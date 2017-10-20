@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -19,1576 +19,1576 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var ConceptMapService = function (_NodeService) {
-    _inherits(ConceptMapService, _NodeService);
+  _inherits(ConceptMapService, _NodeService);
 
-    function ConceptMapService($filter, $q, $timeout, ConfigService, StudentAssetService, StudentDataService, UtilService) {
-        _classCallCheck(this, ConceptMapService);
+  function ConceptMapService($filter, $q, $timeout, ConfigService, StudentAssetService, StudentDataService, UtilService) {
+    _classCallCheck(this, ConceptMapService);
 
-        var _this = _possibleConstructorReturn(this, (ConceptMapService.__proto__ || Object.getPrototypeOf(ConceptMapService)).call(this));
+    var _this = _possibleConstructorReturn(this, (ConceptMapService.__proto__ || Object.getPrototypeOf(ConceptMapService)).call(this));
 
-        _this.$filter = $filter;
-        _this.$q = $q;
-        _this.$timeout = $timeout;
-        _this.ConfigService = ConfigService;
-        _this.StudentAssetService = StudentAssetService;
-        _this.StudentDataService = StudentDataService;
-        _this.UtilService = UtilService;
-        _this.$translate = _this.$filter('translate');
-        return _this;
+    _this.$filter = $filter;
+    _this.$q = $q;
+    _this.$timeout = $timeout;
+    _this.ConfigService = ConfigService;
+    _this.StudentAssetService = StudentAssetService;
+    _this.StudentDataService = StudentDataService;
+    _this.UtilService = UtilService;
+    _this.$translate = _this.$filter('translate');
+    return _this;
+  }
+
+  /**
+   * Get the component type label
+   * example
+   * "Concept Map"
+   */
+
+
+  _createClass(ConceptMapService, [{
+    key: 'getComponentTypeLabel',
+    value: function getComponentTypeLabel() {
+      return this.$translate('conceptMap.componentTypeLabel');
     }
 
     /**
-     * Get the component type label
-     * example
-     * "Concept Mape"
+     * Create a ConceptMap component object
+     * @returns a new ConceptMap component object
      */
 
+  }, {
+    key: 'createComponent',
+    value: function createComponent() {
+      var component = {};
+      component.id = this.UtilService.generateKey();
+      component.type = 'ConceptMap';
+      component.prompt = '';
+      component.showSaveButton = false;
+      component.showSubmitButton = false;
+      component.isStudentAttachmentEnabled = false;
+      component.width = 800;
+      component.height = 600;
+      component.background = null;
+      component.stretchBackground = null;
+      component.nodes = [];
+      component.linksTitle = '';
+      component.links = [];
+      component.rules = [];
+      component.starterConceptMap = null;
+      component.customRuleEvaluator = '';
+      component.showAutoScore = false;
+      component.showAutoFeedback = false;
+      return component;
+    }
 
-    _createClass(ConceptMapService, [{
-        key: 'getComponentTypeLabel',
-        value: function getComponentTypeLabel() {
-            return this.$translate('conceptMap.componentTypeLabel');
+    /**
+     * Copies a ConceptMap component object
+     * @returns a copied ConceptMap component object
+     */
+
+  }, {
+    key: 'copyComponent',
+    value: function copyComponent(componentToCopy) {
+      var component = this.createComponent();
+      component.prompt = componentToCopy.prompt;
+      component.showSaveButton = componentToCopy.showSaveButton;
+      component.showSubmitButton = componentToCopy.showSubmitButton;
+      component.starterSentence = componentToCopy.starterSentence;
+      component.isStudentAttachmentEnabled = componentToCopy.isStudentAttachmentEnabled;
+      return component;
+    }
+    /**
+     * Populate a component state with the data from another component state
+     * @param componentStateFromOtherComponent the component state to obtain the data from
+     * @return a new component state that contains the student data from the other
+     * component state
+     */
+
+  }, {
+    key: 'populateComponentState',
+    value: function populateComponentState(componentStateFromOtherComponent) {
+      var componentState = null;
+
+      if (componentStateFromOtherComponent != null) {
+
+        // create an empty component state
+        componentState = this.StudentDataService.createComponentState();
+
+        // get the component type of the other component state
+        var otherComponentType = componentStateFromOtherComponent.componentType;
+
+        if (otherComponentType === 'ConceptMap') {
+          // the other component is an ConceptMap component
+
+          // get the student data from the other component state
+          var studentData = componentStateFromOtherComponent.studentData;
+
+          // create a copy of the student data
+          var studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
+
+          // set the student data into the new component state
+          componentState.studentData = studentDataCopy;
         }
+      }
 
-        /**
-         * Create a ConceptMap component object
-         * @returns a new ConceptMap component object
-         */
+      return componentState;
+    }
+  }, {
+    key: 'isCompleted',
 
-    }, {
-        key: 'createComponent',
-        value: function createComponent() {
-            var component = {};
-            component.id = this.UtilService.generateKey();
-            component.type = 'ConceptMap';
-            component.prompt = '';
-            component.showSaveButton = false;
-            component.showSubmitButton = false;
-            component.isStudentAttachmentEnabled = false;
-            component.width = 800;
-            component.height = 600;
-            component.background = null;
-            component.stretchBackground = null;
-            component.nodes = [];
-            component.linksTitle = "";
-            component.links = [];
-            component.rules = [];
-            component.starterConceptMap = null;
-            component.customRuleEvaluator = "";
-            component.showAutoScore = false;
-            component.showAutoFeedback = false;
-            return component;
-        }
 
-        /**
-         * Copies a ConceptMap component object
-         * @returns a copied ConceptMap component object
-         */
+    /**
+     * Check if the component was completed
+     * @param component the component object
+     * @param componentStates the component states for the specific component
+     * @param componentEvents the events for the specific component
+     * @param nodeEvents the events for the parent node of the component
+     * @param node parent node of the component
+     * @returns whether the component was completed
+     */
+    value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
+      var result = false;
 
-    }, {
-        key: 'copyComponent',
-        value: function copyComponent(componentToCopy) {
-            var component = this.createComponent();
-            component.prompt = componentToCopy.prompt;
-            component.showSaveButton = componentToCopy.showSaveButton;
-            component.showSubmitButton = componentToCopy.showSubmitButton;
-            component.starterSentence = componentToCopy.starterSentence;
-            component.isStudentAttachmentEnabled = componentToCopy.isStudentAttachmentEnabled;
-            return component;
-        }
-        /**
-         * Populate a component state with the data from another component state
-         * @param componentStateFromOtherComponent the component state to obtain the data from
-         * @return a new component state that contains the student data from the other
-         * component state
-         */
+      if (componentStates && componentStates.length) {
+        var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
 
-    }, {
-        key: 'populateComponentState',
-        value: function populateComponentState(componentStateFromOtherComponent) {
-            var componentState = null;
-
-            if (componentStateFromOtherComponent != null) {
-
-                // create an empty component state
-                componentState = this.StudentDataService.createComponentState();
-
-                // get the component type of the other component state
-                var otherComponentType = componentStateFromOtherComponent.componentType;
-
-                if (otherComponentType === 'ConceptMap') {
-                    // the other component is an ConceptMap component
-
-                    // get the student data from the other component state
-                    var studentData = componentStateFromOtherComponent.studentData;
-
-                    // create a copy of the student data
-                    var studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
-
-                    // set the student data into the new component state
-                    componentState.studentData = studentDataCopy;
-                }
+        if (submitRequired) {
+          // completion requires a submission, so check for isSubmit in any component states
+          for (var i = 0, l = componentStates.length; i < l; i++) {
+            var state = componentStates[i];
+            if (state.isSubmit && state.studentData) {
+              // component state is a submission
+              if (state.isSubmit == true || state.studentData.submitCounter != null && state.studentData.submitCounter > 0) {
+                // there is a response so the component is completed
+                result = true;
+                break;
+              }
             }
+          }
+        } else {
+          // get the last component state
+          var _l = componentStates.length - 1;
+          var componentState = componentStates[_l];
 
-            return componentState;
-        }
-    }, {
-        key: 'isCompleted',
+          var studentData = componentState.studentData;
 
-
-        /**
-         * Check if the component was completed
-         * @param component the component object
-         * @param componentStates the component states for the specific component
-         * @param componentEvents the events for the specific component
-         * @param nodeEvents the events for the parent node of the component
-         * @param node parent node of the component
-         * @returns whether the component was completed
-         */
-        value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-            var result = false;
-
-            if (componentStates && componentStates.length) {
-                var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
-
-                if (submitRequired) {
-                    // completion requires a submission, so check for isSubmit in any component states
-                    for (var i = 0, l = componentStates.length; i < l; i++) {
-                        var state = componentStates[i];
-                        if (state.isSubmit && state.studentData) {
-                            // component state is a submission
-                            if (state.isSubmit == true || state.studentData.submitCounter != null && state.studentData.submitCounter > 0) {
-                                // there is a response so the component is completed
-                                result = true;
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    // get the last component state
-                    var _l = componentStates.length - 1;
-                    var componentState = componentStates[_l];
-
-                    var studentData = componentState.studentData;
-
-                    if (studentData != null) {
-                        if (studentData.conceptMapData != null) {
-                            // there is a response so the component is completed
-                            result = true;
-                        }
-                    }
-                }
+          if (studentData != null) {
+            if (studentData.conceptMapData != null) {
+              // there is a response so the component is completed
+              result = true;
             }
-
-            return result;
+          }
         }
-    }, {
-        key: 'newConceptMapNode',
+      }
+
+      return result;
+    }
+  }, {
+    key: 'newConceptMapNode',
 
 
-        /**
-         * Create an instance of the ConceptMapNode class
-         * @param draw the svg.js draw object
-         * @param id the node id
-         * @param filePath the file path of the image
-         * @param label the label of the node
-         * @param x the x coordinate
-         * @param y the y coordinate
-         * @param width the width of the image
-         * @param height the height of the image
-         * @param a ConceptMapNode
-         */
-        value: function newConceptMapNode(draw, id, originalId, filePath, label, x, y, width, height) {
-            return new ConceptMapNode(this, draw, id, originalId, filePath, label, x, y, width, height);
+    /**
+     * Create an instance of the ConceptMapNode class
+     * @param draw the svg.js draw object
+     * @param id the node id
+     * @param filePath the file path of the image
+     * @param label the label of the node
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param width the width of the image
+     * @param height the height of the image
+     * @param a ConceptMapNode
+     */
+    value: function newConceptMapNode(draw, id, originalId, filePath, label, x, y, width, height) {
+      return new ConceptMapNode(this, draw, id, originalId, filePath, label, x, y, width, height);
+    }
+
+    /**
+     * Create an instance of the ConceptMapLink class
+     * @param draw the svg.js draw object
+     * @param id the link id
+     * @param node the source ConceptMapNode that the link is coming out of
+     * @param x the x position of the tail
+     * @param y the y position of the tail
+     * @returns a ConceptMapLink
+     */
+
+  }, {
+    key: 'newConceptMapLink',
+    value: function newConceptMapLink(draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, startCurveDown) {
+      return new ConceptMapLink(this, draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, startCurveDown);
+    }
+
+    /**
+     * Get the slope of the line between two points
+     * @param x1 x position of the first point
+     * @param y1 y position of the first point
+     * @param x2 x position of the second point
+     * @param y2 y position of the second point
+     * @returns the slope of the line or null if the slope is infinite
+     */
+
+  }, {
+    key: 'getSlope',
+    value: function getSlope(x1, y1, x2, y2) {
+
+      var slope = null;
+
+      if (x2 - x1 == 0) {
+        // the slope is infinite so we will return null
+        slope = null;
+      } else {
+        // calculate the slope
+        slope = (y2 - y1) / (x2 - x1);
+      }
+
+      return slope;
+    }
+
+    /**
+     * Calculate the euclidean distance between two points
+     * @param x1 x position of the first point
+     * @param y1 y position of the first point
+     * @param x2 x position of the second point
+     * @param y2 y position of the second point
+     * @returns the distance between the two points
+     */
+
+  }, {
+    key: 'calculateDistance',
+    value: function calculateDistance(x1, y1, x2, y2) {
+
+      // calculate the distance
+      var distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+
+      return distance;
+    }
+
+    /**
+     Returns an array representation of the path elements for an arrow
+     First we calculate a simple curve for the tail.
+     Then we pick a point on that curve to use as the base-center of the arrow head,
+    then calculate the position of that triangle based on the angle between that
+    point and the tip.
+     @params startx {Number} X-coordinate of the start point
+    @params starty {Number} Y-coordinate of the start point
+    @params endx {Number} X-coordinate of the end point
+    @params endy {Number} Y-coordinate of the end point
+    @params len {Number} Length of the "tip" of the arrowhead
+    @params angle {Number} Angle in degrees
+      between the line and each wing of the arrowhead.
+      Should be less than 90.
+     Note: This function and the associated functions that are called by this
+    function are taken from the Concord MySystem github project.
+    https://github.com/concord-consortium/mysystem_sc
+    The code is found in the arrow_drawing.js file.
+    mysystem_sc/apps/my_system/mixins/arrow_drawing.js
+     **/
+
+  }, {
+    key: 'arrowPathArrays',
+    value: function arrowPathArrays(startx, starty, endx, endy, startCurveUp, endCurveUp, len, angle, curvature, nodeRadius) {
+
+      if (startx === endx && starty === endy) {
+        return [[""], [""]];
+      }
+
+      var start = new this.coord(startx, starty),
+          tip = new this.coord(endx, endy),
+          pathData = [],
+          arrowHeadData = [];
+
+      // calculate control points c2 and c3
+      var curveDistance = (tip.x - start.x) * curvature,
+          startYCurveDistance = curveDistance === 0 ? 1 : Math.max(Math.min(curveDistance, 100), -100),
+          endYCurveDistance = startYCurveDistance,
+          startUp = startCurveUp ? 1 : -1,
+          endUp = endCurveUp ? 1 : -1;
+      startYCurveDistance = startYCurveDistance * startUp > 0 ? startYCurveDistance : startYCurveDistance * -1;
+      endYCurveDistance = endYCurveDistance * endUp > 0 ? endYCurveDistance : endYCurveDistance * -1;
+      var c2 = new this.coord(start.x + curveDistance / 2, start.y - startYCurveDistance),
+          c3 = new this.coord(tip.x - curveDistance / 2, tip.y - endYCurveDistance),
+          cDistance = Math.sqrt(Math.pow(curveDistance / 2, 2) + Math.pow(startYCurveDistance, 2)),
+          perimX = nodeRadius * (curveDistance / 2) / cDistance,
+          perimYstart = nodeRadius * startYCurveDistance / cDistance,
+          perimYend = nodeRadius * endYCurveDistance / cDistance;
+
+      // update tip
+      tip = new this.coord(tip.x - perimX, tip.y - perimYend);
+
+      // draw arrow path
+
+      pathData.push("M", start.x + perimX, start.y - perimYstart); // move to start of line
+      pathData.push("C", c2.x, c2.y, c3.x, c3.y, tip.x, tip.y); // curve line to the tip
+
+      // draw arrow head
+      var percLengthOfHead = len / this.getLengthOfCubicBezier(start, c2, c3, tip),
+          centerBaseOfHead = this.getPointOnCubicBezier(percLengthOfHead, start, c2, c3, tip),
+          theta = Math.atan2(tip.y - centerBaseOfHead.y, tip.x - centerBaseOfHead.x),
+          baseAngleA = theta + angle * Math.PI / 180,
+          baseAngleB = theta - angle * Math.PI / 180,
+          baseA = new this.coord(tip.x - len * Math.cos(baseAngleA), tip.y - len * Math.sin(baseAngleA)),
+          baseB = new this.coord(tip.x - len * Math.cos(baseAngleB), tip.y - len * Math.sin(baseAngleB));
+
+      arrowHeadData.push("M", tip.x, tip.y);
+      arrowHeadData.push("L", baseA.x, baseA.y); // line to baseA
+      arrowHeadData.push("L", baseB.x, baseB.y); // line to baseB
+      arrowHeadData.push("L", tip.x, tip.y); // line back to the tip
+
+      return [pathData, arrowHeadData];
+    }
+
+    /**
+     * Note: This function is from
+     * https://github.com/concord-consortium/mysystem_sc
+     * The code is found in the arrow_drawing.js file.
+     * mysystem_sc/apps/my_system/mixins/arrow_drawing.js
+     */
+
+  }, {
+    key: 'coord',
+    value: function coord(x, y) {
+      if (!x) x = 0;
+      if (!y) y = 0;
+      /*
+      *   Limit precision of decimals for SVG rendering.
+      *   otherwise we get really long SVG strings,
+      *   and webkit error messsages like of this sort:
+      *   "Error: Problem parsing d='<svg string with long dec>'"
+      */
+      x = Math.round(x * 1000) / 1000;
+      y = Math.round(y * 1000) / 1000;
+      return { x: x, y: y };
+    }
+
+    /**
+     * Note: This function is from
+     * https://github.com/concord-consortium/mysystem_sc
+     * The code is found in the arrow_drawing.js file.
+     * mysystem_sc/apps/my_system/mixins/arrow_drawing.js
+     */
+
+  }, {
+    key: 'getLengthOfCubicBezier',
+    value: function getLengthOfCubicBezier(C1, C2, C3, C4) {
+      var precision = 10,
+          length = 0,
+          t,
+          currentPoint,
+          previousPoint;
+
+      for (var i = 0; i < precision; i++) {
+        t = i / precision;
+        currentPoint = this.getPointOnCubicBezier(t, C1, C2, C3, C4);
+        if (i > 0) {
+          var xDif = currentPoint.x - previousPoint.x,
+              yDif = currentPoint.y - previousPoint.y;
+          length += Math.sqrt(xDif * xDif + yDif * yDif);
         }
+        previousPoint = currentPoint;
+      }
+      return length;
+    }
 
-        /**
-         * Create an instance of the ConceptMapLink class
-         * @param draw the svg.js draw object
-         * @param id the link id
-         * @param node the source ConceptMapNode that the link is coming out of
-         * @param x the x position of the tail
-         * @param y the y position of the tail
-         * @returns a ConceptMapLink
+    /**
+     * Note: This function is from
+     * https://github.com/concord-consortium/mysystem_sc
+     * The code is found in the arrow_drawing.js file.
+     * mysystem_sc/apps/my_system/mixins/arrow_drawing.js
+     */
+
+  }, {
+    key: 'getPointOnCubicBezier',
+    value: function getPointOnCubicBezier(percent, C1, C2, C3, C4) {
+      if (percent < 0) percent = 0;
+      if (percent > 1) percent = 1;
+      var pos = new this.coord();
+      pos.x = C1.x * this.B1(percent) + C2.x * this.B2(percent) + C3.x * this.B3(percent) + C4.x * this.B4(percent);
+      pos.y = C1.y * this.B1(percent) + C2.y * this.B2(percent) + C3.y * this.B3(percent) + C4.y * this.B4(percent);
+      return pos;
+    }
+
+    /**
+     * Note: These functions are from
+     * https://github.com/concord-consortium/mysystem_sc
+     * The code is found in the arrow_drawing.js file.
+     * mysystem_sc/apps/my_system/mixins/arrow_drawing.js
+     */
+
+  }, {
+    key: 'B1',
+    value: function B1(t) {
+      return t * t * t;
+    }
+  }, {
+    key: 'B2',
+    value: function B2(t) {
+      return 3 * t * t * (1 - t);
+    }
+  }, {
+    key: 'B3',
+    value: function B3(t) {
+      return 3 * t * (1 - t) * (1 - t);
+    }
+  }, {
+    key: 'B4',
+    value: function B4(t) {
+      return (1 - t) * (1 - t) * (1 - t);
+    }
+
+    /**
+     * Evaluate a rule name
+     * @param componentContent the component content
+     * @param conceptMapData the student concept map data
+     * @param ruleName the rule name
+     * @returns whether the rule was satisfied
+     */
+
+  }, {
+    key: 'evaluateRuleByRuleName',
+    value: function evaluateRuleByRuleName(componentContent, conceptMapData, ruleName) {
+
+      var result = false;
+
+      if (ruleName === true) {
+        // the rule name is not actually a rule but is the true boolean
+        return true;
+      } else if (ruleName === false) {
+        // the rule name is not actually a rule but is the false boolean
+        return false;
+      }
+
+      // get the rule
+      var rule = this.getRuleByRuleName(componentContent, ruleName);
+
+      if (rule == null) {
+        /*
+         * we didn't find a rule with the given rule name so we will look
+         * for a category with that name
          */
 
-    }, {
-        key: 'newConceptMapLink',
-        value: function newConceptMapLink(draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, startCurveDown) {
-            return new ConceptMapLink(this, draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, startCurveDown);
-        }
+        // get the rules that are in the category
+        var rules = this.getRulesByCategoryName(componentContent, ruleName);
 
-        /**
-         * Get the slope of the line between two points
-         * @param x1 x position of the first point
-         * @param y1 y position of the first point
-         * @param x2 x position of the second point
-         * @param y2 y position of the second point
-         * @returns the slope of the line or null if the slope is infinite
-         */
+        var firstRule = true;
 
-    }, {
-        key: 'getSlope',
-        value: function getSlope(x1, y1, x2, y2) {
+        if (rules != null) {
 
-            var slope = null;
+          /*
+           * loop through all the rules in the category. we will say the
+           * category is satisfied if all the rules in the category
+           * evaluate to true.
+           */
+          for (var r = 0; r < rules.length; r++) {
+            var tempRule = rules[r];
 
-            if (x2 - x1 == 0) {
-                // the slope is infinite so we will return null
-                slope = null;
+            // evaluate the rule
+            var tempResult = this.evaluateRule(conceptMapData, tempRule);
+
+            if (firstRule) {
+              /*
+               * this is the first rule so we will set the value
+               * of the rule to the result
+               */
+              result = tempResult;
+              firstRule = false;
             } else {
-                // calculate the slope
-                slope = (y2 - y1) / (x2 - x1);
+              /*
+               * this is not the first rule so we will compute the
+               * "logical and" of the result so far and this rule's
+               * result
+               */
+              result = result && tempResult;
             }
 
-            return slope;
-        }
-
-        /**
-         * Calculate the euclidean distance between two points
-         * @param x1 x position of the first point
-         * @param y1 y position of the first point
-         * @param x2 x position of the second point
-         * @param y2 y position of the second point
-         * @returns the distance between the two points
-         */
-
-    }, {
-        key: 'calculateDistance',
-        value: function calculateDistance(x1, y1, x2, y2) {
-
-            // calculate the distance
-            var distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-
-            return distance;
-        }
-
-        /**
-         Returns an array representation of the path elements for an arrow
-         First we calculate a simple curve for the tail.
-         Then we pick a point on that curve to use as the base-center of the arrow head,
-        then calculate the position of that triangle based on the angle between that
-        point and the tip.
-         @params startx {Number} X-coordinate of the start point
-        @params starty {Number} Y-coordinate of the start point
-        @params endx {Number} X-coordinate of the end point
-        @params endy {Number} Y-coordinate of the end point
-        @params len {Number} Length of the "tip" of the arrowhead
-        @params angle {Number} Angle in degrees
-          between the line and each wing of the arrowhead.
-          Should be less than 90.
-         Note: This function and the associated functions that are called by this
-        function are taken from the Concord MySystem github project.
-        https://github.com/concord-consortium/mysystem_sc
-        The code is found in the arrow_drawing.js file.
-        mysystem_sc/apps/my_system/mixins/arrow_drawing.js
-         **/
-
-    }, {
-        key: 'arrowPathArrays',
-        value: function arrowPathArrays(startx, starty, endx, endy, startCurveUp, endCurveUp, len, angle, curvature, nodeRadius) {
-
-            if (startx === endx && starty === endy) {
-                return [[""], [""]];
+            if (!result) {
+              /*
+               * the result is false so we can short circuit and
+               * stop looping since we have now just found that
+               * one of the rules is not satisfied which means
+               * the category is not satisfied.
+               */
+              break;
             }
-
-            var start = new this.coord(startx, starty),
-                tip = new this.coord(endx, endy),
-                pathData = [],
-                arrowHeadData = [];
-
-            // calculate control points c2 and c3
-            var curveDistance = (tip.x - start.x) * curvature,
-                startYCurveDistance = curveDistance === 0 ? 1 : Math.max(Math.min(curveDistance, 100), -100),
-                endYCurveDistance = startYCurveDistance,
-                startUp = startCurveUp ? 1 : -1,
-                endUp = endCurveUp ? 1 : -1;
-            startYCurveDistance = startYCurveDistance * startUp > 0 ? startYCurveDistance : startYCurveDistance * -1;
-            endYCurveDistance = endYCurveDistance * endUp > 0 ? endYCurveDistance : endYCurveDistance * -1;
-            var c2 = new this.coord(start.x + curveDistance / 2, start.y - startYCurveDistance),
-                c3 = new this.coord(tip.x - curveDistance / 2, tip.y - endYCurveDistance),
-                cDistance = Math.sqrt(Math.pow(curveDistance / 2, 2) + Math.pow(startYCurveDistance, 2)),
-                perimX = nodeRadius * (curveDistance / 2) / cDistance,
-                perimYstart = nodeRadius * startYCurveDistance / cDistance,
-                perimYend = nodeRadius * endYCurveDistance / cDistance;
-
-            // update tip
-            tip = new this.coord(tip.x - perimX, tip.y - perimYend);
-
-            // draw arrow path
-
-            pathData.push("M", start.x + perimX, start.y - perimYstart); // move to start of line
-            pathData.push("C", c2.x, c2.y, c3.x, c3.y, tip.x, tip.y); // curve line to the tip
-
-            // draw arrow head
-            var percLengthOfHead = len / this.getLengthOfCubicBezier(start, c2, c3, tip),
-                centerBaseOfHead = this.getPointOnCubicBezier(percLengthOfHead, start, c2, c3, tip),
-                theta = Math.atan2(tip.y - centerBaseOfHead.y, tip.x - centerBaseOfHead.x),
-                baseAngleA = theta + angle * Math.PI / 180,
-                baseAngleB = theta - angle * Math.PI / 180,
-                baseA = new this.coord(tip.x - len * Math.cos(baseAngleA), tip.y - len * Math.sin(baseAngleA)),
-                baseB = new this.coord(tip.x - len * Math.cos(baseAngleB), tip.y - len * Math.sin(baseAngleB));
-
-            arrowHeadData.push("M", tip.x, tip.y);
-            arrowHeadData.push("L", baseA.x, baseA.y); // line to baseA
-            arrowHeadData.push("L", baseB.x, baseB.y); // line to baseB
-            arrowHeadData.push("L", tip.x, tip.y); // line back to the tip
-
-            return [pathData, arrowHeadData];
+          }
         }
+      } else {
+        // evaluate the rule
+        result = this.evaluateRule(conceptMapData, rule);
+      }
 
-        /**
-         * Note: This function is from
-         * https://github.com/concord-consortium/mysystem_sc
-         * The code is found in the arrow_drawing.js file.
-         * mysystem_sc/apps/my_system/mixins/arrow_drawing.js
-         */
+      return result;
+    }
 
-    }, {
-        key: 'coord',
-        value: function coord(x, y) {
-            if (!x) x = 0;
-            if (!y) y = 0;
+    /**
+     * Evaluate a rule
+     * @param conceptMapData the concept map student data
+     * @param rule the rule object
+     * @returns whether the rule was satisfied
+     */
+
+  }, {
+    key: 'evaluateRule',
+    value: function evaluateRule(conceptMapData, rule) {
+
+      var result = false;
+
+      if (rule != null) {
+
+        if (rule.type == 'node') {
+          // this is a node rule
+
+          // get the node we are looking for
+          var nodeLabel = rule.nodeLabel;
+
+          // get all the nodes with the given label
+          var nodes = this.getNodesByLabel(conceptMapData, nodeLabel);
+
+          // get the number of nodes with the given label
+          var nodeCount = nodes.length;
+
+          /*
+           * the comparison for the number which can be "exactly",
+           * "more than", or "less than"
+           */
+          var comparison = rule.comparison;
+
+          // the number to compare to
+          var number = rule.number;
+
+          if (comparison == 'exactly') {
             /*
-            *   Limit precision of decimals for SVG rendering.
-            *   otherwise we get really long SVG strings,
-            *   and webkit error messsages like of this sort:
-            *   "Error: Problem parsing d='<svg string with long dec>'"
-            */
-            x = Math.round(x * 1000) / 1000;
-            y = Math.round(y * 1000) / 1000;
-            return { x: x, y: y };
-        }
-
-        /**
-         * Note: This function is from
-         * https://github.com/concord-consortium/mysystem_sc
-         * The code is found in the arrow_drawing.js file.
-         * mysystem_sc/apps/my_system/mixins/arrow_drawing.js
-         */
-
-    }, {
-        key: 'getLengthOfCubicBezier',
-        value: function getLengthOfCubicBezier(C1, C2, C3, C4) {
-            var precision = 10,
-                length = 0,
-                t,
-                currentPoint,
-                previousPoint;
-
-            for (var i = 0; i < precision; i++) {
-                t = i / precision;
-                currentPoint = this.getPointOnCubicBezier(t, C1, C2, C3, C4);
-                if (i > 0) {
-                    var xDif = currentPoint.x - previousPoint.x,
-                        yDif = currentPoint.y - previousPoint.y;
-                    length += Math.sqrt(xDif * xDif + yDif * yDif);
-                }
-                previousPoint = currentPoint;
+             * we are looking for an exact number of nodes with the
+             * given label
+             */
+            if (nodeCount == number) {
+              result = true;
             }
-            return length;
-        }
-
-        /**
-         * Note: This function is from
-         * https://github.com/concord-consortium/mysystem_sc
-         * The code is found in the arrow_drawing.js file.
-         * mysystem_sc/apps/my_system/mixins/arrow_drawing.js
-         */
-
-    }, {
-        key: 'getPointOnCubicBezier',
-        value: function getPointOnCubicBezier(percent, C1, C2, C3, C4) {
-            if (percent < 0) percent = 0;
-            if (percent > 1) percent = 1;
-            var pos = new this.coord();
-            pos.x = C1.x * this.B1(percent) + C2.x * this.B2(percent) + C3.x * this.B3(percent) + C4.x * this.B4(percent);
-            pos.y = C1.y * this.B1(percent) + C2.y * this.B2(percent) + C3.y * this.B3(percent) + C4.y * this.B4(percent);
-            return pos;
-        }
-
-        /**
-         * Note: These functions are from
-         * https://github.com/concord-consortium/mysystem_sc
-         * The code is found in the arrow_drawing.js file.
-         * mysystem_sc/apps/my_system/mixins/arrow_drawing.js
-         */
-
-    }, {
-        key: 'B1',
-        value: function B1(t) {
-            return t * t * t;
-        }
-    }, {
-        key: 'B2',
-        value: function B2(t) {
-            return 3 * t * t * (1 - t);
-        }
-    }, {
-        key: 'B3',
-        value: function B3(t) {
-            return 3 * t * (1 - t) * (1 - t);
-        }
-    }, {
-        key: 'B4',
-        value: function B4(t) {
-            return (1 - t) * (1 - t) * (1 - t);
-        }
-
-        /**
-         * Evaluate a rule name
-         * @param componentContent the component content
-         * @param conceptMapData the student concept map data
-         * @param ruleName the rule name
-         * @returns whether the rule was satisfied
-         */
-
-    }, {
-        key: 'evaluateRuleByRuleName',
-        value: function evaluateRuleByRuleName(componentContent, conceptMapData, ruleName) {
-
-            var result = false;
-
-            if (ruleName === true) {
-                // the rule name is not actually a rule but is the true boolean
-                return true;
-            } else if (ruleName === false) {
-                // the rule name is not actually a rule but is the false boolean
-                return false;
+          } else if (comparison == 'more than') {
+            /*
+             * we are looking for more than a certain number of nodes
+             * with the given label
+             */
+            if (nodeCount > number) {
+              result = true;
             }
-
-            // get the rule
-            var rule = this.getRuleByRuleName(componentContent, ruleName);
-
-            if (rule == null) {
-                /*
-                 * we didn't find a rule with the given rule name so we will look
-                 * for a category with that name
-                 */
-
-                // get the rules that are in the category
-                var rules = this.getRulesByCategoryName(componentContent, ruleName);
-
-                var firstRule = true;
-
-                if (rules != null) {
-
-                    /*
-                     * loop through all the rules in the category. we will say the
-                     * category is satisfied if all the rules in the category
-                     * evaluate to true.
-                     */
-                    for (var r = 0; r < rules.length; r++) {
-                        var tempRule = rules[r];
-
-                        // evaluate the rule
-                        var tempResult = this.evaluateRule(conceptMapData, tempRule);
-
-                        if (firstRule) {
-                            /*
-                             * this is the first rule so we will set the value
-                             * of the rule to the result
-                             */
-                            result = tempResult;
-                            firstRule = false;
-                        } else {
-                            /*
-                             * this is not the first rule so we will compute the
-                             * "logical and" of the result so far and this rule's
-                             * result
-                             */
-                            result = result && tempResult;
-                        }
-
-                        if (!result) {
-                            /*
-                             * the result is false so we can short circuit and
-                             * stop looping since we have now just found that
-                             * one of the rules is not satisfied which means
-                             * the category is not satisfied.
-                             */
-                            break;
-                        }
-                    }
-                }
-            } else {
-                // evaluate the rule
-                result = this.evaluateRule(conceptMapData, rule);
+          } else if (comparison == 'less than') {
+            /*
+             * we are looking for less than a certain number of nodes
+             * with the given label
+             */
+            if (nodeCount < number) {
+              result = true;
             }
+          }
 
-            return result;
+          if (rule.not) {
+            /*
+             * the rule is satisfied if the result is false so we will
+             * negate the result
+             */
+            result = !result;
+          }
+        } else if (rule.type == 'link') {
+          // this is a link rule
+
+          // get the source node label
+          var nodeLabel = rule.nodeLabel;
+
+          // get the link label
+          var linkLabel = rule.linkLabel;
+
+          // get the destination node label
+          var otherNodeLabel = rule.otherNodeLabel;
+
+          // get all the links with the matching labels
+          var links = this.getLinksByLabels(conceptMapData, nodeLabel, linkLabel, otherNodeLabel);
+
+          // get the number of links with the matching labels
+          var linkCount = links.length;
+
+          /*
+           * the comparison for the number which can be "exactly",
+           * "more than", or "less than"
+           */
+          var comparison = rule.comparison;
+
+          // the number to compare to
+          var number = rule.number;
+
+          if (comparison == 'exactly') {
+            // we are looking for an exact number of links
+            if (linkCount == number) {
+              result = true;
+            }
+          } else if (comparison == 'more than') {
+            // we are looking for more than a certain number of links
+            if (linkCount > number) {
+              result = true;
+            }
+          } else if (comparison == 'less than') {
+            // we are looking for less than a certain number of links
+            if (linkCount < number) {
+              result = true;
+            }
+          }
+
+          if (rule.not) {
+            /*
+             * the rule is satisfied if the result is false so we will
+             * negate the result
+             */
+            result = !result;
+          }
         }
+      }
 
-        /**
-         * Evaluate a rule
-         * @param conceptMapData the concept map student data
-         * @param rule the rule object
-         * @returns whether the rule was satisfied
-         */
+      return result;
+    }
 
-    }, {
-        key: 'evaluateRule',
-        value: function evaluateRule(conceptMapData, rule) {
+    /**
+     * Get a rule by the rule name
+     * @param componentContent the concept map component content
+     * @param ruleName the rule name
+     * @returns the rule with the given rule name
+     */
 
-            var result = false;
+  }, {
+    key: 'getRuleByRuleName',
+    value: function getRuleByRuleName(componentContent, ruleName) {
+
+      var rule = null;
+
+      if (ruleName != null) {
+
+        // get the rules
+        var rules = componentContent.rules;
+
+        if (rules != null) {
+
+          // loop through all the rules
+          for (var r = 0; r < rules.length; r++) {
+
+            // get a rule
+            var tempRule = rules[r];
+
+            if (tempRule != null) {
+
+              if (ruleName == tempRule.name) {
+                // we have found the rule with the name we want
+                rule = tempRule;
+              }
+            }
+          }
+        }
+      }
+
+      return rule;
+    }
+
+    /**
+     * Get the rules in the category
+     * @param componentContent the component content
+     * @param category the category name
+     * @returns the rules in the category
+     */
+
+  }, {
+    key: 'getRulesByCategoryName',
+    value: function getRulesByCategoryName(componentContent, category) {
+
+      var rules = [];
+
+      if (componentContent != null) {
+
+        // get all the rules
+        var tempRules = componentContent.rules;
+
+        if (tempRules != null) {
+
+          // loop through all the rules
+          for (var r = 0; r < tempRules.length; r++) {
+            var rule = tempRules[r];
 
             if (rule != null) {
 
-                if (rule.type == 'node') {
-                    // this is a node rule
+              // get the categories the rule is in
+              var categories = rule.categories;
 
-                    // get the node we are looking for
-                    var nodeLabel = rule.nodeLabel;
+              if (categories != null) {
 
-                    // get all the nodes with the given label
-                    var nodes = this.getNodesByLabel(conceptMapData, nodeLabel);
+                // loop through categories the rule is in
+                for (var c = 0; c < categories.length; c++) {
+                  var tempCategory = categories[c];
 
-                    // get the number of nodes with the given label
-                    var nodeCount = nodes.length;
-
+                  if (category == tempCategory) {
                     /*
-                     * the comparison for the number which can be "exactly",
-                     * "more than", or "less than"
+                     * the rule is in the category we are
+                     * searching for
                      */
-                    var comparison = rule.comparison;
-
-                    // the number to compare to
-                    var number = rule.number;
-
-                    if (comparison == 'exactly') {
-                        /*
-                         * we are looking for an exact number of nodes with the
-                         * given label
-                         */
-                        if (nodeCount == number) {
-                            result = true;
-                        }
-                    } else if (comparison == 'more than') {
-                        /*
-                         * we are looking for more than a certain number of nodes
-                         * with the given label
-                         */
-                        if (nodeCount > number) {
-                            result = true;
-                        }
-                    } else if (comparison == 'less than') {
-                        /*
-                         * we are looking for less than a certain number of nodes
-                         * with the given label
-                         */
-                        if (nodeCount < number) {
-                            result = true;
-                        }
-                    }
-
-                    if (rule.not) {
-                        /*
-                         * the rule is satisfied if the result is false so we will
-                         * negate the result
-                         */
-                        result = !result;
-                    }
-                } else if (rule.type == 'link') {
-                    // this is a link rule
-
-                    // get the source node label
-                    var nodeLabel = rule.nodeLabel;
-
-                    // get the link label
-                    var linkLabel = rule.linkLabel;
-
-                    // get the destination node label
-                    var otherNodeLabel = rule.otherNodeLabel;
-
-                    // get all the links with the matching labels
-                    var links = this.getLinksByLabels(conceptMapData, nodeLabel, linkLabel, otherNodeLabel);
-
-                    // get the number of links with the matching labels
-                    var linkCount = links.length;
-
-                    /*
-                     * the comparison for the number which can be "exactly",
-                     * "more than", or "less than"
-                     */
-                    var comparison = rule.comparison;
-
-                    // the number to compare to
-                    var number = rule.number;
-
-                    if (comparison == 'exactly') {
-                        // we are looking for an exact number of links
-                        if (linkCount == number) {
-                            result = true;
-                        }
-                    } else if (comparison == 'more than') {
-                        // we are looking for more than a certain number of links
-                        if (linkCount > number) {
-                            result = true;
-                        }
-                    } else if (comparison == 'less than') {
-                        // we are looking for less than a certain number of links
-                        if (linkCount < number) {
-                            result = true;
-                        }
-                    }
-
-                    if (rule.not) {
-                        /*
-                         * the rule is satisfied if the result is false so we will
-                         * negate the result
-                         */
-                        result = !result;
-                    }
+                    rules.push(rule);
+                    break;
+                  }
                 }
+              }
             }
-
-            return result;
+          }
         }
+      }
 
-        /**
-         * Get a rule by the rule name
-         * @param componentContent the concept map component content
-         * @param ruleName the rule name
-         * @returns the rule with the given rule name
-         */
+      return rules;
+    }
 
-    }, {
-        key: 'getRuleByRuleName',
-        value: function getRuleByRuleName(componentContent, ruleName) {
+    /**
+     * Get nodes by label
+     * @param conceptMapData the concept map student data
+     * @param label the node label to look for
+     * @returns all the nodes with the given label
+     */
 
-            var rule = null;
+  }, {
+    key: 'getNodesByLabel',
+    value: function getNodesByLabel(conceptMapData, label) {
 
-            if (ruleName != null) {
+      var nodesByLabel = [];
 
-                // get the rules
-                var rules = componentContent.rules;
+      if (conceptMapData != null) {
 
-                if (rules != null) {
+        var nodes = conceptMapData.nodes;
 
-                    // loop through all the rules
-                    for (var r = 0; r < rules.length; r++) {
+        if (nodes != null) {
 
-                        // get a rule
-                        var tempRule = rules[r];
+          // loop through all the nodes
+          for (var n = 0; n < nodes.length; n++) {
+            var node = nodes[n];
 
-                        if (tempRule != null) {
+            if (node != null) {
 
-                            if (ruleName == tempRule.name) {
-                                // we have found the rule with the name we want
-                                rule = tempRule;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return rule;
-        }
-
-        /**
-         * Get the rules in the category
-         * @param componentContent the component content
-         * @param category the category name
-         * @returns the rules in the category
-         */
-
-    }, {
-        key: 'getRulesByCategoryName',
-        value: function getRulesByCategoryName(componentContent, category) {
-
-            var rules = [];
-
-            if (componentContent != null) {
-
-                // get all the rules
-                var tempRules = componentContent.rules;
-
-                if (tempRules != null) {
-
-                    // loop through all the rules
-                    for (var r = 0; r < tempRules.length; r++) {
-                        var rule = tempRules[r];
-
-                        if (rule != null) {
-
-                            // get the categories the rule is in
-                            var categories = rule.categories;
-
-                            if (categories != null) {
-
-                                // loop through categories the rule is in
-                                for (var c = 0; c < categories.length; c++) {
-                                    var tempCategory = categories[c];
-
-                                    if (category == tempCategory) {
-                                        /*
-                                         * the rule is in the category we are
-                                         * searching for
-                                         */
-                                        rules.push(rule);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return rules;
-        }
-
-        /**
-         * Get nodes by label
-         * @param conceptMapData the concept map student data
-         * @param label the node label to look for
-         * @returns all the nodes with the given label
-         */
-
-    }, {
-        key: 'getNodesByLabel',
-        value: function getNodesByLabel(conceptMapData, label) {
-
-            var nodesByLabel = [];
-
-            if (conceptMapData != null) {
-
-                var nodes = conceptMapData.nodes;
-
-                if (nodes != null) {
-
-                    // loop through all the nodes
-                    for (var n = 0; n < nodes.length; n++) {
-                        var node = nodes[n];
-
-                        if (node != null) {
-
-                            if (label == node.label || label == 'any') {
-                                /*
-                                 * we have found a node with the label we are
-                                 * looking for
-                                 */
-                                nodesByLabel.push(node);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return nodesByLabel;
-        }
-
-        /**
-         * Get links with the given source node label, link label, and destination
-         * node label
-         * @param conceptMapData the concept map student data
-         * @param nodeLabel the source node label
-         * @param linkLabel the link label
-         * @param otherNodeLabel the destination node label
-         * @returns the links with the given source node label, link label, and
-         * destination node label
-         */
-
-    }, {
-        key: 'getLinksByLabels',
-        value: function getLinksByLabels(conceptMapData, nodeLabel, linkLabel, otherNodeLabel) {
-
-            var resultLinks = [];
-
-            if (conceptMapData != null) {
-
-                var links = conceptMapData.links;
-
-                if (links != null) {
-
-                    // loop through all the links
-                    for (var l = 0; l < links.length; l++) {
-                        var tempLink = links[l];
-
-                        if (tempLink != null) {
-
-                            // get the labels
-                            var tempLinkLabel = tempLink.label;
-                            var sourceNodeLabel = tempLink.sourceNodeLabel;
-                            var destinationNodeLabel = tempLink.destinationNodeLabel;
-
-                            if ((nodeLabel == sourceNodeLabel || nodeLabel == 'any') && (linkLabel == tempLinkLabel || linkLabel == 'any') && (otherNodeLabel == destinationNodeLabel || otherNodeLabel == 'any')) {
-
-                                // the labels match the ones we are looking for
-                                resultLinks.push(tempLink);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return resultLinks;
-        }
-
-        /**
-         * Check if any of the rules are satisfied
-         * @param componentContent the concept map component content
-         * @param conceptMapData the concept map student data
-         * @param args an array of rule names
-         * @returns true if any of the rules are satisifed
-         * false if none of the rules are satisified
-         */
-
-    }, {
-        key: 'any',
-        value: function any(componentContent, conceptMapData, args) {
-
-            // loop through all the rule names
-            for (var n = 0; n < args.length; n++) {
-
-                // get a rule name
-                var ruleName = args[n];
-
-                // check if the rule is satisifed
-                var ruleResult = this.evaluateRuleByRuleName(componentContent, conceptMapData, ruleName);
-
-                if (ruleResult) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /**
-         * Check if all the rules are satisfied
-         * @param componentContent the concept map component content
-         * @param conceptMapData the concept map student data
-         * @param args an array of rule names
-         * @returns true if all the rules are satisifed
-         * false if any of the rules are not satisfied
-         */
-
-    }, {
-        key: 'all',
-        value: function all(componentContent, conceptMapData, args) {
-            var result = true;
-
-            // loop through all the rule names
-            for (var n = 0; n < args.length; n++) {
-
-                // get a rule name
-                var ruleName = args[n];
-
-                // check if the rule is satisfied
-                var ruleResult = this.evaluateRuleByRuleName(componentContent, conceptMapData, ruleName);
-
-                result = result && ruleResult;
-            }
-            return result;
-        }
-
-        /**
-         * Whether this component generates student work
-         * @param component (optional) the component object. if the component object
-         * is not provided, we will use the default value of whether the
-         * component type usually has work.
-         * @return whether this component generates student work
-         */
-
-    }, {
-        key: 'componentHasWork',
-        value: function componentHasWork(component) {
-            return true;
-        }
-
-        /**
-         * Whether this component uses a save button
-         * @return whether this component uses a save button
-         */
-
-    }, {
-        key: 'componentUsesSaveButton',
-        value: function componentUsesSaveButton() {
-            return true;
-        }
-
-        /**
-         * Whether this component uses a submit button
-         * @return whether this component uses a submit button
-         */
-
-    }, {
-        key: 'componentUsesSubmitButton',
-        value: function componentUsesSubmitButton() {
-            return true;
-        }
-
-        /**
-         * Populate the concept map data into the component
-         * @param draw the SVG draw div
-         * @param conceptMapData the concept map data which contains an array
-         * of nodes and an array of links
-         */
-
-    }, {
-        key: 'populateConceptMapData',
-        value: function populateConceptMapData(draw, conceptMapData) {
-
-            if (conceptMapData != null) {
-
-                // get the JSON nodes
-                var nodes = conceptMapData.nodes;
-
-                // this is used to hold the SVG node objects
-                var conceptMapNodes = [];
-
-                if (nodes != null) {
-
-                    // loop through all the nodes
-                    for (var n = 0; n < nodes.length; n++) {
-                        var node = nodes[n];
-
-                        var instanceId = node.instanceId;
-                        var originalId = node.originalId;
-                        var filePath = node.fileName;
-                        var label = node.label;
-                        var x = node.x;
-                        var y = node.y;
-                        var width = node.width;
-                        var height = node.height;
-
-                        // create a ConceptMapNode
-                        var conceptMapNode = this.newConceptMapNode(draw, instanceId, originalId, filePath, label, x, y, width, height);
-
-                        conceptMapNodes.push(conceptMapNode);
-                    }
-                }
-
-                // get the JSON links
-                var links = conceptMapData.links;
-
-                // this is used to hold the SVG link objects
-                var conceptMapLinks = [];
-
-                if (links != null) {
-
-                    // loop through all the links
-                    for (var l = 0; l < links.length; l++) {
-                        var link = links[l];
-
-                        var instanceId = link.instanceId;
-                        var originalId = link.originalId;
-                        var sourceNodeId = link.sourceNodeInstanceId;
-                        var destinationNodeId = link.destinationNodeInstanceId;
-                        var label = link.label;
-                        var color = link.color;
-                        var curvature = link.curvature;
-                        var startCurveUp = link.startCurveUp;
-                        var endCurveUp = link.endCurveUp;
-                        var sourceNode = null;
-                        var destinationNode = null;
-
-                        if (sourceNodeId != null) {
-                            sourceNode = this.getNodeById(conceptMapNodes, sourceNodeId);
-                        }
-
-                        if (destinationNodeId != null) {
-                            destinationNode = this.getNodeById(conceptMapNodes, destinationNodeId);
-                        }
-
-                        // create a ConceptMapLink
-                        var conceptMapLink = this.newConceptMapLink(draw, instanceId, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, endCurveUp);
-
-                        conceptMapLinks.push(conceptMapLink);
-                    }
-                }
-
+              if (label == node.label || label == 'any') {
                 /*
-                 * move the link text group to the front so that they are on top
-                 * of links
+                 * we have found a node with the label we are
+                 * looking for
                  */
-                this.moveLinkTextToFront(conceptMapLinks);
-
-                // move the nodes to the front so that they are on top of links
-                this.moveNodesToFront(conceptMapNodes);
-
-                /*
-                 * set a timeout to refresh the link labels so that the rectangles
-                 * around the labels are properly resized
-                 */
-                // this.$timeout(() => {
-                //     this.refreshLinkLabels(conceptMapNodes, conceptMapLinks);
-                // });
-                this.refreshLinkLabels(conceptMapNodes, conceptMapLinks);
+                nodesByLabel.push(node);
+              }
             }
+          }
+        }
+      }
+
+      return nodesByLabel;
+    }
+
+    /**
+     * Get links with the given source node label, link label, and destination
+     * node label
+     * @param conceptMapData the concept map student data
+     * @param nodeLabel the source node label
+     * @param linkLabel the link label
+     * @param otherNodeLabel the destination node label
+     * @returns the links with the given source node label, link label, and
+     * destination node label
+     */
+
+  }, {
+    key: 'getLinksByLabels',
+    value: function getLinksByLabels(conceptMapData, nodeLabel, linkLabel, otherNodeLabel) {
+
+      var resultLinks = [];
+
+      if (conceptMapData != null) {
+
+        var links = conceptMapData.links;
+
+        if (links != null) {
+
+          // loop through all the links
+          for (var l = 0; l < links.length; l++) {
+            var tempLink = links[l];
+
+            if (tempLink != null) {
+
+              // get the labels
+              var tempLinkLabel = tempLink.label;
+              var sourceNodeLabel = tempLink.sourceNodeLabel;
+              var destinationNodeLabel = tempLink.destinationNodeLabel;
+
+              if ((nodeLabel == sourceNodeLabel || nodeLabel == 'any') && (linkLabel == tempLinkLabel || linkLabel == 'any') && (otherNodeLabel == destinationNodeLabel || otherNodeLabel == 'any')) {
+
+                // the labels match the ones we are looking for
+                resultLinks.push(tempLink);
+              }
+            }
+          }
+        }
+      }
+
+      return resultLinks;
+    }
+
+    /**
+     * Check if any of the rules are satisfied
+     * @param componentContent the concept map component content
+     * @param conceptMapData the concept map student data
+     * @param args an array of rule names
+     * @returns true if any of the rules are satisifed
+     * false if none of the rules are satisified
+     */
+
+  }, {
+    key: 'any',
+    value: function any(componentContent, conceptMapData, args) {
+
+      // loop through all the rule names
+      for (var n = 0; n < args.length; n++) {
+
+        // get a rule name
+        var ruleName = args[n];
+
+        // check if the rule is satisifed
+        var ruleResult = this.evaluateRuleByRuleName(componentContent, conceptMapData, ruleName);
+
+        if (ruleResult) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    /**
+     * Check if all the rules are satisfied
+     * @param componentContent the concept map component content
+     * @param conceptMapData the concept map student data
+     * @param args an array of rule names
+     * @returns true if all the rules are satisifed
+     * false if any of the rules are not satisfied
+     */
+
+  }, {
+    key: 'all',
+    value: function all(componentContent, conceptMapData, args) {
+      var result = true;
+
+      // loop through all the rule names
+      for (var n = 0; n < args.length; n++) {
+
+        // get a rule name
+        var ruleName = args[n];
+
+        // check if the rule is satisfied
+        var ruleResult = this.evaluateRuleByRuleName(componentContent, conceptMapData, ruleName);
+
+        result = result && ruleResult;
+      }
+      return result;
+    }
+
+    /**
+     * Whether this component generates student work
+     * @param component (optional) the component object. if the component object
+     * is not provided, we will use the default value of whether the
+     * component type usually has work.
+     * @return whether this component generates student work
+     */
+
+  }, {
+    key: 'componentHasWork',
+    value: function componentHasWork(component) {
+      return true;
+    }
+
+    /**
+     * Whether this component uses a save button
+     * @return whether this component uses a save button
+     */
+
+  }, {
+    key: 'componentUsesSaveButton',
+    value: function componentUsesSaveButton() {
+      return true;
+    }
+
+    /**
+     * Whether this component uses a submit button
+     * @return whether this component uses a submit button
+     */
+
+  }, {
+    key: 'componentUsesSubmitButton',
+    value: function componentUsesSubmitButton() {
+      return true;
+    }
+
+    /**
+     * Populate the concept map data into the component
+     * @param draw the SVG draw div
+     * @param conceptMapData the concept map data which contains an array
+     * of nodes and an array of links
+     */
+
+  }, {
+    key: 'populateConceptMapData',
+    value: function populateConceptMapData(draw, conceptMapData) {
+
+      if (conceptMapData != null) {
+
+        // get the JSON nodes
+        var nodes = conceptMapData.nodes;
+
+        // this is used to hold the SVG node objects
+        var conceptMapNodes = [];
+
+        if (nodes != null) {
+
+          // loop through all the nodes
+          for (var n = 0; n < nodes.length; n++) {
+            var node = nodes[n];
+
+            var instanceId = node.instanceId;
+            var originalId = node.originalId;
+            var filePath = node.fileName;
+            var label = node.label;
+            var x = node.x;
+            var y = node.y;
+            var width = node.width;
+            var height = node.height;
+
+            // create a ConceptMapNode
+            var conceptMapNode = this.newConceptMapNode(draw, instanceId, originalId, filePath, label, x, y, width, height);
+
+            conceptMapNodes.push(conceptMapNode);
+          }
         }
 
-        /**
-         * Move the link text group to the front
+        // get the JSON links
+        var links = conceptMapData.links;
+
+        // this is used to hold the SVG link objects
+        var conceptMapLinks = [];
+
+        if (links != null) {
+
+          // loop through all the links
+          for (var l = 0; l < links.length; l++) {
+            var link = links[l];
+
+            var instanceId = link.instanceId;
+            var originalId = link.originalId;
+            var sourceNodeId = link.sourceNodeInstanceId;
+            var destinationNodeId = link.destinationNodeInstanceId;
+            var label = link.label;
+            var color = link.color;
+            var curvature = link.curvature;
+            var startCurveUp = link.startCurveUp;
+            var endCurveUp = link.endCurveUp;
+            var sourceNode = null;
+            var destinationNode = null;
+
+            if (sourceNodeId != null) {
+              sourceNode = this.getNodeById(conceptMapNodes, sourceNodeId);
+            }
+
+            if (destinationNodeId != null) {
+              destinationNode = this.getNodeById(conceptMapNodes, destinationNodeId);
+            }
+
+            // create a ConceptMapLink
+            var conceptMapLink = this.newConceptMapLink(draw, instanceId, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, endCurveUp);
+
+            conceptMapLinks.push(conceptMapLink);
+          }
+        }
+
+        /*
+         * move the link text group to the front so that they are on top
+         * of links
          */
+        this.moveLinkTextToFront(conceptMapLinks);
 
-    }, {
-        key: 'moveLinkTextToFront',
-        value: function moveLinkTextToFront(links) {
+        // move the nodes to the front so that they are on top of links
+        this.moveNodesToFront(conceptMapNodes);
 
-            // loop through all the links
-            for (var l = 0; l < links.length; l++) {
-                var link = links[l];
-
-                if (link != null) {
-                    // move the link text group to the front
-                    link.moveTextGroupToFront();
-                }
-            }
-        }
-
-        /**
-         * Move the nodes to the front so that they show up above links
+        /*
+         * set a timeout to refresh the link labels so that the rectangles
+         * around the labels are properly resized
          */
+        // this.$timeout(() => {
+        //   this.refreshLinkLabels(conceptMapNodes, conceptMapLinks);
+        // });
+        this.refreshLinkLabels(conceptMapNodes, conceptMapLinks);
+      }
+    }
 
-    }, {
-        key: 'moveNodesToFront',
-        value: function moveNodesToFront(nodes) {
+    /**
+     * Move the link text group to the front
+     */
 
-            // loop through all the nodes
-            for (var n = 0; n < nodes.length; n++) {
-                var node = nodes[n];
+  }, {
+    key: 'moveLinkTextToFront',
+    value: function moveLinkTextToFront(links) {
 
-                if (node != null) {
+      // loop through all the links
+      for (var l = 0; l < links.length; l++) {
+        var link = links[l];
 
-                    // get a node group
-                    var group = node.getGroup();
+        if (link != null) {
+          // move the link text group to the front
+          link.moveTextGroupToFront();
+        }
+      }
+    }
 
-                    if (group != null) {
-                        // move the node group to the front
-                        group.front();
-                    }
-                }
+    /**
+     * Move the nodes to the front so that they show up above links
+     */
+
+  }, {
+    key: 'moveNodesToFront',
+    value: function moveNodesToFront(nodes) {
+
+      // loop through all the nodes
+      for (var n = 0; n < nodes.length; n++) {
+        var node = nodes[n];
+
+        if (node != null) {
+
+          // get a node group
+          var group = node.getGroup();
+
+          if (group != null) {
+            // move the node group to the front
+            group.front();
+          }
+        }
+      }
+    }
+
+    /**
+     * Refresh the link labels so that the rectangles around the text
+     * labels are resized to fit the text properly. This is required because
+     * the rectangles are not properly sized when the ConceptMapLinks are
+     * initialized. The rectangles need to be rendered first and then the
+     * labels need to be set in order for the rectangles to be resized properly.
+     * This is why this function is called in a $timeout.
+     */
+
+  }, {
+    key: 'refreshLinkLabels',
+    value: function refreshLinkLabels(nodes, links) {
+
+      if (nodes != null) {
+
+        // loop through all the nodes
+        for (var n = 0; n < nodes.length; n++) {
+          var node = nodes[n];
+
+          if (node != null) {
+            // get the label from the node
+            var label = node.getLabel();
+
+            /*
+             * set the label back into the node so that the rectangle
+             * around the text label is resized to the text
+             */
+            node.setLabel(label);
+          }
+        }
+      }
+
+      if (links != null) {
+
+        // loop throgh all the links
+        for (var l = 0; l < links.length; l++) {
+          var link = links[l];
+
+          if (link != null) {
+            // get the label from the link
+            var label = link.getLabel();
+
+            /*
+             * set the label back into the link so that the rectangle
+             * around the text label is resized to the text
+             */
+            link.setLabel(label);
+          }
+        }
+      }
+    }
+
+    /**
+     * Get a node by id.
+     * @param id the node id
+     * @returns the node with the given id or null
+     */
+
+  }, {
+    key: 'getNodeById',
+    value: function getNodeById(nodes, id) {
+      var node = null;
+
+      if (id != null) {
+
+        // loop through all the nodes
+        for (var n = 0; n < nodes.length; n++) {
+          var tempNode = nodes[n];
+          var tempNodeId = tempNode.getId();
+
+          if (id == tempNodeId) {
+            // we have found the node we want
+            node = tempNode;
+            break;
+          }
+        }
+      }
+
+      return node;
+    }
+
+    /**
+     * Create an image from the concept map data
+     * @param conceptMapData concept map data from a student
+     * @param width the width of the image we want to create
+     * @param height the height of the image we want to create
+     */
+
+  }, {
+    key: 'createImage',
+    value: function createImage(conceptMapData, width, height) {
+      var _this2 = this;
+
+      // create a promise that will return an image of the concept map
+      var deferred = this.$q.defer();
+
+      // create a div to draw the SVG in
+      var svgElement = document.createElement('div');
+
+      if (width == null || width == '') {
+        // we will default to a width of 800 pixels
+        width = 800;
+      }
+
+      if (height == null || height == '') {
+        // we will default to a height of 600 pixels
+        height = 600;
+      }
+
+      var draw = SVG(svgElement);
+      draw.width(width);
+      draw.height(height);
+
+      if (svgElement != null) {
+
+        // populate the concept map data into the svg draw element
+        this.populateConceptMapData(draw, conceptMapData);
+
+        // get the svg element as a string
+        var svgString = svgElement.innerHTML;
+
+        // find all the images in the svg and replace them with Base64 images
+        this.getHrefToBase64ImageReplacements(svgString, true).then(function (images) {
+
+          /*
+           * Loop through all the image objects. Each object contains
+           * an image href and a Base64 image.
+           */
+          for (var i = 0; i < images.length; i++) {
+
+            // get an image object
+            var imagePair = images[i];
+
+            // get the image href e.g. /wise/curriculum/25/assets/Sun.png
+            var imageHref = imagePair.imageHref;
+
+            // get the last index of '/'
+            var lastIndexOfSlash = imageHref.lastIndexOf('/');
+
+            if (lastIndexOfSlash != -1) {
+              // only get everything after the last '/'
+              imageHref = imageHref.substring(lastIndexOfSlash + 1);
             }
+
+            // get the Base64 image
+            var base64Image = imagePair.base64Image;
+
+            // create a regex to match the image href
+            var imageRegEx = new RegExp(imageHref, 'g');
+
+            /*
+             * replace all the instances of the image href with the
+             * Base64 image
+             */
+            svgString = svgString.replace(imageRegEx, base64Image);
+          }
+
+          // create a canvas to draw the image on
+          var myCanvas = document.createElement('canvas');
+          var ctx = myCanvas.getContext('2d');
+
+          // create an svg blob
+          var svg = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+          var domURL = self.URL || self.webkitURL || self;
+          var url = domURL.createObjectURL(svg);
+          var image = new Image();
+
+          /*
+           * set the UtilService in a local variable so we can access it
+           * in the onload callback function
+           */
+          var thisUtilService = _this2.UtilService;
+
+          // the function that is called after the image is fully loaded
+          image.onload = function (event) {
+
+            // get the image that was loaded
+            var image = event.target;
+
+            // set the dimensions of the canvas
+            myCanvas.width = image.width;
+            myCanvas.height = image.height;
+            ctx.drawImage(image, 0, 0);
+
+            // get the canvas as a Base64 string
+            var base64Image = myCanvas.toDataURL('image/png');
+
+            // get the image object
+            var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
+
+            // create a student asset image
+            _this2.StudentAssetService.uploadAsset(imageObject).then(function (unreferencedAsset) {
+
+              /*
+               * make a copy of the unreferenced asset so that we
+               * get a referenced asset
+               */
+              _this2.StudentAssetService.copyAssetForReference(unreferencedAsset).then(function (referencedAsset) {
+                if (referencedAsset != null) {
+                  /*
+                   * get the asset url
+                   * for example
+                   * /wise/studentuploads/11261/297478/referenced/picture_1494016652542.png
+                   */
+                  var referencedAssetUrl = referencedAsset.url;
+
+                  // remove the unreferenced asset
+                  _this2.StudentAssetService.deleteAsset(unreferencedAsset);
+
+                  // resolve the promise with the image url
+                  deferred.resolve(referencedAssetUrl);
+                }
+              });
+            });
+          };
+
+          // set the src of the image so that the image gets loaded
+          image.src = url;
+        });
+      }
+
+      return deferred.promise;
+    }
+
+    /**
+     * Get Base64 images from image hrefs
+     * @param svgString the svg string
+     * @param prependAssetsPath whether to prepend the assets directory path
+     * to the image references
+     * @return a promise that will return an array of objects. The objects will
+     * contain an image href and a Base64 image.
+     */
+
+  }, {
+    key: 'getHrefToBase64ImageReplacements',
+    value: function getHrefToBase64ImageReplacements(svgString, prependAssetsPath) {
+
+      // an array to hold all the promises
+      var promises = [];
+
+      // get all the image hrefs
+      var imageHrefs = this.getImagesInSVG(svgString);
+
+      // loop through all the images
+      for (var i = 0; i < imageHrefs.length; i++) {
+
+        // get an image href
+        var imageHref = imageHrefs[i];
+
+        if (prependAssetsPath) {
+          /*
+           * the image href is relative so we need to make it absolute
+           * so that the browser can retrieve it
+           */
+
+          // prepend the project asset directory path
+          imageHref = this.ConfigService.getProjectAssetsDirectoryPath(true) + '/' + imageHref;
         }
 
-        /**
-         * Refresh the link labels so that the rectangles around the text
-         * labels are resized to fit the text properly. This is required because
-         * the rectangles are not properly sized when the ConceptMapLinks are
-         * initialized. The rectangles need to be rendered first and then the
-         * labels need to be set in order for the rectangles to be resized properly.
-         * This is why this function is called in a $timeout.
-         */
-
-    }, {
-        key: 'refreshLinkLabels',
-        value: function refreshLinkLabels(nodes, links) {
-
-            if (nodes != null) {
-
-                // loop through all the nodes
-                for (var n = 0; n < nodes.length; n++) {
-                    var node = nodes[n];
-
-                    if (node != null) {
-                        // get the label from the node
-                        var label = node.getLabel();
-
-                        /*
-                         * set the label back into the node so that the rectangle
-                         * around the text label is resized to the text
-                         */
-                        node.setLabel(label);
-                    }
-                }
-            }
-
-            if (links != null) {
-
-                // loop throgh all the links
-                for (var l = 0; l < links.length; l++) {
-                    var link = links[l];
-
-                    if (link != null) {
-                        // get the label from the link
-                        var label = link.getLabel();
-
-                        /*
-                         * set the label back into the link so that the rectangle
-                         * around the text label is resized to the text
-                         */
-                        link.setLabel(label);
-                    }
-                }
-            }
-        }
-
-        /**
-         * Get a node by id.
-         * @param id the node id
-         * @returns the node with the given id or null
-         */
-
-    }, {
-        key: 'getNodeById',
-        value: function getNodeById(nodes, id) {
-            var node = null;
-
-            if (id != null) {
-
-                // loop through all the nodes
-                for (var n = 0; n < nodes.length; n++) {
-                    var tempNode = nodes[n];
-                    var tempNodeId = tempNode.getId();
-
-                    if (id == tempNodeId) {
-                        // we have found the node we want
-                        node = tempNode;
-                        break;
-                    }
-                }
-            }
-
-            return node;
-        }
-
-        /**
-         * Create an image from the concept map data
-         * @param conceptMapData concept map data from a student
-         * @param width the width of the image we want to create
-         * @param height the height of the image we want to create
-         */
-
-    }, {
-        key: 'createImage',
-        value: function createImage(conceptMapData, width, height) {
-            var _this2 = this;
-
-            // create a promise that will return an image of the concept map
-            var deferred = this.$q.defer();
-
-            // create a div to draw the SVG in
-            var svgElement = document.createElement("div");
-
-            if (width == null || width == '') {
-                // we will default to a width of 800 pixels
-                width = 800;
-            }
-
-            if (height == null || height == '') {
-                // we will default to a height of 600 pixels
-                height = 600;
-            }
-
-            var draw = SVG(svgElement);
-            draw.width(width);
-            draw.height(height);
-
-            if (svgElement != null) {
-
-                // populate the concept map data into the svg draw element
-                this.populateConceptMapData(draw, conceptMapData);
-
-                // get the svg element as a string
-                var svgString = svgElement.innerHTML;
-
-                // find all the images in the svg and replace them with Base64 images
-                this.getHrefToBase64ImageReplacements(svgString, true).then(function (images) {
-
-                    /*
-                     * Loop through all the image objects. Each object contains
-                     * an image href and a Base64 image.
-                     */
-                    for (var i = 0; i < images.length; i++) {
-
-                        // get an image object
-                        var imagePair = images[i];
-
-                        // get the image href e.g. /wise/curriculum/25/assets/Sun.png
-                        var imageHref = imagePair.imageHref;
-
-                        // get the last index of '/'
-                        var lastIndexOfSlash = imageHref.lastIndexOf('/');
-
-                        if (lastIndexOfSlash != -1) {
-                            // only get everything after the last '/'
-                            imageHref = imageHref.substring(lastIndexOfSlash + 1);
-                        }
-
-                        // get the Base64 image
-                        var base64Image = imagePair.base64Image;
-
-                        // create a regex to match the image href
-                        var imageRegEx = new RegExp(imageHref, 'g');
-
-                        /*
-                         * replace all the instances of the image href with the
-                         * Base64 image
-                         */
-                        svgString = svgString.replace(imageRegEx, base64Image);
-                    }
-
-                    // create a canvas to draw the image on
-                    var myCanvas = document.createElement("canvas");
-                    var ctx = myCanvas.getContext("2d");
-
-                    // create an svg blob
-                    var svg = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
-                    var domURL = self.URL || self.webkitURL || self;
-                    var url = domURL.createObjectURL(svg);
-                    var image = new Image();
-
-                    /*
-                     * set the UtilService in a local variable so we can access it
-                     * in the onload callback function
-                     */
-                    var thisUtilService = _this2.UtilService;
-
-                    // the function that is called after the image is fully loaded
-                    image.onload = function (event) {
-
-                        // get the image that was loaded
-                        var image = event.target;
-
-                        // set the dimensions of the canvas
-                        myCanvas.width = image.width;
-                        myCanvas.height = image.height;
-                        ctx.drawImage(image, 0, 0);
-
-                        // get the canvas as a Base64 string
-                        var base64Image = myCanvas.toDataURL('image/png');
-
-                        // get the image object
-                        var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
-
-                        // create a student asset image
-                        _this2.StudentAssetService.uploadAsset(imageObject).then(function (unreferencedAsset) {
-
-                            /*
-                             * make a copy of the unreferenced asset so that we
-                             * get a referenced asset
-                             */
-                            _this2.StudentAssetService.copyAssetForReference(unreferencedAsset).then(function (referencedAsset) {
-                                if (referencedAsset != null) {
-                                    /*
-                                     * get the asset url
-                                     * for example
-                                     * /wise/studentuploads/11261/297478/referenced/picture_1494016652542.png
-                                     */
-                                    var referencedAssetUrl = referencedAsset.url;
-
-                                    // remove the unreferenced asset
-                                    _this2.StudentAssetService.deleteAsset(unreferencedAsset);
-
-                                    // resolve the promise with the image url
-                                    deferred.resolve(referencedAssetUrl);
-                                }
-                            });
-                        });
-                    };
-
-                    // set the src of the image so that the image gets loaded
-                    image.src = url;
-                });
-            }
-
-            return deferred.promise;
-        }
-
-        /**
-         * Get Base64 images from image hrefs
-         * @param svgString the svg string
-         * @param prependAssetsPath whether to prepend the assets directory path
-         * to the image references
-         * @return a promise that will return an array of objects. The objects will
-         * contain an image href and a Base64 image.
-         */
-
-    }, {
-        key: 'getHrefToBase64ImageReplacements',
-        value: function getHrefToBase64ImageReplacements(svgString, prependAssetsPath) {
-
-            // an array to hold all the promises
-            var promises = [];
-
-            // get all the image hrefs
-            var imageHrefs = this.getImagesInSVG(svgString);
-
-            // loop through all the images
-            for (var i = 0; i < imageHrefs.length; i++) {
-
-                // get an image href
-                var imageHref = imageHrefs[i];
-
-                if (prependAssetsPath) {
-                    /*
-                     * the image href is relative so we need to make it absolute
-                     * so that the browser can retrieve it
-                     */
-
-                    // prepend the project asset directory path
-                    imageHref = this.ConfigService.getProjectAssetsDirectoryPath(true) + '/' + imageHref;
-                }
-
-                // get the Base64 of the image
-                var promise = this.getBase64Image(imageHref);
-
-                promises.push(promise);
-            }
-
-            return this.$q.all(promises);
-        }
-
-        /**
-         * Get all the image hrefs in the svg string
-         * @param svgString the svg string
-         * @return an array of image hrefs
-         */
-
-    }, {
-        key: 'getImagesInSVG',
-        value: function getImagesInSVG(svgString) {
-
-            // used to hold all the images we find
-            var images = [];
-
-            if (svgString != null) {
-
-                /*
-                 * the regex to match href values in image elements
-                 * e.g.
-                 * if the svg contained in image element like this
-                 * <image id="SvgjsImage1007" xlink:href="/wise/curriculum/25/assets/Sun.png" width="100" height="100"/>
-                 * it would match it and the matching group would contain
-                 * /wise/curriculum/25/assets/Sun.png
-                 */
-                var regex = /<image.*?xlink:href="(.*?)".*?\/?>/g;
-
-                // find the first match in the svg string
-                var result = regex.exec(svgString);
-
-                while (result != null) {
-
-                    /*
-                     * get the href image from the match
-                     * e.g.
-                     * /wise/curriculum/25/assets/Sun.png
-                     */
-                    var imageHref = result[1];
-
-                    // add the href to our array of hrefs
-                    images.push(imageHref);
-
-                    // try to find the next match
-                    result = regex.exec(svgString);
-                }
-            }
-
-            return images;
-        }
-
-        /**
-         * Get the Base64 image from an image href. An image href will look like
+        // get the Base64 of the image
+        var promise = this.getBase64Image(imageHref);
+
+        promises.push(promise);
+      }
+
+      return this.$q.all(promises);
+    }
+
+    /**
+     * Get all the image hrefs in the svg string
+     * @param svgString the svg string
+     * @return an array of image hrefs
+     */
+
+  }, {
+    key: 'getImagesInSVG',
+    value: function getImagesInSVG(svgString) {
+
+      // used to hold all the images we find
+      var images = [];
+
+      if (svgString != null) {
+
+        /*
+         * the regex to match href values in image elements
+         * e.g.
+         * if the svg contained in image element like this
+         * <image id="SvgjsImage1007" xlink:href="/wise/curriculum/25/assets/Sun.png" width="100" height="100"/>
+         * it would match it and the matching group would contain
          * /wise/curriculum/25/assets/Sun.png
-         * @param imageHref the image href
-         * @return a promise that will return an object containing the image href
-         * and the Base64 image
          */
+        var regex = /<image.*?xlink:href="(.*?)".*?\/?>/g;
 
-    }, {
-        key: 'getBase64Image',
-        value: function getBase64Image(imageHref) {
+        // find the first match in the svg string
+        var result = regex.exec(svgString);
 
-            var deferred = this.$q.defer();
+        while (result != null) {
 
-            // create the image object that we will load the image into
-            var image = new Image();
+          /*
+           * get the href image from the match
+           * e.g.
+           * /wise/curriculum/25/assets/Sun.png
+           */
+          var imageHref = result[1];
 
-            // create a new canvas to render the image in
-            var myCanvas = document.createElement("canvas");
-            var ctx = myCanvas.getContext("2d");
+          // add the href to our array of hrefs
+          images.push(imageHref);
 
-            // the function that is called after the image is fully loaded
-            image.onload = function (event) {
-
-                // get the image that was loaded
-                var image = event.target;
-
-                // set the canvas dimensions to match the image
-                myCanvas.width = image.width;
-                myCanvas.height = image.height;
-
-                // draw the image in the canvas
-                ctx.drawImage(image, 0, 0);
-
-                // get the Base64 string of the canvas
-                var base64Image = myCanvas.toDataURL('image/png');
-
-                // create an object that will contain the image href and Base64 image
-                var result = {};
-                result.imageHref = imageHref;
-                result.base64Image = base64Image;
-
-                // resolve the promise with the object
-                deferred.resolve(result);
-            };
-
-            // load the image
-            image.src = imageHref;
-
-            // return the promise
-            return deferred.promise;
+          // try to find the next match
+          result = regex.exec(svgString);
         }
+      }
 
-        /**
-         * Check if the component state has student work. Sometimes a component
-         * state may be created if the student visits a component but doesn't
-         * actually perform any work. This is where we will check if the student
-         * actually performed any work.
-         * @param componentState the component state object
-         * @param componentContent the component content
-         * @return whether the component state has any work
-         */
+      return images;
+    }
 
-    }, {
-        key: 'componentStateHasStudentWork',
-        value: function componentStateHasStudentWork(componentState, componentContent) {
+    /**
+     * Get the Base64 image from an image href. An image href will look like
+     * /wise/curriculum/25/assets/Sun.png
+     * @param imageHref the image href
+     * @return a promise that will return an object containing the image href
+     * and the Base64 image
+     */
 
-            if (componentState != null) {
+  }, {
+    key: 'getBase64Image',
+    value: function getBase64Image(imageHref) {
 
-                var studentData = componentState.studentData;
+      var deferred = this.$q.defer();
 
-                if (studentData != null) {
+      // create the image object that we will load the image into
+      var image = new Image();
 
-                    var nodes = [];
-                    var links = [];
-                    var conceptMapData = studentData.conceptMapData;
+      // create a new canvas to render the image in
+      var myCanvas = document.createElement('canvas');
+      var ctx = myCanvas.getContext('2d');
 
-                    if (conceptMapData != null) {
-                        if (conceptMapData.nodes != null) {
-                            nodes = conceptMapData.nodes;
-                        }
+      // the function that is called after the image is fully loaded
+      image.onload = function (event) {
 
-                        if (conceptMapData.links != null) {
-                            links = conceptMapData.links;
-                        }
-                    }
+        // get the image that was loaded
+        var image = event.target;
 
-                    if (componentContent == null) {
-                        // the component content was not provided
+        // set the canvas dimensions to match the image
+        myCanvas.width = image.width;
+        myCanvas.height = image.height;
 
-                        if (nodes.length > 0) {
-                            // the student has created a node
-                            return true;
-                        }
+        // draw the image in the canvas
+        ctx.drawImage(image, 0, 0);
 
-                        if (links.length > 0) {
-                            // the student has created a link
-                            return true;
-                        }
-                    } else {
-                        // the component content was provided
+        // get the Base64 string of the canvas
+        var base64Image = myCanvas.toDataURL('image/png');
 
-                        var starterConceptMap = componentContent.starterConceptMap;
+        // create an object that will contain the image href and Base64 image
+        var result = {};
+        result.imageHref = imageHref;
+        result.base64Image = base64Image;
 
-                        if (starterConceptMap == null || starterConceptMap === '') {
-                            // there is no starter concept map
+        // resolve the promise with the object
+        deferred.resolve(result);
+      };
 
-                            if (nodes.length > 0) {
-                                // the student has created a node
-                                return true;
-                            }
+      // load the image
+      image.src = imageHref;
 
-                            if (links.length > 0) {
-                                // the student has created a link
-                                return true;
-                            }
-                        } else {
-                            /*
-                             * there is a starter concept map so we will compare it
-                             * with the student concept map
-                             */
-                            if (this.isStudentConceptMapDifferentThanStarterConceptMap(conceptMapData, starterConceptMap)) {
-                                return true;
-                            }
-                        }
-                    }
-                }
+      // return the promise
+      return deferred.promise;
+    }
+
+    /**
+     * Check if the component state has student work. Sometimes a component
+     * state may be created if the student visits a component but doesn't
+     * actually perform any work. This is where we will check if the student
+     * actually performed any work.
+     * @param componentState the component state object
+     * @param componentContent the component content
+     * @return whether the component state has any work
+     */
+
+  }, {
+    key: 'componentStateHasStudentWork',
+    value: function componentStateHasStudentWork(componentState, componentContent) {
+
+      if (componentState != null) {
+
+        var studentData = componentState.studentData;
+
+        if (studentData != null) {
+
+          var nodes = [];
+          var links = [];
+          var conceptMapData = studentData.conceptMapData;
+
+          if (conceptMapData != null) {
+            if (conceptMapData.nodes != null) {
+              nodes = conceptMapData.nodes;
             }
 
-            return false;
-        }
+            if (conceptMapData.links != null) {
+              links = conceptMapData.links;
+            }
+          }
 
-        /**
-         * Check if the student concept map is different than the starter conept map
-         * @param studentConceptMap the student concept map
-         * @param starterConceptMap the authored starter concept map
-         * @return whether the student concept map is different than the starter
-         * concept map
-         */
+          if (componentContent == null) {
+            // the component content was not provided
 
-    }, {
-        key: 'isStudentConceptMapDifferentThanStarterConceptMap',
-        value: function isStudentConceptMapDifferentThanStarterConceptMap(studentConceptMap, starterConceptMap) {
-
-            if (studentConceptMap != null && starterConceptMap != null) {
-
-                var studentNodes = studentConceptMap.nodes;
-                var studentLinks = studentConceptMap.links;
-
-                var starterNodes = starterConceptMap.nodes;
-                var starterLinks = starterConceptMap.links;
-
-                if (studentNodes.length == starterNodes.length) {
-                    /*
-                     * the student has the same number of nodes as the starter so
-                     * we will need to check if the nodes area actually different
-                     */
-
-                    // loop through all the nodes
-                    for (var n = 0; n < studentNodes.length; n++) {
-                        var studentNode = studentNodes[n];
-                        var starterNode = starterNodes[n];
-
-                        if (studentNode != null && starterNode != null) {
-
-                            // check if any of the fields have different values
-                            if (studentNode.originalId != starterNode.originalId || studentNode.instanceId != starterNode.instanceId || studentNode.x != starterNode.x || studentNode.y != starterNode.y) {
-
-                                // the student node is different than the starter node
-                                return true;
-                            }
-                        }
-                    }
-                } else {
-                    // the student has a different number of nodes
-                    return true;
-                }
-
-                if (studentLinks.length == starterLinks.length) {
-                    /*
-                     * the student has the same number of links as the starter so
-                     * we will need to check if the links area actually different
-                     */
-
-                    // loop through all the links
-                    for (var l = 0; l < studentLinks.length; l++) {
-                        var studentLink = studentLinks[l];
-                        var starterLink = starterLinks[l];
-
-                        if (studentLink != null && starterLink != null) {
-
-                            // check if any of the fields have different values
-                            if (studentLink.label != starterLink.label || studentLink.originalId != starterLink.originalId || studentLink.instanceId != starterLink.instanceId || studentLink.sourceNodeOriginalId != starterLink.sourceNodeOriginalId || studentLink.sourceNodeInstanceId != starterLink.sourceNodeInstanceId || studentLink.destinationNodeOriginalId != starterLink.destinationNodeOriginalId || studentLink.destinationNodeInstanceId != starterLink.destinationNodeInstanceId) {
-
-                                // the student link is different than the starter link
-                                return true;
-                            }
-                        }
-                    }
-                } else {
-                    // the student has a different number of links
-                    return true;
-                }
+            if (nodes.length > 0) {
+              // the student has created a node
+              return true;
             }
 
-            return false;
-        }
-    }]);
+            if (links.length > 0) {
+              // the student has created a link
+              return true;
+            }
+          } else {
+            // the component content was provided
 
-    return ConceptMapService;
+            var starterConceptMap = componentContent.starterConceptMap;
+
+            if (starterConceptMap == null || starterConceptMap === '') {
+              // there is no starter concept map
+
+              if (nodes.length > 0) {
+                // the student has created a node
+                return true;
+              }
+
+              if (links.length > 0) {
+                // the student has created a link
+                return true;
+              }
+            } else {
+              /*
+               * there is a starter concept map so we will compare it
+               * with the student concept map
+               */
+              if (this.isStudentConceptMapDifferentThanStarterConceptMap(conceptMapData, starterConceptMap)) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+
+      return false;
+    }
+
+    /**
+     * Check if the student concept map is different than the starter conept map
+     * @param studentConceptMap the student concept map
+     * @param starterConceptMap the authored starter concept map
+     * @return whether the student concept map is different than the starter
+     * concept map
+     */
+
+  }, {
+    key: 'isStudentConceptMapDifferentThanStarterConceptMap',
+    value: function isStudentConceptMapDifferentThanStarterConceptMap(studentConceptMap, starterConceptMap) {
+
+      if (studentConceptMap != null && starterConceptMap != null) {
+
+        var studentNodes = studentConceptMap.nodes;
+        var studentLinks = studentConceptMap.links;
+
+        var starterNodes = starterConceptMap.nodes;
+        var starterLinks = starterConceptMap.links;
+
+        if (studentNodes.length == starterNodes.length) {
+          /*
+           * the student has the same number of nodes as the starter so
+           * we will need to check if the nodes area actually different
+           */
+
+          // loop through all the nodes
+          for (var n = 0; n < studentNodes.length; n++) {
+            var studentNode = studentNodes[n];
+            var starterNode = starterNodes[n];
+
+            if (studentNode != null && starterNode != null) {
+
+              // check if any of the fields have different values
+              if (studentNode.originalId != starterNode.originalId || studentNode.instanceId != starterNode.instanceId || studentNode.x != starterNode.x || studentNode.y != starterNode.y) {
+
+                // the student node is different than the starter node
+                return true;
+              }
+            }
+          }
+        } else {
+          // the student has a different number of nodes
+          return true;
+        }
+
+        if (studentLinks.length == starterLinks.length) {
+          /*
+           * the student has the same number of links as the starter so
+           * we will need to check if the links area actually different
+           */
+
+          // loop through all the links
+          for (var l = 0; l < studentLinks.length; l++) {
+            var studentLink = studentLinks[l];
+            var starterLink = starterLinks[l];
+
+            if (studentLink != null && starterLink != null) {
+
+              // check if any of the fields have different values
+              if (studentLink.label != starterLink.label || studentLink.originalId != starterLink.originalId || studentLink.instanceId != starterLink.instanceId || studentLink.sourceNodeOriginalId != starterLink.sourceNodeOriginalId || studentLink.sourceNodeInstanceId != starterLink.sourceNodeInstanceId || studentLink.destinationNodeOriginalId != starterLink.destinationNodeOriginalId || studentLink.destinationNodeInstanceId != starterLink.destinationNodeInstanceId) {
+
+                // the student link is different than the starter link
+                return true;
+              }
+            }
+          }
+        } else {
+          // the student has a different number of links
+          return true;
+        }
+      }
+
+      return false;
+    }
+  }]);
+
+  return ConceptMapService;
 }(_nodeService2.default);
 
 /**
@@ -1598,1269 +1598,1269 @@ var ConceptMapService = function (_NodeService) {
 
 var ConceptMapNode = function () {
 
-    /**
-     * The constructor for creating ConceptMapNodes
-     * @param ConceptMapService the ConceptMapService
-     * @param draw the svg.js draw object
-     * @param filePath the path of the image file that represents the node
-     * @param label the label of the node
-     * @param x the x position of the node
-     * @param y the y position of the node
-     * @param width the the width of the node
-     * @param height the height of the node
+  /**
+   * The constructor for creating ConceptMapNodes
+   * @param ConceptMapService the ConceptMapService
+   * @param draw the svg.js draw object
+   * @param filePath the path of the image file that represents the node
+   * @param label the label of the node
+   * @param x the x position of the node
+   * @param y the y position of the node
+   * @param width the the width of the node
+   * @param height the height of the node
+   */
+  function ConceptMapNode(ConceptMapService, draw, id, originalId, filePath, label, x, y, width, height) {
+    _classCallCheck(this, ConceptMapNode);
+
+    // remember the ConceptMapService
+    this.ConceptMapService = ConceptMapService;
+
+    // remember the svg.js draw object so we can draw onto it
+    this.draw = draw;
+
+    // set the id
+    this.id = id;
+
+    // set the original id
+    this.originalId = originalId;
+
+    // remember the file path e.g. "/wise/curriculum/108/assets/Space.png"
+    this.filePath = filePath;
+
+    if (this.filePath != null) {
+      // get the file name e.g. "Space.png"
+      this.fileName = this.filePath.substring(this.filePath.lastIndexOf('/') + 1);
+    }
+
+    // remember the label
+    this.label = label;
+
+    // create the svg image object
+    this.image = this.draw.image(this.filePath, width, height);
+
+    // remember the width
+    this.width = width;
+
+    // remember the height
+    this.height = height;
+
+    // create a group to contain all the elements of this node
+    this.group = this.draw.group();
+
+    // flag that specifies whether this node is highlighted by the student
+    this.highlighted = false;
+
+    // the color of the delete button
+    this.deleteButtonColor = 'gray';
+
+    // create the connector that students will use to create links
+    this.connector = this.createConnector();
+
+    // create the delete button
+    this.deleteButtonGroup = this.createDeleteButtonGroup();
+
+    // create the text group
+    this.textGroup = this.createTextGroup();
+
+    /*
+     * create the border that displays when the node is highighted or
+     * moused over
      */
-    function ConceptMapNode(ConceptMapService, draw, id, originalId, filePath, label, x, y, width, height) {
-        _classCallCheck(this, ConceptMapNode);
+    this.border = this.createBorder();
 
-        // remember the ConceptMapService
-        this.ConceptMapService = ConceptMapService;
+    // remember the x and y coordinates
+    this.x = x;
+    this.y = y;
 
-        // remember the svg.js draw object so we can draw onto it
-        this.draw = draw;
+    // initialize the outgoing and incoming links arrays
+    this.outgoingLinks = [];
+    this.incomingLinks = [];
 
-        // set the id
-        this.id = id;
+    // add all the elements to the group
+    this.group.add(this.border);
+    this.group.add(this.image);
+    this.group.add(this.connector);
+    this.group.add(this.deleteButtonGroup);
+    this.group.add(this.textGroup);
 
-        // set the original id
-        this.originalId = originalId;
+    // hide the border and delete button
+    this.border.hide();
+    this.deleteButtonGroup.hide();
 
-        // remember the file path e.g. "/wise/curriculum/108/assets/Space.png"
-        this.filePath = filePath;
+    // set the position of the group
+    this.group.x(x);
+    this.group.y(y);
+  }
 
-        if (this.filePath != null) {
-            // get the file name e.g. "Space.png"
-            this.fileName = this.filePath.substring(this.filePath.lastIndexOf('/') + 1);
-        }
+  /**
+   * Get the JSON object representation of the ConceptMapNode
+   * @returns a JSON object containing the data of the ConceptMapNode
+   */
 
-        // remember the label
-        this.label = label;
 
-        // create the svg image object
-        this.image = this.draw.image(this.filePath, width, height);
+  _createClass(ConceptMapNode, [{
+    key: 'toJSONObject',
+    value: function toJSONObject() {
+      var jsonObject = {};
 
-        // remember the width
-        this.width = width;
+      jsonObject.originalId = this.originalId;
+      jsonObject.instanceId = this.id;
+      jsonObject.fileName = this.fileName;
+      jsonObject.filePath = this.filePath;
+      jsonObject.label = this.label;
+      jsonObject.x = this.x;
+      jsonObject.y = this.y;
+      jsonObject.width = this.width;
+      jsonObject.height = this.height;
 
-        // remember the height
-        this.height = height;
+      jsonObject.outgoingLinks = [];
+      jsonObject.incomingLinks = [];
 
-        // create a group to contain all the elements of this node
-        this.group = this.draw.group();
+      // loop through all the outgoing links
+      for (var ol = 0; ol < this.outgoingLinks.length; ol++) {
+        var outgoingLink = this.outgoingLinks[ol];
 
-        // flag that specifies whether this node is highlighted by the student
-        this.highlighted = false;
-
-        // the color of the delete button
-        this.deleteButtonColor = 'gray';
-
-        // create the connector that students will use to create links
-        this.connector = this.createConnector();
-
-        // create the delete button
-        this.deleteButtonGroup = this.createDeleteButtonGroup();
-
-        // create the text group
-        this.textGroup = this.createTextGroup();
+        var instanceId = outgoingLink.getId();
+        var originalId = outgoingLink.getOriginalId();
+        var label = outgoingLink.getLabel();
 
         /*
-         * create the border that displays when the node is highighted or
-         * moused over
+         * create an object containing the instance id, original id
+         * and label of the link
          */
-        this.border = this.createBorder();
+        var tempLinkObject = {};
+        tempLinkObject.originalId = originalId;
+        tempLinkObject.instanceId = instanceId;
+        tempLinkObject.label = label;
 
-        // remember the x and y coordinates
-        this.x = x;
-        this.y = y;
+        jsonObject.outgoingLinks.push(tempLinkObject);
+      }
 
-        // initialize the outgoing and incoming links arrays
-        this.outgoingLinks = [];
-        this.incomingLinks = [];
+      // loop through all the incoming links
+      for (var il = 0; il < this.incomingLinks.length; il++) {
+        var incomingLink = this.incomingLinks[il];
 
-        // add all the elements to the group
-        this.group.add(this.border);
-        this.group.add(this.image);
-        this.group.add(this.connector);
-        this.group.add(this.deleteButtonGroup);
-        this.group.add(this.textGroup);
+        var instanceId = incomingLink.getId();
+        var originalId = incomingLink.getOriginalId();
+        var label = incomingLink.getLabel();
 
-        // hide the border and delete button
-        this.border.hide();
-        this.deleteButtonGroup.hide();
+        /*
+         * create an object containing the instance id, original id
+         * and label of the link
+         */
+        var tempLinkObject = {};
+        tempLinkObject.originalId = originalId;
+        tempLinkObject.instanceId = instanceId;
+        tempLinkObject.label = label;
 
-        // set the position of the group
-        this.group.x(x);
-        this.group.y(y);
+        jsonObject.incomingLinks.push(tempLinkObject);
+      }
+
+      return jsonObject;
     }
 
     /**
-     * Get the JSON object representation of the ConceptMapNode
-     * @returns a JSON object containing the data of the ConceptMapNode
+     * Create the border that displays when the node is highlighted or
+     * moused over.
+     * @returns the svg rectangle that represents the border
      */
 
+  }, {
+    key: 'createBorder',
+    value: function createBorder() {
 
-    _createClass(ConceptMapNode, [{
-        key: 'toJSONObject',
-        value: function toJSONObject() {
-            var jsonObject = {};
+      // create the rectangle
+      this.border = this.draw.rect(this.width, this.height);
+      this.border.fill('none');
+      this.border.stroke({ color: '#333333', opacity: 0.2, width: 2 });
 
-            jsonObject.originalId = this.originalId;
-            jsonObject.instanceId = this.id;
-            jsonObject.fileName = this.fileName;
-            jsonObject.filePath = this.filePath;
-            jsonObject.label = this.label;
-            jsonObject.x = this.x;
-            jsonObject.y = this.y;
-            jsonObject.width = this.width;
-            jsonObject.height = this.height;
+      return this.border;
+    }
 
-            jsonObject.outgoingLinks = [];
-            jsonObject.incomingLinks = [];
+    /**
+     * Create the connector that students will use to create links from this
+     * node.
+     * @returns the svg circle that represents the connector
+     */
 
-            // loop through all the outgoing links
-            for (var ol = 0; ol < this.outgoingLinks.length; ol++) {
-                var outgoingLink = this.outgoingLinks[ol];
+  }, {
+    key: 'createConnector',
+    value: function createConnector() {
 
-                var instanceId = outgoingLink.getId();
-                var originalId = outgoingLink.getOriginalId();
-                var label = outgoingLink.getLabel();
+      // create the circle
+      var connectorRadius = 10;
+      this.connector = this.draw.circle();
+      this.connector.radius(connectorRadius);
+      this.connector.cx(this.width / 2);
+      this.connector.cy(0);
+      this.connector.fill({ color: '#cccccc', opacity: 0.4 });
+      this.connector.stroke({ color: '#333333', opacity: 0.2 });
 
-                /*
-                 * create an object containing the instance id, original id
-                 * and label of the link
-                 */
-                var tempLinkObject = {};
-                tempLinkObject.originalId = originalId;
-                tempLinkObject.instanceId = instanceId;
-                tempLinkObject.label = label;
+      return this.connector;
+    }
 
-                jsonObject.outgoingLinks.push(tempLinkObject);
-            }
+    /**
+     * Create the delete button. The delete button is a group that contains
+     * a circle and an x.
+     * @returns a group that contains a circle and an x
+     */
 
-            // loop through all the incoming links
-            for (var il = 0; il < this.incomingLinks.length; il++) {
-                var incomingLink = this.incomingLinks[il];
+  }, {
+    key: 'createDeleteButtonGroup',
+    value: function createDeleteButtonGroup() {
 
-                var instanceId = incomingLink.getId();
-                var originalId = incomingLink.getOriginalId();
-                var label = incomingLink.getLabel();
+      // create a group to contain the circle and x for the delete button
+      this.deleteButtonGroup = this.draw.group();
 
-                /*
-                 * create an object containing the instance id, original id
-                 * and label of the link
-                 */
-                var tempLinkObject = {};
-                tempLinkObject.originalId = originalId;
-                tempLinkObject.instanceId = instanceId;
-                tempLinkObject.label = label;
+      // create the delete button circle
+      var deleteButtonRadius = 10;
+      this.deleteButtonCircle = this.draw.circle();
+      this.deleteButtonCircle.radius(deleteButtonRadius);
+      this.deleteButtonCircle.cx(this.width);
+      this.deleteButtonCircle.cy(0);
+      this.deleteButtonCircle.fill({ opacity: 0.0 });
+      this.deleteButtonCircle.stroke({ color: '#333333', opacity: 0.2, width: 2 });
 
-                jsonObject.incomingLinks.push(tempLinkObject);
-            }
+      // create the x by first creating a + and then rotating it 45 degrees
 
-            return jsonObject;
+      // get the top location of the +
+      var topX = 0;
+      var topY = 0 - deleteButtonRadius * 0.7;
+
+      // get the bottom location of the +
+      var bottomX = 0;
+      var bottomY = 0 + deleteButtonRadius * 0.7;
+
+      // get the left position of the +
+      var leftX = 0 - deleteButtonRadius * 0.7;
+      var leftY = 0;
+
+      // get the right position of the +
+      var rightX = 0 + deleteButtonRadius * 0.7;
+      var rightY = 0;
+
+      // draw the +
+      var deleteButtonXPath = 'M' + topX + ',' + topY + 'L' + bottomX + ',' + bottomY + 'M' + leftX + ',' + leftY + 'L' + rightX + ',' + rightY;
+      this.deleteButtonX = this.draw.path(deleteButtonXPath);
+      this.deleteButtonX.stroke({ color: '#333333', opacity: 0.2, width: 2 });
+
+      // rotate the + to turn it into an x
+      this.deleteButtonX.transform({ rotation: 45 });
+
+      // move the x to the upper right of the group
+      this.deleteButtonX.translate(this.width, 0);
+
+      /*
+       * disable pointer events on the x so that clicks will pass through
+       * and hit the circle. this way we only need to set a listener on the
+       * circle for click events.
+       */
+      this.deleteButtonX.attr('pointer-events', 'none');
+
+      // add the circle and the x
+      this.deleteButtonGroup.add(this.deleteButtonCircle);
+      this.deleteButtonGroup.add(this.deleteButtonX);
+
+      return this.deleteButtonGroup;
+    }
+
+    /**
+     * Create the text group
+     * @returns the text group
+     */
+
+  }, {
+    key: 'createTextGroup',
+    value: function createTextGroup() {
+
+      // create the group
+      this.textGroup = this.draw.group();
+
+      // create a rectangle to surround the text
+      this.textRect = this.draw.rect(100, 15);
+      this.textRect.attr('fill', 'white');
+      this.textRect.attr('stroke', 'black');
+      this.textRect.attr('x', 0);
+      this.textRect.attr('y', 10);
+      this.textRect.attr('width', 100);
+      this.textRect.attr('height', 20);
+      this.textRect.radius(5);
+
+      // create the text element
+      this.text = this.draw.text(this.label);
+      this.text.attr('x', 5);
+      //this.text.attr('x', 0);
+      this.text.attr('y', 9);
+      this.text.font({
+        family: 'Arial',
+        size: 12
+      });
+
+      // prevent the text from being highlighted when the user drags the mouse
+      this.text.style('user-select:none');
+      this.text.node.setAttribute('user-select', 'none');
+      this.text.node.setAttribute('style', 'user-select:none');
+
+      // add the rectangle and text to the group
+      this.textGroup.add(this.textRect);
+      this.textGroup.add(this.text);
+
+      // add the text group to the link group
+      this.group.add(this.textGroup);
+
+      var width = 0;
+
+      try {
+        // get the width of the bounding box of the text node
+        var textBBox = this.text.node.getBBox();
+
+        if (textBBox.width == 0) {
+          width = this.calculateTextRectWidth(this.label);
+        } else {
+          width = textBBox.width + 10;
+        }
+      } catch (e) {
+        /*
+         * we were unable to get the bounding box (likely because
+         * Firefox threw an error when trying to call getBBox())
+         * so we will calculate the width based on the label text
+         */
+        width = this.calculateTextRectWidth(this.label);
+      }
+
+      this.textRect.attr('width', width);
+
+      // set the position of the text group
+      var x = this.getImageWidth() / 2;
+      var y = this.getImageHeight();
+      this.textGroup.cx(x);
+      this.textGroup.cy(y);
+
+      return this.textGroup;
+    }
+
+    /**
+     * Get the id of the node
+     * @returns the id of the node
+     */
+
+  }, {
+    key: 'getId',
+    value: function getId() {
+      return this.id;
+    }
+
+    /**
+     * Get the original id of the node
+     * @returns the original id of the node
+     */
+
+  }, {
+    key: 'getOriginalId',
+    value: function getOriginalId() {
+      return this.originalId;
+    }
+
+    /**
+     * Get the group id of the node
+     * @returns the group id of the node
+     */
+
+  }, {
+    key: 'getGroupId',
+    value: function getGroupId() {
+      var groupId = null;
+
+      if (this.group != null) {
+        // get the id of the group which we will use as the id of the node
+        groupId = this.group.id();
+      }
+
+      return groupId;
+    }
+
+    /**
+     * Get the label
+     * @returns the label of the node
+     */
+
+  }, {
+    key: 'getLabel',
+    value: function getLabel() {
+      return this.label;
+    }
+
+    /**
+     * Set the label of the node
+     * @param label the label of the node
+     */
+
+  }, {
+    key: 'setLabel',
+    value: function setLabel(label) {
+
+      // remember the label
+      this.label = label;
+
+      // set the label into the text element
+      this.text.text(label);
+
+      var width = 0;
+
+      try {
+        // get the width of the bounding box of the text node
+        var textBBox = this.text.node.getBBox();
+
+        if (textBBox.width == 0) {
+          width = this.calculateTextRectWidth(this.label);
+        } else {
+          width = textBBox.width + 10;
+        }
+      } catch (e) {
+        /*
+         * we were unable to get the bounding box (likely because
+         * Firefox threw an error when trying to call getBBox())
+         * so we will calculate the width based on the label text
+         */
+        width = this.calculateTextRectWidth(this.label);
+      }
+
+      this.textRect.attr('width', width);
+
+      // set the position of the text group
+      var x = this.getImageWidth() / 2;
+      var y = this.getImageHeight();
+      this.textGroup.cx(x);
+      this.textGroup.cy(y);
+    }
+
+    /**
+     * Get the center x coordinate of the group
+     */
+
+  }, {
+    key: 'cx',
+    value: function cx() {
+      var val = 0;
+
+      if (this.group != null && this.image != null) {
+
+        // get the group
+        var groupX = this.group.x();
+
+        /*
+         * get the center x coordinate of the image relative to the group.
+         * this will be equal to half the width of the image.
+         */
+        var imageCX = this.image.cx();
+
+        /*
+         * get the x coordinate of the center of the group relative to the
+         * svg parent
+         */
+        val = groupX + imageCX;
+      }
+
+      return val;
+    }
+
+    /**
+     * Get the center y coordinate of the group
+     */
+
+  }, {
+    key: 'cy',
+    value: function cy() {
+      var val = 0;
+
+      if (this.group != null && this.image != null) {
+
+        // get the group
+        var groupY = this.group.y();
+
+        /*
+         * get the center y coordinate of the image relative to the group.
+         * this will be equal to half the height of the image.
+         */
+        var imageCY = this.image.cy();
+
+        /*
+         * get the y coordinate of the center of the group relative to the
+         * svg parent
+         */
+        val = groupY + imageCY;
+      }
+
+      return val;
+    }
+
+    /**
+     * Get the center x coordinate of the group
+     */
+
+  }, {
+    key: 'connectorCX',
+    value: function connectorCX() {
+      var val = 0;
+
+      if (this.group != null && this.image != null) {
+
+        // get the group
+        var groupX = this.group.x();
+
+        /*
+         * get the center x coordinate of the image relative to the group.
+         * this will be equal to half the width of the image.
+         */
+        var imageCX = this.connector.cx();
+
+        /*
+         * get the x coordinate of the center of the group relative to the
+         * svg parent
+         */
+        val = groupX + imageCX;
+      }
+
+      return val;
+    }
+
+    /**
+     * Get the center y coordinate of the group
+     */
+
+  }, {
+    key: 'connectorCY',
+    value: function connectorCY() {
+      var val = 0;
+
+      if (this.group != null && this.image != null) {
+
+        // get the group
+        var groupY = this.group.y();
+
+        /*
+         * get the center y coordinate of the image relative to the group.
+         * this will be equal to half the height of the image.
+         */
+        var imageCY = this.connector.cy();
+
+        /*
+         * get the y coordinate of the center of the group relative to the
+         * svg parent
+         */
+        val = groupY + imageCY;
+      }
+
+      return val;
+    }
+
+    /**
+     * Getter/setter for whether the node is highlighted
+     * @parm value (optional) boolean value that sets the highlighted value
+     * @returns whether the node is highlighted
+     */
+
+  }, {
+    key: 'isHighlighted',
+    value: function isHighlighted(value) {
+
+      if (value != null) {
+        this.highlighted = value;
+      }
+
+      return this.highlighted;
+    }
+
+    /**
+     * Get the group
+     * @returns the group
+     */
+
+  }, {
+    key: 'getGroup',
+    value: function getGroup() {
+      return this.group;
+    }
+
+    /**
+     * Show the delete button group
+     */
+
+  }, {
+    key: 'showDeleteButton',
+    value: function showDeleteButton() {
+      this.deleteButtonGroup.show();
+    }
+
+    /**
+     * Hide the delete button group
+     */
+
+  }, {
+    key: 'hideDeleteButton',
+    value: function hideDeleteButton() {
+      this.deleteButtonGroup.hide();
+    }
+
+    /**
+     * Show the border of the node
+     */
+
+  }, {
+    key: 'showBorder',
+    value: function showBorder() {
+      this.border.show();
+    }
+
+    /**
+     * Hide the border of the node
+     */
+
+  }, {
+    key: 'hideBorder',
+    value: function hideBorder() {
+      this.border.hide();
+    }
+
+    /**
+     * Get the connector of the node
+     */
+
+  }, {
+    key: 'getConnector',
+    value: function getConnector() {
+      return this.connector;
+    }
+
+    /**
+     * Get the id of the connector
+     */
+
+  }, {
+    key: 'getConnectorId',
+    value: function getConnectorId() {
+      var id = null;
+
+      if (this.connector != null) {
+        id = this.connector.id();
+      }
+
+      return id;
+    }
+
+    /**
+     * Get the x position of the group within the svg
+     * @returns the x position of the group
+     */
+
+  }, {
+    key: 'getGroupX',
+    value: function getGroupX() {
+
+      var x = 0;
+
+      if (this.group != null) {
+        /*
+         * the image is located at 0, 0 within the group so we will obtain
+         * the x location of the group
+         */
+        x = this.group.x();
+      }
+
+      return x;
+    }
+
+    /**
+     * Get the y position of the group within the svg
+     * @returns the y position of the group
+     */
+
+  }, {
+    key: 'getGroupY',
+    value: function getGroupY() {
+      var y = 0;
+
+      if (this.group != null) {
+        /*
+         * the image is located at 0, 0 within the group so we will obtain
+         * the y location of the group
+         */
+        y = this.group.y();
+      }
+
+      return y;
+    }
+
+    /**
+     * Get the x position of the image within the svg
+     * @returns the x position of the image
+     */
+
+  }, {
+    key: 'getImageX',
+    value: function getImageX() {
+
+      // get the x position of the group
+      var groupX = this.getGroupX();
+
+      // get the x position of the image relative to the group
+      var imageRelativeX = this.image.x();
+
+      // add the values together to get the absolute x position of the image
+      var imageX = groupX + imageRelativeX;
+
+      // get the group
+      var group = this.getGroup();
+
+      // check if the group is shifted
+      if (group != null) {
+        // get the bounding box of the group
+        var bbox = group.bbox();
+
+        if (bbox != null) {
+          // get the x position of the bounding box on the group
+          var bboxX = bbox.x;
+
+          // compensate for the shift of the group
+          imageX = imageX - bboxX;
+        }
+      }
+
+      return imageX;
+    }
+
+    /**
+     * Get the y position of the image within the svg
+     * @returns the y position of the image
+     */
+
+  }, {
+    key: 'getImageY',
+    value: function getImageY() {
+
+      // get the y position of the group
+      var groupY = this.getGroupY();
+
+      // get the y position of the image relative to the group
+      var imageRelativeY = this.image.y();
+
+      // add the values together to get the absolute y position of the image
+      var imageY = groupY + imageRelativeY;
+
+      // get the group
+      var group = this.getGroup();
+
+      // check if the group is shifted
+      if (group != null) {
+        // get the bounding box of the group
+        var bbox = group.bbox();
+
+        // get the y position of the bounding box on the group
+        var bboxY = bbox.y;
+
+        // compensate for the shift of the group
+        imageY = imageY - bboxY;
+      }
+
+      return imageY;
+    }
+
+    /**
+     * Get the width of the image
+     * @returns the width of th eimage
+     */
+
+  }, {
+    key: 'getImageWidth',
+    value: function getImageWidth() {
+      var width = 0;
+
+      if (this.image != null) {
+        width = this.image.width();
+      }
+
+      return width;
+    }
+
+    /**
+     * Get the height of the image
+     * @returns the height of the image
+     */
+
+  }, {
+    key: 'getImageHeight',
+    value: function getImageHeight() {
+      var height = 0;
+
+      if (this.image != null) {
+        height = this.image.height();
+      }
+
+      return height;
+    }
+
+    /**
+     * Set the mouseover listener for the group
+     * @param nodeMouseOverFunction the function to call when the mouse is over
+     * the group
+     */
+
+  }, {
+    key: 'setNodeMouseOver',
+    value: function setNodeMouseOver(nodeMouseOverFunction) {
+
+      if (this.group != null) {
+        this.group.mouseover(nodeMouseOverFunction);
+      }
+    }
+
+    /**
+     * Set the mouseout listener for the group
+     * @param nodeMouseOutFunction the function to call when the mouse moves
+     * out of the group
+     */
+
+  }, {
+    key: 'setNodeMouseOut',
+    value: function setNodeMouseOut(nodeMouseOutFunction) {
+
+      if (this.group != null) {
+        this.group.mouseout(nodeMouseOutFunction);
+      }
+    }
+
+    /**
+     * Set the mousedown listener for the group
+     * @param nodeMouseDownFunction the function to call when the mouse is
+     * down on the group
+     */
+
+  }, {
+    key: 'setNodeMouseDown',
+    value: function setNodeMouseDown(nodeMouseDownFunction) {
+
+      if (this.group != null) {
+        this.group.mousedown(nodeMouseDownFunction);
+      }
+    }
+
+    /**
+     * Set the mouseup listener for the group
+     * @param nodeMouseUpFunction the function to call when the mouse is
+     * released over the group
+     */
+
+  }, {
+    key: 'setNodeMouseUp',
+    value: function setNodeMouseUp(nodeMouseUpFunction) {
+
+      if (this.group != null) {
+        this.group.mouseup(nodeMouseUpFunction);
+      }
+    }
+
+    /**
+     * Set the click listener for the image
+     * @param nodeMouseClickFunction the function to call when the image is
+     * clicked
+     */
+
+  }, {
+    key: 'setNodeMouseClick',
+    value: function setNodeMouseClick(nodeMouseClickFunction) {
+
+      if (this.group != null) {
+        this.image.click(nodeMouseClickFunction);
+      }
+    }
+
+    /**
+     * Set the mousedown listener for the connector
+     * @param connectorMouseDownFunction the function to call when the mouse
+     * is down on the connector
+     */
+
+  }, {
+    key: 'setConnectorMouseDown',
+    value: function setConnectorMouseDown(connectorMouseDownFunction) {
+
+      if (this.connector != null) {
+        this.connector.mousedown(connectorMouseDownFunction);
+      }
+    }
+
+    /**
+     * Set the mousedown listener for the delete button
+     * @param deleteButtonMouseDownFunction the function to call when the mouse
+     * is down on the delete button
+     */
+
+  }, {
+    key: 'setDeleteButtonMouseDown',
+    value: function setDeleteButtonMouseDown(deleteButtonMouseDownFunction) {
+
+      if (this.deleteButtonCircle != null) {
+        this.deleteButtonCircle.mousedown(deleteButtonMouseDownFunction);
+      }
+    }
+
+    /**
+     * Set the mouseover listener for the delete button
+     * @param deleteButtonMouseOverFunction the function to call when the mouse
+     * is over the delete button
+     */
+
+  }, {
+    key: 'setDeleteButtonMouseOver',
+    value: function setDeleteButtonMouseOver(deleteButtonMouseOverFunction) {
+
+      if (this.deleteButtonCircle != null) {
+        this.deleteButtonCircle.mouseover(deleteButtonMouseOverFunction);
+      }
+    }
+
+    /**
+     * Set the mouseout listener for the delete button
+     * @param deleteButtonMouseOutFunction the function to call when the mouse
+     * moves out of the delete button
+     */
+
+  }, {
+    key: 'setDeleteButtonMouseOut',
+    value: function setDeleteButtonMouseOut(deleteButtonMouseOutFunction) {
+
+      if (this.deleteButtonCircle != null) {
+        this.deleteButtonCircle.mouseout(deleteButtonMouseOutFunction);
+      }
+    }
+
+    /**
+     * Set the dragmove listener for the group
+     * @param dragMoveFunction the function to call when the group is dragged
+     */
+
+  }, {
+    key: 'setDragMove',
+    value: function setDragMove(dragMoveFunction) {
+
+      if (this.group != null) {
+
+        // set a listener for when the node is dragged
+        this.group.on('dragmove', dragMoveFunction);
+      }
+    }
+
+    /**
+     * Set the x position
+     * @param x the x position
+     */
+
+  }, {
+    key: 'setX',
+    value: function setX(x) {
+      this.x = x;
+      this.group.x(x);
+    }
+
+    /**
+     * Set the y position
+     * @param y the y position
+     */
+
+  }, {
+    key: 'setY',
+    value: function setY(y) {
+      this.y = y;
+      this.group.y(y);
+    }
+
+    /**
+     * Add an outgoing link to the node
+     * @param outgoingLink a ConceptMapLink object
+     */
+
+  }, {
+    key: 'addOutgoingLink',
+    value: function addOutgoingLink(outgoingLink) {
+      if (outgoingLink != null) {
+        this.outgoingLinks.push(outgoingLink);
+      }
+    }
+
+    /**
+     * Remove an outgoing link from the node
+     * @param outgoingLink a ConceptMapLink object
+     */
+
+  }, {
+    key: 'removeOutgoingLink',
+    value: function removeOutgoingLink(outgoingLink) {
+
+      if (outgoingLink != null) {
+
+        // loop through all the outgoing links in this node
+        for (var ol = 0; ol < this.outgoingLinks.length; ol++) {
+
+          // get an outgoing link
+          var tempOutgoingLink = this.outgoingLinks[ol];
+
+          if (outgoingLink == tempOutgoingLink) {
+            // we have found the outgoing link we want to remove
+            this.outgoingLinks.splice(ol, 1);
+            break;
+          }
+        }
+      }
+    }
+
+    /**
+     * Get the outgoing links
+     * @return the outgoing links
+     */
+
+  }, {
+    key: 'getOutgoingLinks',
+    value: function getOutgoingLinks() {
+      return this.outgoingLinks;
+    }
+
+    /**
+     * Add an incoming link to the node
+     * @param incomingLink a ConceptMapLink object
+     */
+
+  }, {
+    key: 'addIncomingLink',
+    value: function addIncomingLink(incomingLink) {
+      if (incomingLink != null) {
+        this.incomingLinks.push(incomingLink);
+      }
+    }
+
+    /**
+     * Remove an incoming link from the node
+     * @param incomingLink a ConceptMapLink object
+     */
+
+  }, {
+    key: 'removeIncomingLink',
+    value: function removeIncomingLink(incomingLink) {
+
+      if (incomingLink != null) {
+
+        // loop through the incoming links in the node
+        for (var il = 0; il < this.incomingLinks.length; il++) {
+
+          // get an incoming link
+          var tempIncomingLink = this.incomingLinks[il];
+
+          if (incomingLink == tempIncomingLink) {
+            // we have found the incoming link we want to remove
+            this.incomingLinks.splice(il, 1);
+            break;
+          }
+        }
+      }
+    }
+
+    /**
+     * Get the incoming links
+     * @return the incoming links
+     */
+
+  }, {
+    key: 'getIncomingLinks',
+    value: function getIncomingLinks() {
+      return this.incomingLinks;
+    }
+
+    /**
+     * The function that is called when the node is moved
+     * @param event
+     */
+
+  }, {
+    key: 'dragMove',
+    value: function dragMove(event) {
+
+      // get the group
+      var group = this.getGroup();
+
+      // get the x and y coordinates of the center of the image
+      var cx = this.cx();
+      var cy = this.cy();
+
+      // update the local x, y values of the node for bookkeeping
+      this.x = group.x();
+      this.y = group.y();
+
+      // get the outgoing links and incoming links
+      var outgoingLinks = this.outgoingLinks;
+      var incomingLinks = this.incomingLinks;
+
+      if (outgoingLinks != null) {
+
+        // loop through all the outgoing links
+        for (var ol = 0; ol < outgoingLinks.length; ol++) {
+
+          // get an outgoing link
+          var outgoingLink = outgoingLinks[ol];
+
+          // update the x, y coordinate of the tail of the link
+          var x1 = cx;
+          var y1 = cy;
+
+          // calculate the nearest point to the destination node
+          var nearestPoint = outgoingLink.getNearestPointToDestinationNode(x1, y1);
+          x2 = nearestPoint.x;
+          y2 = nearestPoint.y;
+
+          // update the coordinates of the link
+          outgoingLink.updateCoordinates(x1, y1, x2, y2);
         }
 
-        /**
-         * Create the border that displays when the node is highlighted or
-         * moused over.
-         * @returns the svg rectangle that represents the border
-         */
+        // loop through all the incoming links
+        for (var il = 0; il < incomingLinks.length; il++) {
 
-    }, {
-        key: 'createBorder',
-        value: function createBorder() {
+          // get an incoming link
+          var incomingLink = incomingLinks[il];
 
-            // create the rectangle
-            this.border = this.draw.rect(this.width, this.height);
-            this.border.fill('none');
-            this.border.stroke({ color: '#333333', opacity: 0.2, width: 2 });
+          // reuse the coordinates of the tail of the link
+          var x1 = incomingLink.x1();
+          var y1 = incomingLink.y1();
 
-            return this.border;
+          // calculate the nearest point to the source node
+          var nearestPoint = incomingLink.getNearestPointToDestinationNode(x1, y1);
+          var x2 = nearestPoint.x;
+          var y2 = nearestPoint.y;
+
+          // update the coordinates of the link
+          incomingLink.updateCoordinates(x1, y1, x2, y2);
         }
+      }
 
-        /**
-         * Create the connector that students will use to create links from this
-         * node.
-         * @returns the svg circle that represents the connector
-         */
+      if (this.controller != null) {
+        // handle the student data changing
+        this.controller.studentDataChanged();
+      }
 
-    }, {
-        key: 'createConnector',
-        value: function createConnector() {
+      // move the group to the front so that it shows up above other elements
+      group.front();
+    }
 
-            // create the circle
-            var connectorRadius = 10;
-            this.connector = this.draw.circle();
-            this.connector.radius(connectorRadius);
-            this.connector.cx(this.width / 2);
-            this.connector.cy(0);
-            this.connector.fill({ color: '#cccccc', opacity: 0.4 });
-            this.connector.stroke({ color: '#333333', opacity: 0.2 });
+    /**
+     * Remove the node from the svg
+     */
 
-            return this.connector;
+  }, {
+    key: 'remove',
+    value: function remove() {
+
+      // make the group not draggable
+      this.group.draggable(false);
+
+      // remove the group
+      this.group.remove();
+
+      // remove the image
+      this.image.remove();
+
+      // remove the connector
+      this.connector.remove();
+
+      // remove the delete button
+      this.deleteButtonCircle.remove();
+      this.deleteButtonX.remove();
+      this.deleteButtonGroup.remove();
+
+      // loop through all the outgoing links
+      for (var ol = 0; ol < this.outgoingLinks.length; ol++) {
+
+        // get an outgoing link
+        var outgoingLink = this.outgoingLinks[ol];
+
+        if (outgoingLink != null) {
+          // remove the outgoing link
+          outgoingLink.remove();
+
+          /*
+           * move the counter back one because calling outgoingLink.remove()
+           * has removed the outgoingLink from the outgoingLinks array
+           */
+          ol--;
         }
+      }
 
-        /**
-         * Create the delete button. The delete button is a group that contains
-         * a circle and an x.
-         * @returns a group that contains a circle and an x
-         */
+      // loop through all the incoming links
+      for (var il = 0; il < this.incomingLinks.length; il++) {
 
-    }, {
-        key: 'createDeleteButtonGroup',
-        value: function createDeleteButtonGroup() {
+        // get an incoming link
+        var incomingLink = this.incomingLinks[il];
 
-            // create a group to contain the circle and x for the delete button
-            this.deleteButtonGroup = this.draw.group();
+        if (incomingLink != null) {
+          // remove the incoming link
+          incomingLink.remove();
 
-            // create the delete button circle
-            var deleteButtonRadius = 10;
-            this.deleteButtonCircle = this.draw.circle();
-            this.deleteButtonCircle.radius(deleteButtonRadius);
-            this.deleteButtonCircle.cx(this.width);
-            this.deleteButtonCircle.cy(0);
-            this.deleteButtonCircle.fill({ opacity: 0.0 });
-            this.deleteButtonCircle.stroke({ color: '#333333', opacity: 0.2, width: 2 });
+          /*
+           * move the counter back one because calling incomingLink.remove()
+           * has removed the incomingLink from the incomingLinks array
+           */
+          il--;
+        }
+      }
+    }
 
-            // create the x by first creating a + and then rotating it 45 degrees
+    /**
+     * Get the links from this node to a given destination node
+     * @param destinationNode the destination node
+     */
 
-            // get the top location of the +
-            var topX = 0;
-            var topY = 0 - deleteButtonRadius * 0.7;
+  }, {
+    key: 'getLinksToDestination',
+    value: function getLinksToDestination(destinationNode) {
 
-            // get the bottom location of the +
-            var bottomX = 0;
-            var bottomY = 0 + deleteButtonRadius * 0.7;
+      var linksToDestination = [];
 
-            // get the left position of the +
-            var leftX = 0 - deleteButtonRadius * 0.7;
-            var leftY = 0;
+      // loop through all the outgoing links
+      for (var ol = 0; ol < this.outgoingLinks.length; ol++) {
 
-            // get the right position of the +
-            var rightX = 0 + deleteButtonRadius * 0.7;
-            var rightY = 0;
+        // get an outgoing link
+        var outgoingLink = this.outgoingLinks[ol];
 
-            // draw the +
-            var deleteButtonXPath = 'M' + topX + ',' + topY + 'L' + bottomX + ',' + bottomY + 'M' + leftX + ',' + leftY + 'L' + rightX + ',' + rightY;
-            this.deleteButtonX = this.draw.path(deleteButtonXPath);
-            this.deleteButtonX.stroke({ color: '#333333', opacity: 0.2, width: 2 });
-
-            // rotate the + to turn it into an x
-            this.deleteButtonX.transform({ rotation: 45 });
-
-            // move the x to the upper right of the group
-            this.deleteButtonX.translate(this.width, 0);
-
+        if (outgoingLink != null) {
+          if (destinationNode == outgoingLink.destinationNode) {
             /*
-             * disable pointer events on the x so that clicks will pass through
-             * and hit the circle. this way we only need to set a listener on the
-             * circle for click events.
+             * the destination of the link is the destination we are
+             * looking for
              */
-            this.deleteButtonX.attr('pointer-events', 'none');
-
-            // add the circle and the x
-            this.deleteButtonGroup.add(this.deleteButtonCircle);
-            this.deleteButtonGroup.add(this.deleteButtonX);
-
-            return this.deleteButtonGroup;
+            linksToDestination.push(outgoingLink);
+          }
         }
-
-        /**
-         * Create the text group
-         * @returns the text group
-         */
-
-    }, {
-        key: 'createTextGroup',
-        value: function createTextGroup() {
-
-            // create the group
-            this.textGroup = this.draw.group();
-
-            // create a rectangle to surround the text
-            this.textRect = this.draw.rect(100, 15);
-            this.textRect.attr('fill', 'white');
-            this.textRect.attr('stroke', 'black');
-            this.textRect.attr('x', 0);
-            this.textRect.attr('y', 10);
-            this.textRect.attr('width', 100);
-            this.textRect.attr('height', 20);
-            this.textRect.radius(5);
-
-            // create the text element
-            this.text = this.draw.text(this.label);
-            this.text.attr('x', 5);
-            //this.text.attr('x', 0);
-            this.text.attr('y', 9);
-            this.text.font({
-                family: 'Arial',
-                size: 12
-            });
-
-            // prevent the text from being highlighted when the user drags the mouse
-            this.text.style('user-select:none');
-            this.text.node.setAttribute('user-select', 'none');
-            this.text.node.setAttribute('style', 'user-select:none');
-
-            // add the rectangle and text to the group
-            this.textGroup.add(this.textRect);
-            this.textGroup.add(this.text);
-
-            // add the text group to the link group
-            this.group.add(this.textGroup);
-
-            var width = 0;
-
-            try {
-                // get the width of the bounding box of the text node
-                var textBBox = this.text.node.getBBox();
-
-                if (textBBox.width == 0) {
-                    width = this.calculateTextRectWidth(this.label);
-                } else {
-                    width = textBBox.width + 10;
-                }
-            } catch (e) {
-                /*
-                 * we were unable to get the bounding box (likely because
-                 * Firefox threw an error when trying to call getBBox())
-                 * so we will calculate the width based on the label text
-                 */
-                width = this.calculateTextRectWidth(this.label);
-            }
-
-            this.textRect.attr('width', width);
-
-            // set the position of the text group
-            var x = this.getImageWidth() / 2;
-            var y = this.getImageHeight();
-            this.textGroup.cx(x);
-            this.textGroup.cy(y);
-
-            return this.textGroup;
-        }
-
-        /**
-         * Get the id of the node
-         * @returns the id of the node
-         */
-
-    }, {
-        key: 'getId',
-        value: function getId() {
-            return this.id;
-        }
-
-        /**
-         * Get the original id of the node
-         * @returns the original id of the node
-         */
-
-    }, {
-        key: 'getOriginalId',
-        value: function getOriginalId() {
-            return this.originalId;
-        }
-
-        /**
-         * Get the group id of the node
-         * @returns the group id of the node
-         */
-
-    }, {
-        key: 'getGroupId',
-        value: function getGroupId() {
-            var groupId = null;
-
-            if (this.group != null) {
-                // get the id of the group which we will use as the id of the node
-                groupId = this.group.id();
-            }
-
-            return groupId;
-        }
-
-        /**
-         * Get the label
-         * @returns the label of the node
-         */
-
-    }, {
-        key: 'getLabel',
-        value: function getLabel() {
-            return this.label;
-        }
-
-        /**
-         * Set the label of the node
-         * @param label the label of the node
-         */
-
-    }, {
-        key: 'setLabel',
-        value: function setLabel(label) {
-
-            // remember the label
-            this.label = label;
-
-            // set the label into the text element
-            this.text.text(label);
-
-            var width = 0;
-
-            try {
-                // get the width of the bounding box of the text node
-                var textBBox = this.text.node.getBBox();
-
-                if (textBBox.width == 0) {
-                    width = this.calculateTextRectWidth(this.label);
-                } else {
-                    width = textBBox.width + 10;
-                }
-            } catch (e) {
-                /*
-                 * we were unable to get the bounding box (likely because
-                 * Firefox threw an error when trying to call getBBox())
-                 * so we will calculate the width based on the label text
-                 */
-                width = this.calculateTextRectWidth(this.label);
-            }
-
-            this.textRect.attr('width', width);
-
-            // set the position of the text group
-            var x = this.getImageWidth() / 2;
-            var y = this.getImageHeight();
-            this.textGroup.cx(x);
-            this.textGroup.cy(y);
-        }
-
-        /**
-         * Get the center x coordinate of the group
-         */
-
-    }, {
-        key: 'cx',
-        value: function cx() {
-            var val = 0;
-
-            if (this.group != null && this.image != null) {
-
-                // get the group
-                var groupX = this.group.x();
-
-                /*
-                 * get the center x coordinate of the image relative to the group.
-                 * this will be equal to half the width of the image.
-                 */
-                var imageCX = this.image.cx();
-
-                /*
-                 * get the x coordinate of the center of the group relative to the
-                 * svg parent
-                 */
-                val = groupX + imageCX;
-            }
-
-            return val;
-        }
-
-        /**
-         * Get the center y coordinate of the group
-         */
-
-    }, {
-        key: 'cy',
-        value: function cy() {
-            var val = 0;
-
-            if (this.group != null && this.image != null) {
-
-                // get the group
-                var groupY = this.group.y();
-
-                /*
-                 * get the center y coordinate of the image relative to the group.
-                 * this will be equal to half the height of the image.
-                 */
-                var imageCY = this.image.cy();
-
-                /*
-                 * get the y coordinate of the center of the group relative to the
-                 * svg parent
-                 */
-                val = groupY + imageCY;
-            }
-
-            return val;
-        }
-
-        /**
-         * Get the center x coordinate of the group
-         */
-
-    }, {
-        key: 'connectorCX',
-        value: function connectorCX() {
-            var val = 0;
-
-            if (this.group != null && this.image != null) {
-
-                // get the group
-                var groupX = this.group.x();
-
-                /*
-                 * get the center x coordinate of the image relative to the group.
-                 * this will be equal to half the width of the image.
-                 */
-                var imageCX = this.connector.cx();
-
-                /*
-                 * get the x coordinate of the center of the group relative to the
-                 * svg parent
-                 */
-                val = groupX + imageCX;
-            }
-
-            return val;
-        }
-
-        /**
-         * Get the center y coordinate of the group
-         */
-
-    }, {
-        key: 'connectorCY',
-        value: function connectorCY() {
-            var val = 0;
-
-            if (this.group != null && this.image != null) {
-
-                // get the group
-                var groupY = this.group.y();
-
-                /*
-                 * get the center y coordinate of the image relative to the group.
-                 * this will be equal to half the height of the image.
-                 */
-                var imageCY = this.connector.cy();
-
-                /*
-                 * get the y coordinate of the center of the group relative to the
-                 * svg parent
-                 */
-                val = groupY + imageCY;
-            }
-
-            return val;
-        }
-
-        /**
-         * Getter/setter for whether the node is highlighted
-         * @parm value (optional) boolean value that sets the highlighted value
-         * @returns whether the node is highlighted
-         */
-
-    }, {
-        key: 'isHighlighted',
-        value: function isHighlighted(value) {
-
-            if (value != null) {
-                this.highlighted = value;
-            }
-
-            return this.highlighted;
-        }
-
-        /**
-         * Get the group
-         * @returns the group
-         */
-
-    }, {
-        key: 'getGroup',
-        value: function getGroup() {
-            return this.group;
-        }
-
-        /**
-         * Show the delete button group
-         */
-
-    }, {
-        key: 'showDeleteButton',
-        value: function showDeleteButton() {
-            this.deleteButtonGroup.show();
-        }
-
-        /**
-         * Hide the delete button group
-         */
-
-    }, {
-        key: 'hideDeleteButton',
-        value: function hideDeleteButton() {
-            this.deleteButtonGroup.hide();
-        }
-
-        /**
-         * Show the border of the node
-         */
-
-    }, {
-        key: 'showBorder',
-        value: function showBorder() {
-            this.border.show();
-        }
-
-        /**
-         * Hide the border of the node
-         */
-
-    }, {
-        key: 'hideBorder',
-        value: function hideBorder() {
-            this.border.hide();
-        }
-
-        /**
-         * Get the connector of the node
-         */
-
-    }, {
-        key: 'getConnector',
-        value: function getConnector() {
-            return this.connector;
-        }
-
-        /**
-         * Get the id of the connector
-         */
-
-    }, {
-        key: 'getConnectorId',
-        value: function getConnectorId() {
-            var id = null;
-
-            if (this.connector != null) {
-                id = this.connector.id();
-            }
-
-            return id;
-        }
-
-        /**
-         * Get the x position of the group within the svg
-         * @returns the x position of the group
-         */
-
-    }, {
-        key: 'getGroupX',
-        value: function getGroupX() {
-
-            var x = 0;
-
-            if (this.group != null) {
-                /*
-                 * the image is located at 0, 0 within the group so we will obtain
-                 * the x location of the group
-                 */
-                x = this.group.x();
-            }
-
-            return x;
-        }
-
-        /**
-         * Get the y position of the group within the svg
-         * @returns the y position of the group
-         */
-
-    }, {
-        key: 'getGroupY',
-        value: function getGroupY() {
-            var y = 0;
-
-            if (this.group != null) {
-                /*
-                 * the image is located at 0, 0 within the group so we will obtain
-                 * the y location of the group
-                 */
-                y = this.group.y();
-            }
-
-            return y;
-        }
-
-        /**
-         * Get the x position of the image within the svg
-         * @returns the x position of the image
-         */
-
-    }, {
-        key: 'getImageX',
-        value: function getImageX() {
-
-            // get the x position of the group
-            var groupX = this.getGroupX();
-
-            // get the x position of the image relative to the group
-            var imageRelativeX = this.image.x();
-
-            // add the values together to get the absolute x position of the image
-            var imageX = groupX + imageRelativeX;
-
-            // get the group
-            var group = this.getGroup();
-
-            // check if the group is shifted
-            if (group != null) {
-                // get the bounding box of the group
-                var bbox = group.bbox();
-
-                if (bbox != null) {
-                    // get the x position of the bounding box on the group
-                    var bboxX = bbox.x;
-
-                    // compensate for the shift of the group
-                    imageX = imageX - bboxX;
-                }
-            }
-
-            return imageX;
-        }
-
-        /**
-         * Get the y position of the image within the svg
-         * @returns the y position of the image
-         */
-
-    }, {
-        key: 'getImageY',
-        value: function getImageY() {
-
-            // get the y position of the group
-            var groupY = this.getGroupY();
-
-            // get the y position of the image relative to the group
-            var imageRelativeY = this.image.y();
-
-            // add the values together to get the absolute y position of the image
-            var imageY = groupY + imageRelativeY;
-
-            // get the group
-            var group = this.getGroup();
-
-            // check if the group is shifted
-            if (group != null) {
-                // get the bounding box of the group
-                var bbox = group.bbox();
-
-                // get the y position of the bounding box on the group
-                var bboxY = bbox.y;
-
-                // compensate for the shift of the group
-                imageY = imageY - bboxY;
-            }
-
-            return imageY;
-        }
-
-        /**
-         * Get the width of the image
-         * @returns the width of th eimage
-         */
-
-    }, {
-        key: 'getImageWidth',
-        value: function getImageWidth() {
-            var width = 0;
-
-            if (this.image != null) {
-                width = this.image.width();
-            }
-
-            return width;
-        }
-
-        /**
-         * Get the height of the image
-         * @returns the height of the image
-         */
-
-    }, {
-        key: 'getImageHeight',
-        value: function getImageHeight() {
-            var height = 0;
-
-            if (this.image != null) {
-                height = this.image.height();
-            }
-
-            return height;
-        }
-
-        /**
-         * Set the mouseover listener for the group
-         * @param nodeMouseOverFunction the function to call when the mouse is over
-         * the group
-         */
-
-    }, {
-        key: 'setNodeMouseOver',
-        value: function setNodeMouseOver(nodeMouseOverFunction) {
-
-            if (this.group != null) {
-                this.group.mouseover(nodeMouseOverFunction);
-            }
-        }
-
-        /**
-         * Set the mouseout listener for the group
-         * @param nodeMouseOutFunction the function to call when the mouse moves
-         * out of the group
-         */
-
-    }, {
-        key: 'setNodeMouseOut',
-        value: function setNodeMouseOut(nodeMouseOutFunction) {
-
-            if (this.group != null) {
-                this.group.mouseout(nodeMouseOutFunction);
-            }
-        }
-
-        /**
-         * Set the mousedown listener for the group
-         * @param nodeMouseDownFunction the function to call when the mouse is
-         * down on the group
-         */
-
-    }, {
-        key: 'setNodeMouseDown',
-        value: function setNodeMouseDown(nodeMouseDownFunction) {
-
-            if (this.group != null) {
-                this.group.mousedown(nodeMouseDownFunction);
-            }
-        }
-
-        /**
-         * Set the mouseup listener for the group
-         * @param nodeMouseUpFunction the function to call when the mouse is
-         * released over the group
-         */
-
-    }, {
-        key: 'setNodeMouseUp',
-        value: function setNodeMouseUp(nodeMouseUpFunction) {
-
-            if (this.group != null) {
-                this.group.mouseup(nodeMouseUpFunction);
-            }
-        }
-
-        /**
-         * Set the click listener for the image
-         * @param nodeMouseClickFunction the function to call when the image is
-         * clicked
-         */
-
-    }, {
-        key: 'setNodeMouseClick',
-        value: function setNodeMouseClick(nodeMouseClickFunction) {
-
-            if (this.group != null) {
-                this.image.click(nodeMouseClickFunction);
-            }
-        }
-
-        /**
-         * Set the mousedown listener for the connector
-         * @param connectorMouseDownFunction the function to call when the mouse
-         * is down on the connector
-         */
-
-    }, {
-        key: 'setConnectorMouseDown',
-        value: function setConnectorMouseDown(connectorMouseDownFunction) {
-
-            if (this.connector != null) {
-                this.connector.mousedown(connectorMouseDownFunction);
-            }
-        }
-
-        /**
-         * Set the mousedown listener for the delete button
-         * @param deleteButtonMouseDownFunction the function to call when the mouse
-         * is down on the delete button
-         */
-
-    }, {
-        key: 'setDeleteButtonMouseDown',
-        value: function setDeleteButtonMouseDown(deleteButtonMouseDownFunction) {
-
-            if (this.deleteButtonCircle != null) {
-                this.deleteButtonCircle.mousedown(deleteButtonMouseDownFunction);
-            }
-        }
-
-        /**
-         * Set the mouseover listener for the delete button
-         * @param deleteButtonMouseOverFunction the function to call when the mouse
-         * is over the delete button
-         */
-
-    }, {
-        key: 'setDeleteButtonMouseOver',
-        value: function setDeleteButtonMouseOver(deleteButtonMouseOverFunction) {
-
-            if (this.deleteButtonCircle != null) {
-                this.deleteButtonCircle.mouseover(deleteButtonMouseOverFunction);
-            }
-        }
-
-        /**
-         * Set the mouseout listener for the delete button
-         * @param deleteButtonMouseOutFunction the function to call when the mouse
-         * moves out of the delete button
-         */
-
-    }, {
-        key: 'setDeleteButtonMouseOut',
-        value: function setDeleteButtonMouseOut(deleteButtonMouseOutFunction) {
-
-            if (this.deleteButtonCircle != null) {
-                this.deleteButtonCircle.mouseout(deleteButtonMouseOutFunction);
-            }
-        }
-
-        /**
-         * Set the dragmove listener for the group
-         * @param dragMoveFunction the function to call when the group is dragged
-         */
-
-    }, {
-        key: 'setDragMove',
-        value: function setDragMove(dragMoveFunction) {
-
-            if (this.group != null) {
-
-                // set a listener for when the node is dragged
-                this.group.on('dragmove', dragMoveFunction);
-            }
-        }
-
-        /**
-         * Set the x position
-         * @param x the x position
-         */
-
-    }, {
-        key: 'setX',
-        value: function setX(x) {
-            this.x = x;
-            this.group.x(x);
-        }
-
-        /**
-         * Set the y position
-         * @param y the y position
-         */
-
-    }, {
-        key: 'setY',
-        value: function setY(y) {
-            this.y = y;
-            this.group.y(y);
-        }
-
-        /**
-         * Add an outgoing link to the node
-         * @param outgoingLink a ConceptMapLink object
-         */
-
-    }, {
-        key: 'addOutgoingLink',
-        value: function addOutgoingLink(outgoingLink) {
-            if (outgoingLink != null) {
-                this.outgoingLinks.push(outgoingLink);
-            }
-        }
-
-        /**
-         * Remove an outgoing link from the node
-         * @param outgoingLink a ConceptMapLink object
-         */
-
-    }, {
-        key: 'removeOutgoingLink',
-        value: function removeOutgoingLink(outgoingLink) {
-
-            if (outgoingLink != null) {
-
-                // loop through all the outgoing links in this node
-                for (var ol = 0; ol < this.outgoingLinks.length; ol++) {
-
-                    // get an outgoing link
-                    var tempOutgoingLink = this.outgoingLinks[ol];
-
-                    if (outgoingLink == tempOutgoingLink) {
-                        // we have found the outgoing link we want to remove
-                        this.outgoingLinks.splice(ol, 1);
-                        break;
-                    }
-                }
-            }
-        }
-
-        /**
-         * Get the outgoing links
-         * @return the outgoing links
-         */
-
-    }, {
-        key: 'getOutgoingLinks',
-        value: function getOutgoingLinks() {
-            return this.outgoingLinks;
-        }
-
-        /**
-         * Add an incoming link to the node
-         * @param incomingLink a ConceptMapLink object
-         */
-
-    }, {
-        key: 'addIncomingLink',
-        value: function addIncomingLink(incomingLink) {
-            if (incomingLink != null) {
-                this.incomingLinks.push(incomingLink);
-            }
-        }
-
-        /**
-         * Remove an incoming link from the node
-         * @param incomingLink a ConceptMapLink object
-         */
-
-    }, {
-        key: 'removeIncomingLink',
-        value: function removeIncomingLink(incomingLink) {
-
-            if (incomingLink != null) {
-
-                // loop through the incoming links in the node
-                for (var il = 0; il < this.incomingLinks.length; il++) {
-
-                    // get an incoming link
-                    var tempIncomingLink = this.incomingLinks[il];
-
-                    if (incomingLink == tempIncomingLink) {
-                        // we have found the incoming link we want to remove
-                        this.incomingLinks.splice(il, 1);
-                        break;
-                    }
-                }
-            }
-        }
-
-        /**
-         * Get the incoming links
-         * @return the incoming links
-         */
-
-    }, {
-        key: 'getIncomingLinks',
-        value: function getIncomingLinks() {
-            return this.incomingLinks;
-        }
-
-        /**
-         * The function that is called when the node is moved
-         * @param event
-         */
-
-    }, {
-        key: 'dragMove',
-        value: function dragMove(event) {
-
-            // get the group
-            var group = this.getGroup();
-
-            // get the x and y coordinates of the center of the image
-            var cx = this.cx();
-            var cy = this.cy();
-
-            // update the local x, y values of the node for bookkeeping
-            this.x = group.x();
-            this.y = group.y();
-
-            // get the outgoing links and incoming links
-            var outgoingLinks = this.outgoingLinks;
-            var incomingLinks = this.incomingLinks;
-
-            if (outgoingLinks != null) {
-
-                // loop through all the outgoing links
-                for (var ol = 0; ol < outgoingLinks.length; ol++) {
-
-                    // get an outgoing link
-                    var outgoingLink = outgoingLinks[ol];
-
-                    // update the x, y coordinate of the tail of the link
-                    var x1 = cx;
-                    var y1 = cy;
-
-                    // calculate the nearest point to the destination node
-                    var nearestPoint = outgoingLink.getNearestPointToDestinationNode(x1, y1);
-                    x2 = nearestPoint.x;
-                    y2 = nearestPoint.y;
-
-                    // update the coordinates of the link
-                    outgoingLink.updateCoordinates(x1, y1, x2, y2);
-                }
-
-                // loop through all the incoming links
-                for (var il = 0; il < incomingLinks.length; il++) {
-
-                    // get an incoming link
-                    var incomingLink = incomingLinks[il];
-
-                    // reuse the coordinates of the tail of the link
-                    var x1 = incomingLink.x1();
-                    var y1 = incomingLink.y1();
-
-                    // calculate the nearest point to the source node
-                    var nearestPoint = incomingLink.getNearestPointToDestinationNode(x1, y1);
-                    var x2 = nearestPoint.x;
-                    var y2 = nearestPoint.y;
-
-                    // update the coordinates of the link
-                    incomingLink.updateCoordinates(x1, y1, x2, y2);
-                }
-            }
-
-            if (this.controller != null) {
-                // handle the student data changing
-                this.controller.studentDataChanged();
-            }
-
-            // move the group to the front so that it shows up above other elements
-            group.front();
-        }
-
-        /**
-         * Remove the node from the svg
-         */
-
-    }, {
-        key: 'remove',
-        value: function remove() {
-
-            // make the group not draggable
-            this.group.draggable(false);
-
-            // remove the group
-            this.group.remove();
-
-            // remove the image
-            this.image.remove();
-
-            // remove the connector
-            this.connector.remove();
-
-            // remove the delete button
-            this.deleteButtonCircle.remove();
-            this.deleteButtonX.remove();
-            this.deleteButtonGroup.remove();
-
-            // loop through all the outgoing links
-            for (var ol = 0; ol < this.outgoingLinks.length; ol++) {
-
-                // get an outgoing link
-                var outgoingLink = this.outgoingLinks[ol];
-
-                if (outgoingLink != null) {
-                    // remove the outgoing link
-                    outgoingLink.remove();
-
-                    /*
-                     * move the counter back one because calling outgoingLink.remove()
-                     * has removed the outgoingLink from the outgoingLinks array
-                     */
-                    ol--;
-                }
-            }
-
-            // loop through all the incoming links
-            for (var il = 0; il < this.incomingLinks.length; il++) {
-
-                // get an incoming link
-                var incomingLink = this.incomingLinks[il];
-
-                if (incomingLink != null) {
-                    // remove the incoming link
-                    incomingLink.remove();
-
-                    /*
-                     * move the counter back one because calling incomingLink.remove()
-                     * has removed the incomingLink from the incomingLinks array
-                     */
-                    il--;
-                }
-            }
-        }
-
-        /**
-         * Get the links from this node to a given destination node
-         * @param destinationNode the destination node
-         */
-
-    }, {
-        key: 'getLinksToDestination',
-        value: function getLinksToDestination(destinationNode) {
-
-            var linksToDestination = [];
-
-            // loop through all the outgoing links
-            for (var ol = 0; ol < this.outgoingLinks.length; ol++) {
-
-                // get an outgoing link
-                var outgoingLink = this.outgoingLinks[ol];
-
-                if (outgoingLink != null) {
-                    if (destinationNode == outgoingLink.destinationNode) {
-                        /*
-                         * the destination of the link is the destination we are
-                         * looking for
-                         */
-                        linksToDestination.push(outgoingLink);
-                    }
-                }
-            }
-
-            return linksToDestination;
-        }
-
-        /**
-         * Calculate the width that the text rectangle should be set to
-         * @param labelText the label text that will be displayed in the rectangle
-         * @return the width that the text rectangle should be set to
-         */
-
-    }, {
-        key: 'calculateTextRectWidth',
-        value: function calculateTextRectWidth(labelText) {
-            var width = 0;
-
-            if (labelText != null) {
-                width = labelText.length * 6 + 10;
-            }
-
-            return width;
-        }
-    }]);
-
-    return ConceptMapNode;
+      }
+
+      return linksToDestination;
+    }
+
+    /**
+     * Calculate the width that the text rectangle should be set to
+     * @param labelText the label text that will be displayed in the rectangle
+     * @return the width that the text rectangle should be set to
+     */
+
+  }, {
+    key: 'calculateTextRectWidth',
+    value: function calculateTextRectWidth(labelText) {
+      var width = 0;
+
+      if (labelText != null) {
+        width = labelText.length * 6 + 10;
+      }
+
+      return width;
+    }
+  }]);
+
+  return ConceptMapNode;
 }();
 
 /**
@@ -2870,1308 +2870,1308 @@ var ConceptMapNode = function () {
 
 var ConceptMapLink = function () {
 
-    /**
-     * The constructor to create a ConceptMapLink object
-     * @param ConceptMapService the ConceptMapService
-     * @param draw the svg.js draw object
-     * @param id the instance id of the link
-     * @param originalId the original authored id of the link
-     * @param sourceNode the source ConceptMapNode
-     * @param destinationNode the destination ConceptMapNode
-     * @param label the text label
-     * @param color the color of the link
-     * @param curvature the curvature of the link
-     * @param startCurveUp whether the start of the link curves up
-     * @param endCurveUp whether the end of the link curves up
+  /**
+   * The constructor to create a ConceptMapLink object
+   * @param ConceptMapService the ConceptMapService
+   * @param draw the svg.js draw object
+   * @param id the instance id of the link
+   * @param originalId the original authored id of the link
+   * @param sourceNode the source ConceptMapNode
+   * @param destinationNode the destination ConceptMapNode
+   * @param label the text label
+   * @param color the color of the link
+   * @param curvature the curvature of the link
+   * @param startCurveUp whether the start of the link curves up
+   * @param endCurveUp whether the end of the link curves up
+   */
+  function ConceptMapLink(ConceptMapService, draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, endCurveUp) {
+    _classCallCheck(this, ConceptMapLink);
+
+    // remember the ConceptMapService
+    this.ConceptMapService = ConceptMapService;
+
+    // remember the svg.js draw object
+    this.draw = draw;
+
+    // set the id
+    this.id = id;
+
+    // set the original id
+    this.originalId = originalId;
+
+    // the arrow head of the link
+    this.head = null;
+
+    // the line of the link
+    this.path = null;
+
+    // set the color of the link
+    this.color = color;
+
+    if (this.color == null) {
+      // if no color is specified, use a default color
+      this.color = 'blue';
+    }
+
+    // whether the link is highlighted
+    this.highlighted = false;
+
+    // create a group to contain the path and head
+    this.group = this.draw.group();
+
+    // where to place the text of the link along the line
+    this.textPercentageLocationOnLink = 0.6;
+
+    // remember the source node
+    this.sourceNode = sourceNode;
+
+    /*
+     * used to remember the destination node later after the destination
+     * node has been chosen
      */
-    function ConceptMapLink(ConceptMapService, draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, endCurveUp) {
-        _classCallCheck(this, ConceptMapLink);
+    this.destinationNode = destinationNode;
 
-        // remember the ConceptMapService
-        this.ConceptMapService = ConceptMapService;
+    // remember the curvature
+    this.curvature = curvature;
 
-        // remember the svg.js draw object
-        this.draw = draw;
+    if (this.curvature == null) {
+      this.curvature = 0.5;
+    }
 
-        // set the id
-        this.id = id;
+    // set whether the link curves up or down
+    this.startCurveUp = startCurveUp;
+    this.endCurveUp = endCurveUp;
 
-        // set the original id
-        this.originalId = originalId;
+    if (this.startCurveUp == null || this.endCurveUp == null) {
+      /*
+       * start and end curve up have not been specified so we will set
+       * it at random
+       */
 
-        // the arrow head of the link
-        this.head = null;
+      // choose a random integer 0 or 1
+      var randInt = Math.floor(Math.random() * 2);
 
-        // the line of the link
-        this.path = null;
+      if (randInt == 0) {
+        // set the link to curve down
+        this.startCurveUp = false;
+        this.endCurveUp = false;
+      } else {
+        // set the link to curve up
+        this.startCurveUp = true;
+        this.endCurveUp = true;
+      }
+    }
 
-        // set the color of the link
-        this.color = color;
+    // create a curved link
+    this.curvedLink = true;
 
-        if (this.color == null) {
-            // if no color is specified, use a default color
-            this.color = 'blue';
-        }
+    // initialize the coordinates of both ends of the link
+    var x1 = this.sourceNode.cx();
+    var y1 = this.sourceNode.cy();
+    var x2 = x1;
+    var y2 = y1;
 
-        // whether the link is highlighted
-        this.highlighted = false;
+    if (this.destinationNode != null) {
 
-        // create a group to contain the path and head
-        this.group = this.draw.group();
+      /*
+       * get the nearest point from the center of the source node to the
+       * destination node along the perimeter of the destination node
+       * image
+       */
+      var nearestPoint = this.getNearestPointToDestinationNode(x1, y1);
+      x2 = nearestPoint.x;
+      y2 = nearestPoint.y;
 
-        // where to place the text of the link along the line
-        this.textPercentageLocationOnLink = 0.6;
+      // connect the link to the nodes
+      this.connectLinkToNodes();
+    }
 
-        // remember the source node
-        this.sourceNode = sourceNode;
+    if (this.curvedLink) {
+      // create a curved link
 
-        /*
-         * used to remember the destination node later after the destination
-         * node has been chosen
-         */
-        this.destinationNode = destinationNode;
+      // calculate the curved line in svg
+      var arrowPathArraysObject = this.calculateCurvedLine(x1, y1, x2, y2);
 
-        // remember the curvature
-        this.curvature = curvature;
+      // get the line
+      var tail = arrowPathArraysObject[0];
 
-        if (this.curvature == null) {
-            this.curvature = 0.5;
-        }
+      // get the arrow head
+      var head = arrowPathArraysObject[1];
 
-        // set whether the link curves up or down
-        this.startCurveUp = startCurveUp;
-        this.endCurveUp = endCurveUp;
+      // draw the head and tail
+      this.head = this.draw.path(head.toString());
+      this.path = this.draw.path(tail.toString());
+    } else {
+      // create a straight line
+      this.path = this.draw.path('M' + x1 + ',' + y1 + ' L' + x2 + ',' + y2);
+    }
 
-        if (this.startCurveUp == null || this.endCurveUp == null) {
-            /*
-             * start and end curve up have not been specified so we will set
-             * it at random
-             */
+    // set the style of the link
+    this.path.attr('stroke', this.color);
+    this.path.attr('stroke-width', 3);
+    this.path.attr('fill', 'transparent');
+    this.head.attr('stroke', this.color);
+    this.head.attr('fill', this.color);
+    this.head.attr('pointer-events', 'none');
 
-            // choose a random integer 0 or 1
-            var randInt = Math.floor(Math.random() * 2);
+    /*
+     * remember the x and y coordinates of the source and destination
+     * so that we can look them up easily later
+     */
+    this.path.attr('x1', x1);
+    this.path.attr('y1', y1);
+    this.path.attr('x2', x2);
+    this.path.attr('y2', y2);
 
-            if (randInt == 0) {
-                // set the link to curve down
-                this.startCurveUp = false;
-                this.endCurveUp = false;
-            } else {
-                // set the link to curve up
-                this.startCurveUp = true;
-                this.endCurveUp = true;
-            }
-        }
+    // add the tail and head to the group
+    this.group.add(this.path);
+    this.group.add(this.head);
 
-        // create a curved link
-        this.curvedLink = true;
+    // create the text group for the link
+    this.createTextGroup();
 
-        // initialize the coordinates of both ends of the link
-        var x1 = this.sourceNode.cx();
-        var y1 = this.sourceNode.cy();
-        var x2 = x1;
-        var y2 = y1;
+    // text that describes the type of link chosen by the student
+    this.setLabel(label);
 
-        if (this.destinationNode != null) {
+    if (this.label == null || this.label == '') {
+      // there is no label so we will hide the text group
+      this.hideTextGroup();
+    } else {
+      // there is a label so we will show the text group
+      this.showTextGroup();
+    }
 
-            /*
-             * get the nearest point from the center of the source node to the
-             * destination node along the perimeter of the destination node
-             * image
-             */
-            var nearestPoint = this.getNearestPointToDestinationNode(x1, y1);
-            x2 = nearestPoint.x;
-            y2 = nearestPoint.y;
+    // create the delete button group
+    this.createDeleteButtonGroup();
+  }
 
-            // connect the link to the nodes
-            this.connectLinkToNodes();
-        }
+  /**
+   * Get the JSON object representation of the ConceptMapLink
+   * @returns a JSON object containing the data of the ConceptMapLink
+   */
 
-        if (this.curvedLink) {
-            // create a curved link
 
-            // calculate the curved line in svg
-            var arrowPathArraysObject = this.calculateCurvedLine(x1, y1, x2, y2);
+  _createClass(ConceptMapLink, [{
+    key: 'toJSONObject',
+    value: function toJSONObject() {
+      var jsonObject = {};
 
-            // get the line
-            var tail = arrowPathArraysObject[0];
+      jsonObject.originalId = this.originalId;
+      jsonObject.instanceId = this.id;
+      jsonObject.color = this.color;
+      jsonObject.label = this.label;
+      jsonObject.curvature = this.curvature;
+      jsonObject.startCurveUp = this.startCurveUp;
+      jsonObject.endCurveUp = this.endCurveUp;
+      jsonObject.sourceNodeOriginalId = this.sourceNode.getOriginalId();
+      jsonObject.sourceNodeInstanceId = this.sourceNode.getId();
+      jsonObject.sourceNodeLabel = this.sourceNode.getLabel();
+      jsonObject.destinationNodeOriginalId = this.destinationNode.getOriginalId();
+      jsonObject.destinationNodeInstanceId = this.destinationNode.getId();
+      jsonObject.destinationNodeLabel = this.destinationNode.getLabel();
 
-            // get the arrow head
-            var head = arrowPathArraysObject[1];
-
-            // draw the head and tail
-            this.head = this.draw.path(head.toString());
-            this.path = this.draw.path(tail.toString());
-        } else {
-            // create a straight line
-            this.path = this.draw.path('M' + x1 + ',' + y1 + ' L' + x2 + ',' + y2);
-        }
-
-        // set the style of the link
-        this.path.attr('stroke', this.color);
-        this.path.attr('stroke-width', 3);
-        this.path.attr('fill', 'transparent');
-        this.head.attr('stroke', this.color);
-        this.head.attr('fill', this.color);
-        this.head.attr('pointer-events', 'none');
-
-        /*
-         * remember the x and y coordinates of the source and destination
-         * so that we can look them up easily later
-         */
-        this.path.attr('x1', x1);
-        this.path.attr('y1', y1);
-        this.path.attr('x2', x2);
-        this.path.attr('y2', y2);
-
-        // add the tail and head to the group
-        this.group.add(this.path);
-        this.group.add(this.head);
-
-        // create the text group for the link
-        this.createTextGroup();
-
-        // text that describes the type of link chosen by the student
-        this.setLabel(label);
-
-        if (this.label == null || this.label == '') {
-            // there is no label so we will hide the text group
-            this.hideTextGroup();
-        } else {
-            // there is a label so we will show the text group
-            this.showTextGroup();
-        }
-
-        // create the delete button group
-        this.createDeleteButtonGroup();
+      return jsonObject;
     }
 
     /**
-     * Get the JSON object representation of the ConceptMapLink
-     * @returns a JSON object containing the data of the ConceptMapLink
+     * Get the id of the link
+     * @returns the id of the link
      */
 
+  }, {
+    key: 'getId',
+    value: function getId() {
+      return this.id;
+    }
 
-    _createClass(ConceptMapLink, [{
-        key: 'toJSONObject',
-        value: function toJSONObject() {
-            var jsonObject = {};
+    /**
+     * Get the original id of the node
+     * @returns the original id of the node
+     */
 
-            jsonObject.originalId = this.originalId;
-            jsonObject.instanceId = this.id;
-            jsonObject.color = this.color;
-            jsonObject.label = this.label;
-            jsonObject.curvature = this.curvature;
-            jsonObject.startCurveUp = this.startCurveUp;
-            jsonObject.endCurveUp = this.endCurveUp;
-            jsonObject.sourceNodeOriginalId = this.sourceNode.getOriginalId();
-            jsonObject.sourceNodeInstanceId = this.sourceNode.getId();
-            jsonObject.sourceNodeLabel = this.sourceNode.getLabel();
-            jsonObject.destinationNodeOriginalId = this.destinationNode.getOriginalId();
-            jsonObject.destinationNodeInstanceId = this.destinationNode.getId();
-            jsonObject.destinationNodeLabel = this.destinationNode.getLabel();
+  }, {
+    key: 'getOriginalId',
+    value: function getOriginalId() {
+      return this.originalId;
+    }
 
-            return jsonObject;
+    /**
+     * Get the id of the group
+     * @returns the id of the group
+     */
+
+  }, {
+    key: 'getGroupId',
+    value: function getGroupId() {
+      return this.group.id();
+    }
+
+    /**
+     * Get the x1 value
+     * @returns the x coordinate of the source of the link
+     */
+
+  }, {
+    key: 'x1',
+    value: function x1() {
+      return this.path.attr('x1');
+    }
+
+    /**
+     * Get the y1 value
+     * @returns the y coordinate of the source of the link
+     */
+
+  }, {
+    key: 'y1',
+    value: function y1() {
+      return this.path.attr('y1');
+    }
+
+    /**
+     * Get the x2 value
+     * @returns the x coordinate of the destination of the link
+     */
+
+  }, {
+    key: 'x2',
+    value: function x2() {
+      return this.path.attr('x2');
+    }
+
+    /**
+     * Get the y2 value
+     * @returns the y coordinate of the destination of the link
+     */
+
+  }, {
+    key: 'y2',
+    value: function y2() {
+      return this.path.attr('y2');
+    }
+
+    /**
+     * Set the original id
+     * @param originalId the original id
+     */
+
+  }, {
+    key: 'setOriginalId',
+    value: function setOriginalId(originalId) {
+      this.originalId = originalId;
+    }
+
+    /**
+     * Get the label
+     * @returns the label
+     */
+
+  }, {
+    key: 'getLabel',
+    value: function getLabel() {
+      return this.label;
+    }
+
+    /**
+     * Getter/setter for the highlighted value
+     * @param value (optional) the highlighted value
+     * @returns whether the link is highlighted
+     */
+
+  }, {
+    key: 'isHighlighted',
+    value: function isHighlighted(value) {
+
+      if (value != null) {
+        this.highlighted = value;
+      }
+
+      return this.highlighted;
+    }
+
+    /**
+     * Update the coordinates of the link
+     * @param x1 (optional) the x position of the source
+     * @param y1 (optional) the y position of the source
+     * @param x2 (optional) the x position of the destination
+     * @param y2 (optional) the y position of the destination
+     * @param isDragging whether the link is currently being dragged
+     */
+
+  }, {
+    key: 'updateCoordinates',
+    value: function updateCoordinates(x1, y1, x2, y2, isDragging) {
+      var array = this.path.array();
+
+      if (this.curvedLink) {
+        // draw a curved link
+
+        if (x1 == null) {
+          /*
+           * the x1 parameter was not provided so we will reuse the
+           * existing value
+           */
+          x1 = this.path.attr('x1');
         }
 
-        /**
-         * Get the id of the link
-         * @returns the id of the link
-         */
-
-    }, {
-        key: 'getId',
-        value: function getId() {
-            return this.id;
+        if (y1 == null) {
+          /*
+           * the y1 parameter was not provided so we will reuse the
+           * existing value
+           */
+          y1 = this.path.attr('y1');
         }
 
-        /**
-         * Get the original id of the node
-         * @returns the original id of the node
-         */
-
-    }, {
-        key: 'getOriginalId',
-        value: function getOriginalId() {
-            return this.originalId;
+        if (x2 == null) {
+          /*
+           * the x2 parameter was not provided so we will reuse the
+           * existing value
+           */
+          x2 = this.path.attr('x2');
         }
 
-        /**
-         * Get the id of the group
-         * @returns the id of the group
-         */
-
-    }, {
-        key: 'getGroupId',
-        value: function getGroupId() {
-            return this.group.id();
+        if (y2 == null) {
+          /*
+           * the y2 parameter was not provided so we will reuse the
+           * existing value
+           */
+          y2 = this.path.attr('y2');
         }
 
-        /**
-         * Get the x1 value
-         * @returns the x coordinate of the source of the link
-         */
+        // calculate the line
+        var arrowPathArraysObject = this.calculateCurvedLine(x1, y1, x2, y2, isDragging);
 
-    }, {
-        key: 'x1',
-        value: function x1() {
-            return this.path.attr('x1');
+        // get the svg tail
+        var tail = arrowPathArraysObject[0];
+
+        // get the svg head
+        var head = arrowPathArraysObject[1];
+
+        // re-plot the head and path
+        this.head.plot(head.toString());
+        this.path.plot(tail.toString());
+      } else {
+        // draw a straight line
+
+        if (x1 == null) {
+          /*
+           * the x1 parameter was not provided so we will reuse the
+           * existing value
+           */
+          x1 = this.path.attr('x1');
         }
 
-        /**
-         * Get the y1 value
-         * @returns the y coordinate of the source of the link
-         */
-
-    }, {
-        key: 'y1',
-        value: function y1() {
-            return this.path.attr('y1');
+        if (y1 == null) {
+          /*
+           * the y1 parameter was not provided so we will reuse the
+           * existing value
+           */
+          y1 = this.path.attr('y1');
         }
 
-        /**
-         * Get the x2 value
-         * @returns the x coordinate of the destination of the link
-         */
-
-    }, {
-        key: 'x2',
-        value: function x2() {
-            return this.path.attr('x2');
+        if (x2 == null) {
+          /*
+           * the x2 parameter was not provided so we will reuse the
+           * existing value
+           */
+          x2 = this.path.attr('x2');
         }
 
-        /**
-         * Get the y2 value
-         * @returns the y coordinate of the destination of the link
-         */
-
-    }, {
-        key: 'y2',
-        value: function y2() {
-            return this.path.attr('y2');
+        if (y2 == null) {
+          /*
+           * the y2 parameter was not provided so we will reuse the
+           * existing value
+           */
+          y2 = this.path.attr('y2');
         }
 
-        /**
-         * Set the original id
-         * @param originalId the original id
+        // re-plot the line
+        this.path.plot('M' + x1 + ',' + y1 + ' L' + x2 + ',' + y2);
+      }
+
+      // update the coordinate values
+      this.path.attr('x1', x1);
+      this.path.attr('y1', y1);
+      this.path.attr('x2', x2);
+      this.path.attr('y2', y2);
+
+      if (this.deleteButtonGroup != null) {
+        // update the location of the delete button
+        var deleteButtonLocation = this.getDeleteButtonLocation();
+        this.deleteButtonGroup.x(deleteButtonLocation.x);
+        this.deleteButtonGroup.y(deleteButtonLocation.y);
+      }
+
+      if (this.textGroup != null) {
+        // update the location of the text group
+
+        // get the length of the line
+        var totalLength = this.path.node.getTotalLength();
+
+        // get the coordinate of a point somewhere in the middel of the line
+        var midPoint = this.path.node.getPointAtLength(totalLength * this.textPercentageLocationOnLink);
+
+        this.textGroup.cx(midPoint.x);
+        this.textGroup.cy(midPoint.y);
+      }
+    }
+
+    /**
+     * Calculate the curved line
+     * @param x1 the x coordinate of the source
+     * @param y1 the y coordinate of the source
+     * @param x2 the x coordinate of the destination
+     * @param y2 the y coordinate of the destination
+     * @param isDragging whether the line is currently being dragged
+     * @returns an array that contains the svg objects for the arrow head and line
+     */
+
+  }, {
+    key: 'calculateCurvedLine',
+    value: function calculateCurvedLine(x1, y1, x2, y2, isDragging) {
+
+      var startx = x1;
+      var starty = y1;
+      var endx = x2;
+      var endy = y2;
+      var startCurveUp = true;
+      var endCurveUp = true;
+      var len = 15;
+      var angle = 45;
+      var curvature = 0.5;
+      var nodeRadius = 10;
+
+      // set the amount of curvature of the line
+      curvature = this.curvature;
+
+      // whether the link should curve up or down
+      startCurveUp = this.startCurveUp;
+      endCurveUp = this.endCurveUp;
+
+      // calculate the svg objects for the arrow head and line
+      var arrowPathArraysObject = this.ConceptMapService.arrowPathArrays(startx, starty, endx, endy, startCurveUp, endCurveUp, len, angle, curvature, nodeRadius);
+
+      return arrowPathArraysObject;
+    }
+
+    /**
+     * Set the destination node
+     * @param destinationNode the destination ConceptMapNode object
+     */
+
+  }, {
+    key: 'setDestination',
+    value: function setDestination(destinationNode) {
+
+      if (destinationNode != null) {
+
+        // get x and y of the tail
+        var x1 = this.path.attr('x1');
+        var y1 = this.path.attr('y1');
+
+        // remember the destination node
+        this.destinationNode = destinationNode;
+
+        /*
+         * check if there are any links with that have the same source,
+         * destination, and direction. if there is a link that has the
+         * same source, destination, and direction, we will try to use
+         * a different direction that hasn't already been used. if all
+         * directions have already been used, we will use the original
+         * direction the user specified. there are three link directions,
+         * up, straight, and down.
+         *    ___
+         * up  /   \
+         *  o  o
+         *
+         * straight o------o
+         *
+         *    o   o
+         * down \__/
          */
 
-    }, {
-        key: 'setOriginalId',
-        value: function setOriginalId(originalId) {
-            this.originalId = originalId;
+        var directionAlreadyUsed = false;
+        var direction = '';
+
+        if (this.curvature == 0) {
+          // the user has created the curve to be straight
+          direction = 'straight';
+        } else if (this.startCurveUp && this.endCurveUp) {
+          // the user has created the curve that starts by pointing up
+          direction = 'up';
+        } else if (!this.startCurveUp && !this.endCurveUp) {
+          // the user has created the curve that starts by pointing down
+          direction = 'down';
         }
 
-        /**
-         * Get the label
-         * @returns the label
-         */
+        // get all the links that have the same source and destination
+        var parallelLinks = this.sourceNode.getLinksToDestination(destinationNode);
 
-    }, {
-        key: 'getLabel',
-        value: function getLabel() {
-            return this.label;
-        }
+        var usedDirections = [];
 
-        /**
-         * Getter/setter for the highlighted value
-         * @param value (optional) the highlighted value
-         * @returns whether the link is highlighted
-         */
+        // loop through all the links that have the same source and destination
+        for (var p = 0; p < parallelLinks.length; p++) {
+          var parallelLink = parallelLinks[p];
 
-    }, {
-        key: 'isHighlighted',
-        value: function isHighlighted(value) {
+          if (parallelLink != null) {
 
-            if (value != null) {
-                this.highlighted = value;
+            var curvature = parallelLink.curvature;
+            var startCurveUp = parallelLink.startCurveUp;
+            var endCurveUp = parallelLink.endCurveUp;
+
+            var tempDirection = '';
+
+            if (curvature == 0) {
+              // the other link is straight
+              tempDirection = 'straight';
+            } else if (startCurveUp && endCurveUp) {
+              // the other link points up
+              tempDirection = 'up';
+            } else if (!startCurveUp && !endCurveUp) {
+              // the other link points down
+              tempDirection = 'down';
             }
 
-            return this.highlighted;
-        }
-
-        /**
-         * Update the coordinates of the link
-         * @param x1 (optional) the x position of the source
-         * @param y1 (optional) the y position of the source
-         * @param x2 (optional) the x position of the destination
-         * @param y2 (optional) the y position of the destination
-         * @param isDragging whether the link is currently being dragged
-         */
-
-    }, {
-        key: 'updateCoordinates',
-        value: function updateCoordinates(x1, y1, x2, y2, isDragging) {
-            var array = this.path.array();
-
-            if (this.curvedLink) {
-                // draw a curved link
-
-                if (x1 == null) {
-                    /*
-                     * the x1 parameter was not provided so we will reuse the
-                     * existing value
-                     */
-                    x1 = this.path.attr('x1');
-                }
-
-                if (y1 == null) {
-                    /*
-                     * the y1 parameter was not provided so we will reuse the
-                     * existing value
-                     */
-                    y1 = this.path.attr('y1');
-                }
-
-                if (x2 == null) {
-                    /*
-                     * the x2 parameter was not provided so we will reuse the
-                     * existing value
-                     */
-                    x2 = this.path.attr('x2');
-                }
-
-                if (y2 == null) {
-                    /*
-                     * the y2 parameter was not provided so we will reuse the
-                     * existing value
-                     */
-                    y2 = this.path.attr('y2');
-                }
-
-                // calculate the line
-                var arrowPathArraysObject = this.calculateCurvedLine(x1, y1, x2, y2, isDragging);
-
-                // get the svg tail
-                var tail = arrowPathArraysObject[0];
-
-                // get the svg head
-                var head = arrowPathArraysObject[1];
-
-                // re-plot the head and path
-                this.head.plot(head.toString());
-                this.path.plot(tail.toString());
-            } else {
-                // draw a straight line
-
-                if (x1 == null) {
-                    /*
-                     * the x1 parameter was not provided so we will reuse the
-                     * existing value
-                     */
-                    x1 = this.path.attr('x1');
-                }
-
-                if (y1 == null) {
-                    /*
-                     * the y1 parameter was not provided so we will reuse the
-                     * existing value
-                     */
-                    y1 = this.path.attr('y1');
-                }
-
-                if (x2 == null) {
-                    /*
-                     * the x2 parameter was not provided so we will reuse the
-                     * existing value
-                     */
-                    x2 = this.path.attr('x2');
-                }
-
-                if (y2 == null) {
-                    /*
-                     * the y2 parameter was not provided so we will reuse the
-                     * existing value
-                     */
-                    y2 = this.path.attr('y2');
-                }
-
-                // re-plot the line
-                this.path.plot('M' + x1 + ',' + y1 + ' L' + x2 + ',' + y2);
+            if (direction == tempDirection) {
+              /*
+               * the direction is the same as the direction the user
+               * has specified
+               */
+              directionAlreadyUsed = true;
             }
 
-            // update the coordinate values
-            this.path.attr('x1', x1);
-            this.path.attr('y1', y1);
-            this.path.attr('x2', x2);
-            this.path.attr('y2', y2);
-
-            if (this.deleteButtonGroup != null) {
-                // update the location of the delete button
-                var deleteButtonLocation = this.getDeleteButtonLocation();
-                this.deleteButtonGroup.x(deleteButtonLocation.x);
-                this.deleteButtonGroup.y(deleteButtonLocation.y);
-            }
-
-            if (this.textGroup != null) {
-                // update the location of the text group
-
-                // get the length of the line
-                var totalLength = this.path.node.getTotalLength();
-
-                // get the coordinate of a point somewhere in the middel of the line
-                var midPoint = this.path.node.getPointAtLength(totalLength * this.textPercentageLocationOnLink);
-
-                this.textGroup.cx(midPoint.x);
-                this.textGroup.cy(midPoint.y);
-            }
+            // keep track of the directions that were used
+            usedDirections.push(tempDirection);
+          }
         }
 
-        /**
-         * Calculate the curved line
-         * @param x1 the x coordinate of the source
-         * @param y1 the y coordinate of the source
-         * @param x2 the x coordinate of the destination
-         * @param y2 the y coordinate of the destination
-         * @param isDragging whether the line is currently being dragged
-         * @returns an array that contains the svg objects for the arrow head and line
-         */
+        if (directionAlreadyUsed) {
+          /*
+           * the direction the user specified is already used so we will
+           * try to find a direction that hasn't been used
+           */
 
-    }, {
-        key: 'calculateCurvedLine',
-        value: function calculateCurvedLine(x1, y1, x2, y2, isDragging) {
-
-            var startx = x1;
-            var starty = y1;
-            var endx = x2;
-            var endy = y2;
-            var startCurveUp = true;
-            var endCurveUp = true;
-            var len = 15;
-            var angle = 45;
-            var curvature = 0.5;
-            var nodeRadius = 10;
-
-            // set the amount of curvature of the line
-            curvature = this.curvature;
-
-            // whether the link should curve up or down
-            startCurveUp = this.startCurveUp;
-            endCurveUp = this.endCurveUp;
-
-            // calculate the svg objects for the arrow head and line
-            var arrowPathArraysObject = this.ConceptMapService.arrowPathArrays(startx, starty, endx, endy, startCurveUp, endCurveUp, len, angle, curvature, nodeRadius);
-
-            return arrowPathArraysObject;
-        }
-
-        /**
-         * Set the destination node
-         * @param destinationNode the destination ConceptMapNode object
-         */
-
-    }, {
-        key: 'setDestination',
-        value: function setDestination(destinationNode) {
-
-            if (destinationNode != null) {
-
-                // get x and y of the tail
-                var x1 = this.path.attr('x1');
-                var y1 = this.path.attr('y1');
-
-                // remember the destination node
-                this.destinationNode = destinationNode;
-
-                /*
-                 * check if there are any links with that have the same source,
-                 * destination, and direction. if there is a link that has the
-                 * same source, destination, and direction, we will try to use
-                 * a different direction that hasn't already been used. if all
-                 * directions have already been used, we will use the original
-                 * direction the user specified. there are three link directions,
-                 * up, straight, and down.
-                 *      ___
-                 * up  /   \
-                 *    o    o
-                 *
-                 * straight o------o
-                 *
-                 *      o   o
-                 * down \__/
-                 */
-
-                var directionAlreadyUsed = false;
-                var direction = '';
-
-                if (this.curvature == 0) {
-                    // the user has created the curve to be straight
-                    direction = 'straight';
-                } else if (this.startCurveUp && this.endCurveUp) {
-                    // the user has created the curve that starts by pointing up
-                    direction = 'up';
-                } else if (!this.startCurveUp && !this.endCurveUp) {
-                    // the user has created the curve that starts by pointing down
-                    direction = 'down';
-                }
-
-                // get all the links that have the same source and destination
-                var parallelLinks = this.sourceNode.getLinksToDestination(destinationNode);
-
-                var usedDirections = [];
-
-                // loop through all the links that have the same source and destination
-                for (var p = 0; p < parallelLinks.length; p++) {
-                    var parallelLink = parallelLinks[p];
-
-                    if (parallelLink != null) {
-
-                        var curvature = parallelLink.curvature;
-                        var startCurveUp = parallelLink.startCurveUp;
-                        var endCurveUp = parallelLink.endCurveUp;
-
-                        var tempDirection = '';
-
-                        if (curvature == 0) {
-                            // the other link is straight
-                            tempDirection = 'straight';
-                        } else if (startCurveUp && endCurveUp) {
-                            // the other link points up
-                            tempDirection = 'up';
-                        } else if (!startCurveUp && !endCurveUp) {
-                            // the other link points down
-                            tempDirection = 'down';
-                        }
-
-                        if (direction == tempDirection) {
-                            /*
-                             * the direction is the same as the direction the user
-                             * has specified
-                             */
-                            directionAlreadyUsed = true;
-                        }
-
-                        // keep track of the directions that were used
-                        usedDirections.push(tempDirection);
-                    }
-                }
-
-                if (directionAlreadyUsed) {
-                    /*
-                     * the direction the user specified is already used so we will
-                     * try to find a direction that hasn't been used
-                     */
-
-                    if (usedDirections.indexOf('up') == -1) {
-                        /*
-                         * we have not used the up direction yet so we will make
-                         * the link point up
-                         */
-                        this.curvature = 0.5;
-                        this.startCurveUp = true;
-                        this.endCurveUp = true;
-                    } else if (usedDirections.indexOf('straight') == -1) {
-                        /*
-                         * we have not used the straight direction yet so we will
-                         * make the link point straight
-                         */
-                        this.curvature = 0.0;
-                        this.startCurveUp = true;
-                        this.endCurveUp = true;
-                    } else if (usedDirections.indexOf('down') == -1) {
-                        /*
-                         * we have not used the down direction yet so we will make
-                         * the link point down
-                         */
-                        this.curvature = 0.5;
-                        this.startCurveUp = false;
-                        this.endCurveUp = false;
-                    }
-                }
-
-                /*
-                 * get the nearest point from the center of the source node to the
-                 * destination node along the perimeter of the destination node
-                 * image
-                 */
-                var nearestPoint = this.getNearestPointToDestinationNode(x1, y1);
-                var x2 = nearestPoint.x;
-                var y2 = nearestPoint.y;
-
-                // update the coordinates of the link
-                var isDragging = false;
-                this.updateCoordinates(x1, y1, x2, y2, isDragging);
-
-                // connect the link to the nodes
-                this.connectLinkToNodes();
-
-                // hide the delete button
-                this.hideDeleteButton();
-            }
-        }
-
-        /**
-         * Get the nearest point to the destination node from a given x, y point
-         * @param x the x value of the source point
-         * @param y the y value of the source point
-         * @returns an object containing an x and y field
-         */
-
-    }, {
-        key: 'getNearestPointToDestinationNode',
-        value: function getNearestPointToDestinationNode(x, y) {
-
-            // get the coordinates of the upper left corner of the image
-            var rectMinX = this.destinationNode.getImageX();
-            var rectMinY = this.destinationNode.getImageY();
-
+          if (usedDirections.indexOf('up') == -1) {
             /*
-             * add padding of 25 pixels to resolve the problem of the arrow head
-             * being placed behind the destination image
+             * we have not used the up direction yet so we will make
+             * the link point up
              */
-            rectMinY = rectMinY - 25;
-
-            // get the width and height of the image
-            var width = this.destinationNode.getImageWidth();
-            var height = this.destinationNode.getImageHeight();
-
-            // compensate for the 25 pixel padding that we added above
-            height = height + 25;
-
+            this.curvature = 0.5;
+            this.startCurveUp = true;
+            this.endCurveUp = true;
+          } else if (usedDirections.indexOf('straight') == -1) {
             /*
-            var destinationNodeGroup = this.destinationNode.getGroup();
-            var destinationNodeGroupBBox = destinationNodeGroup.bbox();
-             rectMinX = this.destinationNode.getGroupX();
-            rectMinY = this.destinationNode.getGroupY();
-             width = destinationNodeGroupBBox.width;
-            height = destinationNodeGroupBBox.height;
-            */
-
-            if (x == null && y == null) {
-                // get the coordinates of the source if x and y were not provided
-                x = this.path.attr('x1');
-                y = this.path.attr('y1');
-            }
-
-            /*
-             * find the nearest point from the source to anywhere along the
-             * rectangular perimeter of the destination image
+             * we have not used the straight direction yet so we will
+             * make the link point straight
              */
-            var point = this.getNearestPointInPerimeter(rectMinX, rectMinY, width, height, x, y);
-
-            return point;
-        }
-
-        /**
-         * Get the nearest point on a rectangle from a source point
-         * @param l the upper left x value of the rectangle
-         * @param t the upper left y value of the rectangle
-         * @param w the width of the rectangle
-         * @param h the height of the rectangle
-         * @param x the source point x value
-         * @param y the source point y value
-         * @returns the point on the rectangle that is closest to the
-         */
-
-    }, {
-        key: 'getNearestPointInPerimeter',
-        value: function getNearestPointInPerimeter(l, t, w, h, x, y) {
-            var r = l + w;
-            var b = t + h;
-
-            var x = this.clamp(x, l, r);
-            var y = this.clamp(y, t, b);
-
-            var dl = Math.abs(x - l);
-            var dr = Math.abs(x - r);
-            var dt = Math.abs(y - t);
-            var db = Math.abs(y - b);
-
-            var m = Math.min(dl, dr, dt, db);
-
-            var point = {};
-
-            if (m == dt) {
-                point.x = x;
-                point.y = t;
-            } else if (m == db) {
-                point.x = x;
-                point.y = b;
-            } else if (m == dl) {
-                point.x = l;
-                point.y = y;
-            } else {
-                point.x = r;
-                point.y = y;
-            }
-
-            return point;
-        }
-
-        /**
-         * Helper function for getNearestPointInPerimeter
-         */
-
-    }, {
-        key: 'clamp',
-        value: function clamp(x, lower, upper) {
-            return Math.max(lower, Math.min(upper, x));
-        }
-
-        /**
-         * Set the color of the link
-         * @param color the color
-         */
-
-    }, {
-        key: 'setColor',
-        value: function setColor(color) {
-
-            if (color != null) {
-                // set the color styling
-                this.color = color;
-                this.path.attr('stroke', this.color);
-                this.head.attr('stroke', this.color);
-                this.head.attr('fill', this.color);
-                this.deleteButton.attr('stroke', this.color);
-                this.deleteButtonX.attr('stroke', this.color);
-            }
-        }
-
-        /**
-         * Set the label
-         * @param label the text label
-         */
-
-    }, {
-        key: 'setLabel',
-        value: function setLabel(label) {
-
-            if (label != null) {
-
-                // remember the label
-                this.label = label;
-
-                // set the text into the text element
-                this.text.text(label);
-
-                // show the text group now that it has a label
-                this.showTextGroup();
-
-                // reset the width to adjust to the new text length
-                var width = 0;
-
-                try {
-                    // get the width of the bounding box of the text node
-                    var textBBox = this.text.node.getBBox();
-
-                    if (textBBox.width == 0) {
-                        width = this.calculateTextRectWidth(this.label);
-                    } else {
-                        width = textBBox.width + 10;
-                    }
-                } catch (e) {
-                    /*
-                     * we were unable to get the bounding box (likely because
-                     * Firefox threw an error when trying to call getBBox())
-                     * so we will calculate the width based on the label text
-                     */
-                    width = this.calculateTextRectWidth(this.label);
-                }
-
-                this.textRect.attr('width', width);
-
-                // recalculate the position of the svg text object
-                var totalLength = this.path.node.getTotalLength();
-                var midPoint = this.path.node.getPointAtLength(totalLength * this.textPercentageLocationOnLink);
-                this.textGroup.cx(midPoint.x);
-                this.textGroup.cy(midPoint.y);
-            }
-        }
-
-        /**
-         * Connect a link the its source and destination nodes
-         */
-
-    }, {
-        key: 'connectLinkToNodes',
-        value: function connectLinkToNodes() {
-
-            if (this.sourceNode != null && this.destinationNode != null) {
-
-                // add the link to the outgoing links of its source node
-                this.sourceNode.addOutgoingLink(this);
-
-                // add the link to the incoming links of its destination node
-                this.destinationNode.addIncomingLink(this);
-            }
-        }
-
-        /**
-         * Create the delete button for the link
-         */
-
-    }, {
-        key: 'createDeleteButtonGroup',
-        value: function createDeleteButtonGroup() {
-            var _this3 = this;
-
-            // create a group to contain the elements of the delete button
-            this.deleteButtonGroup = this.draw.group();
-
+            this.curvature = 0.0;
+            this.startCurveUp = true;
+            this.endCurveUp = true;
+          } else if (usedDirections.indexOf('down') == -1) {
             /*
-             * create an invisible circle that is placed behind the delete button
-             * and has a larger radius than the delete button. this is used for
-             * mouse over purposes so that we can keep the delete button visible
-             * when the mouse is around the area of the delete button
+             * we have not used the down direction yet so we will make
+             * the link point down
              */
-            var invisibleCircleRadius = 30;
-            this.invisibleCircle = this.draw.circle();
-            this.invisibleCircle.radius(invisibleCircleRadius);
-            this.invisibleCircle.fill({ opacity: 0.0 });
-
-            // create the delete button circle
-            var deleteButtonRadius = 10;
-            this.deleteButton = this.draw.circle();
-            this.deleteButton.radius(deleteButtonRadius);
-            this.deleteButton.fill({ opacity: 0.0 });
-            this.deleteButton.stroke({ color: this.color, opacity: 1.0, width: 2 });
-
-            /*
-             * create the x part of the delete button by creating a + and then
-             * rotating it 45 degrees
-             */
-
-            // get the coordinate of the center of the delete button
-            var deleteButtonMidpointX = this.deleteButton.cx();
-            var deleteButtonMidpointY = this.deleteButton.cy();
-
-            // get the coordinates of the top of the +
-            var topX = deleteButtonMidpointX;
-            var topY = deleteButtonMidpointY - deleteButtonRadius * 0.7;
-
-            // get the coordinates of the bottom of the +
-            var bottomX = deleteButtonMidpointX;
-            var bottomY = deleteButtonMidpointY + deleteButtonRadius * 0.7;
-
-            // get the coordinates of the left of the +
-            var leftX = deleteButtonMidpointX - deleteButtonRadius * 0.7;
-            var leftY = deleteButtonMidpointY;
-
-            // get the coordinates of the right of the +
-            var rightX = deleteButtonMidpointX + deleteButtonRadius * 0.7;
-            var rightY = deleteButtonMidpointY;
-
-            // create the path for the +
-            var deleteButtonXPath = 'M' + topX + ',' + topY + 'L' + bottomX + ',' + bottomY + 'M' + leftX + ',' + leftY + 'L' + rightX + ',' + rightY;
-
-            // draw the path
-            this.deleteButtonX = this.draw.path(deleteButtonXPath);
-            this.deleteButtonX.stroke({ color: this.color, opacity: 1.0, width: 2 });
-
-            /// rotate the + to create the x
-            this.deleteButtonX.rotate(45);
-
-            /*
-             * disable pointer events on the x so that we only need to set a
-             * mouse listener on the circle
-             */
-            this.deleteButtonX.attr('pointer-events', 'none');
-
-            // add the invisible circle, regular circle, and x to the group
-            this.deleteButtonGroup.add(this.invisibleCircle);
-            this.deleteButtonGroup.add(this.deleteButton);
-            this.deleteButtonGroup.add(this.deleteButtonX);
-
-            // set the location of the delete button group
-            var location = this.getDeleteButtonLocation();
-            var x = location.x;
-            var y = location.y;
-            this.deleteButtonGroup.x(x);
-            this.deleteButtonGroup.y(y);
-
-            // set the listener for when the mouse is over the group
-            this.deleteButtonGroup.mouseover(function (event) {
-                _this3.deleteButtonGroupMouseOver(event);
-            });
-
-            // set the listener for when the mouse moves out of the group
-            this.deleteButtonGroup.mouseout(function (event) {
-                _this3.deleteButtonGroupMouseOut(event);
-            });
-
-            // add the delete button group to the link group
-            this.group.add(this.deleteButtonGroup);
-
-            /*
-             * hide the delete button. we only need to show the delete button
-             * when the link is active.
-             */
-            this.deleteButtonGroup.hide();
+            this.curvature = 0.5;
+            this.startCurveUp = false;
+            this.endCurveUp = false;
+          }
         }
 
-        /**
-         * Called when the mouse is over the delete button group
-         * @param event the mouseover event
+        /*
+         * get the nearest point from the center of the source node to the
+         * destination node along the perimeter of the destination node
+         * image
          */
+        var nearestPoint = this.getNearestPointToDestinationNode(x1, y1);
+        var x2 = nearestPoint.x;
+        var y2 = nearestPoint.y;
 
-    }, {
-        key: 'deleteButtonGroupMouseOver',
-        value: function deleteButtonGroupMouseOver(event) {
-            // show the delete button
-            this.showDeleteButton();
+        // update the coordinates of the link
+        var isDragging = false;
+        this.updateCoordinates(x1, y1, x2, y2, isDragging);
+
+        // connect the link to the nodes
+        this.connectLinkToNodes();
+
+        // hide the delete button
+        this.hideDeleteButton();
+      }
+    }
+
+    /**
+     * Get the nearest point to the destination node from a given x, y point
+     * @param x the x value of the source point
+     * @param y the y value of the source point
+     * @returns an object containing an x and y field
+     */
+
+  }, {
+    key: 'getNearestPointToDestinationNode',
+    value: function getNearestPointToDestinationNode(x, y) {
+
+      // get the coordinates of the upper left corner of the image
+      var rectMinX = this.destinationNode.getImageX();
+      var rectMinY = this.destinationNode.getImageY();
+
+      /*
+       * add padding of 25 pixels to resolve the problem of the arrow head
+       * being placed behind the destination image
+       */
+      rectMinY = rectMinY - 25;
+
+      // get the width and height of the image
+      var width = this.destinationNode.getImageWidth();
+      var height = this.destinationNode.getImageHeight();
+
+      // compensate for the 25 pixel padding that we added above
+      height = height + 25;
+
+      /*
+      var destinationNodeGroup = this.destinationNode.getGroup();
+      var destinationNodeGroupBBox = destinationNodeGroup.bbox();
+       rectMinX = this.destinationNode.getGroupX();
+      rectMinY = this.destinationNode.getGroupY();
+       width = destinationNodeGroupBBox.width;
+      height = destinationNodeGroupBBox.height;
+      */
+
+      if (x == null && y == null) {
+        // get the coordinates of the source if x and y were not provided
+        x = this.path.attr('x1');
+        y = this.path.attr('y1');
+      }
+
+      /*
+       * find the nearest point from the source to anywhere along the
+       * rectangular perimeter of the destination image
+       */
+      var point = this.getNearestPointInPerimeter(rectMinX, rectMinY, width, height, x, y);
+
+      return point;
+    }
+
+    /**
+     * Get the nearest point on a rectangle from a source point
+     * @param l the upper left x value of the rectangle
+     * @param t the upper left y value of the rectangle
+     * @param w the width of the rectangle
+     * @param h the height of the rectangle
+     * @param x the source point x value
+     * @param y the source point y value
+     * @returns the point on the rectangle that is closest to the
+     */
+
+  }, {
+    key: 'getNearestPointInPerimeter',
+    value: function getNearestPointInPerimeter(l, t, w, h, x, y) {
+      var r = l + w;
+      var b = t + h;
+
+      var x = this.clamp(x, l, r);
+      var y = this.clamp(y, t, b);
+
+      var dl = Math.abs(x - l);
+      var dr = Math.abs(x - r);
+      var dt = Math.abs(y - t);
+      var db = Math.abs(y - b);
+
+      var m = Math.min(dl, dr, dt, db);
+
+      var point = {};
+
+      if (m == dt) {
+        point.x = x;
+        point.y = t;
+      } else if (m == db) {
+        point.x = x;
+        point.y = b;
+      } else if (m == dl) {
+        point.x = l;
+        point.y = y;
+      } else {
+        point.x = r;
+        point.y = y;
+      }
+
+      return point;
+    }
+
+    /**
+     * Helper function for getNearestPointInPerimeter
+     */
+
+  }, {
+    key: 'clamp',
+    value: function clamp(x, lower, upper) {
+      return Math.max(lower, Math.min(upper, x));
+    }
+
+    /**
+     * Set the color of the link
+     * @param color the color
+     */
+
+  }, {
+    key: 'setColor',
+    value: function setColor(color) {
+
+      if (color != null) {
+        // set the color styling
+        this.color = color;
+        this.path.attr('stroke', this.color);
+        this.head.attr('stroke', this.color);
+        this.head.attr('fill', this.color);
+        this.deleteButton.attr('stroke', this.color);
+        this.deleteButtonX.attr('stroke', this.color);
+      }
+    }
+
+    /**
+     * Set the label
+     * @param label the text label
+     */
+
+  }, {
+    key: 'setLabel',
+    value: function setLabel(label) {
+
+      if (label != null) {
+
+        // remember the label
+        this.label = label;
+
+        // set the text into the text element
+        this.text.text(label);
+
+        // show the text group now that it has a label
+        this.showTextGroup();
+
+        // reset the width to adjust to the new text length
+        var width = 0;
+
+        try {
+          // get the width of the bounding box of the text node
+          var textBBox = this.text.node.getBBox();
+
+          if (textBBox.width == 0) {
+            width = this.calculateTextRectWidth(this.label);
+          } else {
+            width = textBBox.width + 10;
+          }
+        } catch (e) {
+          /*
+           * we were unable to get the bounding box (likely because
+           * Firefox threw an error when trying to call getBBox())
+           * so we will calculate the width based on the label text
+           */
+          width = this.calculateTextRectWidth(this.label);
         }
 
-        /**
-         * Called when the mouse leaves the delete button group
-         * @param event the mouseout event
+        this.textRect.attr('width', width);
+
+        // recalculate the position of the svg text object
+        var totalLength = this.path.node.getTotalLength();
+        var midPoint = this.path.node.getPointAtLength(totalLength * this.textPercentageLocationOnLink);
+        this.textGroup.cx(midPoint.x);
+        this.textGroup.cy(midPoint.y);
+      }
+    }
+
+    /**
+     * Connect a link the its source and destination nodes
+     */
+
+  }, {
+    key: 'connectLinkToNodes',
+    value: function connectLinkToNodes() {
+
+      if (this.sourceNode != null && this.destinationNode != null) {
+
+        // add the link to the outgoing links of its source node
+        this.sourceNode.addOutgoingLink(this);
+
+        // add the link to the incoming links of its destination node
+        this.destinationNode.addIncomingLink(this);
+      }
+    }
+
+    /**
+     * Create the delete button for the link
+     */
+
+  }, {
+    key: 'createDeleteButtonGroup',
+    value: function createDeleteButtonGroup() {
+      var _this3 = this;
+
+      // create a group to contain the elements of the delete button
+      this.deleteButtonGroup = this.draw.group();
+
+      /*
+       * create an invisible circle that is placed behind the delete button
+       * and has a larger radius than the delete button. this is used for
+       * mouse over purposes so that we can keep the delete button visible
+       * when the mouse is around the area of the delete button
+       */
+      var invisibleCircleRadius = 30;
+      this.invisibleCircle = this.draw.circle();
+      this.invisibleCircle.radius(invisibleCircleRadius);
+      this.invisibleCircle.fill({ opacity: 0.0 });
+
+      // create the delete button circle
+      var deleteButtonRadius = 10;
+      this.deleteButton = this.draw.circle();
+      this.deleteButton.radius(deleteButtonRadius);
+      this.deleteButton.fill({ opacity: 0.0 });
+      this.deleteButton.stroke({ color: this.color, opacity: 1.0, width: 2 });
+
+      /*
+       * create the x part of the delete button by creating a + and then
+       * rotating it 45 degrees
+       */
+
+      // get the coordinate of the center of the delete button
+      var deleteButtonMidpointX = this.deleteButton.cx();
+      var deleteButtonMidpointY = this.deleteButton.cy();
+
+      // get the coordinates of the top of the +
+      var topX = deleteButtonMidpointX;
+      var topY = deleteButtonMidpointY - deleteButtonRadius * 0.7;
+
+      // get the coordinates of the bottom of the +
+      var bottomX = deleteButtonMidpointX;
+      var bottomY = deleteButtonMidpointY + deleteButtonRadius * 0.7;
+
+      // get the coordinates of the left of the +
+      var leftX = deleteButtonMidpointX - deleteButtonRadius * 0.7;
+      var leftY = deleteButtonMidpointY;
+
+      // get the coordinates of the right of the +
+      var rightX = deleteButtonMidpointX + deleteButtonRadius * 0.7;
+      var rightY = deleteButtonMidpointY;
+
+      // create the path for the +
+      var deleteButtonXPath = 'M' + topX + ',' + topY + 'L' + bottomX + ',' + bottomY + 'M' + leftX + ',' + leftY + 'L' + rightX + ',' + rightY;
+
+      // draw the path
+      this.deleteButtonX = this.draw.path(deleteButtonXPath);
+      this.deleteButtonX.stroke({ color: this.color, opacity: 1.0, width: 2 });
+
+      /// rotate the + to create the x
+      this.deleteButtonX.rotate(45);
+
+      /*
+       * disable pointer events on the x so that we only need to set a
+       * mouse listener on the circle
+       */
+      this.deleteButtonX.attr('pointer-events', 'none');
+
+      // add the invisible circle, regular circle, and x to the group
+      this.deleteButtonGroup.add(this.invisibleCircle);
+      this.deleteButtonGroup.add(this.deleteButton);
+      this.deleteButtonGroup.add(this.deleteButtonX);
+
+      // set the location of the delete button group
+      var location = this.getDeleteButtonLocation();
+      var x = location.x;
+      var y = location.y;
+      this.deleteButtonGroup.x(x);
+      this.deleteButtonGroup.y(y);
+
+      // set the listener for when the mouse is over the group
+      this.deleteButtonGroup.mouseover(function (event) {
+        _this3.deleteButtonGroupMouseOver(event);
+      });
+
+      // set the listener for when the mouse moves out of the group
+      this.deleteButtonGroup.mouseout(function (event) {
+        _this3.deleteButtonGroupMouseOut(event);
+      });
+
+      // add the delete button group to the link group
+      this.group.add(this.deleteButtonGroup);
+
+      /*
+       * hide the delete button. we only need to show the delete button
+       * when the link is active.
+       */
+      this.deleteButtonGroup.hide();
+    }
+
+    /**
+     * Called when the mouse is over the delete button group
+     * @param event the mouseover event
+     */
+
+  }, {
+    key: 'deleteButtonGroupMouseOver',
+    value: function deleteButtonGroupMouseOver(event) {
+      // show the delete button
+      this.showDeleteButton();
+    }
+
+    /**
+     * Called when the mouse leaves the delete button group
+     * @param event the mouseout event
+     */
+
+  }, {
+    key: 'deleteButtonGroupMouseOut',
+    value: function deleteButtonGroupMouseOut(event) {
+      if (!this.highlighted) {
+        // the link is not highlighted so we will hide the delete button
+        this.hideDeleteButton();
+      }
+    }
+
+    /**
+     * Called when the delete button is clicked
+     * @param deleteButtonClickedFunction the function to call when the delete
+     * button is clicked
+     */
+
+  }, {
+    key: 'setDeleteButtonClicked',
+    value: function setDeleteButtonClicked(deleteButtonClickedFunction) {
+      // listen for the click event on the delete button to call the function
+      this.deleteButton.click(deleteButtonClickedFunction);
+    }
+
+    /**
+     * Called when the mouse is clicked down on the group
+     * @param linkMouseDownFunction the function to call when the mouse is
+     * clicked down on the group
+     */
+
+  }, {
+    key: 'setLinkMouseDown',
+    value: function setLinkMouseDown(linkMouseDownFunction) {
+
+      if (this.group != null) {
+        /*
+         * listen for the mousedown event on the group to call
+         * the function
          */
+        this.group.mousedown(linkMouseDownFunction);
+      }
+    }
 
-    }, {
-        key: 'deleteButtonGroupMouseOut',
-        value: function deleteButtonGroupMouseOut(event) {
-            if (!this.highlighted) {
-                // the link is not highlighted so we will hide the delete button
-                this.hideDeleteButton();
-            }
-        }
+    /**
+     * Called when the mouse is clicked down on the link text group
+     * @param linkTextMouseDownFunction the function to call when the mouse is
+     * clicked down on the link text group
+     */
 
-        /**
-         * Called when the delete button is clicked
-         * @param deleteButtonClickedFunction the function to call when the delete
-         * button is clicked
+  }, {
+    key: 'setLinkTextMouseDown',
+    value: function setLinkTextMouseDown(linkTextMouseDownFunction) {
+
+      if (this.textGroup != null) {
+        /*
+         * listen for the mousedown event on the link text group to call
+         * the function
          */
+        this.textGroup.mousedown(linkTextMouseDownFunction);
+      }
+    }
 
-    }, {
-        key: 'setDeleteButtonClicked',
-        value: function setDeleteButtonClicked(deleteButtonClickedFunction) {
-            // listen for the click event on the delete button to call the function
-            this.deleteButton.click(deleteButtonClickedFunction);
+    /**
+     * Called when the mouse is over the group
+     * @param linkMouseOverFunction the function to call when the mouse is over
+     * the group
+     */
+
+  }, {
+    key: 'setLinkMouseOver',
+    value: function setLinkMouseOver(linkMouseOverFunction) {
+      if (this.group != null) {
+        // listen for the mouseover event on the group to call the function
+        this.group.mouseover(linkMouseOverFunction);
+      }
+    }
+
+    /**
+     * Called when the mouse leaves the group
+     * @param linkMouseOutFunction the function to call when the mouse leaves
+     * the group
+     */
+
+  }, {
+    key: 'setLinkMouseOut',
+    value: function setLinkMouseOut(linkMouseOutFunction) {
+      if (this.group != null) {
+        // listen for the mouseout event on the group to call the function
+        this.group.mouseout(linkMouseOutFunction);
+      }
+    }
+
+    /**
+    * Calculate the location of the delete button for the link
+    *
+    * Note: This function and the associated functions that are called by this
+    * function are taken from the Concord MySystem github project.
+    * https://github.com/concord-consortium/mysystem_sc
+    * The code is found in the _setRemoveButtonLocation function in the link.js file.
+    * mysystem_sc/apps/my_system/views/link.js
+    */
+
+  }, {
+    key: 'getDeleteButtonLocation',
+    value: function getDeleteButtonLocation() {
+      //var line = raphaelObject.items[2];
+
+      var line = this.path.node;
+      var distanceAlongLine = 35;
+      var distanceAlongNormal = 18;
+      var len, p1, p2, scale, dx, dy, x, y, occluded;
+
+      /*
+      var link = this.get('content');
+      if (!link.isComplete()) return;
+      if (line.attr('path').length < 1) return;   // this can happen after our content is destroyed
+      */
+
+      len = line.getTotalLength();
+      p2 = line.getPointAtLength(len);
+
+      if (len > 50) {
+        p1 = line.getPointAtLength(len - distanceAlongLine);
+
+        dx = p2.x - p1.x;
+        dy = p2.y - p1.y;
+        scale = distanceAlongNormal / distanceAlongLine * (dx > 0 ? 1 : -1);
+
+        x = p1.x + scale * dy;
+        y = p1.y - scale * dx;
+        //occluded = NO;
+      } else {
+        x = 0;
+        y = 0;
+        //occluded = YES;
+      }
+
+      /*
+      this.set('removeButtonX', x);
+      this.set('removeButtonY', y);
+      this.set('isRemoveButtonOccluded', occluded);
+      */
+
+      var location = {};
+      location.x = x;
+      location.y = y;
+
+      return location;
+    }
+
+    /**
+     * Show the delete button
+     */
+
+  }, {
+    key: 'showDeleteButton',
+    value: function showDeleteButton() {
+      if (this.deleteButtonGroup != null) {
+        this.deleteButtonGroup.show();
+      }
+    }
+
+    /**
+     * Hide the delete button
+     */
+
+  }, {
+    key: 'hideDeleteButton',
+    value: function hideDeleteButton() {
+      if (this.deleteButtonGroup != null) {
+        this.deleteButtonGroup.hide();
+      }
+    }
+
+    /**
+     * Create the text group
+     * @returns the text group
+     */
+
+  }, {
+    key: 'createTextGroup',
+    value: function createTextGroup() {
+
+      // create the group
+      this.textGroup = this.draw.group();
+
+      // create a rectangle to surround the text
+      this.textRect = this.draw.rect(100, 15);
+      this.textRect.attr('fill', 'white');
+      this.textRect.attr('stroke', 'black');
+      this.textRect.attr('x', 0);
+      this.textRect.attr('y', 10);
+      this.textRect.attr('width', 100);
+      this.textRect.attr('height', 20);
+      this.textRect.radius(5);
+
+      var label = '';
+
+      // create the text element
+      this.text = this.draw.text(label);
+      this.text.attr('x', 5);
+      this.text.attr('y', 9);
+      this.text.font({
+        family: 'Arial',
+        size: 12
+      });
+
+      // prevent the text from being highlighted when the user drags the mouse
+      this.text.style('user-select:none');
+      this.text.node.setAttribute('user-select', 'none');
+      this.text.node.setAttribute('style', 'user-select:none');
+
+      // add the rectangle and text to the group
+      this.textGroup.add(this.textRect);
+      this.textGroup.add(this.text);
+
+      var width = 0;
+
+      try {
+        // get the width of the bounding box of the text node
+        var textBBox = this.text.node.getBBox();
+
+        if (textBBox.width == 0) {
+          width = this.calculateTextRectWidth(this.label);
+        } else {
+          width = textBBox.width + 10;
         }
-
-        /**
-         * Called when the mouse is clicked down on the group
-         * @param linkMouseDownFunction the function to call when the mouse is
-         * clicked down on the group
+      } catch (e) {
+        /*
+         * we were unable to get the bounding box (likely because
+         * Firefox threw an error when trying to call getBBox())
+         * so we will calculate the width based on the label text
          */
+        width = this.calculateTextRectWidth(this.label);
+      }
 
-    }, {
-        key: 'setLinkMouseDown',
-        value: function setLinkMouseDown(linkMouseDownFunction) {
+      this.textRect.attr('width', width);
 
-            if (this.group != null) {
-                /*
-                 * listen for the mousedown event on the group to call
-                 * the function
-                 */
-                this.group.mousedown(linkMouseDownFunction);
-            }
-        }
+      // set the location of the text to be somewhere along the line of the link
+      var totalLength = this.path.node.getTotalLength();
+      var midPoint = this.path.node.getPointAtLength(totalLength * this.textPercentageLocationOnLink);
+      this.textGroup.cx(midPoint.x);
+      this.textGroup.cy(midPoint.y);
 
-        /**
-         * Called when the mouse is clicked down on the link text group
-         * @param linkTextMouseDownFunction the function to call when the mouse is
-         * clicked down on the link text group
-         */
+      // hide the text group until the student has chosen a link type
+      this.textGroup.hide();
 
-    }, {
-        key: 'setLinkTextMouseDown',
-        value: function setLinkTextMouseDown(linkTextMouseDownFunction) {
+      /*
+       * set the link group id into the text group so we can look it up
+       * later when the mouse is clicked down on the text group
+       */
+      this.textGroup.node.linkGroupId = this.group.id();
 
-            if (this.textGroup != null) {
-                /*
-                 * listen for the mousedown event on the link text group to call
-                 * the function
-                 */
-                this.textGroup.mousedown(linkTextMouseDownFunction);
-            }
-        }
+      return this.textGroup;
+    }
 
-        /**
-         * Called when the mouse is over the group
-         * @param linkMouseOverFunction the function to call when the mouse is over
-         * the group
-         */
+    /**
+     * Move the text group to the front so that it won't be blocked behind
+     * another element when the student tries to click on the text group.
+     */
 
-    }, {
-        key: 'setLinkMouseOver',
-        value: function setLinkMouseOver(linkMouseOverFunction) {
-            if (this.group != null) {
-                // listen for the mouseover event on the group to call the function
-                this.group.mouseover(linkMouseOverFunction);
-            }
-        }
+  }, {
+    key: 'moveTextGroupToFront',
+    value: function moveTextGroupToFront() {
+      this.textGroup.front();
+    }
 
-        /**
-         * Called when the mouse leaves the group
-         * @param linkMouseOutFunction the function to call when the mouse leaves
-         * the group
-         */
+    /**
+     * Show the text group
+     */
 
-    }, {
-        key: 'setLinkMouseOut',
-        value: function setLinkMouseOut(linkMouseOutFunction) {
-            if (this.group != null) {
-                // listen for the mouseout event on the group to call the function
-                this.group.mouseout(linkMouseOutFunction);
-            }
-        }
+  }, {
+    key: 'showTextGroup',
+    value: function showTextGroup() {
 
-        /**
-        * Calculate the location of the delete button for the link
-        *
-        * Note: This function and the associated functions that are called by this
-        * function are taken from the Concord MySystem github project.
-        * https://github.com/concord-consortium/mysystem_sc
-        * The code is found in the _setRemoveButtonLocation function in the link.js file.
-        * mysystem_sc/apps/my_system/views/link.js
-        */
+      if (this.textGroup != null) {
+        this.textGroup.show();
+      }
+    }
 
-    }, {
-        key: 'getDeleteButtonLocation',
-        value: function getDeleteButtonLocation() {
-            //var line = raphaelObject.items[2];
+    /**
+     * Hide the text group
+     */
 
-            var line = this.path.node;
-            var distanceAlongLine = 35;
-            var distanceAlongNormal = 18;
-            var len, p1, p2, scale, dx, dy, x, y, occluded;
+  }, {
+    key: 'hideTextGroup',
+    value: function hideTextGroup() {
 
-            /*
-            var link = this.get('content');
-            if (!link.isComplete()) return;
-            if (line.attr('path').length < 1) return;     // this can happen after our content is destroyed
-            */
+      if (this.textGroup != null) {
+        this.textGroup.hide();
+      }
+    }
 
-            len = line.getTotalLength();
-            p2 = line.getPointAtLength(len);
+    /**
+     * Remove all the references to the link and also remove all the elements
+     * from the svg
+     */
 
-            if (len > 50) {
-                p1 = line.getPointAtLength(len - distanceAlongLine);
+  }, {
+    key: 'remove',
+    value: function remove() {
 
-                dx = p2.x - p1.x;
-                dy = p2.y - p1.y;
-                scale = distanceAlongNormal / distanceAlongLine * (dx > 0 ? 1 : -1);
+      if (this.sourceNode != null) {
+        // remove the link from the source node's outgoing links
+        this.sourceNode.removeOutgoingLink(this);
+      }
 
-                x = p1.x + scale * dy;
-                y = p1.y - scale * dx;
-                //occluded = NO;
-            } else {
-                x = 0;
-                y = 0;
-                //occluded = YES;
-            }
+      if (this.destinationNode != null) {
+        // remove the link from the destination node's incoming links
+        this.destinationNode.removeIncomingLink(this);
+      }
 
-            /*
-            this.set('removeButtonX', x);
-            this.set('removeButtonY', y);
-            this.set('isRemoveButtonOccluded', occluded);
-            */
+      if (this.path != null) {
+        // remove the line
+        this.path.remove();
+      }
 
-            var location = {};
-            location.x = x;
-            location.y = y;
+      if (this.head != null) {
+        // remove the arrow head
+        this.head.remove();
+      }
 
-            return location;
-        }
+      if (this.deleteButtonGroup != null) {
+        // remove the delete button group
+        this.deleteButtonGroup.remove();
+      }
 
-        /**
-         * Show the delete button
-         */
+      if (this.textGroup != null) {
+        // remove the text group
+        this.textGroup.remove();
+      }
 
-    }, {
-        key: 'showDeleteButton',
-        value: function showDeleteButton() {
-            if (this.deleteButtonGroup != null) {
-                this.deleteButtonGroup.show();
-            }
-        }
+      if (this.group != null) {
+        // remove the link group
+        this.group.remove();
+      }
+    }
 
-        /**
-         * Hide the delete button
-         */
+    /**
+     * Calculate the width that the text rectangle should be set to
+     * @param labelText the label text that will be displayed in the rectangle
+     * @return the width that the text rectangle should be set to
+     */
 
-    }, {
-        key: 'hideDeleteButton',
-        value: function hideDeleteButton() {
-            if (this.deleteButtonGroup != null) {
-                this.deleteButtonGroup.hide();
-            }
-        }
+  }, {
+    key: 'calculateTextRectWidth',
+    value: function calculateTextRectWidth(labelText) {
+      var width = 0;
 
-        /**
-         * Create the text group
-         * @returns the text group
-         */
+      if (labelText != null) {
+        width = labelText.length * 6 + 10;
+      }
 
-    }, {
-        key: 'createTextGroup',
-        value: function createTextGroup() {
+      return width;
+    }
+  }]);
 
-            // create the group
-            this.textGroup = this.draw.group();
-
-            // create a rectangle to surround the text
-            this.textRect = this.draw.rect(100, 15);
-            this.textRect.attr('fill', 'white');
-            this.textRect.attr('stroke', 'black');
-            this.textRect.attr('x', 0);
-            this.textRect.attr('y', 10);
-            this.textRect.attr('width', 100);
-            this.textRect.attr('height', 20);
-            this.textRect.radius(5);
-
-            var label = "";
-
-            // create the text element
-            this.text = this.draw.text(label);
-            this.text.attr('x', 5);
-            this.text.attr('y', 9);
-            this.text.font({
-                family: 'Arial',
-                size: 12
-            });
-
-            // prevent the text from being highlighted when the user drags the mouse
-            this.text.style('user-select:none');
-            this.text.node.setAttribute('user-select', 'none');
-            this.text.node.setAttribute('style', 'user-select:none');
-
-            // add the rectangle and text to the group
-            this.textGroup.add(this.textRect);
-            this.textGroup.add(this.text);
-
-            var width = 0;
-
-            try {
-                // get the width of the bounding box of the text node
-                var textBBox = this.text.node.getBBox();
-
-                if (textBBox.width == 0) {
-                    width = this.calculateTextRectWidth(this.label);
-                } else {
-                    width = textBBox.width + 10;
-                }
-            } catch (e) {
-                /*
-                 * we were unable to get the bounding box (likely because
-                 * Firefox threw an error when trying to call getBBox())
-                 * so we will calculate the width based on the label text
-                 */
-                width = this.calculateTextRectWidth(this.label);
-            }
-
-            this.textRect.attr('width', width);
-
-            // set the location of the text to be somewhere along the line of the link
-            var totalLength = this.path.node.getTotalLength();
-            var midPoint = this.path.node.getPointAtLength(totalLength * this.textPercentageLocationOnLink);
-            this.textGroup.cx(midPoint.x);
-            this.textGroup.cy(midPoint.y);
-
-            // hide the text group until the student has chosen a link type
-            this.textGroup.hide();
-
-            /*
-             * set the link group id into the text group so we can look it up
-             * later when the mouse is clicked down on the text group
-             */
-            this.textGroup.node.linkGroupId = this.group.id();
-
-            return this.textGroup;
-        }
-
-        /**
-         * Move the text group to the front so that it won't be blocked behind
-         * another element when the student tries to click on the text group.
-         */
-
-    }, {
-        key: 'moveTextGroupToFront',
-        value: function moveTextGroupToFront() {
-            this.textGroup.front();
-        }
-
-        /**
-         * Show the text group
-         */
-
-    }, {
-        key: 'showTextGroup',
-        value: function showTextGroup() {
-
-            if (this.textGroup != null) {
-                this.textGroup.show();
-            }
-        }
-
-        /**
-         * Hide the text group
-         */
-
-    }, {
-        key: 'hideTextGroup',
-        value: function hideTextGroup() {
-
-            if (this.textGroup != null) {
-                this.textGroup.hide();
-            }
-        }
-
-        /**
-         * Remove all the references to the link and also remove all the elements
-         * from the svg
-         */
-
-    }, {
-        key: 'remove',
-        value: function remove() {
-
-            if (this.sourceNode != null) {
-                // remove the link from the source node's outgoing links
-                this.sourceNode.removeOutgoingLink(this);
-            }
-
-            if (this.destinationNode != null) {
-                // remove the link from the destination node's incoming links
-                this.destinationNode.removeIncomingLink(this);
-            }
-
-            if (this.path != null) {
-                // remove the line
-                this.path.remove();
-            }
-
-            if (this.head != null) {
-                // remove the arrow head
-                this.head.remove();
-            }
-
-            if (this.deleteButtonGroup != null) {
-                // remove the delete button group
-                this.deleteButtonGroup.remove();
-            }
-
-            if (this.textGroup != null) {
-                // remove the text group
-                this.textGroup.remove();
-            }
-
-            if (this.group != null) {
-                // remove the link group
-                this.group.remove();
-            }
-        }
-
-        /**
-         * Calculate the width that the text rectangle should be set to
-         * @param labelText the label text that will be displayed in the rectangle
-         * @return the width that the text rectangle should be set to
-         */
-
-    }, {
-        key: 'calculateTextRectWidth',
-        value: function calculateTextRectWidth(labelText) {
-            var width = 0;
-
-            if (labelText != null) {
-                width = labelText.length * 6 + 10;
-            }
-
-            return width;
-        }
-    }]);
-
-    return ConceptMapLink;
+  return ConceptMapLink;
 }();
 
 ConceptMapService.$inject = ['$filter', '$q', '$timeout', 'ConfigService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
