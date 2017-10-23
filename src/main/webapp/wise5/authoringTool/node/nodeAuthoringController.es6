@@ -1908,6 +1908,9 @@ class NodeAuthoringController {
    * component
    */
   createBranchUpdateChoiceChosenIdsHelper(component) {
+    let nodeId = this.createBranchNodeId;
+    let componentId = this.createBranchComponentId;
+
     // get the choices from the component
     let choices = component.choices;
 
@@ -2361,34 +2364,35 @@ class NodeAuthoringController {
    * @param branch the branch object
    */
   removeBranchPath(branch) {
-    if (branch != null && branch.checkedItemsInBranchPath != null) {
+    if (branch != null) {
       // get the checked items in the branch path
       let checkedItemsInBranchPath = branch.checkedItemsInBranchPath;
-      for (let checkedItem of checkedItemsInBranchPath) {
-        if (checkedItem != null) {
-          // get the node id of the checked item
-          let nodeId = checkedItem.$key;
+      if (checkedItemsInBranchPath != null) {
+        for (let checkedItem of checkedItemsInBranchPath) {
+          if (checkedItem != null) {
+            // get the node id of the checked item
+            let nodeId = checkedItem.$key;
 
-          // remove the branchPathTaken constraints from the step
-          this.ProjectService.removeBranchPathTakenNodeConstraints(nodeId);
+            // remove the branchPathTaken constraints from the step
+            this.ProjectService.removeBranchPathTakenNodeConstraints(nodeId);
 
-          /*
-           * update the transition of the step to point to the next step
-           * in the project. this may be different than the next step
-           * if it was still in the branch path.
-           */
-          let nodeIdAfter = this.ProjectService.getNodeIdAfter(nodeId);
-          this.ProjectService.setTransition(nodeId, nodeIdAfter);
+            /*
+             * update the transition of the step to point to the next step
+             * in the project. this may be different than the next step
+             * if it was still in the branch path.
+             */
+            let nodeIdAfter = this.ProjectService.getNodeIdAfter(nodeId);
+            this.ProjectService.setTransition(nodeId, nodeIdAfter);
+          }
         }
       }
-
       // get the index of the branch path
       let branchPathIndex = this.createBranchBranches.indexOf(branch);
 
       // remove the branch path
       this.createBranchBranches.splice(branchPathIndex, 1);
 
-      // remove the transition the corresponds to the branch path
+      // remove the transition that corresponds to the branch path
       this.node.transitionLogic.transitions.splice(branchPathIndex, 1);
     }
   }
