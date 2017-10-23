@@ -1,463 +1,473 @@
 <div class='openResponse' ng-controller='OpenResponseController as openResponseController' flex>
-    <style>
-        {{openResponseController.nodeContent.style}}
-    </style>
+  <style>
+    {{openResponseController.nodeContent.style}}
+  </style>
 
-    <div ng-if='openResponseController.mode === "authoring"'>
-        <div class='advancedAuthoringDiv'
-             ng-if='openResponseController.showAdvancedAuthoring'>
-            <div>
-                <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
-            </div
-            <p>{{ 'openResponse.starterSentence' | translate }} ({{ 'openResponse.optional' | translate }}):</p>
-            <textarea ng-model='openResponseController.authoringComponentContent.starterSentence'
-                      ng-change='openResponseController.authoringViewComponentChanged()'
-                      ng-model-options='{ debounce: 1000 }'
-                      rows='2'
-                      cols='100'></textarea>
+  <div ng-if='openResponseController.mode === "authoring"'>
+    <div class='advancedAuthoringDiv'
+       ng-if='openResponseController.showAdvancedAuthoring'>
+      <div>
+        <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+      </div
+      <p>{{ 'openResponse.starterSentence' | translate }} ({{ 'openResponse.optional' | translate }}):</p>
+      <textarea ng-model='openResponseController.authoringComponentContent.starterSentence'
+            ng-change='openResponseController.authoringViewComponentChanged()'
+            ng-model-options='{ debounce: 1000 }'
+            rows='2'
+            cols='100'></textarea>
+      <br/>
+      <span>{{ 'openResponse.enableCRater' | translate }}:</span>
+      <input type='checkbox'
+           ng-model='openResponseController.authoringComponentContent.enableCRater'
+           ng-change='openResponseController.authoringViewEnableCRaterClicked()'/>
+      <div ng-if='openResponseController.authoringComponentContent.enableCRater'>
+        <span>{{ 'openResponse.type' | translate }}:</span>
+        <input type='radio'
+             ng-model='openResponseController.authoringComponentContent.cRater.itemType'
+             value='CRATER'
+             ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'openResponse.cRater' | translate }}</span>
+        <input type='radio'
+             ng-model='openResponseController.authoringComponentContent.cRater.itemType'
+             value='HENRY'
+             ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'openResponse.henry' | translate }}</span>
+        <br/>
+        <span>{{ 'openResponse.itemId' | translate }}:</span>
+        <input type='text'
+             ng-model='openResponseController.authoringComponentContent.cRater.itemId'
+             ng-change='openResponseController.authoringViewComponentChanged()'
+             size='30'/>
+        <br/>
+        <span>{{ 'openResponse.scoreOn' | translate }}:</span>
+        <input type='radio'
+             ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
+             value='submit'
+             ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'SUBMIT' | translate }}</span>
+        <input type='radio'
+             ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
+             value='save'
+             ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'SAVE' | translate }}</span>
+        <input type='radio'
+             ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
+             value='change'
+             ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'openResponse.change' | translate }}</span>
+        <br/>
+        <input type='checkbox'
+             ng-model='openResponseController.authoringComponentContent.cRater.showScore'
+             ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'SHOW_SCORE' | translate }}</span>
+        <br/>
+        <input type='checkbox'
+             ng-model='openResponseController.authoringComponentContent.cRater.showFeedback'
+             ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'SHOW_FEEDBACK' | translate }}</span>
+        <br/>
+        <button ng-click='openResponseController.authoringAddScoringRule()'>{{ 'openResponse.addScoringRule' | translate }}</button>
+        <div ng-repeat='scoringRule in openResponseController.authoringComponentContent.cRater.scoringRules'>
+          <span>{{ 'SCORE' | translate }}:</span> <input type='text'
+                  ng-model='scoringRule.score'
+                  ng-model-options='{ debounce: 500 }'
+                  ng-change='openResponseController.authoringViewComponentChanged()'
+                  style='width: 3em'/>
+          <span>{{ 'openResponse.feedbackText' | translate }}:</span> <textarea type='text'
+                   ng-model='scoringRule.feedbackText'
+                   rows='5'
+                   cols='100'
+                   ng-model-options='{ debounce: 500 }'
+                   ng-change='openResponseController.authoringViewComponentChanged()'/>
+          <button ng-click='openResponseController.authoringViewScoringRuleUpClicked($index)'>{{ 'UP' | translate }}</button>
+          <button ng-click='openResponseController.authoringViewScoringRuleDownClicked($index)'>{{ 'DOWN' | translate }}</button>
+          <button ng-click='openResponseController.authoringViewScoringRuleDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
+        </div>
+        <button ng-click='openResponseController.authoringAddScoringRule()'>{{ 'openResponse.addScoringRule' | translate }}</button>
+        <br/>
+        <span>{{ 'openResponse.enableMultipleAttemptFeedback' | translate }}</span>
+        <input type='checkbox'
+             ng-model='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'
+             ng-click='openResponseController.enableMultipleAttemptScoringRulesClicked()'/>
+        <br/>
+        <div ng-if='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
+          <div ng-repeat='multipleAttemptScoringRule in openResponseController.authoringComponentContent.cRater.multipleAttemptScoringRules'>
+            <span>{{ 'openResponse.previousScore' | translate }}:</span> <input type='text'
+                         ng-model='multipleAttemptScoringRule.scoreSequence[0]'
+                         size='5'
+                         ng-model-options='{ debounce: 500 }'
+                         ng-change='openResponseController.authoringViewComponentChanged()'/>
+            <span>{{ 'openResponse.currentScore' | translate }}:</span> <input type='text'
+                        ng-model='multipleAttemptScoringRule.scoreSequence[1]'
+                        size='5'
+                        ng-model-options='{ debounce: 500 }'
+                        ng-change='openResponseController.authoringViewComponentChanged()'/>
+            <span>{{ 'openResponse.feedbackToStudent' | translate }}:</span>
+            <textarea
+              type='text'
+              ng-model='multipleAttemptScoringRule.feedbackText'
+              rows='5'
+              cols='100'
+              ng-model-options='{ debounce: 500 }'
+              ng-change='openResponseController.authoringViewComponentChanged()'/>
+             <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleUpClicked($index)'>{{ 'UP' | translate }}</button>
+             <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDownClicked($index)'>{{ 'DOWN' | translate }}</button>
+             <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
+          </div>
+          <button ng-click='openResponseController.authoringAddMultipleAttemptScoringRule()'
+              ng-if='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
+              {{ 'openResponse.addMultipleAttemptScoringRule' | translate }}
+          </button>
+          <br/>
+        </div>
+        <span>{{ 'openResponse.enableNotifications' | translate }}:</span>
+        <input type='checkbox'
+             ng-model='openResponseController.authoringComponentContent.enableNotifications'
+             ng-change='openResponseController.authoringViewEnableNotificationsClicked()'/>
+        <div ng-if='openResponseController.authoringComponentContent.enableNotifications'>
+          <div style='border:.5px dotted; padding: 5px' ng-repeat='notification in openResponseController.authoringComponentContent.notificationSettings.notifications'>
+            <span>{{ 'openResponse.previousScore' | translate }}:</span> <input type='text'
+                         ng-model='notification.enableCriteria.scoreSequence[0]'
+                         size='5'
+                         ng-model-options='{ debounce: 500 }'
+                         ng-change='openResponseController.authoringViewComponentChanged()'/>
+            <span>{{ 'openResponse.currentScore' | translate }}:</span> <input type='text'
+                        ng-model='notification.enableCriteria.scoreSequence[1]'
+                        size='5'
+                        ng-model-options='{ debounce: 500 }'
+                        ng-change='openResponseController.authoringViewComponentChanged()'/>
             <br/>
-            <span>{{ 'openResponse.enableCRater' | translate }}:</span>
+            <span>{{ 'openResponse.enableAmbientDisplayDismissMode' | translate }}</span>
             <input type='checkbox'
-                   ng-model='openResponseController.authoringComponentContent.enableCRater'
-                   ng-change='openResponseController.authoringViewEnableCRaterClicked()'/>
-            <div ng-if='openResponseController.authoringComponentContent.enableCRater'>
-                <span>{{ 'openResponse.type' | translate }}:</span>
-                <input type='radio'
-                       ng-model='openResponseController.authoringComponentContent.cRater.itemType'
-                       value='CRATER'
-                       ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'openResponse.cRater' | translate }}</span>
-                <input type='radio'
-                       ng-model='openResponseController.authoringComponentContent.cRater.itemType'
-                       value='HENRY'
-                       ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'openResponse.henry' | translate }}</span>
-                <br/>
-                <span>{{ 'openResponse.itemId' | translate }}:</span>
-                <input type='text'
-                       ng-model='openResponseController.authoringComponentContent.cRater.itemId'
-                       ng-change='openResponseController.authoringViewComponentChanged()'
-                       size='30'/>
-                <br/>
-                <span>{{ 'openResponse.scoreOn' | translate }}:</span>
-                <input type='radio'
-                       ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
-                       value='submit'
-                       ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'SUBMIT' | translate }}</span>
-                <input type='radio'
-                       ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
-                       value='save'
-                       ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'SAVE' | translate }}</span>
-                <input type='radio'
-                       ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
-                       value='change'
-                       ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'openResponse.change' | translate }}</span>
-                <br/>
-                <input type='checkbox'
-                       ng-model='openResponseController.authoringComponentContent.cRater.showScore'
-                       ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'SHOW_SCORE' | translate }}</span>
-                <br/>
-                <input type='checkbox'
-                       ng-model='openResponseController.authoringComponentContent.cRater.showFeedback'
-                       ng-change='openResponseController.authoringViewComponentChanged()'/> <span>{{ 'SHOW_FEEDBACK' | translate }}</span>
-                <br/>
-                <button ng-click='openResponseController.authoringAddScoringRule()'>{{ 'openResponse.addScoringRule' | translate }}</button>
-                <div ng-repeat='scoringRule in openResponseController.authoringComponentContent.cRater.scoringRules'>
-                    <span>{{ 'SCORE' | translate }}:</span> <input type='text'
-                                  ng-model='scoringRule.score'
-                                  ng-model-options='{ debounce: 500 }'
-                                  ng-change='openResponseController.authoringViewComponentChanged()'
-                                  style='width: 3em'/>
-                    <span>{{ 'openResponse.feedbackText' | translate }}:</span> <textarea type='text'
-                                     ng-model='scoringRule.feedbackText'
-                                     rows='5'
-                                     cols='100'
-                                     ng-model-options='{ debounce: 500 }'
-                                     ng-change='openResponseController.authoringViewComponentChanged()'/>
-                    <button ng-click='openResponseController.authoringViewScoringRuleUpClicked($index)'>{{ 'UP' | translate }}</button>
-                    <button ng-click='openResponseController.authoringViewScoringRuleDownClicked($index)'>{{ 'DOWN' | translate }}</button>
-                    <button ng-click='openResponseController.authoringViewScoringRuleDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
-                </div>
-                <button ng-click='openResponseController.authoringAddScoringRule()'>{{ 'openResponse.addScoringRule' | translate }}</button>
-                <br/>
-                <span>{{ 'openResponse.enableMultipleAttemptFeedback' | translate }}</span>
-                <input type='checkbox'
-                       ng-model='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'
-                       ng-click='openResponseController.enableMultipleAttemptScoringRulesClicked()'/>
-                <br/>
-                <div ng-if='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
-                    <div ng-repeat='multipleAttemptScoringRule in openResponseController.authoringComponentContent.cRater.multipleAttemptScoringRules'>
-                        <span>{{ 'openResponse.previousScore' | translate }}:</span> <input type='text'
-                                               ng-model='multipleAttemptScoringRule.scoreSequence[0]'
-                                               size='5'
-                                               ng-model-options='{ debounce: 500 }'
-                                               ng-change='openResponseController.authoringViewComponentChanged()'/>
-                        <span>{{ 'openResponse.currentScore' | translate }}:</span> <input type='text'
-                                              ng-model='multipleAttemptScoringRule.scoreSequence[1]'
-                                              size='5'
-                                              ng-model-options='{ debounce: 500 }'
-                                              ng-change='openResponseController.authoringViewComponentChanged()'/>
-                        <span>{{ 'openResponse.feedbackToStudent' | translate }}:</span>
-                        <textarea
-                            type='text'
-                            ng-model='multipleAttemptScoringRule.feedbackText'
-                            rows='5'
-                            cols='100'
-                            ng-model-options='{ debounce: 500 }'
-                            ng-change='openResponseController.authoringViewComponentChanged()'/>
-                         <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleUpClicked($index)'>{{ 'UP' | translate }}</button>
-                         <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDownClicked($index)'>{{ 'DOWN' | translate }}</button>
-                         <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
-                    </div>
-                    <button ng-click='openResponseController.authoringAddMultipleAttemptScoringRule()'
-                            ng-if='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
-                            {{ 'openResponse.addMultipleAttemptScoringRule' | translate }}
-                    </button>
-                    <br/>
-                </div>
-                <span>{{ 'openResponse.enableNotifications' | translate }}:</span>
-                <input type='checkbox'
-                       ng-model='openResponseController.authoringComponentContent.enableNotifications'
-                       ng-change='openResponseController.authoringViewEnableNotificationsClicked()'/>
-                <div ng-if='openResponseController.authoringComponentContent.enableNotifications'>
-                    <div style="border:.5px dotted; padding: 5px" ng-repeat='notification in openResponseController.authoringComponentContent.notificationSettings.notifications'>
-                        <span>{{ 'openResponse.previousScore' | translate }}:</span> <input type='text'
-                                               ng-model='notification.enableCriteria.scoreSequence[0]'
-                                               size='5'
-                                               ng-model-options='{ debounce: 500 }'
-                                               ng-change='openResponseController.authoringViewComponentChanged()'/>
-                        <span>{{ 'openResponse.currentScore' | translate }}:</span> <input type='text'
-                                              ng-model='notification.enableCriteria.scoreSequence[1]'
-                                              size='5'
-                                              ng-model-options='{ debounce: 500 }'
-                                              ng-change='openResponseController.authoringViewComponentChanged()'/>
-                        <br/>
-                        <span>{{ 'openResponse.enableAmbientDisplayDismissMode' | translate }}</span>
-                        <input type='checkbox'
-                               ng-model='notification.isAmbient' />
-                        <div ng-if='notification.isAmbient'>
-                            <span>{{ 'openResponse.dismissCode' | translate }}:</span>
-                            <input ng-model='notification.dismissCode'
-                                   ng-model-options='{ debounce: 500 }'
-                                   ng-change='openResponseController.authoringViewComponentChanged()' />
-                        </div>
-                        <br/>
-                        <span>{{ 'openResponse.notifyStudent' | translate }}</span>
-                        <input type='checkbox'
-                               ng-model='notification.isNotifyStudent' />
-                        <br/>
-                        <div ng-if='notification.isNotifyStudent'>
-                        <span>{{ 'openResponse.feedbackToStudent' | translate }}:</span>
-                        <textarea type='text'
-                             ng-model='notification.notificationMessageToStudent'
-                             rows='5'
-                             cols='100'
-                             ng-model-options='{ debounce: 500 }'
-                             ng-change='openResponseController.authoringViewComponentChanged()'/>
-                        </div>
-                        <span>{{ 'openResponse.notifyTeacher' | translate }}</span>
-                        <input type='checkbox'
-                               ng-model='notification.isNotifyTeacher' />
-                        <div ng-if='notification.isNotifyTeacher'>
-                        <span>{{ 'openResponse.feedbackToTeacher' | translate }}:</span>
-                        <textarea type='text'
-                            ng-model='notification.notificationMessageToTeacher'
-                            rows='5'
-                            cols='100'
-                            ng-model-options='{ debounce: 500 }'
-                            ng-change='openResponseController.authoringViewComponentChanged()'/>
-                        </div>
-                        <br/>
-                        <button ng-click='openResponseController.authoringViewNotificationUpClicked($index)'>{{ 'UP' | translate }}</button>
-                        <button ng-click='openResponseController.authoringViewNotificationDownClicked($index)'>{{ 'DOWN' | translate }}</button>
-                        <button ng-click='openResponseController.authoringViewNotificationDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
-                     </div>
-                    <button ng-click='openResponseController.authoringAddNotification()'>
-                        {{ 'openResponse.addNewNotification' | translate }}
-                    </button>
-                </div>
+                 ng-model='notification.isAmbient' />
+            <div ng-if='notification.isAmbient'>
+              <span>{{ 'openResponse.dismissCode' | translate }}:</span>
+              <input ng-model='notification.dismissCode'
+                   ng-model-options='{ debounce: 500 }'
+                   ng-change='openResponseController.authoringViewComponentChanged()' />
             </div>
-            <div>
-                <md-checkbox class='md-primary'
-                             ng-model='openResponseController.authoringComponentContent.showSaveButton'
-                             ng-change='openResponseController.authoringViewComponentChanged()'>
-                    {{ 'SHOW_SAVE_BUTTON' | translate }}
-                </md-checkbox>
+            <br/>
+            <span>{{ 'openResponse.notifyStudent' | translate }}</span>
+            <input type='checkbox'
+                 ng-model='notification.isNotifyStudent' />
+            <br/>
+            <div ng-if='notification.isNotifyStudent'>
+            <span>{{ 'openResponse.feedbackToStudent' | translate }}:</span>
+            <textarea type='text'
+               ng-model='notification.notificationMessageToStudent'
+               rows='5'
+               cols='100'
+               ng-model-options='{ debounce: 500 }'
+               ng-change='openResponseController.authoringViewComponentChanged()'/>
             </div>
-            <div>
-                <md-checkbox class='md-primary'
-                             ng-model='openResponseController.authoringComponentContent.showSubmitButton'
-                             ng-change='openResponseController.authoringViewComponentChanged()'>
-                    {{ 'SHOW_SUBMIT_BUTTON' | translate }}
-                </md-checkbox>
+            <span>{{ 'openResponse.notifyTeacher' | translate }}</span>
+            <input type='checkbox'
+                 ng-model='notification.isNotifyTeacher' />
+            <div ng-if='notification.isNotifyTeacher'>
+            <span>{{ 'openResponse.feedbackToTeacher' | translate }}:</span>
+            <textarea type='text'
+              ng-model='notification.notificationMessageToTeacher'
+              rows='5'
+              cols='100'
+              ng-model-options='{ debounce: 500 }'
+              ng-change='openResponseController.authoringViewComponentChanged()'/>
             </div>
-            <div>
-                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
-                                    ng-if='openResponseController.authoringComponentContent.showSubmitButton'>
-                    <label>{{ 'MAX_SUBMIT' | translate }}</label>
-                    <input type='number'
-                           ng-model='openResponseController.authoringComponentContent.maxSubmitCount'
-                           ng-model-options='{ debounce: 1000 }'
-                           ng-change='openResponseController.authoringViewComponentChanged()'/>
-                </md-input-container>
-            </div>
-            <div>
-                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-                    <label>{{ 'MAX_SCORE' | translate }}</label>
-                    <input type='number'
-                           ng-model='openResponseController.authoringComponentContent.maxScore'
-                           ng-model-options='{ debounce: 1000 }'
-                           ng-change='openResponseController.authoringViewComponentChanged()'/>
-                </md-input-container>
-            </div>
-            <div>
-                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-                    <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
-                    <input type='number'
-                           ng-model='openResponseController.authoringComponentContent.componentWidth'
-                           ng-model-options='{ debounce: 1000 }'
-                           ng-change='openResponseController.authoringViewComponentChanged()'/>
-                </md-input-container>
-            </div>
-            <div>
-                <md-button class='topButton md-raised md-primary' ng-click='openResponseController.showRubricAuthoring = !openResponseController.showRubricAuthoring'>
-                    <md-icon>message</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
-                </md-button>
-                <div ng-if='openResponseController.showRubricAuthoring'>
-                    <summernote id='{{openResponseController.summernoteRubricId}}'
-                                ng-model='openResponseController.summernoteRubricHTML'
-                                ng-change='openResponseController.summernoteRubricHTMLChanged()'
-                                config='openResponseController.summernoteRubricOptions'
-                                ng-model-options='{ debounce: 1000 }'
-                                rows='10'
-                                cols='100'>
-                    </summernote>
-                </div>
-            </div>
-            <div>
-                <div layout='row'>
-                    <div>
-                        <label>{{ 'CONNECTED_COMPONENTS' | translate }}</label>
-                        <md-button class='topButton md-raised md-primary'
-                                   ng-click='openResponseController.authoringAddConnectedComponent()'>
-                            <md-icon>add</md-icon>
-                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</md-tooltip>
-                        </md-button>
-                    </div>
-                </div>
-                <div ng-repeat='connectedComponent in openResponseController.authoringComponentContent.connectedComponents track by $index'
-                     style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'
-                     layout='row'>
-                    <div flex>
-                        <md-input-container style='margin-right: 20; width: 300;'>
-                            <label>{{ 'step' | translate }}</label>
-                            <md-select ng-model='connectedComponent.nodeId'
-                                       ng-change='openResponseController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
-                                       style='width: 300'>
-                                <md-option ng-repeat='item in openResponseController.idToOrder | toArray | orderBy : "order"'
-                                           value='{{item.$key}}'
-                                           ng-if='openResponseController.isApplicationNode(item.$key)'>
-                                    {{ openResponseController.getNodePositionAndTitleByNodeId(item.$key) }}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                        <md-input-container style='margin-right: 20; width: 300;'>
-                            <label>{{ 'component' | translate }}</label>
-                            <md-select ng-model='connectedComponent.componentId'
-                                       ng-change='openResponseController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
-                                       style='width: 300'>
-                                <md-option ng-repeat='(componentIndex, component) in openResponseController.getComponentsByNodeId(connectedComponent.nodeId)'
-                                           value='{{component.id}}'
-                                           ng-disabled='!openResponseController.isConnectedComponentTypeAllowed(component.type) || component.id == openResponseController.componentId'>
-                                    {{ componentIndex + 1 }}. {{ component.type }} <span ng-if='component.id == openResponseController.componentId'>({{ 'thisComponent' | translate }})</span>
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                        <md-input-container style='margin-right: 20; width: 200;'>
-                            <label>{{ 'type' | translate }}</label>
-                            <md-select ng-model='connectedComponent.type'
-                                       ng-change='openResponseController.authoringConnectedComponentTypeChanged(connectedComponent)'
-                                       style='width: 200'>
-                                <md-option value='importWork'>
-                                    {{ 'importWork' | translate }}
-                                </md-option>
-                                <md-option value='showWork'>
-                                    {{ 'showWork' | translate }}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                        <span flex></span>
-                        <md-input-container style='margin-left: 20;'>
-                            <md-button class='topButton md-raised md-primary'
-                                       ng-click='openResponseController.authoringDeleteConnectedComponent($index)'>
-                                <md-icon>delete</md-icon>
-                                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
-                            </md-button>
-                        </md-input-container>
-                    </div>
-                </div>
-            </div>
-            <div style='margin-top: 10px; margin-bottom: 10px;'>
-                <div>
-                    <label>{{ 'tags' | translate }}</label>
-                    <md-button class='topButton md-raised md-primary'
-                               ng-click='openResponseController.addTag()'>
-                        <md-icon>add</md-icon>
-                        <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "addTag" | translate }}</md-tooltip>
-                    </md-button>
-                </div>
-                <div ng-repeat='tag in openResponseController.authoringComponentContent.tags track by $index'>
-                    <div layout='row'>
-                        <md-input-container style='margin-bottom: 0px'>
-                            <label></label>
-                            <input ng-model='openResponseController.authoringComponentContent.tags[$index]'
-                                   ng-change='openResponseController.authoringViewComponentChanged()'
-                                   ng-model-options='{ debounce: 1000 }'
-                                   size='100'
-                                   placeholder='{{ "enterTag" | translate }}'/>
-                        </md-input-container>
-                        <md-button class='moveComponentButton md-raised md-primary' ng-click='openResponseController.moveTagUp($index)'>
-                            <md-icon>arrow_upward</md-icon>
-                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'moveUp' | translate }}</md-tooltip>
-                        </md-button>
-                        <md-button class='moveComponentButton md-raised md-primary' ng-click='openResponseController.moveTagDown($index)'>
-                            <md-icon>arrow_downward</md-icon>
-                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'moveDown' | translate }}</md-tooltip>
-                        </md-button>
-                        <md-button class='moveComponentButton md-raised md-primary' ng-click='openResponseController.deleteTag($index)'>
-                            <md-icon>delete</md-icon>
-                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'DELETE' | translate }}</md-tooltip>
-                        </md-button>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <md-button class='topButton md-raised md-primary'
-                           ng-click='openResponseController.showJSONButtonClicked()'>
-                    <md-icon>code</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
-                </md-button>
-                <span ng-if='openResponseController.jsonStringChanged'>
-                    {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
-                </span>
-                <div ng-if='openResponseController.showJSONAuthoring'>
-                    <md-input-container style='width: 100%;'>
-                        <textarea ng-model='openResponseController.authoringComponentContentJSONString'
-                                  style='width: 90%; border: 1px solid black;'
-                                  ng-change='openResponseController.authoringJSONChanged()'></textarea>
-                    </md-input-container>
-                </div>
-            </div>
+            <br/>
+            <button ng-click='openResponseController.authoringViewNotificationUpClicked($index)'>{{ 'UP' | translate }}</button>
+            <button ng-click='openResponseController.authoringViewNotificationDownClicked($index)'>{{ 'DOWN' | translate }}</button>
+            <button ng-click='openResponseController.authoringViewNotificationDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
+           </div>
+          <button ng-click='openResponseController.authoringAddNotification()'>
+            {{ 'openResponse.addNewNotification' | translate }}
+          </button>
         </div>
-        <div ng-if='!openResponseController.authoringComponentContent.showPreviousWork'>
-            <md-input-container style='width:100%'>
-                <label>{{ 'PROMPT' | translate }}</label><span><md-icon>announcement</md-icon><md-tooltip md-direction="right">{{ 'openResponse.promptTip' | translate }}</md-tooltip></span>
-                <textarea rows='1'
-                          ng-model='openResponseController.authoringComponentContent.prompt'
-                          ng-change='openResponseController.authoringViewComponentChanged()'
-                          ng-model-options='{ debounce: 1000 }'
-                          placeholder='{{ "enterPromptHere" | translate }}'>
-            </textarea>
+      </div>
+      <div>
+        <md-checkbox class='md-primary'
+               ng-model='openResponseController.authoringComponentContent.showSaveButton'
+               ng-change='openResponseController.authoringViewComponentChanged()'>
+          {{ 'SHOW_SAVE_BUTTON' | translate }}
+        </md-checkbox>
+      </div>
+      <div>
+        <md-checkbox class='md-primary'
+               ng-model='openResponseController.authoringComponentContent.showSubmitButton'
+               ng-change='openResponseController.authoringViewComponentChanged()'>
+          {{ 'SHOW_SUBMIT_BUTTON' | translate }}
+        </md-checkbox>
+      </div>
+      <div>
+        <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
+                  ng-if='openResponseController.authoringComponentContent.showSubmitButton'>
+          <label>{{ 'MAX_SUBMIT' | translate }}</label>
+          <input type='number'
+               ng-model='openResponseController.authoringComponentContent.maxSubmitCount'
+               ng-model-options='{ debounce: 1000 }'
+               ng-change='openResponseController.authoringViewComponentChanged()'/>
+        </md-input-container>
+      </div>
+      <div>
+        <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+          <label>{{ 'MAX_SCORE' | translate }}</label>
+          <input type='number'
+               ng-model='openResponseController.authoringComponentContent.maxScore'
+               ng-model-options='{ debounce: 1000 }'
+               ng-change='openResponseController.authoringViewComponentChanged()'/>
+        </md-input-container>
+      </div>
+      <div>
+        <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+          <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+          <input type='number'
+               ng-model='openResponseController.authoringComponentContent.componentWidth'
+               ng-model-options='{ debounce: 1000 }'
+               ng-change='openResponseController.authoringViewComponentChanged()'/>
+        </md-input-container>
+      </div>
+      <div>
+        <md-button class='topButton md-raised md-primary' ng-click='openResponseController.showRubricAuthoring = !openResponseController.showRubricAuthoring'>
+          <md-icon>message</md-icon>
+          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+        </md-button>
+        <div ng-if='openResponseController.showRubricAuthoring'>
+          <summernote id='{{openResponseController.summernoteRubricId}}'
+                ng-model='openResponseController.summernoteRubricHTML'
+                ng-change='openResponseController.summernoteRubricHTMLChanged()'
+                config='openResponseController.summernoteRubricOptions'
+                ng-model-options='{ debounce: 1000 }'
+                rows='10'
+                cols='100'>
+          </summernote>
+        </div>
+      </div>
+      <div>
+        <div style='height: 50;'>
+          <label style='vertical-align: middle; display:inline-block;'>
+            {{ 'CONNECTED_COMPONENTS' | translate }}
+          </label>
+          <md-button class='topButton md-raised md-primary'
+              style='vertical-align: middle; display:inline-block;'
+              ng-click='openResponseController.authoringAddConnectedComponent()'>
+            <md-icon>add</md-icon>
+            <md-tooltip md-direction='top'
+                class='projectButtonTooltip'>
+              {{ 'ADD_CONNECTED_COMPONENT' | translate }}
+            </md-tooltip>
+          </md-button>
+        </div>
+        <div ng-repeat='connectedComponent in openResponseController.authoringComponentContent.connectedComponents track by $index'
+           style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'
+           layout='row'>
+          <div flex>
+            <md-input-container style='margin-right: 20; width: 300;'>
+              <label>{{ 'step' | translate }}</label>
+              <md-select ng-model='connectedComponent.nodeId'
+                     ng-change='openResponseController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
+                     style='width: 300'>
+                <md-option ng-repeat='item in openResponseController.idToOrder | toArray | orderBy : "order"'
+                       value='{{item.$key}}'
+                       ng-if='openResponseController.isApplicationNode(item.$key)'>
+                  {{ openResponseController.getNodePositionAndTitleByNodeId(item.$key) }}
+                </md-option>
+              </md-select>
             </md-input-container>
+            <md-input-container style='margin-right: 20; width: 300;'>
+              <label>{{ 'component' | translate }}</label>
+              <md-select ng-model='connectedComponent.componentId'
+                     ng-change='openResponseController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
+                     style='width: 300'>
+                <md-option ng-repeat='(componentIndex, component) in openResponseController.getComponentsByNodeId(connectedComponent.nodeId)'
+                       value='{{component.id}}'
+                       ng-disabled='!openResponseController.isConnectedComponentTypeAllowed(component.type) || component.id == openResponseController.componentId'>
+                  {{ componentIndex + 1 }}. {{ component.type }} <span ng-if='component.id == openResponseController.componentId'>({{ 'thisComponent' | translate }})</span>
+                </md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container style='margin-right: 20; width: 200;'>
+              <label>{{ 'type' | translate }}</label>
+              <md-select ng-model='connectedComponent.type'
+                     ng-change='openResponseController.authoringConnectedComponentTypeChanged(connectedComponent)'
+                     style='width: 200'>
+                <md-option value='importWork'>
+                  {{ 'importWork' | translate }}
+                </md-option>
+                <md-option value='showWork'>
+                  {{ 'showWork' | translate }}
+                </md-option>
+              </md-select>
+            </md-input-container>
+            <span flex></span>
+            <md-input-container style='margin-left: 20;'>
+              <md-button class='topButton md-raised md-primary'
+                     ng-click='openResponseController.authoringDeleteConnectedComponent($index)'>
+                <md-icon>delete</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
+              </md-button>
+            </md-input-container>
+          </div>
         </div>
+      </div>
+      <div style='margin-top: 10px; margin-bottom: 10px;'>
+        <div style='height: 50;'>
+          <label style='vertical-align: middle; display:inline-block;'>
+            {{ 'tags' | translate }}
+          </label>
+          <md-button class='topButton md-raised md-primary'
+              style='vertical-align: middle; display:inline-block;'
+              ng-click='openResponseController.addTag()'>
+            <md-icon>add</md-icon>
+            <md-tooltip md-direction='top'
+                class='projectButtonTooltip'>
+              {{ 'addTag' | translate }}
+            </md-tooltip>
+          </md-button>
+        </div>
+        <div ng-repeat='tag in openResponseController.authoringComponentContent.tags track by $index'>
+          <div layout='row'>
+            <md-input-container style='margin-bottom: 0px'>
+              <label></label>
+              <input ng-model='openResponseController.authoringComponentContent.tags[$index]'
+                   ng-change='openResponseController.authoringViewComponentChanged()'
+                   ng-model-options='{ debounce: 1000 }'
+                   size='100'
+                   placeholder='{{ "enterTag" | translate }}'/>
+            </md-input-container>
+            <md-button class='moveComponentButton md-raised md-primary' ng-click='openResponseController.moveTagUp($index)'>
+              <md-icon>arrow_upward</md-icon>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'moveUp' | translate }}</md-tooltip>
+            </md-button>
+            <md-button class='moveComponentButton md-raised md-primary' ng-click='openResponseController.moveTagDown($index)'>
+              <md-icon>arrow_downward</md-icon>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'moveDown' | translate }}</md-tooltip>
+            </md-button>
+            <md-button class='moveComponentButton md-raised md-primary' ng-click='openResponseController.deleteTag($index)'>
+              <md-icon>delete</md-icon>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
+            </md-button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <md-button class='topButton md-raised md-primary'
+               ng-click='openResponseController.showJSONButtonClicked()'>
+          <md-icon>code</md-icon>
+          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+        </md-button>
+        <span ng-if='openResponseController.jsonStringChanged'>
+          {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+        </span>
+        <div ng-if='openResponseController.showJSONAuthoring'>
+          <md-input-container style='width: 100%;'>
+            <textarea ng-model='openResponseController.authoringComponentContentJSONString'
+                  style='width: 90%; border: 1px solid black;'
+                  ng-change='openResponseController.authoringJSONChanged()'></textarea>
+          </md-input-container>
+        </div>
+      </div>
     </div>
-    <div ng-style='openResponseController.mode === "authoring" && {"border": "5px solid black", "padding": "20px"}'>
-        <div ng-if='openResponseController.mode === "authoring"'>
-            <h5>{{ 'studentPreview' | translate }}</h5>
-        </div>
-        <div ng-switch="openResponseController.mode">
-            <div ng-switch-when="grading|gradingRevision" ng-switch-when-separator="|" layout="row" layout-wrap>
-                <div flex="100" flex-gt-sm="66" layout="column" class="component--grading__response">
-                    <div class="component--grading__response__content"><compile data="openResponseController.studentResponse"></compile></div>
-                    <span flex></span>
-                    <component-revisions-info node-id="openResponseController.nodeId"
-                                              component-id="openResponseController.componentId"
-                                              max-score="openResponseController.componentContent.maxScore"
-                                              to-workgroup-id="workgroupId"
-                                              component-state="componentState"
-                                              active="openResponseController.mode === 'grading'"></component-revisions-info>
-                </div>
-                <div flex="100" flex-gt-sm="33" class="component--grading__annotations">
-                    <component-grading node-id="openResponseController.nodeId"
-                                       component-id="openResponseController.componentId"
-                                       max-score="openResponseController.componentContent.maxScore"
-                                       from-workgroup-id="teacherWorkgroupId"
-                                       to-workgroup-id="workgroupId"
-                                       component-state-id="componentState.id"
-                                       show-all-annotations="openResponseController.mode !== 'grading'"
-                                       is-disabled="openResponseController.mode !== 'grading'"></component-grading>
-                </div>
-            </div>
-            <div ng-switch-default>
-                <md-input-container class="input-container input-container--open-response md-block md-no-float">
-                    <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
-                           ng-if="openResponseController.isPromptVisible">
-                        <compile id='prompt' data="openResponseController.getPrompt()"></compile>
-                        <possible-score max-score="openResponseController.componentContent.maxScore"></possible-score>
-                    </label>
-                    <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
-                        <textarea ng-if="openResponseController.isRichTextEnabled && !openResponseController.isDisabled"
-                                  ui-tinymce="openResponseController.tinymceOptions"
-                                  ng-model="openResponseController.studentResponse"
-                                  ng-model-options='{ debounce: 100 }'
-                                  ng-change="openResponseController.studentDataChanged()"></textarea>
-                        <div ng-if="openResponseController.isRichTextEnabled && openResponseController.isDisabled"
-                             class="input--textarea input--textarea--disabled">
-                                <compile data="openResponseController.studentResponse"></compile>
-                        </div>
-                        <textarea
-                                  ng-if="!openResponseController.isRichTextEnabled"
-                                  class="input--textarea"
-                                  rows="{{openResponseController.getNumRows() || 3}}"
-                                  ng-model="openResponseController.studentResponse"
-                                  ng-model-options='{ debounce: 100 }'
-                                  ng-disabled="openResponseController.isDisabled"
-                                  ng-change="openResponseController.studentDataChanged()"
-                                  md-no-autogrow></textarea>
-                    </div>
-                </md-input-container>
-            </div>
-        </div>
-        <div ng-if="nodeController.getRevisions().length > 1" layout="row" layout-align="center end">
-            <a ng-click="nodeController.showRevisions($event, component.id, openResponseController.isDisabled)">
-               + {{ 'openResponse.previousVersions' | translate }}: {{nodeController.getRevisions().length - 1}}
-           </a>
-        </div>
-        <div class="component__actions" ng-if="openResponseController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
-            <div class="component__add-attachment">
-                <md-button class="md-accent"
-                           ng-click="nodeController.showStudentAssets($event, component.id, openResponseController.isDisabled)">
-                    <md-icon>image</md-icon> <span>{{ 'openResponse.addFile' | translate }}</span>
-                </md-button>
-            </div>
-            <div class="component__attachment" ng-repeat="attachment in openResponseController.attachments">
-                <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
-                <md-button ng-show="!openResponseController.isDisabled" class="component__attachment__delete" ng-click='openResponseController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
-            </div>
-        </div>
-        <div ng-if="openResponseController.isSaveButtonVisible || openResponseController.isSubmitButtonVisible"
-             class="component__actions" layout="row" layout-align="start center">
-            <md-button id='saveButton'
-                       class="md-raised md-primary"
-                       ng-class="{'md-raised': !openResponseController.isSubmitButtonVisible}"
-                       ng-click="openResponseController.saveButtonClicked()"
-                       ng-disabled="openResponseController.isDisabled || !openResponseController.isDirty"
-                       ng-if="openResponseController.isSaveButtonVisible"
-                       aria-label="{{SAVE | translate}}"
-                       translate="SAVE"></md-button>
-            <md-button id='submitButton'
-                       class="md-raised md-primary"
-                       ng-click="openResponseController.submitButtonClicked()"
-                       ng-disabled="openResponseController.isDisabled || !openResponseController.isSubmitDirty || openResponseController.isSubmitButtonDisabled"
-                       ng-if="openResponseController.isSubmitButtonVisible"
-                       aria-label="{{SUBMIT | translate}}"
-                       translate="SUBMIT"></md-button>
-            <span ng-if="openResponseController.saveMessage.text"
-                  class="component__actions__info md-caption">
-                  {{openResponseController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ openResponseController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="openResponseController.saveMessage.time"></span></span>
-            </span>
-        </div>
-        <component-annotations ng-if="openResponseController.mode === 'student' || openResponseController.mode === 'authoring'"
-                               annotations='openResponseController.latestAnnotations'
-                               max-score="openResponseController.componentContent.maxScore"></component-annotations>
+    <div ng-if='!openResponseController.authoringComponentContent.showPreviousWork'>
+      <md-input-container style='width:100%'>
+        <label>{{ 'PROMPT' | translate }}</label><span><md-icon>announcement</md-icon><md-tooltip md-direction='right'>{{ 'openResponse.promptTip' | translate }}</md-tooltip></span>
+        <textarea rows='1'
+              ng-model='openResponseController.authoringComponentContent.prompt'
+              ng-change='openResponseController.authoringViewComponentChanged()'
+              ng-model-options='{ debounce: 1000 }'
+              placeholder='{{ "enterPromptHere" | translate }}'>
+      </textarea>
+      </md-input-container>
     </div>
+  </div>
+  <div ng-style='openResponseController.mode === "authoring" && {"border": "5px solid black", "padding": "20px"}'>
+    <div ng-if='openResponseController.mode === "authoring"'>
+      <h5>{{ 'studentPreview' | translate }}</h5>
+    </div>
+    <div ng-switch='openResponseController.mode'>
+      <div ng-switch-when='grading|gradingRevision' ng-switch-when-separator='|' layout='row' layout-wrap>
+        <div flex='100' flex-gt-sm='66' layout='column' class='component--grading__response'>
+          <div class='component--grading__response__content'><compile data='openResponseController.studentResponse'></compile></div>
+          <span flex></span>
+          <component-revisions-info node-id='openResponseController.nodeId'
+                        component-id='openResponseController.componentId'
+                        max-score='openResponseController.componentContent.maxScore'
+                        to-workgroup-id='workgroupId'
+                        component-state='componentState'
+                        active='openResponseController.mode === "grading"'></component-revisions-info>
+        </div>
+        <div flex='100' flex-gt-sm='33' class='component--grading__annotations'>
+          <component-grading node-id='openResponseController.nodeId'
+                     component-id='openResponseController.componentId'
+                     max-score='openResponseController.componentContent.maxScore'
+                     from-workgroup-id='teacherWorkgroupId'
+                     to-workgroup-id='workgroupId'
+                     component-state-id='componentState.id'
+                     show-all-annotations='openResponseController.mode !== "grading"'
+                     is-disabled='openResponseController.mode !== "grading"'></component-grading>
+        </div>
+      </div>
+      <div ng-switch-default>
+        <md-input-container class='input-container input-container--open-response md-block md-no-float'>
+          <label class='input-label md-no-float' ng-disabled='openResponseController.isDisabled'
+               ng-if='openResponseController.isPromptVisible'>
+            <compile id='prompt' data='openResponseController.getPrompt()'></compile>
+            <possible-score max-score='openResponseController.componentContent.maxScore'></possible-score>
+          </label>
+          <div class='input-wrapper' ng-class='{"input-wrapper--richtext": openResponseController.isRichTextEnabled}'>
+            <textarea ng-if='openResponseController.isRichTextEnabled && !openResponseController.isDisabled'
+                  ui-tinymce='openResponseController.tinymceOptions'
+                  ng-model='openResponseController.studentResponse'
+                  ng-model-options='{ debounce: 100 }'
+                  ng-change='openResponseController.studentDataChanged()'></textarea>
+            <div ng-if='openResponseController.isRichTextEnabled && openResponseController.isDisabled'
+               class='input--textarea input--textarea--disabled'>
+                <compile data='openResponseController.studentResponse'></compile>
+            </div>
+            <textarea
+                  ng-if='!openResponseController.isRichTextEnabled'
+                  class='input--textarea'
+                  rows='{{openResponseController.getNumRows() || 3}}'
+                  ng-model='openResponseController.studentResponse'
+                  ng-model-options='{ debounce: 100 }'
+                  ng-disabled='openResponseController.isDisabled'
+                  ng-change='openResponseController.studentDataChanged()'
+                  md-no-autogrow></textarea>
+          </div>
+        </md-input-container>
+      </div>
+    </div>
+    <div ng-if='nodeController.getRevisions().length > 1' layout='row' layout-align='center end'>
+      <a ng-click='nodeController.showRevisions($event, component.id, openResponseController.isDisabled)'>
+         + {{ 'openResponse.previousVersions' | translate }}: {{nodeController.getRevisions().length - 1}}
+       </a>
+    </div>
+    <div class='component__actions' ng-if='openResponseController.isStudentAttachmentEnabled' layout='row' layout-wrap='true'>
+      <div class='component__add-attachment'>
+        <md-button class='md-accent'
+               ng-click='nodeController.showStudentAssets($event, component.id, openResponseController.isDisabled)'>
+          <md-icon>image</md-icon> <span>{{ 'openResponse.addFile' | translate }}</span>
+        </md-button>
+      </div>
+      <div class='component__attachment' ng-repeat='attachment in openResponseController.attachments'>
+        <img ng-src='{{attachment.iconURL}}' class='component__attachment__content' />
+        <md-button ng-show='!openResponseController.isDisabled' class='component__attachment__delete' ng-click='openResponseController.removeAttachment(attachment)' title='Remove file'><md-icon>cancel</md-icon></md-button>
+      </div>
+    </div>
+    <div ng-if='openResponseController.isSaveButtonVisible || openResponseController.isSubmitButtonVisible'
+       class='component__actions' layout='row' layout-align='start center'>
+      <md-button id='saveButton'
+             class='md-raised md-primary'
+             ng-class='{"md-raised": !openResponseController.isSubmitButtonVisible}'
+             ng-click='openResponseController.saveButtonClicked()'
+             ng-disabled='openResponseController.isDisabled || !openResponseController.isDirty'
+             ng-if='openResponseController.isSaveButtonVisible'
+             aria-label='{{SAVE | translate}}'
+             translate='SAVE'></md-button>
+      <md-button id='submitButton'
+             class='md-raised md-primary'
+             ng-click='openResponseController.submitButtonClicked()'
+             ng-disabled='openResponseController.isDisabled || !openResponseController.isSubmitDirty || openResponseController.isSubmitButtonDisabled'
+             ng-if='openResponseController.isSubmitButtonVisible'
+             aria-label='{{SUBMIT | translate}}'
+             translate='SUBMIT'></md-button>
+      <span ng-if='openResponseController.saveMessage.text'
+          class='component__actions__info md-caption'>
+          {{openResponseController.saveMessage.text}} <span class='component__actions__more'><md-tooltip md-direction='top'>{{ openResponseController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago='openResponseController.saveMessage.time'></span></span>
+      </span>
+    </div>
+    <component-annotations ng-if='openResponseController.mode === "student" || openResponseController.mode === "authoring"'
+                 annotations='openResponseController.latestAnnotations'
+                 max-score='openResponseController.componentContent.maxScore'></component-annotations>
+  </div>
 </div>

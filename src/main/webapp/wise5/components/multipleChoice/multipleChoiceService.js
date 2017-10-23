@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -19,422 +19,422 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var MultipleChoiceService = function (_NodeService) {
-    _inherits(MultipleChoiceService, _NodeService);
+  _inherits(MultipleChoiceService, _NodeService);
 
-    function MultipleChoiceService($filter, StudentDataService, UtilService) {
-        _classCallCheck(this, MultipleChoiceService);
+  function MultipleChoiceService($filter, StudentDataService, UtilService) {
+    _classCallCheck(this, MultipleChoiceService);
 
-        var _this = _possibleConstructorReturn(this, (MultipleChoiceService.__proto__ || Object.getPrototypeOf(MultipleChoiceService)).call(this));
+    var _this = _possibleConstructorReturn(this, (MultipleChoiceService.__proto__ || Object.getPrototypeOf(MultipleChoiceService)).call(this));
 
-        _this.$filter = $filter;
-        _this.StudentDataService = StudentDataService;
-        _this.UtilService = UtilService;
-        _this.$translate = _this.$filter('translate');
-        return _this;
+    _this.$filter = $filter;
+    _this.StudentDataService = StudentDataService;
+    _this.UtilService = UtilService;
+    _this.$translate = _this.$filter('translate');
+    return _this;
+  }
+
+  /**
+   * Get the component type label
+   * example
+   * "Multiple Choice"
+   */
+
+
+  _createClass(MultipleChoiceService, [{
+    key: 'getComponentTypeLabel',
+    value: function getComponentTypeLabel() {
+      return this.$translate('multipleChoice.componentTypeLabel');
     }
 
     /**
-     * Get the component type label
-     * example
-     * "Multiple Choice"
+     * Create a MultipleChoice component object
+     * @returns a new MultipleChoice component object
      */
 
+  }, {
+    key: 'createComponent',
+    value: function createComponent() {
+      var component = {};
+      component.id = this.UtilService.generateKey();
+      component.type = 'MultipleChoice';
+      component.prompt = '';
+      component.showSaveButton = false;
+      component.showSubmitButton = false;
+      component.choiceType = 'radio';
+      component.choices = [];
+      component.showFeedback = true;
+      return component;
+    }
 
-    _createClass(MultipleChoiceService, [{
-        key: 'getComponentTypeLabel',
-        value: function getComponentTypeLabel() {
-            return this.$translate('multipleChoice.componentTypeLabel');
+    /**
+     * Copies an existing MultipleChoice component object
+     * @returns a copied MultipleChoice component object
+     */
+
+  }, {
+    key: 'copyComponent',
+    value: function copyComponent(componentToCopy) {
+      var component = this.createComponent();
+      component.prompt = componentToCopy.prompt;
+      component.showSaveButton = componentToCopy.showSaveButton;
+      component.showSubmitButton = componentToCopy.showSubmitButton;
+      component.choiceType = componentToCopy.choiceType;
+      component.choices = [];
+      // go through the original choices and create new id's
+      if (componentToCopy.choices != null && componentToCopy.choices.length > 0) {
+        for (var c = 0; c < componentToCopy.choices.length; c++) {
+          var choice = componentToCopy.choices[c];
+          choice.id = this.UtilService.generateKey(); // generate a new id for this choice.
+          component.choices.push(choice);
         }
+      }
+      return component;
+    }
 
-        /**
-         * Create a MultipleChoice component object
-         * @returns a new MultipleChoice component object
-         */
+    /**
+     * Returns all possible criteria for this component.
+     * @param component a MultipleChoice component
+     */
 
-    }, {
-        key: 'createComponent',
-        value: function createComponent() {
-            var component = {};
-            component.id = this.UtilService.generateKey();
-            component.type = 'MultipleChoice';
-            component.prompt = '';
-            component.showSaveButton = false;
-            component.showSubmitButton = false;
-            component.choiceType = 'radio';
-            component.choices = [];
-            component.showFeedback = true;
-            return component;
+  }, {
+    key: 'getPossibleTransitionCriteria',
+    value: function getPossibleTransitionCriteria(nodeId, componentId, component) {
+      var allPossibleTransitionCriteria = [];
+      if (component.choiceType === 'radio') {
+        // Go through all the choices
+        for (var c = 0; c < component.choices.length; c++) {
+          var choice = component.choices[c];
+          var possibleTransitionCriteria = {
+            'name': 'choiceChosen',
+            'id': 'choiceChosen_' + choice.id,
+            'params': {
+              'nodeId': nodeId,
+              'componentId': componentId,
+              'choiceIds': [choice.id]
+            },
+            'userFriendlyDescription': this.$translate('multipleChoice.userChose', { choiceText: choice.text, choiceId: choice.id })
+          };
+          allPossibleTransitionCriteria.push(possibleTransitionCriteria);
         }
+      } else if (component.choiceType === 'checkbox') {
+        // TODO: implement meeee!
+      }
+      return allPossibleTransitionCriteria;
+    }
 
-        /**
-         * Copies an existing MultipleChoice component object
-         * @returns a copied MultipleChoice component object
-         */
+    /**
+     * Check if the student chose a specific choice
+     * @param criteria the criteria object
+     * @returns a boolean value whether the student chose the choice specified in the
+     * criteria object
+     */
 
-    }, {
-        key: 'copyComponent',
-        value: function copyComponent(componentToCopy) {
-            var component = this.createComponent();
-            component.prompt = componentToCopy.prompt;
-            component.showSaveButton = componentToCopy.showSaveButton;
-            component.showSubmitButton = componentToCopy.showSubmitButton;
-            component.choiceType = componentToCopy.choiceType;
-            component.choices = [];
-            // go through the original choices and create new id's
-            if (componentToCopy.choices != null && componentToCopy.choices.length > 0) {
-                for (var c = 0; c < componentToCopy.choices.length; c++) {
-                    var choice = componentToCopy.choices[c];
-                    choice.id = this.UtilService.generateKey(); // generate a new id for this choice.
-                    component.choices.push(choice);
-                }
-            }
-            return component;
-        }
+  }, {
+    key: 'choiceChosen',
+    value: function choiceChosen(criteria) {
 
-        /**
-         * Returns all possible criteria for this component.
-         * @param component a MultipleChoice component
-         */
+      var result = false;
 
-    }, {
-        key: 'getPossibleTransitionCriteria',
-        value: function getPossibleTransitionCriteria(nodeId, componentId, component) {
-            var allPossibleTransitionCriteria = [];
-            if (component.choiceType === "radio") {
-                // Go through all the choices
-                for (var c = 0; c < component.choices.length; c++) {
-                    var choice = component.choices[c];
-                    var possibleTransitionCriteria = {
-                        "name": "choiceChosen",
-                        "id": "choiceChosen_" + choice.id,
-                        "params": {
-                            "nodeId": nodeId,
-                            "componentId": componentId,
-                            "choiceIds": [choice.id]
-                        },
-                        "userFriendlyDescription": this.$translate('multipleChoice.userChose', { choiceText: choice.text, choiceId: choice.id })
-                    };
-                    allPossibleTransitionCriteria.push(possibleTransitionCriteria);
-                }
-            } else if (component.choiceType === "checkbox") {
-                // TODO: implement meeee!
-            }
-            return allPossibleTransitionCriteria;
-        }
+      if (criteria != null && criteria.params != null) {
+        var nodeId = criteria.params.nodeId;
+        var componentId = criteria.params.componentId;
+        var choiceIds = criteria.params.choiceIds; // the choice ids that we expect the student to have chosen
 
-        /**
-         * Check if the student chose a specific choice
-         * @param criteria the criteria object
-         * @returns a boolean value whether the student chose the choice specified in the
-         * criteria object
-         */
+        if (nodeId != null && componentId != null) {
 
-    }, {
-        key: 'choiceChosen',
-        value: function choiceChosen(criteria) {
+          // get the component states
+          var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
 
-            var result = false;
+          if (componentStates != null && componentStates.length > 0) {
 
-            if (criteria != null && criteria.params != null) {
-                var nodeId = criteria.params.nodeId;
-                var componentId = criteria.params.componentId;
-                var choiceIds = criteria.params.choiceIds; // the choice ids that we expect the student to have chosen
+            if (choiceIds != null) {
+              // get the latest component state
+              var componentState = componentStates[componentStates.length - 1];
 
-                if (nodeId != null && componentId != null) {
+              // get the student data
+              var studentData = componentState.studentData;
 
-                    // get the component states
-                    var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
+              if (studentData != null) {
 
-                    if (componentStates != null && componentStates.length > 0) {
+                // get the choice(s) the student chose
+                var studentChoices = studentData.studentChoices;
 
-                        if (choiceIds != null) {
-                            // get the latest component state
-                            var componentState = componentStates[componentStates.length - 1];
+                if (studentChoices != null) {
 
-                            // get the student data
-                            var studentData = componentState.studentData;
+                  if (studentChoices.length === choiceIds.length) {
+                    /*
+                     * the number of choices the student chose do match so the student may
+                     * have matched the choices. we will now need to compare each of the
+                     * choice ids to make sure the student chose the ones that are required
+                     */
 
-                            if (studentData != null) {
+                    var studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
 
-                                // get the choice(s) the student chose
-                                var studentChoices = studentData.studentChoices;
+                    for (var c = 0; c < choiceIds.length; c++) {
+                      var choiceId = choiceIds[c];
 
-                                if (studentChoices != null) {
-
-                                    if (studentChoices.length === choiceIds.length) {
-                                        /*
-                                         * the number of choices the student chose do match so the student may
-                                         * have matched the choices. we will now need to compare each of the
-                                         * choice ids to make sure the student chose the ones that are required
-                                         */
-
-                                        var studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
-
-                                        for (var c = 0; c < choiceIds.length; c++) {
-                                            var choiceId = choiceIds[c];
-
-                                            if (studentChoiceIds.indexOf(choiceId) === -1) {
-                                                /*
-                                                 * the required choice id is not in the student choices so the student
-                                                 * did not match all the choices
-                                                 */
-                                                result = false;
-                                                break;
-                                            } else {
-                                                // the required choice id is in the student choices
-                                                result = true;
-                                            }
-                                        }
-                                    } else {
-                                        /*
-                                         * the number of choices the student chose do not match so the student did
-                                         * not match the choices
-                                         */
-
-                                        result = false;
-                                    }
-                                }
-                            }
-                        }
+                      if (studentChoiceIds.indexOf(choiceId) === -1) {
+                        /*
+                         * the required choice id is not in the student choices so the student
+                         * did not match all the choices
+                         */
+                        result = false;
+                        break;
+                      } else {
+                        // the required choice id is in the student choices
+                        result = true;
+                      }
                     }
+                  } else {
+                    /*
+                     * the number of choices the student chose do not match so the student did
+                     * not match the choices
+                     */
+
+                    result = false;
+                  }
                 }
+              }
             }
-
-            return result;
+          }
         }
-    }, {
-        key: 'getStudentChoiceIdsFromStudentChoiceObjects',
+      }
+
+      return result;
+    }
+  }, {
+    key: 'getStudentChoiceIdsFromStudentChoiceObjects',
 
 
-        /**
-         * Get the student choice ids from the student choice objects
-         * @param studentChoices an array of student choice objects. these objects contain
-         * an id and text fields
-         * @returns an array of choice id strings
-         */
-        value: function getStudentChoiceIdsFromStudentChoiceObjects(studentChoices) {
-            var choiceIds = [];
+    /**
+     * Get the student choice ids from the student choice objects
+     * @param studentChoices an array of student choice objects. these objects contain
+     * an id and text fields
+     * @returns an array of choice id strings
+     */
+    value: function getStudentChoiceIdsFromStudentChoiceObjects(studentChoices) {
+      var choiceIds = [];
+
+      if (studentChoices != null) {
+
+        // loop through all the student choice objects
+        for (var c = 0; c < studentChoices.length; c++) {
+
+          // get a student choice object
+          var studentChoice = studentChoices[c];
+
+          if (studentChoice != null) {
+
+            // get the student choice id
+            var studentChoiceId = studentChoice.id;
+
+            choiceIds.push(studentChoiceId);
+          }
+        }
+      }
+
+      return choiceIds;
+    }
+  }, {
+    key: 'populateComponentState',
+
+
+    /**
+     * Populate a component state with the data from another component state
+     * @param componentStateFromOtherComponent the component state to obtain the data from
+     * @return a new component state that contains the student data from the other
+     * component state
+     */
+    value: function populateComponentState(componentStateFromOtherComponent) {
+      var componentState = null;
+
+      if (componentStateFromOtherComponent != null) {
+
+        // create an empty component state
+        componentState = this.StudentDataService.createComponentState();
+
+        // get the component type of the other component state
+        var otherComponentType = componentStateFromOtherComponent.componentType;
+
+        if (otherComponentType === 'MultipleChoice') {
+          // the other component is an MultipleChoice component
+
+          // get the student data from the other component state
+          var studentData = componentStateFromOtherComponent.studentData;
+
+          // create a copy of the student data
+          var studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
+
+          // set the student data into the new component state
+          componentState.studentData = studentDataCopy;
+        }
+      }
+
+      return componentState;
+    }
+  }, {
+    key: 'isCompleted',
+
+
+    /**
+     * Check if the component was completed
+     * @param component the component object
+     * @param componentStates the component states for the specific component
+     * @param componentEvents the events for the specific component
+     * @param nodeEvents the events for the parent node of the component
+     * @param node parent node of the component
+     * @returns whether the component was completed
+     */
+    value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
+      var result = false;
+
+      if (componentStates && componentStates.length) {
+        var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
+
+        // loop through all the component states
+        for (var c = 0, l = componentStates.length; c < l; c++) {
+
+          // the component state
+          var componentState = componentStates[c];
+
+          // get the student data from the component state
+          var studentData = componentState.studentData;
+
+          if (studentData != null) {
+            var studentChoices = studentData.studentChoices;
 
             if (studentChoices != null) {
-
-                // loop through all the student choice objects
-                for (var c = 0; c < studentChoices.length; c++) {
-
-                    // get a student choice object
-                    var studentChoice = studentChoices[c];
-
-                    if (studentChoice != null) {
-
-                        // get the student choice id
-                        var studentChoiceId = studentChoice.id;
-
-                        choiceIds.push(studentChoiceId);
-                    }
+              // there is a student choice so the component has saved work
+              if (submitRequired) {
+                // completion requires a submission, so check for isSubmit
+                if (componentState.isSubmit) {
+                  result = true;
+                  break;
                 }
+              } else {
+                result = true;
+                break;
+              }
             }
-
-            return choiceIds;
+          }
         }
-    }, {
-        key: 'populateComponentState',
+      }
+
+      return result;
+    }
+  }, {
+    key: 'componentHasWork',
 
 
-        /**
-         * Populate a component state with the data from another component state
-         * @param componentStateFromOtherComponent the component state to obtain the data from
-         * @return a new component state that contains the student data from the other
-         * component state
-         */
-        value: function populateComponentState(componentStateFromOtherComponent) {
-            var componentState = null;
+    /**
+     * Whether this component generates student work
+     * @param component (optional) the component object. if the component object
+     * is not provided, we will use the default value of whether the
+     * component type usually has work.
+     * @return whether this component generates student work
+     */
+    value: function componentHasWork(component) {
+      return true;
+    }
 
-            if (componentStateFromOtherComponent != null) {
+    /**
+     * Get the human readable student data string
+     * @param componentState the component state
+     * @return a human readable student data string
+     */
 
-                // create an empty component state
-                componentState = this.StudentDataService.createComponentState();
+  }, {
+    key: 'getStudentDataString',
+    value: function getStudentDataString(componentState) {
 
-                // get the component type of the other component state
-                var otherComponentType = componentStateFromOtherComponent.componentType;
+      var studentDataString = '';
 
-                if (otherComponentType === 'MultipleChoice') {
-                    // the other component is an MultipleChoice component
+      if (componentState != null) {
+        var studentData = componentState.studentData;
 
-                    // get the student data from the other component state
-                    var studentData = componentStateFromOtherComponent.studentData;
+        if (studentData != null) {
 
-                    // create a copy of the student data
-                    var studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
+          // get the choices the student chose
+          var studentChoices = studentData.studentChoices;
 
-                    // set the student data into the new component state
-                    componentState.studentData = studentDataCopy;
+          if (studentChoices != null) {
+
+            // loop through all the choices the student chose
+            for (var c = 0; c < studentChoices.length; c++) {
+              var studentChoice = studentChoices[c];
+
+              if (studentChoice != null) {
+
+                // get the choice text
+                var text = studentChoice.text;
+
+                if (text != null) {
+                  if (studentDataString != '') {
+                    // separate the choices with a comma
+                    studentDataString += ', ';
+                  }
+
+                  // append the choice text
+                  studentDataString += text;
                 }
+              }
             }
-
-            return componentState;
+          }
         }
-    }, {
-        key: 'isCompleted',
+      }
 
+      return studentDataString;
+    }
 
-        /**
-         * Check if the component was completed
-         * @param component the component object
-         * @param componentStates the component states for the specific component
-         * @param componentEvents the events for the specific component
-         * @param nodeEvents the events for the parent node of the component
-         * @param node parent node of the component
-         * @returns whether the component was completed
-         */
-        value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-            var result = false;
+    /**
+     * Whether this component uses a save button
+     * @return whether this component uses a save button
+     */
 
-            if (componentStates && componentStates.length) {
-                var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
+  }, {
+    key: 'componentUsesSaveButton',
+    value: function componentUsesSaveButton() {
+      return true;
+    }
 
-                // loop through all the component states
-                for (var c = 0, l = componentStates.length; c < l; c++) {
+    /**
+     * Whether this component uses a submit button
+     * @return whether this component uses a submit button
+     */
 
-                    // the component state
-                    var componentState = componentStates[c];
+  }, {
+    key: 'componentUsesSubmitButton',
+    value: function componentUsesSubmitButton() {
+      return true;
+    }
 
-                    // get the student data from the component state
-                    var studentData = componentState.studentData;
+    /**
+     * Check if the component state has student work. Sometimes a component
+     * state may be created if the student visits a component but doesn't
+     * actually perform any work. This is where we will check if the student
+     * actually performed any work.
+     * @param componentState the component state object
+     * @param componentContent the component content
+     * @return whether the component state has any work
+     */
 
-                    if (studentData != null) {
-                        var studentChoices = studentData.studentChoices;
-
-                        if (studentChoices != null) {
-                            // there is a student choice so the component has saved work
-                            if (submitRequired) {
-                                // completion requires a submission, so check for isSubmit
-                                if (componentState.isSubmit) {
-                                    result = true;
-                                    break;
-                                }
-                            } else {
-                                result = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
-    }, {
-        key: 'componentHasWork',
-
-
-        /**
-         * Whether this component generates student work
-         * @param component (optional) the component object. if the component object
-         * is not provided, we will use the default value of whether the
-         * component type usually has work.
-         * @return whether this component generates student work
-         */
-        value: function componentHasWork(component) {
+  }, {
+    key: 'componentStateHasStudentWork',
+    value: function componentStateHasStudentWork(componentState, componentContent) {
+      if (componentState != null) {
+        var studentData = componentState.studentData;
+        if (studentData != null) {
+          var studentChoices = studentData.studentChoices;
+          if (studentChoices != null && studentChoices.length > 0) {
             return true;
+          }
         }
+      }
+      return false;
+    }
+  }]);
 
-        /**
-         * Get the human readable student data string
-         * @param componentState the component state
-         * @return a human readable student data string
-         */
-
-    }, {
-        key: 'getStudentDataString',
-        value: function getStudentDataString(componentState) {
-
-            var studentDataString = "";
-
-            if (componentState != null) {
-                var studentData = componentState.studentData;
-
-                if (studentData != null) {
-
-                    // get the choices the student chose
-                    var studentChoices = studentData.studentChoices;
-
-                    if (studentChoices != null) {
-
-                        // loop through all the choices the student chose
-                        for (var c = 0; c < studentChoices.length; c++) {
-                            var studentChoice = studentChoices[c];
-
-                            if (studentChoice != null) {
-
-                                // get the choice text
-                                var text = studentChoice.text;
-
-                                if (text != null) {
-                                    if (studentDataString != "") {
-                                        // separate the choices with a comma
-                                        studentDataString += ", ";
-                                    }
-
-                                    // append the choice text
-                                    studentDataString += text;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return studentDataString;
-        }
-
-        /**
-         * Whether this component uses a save button
-         * @return whether this component uses a save button
-         */
-
-    }, {
-        key: 'componentUsesSaveButton',
-        value: function componentUsesSaveButton() {
-            return true;
-        }
-
-        /**
-         * Whether this component uses a submit button
-         * @return whether this component uses a submit button
-         */
-
-    }, {
-        key: 'componentUsesSubmitButton',
-        value: function componentUsesSubmitButton() {
-            return true;
-        }
-
-        /**
-         * Check if the component state has student work. Sometimes a component
-         * state may be created if the student visits a component but doesn't
-         * actually perform any work. This is where we will check if the student
-         * actually performed any work.
-         * @param componentState the component state object
-         * @param componentContent the component content
-         * @return whether the component state has any work
-         */
-
-    }, {
-        key: 'componentStateHasStudentWork',
-        value: function componentStateHasStudentWork(componentState, componentContent) {
-            if (componentState != null) {
-                var studentData = componentState.studentData;
-                if (studentData != null) {
-                    var studentChoices = studentData.studentChoices;
-                    if (studentChoices != null && studentChoices.length > 0) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-    }]);
-
-    return MultipleChoiceService;
+  return MultipleChoiceService;
 }(_nodeService2.default);
 
 MultipleChoiceService.$inject = ['$filter', 'StudentDataService', 'UtilService'];

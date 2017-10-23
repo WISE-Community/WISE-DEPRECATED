@@ -523,9 +523,9 @@ var NodeAuthoringController = function () {
 
             try {
               for (var _iterator2 = nodeIdsInBranch[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                var _nodeId = _step2.value;
+                var nodeId = _step2.value;
 
-                var item = branch.items[_nodeId];
+                var item = branch.items[nodeId];
                 if (item != null) {
                   // make the item checked
                   item.checked = true;
@@ -773,14 +773,14 @@ var NodeAuthoringController = function () {
     value: function transitionCriteriaNodeIdChanged(transitionCriteria) {
       if (transitionCriteria != null && transitionCriteria.params != null) {
         // remember the node id
-        var _nodeId2 = transitionCriteria.params.nodeId;
+        var nodeId = transitionCriteria.params.nodeId;
 
         // clear the params
         transitionCriteria.params = {};
 
-        if (_nodeId2 != null) {
+        if (nodeId != null) {
           // set the node id back into the params
-          transitionCriteria.params.nodeId = _nodeId2;
+          transitionCriteria.params.nodeId = nodeId;
         }
       }
 
@@ -799,20 +799,20 @@ var NodeAuthoringController = function () {
     value: function transitionCriteriaComponentIdChanged(transitionCriteria) {
       if (transitionCriteria != null && transitionCriteria.params != null) {
         // remember the node id and component id
-        var _nodeId3 = transitionCriteria.params.nodeId;
-        var _componentId = transitionCriteria.params.componentId;
+        var nodeId = transitionCriteria.params.nodeId;
+        var componentId = transitionCriteria.params.componentId;
 
         // clear the params
         transitionCriteria.params = {};
 
-        if (_nodeId3 != null) {
+        if (nodeId != null) {
           // set the node id back into the params
-          transitionCriteria.params.nodeId = _nodeId3;
+          transitionCriteria.params.nodeId = nodeId;
         }
 
-        if (_componentId != null) {
+        if (componentId != null) {
           // set the component id back into the params
-          transitionCriteria.params.componentId = _componentId;
+          transitionCriteria.params.componentId = componentId;
         }
       }
 
@@ -1395,26 +1395,26 @@ var NodeAuthoringController = function () {
     key: 'transitionCriteriaNameChanged',
     value: function transitionCriteriaNameChanged(transitionCriteria) {
       if (transitionCriteria != null) {
-        var _nodeId4 = null;
-        var _componentId2 = null;
+        var nodeId = null;
+        var componentId = null;
 
         if (transitionCriteria.params != null) {
           // remember the node id and component id
-          _nodeId4 = transitionCriteria.params.nodeId;
-          _componentId2 = transitionCriteria.params.componentId;
+          nodeId = transitionCriteria.params.nodeId;
+          componentId = transitionCriteria.params.componentId;
         }
 
         // clear the params
         transitionCriteria.params = {};
 
-        if (_nodeId4 != null) {
+        if (nodeId != null) {
           // set the node id back into the params
-          transitionCriteria.params.nodeId = _nodeId4;
+          transitionCriteria.params.nodeId = nodeId;
         }
 
-        if (_componentId2 != null) {
+        if (componentId != null) {
           // set the component id back into the params
-          transitionCriteria.params.componentId = _componentId2;
+          transitionCriteria.params.componentId = componentId;
         }
       }
       this.authoringViewNodeChanged();
@@ -1818,31 +1818,31 @@ var NodeAuthoringController = function () {
     key: 'createBranchCriterionChanged',
     value: function createBranchCriterionChanged() {
       if (this.createBranchCriterion != null) {
-        var _nodeId5 = this.node.id;
+        var nodeId = this.node.id;
         if (this.createBranchCriterion == 'workgroupId') {
           // the branch is based on workgroup id
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'howToChooseAmongAvailablePaths', 'workgroupId');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'whenToChoosePath', 'enterNode');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'canChangePath', false);
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'maxPathsVisitable', 1);
+          this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'workgroupId');
+          this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'enterNode');
+          this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
+          this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
         } else if (this.createBranchCriterion == 'score') {
           // the branch is based on score
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'howToChooseAmongAvailablePaths', 'random');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'whenToChoosePath', 'studentDataChanged');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'canChangePath', false);
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'maxPathsVisitable', 1);
+          this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'random');
+          this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'studentDataChanged');
+          this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
+          this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
         } else if (this.createBranchCriterion == 'choiceChosen') {
           // the branch is based on choice chosen
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'howToChooseAmongAvailablePaths', 'random');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'whenToChoosePath', 'studentDataChanged');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'canChangePath', false);
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'maxPathsVisitable', 1);
+          this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'random');
+          this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'studentDataChanged');
+          this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
+          this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
         } else if (this.createBranchCriterion == 'random') {
           // the branch is based on random assignment
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'howToChooseAmongAvailablePaths', 'random');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'whenToChoosePath', 'enterNode');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'canChangePath', false);
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'maxPathsVisitable', 1);
+          this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'random');
+          this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'enterNode');
+          this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
+          this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
         }
       }
 
@@ -2061,6 +2061,9 @@ var NodeAuthoringController = function () {
   }, {
     key: 'createBranchUpdateChoiceChosenIdsHelper',
     value: function createBranchUpdateChoiceChosenIdsHelper(component) {
+      var nodeId = this.createBranchNodeId;
+      var componentId = this.createBranchComponentId;
+
       // get the choices from the component
       var choices = component.choices;
 
@@ -2575,56 +2578,56 @@ var NodeAuthoringController = function () {
   }, {
     key: 'removeBranchPath',
     value: function removeBranchPath(branch) {
-      if (branch != null && branch.checkedItemsInBranchPath != null) {
+      if (branch != null) {
         // get the checked items in the branch path
         var checkedItemsInBranchPath = branch.checkedItemsInBranchPath;
-        var _iteratorNormalCompletion10 = true;
-        var _didIteratorError10 = false;
-        var _iteratorError10 = undefined;
+        if (checkedItemsInBranchPath != null) {
+          var _iteratorNormalCompletion10 = true;
+          var _didIteratorError10 = false;
+          var _iteratorError10 = undefined;
 
-        try {
-          for (var _iterator10 = checkedItemsInBranchPath[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-            var checkedItem = _step10.value;
-
-            if (checkedItem != null) {
-              // get the node id of the checked item
-              var _nodeId6 = checkedItem.$key;
-
-              // remove the branchPathTaken constraints from the step
-              this.ProjectService.removeBranchPathTakenNodeConstraints(_nodeId6);
-
-              /*
-               * update the transition of the step to point to the next step
-               * in the project. this may be different than the next step
-               * if it was still in the branch path.
-               */
-              var nodeIdAfter = this.ProjectService.getNodeIdAfter(_nodeId6);
-              this.ProjectService.setTransition(_nodeId6, nodeIdAfter);
-            }
-          }
-
-          // get the index of the branch path
-        } catch (err) {
-          _didIteratorError10 = true;
-          _iteratorError10 = err;
-        } finally {
           try {
-            if (!_iteratorNormalCompletion10 && _iterator10.return) {
-              _iterator10.return();
+            for (var _iterator10 = checkedItemsInBranchPath[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+              var checkedItem = _step10.value;
+
+              if (checkedItem != null) {
+                // get the node id of the checked item
+                var nodeId = checkedItem.$key;
+
+                // remove the branchPathTaken constraints from the step
+                this.ProjectService.removeBranchPathTakenNodeConstraints(nodeId);
+
+                /*
+                 * update the transition of the step to point to the next step
+                 * in the project. this may be different than the next step
+                 * if it was still in the branch path.
+                 */
+                var nodeIdAfter = this.ProjectService.getNodeIdAfter(nodeId);
+                this.ProjectService.setTransition(nodeId, nodeIdAfter);
+              }
             }
+          } catch (err) {
+            _didIteratorError10 = true;
+            _iteratorError10 = err;
           } finally {
-            if (_didIteratorError10) {
-              throw _iteratorError10;
+            try {
+              if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                _iterator10.return();
+              }
+            } finally {
+              if (_didIteratorError10) {
+                throw _iteratorError10;
+              }
             }
           }
         }
-
+        // get the index of the branch path
         var branchPathIndex = this.createBranchBranches.indexOf(branch);
 
         // remove the branch path
         this.createBranchBranches.splice(branchPathIndex, 1);
 
-        // remove the transition the corresponds to the branch path
+        // remove the transition that corresponds to the branch path
         this.node.transitionLogic.transitions.splice(branchPathIndex, 1);
       }
     }
@@ -3032,9 +3035,9 @@ var NodeAuthoringController = function () {
 
             try {
               for (var _iterator12 = selectedComponents[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-                var _componentId3 = _step12.value;
+                var componentId = _step12.value;
 
-                _this3.ProjectService.deleteComponent(_this3.nodeId, _componentId3);
+                _this3.ProjectService.deleteComponent(_this3.nodeId, componentId);
               }
             } catch (err) {
               _didIteratorError12 = true;
@@ -3642,9 +3645,9 @@ var NodeAuthoringController = function () {
     key: 'previewImportNode',
     value: function previewImportNode(node) {
       if (node != null) {
-        var _nodeId7 = node.id;
+        var nodeId = node.id;
         var previewProjectURL = this.importProject.previewProjectURL;
-        var previewStepURL = previewProjectURL + '#/vle/' + _nodeId7;
+        var previewStepURL = previewProjectURL + '#/vle/' + nodeId;
         window.open(previewStepURL);
       }
     }
@@ -3659,9 +3662,9 @@ var NodeAuthoringController = function () {
     key: 'previewImportComponent',
     value: function previewImportComponent(node, componentId) {
       if (node != null) {
-        var _nodeId8 = node.id;
+        var nodeId = node.id;
         var previewProjectURL = this.importProject.previewProjectURL;
-        var previewStepURL = previewProjectURL + '#/vle/' + _nodeId8 + '/' + componentId;
+        var previewStepURL = previewProjectURL + '#/vle/' + nodeId + '/' + componentId;
         window.open(previewStepURL);
       }
     }
@@ -3780,11 +3783,11 @@ var NodeAuthoringController = function () {
 
         try {
           for (var _iterator17 = componentIds[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-            var _componentId4 = _step17.value;
+            var componentId = _step17.value;
 
-            if (_componentId4 != null) {
+            if (componentId != null) {
               // get the component
-              var component = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, _componentId4);
+              var component = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, componentId);
 
               if (component != null) {
                 // create an object with the component id and type
