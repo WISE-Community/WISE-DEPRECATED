@@ -353,11 +353,17 @@ class StudentDataService {
             }
 
             if (constraintsForNode == null || constraintsForNode.length == 0) {
-                // this node does not have any constraints so it is clickable
-                tempNodeStatus.isVisible = true;
-                tempNodeStatus.isVisitable = true;
+                if (this.ProjectService.getFlattenedProjectAsNodeIds().indexOf(nodeId) == -1 &&
+                        !this.ProjectService.isGroupNode(nodeId)) {
+                    // there are no transitions to this node so it is not visible
+                    tempNodeStatus.isVisible = false;
+                    tempNodeStatus.isVisitable = true;
+                } else {
+                    // this node does not have any constraints so it is clickable
+                    tempNodeStatus.isVisible = true;
+                    tempNodeStatus.isVisitable = true;
+                }
             } else {
-
                 var isVisibleResults = [];
                 var isVisitableResults = [];
 

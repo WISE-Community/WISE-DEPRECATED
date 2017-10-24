@@ -30,6 +30,7 @@ class ProjectService {
         this.nodeIdToBranchPathLetter = {};
         this.achievements = [];
         this.isNodeAffectedByConstraintResult = {};
+        this.flattenedProjectAsNodeIds = null;
 
         this.$translate = this.$filter('translate');
 
@@ -1976,8 +1977,15 @@ class ProjectService {
 
     /**
      * Flatten the project to obtain a list of node ids
+     * @param recalculate Whether to force recalculating the flattened node ids.
+     * @return An array of the flattened node ids in the project.
      */
-    getFlattenedProjectAsNodeIds() {
+    getFlattenedProjectAsNodeIds(recalculate) {
+        if (!recalculate && this.flattenedProjectAsNodeIds != null) {
+            // use the previously calculated flattened node ids
+            return this.flattenedProjectAsNodeIds;
+        }
+
         var nodeIds = [];
 
         // get the start node id
@@ -1995,7 +2003,12 @@ class ProjectService {
 
         // consolidate all the paths to create a single list of node ids
         nodeIds = this.consolidatePaths(allPaths);
-        //nodeIds = this.consolidatePaths(allPaths.reverse());
+
+        /*
+         * Remember the flattened node ids so that we don't have to calculate
+         * it again.
+         */
+        this.flattenedProjectAsNodeIds = nodeIds;
 
         return nodeIds;
     };
