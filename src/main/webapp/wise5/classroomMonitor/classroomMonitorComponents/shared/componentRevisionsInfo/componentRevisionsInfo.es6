@@ -31,11 +31,6 @@ class ComponentRevisionsInfoController {
         };
 
         this.$onChanges = (changes) => {
-
-            if (changes.maxScore) {
-                this.maxScore = typeof changes.maxScore.currentValue === 'number' ? changes.maxScore.currentValue : 0;
-            }
-
             let latest = null;
 
             if (this.active) {
@@ -67,8 +62,8 @@ class ComponentRevisionsInfoController {
     showRevisions($event) {
         let workgroupId = this.toWorkgroupId;
         let componentId = this.componentId;
-        let maxScore  = this.maxScore;
         let userNames = this.userNames;
+        let componentStates = this.componentStates;
 
         this.$mdDialog.show({
             parent: angular.element(document.body),
@@ -83,7 +78,8 @@ class ComponentRevisionsInfoController {
                     </md-toolbar>
                     <md-dialog-content>
                         <div class="md-dialog-content gray-lighter-bg">
-                            <workgroup-component-revisions workgroup-id="{{ workgroupId }}" component-id="{{ componentId }}" max-score="maxScore"></workgroup-component-revisions>
+                            <workgroup-component-revisions component-states="componentStates"
+                                                           workgroup-id="{{ workgroupId }}"></workgroup-component-revisions>
                         </div>
                     </md-dialog-content>
                     <md-dialog-actions layout="row" layout-align="end center">
@@ -93,21 +89,21 @@ class ComponentRevisionsInfoController {
             locals: {
                 workgroupId: workgroupId,
                 componentId: componentId,
-                maxScore: maxScore,
-                userNames: userNames
+                userNames: userNames,
+                componentStates: componentStates
             },
             controller: RevisionsController
         });
-        function RevisionsController($scope, $mdDialog, workgroupId, componentId, maxScore, userNames) {
+        function RevisionsController($scope, $mdDialog, workgroupId, componentId, userNames, componentStates) {
             $scope.workgroupId = workgroupId;
             $scope.componentId = componentId;
-            $scope.maxScore = maxScore;
             $scope.userNames = userNames;
+            $scope.componentStates = componentStates;
             $scope.close = () => {
                 $mdDialog.hide();
             };
         }
-        RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "maxScore", "userNames"];
+        RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "userNames", "componentStates"];
     }
 }
 
@@ -124,8 +120,6 @@ const ComponentRevisionsInfo = {
         active: '<',
         componentId: '<',
         componentState: '<',
-        nodeId: '<',
-        maxScore: '<',
         toWorkgroupId: '<'
     },
     template:
