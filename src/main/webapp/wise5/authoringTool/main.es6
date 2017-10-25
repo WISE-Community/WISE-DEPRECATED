@@ -155,16 +155,16 @@ let authoringModule = angular.module('authoring', [
         controller: 'AuthoringToolMainController',
         controllerAs: 'authoringToolMainController',
         resolve: {
-        config: (ConfigService) => {
-          const configURL = window.configURL;
-          return ConfigService.retrieveConfig(configURL);
-        },
-        language: ($translate, ConfigService, config) => {
-          $translate.use(ConfigService.getLocale());
-        },
-        sessionTimers: (SessionService, config) => {
-          return SessionService.initializeSession();
-        }
+          config: (ConfigService) => {
+            const configURL = window.configURL;
+            return ConfigService.retrieveConfig(configURL);
+          },
+          language: ($translate, ConfigService, config) => {
+            $translate.use(ConfigService.getLocale());
+          },
+          sessionTimers: (SessionService, config) => {
+            return SessionService.initializeSession();
+          }
         }
       })
       .state('root.new', {
@@ -173,16 +173,16 @@ let authoringModule = angular.module('authoring', [
         controller: 'AuthoringToolNewProjectController',
         controllerAs: 'authoringToolNewProjectController',
         resolve: {
-        config: (ConfigService) => {
-          const configURL = window.configURL;
-          return ConfigService.retrieveConfig(configURL);
-        },
-        language: ($translate, ConfigService, config) => {
-          $translate.use(ConfigService.getLocale());
-        },
-        sessionTimers: (SessionService, config) => {
-          return SessionService.initializeSession();
-        }
+          config: (ConfigService) => {
+            const configURL = window.configURL;
+            return ConfigService.retrieveConfig(configURL);
+          },
+          language: ($translate, ConfigService, config) => {
+            $translate.use(ConfigService.getLocale());
+          },
+          sessionTimers: (SessionService, config) => {
+            return SessionService.initializeSession();
+          }
         }
       })
       .state('root.project', {
@@ -191,25 +191,25 @@ let authoringModule = angular.module('authoring', [
         controller: 'ProjectController',
         controllerAs: 'projectController',
         resolve: {
-        projectConfig: (ConfigService, $stateParams) => {
-          const configURL = window.configURL + '/' + $stateParams.projectId;
-          return ConfigService.retrieveConfig(configURL);
-        },
-        project: (ProjectService, projectConfig) => {
-          return ProjectService.retrieveProject();
-        },
-        projectAssets: (ProjectAssetService, projectConfig, project) => {
-          return ProjectAssetService.retrieveProjectAssets();
-        },
-        language: ($translate, ConfigService, projectConfig) => {
-          $translate.use(ConfigService.getLocale());
-        },
-        sessionTimers: (SessionService, projectConfig) => {
-          return SessionService.initializeSession();
-        },
-        webSocket: (AuthorWebSocketService, projectConfig) => {
-          return AuthorWebSocketService.initialize();
-        }
+          projectConfig: (ConfigService, $stateParams) => {
+            const configURL = window.configURL + '/' + $stateParams.projectId;
+            return ConfigService.retrieveConfig(configURL);
+          },
+          project: (ProjectService, projectConfig) => {
+            return ProjectService.retrieveProject();
+          },
+          projectAssets: (ProjectAssetService, projectConfig, project) => {
+            return ProjectAssetService.retrieveProjectAssets();
+          },
+          language: ($translate, ConfigService, projectConfig) => {
+            $translate.use(ConfigService.getLocale());
+          },
+          sessionTimers: (SessionService, projectConfig) => {
+            return SessionService.initializeSession();
+          },
+          webSocket: (AuthorWebSocketService, projectConfig) => {
+            return AuthorWebSocketService.initialize();
+          }
         }
       })
       .state('root.project.node', {
@@ -251,7 +251,7 @@ let authoringModule = angular.module('authoring', [
       $translatePartialLoaderProvider.addPart('i18n');
       $translatePartialLoaderProvider.addPart('authoringTool/i18n');
       $translateProvider.useLoader('$translatePartialLoader', {
-      urlTemplate: 'wise5/{part}/i18n_{lang}.json'
+        urlTemplate: 'wise5/{part}/i18n_{lang}.json'
       })
       .registerAvailableLanguageKeys(
         ['el','en','es','ja','ko','pt','tr','zh_CN','zh_TW'], {
@@ -298,14 +298,14 @@ let authoringModule = angular.module('authoring', [
       // moment.js default overrides
       // TODO: add i18n support
       moment.updateLocale('en', {
-      calendar: {
-        lastDay : '[Yesterday at] LT',
-        sameDay : '[Today at] LT',
-        nextDay : '[Tomorrow at] LT',
-        lastWeek : '[last] dddd [at] LT',
-        nextWeek : 'dddd [at] LT',
-        sameElse : 'll'
-      }
+        calendar: {
+          lastDay : '[Yesterday at] LT',
+          sameDay : '[Today at] LT',
+          nextDay : '[Tomorrow at] LT',
+          lastWeek : '[last] dddd [at] LT',
+          nextWeek : 'dddd [at] LT',
+          sameElse : 'll'
+        }
       });
     }
     ]);

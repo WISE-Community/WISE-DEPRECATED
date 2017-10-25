@@ -984,6 +984,47 @@ var UtilService = function () {
 
             return false;
         }
+
+        /**
+         * Check if an array has any non null elements.
+         * @param arrayToCheck An array which may have null and non null elements.
+         * @return True if the array has at least one non null element.
+         * False if the array has all null elements.
+         */
+
+    }, {
+        key: 'arrayHasNonNullElement',
+        value: function arrayHasNonNullElement(arrayToCheck) {
+            if (arrayToCheck != null) {
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = arrayToCheck[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var element = _step.value;
+
+                        if (element != null) {
+                            return true;
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
     }]);
 
     return UtilService;

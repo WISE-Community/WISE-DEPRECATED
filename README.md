@@ -6,11 +6,9 @@ Web-based Inquiry Science Education (WISE)
 
 Setup WISE on a Server: https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE-on-a-Server
 
-Run WISE locally using Docker: https://github.com/WISE-Community/WISE/wiki/WISE-Docker
+Develop WISE locally: https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE-Local-Development
 
-Develop WISE locally using Docker: https://github.com/WISE-Community/WISE/wiki/WISE-Development-using-Docker
-
-Release Notes: https://github.com/WISE-Community/WISE/wiki/WISE-Release-Notes
+Release Notes: https://github.com/WISE-Community/WISE/releases
  
 Design Doc and Notes: https://github.com/WISE-Community/WISE/wiki/WISE5-Design-Documentation-and-Notes
 

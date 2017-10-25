@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeController = function () {
-    function NodeController($compile, $filter, $q, $rootScope, $scope, $state, $timeout, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService) {
+    function NodeController($compile, $filter, $q, $rootScope, $scope, $state, $timeout, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, NodeController);
@@ -27,6 +27,7 @@ var NodeController = function () {
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
         this.$translate = this.$filter('translate');
 
         // the auto save interval in milliseconds
@@ -932,7 +933,7 @@ var NodeController = function () {
                 var componentEvents = null;
                 var nodeStates = null;
 
-                if (componentStates != null && componentStates.length || componentAnnotations != null && componentAnnotations.length || componentEvents != null && componentEvents.length) {
+                if (componentStates != null && _this3.UtilService.arrayHasNonNullElement(componentStates) || componentAnnotations != null && componentAnnotations.length || componentEvents != null && componentEvents.length) {
 
                     // get the annotations from the components
                     for (var c = 0; c < componentStates.length; c++) {
@@ -1442,7 +1443,7 @@ var NodeController = function () {
     return NodeController;
 }();
 
-NodeController.$inject = ['$compile', '$filter', '$q', '$rootScope', '$scope', '$state', '$timeout', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService'];
+NodeController.$inject = ['$compile', '$filter', '$q', '$rootScope', '$scope', '$state', '$timeout', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = NodeController;
 //# sourceMappingURL=nodeController.js.map
