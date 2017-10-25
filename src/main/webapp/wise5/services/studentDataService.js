@@ -1339,8 +1339,6 @@ var StudentDataService = function () {
         value: function addComponentState(componentState) {
             if (this.studentData != null && this.studentData.componentStates != null) {
                 this.studentData.componentStates.push(componentState);
-
-                this.updateNodeStatuses();
             }
         }
     }, {
@@ -1348,8 +1346,6 @@ var StudentDataService = function () {
         value: function addNodeState(nodeState) {
             if (this.studentData != null && this.studentData.nodeStates != null) {
                 this.studentData.nodeStates.push(nodeState);
-
-                this.updateNodeStatuses();
             }
         }
     }, {
@@ -1746,8 +1742,6 @@ var StudentDataService = function () {
                     }
                 }
             }
-
-            this.updateNodeStatuses();
         }
     }, {
         key: 'saveStudentStatus',
@@ -1758,7 +1752,6 @@ var StudentDataService = function () {
          * Returns a promise of the POST request
          */
         value: function saveStudentStatus() {
-
             if (!this.ConfigService.isPreview()) {
                 // we are in a run
                 var studentStatusURL = this.ConfigService.getStudentStatusURL();

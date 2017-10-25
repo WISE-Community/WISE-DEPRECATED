@@ -1272,16 +1272,12 @@ class StudentDataService {
     addComponentState(componentState) {
         if (this.studentData != null && this.studentData.componentStates != null) {
             this.studentData.componentStates.push(componentState);
-
-            this.updateNodeStatuses();
         }
     };
 
     addNodeState(nodeState) {
         if (this.studentData != null && this.studentData.nodeStates != null) {
             this.studentData.nodeStates.push(nodeState);
-
-            this.updateNodeStatuses();
         }
     };
 
@@ -1425,7 +1421,6 @@ class StudentDataService {
     };
 
     saveToServer(componentStates, nodeStates, events, annotations) {
-
         /*
          * increment the request count since we are about to save data
          * to the server
@@ -1664,9 +1659,6 @@ class StudentDataService {
                 }
             }
         }
-
-        this.updateNodeStatuses();
-
     };
 
     /**
@@ -1674,7 +1666,6 @@ class StudentDataService {
      * Returns a promise of the POST request
      */
     saveStudentStatus() {
-
         if (!this.ConfigService.isPreview()) {
             // we are in a run
             var studentStatusURL = this.ConfigService.getStudentStatusURL();
