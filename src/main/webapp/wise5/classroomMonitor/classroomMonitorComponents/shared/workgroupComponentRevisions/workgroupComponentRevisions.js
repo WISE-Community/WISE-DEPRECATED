@@ -56,11 +56,32 @@ var WorkgroupComponentRevisionsController = function () {
                     var events = result.events;
                     var nodeVisits = [];
                     if (events.length) {
-                        for (var i = 0; i < events.length; i++) {
-                            nodeVisits.push({
-                                serverSaveTime: events[i].serverSaveTime,
-                                states: []
-                            });
+                        var _iteratorNormalCompletion = true;
+                        var _didIteratorError = false;
+                        var _iteratorError = undefined;
+
+                        try {
+                            for (var _iterator = events[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                                var event = _step.value;
+
+                                nodeVisits.push({
+                                    serverSaveTime: event.serverSaveTime,
+                                    states: []
+                                });
+                            }
+                        } catch (err) {
+                            _didIteratorError = true;
+                            _iteratorError = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion && _iterator.return) {
+                                    _iterator.return();
+                                }
+                            } finally {
+                                if (_didIteratorError) {
+                                    throw _iteratorError;
+                                }
+                            }
                         }
                     }
                     var nVisits = nodeVisits.length;
@@ -104,8 +125,8 @@ var WorkgroupComponentRevisionsController = function () {
                             var isRevision = false;
                             if (statesIndex === 0) {
                                 /*
-                                 * The latest state for a visit always
-                                 * counts as a revision
+                                 * The latest state for a visit always counts as a
+                                 * revision
                                  */
                                 isRevision = true;
                             } else if (state.isSubmit) {
@@ -117,11 +138,32 @@ var WorkgroupComponentRevisionsController = function () {
                                  * associated with the component.
                                  */
                                 var latestAnnotations = _this2.AnnotationService.getAnnotationsByStudentWorkId(state.id);
-                                for (var latestIndex = 0; latestIndex < latestAnnotations.length; latestIndex++) {
-                                    var type = latestAnnotations[latestIndex].type;
-                                    if (type === 'score' || type === 'autoScore' || type === 'comment' || type === 'autoComment') {
-                                        isRevision = true;
-                                        break;
+                                var _iteratorNormalCompletion2 = true;
+                                var _didIteratorError2 = false;
+                                var _iteratorError2 = undefined;
+
+                                try {
+                                    for (var _iterator2 = latestAnnotations[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                                        var annotation = _step2.value;
+
+                                        var type = annotation.type;
+                                        if (type === 'score' || type === 'autoScore' || type === 'comment' || type === 'autoComment') {
+                                            isRevision = true;
+                                            break;
+                                        }
+                                    }
+                                } catch (err) {
+                                    _didIteratorError2 = true;
+                                    _iteratorError2 = err;
+                                } finally {
+                                    try {
+                                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                            _iterator2.return();
+                                        }
+                                    } finally {
+                                        if (_didIteratorError2) {
+                                            throw _iteratorError2;
+                                        }
                                     }
                                 }
                             }

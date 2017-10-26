@@ -41,10 +41,10 @@ class WorkgroupComponentRevisionsController {
                 let events = result.events;
                 let nodeVisits = [];
                 if (events.length) {
-                    for (let i = 0; i < events.length; i++) {
+                    for (let event of events) {
                         nodeVisits.push(
                             {
-                                serverSaveTime: events[i].serverSaveTime,
+                                serverSaveTime: event.serverSaveTime,
                                 states: []
                             }
                         );
@@ -93,8 +93,8 @@ class WorkgroupComponentRevisionsController {
                         let isRevision = false;
                         if (statesIndex === 0) {
                             /*
-                             * The latest state for a visit always
-                             * counts as a revision
+                             * The latest state for a visit always counts as a
+                             * revision
                              */
                             isRevision = true;
                         } else if (state.isSubmit) {
@@ -106,8 +106,8 @@ class WorkgroupComponentRevisionsController {
                              * associated with the component.
                              */
                             let latestAnnotations = this.AnnotationService.getAnnotationsByStudentWorkId(state.id);
-                            for (let latestIndex = 0; latestIndex < latestAnnotations.length; latestIndex++) {
-                                let type = latestAnnotations[latestIndex].type;
+                            for (let annotation of latestAnnotations) {
+                                let type = annotation.type;
                                 if (type === 'score' || type === 'autoScore'
                                     || type === 'comment' || type === 'autoComment') {
                                     isRevision = true;

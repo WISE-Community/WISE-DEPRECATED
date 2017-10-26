@@ -1020,14 +1020,9 @@ class AnnotationService {
      */
     getAnnotationsByStudentWorkId(studentWorkId) {
         let annotations = [];
-
-        // loop through all the annotations
-        for (let index = 0; index < this.annotations.length; index++) {
-            let annotation = this.annotations[index];
-            if (annotation) {
-                if (studentWorkId == annotation.studentWorkId) {
-                    annotations.push(annotation);
-                }
+        for (let annotation of this.annotations) {
+            if (annotation && studentWorkId == annotation.studentWorkId) {
+                annotations.push(annotation);
             }
         }
         return annotations;
