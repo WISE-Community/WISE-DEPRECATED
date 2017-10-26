@@ -461,7 +461,9 @@ public class InformationController {
       String mode, String wiseBaseURL, JSONObject config, String runId, Run run, Workgroup workgroup) {
     Long workgroupId = null;
     Long periodId = null;
-    if (workgroup.isTeacherWorkgroup()) {
+    if (signedInUser.isAdmin()) {
+      // admin does not need workgroup or period
+    } else if (workgroup.isTeacherWorkgroup()) {
       workgroupId = workgroup.getId();
     } else if (workgroup.isStudentWorkgroup()) {
       workgroupId = workgroup.getId();
