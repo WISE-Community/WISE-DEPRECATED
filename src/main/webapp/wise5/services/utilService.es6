@@ -891,6 +891,23 @@ class UtilService {
 
         return false;
     }
+
+    /**
+     * Check if an array has any non null elements.
+     * @param arrayToCheck An array which may have null and non null elements.
+     * @return True if the array has at least one non null element.
+     * False if the array has all null elements.
+     */
+    arrayHasNonNullElement(arrayToCheck) {
+        if (arrayToCheck != null) {
+            for (let element of arrayToCheck) {
+                if (element != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
 
 // Get the last element of the array

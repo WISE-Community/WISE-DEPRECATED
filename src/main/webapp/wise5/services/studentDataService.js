@@ -371,11 +371,16 @@ var StudentDataService = function () {
                 }
 
                 if (constraintsForNode == null || constraintsForNode.length == 0) {
-                    // this node does not have any constraints so it is clickable
-                    tempNodeStatus.isVisible = true;
-                    tempNodeStatus.isVisitable = true;
+                    if (this.ProjectService.getFlattenedProjectAsNodeIds().indexOf(nodeId) == -1 && !this.ProjectService.isGroupNode(nodeId)) {
+                        // there are no transitions to this node so it is not visible
+                        tempNodeStatus.isVisible = false;
+                        tempNodeStatus.isVisitable = true;
+                    } else {
+                        // this node does not have any constraints so it is clickable
+                        tempNodeStatus.isVisible = true;
+                        tempNodeStatus.isVisitable = true;
+                    }
                 } else {
-
                     var isVisibleResults = [];
                     var isVisitableResults = [];
 
@@ -1334,8 +1339,6 @@ var StudentDataService = function () {
         value: function addComponentState(componentState) {
             if (this.studentData != null && this.studentData.componentStates != null) {
                 this.studentData.componentStates.push(componentState);
-
-                this.updateNodeStatuses();
             }
         }
     }, {
@@ -1343,8 +1346,6 @@ var StudentDataService = function () {
         value: function addNodeState(nodeState) {
             if (this.studentData != null && this.studentData.nodeStates != null) {
                 this.studentData.nodeStates.push(nodeState);
-
-                this.updateNodeStatuses();
             }
         }
     }, {
@@ -1741,8 +1742,6 @@ var StudentDataService = function () {
                     }
                 }
             }
-
-            this.updateNodeStatuses();
         }
     }, {
         key: 'saveStudentStatus',
@@ -1753,7 +1752,6 @@ var StudentDataService = function () {
          * Returns a promise of the POST request
          */
         value: function saveStudentStatus() {
-
             if (!this.ConfigService.isPreview()) {
                 // we are in a run
                 var studentStatusURL = this.ConfigService.getStudentStatusURL();
