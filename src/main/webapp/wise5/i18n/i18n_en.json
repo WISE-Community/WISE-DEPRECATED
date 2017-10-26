@@ -104,6 +104,7 @@
     "SESSION_TIMEOUT_MESSAGE": "You have been inactive for a long time. Do you want to stay logged in?",
     "SET_SCORE": "Set Score",
     "SHOW_FEEDBACK": "Show Feedback",
+    "SHOW_MORE": "Show More",
     "SHOW_JSON": "Show JSON",
     "SHOW_PREVIOUS_WORK": "Show Previous Work",
     "SHOW_PREVIOUS_WORK_COMPONENT": "Show Previous Work Component",

@@ -31,11 +31,6 @@ class ComponentRevisionsInfoController {
         };
 
         this.$onChanges = (changes) => {
-
-            if (changes.maxScore) {
-                this.maxScore = typeof changes.maxScore.currentValue === 'number' ? changes.maxScore.currentValue : 0;
-            }
-
             let latest = null;
 
             if (this.active) {
@@ -67,8 +62,9 @@ class ComponentRevisionsInfoController {
     showRevisions($event) {
         let workgroupId = this.toWorkgroupId;
         let componentId = this.componentId;
-        let maxScore  = this.maxScore;
+        let nodeId = this.nodeId;
         let userNames = this.userNames;
+        let componentStates = this.componentStates;
 
         this.$mdDialog.show({
             parent: angular.element(document.body),
@@ -83,7 +79,9 @@ class ComponentRevisionsInfoController {
                     </md-toolbar>
                     <md-dialog-content>
                         <div class="md-dialog-content gray-lighter-bg">
-                            <workgroup-component-revisions workgroup-id="{{ workgroupId }}" component-id="{{ componentId }}" max-score="maxScore"></workgroup-component-revisions>
+                            <workgroup-component-revisions component-states="componentStates"
+                                                           node-id="{{ nodeId }}"
+                                                           workgroup-id="{{ workgroupId }}"></workgroup-component-revisions>
                         </div>
                     </md-dialog-content>
                     <md-dialog-actions layout="row" layout-align="end center">
@@ -93,21 +91,23 @@ class ComponentRevisionsInfoController {
             locals: {
                 workgroupId: workgroupId,
                 componentId: componentId,
-                maxScore: maxScore,
-                userNames: userNames
+                nodeId: nodeId,
+                userNames: userNames,
+                componentStates: componentStates
             },
             controller: RevisionsController
         });
-        function RevisionsController($scope, $mdDialog, workgroupId, componentId, maxScore, userNames) {
+        function RevisionsController($scope, $mdDialog, workgroupId, componentId, nodeId, userNames, componentStates) {
             $scope.workgroupId = workgroupId;
             $scope.componentId = componentId;
-            $scope.maxScore = maxScore;
+            $scope.nodeId = nodeId;
             $scope.userNames = userNames;
+            $scope.componentStates = componentStates;
             $scope.close = () => {
                 $mdDialog.hide();
             };
         }
-        RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "maxScore", "userNames"];
+        RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "nodeId", "userNames", "componentStates"];
     }
 }
 
@@ -125,7 +125,6 @@ const ComponentRevisionsInfo = {
         componentId: '<',
         componentState: '<',
         nodeId: '<',
-        maxScore: '<',
         toWorkgroupId: '<'
     },
     template:
@@ -140,8 +139,8 @@ const ComponentRevisionsInfo = {
                 <span ng-if="!$ctrl.active">{{ $ctrl.latestComponentStateTime | amDateFormat:'ddd MMM D YYYY, h:mm a' }}</span>
             </span>
             <span ng-if="$ctrl.componentStates.length === 0">{{ 'TEAM_HAS_NOT_SAVED_ANY_WORK' | translate }}</span>
-            <span ng-if="$ctrl.active && $ctrl.componentStates.length > 0">
-                &#8226;&nbsp;<a ng-click="$ctrl.showRevisions($event)" translate="SEE_REVISIONS" translate-value-number="{{($ctrl.componentStates.length - 1)}}"></a>
+            <span ng-if="$ctrl.active && $ctrl.componentStates.length > 1">
+                &#8226;&nbsp;<a ng-click="$ctrl.showRevisions($event)" translate="seeRevisions"></a>
            </span>
     </div>`,
     controller: ComponentRevisionsInfoController
