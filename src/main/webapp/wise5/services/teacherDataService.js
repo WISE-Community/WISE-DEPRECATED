@@ -303,12 +303,13 @@ var TeacherDataService = function () {
             components = components.concat(showPreviousWorkNodeIdsAndComponentIds);
 
             var params = {};
-            params.runId = this.ConfigService.getRunId();
             //params.periodId = periodId;
             params.periodId = null;
             params.workgroupId = null;
             params.components = components;
             params.getAnnotations = false;
+            params.getEvents = false;
+            //params.event = 'nodeEntered';
 
             return this.retrieveStudentData(params);
         }
@@ -324,7 +325,6 @@ var TeacherDataService = function () {
         value: function retrieveStudentDataByWorkgroupId(workgroupId) {
 
             var params = {};
-            params.runId = this.ConfigService.getRunId();
             params.periodId = null;
             params.nodeId = null;
             params.workgroupId = workgroupId;
@@ -343,7 +343,6 @@ var TeacherDataService = function () {
          */
         value: function retrieveAnnotations() {
             var params = {};
-            params.runId = this.ConfigService.getRunId();
             params.periodId = null;
             params.nodeId = null;
             params.workgroupId = null;
@@ -367,6 +366,7 @@ var TeacherDataService = function () {
             var _this2 = this;
 
             var studentDataURL = this.ConfigService.getConfigParam('teacherDataURL');
+            params.runId = this.ConfigService.getRunId();
 
             if (params.getStudentWork == null) {
                 params.getStudentWork = true;
@@ -448,6 +448,8 @@ var TeacherDataService = function () {
 
                     _this2.AnnotationService.setAnnotations(_this2.studentData.annotations);
                 }
+
+                return resultData;
             });
         }
     }, {

@@ -1101,6 +1101,29 @@ var AnnotationService = function () {
 
             return null;
         }
+
+        /**
+         * Get the annotations for the given student work
+         * @param studentWorkId the student work id
+         * @return array of annotations for the given student work
+         */
+
+    }, {
+        key: 'getAnnotationsByStudentWorkId',
+        value: function getAnnotationsByStudentWorkId(studentWorkId) {
+            var annotations = [];
+
+            // loop through all the annotations
+            for (var index = 0; index < this.annotations.length; index++) {
+                var annotation = this.annotations[index];
+                if (annotation) {
+                    if (studentWorkId == annotation.studentWorkId) {
+                        annotations.push(annotation);
+                    }
+                }
+            }
+            return annotations;
+        }
     }]);
 
     return AnnotationService;

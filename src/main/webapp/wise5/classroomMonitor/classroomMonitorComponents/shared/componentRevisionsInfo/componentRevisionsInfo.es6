@@ -62,6 +62,7 @@ class ComponentRevisionsInfoController {
     showRevisions($event) {
         let workgroupId = this.toWorkgroupId;
         let componentId = this.componentId;
+        let nodeId = this.nodeId;
         let userNames = this.userNames;
         let componentStates = this.componentStates;
 
@@ -79,6 +80,7 @@ class ComponentRevisionsInfoController {
                     <md-dialog-content>
                         <div class="md-dialog-content gray-lighter-bg">
                             <workgroup-component-revisions component-states="componentStates"
+                                                           node-id="{{ nodeId }}"
                                                            workgroup-id="{{ workgroupId }}"></workgroup-component-revisions>
                         </div>
                     </md-dialog-content>
@@ -89,21 +91,23 @@ class ComponentRevisionsInfoController {
             locals: {
                 workgroupId: workgroupId,
                 componentId: componentId,
+                nodeId: nodeId,
                 userNames: userNames,
                 componentStates: componentStates
             },
             controller: RevisionsController
         });
-        function RevisionsController($scope, $mdDialog, workgroupId, componentId, userNames, componentStates) {
+        function RevisionsController($scope, $mdDialog, workgroupId, componentId, nodeId, userNames, componentStates) {
             $scope.workgroupId = workgroupId;
             $scope.componentId = componentId;
+            $scope.nodeId = nodeId;
             $scope.userNames = userNames;
             $scope.componentStates = componentStates;
             $scope.close = () => {
                 $mdDialog.hide();
             };
         }
-        RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "userNames", "componentStates"];
+        RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "nodeId", "userNames", "componentStates"];
     }
 }
 
@@ -120,6 +124,7 @@ const ComponentRevisionsInfo = {
         active: '<',
         componentId: '<',
         componentState: '<',
+        nodeId: '<',
         toWorkgroupId: '<'
     },
     template:
@@ -134,8 +139,8 @@ const ComponentRevisionsInfo = {
                 <span ng-if="!$ctrl.active">{{ $ctrl.latestComponentStateTime | amDateFormat:'ddd MMM D YYYY, h:mm a' }}</span>
             </span>
             <span ng-if="$ctrl.componentStates.length === 0">{{ 'TEAM_HAS_NOT_SAVED_ANY_WORK' | translate }}</span>
-            <span ng-if="$ctrl.active && $ctrl.componentStates.length > 0">
-                &#8226;&nbsp;<a ng-click="$ctrl.showRevisions($event)" translate="SEE_REVISIONS" translate-value-number="{{($ctrl.componentStates.length - 1)}}"></a>
+            <span ng-if="$ctrl.active && $ctrl.componentStates.length > 1">
+                &#8226;&nbsp;<a ng-click="$ctrl.showRevisions($event)" translate="seeRevisions"></a>
            </span>
     </div>`,
     controller: ComponentRevisionsInfoController

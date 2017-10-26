@@ -72,6 +72,7 @@ var ComponentRevisionsInfoController = function () {
         value: function showRevisions($event) {
             var workgroupId = this.toWorkgroupId;
             var componentId = this.componentId;
+            var nodeId = this.nodeId;
             var userNames = this.userNames;
             var componentStates = this.componentStates;
 
@@ -79,25 +80,27 @@ var ComponentRevisionsInfoController = function () {
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 fullscreen: true,
-                template: '<md-dialog aria-label="{{ \'revisionsForTeam\' | translate:{teamNames: userNames} }}" class="dialog--wider">\n                    <md-toolbar>\n                        <div class="md-toolbar-tools">\n                            <h2 class="overflow--ellipsis">{{ \'revisionsForTeam\' | translate:{teamNames: userNames} }}</h2>\n                        </div>\n                    </md-toolbar>\n                    <md-dialog-content>\n                        <div class="md-dialog-content gray-lighter-bg">\n                            <workgroup-component-revisions component-states="componentStates"\n                                                           workgroup-id="{{ workgroupId }}"></workgroup-component-revisions>\n                        </div>\n                    </md-dialog-content>\n                    <md-dialog-actions layout="row" layout-align="end center">\n                        <md-button class="md-primary" ng-click="close()" aria-label="{{ \'close\' | translate }}">{{ \'close\' | translate }}</md-button>\n                    </md-dialog-actions>\n                </md-dialog>',
+                template: '<md-dialog aria-label="{{ \'revisionsForTeam\' | translate:{teamNames: userNames} }}" class="dialog--wider">\n                    <md-toolbar>\n                        <div class="md-toolbar-tools">\n                            <h2 class="overflow--ellipsis">{{ \'revisionsForTeam\' | translate:{teamNames: userNames} }}</h2>\n                        </div>\n                    </md-toolbar>\n                    <md-dialog-content>\n                        <div class="md-dialog-content gray-lighter-bg">\n                            <workgroup-component-revisions component-states="componentStates"\n                                                           node-id="{{ nodeId }}"\n                                                           workgroup-id="{{ workgroupId }}"></workgroup-component-revisions>\n                        </div>\n                    </md-dialog-content>\n                    <md-dialog-actions layout="row" layout-align="end center">\n                        <md-button class="md-primary" ng-click="close()" aria-label="{{ \'close\' | translate }}">{{ \'close\' | translate }}</md-button>\n                    </md-dialog-actions>\n                </md-dialog>',
                 locals: {
                     workgroupId: workgroupId,
                     componentId: componentId,
+                    nodeId: nodeId,
                     userNames: userNames,
                     componentStates: componentStates
                 },
                 controller: RevisionsController
             });
-            function RevisionsController($scope, $mdDialog, workgroupId, componentId, userNames, componentStates) {
+            function RevisionsController($scope, $mdDialog, workgroupId, componentId, nodeId, userNames, componentStates) {
                 $scope.workgroupId = workgroupId;
                 $scope.componentId = componentId;
+                $scope.nodeId = nodeId;
                 $scope.userNames = userNames;
                 $scope.componentStates = componentStates;
                 $scope.close = function () {
                     $mdDialog.hide();
                 };
             }
-            RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "userNames", "componentStates"];
+            RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "nodeId", "userNames", "componentStates"];
         }
     }]);
 
@@ -111,9 +114,10 @@ var ComponentRevisionsInfo = {
         active: '<',
         componentId: '<',
         componentState: '<',
+        nodeId: '<',
         toWorkgroupId: '<'
     },
-    template: '<div class="component__actions__info component--grading__actions__info md-caption">\n            <span ng-if="$ctrl.componentStates.length > 0">\n                <span ng-if="$ctrl.latestComponentStateIsSubmit">{{ \'SUBMITTED\' | translate }} </span>\n                <span ng-if="!$ctrl.latestComponentStateIsSubmit">{{ \'SAVED\' | translate }} </span>\n                <span ng-if="$ctrl.active">\n                    <span class="component__actions__more" am-time-ago="$ctrl.latestComponentStateTime"></span>\n                    <md-tooltip md-direction="top">{{ $ctrl.latestComponentStateTime | amDateFormat:\'ddd MMM D YYYY, h:mm a\' }}</md-tooltip>\n                </span>\n                <span ng-if="!$ctrl.active">{{ $ctrl.latestComponentStateTime | amDateFormat:\'ddd MMM D YYYY, h:mm a\' }}</span>\n            </span>\n            <span ng-if="$ctrl.componentStates.length === 0">{{ \'TEAM_HAS_NOT_SAVED_ANY_WORK\' | translate }}</span>\n            <span ng-if="$ctrl.active && $ctrl.componentStates.length > 0">\n                &#8226;&nbsp;<a ng-click="$ctrl.showRevisions($event)" translate="SEE_REVISIONS" translate-value-number="{{($ctrl.componentStates.length - 1)}}"></a>\n           </span>\n    </div>',
+    template: '<div class="component__actions__info component--grading__actions__info md-caption">\n            <span ng-if="$ctrl.componentStates.length > 0">\n                <span ng-if="$ctrl.latestComponentStateIsSubmit">{{ \'SUBMITTED\' | translate }} </span>\n                <span ng-if="!$ctrl.latestComponentStateIsSubmit">{{ \'SAVED\' | translate }} </span>\n                <span ng-if="$ctrl.active">\n                    <span class="component__actions__more" am-time-ago="$ctrl.latestComponentStateTime"></span>\n                    <md-tooltip md-direction="top">{{ $ctrl.latestComponentStateTime | amDateFormat:\'ddd MMM D YYYY, h:mm a\' }}</md-tooltip>\n                </span>\n                <span ng-if="!$ctrl.active">{{ $ctrl.latestComponentStateTime | amDateFormat:\'ddd MMM D YYYY, h:mm a\' }}</span>\n            </span>\n            <span ng-if="$ctrl.componentStates.length === 0">{{ \'TEAM_HAS_NOT_SAVED_ANY_WORK\' | translate }}</span>\n            <span ng-if="$ctrl.active && $ctrl.componentStates.length > 1">\n                &#8226;&nbsp;<a ng-click="$ctrl.showRevisions($event)" translate="seeRevisions"></a>\n           </span>\n    </div>',
     controller: ComponentRevisionsInfoController
 };
 
