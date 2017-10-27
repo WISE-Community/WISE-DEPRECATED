@@ -275,19 +275,20 @@ public class InformationController {
     String periodName = "";
     User loggedInUser = ControllerUtil.getSignedInUser();
     Workgroup workgroup = getWorkgroup(run);
-    if (loggedInUser.isAdmin()) {
-      periodId = getPeriodIds(run);
-      periodName = getPeriodNames(run);
-    } else if (workgroup.isTeacherWorkgroup()) {
-      // if teacher, include workgroupId
-      workgroupId = workgroup.getId();
-      periodId = getPeriodIds(run);
-      periodName = getPeriodNames(run);
-    } else if (workgroup.isStudentWorkgroup()) {
+    if (workgroup != null && workgroup.isStudentWorkgroup()) {
       Group periodGroup = workgroup.getPeriod();
       periodName = periodGroup.getName();
       periodId = periodGroup.getId().toString();
       workgroupId = workgroup.getId();
+    } else if (workgroup != null && workgroup.isTeacherWorkgroup()) {
+      // if teacher or admin with workgroup, include workgroupId
+      workgroupId = workgroup.getId();
+      periodId = getPeriodIds(run);
+      periodName = getPeriodNames(run);
+    } else if (loggedInUser.isAdmin()) {
+      // admin without workgroup
+      periodId = getPeriodIds(run);
+      periodName = getPeriodNames(run);
     }
 
     try {
@@ -384,14 +385,21 @@ public class InformationController {
       throws ObjectNotFoundException {
     JSONArray classmateUserInfos = new JSONArray();
     for (Workgroup classmateWorkgroup : runService.getWorkgroups(run.getId())) {
-      if (!classmateWorkgroup.getMembers().isEmpty() &&
-              !classmateWorkgroup.isTeacherWorkgroup() &&
-              (loggedInUser.isAdmin() || classmateWorkgroup.getId() != workgroup.getId()) &&
-              classmateWorkgroup.getPeriod() != null) {
+      if (isClassmateWorkgroup(workgroup, loggedInUser, classmateWorkgroup)) {
         classmateUserInfos.put(getClassmateUserInfoJSON(classmateWorkgroup));
       }
     }
     return classmateUserInfos;
+  }
+
+  /**
+   * @return true iff the classmateWorkgroup is active classmate workgroup
+   */
+  private boolean isClassmateWorkgroup(Workgroup workgroup, User loggedInUser, Workgroup classmateWorkgroup) {
+    return !classmateWorkgroup.getMembers().isEmpty() &&
+            !classmateWorkgroup.isTeacherWorkgroup() &&
+            (loggedInUser.isAdmin() || classmateWorkgroup.getId() != workgroup.getId()) &&
+            classmateWorkgroup.getPeriod() != null;
   }
 
   private JSONObject getMyUserInfoJSONObject(String periodId, String periodName,
@@ -461,13 +469,13 @@ public class InformationController {
       String mode, String wiseBaseURL, JSONObject config, String runId, Run run, Workgroup workgroup) {
     Long workgroupId = null;
     Long periodId = null;
-    if (signedInUser.isAdmin()) {
-      // admin does not need workgroup or period
-    } else if (workgroup.isTeacherWorkgroup()) {
-      workgroupId = workgroup.getId();
-    } else if (workgroup.isStudentWorkgroup()) {
+    if (workgroup != null && workgroup.isStudentWorkgroup()) {
       workgroupId = workgroup.getId();
       periodId = workgroup.getPeriod().getId();
+    } else if (workgroup != null && workgroup.isTeacherWorkgroup()) {
+      workgroupId = workgroup.getId();
+    } else if (signedInUser.isAdmin()) {
+      // admin does not need workgroup or period
     }
 
     try {
