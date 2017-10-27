@@ -10,7 +10,7 @@
                 </div>
                 <md-icon class="nav-item__collapse" ng-show="$ctrl.isGroup && $ctrl.expanded" aria-label="collapse">remove</md-icon>
             </div>
-            <alert-status-corner has-alert="$ctrl.hasNewAlert()" has-new-alert="$ctrl.hasNewAlert()" message="$ctrl.alertIconLabel"></alert-status-corner>
+            <alert-status-corner has-alert="$ctrl.newAlert" has-new-alert="$ctrl.newAlert" message="$ctrl.alertIconLabel"></alert-status-corner>
         </md-card-content>
         <md-card-content ng-if="$ctrl.isGroup" ng-show="$ctrl.expanded" class="nav-contents nav-contents--group">
             <div ng-if="$ctrl.isPlanning" class="md-padding" layout="column" layout-align="center center">

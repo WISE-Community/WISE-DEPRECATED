@@ -167,6 +167,7 @@ var NavItemController = function () {
         this.$rootScope.$on('studentStatusReceived', function (event, args) {
             _this.setWorkgroupsOnNodeData();
             _this.setCurrentNodeStatus();
+            _this.getAlertNotifications();
         });
 
         // listen for the currentPeriodChanged event
@@ -177,11 +178,11 @@ var NavItemController = function () {
         });
 
         // listen for the currentWorkgroupChanged event
-        this.$rootScope.$on('currentWorkgroupChanged', function (event, args) {
-            _this.currentWorkgroup = args.currentWorkgroup;
-            _this.setCurrentNodeStatus();
-            _this.getAlertNotifications();
-        });
+        /*this.$rootScope.$on('currentWorkgroupChanged', (event, args) => {
+            this.currentWorkgroup = args.currentWorkgroup;
+            this.setCurrentNodeStatus();
+            this.getAlertNotifications();
+        });*/
     }
 
     _createClass(NavItemController, [{
