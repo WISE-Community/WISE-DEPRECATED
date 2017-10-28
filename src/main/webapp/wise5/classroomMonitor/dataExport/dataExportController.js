@@ -648,7 +648,6 @@ var DataExportController = function () {
                 row[columnNameToNumber["Component Revision Counter"]] = componentState.revisionCounter;
             }
 
-            // increment the revision counter
             this.incrementRevisionCounter(componentRevisionCounter, componentState.nodeId, componentState.componentId);
 
             var isSubmit = componentState.isSubmit;
@@ -3183,15 +3182,33 @@ var DataExportController = function () {
             // the rows that will show up in the export
             var rows = [];
 
-            // the counter for the rows
             var rowCounter = 1;
 
-            // loop through all the workgroup
-            for (var w = 0; w < workgroups.length; w++) {
-                var workgroup = workgroups[w];
-                var rowsForWorkgroup = this.generateMatchComponentWorkRowsForWorkgroup(workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter);
-                rows = rows.concat(rowsForWorkgroup);
-                rowCounter += rowsForWorkgroup.length;
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
+
+            try {
+                for (var _iterator5 = workgroups[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                    var workgroup = _step5.value;
+
+                    var rowsForWorkgroup = this.generateMatchComponentWorkRowsForWorkgroup(workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter);
+                    rows = rows.concat(rowsForWorkgroup);
+                    rowCounter += rowsForWorkgroup.length;
+                }
+            } catch (err) {
+                _didIteratorError5 = true;
+                _iteratorError5 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                        _iterator5.return();
+                    }
+                } finally {
+                    if (_didIteratorError5) {
+                        throw _iteratorError5;
+                    }
+                }
             }
 
             return rows;
@@ -3289,23 +3306,23 @@ var DataExportController = function () {
              */
             var row = this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState);
 
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
 
             try {
-                for (var _iterator5 = matchComponentState.studentData.buckets[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var bucket = _step5.value;
+                for (var _iterator6 = matchComponentState.studentData.buckets[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var bucket = _step6.value;
 
 
                     // loop through all the choices that the student put in this bucket
-                    var _iteratorNormalCompletion6 = true;
-                    var _didIteratorError6 = false;
-                    var _iteratorError6 = undefined;
+                    var _iteratorNormalCompletion7 = true;
+                    var _didIteratorError7 = false;
+                    var _iteratorError7 = undefined;
 
                     try {
-                        for (var _iterator6 = bucket.items[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                            var item = _step6.value;
+                        for (var _iterator7 = bucket.items[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                            var item = _step7.value;
 
                             // put the bucket name in the column corresponding to the choice
                             row[columnNameToNumber[item.id]] = bucket.value;
@@ -3329,31 +3346,31 @@ var DataExportController = function () {
                             }
                         }
                     } catch (err) {
-                        _didIteratorError6 = true;
-                        _iteratorError6 = err;
+                        _didIteratorError7 = true;
+                        _iteratorError7 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                                _iterator6.return();
+                            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                                _iterator7.return();
                             }
                         } finally {
-                            if (_didIteratorError6) {
-                                throw _iteratorError6;
+                            if (_didIteratorError7) {
+                                throw _iteratorError7;
                             }
                         }
                     }
                 }
             } catch (err) {
-                _didIteratorError5 = true;
-                _iteratorError5 = err;
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                        _iterator5.return();
+                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                        _iterator6.return();
                     }
                 } finally {
-                    if (_didIteratorError5) {
-                        throw _iteratorError5;
+                    if (_didIteratorError6) {
+                        throw _iteratorError6;
                     }
                 }
             }

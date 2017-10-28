@@ -660,7 +660,6 @@ class DataExportController {
             row[columnNameToNumber["Component Revision Counter"]] = componentState.revisionCounter;
         }
 
-        // increment the revision counter
         this.incrementRevisionCounter(componentRevisionCounter, componentState.nodeId, componentState.componentId);
 
         var isSubmit = componentState.isSubmit;
@@ -3042,12 +3041,9 @@ class DataExportController {
         // the rows that will show up in the export
         let rows = [];
 
-        // the counter for the rows
         let rowCounter = 1;
 
-        // loop through all the workgroup
-        for (let w = 0; w < workgroups.length; w++) {
-            let workgroup = workgroups[w];
+        for (let workgroup of workgroups) {
             let rowsForWorkgroup = this.generateMatchComponentWorkRowsForWorkgroup(workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter);
             rows = rows.concat(rowsForWorkgroup);
             rowCounter += rowsForWorkgroup.length;
