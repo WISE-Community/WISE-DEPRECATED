@@ -11,7 +11,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DataExportController = function () {
-    function DataExportController($injector, $rootScope, $scope, $state, AnnotationService, ConfigService, FileSaver, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService) {
+    function DataExportController($injector, $rootScope, $scope, $state, AnnotationService, ConfigService, FileSaver, MatchService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, DataExportController);
@@ -23,6 +23,7 @@ var DataExportController = function () {
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.FileSaver = FileSaver;
+        this.MatchService = MatchService;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
@@ -3015,10 +3016,12 @@ var DataExportController = function () {
                 // generate the file name of the csv file
                 var fileName = "";
                 var runId = _this8.ConfigService.getRunId();
+                var stepNumber = _this8.ProjectService.getNodePositionById(nodeId);
+                var componentNumber = _this8.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, component.id) + 1;
                 if (_this8.workSelectionType === 'exportAllWork') {
-                    fileName = runId + '_all_match_work.csv';
+                    fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_all_match_work.csv';
                 } else if (_this8.workSelectionType === 'exportLatestWork') {
-                    fileName = runId + '_latest_match_work.csv';
+                    fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_latest_match_work.csv';
                 }
 
                 // generate the csv file and have the client download it
@@ -3086,7 +3089,7 @@ var DataExportController = function () {
                 }
             }
 
-            if (this.includeCorrectnessColumns) {
+            if (this.includeCorrectnessColumns && this.MatchService.hasCorrectAnswer(component)) {
                 var _iteratorNormalCompletion3 = true;
                 var _didIteratorError3 = false;
                 var _iteratorError3 = undefined;
@@ -3112,10 +3115,10 @@ var DataExportController = function () {
                         }
                     }
                 }
-            }
 
-            columnNameToNumber['Is Correct'] = columnNames.length;
-            columnNames.push('Is Correct');
+                columnNameToNumber['Is Correct'] = columnNames.length;
+                columnNames.push('Is Correct');
+            }
         }
 
         /**
@@ -3192,7 +3195,7 @@ var DataExportController = function () {
                 for (var _iterator5 = workgroups[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
                     var workgroup = _step5.value;
 
-                    var rowsForWorkgroup = this.generateMatchComponentWorkRowsForWorkgroup(workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter);
+                    var rowsForWorkgroup = this.generateMatchComponentWorkRowsForWorkgroup(component, workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter);
                     rows = rows.concat(rowsForWorkgroup);
                     rowCounter += rowsForWorkgroup.length;
                 }
@@ -3216,6 +3219,7 @@ var DataExportController = function () {
 
         /**
          * Generate all the rows for a workgroup.
+         * @param component The component content object.
          * @param workgroup The workgroup.
          * @param columnNames An array of column name headers.
          * @param columnNameToNumber The mapping from column name to column number.
@@ -3226,7 +3230,7 @@ var DataExportController = function () {
 
     }, {
         key: 'generateMatchComponentWorkRowsForWorkgroup',
-        value: function generateMatchComponentWorkRowsForWorkgroup(workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter) {
+        value: function generateMatchComponentWorkRowsForWorkgroup(component, workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter) {
             var rows = [];
 
             // get the workgroup information
@@ -3266,7 +3270,7 @@ var DataExportController = function () {
 
                     if (exportRow) {
                         // add the row to the rows that will show up in the export
-                        rows.push(this.generateMatchComponentWorkRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState));
+                        rows.push(this.generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState));
                         rowCounter++;
                     } else {
                         /*
@@ -3283,6 +3287,7 @@ var DataExportController = function () {
 
         /**
          * Generate the row for the component state.
+         * @param component The component content object.
          * @param columnNames All the header column names.
          * @param columnNameToNumber The mapping from column name to column number.
          * @param rowCounter The current row number.
@@ -3298,7 +3303,7 @@ var DataExportController = function () {
 
     }, {
         key: 'generateMatchComponentWorkRow',
-        value: function generateMatchComponentWorkRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState) {
+        value: function generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState) {
 
             /*
              * Populate the cells in the row that contain the information about the
@@ -3327,22 +3332,8 @@ var DataExportController = function () {
                             // put the bucket name in the column corresponding to the choice
                             row[columnNameToNumber[item.id]] = bucket.value;
 
-                            if (this.includeCorrectnessColumns && item.isCorrect != null) {
-                                if (item.isCorrect) {
-                                    // the student placed the choice in the correct bucket
-                                    row[columnNameToNumber[item.id + '-boolean']] = 1;
-                                } else {
-                                    if (item.isIncorrectPosition) {
-                                        /*
-                                         * The student placed the choice in the correct bucket but
-                                         * in the wrong position.
-                                         */
-                                        row[columnNameToNumber[item.id + '-boolean']] = 2;
-                                    } else {
-                                        // the student did not place the choice in the correct bucket
-                                        row[columnNameToNumber[item.id + '-boolean']] = 0;
-                                    }
-                                }
+                            if (this.includeCorrectnessColumns && this.MatchService.hasCorrectAnswer(component)) {
+                                this.setCorrectnessValue(row, columnNameToNumber, item);
                             }
                         }
                     } catch (err) {
@@ -3377,12 +3368,45 @@ var DataExportController = function () {
 
             return row;
         }
+
+        /**
+         * Set the correctness boolean value into the cell.
+         * @param row The row we are working on.
+         * @param columnNameToNumber The mapping from column name to column number.
+         * @param item The choice object.
+         */
+
+    }, {
+        key: 'setCorrectnessValue',
+        value: function setCorrectnessValue(row, columnNameToNumber, item) {
+            var columnName = item.id + '-boolean';
+            if (item.isCorrect == null) {
+                /*
+                 * The item does not have an isCorrect field so we will not show
+                 * anything in the cell.
+                 */
+            } else if (item.isCorrect) {
+                // The student placed the choice in the correct bucket
+                row[columnNameToNumber[columnName]] = 1;
+            } else {
+                if (item.isIncorrectPosition) {
+                    /*
+                     * The student placed the choice in the correct bucket but
+                     * in the wrong position.
+                     */
+                    row[columnNameToNumber[columnName]] = 2;
+                } else {
+                    // The student placed the choice in the wrong bucket
+                    row[columnNameToNumber[columnName]] = 0;
+                }
+            }
+        }
     }]);
 
     return DataExportController;
 }();
 
-DataExportController.$inject = ['$injector', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'FileSaver', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService'];
+DataExportController.$inject = ['$injector', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'FileSaver', 'MatchService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService'];
 
 exports.default = DataExportController;
 //# sourceMappingURL=dataExportController.js.map

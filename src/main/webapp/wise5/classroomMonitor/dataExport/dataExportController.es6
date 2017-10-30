@@ -9,6 +9,7 @@ class DataExportController {
                 AnnotationService,
                 ConfigService,
                 FileSaver,
+                MatchService,
                 ProjectService,
                 StudentStatusService,
                 TeacherDataService,
@@ -22,6 +23,7 @@ class DataExportController {
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.FileSaver = FileSaver;
+        this.MatchService = MatchService;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
@@ -2922,10 +2924,12 @@ class DataExportController {
             // generate the file name of the csv file
             let fileName = "";
             let runId = this.ConfigService.getRunId();
+            let stepNumber = this.ProjectService.getNodePositionById(nodeId);
+            let componentNumber = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, component.id) + 1;
             if (this.workSelectionType === 'exportAllWork') {
-                fileName = runId + '_all_match_work.csv';
+                fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_all_match_work.csv';
             } else if (this.workSelectionType === 'exportLatestWork') {
-                fileName = runId + '_latest_match_work.csv';
+                fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_latest_match_work.csv';
             }
 
             // generate the csv file and have the client download it
@@ -2993,15 +2997,15 @@ class DataExportController {
         }
 
         // Add the header cells for the choice correctness
-        if (this.includeCorrectnessColumns) {
+        if (this.includeCorrectnessColumns &&
+                this.MatchService.hasCorrectAnswer(component)) {
             for (let choice of component.choices) {
                 columnNameToNumber[choice.id + '-boolean'] = columnNames.length;
                 columnNames.push(choice.value);
             }
+            columnNameToNumber['Is Correct'] = columnNames.length;
+            columnNames.push('Is Correct');
         }
-
-        columnNameToNumber['Is Correct'] = columnNames.length;
-        columnNames.push('Is Correct');
     }
 
     /**
@@ -3044,7 +3048,7 @@ class DataExportController {
         let rowCounter = 1;
 
         for (let workgroup of workgroups) {
-            let rowsForWorkgroup = this.generateMatchComponentWorkRowsForWorkgroup(workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter);
+            let rowsForWorkgroup = this.generateMatchComponentWorkRowsForWorkgroup(component, workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter);
             rows = rows.concat(rowsForWorkgroup);
             rowCounter += rowsForWorkgroup.length;
         }
@@ -3054,6 +3058,7 @@ class DataExportController {
 
     /**
      * Generate all the rows for a workgroup.
+     * @param component The component content object.
      * @param workgroup The workgroup.
      * @param columnNames An array of column name headers.
      * @param columnNameToNumber The mapping from column name to column number.
@@ -3061,7 +3066,7 @@ class DataExportController {
      * @param componentId The component id.
      * @param rowCounter The current row number we will be creating.
      */
-    generateMatchComponentWorkRowsForWorkgroup(workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter) {
+    generateMatchComponentWorkRowsForWorkgroup(component, workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter) {
         let rows = [];
 
         // get the workgroup information
@@ -3102,7 +3107,7 @@ class DataExportController {
 
                 if (exportRow) {
                     // add the row to the rows that will show up in the export
-                    rows.push(this.generateMatchComponentWorkRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState));
+                    rows.push(this.generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState));
                     rowCounter++;
                 } else {
                     /*
@@ -3119,6 +3124,7 @@ class DataExportController {
 
     /**
      * Generate the row for the component state.
+     * @param component The component content object.
      * @param columnNames All the header column names.
      * @param columnNameToNumber The mapping from column name to column number.
      * @param rowCounter The current row number.
@@ -3131,7 +3137,7 @@ class DataExportController {
      * @param matchComponentState The component state.
      * @return The row with the student work.
      */
-    generateMatchComponentWorkRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState) {
+    generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState) {
 
         /*
          * Populate the cells in the row that contain the information about the
@@ -3146,27 +3152,44 @@ class DataExportController {
                 // put the bucket name in the column corresponding to the choice
                 row[columnNameToNumber[item.id]] = bucket.value;
 
-                if (this.includeCorrectnessColumns && item.isCorrect != null) {
-                    if (item.isCorrect) {
-                        // the student placed the choice in the correct bucket
-                        row[columnNameToNumber[item.id + '-boolean']] = 1;
-                    } else {
-                        if (item.isIncorrectPosition) {
-                            /*
-                             * The student placed the choice in the correct bucket but
-                             * in the wrong position.
-                             */
-                            row[columnNameToNumber[item.id + '-boolean']] = 2;
-                        } else {
-                            // the student did not place the choice in the correct bucket
-                            row[columnNameToNumber[item.id + '-boolean']] = 0;
-                        }
-                    }
+                if (this.includeCorrectnessColumns &&
+                        this.MatchService.hasCorrectAnswer(component)) {
+                    this.setCorrectnessValue(row, columnNameToNumber, item);
                 }
             }
         }
 
         return row;
+    }
+
+    /**
+     * Set the correctness boolean value into the cell.
+     * @param row The row we are working on.
+     * @param columnNameToNumber The mapping from column name to column number.
+     * @param item The choice object.
+     */
+    setCorrectnessValue(row, columnNameToNumber, item) {
+        let columnName = item.id + '-boolean';
+        if (item.isCorrect == null) {
+            /*
+             * The item does not have an isCorrect field so we will not show
+             * anything in the cell.
+             */
+        } else if (item.isCorrect) {
+            // The student placed the choice in the correct bucket
+            row[columnNameToNumber[columnName]] = 1;
+        } else {
+            if (item.isIncorrectPosition) {
+                /*
+                 * The student placed the choice in the correct bucket but
+                 * in the wrong position.
+                 */
+                row[columnNameToNumber[columnName]] = 2;
+            } else {
+                // The student placed the choice in the wrong bucket
+                row[columnNameToNumber[columnName]] = 0;
+            }
+        }
     }
 }
 
@@ -3178,6 +3201,7 @@ DataExportController.$inject = [
     'AnnotationService',
     'ConfigService',
     'FileSaver',
+    'MatchService',
     'ProjectService',
     'StudentStatusService',
     'TeacherDataService',
