@@ -243,6 +243,24 @@ class MatchService extends NodeService {
 
     return false;
   }
+
+  /**
+   * Check if a the component has a correct answer.
+   * @param component The component content object.
+   * @return Whether the component has a correct answer.
+   */
+  hasCorrectAnswer(component) {
+    if (component != null) {
+      for (let bucket of component.feedback) {
+        for (let choice of bucket.choices) {
+          if (choice.isCorrect) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
 }
 
 MatchService.$inject = [

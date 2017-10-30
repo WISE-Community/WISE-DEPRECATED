@@ -156,14 +156,19 @@
                   <div ng-if='projectItem.order != 0 && projectItem.node.type != "group" && projectItem.node.components.length > 0'
                        ng-repeat='componentItem in projectItem.node.components track by $index'
                        class='componentHeader'>
-                      <md-button ng-if='dataExportController.canExportComponentDataType(componentItem.type)'
-                          class='md-raised exportComponentDataButton'
-                          ng-click='dataExportController.exportComponentClicked(projectItem.node.id, componentItem)'>
+                      <div>
                         {{($index + 1)}}. {{componentItem.type}}
-                      </md-button>
-                     <div ng-if='!dataExportController.canExportComponentDataType(componentItem.type)'>
-                       {{($index + 1)}}. {{componentItem.type}}
-                     </div>
+                        <md-button ng-if='dataExportController.canExportComponentDataType(componentItem.type)'
+                            class='md-primary md-raised exportComponentDataButton'
+                            ng-click='dataExportController.exportComponentClicked(projectItem.node.id, componentItem)'>
+                          <md-icon>file_download</md-icon>
+                          <md-tooltip>{{ 'downloadExport' | translate }}</md-tooltip>
+                        </md-button>
+                        <span ng-if='componentItem.type == "Match"'>
+                          <md-icon>help</md-icon>
+                          <md-tooltip md-direction='right'>{{ 'matchCorrectnessColumnKey' | translate }}</md-tooltip>
+                        </span>
+                      </div>
                   </div>
               </div>
               <md-button class="md-raised" ng-click="dataExportController.exportType = null" id="cancel">
