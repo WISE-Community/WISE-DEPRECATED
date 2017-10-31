@@ -97,9 +97,12 @@ class ThemeController {
 
                 // get the constraints that affect this node
                 var constraints = this.ProjectService.getConstraintsForNode(node);
+                this.ProjectService.orderConstraints(constraints);
 
                 if (constraints != null && constraints.length > 0) {
-                    message = '';
+                    // get the node title the student is trying to go to
+                    let nodeTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+                    message = this.$translate('toVisitNodeTitleYouNeedTo', { nodeTitle: nodeTitle });
                 }
 
                 // loop through all the constraints that affect this node
@@ -112,7 +115,7 @@ class ThemeController {
 
                         if (message != '') {
                             // separate multiple constraints with line breaks
-                            message += '<br/><br/>';
+                            message += '<br/>';
                         }
 
                         // get the message that describes how to disable the constraint

@@ -96,9 +96,12 @@ var ThemeController = function () {
 
                 // get the constraints that affect this node
                 var constraints = _this.ProjectService.getConstraintsForNode(node);
+                _this.ProjectService.orderConstraints(constraints);
 
                 if (constraints != null && constraints.length > 0) {
-                    message = '';
+                    // get the node title the student is trying to go to
+                    var nodeTitle = _this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+                    message = _this.$translate('toVisitNodeTitleYouNeedTo', { nodeTitle: nodeTitle });
                 }
 
                 // loop through all the constraints that affect this node
@@ -111,7 +114,7 @@ var ThemeController = function () {
 
                         if (message != '') {
                             // separate multiple constraints with line breaks
-                            message += '<br/><br/>';
+                            message += '<br/>';
                         }
 
                         // get the message that describes how to disable the constraint
@@ -223,11 +226,11 @@ var ThemeController = function () {
             let open = args.open;
             this.toggleNotebook(ev, open);
         });
-          // toggle notebook nav opened or closed on 'toggleNotebookNav' event
+         // toggle notebook nav opened or closed on 'toggleNotebookNav' event
         this.$scope.$on('toggleNotebookNav', () => {
             this.toggleNotebookNav();
         });
-          // update notebook filter on 'setNotebookFilter' event
+         // update notebook filter on 'setNotebookFilter' event
         this.$scope.$on('setNotebookFilter', (event, args) => {
             this.notebookFilter = args.filter;
         });*/
@@ -456,7 +459,7 @@ var ThemeController = function () {
          */
         /*deleteNote(itemId, ev, doDelete = true) {
             let confirm = null;
-              if (doDelete) {
+             if (doDelete) {
                 confirm = this.$mdDialog.confirm()
                     .title(this.$translate('deleteNoteConfirmMessage'))
                     .ariaLabel('delete note confirmation')
@@ -471,7 +474,7 @@ var ThemeController = function () {
                     .ok(this.$translate('revive'))
                     .cancel(this.$translate('cancel'));
             }
-              this.$mdDialog.show(confirm).then(() => {
+             this.$mdDialog.show(confirm).then(() => {
                 let noteCopy = angular.copy(this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId));
                 noteCopy.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
                 noteCopy.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
@@ -485,9 +488,9 @@ var ThemeController = function () {
                 // they chose not to delete. Do nothing, the dialog will close.
             });
         }
-          editNote(itemId, isEditMode, file, ev) {
+         editNote(itemId, isEditMode, file, ev) {
             let notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
-              // Display a dialog where students can view/add/edit a notebook item
+             // Display a dialog where students can view/add/edit a notebook item
             this.$mdDialog.show({
                 parent: angular.element(document.body),
                 targetEvent: ev,
