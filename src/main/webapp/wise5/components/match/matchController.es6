@@ -3067,6 +3067,20 @@ class MatchController {
   }
 
   /**
+   * The "Is Correct" checkbox for a choice feedback has been clicked.
+   * @param feedback The choice feedback.
+   */
+  authoringViewIsCorrectClicked(feedback) {
+    if (!feedback.isCorrect) {
+      // the choice has been set to not correct so we will remove the position
+      delete feedback.position;
+      delete feedback.incorrectPositionFeedback;
+    }
+    // save the component
+    this.authoringViewComponentChanged();
+  }
+
+  /**
    * Set the show submit button value
    * @param show whether to show the submit button
    */
