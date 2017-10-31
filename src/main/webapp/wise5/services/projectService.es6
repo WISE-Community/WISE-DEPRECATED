@@ -8732,7 +8732,7 @@ class ProjectService {
      */
     getNodeIdsInBranch(fromNodeId, toNodeId) {
 
-        var nodesInBranch = [];
+        var nodeIdsInBranch = [];
 
         // get all the nodes in the project
         var nodes = this.getNodes();
@@ -8749,13 +8749,47 @@ class ProjectService {
                          * this node has the the branch path taken constraint we are
                          * looking for
                          */
-                        nodesInBranch.push(node.id);
+                        nodeIdsInBranch.push(node.id);
                     }
                 }
             }
         }
 
-        return nodesInBranch;
+        this.orderNodeIds(nodeIdsInBranch);
+
+        return nodeIdsInBranch;
+    }
+
+    /**
+     * Order the node ids so that they show up in the same order as in the
+     * project.
+     * @param constraints An array of node ids.
+     * @return An array of ordered node ids.
+     */
+    orderNodeIds(nodeIds) {
+        let orderedNodeIds = this.getFlattenedProjectAsNodeIds();
+        return nodeIds.sort(this.nodeIdsComparatorGenerator(orderedNodeIds));
+    }
+
+    /**
+     * Create the node ids comparator function that is used for sorting an
+     * array of node ids.
+     * @param orderedNodeIds An array of node ids in the order in which they
+     * show up in the project.
+     * @return A comparator that orders node ids in the order in which they show
+     * up in the project.
+     */
+    nodeIdsComparatorGenerator(orderedNodeIds) {
+        return function(nodeIdA, nodeIdB) {
+            let nodeIdAIndex = orderedNodeIds.indexOf(nodeIdA);
+            let nodeIdBIndex = orderedNodeIds.indexOf(nodeIdB);
+            if (nodeIdAIndex < nodeIdBIndex) {
+                return -1;
+            } else if (nodeIdAIndex > nodeIdBIndex) {
+                return 1;
+            }
+            return 0;
+        }
     }
 
     /**
