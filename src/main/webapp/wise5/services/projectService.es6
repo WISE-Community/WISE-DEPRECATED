@@ -1273,6 +1273,38 @@ class ProjectService {
     };
 
     /**
+     * Order the constraints so that they show up in the same order as in the
+     * project.
+     * @param constraints An array of constraint objects.
+     * @return An array of ordered constraints.
+     */
+    orderConstraints(constraints) {
+        let orderedNodeIds = this.getFlattenedProjectAsNodeIds();
+        return constraints.sort(this.constraintsComparatorGenerator(orderedNodeIds));
+    }
+
+    /**
+     * Create the constraints comparator function that is used for sorting an
+     * array of constraint objects.
+     * @param orderedNodeIds An array of node ids in the order in which they
+     * show up in the project.
+     * @return A comparator that orders constraint objects in the order in which
+     * the target ids show up in the project.
+     */
+    constraintsComparatorGenerator(orderedNodeIds) {
+        return function(constraintA, constraintB) {
+            let constraintAIndex = orderedNodeIds.indexOf(constraintA.targetId);
+            let constraintBIndex = orderedNodeIds.indexOf(constraintB.targetId);
+            if (constraintAIndex < constraintBIndex) {
+                return -1;
+            } else if (constraintAIndex > constraintBIndex) {
+                return 1;
+            }
+            return 0;
+        }
+    }
+
+    /**
      * Check if a node is affected by the constraint
      * @param node check if the node is affected
      * @param constraint the constraint that might affect the node
@@ -6158,14 +6190,7 @@ class ProjectService {
             var removalConditional = constraint.removalConditional;
             var removalCriteria = constraint.removalCriteria;
 
-            if (removalConditional === 'any') {
-                message += this.$translate('TO_VISIT_STEP_YOU_MUST_PERFORM_ONE_OF_THE_ACTIONS_BELOW', { nodeTitle: nodeTitle }) + ':<br/>';
-            } else {
-                message += this.$translate('TO_VISIT_STEP_YOU_MUST_PERFORM_ALL_OF_THE_ACTIONS_BELOW', { nodeTitle: nodeTitle }) + ':<br/>';
-            }
-
             if (removalCriteria != null) {
-
                 var criteriaMessages = '';
 
                 // loop through all the criteria
@@ -8707,7 +8732,7 @@ class ProjectService {
      */
     getNodeIdsInBranch(fromNodeId, toNodeId) {
 
-        var nodesInBranch = [];
+        var nodeIdsInBranch = [];
 
         // get all the nodes in the project
         var nodes = this.getNodes();
@@ -8724,13 +8749,47 @@ class ProjectService {
                          * this node has the the branch path taken constraint we are
                          * looking for
                          */
-                        nodesInBranch.push(node.id);
+                        nodeIdsInBranch.push(node.id);
                     }
                 }
             }
         }
 
-        return nodesInBranch;
+        this.orderNodeIds(nodeIdsInBranch);
+
+        return nodeIdsInBranch;
+    }
+
+    /**
+     * Order the node ids so that they show up in the same order as in the
+     * project.
+     * @param constraints An array of node ids.
+     * @return An array of ordered node ids.
+     */
+    orderNodeIds(nodeIds) {
+        let orderedNodeIds = this.getFlattenedProjectAsNodeIds();
+        return nodeIds.sort(this.nodeIdsComparatorGenerator(orderedNodeIds));
+    }
+
+    /**
+     * Create the node ids comparator function that is used for sorting an
+     * array of node ids.
+     * @param orderedNodeIds An array of node ids in the order in which they
+     * show up in the project.
+     * @return A comparator that orders node ids in the order in which they show
+     * up in the project.
+     */
+    nodeIdsComparatorGenerator(orderedNodeIds) {
+        return function(nodeIdA, nodeIdB) {
+            let nodeIdAIndex = orderedNodeIds.indexOf(nodeIdA);
+            let nodeIdBIndex = orderedNodeIds.indexOf(nodeIdB);
+            if (nodeIdAIndex < nodeIdBIndex) {
+                return -1;
+            } else if (nodeIdAIndex > nodeIdBIndex) {
+                return 1;
+            }
+            return 0;
+        }
     }
 
     /**

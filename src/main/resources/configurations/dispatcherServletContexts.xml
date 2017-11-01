@@ -19,148 +19,143 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  -->
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="
-	http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-    http://www.springframework.org/schema/mvc
- 	http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
-    http://www.springframework.org/schema/context
-    http://www.springframework.org/schema/context/spring-context-4.0.xsd
- 	">
+<beans
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:mvc="http://www.springframework.org/schema/mvc"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+      http://www.springframework.org/schema/mvc
+      http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-	<!-- registers the DefaultAnnotationHandlerMapping and AnnotationMethodHandlerAdapter
-		beans that are required for Spring MVC to dispatch requests to @Controllers.
-		http://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-annotation-driven -->
-	<mvc:annotation-driven />
+  <!-- registers the DefaultAnnotationHandlerMapping and AnnotationMethodHandlerAdapter
+      beans that are required for Spring MVC to dispatch requests to @Controllers.
+      http://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-annotation-driven -->
+  <mvc:annotation-driven />
 
-	<!-- enable the @Controller Spring annotation for defining controllers using annotations -->
-	<context:component-scan base-package="org.wise.portal.presentation">
-		<!-- exclude unit test annotations -->
-		<context:exclude-filter type="regex"
-			expression=".*?Test.*?" />
-	</context:component-scan>
+  <!-- enable the @Controller Spring annotation for defining controllers using annotations -->
+  <context:component-scan base-package="org.wise.portal.presentation">
+    <!-- exclude unit test annotations -->
+    <context:exclude-filter type="regex" expression=".*?Test.*?" />
+  </context:component-scan>
 
-	<context:component-scan base-package="org.wise.vle.web">
-		<!-- exclude unit test annotations -->
-		<context:exclude-filter type="regex"
-			expression=".*?Test.*?" />
-	</context:component-scan>
+  <context:component-scan base-package="org.wise.vle.web">
+    <!-- exclude unit test annotations -->
+    <context:exclude-filter type="regex" expression=".*?Test.*?" />
+  </context:component-scan>
 
-	<!-- this allows key/value pairs in wise.properties to be used to create beans. see dataSource bean for example -->
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:wise.properties</value>
-            </list>
-        </property>
-    </bean>
+  <!-- this allows key/value pairs in wise.properties to be used to create beans. see dataSource bean for example -->
+  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>classpath:wise.properties</value>
+      </list>
+    </property>
+  </bean>
 
-	<!-- Switch locales according to the user's browser -->
-	<bean id="localeResolver"
-		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-		<property name="defaultLocale" value="${defaultLocale}" />
-	</bean>
+  <!-- Switch locales according to the user's browser -->
+  <bean id="localeResolver"
+        class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+    <property name="defaultLocale" value="${defaultLocale}" />
+  </bean>
 
-	<!-- Use a default fixed theme -->
-	<bean id="themeResolver"
-		class="org.springframework.web.servlet.theme.FixedThemeResolver">
-		<property name="defaultThemeName" value="default" />
-	</bean>
+  <!-- Use a default fixed theme -->
+  <bean id="themeResolver"
+        class="org.springframework.web.servlet.theme.FixedThemeResolver">
+    <property name="defaultThemeName" value="default" />
+  </bean>
 
-	<!-- this bean with the well known name generates view names for us -->
-	<bean id="viewNameTranslator"
-		class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator" />
+  <!-- this bean with the well known name generates view names for us -->
+  <bean id="viewNameTranslator"
+        class="org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator" />
 
-	<!-- maps request URLs to view file names -->
-	<bean id="urlFilenameViewController"
-		class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
+  <!-- maps request URLs to view file names -->
+  <bean id="urlFilenameViewController"
+        class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
 
-	<!-- Specifies where theme properties are located -->
-	<bean id="themeSource"
-		class="org.springframework.ui.context.support.ResourceBundleThemeSource">
-		<property name="basenamePrefix" value="themes/" />
-	</bean>
+  <!-- Specifies where theme properties are located -->
+  <bean id="themeSource"
+        class="org.springframework.ui.context.support.ResourceBundleThemeSource">
+    <property name="basenamePrefix" value="themes/" />
+  </bean>
 
-	<!-- JSP with optional JSTL views -->
-	<bean id="viewResolver"
-		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-		<property name="viewClass"
-			value="org.springframework.web.servlet.view.JstlView" />
-		<property name="prefix" value="/portal/" />
-		<property name="suffix" value=".jsp" />
-	</bean>
+  <!-- JSP with optional JSTL views -->
+  <bean id="viewResolver"
+        class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+    <property name="viewClass"
+              value="org.springframework.web.servlet.view.JstlView" />
+    <property name="prefix" value="/portal/" />
+    <property name="suffix" value=".jsp" />
+  </bean>
 
-	<bean id="messageSource"
-		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-		<property name="basename" value="classpath:i18n/i18n" />
-		<property name="defaultEncoding" value="UTF-8" />
-		<property name="fallbackToSystemLocale" value="false" />
-	</bean>
+  <bean id="messageSource"
+        class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+    <property name="basename" value="classpath:i18n/i18n" />
+    <property name="defaultEncoding" value="UTF-8" />
+    <property name="fallbackToSystemLocale" value="false" />
+  </bean>
 
-	<bean class="org.springframework.web.context.support.ServletContextAttributeExporter">
-        <property name="attributes">
-            <map>
-                <entry key="google_analytics_id" value="${google_analytics_id}" />
-            </map>
-        </property>
-    </bean>
+  <bean class="org.springframework.web.context.support.ServletContextAttributeExporter">
+    <property name="attributes">
+      <map>
+        <entry key="google_analytics_id" value="${google_analytics_id}" />
+      </map>
+    </property>
+  </bean>
 
-	<!-- The real exceptions are logged to the tomcat/logs/catalina.out file.
-		Look there if you've got a problem. -->
-	<bean id="exceptionResolver"
-		class="org.wise.portal.spring.impl.WISESimpleMappingExceptionResolver">
-		<property name="exceptionMappings">
-			<props>
-				<prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">errors/maxUploadSizeExceededError</prop>
-				<prop key="java.lang.Exception">errors/friendlyError</prop>
-				<prop key="org.acegisecurity.AccessDeniedException">errors/securityFriendlyError</prop>
-				<prop key="org.wise.portal.presentation.web.exception.NotAuthorizedException">errors/accessdenied</prop>
-			</props>
-		</property>
-	</bean>
+  <!-- The real exceptions are logged to the tomcat/logs/catalina.out file. Look there if you've got a problem. -->
+  <bean id="exceptionResolver"
+        class="org.wise.portal.spring.impl.WISESimpleMappingExceptionResolver">
+    <property name="exceptionMappings">
+      <props>
+        <prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">errors/maxUploadSizeExceededError</prop>
+        <prop key="java.lang.Exception">errors/friendlyError</prop>
+        <prop key="org.acegisecurity.AccessDeniedException">errors/securityFriendlyError</prop>
+        <prop key="org.wise.portal.presentation.web.exception.NotAuthorizedException">errors/accessdenied</prop>
+      </props>
+    </property>
+  </bean>
 
-	<!-- allows user to change language via ?lang=XX url param -->
-	<bean id="localeChangeInterceptor"
-		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-		<property name="paramName" value="lang" />
-	</bean>
+  <!-- allows user to change language via ?lang=XX url param -->
+  <bean id="localeChangeInterceptor"
+        class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+    <property name="paramName" value="lang" />
+  </bean>
 
-	<!-- these are resources that do not need to be backed by controllers and
-		should be handled before looking through the SimpleUrlHandlerMapping mappings -->
-	<mvc:resources mapping="/pages/resources/**" location="/portal/pages/resources/" order="1" />
-	<mvc:resources mapping="/portal/javascript/**" location="/portal/javascript/" order="1" />
-	<mvc:resources mapping="/portal/themes/**" location="/portal/themes/" order="1" />
-	<mvc:resources mapping="/portal/translate/**" location="/portal/translate/" order="1" />
-	<mvc:resources mapping="/vle/**" location="/vle/" order="1" />
-	<mvc:resources mapping="/wise5/**" location="/wise5/" order="1" />
-	<mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
-	<mvc:resources mapping="/studentuploads/**" location="/studentuploads/" order="1" />
-	<mvc:resources mapping="/curriculumWISE5/**" location="/curriculumWISE5/" order="1" />
+  <!-- these are resources that do not need to be backed by controllers and
+      should be handled before looking through the SimpleUrlHandlerMapping mappings -->
+  <mvc:resources mapping="/pages/resources/**" location="/portal/pages/resources/" order="1" />
+  <mvc:resources mapping="/portal/javascript/**" location="/portal/javascript/" order="1" />
+  <mvc:resources mapping="/portal/themes/**" location="/portal/themes/" order="1" />
+  <mvc:resources mapping="/portal/translate/**" location="/portal/translate/" order="1" />
+  <mvc:resources mapping="/vle/**" location="/vle/" order="1" />
+  <mvc:resources mapping="/wise5/**" location="/wise5/" order="1" />
+  <mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />
+  <mvc:resources mapping="/studentuploads/**" location="/studentuploads/" order="1" />
+  <mvc:resources mapping="/curriculumWISE5/**" location="/curriculumWISE5/" order="1" />
 
-	<mvc:interceptors>
-	    <ref bean="localeChangeInterceptor"/>
-	</mvc:interceptors>
+  <mvc:interceptors>
+    <ref bean="localeChangeInterceptor"/>
+  </mvc:interceptors>
 
-	<!-- all of the urls have been mapped using @Controller annotation,
-		 except for files like /teacher/termsofuse.jsp, /pages/*
-		 These will be caught last and will be handled by urlFilenameViewController.
-	-->
-	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-		<property name="order" value="2"></property>
-		<property name="mappings">
-			<value>
-				/**/*=urlFilenameViewController
-			</value>
-		</property>
-		<property name="interceptors">
-			<list>
-				<ref bean="localeChangeInterceptor" />
-			</list>
-		</property>
-	</bean>
+  <!-- all of the urls have been mapped using @Controller annotation,
+   except for files like /teacher/termsofuse.jsp, /pages/*
+   These will be caught last and will be handled by urlFilenameViewController.
+  -->
+  <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <property name="order" value="2"></property>
+    <property name="mappings">
+      <value>/**/*=urlFilenameViewController</value>
+    </property>
+    <property name="interceptors">
+      <list>
+        <ref bean="localeChangeInterceptor" />
+      </list>
+    </property>
+  </bean>
 
 </beans>

@@ -14,5 +14,5 @@ indent_style = space
 [*.{js,es6}]
 indent_size = 4
 
-[*.{java}]
+[*.{java,xml}]
 indent_size = 2

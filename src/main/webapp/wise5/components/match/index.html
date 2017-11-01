@@ -376,7 +376,7 @@
               <md-input-container style='width:110; height: 30;'
                   layout='row'>
                 <md-checkbox ng-model='choiceFeedback.isCorrect'
-                    ng-change='matchController.authoringViewFeedbackChanged()'
+                    ng-change='matchController.authoringViewIsCorrectClicked(choiceFeedback)'
                     layout='row'>
                   {{ 'IS_CORRECT' | translate }}
                 </md-checkbox>
