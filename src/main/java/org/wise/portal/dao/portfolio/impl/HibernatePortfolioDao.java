@@ -18,7 +18,7 @@
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
- * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.wise.portal.dao.portfolio.impl;
 
@@ -40,46 +40,44 @@ import org.wise.vle.domain.portfolio.Portfolio;
 @Repository
 public class HibernatePortfolioDao extends AbstractHibernateDao<Portfolio> implements PortfolioDao<Portfolio> {
 
-	/**
-	 * Get the latest Portfolio with the given run id and workgroup id
-	 * @param runId the id of the run
-	 * @param workgroupId the id of the workgroup
-	 * @return the Portfolio with the matching runId and workgroupId
-	 */
-	@Transactional(readOnly=true)
-	public Portfolio getPortfolioByRunIdWorkgroupId(long runId, long workgroupId) {
-		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        
-        //find the latest Portfolio object that matches
-        List<Portfolio> result = session.createCriteria(Portfolio.class).add(
-        		Restrictions.eq("runId", runId)).add(
-        				Restrictions.eq("workgroupId", workgroupId)).addOrder(Order.desc("postTime")).setMaxResults(1).list();
-        
-        Portfolio portfolio = null;
-        if(result.size() > 0) {
-        	/*
-        	 * get the first Portfolio from the result list since 
-        	 * there will only be one element in the list
-        	 */
-        	portfolio = result.get(0);
-        }
-        return portfolio;
-	}
-	
-	@Transactional
-	public void savePortfolio(Portfolio portfolio) {
-		save(portfolio);
-	}
+  /**
+   * Get the latest Portfolio with the given run id and workgroup id
+   * @param runId the id of the run
+   * @param workgroupId the id of the workgroup
+   * @return the Portfolio with the matching runId and workgroupId
+   */
+  @Transactional(readOnly=true)
+  public Portfolio getPortfolioByRunIdWorkgroupId(long runId, long workgroupId) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 
-	
-	@Override
-	protected String getFindAllQuery() {
-		return null;
-	}
+    //find the latest Portfolio object that matches
+    List<Portfolio> result = session.createCriteria(Portfolio.class).add(
+      Restrictions.eq("runId", runId)).add(
+      Restrictions.eq("workgroupId", workgroupId)).addOrder(Order.desc("postTime")).setMaxResults(1).list();
 
-	@Override
-	protected Class<? extends Portfolio> getDataObjectClass() {
-		return null;
-	}
+    Portfolio portfolio = null;
+    if(result.size() > 0) {
+      /*
+       * get the first Portfolio from the result list since
+       * there will only be one element in the list
+       */
+      portfolio = result.get(0);
+    }
+    return portfolio;
+  }
 
+  @Transactional
+  public void savePortfolio(Portfolio portfolio) {
+    save(portfolio);
+  }
+
+  @Override
+  protected String getFindAllQuery() {
+    return null;
+  }
+
+  @Override
+  protected Class<? extends Portfolio> getDataObjectClass() {
+    return null;
+  }
 }

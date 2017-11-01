@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -29,78 +29,78 @@ import org.wise.portal.domain.user.User;
  * An interface that defines the concept of a group that can be nested in a
  * hierarchy. Group objects are nodes in a group tree hierarchy. Leaf nodes in
  * the tree contain a list of members.
- * 
+ *
  * @author Cynick Young
  */
 public interface Group extends Persistable, Comparable<Group> {
 
-    /**
-     * Add a single member to the group.
-     * 
-     * @param member
-     *            single member to add
-     */
-    void addMember(User member);
-    
-    /**
-     * Removes a single member from the group.
-     * 
-     * @param member
-     *            single member to remove
-     */
-    void removeMember(User member);
+  /**
+   * Add a single member to the group.
+   *
+   * @param member
+   *            single member to add
+   */
+  void addMember(User member);
 
-    /**
-     * Replace any existing list of members with the new list.
-     * 
-     * @param members
-     *            new <code>List</code> of members to set
-     */
-    void setMembers(Set<User> members);
+  /**
+   * Removes a single member from the group.
+   *
+   * @param member
+   *            single member to remove
+   */
+  void removeMember(User member);
 
-    /**
-     * Get the list of members of this group.
-     * 
-     * @return <code>List</code> of <code>User</code> objects that belong to
-     *         this group.
-     */
-    Set<User> getMembers();
+  /**
+   * Replace any existing list of members with the new list.
+   *
+   * @param members
+   *            new <code>List</code> of members to set
+   */
+  void setMembers(Set<User> members);
 
-    /**
-     * Gets the name of this group.
-     * 
-     * @return the name of the current group
-     */
-    String getName();
+  /**
+   * Get the list of members of this group.
+   *
+   * @return <code>List</code> of <code>User</code> objects that belong to
+   *         this group.
+   */
+  Set<User> getMembers();
 
-    /**
-     * Sets the name of this group.
-     * 
-     * @param name
-     *            the name to set for this group.
-     */
-    void setName(String name);
+  /**
+   * Gets the name of this group.
+   *
+   * @return the name of the current group
+   */
+  String getName();
 
-    /**
-     * Gets the parent group for this group. If is the group at the top of the
-     * group hierarchy, then null is returned.
-     * 
-     * @return the parent
-     */
-    Group getParent();
+  /**
+   * Sets the name of this group.
+   *
+   * @param name
+   *            the name to set for this group.
+   */
+  void setName(String name);
 
-    /**
-     * Sets the parent group for this group.
-     * 
-     * @param parent
-     *            the parent to set
-     */
-    void setParent(Group parent);
+  /**
+   * Gets the parent group for this group. If is the group at the top of the
+   * group hierarchy, then null is returned.
+   *
+   * @return the parent
+   */
+  Group getParent();
 
-    /**
-     * Gets the id for this object.
-     * 
-     * @return the id
-     */
-    Long getId();
+  /**
+   * Sets the parent group for this group.
+   *
+   * @param parent
+   *            the parent to set
+   */
+  void setParent(Group parent);
+
+  /**
+   * Gets the id for this object.
+   *
+   * @return the id
+   */
+  Long getId();
 }

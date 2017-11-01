@@ -38,13 +38,13 @@ import java.util.List;
  */
 public interface EventDao<T extends Event> extends SimpleDao<T> {
 
-    List<Event> getEventsByParams(Integer id, Run run, Group period, Workgroup workgroup,
-                                    String nodeId, String componentId, String componentType,
-                                    String context, String category, String event,
-                                    List<JSONObject> components);
-    /**
-     * Returns a list of events for the specified runs in an exportable format
-     */
-    List<Object[]> getStudentEventExport(Integer runId);
+  List<Event> getEventsByParams(Integer id, Run run, Group period, Workgroup workgroup,
+      String nodeId, String componentId, String componentType, String context, String category,
+      String event, List<JSONObject> components);
+
+  /**
+   * Returns a list of events for the specified runs in an exportable format
+   */
+  List<Object[]> getStudentEventExport(Integer runId);
 
 }

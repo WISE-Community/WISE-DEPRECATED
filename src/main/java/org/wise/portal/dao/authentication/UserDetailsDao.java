@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -29,45 +29,44 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
 /**
  * @author Cynick Young
  */
-public interface UserDetailsDao<T extends MutableUserDetails> extends
-        SimpleDao<T> {
+public interface UserDetailsDao<T extends MutableUserDetails> extends SimpleDao<T> {
 
-    /**
-     * Check if the username exists in the data store.
-     * 
-     * @param username
-     * @return true if the data store contains a user with the corresponding
-     *         username, false otherwise.
-     */
-    boolean hasUsername(String username);
+  /**
+   * Check if the username exists in the data store.
+   *
+   * @param username
+   * @return true if the data store contains a user with the corresponding
+   *         username, false otherwise.
+   */
+  boolean hasUsername(String username);
 
-    /**
-     * Given an input string retrieve a corresponding record from data store.
-     * 
-     * @param name
-     *            A string representing the name of the data in the data store.
-     * @return A new instance of a data object.
-     */
-    T retrieveByName(String name);
-    
-    /**
-     * Given an input string retrieve a corresponding record from data store.
-     * 
-     * @param name
-     *            A string representing the name of the data in the data store.
-     * @return A new instance of a data object.
-     */
-    List<T> retrieveAll(String className);
-    
-    /**
-     * Given an input string retrieve a corresponding record from data store.
-     * 
-     * @param name
-     *            A string representing the name of the data in the data store.
-     * @param field
-     *            A string representing the field of the data in the data store. e.g. username
-     *            
-     * @return A new instance of a data object.
-     */
-    List<String> retrieveAll(String className, String field);
+  /**
+   * Given an input string retrieve a corresponding record from data store.
+   *
+   * @param name
+   *            A string representing the name of the data in the data store.
+   * @return A new instance of a data object.
+   */
+  T retrieveByName(String name);
+
+  /**
+   * Given an input string retrieve a corresponding record from data store.
+   *
+   * @param name
+   *            A string representing the name of the data in the data store.
+   * @return A new instance of a data object.
+   */
+  List<T> retrieveAll(String className);
+
+  /**
+   * Given an input string retrieve a corresponding record from data store.
+   *
+   * @param name
+   *            A string representing the name of the data in the data store.
+   * @param field
+   *            A string representing the field of the data in the data store. e.g. username
+   *
+   * @return A new instance of a data object.
+   */
+  List<String> retrieveAll(String className, String field);
 }

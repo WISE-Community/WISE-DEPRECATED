@@ -38,81 +38,81 @@ import org.wise.portal.domain.user.User;
  */
 public interface Workgroup extends Persistable {
 
-    /**
-     * @return the members in this workgroup
-     */
-    Set<User> getMembers();
+  /**
+   * @return the members in this workgroup
+   */
+  Set<User> getMembers();
 
-    /**
-     * @param members the members in this workgroup
-     */
-    void setMembers(Set<User> members);
+  /**
+   * @param members the members in this workgroup
+   */
+  void setMembers(Set<User> members);
 
-    /**
-     * @param member the member to add in this workgroup
-     */
-    void addMember(User member);
+  /**
+   * @param member the member to add in this workgroup
+   */
+  void addMember(User member);
 
-    /**
-     * @param member the member to remove in this workgroup
-     */
-    void removeMember(User member);
+  /**
+   * @param member the member to remove in this workgroup
+   */
+  void removeMember(User member);
 
-    /**
-     * @return the run this workgroup is in
-     */
-    Run getRun();
+  /**
+   * @return the run this workgroup is in
+   */
+  Run getRun();
 
-    /**
-     * @param run the run this workgroup is in
-     */
-    void setRun(Run run);
+  /**
+   * @param run the run this workgroup is in
+   */
+  void setRun(Run run);
 
-    /**
-     * @return the group containing members
-     */
-    Group getGroup();
+  /**
+   * @return the group containing members
+   */
+  Group getGroup();
 
-    /**
-     * @param group the group containing members
-     */
-    void setGroup(Group group);
+  /**
+   * @param group the group containing members
+   */
+  void setGroup(Group group);
 
-	/**
-	 * @return the id
-	 */
-	Long getId();
+  /**
+   * @return the id
+   */
+  Long getId();
 
-	/**
-	 * Generates a name for this workgroup.
-	 *
-	 * @return <code>String</code> a name for this workgroup
-	 */
-	String generateWorkgroupName();
+  /**
+   * Generates a name for this workgroup.
+   *
+   * @return <code>String</code> a name for this workgroup
+   */
+  String generateWorkgroupName();
 
-    /**
-     * Gets the period that this workgroup belongs in
-     *
-     * @return <code>Group</code> (Period) that this workgroup belongs in
-     */
-    Group getPeriod();
+  /**
+   * Gets the period that this workgroup belongs in
+   *
+   * @return <code>Group</code> (Period) that this workgroup belongs in
+   */
+  Group getPeriod();
 
-    /**
-     * Sets the periods that this workgroup belongs in
-     *
-     * @param period the <code>Group</code> to set
-     */
-    void setPeriod(Group period);
+  /**
+   * Sets the periods that this workgroup belongs in
+   *
+   * @param period the <code>Group</code> to set
+   */
+  void setPeriod(Group period);
 
-    /**
-     * @return the teacherWorkgroup if this workgroup is a teacher's workgroup
-     */
-    boolean isTeacherWorkgroup();
+  /**
+   * @return the teacherWorkgroup if this workgroup is a teacher's workgroup
+   */
+  boolean isTeacherWorkgroup();
 
-    /**
-     * @param teacherWorkgroup the teacherWorkgroup to set
-     */
-    void setTeacherWorkgroup(boolean teacherWorkgroup);
+  /**
+   * @param teacherWorkgroup the teacherWorkgroup to set
+   */
+  void setTeacherWorkgroup(boolean teacherWorkgroup);
 
   /**
    * @return true is this workgroup is a student workgroup

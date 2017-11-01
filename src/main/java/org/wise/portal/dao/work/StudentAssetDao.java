@@ -38,8 +38,7 @@ import java.util.List;
  */
 public interface StudentAssetDao<T extends StudentAsset> extends SimpleDao<T> {
 
-    List<StudentWork> getStudentAssetListByParams(
-            Integer id, Run run, Group period, Workgroup workgroup,
-            String nodeId, String componentId, String componentType,
-            Boolean isAutoSave);
+  List<StudentWork> getStudentAssetListByParams(Integer id, Run run, Group period,
+      Workgroup workgroup, String nodeId, String componentId, String componentType,
+      Boolean isAutoSave);
 }

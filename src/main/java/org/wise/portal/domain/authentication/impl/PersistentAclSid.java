@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -38,175 +38,175 @@ import org.wise.portal.domain.authentication.MutableAclSid;
 /**
  * Concrete implementation of <code>MutableAclSid</code> marked with EJB3
  * annotations for persistence.
- * 
+ *
  * @author Cynick Young
  * @see org.acegisecurity.acls.sid.Sid
  */
 @Entity
 @Table(name = PersistentAclSid.DATA_STORE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = {
-        PersistentAclSid.COLUMN_NAME_SID,
-        PersistentAclSid.COLUMN_NAME_IS_PRINCIPAL }) })
+  PersistentAclSid.COLUMN_NAME_SID,
+  PersistentAclSid.COLUMN_NAME_IS_PRINCIPAL }) })
 public class PersistentAclSid implements MutableAclSid {
 
-    @Transient
-    private static final long serialVersionUID = 1L;
+  @Transient
+  private static final long serialVersionUID = 1L;
 
-    @Transient
-    public static final String DATA_STORE_NAME = "acl_sid";
+  @Transient
+  public static final String DATA_STORE_NAME = "acl_sid";
 
-    @Transient
-    static final String COLUMN_NAME_IS_PRINCIPAL = "principal";
+  @Transient
+  static final String COLUMN_NAME_IS_PRINCIPAL = "principal";
 
-    @Transient
-    public static final String COLUMN_NAME_SID = "sid";
+  @Transient
+  public static final String COLUMN_NAME_SID = "sid";
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
 
-    @Version
-    @Column(name = "OPTLOCK")
-    private Integer version = null;
+  @Version
+  @Column(name = "OPTLOCK")
+  private Integer version = null;
 
-        //@Column(name = COLUMN_NAME_IS_PRINCIPAL, nullable = false) 
-    // we need principal to be boolean. the default behavior of hibernate is to make it a bit
-    // so we need to force it to be a boolean when the sql is exported
-    @Column(name = COLUMN_NAME_IS_PRINCIPAL, nullable = false, columnDefinition = "boolean")
-    private Boolean isPrincipal;
+  //@Column(name = COLUMN_NAME_IS_PRINCIPAL, nullable = false)
+  // we need principal to be boolean. the default behavior of hibernate is to make it a bit
+  // so we need to force it to be a boolean when the sql is exported
+  @Column(name = COLUMN_NAME_IS_PRINCIPAL, nullable = false, columnDefinition = "boolean")
+  private Boolean isPrincipal;
 
-    @Column(name = COLUMN_NAME_SID, nullable = false)
-    private String sidName;
+  @Column(name = COLUMN_NAME_SID, nullable = false)
+  private String sidName;
 
-    /**
-     * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#isPrincipal()
-     */
-    public Boolean isPrincipal() {
-        return this.getIsPrincipal();
+  /**
+   * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#isPrincipal()
+   */
+  public Boolean isPrincipal() {
+    return this.getIsPrincipal();
+  }
+
+  private Boolean getIsPrincipal() {
+    return isPrincipal;
+  }
+
+  private void setIsPrincipal(Boolean isPrincipal) {
+    this.isPrincipal = isPrincipal;
+  }
+
+  private String getSidName() {
+    return sidName;
+  }
+
+  private void setSidName(String sidName) {
+    this.sidName = sidName;
+  }
+
+  /**
+   * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#getPrincipal()
+   */
+  public String getPrincipal() {
+    if (this.getIsPrincipal() == null) {
+      throw new IllegalStateException();
     }
-
-    private Boolean getIsPrincipal() {
-        return isPrincipal;
+    if (this.getIsPrincipal()) {
+      return this.getSidName();
     }
+    throw new UnsupportedOperationException(
+      "Unsupported method for this instance of Sid");
+  }
 
-    private void setIsPrincipal(Boolean isPrincipal) {
-        this.isPrincipal = isPrincipal;
+  /**
+   * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#setPrincipal(org.acegisecurity.Authentication)
+   */
+  public void setPrincipal(Authentication authentication) {
+    this.setIsPrincipal(Boolean.TRUE);
+    if (authentication.getPrincipal() instanceof UserDetails) {
+      this.setSidName(((UserDetails) authentication.getPrincipal())
+        .getUsername());
+    } else {
+      this.setSidName(authentication.getPrincipal().toString());
     }
+  }
 
-    private String getSidName() {
-        return sidName;
-    }
+  /**
+   * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#setGrantedAuthority(org.acegisecurity.GrantedAuthority)
+   */
+  public void setGrantedAuthority(GrantedAuthority grantedAuthority) {
+    this.setIsPrincipal(Boolean.FALSE);
+    this.setSidName(grantedAuthority.getAuthority());
+  }
 
-    private void setSidName(String sidName) {
-        this.sidName = sidName;
+  /**
+   * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#getGrantedAuthority()
+   */
+  public String getGrantedAuthority() {
+    if (this.getIsPrincipal() == null) {
+      throw new IllegalStateException();
     }
+    if (this.getIsPrincipal()) {
+      throw new UnsupportedOperationException(
+        "Unsupported method for this instance of Sid");
+    } else {
+      return this.getSidName();
+    }
+  }
 
-    /**
-     * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#getPrincipal()
-     */
-    public String getPrincipal() {
-        if (this.getIsPrincipal() == null) {
-            throw new IllegalStateException();
-        }
-        if (this.getIsPrincipal()) {
-            return this.getSidName();
-        }
-        throw new UnsupportedOperationException(
-                "Unsupported method for this instance of Sid");
-    }
+  /**
+   * @see net.sf.sail.webapp.domain.Persistable#getId()
+   */
+  public Long getId() {
+    return id;
+  }
 
-    /**
-     * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#setPrincipal(org.acegisecurity.Authentication)
-     */
-    public void setPrincipal(Authentication authentication) {
-        this.setIsPrincipal(Boolean.TRUE);
-        if (authentication.getPrincipal() instanceof UserDetails) {
-            this.setSidName(((UserDetails) authentication.getPrincipal())
-                    .getUsername());
-        } else {
-            this.setSidName(authentication.getPrincipal().toString());
-        }
-    }
+  @SuppressWarnings("unused")
+  private void setId(Long id) {
+    this.id = id;
+  }
 
-    /**
-     * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#setGrantedAuthority(org.acegisecurity.GrantedAuthority)
-     */
-    public void setGrantedAuthority(GrantedAuthority grantedAuthority) {
-        this.setIsPrincipal(Boolean.FALSE);
-        this.setSidName(grantedAuthority.getAuthority());
-    }
+  @SuppressWarnings("unused")
+  private Integer getVersion() {
+    return version;
+  }
 
-    /**
-     * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#getGrantedAuthority()
-     */
-    public String getGrantedAuthority() {
-        if (this.getIsPrincipal() == null) {
-            throw new IllegalStateException();
-        }
-        if (this.getIsPrincipal()) {
-            throw new UnsupportedOperationException(
-                    "Unsupported method for this instance of Sid");
-        } else {
-            return this.getSidName();
-        }
-    }
+  @SuppressWarnings("unused")
+  private void setVersion(Integer version) {
+    this.version = version;
+  }
 
-    /**
-     * @see net.sf.sail.webapp.domain.Persistable#getId()
-     */
-    public Long getId() {
-        return id;
-    }
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode() {
+    final int PRIME = 31;
+    int result = 1;
+    result = PRIME * result
+      + ((isPrincipal == null) ? 0 : isPrincipal.hashCode());
+    result = PRIME * result + ((sidName == null) ? 0 : sidName.hashCode());
+    return result;
+  }
 
-    @SuppressWarnings("unused")
-    private void setId(Long id) {
-        this.id = id;
-    }
-
-    @SuppressWarnings("unused")
-    private Integer getVersion() {
-        return version;
-    }
-
-    @SuppressWarnings("unused")
-    private void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    /**
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int PRIME = 31;
-        int result = 1;
-        result = PRIME * result
-                + ((isPrincipal == null) ? 0 : isPrincipal.hashCode());
-        result = PRIME * result + ((sidName == null) ? 0 : sidName.hashCode());
-        return result;
-    }
-
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final PersistentAclSid other = (PersistentAclSid) obj;
-        if (isPrincipal == null) {
-            if (other.isPrincipal != null)
-                return false;
-        } else if (!isPrincipal.equals(other.isPrincipal))
-            return false;
-        if (sidName == null) {
-            if (other.sidName != null)
-                return false;
-        } else if (!sidName.equals(other.sidName))
-            return false;
-        return true;
-    }
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    final PersistentAclSid other = (PersistentAclSid) obj;
+    if (isPrincipal == null) {
+      if (other.isPrincipal != null)
+        return false;
+    } else if (!isPrincipal.equals(other.isPrincipal))
+      return false;
+    if (sidName == null) {
+      if (other.sidName != null)
+        return false;
+    } else if (!sidName.equals(other.sidName))
+      return false;
+    return true;
+  }
 }

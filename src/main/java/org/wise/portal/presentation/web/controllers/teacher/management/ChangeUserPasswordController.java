@@ -49,132 +49,132 @@ import org.wise.portal.service.user.UserService;
 @Controller
 @SessionAttributes("changeStudentPasswordParameters")
 @RequestMapping(value = {
-    "/student/changestudentpassword.html",
-    "/**/changepassword.html",
-	"/teacher/management/changestudentpassword.html"})
+  "/student/changestudentpassword.html",
+  "/**/changepassword.html",
+  "/teacher/management/changestudentpassword.html"})
 public class ChangeUserPasswordController {
 
-	@Autowired
-	private UserService userService;
+  @Autowired
+  private UserService userService;
 
-	@Autowired
-	private StudentService studentService;
+  @Autowired
+  private StudentService studentService;
 
-	@Autowired
-	protected ChangePasswordParametersValidator changePasswordParametersValidator;
+  @Autowired
+  protected ChangePasswordParametersValidator changePasswordParametersValidator;
 
-	private final static String USER_NAME = "userName";
+  private final static String USER_NAME = "userName";
 
-    /**
-     * Called before the page is loaded to initialize values
-     * @param model the model object that contains values for the page to use when rendering the view
-     * @param request the http request
-     * @return the path of the view to display
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    public String initializeForm(ModelMap model, HttpServletRequest request) {
-    	User signedInUser = ControllerUtil.getSignedInUser();
-    	String userName = request.getParameter(USER_NAME);
-    	User userToChange;
-    	User teacherUser = null;
-    	String view = "";
+  /**
+   * Called before the page is loaded to initialize values
+   * @param model the model object that contains values for the page to use when rendering the view
+   * @param request the http request
+   * @return the path of the view to display
+   */
+  @RequestMapping(method = RequestMethod.GET)
+  public String initializeForm(ModelMap model, HttpServletRequest request) {
+    User signedInUser = ControllerUtil.getSignedInUser();
+    String userName = request.getParameter(USER_NAME);
+    User userToChange;
+    User teacherUser = null;
+    String view = "";
 
-    	if (userName != null) {
-    		// the username is provided which means a teacher is changing the password for a student
-    		userToChange = userService.retrieveUserByUsername(userName);
-    		teacherUser = ControllerUtil.getSignedInUser();
-    	} else {
-    		// if username is not specified, assume that logged-in user wants to change his/her own password.
-    		userToChange = ControllerUtil.getSignedInUser();
-    	}
-
-    	if (canChangePassword(signedInUser, userToChange)) {
-    		ChangeStudentPasswordParameters params = new ChangeStudentPasswordParameters();
-    		params.setUser(userToChange);
-    		params.setTeacherUser(teacherUser);
-    		model.addAttribute("changeStudentPasswordParameters", params);
-
-    		view = getServletPath(request);
-    	} else {
-    		view = "errors/accessdenied";
-    	}
-
-		return view;
+    if (userName != null) {
+      // the username is provided which means a teacher is changing the password for a student
+      userToChange = userService.retrieveUserByUsername(userName);
+      teacherUser = ControllerUtil.getSignedInUser();
+    } else {
+      // if username is not specified, assume that logged-in user wants to change his/her own password.
+      userToChange = ControllerUtil.getSignedInUser();
     }
 
-    /**
-     * Returns true iff the loggedInUser has permission to change the password
-     * of userToChange.
-     *  This is true when:
-     *  1) loggedInUser is an admin and userToChange is not "admin". (only "admin" can change "admin"'s password)
-     *  2) loggedInUser == userToChange
-     *  3) loggedInUser is a researcher and userToChange is any student
-     *  4) loggedInUser is the teacher of userToChange
-     * @param loggedInUser
-     * @param userToChange
-     * @return
-     */
-    private boolean canChangePassword(User loggedInUser,
-			User userToChange) {
-		return (loggedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) && !userToChange.getUserDetails().getUsername().equals("admin"))
-				|| userToChange.equals(loggedInUser)
-				|| (userToChange.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)
-				&& loggedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE))
-				|| (userToChange.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)
-				   && studentService.isStudentAssociatedWithTeacher(userToChange, loggedInUser));
-	}
+    if (canChangePassword(signedInUser, userToChange)) {
+      ChangeStudentPasswordParameters params = new ChangeStudentPasswordParameters();
+      params.setUser(userToChange);
+      params.setTeacherUser(teacherUser);
+      model.addAttribute("changeStudentPasswordParameters", params);
 
-	/**
-     * On submission of the Change Student's Password form, the associated student's password
-     * in the database gets changed to the submitted password
-     * @param params the object that contains values from the form
-     * @param bindingResult the object used for validation in which errors will be stored
-     * @param sessionStatus the session status object
-     * @return the path of the view to display
-     *
-     */
-    @RequestMapping(method = RequestMethod.POST)
-    protected String onSubmit(
-    		@ModelAttribute("changeStudentPasswordParameters") ChangeStudentPasswordParameters params,
-			HttpServletRequest request,
-    		BindingResult bindingResult,
-    		SessionStatus sessionStatus) {
-    	String view = "";
-
-    	changePasswordParametersValidator.validate(params, bindingResult);
-
-		String requestPath = getServletPath(request);
-    	if (bindingResult.hasErrors()) {
-			view = requestPath;
-    	} else {
-       		userService.updateUserPassword(params.getUser(), params.getPasswd1());
-
-			String successView = requestPath + "success";
-			view = successView;
-       		sessionStatus.setComplete();
-    	}
-
-   		return view;
+      view = getServletPath(request);
+    } else {
+      view = "errors/accessdenied";
     }
 
-    /**
-     * Get the servlet path from the request
-     * @param request the http request
-     * @return the servlet path
-     * e.g.
-     * /teacher/management/changestudentpassword
-     */
-    protected String getServletPath(HttpServletRequest request) {
-    	String servletPath = "";
-    	if (request != null) {
-    		servletPath = request.getServletPath();
-    		if (servletPath != null) {
-    			int indexOfDotHTML = servletPath.indexOf(".html");
-    			if (indexOfDotHTML != -1) {
-    				servletPath = servletPath.substring(0, indexOfDotHTML);
-    			}
-    		}
-    	}
-    	return servletPath;
+    return view;
+  }
+
+  /**
+   * Returns true iff the loggedInUser has permission to change the password
+   * of userToChange.
+   *  This is true when:
+   *  1) loggedInUser is an admin and userToChange is not "admin". (only "admin" can change "admin"'s password)
+   *  2) loggedInUser == userToChange
+   *  3) loggedInUser is a researcher and userToChange is any student
+   *  4) loggedInUser is the teacher of userToChange
+   * @param loggedInUser
+   * @param userToChange
+   * @return
+   */
+  private boolean canChangePassword(User loggedInUser,
+                                    User userToChange) {
+    return (loggedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) && !userToChange.getUserDetails().getUsername().equals("admin"))
+      || userToChange.equals(loggedInUser)
+      || (userToChange.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)
+      && loggedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE))
+      || (userToChange.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)
+      && studentService.isStudentAssociatedWithTeacher(userToChange, loggedInUser));
+  }
+
+  /**
+   * On submission of the Change Student's Password form, the associated student's password
+   * in the database gets changed to the submitted password
+   * @param params the object that contains values from the form
+   * @param bindingResult the object used for validation in which errors will be stored
+   * @param sessionStatus the session status object
+   * @return the path of the view to display
+   *
+   */
+  @RequestMapping(method = RequestMethod.POST)
+  protected String onSubmit(
+    @ModelAttribute("changeStudentPasswordParameters") ChangeStudentPasswordParameters params,
+    HttpServletRequest request,
+    BindingResult bindingResult,
+    SessionStatus sessionStatus) {
+    String view = "";
+
+    changePasswordParametersValidator.validate(params, bindingResult);
+
+    String requestPath = getServletPath(request);
+    if (bindingResult.hasErrors()) {
+      view = requestPath;
+    } else {
+      userService.updateUserPassword(params.getUser(), params.getPasswd1());
+
+      String successView = requestPath + "success";
+      view = successView;
+      sessionStatus.setComplete();
     }
+
+    return view;
+  }
+
+  /**
+   * Get the servlet path from the request
+   * @param request the http request
+   * @return the servlet path
+   * e.g.
+   * /teacher/management/changestudentpassword
+   */
+  protected String getServletPath(HttpServletRequest request) {
+    String servletPath = "";
+    if (request != null) {
+      servletPath = request.getServletPath();
+      if (servletPath != null) {
+        int indexOfDotHTML = servletPath.indexOf(".html");
+        if (indexOfDotHTML != -1) {
+          servletPath = servletPath.substring(0, indexOfDotHTML);
+        }
+      }
+    }
+    return servletPath;
+  }
 }

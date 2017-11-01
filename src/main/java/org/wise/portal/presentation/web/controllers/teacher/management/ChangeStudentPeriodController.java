@@ -52,89 +52,89 @@ import org.wise.portal.service.user.UserService;
 @RequestMapping("/teacher/management/changestudentperiod.html")
 public class ChangeStudentPeriodController {
 
-	@Autowired
-	private RunService runService;
+  @Autowired
+  private RunService runService;
 
-	@Autowired
-	private StudentService studentService;
+  @Autowired
+  private StudentService studentService;
 
-	@Autowired
-	private UserService userService;
+  @Autowired
+  private UserService userService;
 
-	@Autowired
-	protected ChangePeriodParametersValidator changePeriodParametersValidator;
+  @Autowired
+  protected ChangePeriodParametersValidator changePeriodParametersValidator;
 
-	protected final static String RUN_ID = "runId";
+  protected final static String RUN_ID = "runId";
 
-	protected final static String PROJECT_CODE = "projectCode";
+  protected final static String PROJECT_CODE = "projectCode";
 
-	protected final static String USER_ID = "userId";
+  protected final static String USER_ID = "userId";
 
-	//the path to this form view
-	protected String formView = "/teacher/management/changestudentperiod";
+  //the path to this form view
+  protected String formView = "/teacher/management/changestudentperiod";
 
-	//the path to the success view
-	protected String successView = "teacher/management/changestudentperiodsuccess";
+  //the path to the success view
+  protected String successView = "teacher/management/changestudentperiodsuccess";
 
-    /**
-     * Called before the page is loaded to initialize values
-     * @param model the model object that contains values for the page to use when rendering the view
-     * @param request the http request
-     * @return the path of the view to display
-     */
-    @RequestMapping(method=RequestMethod.GET)
-    public String initializeForm(ModelMap model, HttpServletRequest request) throws Exception {
-		ChangePeriodParameters params = new ChangePeriodParameters();
-		params.setStudent(userService.retrieveById(Long.parseLong(request.getParameter(USER_ID))));
-		params.setRun(runService.retrieveById(Long.parseLong(request.getParameter(RUN_ID))));
-		params.setProjectcode(request.getParameter(PROJECT_CODE));
-		model.addAttribute("changePeriodParameters", params);
+  /**
+   * Called before the page is loaded to initialize values
+   * @param model the model object that contains values for the page to use when rendering the view
+   * @param request the http request
+   * @return the path of the view to display
+   */
+  @RequestMapping(method=RequestMethod.GET)
+  public String initializeForm(ModelMap model, HttpServletRequest request) throws Exception {
+    ChangePeriodParameters params = new ChangePeriodParameters();
+    params.setStudent(userService.retrieveById(Long.parseLong(request.getParameter(USER_ID))));
+    params.setRun(runService.retrieveById(Long.parseLong(request.getParameter(RUN_ID))));
+    params.setProjectcode(request.getParameter(PROJECT_CODE));
+    model.addAttribute("changePeriodParameters", params);
 
-    	return formView;
+    return formView;
+  }
+
+  /**
+   * Called when the user submits the form
+   * @param params the object that contains values from the form
+   * @param bindingResult the object used for validation in which errors will be stored
+   * @param sessionStatus the session status object
+   * @return the path of the view to display
+   */
+  @RequestMapping(method=RequestMethod.POST)
+  protected String onSubmit(
+    @ModelAttribute("changePeriodParameters") ChangePeriodParameters params,
+    BindingResult bindingResult,
+    SessionStatus sessionStatus) {
+    String view = "";
+
+    //validate the parameters
+    changePeriodParametersValidator.validate(params, bindingResult);
+
+    if(bindingResult.hasErrors()) {
+      //there were errors
+      view = "errors/accessdenied";
+    } else {
+      //there were no errors
+      User callingUser = ControllerUtil.getSignedInUser();
+
+      if(this.runService.hasRunPermission(params.getRun(), callingUser, BasePermission.WRITE) ||
+        this.runService.hasRunPermission(params.getRun(), callingUser, BasePermission.ADMINISTRATION)) {
+        try {
+          if(!params.getProjectcodeTo().equals(params.getProjectcode())){
+            studentService.removeStudentFromRun(params.getStudent(), params.getRun());
+            studentService.addStudentToRun(params.getStudent(), new Projectcode(params.getRun().getRuncode(), params.getProjectcodeTo()));
+          }
+        } catch (Exception e){
+
+        }
+
+        view = successView;
+      } else {
+        view = "errors/accessdenied";
+      }
     }
 
-    /**
-     * Called when the user submits the form
-     * @param params the object that contains values from the form
-     * @param bindingResult the object used for validation in which errors will be stored
-     * @param sessionStatus the session status object
-     * @return the path of the view to display
-     */
-    @RequestMapping(method=RequestMethod.POST)
-    protected String onSubmit(
-    		@ModelAttribute("changePeriodParameters") ChangePeriodParameters params,
-    		BindingResult bindingResult,
-    		SessionStatus sessionStatus) {
-    	String view = "";
-
-    	//validate the parameters
-    	changePeriodParametersValidator.validate(params, bindingResult);
-
-    	if(bindingResult.hasErrors()) {
-    		//there were errors
-    		view = "errors/accessdenied";
-    	} else {
-    		//there were no errors
-        	User callingUser = ControllerUtil.getSignedInUser();
-
-    		if(this.runService.hasRunPermission(params.getRun(), callingUser, BasePermission.WRITE) ||
-    				this.runService.hasRunPermission(params.getRun(), callingUser, BasePermission.ADMINISTRATION)) {
-    			try {
-    				if(!params.getProjectcodeTo().equals(params.getProjectcode())){
-    					studentService.removeStudentFromRun(params.getStudent(), params.getRun());
-    					studentService.addStudentToRun(params.getStudent(), new Projectcode(params.getRun().getRuncode(), params.getProjectcodeTo()));
-    				}
-    			} catch (Exception e){
-
-    			}
-
-    			view = successView;
-    		} else {
-    			view = "errors/accessdenied";
-    		}
-    	}
-
-    	sessionStatus.setComplete();
-		return view;
-	}
+    sessionStatus.setComplete();
+    return view;
+  }
 }

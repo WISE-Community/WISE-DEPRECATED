@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -42,276 +42,276 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "notebookItems",  indexes = {
-        @Index(columnList = "runId", name = "notebookItemsRunIdIndex"),
-        @Index(columnList = "workgroupId", name = "notebookItemsWorkgroupIdIndex")})
+  @Index(columnList = "runId", name = "notebookItemsRunIdIndex"),
+  @Index(columnList = "workgroupId", name = "notebookItemsWorkgroupIdIndex")})
 public class NotebookItem extends PersistableDomain {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id = null;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Integer id = null;
 
-	@ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-	@JoinColumn(name = "runId", nullable = false)
-	private Run run;
+  @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "runId", nullable = false)
+  private Run run;
 
-    @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "periodId", nullable = false)
-    private Group period;
+  @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "periodId", nullable = false)
+  private Group period;
 
-    @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-	@JoinColumn(name = "workgroupId", nullable = false)
-	private Workgroup workgroup;
+  @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "workgroupId", nullable = false)
+  private Workgroup workgroup;
 
-    @Column(name = "nodeId", length = 30, nullable = true)
-    private String nodeId;
+  @Column(name = "nodeId", length = 30, nullable = true)
+  private String nodeId;
 
-	@Column(name = "componentId", length = 30, nullable = true)
-	private String componentId;
+  @Column(name = "componentId", length = 30, nullable = true)
+  private String componentId;
 
-	@OneToOne(targetEntity = StudentWork.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-	@JoinColumn(name = "studentWorkId", nullable = true)
-	private StudentWork studentWork;
+  @OneToOne(targetEntity = StudentWork.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "studentWorkId", nullable = true)
+  private StudentWork studentWork;
 
-	@OneToOne(targetEntity = StudentAsset.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-	@JoinColumn(name = "studentAssetId", nullable = true)
-	private StudentAsset studentAsset;
+  @OneToOne(targetEntity = StudentAsset.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "studentAssetId", nullable = true)
+  private StudentAsset studentAsset;
 
-	@Column(name = "localNotebookItemId", length = 30, nullable = true)
-	private String localNotebookItemId;  // ex: [ "1", "letterToACongressperson", "z5hc4jeu12" ]
+  @Column(name = "localNotebookItemId", length = 30, nullable = true)
+  private String localNotebookItemId;  // ex: [ "1", "letterToACongressperson", "z5hc4jeu12" ]
 
-	@Column(name = "type", length = 30, nullable = true)
-	private String type;  // ex: [ "note", "bookmark", "question" ]
+  @Column(name = "type", length = 30, nullable = true)
+  private String type;  // ex: [ "note", "bookmark", "question" ]
 
-	@Column(name = "title", nullable = true)
-	private String title;  // ex: "my note on step 1.2"
+  @Column(name = "title", nullable = true)
+  private String title;  // ex: "my note on step 1.2"
 
-	@Column(name = "content", columnDefinition = "text", nullable = true)
-	private String content; // ex: { note: "my notes with attachments", attachments: [ {studentAssetId: 1, url: "car.png" } ] }
+  @Column(name = "content", columnDefinition = "text", nullable = true)
+  private String content; // ex: { note: "my notes with attachments", attachments: [ {studentAssetId: 1, url: "car.png" } ] }
 
-	@Column(name = "clientSaveTime", nullable = false)
-	private Timestamp clientSaveTime;
+  @Column(name = "clientSaveTime", nullable = false)
+  private Timestamp clientSaveTime;
 
-	@Column(name = "serverSaveTime", nullable = false)
-	private Timestamp serverSaveTime;
+  @Column(name = "serverSaveTime", nullable = false)
+  private Timestamp serverSaveTime;
 
-	@Column(name = "clientDeleteTime", nullable = true)
-	private Timestamp clientDeleteTime;
+  @Column(name = "clientDeleteTime", nullable = true)
+  private Timestamp clientDeleteTime;
 
-	@Column(name = "serverDeleteTime", nullable = true)
-	private Timestamp serverDeleteTime;
+  @Column(name = "serverDeleteTime", nullable = true)
+  private Timestamp serverDeleteTime;
 
-	@Override
-	protected Class<?> getObjectClass() {
-		return NotebookItem.class;
-	}
+  @Override
+  protected Class<?> getObjectClass() {
+    return NotebookItem.class;
+  }
 
-	public Integer getId() {
-        return id;
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+  public Run getRun() {
+    return run;
+  }
+
+  public void setRun(Run run) {
+    this.run = run;
+  }
+
+  public Group getPeriod() {
+    return period;
+  }
+
+  public void setPeriod(Group period) {
+    this.period = period;
+  }
+
+  public Workgroup getWorkgroup() {
+    return workgroup;
+  }
+
+  public void setWorkgroup(Workgroup workgroup) {
+    this.workgroup = workgroup;
+  }
+
+  public String getNodeId() {
+    return nodeId;
+  }
+
+  public void setNodeId(String nodeId) {
+    this.nodeId = nodeId;
+  }
+
+  public StudentWork getStudentWork() {
+    return studentWork;
+  }
+
+  public void setStudentWork(StudentWork studentWork) {
+    this.studentWork = studentWork;
+  }
+
+  public StudentAsset getStudentAsset() {
+    return studentAsset;
+  }
+
+  public void setStudentAsset(StudentAsset studentAsset) {
+    this.studentAsset = studentAsset;
+  }
+
+  public String getLocalNotebookItemId() {
+    return localNotebookItemId;
+  }
+
+  public void setLocalNotebookItemId(String localNotebookItemId) {
+    this.localNotebookItemId = localNotebookItemId;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
+  }
+
+  public String getComponentId() {
+    return componentId;
+  }
+
+  public void setComponentId(String componentId) {
+    this.componentId = componentId;
+  }
+
+  public Timestamp getServerSaveTime() {
+    return serverSaveTime;
+  }
+
+  public void setServerSaveTime(Timestamp serverSaveTime) {
+    this.serverSaveTime = serverSaveTime;
+  }
+
+  public Timestamp getClientDeleteTime() {
+    return clientDeleteTime;
+  }
+
+  public void setClientDeleteTime(Timestamp clientDeleteTime) {
+    this.clientDeleteTime = clientDeleteTime;
+  }
+
+  public Timestamp getServerDeleteTime() {
+    return serverDeleteTime;
+  }
+
+  public void setServerDeleteTime(Timestamp serverDeleteTime) {
+    this.serverDeleteTime = serverDeleteTime;
+  }
+
+  public Timestamp getClientSaveTime() {
+    return clientSaveTime;
+  }
+
+  public void setClientSaveTime(Timestamp clientSaveTime) {
+    this.clientSaveTime = clientSaveTime;
+  }
+
+  /**
+   * Get the JSON representation of the NotebookItem
+   * @return a JSONObject with the values from the NotebookItem
+   */
+  public JSONObject toJSON() {
+    JSONObject notebookItemJSONObject = new JSONObject();
+
+    try {
+
+      if (this.id != null) {
+        notebookItemJSONObject.put("id", this.id);
+      }
+
+      if (this.run != null) {
+        Long runId = this.run.getId();
+        notebookItemJSONObject.put("runId", runId);
+      }
+
+      if (this.period != null) {
+        Long periodId = this.period.getId();
+        notebookItemJSONObject.put("periodId", periodId);
+      }
+
+      if (this.workgroup != null) {
+        Long workgroupId = this.workgroup.getId();
+        notebookItemJSONObject.put("workgroupId", workgroupId);
+      }
+
+      if (this.nodeId != null) {
+        notebookItemJSONObject.put("nodeId", this.nodeId);
+      }
+
+      if (this.componentId != null) {
+        notebookItemJSONObject.put("componentId", this.componentId);
+      }
+
+      if (this.studentWork != null) {
+        notebookItemJSONObject.put("studentWorkId", this.studentWork.getId());
+      }
+
+      if (this.studentAsset != null) {
+        notebookItemJSONObject.put("studentAssetId", this.studentAsset.getId());
+      }
+
+      if (this.localNotebookItemId != null) {
+        notebookItemJSONObject.put("localNotebookItemId", this.localNotebookItemId);
+      }
+
+      if (this.type != null) {
+        notebookItemJSONObject.put("type", this.type);
+      }
+
+      if (this.title != null) {
+        notebookItemJSONObject.put("title", this.title);
+      }
+
+      if (this.content != null) {
+        notebookItemJSONObject.put("content", this.content);
+      }
+
+      if (this.clientSaveTime != null) {
+        notebookItemJSONObject.put("clientSaveTime", clientSaveTime.getTime());
+      }
+
+      if (this.serverSaveTime != null) {
+        notebookItemJSONObject.put("serverSaveTime", serverSaveTime.getTime());
+      }
+
+      if (this.clientDeleteTime != null) {
+        notebookItemJSONObject.put("clientDeleteTime", clientDeleteTime.getTime());
+      }
+
+      if (this.serverDeleteTime != null) {
+        notebookItemJSONObject.put("serverDeleteTime", serverDeleteTime.getTime());
+      }
+
+    } catch (JSONException e) {
+      e.printStackTrace();
     }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public Run getRun() {
-		return run;
-	}
-
-	public void setRun(Run run) {
-		this.run = run;
-	}
-
-	public Group getPeriod() {
-		return period;
-	}
-
-	public void setPeriod(Group period) {
-		this.period = period;
-	}
-
-	public Workgroup getWorkgroup() {
-		return workgroup;
-	}
-
-	public void setWorkgroup(Workgroup workgroup) {
-		this.workgroup = workgroup;
-	}
-
-    public String getNodeId() {
-        return nodeId;
-    }
-
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
-    }
-
-    public StudentWork getStudentWork() {
-        return studentWork;
-    }
-
-    public void setStudentWork(StudentWork studentWork) {
-        this.studentWork = studentWork;
-    }
-
-    public StudentAsset getStudentAsset() {
-        return studentAsset;
-    }
-
-    public void setStudentAsset(StudentAsset studentAsset) {
-        this.studentAsset = studentAsset;
-    }
-
-	public String getLocalNotebookItemId() {
-		return localNotebookItemId;
-	}
-
-	public void setLocalNotebookItemId(String localNotebookItemId) {
-		this.localNotebookItemId = localNotebookItemId;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-	public String getComponentId() {
-		return componentId;
-	}
-
-	public void setComponentId(String componentId) {
-		this.componentId = componentId;
-	}
-
-	public Timestamp getServerSaveTime() {
-		return serverSaveTime;
-	}
-
-	public void setServerSaveTime(Timestamp serverSaveTime) {
-		this.serverSaveTime = serverSaveTime;
-	}
-
-    public Timestamp getClientDeleteTime() {
-        return clientDeleteTime;
-    }
-
-    public void setClientDeleteTime(Timestamp clientDeleteTime) {
-        this.clientDeleteTime = clientDeleteTime;
-    }
-
-    public Timestamp getServerDeleteTime() {
-        return serverDeleteTime;
-    }
-
-    public void setServerDeleteTime(Timestamp serverDeleteTime) {
-        this.serverDeleteTime = serverDeleteTime;
-    }
-
-	public Timestamp getClientSaveTime() {
-		return clientSaveTime;
-	}
-
-	public void setClientSaveTime(Timestamp clientSaveTime) {
-		this.clientSaveTime = clientSaveTime;
-	}
-
-    /**
-     * Get the JSON representation of the NotebookItem
-     * @return a JSONObject with the values from the NotebookItem
-     */
-    public JSONObject toJSON() {
-        JSONObject notebookItemJSONObject = new JSONObject();
-        
-        try {
-            
-			if (this.id != null) {
-				notebookItemJSONObject.put("id", this.id);
-			}
-            
-			if (this.run != null) {
-				Long runId = this.run.getId();
-				notebookItemJSONObject.put("runId", runId);
-			}
-            
-			if (this.period != null) {
-				Long periodId = this.period.getId();
-				notebookItemJSONObject.put("periodId", periodId);
-			}
-
-			if (this.workgroup != null) {
-				Long workgroupId = this.workgroup.getId();
-				notebookItemJSONObject.put("workgroupId", workgroupId);
-			}
-
-			if (this.nodeId != null) {
-				notebookItemJSONObject.put("nodeId", this.nodeId);
-			}
-            
-			if (this.componentId != null) {
-				notebookItemJSONObject.put("componentId", this.componentId);
-			}
-
-            if (this.studentWork != null) {
-                notebookItemJSONObject.put("studentWorkId", this.studentWork.getId());
-            }
-
-            if (this.studentAsset != null) {
-                notebookItemJSONObject.put("studentAssetId", this.studentAsset.getId());
-            }
-
-			if (this.localNotebookItemId != null) {
-				notebookItemJSONObject.put("localNotebookItemId", this.localNotebookItemId);
-			}
-
-			if (this.type != null) {
-                notebookItemJSONObject.put("type", this.type);
-            }
-
-            if (this.title != null) {
-                notebookItemJSONObject.put("title", this.title);
-            }
-
-            if (this.content != null) {
-                notebookItemJSONObject.put("content", this.content);
-            }
-
-			if (this.clientSaveTime != null) {
-				notebookItemJSONObject.put("clientSaveTime", clientSaveTime.getTime());
-			}
-
-			if (this.serverSaveTime != null) {
-				notebookItemJSONObject.put("serverSaveTime", serverSaveTime.getTime());
-			}
-
-            if (this.clientDeleteTime != null) {
-                notebookItemJSONObject.put("clientDeleteTime", clientDeleteTime.getTime());
-            }
-
-            if (this.serverDeleteTime != null) {
-                notebookItemJSONObject.put("serverDeleteTime", serverDeleteTime.getTime());
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        
-        return notebookItemJSONObject;
-    }
+    return notebookItemJSONObject;
+  }
 }

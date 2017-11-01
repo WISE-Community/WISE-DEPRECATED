@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -32,66 +32,65 @@ import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
 /**
  * Class that implements the <code>UserDetailsDao</code> interface using
  * Hibernate.
- * 
+ *
  * @author Cynick Young
  */
 @Repository
 public class HibernateUserDetailsDao extends
-        AbstractHibernateDao<MutableUserDetails> implements
-        UserDetailsDao<MutableUserDetails> {
+    AbstractHibernateDao<MutableUserDetails> implements
+    UserDetailsDao<MutableUserDetails> {
 
-	private static final String FIND_ALL_QUERY = "from PersistentUserDetails";
+  private static final String FIND_ALL_QUERY = "from PersistentUserDetails";
 
-    /**
-     * Retrieve the user, by username. Returns null if user is not found.
-     * 
-     * @see org.wise.portal.dao.authentication.UserDetailsDao#retrieveByName(java.lang.String)
-     */
-    public MutableUserDetails retrieveByName(String username) {
-        return (MutableUserDetails) DataAccessUtils
-                .uniqueResult(this
-                        .getHibernateTemplate()
-                        .findByNamedParam(
-                                "from PersistentUserDetails as user_details where upper(user_details.username) = :username",
-                                "username", username.toUpperCase()));
-    }
-    
+  /**
+   * Retrieve the user, by username. Returns null if user is not found.
+   *
+   * @see org.wise.portal.dao.authentication.UserDetailsDao#retrieveByName(java.lang.String)
+   */
+  public MutableUserDetails retrieveByName(String username) {
+    return (MutableUserDetails) DataAccessUtils
+      .uniqueResult(this
+        .getHibernateTemplate()
+        .findByNamedParam(
+          "from PersistentUserDetails as user_details where upper(user_details.username) = :username",
+          "username", username.toUpperCase()));
+  }
 
-	@SuppressWarnings("unchecked")
-	public List<MutableUserDetails> retrieveAll(String userDetailsClassName) {
-		   return (List<MutableUserDetails>) this
-                   .getHibernateTemplate()
-                   .find("from " + userDetailsClassName);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<String> retrieveAll(String userDetailsClassName, String field) {
-		   return (List<String>) this
-                   .getHibernateTemplate()
-                   .find("select user_details."+ field +" from PersistentUserDetails as user_details, " + userDetailsClassName + 
-                		   " as user_details_child where user_details.id=user_details_child.id");
-	}
+  @SuppressWarnings("unchecked")
+  public List<MutableUserDetails> retrieveAll(String userDetailsClassName) {
+    return (List<MutableUserDetails>) this
+      .getHibernateTemplate()
+      .find("from " + userDetailsClassName);
+  }
 
-	/**
-     * @see org.wise.portal.dao.authentication.UserDetailsDao#hasUsername(java.lang.String)
-     */
-    public boolean hasUsername(String username) {
-        return (this.retrieveByName(username) != null);
-    }
+  @SuppressWarnings("unchecked")
+  public List<String> retrieveAll(String userDetailsClassName, String field) {
+    return (List<String>) this
+      .getHibernateTemplate()
+      .find("select user_details."+ field +" from PersistentUserDetails as user_details, " + userDetailsClassName +
+        " as user_details_child where user_details.id=user_details_child.id");
+  }
 
-    /**
-     * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
-     */
-    @Override
-    protected String getFindAllQuery() {
-        return FIND_ALL_QUERY;
-    }
+  /**
+   * @see org.wise.portal.dao.authentication.UserDetailsDao#hasUsername(java.lang.String)
+   */
+  public boolean hasUsername(String username) {
+    return (this.retrieveByName(username) != null);
+  }
 
-	/**
-	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
-	 */
-	@Override
-	protected Class<PersistentUserDetails> getDataObjectClass() {
-		return PersistentUserDetails.class;
-	}
+  /**
+   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
+   */
+  @Override
+  protected String getFindAllQuery() {
+    return FIND_ALL_QUERY;
+  }
+
+  /**
+   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
+   */
+  @Override
+  protected Class<PersistentUserDetails> getDataObjectClass() {
+    return PersistentUserDetails.class;
+  }
 }

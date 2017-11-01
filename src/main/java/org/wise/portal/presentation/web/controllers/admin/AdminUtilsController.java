@@ -46,69 +46,69 @@ import java.util.List;
 @Controller
 public class AdminUtilsController {
 
-    @Autowired
-    private ProjectService projectService;
+  @Autowired
+  private ProjectService projectService;
 
-    /**
-     * Merges project_metadata.* columns to projects.metadata field.
-     * For migration from pre-5.5 to 5.5
-     * @param response
-     * @return page to display
-     * @throws IOException
-     */
-    @RequestMapping("/admin/mergeProjectMetadata")
-    public void mergetProjectMetadata(HttpServletResponse response) throws IOException, NotAuthorizedException {
-        User signedInUser = ControllerUtil.getSignedInUser();
-        List<Project> allProjects = projectService.getAdminProjectList();  // get all the projects in the db
-        FileWriter writer = null;  // writing debug statements to a file...we're not in this case
-        PrintWriter responseWriter = response.getWriter();  // writing debug statements to a response
-        int metadataUpdatedCounter = 0;
-        for (Project project : allProjects) {
-            ProjectMetadata projectMetadata = project.getMetadataObj(); // projectMetadata is from the metadata table, keyed from project.metadata_fk field
-            if (projectMetadata != null) {
-                try {
-                    debugOutput(writer, responseWriter, "");
-                    debugOutput(writer, responseWriter, "Updating project: " + project.getId());
-                    debugOutput(writer, responseWriter, "Project Metadata: " + projectMetadata.toJSONString());
-                    project.setMetadata(projectMetadata); // set the metadata as JSON string in project.metadata field
-                    projectService.updateProject(project, signedInUser);  // save to db
-                    metadataUpdatedCounter++;  // update counter
-                } catch (Exception e) {
-                    // if there was an error with one project, print the error and keep going with the rest
-                    debugOutput(writer, responseWriter, "Exception was thrown: " + e);
-                }
-            }
+  /**
+   * Merges project_metadata.* columns to projects.metadata field.
+   * For migration from pre-5.5 to 5.5
+   * @param response
+   * @return page to display
+   * @throws IOException
+   */
+  @RequestMapping("/admin/mergeProjectMetadata")
+  public void mergetProjectMetadata(HttpServletResponse response) throws IOException, NotAuthorizedException {
+    User signedInUser = ControllerUtil.getSignedInUser();
+    List<Project> allProjects = projectService.getAdminProjectList();  // get all the projects in the db
+    FileWriter writer = null;  // writing debug statements to a file...we're not in this case
+    PrintWriter responseWriter = response.getWriter();  // writing debug statements to a response
+    int metadataUpdatedCounter = 0;
+    for (Project project : allProjects) {
+      ProjectMetadata projectMetadata = project.getMetadataObj(); // projectMetadata is from the metadata table, keyed from project.metadata_fk field
+      if (projectMetadata != null) {
+        try {
+          debugOutput(writer, responseWriter, "");
+          debugOutput(writer, responseWriter, "Updating project: " + project.getId());
+          debugOutput(writer, responseWriter, "Project Metadata: " + projectMetadata.toJSONString());
+          project.setMetadata(projectMetadata); // set the metadata as JSON string in project.metadata field
+          projectService.updateProject(project, signedInUser);  // save to db
+          metadataUpdatedCounter++;  // update counter
+        } catch (Exception e) {
+          // if there was an error with one project, print the error and keep going with the rest
+          debugOutput(writer, responseWriter, "Exception was thrown: " + e);
         }
-        debugOutput(writer, responseWriter, "");
-        debugOutput(writer, responseWriter, "Done!!!");
-        debugOutput(writer, responseWriter, "Metadata Updated Counter: " + metadataUpdatedCounter);
-        responseWriter.close();
+      }
     }
+    debugOutput(writer, responseWriter, "");
+    debugOutput(writer, responseWriter, "Done!!!");
+    debugOutput(writer, responseWriter, "Metadata Updated Counter: " + metadataUpdatedCounter);
+    responseWriter.close();
+  }
 
-    /**
-     * Write a line to the debug output log file or response or both
-     * @param writer the file to write to
-     * @param responseWriter the HttpServletResponse to write to
-     * @param line a string to write to the file
-     */
-    private void debugOutput(FileWriter writer, PrintWriter responseWriter, String line) {
+  /**
+   * Write a line to the debug output log file or response or both
+   * @param writer the file to write to
+   * @param responseWriter the HttpServletResponse to write to
+   * @param line a string to write to the file
+   */
+  private void debugOutput(FileWriter writer, PrintWriter responseWriter, String line) {
 
-        if (line != null) {
-            System.out.println(line);
+    if (line != null) {
+      System.out.println(line);
 
-            if (writer != null) {
-                try {
-                    // write the line to the file
-                    writer.write(line + "\n");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (responseWriter != null) {
-                // write the line to the response
-                responseWriter.write(line + "\n");
-            }
+      if (writer != null) {
+        try {
+          // write the line to the file
+          writer.write(line + "\n");
+        } catch (Exception e) {
+          e.printStackTrace();
         }
+      }
+
+      if (responseWriter != null) {
+        // write the line to the response
+        responseWriter.write(line + "\n");
+      }
     }
+  }
 }

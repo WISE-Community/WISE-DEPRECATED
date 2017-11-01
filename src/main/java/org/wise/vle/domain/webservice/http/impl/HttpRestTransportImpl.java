@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -47,184 +47,161 @@ import org.wise.vle.domain.webservice.http.HttpRestTransport;
 /**
  * Thread-safe Http transport implementation which uses the Jakarta Commons
  * HttpClient package. See http://jakarta.apache.org/commons/httpclient/
- * 
+ *
  * @author Cynick Young
  */
 public class HttpRestTransportImpl implements HttpRestTransport {
 
-	private Log logger;
+  private Log logger;
 
-	private String baseUrl;
+  private String baseUrl;
 
-	private HttpClient client;
+  private HttpClient client;
 
-	/**
-	 * Constructs a newly allocated HttpRestTransportImpl object.
-	 */
-	public HttpRestTransportImpl() {
-		// Must manually release the connection by calling releaseConnection()
-		// on the method, otherwise there will be a resource leak. Refer to
-		// http://jakarta.apache.org/commons/httpclient/threading.html
-		this.client = HttpClientBuilder.create().build();
-		this.logger = LogFactory.getLog(this.getClass());
-	}
+  /**
+   * Constructs a newly allocated HttpRestTransportImpl object.
+   */
+  public HttpRestTransportImpl() {
+    // Must manually release the connection by calling releaseConnection()
+    // on the method, otherwise there will be a resource leak. Refer to
+    // http://jakarta.apache.org/commons/httpclient/threading.html
+    this.client = HttpClientBuilder.create().build();
+    this.logger = LogFactory.getLog(this.getClass());
+  }
 
-	/**
-	 * @see net.sf.sail.webapp.domain.webservice.http.HttpRestTransport#getBaseUrl()
-	 */
-	public String getBaseUrl() {
-		return this.baseUrl;
-	}
+  /**
+   * @see net.sf.sail.webapp.domain.webservice.http.HttpRestTransport#getBaseUrl()
+   */
+  public String getBaseUrl() {
+    return this.baseUrl;
+  }
 
-	/**
-	 * @param baseUrl
-	 *            the baseUrl to set
-	 */
-	public void setBaseUrl(String baseUrl) {
-		this.baseUrl = baseUrl;
-	}
+  /**
+   * @param baseUrl the baseUrl to set
+   */
+  public void setBaseUrl(String baseUrl) {
+    this.baseUrl = baseUrl;
+  }
 
-	/**
-	 * @see net.sf.sail.webapp.domain.webservice.http.HttpRestTransport#get(net.sf.sail.webapp.domain.webservice.http.HttpGetRequest)
-	 */
-	public InputStream get(final HttpGetRequest httpGetRequestData) throws HttpStatusCodeException {
-		// add parameters to URL
-		Map<String, String> requestParameters = httpGetRequestData
-				.getRequestParameters();
-		StringBuffer buffer = new StringBuffer(this.baseUrl);
-		buffer.append(httpGetRequestData.getRelativeUrl());
-		if (requestParameters != null && !requestParameters.isEmpty()) {
-			buffer.append('?');
-			Set<String> keys = requestParameters.keySet();
-			for (String key : keys) {
-				buffer.append(key).append('=').append(
-						requestParameters.get(key)).append('&');
-			}
-			buffer.deleteCharAt(buffer.length() - 1);
-		}
+  /**
+   * @see net.sf.sail.webapp.domain.webservice.http.HttpRestTransport#get(net.sf.sail.webapp.domain.webservice.http.HttpGetRequest)
+   */
+  public InputStream get(final HttpGetRequest httpGetRequestData) throws HttpStatusCodeException {
+    Map<String, String> requestParameters = httpGetRequestData.getRequestParameters();
+    StringBuffer buffer = new StringBuffer(this.baseUrl);
+    buffer.append(httpGetRequestData.getRelativeUrl());
+    if (requestParameters != null && !requestParameters.isEmpty()) {
+      buffer.append('?');
+      Set<String> keys = requestParameters.keySet();
+      for (String key : keys) {
+        buffer.append(key).append('=').append(
+          requestParameters.get(key)).append('&');
+      }
+      buffer.deleteCharAt(buffer.length() - 1);
+    }
 
-		HttpGet request = new HttpGet(buffer.toString());
+    HttpGet request = new HttpGet(buffer.toString());
 
-		this.setHeaders(httpGetRequestData, request);
-		try {
-			// Execute the method.
-			logRequest(request, "");
-			HttpResponse response = this.client.execute(request);
-			httpGetRequestData.isValidResponseStatus(response);
-			return response.getEntity().getContent();
-		} catch (HttpStatusCodeException hsce) {
-			logAndThrowRuntimeException(hsce);
-		} catch (IOException ioe) {
-			logAndThrowRuntimeException(ioe);
-		} finally {
-			request.releaseConnection();
-		}
-		return null;
-	}
+    this.setHeaders(httpGetRequestData, request);
+    try {
+      logRequest(request, "");
+      HttpResponse response = this.client.execute(request);
+      httpGetRequestData.isValidResponseStatus(response);
+      return response.getEntity().getContent();
+    } catch (HttpStatusCodeException hsce) {
+      logAndThrowRuntimeException(hsce);
+    } catch (IOException ioe) {
+      logAndThrowRuntimeException(ioe);
+    } finally {
+      request.releaseConnection();
+    }
+    return null;
+  }
 
-	/**
-	 * @see net.sf.sail.webapp.domain.webservice.http.HttpRestTransport#post(net.sf.sail.webapp.domain.webservice.http.HttpPostRequest)
-	 */
-	public HttpResponse post(final HttpPostRequest httpPostRequestData) throws HttpStatusCodeException {
+  /**
+   * @see net.sf.sail.webapp.domain.webservice.http.HttpRestTransport#post(net.sf.sail.webapp.domain.webservice.http.HttpPostRequest)
+   */
+  public HttpResponse post(final HttpPostRequest httpPostRequestData)
+      throws HttpStatusCodeException {
+    HttpResponse response = null;
+    HttpClient client = HttpClientBuilder.create().build();
+    HttpPost post = new HttpPost(this.baseUrl
+      + httpPostRequestData.getRelativeUrl());
 
-		HttpResponse response = null;
+    this.setHeaders(httpPostRequestData, post);
+    List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+    final Map<String, String> requestParameters = httpPostRequestData.getRequestParameters();
+    if (requestParameters != null && !requestParameters.isEmpty()) {
+      final Set<String> keys = requestParameters.keySet();
+      for (Iterator<String> i = keys.iterator(); i.hasNext();) {
+        String key = i.next();
+        urlParameters.add(new BasicNameValuePair(key, requestParameters.get(key)));
+      }
+    }
 
-		HttpClient client = HttpClientBuilder.create().build();
-		HttpPost post = new HttpPost(this.baseUrl
-				+ httpPostRequestData.getRelativeUrl());
+    try {
+      post.setEntity(new UrlEncodedFormEntity(urlParameters));
+      final String bodyData = httpPostRequestData.getBodyData();
+      if (bodyData != null) {
+        post.setEntity(new StringEntity(bodyData));
+      }
+      logRequest(post, bodyData);
+      response = client.execute(post);
+      httpPostRequestData.isValidResponseStatus(response);
+    } catch (IOException e) {
+      logAndThrowRuntimeException(e);
+    } finally {
+      post.releaseConnection();
+    }
+    return response;
+  }
 
-		this.setHeaders(httpPostRequestData, post);
+  /**
+   * @see net.sf.sail.webapp.domain.webservice.http.HttpRestTransport#put(net.sf.sail.webapp.domain.webservice.http.HttpPutRequest)
+   */
+  public HttpResponse put(final HttpPutRequest httpPutRequestData) throws HttpStatusCodeException {
+    HttpResponse response = null;
+    HttpClient client = HttpClientBuilder.create().build();
+    HttpPut put = new HttpPut(this.baseUrl + httpPutRequestData.getRelativeUrl());
+    this.setHeaders(httpPutRequestData, put);
+    final String bodyData = httpPutRequestData.getBodyData();
 
-		// set parameters
-		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+    final Map<String, String> responseHeaders = new HashMap<String, String>();
+    try {
+      logRequest(put, bodyData);
+      response = this.client.execute(put);
+      httpPutRequestData.isValidResponseStatus(response);
+    } catch (IOException e) {
+      logAndThrowRuntimeException(e);
+    } finally {
+      put.releaseConnection();
+    }
 
-		final Map<String, String> requestParameters = httpPostRequestData
-				.getRequestParameters();
-		if (requestParameters != null && !requestParameters.isEmpty()) {
-			final Set<String> keys = requestParameters.keySet();
-			for (Iterator<String> i = keys.iterator(); i.hasNext();) {
-				String key = i.next();
-				urlParameters.add(new BasicNameValuePair(key, requestParameters.get(key)));
-			}
-		}
+    return response;
+  }
 
-		final Map<String, String> responseHeaders = new HashMap<String, String>();
-		try {
-			post.setEntity(new UrlEncodedFormEntity(urlParameters));
+  private void logRequest(HttpRequestBase request, String bodyData) {
+    if (logger.isInfoEnabled()) {
+      logger.info(request.getMethod() + ": " + request.getURI());
+      if (bodyData != "")
+        logger.info(request.getMethod() + ": " + bodyData);
+    }
+  }
 
-			// set body data
-			final String bodyData = httpPostRequestData.getBodyData();
-			if (bodyData != null) {
-				post.setEntity(new StringEntity(bodyData));
-			}
+  private void logAndThrowRuntimeException(Exception e) throws RuntimeException {
+    if (logger.isErrorEnabled()) {
+      logger.error(e.getMessage(), e);
+    }
+    throw new RuntimeException(e);
+  }
 
-			// Execute the method.
-			logRequest(post, bodyData);
-			response = client.execute(post);
-			httpPostRequestData.isValidResponseStatus(response);
-		} catch (IOException e) {
-			logAndThrowRuntimeException(e);
-		} finally {
-			post.releaseConnection();
-		}
-
-		return response;
-	}
-
-	/**
-	 * @see net.sf.sail.webapp.domain.webservice.http.HttpRestTransport#put(net.sf.sail.webapp.domain.webservice.http.HttpPutRequest)
-	 */
-	public HttpResponse put(final HttpPutRequest httpPutRequestData) throws HttpStatusCodeException {
-		HttpResponse response = null;
-		HttpClient client = HttpClientBuilder.create().build();
-
-		HttpPut put = new HttpPut(this.baseUrl
-				+ httpPutRequestData.getRelativeUrl());
-
-		this.setHeaders(httpPutRequestData, put);
-
-		// set body data
-		final String bodyData = httpPutRequestData.getBodyData();
-
-		final Map<String, String> responseHeaders = new HashMap<String, String>();
-		try {
-			// Execute the method.
-			logRequest(put, bodyData);
-			response = this.client.execute(put);
-			httpPutRequestData.isValidResponseStatus(response);
-		} catch (IOException e) {
-			logAndThrowRuntimeException(e);
-		} finally {
-			put.releaseConnection();
-		}
-
-		return response;
-	}
-
-	private void logRequest(HttpRequestBase request, String bodyData) {
-		if (logger.isInfoEnabled()) {
-			logger.info(request.getMethod() + ": " + request.getURI());
-			if (bodyData != "")
-				logger.info(request.getMethod() + ": " + bodyData);
-		}
-	}
-
-	private void logAndThrowRuntimeException(Exception e) throws RuntimeException {
-		if (logger.isErrorEnabled()) {
-			logger.error(e.getMessage(), e);
-		}
-		throw new RuntimeException(e);
-	}	
-
-	private void setHeaders(final AbstractHttpRequest httpRequestData,
-			HttpRequestBase request) {
-		final Map<String, String> requestHeaders = httpRequestData
-				.getRequestHeaders();
-		if (requestHeaders != null && !requestHeaders.isEmpty()) {
-			Set<String> keys = requestHeaders.keySet();
-			for (String key : keys) {
-				request.addHeader(key, requestHeaders.get(key));
-			}
-		}
-	}
+  private void setHeaders(final AbstractHttpRequest httpRequestData, HttpRequestBase request) {
+    final Map<String, String> requestHeaders = httpRequestData.getRequestHeaders();
+    if (requestHeaders != null && !requestHeaders.isEmpty()) {
+      Set<String> keys = requestHeaders.keySet();
+      for (String key : keys) {
+        request.addHeader(key, requestHeaders.get(key));
+      }
+    }
+  }
 }

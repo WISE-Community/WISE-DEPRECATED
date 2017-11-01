@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -27,68 +27,68 @@ import org.wise.portal.domain.Persistable;
  * Mutable extension of <code>ObjectIdentity</code>. Represents the object
  * identity of a Java object that will be authorized according to an access
  * control list (ACL).
- * 
+ *
  * @author Cynick Young
- * 
+ *
  * @see org.acegisecurity.acls.objectidentity.ObjectIdentity
  */
 public interface MutableAclTargetObjectIdentity extends ObjectIdentity,
-        Persistable {
+  Persistable {
 
-    /**
-     * @return the aclTargetObject
-     */
-    MutableAclTargetObject getAclTargetObject();
+  /**
+   * @return the aclTargetObject
+   */
+  MutableAclTargetObject getAclTargetObject();
 
-    /**
-     * @param aclTargetObject
-     *                the aclTargetObject to set
-     */
-    void setAclTargetObject(
-            MutableAclTargetObject aclTargetObject);
+  /**
+   * @param aclTargetObject
+   *                the aclTargetObject to set
+   */
+  void setAclTargetObject(
+    MutableAclTargetObject aclTargetObject);
 
-    /**
-     * @return the aclTargetObjectId
-     */
-    Long getAclTargetObjectId();
+  /**
+   * @return the aclTargetObjectId
+   */
+  Long getAclTargetObjectId();
 
-    /**
-     * @param aclTargetObjectId
-     *                the aclTargetObjectId to set
-     */
-    void setAclTargetObjectId(Long aclTargetObjectId);
+  /**
+   * @param aclTargetObjectId
+   *                the aclTargetObjectId to set
+   */
+  void setAclTargetObjectId(Long aclTargetObjectId);
 
-    /**
-     * @return the inheriting
-     */
-    Boolean isInheriting();
+  /**
+   * @return the inheriting
+   */
+  Boolean isInheriting();
 
-    /**
-     * @param inheriting
-     *                the inheriting to set
-     */
-    void setInheriting(Boolean isInheriting);
+  /**
+   * @param inheriting
+   *                the inheriting to set
+   */
+  void setInheriting(Boolean isInheriting);
 
-    /**
-     * @return the ownerSid
-     */
-    MutableAclSid getOwnerSid();
+  /**
+   * @return the ownerSid
+   */
+  MutableAclSid getOwnerSid();
 
-    /**
-     * @param ownerSid
-     *                the ownerSid to set
-     */
-    void setOwnerSid(MutableAclSid ownerSid);
+  /**
+   * @param ownerSid
+   *                the ownerSid to set
+   */
+  void setOwnerSid(MutableAclSid ownerSid);
 
-    /**
-     * @return the parent
-     */
-    MutableAclTargetObjectIdentity getParent();
+  /**
+   * @return the parent
+   */
+  MutableAclTargetObjectIdentity getParent();
 
-    /**
-     * @param parent
-     *                the parent to set
-     */
-    void setParent(MutableAclTargetObjectIdentity parent);
+  /**
+   * @param parent
+   *                the parent to set
+   */
+  void setParent(MutableAclTargetObjectIdentity parent);
 
 }

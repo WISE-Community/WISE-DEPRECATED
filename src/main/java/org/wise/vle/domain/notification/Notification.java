@@ -42,265 +42,265 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "notification",  indexes = {
-        @Index(columnList = "runId", name = "notificationRunIdIndex"),
-        @Index(columnList = "toWorkgroupId", name = "notificationToWorkgroupIdIndex"),
-        @Index(columnList = "fromWorkgroupId", name = "notificationFromWorkgroupIdIndex")
+  @Index(columnList = "runId", name = "notificationRunIdIndex"),
+  @Index(columnList = "toWorkgroupId", name = "notificationToWorkgroupIdIndex"),
+  @Index(columnList = "fromWorkgroupId", name = "notificationFromWorkgroupIdIndex")
 })
 public class Notification extends PersistableDomain {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id = null;  // unique id of the notification
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Integer id = null;  // unique id of the notification
 
-    @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "runId", nullable = false)
-    private Run run;   // which run this notification is for
+  @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "runId", nullable = false)
+  private Run run;   // which run this notification is for
 
-    @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "periodId", nullable = false)
-    private Group period;   // which period this notification is for
+  @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "periodId", nullable = false)
+  private Group period;   // which period this notification is for
 
-    @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "toWorkgroupId")
-    private Workgroup toWorkgroup;  // who this notification is for
+  @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "toWorkgroupId")
+  private Workgroup toWorkgroup;  // who this notification is for
 
-    @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "fromWorkgroupId")
-    private Workgroup fromWorkgroup;  // who this notification is from
+  @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "fromWorkgroupId")
+  private Workgroup fromWorkgroup;  // who this notification is from
 
-    @Column(name = "groupId", length = 30)
-    private String groupId;  // id of the group of notifications this notification belongs to, if any.
+  @Column(name = "groupId", length = 30)
+  private String groupId;  // id of the group of notifications this notification belongs to, if any.
 
-    @Column(name = "nodeId", length = 30)
-    private String nodeId;  // which node created this notification, if any
+  @Column(name = "nodeId", length = 30)
+  private String nodeId;  // which node created this notification, if any
 
-    @Column(name = "componentId", length = 30)
-    private String componentId;  // which component created this notification, if any
+  @Column(name = "componentId", length = 30)
+  private String componentId;  // which component created this notification, if any
 
-    @Column(name = "componentType", length = 30)
-    private String componentType;  // type of component that created this notification, if any
+  @Column(name = "componentType", length = 30)
+  private String componentType;  // type of component that created this notification, if any
 
-    @Column(name = "type")
-    private String type;  // type of this notification, ex: component, node, vle, teacherToStudent, etc
+  @Column(name = "type")
+  private String type;  // type of this notification, ex: component, node, vle, teacherToStudent, etc
 
-    @Column(name = "message", nullable = false)
-    private String message;  // message of the notification
+  @Column(name = "message", nullable = false)
+  private String message;  // message of the notification
 
-    @Column(name = "data", length = 5120000, columnDefinition = "mediumtext")
-    private String data;  // other specific information about this notification
+  @Column(name = "data", length = 5120000, columnDefinition = "mediumtext")
+  private String data;  // other specific information about this notification
 
-    @Column(name = "timeGenerated", nullable = false)
-    private Timestamp timeGenerated;  // when this notification was generated, client time
+  @Column(name = "timeGenerated", nullable = false)
+  private Timestamp timeGenerated;  // when this notification was generated, client time
 
-    @Column(name = "timeDismissed")
-    private Timestamp timeDismissed;  // when this notification was dismissed, client time
+  @Column(name = "timeDismissed")
+  private Timestamp timeDismissed;  // when this notification was dismissed, client time
 
-    @Column(name = "serverSaveTime", nullable = false)
-    private Timestamp serverSaveTime;
+  @Column(name = "serverSaveTime", nullable = false)
+  private Timestamp serverSaveTime;
 
-    @Override
-    protected Class<?> getObjectClass() {
-        return Notification.class;
+  @Override
+  protected Class<?> getObjectClass() {
+    return Notification.class;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public Run getRun() {
+    return run;
+  }
+
+  public void setRun(Run run) {
+    this.run = run;
+  }
+
+  public Group getPeriod() {
+    return period;
+  }
+
+  public void setPeriod(Group period) {
+    this.period = period;
+  }
+
+  public Workgroup getToWorkgroup() {
+    return toWorkgroup;
+  }
+
+  public void setToWorkgroup(Workgroup toWorkgroup) {
+    this.toWorkgroup = toWorkgroup;
+  }
+
+  public Workgroup getFromWorkgroup() {
+    return fromWorkgroup;
+  }
+
+  public void setFromWorkgroup(Workgroup fromWorkgroup) {
+    this.fromWorkgroup = fromWorkgroup;
+  }
+
+  public String getGroupId() {
+    return groupId;
+  }
+
+  public void setGroupId(String groupId) {
+    this.groupId = groupId;
+  }
+
+  public String getNodeId() {
+    return nodeId;
+  }
+
+  public void setNodeId(String nodeId) {
+    this.nodeId = nodeId;
+  }
+
+  public String getComponentId() {
+    return componentId;
+  }
+
+  public void setComponentId(String componentId) {
+    this.componentId = componentId;
+  }
+
+  public String getComponentType() {
+    return componentType;
+  }
+
+  public void setComponentType(String componentType) {
+    this.componentType = componentType;
+  }
+
+  public Timestamp getTimeGenerated() {
+    return timeGenerated;
+  }
+
+  public void setTimeGenerated(Timestamp timeGenerated) {
+    this.timeGenerated = timeGenerated;
+  }
+
+  public Timestamp getTimeDismissed() {
+    return timeDismissed;
+  }
+
+  public void setTimeDismissed(Timestamp timeDismissed) {
+    this.timeDismissed = timeDismissed;
+  }
+
+  public Timestamp getServerSaveTime() {
+    return serverSaveTime;
+  }
+
+  public void setServerSaveTime(Timestamp serverSaveTime) {
+    this.serverSaveTime = serverSaveTime;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+  public String getData() {
+    return data;
+  }
+
+  public void setData(String data) {
+    this.data = data;
+  }
+
+  /**
+   * Get the JSON representation of the StudentWork
+   *
+   * @return a JSONObject with the values from the StudentWork
+   */
+  public JSONObject toJSON() {
+    JSONObject notificationJSONObject = new JSONObject();
+
+    try {
+
+      if (this.id != null) {
+        notificationJSONObject.put("id", this.id);
+      }
+
+      if (this.run != null) {
+        Long runId = this.run.getId();
+        notificationJSONObject.put("runId", runId);
+      }
+
+      if (this.period != null) {
+        Long periodId = this.period.getId();
+        notificationJSONObject.put("periodId", periodId);
+      }
+
+      if (this.toWorkgroup != null) {
+        Long toWorkgroupId = this.toWorkgroup.getId();
+        notificationJSONObject.put("toWorkgroupId", toWorkgroupId);
+      }
+
+      if (this.fromWorkgroup != null) {
+        Long fromWorkgroupId = this.fromWorkgroup.getId();
+        notificationJSONObject.put("fromWorkgroupId", fromWorkgroupId);
+      }
+
+      if (this.groupId != null) {
+        notificationJSONObject.put("groupId", this.groupId);
+      }
+
+      if (this.nodeId != null) {
+        notificationJSONObject.put("nodeId", this.nodeId);
+      }
+
+      if (this.componentId != null) {
+        notificationJSONObject.put("componentId", this.componentId);
+      }
+
+      if (this.componentType != null) {
+        notificationJSONObject.put("componentType", this.componentType);
+      }
+
+      if (this.type != null) {
+        notificationJSONObject.put("type", this.type);
+      }
+
+      if (this.message != null) {
+        notificationJSONObject.put("message", this.message);
+      }
+
+      if (this.data != null) {
+        notificationJSONObject.put("data", this.data);
+      }
+
+      if (this.serverSaveTime != null) {
+        notificationJSONObject.put("serverSaveTime", serverSaveTime.getTime());
+      }
+
+      if (this.timeGenerated != null) {
+        notificationJSONObject.put("timeGenerated", timeGenerated.getTime());
+      }
+
+      if (this.timeDismissed != null) {
+        notificationJSONObject.put("timeDismissed", timeDismissed.getTime());
+      }
+
+    } catch (JSONException e) {
+      e.printStackTrace();
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Run getRun() {
-        return run;
-    }
-
-    public void setRun(Run run) {
-        this.run = run;
-    }
-
-    public Group getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(Group period) {
-        this.period = period;
-    }
-
-    public Workgroup getToWorkgroup() {
-        return toWorkgroup;
-    }
-
-    public void setToWorkgroup(Workgroup toWorkgroup) {
-        this.toWorkgroup = toWorkgroup;
-    }
-
-    public Workgroup getFromWorkgroup() {
-        return fromWorkgroup;
-    }
-
-    public void setFromWorkgroup(Workgroup fromWorkgroup) {
-        this.fromWorkgroup = fromWorkgroup;
-    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getNodeId() {
-        return nodeId;
-    }
-
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
-    }
-
-    public String getComponentId() {
-        return componentId;
-    }
-
-    public void setComponentId(String componentId) {
-        this.componentId = componentId;
-    }
-
-    public String getComponentType() {
-        return componentType;
-    }
-
-    public void setComponentType(String componentType) {
-        this.componentType = componentType;
-    }
-
-    public Timestamp getTimeGenerated() {
-        return timeGenerated;
-    }
-
-    public void setTimeGenerated(Timestamp timeGenerated) {
-        this.timeGenerated = timeGenerated;
-    }
-
-    public Timestamp getTimeDismissed() {
-        return timeDismissed;
-    }
-
-    public void setTimeDismissed(Timestamp timeDismissed) {
-        this.timeDismissed = timeDismissed;
-    }
-
-    public Timestamp getServerSaveTime() {
-        return serverSaveTime;
-    }
-
-    public void setServerSaveTime(Timestamp serverSaveTime) {
-        this.serverSaveTime = serverSaveTime;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    /**
-     * Get the JSON representation of the StudentWork
-     *
-     * @return a JSONObject with the values from the StudentWork
-     */
-    public JSONObject toJSON() {
-        JSONObject notificationJSONObject = new JSONObject();
-
-        try {
-
-            if (this.id != null) {
-                notificationJSONObject.put("id", this.id);
-            }
-
-            if (this.run != null) {
-                Long runId = this.run.getId();
-                notificationJSONObject.put("runId", runId);
-            }
-
-            if (this.period != null) {
-                Long periodId = this.period.getId();
-                notificationJSONObject.put("periodId", periodId);
-            }
-
-            if (this.toWorkgroup != null) {
-                Long toWorkgroupId = this.toWorkgroup.getId();
-                notificationJSONObject.put("toWorkgroupId", toWorkgroupId);
-            }
-
-            if (this.fromWorkgroup != null) {
-                Long fromWorkgroupId = this.fromWorkgroup.getId();
-                notificationJSONObject.put("fromWorkgroupId", fromWorkgroupId);
-            }
-
-            if (this.groupId != null) {
-                notificationJSONObject.put("groupId", this.groupId);
-            }
-
-            if (this.nodeId != null) {
-                notificationJSONObject.put("nodeId", this.nodeId);
-            }
-
-            if (this.componentId != null) {
-                notificationJSONObject.put("componentId", this.componentId);
-            }
-
-            if (this.componentType != null) {
-                notificationJSONObject.put("componentType", this.componentType);
-            }
-
-            if (this.type != null) {
-                notificationJSONObject.put("type", this.type);
-            }
-
-            if (this.message != null) {
-                notificationJSONObject.put("message", this.message);
-            }
-
-            if (this.data != null) {
-                notificationJSONObject.put("data", this.data);
-            }
-
-            if (this.serverSaveTime != null) {
-                notificationJSONObject.put("serverSaveTime", serverSaveTime.getTime());
-            }
-
-            if (this.timeGenerated != null) {
-                notificationJSONObject.put("timeGenerated", timeGenerated.getTime());
-            }
-
-            if (this.timeDismissed != null) {
-                notificationJSONObject.put("timeDismissed", timeDismissed.getTime());
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return notificationJSONObject;
-    }
+    return notificationJSONObject;
+  }
 }

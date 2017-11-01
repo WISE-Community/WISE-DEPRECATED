@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -31,41 +31,41 @@ import org.wise.portal.domain.authentication.impl.PersistentAclTargetObject;
  * This class is not being used. Tried to implement Hibernate versions of the acl
  * services and became bogged down, so went back to jdbc versions. Keeping this
  * class around in case we want to try again later.
- * 
+ *
  * @author Cynick Young
  */
 @Repository
 public class HibernateAclTargetObjectDao extends
-        AbstractHibernateDao<MutableAclTargetObject> implements
-        AclTargetObjectDao<MutableAclTargetObject> {
+    AbstractHibernateDao<MutableAclTargetObject> implements
+    AclTargetObjectDao<MutableAclTargetObject> {
 
-    private static final String FIND_ALL_QUERY = "from PersistentAclTargetObject";
+  private static final String FIND_ALL_QUERY = "from PersistentAclTargetObject";
 
-    /**
-     * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
-     */
-    @Override
-    protected Class<PersistentAclTargetObject> getDataObjectClass() {
-        return PersistentAclTargetObject.class;
-    }
+  /**
+   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
+   */
+  @Override
+  protected Class<PersistentAclTargetObject> getDataObjectClass() {
+    return PersistentAclTargetObject.class;
+  }
 
-    /**
-     * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
-     */
-    @Override
-    protected String getFindAllQuery() {
-        return FIND_ALL_QUERY;
-    }
+  /**
+   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
+   */
+  @Override
+  protected String getFindAllQuery() {
+    return FIND_ALL_QUERY;
+  }
 
-    /**
-     * @see org.wise.portal.dao.authentication.AclTargetObjectDao#retrieveByClassname(java.lang.String)
-     */
-    public MutableAclTargetObject retrieveByClassname(String classname) {
-        return (MutableAclTargetObject) DataAccessUtils
-                .uniqueResult(this
-                        .getHibernateTemplate()
-                        .findByNamedParam(
-                                "from PersistentAclTargetObject as target where target.classname = :classname",
-                                "classname", classname));
-    }
+  /**
+   * @see org.wise.portal.dao.authentication.AclTargetObjectDao#retrieveByClassname(java.lang.String)
+   */
+  public MutableAclTargetObject retrieveByClassname(String classname) {
+    return (MutableAclTargetObject) DataAccessUtils
+      .uniqueResult(this
+        .getHibernateTemplate()
+        .findByNamedParam(
+          "from PersistentAclTargetObject as target where target.classname = :classname",
+          "classname", classname));
+  }
 }

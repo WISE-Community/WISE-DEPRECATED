@@ -51,190 +51,189 @@ import org.wise.portal.domain.workgroup.Workgroup;
 @Table(name = WorkgroupImpl.DATA_STORE_NAME)
 public class WorkgroupImpl implements Workgroup, Comparable<WorkgroupImpl> {
 
-    @Transient
-    public static final String DATA_STORE_NAME = "workgroups";
+  @Transient
+  public static final String DATA_STORE_NAME = "workgroups";
 
-    @Transient
-    private static final long serialVersionUID = 1L;
+  @Transient
+  private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-	public Long id = null;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  public Long id = null;
 
-    @Version
-    @Column(name = "OPTLOCK")
-    private Integer version = null;
+  @Version
+  @Column(name = "OPTLOCK")
+  private Integer version = null;
 
-    @OneToOne(targetEntity = RunImpl.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "run_fk", nullable = false)
-    private Run run;
+  @OneToOne(targetEntity = RunImpl.class, fetch = FetchType.LAZY)
+  @JoinColumn(name = "run_fk", nullable = false)
+  private Run run;
 
-    @OneToOne(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_fk", nullable = false)
-    private Group group = new PersistentGroup();
+  @OneToOne(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY)
+  @JoinColumn(name = "group_fk", nullable = false)
+  private Group group = new PersistentGroup();
 
-    @OneToOne(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "period")
-    private Group period;
+  @OneToOne(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY)
+  @JoinColumn(name = "period")
+  private Group period;
 
-    @Column(name = "isTeacherWorkgroup")
-    private boolean teacherWorkgroup;
+  @Column(name = "isTeacherWorkgroup")
+  private boolean teacherWorkgroup;
 
-    /**
-     * @see Workgroup#getMembers()
-     */
-    public Set<User> getMembers() {
-        return this.group.getMembers();
-    }
+  /**
+   * @see Workgroup#getMembers()
+   */
+  public Set<User> getMembers() {
+    return this.group.getMembers();
+  }
 
-    /**
-     * @see Workgroup#addMember(User)
-     */
-    public void addMember(User member) {
-        this.group.addMember(member);
-        this.group.setName(this.generateWorkgroupName());
-    }
+  /**
+   * @see Workgroup#addMember(User)
+   */
+  public void addMember(User member) {
+    this.group.addMember(member);
+    this.group.setName(this.generateWorkgroupName());
+  }
 
-    /**
-     * @see Workgroup#removeMember(User)
-     */
-    public void removeMember(User member) {
-    	this.group.getMembers().remove(member);
-    }
+  /**
+   * @see Workgroup#removeMember(User)
+   */
+  public void removeMember(User member) {
+    this.group.getMembers().remove(member);
+  }
 
-    /**
-     * @see Workgroup#setMembers(java.util.Set)
-     */
-    public void setMembers(Set<User> members) {
-        this.group.setMembers(members);
-    }
+  /**
+   * @see Workgroup#setMembers(java.util.Set)
+   */
+  public void setMembers(Set<User> members) {
+    this.group.setMembers(members);
+  }
 
-	/**
-	 * @return the group
-	 */
-	public Group getGroup() {
-		return group;
-	}
+  /**
+   * @return the group
+   */
+  public Group getGroup() {
+    return group;
+  }
 
-	/**
-	 * @param group the group to set
-	 */
-	public void setGroup(Group group) {
-		this.group = group;
-	}
+  /**
+   * @param group the group to set
+   */
+  public void setGroup(Group group) {
+    this.group = group;
+  }
 
-    /**
-     * @see Workgroup#getRun()
-     */
-    public Run getRun() {
-        return run;
-    }
+  /**
+   * @see Workgroup#getRun()
+   */
+  public Run getRun() {
+    return run;
+  }
 
-    /**
-     * @see Workgroup#setRun(Run)
-     */
-    public void setRun(Run run) {
-        this.run = run;
-    }
+  /**
+   * @see Workgroup#setRun(Run)
+   */
+  public void setRun(Run run) {
+    this.run = run;
+  }
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+  /**
+   * @return the id
+   */
+  public Long getId() {
+    return id;
+  }
 
-    /**
-     * @param id the id to set
-     */
-    @SuppressWarnings("unused")
-    private void setId(Long id) {
-        this.id = id;
-    }
+  /**
+   * @param id the id to set
+   */
+  @SuppressWarnings("unused")
+  private void setId(Long id) {
+    this.id = id;
+  }
 
-    /**
-     * @see Workgroup#getPeriod()
-     */
-    public Group getPeriod() {
-        return period;
-    }
+  /**
+   * @see Workgroup#getPeriod()
+   */
+  public Group getPeriod() {
+    return period;
+  }
 
-    /**
-     * @see Workgroup#setPeriod(Group)
-     */
-    public void setPeriod(Group period) {
-        this.period = period;
-    }
+  /**
+   * @see Workgroup#setPeriod(Group)
+   */
+  public void setPeriod(Group period) {
+    this.period = period;
+  }
 
-    public int compareTo(WorkgroupImpl o) {
-        return this.id.compareTo(o.id);
-    }
+  public int compareTo(WorkgroupImpl o) {
+    return this.id.compareTo(o.id);
+  }
 
-    /**
-     * @return the teacherWorkgroup
-     */
-    public boolean isTeacherWorkgroup() {
-        return teacherWorkgroup;
-    }
+  /**
+   * @return the teacherWorkgroup
+   */
+  public boolean isTeacherWorkgroup() {
+    return teacherWorkgroup;
+  }
 
-    /**
-     * @param teacherWorkgroup the teacherWorkgroup to set
-     */
-    public void setTeacherWorkgroup(boolean teacherWorkgroup) {
-        this.teacherWorkgroup = teacherWorkgroup;
-    }
+  /**
+   * @param teacherWorkgroup the teacherWorkgroup to set
+   */
+  public void setTeacherWorkgroup(boolean teacherWorkgroup) {
+    this.teacherWorkgroup = teacherWorkgroup;
+  }
 
-    public boolean isStudentWorkgroup() {
+  public boolean isStudentWorkgroup() {
     return !teacherWorkgroup;
   }
 
-    /**
-     * @see Workgroup#generateWorkgroupName()
-     */
-	public String generateWorkgroupName() {
-		String workgroupName = "";
-		for (User member : group.getMembers()) {
-			workgroupName += " " + member.getUserDetails().getUsername();
-		}
-		return workgroupName;
-	}
+  /**
+   * @see Workgroup#generateWorkgroupName()
+   */
+  public String generateWorkgroupName() {
+    String workgroupName = "";
+    for (User member : group.getMembers()) {
+      workgroupName += " " + member.getUserDetails().getUsername();
+    }
+    return workgroupName;
+  }
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((group == null) ? 0 : group.hashCode());
-		result = prime * result
-				+ ((run == null) ? 0 : run.hashCode());
-		return result;
-	}
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((group == null) ? 0 : group.hashCode());
+    result = prime * result
+      + ((run == null) ? 0 : run.hashCode());
+    return result;
+  }
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final WorkgroupImpl other = (WorkgroupImpl) obj;
-		if (group == null) {
-			if (other.group != null)
-				return false;
-		} else if (!group.equals(other.group))
-			return false;
-		if (run == null) {
-			if (other.run != null)
-				return false;
-		} else if (!run.equals(other.run))
-			return false;
-		return true;
-	}
-
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    final WorkgroupImpl other = (WorkgroupImpl) obj;
+    if (group == null) {
+      if (other.group != null)
+        return false;
+    } else if (!group.equals(other.group))
+      return false;
+    if (run == null) {
+      if (other.run != null)
+        return false;
+    } else if (!run.equals(other.run))
+      return false;
+    return true;
+  }
 }

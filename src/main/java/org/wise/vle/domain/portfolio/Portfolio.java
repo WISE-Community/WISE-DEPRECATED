@@ -18,7 +18,7 @@
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
- * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.wise.vle.domain.portfolio;
 
@@ -41,194 +41,188 @@ import org.wise.vle.domain.PersistableDomain;
 @Table(name = "portfolio", indexes = { @Index(columnList = "runId,workgroupId", name = "portfolioRunIdAndWorkgroupIdIndex") } )
 public class Portfolio extends PersistableDomain implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	//the unique id of the Portfolio
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id = null;
+  //the unique id of the Portfolio
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id = null;
 
-	//the id of the run
-	@Column(name = "runId")
-	private Long runId = null;
+  //the id of the run
+  @Column(name = "runId")
+  private Long runId = null;
 
-	//the id of the workgroup
-	@Column(name = "workgroupId")
-	private Long workgroupId = null;
+  //the id of the workgroup
+  @Column(name = "workgroupId")
+  private Long workgroupId = null;
 
-	@Column(name = "metadata", columnDefinition = "mediumtext")
-	private String metadata = null;
+  @Column(name = "metadata", columnDefinition = "mediumtext")
+  private String metadata = null;
 
-	@Column(name = "items", length = 512000, columnDefinition = "mediumtext")
-	private String items = null;
+  @Column(name = "items", length = 512000, columnDefinition = "mediumtext")
+  private String items = null;
 
-	@Column(name = "deletedItems", length = 512000, columnDefinition = "mediumtext")
-	private String deletedItems = null;
+  @Column(name = "deletedItems", length = 512000, columnDefinition = "mediumtext")
+  private String deletedItems = null;
 
-	//whether this portfolio is a public portfolio
-	@Column(name = "isPublic")
-	private Boolean isPublic = false;
+  //whether this portfolio is a public portfolio
+  @Column(name = "isPublic")
+  private Boolean isPublic = false;
 
-	//whether this portfolio is submitted
-	@Column(name = "isSubmitted")
-	private Boolean isSubmitted = false;
+  //whether this portfolio is submitted
+  @Column(name = "isSubmitted")
+  private Boolean isSubmitted = false;
 
-	//portfolio tags
-	@Column(name = "tags")
-	private String tags;
+  //portfolio tags
+  @Column(name = "tags")
+  private String tags;
 
-	//the time the portfolio was posted
-	@Column(name = "postTime")
-	private Timestamp postTime;
+  //the time the portfolio was posted
+  @Column(name = "postTime")
+  private Timestamp postTime;
 
-	/**
-	 * the no args constructor
-	 */
-	public Portfolio() {
+  /**
+   * the no args constructor
+   */
+  public Portfolio() {
 
-	}
+  }
 
-	/**
-	 * Constructor that does not populate the data field
-	 */
-	public Portfolio(JSONObject portfolioJSONObject) {
-		try {
-			this.runId = portfolioJSONObject.getLong("runId");
-			this.workgroupId = portfolioJSONObject.getLong("workgroupId");
-			this.metadata = portfolioJSONObject.getString("metadata");
-			this.items = portfolioJSONObject.getString("items");
-			this.deletedItems = portfolioJSONObject.getString("deletedItems");
-			Calendar now = Calendar.getInstance();
-			this.postTime = new Timestamp(now.getTimeInMillis());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
+  /**
+   * Constructor that does not populate the data field
+   */
+  public Portfolio(JSONObject portfolioJSONObject) {
+    try {
+      this.runId = portfolioJSONObject.getLong("runId");
+      this.workgroupId = portfolioJSONObject.getLong("workgroupId");
+      this.metadata = portfolioJSONObject.getString("metadata");
+      this.items = portfolioJSONObject.getString("items");
+      this.deletedItems = portfolioJSONObject.getString("deletedItems");
+      Calendar now = Calendar.getInstance();
+      this.postTime = new Timestamp(now.getTimeInMillis());
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+  }
 
-	/**
-	 * Constructor that does not populate the data field
-	 * @param runId
-	 * @param workgroupId
-	 */
-	public Portfolio(long runId, long workgroupId) {
-		this.runId = runId;
-		this.workgroupId = workgroupId;
-		Calendar now = Calendar.getInstance();
-		this.postTime = new Timestamp(now.getTimeInMillis());
-	}
+  /**
+   * Constructor that does not populate the data field
+   * @param runId
+   * @param workgroupId
+   */
+  public Portfolio(long runId, long workgroupId) {
+    this.runId = runId;
+    this.workgroupId = workgroupId;
+    Calendar now = Calendar.getInstance();
+    this.postTime = new Timestamp(now.getTimeInMillis());
+  }
 
-	/**
-	 * @see org.wise.vle.domain.PersistableDomain#getObjectClass()
-	 */
-	@Override
-	protected Class<?> getObjectClass() {
-		return Portfolio.class;
-	}
+  /**
+   * @see org.wise.vle.domain.PersistableDomain#getObjectClass()
+   */
+  @Override
+  protected Class<?> getObjectClass() {
+    return Portfolio.class;
+  }
 
-	public Long getId() {
-		return id;
-	}
+  public Long getId() {
+    return id;
+  }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-	public Long getRunId() {
-		return runId;
-	}
+  public Long getRunId() {
+    return runId;
+  }
 
-	public void setRunId(Long runId) {
-		this.runId = runId;
-	}
+  public void setRunId(Long runId) {
+    this.runId = runId;
+  }
 
-	public Long getWorkgroupId() {
-		return workgroupId;
-	}
+  public Long getWorkgroupId() {
+    return workgroupId;
+  }
 
-	public void setWorkgroupId(Long workgroupId) {
-		this.workgroupId = workgroupId;
-	}
+  public void setWorkgroupId(Long workgroupId) {
+    this.workgroupId = workgroupId;
+  }
 
-	public String getMetadata() {
-		return metadata;
-	}
+  public String getMetadata() {
+    return metadata;
+  }
 
-	public void setMetadata(String metadata) {
-		this.metadata = metadata;
-	}
+  public void setMetadata(String metadata) {
+    this.metadata = metadata;
+  }
 
-	/**
-	 * @return the items
-	 */
-	public String getItems() {
-		return items;
-	}
+  /**
+   * @return the items
+   */
+  public String getItems() {
+    return items;
+  }
 
-	/**
-	 * @param items the items to set
-	 */
-	public void setItems(String items) {
-		this.items = items;
-	}
+  /**
+   * @param items the items to set
+   */
+  public void setItems(String items) {
+    this.items = items;
+  }
 
-	/**
-	 * @return the deletedItems
-	 */
-	public String getDeletedItems() {
-		return deletedItems;
-	}
+  /**
+   * @return the deletedItems
+   */
+  public String getDeletedItems() {
+    return deletedItems;
+  }
 
-	/**
-	 * @param deletedItems the deletedItems to set
-	 */
-	public void setDeletedItems(String deletedItems) {
-		this.deletedItems = deletedItems;
-	}
+  /**
+   * @param deletedItems the deletedItems to set
+   */
+  public void setDeletedItems(String deletedItems) {
+    this.deletedItems = deletedItems;
+  }
 
-	public Timestamp getPostTime() {
-		return postTime;
-	}
+  public Timestamp getPostTime() {
+    return postTime;
+  }
 
-	public void setPostTime(Timestamp postTime) {
-		this.postTime = postTime;
-	}
+  public void setPostTime(Timestamp postTime) {
+    this.postTime = postTime;
+  }
 
-	public Boolean isPublic() {
-		return isPublic;
-	}
+  public Boolean isPublic() {
+    return isPublic;
+  }
 
-	public void setPublic(Boolean isPublic) {
-		this.isPublic = isPublic;
-	}
+  public void setPublic(Boolean isPublic) {
+    this.isPublic = isPublic;
+  }
 
-	public Boolean isSubmitted() {
-		return isSubmitted;
-	}
+  public Boolean isSubmitted() {
+    return isSubmitted;
+  }
 
-	public void setSubmitted(Boolean isSubmitted) {
-		this.isSubmitted = isSubmitted;
-	}
+  public void setSubmitted(Boolean isSubmitted) {
+    this.isSubmitted = isSubmitted;
+  }
 
-	/**
-	 * Get the JSON string representation of the Portfolio
-	 * @return
-	 */
-	public String toJSONString() {
-		String jsonString = null;
-
-		//get the JSONObject representation of the portfolio
-		JSONObject jsonObject = new JSONObject(this);
-
-		try {
-			if(jsonObject != null) {
-				//get the JSON string representation with indentation
-				jsonString = jsonObject.toString(3);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
-		return jsonString;
-	}
-
+  /**
+   * Get the JSON string representation of the Portfolio
+   * @return
+   */
+  public String toJSONString() {
+    String jsonString = null;
+    JSONObject jsonObject = new JSONObject(this);
+    try {
+      if(jsonObject != null) {
+        jsonString = jsonObject.toString(3);
+      }
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    return jsonString;
+  }
 }

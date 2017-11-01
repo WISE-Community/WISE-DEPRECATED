@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -27,9 +27,8 @@ import org.wise.portal.domain.authentication.ImmutableAclEntry;
  * This class is not being used. Tried to implement Hibernate versions of the acl
  * services and became bogged down, so went back to jdbc versions. Keeping this
  * class around in case we want to try again later.
- * 
+ *
  * @author Cynick Young
  */
 public interface AclEntryDao<T extends ImmutableAclEntry> extends SimpleDao<T> {
-
 }

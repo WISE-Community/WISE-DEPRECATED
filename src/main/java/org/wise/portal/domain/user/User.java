@@ -30,50 +30,50 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
  */
 public interface User extends Persistable {
 
-    String CURRENT_USER_SESSION_KEY = "CURRENT_USER";
+  String CURRENT_USER_SESSION_KEY = "CURRENT_USER";
 
-    Long getId();
+  Long getId();
 
-    /**
-     * Gets the UserDetails object.
-     *
-     * @return the userDetails
-     */
-    MutableUserDetails getUserDetails();
+  /**
+   * Gets the UserDetails object.
+   *
+   * @return the userDetails
+   */
+  MutableUserDetails getUserDetails();
 
-    /**
-     * Sets the UserDetails object
-     *
-     * @param userDetails
-     *            the userDetails to set
-     */
-    void setUserDetails(MutableUserDetails userDetails);
+  /**
+   * Sets the UserDetails object
+   *
+   * @param userDetails
+   *            the userDetails to set
+   */
+  void setUserDetails(MutableUserDetails userDetails);
 
-    /**
-     * Returns true if this use is an admin, false otherwise.
-     *
-     * @return boolean
-     */
-    boolean isAdmin();
+  /**
+   * Returns true if this use is an admin, false otherwise.
+   *
+   * @return boolean
+   */
+  boolean isAdmin();
 
-    /**
-     * Returns true if this use is an student, false otherwise.
-     *
-     * @return boolean
-     */
-    boolean isStudent();
+  /**
+   * Returns true if this use is an student, false otherwise.
+   *
+   * @return boolean
+   */
+  boolean isStudent();
 
-    /**
-     * Returns true if this use is an teacher, false otherwise.
-     *
-     * @return boolean
-     */
-    boolean isTeacher();
+  /**
+   * Returns true if this use is an teacher, false otherwise.
+   *
+   * @return boolean
+   */
+  boolean isTeacher();
 
-    /**
-     * Returns true if this use is a trusted author, false otherwise
-     *
-     * @return boolean
-     */
-    boolean isTrustedAuthor();
+  /**
+   * Returns true if this use is a trusted author, false otherwise
+   *
+   * @return boolean
+   */
+  boolean isTrustedAuthor();
 }

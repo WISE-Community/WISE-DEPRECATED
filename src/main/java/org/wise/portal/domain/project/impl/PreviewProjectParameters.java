@@ -34,132 +34,131 @@ import org.wise.portal.domain.user.User;
  */
 public class PreviewProjectParameters {
 
-	private HttpServletRequest httpServletRequest;
+  private HttpServletRequest httpServletRequest;
 
-	private User user;
+  private User user;
 
-	private Project project;
+  private Project project;
 
-	private String versionId;
+  private String versionId;
 
-	private String lang;
+  private String lang;
 
-	private String step;
+  private String step;
 
-	private String workgroupId;
+  private String workgroupId;
 
-	private boolean isConstraintsDisabled = false;
+  private boolean isConstraintsDisabled = false;
 
+  /**
+   * @return the httpServletRequest
+   */
+  public HttpServletRequest getHttpServletRequest() {
+    return httpServletRequest;
+  }
 
-	/**
-	 * @return the httpServletRequest
-	 */
-	public HttpServletRequest getHttpServletRequest() {
-		return httpServletRequest;
-	}
+  /**
+   * @param httpServletRequest the httpServletRequest to set
+   */
+  public void setHttpServletRequest(HttpServletRequest httpServletRequest) {
+    this.httpServletRequest = httpServletRequest;
+  }
 
-	/**
-	 * @param httpServletRequest the httpServletRequest to set
-	 */
-	public void setHttpServletRequest(HttpServletRequest httpServletRequest) {
-		this.httpServletRequest = httpServletRequest;
-	}
+  /**
+   * @return the user
+   */
+  public User getUser() {
+    return user;
+  }
 
-	/**
-	 * @return the user
-	 */
-	public User getUser() {
-		return user;
-	}
+  /**
+   * @param user the user to set
+   */
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-	/**
-	 * @param user the user to set
-	 */
-	public void setUser(User user) {
-		this.user = user;
-	}
+  /**
+   * @return the project
+   */
+  public Project getProject() {
+    return project;
+  }
 
-	/**
-	 * @return the project
-	 */
-	public Project getProject() {
-		return project;
-	}
+  /**
+   * @param project the project to set
+   */
+  public void setProject(Project project) {
+    this.project = project;
+  }
 
-	/**
-	 * @param project the project to set
-	 */
-	public void setProject(Project project) {
-		this.project = project;
-	}
+  /**
+   * @return the versionId
+   */
+  public String getVersionId() {
+    return versionId;
+  }
 
-	/**
-	 * @return the versionId
-	 */
-	public String getVersionId() {
-		return versionId;
-	}
+  /**
+   * @param versionId the versionId to set
+   */
+  public void setVersionId(String versionId) {
+    this.versionId = versionId;
+  }
 
-	/**
-	 * @param versionId the versionId to set
-	 */
-	public void setVersionId(String versionId) {
-		this.versionId = versionId;
-	}
+  /**
+   * @return the lang
+   */
+  public String getLang() {
+    return lang;
+  }
 
-	/**
-     * @return the lang
-     */
-    public String getLang() {
-        return lang;
-    }
+  /**
+   * @param lang the lang to set
+   */
+  public void setLang(String lang) {
+    this.lang = lang;
+  }
 
-    /**
-     * @param lang the lang to set
-     */
-    public void setLang(String lang) {
-        this.lang = lang;
-    }
+  /**
+   * @return the step
+   */
+  public String getStep() {
+    return step;
+  }
 
-    /**
-	 * @return the step
-	 */
-	public String getStep() {
-		return step;
-	}
+  /**
+   * @param step the step to set
+   */
+  public void setStep(String step) {
+    this.step = step;
+  }
 
-	/**
-	 * @param step the step to set
-	 */
-	public void setStep(String step) {
-		this.step = step;
-	}
+  /**
+   * @return the workgroup id
+   */
+  public String getWorkgroupId() {
+    return workgroupId;
+  }
 
-    /**
-	 * @return the workgroup id
-	 */
-	public String getWorkgroupId() {
-		return workgroupId;
-	}
+  /**
+   * @param workgroupId the workgroup id to set
+   */
+  public void setWorkgroupId(String workgroupId) {
+    this.workgroupId = workgroupId;
+  }
 
-	/**
-	 * @param workgroupId the workgroup id to set
-	 */
-	public void setWorkgroupId(String workgroupId) {
-		this.workgroupId = workgroupId;
-	}
+  /**
+   * @return the isConstraintsDisabled
+   */
+  public boolean isConstraintsDisabled() {
+    return isConstraintsDisabled;
+  }
 
-	/**
-	 * @return the isConstraintsDisabled
-	 */
-	public boolean isConstraintsDisabled() {
-		return isConstraintsDisabled;
-	}
-
-	/**
-	 * @param isConstraintsDisabled the isConstraintsDisabled to set
-	 */
-	public void setConstraintsDisabled(boolean isConstraintsDisabled) {
-		this.isConstraintsDisabled = isConstraintsDisabled;
-	}
+  /**
+   * @param isConstraintsDisabled the isConstraintsDisabled to set
+   */
+  public void setConstraintsDisabled(boolean isConstraintsDisabled) {
+    this.isConstraintsDisabled = isConstraintsDisabled;
+  }
 }

@@ -53,69 +53,65 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/teacher")
 public class TeacherIndexController {
 
-	@Autowired
-	private Properties wiseProperties;
+  @Autowired
+  private Properties wiseProperties;
 
-	@Autowired
-	private RunService runService;
+  @Autowired
+  private RunService runService;
 
-	@Autowired
-	private WorkgroupService workgroupService;
+  @Autowired
+  private WorkgroupService workgroupService;
 
-	@Autowired
-	private NewsItemService newsItemService;
+  @Autowired
+  private NewsItemService newsItemService;
 
-	static final Comparator<Run> ORDER_BY_STARTTIME =
-	new Comparator<Run>() {
-		public int compare(Run o1, Run o2) {
-			return o2.getStarttime().compareTo(o1.getStarttime());
+  static final Comparator<Run> ORDER_BY_STARTTIME =
+      new Comparator<Run>() {
+        public int compare(Run o1, Run o2) {
+          return o2.getStarttime().compareTo(o1.getStarttime());
         }
-	};
+      };
 
-	@RequestMapping(method = RequestMethod.GET)
-	protected String getTeacherHomepage(ModelMap modelMap) throws Exception {
+  @RequestMapping(method = RequestMethod.GET)
+  protected String getTeacherHomepage(ModelMap modelMap) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
 
-		User user = ControllerUtil.getSignedInUser();
+    // combine owned and shared runs
+    List<Run> runList = this.runService.getRunListByOwner(user);
+    runList.addAll(this.runService.getRunListBySharedOwner(user));
 
-        // combine owned and shared runs
-		List<Run> runList = this.runService.getRunListByOwner(user);
-		runList.addAll(this.runService.getRunListBySharedOwner(user));
+    List<Run> allCurrentRuns = new ArrayList<Run>();
+    Map<Run, List<Workgroup>> workgroupMap = new HashMap<Run, List<Workgroup>>();
+    for (Run run : runList) {
+      List<Workgroup> workgroupList = this.workgroupService.getWorkgroupListByRunAndUser(run, user);
+      workgroupMap.put(run, workgroupList);
+      if (!run.isEnded()) {
+        allCurrentRuns.add(run);
+      }
+    }
 
-		List<Run> allCurrentRuns = new ArrayList<Run>();
-		Map<Run, List<Workgroup>> workgroupMap = new HashMap<Run, List<Workgroup>>();
-		for (Run run : runList) {
+    List<Run> current_run_list;
+    Collections.sort(allCurrentRuns, ORDER_BY_STARTTIME);
+    if (allCurrentRuns.size() > 5) {
+      current_run_list = allCurrentRuns.subList(0,5);
+    } else {
+      current_run_list = allCurrentRuns;
+    }
 
-			List<Workgroup> workgroupList = this.workgroupService
-					.getWorkgroupListByRunAndUser(run, user);
+    modelMap.put("user", user);
+    modelMap.put("current_run_list", current_run_list);  // this is used in run listing page and only contains latest 5 runs
+    modelMap.put("allCurrentRuns", allCurrentRuns);  // this is used to go through all the announcements in the homepage
+    modelMap.put("workgroup_map", workgroupMap);
+    modelMap.put("teacherOnlyNewsItems", newsItemService.retrieveByType("teacherOnly"));
 
-			workgroupMap.put(run, workgroupList);
-			if (!run.isEnded()) {
-				allCurrentRuns.add(run);
-			}
-		}
+    // if discourse is enabled for this WISE instance, add the link to the model
+    // so the view can display it
+    String discourseURL = wiseProperties.getProperty("discourse_url");
+    if (discourseURL != null && !discourseURL.isEmpty()) {
+      String discourseSSOLoginURL = discourseURL + "/session/sso";
+      modelMap.put("discourseSSOLoginURL", discourseSSOLoginURL);
+    }
 
-		List<Run> current_run_list;
-		Collections.sort(allCurrentRuns, ORDER_BY_STARTTIME);
-		if (allCurrentRuns.size() > 5) {
-			current_run_list = allCurrentRuns.subList(0,5);
-		} else {
-			current_run_list = allCurrentRuns;
-		}
-
-		modelMap.put("user", user);
-		modelMap.put("current_run_list", current_run_list);  // this is used in run listing page and only contains latest 5 runs
-		modelMap.put("allCurrentRuns", allCurrentRuns);  // this is used to go through all the announcements in the homepage
-		modelMap.put("workgroup_map", workgroupMap);
-		modelMap.put("teacherOnlyNewsItems", newsItemService.retrieveByType("teacherOnly"));
-
-    	// if discourse is enabled for this WISE instance, add the link to the model
-    	// so the view can display it
-    	String discourseURL = wiseProperties.getProperty("discourse_url");
-    	if (discourseURL != null && !discourseURL.isEmpty()) {
-    		String discourseSSOLoginURL = discourseURL + "/session/sso";
-    		modelMap.put("discourseSSOLoginURL", discourseSSOLoginURL);
-    	}
-
-        return "teacher/index";
-	}
+    return "teacher/index";
+  }
 }

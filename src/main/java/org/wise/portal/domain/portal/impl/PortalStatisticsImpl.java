@@ -42,137 +42,137 @@ import org.json.JSONObject;
 @Table(name = "portal_statistics")
 public class PortalStatisticsImpl implements PortalStatistics {
 
-	@Transient
-	private static final long serialVersionUID = 1L;
+  @Transient
+  private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id", columnDefinition = "smallint")
-	public Integer id = null;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id", columnDefinition = "smallint")
+  public Integer id = null;
 
-    @Column(name = "timestamp")
-    private Date timestamp;
+  @Column(name = "timestamp")
+  private Date timestamp;
 
-	@Column(name = "totalNumberStudents")
-    private Long totalNumberStudents;
+  @Column(name = "totalNumberStudents")
+  private Long totalNumberStudents;
 
-    @Column(name = "totalNumberStudentLogins")
-    private Long totalNumberStudentLogins;
+  @Column(name = "totalNumberStudentLogins")
+  private Long totalNumberStudentLogins;
 
-    @Column(name = "totalNumberTeachers")
-    private Long totalNumberTeachers;
+  @Column(name = "totalNumberTeachers")
+  private Long totalNumberTeachers;
 
-    @Column(name = "totalNumberTeacherLogins")
-    private Long totalNumberTeacherLogins;
+  @Column(name = "totalNumberTeacherLogins")
+  private Long totalNumberTeacherLogins;
 
-    @Column(name = "totalNumberProjects")
-    private Long totalNumberProjects;
+  @Column(name = "totalNumberProjects")
+  private Long totalNumberProjects;
 
-	@Column(name = "totalNumberRuns")
-    private Long totalNumberRuns;
+  @Column(name = "totalNumberRuns")
+  private Long totalNumberRuns;
 
-    @Column(name = "totalNumberProjectsRun")
-    private Long totalNumberProjectsRun;
+  @Column(name = "totalNumberProjectsRun")
+  private Long totalNumberProjectsRun;
 
-	public Serializable getId() {
-		return this.id;
-	}
+  public Serializable getId() {
+    return this.id;
+  }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public Date getTimestamp() {
-		return timestamp;
-	}
+  public Date getTimestamp() {
+    return timestamp;
+  }
 
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
-	}
+  public void setTimestamp(Date timestamp) {
+    this.timestamp = timestamp;
+  }
 
-	public Long getTotalNumberStudents() {
-		return totalNumberStudents;
-	}
+  public Long getTotalNumberStudents() {
+    return totalNumberStudents;
+  }
 
-	public void setTotalNumberStudents(Long totalNumberStudents) {
-		this.totalNumberStudents = totalNumberStudents;
-	}
+  public void setTotalNumberStudents(Long totalNumberStudents) {
+    this.totalNumberStudents = totalNumberStudents;
+  }
 
-	public Long getTotalNumberStudentLogins() {
-		return totalNumberStudentLogins;
-	}
+  public Long getTotalNumberStudentLogins() {
+    return totalNumberStudentLogins;
+  }
 
-	public void setTotalNumberStudentLogins(Long totalNumberStudentLogins) {
-		this.totalNumberStudentLogins = totalNumberStudentLogins;
-	}
+  public void setTotalNumberStudentLogins(Long totalNumberStudentLogins) {
+    this.totalNumberStudentLogins = totalNumberStudentLogins;
+  }
 
-	public Long getTotalNumberTeachers() {
-		return totalNumberTeachers;
-	}
+  public Long getTotalNumberTeachers() {
+    return totalNumberTeachers;
+  }
 
-	public void setTotalNumberTeachers(Long totalNumberTeachers) {
-		this.totalNumberTeachers = totalNumberTeachers;
-	}
+  public void setTotalNumberTeachers(Long totalNumberTeachers) {
+    this.totalNumberTeachers = totalNumberTeachers;
+  }
 
-	public Long getTotalNumberTeacherLogins() {
-		return totalNumberTeacherLogins;
-	}
+  public Long getTotalNumberTeacherLogins() {
+    return totalNumberTeacherLogins;
+  }
 
-	public void setTotalNumberTeacherLogins(Long totalNumberTeacherLogins) {
-		this.totalNumberTeacherLogins = totalNumberTeacherLogins;
-	}
+  public void setTotalNumberTeacherLogins(Long totalNumberTeacherLogins) {
+    this.totalNumberTeacherLogins = totalNumberTeacherLogins;
+  }
 
-    public Long getTotalNumberProjects() {
-		return totalNumberProjects;
-	}
+  public Long getTotalNumberProjects() {
+    return totalNumberProjects;
+  }
 
-	public void setTotalNumberProjects(Long totalNumberProjects) {
-		this.totalNumberProjects = totalNumberProjects;
-	}
+  public void setTotalNumberProjects(Long totalNumberProjects) {
+    this.totalNumberProjects = totalNumberProjects;
+  }
 
-	public Long getTotalNumberRuns() {
-		return totalNumberRuns;
-	}
+  public Long getTotalNumberRuns() {
+    return totalNumberRuns;
+  }
 
-	public void setTotalNumberRuns(Long totalNumberRuns) {
-		this.totalNumberRuns = totalNumberRuns;
-	}
+  public void setTotalNumberRuns(Long totalNumberRuns) {
+    this.totalNumberRuns = totalNumberRuns;
+  }
 
-	public Long getTotalNumberProjectsRun() {
-		return totalNumberProjectsRun;
-	}
+  public Long getTotalNumberProjectsRun() {
+    return totalNumberProjectsRun;
+  }
 
-	public void setTotalNumberProjectsRun(Long totalNumberProjectsRun) {
-		this.totalNumberProjectsRun = totalNumberProjectsRun;
-	}
+  public void setTotalNumberProjectsRun(Long totalNumberProjectsRun) {
+    this.totalNumberProjectsRun = totalNumberProjectsRun;
+  }
 
-	/**
-	 * Get the JSONObject representation of this object
-	 */
-	public JSONObject getJSONObject() {
-		JSONObject jsonObject = new JSONObject();
+  /**
+   * Get the JSONObject representation of this object
+   */
+  public JSONObject getJSONObject() {
+    JSONObject jsonObject = new JSONObject();
 
-		try {
-			Long timestampMilliseconds = null;
+    try {
+      Long timestampMilliseconds = null;
 
-			if(timestamp != null) {
-				//get the timestamp in milliseconds
-				timestampMilliseconds = timestamp.getTime();
-			}
+      if(timestamp != null) {
+        //get the timestamp in milliseconds
+        timestampMilliseconds = timestamp.getTime();
+      }
 
-			//set the fields
-			jsonObject.put("timestamp", timestampMilliseconds);
-			jsonObject.put("totalNumberStudents", totalNumberStudents);
-			jsonObject.put("totalNumberStudentLogins", totalNumberStudentLogins);
-			jsonObject.put("totalNumberTeachers", totalNumberTeachers);
-			jsonObject.put("totalNumberTeacherLogins", totalNumberTeacherLogins);
-			jsonObject.put("totalNumberProjects", totalNumberProjects);
-			jsonObject.put("totalNumberRuns", totalNumberRuns);
-			jsonObject.put("totalNumberProjectsRun", totalNumberProjectsRun);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+      //set the fields
+      jsonObject.put("timestamp", timestampMilliseconds);
+      jsonObject.put("totalNumberStudents", totalNumberStudents);
+      jsonObject.put("totalNumberStudentLogins", totalNumberStudentLogins);
+      jsonObject.put("totalNumberTeachers", totalNumberTeachers);
+      jsonObject.put("totalNumberTeacherLogins", totalNumberTeacherLogins);
+      jsonObject.put("totalNumberProjects", totalNumberProjects);
+      jsonObject.put("totalNumberRuns", totalNumberRuns);
+      jsonObject.put("totalNumberProjectsRun", totalNumberProjectsRun);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
 
-		return jsonObject;
-	}
+    return jsonObject;
+  }
 }
