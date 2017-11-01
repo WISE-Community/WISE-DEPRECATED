@@ -127,8 +127,6 @@
     "TEXT": "Text",
     "THERE_WAS_AN_ERROR_UPLOADING": "There was an error uploading.",
     "THERE_WAS_AN_ERROR_UPLOADING_YOU_MIGHT_HAVE_REACHED_LIMIT": "There was an error uploading. You might have reached your file upload limit or the file you tried to upload was too large. Please ask your teacher for help.",
-    "TO_VISIT_STEP_YOU_MUST_PERFORM_ALL_OF_THE_ACTIONS_BELOW": "To visit \"{{nodeTitle}}\" you must perform all of the actions below",
-    "TO_VISIT_STEP_YOU_MUST_PERFORM_ONE_OF_THE_ACTIONS_BELOW": "To visit \"{{nodeTitle}}\" you must perform one of the actions below",
     "TYPE": "Type",
     "TYPE_TEXT_OR_CHOOSE_AN_IMAGE": "Type text or choose an image",
     "UP": "Up",
