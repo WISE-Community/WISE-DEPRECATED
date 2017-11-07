@@ -99,7 +99,7 @@ public class TeacherAccountController {
    * @param modelMap the model object that contains values for the page to use when rendering the view
    * @return the path of the view to display
    */
-  @RequestMapping(value = "/teacher/management/updatemyaccountinfo.html", method = RequestMethod.GET)
+  @RequestMapping(value = "/teacher/management/updatemyaccountinfo", method = RequestMethod.GET)
   public String initializeFormExistingTeacher(ModelMap modelMap) throws Exception {
     User signedInUser = ControllerUtil.getSignedInUser();
     TeacherUserDetails teacherUserDetails = (TeacherUserDetails) signedInUser.getUserDetails();
@@ -188,8 +188,7 @@ public class TeacherAccountController {
    * @param modelMap the object that contains values to be displayed on the page
    * @return the path of the view to display
    */
-  @RequestMapping(value = "/teacher/management/updatemyaccountinfo.html",
-      method = RequestMethod.POST)
+  @RequestMapping(value = "/teacher/management/updatemyaccountinfo", method = RequestMethod.POST)
   protected String updateExistingTeacher(
       @ModelAttribute("teacherAccountForm") TeacherAccountForm accountForm,
       BindingResult bindingResult,

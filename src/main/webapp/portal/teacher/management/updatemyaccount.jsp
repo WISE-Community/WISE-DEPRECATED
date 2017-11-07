@@ -29,7 +29,7 @@
 					<div class="sectionHead"><spring:message code="teacher.management.updatemyaccount.accountInfo" /></div>
 					<div class="sectionContent">
 						<h5><a href="changepassword.html"><spring:message code="teacher.management.updatemyaccount.changePassword"/></a> - <spring:message code="teacher.management.updatemyaccount.changePasswordInfo"/></h5>
-						<h5><a href="updatemyaccountinfo.html"><spring:message code="teacher.management.updatemyaccount.editRegistration"/></a> - <spring:message code="teacher.management.updatemyaccount.editRegistrationInfo"/></h5>
+						<h5><a href="updatemyaccountinfo"><spring:message code="teacher.management.updatemyaccount.editRegistration"/></a> - <spring:message code="teacher.management.updatemyaccount.editRegistrationInfo"/></h5>
 					</div>
 				</div>
 			</div>
