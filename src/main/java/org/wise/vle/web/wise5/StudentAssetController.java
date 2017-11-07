@@ -56,49 +56,49 @@ import java.util.*;
 @Controller
 public class StudentAssetController {
 
-    @Autowired
-    private VLEService vleService;
+  @Autowired
+  private VLEService vleService;
 
-    @Autowired
-    private RunService runService;
+  @Autowired
+  private RunService runService;
 
-    @Autowired
-    private Properties wiseProperties;
+  @Autowired
+  private Properties wiseProperties;
 
-    @Autowired
-    private WorkgroupService workgroupService;
+  @Autowired
+  private WorkgroupService workgroupService;
 
-    /**
-     * Returns student asset information based on specified parameters
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/student/asset/{runId}")
-    protected void getStudentAssets(
-            @PathVariable Integer runId,
-            @RequestParam(value = "id", required = false) Integer id,
-            @RequestParam(value = "periodId", required = false) Integer periodId,
-            @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
-            @RequestParam(value = "workgroups", required = false) String workgroups,
-            @RequestParam(value = "nodeId", required = false) String nodeId,
-            @RequestParam(value = "componentId", required = false) String componentId,
-            @RequestParam(value = "componentType", required = false) String componentType,
-            @RequestParam(value = "isReferenced", required = false) Boolean isReferenced,
-            HttpServletResponse response)
-            throws ServletException, IOException {
+  /**
+   * Returns student asset information based on specified parameters
+   */
+  @RequestMapping(method = RequestMethod.GET, value = "/student/asset/{runId}")
+  protected void getStudentAssets(
+    @PathVariable Integer runId,
+    @RequestParam(value = "id", required = false) Integer id,
+    @RequestParam(value = "periodId", required = false) Integer periodId,
+    @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
+    @RequestParam(value = "workgroups", required = false) String workgroups,
+    @RequestParam(value = "nodeId", required = false) String nodeId,
+    @RequestParam(value = "componentId", required = false) String componentId,
+    @RequestParam(value = "componentType", required = false) String componentType,
+    @RequestParam(value = "isReferenced", required = false) Boolean isReferenced,
+    HttpServletResponse response)
+    throws ServletException, IOException {
 
-        Run run = null;
-        try {
-            run = runService.retrieveById(new Long(runId));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        }
+    Run run = null;
+    try {
+      run = runService.retrieveById(new Long(runId));
+    } catch (NumberFormatException e) {
+      e.printStackTrace();
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+    }
 
-        //get the student uploads base directory path
-        String studentUploadsBaseDir = wiseProperties.getProperty("studentuploads_base_dir");
+    //get the student uploads base directory path
+    String studentUploadsBaseDir = wiseProperties.getProperty("studentuploads_base_dir");
 
-        if (workgroups != null) {
-            // this is a request from the teacher of the run or admin who wants to see the run's students' assets
+    if (workgroups != null) {
+      // this is a request from the teacher of the run or admin who wants to see the run's students' assets
             /* COMMENTED OUT FOR NOW. This block will work, but does not use the StudentAsset domain object.
             if (user.isAdmin() || runService.hasRunPermission(run, user, BasePermission.READ)) {  // verify that user is the owner of the run
                 String[] workgroupIds = workgroups.split(":");
@@ -126,269 +126,269 @@ public class StudentAssetController {
                 response.getWriter().write(workgroupAssetLists.toString());
             }
                 */
-        } else if (workgroupId != null) {
-            // this is a request from the student of the run who wants to see their assets
-            try {
-                List<StudentAsset> studentAssets = vleService.getStudentAssets(id, runId, periodId, workgroupId,
-                        nodeId, componentId, componentType, isReferenced);
-                JSONArray studentAssetList = new JSONArray();
-                for (StudentAsset studentAsset : studentAssets) {
-                    studentAssetList.put(studentAsset.toJSON());
-                }
-                response.getWriter().write(studentAssetList.toString());
-            } catch (ObjectNotFoundException e) {
-                e.printStackTrace();
-            }
+    } else if (workgroupId != null) {
+      // this is a request from the student of the run who wants to see their assets
+      try {
+        List<StudentAsset> studentAssets = vleService.getStudentAssets(id, runId, periodId, workgroupId,
+          nodeId, componentId, componentType, isReferenced);
+        JSONArray studentAssetList = new JSONArray();
+        for (StudentAsset studentAsset : studentAssets) {
+          studentAssetList.put(studentAsset.toJSON());
         }
+        response.getWriter().write(studentAssetList.toString());
+      } catch (ObjectNotFoundException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  /**
+   * Saves POSTed file into logged-in user's asset folder in the filesystem and in the database
+   */
+  @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}")
+  protected void postStudentAsset(
+    @PathVariable Integer runId,
+    @RequestParam(value = "periodId", required = true) Integer periodId,
+    @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+    @RequestParam(value = "nodeId", required = false) String nodeId,
+    @RequestParam(value = "componentId", required = false) String componentId,
+    @RequestParam(value = "componentType", required = false) String componentType,
+    @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
+    HttpServletRequest request,
+    HttpServletResponse response)
+    throws ServletException, IOException {
+
+    // get the run
+    Run run = null;
+    try {
+      run = runService.retrieveById(new Long(runId));
+    } catch (NumberFormatException e) {
+      e.printStackTrace();
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
     }
 
-    /**
-     * Saves POSTed file into logged-in user's asset folder in the filesystem and in the database
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}")
-    protected void postStudentAsset(
-            @PathVariable Integer runId,
-            @RequestParam(value = "periodId", required = true) Integer periodId,
-            @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-            @RequestParam(value = "nodeId", required = false) String nodeId,
-            @RequestParam(value = "componentId", required = false) String componentId,
-            @RequestParam(value = "componentType", required = false) String componentType,
-            @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
-            HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
+    // get the directory name for the workgroup for this run
+    String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
 
-        // get the run
-        Run run = null;
-        try {
-            run = runService.retrieveById(new Long(runId));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
+    // get the student uploads base directory path
+    String path = wiseProperties.getProperty("studentuploads_base_dir");
+    Long studentMaxAssetSize = new Long(wiseProperties.getProperty("student_max_asset_size", "5242880"));
+    Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "10485760"));
+    String pathToCheckSize = path + "/" + dirName;
+
+    DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
+    Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
+    if (fileMap != null && fileMap.size() > 0) {
+      Set<String> keySet = fileMap.keySet();
+      Iterator<String> iter = keySet.iterator();
+      while (iter.hasNext()) {
+        String key = iter.next();
+        MultipartFile file = fileMap.get(key);
+        if (file.getSize() > studentMaxAssetSize) {
+          response.sendError(500, "error handling uploaded asset: filesize exceeds max allowed");
+          return;
         }
+        String clientDeleteTime = null;
 
-        // get the directory name for the workgroup for this run
-        String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
+        // upload the files
+        Boolean result = AssetManager.uploadAssetWISE5(file, path, dirName, pathToCheckSize, studentMaxTotalAssetsSize);
+        if (result) {
+          Integer id = null;
+          Boolean isReferenced = false;
+          String fileName = file.getOriginalFilename();
+          String filePath = "/" + dirName + "/" + fileName;
+          Long fileSize = file.getSize();
 
-        // get the student uploads base directory path
-        String path = wiseProperties.getProperty("studentuploads_base_dir");
-        Long studentMaxAssetSize = new Long(wiseProperties.getProperty("student_max_asset_size", "5242880"));
-        Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "10485760"));
-        String pathToCheckSize = path + "/" + dirName;
-
-        DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
-        Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
-        if (fileMap != null && fileMap.size() > 0) {
-            Set<String> keySet = fileMap.keySet();
-            Iterator<String> iter = keySet.iterator();
-            while (iter.hasNext()) {
-                String key = iter.next();
-                MultipartFile file = fileMap.get(key);
-                if (file.getSize() > studentMaxAssetSize) {
-                    response.sendError(500, "error handling uploaded asset: filesize exceeds max allowed");
-                    return;
-                }
-                String clientDeleteTime = null;
-
-                // upload the files
-                Boolean result = AssetManager.uploadAssetWISE5(file, path, dirName, pathToCheckSize, studentMaxTotalAssetsSize);
-                if (result) {
-                    Integer id = null;
-                    Boolean isReferenced = false;
-                    String fileName = file.getOriginalFilename();
-                    String filePath = "/" + dirName + "/" + fileName;
-                    Long fileSize = file.getSize();
-
-                    StudentAsset studentAsset = null;
-                    try {
-                        studentAsset = vleService.saveStudentAsset(
-                                id,
-                                runId,
-                                periodId,
-                                workgroupId,
-                                nodeId,
-                                componentId,
-                                componentType,
-                                isReferenced,
-                                fileName,
-                                filePath,
-                                fileSize,
-                                clientSaveTime,
-                                clientDeleteTime);
-                        response.getWriter().write(studentAsset.toJSON().toString());
-                    } catch (ObjectNotFoundException e) {
-                        e.printStackTrace();
-                        response.sendError(500, "error handling uploaded asset");
-                        return;
-                    }
-                } else {
-                    response.sendError(500, "error: total asset size exceeds max allowed");
-                    return;
-                }
-            }
-        }
-    }
-
-    /**
-     * Removes specified asset from the filesystem and marks as deleted in the database
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}/remove")
-    protected void removeStudentAsset(
-            @PathVariable Integer runId,
-            @RequestParam(value = "studentAssetId", required = true) Integer studentAssetId,
-            @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-            @RequestParam(value = "clientDeleteTime", required = true) Long clientDeleteTime,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        // the student is removing an asset
-        User user = ControllerUtil.getSignedInUser();
-
-        // get the run
-        Run run = null;
-        try {
-            run = runService.retrieveById(new Long(runId));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        StudentAsset studentAsset = null;
-        try {
-            studentAsset = vleService.getStudentAssetById(studentAssetId);
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-        String assetFileName = studentAsset.getFileName();
-
-        // get the directory name for the workgroup for this run
-        String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-
-        // get the student uploads base directory path
-        String path = wiseProperties.getProperty("studentuploads_base_dir");
-
-        // remove the file from the student asset folder
-        Boolean removeSuccess = AssetManager.removeAssetWISE5(path, dirName, assetFileName);
-
-        if (removeSuccess) {
-            studentAsset = vleService.deleteStudentAsset(studentAssetId, clientDeleteTime);
+          StudentAsset studentAsset = null;
+          try {
+            studentAsset = vleService.saveStudentAsset(
+              id,
+              runId,
+              periodId,
+              workgroupId,
+              nodeId,
+              componentId,
+              componentType,
+              isReferenced,
+              fileName,
+              filePath,
+              fileSize,
+              clientSaveTime,
+              clientDeleteTime);
             response.getWriter().write(studentAsset.toJSON().toString());
-        }
-    }
-
-    /**
-     * Copies specified asset in the filesystem and in the database
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}/copy")
-    protected void copyStudentAsset(
-            @PathVariable Integer runId,
-            @RequestParam(value = "studentAssetId", required = true) Integer studentAssetId,
-            @RequestParam(value = "periodId", required = true) Integer periodId,
-            @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-            @RequestParam(value = "nodeId", required = false) String nodeId,
-            @RequestParam(value = "componentId", required = false) String componentId,
-            @RequestParam(value = "componentType", required = false) String componentType,
-            @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        User user = ControllerUtil.getSignedInUser();
-
-        // get the run
-        Run run = null;
-        try {
-            run = runService.retrieveById(new Long(runId));
-        } catch (NumberFormatException e) {
+          } catch (ObjectNotFoundException e) {
             e.printStackTrace();
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        StudentAsset studentAsset = null;
-        try {
-            studentAsset = vleService.getStudentAssetById(studentAssetId);
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-        String assetFileName = studentAsset.getFileName();
-
-        // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-        String unreferencedDirName = run.getId() + "/" + workgroupId + "/unreferenced";
-
-        // if we're copying student asset for reference, also pass along the referenced dir. looks like /studentuploads/[runId]/[workgroupId]/referenced
-        String referencedDirName = run.getId() + "/" + workgroupId + "/referenced";
-
-        String copiedFileName = AssetManager.copyAssetForReferenceWISE5(unreferencedDirName, referencedDirName, assetFileName);
-
-        if (copiedFileName != null) {
-            Integer id = null;
-            Boolean isReferenced = true;
-            String fileName = copiedFileName;
-            String filePath = "/" + referencedDirName + "/" + copiedFileName;
-            Long fileSize = studentAsset.getFileSize();
-            String clientDeleteTime = null;
-
-            StudentAsset copiedStudentAsset = null;
-            try {
-                copiedStudentAsset = vleService.saveStudentAsset(
-                        id,
-                        runId,
-                        periodId,
-                        workgroupId,
-                        nodeId,
-                        componentId,
-                        componentType,
-                        isReferenced,
-                        fileName,
-                        filePath,
-                        fileSize,
-                        clientSaveTime,
-                        clientDeleteTime);
-                response.getWriter().write(copiedStudentAsset.toJSON().toString());
-            } catch (ObjectNotFoundException e) {
-                e.printStackTrace();
-                response.getWriter().write("error");
-            }
+            response.sendError(500, "error handling uploaded asset");
+            return;
+          }
         } else {
-            response.getWriter().write("error");
+          response.sendError(500, "error: total asset size exceeds max allowed");
+          return;
         }
+      }
+    }
+  }
+
+  /**
+   * Removes specified asset from the filesystem and marks as deleted in the database
+   */
+  @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}/remove")
+  protected void removeStudentAsset(
+    @PathVariable Integer runId,
+    @RequestParam(value = "studentAssetId", required = true) Integer studentAssetId,
+    @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+    @RequestParam(value = "clientDeleteTime", required = true) Long clientDeleteTime,
+    HttpServletResponse response)
+    throws ServletException, IOException {
+
+    // the student is removing an asset
+    User user = ControllerUtil.getSignedInUser();
+
+    // get the run
+    Run run = null;
+    try {
+      run = runService.retrieveById(new Long(runId));
+    } catch (NumberFormatException e) {
+      e.printStackTrace();
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
     }
 
-    /**
-     * Returns size of logged-in student's unreferenced directory
-     */
-    @RequestMapping(method = RequestMethod.GET, value = "/student/asset/{runId}/size")
-    protected void getStudentAssetsSize(
-            @PathVariable Long runId,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        User user = ControllerUtil.getSignedInUser();
-
-        Run run = null;
-        try {
-            run = runService.retrieveById(runId);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        // get the workgroup id
-        List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run, user);
-        Workgroup workgroup = workgroupListByRunAndUser.get(0);
-        Long workgroupId = workgroup.getId();
-
-        // get the directory name for the workgroup for this run
-        String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
-
-        // get the student uploads base directory path
-        String path = wiseProperties.getProperty("studentuploads_base_dir");
-
-        // get the disk space usage of the workgroup's upload directory
-        String result = AssetManager.getSize(path, dirName);
-        response.getWriter().write(result);
+    StudentAsset studentAsset = null;
+    try {
+      studentAsset = vleService.getStudentAssetById(studentAssetId);
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
     }
+    String assetFileName = studentAsset.getFileName();
+
+    // get the directory name for the workgroup for this run
+    String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
+
+    // get the student uploads base directory path
+    String path = wiseProperties.getProperty("studentuploads_base_dir");
+
+    // remove the file from the student asset folder
+    Boolean removeSuccess = AssetManager.removeAssetWISE5(path, dirName, assetFileName);
+
+    if (removeSuccess) {
+      studentAsset = vleService.deleteStudentAsset(studentAssetId, clientDeleteTime);
+      response.getWriter().write(studentAsset.toJSON().toString());
+    }
+  }
+
+  /**
+   * Copies specified asset in the filesystem and in the database
+   */
+  @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}/copy")
+  protected void copyStudentAsset(
+    @PathVariable Integer runId,
+    @RequestParam(value = "studentAssetId", required = true) Integer studentAssetId,
+    @RequestParam(value = "periodId", required = true) Integer periodId,
+    @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+    @RequestParam(value = "nodeId", required = false) String nodeId,
+    @RequestParam(value = "componentId", required = false) String componentId,
+    @RequestParam(value = "componentType", required = false) String componentType,
+    @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
+    HttpServletResponse response)
+    throws ServletException, IOException {
+
+    User user = ControllerUtil.getSignedInUser();
+
+    // get the run
+    Run run = null;
+    try {
+      run = runService.retrieveById(new Long(runId));
+    } catch (NumberFormatException e) {
+      e.printStackTrace();
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    StudentAsset studentAsset = null;
+    try {
+      studentAsset = vleService.getStudentAssetById(studentAssetId);
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+    }
+    String assetFileName = studentAsset.getFileName();
+
+    // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
+    String unreferencedDirName = run.getId() + "/" + workgroupId + "/unreferenced";
+
+    // if we're copying student asset for reference, also pass along the referenced dir. looks like /studentuploads/[runId]/[workgroupId]/referenced
+    String referencedDirName = run.getId() + "/" + workgroupId + "/referenced";
+
+    String copiedFileName = AssetManager.copyAssetForReferenceWISE5(unreferencedDirName, referencedDirName, assetFileName);
+
+    if (copiedFileName != null) {
+      Integer id = null;
+      Boolean isReferenced = true;
+      String fileName = copiedFileName;
+      String filePath = "/" + referencedDirName + "/" + copiedFileName;
+      Long fileSize = studentAsset.getFileSize();
+      String clientDeleteTime = null;
+
+      StudentAsset copiedStudentAsset = null;
+      try {
+        copiedStudentAsset = vleService.saveStudentAsset(
+          id,
+          runId,
+          periodId,
+          workgroupId,
+          nodeId,
+          componentId,
+          componentType,
+          isReferenced,
+          fileName,
+          filePath,
+          fileSize,
+          clientSaveTime,
+          clientDeleteTime);
+        response.getWriter().write(copiedStudentAsset.toJSON().toString());
+      } catch (ObjectNotFoundException e) {
+        e.printStackTrace();
+        response.getWriter().write("error");
+      }
+    } else {
+      response.getWriter().write("error");
+    }
+  }
+
+  /**
+   * Returns size of logged-in student's unreferenced directory
+   */
+  @RequestMapping(method = RequestMethod.GET, value = "/student/asset/{runId}/size")
+  protected void getStudentAssetsSize(
+    @PathVariable Long runId,
+    HttpServletResponse response)
+    throws ServletException, IOException {
+
+    User user = ControllerUtil.getSignedInUser();
+
+    Run run = null;
+    try {
+      run = runService.retrieveById(runId);
+    } catch (NumberFormatException e) {
+      e.printStackTrace();
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+    }
+
+    // get the workgroup id
+    List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run, user);
+    Workgroup workgroup = workgroupListByRunAndUser.get(0);
+    Long workgroupId = workgroup.getId();
+
+    // get the directory name for the workgroup for this run
+    String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
+
+    // get the student uploads base directory path
+    String path = wiseProperties.getProperty("studentuploads_base_dir");
+
+    // get the disk space usage of the workgroup's upload directory
+    String result = AssetManager.getSize(path, dirName);
+    response.getWriter().write(result);
+  }
 }

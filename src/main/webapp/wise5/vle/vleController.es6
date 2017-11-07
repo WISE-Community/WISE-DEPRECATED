@@ -132,7 +132,7 @@ class VLEController {
         });
 
         this.$scope.$on('componentStudentDataChanged', () => {
-            this.StudentDataService.updateNodeStatuses();
+
         });
 
         // listen for the pause screen event

@@ -19,29 +19,30 @@ var SessionService = function () {
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
-        //this.StudentDataService = StudentDataService;
-        /*
-         * the amount of time (in milliseconds) before we automatically log
-         * out the user
-         */
-        this.sessionTimeoutInterval = null;
+        this.initialized = false;
 
         /*
-         * the amount of time (in milliseconds) before we check if there
-         * were any mouse events
+         * The amount of user inactive time (in milliseconds) before we display
+         * a warning message asking if they want to stay logged in.
          */
-        this.checkMouseEventInterval = null;
+        this.warningInterval = this.convertMinutesToMilliseconds(25);
+
+        /*
+         * The amount of time (in milliseconds) after the warning message is
+         * displayed at which we automatically log out the user.
+         */
+        this.logOutInterval = this.convertMinutesToMilliseconds(5);
+
+        /*
+         * The amount of time (in milliseconds) before we check if there were
+         * any mouse events.
+         */
+        this.checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
 
         /*
          * the timestamp when the last mouse event occurred
          */
         this.lastMouseEventTimestamp = null;
-
-        // the id for the setTimeout of the warning message
-        //this.warningId = null;
-
-        // the id for the setTimeout of the automatic log out
-        //this.logOutId = null;
 
         /*
          * boolean value used to determine if we need to log out the
@@ -121,68 +122,38 @@ var SessionService = function () {
     _createClass(SessionService, [{
         key: 'initializeSession',
         value: function initializeSession() {
-            if (this.ConfigService.isPreview()) {
-                // no session management for previewers
-                return;
+            if (!this.initialized) {
+                this.initialized = true;
+                if (this.ConfigService.isPreview()) {
+                    // no session management for previewers
+                    return;
+                }
+
+                this.startWarningTimer();
+                this.startCheckMouseEventTimer();
             }
-
-            var minutes = 30;
-            var seconds = minutes * 60;
-            var milliseconds = seconds * 1000;
-            this.sessionTimeoutInterval = milliseconds;
-
-            // set the check mouse interval to one minute
-            this.checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
-
-            // start the warning and auto log out timers
-            this.startTimers();
-
-            // start the check mouse event timer
-            this.startCheckMouseEventTimer();
-
-            // save session started event
-            var nodeId = null;
-            var componentId = null;
-            var componentType = null;
-            var category = "Navigation";
-            var event = "sessionStarted";
-            var eventData = {};
-            //this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-        }
-    }, {
-        key: 'startTimers',
-
-
-        /**
-         * Start the warning and auto log out timers
-         */
-        value: function startTimers() {
-            this.startWarningTimer();
-            this.startLogOutTimer();
         }
     }, {
         key: 'startWarningTimer',
 
 
         /**
-         * Start the warning timer
+         * Start the warning timer. When the warning timer expires, we will display
+         * a warning message to the user asking them if they want to stay logged in.
          */
         value: function startWarningTimer() {
-
-            // clear all the active warning timers
+            // clear all the previous warning timers
             this.clearWarningTimers();
-
-            var warningTimeoutInterval = this.sessionTimeoutInterval * 0.9;
-            var warningId = setTimeout(angular.bind(this, this.showWarning), warningTimeoutInterval);
+            var warningId = setTimeout(angular.bind(this, this.showWarning), this.warningInterval);
             this.warningIds.push(warningId);
         }
-    }, {
-        key: 'clearWarningTimers',
-
 
         /**
          * Clear the warning timers
          */
+
+    }, {
+        key: 'clearWarningTimers',
         value: function clearWarningTimers() {
             // clear all the active warning timeouts
             for (var w = 0; w < this.warningIds.length; w++) {
@@ -202,17 +173,26 @@ var SessionService = function () {
         }
 
         /**
+         * Restart the warning time so that it starts counting from 0 again.
+         */
+
+    }, {
+        key: 'restartWarningTimer',
+        value: function restartWarningTimer() {
+            this.clearWarningTimers();
+            this.startWarningTimer();
+        }
+
+        /**
          * Start the auto log out timer
          */
 
     }, {
         key: 'startLogOutTimer',
         value: function startLogOutTimer() {
-
-            // clear all the active log out timers
+            // clear all the previou log out timers
             this.clearLogOutTimers();
-
-            var logOutId = setTimeout(angular.bind(this, this.forceLogOut), this.sessionTimeoutInterval);
+            var logOutId = setTimeout(angular.bind(this, this.forceLogOut), this.logOutInterval);
             this.logOutIds.push(logOutId);
         }
     }, {
@@ -262,6 +242,7 @@ var SessionService = function () {
             } else {
                 // a mouse event has not occurred recently so we will show the warning
                 this.$rootScope.$broadcast('showSessionWarning');
+                this.startLogOutTimer();
             }
         }
     }, {
@@ -280,9 +261,9 @@ var SessionService = function () {
                 var renewSessionResult = result.data;
 
                 if (renewSessionResult === 'true') {
-                    // Session is active, restart local timers.
-                    _this2.clearTimers();
-                    _this2.startTimers();
+                    // the session is still active
+                    _this2.clearLogOutTimers();
+                    _this2.restartWarningTimer();
                 } else if (renewSessionResult === "requestLogout") {
                     // WISE server is requesting that we log out
                     _this2.$rootScope.$broadcast('showRequestLogout');
@@ -411,15 +392,6 @@ var SessionService = function () {
                 // there are no more listeners so we will exit
                 var mainHomePageURL = this.ConfigService.getMainHomePageURL();
 
-                // save sessionEnded event
-                var nodeId = null;
-                var componentId = null;
-                var componentType = null;
-                var category = "Navigation";
-                var event = "sessionEnded";
-                var eventData = {};
-                //this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-
                 if (this.performLogOut) {
                     // log out the user and bring them to the home page
 
@@ -461,9 +433,6 @@ var SessionService = function () {
 
     return SessionService;
 }();
-
-//SessionService.$inject = ['$http','$rootScope','ConfigService','StudentDataService'];
-
 
 SessionService.$inject = ['$http', '$rootScope', 'ConfigService'];
 

@@ -36,14 +36,14 @@ import java.util.List;
  */
 public interface AchievementDao<T extends Achievement> extends SimpleDao<T> {
 
-    /**
-     * Returns a list of achievements specified by params
-     * @param id id of the achievement in the db
-     * @param run run this achievement was created in
-     * @param workgroup the workgroup that received this achievement
-     * @param achievementId id of the achievement in the project content
-     * @param type type of achievement (e.g. "completion", "milestone")
-     * @return a list of achievements that match the specified params
-     */
-    List<Achievement> getAchievementsByParams(Integer id, Run run, Workgroup workgroup, String achievementId, String type);
+  /**
+   * Returns a list of achievements specified by params
+   * @param id id of the achievement in the db
+   * @param run run this achievement was created in
+   * @param workgroup the workgroup that received this achievement
+   * @param achievementId id of the achievement in the project content
+   * @param type type of achievement (e.g. "completion", "milestone")
+   * @return a list of achievements that match the specified params
+   */
+  List<Achievement> getAchievementsByParams(Integer id, Run run, Workgroup workgroup, String achievementId, String type);
 }

@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -47,68 +47,68 @@ import org.wise.portal.service.project.ProjectService;
 @RequestMapping("/admin/project/manageallprojects.html")
 public class ManageAllProjectsController {
 
-	@Autowired
-	private ProjectService projectService;
+  @Autowired
+  private ProjectService projectService;
 
-	private static final String VIEW_NAME = "admin/project/manageallprojects";
+  private static final String VIEW_NAME = "admin/project/manageallprojects";
 
-	private static final String INTERNAL_PROJECT_LIST_PARAM_NAME = "internal_project_list";
+  private static final String INTERNAL_PROJECT_LIST_PARAM_NAME = "internal_project_list";
 
-	@RequestMapping(method=RequestMethod.GET)
-	protected ModelAndView handleGET(
-			HttpServletRequest request) throws Exception {
-		// separate calls to project services to get internal and external projects
-		List<Project> internalProjectList = new ArrayList<Project>();
-		// check if projectLookupType was passed in, can be ["id","author","title"]
-		String projectLookupType = request.getParameter("projectLookupType");
-		if (projectLookupType != null) {
-			String projectLookupValue = request.getParameter("projectLookupValue");
-			if ("id".equals(projectLookupType)) {
-				internalProjectList.add(projectService.getById(Long.valueOf(projectLookupValue.trim())));
-			} else if ("author".equals(projectLookupType)) {
-				internalProjectList.addAll(projectService.getProjectListByAuthorName(projectLookupValue));
-			} else if ("title".equals(projectLookupType)) {
-				internalProjectList.addAll(projectService.getProjectListByTitle(projectLookupValue));
-			}
-		} else {
-			internalProjectList.addAll(projectService.getAdminProjectList());
-		}
+  @RequestMapping(method=RequestMethod.GET)
+  protected ModelAndView handleGET(
+    HttpServletRequest request) throws Exception {
+    // separate calls to project services to get internal and external projects
+    List<Project> internalProjectList = new ArrayList<Project>();
+    // check if projectLookupType was passed in, can be ["id","author","title"]
+    String projectLookupType = request.getParameter("projectLookupType");
+    if (projectLookupType != null) {
+      String projectLookupValue = request.getParameter("projectLookupValue");
+      if ("id".equals(projectLookupType)) {
+        internalProjectList.add(projectService.getById(Long.valueOf(projectLookupValue.trim())));
+      } else if ("author".equals(projectLookupType)) {
+        internalProjectList.addAll(projectService.getProjectListByAuthorName(projectLookupValue));
+      } else if ("title".equals(projectLookupType)) {
+        internalProjectList.addAll(projectService.getProjectListByTitle(projectLookupValue));
+      }
+    } else {
+      internalProjectList.addAll(projectService.getAdminProjectList());
+    }
 
-		ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
-		modelAndView.addObject(INTERNAL_PROJECT_LIST_PARAM_NAME, internalProjectList);
-		return modelAndView;
-	}
+    ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
+    modelAndView.addObject(INTERNAL_PROJECT_LIST_PARAM_NAME, internalProjectList);
+    return modelAndView;
+  }
 
-	@RequestMapping(method=RequestMethod.POST)
-	protected ModelAndView handleRequestInternal(
-			HttpServletRequest request) throws Exception {
-		// posting changes to project
-		ModelAndView mav = new ModelAndView();
-		try {
-			String projectIdStr = request.getParameter("projectId");
-			Long projectId = new Long(projectIdStr);
-			Project project = projectService.getById(projectId);
-			String attr = request.getParameter("attr");
-			if (attr.equals("isCurrent")) {
-				project.setCurrent(Boolean.valueOf(request.getParameter("val")));
-			} else if (attr.equals("familyTag")) {
-				project.setFamilytag(FamilyTag.valueOf(request.getParameter("val")));
-			} else if (attr.equals("maxTotalAssetsSize")) {
-				String maxTotalAssetsSizeStr = request.getParameter("val");
-				Long maxTotalAssetsSize = Long.parseLong(maxTotalAssetsSizeStr);
-				project.setMaxTotalAssetsSize(maxTotalAssetsSize);
-			}
-			User user = ControllerUtil.getSignedInUser();
-			if (user.isAdmin()) {
-				projectService.updateProject(project, user);
-				mav.addObject("msg", "success");
-			} else {
-				mav.addObject("msg", "error: permission denied");
-			}
-			return mav;
-		} catch (Exception e) {
-			mav.addObject("msg", "error");
-			return mav;
-		}
-	}
+  @RequestMapping(method=RequestMethod.POST)
+  protected ModelAndView handleRequestInternal(
+    HttpServletRequest request) throws Exception {
+    // posting changes to project
+    ModelAndView mav = new ModelAndView();
+    try {
+      String projectIdStr = request.getParameter("projectId");
+      Long projectId = new Long(projectIdStr);
+      Project project = projectService.getById(projectId);
+      String attr = request.getParameter("attr");
+      if (attr.equals("isCurrent")) {
+        project.setCurrent(Boolean.valueOf(request.getParameter("val")));
+      } else if (attr.equals("familyTag")) {
+        project.setFamilytag(FamilyTag.valueOf(request.getParameter("val")));
+      } else if (attr.equals("maxTotalAssetsSize")) {
+        String maxTotalAssetsSizeStr = request.getParameter("val");
+        Long maxTotalAssetsSize = Long.parseLong(maxTotalAssetsSizeStr);
+        project.setMaxTotalAssetsSize(maxTotalAssetsSize);
+      }
+      User user = ControllerUtil.getSignedInUser();
+      if (user.isAdmin()) {
+        projectService.updateProject(project, user);
+        mav.addObject("msg", "success");
+      } else {
+        mav.addObject("msg", "error: permission denied");
+      }
+      return mav;
+    } catch (Exception e) {
+      mav.addObject("msg", "error");
+      return mav;
+    }
+  }
 }

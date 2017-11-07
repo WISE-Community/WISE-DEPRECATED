@@ -18,7 +18,7 @@
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
- * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.wise.portal.presentation.web.controllers.author.project;
 
@@ -36,77 +36,76 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
  */
 public class JGitUtils {
 
-    /**
-     * @param directoryPath
-     * @param doCreate create the directory if it doesn't exit
-     * @return
-     * @throws IOException
-     */
-    public static Repository getGitRepository(String directoryPath, boolean doCreate) throws IOException {
-        // prepare a new folder
-        File localPath = new File(directoryPath);
-        File gitDir = new File(localPath, ".git");
-        if (!doCreate && !gitDir.exists()) {
-            return null;
-        } else {
-            Repository repository = FileRepositoryBuilder.create(gitDir);
-            if (doCreate && !gitDir.exists()) {
-                repository.create();
-            }
-            return repository;
-        }
+  /**
+   * @param directoryPath
+   * @param doCreate create the directory if it doesn't exit
+   * @return
+   * @throws IOException
+   */
+  public static Repository getGitRepository(String directoryPath, boolean doCreate)
+      throws IOException {
+    // prepare a new folder
+    File localPath = new File(directoryPath);
+    File gitDir = new File(localPath, ".git");
+    if (!doCreate && !gitDir.exists()) {
+      return null;
+    } else {
+      Repository repository = FileRepositoryBuilder.create(gitDir);
+      if (doCreate && !gitDir.exists()) {
+        repository.create();
+      }
+      return repository;
     }
+  }
 
-    /**
-     * Returns commit history for specified directory
-     *
-     * @param directoryPath
-     * @return
-     * @throws IOException
-     * @throws GitAPIException
-     */
-    public static Iterable<RevCommit> getCommitHistory(String directoryPath) throws IOException, GitAPIException {
-
-        boolean doCreate = false;
-        Repository gitRepository = getGitRepository(directoryPath, doCreate);
-        if (gitRepository == null) {
-            return null;
-        } else {
-            Git git = new Git(gitRepository);
-            Iterable<RevCommit> commits = git.log().all().call();
-            gitRepository.close();
-            return commits;
-        }
+  /**
+   * Returns commit history for specified directory
+   *
+   * @param directoryPath
+   * @return
+   * @throws IOException
+   * @throws GitAPIException
+   */
+  public static Iterable<RevCommit> getCommitHistory(String directoryPath)
+      throws IOException, GitAPIException {
+    boolean doCreate = false;
+    Repository gitRepository = getGitRepository(directoryPath, doCreate);
+    if (gitRepository == null) {
+      return null;
+    } else {
+      Git git = new Git(gitRepository);
+      Iterable<RevCommit> commits = git.log().all().call();
+      gitRepository.close();
+      return commits;
     }
+  }
 
-    /**
-     * Adds all changes in specified directory to git index and then commits them
-     * with the specified commit message
-     *
-     * @param directoryPath
-     * @param author author username
-     * @param commitMessage
-     * @throws IOException
-     * @throws GitAPIException
-     */
-    public static void commitAllChangesToCurriculumHistory(String directoryPath, String author, String commitMessage)
-            throws IOException, GitAPIException {
+  /**
+   * Adds all changes in specified directory to git index and then commits them
+   * with the specified commit message
+   *
+   * @param directoryPath
+   * @param author author username
+   * @param commitMessage
+   * @throws IOException
+   * @throws GitAPIException
+   */
+  public static void commitAllChangesToCurriculumHistory(
+      String directoryPath, String author, String commitMessage)
+      throws IOException, GitAPIException {
+    boolean doCreate = true;
+    Repository gitRepository = getGitRepository(directoryPath, doCreate);
+    Git git = new Git(gitRepository);
 
-        boolean doCreate = true;
-        Repository gitRepository = getGitRepository(directoryPath, doCreate);
-        Git git = new Git(gitRepository);
+    git.add().addFilepattern(".").call();
 
-        // add all changes in directory
-        git.add().addFilepattern(".").call();
+    String email = "";
 
-        String email = "";  // don't save any emails for now.
-
-        // commit all changes
-        git.commit()
-                .setAll(true)
-                .setAuthor(author, email)
-                .setMessage(commitMessage)
-                .call();
-        gitRepository.close();
-    }
+    git.commit()
+        .setAll(true)
+        .setAuthor(author, email)
+        .setMessage(commitMessage)
+        .call();
+    gitRepository.close();
+  }
 }

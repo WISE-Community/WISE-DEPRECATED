@@ -33,76 +33,75 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
  * @author Hiroki Terashima
  */
 public interface UserDetailsService extends
-	org.springframework.security.core.userdetails.UserDetailsService {
+    org.springframework.security.core.userdetails.UserDetailsService {
 
-	String USER_ROLE = "ROLE_USER";
+  String USER_ROLE = "ROLE_USER";
 
-    String ADMIN_ROLE = "ROLE_ADMINISTRATOR";
+  String ADMIN_ROLE = "ROLE_ADMINISTRATOR";
 
-    String PREVIOUS_ADMIN_ROLE = "ROLE_PREVIOUS_ADMINISTRATOR";
+  String PREVIOUS_ADMIN_ROLE = "ROLE_PREVIOUS_ADMINISTRATOR";
 
-	String TEACHER_ROLE = "ROLE_TEACHER";
+  String TEACHER_ROLE = "ROLE_TEACHER";
 
-	String STUDENT_ROLE = "ROLE_STUDENT";
+  String STUDENT_ROLE = "ROLE_STUDENT";
 
-	String AUTHOR_ROLE = "ROLE_AUTHOR";
+  String AUTHOR_ROLE = "ROLE_AUTHOR";
 
-	String TRUSTED_AUTHOR_ROLE = "ROLE_TRUSTED_AUTHOR";
+  String TRUSTED_AUTHOR_ROLE = "ROLE_TRUSTED_AUTHOR";
 
-	String RESEARCHER_ROLE = "ROLE_RESEARCHER";
+  String RESEARCHER_ROLE = "ROLE_RESEARCHER";
 
-	String RUN_GRADE_ROLE = "ROLE_RUN_GRADE";
+  String RUN_GRADE_ROLE = "ROLE_RUN_GRADE";
 
-	String RUN_READ_ROLE = "ROLE_RUN_READ";
+  String RUN_READ_ROLE = "ROLE_RUN_READ";
 
-	String PROJECT_READ_ROLE = "ROLE_READ_PROJECT";
+  String PROJECT_READ_ROLE = "ROLE_READ_PROJECT";
 
-	String PROJECT_WRITE_ROLE = "ROLE_WRITE_PROJECT";
+  String PROJECT_WRITE_ROLE = "ROLE_WRITE_PROJECT";
 
-	String PROJECT_SHARE_ROLE = "ROLE_SHARE_PROJECT";
+  String PROJECT_SHARE_ROLE = "ROLE_SHARE_PROJECT";
 
-    /**
-     * Given an object representing a role, created the granted authority record
-     * in the data store.
-     *
-     * @param mutableGrantedAuthority
-     *            to create in the data store
-     * @return the <code>MutableGrantedAuthority</code> object after it has
-     *         been saved in the data store
-     * @throws DuplicateAuthorityException
-     *             if authority is not unique.
-     */
-    MutableGrantedAuthority createGrantedAuthority(
-            MutableGrantedAuthority mutableGrantedAuthority)
-            throws DuplicateAuthorityException;
+  /**
+   * Given an object representing a role, created the granted authority record
+   * in the data store.
+   *
+   * @param mutableGrantedAuthority
+   *            to create in the data store
+   * @return the <code>MutableGrantedAuthority</code> object after it has
+   *         been saved in the data store
+   * @throws DuplicateAuthorityException
+   *             if authority is not unique.
+   */
+  MutableGrantedAuthority createGrantedAuthority(MutableGrantedAuthority mutableGrantedAuthority)
+      throws DuplicateAuthorityException;
 
-    /**
-     * Given an authority string, loads an authority from the data store.
-     *
-     * @param authority
-     * @return A MutableGrantedAuthority object
-     * @throws AuthorityNotFoundException
-     *             If authority is not in data store.
-     */
-    GrantedAuthority loadAuthorityByName(String authority)
-            throws AuthorityNotFoundException;
+  /**
+   * Given an authority string, loads an authority from the data store.
+   *
+   * @param authority
+   * @return A MutableGrantedAuthority object
+   * @throws AuthorityNotFoundException
+   *             If authority is not in data store.
+   */
+  GrantedAuthority loadAuthorityByName(String authority)
+    throws AuthorityNotFoundException;
 
-    /**
-     * Returns a list of all existing authorities in the system.
-     *
-     * @return A List of MutableGrantedAuthority objects
-     */
-    List<MutableGrantedAuthority> retrieveAllAuthorities();
+  /**
+   * Returns a list of all existing authorities in the system.
+   *
+   * @return A List of MutableGrantedAuthority objects
+   */
+  List<MutableGrantedAuthority> retrieveAllAuthorities();
 
-    /**
-     * Given a MutableUserDetails, updates the data of that object in the database
-     * @param userDetails
-     */
-    void updateUserDetails(final MutableUserDetails userDetails);
+  /**
+   * Given a MutableUserDetails, updates the data of that object in the database
+   * @param userDetails
+   */
+  void updateUserDetails(final MutableUserDetails userDetails);
 
 
-	List<MutableUserDetails> retrieveAllUserDetails(String userDetailsClassName);
+  List<MutableUserDetails> retrieveAllUserDetails(String userDetailsClassName);
 
-	List<String> retrieveAllUsernames(String userDetailsClassName);
+  List<String> retrieveAllUsernames(String userDetailsClassName);
 
 }

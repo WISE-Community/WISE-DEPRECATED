@@ -79,1183 +79,1181 @@ import java.util.stream.Collectors;
 @Controller
 public class WISE5AuthorProjectController {
 
-    @Autowired
-    PortalService portalService;
+  @Autowired
+  PortalService portalService;
 
-    @Autowired
-    ProjectService projectService;
+  @Autowired
+  ProjectService projectService;
 
-    @Autowired
-    RunService runService;
+  @Autowired
+  RunService runService;
 
-    @Autowired
-    Properties wiseProperties;
+  @Autowired
+  Properties wiseProperties;
 
-    @Autowired
-    ServletContext servletContext;
+  @Autowired
+  ServletContext servletContext;
 
-    @Autowired
-    private WebSocketHandler webSocketHandler;
+  @Autowired
+  private WebSocketHandler webSocketHandler;
 
-    /**
-     * Handle user's request to launch the Authoring Tool without specified project
-     * @return
-     */
-    @RequestMapping(value = "/author", method = RequestMethod.GET)
-    protected String authorProject(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        ModelMap modelMap) {
-        // if login is not allowed, log out user and redirect them to the home page
-        try {
-            Portal portal = portalService.getById(new Integer(1));
-            if (!portal.isLoginAllowed()) {
-                Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-                if (auth != null){
-                    new SecurityContextLogoutHandler().logout(request, response, auth);
-                }
-                SecurityContextHolder.getContext().setAuthentication(null);
-                return "redirect:/index.html";
-            }
-        } catch (ObjectNotFoundException e) {
-            // do nothing
+  /**
+   * Handle user's request to launch the Authoring Tool without specified project
+   * @return
+   */
+  @RequestMapping(value = "/author", method = RequestMethod.GET)
+  protected String authorProject(HttpServletRequest request, HttpServletResponse response,
+      ModelMap modelMap) {
+    // if login is not allowed, log out user and redirect them to the home page
+    try {
+      Portal portal = portalService.getById(new Integer(1));
+      if (!portal.isLoginAllowed()) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null){
+          new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-
-        String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-        modelMap.put("configURL", wiseBaseURL + "/authorConfig");
-        return "author";
+        SecurityContextHolder.getContext().setAuthentication(null);
+        return "redirect:/index.html";
+      }
+    } catch (ObjectNotFoundException e) {
+      // do nothing
     }
 
-    /**
-     * Handle user's request to register a new WISE5 project.
-     * Registers the new project in DB and returns the new project ID
-     * If the parentProjectId is specified, the user is requesting to copy that project
-     * @return
-     */
-    @RequestMapping(value = "/project/new", method = RequestMethod.POST)
-    protected void registerNewProject(
-        @RequestParam(value = "parentProjectId", required = false) String parentProjectId,
-        @RequestParam(value = "projectJSONString", required = true) String projectJSONString,
-        @RequestParam(value = "commitMessage", required = true) String commitMessage,
-        HttpServletResponse response) {
-        User user = ControllerUtil.getSignedInUser();
-        if (!this.hasAuthorPermissions(user)) {
-            return;
-        }
+    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+    modelMap.put("configURL", wiseBaseURL + "/authorConfig");
+    return "author";
+  }
 
-        String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-        File curriculumBaseDirFile = new File(curriculumBaseDir);
-
-        // create new directory for this project (returns absolute path)
-        File newProjectPath = FileManager.createNewprojectPath(curriculumBaseDirFile);
-
-        // also make the assets directory
-        File newProjectAssetsDir = new File(newProjectPath, "assets");
-        newProjectAssetsDir.mkdir();
-
-        try {
-            JSONObject projectJSONObject = new JSONObject(projectJSONString);
-            // get the name of the project from the project JSON
-            String projectName = projectJSONObject.getJSONObject("metadata").getString("title");
-
-            String projectJSONFilename = "project.json";
-
-            File newProjectJSONFile = new File(newProjectPath, projectJSONFilename);  // where we'll be writing the new project JSON
-
-            if (!newProjectJSONFile.exists()) {
-                newProjectJSONFile.createNewFile();
-            }
-            // write the project JSON to file system
-            Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newProjectJSONFile), "UTF-8"));
-            writer.write(projectJSONString.toString());
-            writer.close();
-
-            String projectFolderName = newProjectJSONFile.getParentFile().getName();
-
-            // get the relative path to the project from curriculumBaseDir (e.g. /510/project.json)
-            String projectPathRelativeToCurriculumBaseDir = "/" + projectFolderName + "/" + projectJSONFilename;
-
-            ProjectParameters pParams = new ProjectParameters();
-            pParams.setModulePath(projectPathRelativeToCurriculumBaseDir);
-            pParams.setOwner(user);
-            pParams.setProjectname(projectName);
-            pParams.setProjectType(ProjectType.LD);
-            pParams.setWiseVersion(new Integer(5));
-
-            // since this is new original project, set a new fresh metadata object
-            ProjectMetadata metadata = new ProjectMetadataImpl();
-            metadata.setTitle(projectName);
-            pParams.setMetadata(metadata);
-
-            Project project = projectService.createProject(pParams);
-            response.getWriter().write(project.getId().toString());
-
-            try {
-                // now commit changes
-                String author = user.getUserDetails().getUsername();
-                JGitUtils.commitAllChangesToCurriculumHistory(newProjectPath.getAbsolutePath(), author, commitMessage);
-
-                Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(newProjectPath.getAbsolutePath());
-                JSONArray commitHistoryJSONArray = new JSONArray();
-                try {
-                    if (commitHistory != null) {
-                        for (RevCommit commit : commitHistory) {
-                            JSONObject commitHistoryJSONObject = new JSONObject();
-                            ObjectId commitId = commit.getId();
-                            commitHistoryJSONObject.put("commitId", commitId);
-                            String commitName = commit.getName();
-                            commitHistoryJSONObject.put("commitName", commitName);
-                            String commitMsg = commit.getFullMessage();
-                            commitHistoryJSONObject.put("commitMessage", commitMsg);
-                            String commitAuthor = commit.getAuthorIdent().getName();
-                            commitHistoryJSONObject.put("commitAuthor", commitAuthor);
-                            long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
-                            commitHistoryJSONObject.put("commitTime", commitTime);
-                            commitHistoryJSONArray.put(commitHistoryJSONObject);
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } catch (GitAPIException e) {
-                e.printStackTrace();
-            }
-        } catch(IOException e){
-            e.printStackTrace();
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+  /**
+   * Handle user's request to register a new WISE5 project.
+   * Registers the new project in DB and returns the new project ID
+   * If the parentProjectId is specified, the user is requesting to copy that project
+   * @return
+   */
+  @RequestMapping(value = "/project/new", method = RequestMethod.POST)
+  protected void registerNewProject(
+    @RequestParam(value = "parentProjectId", required = false) String parentProjectId,
+    @RequestParam(value = "projectJSONString", required = true) String projectJSONString,
+    @RequestParam(value = "commitMessage", required = true) String commitMessage,
+    HttpServletResponse response) {
+    User user = ControllerUtil.getSignedInUser();
+    if (!this.hasAuthorPermissions(user)) {
+      return;
     }
 
-    /**
-     * Handle user's request to register a new WISE5 project.
-     * Registers the new project in DB and returns the new project ID
-     * If the parentProjectId is specified, the user is requesting to copy that project
-     * @return
-     */
-    @RequestMapping(value = "/project/copy/{projectId}", method = RequestMethod.POST)
-    protected void copyProject(
-        @PathVariable Long projectId,
-        HttpServletResponse response) {
-        User user = ControllerUtil.getSignedInUser();
-        if (!this.hasAuthorPermissions(user)) {
-            return;
-        }
+    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    File curriculumBaseDirFile = new File(curriculumBaseDir);
 
-        if (projectId != null) {
-            try {
-                Project parentProject = projectService.getById(projectId);
-                Set<String> tagNames = new TreeSet<String>();
-                tagNames.add("library");
-                if (parentProject != null && (this.projectService.canAuthorProject(parentProject, user) || parentProject.hasTags(tagNames))) {
-                    // upload the zipfile to curriculum_base_dir
-                    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-                    String parentProjectJSONAbsolutePath = curriculumBaseDir + parentProject.getModulePath();
-                    File parentProjectJSONFile = new File(parentProjectJSONAbsolutePath);
-                    File parentProjectDir = parentProjectJSONFile.getParentFile();
+    // create new directory for this project (returns absolute path)
+    File newProjectPath = FileManager.createNewprojectPath(curriculumBaseDirFile);
 
-                    String newProjectDirectoryPath = copyProjectDirectory(parentProjectDir);
-                    String modulePath = "/" + newProjectDirectoryPath + "/project.json";
+    // also make the assets directory
+    File newProjectAssetsDir = new File(newProjectPath, "assets");
+    newProjectAssetsDir.mkdir();
 
-                    ProjectParameters pParams = new ProjectParameters();
-                    pParams.setModulePath(modulePath);
-                    pParams.setOwner(user);
-                    pParams.setProjectname(parentProject.getName());
-                    pParams.setProjectType(ProjectType.LD);
-                    pParams.setWiseVersion(new Integer(5));
-                    pParams.setParentProjectId(Long.valueOf(projectId));
+    try {
+      JSONObject projectJSONObject = new JSONObject(projectJSONString);
+      // get the name of the project from the project JSON
+      String projectName = projectJSONObject.getJSONObject("metadata").getString("title");
 
-                    ProjectMetadata parentProjectMetadata = parentProject.getMetadata(); // get the parent project's metadata
-                    if (parentProjectMetadata != null) {
-                        // copy parent's metadata into new metadata object
-                        ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
-                        pParams.setMetadata(newProjectMetadata);
-                    } else {
-                        // create a new metadata if parent project doesn't have one
-                        ProjectMetadata metadata = new ProjectMetadataImpl();
-                        metadata.setTitle(parentProject.getName());
-                        pParams.setMetadata(metadata);
-                    }
+      String projectJSONFilename = "project.json";
 
-                    Project project = projectService.createProject(pParams);
-                    response.getWriter().write(project.getId().toString());
-                }
-            } catch (ObjectNotFoundException onfe) {
-                onfe.printStackTrace();
-                return;
-            } catch (IOException ie) {
-                ie.printStackTrace();
-                return;
-            } catch (JSONException je) {
-                je.printStackTrace();
-                return;
-            }
-        }
-    }
+      File newProjectJSONFile = new File(newProjectPath, projectJSONFilename);  // where we'll be writing the new project JSON
 
-    /**
-     * Save project and and commit changes
-     * @param projectId id of project to save
-     * @param commitMessage commit message, can be null
-     * @param projectJSONString a valid-JSON string of the project
-     * @param response
-     */
-    @RequestMapping(value = "/project/save/{projectId}", method = RequestMethod.POST)
-    protected void saveProject(
-        @PathVariable Long projectId,
-        @RequestParam(value = "commitMessage", required = false) String commitMessage,
-        @RequestParam(value = "projectJSONString", required = true) String projectJSONString,
-        HttpServletResponse response) {
-        Project project;
-        try {
-            project = projectService.getById(projectId);
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
+      if (!newProjectJSONFile.exists()) {
+        newProjectJSONFile.createNewFile();
+      }
+      // write the project JSON to file system
+      Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newProjectJSONFile), "UTF-8"));
+      writer.write(projectJSONString.toString());
+      writer.close();
 
-        User user = ControllerUtil.getSignedInUser();
-        if (!projectService.canAuthorProject(project, user)) {
-            return;
-        }
+      String projectFolderName = newProjectJSONFile.getParentFile().getName();
 
-        String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-        String rawProjectUrl = project.getModulePath();
-        String fullProjectPath = curriculumBaseDir + rawProjectUrl;    // e.g. /path/to/project/project.json
-        String fullProjectDir = fullProjectPath.substring(0, fullProjectPath.lastIndexOf("/"));   // e.g. /path/to/project/
+      // get the relative path to the project from curriculumBaseDir (e.g. /510/project.json)
+      String projectPathRelativeToCurriculumBaseDir = "/" + projectFolderName + "/" + projectJSONFilename;
 
-        File projectFile = new File(fullProjectPath);
-        try {
-            if (!projectFile.exists()) {
-                projectFile.createNewFile();
-            }
-            Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(projectFile), "UTF-8"));
-            writer.write(projectJSONString.toString());
-            writer.close();
+      ProjectParameters pParams = new ProjectParameters();
+      pParams.setModulePath(projectPathRelativeToCurriculumBaseDir);
+      pParams.setOwner(user);
+      pParams.setProjectname(projectName);
+      pParams.setProjectType(ProjectType.LD);
+      pParams.setWiseVersion(new Integer(5));
 
-            // check if we need to update the project name or metadata in the project table in the db
-            try {
-                // convert the project JSON string into a JSON object
-                JSONObject projectJSONObject = new JSONObject(projectJSONString);
+      // since this is new original project, set a new fresh metadata object
+      ProjectMetadata metadata = new ProjectMetadataImpl();
+      metadata.setTitle(projectName);
+      pParams.setMetadata(metadata);
 
-                // get the metadata object from the project
-                JSONObject projectMetadataJSON = projectJSONObject.getJSONObject("metadata");
+      Project project = projectService.createProject(pParams);
+      response.getWriter().write(project.getId().toString());
 
-                if (projectMetadataJSON != null) {
-                    project.setMetadata(projectMetadataJSON.toString()); // update the project.metadata field with the metadata in project.json content
+      try {
+        // now commit changes
+        String author = user.getUserDetails().getUsername();
+        JGitUtils.commitAllChangesToCurriculumHistory(newProjectPath.getAbsolutePath(), author, commitMessage);
 
-                    // get the project title from the metadata
-                    String projectTitle = projectMetadataJSON.getString("title");
-                    if (projectTitle != null) {
-
-                        // check if the project title has changed
-                        if (!projectTitle.equals(project.getName())) {
-                            // the project title has changed, so also set the project title in the projects table
-                            project.setName(projectTitle);
-                        }
-                    }
-
-                    // update the project
-                    this.projectService.updateProject(project, user);
-                }
-            } catch(JSONException e) {
-                e.printStackTrace();
-            } catch (NotAuthorizedException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                // now commit changes if they specify a commit message
-                if (commitMessage != null && !commitMessage.isEmpty()) {
-                    String author = user.getUserDetails().getUsername();
-                    JGitUtils.commitAllChangesToCurriculumHistory(fullProjectDir, author, commitMessage);
-
-                    Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(fullProjectDir);
-                    JSONArray commitHistoryJSONArray = new JSONArray();
-                    try {
-                        if (commitHistory != null) {
-                            for (RevCommit commit : commitHistory) {
-                                JSONObject commitHistoryJSONObject = new JSONObject();
-                                ObjectId commitId = commit.getId();
-                                commitHistoryJSONObject.put("commitId", commitId);
-                                String commitName = commit.getName();
-                                commitHistoryJSONObject.put("commitName", commitName);
-                                String commitMsg = commit.getFullMessage();
-                                commitHistoryJSONObject.put("commitMessage", commitMsg);
-                                String commitAuthor = commit.getAuthorIdent().getName();
-                                commitHistoryJSONObject.put("commitAuthor", commitAuthor);
-                                long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
-                                commitHistoryJSONObject.put("commitTime", commitTime);
-                                commitHistoryJSONArray.put(commitHistoryJSONObject);
-                            }
-                            response.getWriter().print(commitHistoryJSONArray);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (GitAPIException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Handles request to get a config object for authoring tool without any specific project
-     */
-    @RequestMapping(value = "/authorConfig", method = RequestMethod.GET)
-    protected void getAuthorProjectConfigChooser(
-        HttpServletRequest request,
-        HttpServletResponse response) throws IOException {
-        JSONObject config = getDefaultAuthoringConfigJsonObject(request);
-
-        PrintWriter writer = response.getWriter();
-        writer.write(config.toString());
-        writer.close();
-    }
-
-    /**
-     * Handles request to get a config object for a specific project
-     */
-    @RequestMapping(value = "/authorConfig/{projectId}", method = RequestMethod.GET)
-    protected void getAuthorProjectConfig(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        @PathVariable Long projectId) throws IOException {
-        Project project;
-        try {
-            project = projectService.getById(projectId);
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        JSONObject config = getDefaultAuthoringConfigJsonObject(request);
-        try {
-            String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-            String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
-            String rawProjectUrl = project.getModulePath();
-            String projectURL = curriculumBaseWWW + rawProjectUrl;
-            String projectBaseURL = projectURL.substring(0, projectURL.indexOf("project.json"));
-            Long projectAssetTotalSizeMax = project.getMaxTotalAssetsSize();
-            if (projectAssetTotalSizeMax == null) {
-                projectAssetTotalSizeMax = new Long(
-                    wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
-            }
-
-            config.put("projectId", projectId);
-            config.put("projectURL", projectURL);
-            config.put("projectAssetTotalSizeMax", projectAssetTotalSizeMax);
-            config.put("projectAssetURL", wiseBaseURL + "/project/asset/" + projectId);
-            config.put("projectBaseURL", projectBaseURL);
-            config.put("previewProjectURL", wiseBaseURL + "/project/" + projectId);
-            config.put("cRaterRequestURL", wiseBaseURL + "/cRater");
-            config.put("importStepsURL", wiseBaseURL + "/project/importSteps/" + projectId);
-            config.put("mode", "author");
-
-            if (projectService.canAuthorProject(project,
-                ControllerUtil.getSignedInUser())) {
-                config.put("saveProjectURL", wiseBaseURL + "/project/save/" + projectId);
-                config.put("commitProjectURL", wiseBaseURL + "/project/commit/" + projectId);
-            }
-
-            Long runId = this.getRunId(projectId);
-            if (runId != null) {
-                config.put("runId", runId);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        PrintWriter writer = response.getWriter();
-        writer.write(config.toString());
-        writer.close();
-    }
-
-    /**
-     * Creates and returns a default Authoring config object that is the same for all projects
-     */
-    private JSONObject getDefaultAuthoringConfigJsonObject(HttpServletRequest request) {
-        // create a JSONObject to contain the config params
-        JSONObject config = new JSONObject();
-        User user = ControllerUtil.getSignedInUser();
-        try {
-            String contextPath = request.getContextPath(); // get the context path e.g. /wise
-            String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-            config.put("contextPath", contextPath);
-            config.put("copyProjectURL", wiseBaseURL + "/project/copy");
-            config.put("mainHomePageURL", wiseBaseURL);
-            config.put("renewSessionURL", wiseBaseURL + "/session/renew");
-            config.put("sessionLogOutURL", wiseBaseURL + "/logout");
-            config.put("registerNewProjectURL", wiseBaseURL + "/project/new");
-            config.put("wiseBaseURL", wiseBaseURL);
-            config.put("notifyProjectBeginURL", wiseBaseURL + "/project/notifyAuthorBegin/");
-            config.put("notifyProjectEndURL", wiseBaseURL + "/project/notifyAuthorEnd/");
-            config.put("getLibraryProjectsURL", wiseBaseURL + "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
-            config.put("teacherDataURL", wiseBaseURL + "/teacher/data");
-
-            // get project metadata settings
-            String projectMetadataSettings = null;
-            try {
-                Portal portal = portalService.getById(new Integer(1));
-                projectMetadataSettings = portal.getProjectMetadataSettings();
-            } catch (ObjectNotFoundException e) {
-                // do nothing
-            }
-
-            if (projectMetadataSettings == null) {
-                // get default project metadata settings from Portal.
-                projectMetadataSettings = portalService.getDefaultProjectMetadataSettings();
-            }
-
-            config.put("projectMetadataSettings", new JSONObject(projectMetadataSettings));
-
-            MutableUserDetails userDetails = (org.wise.portal.domain.authentication.MutableUserDetails) user.getUserDetails();
-
-            String userName = userDetails.getUsername();
-            String firstName = userDetails.getFirstname();
-            String lastName = userDetails.getLastname();
-            String fullName = firstName + " " + lastName;
-
-            // get the full name and user name
-            userName = fullName + " (" + userName + ")";
-
-            // add this teachers's info in config.userInfo.myUserInfo object
-            JSONObject myUserInfo = new JSONObject();
-            myUserInfo.put("id", user.getId());
-            myUserInfo.put("userName", userName);
-            myUserInfo.put("firstName", firstName);
-            myUserInfo.put("lastName", lastName);
-            myUserInfo.put("fullName", fullName);
-            JSONObject userInfo = new JSONObject();
-            userInfo.put("myUserInfo", myUserInfo);
-            config.put("userInfo", userInfo);
-
-            // get a list of projects this user owns
-            List<Project> allProjectsOwnedByUser = projectService.getProjectList(user);
-            List<JSONObject> wise5ProjectsOwnedByUser = new ArrayList<JSONObject>();
-            for (Project project : allProjectsOwnedByUser) {
-                if (new Integer(5).equals(project.getWiseVersion())) {
-                    JSONObject projectJSONObject = new JSONObject();
-                    projectJSONObject.put("id", project.getId());
-                    projectJSONObject.put("name", project.getName());
-
-                    // get the project id
-                    String projectIdString = project.getId().toString();
-                    Long projectId = new Long(projectIdString);
-
-                    // get the run id if it exists
-                    Long runId = this.getRunId(projectId);
-
-                    if (runId != null) {
-                        projectJSONObject.put("runId", runId);
-                    }
-
-                    if (project.isDeleted()) {
-                        projectJSONObject.put("isDeleted", true);
-                    }
-
-                    wise5ProjectsOwnedByUser.add(projectJSONObject);
-                }
-            }
-            config.put("projects", wise5ProjectsOwnedByUser);
-
-            // get a list of projects this user has shared access to
-            List<Project> sharedProjects = projectService.getSharedProjectList(user);
-            List<JSONObject> wise5SharedProjects = new ArrayList<JSONObject>();
-            for (Project project : sharedProjects) {
-                if (new Integer(5).equals(project.getWiseVersion())) {
-
-                    JSONObject projectJSONObject = new JSONObject();
-                    projectJSONObject.put("id", project.getId());
-                    projectJSONObject.put("name", project.getName());
-
-                    // get the project id
-                    String projectIdString = project.getId().toString();
-                    Long projectId = new Long(projectIdString);
-
-                    // get the run id if it exists
-                    Long runId = this.getRunId(projectId);
-
-                    if (runId != null) {
-                        projectJSONObject.put("runId", runId);
-                    }
-
-                    if (projectService.canAuthorProject(project, user)) {
-                        projectJSONObject.put("canEdit", true);
-                    }
-
-                    if (project.isDeleted()) {
-                        projectJSONObject.put("isDeleted", true);
-                    }
-
-                    wise5SharedProjects.add(projectJSONObject);
-                }
-            }
-            config.put("sharedProjects", wise5SharedProjects);
-
-            // set user's locale
-            Locale locale = request.getLocale();
-            if (user != null) {
-                String userLanguage = user.getUserDetails().getLanguage();
-                if (userLanguage != null) {
-                    if (userLanguage.contains("_")) {
-                        String language = userLanguage.substring(0, userLanguage.indexOf("_"));
-                        String country = userLanguage.substring(userLanguage.indexOf("_") + 1);
-                        locale = new Locale(language, country);
-                    } else {
-                        locale = new Locale(userLanguage);
-                    }
-                }
-            }
-            config.put("locale", locale);
-
-            //get the websocket base url e.g. ws://wise.berkeley.edu:8080
-            String webSocketBaseURL = wiseProperties.getProperty("webSocketBaseUrl");
-
-            if (webSocketBaseURL == null) {
-				/*
-				 * if the websocket base url was not provided in the portal properties
-				 * we will use the default websocket base url.
-				 * e.g.
-				 * ws://localhost:8080/wise
-				 */
-                if (wiseBaseURL.contains("http")) {
-                    webSocketBaseURL = wiseBaseURL.replace("http", "ws");
-                } else {
-                    String portalContextPath = ControllerUtil.getPortalUrlString(request);
-                    webSocketBaseURL = portalContextPath.replace("http", "ws");
-                }
-            }
-
-            // get the url for websocket connections
-            String webSocketURL = webSocketBaseURL + "/websocket";
-            config.put("webSocketURL", webSocketURL);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return config;
-    }
-
-    /**
-     * Handle request to retrieve commit history for the specified projectId.
-     * Optional parameter specifies how many commits to retrieve
-     * @param projectId
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/project/commit/{projectId}", method = RequestMethod.GET)
-    protected void getCommitHistory(
-        @PathVariable Long projectId,
-        @RequestParam(required = false) Integer numCommits,
-        @RequestParam(required = false) String fileName,
-        HttpServletResponse response
-    ) throws Exception {
-        Project project;
-        try {
-            project = projectService.getById(projectId);
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        User user = ControllerUtil.getSignedInUser();
-        if (!projectService.canAuthorProject(project, user)) {
-            return;
-        }
-
-        String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-        String rawProjectUrl = project.getModulePath();
-        String fullProjectPath = curriculumBaseDir + rawProjectUrl;    // e.g. /path/to/project/project.json
-        String fullProjectDir = fullProjectPath.substring(0, fullProjectPath.lastIndexOf("/"));   // e.g. /path/to/project/
-
-        Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(fullProjectDir);
+        Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(newProjectPath.getAbsolutePath());
         JSONArray commitHistoryJSONArray = new JSONArray();
-
-        if (commitHistory != null) {
+        try {
+          if (commitHistory != null) {
             for (RevCommit commit : commitHistory) {
+              JSONObject commitHistoryJSONObject = new JSONObject();
+              ObjectId commitId = commit.getId();
+              commitHistoryJSONObject.put("commitId", commitId);
+              String commitName = commit.getName();
+              commitHistoryJSONObject.put("commitName", commitName);
+              String commitMsg = commit.getFullMessage();
+              commitHistoryJSONObject.put("commitMessage", commitMsg);
+              String commitAuthor = commit.getAuthorIdent().getName();
+              commitHistoryJSONObject.put("commitAuthor", commitAuthor);
+              long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
+              commitHistoryJSONObject.put("commitTime", commitTime);
+              commitHistoryJSONArray.put(commitHistoryJSONObject);
+            }
+          }
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
+      } catch (GitAPIException e) {
+        e.printStackTrace();
+      }
+    } catch(IOException e){
+      e.printStackTrace();
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Handle user's request to register a new WISE5 project.
+   * Registers the new project in DB and returns the new project ID
+   * If the parentProjectId is specified, the user is requesting to copy that project
+   * @return
+   */
+  @RequestMapping(value = "/project/copy/{projectId}", method = RequestMethod.POST)
+  protected void copyProject(
+    @PathVariable Long projectId,
+    HttpServletResponse response) {
+    User user = ControllerUtil.getSignedInUser();
+    if (!this.hasAuthorPermissions(user)) {
+      return;
+    }
+
+    if (projectId != null) {
+      try {
+        Project parentProject = projectService.getById(projectId);
+        Set<String> tagNames = new TreeSet<String>();
+        tagNames.add("library");
+        if (parentProject != null && (this.projectService.canAuthorProject(parentProject, user) || parentProject.hasTags(tagNames))) {
+          // upload the zipfile to curriculum_base_dir
+          String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+          String parentProjectJSONAbsolutePath = curriculumBaseDir + parentProject.getModulePath();
+          File parentProjectJSONFile = new File(parentProjectJSONAbsolutePath);
+          File parentProjectDir = parentProjectJSONFile.getParentFile();
+
+          String newProjectDirectoryPath = copyProjectDirectory(parentProjectDir);
+          String modulePath = "/" + newProjectDirectoryPath + "/project.json";
+
+          ProjectParameters pParams = new ProjectParameters();
+          pParams.setModulePath(modulePath);
+          pParams.setOwner(user);
+          pParams.setProjectname(parentProject.getName());
+          pParams.setProjectType(ProjectType.LD);
+          pParams.setWiseVersion(new Integer(5));
+          pParams.setParentProjectId(Long.valueOf(projectId));
+
+          ProjectMetadata parentProjectMetadata = parentProject.getMetadata(); // get the parent project's metadata
+          if (parentProjectMetadata != null) {
+            // copy parent's metadata into new metadata object
+            ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
+            pParams.setMetadata(newProjectMetadata);
+          } else {
+            // create a new metadata if parent project doesn't have one
+            ProjectMetadata metadata = new ProjectMetadataImpl();
+            metadata.setTitle(parentProject.getName());
+            pParams.setMetadata(metadata);
+          }
+
+          Project project = projectService.createProject(pParams);
+          response.getWriter().write(project.getId().toString());
+        }
+      } catch (ObjectNotFoundException onfe) {
+        onfe.printStackTrace();
+        return;
+      } catch (IOException ie) {
+        ie.printStackTrace();
+        return;
+      } catch (JSONException je) {
+        je.printStackTrace();
+        return;
+      }
+    }
+  }
+
+  /**
+   * Save project and and commit changes
+   * @param projectId id of project to save
+   * @param commitMessage commit message, can be null
+   * @param projectJSONString a valid-JSON string of the project
+   * @param response
+   */
+  @RequestMapping(value = "/project/save/{projectId}", method = RequestMethod.POST)
+  protected void saveProject(
+    @PathVariable Long projectId,
+    @RequestParam(value = "commitMessage", required = false) String commitMessage,
+    @RequestParam(value = "projectJSONString", required = true) String projectJSONString,
+    HttpServletResponse response) {
+    Project project;
+    try {
+      project = projectService.getById(projectId);
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+      return;
+    }
+
+    User user = ControllerUtil.getSignedInUser();
+    if (!projectService.canAuthorProject(project, user)) {
+      return;
+    }
+
+    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String rawProjectUrl = project.getModulePath();
+    String fullProjectPath = curriculumBaseDir + rawProjectUrl;    // e.g. /path/to/project/project.json
+    String fullProjectDir = fullProjectPath.substring(0, fullProjectPath.lastIndexOf("/"));   // e.g. /path/to/project/
+
+    File projectFile = new File(fullProjectPath);
+    try {
+      if (!projectFile.exists()) {
+        projectFile.createNewFile();
+      }
+      Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(projectFile), "UTF-8"));
+      writer.write(projectJSONString.toString());
+      writer.close();
+
+      // check if we need to update the project name or metadata in the project table in the db
+      try {
+        // convert the project JSON string into a JSON object
+        JSONObject projectJSONObject = new JSONObject(projectJSONString);
+
+        // get the metadata object from the project
+        JSONObject projectMetadataJSON = projectJSONObject.getJSONObject("metadata");
+
+        if (projectMetadataJSON != null) {
+          project.setMetadata(projectMetadataJSON.toString()); // update the project.metadata field with the metadata in project.json content
+
+          // get the project title from the metadata
+          String projectTitle = projectMetadataJSON.getString("title");
+          if (projectTitle != null) {
+
+            // check if the project title has changed
+            if (!projectTitle.equals(project.getName())) {
+              // the project title has changed, so also set the project title in the projects table
+              project.setName(projectTitle);
+            }
+          }
+
+          // update the project
+          this.projectService.updateProject(project, user);
+        }
+      } catch(JSONException e) {
+        e.printStackTrace();
+      } catch (NotAuthorizedException e) {
+        e.printStackTrace();
+      }
+
+      try {
+        // now commit changes if they specify a commit message
+        if (commitMessage != null && !commitMessage.isEmpty()) {
+          String author = user.getUserDetails().getUsername();
+          JGitUtils.commitAllChangesToCurriculumHistory(fullProjectDir, author, commitMessage);
+
+          Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(fullProjectDir);
+          JSONArray commitHistoryJSONArray = new JSONArray();
+          try {
+            if (commitHistory != null) {
+              for (RevCommit commit : commitHistory) {
                 JSONObject commitHistoryJSONObject = new JSONObject();
                 ObjectId commitId = commit.getId();
                 commitHistoryJSONObject.put("commitId", commitId);
                 String commitName = commit.getName();
                 commitHistoryJSONObject.put("commitName", commitName);
-                String commitMessage = commit.getFullMessage();
-                commitHistoryJSONObject.put("commitMessage", commitMessage);
+                String commitMsg = commit.getFullMessage();
+                commitHistoryJSONObject.put("commitMessage", commitMsg);
                 String commitAuthor = commit.getAuthorIdent().getName();
                 commitHistoryJSONObject.put("commitAuthor", commitAuthor);
                 long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
                 commitHistoryJSONObject.put("commitTime", commitTime);
                 commitHistoryJSONArray.put(commitHistoryJSONObject);
+              }
+              response.getWriter().print(commitHistoryJSONArray);
             }
+          } catch (JSONException e) {
+            e.printStackTrace();
+          }
         }
-        response.getWriter().print(commitHistoryJSONArray);
+      } catch (GitAPIException e) {
+        e.printStackTrace();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Handles request to get a config object for authoring tool without any specific project
+   */
+  @RequestMapping(value = "/authorConfig", method = RequestMethod.GET)
+  protected void getAuthorProjectConfigChooser(
+    HttpServletRequest request,
+    HttpServletResponse response) throws IOException {
+    JSONObject config = getDefaultAuthoringConfigJsonObject(request);
+
+    PrintWriter writer = response.getWriter();
+    writer.write(config.toString());
+    writer.close();
+  }
+
+  /**
+   * Handles request to get a config object for a specific project
+   */
+  @RequestMapping(value = "/authorConfig/{projectId}", method = RequestMethod.GET)
+  protected void getAuthorProjectConfig(
+    HttpServletRequest request,
+    HttpServletResponse response,
+    @PathVariable Long projectId) throws IOException {
+    Project project;
+    try {
+      project = projectService.getById(projectId);
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+      return;
     }
 
-    /**
-     * Returns the absolute path to the specified project's assets directory
-     */
-    private String getProjectAssetsDirectoryPath(Project project) {
-        String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-        String rawProjectUrl = project.getModulePath();
-        String projectURL = curriculumBaseDir + rawProjectUrl;
-        String projectBaseDir = projectURL.substring(0, projectURL.indexOf("project.json"));
-        return projectBaseDir + "/assets";
+    JSONObject config = getDefaultAuthoringConfigJsonObject(request);
+    try {
+      String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+      String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+      String rawProjectUrl = project.getModulePath();
+      String projectURL = curriculumBaseWWW + rawProjectUrl;
+      String projectBaseURL = projectURL.substring(0, projectURL.indexOf("project.json"));
+      Long projectAssetTotalSizeMax = project.getMaxTotalAssetsSize();
+      if (projectAssetTotalSizeMax == null) {
+        projectAssetTotalSizeMax = new Long(
+          wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
+      }
+
+      config.put("projectId", projectId);
+      config.put("projectURL", projectURL);
+      config.put("projectAssetTotalSizeMax", projectAssetTotalSizeMax);
+      config.put("projectAssetURL", wiseBaseURL + "/project/asset/" + projectId);
+      config.put("projectBaseURL", projectBaseURL);
+      config.put("previewProjectURL", wiseBaseURL + "/project/" + projectId);
+      config.put("cRaterRequestURL", wiseBaseURL + "/cRater");
+      config.put("importStepsURL", wiseBaseURL + "/project/importSteps/" + projectId);
+      config.put("mode", "author");
+
+      if (projectService.canAuthorProject(project,
+        ControllerUtil.getSignedInUser())) {
+        config.put("saveProjectURL", wiseBaseURL + "/project/save/" + projectId);
+        config.put("commitProjectURL", wiseBaseURL + "/project/commit/" + projectId);
+      }
+
+      Long runId = this.getRunId(projectId);
+      if (runId != null) {
+        config.put("runId", runId);
+      }
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    PrintWriter writer = response.getWriter();
+    writer.write(config.toString());
+    writer.close();
+  }
+
+  /**
+   * Creates and returns a default Authoring config object that is the same for all projects
+   */
+  private JSONObject getDefaultAuthoringConfigJsonObject(HttpServletRequest request) {
+    // create a JSONObject to contain the config params
+    JSONObject config = new JSONObject();
+    User user = ControllerUtil.getSignedInUser();
+    try {
+      String contextPath = request.getContextPath(); // get the context path e.g. /wise
+      String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+      config.put("contextPath", contextPath);
+      config.put("copyProjectURL", wiseBaseURL + "/project/copy");
+      config.put("mainHomePageURL", wiseBaseURL);
+      config.put("renewSessionURL", wiseBaseURL + "/session/renew");
+      config.put("sessionLogOutURL", wiseBaseURL + "/logout");
+      config.put("registerNewProjectURL", wiseBaseURL + "/project/new");
+      config.put("wiseBaseURL", wiseBaseURL);
+      config.put("notifyProjectBeginURL", wiseBaseURL + "/project/notifyAuthorBegin/");
+      config.put("notifyProjectEndURL", wiseBaseURL + "/project/notifyAuthorEnd/");
+      config.put("getLibraryProjectsURL", wiseBaseURL + "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
+      config.put("teacherDataURL", wiseBaseURL + "/teacher/data");
+
+      // get project metadata settings
+      String projectMetadataSettings = null;
+      try {
+        Portal portal = portalService.getById(new Integer(1));
+        projectMetadataSettings = portal.getProjectMetadataSettings();
+      } catch (ObjectNotFoundException e) {
+        // do nothing
+      }
+
+      if (projectMetadataSettings == null) {
+        // get default project metadata settings from Portal.
+        projectMetadataSettings = portalService.getDefaultProjectMetadataSettings();
+      }
+
+      config.put("projectMetadataSettings", new JSONObject(projectMetadataSettings));
+
+      MutableUserDetails userDetails = (org.wise.portal.domain.authentication.MutableUserDetails) user.getUserDetails();
+
+      String userName = userDetails.getUsername();
+      String firstName = userDetails.getFirstname();
+      String lastName = userDetails.getLastname();
+      String fullName = firstName + " " + lastName;
+
+      // get the full name and user name
+      userName = fullName + " (" + userName + ")";
+
+      // add this teachers's info in config.userInfo.myUserInfo object
+      JSONObject myUserInfo = new JSONObject();
+      myUserInfo.put("id", user.getId());
+      myUserInfo.put("userName", userName);
+      myUserInfo.put("firstName", firstName);
+      myUserInfo.put("lastName", lastName);
+      myUserInfo.put("fullName", fullName);
+      JSONObject userInfo = new JSONObject();
+      userInfo.put("myUserInfo", myUserInfo);
+      config.put("userInfo", userInfo);
+
+      // get a list of projects this user owns
+      List<Project> allProjectsOwnedByUser = projectService.getProjectList(user);
+      List<JSONObject> wise5ProjectsOwnedByUser = new ArrayList<JSONObject>();
+      for (Project project : allProjectsOwnedByUser) {
+        if (new Integer(5).equals(project.getWiseVersion())) {
+          JSONObject projectJSONObject = new JSONObject();
+          projectJSONObject.put("id", project.getId());
+          projectJSONObject.put("name", project.getName());
+
+          // get the project id
+          String projectIdString = project.getId().toString();
+          Long projectId = new Long(projectIdString);
+
+          // get the run id if it exists
+          Long runId = this.getRunId(projectId);
+
+          if (runId != null) {
+            projectJSONObject.put("runId", runId);
+          }
+
+          if (project.isDeleted()) {
+            projectJSONObject.put("isDeleted", true);
+          }
+
+          wise5ProjectsOwnedByUser.add(projectJSONObject);
+        }
+      }
+      config.put("projects", wise5ProjectsOwnedByUser);
+
+      // get a list of projects this user has shared access to
+      List<Project> sharedProjects = projectService.getSharedProjectList(user);
+      List<JSONObject> wise5SharedProjects = new ArrayList<JSONObject>();
+      for (Project project : sharedProjects) {
+        if (new Integer(5).equals(project.getWiseVersion())) {
+
+          JSONObject projectJSONObject = new JSONObject();
+          projectJSONObject.put("id", project.getId());
+          projectJSONObject.put("name", project.getName());
+
+          // get the project id
+          String projectIdString = project.getId().toString();
+          Long projectId = new Long(projectIdString);
+
+          // get the run id if it exists
+          Long runId = this.getRunId(projectId);
+
+          if (runId != null) {
+            projectJSONObject.put("runId", runId);
+          }
+
+          if (projectService.canAuthorProject(project, user)) {
+            projectJSONObject.put("canEdit", true);
+          }
+
+          if (project.isDeleted()) {
+            projectJSONObject.put("isDeleted", true);
+          }
+
+          wise5SharedProjects.add(projectJSONObject);
+        }
+      }
+      config.put("sharedProjects", wise5SharedProjects);
+
+      // set user's locale
+      Locale locale = request.getLocale();
+      if (user != null) {
+        String userLanguage = user.getUserDetails().getLanguage();
+        if (userLanguage != null) {
+          if (userLanguage.contains("_")) {
+            String language = userLanguage.substring(0, userLanguage.indexOf("_"));
+            String country = userLanguage.substring(userLanguage.indexOf("_") + 1);
+            locale = new Locale(language, country);
+          } else {
+            locale = new Locale(userLanguage);
+          }
+        }
+      }
+      config.put("locale", locale);
+
+      //get the websocket base url e.g. ws://wise.berkeley.edu:8080
+      String webSocketBaseURL = wiseProperties.getProperty("webSocketBaseUrl");
+
+      if (webSocketBaseURL == null) {
+        /*
+         * if the websocket base url was not provided in the portal properties
+         * we will use the default websocket base url.
+         * e.g.
+         * ws://localhost:8080/wise
+         */
+        if (wiseBaseURL.contains("http")) {
+          webSocketBaseURL = wiseBaseURL.replace("http", "ws");
+        } else {
+          String portalContextPath = ControllerUtil.getPortalUrlString(request);
+          webSocketBaseURL = portalContextPath.replace("http", "ws");
+        }
+      }
+
+      // get the url for websocket connections
+      String webSocketURL = webSocketBaseURL + "/websocket";
+      config.put("webSocketURL", webSocketURL);
+
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    return config;
+  }
+
+  /**
+   * Handle request to retrieve commit history for the specified projectId.
+   * Optional parameter specifies how many commits to retrieve
+   * @param projectId
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = "/project/commit/{projectId}", method = RequestMethod.GET)
+  protected void getCommitHistory(
+    @PathVariable Long projectId,
+    @RequestParam(required = false) Integer numCommits,
+    @RequestParam(required = false) String fileName,
+    HttpServletResponse response
+  ) throws Exception {
+    Project project;
+    try {
+      project = projectService.getById(projectId);
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+      return;
     }
 
-    /**
-     * Prints project assets in output stream.
-     */
-    @RequestMapping(value = "/project/asset/{projectId}", method = RequestMethod.GET)
-    protected void getProjectAssets(
-        HttpServletResponse response,
-        @PathVariable Long projectId) {
-        try {
-            Project project = projectService.getById(projectId);
-            User user = ControllerUtil.getSignedInUser();
-            if (projectService.canAuthorProject(project, user)) {
-                String projectAssetsPath = getProjectAssetsDirectoryPath(project);
-                File projectAssetsDirectory = new File(projectAssetsPath);
-                JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDirectory);
+    User user = ControllerUtil.getSignedInUser();
+    if (!projectService.canAuthorProject(project, user)) {
+      return;
+    }
+
+    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String rawProjectUrl = project.getModulePath();
+    String fullProjectPath = curriculumBaseDir + rawProjectUrl;    // e.g. /path/to/project/project.json
+    String fullProjectDir = fullProjectPath.substring(0, fullProjectPath.lastIndexOf("/"));   // e.g. /path/to/project/
+
+    Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(fullProjectDir);
+    JSONArray commitHistoryJSONArray = new JSONArray();
+
+    if (commitHistory != null) {
+      for (RevCommit commit : commitHistory) {
+        JSONObject commitHistoryJSONObject = new JSONObject();
+        ObjectId commitId = commit.getId();
+        commitHistoryJSONObject.put("commitId", commitId);
+        String commitName = commit.getName();
+        commitHistoryJSONObject.put("commitName", commitName);
+        String commitMessage = commit.getFullMessage();
+        commitHistoryJSONObject.put("commitMessage", commitMessage);
+        String commitAuthor = commit.getAuthorIdent().getName();
+        commitHistoryJSONObject.put("commitAuthor", commitAuthor);
+        long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
+        commitHistoryJSONObject.put("commitTime", commitTime);
+        commitHistoryJSONArray.put(commitHistoryJSONObject);
+      }
+    }
+    response.getWriter().print(commitHistoryJSONArray);
+  }
+
+  /**
+   * Returns the absolute path to the specified project's assets directory
+   */
+  private String getProjectAssetsDirectoryPath(Project project) {
+    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String rawProjectUrl = project.getModulePath();
+    String projectURL = curriculumBaseDir + rawProjectUrl;
+    String projectBaseDir = projectURL.substring(0, projectURL.indexOf("project.json"));
+    return projectBaseDir + "/assets";
+  }
+
+  /**
+   * Prints project assets in output stream.
+   */
+  @RequestMapping(value = "/project/asset/{projectId}", method = RequestMethod.GET)
+  protected void getProjectAssets(
+    HttpServletResponse response,
+    @PathVariable Long projectId) {
+    try {
+      Project project = projectService.getById(projectId);
+      User user = ControllerUtil.getSignedInUser();
+      if (projectService.canAuthorProject(project, user)) {
+        String projectAssetsPath = getProjectAssetsDirectoryPath(project);
+        File projectAssetsDirectory = new File(projectAssetsPath);
+        JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDirectory);
+        PrintWriter writer = response.getWriter();
+        writer.write(projectAssetsJSONObject.toString());
+        writer.close();
+      }
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+    } catch (JSONException je) {
+      je.printStackTrace();
+    } catch (IOException ioe) {
+      ioe.printStackTrace();
+    }
+  }
+
+  /**
+   * Prints specified project asset in output stream so it can be downloaded by the user
+   */
+  @RequestMapping(value = "/project/asset/{projectId}/download", method = RequestMethod.GET)
+  protected void downloadProjectAsset(
+    HttpServletResponse response,
+    @PathVariable Long projectId,
+    @RequestParam(value = "assetFileName", required = true) String assetFileName) throws Exception {
+    try {
+      Project project = projectService.getById(projectId);
+      User user = ControllerUtil.getSignedInUser();
+      if (projectService.canAuthorProject(project, user)) {
+        String projectAssetsPath = getProjectAssetsDirectoryPath(project);
+        File projectAssetFile = new File(projectAssetsPath + "/" + assetFileName);
+
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;filename=\"" + assetFileName + "\"");
+        FileUtils.copyFile(projectAssetFile, response.getOutputStream());
+      }
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException ioe) {
+      ioe.printStackTrace();
+    }
+  }
+
+  /**
+   * Saves POSTed file into the project's asset folder
+   * TODO refactor too many nesting
+   */
+  @RequestMapping(method = RequestMethod.POST, value = "/project/asset/{projectId}")
+  protected void saveProjectAsset(
+    @PathVariable Long projectId,
+    HttpServletRequest request,
+    String assetFileName,
+    HttpServletResponse response)
+    throws ServletException, IOException {
+    try {
+      Project project = projectService.getById(projectId);
+      User user = ControllerUtil.getSignedInUser();
+      if (projectService.canAuthorProject(project, user)) {
+        String projectAssetsPath = getProjectAssetsDirectoryPath(project);
+        File projectAssetsDir = new File(projectAssetsPath);
+
+        if (assetFileName != null) {
+          // user wants to delete an existing asset
+          File asset = new File(projectAssetsDir, assetFileName);
+          if (asset.exists()) {
+            asset.delete();
+          }
+        } else {
+          // user wants to add a new asset
+          Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
+          if (projectMaxTotalAssetsSize == null) {
+            // get the default max project size
+            projectMaxTotalAssetsSize = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
+          }
+          // get the size of the assets directory
+          long sizeOfAssetsDirectory = FileUtils.sizeOfDirectory(projectAssetsDir);
+
+          DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
+          Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
+          if (fileMap != null && fileMap.size() > 0) {
+            Set<String> keySet = fileMap.keySet();
+            Iterator<String> iter = keySet.iterator();
+            while (iter.hasNext()) {
+              String key = iter.next();
+              MultipartFile file = fileMap.get(key);
+
+              if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
+                // Adding this asset will exceed the maximum allowed for the project, so don't add it
+                // Show a message to the user
                 PrintWriter writer = response.getWriter();
-                writer.write(projectAssetsJSONObject.toString());
+                writer.write("Error: Exceeded project max asset size.\nPlease delete unused assets.\n\nContact WISE if your project needs more disk space.");
                 writer.close();
-            }
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        } catch (JSONException je) {
-            je.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-    }
-
-    /**
-     * Prints specified project asset in output stream so it can be downloaded by the user
-     */
-    @RequestMapping(value = "/project/asset/{projectId}/download", method = RequestMethod.GET)
-    protected void downloadProjectAsset(
-        HttpServletResponse response,
-        @PathVariable Long projectId,
-        @RequestParam(value = "assetFileName", required = true) String assetFileName) throws Exception {
-        try {
-            Project project = projectService.getById(projectId);
-            User user = ControllerUtil.getSignedInUser();
-            if (projectService.canAuthorProject(project, user)) {
-                String projectAssetsPath = getProjectAssetsDirectoryPath(project);
-                File projectAssetFile = new File(projectAssetsPath + "/" + assetFileName);
-
-                response.setContentType("application/octet-stream");
-                response.setHeader("Content-Disposition", "attachment;filename=\"" + assetFileName + "\"");
-                FileUtils.copyFile(projectAssetFile, response.getOutputStream());
-            }
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-    }
-
-    /**
-     * Saves POSTed file into the project's asset folder
-     * TODO refactor too many nesting
-     */
-    @RequestMapping(method = RequestMethod.POST, value = "/project/asset/{projectId}")
-    protected void saveProjectAsset(
-        @PathVariable Long projectId,
-        HttpServletRequest request,
-        String assetFileName,
-        HttpServletResponse response)
-        throws ServletException, IOException {
-        try {
-            Project project = projectService.getById(projectId);
-            User user = ControllerUtil.getSignedInUser();
-            if (projectService.canAuthorProject(project, user)) {
-                String projectAssetsPath = getProjectAssetsDirectoryPath(project);
-                File projectAssetsDir = new File(projectAssetsPath);
-
-                if (assetFileName != null) {
-                    // user wants to delete an existing asset
-                    File asset = new File(projectAssetsDir, assetFileName);
-                    if (asset.exists()) {
-                        asset.delete();
-                    }
-                } else {
-                    // user wants to add a new asset
-                    Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
-                    if (projectMaxTotalAssetsSize == null) {
-                        // get the default max project size
-                        projectMaxTotalAssetsSize = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
-                    }
-                    // get the size of the assets directory
-                    long sizeOfAssetsDirectory = FileUtils.sizeOfDirectory(projectAssetsDir);
-
-                    DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
-                    Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
-                    if (fileMap != null && fileMap.size() > 0) {
-                        Set<String> keySet = fileMap.keySet();
-                        Iterator<String> iter = keySet.iterator();
-                        while (iter.hasNext()) {
-                            String key = iter.next();
-                            MultipartFile file = fileMap.get(key);
-
-                            if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
-                                // Adding this asset will exceed the maximum allowed for the project, so don't add it
-                                // Show a message to the user
-                                PrintWriter writer = response.getWriter();
-                                writer.write("Error: Exceeded project max asset size.\nPlease delete unused assets.\n\nContact WISE if your project needs more disk space.");
-                                writer.close();
-                                return;
-                            } else if (!isUserAllowedToUpload(user, file)) {
-                                // user is not a trusted author and is trying to upload a file that is not allowed
-                                PrintWriter writer = response.getWriter();
-                                writer.write("Error: Upload file \"" + file.getOriginalFilename() + "\" not allowed.\n");
-                                writer.close();
-                                return;
-                            } else {
-                                String filename = file.getOriginalFilename();
-                                File asset = new File(projectAssetsDir, filename);
-                                if (!asset.exists()) {
-                                    asset.createNewFile();
-                                }
-                                byte[] fileContent = file.getBytes();
-                                FileOutputStream fos = new FileOutputStream(asset);
-                                fos.write(fileContent);
-                                fos.flush();
-                                fos.close();
-                            }
-                        }
-                    }
-                }
-
-                File projectAssetsDirectory = new File(projectAssetsPath);
-                JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDirectory);
+                return;
+              } else if (!isUserAllowedToUpload(user, file)) {
+                // user is not a trusted author and is trying to upload a file that is not allowed
                 PrintWriter writer = response.getWriter();
-                writer.write(projectAssetsJSONObject.toString());
+                writer.write("Error: Upload file \"" + file.getOriginalFilename() + "\" not allowed.\n");
                 writer.close();
-            }
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-        } catch (JSONException je) {
-            je.printStackTrace();
-        }
-    }
-
-    /**
-     * Returns true iff the logged-in user is allowed to post the specified file
-     * @param user the user who is trying to upload
-     * @param file file that the user is trying to upload
-     * @return true/false
-     */
-    private boolean isUserAllowedToUpload(User user, MultipartFile file) {
-        String allowedProjectAssetContentTypesStr = wiseProperties.getProperty("normalAuthorAllowedProjectAssetContentTypes");
-        if (user.isTrustedAuthor()) {
-            allowedProjectAssetContentTypesStr += "," + wiseProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
-        }
-
-        String contentType = file.getContentType();
-        if (!allowedProjectAssetContentTypesStr.contains(contentType)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Returns a JSONObject containing information about the specified directory.
-     * This includes totalFileSize and files in the directory
-     * @throws JSONException
-     */
-    private JSONObject getDirectoryJSONObject(File directory) throws JSONException {
-        JSONObject directoryJSONObject = new JSONObject();
-        JSONArray projectAssetsJSONArray = new JSONArray();
-        long totalDirectorySize = 0l;
-        File[] filesInProjectAssetsDir = getFilesInDirectory(directory);
-        if (filesInProjectAssetsDir != null) {
-            for (int v = 0; v < filesInProjectAssetsDir.length; v++) {
-                try {
-                    File file = filesInProjectAssetsDir[v];
-                    String fileName = file.getName();
-                    JSONObject fileObject = new JSONObject();
-                    fileObject.put("fileName", fileName);
-                    long fileSize = file.length();
-                    fileObject.put("fileSize", fileSize);
-                    totalDirectorySize += fileSize;
-                    projectAssetsJSONArray.put(fileObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                return;
+              } else {
+                String filename = file.getOriginalFilename();
+                File asset = new File(projectAssetsDir, filename);
+                if (!asset.exists()) {
+                  asset.createNewFile();
                 }
+                byte[] fileContent = file.getBytes();
+                FileOutputStream fos = new FileOutputStream(asset);
+                fos.write(fileContent);
+                fos.flush();
+                fos.close();
+              }
             }
-        }
-        directoryJSONObject.put("totalFileSize", totalDirectorySize);
-        directoryJSONObject.put("files", projectAssetsJSONArray);
-        return directoryJSONObject;
-    }
-
-    /**
-     * Get the file names in the directory. Permission checks should be done before calling this method.
-     * @param directory the directory containing the files
-     * @return an array of files in the directory
-     */
-    public static File[] getFilesInDirectory(File directory) {
-        if (directory.exists() && directory.isDirectory()) {
-            return directory.listFiles();
-        }
-        return new File[0];
-    }
-
-    /**
-     * Returns <code>boolean</code> true iff the given <code>User</code> user has sufficient permissions
-     * to create a project
-     *
-     * @param user
-     * @return boolean
-     */
-    private boolean hasAuthorPermissions(User user) {
-        return user.getUserDetails().hasGrantedAuthority(UserDetailsService.AUTHOR_ROLE) ||
-            user.getUserDetails().hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
-    }
-
-    /**
-     * Given a path to curriculum base directory and the path to the project directory that we want to copy,
-     * copies the directory and returns <code>String</code> the path to the freshly copied directory.
-     *
-     * @param srcDir the directory of the project we are copying, e.g. "/tomcat/webapps/curriculum/5"
-     * @return the path to the new project
-     * @throws IOException
-     */
-    public static String copyProjectDirectory(File srcDir) throws IOException {
-        if (srcDir.exists() && srcDir.isDirectory()) {
-            File destDir = createNewprojectPath(srcDir.getParentFile());
-            copy(srcDir, destDir);
-            return destDir.getName();
-        } else {
-            throw new IOException("Provided path is not found or is not a directory. Path: " + srcDir.getPath());
-        }
-    }
-
-    /**
-     * Given a parent directory, attempts to generate and return
-     * a unique project directory.
-     *
-     * @param parent
-     * @return
-     */
-    public static File createNewprojectPath(File parent){
-        Integer counter = 1;
-
-        while (true) {
-            File tryMe = new File(parent, String.valueOf(counter));
-            if (!tryMe.exists()) {
-                tryMe.mkdir();
-                return tryMe;
-            }
-            counter++;
-        }
-    }
-
-    /**
-     * Copies the given <code>File</code> src to the given <code>File</code> dest. If the src is
-     * a directories, recursively copies the contents of the directory into dest.
-     *
-     * @param src directory to copy from
-     * @param dest directory to copy to
-     * @throws IOException
-     */
-    public static void copy(File src, File dest) throws IOException {
-        if (src.isDirectory()) {
-            if (!dest.exists()) {
-                dest.mkdir();
-            }
-
-            String[] files = src.list();
-            for (int a = 0; a < files.length; a++) {
-                copy(new File(src, files[a]), new File(dest, files[a]));
-            }
-        } else {
-            InputStream in = new FileInputStream(src);
-            FileOutputStream out = new FileOutputStream(dest);
-
-            byte[] buffer = new byte[2048];
-            int len;
-            while ((len = in.read(buffer)) > 0) {
-                out.write(buffer, 0, len);
-            }
-
-            in.close();
-            out.close();
-        }
-    }
-
-    /**
-     * Get the run id that uses the project id
-     * @param projectId the project id
-     * @returns the run id that uses the project if the project is used
-     * in a run
-     */
-    private Long getRunId(Long projectId) {
-        Long runId = null;
-
-        if (projectId != null) {
-            // get the runs that use the project
-            List<Run> runs = this.runService.getProjectRuns(projectId);
-
-            if (runs != null && runs.size() > 0) {
-
-                // get the first run since a project can only be used in one run
-                Run run = runs.get(0);
-
-                if (run != null) {
-                    // add the runId to the JSON object
-                    runId = run.getId();
-                }
-            }
+          }
         }
 
-        return runId;
+        File projectAssetsDirectory = new File(projectAssetsPath);
+        JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDirectory);
+        PrintWriter writer = response.getWriter();
+        writer.write(projectAssetsJSONObject.toString());
+        writer.close();
+      }
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+    } catch (JSONException je) {
+      je.printStackTrace();
+    }
+  }
+
+  /**
+   * Returns true iff the logged-in user is allowed to post the specified file
+   * @param user the user who is trying to upload
+   * @param file file that the user is trying to upload
+   * @return true/false
+   */
+  private boolean isUserAllowedToUpload(User user, MultipartFile file) {
+    String allowedProjectAssetContentTypesStr = wiseProperties.getProperty("normalAuthorAllowedProjectAssetContentTypes");
+    if (user.isTrustedAuthor()) {
+      allowedProjectAssetContentTypesStr += "," + wiseProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
     }
 
-    /**
-     * Handles notifications of opened projects
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @SuppressWarnings("unchecked")
-    @RequestMapping(value = "/project/notifyAuthorBegin/{projectId}", method = RequestMethod.POST)
-    private ModelAndView handleNotifyAuthorProjectBegin(
-        @PathVariable String projectId,
-        HttpServletRequest request) throws Exception{
-        User user = ControllerUtil.getSignedInUser();
-        if (this.hasAuthorPermissions(user)) {
-
-            HttpSession currentUserSession = request.getSession();
-            HashMap<String, ArrayList<String>> openedProjectsToSessions =
-                (HashMap<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
-
-            if (openedProjectsToSessions == null) {
-                openedProjectsToSessions = new HashMap<String, ArrayList<String>>();
-                servletContext.setAttribute("openedProjectsToSessions", openedProjectsToSessions);
-            }
-
-            if (openedProjectsToSessions.get(projectId) == null) {
-                openedProjectsToSessions.put(projectId, new ArrayList<String>());
-            }
-            ArrayList<String> sessions = openedProjectsToSessions.get(projectId);  // sessions that are currently authoring this project
-            if (!sessions.contains(currentUserSession.getId())) {
-                sessions.add(currentUserSession.getId());
-            }
-
-            notifyCurrentAuthors(projectId);
-            return null;
-        } else {
-            return new ModelAndView(new RedirectView("accessdenied.html"));
-        }
+    String contentType = file.getContentType();
+    if (!allowedProjectAssetContentTypesStr.contains(contentType)) {
+      return false;
     }
 
-    /**
-     * Handles notifications of closed projects
-     *
-     * @throws Exception
-     */
-    @SuppressWarnings("unchecked")
-    @RequestMapping(value = "/project/notifyAuthorEnd/{projectId}", method = RequestMethod.POST)
-    private ModelAndView handleNotifyAuthorProjectEnd(
-        @PathVariable String projectId,
-        HttpServletRequest request) throws Exception{
-        User user = ControllerUtil.getSignedInUser();
-        if (this.hasAuthorPermissions(user)) {
-            HttpSession currentSession = request.getSession();
-            Map<String, ArrayList<String>> openedProjectsToSessions =
-                (Map<String, ArrayList<String>>) servletContext
-                    .getAttribute("openedProjectsToSessions");
+    return true;
+  }
 
-            if (openedProjectsToSessions == null || openedProjectsToSessions.get(projectId) == null) {
-                return null;
-            } else {
-                ArrayList<String> sessions = openedProjectsToSessions.get(projectId);
-                if (!sessions.contains(currentSession.getId())) {
-                    return null;
-                } else {
-                    sessions.remove(currentSession.getId());
-                    // if there are no more users authoring this project, remove this project from openedProjectsToSessions
-                    if (sessions.size() == 0) {
-                        openedProjectsToSessions.remove(projectId);
-                    }
-
-                    notifyCurrentAuthors(projectId);
-                    return null;
-                }
-            }
-        } else {
-            return new ModelAndView(new RedirectView("accessdenied.html"));
-        }
-    }
-
-    /**
-     * Notify other authors authoring the same project id.
-     * @param projectId
-     */
-    private void notifyCurrentAuthors(String projectId) {
-        // Notifiy other authors authoring this project in real-time with websocket.
+  /**
+   * Returns a JSONObject containing information about the specified directory.
+   * This includes totalFileSize and files in the directory
+   * @throws JSONException
+   */
+  private JSONObject getDirectoryJSONObject(File directory) throws JSONException {
+    JSONObject directoryJSONObject = new JSONObject();
+    JSONArray projectAssetsJSONArray = new JSONArray();
+    long totalDirectorySize = 0l;
+    File[] filesInProjectAssetsDir = getFilesInDirectory(directory);
+    if (filesInProjectAssetsDir != null) {
+      for (int v = 0; v < filesInProjectAssetsDir.length; v++) {
         try {
-            User user = ControllerUtil.getSignedInUser();
-            if (webSocketHandler != null) {
-                WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
-
-                // send this message to websockets
-                JSONObject webSocketMessageJSON = new JSONObject();
-                webSocketMessageJSON.put("messageType", "currentAuthors");
-                webSocketMessageJSON.put("projectId", projectId);
-                webSocketMessageJSON.put("messageParticipants", "authorToAuthors");
-                wiseWebSocketHandler.handleMessage(user, webSocketMessageJSON.toString());
-            }
-
+          File file = filesInProjectAssetsDir[v];
+          String fileName = file.getName();
+          JSONObject fileObject = new JSONObject();
+          fileObject.put("fileName", fileName);
+          long fileSize = file.length();
+          fileObject.put("fileSize", fileSize);
+          totalDirectorySize += fileSize;
+          projectAssetsJSONArray.put(fileObject);
         } catch (Exception e) {
-            // if something fails while sending to websocket, allow the rest to continue
-            e.printStackTrace();
+          e.printStackTrace();
         }
+      }
+    }
+    directoryJSONObject.put("totalFileSize", totalDirectorySize);
+    directoryJSONObject.put("files", projectAssetsJSONArray);
+    return directoryJSONObject;
+  }
+
+  /**
+   * Get the file names in the directory. Permission checks should be done before calling this method.
+   * @param directory the directory containing the files
+   * @return an array of files in the directory
+   */
+  public static File[] getFilesInDirectory(File directory) {
+    if (directory.exists() && directory.isDirectory()) {
+      return directory.listFiles();
+    }
+    return new File[0];
+  }
+
+  /**
+   * Returns <code>boolean</code> true iff the given <code>User</code> user has sufficient permissions
+   * to create a project
+   *
+   * @param user
+   * @return boolean
+   */
+  private boolean hasAuthorPermissions(User user) {
+    return user.getUserDetails().hasGrantedAuthority(UserDetailsService.AUTHOR_ROLE) ||
+      user.getUserDetails().hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
+  }
+
+  /**
+   * Given a path to curriculum base directory and the path to the project directory that we want to copy,
+   * copies the directory and returns <code>String</code> the path to the freshly copied directory.
+   *
+   * @param srcDir the directory of the project we are copying, e.g. "/tomcat/webapps/curriculum/5"
+   * @return the path to the new project
+   * @throws IOException
+   */
+  public static String copyProjectDirectory(File srcDir) throws IOException {
+    if (srcDir.exists() && srcDir.isDirectory()) {
+      File destDir = createNewprojectPath(srcDir.getParentFile());
+      copy(srcDir, destDir);
+      return destDir.getName();
+    } else {
+      throw new IOException("Provided path is not found or is not a directory. Path: " + srcDir.getPath());
+    }
+  }
+
+  /**
+   * Given a parent directory, attempts to generate and return
+   * a unique project directory.
+   *
+   * @param parent
+   * @return
+   */
+  public static File createNewprojectPath(File parent){
+    Integer counter = 1;
+
+    while (true) {
+      File tryMe = new File(parent, String.valueOf(counter));
+      if (!tryMe.exists()) {
+        tryMe.mkdir();
+        return tryMe;
+      }
+      counter++;
+    }
+  }
+
+  /**
+   * Copies the given <code>File</code> src to the given <code>File</code> dest. If the src is
+   * a directories, recursively copies the contents of the directory into dest.
+   *
+   * @param src directory to copy from
+   * @param dest directory to copy to
+   * @throws IOException
+   */
+  public static void copy(File src, File dest) throws IOException {
+    if (src.isDirectory()) {
+      if (!dest.exists()) {
+        dest.mkdir();
+      }
+
+      String[] files = src.list();
+      for (int a = 0; a < files.length; a++) {
+        copy(new File(src, files[a]), new File(dest, files[a]));
+      }
+    } else {
+      InputStream in = new FileInputStream(src);
+      FileOutputStream out = new FileOutputStream(dest);
+
+      byte[] buffer = new byte[2048];
+      int len;
+      while ((len = in.read(buffer)) > 0) {
+        out.write(buffer, 0, len);
+      }
+
+      in.close();
+      out.close();
+    }
+  }
+
+  /**
+   * Get the run id that uses the project id
+   * @param projectId the project id
+   * @returns the run id that uses the project if the project is used
+   * in a run
+   */
+  private Long getRunId(Long projectId) {
+    Long runId = null;
+
+    if (projectId != null) {
+      // get the runs that use the project
+      List<Run> runs = this.runService.getProjectRuns(projectId);
+
+      if (runs != null && runs.size() > 0) {
+
+        // get the first run since a project can only be used in one run
+        Run run = runs.get(0);
+
+        if (run != null) {
+          // add the runId to the JSON object
+          runId = run.getId();
+        }
+      }
     }
 
-    /**
-     * Import steps and copy assets if necessary
-     * @param steps a string containing a JSONArray of steps
-     * @param toProjectId the project id we are importing into
-     * @param fromProjectId the project id we are importing from
-     */
-    @SuppressWarnings("unchecked")
-    @RequestMapping(value = "/project/importSteps/{projectId}", method = RequestMethod.POST)
-    private ModelAndView handleImportSteps(
-        @RequestParam(value = "steps", required = true) String steps,
-        @RequestParam(value = "toProjectId", required = true) Integer toProjectId,
-        @RequestParam(value = "fromProjectId", required = true) Integer fromProjectId,
-        HttpServletResponse response) throws Exception {
-        User user = ControllerUtil.getSignedInUser();
-        Project project = projectService.getById(toProjectId);
+    return runId;
+  }
 
-        if (!projectService.canAuthorProject(project, user)) {
+  /**
+   * Handles notifications of opened projects
+   * @param request
+   * @return
+   * @throws Exception
+   */
+  @SuppressWarnings("unchecked")
+  @RequestMapping(value = "/project/notifyAuthorBegin/{projectId}", method = RequestMethod.POST)
+  private ModelAndView handleNotifyAuthorProjectBegin(
+    @PathVariable String projectId,
+    HttpServletRequest request) throws Exception{
+    User user = ControllerUtil.getSignedInUser();
+    if (this.hasAuthorPermissions(user)) {
+
+      HttpSession currentUserSession = request.getSession();
+      HashMap<String, ArrayList<String>> openedProjectsToSessions =
+        (HashMap<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
+
+      if (openedProjectsToSessions == null) {
+        openedProjectsToSessions = new HashMap<String, ArrayList<String>>();
+        servletContext.setAttribute("openedProjectsToSessions", openedProjectsToSessions);
+      }
+
+      if (openedProjectsToSessions.get(projectId) == null) {
+        openedProjectsToSessions.put(projectId, new ArrayList<String>());
+      }
+      ArrayList<String> sessions = openedProjectsToSessions.get(projectId);  // sessions that are currently authoring this project
+      if (!sessions.contains(currentUserSession.getId())) {
+        sessions.add(currentUserSession.getId());
+      }
+
+      notifyCurrentAuthors(projectId);
+      return null;
+    } else {
+      return new ModelAndView(new RedirectView("accessdenied.html"));
+    }
+  }
+
+  /**
+   * Handles notifications of closed projects
+   *
+   * @throws Exception
+   */
+  @SuppressWarnings("unchecked")
+  @RequestMapping(value = "/project/notifyAuthorEnd/{projectId}", method = RequestMethod.POST)
+  private ModelAndView handleNotifyAuthorProjectEnd(
+    @PathVariable String projectId,
+    HttpServletRequest request) throws Exception{
+    User user = ControllerUtil.getSignedInUser();
+    if (this.hasAuthorPermissions(user)) {
+      HttpSession currentSession = request.getSession();
+      Map<String, ArrayList<String>> openedProjectsToSessions =
+        (Map<String, ArrayList<String>>) servletContext
+          .getAttribute("openedProjectsToSessions");
+
+      if (openedProjectsToSessions == null || openedProjectsToSessions.get(projectId) == null) {
+        return null;
+      } else {
+        ArrayList<String> sessions = openedProjectsToSessions.get(projectId);
+        if (!sessions.contains(currentSession.getId())) {
+          return null;
+        } else {
+          sessions.remove(currentSession.getId());
+          // if there are no more users authoring this project, remove this project from openedProjectsToSessions
+          if (sessions.size() == 0) {
+            openedProjectsToSessions.remove(projectId);
+          }
+
+          notifyCurrentAuthors(projectId);
+          return null;
+        }
+      }
+    } else {
+      return new ModelAndView(new RedirectView("accessdenied.html"));
+    }
+  }
+
+  /**
+   * Notify other authors authoring the same project id.
+   * @param projectId
+   */
+  private void notifyCurrentAuthors(String projectId) {
+    // Notifiy other authors authoring this project in real-time with websocket.
+    try {
+      User user = ControllerUtil.getSignedInUser();
+      if (webSocketHandler != null) {
+        WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+
+        // send this message to websockets
+        JSONObject webSocketMessageJSON = new JSONObject();
+        webSocketMessageJSON.put("messageType", "currentAuthors");
+        webSocketMessageJSON.put("projectId", projectId);
+        webSocketMessageJSON.put("messageParticipants", "authorToAuthors");
+        wiseWebSocketHandler.handleMessage(user, webSocketMessageJSON.toString());
+      }
+
+    } catch (Exception e) {
+      // if something fails while sending to websocket, allow the rest to continue
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Import steps and copy assets if necessary
+   * @param steps a string containing a JSONArray of steps
+   * @param toProjectId the project id we are importing into
+   * @param fromProjectId the project id we are importing from
+   */
+  @SuppressWarnings("unchecked")
+  @RequestMapping(value = "/project/importSteps/{projectId}", method = RequestMethod.POST)
+  private ModelAndView handleImportSteps(
+    @RequestParam(value = "steps", required = true) String steps,
+    @RequestParam(value = "toProjectId", required = true) Integer toProjectId,
+    @RequestParam(value = "fromProjectId", required = true) Integer fromProjectId,
+    HttpServletResponse response) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
+    Project project = projectService.getById(toProjectId);
+
+    if (!projectService.canAuthorProject(project, user)) {
             /*
              * the user does not have access to author the project so we will
              * not proceed
              */
-            return null;
-        }
-
-        /*
-         * Regex string to match asset file references in the step/component
-         * content.
-         * e.g. carbon.png
-         */
-        String patternString = "(\'|\"|\\\\\'|\\\\\")([^:][^/]?[^/]?[a-zA-Z0-9@\\._\\/\\s\\-]*[.](png|PNG|jpe?g|JPE?G|pdf|PDF|gif|GIF|mov|MOV|mp4|MP4|mp3|MP3|wav|WAV|swf|SWF|css|CSS|txt|TXT|json|JSON|xlsx?|XLSX?|doc|DOC|html.*?|HTML.*?|js|JS)).*?(\'|\"|\\\\\'|\\\\\")";
-
-        // compile the regex
-        Pattern pattern = Pattern.compile(patternString);
-
-        // run the regex on the string of steps
-        Matcher matcher = pattern.matcher(steps);
-
-        /*
-         * this list will hold all the file names that are referenced by the
-         * steps that we are importing
-         */
-        List<String> fileNames = new ArrayList<String>();
-
-        while(matcher.find()) {
-            String group0 = matcher.group(0); //\"nyan_cat.png\"
-            String group1 = matcher.group(1); //\"
-            String group2 = matcher.group(2); //nyan_cat.png
-            String group3 = matcher.group(3); //\"
-
-            // get the file name
-            String fileName = matcher.group(2);
-
-            // add the file name to our list of file names
-            fileNames.add(fileName);
-        }
-
-        // remove duplicates from the list of file names
-        fileNames = fileNames.stream().distinct().collect(Collectors.toList());
-        Project fromProject = projectService.getById(fromProjectId);
-
-        // get the from project url e.g. /171/project.json
-        String fromProjectUrl = fromProject.getModulePath();
-
-        // get the to project
-        Project toProject = projectService.getById(toProjectId);
-
-        // get the to project url e.g. /172/project.json
-        String toProjectUrl = toProject.getModulePath();
-
-        // get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
-        String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-
-        // get the full project file url e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/171/wise4.project.json
-        String fullFromProjectFileUrl = curriculumBaseDir + fromProjectUrl;
-
-        // get the full project file url e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/172/project.json
-        String fullToProjectFileUrl = curriculumBaseDir + toProjectUrl;
-
-        // get the index of the last separator from the fromProjectUrl
-        int fromProjectUrlLastIndexOfSlash = fromProjectUrl.lastIndexOf("/");
-        if (fromProjectUrlLastIndexOfSlash == -1) {
-            fromProjectUrlLastIndexOfSlash = fromProjectUrl.lastIndexOf("\\");
-        }
-
-        // get the project folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/171
-        String fullFromProjectFolderUrl = curriculumBaseDir + fromProjectUrl.substring(0, fromProjectUrlLastIndexOfSlash);
-        File fromProjectFolder = new File(fullFromProjectFolderUrl);
-
-        // get the index of the last separator from the toProjectUrl
-        int toProjectUrlLastIndexOfSlash = toProjectUrl.lastIndexOf("/");
-        if (toProjectUrlLastIndexOfSlash == -1) {
-            toProjectUrlLastIndexOfSlash = toProjectUrl.lastIndexOf("\\");
-        }
-
-        // get the project folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/172
-        String fullToProjectFolderUrl = curriculumBaseDir + toProjectUrl.substring(0, toProjectUrlLastIndexOfSlash);
-        File toProjectFolder = new File(fullToProjectFolderUrl);
-
-        // get the project assets folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/171/assets
-        String fromProjectAssetsUrl = fullFromProjectFolderUrl + "/assets";
-        File fromProjectAssetsFolder = new File(fromProjectAssetsUrl);
-
-        // get the project assets folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/172/assets
-        String toProjectAssetsUrl = fullToProjectFolderUrl + "/assets";
-        File toProjectAssetsFolder = new File(toProjectAssetsUrl);
-
-        /*
-         * loop through all the asset file names that are referenced in the
-         * steps we are importing
-         */
-        for (int f = 0; f < fileNames.size(); f++) {
-            String fileName = fileNames.get(f);
-
-            /*
-             * Import the asset to the project we are importing to. If the
-             * project already contains a file with the same file name and does
-             * not have the same file content, it will be given a new file name.
-             * The file name that is used will be returned by
-             * importAssetInContent().
-             */
-            String newFileName = FileManager.importAssetInContent(fileName, null, fromProjectAssetsFolder, toProjectAssetsFolder);
-
-            // check if the file name was changed
-            if (newFileName != null && !fileName.equals(newFileName)) {
-                // the file name was changed so we need to update the step content
-
-                // replace all instances of the file name with the new file name
-                steps = steps.replaceAll(fileName, newFileName);
-            }
-        }
-
-        /*
-         * send back the steps string which may have been modified if we needed
-         * to change a file name
-         */
-        response.getWriter().write(steps);
-        return null;
+      return null;
     }
+
+    /*
+     * Regex string to match asset file references in the step/component
+     * content.
+     * e.g. carbon.png
+     */
+    String patternString = "(\'|\"|\\\\\'|\\\\\")([^:][^/]?[^/]?[a-zA-Z0-9@\\._\\/\\s\\-]*[.](png|PNG|jpe?g|JPE?G|pdf|PDF|gif|GIF|mov|MOV|mp4|MP4|mp3|MP3|wav|WAV|swf|SWF|css|CSS|txt|TXT|json|JSON|xlsx?|XLSX?|doc|DOC|html.*?|HTML.*?|js|JS)).*?(\'|\"|\\\\\'|\\\\\")";
+
+    // compile the regex
+    Pattern pattern = Pattern.compile(patternString);
+
+    // run the regex on the string of steps
+    Matcher matcher = pattern.matcher(steps);
+
+    /*
+     * this list will hold all the file names that are referenced by the
+     * steps that we are importing
+     */
+    List<String> fileNames = new ArrayList<String>();
+
+    while(matcher.find()) {
+      String group0 = matcher.group(0); //\"nyan_cat.png\"
+      String group1 = matcher.group(1); //\"
+      String group2 = matcher.group(2); //nyan_cat.png
+      String group3 = matcher.group(3); //\"
+
+      // get the file name
+      String fileName = matcher.group(2);
+
+      // add the file name to our list of file names
+      fileNames.add(fileName);
+    }
+
+    // remove duplicates from the list of file names
+    fileNames = fileNames.stream().distinct().collect(Collectors.toList());
+    Project fromProject = projectService.getById(fromProjectId);
+
+    // get the from project url e.g. /171/project.json
+    String fromProjectUrl = fromProject.getModulePath();
+
+    // get the to project
+    Project toProject = projectService.getById(toProjectId);
+
+    // get the to project url e.g. /172/project.json
+    String toProjectUrl = toProject.getModulePath();
+
+    // get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
+    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+
+    // get the full project file url e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/171/wise4.project.json
+    String fullFromProjectFileUrl = curriculumBaseDir + fromProjectUrl;
+
+    // get the full project file url e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/172/project.json
+    String fullToProjectFileUrl = curriculumBaseDir + toProjectUrl;
+
+    // get the index of the last separator from the fromProjectUrl
+    int fromProjectUrlLastIndexOfSlash = fromProjectUrl.lastIndexOf("/");
+    if (fromProjectUrlLastIndexOfSlash == -1) {
+      fromProjectUrlLastIndexOfSlash = fromProjectUrl.lastIndexOf("\\");
+    }
+
+    // get the project folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/171
+    String fullFromProjectFolderUrl = curriculumBaseDir + fromProjectUrl.substring(0, fromProjectUrlLastIndexOfSlash);
+    File fromProjectFolder = new File(fullFromProjectFolderUrl);
+
+    // get the index of the last separator from the toProjectUrl
+    int toProjectUrlLastIndexOfSlash = toProjectUrl.lastIndexOf("/");
+    if (toProjectUrlLastIndexOfSlash == -1) {
+      toProjectUrlLastIndexOfSlash = toProjectUrl.lastIndexOf("\\");
+    }
+
+    // get the project folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/172
+    String fullToProjectFolderUrl = curriculumBaseDir + toProjectUrl.substring(0, toProjectUrlLastIndexOfSlash);
+    File toProjectFolder = new File(fullToProjectFolderUrl);
+
+    // get the project assets folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/171/assets
+    String fromProjectAssetsUrl = fullFromProjectFolderUrl + "/assets";
+    File fromProjectAssetsFolder = new File(fromProjectAssetsUrl);
+
+    // get the project assets folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/172/assets
+    String toProjectAssetsUrl = fullToProjectFolderUrl + "/assets";
+    File toProjectAssetsFolder = new File(toProjectAssetsUrl);
+
+    /*
+     * loop through all the asset file names that are referenced in the
+     * steps we are importing
+     */
+    for (int f = 0; f < fileNames.size(); f++) {
+      String fileName = fileNames.get(f);
+
+      /*
+       * Import the asset to the project we are importing to. If the
+       * project already contains a file with the same file name and does
+       * not have the same file content, it will be given a new file name.
+       * The file name that is used will be returned by
+       * importAssetInContent().
+       */
+      String newFileName = FileManager.importAssetInContent(fileName, null, fromProjectAssetsFolder, toProjectAssetsFolder);
+
+      // check if the file name was changed
+      if (newFileName != null && !fileName.equals(newFileName)) {
+        // the file name was changed so we need to update the step content
+
+        // replace all instances of the file name with the new file name
+        steps = steps.replaceAll(fileName, newFileName);
+      }
+    }
+
+    /*
+     * send back the steps string which may have been modified if we needed
+     * to change a file name
+     */
+    response.getWriter().write(steps);
+    return null;
+  }
 }

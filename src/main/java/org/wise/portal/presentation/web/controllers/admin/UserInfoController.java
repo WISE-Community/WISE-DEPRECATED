@@ -49,46 +49,46 @@ import org.wise.portal.service.user.UserService;
 @Controller
 public class UserInfoController {
 
-	@Autowired
-	private UserService userService;
+  @Autowired
+  private UserService userService;
 
-	@Autowired
-	private StudentService studentService;
+  @Autowired
+  private StudentService studentService;
 
-	@Autowired
-	private RunService runService;
+  @Autowired
+  private RunService runService;
 
-	protected final static String USER_INFO_MAP = "userInfoMap";
+  protected final static String USER_INFO_MAP = "userInfoMap";
 
-	@RequestMapping(value = {"/student/account/info", "/teacher/account/info"})
-	protected ModelAndView handleGetUserAccountInfo(
-        @RequestParam("userName") String userName) throws Exception {
-		User signedInUser = ControllerUtil.getSignedInUser();
-		User infoUser = this.userService.retrieveUserByUsername(userName);
+  @RequestMapping(value = {"/student/account/info", "/teacher/account/info"})
+  protected ModelAndView handleGetUserAccountInfo(
+      @RequestParam("userName") String userName) throws Exception {
+    User signedInUser = ControllerUtil.getSignedInUser();
+    User infoUser = this.userService.retrieveUserByUsername(userName);
 
-		if (signedInUser.isAdmin() ||
-				this.studentService.isStudentAssociatedWithTeacher(infoUser, signedInUser)) {
-			MutableUserDetails userDetails = (MutableUserDetails) infoUser.getUserDetails();
-			ModelAndView modelAndView = new ModelAndView();
+    if (signedInUser.isAdmin() ||
+      this.studentService.isStudentAssociatedWithTeacher(infoUser, signedInUser)) {
+      MutableUserDetails userDetails = (MutableUserDetails) infoUser.getUserDetails();
+      ModelAndView modelAndView = new ModelAndView();
 
-			HashMap<String, Object> userInfoMap = userDetails.getInfo();
-            userInfoMap.put("ID", infoUser.getId());
-			modelAndView.addObject(USER_INFO_MAP, userInfoMap);
+      HashMap<String, Object> userInfoMap = userDetails.getInfo();
+      userInfoMap.put("ID", infoUser.getId());
+      modelAndView.addObject(USER_INFO_MAP, userInfoMap);
 
-			if (infoUser.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)) {
-				modelAndView.addObject("isStudent", true);
-				List<Run> runList = runService.getRunList(infoUser);
-				modelAndView.addObject("runList", runList);
-				modelAndView.setViewName("student/account/info");
-			} else {
-				modelAndView.addObject("isStudent", false);
-				List<Run> runListByOwner = runService.getRunListByOwner(infoUser);
-				modelAndView.addObject("runList", runListByOwner);
-				modelAndView.setViewName("teacher/account/info");
-			}
-	        return modelAndView;
-		} else {
-            return new ModelAndView("errors/accessdenied");
-		}
+      if (infoUser.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)) {
+        modelAndView.addObject("isStudent", true);
+        List<Run> runList = runService.getRunList(infoUser);
+        modelAndView.addObject("runList", runList);
+        modelAndView.setViewName("student/account/info");
+      } else {
+        modelAndView.addObject("isStudent", false);
+        List<Run> runListByOwner = runService.getRunListByOwner(infoUser);
+        modelAndView.addObject("runList", runListByOwner);
+        modelAndView.setViewName("teacher/account/info");
+      }
+      return modelAndView;
+    } else {
+      return new ModelAndView("errors/accessdenied");
     }
+  }
 }

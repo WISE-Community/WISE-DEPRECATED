@@ -57,251 +57,249 @@ import org.wise.portal.service.run.RunService;
 @Controller
 public class GradeWorkController {
 
-	@Autowired
-	private RunService runService;
+  @Autowired
+  private RunService runService;
 
-	@Autowired
-	Properties wiseProperties;
+  @Autowired
+  Properties wiseProperties;
 
-	/**
-	 * Handles launching classroom monitor for WISE5 runs
-	 * @param runId ID of the run
-	 * @return
-     * @throws Exception
-     */
-	@RequestMapping(value = "/classroomMonitor/{runId}")
-	protected ModelAndView launchClassroomMonitorWISE5(
-			@PathVariable Integer runId) throws Exception {
+  /**
+   * Handles launching classroom monitor for WISE5 runs
+   * @param runId ID of the run
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = "/classroomMonitor/{runId}")
+  protected ModelAndView launchClassroomMonitorWISE5(@PathVariable Integer runId) throws Exception {
+    Run run = null;
+    try {
+      run = runService.retrieveById(new Long(runId));
+    } catch (NumberFormatException e) {
+      e.printStackTrace();
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+    }
 
-		Run run = null;
-		try {
-			run = runService.retrieveById(new Long(runId));
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (ObjectNotFoundException e) {
-			e.printStackTrace();
-		}
+    User user = ControllerUtil.getSignedInUser();
 
-		User user = ControllerUtil.getSignedInUser();
+    // check that the user has read or write permission on the run
+    if (user.isAdmin() ||
+      this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
+      this.runService.hasRunPermission(run, user, BasePermission.READ)) {
 
-		// check that the user has read or write permission on the run
-		if (user.isAdmin() ||
-				this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
-				this.runService.hasRunPermission(run, user, BasePermission.READ)) {
+      String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+      String getClassroomMonitorConfigUrl = wiseBaseURL + "/config/classroomMonitor/" + runId;
 
-			String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-			String getClassroomMonitorConfigUrl = wiseBaseURL + "/config/classroomMonitor/" + runId;
+      ModelAndView modelAndView = new ModelAndView("classroomMonitor");
+      modelAndView.addObject("configURL", getClassroomMonitorConfigUrl);
+      return modelAndView;
+    }
+    return null;
+  }
 
-			ModelAndView modelAndView = new ModelAndView("classroomMonitor");
-			modelAndView.addObject("configURL", getClassroomMonitorConfigUrl);
-			return modelAndView;
-		}
-		return null;
-	}
+  /**
+   * Handles launching classroom monitor for WISE4 runs
+   * @param runId
+   * @param action
+   * @param gradingType
+   * @param getRevisions
+   * @param request
+   * @param response
+   * @return
+   * @throws Exception
+   */
+  @RequestMapping(value = {
+    "/teacher/grading/gradework.html",
+    "/teacher/classroomMonitor/classroomMonitor"})
+  protected ModelAndView handleRequestInternal(
+    @RequestParam("runId") String runId,
+    @RequestParam(value = "action", required = false) String action,
+    @RequestParam(value = "gradingType", required = false) String gradingType,
+    @RequestParam(value = "getRevisions", required = false) String getRevisions,
+    HttpServletRequest request,
+    HttpServletResponse response) throws Exception {
 
-	/**
-	 * Handles launching classroom monitor for WISE4 runs
-	 * @param runId
-	 * @param action
-	 * @param gradingType
-	 * @param getRevisions
-	 * @param request
-	 * @param response
-     * @return
-     * @throws Exception
-     */
-	@RequestMapping(value = {
-			"/teacher/grading/gradework.html",
-			"/teacher/classroomMonitor/classroomMonitor"})
-	protected ModelAndView handleRequestInternal(
-			@RequestParam("runId") String runId,
-			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "gradingType", required = false) String gradingType,
-			@RequestParam(value = "getRevisions", required = false) String getRevisions,
-			HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+    Run run = runService.retrieveById(new Long(runId));
 
-		Run run = runService.retrieveById(new Long(runId));
+    if (action != null) {
+      if (action.equals("postMaxScore")) {
+        return handlePostMaxScore(request, response, run);
+      }
+    } else {
 
-		if (action != null) {
-			if (action.equals("postMaxScore")) {
-				return handlePostMaxScore(request, response, run);
-			}
-		} else {
+      ProjectType projectType = run.getProject().getProjectType();
 
-			ProjectType projectType = run.getProject().getProjectType();
+      if (projectType.equals(ProjectType.LD)) {
+        User user = ControllerUtil.getSignedInUser();
 
-			if (projectType.equals(ProjectType.LD)) {
-				User user = ControllerUtil.getSignedInUser();
+        // check that the user has read or write permission on the run
+        if (user.isAdmin() ||
+          this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
+          this.runService.hasRunPermission(run, user, BasePermission.READ)) {
 
-				// check that the user has read or write permission on the run
-				if (user.isAdmin() ||
-						this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
-						this.runService.hasRunPermission(run, user, BasePermission.READ)) {
+          String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 
-					String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+          String getGradeWorkUrl = wiseBaseURL + "/vle/gradework.html";
+          String getGradingConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
 
-			    	String getGradeWorkUrl = wiseBaseURL + "/vle/gradework.html";
-					String getGradingConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
+          // get the classroom monitor urls
+          String getClassroomMonitorUrl = wiseBaseURL + "/vle/classroomMonitor.html";
+          String getClassroomMonitorConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
 
-					// get the classroom monitor urls
-					String getClassroomMonitorUrl = wiseBaseURL + "/vle/classroomMonitor.html";
-					String getClassroomMonitorConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
+          // set the permission variable so that we can access it in the .jsp
+          if (this.runService.hasRunPermission(run, user, BasePermission.WRITE)) {
+            getGradeWorkUrl += "?loadScriptsIndividually&permission=write";
+            getClassroomMonitorUrl += "?loadScriptsIndividually&permission=write";
+          } else if (this.runService.hasRunPermission(run, user, BasePermission.READ)) {
+            getGradeWorkUrl += "?loadScriptsIndividually&permission=read";
+            getClassroomMonitorUrl += "?loadScriptsIndividually&permission=read";
+          }
 
-					// set the permission variable so that we can access it in the .jsp
-					if (this.runService.hasRunPermission(run, user, BasePermission.WRITE)) {
-						getGradeWorkUrl += "?loadScriptsIndividually&permission=write";
-						getClassroomMonitorUrl += "?loadScriptsIndividually&permission=write";
-					} else if (this.runService.hasRunPermission(run, user, BasePermission.READ)) {
-						getGradeWorkUrl += "?loadScriptsIndividually&permission=read";
-						getClassroomMonitorUrl += "?loadScriptsIndividually&permission=read";
-					}
+          ModelAndView modelAndView = new ModelAndView("vle");
+          modelAndView.addObject("runId", runId);
+          modelAndView.addObject("run", run);
+          if ("monitor".equals(gradingType)) {
+            modelAndView.addObject("vleurl", getClassroomMonitorUrl);
+            modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
+          } else {
+            modelAndView.addObject("vleurl", getGradeWorkUrl);
+            modelAndView.addObject("vleConfigUrl", getGradingConfigUrl);
+          }
 
-					ModelAndView modelAndView = new ModelAndView("vle");
-					modelAndView.addObject("runId", runId);
-					modelAndView.addObject("run", run);
-					if ("monitor".equals(gradingType)) {
-						modelAndView.addObject("vleurl", getClassroomMonitorUrl);
-						modelAndView.addObject("vleConfigUrl", getClassroomMonitorConfigUrl);
-					} else {
-						modelAndView.addObject("vleurl", getGradeWorkUrl);
-						modelAndView.addObject("vleConfigUrl", getGradingConfigUrl);
-					}
+          return modelAndView;
 
-					return modelAndView;
-
-				} else {
-                    return new ModelAndView("errors/accessdenied");
-				}
-			} else if (runId != null) {
-				ModelAndView modelAndView = new ModelAndView();
-				modelAndView.addObject("runId", runId);
-				return modelAndView;
-			} else {
-				//throw error
-			}
-		}
-
-		ModelAndView modelAndView = new ModelAndView();
+        } else {
+          return new ModelAndView("errors/accessdenied");
+        }
+      } else if (runId != null) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("runId", runId);
         return modelAndView;
-	}
+      } else {
+        //throw error
+      }
+    }
 
-	/**
-	 * Handles the saving of max score POSTs
-	 * @param request
-	 * @param response
-	 * @param run
-	 * @return
-	 */
-	private ModelAndView handlePostMaxScore(HttpServletRequest request,
-			HttpServletResponse response, Run run) {
-		try {
-			//get the nodeId
-			String nodeId = request.getParameter("nodeId");
+    ModelAndView modelAndView = new ModelAndView();
+    return modelAndView;
+  }
 
-			//get the new max score value
-			String maxScoreValue = request.getParameter("maxScoreValue");
+  /**
+   * Handles the saving of max score POSTs
+   * @param request
+   * @param response
+   * @param run
+   * @return
+   */
+  private ModelAndView handlePostMaxScore(HttpServletRequest request,
+                                          HttpServletResponse response, Run run) {
+    try {
+      //get the nodeId
+      String nodeId = request.getParameter("nodeId");
 
-			int maxScore = 0;
+      //get the new max score value
+      String maxScoreValue = request.getParameter("maxScoreValue");
 
-			//check if a max score value was provided
-			if (maxScoreValue != null && !maxScoreValue.equals("")) {
-				//parse the new max score value
-				maxScore = Integer.parseInt(maxScoreValue);
-			}
+      int maxScore = 0;
 
-			/*
-			 * the string that we will use to return the new max score JSON object
-			 * once we have successfully updated it on the server. this is so
-			 * that the client can retrieve confirmation that the new max
-			 * score has been saved and that it can then update its local copy.
-			 */
-			String maxScoreReturnJSON = "";
+      //check if a max score value was provided
+      if (maxScoreValue != null && !maxScoreValue.equals("")) {
+        //parse the new max score value
+        maxScore = Integer.parseInt(maxScoreValue);
+      }
 
-			//get the current run extras
-			String extras = run.getExtras();
+      /*
+       * the string that we will use to return the new max score JSON object
+       * once we have successfully updated it on the server. this is so
+       * that the client can retrieve confirmation that the new max
+       * score has been saved and that it can then update its local copy.
+       */
+      String maxScoreReturnJSON = "";
 
-			JSONObject jsonExtras;
-			JSONArray maxScores;
+      //get the current run extras
+      String extras = run.getExtras();
 
-			//check if there are extras
-			if (extras == null || extras.equals("")) {
-				//there are no extras so we will have to create it
-				jsonExtras = new JSONObject("{'summary':'','contact':'','title':'','comptime':'','graderange':'','subject':'','techreqs':'','maxScores':[],'author':'','totaltime':''}");
-			} else {
-				//create a JSONObject from the run extras
-				jsonExtras = new JSONObject(extras);
-			}
+      JSONObject jsonExtras;
+      JSONArray maxScores;
 
-			//get the maxScores from the extras
-			maxScores = (JSONArray) jsonExtras.get("maxScores");
+      //check if there are extras
+      if (extras == null || extras.equals("")) {
+        //there are no extras so we will have to create it
+        jsonExtras = new JSONObject("{'summary':'','contact':'','title':'','comptime':'','graderange':'','subject':'','techreqs':'','maxScores':[],'author':'','totaltime':''}");
+      } else {
+        //create a JSONObject from the run extras
+        jsonExtras = new JSONObject(extras);
+      }
 
-			/*
-			 * value to remember if we have updated an existing entry or
-			 * need to add a new entry
-			 */
-			boolean maxScoreUpdated = false;
+      //get the maxScores from the extras
+      maxScores = (JSONArray) jsonExtras.get("maxScores");
 
-			//loop through all the max scores in the current run extras
-			for(int x=0; x<maxScores.length(); x++) {
-				//get a max score entry
-				JSONObject maxScoreObj = (JSONObject) maxScores.get(x);
+      /*
+       * value to remember if we have updated an existing entry or
+       * need to add a new entry
+       */
+      boolean maxScoreUpdated = false;
 
-				//get the node id
-				String maxScoreObjNodeId = (String) maxScoreObj.get("nodeId");
+      //loop through all the max scores in the current run extras
+      for(int x=0; x<maxScores.length(); x++) {
+        //get a max score entry
+        JSONObject maxScoreObj = (JSONObject) maxScores.get(x);
 
-				//check if the node id matches the one new one we need to save
-				if (nodeId.equals(maxScoreObjNodeId)) {
-					//it matches so we will update the score
-					maxScoreObj.put("maxScoreValue", maxScore);
+        //get the node id
+        String maxScoreObjNodeId = (String) maxScoreObj.get("nodeId");
 
-					/*
-					 * generate the json string for the updated max score entry
-					 * so we can send it back in the response
-					 */
-					maxScoreReturnJSON = maxScoreObj.toString();
+        //check if the node id matches the one new one we need to save
+        if (nodeId.equals(maxScoreObjNodeId)) {
+          //it matches so we will update the score
+          maxScoreObj.put("maxScoreValue", maxScore);
 
-					maxScoreUpdated = true;
-				}
-			}
+          /*
+           * generate the json string for the updated max score entry
+           * so we can send it back in the response
+           */
+          maxScoreReturnJSON = maxScoreObj.toString();
 
-			//check if we were able to find an existing entry to update it
-			if (!maxScoreUpdated) {
-				/*
-				 * we did not find an existing entry to update so we will
-				 * create a new entry
-				 */
-				JSONObject newMaxScore = new JSONObject();
+          maxScoreUpdated = true;
+        }
+      }
 
-				//set the values
-				newMaxScore.put("nodeId", nodeId);
+      //check if we were able to find an existing entry to update it
+      if (!maxScoreUpdated) {
+        /*
+         * we did not find an existing entry to update so we will
+         * create a new entry
+         */
+        JSONObject newMaxScore = new JSONObject();
 
-				//set the max score
-				newMaxScore.put("maxScoreValue", maxScore);
+        //set the values
+        newMaxScore.put("nodeId", nodeId);
 
-				/*
-				 * generate the json string for the updated max score entry
-				 * so we can send it back in the response
-				 */
-				maxScoreReturnJSON = newMaxScore.toString();
+        //set the max score
+        newMaxScore.put("maxScoreValue", maxScore);
 
-				//put the new entry back into the maxScores JSON object
-				maxScores.put(newMaxScore);
-			}
+        /*
+         * generate the json string for the updated max score entry
+         * so we can send it back in the response
+         */
+        maxScoreReturnJSON = newMaxScore.toString();
 
-			//save the run extras back
-			runService.setExtras(run, jsonExtras.toString());
+        //put the new entry back into the maxScores JSON object
+        maxScores.put(newMaxScore);
+      }
 
-			//send the new max score entry back to the client
-			response.getWriter().print(maxScoreReturnJSON);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+      //save the run extras back
+      runService.setExtras(run, jsonExtras.toString());
 
-		return null;
-	}
+      //send the new max score entry back to the client
+      response.getWriter().print(maxScoreReturnJSON);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return null;
+  }
 }

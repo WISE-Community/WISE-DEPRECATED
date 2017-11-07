@@ -15,10 +15,11 @@ import java.util.List;
  */
 public interface AnnotationDao<T extends Annotation> extends SimpleDao<T> {
 
-    /**
-     * @return List of Annotations that match the specified parameters
-     */
-    List<Annotation> getAnnotationsByParams(
-            Integer id, Run run, Group period, Workgroup fromWorkgroup, Workgroup toWorkgroup,
-            String nodeId, String componentId, StudentWork studentWork, String localNotebookItemId, NotebookItem notebookItem, String type);
+  /**
+   * @return List of Annotations that match the specified parameters
+   */
+  List<Annotation> getAnnotationsByParams(
+    Integer id, Run run, Group period, Workgroup fromWorkgroup, Workgroup toWorkgroup,
+    String nodeId, String componentId, StudentWork studentWork, String localNotebookItemId,
+    NotebookItem notebookItem, String type);
 }

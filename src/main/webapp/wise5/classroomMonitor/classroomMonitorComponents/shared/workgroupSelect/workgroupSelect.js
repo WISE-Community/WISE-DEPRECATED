@@ -120,9 +120,7 @@ var WorkgroupSelectController = function () {
                         var _workgroup = _step2.value;
 
                         if (this.periodId === -1 || this.periodId === _workgroup.periodId) {
-                            if (this.canViewStudentNames) {
-                                _workgroup.displayNames += ' (' + this.$translate('teamId', { id: _workgroup.workgroupId }) + ')';
-                            }
+                            _workgroup.displayNames += ' (' + this.$translate('teamId', { id: _workgroup.workgroupId }) + ')';
                             workgroups.push(_workgroup);
                         }
                     }

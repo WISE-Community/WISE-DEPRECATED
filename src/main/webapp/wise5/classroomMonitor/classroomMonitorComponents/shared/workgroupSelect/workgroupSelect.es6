@@ -79,9 +79,7 @@ class WorkgroupSelectController {
             let workgroups = [];
             for (let workgroup of this.workgroups) {
                 if (this.periodId === -1 || this.periodId === workgroup.periodId) {
-                    if (this.canViewStudentNames) {
-                        workgroup.displayNames += ' (' + this.$translate('teamId', { id: workgroup.workgroupId}) + ')';
-                    }
+                    workgroup.displayNames += ' (' + this.$translate('teamId', { id: workgroup.workgroupId}) + ')';
                     workgroups.push(workgroup);
                 }
             }

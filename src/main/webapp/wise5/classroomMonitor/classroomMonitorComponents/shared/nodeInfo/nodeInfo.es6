@@ -1,8 +1,10 @@
 "use strict";
 
 class NodeInfoController {
-    constructor(ProjectService) {
+    constructor(ProjectService,
+                UtilService) {
         this.ProjectService = ProjectService;
+        this.UtilService = UtilService;
 
         this.$onInit = () => {
             this.nodeContent = this.getNodeContent();
@@ -37,6 +39,7 @@ class NodeInfoController {
 
         if (this.nodeContent) {
             components = this.nodeContent.components;
+            let assessmentItemIndex = 0;
 
             for (let c = 0; c < components.length; c++) {
                 let component = components[c];
@@ -50,6 +53,10 @@ class NodeInfoController {
                 }
 
                 component.hasWork = this.ProjectService.componentHasWork(component);
+                if (component.hasWork) {
+                    assessmentItemIndex++;
+                    component.assessmentItemIndex = assessmentItemIndex;
+                }
             }
         }
 
@@ -64,10 +71,20 @@ class NodeInfoController {
     getRubricWithAssetPaths(rubric) {
         return this.ProjectService.replaceAssetPaths(rubric);
     }
+
+    /**
+     * Get the component type label for the given component type
+     * @param componentType string
+     * @return string of the component type label
+     */
+    getComponentTypeLabel(componentType) {
+        return this.UtilService.getComponentTypeLabel(componentType);
+    }
 }
 
 NodeInfoController.$inject = [
-    'ProjectService'
+    'ProjectService',
+    'UtilService'
 ];
 
 const NodeInfo = {
@@ -93,6 +110,11 @@ const NodeInfo = {
             <md-card-content>
                 <div id="component_{{component.id}}" ng-repeat='component in $ctrl.components' class="component">
                     <md-divider class="divider divider--dashed" ng-if="!$first"></md-divider>
+                    <h3 ng-if="component.hasWork"
+                        class="accent-2 md-body-2 gray-lightest-bg
+                            component__header">
+                        {{ component.assessmentItemIndex + '. ' + $ctrl.getComponentTypeLabel(component.type) }}&nbsp;
+                    </h3>
                     <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""'
                                node-id='{{component.showPreviousWorkNodeId}}'
                                component-id='{{component.showPreviousWorkComponentId}}'

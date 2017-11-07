@@ -44,133 +44,133 @@ import org.wise.portal.service.authentication.UserDetailsService;
 @Table(name = UserImpl.DATA_STORE_NAME)
 public class UserImpl implements User {
 
-    @Transient
-    public static final String DATA_STORE_NAME = "users";
+  @Transient
+  public static final String DATA_STORE_NAME = "users";
 
-    @Transient
-    public static final String COLUMN_NAME_USER_DETAILS_FK = "user_details_fk";
+  @Transient
+  public static final String COLUMN_NAME_USER_DETAILS_FK = "user_details_fk";
 
-    @Transient
-    private static final long serialVersionUID = 1L;
+  @Transient
+  private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id = null;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id = null;
 
-    @Version
-    @Column(name = "OPTLOCK")
-    private Integer version = null;
+  @Version
+  @Column(name = "OPTLOCK")
+  private Integer version = null;
 
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = PersistentUserDetails.class)
-    @JoinColumn(name = COLUMN_NAME_USER_DETAILS_FK, nullable = false, unique = true)
-    private MutableUserDetails userDetails;
+  @OneToOne(cascade = CascadeType.ALL, targetEntity = PersistentUserDetails.class)
+  @JoinColumn(name = COLUMN_NAME_USER_DETAILS_FK, nullable = false, unique = true)
+  private MutableUserDetails userDetails;
 
-    /**
-     * @see User#getUserDetails()
-     */
-    public MutableUserDetails getUserDetails() {
-        return userDetails;
-    }
+  /**
+   * @see User#getUserDetails()
+   */
+  public MutableUserDetails getUserDetails() {
+    return userDetails;
+  }
 
-    /**
-     * @see User#setUserDetails(org.wise.portal.domain.authentication.MutableUserDetails)
-     */
-    public void setUserDetails(MutableUserDetails userDetails) {
-        this.userDetails = userDetails;
-    }
+  /**
+   * @see User#setUserDetails(org.wise.portal.domain.authentication.MutableUserDetails)
+   */
+  public void setUserDetails(MutableUserDetails userDetails) {
+    this.userDetails = userDetails;
+  }
 
-    /**
-     * @see User#isAdmin()
-     */
-    public boolean isStudent(){
-        return this.userDetails.hasGrantedAuthority(UserDetailsService.STUDENT_ROLE);
-    }
+  /**
+   * @see User#isAdmin()
+   */
+  public boolean isStudent(){
+    return this.userDetails.hasGrantedAuthority(UserDetailsService.STUDENT_ROLE);
+  }
 
-    /**
-     * @see User#isTeacher()
-     */
-    public boolean isTeacher(){
-        return this.userDetails.hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
-    }
+  /**
+   * @see User#isTeacher()
+   */
+  public boolean isTeacher(){
+    return this.userDetails.hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
+  }
 
-    /**
-     * @see User#isAdmin()
-     */
-    public boolean isAdmin(){
-    	return this.userDetails.hasGrantedAuthority(UserDetailsService.ADMIN_ROLE);
-    }
+  /**
+   * @see User#isAdmin()
+   */
+  public boolean isAdmin(){
+    return this.userDetails.hasGrantedAuthority(UserDetailsService.ADMIN_ROLE);
+  }
 
-    /**
-     * @see User#isAdmin()
-     */
-    public boolean isTrustedAuthor(){
-    	return this.userDetails.hasGrantedAuthority(UserDetailsService.TRUSTED_AUTHOR_ROLE);
-    }
+  /**
+   * @see User#isAdmin()
+   */
+  public boolean isTrustedAuthor(){
+    return this.userDetails.hasGrantedAuthority(UserDetailsService.TRUSTED_AUTHOR_ROLE);
+  }
 
-    /**
-     * @return the id
-     */
-    @SuppressWarnings("unused")
-    public Long getId() {
-        return id;
-    }
+  /**
+   * @return the id
+   */
+  @SuppressWarnings("unused")
+  public Long getId() {
+    return id;
+  }
 
-    /**
-     * @param id
-     *            the id to set
-     */
-    @SuppressWarnings("unused")
-    private void setId(Long id) {
-        this.id = id;
-    }
+  /**
+   * @param id
+   *            the id to set
+   */
+  @SuppressWarnings("unused")
+  private void setId(Long id) {
+    this.id = id;
+  }
 
-    /**
-     * @return the version
-     */
-    @SuppressWarnings("unused")
-    private Integer getVersion() {
-        return version;
-    }
+  /**
+   * @return the version
+   */
+  @SuppressWarnings("unused")
+  private Integer getVersion() {
+    return version;
+  }
 
-    /**
-     * @param version
-     *            the version to set
-     */
-    @SuppressWarnings("unused")
-    private void setVersion(Integer version) {
-        this.version = version;
-    }
+  /**
+   * @param version
+   *            the version to set
+   */
+  @SuppressWarnings("unused")
+  private void setVersion(Integer version) {
+    this.version = version;
+  }
 
-    /**
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int PRIME = 31;
-        int result = 1;
-        result = PRIME
-                * result
-                + ((this.userDetails == null) ? 0 : this.userDetails.hashCode());
-        return result;
-    }
+  /**
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode() {
+    final int PRIME = 31;
+    int result = 1;
+    result = PRIME
+      * result
+      + ((this.userDetails == null) ? 0 : this.userDetails.hashCode());
+    return result;
+  }
 
-    /**
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final UserImpl other = (UserImpl) obj;
-        if (this.userDetails == null) {
-            if (other.userDetails != null)
-                return false;
-        } else if (!this.userDetails.equals(other.userDetails))
-            return false;
-        return true;
-    }
+  /**
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    final UserImpl other = (UserImpl) obj;
+    if (this.userDetails == null) {
+      if (other.userDetails != null)
+        return false;
+    } else if (!this.userDetails.equals(other.userDetails))
+      return false;
+    return true;
+  }
 }

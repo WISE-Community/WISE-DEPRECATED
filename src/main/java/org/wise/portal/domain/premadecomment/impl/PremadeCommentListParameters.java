@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -36,113 +36,103 @@ import org.wise.portal.domain.user.User;
  */
 public class PremadeCommentListParameters {
 
-	private Set<PremadeComment> list = null;
-	
-	private String label = null;
-	
-	private User owner = null;
-	
-	private Run run = null;
-	
-	private boolean global = false;
-	
-	private Long projectId = null;
+  private Set<PremadeComment> list = null;
 
-	public PremadeCommentListParameters() {
-		
-	}
-			
-	public PremadeCommentListParameters(String label, User owner) {
-		this(label, owner, false, null);
-	}
-	
-	public PremadeCommentListParameters(String label, User owner, boolean global, Long projectId) {
-		this.label = label;
-		this.owner = owner;
-		this.global = global;
-		this.projectId = projectId;
-		this.list = new TreeSet<PremadeComment>();
-	}
-	
-	/**
-	 * @return the list
-	 */
-	public Set<PremadeComment> getList() {
-		return list;
-	}
+  private String label = null;
 
-	/**
-	 * @param list the list to set
-	 */
-	public void setList(Set<PremadeComment> list) {
-		this.list = list;
-	}
+  private User owner = null;
 
-	/**
-	 * @return the label
-	 */
-	public String getLabel() {
-		return label;
-	}
+  private Run run = null;
 
-	/**
-	 * @param label the label to set
-	 */
-	public void setLabel(String label) {
-		this.label = label;
-	}
+  private boolean global = false;
 
-	/**
-	 * @return the owner
-	 */
-	public User getOwner() {
-		return owner;
-	}
+  private Long projectId = null;
 
-	/**
-	 * @param owner the owner to set
-	 */
-	public void setOwner(User owner) {
-		this.owner = owner;
-	}
+  public PremadeCommentListParameters() {
 
-	/**
-	 * @return the run
-	 */
-	public Run getRun() {
-		return run;
-	}
+  }
 
-	/**
-	 * @param run the run to set
-	 */
-	public void setRun(Run run) {
-		this.run = run;
-	}
+  public PremadeCommentListParameters(String label, User owner) {
+    this(label, owner, false, null);
+  }
 
+  public PremadeCommentListParameters(String label, User owner, boolean global, Long projectId) {
+    this.label = label;
+    this.owner = owner;
+    this.global = global;
+    this.projectId = projectId;
+    this.list = new TreeSet<PremadeComment>();
+  }
 
-	public void setGlobal(boolean global) {
-		this.global = global;
-	}
+  /**
+   * @return the list
+   */
+  public Set<PremadeComment> getList() {
+    return list;
+  }
 
+  /**
+   * @param list the list to set
+   */
+  public void setList(Set<PremadeComment> list) {
+    this.list = list;
+  }
 
-	public boolean isGlobal() {
-		return global;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public Long getProjectId() {
-		return projectId;
-	}
+  /**
+   * @return the label
+   */
+  public String getLabel() {
+    return label;
+  }
 
-	/**
-	 * 
-	 * @param projectId
-	 */
-	public void setProjectId(Long projectId) {
-		this.projectId = projectId;
-	}
+  /**
+   * @param label the label to set
+   */
+  public void setLabel(String label) {
+    this.label = label;
+  }
+
+  /**
+   * @return the owner
+   */
+  public User getOwner() {
+    return owner;
+  }
+
+  /**
+   * @param owner the owner to set
+   */
+  public void setOwner(User owner) {
+    this.owner = owner;
+  }
+
+  /**
+   * @return the run
+   */
+  public Run getRun() {
+    return run;
+  }
+
+  /**
+   * @param run the run to set
+   */
+  public void setRun(Run run) {
+    this.run = run;
+  }
+
+  public void setGlobal(boolean global) {
+    this.global = global;
+  }
+
+  public boolean isGlobal() {
+    return global;
+  }
+
+  public Long getProjectId() {
+    return projectId;
+  }
+
+  public void setProjectId(Long projectId) {
+    this.projectId = projectId;
+  }
 }

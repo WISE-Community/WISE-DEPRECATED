@@ -29,102 +29,102 @@ import java.util.List;
 @Controller
 public class NotebookController {
 
-    @Autowired
-    private VLEService vleService;
+  @Autowired
+  private VLEService vleService;
 
-    @Autowired
-    private RunService runService;
+  @Autowired
+  private RunService runService;
 
-    @Autowired
-    private WorkgroupService workgroupService;
+  @Autowired
+  private WorkgroupService workgroupService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}")
-    protected void getNotebookItems(
-            @PathVariable Integer runId,
-            @RequestParam(value = "id", required = false) Integer id,
-            @RequestParam(value = "periodId", required = false) Integer periodId,
-            @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
-            @RequestParam(value = "nodeId", required = false) String nodeId,
-            @RequestParam(value = "componentId", required = false) String componentId,
-            HttpServletResponse response) throws IOException {
+  @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}")
+  protected void getNotebookItems(
+    @PathVariable Integer runId,
+    @RequestParam(value = "id", required = false) Integer id,
+    @RequestParam(value = "periodId", required = false) Integer periodId,
+    @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
+    @RequestParam(value = "nodeId", required = false) String nodeId,
+    @RequestParam(value = "componentId", required = false) String componentId,
+    HttpServletResponse response) throws IOException {
 
-        User signedInUser = ControllerUtil.getSignedInUser();
-        try {
-            Run run = runService.retrieveById(new Long(runId));
-            if (signedInUser.isStudent()) {
-                Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));
-                if ((!run.isStudentAssociatedToThisRun(signedInUser) || !workgroup.getMembers().contains(signedInUser))
-                        ) {
-                    // user is student and is not in this run or not in the specified workgroup, so deny access
-                    return;
-                }
-            }
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-            return;
+    User signedInUser = ControllerUtil.getSignedInUser();
+    try {
+      Run run = runService.retrieveById(new Long(runId));
+      if (signedInUser.isStudent()) {
+        Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));
+        if ((!run.isStudentAssociatedToThisRun(signedInUser) || !workgroup.getMembers().contains(signedInUser))
+          ) {
+          // user is student and is not in this run or not in the specified workgroup, so deny access
+          return;
         }
-
-        if (workgroupId != null) {
-            List<NotebookItem> notebookItemList = vleService.getNotebookItems(
-                    id, runId, periodId, workgroupId, nodeId, componentId);
-            JSONArray notebookItems = new JSONArray();
-            for (NotebookItem notebookItem : notebookItemList) {
-                notebookItems.put(notebookItem.toJSON());
-            }
-            response.getWriter().write(notebookItems.toString());
-        }
+      }
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+      return;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/student/notebook/{runId}")
-    protected void postNotebookItem(
-            @PathVariable Integer runId,
-            @RequestParam(value = "periodId", required = true) Integer periodId,
-            @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-            @RequestParam(value = "notebookItemId", required = false) Integer notebookItemId,
-            @RequestParam(value = "nodeId", required = false) String nodeId,
-            @RequestParam(value = "componentId", required = false) String componentId,
-            @RequestParam(value = "studentWorkId", required = false) Integer studentWorkId,
-            @RequestParam(value = "studentAssetId", required = false) Integer studentAssetId,
-            @RequestParam(value = "localNotebookItemId", required = false) String localNotebookItemId,
-            @RequestParam(value = "type", required = false) String type,
-            @RequestParam(value = "title", required = false) String title,
-            @RequestParam(value = "content", required = false) String content,
-            @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
-            @RequestParam(value = "clientDeleteTime", required = false) String clientDeleteTime,
-            HttpServletResponse response) throws IOException {
-
-        User signedInUser = ControllerUtil.getSignedInUser();
-        try {
-            Run run = runService.retrieveById(new Long(runId));
-            Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));
-            if (signedInUser.getUserDetails() instanceof StudentUserDetails &&
-                    (!run.isStudentAssociatedToThisRun(signedInUser) || !workgroup.getMembers().contains(signedInUser))
-                    ) {
-                // user is student and is not in this run or not in the specified workgroup, so deny access
-                return;
-            }
-        } catch (ObjectNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        NotebookItem notebookItem = vleService.saveNotebookItem(
-                notebookItemId,
-                runId,
-                periodId,
-                workgroupId,
-                nodeId,
-                componentId,
-                studentWorkId,
-                studentAssetId,
-                localNotebookItemId,
-                type,
-                title,
-                content,
-                clientSaveTime,
-                clientDeleteTime
-        );
-        response.getWriter().write(notebookItem.toJSON().toString());
+    if (workgroupId != null) {
+      List<NotebookItem> notebookItemList = vleService.getNotebookItems(
+        id, runId, periodId, workgroupId, nodeId, componentId);
+      JSONArray notebookItems = new JSONArray();
+      for (NotebookItem notebookItem : notebookItemList) {
+        notebookItems.put(notebookItem.toJSON());
+      }
+      response.getWriter().write(notebookItems.toString());
     }
+  }
+
+  @RequestMapping(method = RequestMethod.POST, value = "/student/notebook/{runId}")
+  protected void postNotebookItem(
+    @PathVariable Integer runId,
+    @RequestParam(value = "periodId", required = true) Integer periodId,
+    @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+    @RequestParam(value = "notebookItemId", required = false) Integer notebookItemId,
+    @RequestParam(value = "nodeId", required = false) String nodeId,
+    @RequestParam(value = "componentId", required = false) String componentId,
+    @RequestParam(value = "studentWorkId", required = false) Integer studentWorkId,
+    @RequestParam(value = "studentAssetId", required = false) Integer studentAssetId,
+    @RequestParam(value = "localNotebookItemId", required = false) String localNotebookItemId,
+    @RequestParam(value = "type", required = false) String type,
+    @RequestParam(value = "title", required = false) String title,
+    @RequestParam(value = "content", required = false) String content,
+    @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
+    @RequestParam(value = "clientDeleteTime", required = false) String clientDeleteTime,
+    HttpServletResponse response) throws IOException {
+
+    User signedInUser = ControllerUtil.getSignedInUser();
+    try {
+      Run run = runService.retrieveById(new Long(runId));
+      Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));
+      if (signedInUser.getUserDetails() instanceof StudentUserDetails &&
+        (!run.isStudentAssociatedToThisRun(signedInUser) || !workgroup.getMembers().contains(signedInUser))
+        ) {
+        // user is student and is not in this run or not in the specified workgroup, so deny access
+        return;
+      }
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+      return;
+    }
+
+    NotebookItem notebookItem = vleService.saveNotebookItem(
+      notebookItemId,
+      runId,
+      periodId,
+      workgroupId,
+      nodeId,
+      componentId,
+      studentWorkId,
+      studentAssetId,
+      localNotebookItemId,
+      type,
+      title,
+      content,
+      clientSaveTime,
+      clientDeleteTime
+    );
+    response.getWriter().write(notebookItem.toJSON().toString());
+  }
 
 }

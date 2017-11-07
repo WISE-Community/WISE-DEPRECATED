@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -27,16 +27,16 @@ import java.io.Serializable;
  */
 public class ObjectNotFoundException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private String message;
+  private String message;
 
-	@SuppressWarnings("unchecked")
-	public ObjectNotFoundException(Serializable id, Class objectClass) {
-		this.message = "Object with id " + id.toString() + "of type " + objectClass + " not found.";
-	}
+  @SuppressWarnings("unchecked")
+  public ObjectNotFoundException(Serializable id, Class objectClass) {
+    this.message = "Object with id " + id.toString() + "of type " + objectClass + " not found.";
+  }
 
-	public String getMessage() {
-		return this.message;
-	}
+  public String getMessage() {
+    return this.message;
+  }
 }

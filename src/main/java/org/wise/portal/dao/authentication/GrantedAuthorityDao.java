@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -26,28 +26,27 @@ import org.wise.portal.domain.authentication.MutableGrantedAuthority;
 /**
  * Interface that extends <code>SimpleDao</code> used for
  * <code>GrantedAuthority</code>.
- * 
+ *
  * @author Cynick Young
  */
-public interface GrantedAuthorityDao<T extends MutableGrantedAuthority> extends
-        SimpleDao<T> {
+public interface GrantedAuthorityDao<T extends MutableGrantedAuthority> extends SimpleDao<T> {
 
-    /**
-     * Given a string representing a role, determines if this granted authority
-     * has this role.
-     * 
-     * @param authority
-     *            The role string
-     * @return True if the GrantedAuthority has this role, false otherwise.
-     */
-    boolean hasRole(String authority);
+  /**
+   * Given a string representing a role, determines if this granted authority
+   * has this role.
+   *
+   * @param authority
+   *            The role string
+   * @return True if the GrantedAuthority has this role, false otherwise.
+   */
+  boolean hasRole(String authority);
 
-    /**
-     * Given an input string retrieve a corresponding record from data store.
-     * 
-     * @param name
-     *            A string representing the name of the data in the data store.
-     * @return A new instance of a data object.
-     */
-    T retrieveByName(String name);
+  /**
+   * Given an input string retrieve a corresponding record from data store.
+   *
+   * @param name
+   *            A string representing the name of the data in the data store.
+   * @return A new instance of a data object.
+   */
+  T retrieveByName(String name);
 }

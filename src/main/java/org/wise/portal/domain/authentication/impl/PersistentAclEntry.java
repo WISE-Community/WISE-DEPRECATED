@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -46,234 +46,226 @@ import org.wise.portal.domain.authentication.MutableAclTargetObjectIdentity;
 /**
  * Concrete implementation of <code>MutableAclEntry</code> marked with EJB3
  * annotations for persistence.
- * 
+ *
  * @author Cynick Young
  */
 @Entity
 @Table(name = PersistentAclEntry.DATA_STORE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = {
-        PersistentAclEntry.COLUMN_NAME_TARGET_OBJECT_ID,
-        PersistentAclEntry.COLUMN_NAME_ACE_ORDER }) })
+  PersistentAclEntry.COLUMN_NAME_TARGET_OBJECT_ID,
+  PersistentAclEntry.COLUMN_NAME_ACE_ORDER }) })
 public class PersistentAclEntry implements ImmutableAclEntry, Serializable {
 
-    @Transient
-    private static final long serialVersionUID = 1L;
+  @Transient
+  private static final long serialVersionUID = 1L;
 
-    @Transient
-    public static final String DATA_STORE_NAME = "acl_entry";
+  @Transient
+  public static final String DATA_STORE_NAME = "acl_entry";
 
-    @Transient
-    static final String COLUMN_NAME_TARGET_OBJECT_ID = "acl_object_identity";
+  @Transient
+  static final String COLUMN_NAME_TARGET_OBJECT_ID = "acl_object_identity";
 
-    @Transient
-    public static final String COLUMN_NAME_ACE_ORDER = "ace_order";
+  @Transient
+  public static final String COLUMN_NAME_ACE_ORDER = "ace_order";
 
-    @Transient
-    static final String COLUMN_NAME_SID = "sid";
+  @Transient
+  static final String COLUMN_NAME_SID = "sid";
 
-    @Transient
-    public static final String COLUMN_NAME_MASK = "mask";
+  @Transient
+  public static final String COLUMN_NAME_MASK = "mask";
 
-    @Transient
-    public static final String COLUMN_NAME_GRANTING = "granting";
+  @Transient
+  public static final String COLUMN_NAME_GRANTING = "granting";
 
-    @Transient
-    public static final String COLUMN_NAME_AUDIT_SUCCESS = "audit_success";
+  @Transient
+  public static final String COLUMN_NAME_AUDIT_SUCCESS = "audit_success";
 
-    @Transient
-    public static final String COLUMN_NAME_AUDIT_FAILURE = "audit_failure";
+  @Transient
+  public static final String COLUMN_NAME_AUDIT_FAILURE = "audit_failure";
 
-    @SuppressWarnings("unused")
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = PersistentAclTargetObjectIdentity.class)
-    @JoinColumn(name = COLUMN_NAME_TARGET_OBJECT_ID, nullable = false)
-    private MutableAclTargetObjectIdentity targetObjectIdentity;
+  @SuppressWarnings("unused")
+  @ManyToOne(cascade = CascadeType.ALL, targetEntity = PersistentAclTargetObjectIdentity.class)
+  @JoinColumn(name = COLUMN_NAME_TARGET_OBJECT_ID, nullable = false)
+  private MutableAclTargetObjectIdentity targetObjectIdentity;
 
-    @SuppressWarnings("unused")
-    @Column(name = COLUMN_NAME_ACE_ORDER, nullable = false)
-    private Integer aceOrder;
+  @SuppressWarnings("unused")
+  @Column(name = COLUMN_NAME_ACE_ORDER, nullable = false)
+  private Integer aceOrder;
 
-    @ManyToOne(cascade = CascadeType.ALL, targetEntity = PersistentAclSid.class)
-    @JoinColumn(name = COLUMN_NAME_SID, nullable = false)
-    private MutableAclSid sid;
+  @ManyToOne(cascade = CascadeType.ALL, targetEntity = PersistentAclSid.class)
+  @JoinColumn(name = COLUMN_NAME_SID, nullable = false)
+  private MutableAclSid sid;
 
-    @SuppressWarnings("unused")
-    @Column(name = COLUMN_NAME_MASK, nullable = false)
-    private Integer mask;
+  @SuppressWarnings("unused")
+  @Column(name = COLUMN_NAME_MASK, nullable = false)
+  private Integer mask;
 
-    @Transient
-    private Permission permission;
+  @Transient
+  private Permission permission;
 
-    @Column(name = COLUMN_NAME_GRANTING, nullable = false)
-    private Boolean granting;
+  @Column(name = COLUMN_NAME_GRANTING, nullable = false)
+  private Boolean granting;
 
-    @Column(name = COLUMN_NAME_AUDIT_SUCCESS, nullable = false)
-    private Boolean auditSuccess;
+  @Column(name = COLUMN_NAME_AUDIT_SUCCESS, nullable = false)
+  private Boolean auditSuccess;
 
-    @Column(name = COLUMN_NAME_AUDIT_FAILURE, nullable = false)
-    private Boolean auditFailure;
+  @Column(name = COLUMN_NAME_AUDIT_FAILURE, nullable = false)
+  private Boolean auditFailure;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
 
-    @SuppressWarnings("unused")
-    @Version
-    @Column(name = "OPTLOCK")
-    private Integer version = null;
+  @SuppressWarnings("unused")
+  @Version
+  @Column(name = "OPTLOCK")
+  private Integer version = null;
 
-    /**
-     * @param targetObjectIdentity
-     * @param aceOrder
-     * @param sid
-     * @param permission
-     * @param granting
-     * @param auditSuccess
-     * @param auditFailure
-     */
-    public PersistentAclEntry(
-            MutableAclTargetObjectIdentity targetObjectIdentity,
-            Integer aceOrder, MutableAclSid sid, Permission permission,
-            Boolean granting, Boolean auditSuccess, Boolean auditFailure) {
-        super();
-        this.targetObjectIdentity = targetObjectIdentity;
-        this.aceOrder = aceOrder;
-        this.sid = sid;
-        this.permission = permission;
-        this.mask = permission.getMask();
-        this.granting = granting;
-        this.auditSuccess = auditSuccess;
-        this.auditFailure = auditFailure;
-    }
+  /**
+   * @param targetObjectIdentity
+   * @param aceOrder
+   * @param sid
+   * @param permission
+   * @param granting
+   * @param auditSuccess
+   * @param auditFailure
+   */
+  public PersistentAclEntry(
+    MutableAclTargetObjectIdentity targetObjectIdentity,
+    Integer aceOrder, MutableAclSid sid, Permission permission,
+    Boolean granting, Boolean auditSuccess, Boolean auditFailure) {
+    super();
+    this.targetObjectIdentity = targetObjectIdentity;
+    this.aceOrder = aceOrder;
+    this.sid = sid;
+    this.permission = permission;
+    this.mask = permission.getMask();
+    this.granting = granting;
+    this.auditSuccess = auditSuccess;
+    this.auditFailure = auditFailure;
+  }
 
-    /**
-     * @see org.acegisecurity.acls.AccessControlEntry#getAcl()
-     */
-    public Acl getAcl() {
-        return null;
-    }
+  /**
+   * @see org.acegisecurity.acls.AccessControlEntry#getAcl()
+   */
+  public Acl getAcl() {
+    return null;
+  }
 
-    /**
-     * @see org.acegisecurity.acls.AccessControlEntry#getId()
-     */
-    public Serializable getId() {
-        return this.id;
-    }
+  /**
+   * @see org.acegisecurity.acls.AccessControlEntry#getId()
+   */
+  public Serializable getId() {
+    return this.id;
+  }
 
-    /**
-     * @see org.acegisecurity.acls.AccessControlEntry#getPermission()
-     */
-    public Permission getPermission() {
-        return this.permission;
-    }
+  /**
+   * @see org.acegisecurity.acls.AccessControlEntry#getPermission()
+   */
+  public Permission getPermission() {
+    return this.permission;
+  }
 
-    /**
-     * @see org.acegisecurity.acls.AccessControlEntry#getSid()
-     */
-    public Sid getSid() {
-        return this.sid;
-    }
+  /**
+   * @see org.acegisecurity.acls.AccessControlEntry#getSid()
+   */
+  public Sid getSid() {
+    return this.sid;
+  }
 
-    /**
-     * @see org.acegisecurity.acls.AccessControlEntry#isGranting()
-     */
-    public boolean isGranting() {
-        return this.granting;
-    }
+  /**
+   * @see org.acegisecurity.acls.AccessControlEntry#isGranting()
+   */
+  public boolean isGranting() {
+    return this.granting;
+  }
 
-    /**
-     * @see org.acegisecurity.acls.AuditableAccessControlEntry#isAuditFailure()
-     */
-    public boolean isAuditFailure() {
-        return this.auditFailure;
-    }
+  /**
+   * @see org.acegisecurity.acls.AuditableAccessControlEntry#isAuditFailure()
+   */
+  public boolean isAuditFailure() {
+    return this.auditFailure;
+  }
 
-    /**
-     * @see org.acegisecurity.acls.AuditableAccessControlEntry#isAuditSuccess()
-     */
-    public boolean isAuditSuccess() {
-        return this.auditSuccess;
-    }
+  /**
+   * @see org.acegisecurity.acls.AuditableAccessControlEntry#isAuditSuccess()
+   */
+  public boolean isAuditSuccess() {
+    return this.auditSuccess;
+  }
 
-    /**
-     * @param targetObjectIdentity
-     *                the targetObjectIdentity to set
-     */
-    @SuppressWarnings("unused")
-    private void setTargetObjectIdentity(
-            MutableAclTargetObjectIdentity targetObjectIdentity) {
-        this.targetObjectIdentity = targetObjectIdentity;
-    }
+  /**
+   * @param targetObjectIdentity
+   *                the targetObjectIdentity to set
+   */
+  @SuppressWarnings("unused")
+  private void setTargetObjectIdentity(
+    MutableAclTargetObjectIdentity targetObjectIdentity) {
+    this.targetObjectIdentity = targetObjectIdentity;
+  }
 
-    /**
-     * @param aceOrder
-     *                the aceOrder to set
-     */
-    @SuppressWarnings("unused")
-    private void setAceOrder(Integer aceOrder) {
-        this.aceOrder = aceOrder;
-    }
+  /**
+   * @param aceOrder the aceOrder to set
+   */
+  @SuppressWarnings("unused")
+  private void setAceOrder(Integer aceOrder) {
+    this.aceOrder = aceOrder;
+  }
 
-    /**
-     * @param sid
-     *                the sid to set
-     */
-    @SuppressWarnings("unused")
-    private void setSid(MutableAclSid sid) {
-        this.sid = sid;
-    }
+  /**
+   * @param sid the sid to set
+   */
+  @SuppressWarnings("unused")
+  private void setSid(MutableAclSid sid) {
+    this.sid = sid;
+  }
 
-    /**
-     * @param mask
-     *                the mask to set
-     */
-    @SuppressWarnings("unused")
-    private void setMask(Integer mask) {
-        this.mask = mask;
-        DefaultPermissionFactory dpf = new DefaultPermissionFactory();
-        this.permission = dpf.buildFromMask(mask);
-    }
+  /**
+   * @param mask the mask to set
+   */
+  @SuppressWarnings("unused")
+  private void setMask(Integer mask) {
+    this.mask = mask;
+    DefaultPermissionFactory dpf = new DefaultPermissionFactory();
+    this.permission = dpf.buildFromMask(mask);
+  }
 
-    /**
-     * @param granting
-     *                the granting to set
-     */
-    @SuppressWarnings("unused")
-    private void setGranting(Boolean granting) {
-        this.granting = granting;
-    }
+  /**
+   * @param granting the granting to set
+   */
+  @SuppressWarnings("unused")
+  private void setGranting(Boolean granting) {
+    this.granting = granting;
+  }
 
-    /**
-     * @param auditSuccess
-     *                the auditSuccess to set
-     */
-    @SuppressWarnings("unused")
-    private void setAuditSuccess(Boolean auditSuccess) {
-        this.auditSuccess = auditSuccess;
-    }
+  /**
+   * @param auditSuccess the auditSuccess to set
+   */
+  @SuppressWarnings("unused")
+  private void setAuditSuccess(Boolean auditSuccess) {
+    this.auditSuccess = auditSuccess;
+  }
 
-    /**
-     * @param auditFailure
-     *                the auditFailure to set
-     */
-    @SuppressWarnings("unused")
-    private void setAuditFailure(Boolean auditFailure) {
-        this.auditFailure = auditFailure;
-    }
+  /**
+   * @param auditFailure the auditFailure to set
+   */
+  @SuppressWarnings("unused")
+  private void setAuditFailure(Boolean auditFailure) {
+    this.auditFailure = auditFailure;
+  }
 
-    /**
-     * @param id
-     *                the id to set
-     */
-    @SuppressWarnings("unused")
-    private void setId(Long id) {
-        this.id = id;
-    }
+  /**
+   * @param id the id to set
+   */
+  @SuppressWarnings("unused")
+  private void setId(Long id) {
+    this.id = id;
+  }
 
-    /**
-     * @param version
-     *                the version to set
-     */
-    @SuppressWarnings("unused")
-    private void setVersion(Integer version) {
-        this.version = version;
-    }
+  /**
+   * @param version the version to set
+   */
+  @SuppressWarnings("unused")
+  private void setVersion(Integer version) {
+    this.version = version;
+  }
 }

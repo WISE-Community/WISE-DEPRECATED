@@ -48,203 +48,203 @@ import org.wise.portal.domain.user.User;
  */
 @Repository
 public class HibernateProjectDao extends AbstractHibernateDao<Project> implements
-		ProjectDao<Project> {
+    ProjectDao<Project> {
 
-    	private static final String FIND_ALL_QUERY = "from ProjectImpl";
+  private static final String FIND_ALL_QUERY = "from ProjectImpl";
 
-	/**
-	 * @see org.wise.portal.dao.run.RunDao#retrieveByRunCode(String)
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Project> retrieveListByTag(FamilyTag familytag) throws ObjectNotFoundException {
-		List<Project> projects = (List<Project>) this
-						.getHibernateTemplate()
-						.findByNamedParam(
-								"from ProjectImpl as project where project.familytag = :familytag",
-								"familytag", familytag);
-		if (projects == null)
-			throw new ObjectNotFoundException(familytag, this
-					.getDataObjectClass());
-		return projects;
-	}
+  /**
+   * @see org.wise.portal.dao.run.RunDao#retrieveByRunCode(String)
+   */
+  @SuppressWarnings("unchecked")
+  public List<Project> retrieveListByTag(FamilyTag familytag) throws ObjectNotFoundException {
+    List<Project> projects = (List<Project>) this
+      .getHibernateTemplate()
+      .findByNamedParam(
+        "from ProjectImpl as project where project.familytag = :familytag",
+        "familytag", familytag);
+    if (projects == null)
+      throw new ObjectNotFoundException(familytag, this
+        .getDataObjectClass());
+    return projects;
+  }
 
-	/**
-	 * @see org.wise.portal.dao.run.RunDao#retrieveByRunCode(String)
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Project> retrieveListByTag(String projectinfotag) throws ObjectNotFoundException {
-		List<Project> projects = (List<Project>) this
-		.getHibernateTemplate()
-		.findByNamedParam(
-				"from ProjectImpl as project where upper(project.projectinfotag) = :projectinfotag",
-				"projectinfotag", projectinfotag.toString().toUpperCase());
-		if (projects == null)
-			throw new ObjectNotFoundException(projectinfotag, this
-					.getDataObjectClass());
-		return projects;
-	}
+  /**
+   * @see org.wise.portal.dao.run.RunDao#retrieveByRunCode(String)
+   */
+  @SuppressWarnings("unchecked")
+  public List<Project> retrieveListByTag(String projectinfotag) throws ObjectNotFoundException {
+    List<Project> projects = (List<Project>) this
+      .getHibernateTemplate()
+      .findByNamedParam(
+        "from ProjectImpl as project where upper(project.projectinfotag) = :projectinfotag",
+        "projectinfotag", projectinfotag.toString().toUpperCase());
+    if (projects == null)
+      throw new ObjectNotFoundException(projectinfotag, this
+        .getDataObjectClass());
+    return projects;
+  }
 
-	/**
-	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
-	 */
-	@Override
-	protected String getFindAllQuery() {
-		return FIND_ALL_QUERY;
-	}
+  /**
+   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
+   */
+  @Override
+  protected String getFindAllQuery() {
+    return FIND_ALL_QUERY;
+  }
 
-	/**
-	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
-	 */
-	@Override
-	protected Class<? extends ProjectImpl> getDataObjectClass() {
-		return ProjectImpl.class;
-	}
+  /**
+   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
+   */
+  @Override
+  protected Class<? extends ProjectImpl> getDataObjectClass() {
+    return ProjectImpl.class;
+  }
 
-	public Project createEmptyProject() {
-		return new ProjectImpl();
-	}
+  public Project createEmptyProject() {
+    return new ProjectImpl();
+  }
 
-	public List<Project> retrieveListByInfo(ProjectInfo projectinfo)
-		throws ObjectNotFoundException {
+  public List<Project> retrieveListByInfo(ProjectInfo projectinfo)
+    throws ObjectNotFoundException {
 
-	    return this.retrieveListByTag(projectinfo.getFamilyTag());
-	}
+    return this.retrieveListByTag(projectinfo.getFamilyTag());
+  }
 
-	/**
-	 * @see org.wise.portal.dao.project.ProjectDao#getProjectListByUAR(net.sf.sail.webapp.domain.User, java.lang.String)
-	 */
-	public List<Project> getProjectListByUAR(User user, String role){
-		String q = "select project from ProjectImpl project inner join project." +
-			role + "s " + role + " where " + role + ".id='" + user.getId() + "'" +
-			" order by project.id desc";
-		return (List<Project>) this.getHibernateTemplate().find(q);
-	}
+  /**
+   * @see org.wise.portal.dao.project.ProjectDao#getProjectListByUAR(net.sf.sail.webapp.domain.User, java.lang.String)
+   */
+  public List<Project> getProjectListByUAR(User user, String role){
+    String q = "select project from ProjectImpl project inner join project." +
+      role + "s " + role + " where " + role + ".id='" + user.getId() + "'" +
+      " order by project.id desc";
+    return (List<Project>) this.getHibernateTemplate().find(q);
+  }
 
-	/**
-	 * @see org.wise.portal.dao.project.ProjectDao#getProjectList(java.lang.String)
-	 */
-	public List<Project> getProjectList(String query){
-		return (List<Project>) this.getHibernateTemplate().find(query);
-	}
+  /**
+   * @see org.wise.portal.dao.project.ProjectDao#getProjectList(java.lang.String)
+   */
+  public List<Project> getProjectList(String query){
+    return (List<Project>) this.getHibernateTemplate().find(query);
+  }
 
-	/**
-	 * @see org.wise.portal.dao.SimpleDao#getList()
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Project> getList() {
-		return (List<Project>) this.getHibernateTemplate().find(this.getFindAllQuery());
-	}
+  /**
+   * @see org.wise.portal.dao.SimpleDao#getList()
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<Project> getList() {
+    return (List<Project>) this.getHibernateTemplate().find(this.getFindAllQuery());
+  }
 
-	/**
-	 * @see org.wise.portal.dao.SimpleDao#getById(java.lang.Integer)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public Project getById(Serializable id) throws ObjectNotFoundException {
-		Project object = null;
-		try {
-			object = (Project) this.getHibernateTemplate().get(
-					this.getDataObjectClass(),  Long.valueOf(id.toString()));
-		} catch (NumberFormatException e) {
-			return null;
-		}
-		if (object == null)
-			throw new ObjectNotFoundException((Long) id, this.getDataObjectClass());
+  /**
+   * @see org.wise.portal.dao.SimpleDao#getById(java.lang.Integer)
+   */
+  @SuppressWarnings("unchecked")
+  @Override
+  public Project getById(Serializable id) throws ObjectNotFoundException {
+    Project object = null;
+    try {
+      object = (Project) this.getHibernateTemplate().get(
+        this.getDataObjectClass(),  Long.valueOf(id.toString()));
+    } catch (NumberFormatException e) {
+      return null;
+    }
+    if (object == null)
+      throw new ObjectNotFoundException((Long) id, this.getDataObjectClass());
 
-		return object;
-	}
+    return object;
+  }
 
-	@SuppressWarnings("unchecked")
-	public List<Project> getProjectListByOwner(User owner) {
-		if (owner == null) {
-			return new ArrayList<Project>();
-		}
+  @SuppressWarnings("unchecked")
+  public List<Project> getProjectListByOwner(User owner) {
+    if (owner == null) {
+      return new ArrayList<Project>();
+    }
 
-		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-		List<Project> result = session.createCriteria(ProjectImpl.class)
-				.add(Restrictions.eq("owner", owner))
-				.addOrder(Order.desc("id"))
-				.list();
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    List<Project> result = session.createCriteria(ProjectImpl.class)
+      .add(Restrictions.eq("owner", owner))
+      .addOrder(Order.desc("id"))
+      .list();
 
-		return result;
-	}
+    return result;
+  }
 
-	/**
-	 * @see org.wise.portal.dao.project.ProjectDao#getProjectListByTags(java.util.Set)
-	 */
-	@SuppressWarnings("unchecked")
-	@Transactional
-	public List<Project> getProjectListByTagNames(Set<String> tagNames) {
-		String tagString = "";
-		for(String name : tagNames){
-			tagString += "'" + name + "',";
-		}
-		tagString = tagString.substring(0, tagString.length() - 1);
+  /**
+   * @see org.wise.portal.dao.project.ProjectDao#getProjectListByTags(java.util.Set)
+   */
+  @SuppressWarnings("unchecked")
+  @Transactional
+  public List<Project> getProjectListByTagNames(Set<String> tagNames) {
+    String tagString = "";
+    for(String name : tagNames){
+      tagString += "'" + name + "',";
+    }
+    tagString = tagString.substring(0, tagString.length() - 1);
 
-		String q = "select distinct project from ProjectImpl project inner join project.tags tag with tag.name in (" + tagString + ") ";
-		List<Project> projects = (List<Project>) this.getHibernateTemplate().find(q);
-		List<Project> result = new ArrayList<Project>();
-		for (Project project : projects) {
-			int numMatches = 0;
-			for (Tag projectTag : project.getTags()) {
-				if (tagNames.contains(projectTag.getName())) {
-					numMatches++;
-				}
-			}
-			if (numMatches == tagNames.size()) {
-				result.add(project);
-			}
-		}
-		return result;
-	}
+    String q = "select distinct project from ProjectImpl project inner join project.tags tag with tag.name in (" + tagString + ") ";
+    List<Project> projects = (List<Project>) this.getHibernateTemplate().find(q);
+    List<Project> result = new ArrayList<Project>();
+    for (Project project : projects) {
+      int numMatches = 0;
+      for (Tag projectTag : project.getTags()) {
+        if (tagNames.contains(projectTag.getName())) {
+          numMatches++;
+        }
+      }
+      if (numMatches == tagNames.size()) {
+        result.add(project);
+      }
+    }
+    return result;
+  }
 
-	/**
-	 * @see org.wise.portal.dao.project.ProjectDao#getProjectListByAuthorName(java.lang.String)
-	 */
-	@Override
-	public List<Project> getProjectListByAuthorName(String authorName) {
-		List<Project> projects = (List<Project>) this
-				.getHibernateTemplate()
-				.findByNamedParam(
-						"from ProjectImpl as project where project.metadataObj.author like :authorName",
-						"authorName", "%"+authorName+"%");
-		return projects;
-	}
+  /**
+   * @see org.wise.portal.dao.project.ProjectDao#getProjectListByAuthorName(java.lang.String)
+   */
+  @Override
+  public List<Project> getProjectListByAuthorName(String authorName) {
+    List<Project> projects = (List<Project>) this
+      .getHibernateTemplate()
+      .findByNamedParam(
+        "from ProjectImpl as project where project.metadataObj.author like :authorName",
+        "authorName", "%"+authorName+"%");
+    return projects;
+  }
 
-	/**
-	 * @see org.wise.portal.dao.project.ProjectDao#getProjectListByTitle(java.lang.String)
-	 */
-	@Override
-	public List<Project> getProjectListByTitle(String title) {
-		List<Project> projects = (List<Project>) this
-				.getHibernateTemplate()
-				.findByNamedParam(
-						"from ProjectImpl as project where project.name like :title",
-						"title", "%"+title+"%");
-		return projects;
-	}
+  /**
+   * @see org.wise.portal.dao.project.ProjectDao#getProjectListByTitle(java.lang.String)
+   */
+  @Override
+  public List<Project> getProjectListByTitle(String title) {
+    List<Project> projects = (List<Project>) this
+      .getHibernateTemplate()
+      .findByNamedParam(
+        "from ProjectImpl as project where project.name like :title",
+        "title", "%"+title+"%");
+    return projects;
+  }
 
-	/**
-	 * @see org.wise.portal.dao.project.ProjectDao#getProjectWithoutMetadata(java.lang.Long)
-	 */
-	public Project getProjectWithoutMetadata(Long projectId){
-		try {
-			return (Project) this.getHibernateTemplate().get(this.getDataObjectClass(),  projectId);
-		} catch (NumberFormatException e) {
-			return null;
-		}
-	}
+  /**
+   * @see org.wise.portal.dao.project.ProjectDao#getProjectWithoutMetadata(java.lang.Long)
+   */
+  public Project getProjectWithoutMetadata(Long projectId){
+    try {
+      return (Project) this.getHibernateTemplate().get(this.getDataObjectClass(),  projectId);
+    } catch (NumberFormatException e) {
+      return null;
+    }
+  }
 
-	/**
-	 * @see org.wise.portal.dao.project.ProjectDao#getProjectCopies(java.lang.Long)
-	 */
-	public List<Project> getProjectCopies(Long projectId) {
-		List<Project> projects = (List<Project>) this
-		.getHibernateTemplate()
-		.findByNamedParam(
-				"from ProjectImpl as project where project.parentProjectId = :parentProjectId",
-				"parentProjectId", projectId);
-		return projects;
-	}
+  /**
+   * @see org.wise.portal.dao.project.ProjectDao#getProjectCopies(java.lang.Long)
+   */
+  public List<Project> getProjectCopies(Long projectId) {
+    List<Project> projects = (List<Project>) this
+      .getHibernateTemplate()
+      .findByNamedParam(
+        "from ProjectImpl as project where project.parentProjectId = :parentProjectId",
+        "parentProjectId", projectId);
+    return projects;
+  }
 }

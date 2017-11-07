@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -30,52 +30,52 @@ import org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority;
 /**
  * Class that implements the <code>GrantedAuthorityDao</code> interface using
  * Hibernate.
- * 
+ *
  * @author Cynick Young
  */
 @Repository
 public class HibernateGrantedAuthorityDao extends
-        AbstractHibernateDao<MutableGrantedAuthority> implements
-        GrantedAuthorityDao<MutableGrantedAuthority> {
+    AbstractHibernateDao<MutableGrantedAuthority> implements
+    GrantedAuthorityDao<MutableGrantedAuthority> {
 
-    private static final String FIND_ALL_QUERY = "from PersistentGrantedAuthority";
+  private static final String FIND_ALL_QUERY = "from PersistentGrantedAuthority";
 
-    /**
-     * Retrieve the granted authority by name. Returns null if the specified
-     * authority name is not found.
-     * 
-     * @see org.wise.portal.dao.authentication.GrantedAuthorityDao#retrieveByName(java.lang.String)
-     */
-    public MutableGrantedAuthority retrieveByName(String authority) {
-        return (MutableGrantedAuthority) DataAccessUtils
-                .uniqueResult(this
-                        .getHibernateTemplate()
-                        .findByNamedParam(
-                                "from PersistentGrantedAuthority as granted_authority where granted_authority.authority = :authority",
-                                new String[] { "authority" },
-                                new Object[] { authority }));
-    }
+  /**
+   * Retrieve the granted authority by name. Returns null if the specified
+   * authority name is not found.
+   *
+   * @see org.wise.portal.dao.authentication.GrantedAuthorityDao#retrieveByName(java.lang.String)
+   */
+  public MutableGrantedAuthority retrieveByName(String authority) {
+    return (MutableGrantedAuthority) DataAccessUtils
+      .uniqueResult(this
+        .getHibernateTemplate()
+        .findByNamedParam(
+          "from PersistentGrantedAuthority as granted_authority where granted_authority.authority = :authority",
+          new String[] { "authority" },
+          new Object[] { authority }));
+  }
 
-    /**
-     * @see org.wise.portal.dao.authentication.GrantedAuthorityDao#hasRole(java.lang.String)
-     */
-    public boolean hasRole(String authority) {
-        return (this.retrieveByName(authority) != null);
-    }
+  /**
+   * @see org.wise.portal.dao.authentication.GrantedAuthorityDao#hasRole(java.lang.String)
+   */
+  public boolean hasRole(String authority) {
+    return (this.retrieveByName(authority) != null);
+  }
 
-    /**
-     * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
-     */
-    @Override
-    protected String getFindAllQuery() {
-        return FIND_ALL_QUERY;
-    }
+  /**
+   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
+   */
+  @Override
+  protected String getFindAllQuery() {
+    return FIND_ALL_QUERY;
+  }
 
-	/**
-	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
-	 */
-	@Override
-	protected Class<PersistentGrantedAuthority> getDataObjectClass() {
-		return PersistentGrantedAuthority.class;
-	}
+  /**
+   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
+   */
+  @Override
+  protected Class<PersistentGrantedAuthority> getDataObjectClass() {
+    return PersistentGrantedAuthority.class;
+  }
 }

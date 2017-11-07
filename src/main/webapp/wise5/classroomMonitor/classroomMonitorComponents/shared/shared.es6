@@ -9,6 +9,7 @@ import ComponentRevisionsInfo from './componentRevisionsInfo/componentRevisionsI
 import MainMenu from './mainMenu/mainMenu';
 import NodeCompletionIcon from './nodeCompletionIcon/nodeCompletionIcon';
 import NodeIcon from './nodeIcon/nodeIcon';
+import NodeInfo from './nodeInfo/nodeInfo';
 import NotificationsMenu from './notificationsMenu/notificationsMenu';
 import PauseScreensMenu from './pauseScreensMenu/pauseScreensMenu'
 import PeriodSelect from './periodSelect/periodSelect';
@@ -34,6 +35,7 @@ Shared.component('mainMenu', MainMenu);
 Shared.component('notificationsMenu', NotificationsMenu);
 Shared.component('nodeCompletionIcon', NodeCompletionIcon);
 Shared.component('nodeIcon', NodeIcon);
+Shared.component('nodeInfo', NodeInfo);
 Shared.component('pauseScreensMenu', PauseScreensMenu);
 Shared.component('periodSelect', PeriodSelect);
 Shared.component('sideMenu', SideMenu);

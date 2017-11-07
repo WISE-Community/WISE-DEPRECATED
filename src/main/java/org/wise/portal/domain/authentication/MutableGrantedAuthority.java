@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -28,16 +28,16 @@ import org.wise.portal.domain.Persistable;
  * provides mutator methods to the properties. <code>GrantedAuthority</code>
  * represents a role that can be given specific access permissions. An example
  * could be Admin, User, Manager, and Bank Teller roles.
- * 
+ *
  * @author Cynick Young
  * @see org.acegisecurity.GrantedAuthority
  */
 public interface MutableGrantedAuthority extends GrantedAuthority, Persistable {
 
-    /**
-     * Sets the name of the this authority.
-     * 
-     * @param authority
-     */
-    void setAuthority(String authority);
+  /**
+   * Sets the name of the this authority.
+   *
+   * @param authority
+   */
+  void setAuthority(String authority);
 }

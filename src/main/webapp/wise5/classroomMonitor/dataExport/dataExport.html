@@ -14,6 +14,12 @@
     md-checkbox.md-checked .md-icon {
         background-color: rgba(21,101,192,0.87);
     }
+    .exportComponentDataButton {
+      min-height: 23px !important;
+      min-width: 46px !important;
+      font-size: 12px !important;
+      line-height: 0px;
+    }
 </style>
 
 <div class="view-content view-content--with-sidemenu">
@@ -34,6 +40,8 @@
                 <md-button class="md-raised" ng-click="dataExportController.export('notifications')" translate="exportNotifications" id="downloadNotificationsButton"></md-button>
                 <br/>
                 <md-button class="md-raised" ng-click="dataExportController.export('studentAssets')" translate="exportStudentAssets" id="downloadStudentAssetsButton"></md-button>
+                <br/>
+                <md-button class="md-raised" ng-click="dataExportController.export('componentData')" translate="exportComponentData" id="downloadComponentDataButton"></md-button>
                 <br/>
                 <md-button class="md-raised" ng-click="dataExportController.rawDataExportClicked()" translate="exportRawData" id="downloadRawDataButton"></md-button>
             </div>
@@ -105,12 +113,70 @@
                         </span>
                         <div ng-if='projectItem.order != 0 && projectItem.node.type != "group" && projectItem.node.components.length > 0'
                              ng-repeat='componentItem in projectItem.node.components track by $index'>
-                            <input type='checkbox' ng-model='componentItem.checked' class='componentHeader'"/> {{($index + 1)}} {{componentItem.type}}
+                            <input type='checkbox' ng-model='componentItem.checked' class='componentHeader'/> {{($index + 1)}} {{componentItem.type}}
                         </div>
                     </div>
                     <md-button class="md-raised" ng-click="dataExportController.export()" translate="export" id="doExportButton2"></md-button>
                     <md-button class="md-raised" ng-click="dataExportController.exportType = null" translate="cancel" id="cancel"></md-button>
                 </div>
+            </div>
+            <div ng-show='dataExportController.exportType == "componentData"'>
+              <md-button class="md-raised" ng-click="dataExportController.exportType = null" id="cancel">
+                  <md-icon>arrow_back</md-icon>
+                  <md-tooltip>
+                      {{ 'back' | translate }}
+                  </md-tooltip>
+              </md-button>
+              <h4>{{ 'exportComponentData' | translate }}</h4>
+              <br/>
+              <md-radio-group ng-model="dataExportController.workSelectionType">
+                  <md-radio-button value="exportAllWork" class="md-primary">{{ 'exportAllStudentWork' | translate }}</md-radio-button>
+                  <md-radio-button value="exportLatestWork" class="md-primary">{{ 'exportLatestStudentWork' | translate }}</md-radio-button>
+              </md-radio-group>
+              <md-checkbox ng-model="dataExportController.includeCorrectnessColumns">{{ 'includeCorrectnessColumns' | translate }}</md-checkbox>
+              <br/>
+              <md-checkbox ng-model="dataExportController.includeOnlySubmits">{{ 'includeOnlySubmits' | translate }}</md-checkbox>
+              <br/>
+              <h4 style='display:inline'>{{dataExportController.project.metadata.title}}</h4>
+              <span style="cursor:pointer" ng-click='dataExportController.previewProject()'>
+                  <md-tooltip md-direction="right"><span translate="preview"></span></md-tooltip>
+                  <md-icon>pageview</md-icon>
+              </span><br/>
+              <div ng-repeat='projectItem in dataExportController.projectIdToOrder'>
+                  <h6 style='display: inline; cursor: pointer'
+                      ng-if='projectItem.order != 0'
+                      ng-class='{ "stepHeader" : !dataExportController.isGroupNode(projectItem.node.id) }'>
+                      {{dataExportController.getNodePositionById(projectItem.node.id)}} {{dataExportController.getNodeTitleByNodeId(projectItem.node.id)}}
+                  </h6>
+                  <span style="cursor:pointer" ng-if='projectItem.node.type != "group"'
+                          ng-click='dataExportController.previewNode(projectItem.node)'>
+                      <md-tooltip md-direction="right"><span translate="preview"></span></md-tooltip>
+                      <md-icon>pageview</md-icon>
+                  </span>
+                  <div ng-if='projectItem.order != 0 && projectItem.node.type != "group" && projectItem.node.components.length > 0'
+                       ng-repeat='componentItem in projectItem.node.components track by $index'
+                       class='componentHeader'>
+                      <div>
+                        {{($index + 1)}}. {{componentItem.type}}
+                        <md-button ng-if='dataExportController.canExportComponentDataType(componentItem.type)'
+                            class='md-primary md-raised exportComponentDataButton'
+                            ng-click='dataExportController.exportComponentClicked(projectItem.node.id, componentItem)'>
+                          <md-icon>file_download</md-icon>
+                          <md-tooltip>{{ 'downloadExport' | translate }}</md-tooltip>
+                        </md-button>
+                        <span ng-if='componentItem.type == "Match"'>
+                          <md-icon>help</md-icon>
+                          <md-tooltip md-direction='right'>{{ 'matchCorrectnessColumnKey' | translate }}</md-tooltip>
+                        </span>
+                      </div>
+                  </div>
+              </div>
+              <md-button class="md-raised" ng-click="dataExportController.exportType = null" id="cancel">
+                  <md-icon>arrow_back</md-icon>
+                  <md-tooltip>
+                      {{ 'back' | translate }}
+                  </md-tooltip>
+              </md-button>
             </div>
         </div>
     </div>

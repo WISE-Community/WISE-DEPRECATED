@@ -51,273 +51,259 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "events",  indexes = {
-		@Index(columnList = "runId", name = "eventsRunIdIndex"),
-		@Index(columnList = "workgroupId", name = "eventsWorkgroupIdIndex"),
-		@Index(columnList = "projectId", name = "eventsProjectIdIndex"),
-		@Index(columnList = "userId", name = "eventsUserIdIndex")})
+  @Index(columnList = "runId", name = "eventsRunIdIndex"),
+  @Index(columnList = "workgroupId", name = "eventsWorkgroupIdIndex"),
+  @Index(columnList = "projectId", name = "eventsProjectIdIndex"),
+  @Index(columnList = "userId", name = "eventsUserIdIndex")})
 public class Event extends PersistableDomain {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id = null;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Integer id = null;
 
-	@ManyToOne(targetEntity = ProjectImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-	@JoinColumn(name = "projectId", nullable = true)
-	private Project project;
+  @ManyToOne(targetEntity = ProjectImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "projectId", nullable = true)
+  private Project project;
 
-	@ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-	@JoinColumn(name = "runId", nullable = true)
-	private Run run;
+  @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "runId", nullable = true)
+  private Run run;
 
-    @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "periodId")
-    private Group period;
+  @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "periodId")
+  private Group period;
 
-    @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-	@JoinColumn(name = "workgroupId", nullable = true)
-	private Workgroup workgroup;
+  @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "workgroupId", nullable = true)
+  private Workgroup workgroup;
 
-    @ManyToOne(targetEntity = UserImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-	@JoinColumn(name = "userId", nullable = true)
-	private User user;
+  @ManyToOne(targetEntity = UserImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "userId", nullable = true)
+  private User user;
 
-    @Column(name = "nodeId", length = 30)
-    private String nodeId;
+  @Column(name = "nodeId", length = 30)
+  private String nodeId;
 
-	@Column(name = "componentId", length = 30)
-	private String componentId;
+  @Column(name = "componentId", length = 30)
+  private String componentId;
 
-	@Column(name = "componentType", length = 30)
-	private String componentType;
+  @Column(name = "componentType", length = 30)
+  private String componentType;
 
-	@Column(name = "context", nullable = false, length = 30)
-	private String context;
+  @Column(name = "context", nullable = false, length = 30)
+  private String context;
 
-	@Column(name = "category", nullable = false)
-	private String category;
+  @Column(name = "category", nullable = false)
+  private String category;
 
-	@Column(name = "event", nullable = false)
-	private String event;
+  @Column(name = "event", nullable = false)
+  private String event;
 
-	@Column(name = "data", length = 65536, columnDefinition = "text")
-	private String data;
+  @Column(name = "data", length = 65536, columnDefinition = "text")
+  private String data;
 
-	@Column(name = "clientSaveTime", nullable = false)
-	private Timestamp clientSaveTime;
+  @Column(name = "clientSaveTime", nullable = false)
+  private Timestamp clientSaveTime;
 
-	@Column(name = "serverSaveTime", nullable = false)
-	private Timestamp serverSaveTime;
+  @Column(name = "serverSaveTime", nullable = false)
+  private Timestamp serverSaveTime;
 
-	@Override
-	protected Class<?> getObjectClass() {
-		return Event.class;
-	}
+  @Override
+  protected Class<?> getObjectClass() {
+    return Event.class;
+  }
 
-	public Integer getId() {
-        return id;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public Project getProject() {
-		return project;
-	}
+  public Project getProject() {
+    return project;
+  }
 
-	public void setProject(Project project) {
-		this.project = project;
-	}
+  public void setProject(Project project) {
+    this.project = project;
+  }
 
-	public Run getRun() {
-		return run;
-	}
+  public Run getRun() {
+    return run;
+  }
 
-	public void setRun(Run run) {
-		this.run = run;
-	}
+  public void setRun(Run run) {
+    this.run = run;
+  }
 
-	public Group getPeriod() {
-		return period;
-	}
+  public Group getPeriod() {
+    return period;
+  }
 
-	public void setPeriod(Group period) {
-		this.period = period;
-	}
+  public void setPeriod(Group period) {
+    this.period = period;
+  }
 
-	public Workgroup getWorkgroup() {
-		return workgroup;
-	}
+  public Workgroup getWorkgroup() {
+    return workgroup;
+  }
 
-	public void setWorkgroup(Workgroup workgroup) {
-		this.workgroup = workgroup;
-	}
+  public void setWorkgroup(Workgroup workgroup) {
+    this.workgroup = workgroup;
+  }
 
-	public User getUser() {
-		return user;
-	}
+  public User getUser() {
+    return user;
+  }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-	public String getNodeId() {
-		return nodeId;
-	}
+  public String getNodeId() {
+    return nodeId;
+  }
 
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
-	}
+  public void setNodeId(String nodeId) {
+    this.nodeId = nodeId;
+  }
 
-	public String getComponentType() {
-		return componentType;
-	}
+  public String getComponentType() {
+    return componentType;
+  }
 
-	public void setComponentType(String componentType) {
-		this.componentType = componentType;
-	}
+  public void setComponentType(String componentType) {
+    this.componentType = componentType;
+  }
 
-	public String getComponentId() {
-		return componentId;
-	}
+  public String getComponentId() {
+    return componentId;
+  }
 
-	public void setComponentId(String componentId) {
-		this.componentId = componentId;
-	}
+  public void setComponentId(String componentId) {
+    this.componentId = componentId;
+  }
 
-	public String getContext() {
-		return context;
-	}
+  public String getContext() {
+    return context;
+  }
 
-	public void setContext(String context) {
-		this.context = context;
-	}
+  public void setContext(String context) {
+    this.context = context;
+  }
 
-	public String getCategory() {
-		return category;
-	}
+  public String getCategory() {
+    return category;
+  }
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
+  public void setCategory(String category) {
+    this.category = category;
+  }
 
-	public String getEvent() {
-		return event;
-	}
+  public String getEvent() {
+    return event;
+  }
 
-	public void setEvent(String event) {
-		this.event = event;
-	}
+  public void setEvent(String event) {
+    this.event = event;
+  }
 
-	public String getData() {
-		return data;
-	}
+  public String getData() {
+    return data;
+  }
 
-	public void setData(String data) {
-		this.data = data;
-	}
+  public void setData(String data) {
+    this.data = data;
+  }
 
-	public Timestamp getServerSaveTime() {
-		return serverSaveTime;
-	}
+  public Timestamp getServerSaveTime() {
+    return serverSaveTime;
+  }
 
-	public void setServerSaveTime(Timestamp serverSaveTime) {
-		this.serverSaveTime = serverSaveTime;
-	}
+  public void setServerSaveTime(Timestamp serverSaveTime) {
+    this.serverSaveTime = serverSaveTime;
+  }
 
-	public Timestamp getClientSaveTime() {
-		return clientSaveTime;
-	}
+  public Timestamp getClientSaveTime() {
+    return clientSaveTime;
+  }
 
-	public void setClientSaveTime(Timestamp clientSaveTime) {
-		this.clientSaveTime = clientSaveTime;
-	}
+  public void setClientSaveTime(Timestamp clientSaveTime) {
+    this.clientSaveTime = clientSaveTime;
+  }
 
-    /**
-     * Get the JSON representation of the Event
-     * @return a JSONObject with the values from the Event
-     */
-    public JSONObject toJSON() {
-        JSONObject eventJSONObject = new JSONObject();
+  /**
+   * Get the JSON representation of the Event
+   * @return a JSONObject with the values from the Event
+   */
+  public JSONObject toJSON() {
+    JSONObject eventJSONObject = new JSONObject();
 
+    try {
+      if (this.id != null) {
+        eventJSONObject.put("id", this.id);
+      }
+
+      if (this.run != null) {
+        Long runId = this.run.getId();
+        eventJSONObject.put("runId", runId);
+      }
+
+      if (this.period != null) {
+        Long periodId = this.period.getId();
+        eventJSONObject.put("periodId", periodId);
+      }
+
+      if (this.workgroup != null) {
+        Long workgroupId = this.workgroup.getId();
+        eventJSONObject.put("workgroupId", workgroupId);
+      }
+
+      if (this.nodeId != null) {
+        eventJSONObject.put("nodeId", this.nodeId);
+      }
+
+      if (this.componentId != null) {
+        eventJSONObject.put("componentId", this.componentId);
+      }
+
+      if (this.componentType != null) {
+        eventJSONObject.put("componentType", this.componentType);
+      }
+
+      if (this.context != null) {
+        eventJSONObject.put("context", this.context);
+      }
+
+      if (this.category != null) {
+        eventJSONObject.put("category", this.category);
+      }
+
+      if (this.event != null) {
+        eventJSONObject.put("event", this.event);
+      }
+
+      if (this.data != null) {
         try {
-
-            // set the id
-			if (this.id != null) {
-				eventJSONObject.put("id", this.id);
-			}
-
-            // set the run id
-			if (this.run != null) {
-				Long runId = this.run.getId();
-				eventJSONObject.put("runId", runId);
-			}
-
-            // set the period id
-			if (this.period != null) {
-				Long periodId = this.period.getId();
-				eventJSONObject.put("periodId", periodId);
-			}
-
-            // set the workgroup id
-			if (this.workgroup != null) {
-				Long workgroupId = this.workgroup.getId();
-				eventJSONObject.put("workgroupId", workgroupId);
-			}
-
-            // set the node id
-			if (this.nodeId != null) {
-				eventJSONObject.put("nodeId", this.nodeId);
-			}
-
-            // set the component id
-			if (this.componentId != null) {
-				eventJSONObject.put("componentId", this.componentId);
-			}
-
-            // set the component type
-			if (this.componentType != null) {
-				eventJSONObject.put("componentType", this.componentType);
-			}
-
-			// set the context
-			if (this.context != null) {
-				eventJSONObject.put("context", this.context);
-			}
-
-			// set the category
-			if (this.category != null) {
-				eventJSONObject.put("category", this.category);
-			}
-
-			// set the event
-			if (this.event != null) {
-				eventJSONObject.put("event", this.event);
-			}
-
-			// set the data
-			if (this.data != null) {
-				try {
-					eventJSONObject.put("data", new JSONObject(this.data));
-				} catch (Exception e) {
-					eventJSONObject.put("data", this.data);
-				}
-			}
-
-			// set the clientSaveTime time
-			if (this.clientSaveTime != null) {
-				eventJSONObject.put("clientSaveTime", clientSaveTime.getTime());
-			}
-
-			// set the serverSaveTime time
-			if (this.serverSaveTime != null) {
-				eventJSONObject.put("serverSaveTime", serverSaveTime.getTime());
-			}
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+          eventJSONObject.put("data", new JSONObject(this.data));
+        } catch (Exception e) {
+          eventJSONObject.put("data", this.data);
         }
+      }
 
-        return eventJSONObject;
+      if (this.clientSaveTime != null) {
+        eventJSONObject.put("clientSaveTime", clientSaveTime.getTime());
+      }
+
+      if (this.serverSaveTime != null) {
+        eventJSONObject.put("serverSaveTime", serverSaveTime.getTime());
+      }
+
+    } catch (JSONException e) {
+      e.printStackTrace();
     }
+
+    return eventJSONObject;
+  }
 }

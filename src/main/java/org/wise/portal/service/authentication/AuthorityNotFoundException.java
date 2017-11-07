@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -23,21 +23,20 @@ package org.wise.portal.service.authentication;
 /**
  * A checked exception thrown when an authority is requested from the data
  * store, but an authority of that name does not exist.
- * 
+ *
  * @author Laurel Williams
  */
 public class AuthorityNotFoundException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private String message;
+  private String message;
 
-	public AuthorityNotFoundException(String authority) {
-		this.message = "Granted Authority:" + authority + " not found.";
-	}
+  public AuthorityNotFoundException(String authority) {
+    this.message = "Granted Authority:" + authority + " not found.";
+  }
 
-	public String getMessage() {
-		return this.message;
-	}
-
+  public String getMessage() {
+    return this.message;
+  }
 }

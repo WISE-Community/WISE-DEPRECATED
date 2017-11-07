@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -48,224 +48,199 @@ import org.wise.portal.service.workgroup.WorkgroupService;
  */
 public class WorkgroupServiceImpl implements WorkgroupService {
 
-	@Autowired 
-    protected WorkgroupDao<Workgroup> workgroupDao;
-    
-    @Autowired
-    protected GroupDao<Group> groupDao;
+  @Autowired
+  protected WorkgroupDao<Workgroup> workgroupDao;
 
-	@Autowired
-	private GroupService groupService;
+  @Autowired
+  protected GroupDao<Group> groupDao;
 
-	@Autowired
-    protected RunService runService;
+  @Autowired
+  private GroupService groupService;
 
-	@Autowired
-	protected UserService userService;
+  @Autowired
+  protected RunService runService;
 
-	@Autowired
-	protected AclService<Workgroup> aclService;
+  @Autowired
+  protected UserService userService;
 
-	/**
-	 * @see org.wise.portal.service.workgroup.WorkgroupService#createWorkgroup(String, Set, Run, Group)
-	 */
-	@Transactional()
-	public Workgroup createWorkgroup(String name, Set<User> members,
-			Run run, Group period) throws ObjectNotFoundException {
+  @Autowired
+  protected AclService<Workgroup> aclService;
 
-		Workgroup workgroup = createWorkgroup(members, run, period);
+  /**
+   * @see org.wise.portal.service.workgroup.WorkgroupService#createWorkgroup(String, Set, Run, Group)
+   */
+  @Transactional()
+  public Workgroup createWorkgroup(String name, Set<User> members, Run run, Group period)
+      throws ObjectNotFoundException {
+    Workgroup workgroup = createWorkgroup(members, run, period);
+    this.groupDao.save(workgroup.getGroup());
+    this.workgroupDao.save(workgroup);
+    this.aclService.addPermission(workgroup, BasePermission.ADMINISTRATION);
+    return workgroup;
+  }
 
-		this.groupDao.save(workgroup.getGroup());
-		this.workgroupDao.save(workgroup);
-		this.aclService.addPermission(workgroup, BasePermission.ADMINISTRATION);
-
-		return workgroup;
-	}
-
-	/**
-	 * A helper method to create a <code>Workgroup</code> given parameters.
-	 * 
-	 * A teacher can be in a Workgroup. In this case, the members
-	 * provided as a parameter in this method must match the owners
-	 * of the run.
-	 * 
-	 * @param members set of users in this workgroup
-	 * @param run the <code>Run</code> that this workgroup belongs in
-	 * @param period <code>Group</code> that this workgroup belongs in
-	 * @return the created <code>Workgroup</code>
-	 */
-	private Workgroup createWorkgroup(Set<User> members, Run run, Group period) {
-		Workgroup workgroup = new WorkgroupImpl();
-		for (User member : members) {
-			workgroup.addMember(member);
-		}
-		workgroup.setRun(run);
-		workgroup.setPeriod(period);
-		if ((run.getOwner() != null && members.size() == 1 && run.getOwner().equals(members.iterator().next())) ||
-				(run.getSharedowners() != null && run.getSharedowners().containsAll(members))) {
-			workgroup.setTeacherWorkgroup(true);
-		}
-		return workgroup;
-	}
-	
-    /**
-     * @see org.wise.portal.service.workgroup.WorkgroupService#getWorkgroupListByRunAndUser(Run, User)
-     */
-    @Transactional(readOnly = true)
-    public List<Workgroup> getWorkgroupListByRunAndUser(Run run, User user) {
-        return this.workgroupDao.getListByRunAndUser(run, user);
+  /**
+   * A helper method to create a <code>Workgroup</code> given parameters.
+   *
+   * A teacher can be in a Workgroup. In this case, the members
+   * provided as a parameter in this method must match the owners
+   * of the run.
+   *
+   * @param members set of users in this workgroup
+   * @param run the <code>Run</code> that this workgroup belongs in
+   * @param period <code>Group</code> that this workgroup belongs in
+   * @return the created <code>Workgroup</code>
+   */
+  private Workgroup createWorkgroup(Set<User> members, Run run, Group period) {
+    Workgroup workgroup = new WorkgroupImpl();
+    for (User member : members) {
+      workgroup.addMember(member);
     }
-    
-	/**
-	 * @see org.wise.portal.service.workgroup.WorkgroupService#getWorkgroupsForUser(User)
-	 */
-    @Transactional(readOnly = true)
-	public List<Workgroup> getWorkgroupsForUser(User user) {
-		// first find all of the runs that user is in.
-        return this.workgroupDao.getListByUser(user);
-	}
+    workgroup.setRun(run);
+    workgroup.setPeriod(period);
+    if ((run.getOwner() != null && members.size() == 1 && run.getOwner().equals(members.iterator().next())) ||
+      (run.getSharedowners() != null && run.getSharedowners().containsAll(members))) {
+      workgroup.setTeacherWorkgroup(true);
+    }
+    return workgroup;
+  }
 
-    /**
-     * @see org.wise.portal.service.workgroup.WorkgroupService#addMembers(Workgroup, Set)
-     */
-    @Transactional()
-	public void addMembers(Workgroup workgroup, Set<User> membersToAdd) {
-    	for (User member : membersToAdd) {
-    		workgroup.addMember(member);
-    	}
-        this.groupDao.save(workgroup.getGroup());
-    	this.workgroupDao.save(workgroup);
-	}
-    
-    /**
-     * @see org.wise.portal.service.workgroup.WorkgroupService#removeMembers(Workgroup, Set)
-     */
-    @Transactional()
-	public void removeMembers(Workgroup workgroup, Set<User> membersToRemove) {
-    	
-    	for (User member : membersToRemove) {
-    		workgroup.removeMember(member);
-    	}
-        this.groupDao.save(workgroup.getGroup());
-    	this.workgroupDao.save(workgroup);
-	}
-    
-    /**
-	 * @see org.wise.portal.service.workgroup.WorkgroupService#updateWorkgroupMembership(ChangeWorkgroupParameters)
-	 */
-	@Transactional()
-	public Workgroup updateWorkgroupMembership(ChangeWorkgroupParameters params) throws Exception {
-		Workgroup workgroupCreated = null;
-		Workgroup toGroup;
-		Workgroup fromGroup;
-		User user = params.getStudent();
-		Run run = runService.retrieveById(params.getRunId());
-		Group period = groupService.retrieveById(params.getPeriodId());
+  /**
+   * @see org.wise.portal.service.workgroup.WorkgroupService#getWorkgroupListByRunAndUser(Run, User)
+   */
+  @Transactional(readOnly = true)
+  public List<Workgroup> getWorkgroupListByRunAndUser(Run run, User user) {
+    return this.workgroupDao.getListByRunAndUser(run, user);
+  }
 
-		fromGroup = params.getWorkgroupFrom();
-		Set<User> addMemberSet = new HashSet<User>();
-		addMemberSet.add(user);
-		if (params.getWorkgroupTo() == null) {
-			if ((params.getWorkgroupToId() != null) && 
-					(params.getWorkgroupToId().intValue() == -1)) {   		
-				workgroupCreated = createWorkgroup("workgroup " + user.getUserDetails().getUsername(), addMemberSet, run, period);
-			}
-		} else {
-			toGroup = params.getWorkgroupTo();
-			this.addMembers(toGroup, addMemberSet);
-		}
+  /**
+   * @see org.wise.portal.service.workgroup.WorkgroupService#getWorkgroupsForUser(User)
+   */
+  @Transactional(readOnly = true)
+  public List<Workgroup> getWorkgroupsForUser(User user) {
+    // first find all of the runs that user is in.
+    return this.workgroupDao.getListByUser(user);
+  }
 
-		if(!(fromGroup == null)){
-			Set<User> removeMemberSet = new HashSet<User>();
-			removeMemberSet.add(user);
-			this.removeMembers(fromGroup, removeMemberSet);
-		}
-		return workgroupCreated;
-	}
+  /**
+   * @see org.wise.portal.service.workgroup.WorkgroupService#addMembers(Workgroup, Set)
+   */
+  @Transactional()
+  public void addMembers(Workgroup workgroup, Set<User> membersToAdd) {
+    for (User member : membersToAdd) {
+      workgroup.addMember(member);
+    }
+    this.groupDao.save(workgroup.getGroup());
+    this.workgroupDao.save(workgroup);
+  }
 
-	/**
-	 * @see org.wise.portal.service.workgroup.WorkgroupService#retrieveById(Long)
-	 */
-    public Workgroup retrieveById(Long workgroupId) throws ObjectNotFoundException {
-		return workgroupDao.getById(workgroupId);
-	}
-    
-	@Override
-	public Workgroup retrieveById(Long workgroupId, boolean doEagerFetch) {
-		return workgroupDao.getById(workgroupId, doEagerFetch);
-	}
+  /**
+   * @see org.wise.portal.service.workgroup.WorkgroupService#removeMembers(Workgroup, Set)
+   */
+  @Transactional()
+  public void removeMembers(Workgroup workgroup, Set<User> membersToRemove) {
+    for (User member : membersToRemove) {
+      workgroup.removeMember(member);
+    }
+    this.groupDao.save(workgroup.getGroup());
+    this.workgroupDao.save(workgroup);
+  }
 
-	/**
-	 * Check if a user is in any workgroup for the run
-	 * @param user the user
-	 * @param run the run
-	 * @return whether the user is in a workgroup for the run
-	 */
-	public boolean isUserInAnyWorkgroupForRun(User user, Run run) {
+  /**
+   * @see org.wise.portal.service.workgroup.WorkgroupService#updateWorkgroupMembership(ChangeWorkgroupParameters)
+   */
+  @Transactional()
+  public Workgroup updateWorkgroupMembership(ChangeWorkgroupParameters params) throws Exception {
+    Workgroup workgroupCreated = null;
+    Workgroup toGroup;
+    Workgroup fromGroup;
+    User user = params.getStudent();
+    Run run = runService.retrieveById(params.getRunId());
+    Group period = groupService.retrieveById(params.getPeriodId());
 
-	    List<Workgroup> workgroupsForUser = getWorkgroupListByRunAndUser(run, user);
-	    return workgroupsForUser.size() > 0;
-	}
-	
-	/**
-	 * Check if a user is in a specific workgroup for the run
-	 * @param user the user
-	 * @param run the run
-	 * @param workgroup the workgroup
-	 * @return whether the user is in the workgroup
-	 */
-	public boolean isUserInWorkgroupForRun(User user, Run run, Workgroup workgroup) {
-	    
-	    boolean result = false;
-	    
-	    if (user != null && workgroup != null) {
-	        
-	        // get all the workgroups the user is in
-	        List<Workgroup> workgroupsForUser = getWorkgroupListByRunAndUser(run, user);
-	        
-	        // loop through all the workgroups the user is in
-	        for (Workgroup tempWorkgroup : workgroupsForUser) {
-	            
-	            // check if the current workgroup is the one we are looking for
-	            if (workgroup.equals(tempWorkgroup)) {
-	                // the user is in the workgroup we are looking for
-	                result = true;
-	                break;
-	            }
-	        }
-	    }
-	    
-	    return result;
-	}
-	
-	/**
-	 * Check if a user is in a workgroup besides the one provided for the run
-	 * @param user the user
-	 * @param run the run
-	 * @param workgroup check if the user is in another workgroup besides this workgroup
-	 * @return whether the user is in another workgroup for the run
-	 */
-	public boolean isUserInAnotherWorkgroupForRun(User user, Run run, Workgroup workgroup) {
-        
-        boolean result = false;
-        
-        if (user != null && workgroup != null) {
-            
-            // get all the workgroups the user is in
-            List<Workgroup> workgroupsForUser = getWorkgroupListByRunAndUser(run, user);
-            
-            // loop through all the workgroups the user is in
-            for (Workgroup tempWorkgroup : workgroupsForUser) {
-                
-                // check if the current workgroup is the one we are looking for
-                if (!workgroup.equals(tempWorkgroup)) {
-                    // the user is in the workgroup we are looking for
-                    result = true;
-                    break;
-                }
-            }
+    fromGroup = params.getWorkgroupFrom();
+    Set<User> addMemberSet = new HashSet<User>();
+    addMemberSet.add(user);
+    if (params.getWorkgroupTo() == null) {
+      if ((params.getWorkgroupToId() != null) &&
+        (params.getWorkgroupToId().intValue() == -1)) {
+        workgroupCreated = createWorkgroup("workgroup " + user.getUserDetails().getUsername(), addMemberSet, run, period);
+      }
+    } else {
+      toGroup = params.getWorkgroupTo();
+      this.addMembers(toGroup, addMemberSet);
+    }
+
+    if(!(fromGroup == null)){
+      Set<User> removeMemberSet = new HashSet<User>();
+      removeMemberSet.add(user);
+      this.removeMembers(fromGroup, removeMemberSet);
+    }
+    return workgroupCreated;
+  }
+
+  /**
+   * @see org.wise.portal.service.workgroup.WorkgroupService#retrieveById(Long)
+   */
+  public Workgroup retrieveById(Long workgroupId) throws ObjectNotFoundException {
+    return workgroupDao.getById(workgroupId);
+  }
+
+  @Override
+  public Workgroup retrieveById(Long workgroupId, boolean doEagerFetch) {
+    return workgroupDao.getById(workgroupId, doEagerFetch);
+  }
+
+  /**
+   * Check if a user is in any workgroup for the run
+   * @param user the user
+   * @param run the run
+   * @return whether the user is in a workgroup for the run
+   */
+  public boolean isUserInAnyWorkgroupForRun(User user, Run run) {
+    List<Workgroup> workgroupsForUser = getWorkgroupListByRunAndUser(run, user);
+    return workgroupsForUser.size() > 0;
+  }
+
+  /**
+   * Check if a user is in a specific workgroup for the run
+   * @param user the user
+   * @param run the run
+   * @param workgroup the workgroup
+   * @return whether the user is in the workgroup
+   */
+  public boolean isUserInWorkgroupForRun(User user, Run run, Workgroup workgroup) {
+    boolean result = false;
+    if (user != null && workgroup != null) {
+      List<Workgroup> workgroupsForUser = getWorkgroupListByRunAndUser(run, user);
+      for (Workgroup tempWorkgroup : workgroupsForUser) {
+        if (workgroup.equals(tempWorkgroup)) {
+          result = true;
+          break;
         }
-        
-        return result;
-	}
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Check if a user is in a workgroup besides the one provided for the run
+   * @param user the user
+   * @param run the run
+   * @param workgroup check if the user is in another workgroup besides this workgroup
+   * @return whether the user is in another workgroup for the run
+   */
+  public boolean isUserInAnotherWorkgroupForRun(User user, Run run, Workgroup workgroup) {
+    boolean result = false;
+    if (user != null && workgroup != null) {
+      List<Workgroup> workgroupsForUser = getWorkgroupListByRunAndUser(run, user);
+      for (Workgroup tempWorkgroup : workgroupsForUser) {
+        if (!workgroup.equals(tempWorkgroup)) {
+          result = true;
+          break;
+        }
+      }
+    }
+    return result;
+  }
 }

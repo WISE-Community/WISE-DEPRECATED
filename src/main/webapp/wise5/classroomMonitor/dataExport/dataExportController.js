@@ -11,7 +11,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DataExportController = function () {
-    function DataExportController($injector, $rootScope, $scope, $state, AnnotationService, ConfigService, FileSaver, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService) {
+    function DataExportController($injector, $rootScope, $scope, $state, AnnotationService, ConfigService, FileSaver, MatchService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, DataExportController);
@@ -23,6 +23,7 @@ var DataExportController = function () {
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.FileSaver = FileSaver;
+        this.MatchService = MatchService;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
@@ -31,6 +32,8 @@ var DataExportController = function () {
         this.exportStepSelectionType = "exportAllSteps";
         this.exportType = null; // type of export: [latestWork, allWork, events]
         this.componentTypeToComponentService = {};
+
+        this.availableComponentDataExports = ['Match'];
 
         this.setDefaultExportSettings();
 
@@ -56,7 +59,7 @@ var DataExportController = function () {
     }
 
     _createClass(DataExportController, [{
-        key: "hello",
+        key: 'hello',
         value: function hello() {
             ocpu.seturl("//128.32.189.240:81/ocpu/user/wiser/library/wiser/R");
             // perform the request
@@ -81,7 +84,7 @@ var DataExportController = function () {
             });
         }
     }, {
-        key: "export",
+        key: 'export',
 
 
         /**
@@ -119,6 +122,8 @@ var DataExportController = function () {
                 this.exportStudentAssets();
             } else if (exportType === "oneWorkgroupPerRow") {
                 this.exportOneWorkgroupPerRow();
+            } else if (exportType === "componentData") {
+                this.showExportComponentDataPage();
             } else if (exportType === "rawData") {
                 this.exportRawData();
             }
@@ -129,7 +134,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "exportAllStudentWork",
+        key: 'exportAllStudentWork',
         value: function exportAllStudentWork() {
             this.exportStudentWork("allStudentWork");
         }
@@ -139,7 +144,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "exportLatestStudentWork",
+        key: 'exportLatestStudentWork',
         value: function exportLatestStudentWork() {
             this.exportStudentWork("latestStudentWork");
         }
@@ -150,7 +155,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "exportStudentWork",
+        key: 'exportStudentWork',
         value: function exportStudentWork(exportType) {
             var _this2 = this;
 
@@ -325,7 +330,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "createStudentWorkExportRow",
+        key: 'createStudentWorkExportRow',
         value: function createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, componentState) {
 
             // create the row and prepopulate the elements with an empty string
@@ -625,16 +630,7 @@ var DataExportController = function () {
                 }
             }
 
-            // create the {{nodeId}}_{{componentId}} key to look up the component revision counter
-            var nodeIdAndComponentId = componentState.nodeId + "_" + componentState.componentId;
-
-            if (componentRevisionCounter[nodeIdAndComponentId] == null) {
-                // initialize the component revision counter for this component to 1 if there is no entry
-                componentRevisionCounter[nodeIdAndComponentId] = 1;
-            }
-
-            // get the revision counter
-            var revisionCounter = componentRevisionCounter[nodeIdAndComponentId];
+            var revisionCounter = this.getRevisionCounter(componentRevisionCounter, componentState.nodeId, componentState.componentId);
 
             if (componentState.revisionCounter == null) {
                 /*
@@ -653,8 +649,7 @@ var DataExportController = function () {
                 row[columnNameToNumber["Component Revision Counter"]] = componentState.revisionCounter;
             }
 
-            // increment the revision counter
-            componentRevisionCounter[nodeIdAndComponentId] = revisionCounter + 1;
+            this.incrementRevisionCounter(componentRevisionCounter, componentState.nodeId, componentState.componentId);
 
             var isSubmit = componentState.isSubmit;
 
@@ -679,6 +674,54 @@ var DataExportController = function () {
         }
 
         /**
+         * Get the revision number for the next component state revision.
+         * @param componentRevisionCounter The mapping from component to revision
+         * counter.
+         * @param nodeId The node id the component is in.
+         * @param componentId The component id of the component.
+         */
+
+    }, {
+        key: 'getRevisionCounter',
+        value: function getRevisionCounter(componentRevisionCounter, nodeId, componentId) {
+            // create the {{nodeId}}_{{componentId}} key to look up the component revision counter
+            var nodeIdAndComponentId = nodeId + "_" + componentId;
+
+            if (componentRevisionCounter[nodeIdAndComponentId] == null) {
+                // initialize the component revision counter for this component to 1 if there is no entry
+                componentRevisionCounter[nodeIdAndComponentId] = 1;
+            }
+
+            return componentRevisionCounter[nodeIdAndComponentId];
+        }
+
+        /**
+         * Increment the revision counter for the given {{nodeId}}_{{componentId}}.
+         * @param componentRevisionCounter The mapping from component to revision
+         * counter.
+         * @param nodeId The node id the component is in.
+         * @param componentId The component id of the component.
+         */
+
+    }, {
+        key: 'incrementRevisionCounter',
+        value: function incrementRevisionCounter(componentRevisionCounter, nodeId, componentId) {
+            // create the {{nodeId}}_{{componentId}} key to look up the component revision counter
+            var nodeIdAndComponentId = nodeId + "_" + componentId;
+
+            if (componentRevisionCounter[nodeIdAndComponentId] == null) {
+                // initialize the component revision counter for this component to 1 if there is no entry
+                componentRevisionCounter[nodeIdAndComponentId] = 1;
+            }
+
+            // get the revision counter
+            var revisionCounter = componentRevisionCounter[nodeIdAndComponentId];
+
+            // increment the revision counter
+            componentRevisionCounter[nodeIdAndComponentId] = revisionCounter + 1;
+        }
+
+        /**
          * Check if a component is selected
          * @param selectedNodesMap a map of node id and component id strings
          * to true
@@ -693,7 +736,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "isComponentSelected",
+        key: 'isComponentSelected',
         value: function isComponentSelected(selectedNodesMap, nodeId, componentId) {
             var result = false;
 
@@ -723,7 +766,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "isNodeSelected",
+        key: 'isNodeSelected',
         value: function isNodeSelected(selectedNodesMap, nodeId) {
             var result = false;
 
@@ -747,7 +790,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "generateCSVFile",
+        key: 'generateCSVFile',
         value: function generateCSVFile(rows, fileName) {
 
             // used to accumulate the csv string
@@ -767,7 +810,7 @@ var DataExportController = function () {
                             // get the cell value
                             var cell = row[c];
 
-                            if ((typeof cell === "undefined" ? "undefined" : _typeof(cell)) === "object") {
+                            if ((typeof cell === 'undefined' ? 'undefined' : _typeof(cell)) === "object") {
                                 /*
                                  * the cell value is an object so we will obtain the
                                  * string representation of the object and wrap it
@@ -824,7 +867,7 @@ var DataExportController = function () {
             this.FileSaver.saveAs(csvBlob, fileName);
         }
     }, {
-        key: "escapeContent",
+        key: 'escapeContent',
         value: function escapeContent(str) {
             return str.replace(/[\n]/g, '\\n').replace(/[\r]/g, '\\r').replace(/[\t]/g, '\\t');
         }
@@ -834,7 +877,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "exportEvents",
+        key: 'exportEvents',
         value: function exportEvents() {
             var _this3 = this;
 
@@ -1013,7 +1056,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "createEventExportRow",
+        key: 'createEventExportRow',
         value: function createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentEventCount, event) {
 
             // create the row and prepopulate the elements with an empty string
@@ -1169,7 +1212,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "getEventResponse",
+        key: 'getEventResponse',
         value: function getEventResponse(event) {
 
             var response = " ";
@@ -1196,7 +1239,7 @@ var DataExportController = function () {
             return response;
         }
     }, {
-        key: "exportNotebookItems",
+        key: 'exportNotebookItems',
         value: function exportNotebookItems(exportType) {
             var _this4 = this;
 
@@ -1285,7 +1328,7 @@ var DataExportController = function () {
                     // append row to csvString
                     for (var cellIndex = 0; cellIndex < row.length; cellIndex++) {
                         var cell = row[cellIndex];
-                        if ((typeof cell === "undefined" ? "undefined" : _typeof(cell)) === "object") {
+                        if ((typeof cell === 'undefined' ? 'undefined' : _typeof(cell)) === "object") {
                             cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
                         } else if (typeof cell === "string") {
                             cell = "\"" + cell + "\"";
@@ -1310,7 +1353,7 @@ var DataExportController = function () {
             });
         }
     }, {
-        key: "exportNotifications",
+        key: 'exportNotifications',
         value: function exportNotifications() {
             var _this5 = this;
 
@@ -1358,7 +1401,7 @@ var DataExportController = function () {
                     // append row to csvString
                     for (var cellIndex = 0; cellIndex < row.length; cellIndex++) {
                         var cell = row[cellIndex];
-                        if ((typeof cell === "undefined" ? "undefined" : _typeof(cell)) === "object") {
+                        if ((typeof cell === 'undefined' ? 'undefined' : _typeof(cell)) === "object") {
                             cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
                         } else if (typeof cell === "string") {
                             cell = "\"" + cell + "\"";
@@ -1383,7 +1426,7 @@ var DataExportController = function () {
             });
         }
     }, {
-        key: "exportStudentAssets",
+        key: 'exportStudentAssets',
         value: function exportStudentAssets() {
             this.TeacherDataService.getExport("studentAssets");
         }
@@ -1410,7 +1453,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "getSelectedNodesToExport",
+        key: 'getSelectedNodesToExport',
         value: function getSelectedNodesToExport() {
             var selectedNodes = [];
 
@@ -1483,7 +1526,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "getSelectedNodesMap",
+        key: 'getSelectedNodesMap',
         value: function getSelectedNodesMap(selectedNodes) {
 
             var selectedNodesMap = {};
@@ -1525,7 +1568,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "nodeItemClicked",
+        key: 'nodeItemClicked',
         value: function nodeItemClicked(nodeItem) {
 
             if (nodeItem != null) {
@@ -1592,7 +1635,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "selectAll",
+        key: 'selectAll',
         value: function selectAll() {
             var doSelect = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
@@ -1625,7 +1668,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "deselectAll",
+        key: 'deselectAll',
         value: function deselectAll() {
             this.selectAll(false);
         }
@@ -1635,7 +1678,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "previewProject",
+        key: 'previewProject',
         value: function previewProject() {
             var previewProjectURL = this.ConfigService.getConfigParam('previewProjectURL');
             // open the preview step in a new tab
@@ -1648,7 +1691,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "previewNode",
+        key: 'previewNode',
         value: function previewNode(node) {
 
             if (node != null) {
@@ -1672,7 +1715,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "exportOneWorkgroupPerRow",
+        key: 'exportOneWorkgroupPerRow',
         value: function exportOneWorkgroupPerRow() {
             var _this6 = this;
 
@@ -2016,7 +2059,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "getColumnIdsForOneWorkgroupPerRow",
+        key: 'getColumnIdsForOneWorkgroupPerRow',
         value: function getColumnIdsForOneWorkgroupPerRow(selectedNodesMap) {
             var columnIds = [];
 
@@ -2142,7 +2185,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "getColumnIdToColumnIndex",
+        key: 'getColumnIdToColumnIndex',
         value: function getColumnIdToColumnIndex(columnIds, descriptionRowHeaders) {
 
             /*
@@ -2207,7 +2250,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "getOneWorkgroupPerRowTopRows",
+        key: 'getOneWorkgroupPerRowTopRows',
         value: function getOneWorkgroupPerRowTopRows(columnIds, columnIdToColumnIndex, descriptionRowHeaders) {
 
             // get the total number of columns in a row
@@ -2470,7 +2513,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "getComponentService",
+        key: 'getComponentService',
         value: function getComponentService(componentType) {
 
             var componentService = null;
@@ -2510,7 +2553,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "exportNode",
+        key: 'exportNode',
         value: function exportNode(selectedNodesMap, nodeId) {
             if (selectedNodesMap == null || this.isNodeSelected(selectedNodesMap, nodeId)) {
                 return true;
@@ -2529,7 +2572,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "exportComponent",
+        key: 'exportComponent',
         value: function exportComponent(selectedNodesMap, nodeId, componentId) {
             if (selectedNodesMap == null || this.isComponentSelected(selectedNodesMap, nodeId, componentId)) {
                 return true;
@@ -2544,7 +2587,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "exportOneWorkgroupPerRowClicked",
+        key: 'exportOneWorkgroupPerRowClicked',
         value: function exportOneWorkgroupPerRowClicked() {
 
             // set the export type
@@ -2558,12 +2601,12 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "getNodePositionById",
+        key: 'getNodePositionById',
         value: function getNodePositionById(nodeId) {
             return this.ProjectService.getNodePositionById(nodeId);
         }
     }, {
-        key: "getNodeTitleByNodeId",
+        key: 'getNodeTitleByNodeId',
 
 
         /**
@@ -2575,7 +2618,7 @@ var DataExportController = function () {
             return this.ProjectService.getNodeTitleByNodeId(nodeId);
         }
     }, {
-        key: "isGroupNode",
+        key: 'isGroupNode',
 
 
         /**
@@ -2587,7 +2630,7 @@ var DataExportController = function () {
             return this.ProjectService.isGroupNode(nodeId);
         }
     }, {
-        key: "isNodeInAnyBranchPath",
+        key: 'isNodeInAnyBranchPath',
 
 
         /**
@@ -2604,7 +2647,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "defaultClicked",
+        key: 'defaultClicked',
         value: function defaultClicked() {
             // set the default export settings
             this.setDefaultExportSettings();
@@ -2615,7 +2658,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "everythingClicked",
+        key: 'everythingClicked',
         value: function everythingClicked() {
             // enable all the settings
 
@@ -2642,7 +2685,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "setDefaultExportSettings",
+        key: 'setDefaultExportSettings',
         value: function setDefaultExportSettings() {
             // enable the default settings
 
@@ -2669,7 +2712,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "rawDataExportClicked",
+        key: 'rawDataExportClicked',
         value: function rawDataExportClicked() {
             // set the export type
             this.exportType = 'rawData';
@@ -2680,7 +2723,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "exportRawData",
+        key: 'exportRawData',
         value: function exportRawData() {
             var _this7 = this;
 
@@ -2858,7 +2901,7 @@ var DataExportController = function () {
          */
 
     }, {
-        key: "getCompositeId",
+        key: 'getCompositeId',
         value: function getCompositeId(object) {
             var compositeId = null;
 
@@ -2874,12 +2917,496 @@ var DataExportController = function () {
 
             return compositeId;
         }
+
+        /**
+         * Check if a component type has a specific export implemented for it.
+         * @param componentType The component type.
+         * @return Whether the component type has a specific export.
+         */
+
+    }, {
+        key: 'canExportComponentDataType',
+        value: function canExportComponentDataType(componentType) {
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = this.availableComponentDataExports[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var tempComponentType = _step.value;
+
+                    if (componentType == tempComponentType) {
+                        return true;
+                    }
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * Show the page where users can export work for a specific component.
+         */
+
+    }, {
+        key: 'showExportComponentDataPage',
+        value: function showExportComponentDataPage() {
+            this.workSelectionType = 'exportAllWork';
+            this.includeCorrectnessColumns = true;
+            this.includeOnlySubmits = false;
+            this.exportType = 'componentData';
+        }
+
+        /**
+         * Export the work for a specific component.
+         * @param nodeId The node id.
+         * @param component The component content object.
+         */
+
+    }, {
+        key: 'exportComponentClicked',
+        value: function exportComponentClicked(nodeId, component) {
+            if (component.type == 'Match') {
+                this.exportMatchComponent(nodeId, component);
+            }
+        }
+
+        /**
+         * Generate an export for a specific match component.
+         * TODO: Move these Match export functions to the MatchService.
+         * @param nodeId The node id.
+         * @param component The component content object.
+         */
+
+    }, {
+        key: 'exportMatchComponent',
+        value: function exportMatchComponent(nodeId, component) {
+            var _this8 = this;
+
+            // request the student data from the server and then generate the export
+            this.TeacherDataService.getExport("allStudentWork").then(function (result) {
+                // the column names in the header row
+                var columnNames = [];
+
+                // mapping from column name to column number
+                var columnNameToNumber = {};
+
+                // the rows that will be in the export
+                var rows = [];
+
+                // add the header row to the rows
+                rows.push(_this8.generateMatchComponentHeaderRow(component, columnNames, columnNameToNumber));
+
+                // add the student work rows
+                rows = rows.concat(_this8.generateMatchComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
+
+                // generate the file name of the csv file
+                var fileName = "";
+                var runId = _this8.ConfigService.getRunId();
+                var stepNumber = _this8.ProjectService.getNodePositionById(nodeId);
+                var componentNumber = _this8.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, component.id) + 1;
+                if (_this8.workSelectionType === 'exportAllWork') {
+                    fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_all_match_work.csv';
+                } else if (_this8.workSelectionType === 'exportLatestWork') {
+                    fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_latest_match_work.csv';
+                }
+
+                // generate the csv file and have the client download it
+                _this8.generateCSVFile(rows, fileName);
+            });
+        }
+
+        /**
+         * Populate the array of header column names.
+         * Populate the mappings of column name to column number.
+         * @param component The component content object.
+         * @param columnNames An array that we will populate with column names.
+         * @param columnNameToNumber An object that we will populate with mappings
+         * of column name to column number.
+         */
+
+    }, {
+        key: 'populateMatchColumnNames',
+        value: function populateMatchColumnNames(component, columnNames, columnNameToNumber) {
+
+            // an array of column names
+            var defaultMatchColumnNames = ["#", "Workgroup ID", "WISE ID 1", "WISE ID 2", "WISE ID 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Student Work ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Student Data", "Component Revision Counter", "Is Submit", "Submit Count"];
+
+            /*
+             * Add the default column names that contain the information about the
+             * student, project, run, node, and component.
+             */
+            for (var c = 0; c < defaultMatchColumnNames.length; c++) {
+                // get a column name
+                var defaultMatchColumnName = defaultMatchColumnNames[c];
+
+                // add a mapping from column name to column number
+                columnNameToNumber[defaultMatchColumnName] = c;
+
+                // add the column name to the header row
+                columnNames.push(defaultMatchColumnName);
+            }
+
+            // Add the header cells for the choices
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = component.choices[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var _choice = _step2.value;
+
+                    columnNameToNumber[_choice.id] = columnNames.length;
+                    columnNames.push(_choice.value);
+                }
+
+                // Add the header cells for the choice correctness
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
+
+            if (this.includeCorrectnessColumns && this.MatchService.hasCorrectAnswer(component)) {
+                var _iteratorNormalCompletion3 = true;
+                var _didIteratorError3 = false;
+                var _iteratorError3 = undefined;
+
+                try {
+                    for (var _iterator3 = component.choices[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                        var choice = _step3.value;
+
+                        columnNameToNumber[choice.id + '-boolean'] = columnNames.length;
+                        columnNames.push(choice.value);
+                    }
+                } catch (err) {
+                    _didIteratorError3 = true;
+                    _iteratorError3 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                            _iterator3.return();
+                        }
+                    } finally {
+                        if (_didIteratorError3) {
+                            throw _iteratorError3;
+                        }
+                    }
+                }
+
+                columnNameToNumber['Is Correct'] = columnNames.length;
+                columnNames.push('Is Correct');
+            }
+        }
+
+        /**
+         * Generate the header row.
+         * @param component The component content object.
+         * @param columnNames An array of column names.
+         * @param columnNameToNumber An object containing the mappings from column
+         * name to column number.
+         */
+
+    }, {
+        key: 'generateMatchComponentHeaderRow',
+        value: function generateMatchComponentHeaderRow(component, columnNames, columnNameToNumber) {
+            this.populateMatchColumnNames(component, columnNames, columnNameToNumber);
+            var headerRow = [];
+
+            // generate the header row by looping through all the column names
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
+
+            try {
+                for (var _iterator4 = columnNames[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var columnName = _step4.value;
+
+                    // add the column name to the header row
+                    headerRow.push(columnName);
+                }
+            } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
+                    }
+                } finally {
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
+                    }
+                }
+            }
+
+            return headerRow;
+        }
+
+        /**
+         * Generate all the rows for all the workgroups.
+         * @param component The component content object.
+         * @param columnNames All the header column names.
+         * @param columnNameToNumber The mapping from column name to column number.
+         * @param nodeId The node id the component is in.
+         * @return An array of rows.
+         */
+
+    }, {
+        key: 'generateMatchComponentWorkRows',
+        value: function generateMatchComponentWorkRows(component, columnNames, columnNameToNumber, nodeId) {
+            var componentId = component.id;
+
+            // get the workgroups in the class
+            var workgroups = this.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+
+            // the rows that will show up in the export
+            var rows = [];
+
+            var rowCounter = 1;
+
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
+
+            try {
+                for (var _iterator5 = workgroups[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                    var workgroup = _step5.value;
+
+                    var rowsForWorkgroup = this.generateMatchComponentWorkRowsForWorkgroup(component, workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter);
+                    rows = rows.concat(rowsForWorkgroup);
+                    rowCounter += rowsForWorkgroup.length;
+                }
+            } catch (err) {
+                _didIteratorError5 = true;
+                _iteratorError5 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                        _iterator5.return();
+                    }
+                } finally {
+                    if (_didIteratorError5) {
+                        throw _iteratorError5;
+                    }
+                }
+            }
+
+            return rows;
+        }
+
+        /**
+         * Generate all the rows for a workgroup.
+         * @param component The component content object.
+         * @param workgroup The workgroup.
+         * @param columnNames An array of column name headers.
+         * @param columnNameToNumber The mapping from column name to column number.
+         * @param nodeId The node the component is in.
+         * @param componentId The component id.
+         * @param rowCounter The current row number we will be creating.
+         */
+
+    }, {
+        key: 'generateMatchComponentWorkRowsForWorkgroup',
+        value: function generateMatchComponentWorkRowsForWorkgroup(component, workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter) {
+            var rows = [];
+
+            // get the workgroup information
+            var workgroupId = workgroup.workgroupId;
+            var periodName = workgroup.periodName;
+            var userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+
+            // get the WISE IDs
+            var wiseIds = this.ConfigService.getWISEIds(workgroupId);
+            var wiseId1 = wiseIds[0];
+            var wiseId2 = wiseIds[1];
+            var wiseId3 = wiseIds[2];
+
+            /*
+             * a mapping from component to component revision counter.
+             * the key will be {{nodeId}}_{{componentId}} and the
+             * value will be a number.
+             */
+            var componentRevisionCounter = {};
+
+            var matchComponentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId);
+
+            if (matchComponentStates != null) {
+                for (var c = 0; c < matchComponentStates.length; c++) {
+                    var matchComponentState = matchComponentStates[c];
+                    var exportRow = true;
+
+                    if (this.includeOnlySubmits && !matchComponentState.isSubmit) {
+                        exportRow = false;
+                    } else if (this.workSelectionType == 'exportLatestWork' && c != matchComponentStates.length - 1) {
+                        /*
+                         * We are only exporting the latest work and this component state
+                         * is not the last component state for this workgroup.
+                         */
+                        exportRow = false;
+                    }
+
+                    if (exportRow) {
+                        // add the row to the rows that will show up in the export
+                        rows.push(this.generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState));
+                        rowCounter++;
+                    } else {
+                        /*
+                         * We do not want to add this row in the export but
+                         * we still want to increment the revision counter.
+                         */
+                        this.incrementRevisionCounter(componentRevisionCounter, nodeId, componentId);
+                    }
+                }
+            }
+
+            return rows;
+        }
+
+        /**
+         * Generate the row for the component state.
+         * @param component The component content object.
+         * @param columnNames All the header column names.
+         * @param columnNameToNumber The mapping from column name to column number.
+         * @param rowCounter The current row number.
+         * @param workgroupId The workgroup id.
+         * @param wiseId1 The WISE ID 1.
+         * @param wiseId2 The WISE ID 2.
+         * @param wiseId3 The WISE ID 3.
+         * @param periodName The period name.
+         * @param componentRevisionCounter The mapping of component to revision counter.
+         * @param matchComponentState The component state.
+         * @return The row with the student work.
+         */
+
+    }, {
+        key: 'generateMatchComponentWorkRow',
+        value: function generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState) {
+
+            /*
+             * Populate the cells in the row that contain the information about the
+             * student, project, run, step, and component.
+             */
+            var row = this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState);
+
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
+
+            try {
+                for (var _iterator6 = matchComponentState.studentData.buckets[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var bucket = _step6.value;
+
+
+                    // loop through all the choices that the student put in this bucket
+                    var _iteratorNormalCompletion7 = true;
+                    var _didIteratorError7 = false;
+                    var _iteratorError7 = undefined;
+
+                    try {
+                        for (var _iterator7 = bucket.items[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                            var item = _step7.value;
+
+                            // put the bucket name in the column corresponding to the choice
+                            row[columnNameToNumber[item.id]] = bucket.value;
+
+                            if (this.includeCorrectnessColumns && this.MatchService.hasCorrectAnswer(component)) {
+                                this.setCorrectnessValue(row, columnNameToNumber, item);
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError7 = true;
+                        _iteratorError7 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                                _iterator7.return();
+                            }
+                        } finally {
+                            if (_didIteratorError7) {
+                                throw _iteratorError7;
+                            }
+                        }
+                    }
+                }
+            } catch (err) {
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                        _iterator6.return();
+                    }
+                } finally {
+                    if (_didIteratorError6) {
+                        throw _iteratorError6;
+                    }
+                }
+            }
+
+            return row;
+        }
+
+        /**
+         * Set the correctness boolean value into the cell.
+         * @param row The row we are working on.
+         * @param columnNameToNumber The mapping from column name to column number.
+         * @param item The choice object.
+         */
+
+    }, {
+        key: 'setCorrectnessValue',
+        value: function setCorrectnessValue(row, columnNameToNumber, item) {
+            var columnName = item.id + '-boolean';
+            if (item.isCorrect == null) {
+                /*
+                 * The item does not have an isCorrect field so we will not show
+                 * anything in the cell.
+                 */
+            } else if (item.isCorrect) {
+                // The student placed the choice in the correct bucket
+                row[columnNameToNumber[columnName]] = 1;
+            } else {
+                if (item.isIncorrectPosition) {
+                    /*
+                     * The student placed the choice in the correct bucket but
+                     * in the wrong position.
+                     */
+                    row[columnNameToNumber[columnName]] = 2;
+                } else {
+                    // The student placed the choice in the wrong bucket
+                    row[columnNameToNumber[columnName]] = 0;
+                }
+            }
+        }
     }]);
 
     return DataExportController;
 }();
 
-DataExportController.$inject = ['$injector', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'FileSaver', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService'];
+DataExportController.$inject = ['$injector', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'FileSaver', 'MatchService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService'];
 
 exports.default = DataExportController;
 //# sourceMappingURL=dataExportController.js.map

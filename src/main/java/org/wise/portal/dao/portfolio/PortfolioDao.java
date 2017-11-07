@@ -18,7 +18,7 @@
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
- * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
+ * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.wise.portal.dao.portfolio;
 
@@ -30,8 +30,8 @@ import org.wise.vle.domain.portfolio.Portfolio;
  */
 public interface PortfolioDao<T extends Portfolio> extends SimpleDao<Portfolio> {
 
-	Portfolio getPortfolioByRunIdWorkgroupId(long runId, long workgroupId);
-	
-	void savePortfolio(Portfolio portfolio);
+  Portfolio getPortfolioByRunIdWorkgroupId(long runId, long workgroupId);
+
+  void savePortfolio(Portfolio portfolio);
 
 }

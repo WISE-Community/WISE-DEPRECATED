@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -17,7 +17,6 @@
  */
 package org.wise.portal.dao.authentication.impl;
 
-
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.authentication.AclEntryDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -29,29 +28,28 @@ import org.wise.portal.domain.authentication.impl.PersistentAclEntry;
  * This class is not being used. Tried to implement Hibernate versions of the acl
  * services and became bogged down, so went back to jdbc versions. Keeping this
  * class around in case we want to try again later.
- * 
+ *
  * @author Cynick Young
  */
 @Repository
 public class HibernateAclEntryDao extends AbstractHibernateDao<ImmutableAclEntry> implements
-        AclEntryDao<ImmutableAclEntry> {
-    
-    private static final String FIND_ALL_QUERY = "from PersistentAclEntry";
+  AclEntryDao<ImmutableAclEntry> {
 
-    /**
-     * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
-     */
-    @Override
-    protected Class<? extends ImmutableAclEntry> getDataObjectClass() {
-        return PersistentAclEntry.class;
-    }
+  private static final String FIND_ALL_QUERY = "from PersistentAclEntry";
 
-    /**
-     * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
-     */
-    @Override
-    protected String getFindAllQuery() {
-        return FIND_ALL_QUERY;
-    }
+  /**
+   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
+   */
+  @Override
+  protected Class<? extends ImmutableAclEntry> getDataObjectClass() {
+    return PersistentAclEntry.class;
+  }
 
+  /**
+   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
+   */
+  @Override
+  protected String getFindAllQuery() {
+    return FIND_ALL_QUERY;
+  }
 }

@@ -38,10 +38,9 @@ import java.util.List;
  */
 public interface StudentWorkDao<T extends StudentWork> extends SimpleDao<T> {
 
-    List<StudentWork> getStudentWorkListByParams(Integer id, Run run, Group period, Workgroup workgroup,
-                                                    Boolean isAutoSave, Boolean isSubmit,
-                                                    String nodeId, String componentId, String componentType,
-                                                    List<JSONObject> components, Boolean latest);
+  List<StudentWork> getStudentWorkListByParams(Integer id, Run run, Group period,
+      Workgroup workgroup, Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId,
+      String componentType, List<JSONObject> components, Boolean latest);
 
-    List<Object[]> getStudentWorkExport(Integer runId);
+  List<Object[]> getStudentWorkExport(Integer runId);
 }

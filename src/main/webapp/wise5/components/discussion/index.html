@@ -1,310 +1,376 @@
-<div ng-controller="DiscussionController as discussionController">
-    <div ng-if='discussionController.mode === "authoring"'>
-        <div ng-if='!discussionController.authoringComponentContent.showPreviousWork'>
-            <md-input-container style='width: 100%; margin-bottom: 0;'>
-                <label>{{ 'PROMPT' | translate }}</label>
-                <textarea rows='1'
-                          ng-model='discussionController.authoringComponentContent.prompt'
-                          ng-change='discussionController.authoringViewComponentChanged()'
-                          ng-model-options='{ debounce: 1000 }'
-                          placeholder='{{ "enterPromptHere" | translate }}'>
+<div ng-controller='DiscussionController as discussionController'>
+  <div ng-if='discussionController.mode === "authoring"'>
+    <div class='advancedAuthoringDiv'
+        ng-if='discussionController.showAdvancedAuthoring'>
+      <div>
+        <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+      </div>
+      <div>
+        <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+          <label>{{ 'MAX_SCORE' | translate }}</label>
+          <input type='number'
+              ng-model='discussionController.authoringComponentContent.maxScore'
+              ng-model-options='{ debounce: 1000 }'
+              ng-change='discussionController.authoringViewComponentChanged()'/>
+        </md-input-container>
+      </div>
+      <div>
+        <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+          <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+          <input type='number'
+              ng-model='discussionController.authoringComponentContent.componentWidth'
+              ng-model-options='{ debounce: 1000 }'
+              ng-change='discussionController.authoringViewComponentChanged()'/>
+        </md-input-container>
+      </div>
+      <div>
+        <md-button class='topButton md-raised md-primary'
+            ng-click='discussionController.showRubricAuthoring = !discussionController.showRubricAuthoring'>
+          <md-icon>message</md-icon>
+          <md-tooltip md-direction='top'
+              class='projectButtonTooltip'>
+            {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+          </md-tooltip>
+        </md-button>
+        <div ng-if='discussionController.showRubricAuthoring'>
+          <summernote id='{{discussionController.summernoteRubricId}}'
+              ng-model='discussionController.summernoteRubricHTML'
+              ng-change='discussionController.summernoteRubricHTMLChanged()'
+              config='discussionController.summernoteRubricOptions'
+              ng-model-options='{ debounce: 1000 }'
+              rows='10'
+              cols='100'>
+          </summernote>
+        </div>
+      </div>
+      <div>
+        <div style='height: 50;'>
+          <label style='vertical-align: middle; display:inline-block;'>
+            {{ 'CONNECTED_COMPONENTS' | translate }}
+          </label>
+          <md-button class='topButton md-raised md-primary'
+              style='vertical-align: middle; display:inline-block;'
+              ng-click='discussionController.authoringAddConnectedComponent()'>
+            <md-icon>add</md-icon>
+            <md-tooltip md-direction='top'
+                class='projectButtonTooltip'>
+              {{ 'ADD_CONNECTED_COMPONENT' | translate }}
+            </md-tooltip>
+          </md-button>
+        </div>
+        <div ng-repeat='connectedComponent in discussionController.authoringComponentContent.connectedComponents track by $index'
+            style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'
+            layout='row'>
+          <div flex>
+            <md-input-container style='margin-right: 20; width: 300;'>
+              <label>{{ 'step' | translate }}</label>
+              <md-select ng-model='connectedComponent.nodeId'
+                  ng-change='discussionController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
+                  style='width: 300'>
+                <md-option ng-repeat='item in discussionController.idToOrder | toArray | orderBy : "order"'
+                    value='{{item.$key}}'
+                    ng-if='discussionController.isApplicationNode(item.$key)'>
+                  {{ discussionController.getNodePositionAndTitleByNodeId(item.$key) }}
+                </md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container style='margin-right: 20; width: 300;'>
+              <label>{{ 'component' | translate }}</label>
+              <md-select ng-model='connectedComponent.componentId'
+                  ng-change='discussionController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
+                  style='width: 300'>
+                <md-option ng-repeat='(componentIndex, component) in discussionController.getComponentsByNodeId(connectedComponent.nodeId)'
+                    value='{{component.id}}'
+                    ng-disabled='!discussionController.isConnectedComponentTypeAllowed(component.type) || component.id == discussionController.componentId'>
+                  {{ componentIndex + 1 }}. {{ component.type }}
+                  <span ng-if='component.id == discussionController.componentId'>
+                    ({{ 'thisComponent' | translate }})
+                  </span>
+                </md-option>
+              </md-select>
+            </md-input-container>
+            <md-input-container style='margin-right: 20; width: 200;'>
+              <label>{{ 'type' | translate }}</label>
+              <md-select ng-model='connectedComponent.type'
+                  ng-change='discussionController.authoringConnectedComponentTypeChanged(connectedComponent)'
+                  style='width: 200'>
+                <md-option value='importWork'>
+                  {{ 'importWork' | translate }}
+                </md-option>
+                <md-option value='showWork'>
+                  {{ 'showWork' | translate }}
+                </md-option>
+              </md-select>
+            </md-input-container>
+            <span flex></span>
+            <md-input-container style='margin-left: 20;'>
+              <md-button class='topButton md-raised md-primary'
+                  ng-click='discussionController.authoringDeleteConnectedComponent($index)'>
+                <md-icon>delete</md-icon>
+                <md-tooltip md-direction='top'
+                    class='projectButtonTooltip'>
+                  {{ 'DELETE' | translate }}
+                </md-tooltip>
+              </md-button>
+            </md-input-container>
+          </div>
+        </div>
+      </div>
+      <div style='margin-top: 10px; margin-bottom: 10px;'>
+        <div style='height: 50;'>
+          <label style='vertical-align: middle; display:inline-block;'>{{ 'tags' | translate }}</label>
+          <md-button class='topButton md-raised md-primary'
+              style='vertical-align: middle; display:inline-block;'
+              ng-click='discussionController.addTag()'>
+            <md-icon>add</md-icon>
+            <md-tooltip md-direction='top'
+                class='projectButtonTooltip'>
+              {{ 'addTag' | translate }}
+            </md-tooltip>
+          </md-button>
+        </div>
+        <div ng-repeat='tag in discussionController.authoringComponentContent.tags track by $index'>
+          <div layout='row'>
+            <md-input-container style='margin-bottom: 0px'>
+              <label></label>
+              <input ng-model='discussionController.authoringComponentContent.tags[$index]'
+                  ng-change='discussionController.authoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'
+                  size='100'
+                  placeholder='{{ "enterTag" | translate }}'/>
+            </md-input-container>
+            <md-button class='moveComponentButton md-raised md-primary'
+                ng-click='discussionController.moveTagUp($index)'>
+              <md-icon>arrow_upward</md-icon>
+              <md-tooltip md-direction='top'
+                  class='projectButtonTooltip'>
+                {{ 'moveUp' | translate }}
+              </md-tooltip>
+            </md-button>
+            <md-button class='moveComponentButton md-raised md-primary'
+                ng-click='discussionController.moveTagDown($index)'>
+              <md-icon>arrow_downward</md-icon>
+              <md-tooltip md-direction='top'
+                  class='projectButtonTooltip'>
+                {{ 'moveDown' | translate }}
+              </md-tooltip>
+            </md-button>
+            <md-button class='moveComponentButton md-raised md-primary'
+                ng-click='discussionController.deleteTag($index)'>
+              <md-icon>delete</md-icon>
+              <md-tooltip md-direction='top'
+                  class='projectButtonTooltip'>
+                {{ 'DELETE' | translate }}
+              </md-tooltip>
+            </md-button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <md-button class='topButton md-raised md-primary'
+            ng-click='discussionController.showJSONButtonClicked()'>
+          <md-icon>code</md-icon>
+          <md-tooltip md-direction='top'
+              class='projectButtonTooltip'>
+            {{ 'SHOW_JSON' | translate }}
+          </md-tooltip>
+        </md-button>
+        <span ng-if='discussionController.jsonStringChanged'>
+          {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+        </span>
+        <div ng-if='discussionController.showJSONAuthoring'>
+          <md-input-container style='width: 100%;'>
+            <textarea ng-model='discussionController.authoringComponentContentJSONString'
+                style='width: 90%; border: 1px solid black;'
+                ng-change='discussionController.authoringJSONChanged()'>
             </textarea>
-            </md-input-container>
-            <md-input-container style='margin-top: 0; margin-bottom: 0;'>
-                <md-checkbox ng-model='discussionController.authoringComponentContent.isStudentAttachmentEnabled'
-                             ng-change='discussionController.authoringViewComponentChanged()'>
-                    {{ 'discussion.allowUploadedImagesInPosts' | translate }}
-                </md-checkbox>
-            </md-input-container>
+          </md-input-container>
         </div>
-        <div>
-            <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
-                <md-button class='topButton md-raised md-primary' ng-click='discussionController.showAdvancedAuthoring = !discussionController.showAdvancedAuthoring'>
-                    <md-icon>build</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
-                </md-button>
-            </md-input-container>
+      </div>
+    </div>
+    <br/>
+    <div ng-if='!discussionController.authoringComponentContent.showPreviousWork'>
+      <md-input-container style='width: 100%; margin-bottom: 0;'>
+        <label>{{ 'PROMPT' | translate }}</label>
+        <textarea rows='1'
+            ng-model='discussionController.authoringComponentContent.prompt'
+            ng-change='discussionController.authoringViewComponentChanged()'
+            ng-model-options='{ debounce: 1000 }'
+            placeholder='{{ "enterPromptHere" | translate }}'>
+      </textarea>
+      </md-input-container>
+      <md-input-container style='margin-top: 0; margin-bottom: 0;'>
+        <md-checkbox ng-model='discussionController.authoringComponentContent.isStudentAttachmentEnabled'
+            ng-change='discussionController.authoringViewComponentChanged()'>
+          {{ 'discussion.allowUploadedImagesInPosts' | translate }}
+        </md-checkbox>
+      </md-input-container>
+    </div>
+  </div>
+  <div ng-style='discussionController.mode === "authoring" && {"border": "5px solid black", "padding": "20px"}'>
+    <div ng-if='discussionController.mode === "authoring"'>
+      <h5>{{ 'studentPreview' | translate }}</h5>
+    </div>
+    <div ng-switch='discussionController.mode'>
+      <div ng-switch-when='grading|gradingRevision'
+          ng-switch-when-separator='|'
+          layout='row'
+          layout-wrap>
+        <div flex='100'
+            flex-gt-sm='66'
+            layout='column'
+            class='component--grading__response'>
+          <div class='component--grading__response__content'>
+            <div class='md-padding discussion-content'>
+              <div layout='row'>
+                <div class='discussion-posts'
+                    flex>
+                  <class-response ng-repeat='componentState in discussionController.topLevelResponses.slice().reverse()'
+                      response='componentState'
+                      submitbuttonclicked='submitbuttonclicked(r)'
+                      mode='discussionController.mode'
+                      deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
+                      undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
+                      studentdatachanged='studentdatachanged()'
+                      class='post animate-repeat'>
+                  </class-response>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span flex></span>
+          <component-revisions-info node-id='discussionController.nodeId'
+              component-id='discussionController.componentId'
+              to-workgroup-id='workgroupId'
+              component-state='componentState'
+              active='discussionController.mode === "grading"'>
+          </component-revisions-info>
         </div>
-        <div ng-if='discussionController.showAdvancedAuthoring'>
-            <div>
-                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-                    <label>{{ 'MAX_SCORE' | translate }}</label>
-                    <input type='number'
-                           ng-model='discussionController.authoringComponentContent.maxScore'
-                           ng-model-options='{ debounce: 1000 }'
-                           ng-change='discussionController.authoringViewComponentChanged()'/>
+        <div flex='100'
+            flex-gt-sm='33'
+            class='component--grading__annotations'>
+          <component-grading node-id='discussionController.nodeId'
+              component-id='discussionController.componentId'
+              max-score='discussionController.componentContent.maxScore'
+              from-workgroup-id='teacherWorkgroupId'
+              to-workgroup-id='workgroupId'
+              component-state-id='componentState.id'
+              show-all-annotations='discussionController.mode !== "grading"'
+              is-disabled='discussionController.mode !== "grading"'>
+          </component-grading>
+        </div>
+      </div>
+      <div ng-switch-default>
+        <div class='component__prompt'>
+          <div class='component__prompt__content'>
+            <compile data='discussionController.getPrompt()'></compile>
+          </div>
+          <possible-score max-score='discussionController.componentContent.maxScore'
+              ng-if='discussionController.mode === "student" && !discussionController.latestAnnotations.score'>
+          </possible-score>
+        </div>
+        <div class='md-padding discussion-content'>
+          <component-annotations ng-if='discussionController.mode === "student" || discussionController.mode === "authoring"'
+              class='annotations--inside'
+              annotations='discussionController.latestAnnotations'
+              max-score='discussionController.componentContent.maxScore'>
+          </component-annotations>
+          <div layout='row'>
+            <div class='discussion-posts' flex>
+              <md-card class='discussion-new discussion-post'
+                  ng-if='!discussionController.isDisabled'
+                  ng-class='{"discussion-new--focused md-whiteframe-z3": discussionController.focus || discussionController.newResponse || discussionController.newAttachments.length}'>
+                <md-input-container class='input--placeholder-only discussion-new__input-container input-container'
+                    md-no-float>
+                  <textarea ng-if='discussionController.isRichTextEnabled && !discussionController.isDisabled'
+                      ui-tinymce='discussionController.tinymceOptions'
+                      ng-model='discussionController.newResponse'
+                      ng-model-options='{ debounce: 100 }'
+                      ng-change='discussionController.studentDataChanged()'
+                      ng-init='discussionController.focus = false'
+                      ng-focus='discussionController.focus = true'
+                      ng-blur='discussionController.focus = false'>
+                  </textarea>
+                  <div ng-if='discussionController.isDisabled'
+                      class='discussion-new__input--textarea input--textarea--disabled'
+                      ng-model='discussionController.newResponse'>
+                  </div>
+                  <textarea ng-if='!discussionController.isRichTextEnabled && !discussionController.isDisabled'
+                      class='discussion-new__input--textarea'
+                      placeholder='{{ "shareWithClass" | translate }}'
+                      ng-model='discussionController.newResponse'
+                      ng-model-options='{ debounce: 100 }'
+                      ng-disabled='discussionController.isDisabled'
+                      ng-change='discussionController.studentDataChanged()'
+                      ng-init='discussionController.focus = false'
+                      ng-focus='discussionController.focus = true'
+                      ng-blur='discussionController.focus = false'>
+                  </textarea>
                 </md-input-container>
-            </div>
-            <div>
-                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-                    <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
-                    <input type='number'
-                           ng-model='discussionController.authoringComponentContent.componentWidth'
-                           ng-model-options='{ debounce: 1000 }'
-                           ng-change='discussionController.authoringViewComponentChanged()'/>
-                </md-input-container>
-            </div>
-            <div>
-                <md-button class='topButton md-raised md-primary' ng-click='discussionController.showRubricAuthoring = !discussionController.showRubricAuthoring'>
-                    <md-icon>message</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
-                </md-button>
-                <div ng-if='discussionController.showRubricAuthoring'>
-                    <summernote id='{{discussionController.summernoteRubricId}}'
-                                ng-model='discussionController.summernoteRubricHTML'
-                                ng-change='discussionController.summernoteRubricHTMLChanged()'
-                                config='discussionController.summernoteRubricOptions'
-                                ng-model-options='{ debounce: 1000 }'
-                                rows='10'
-                                cols='100'>
-                    </summernote>
-                </div>
-            </div>
-            <div>
-                <div layout='row'>
-                    <div>
-                        <label>{{ 'CONNECTED_COMPONENTS' | translate }}</label>
-                        <md-button class='topButton md-raised md-primary'
-                                   ng-click='discussionController.authoringAddConnectedComponent()'>
-                            <md-icon>add</md-icon>
-                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</md-tooltip>
-                        </md-button>
-                    </div>
-                </div>
-                <div ng-repeat='connectedComponent in discussionController.authoringComponentContent.connectedComponents track by $index'
-                     style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'
-                     layout='row'>
-                    <div flex>
-                        <md-input-container style='margin-right: 20; width: 300;'>
-                            <label>{{ 'step' | translate }}</label>
-                            <md-select ng-model='connectedComponent.nodeId'
-                                       ng-change='discussionController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
-                                       style='width: 300'>
-                                <md-option ng-repeat='item in discussionController.idToOrder | toArray | orderBy : "order"'
-                                           value='{{item.$key}}'
-                                           ng-if='discussionController.isApplicationNode(item.$key)'>
-                                    {{ discussionController.getNodePositionAndTitleByNodeId(item.$key) }}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                        <md-input-container style='margin-right: 20; width: 300;'>
-                            <label>{{ 'component' | translate }}</label>
-                            <md-select ng-model='connectedComponent.componentId'
-                                       ng-change='discussionController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
-                                       style='width: 300'>
-                                <md-option ng-repeat='(componentIndex, component) in discussionController.getComponentsByNodeId(connectedComponent.nodeId)'
-                                           value='{{component.id}}'
-                                           ng-disabled='!discussionController.isConnectedComponentTypeAllowed(component.type) || component.id == discussionController.componentId'>
-                                    {{ componentIndex + 1 }}. {{ component.type }} <span ng-if='component.id == discussionController.componentId'>({{ 'thisComponent' | translate }})</span>
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                        <md-input-container style='margin-right: 20; width: 200;'>
-                            <label>{{ 'type' | translate }}</label>
-                            <md-select ng-model='connectedComponent.type'
-                                       ng-change='discussionController.authoringConnectedComponentTypeChanged(connectedComponent)'
-                                       style='width: 200'>
-                                <md-option value='importWork'>
-                                    {{ 'importWork' | translate }}
-                                </md-option>
-                                <md-option value='showWork'>
-                                    {{ 'showWork' | translate }}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                        <span flex></span>
-                        <md-input-container style='margin-left: 20;'>
-                            <md-button class='topButton md-raised md-primary'
-                                       ng-click='discussionController.authoringDeleteConnectedComponent($index)'>
-                                <md-icon>delete</md-icon>
-                                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
-                            </md-button>
-                        </md-input-container>
-                    </div>
-                </div>
-            </div>
-            <div style='margin-top: 10px; margin-bottom: 10px;'>
-                <div>
-                    <label>{{ 'tags' | translate }}</label>
-                    <md-button class='topButton md-raised md-primary'
-                               ng-click='discussionController.addTag()'>
-                        <md-icon>add</md-icon>
-                        <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "addTag" | translate }}</md-tooltip>
+                <div class='discussion-new__actions'
+                    ng-if='!discussionController.isDisabled && discussionController.isStudentAttachmentEnabled && discussionController.newAttachments.length'>
+                  <div class='component__attachment discussion-new__attachment'
+                      ng-repeat='attachment in discussionController.newAttachments'>
+                    <img ng-src='{{attachment.iconURL}}'
+                        alt='Image'
+                        class='discussion-post__attachment discussion-new__attachment__content' />
+                    <md-button class='component__attachment__delete'
+                        ng-click='discussionController.removeAttachment(attachment)'
+                        title='Remove file'>
+                      <md-icon>cancel</md-icon>
                     </md-button>
+                  </div>
                 </div>
-                <div ng-repeat='tag in discussionController.authoringComponentContent.tags track by $index'>
-                    <div layout='row'>
-                        <md-input-container style='margin-bottom: 0px'>
-                            <label></label>
-                            <input ng-model='discussionController.authoringComponentContent.tags[$index]'
-                                   ng-change='discussionController.authoringViewComponentChanged()'
-                                   ng-model-options='{ debounce: 1000 }'
-                                   size='100'
-                                   placeholder='{{ "enterTag" | translate }}'/>
-                        </md-input-container>
-                        <md-button class='moveComponentButton md-raised md-primary' ng-click='discussionController.moveTagUp($index)'>
-                            <md-icon>arrow_upward</md-icon>
-                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'moveUp' | translate }}</md-tooltip>
-                        </md-button>
-                        <md-button class='moveComponentButton md-raised md-primary' ng-click='discussionController.moveTagDown($index)'>
-                            <md-icon>arrow_downward</md-icon>
-                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'moveDown' | translate }}</md-tooltip>
-                        </md-button>
-                        <md-button class='moveComponentButton md-raised md-primary' ng-click='discussionController.deleteTag($index)'>
-                            <md-icon>delete</md-icon>
-                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'DELETE' | translate }}</md-tooltip>
-                        </md-button>
-                    </div>
+                <div class='discussion-new__actions'
+                    layout='row'
+                    layout-align='end center'>
+                  <md-button class='md-accent md-icon-button'
+                      ng-click='nodeController.showStudentAssets($event, discussionController.componentId, discussionController.isDisabled)'
+                      ng-if='discussionController.isStudentAttachmentEnabled'
+                      title='Add picture'>
+                    <md-icon>image</md-icon>
+                  </md-button>
+                  <!--<md-button class='md-primary'
+                         ng-class='{"md-raised": !discussionController.showSubmitButton()}'
+                         ng-click='discussionController.saveButtonClicked()'
+                         ng-disabled='discussionController.isDisabled || !discussionController.newResponse'
+                         ng-if='discussionController.showSaveButton()'>Save Draft</md-button>-->
+                  <md-button class='md-raised md-primary'
+                      ng-click='discussionController.submitButtonClicked()'
+                      ng-disabled='discussionController.isDisabled || (!discussionController.newResponse && discussionController.newAttachments.length == 0)'>
+                    {{ 'discussion.post' | translate }}
+                  </md-button>
                 </div>
+              </md-card>
+              <class-response ng-repeat='componentState in discussionController.topLevelResponses.slice().reverse()'
+                  ng-if='mdScreen ? $odd : true'
+                  response='componentState'
+                  submitbuttonclicked='submitbuttonclicked(r)'
+                  mode='discussionController.mode'
+                  deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
+                  undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
+                  studentdatachanged='studentdatachanged()'
+                  class='post animate-repeat'>
+              </class-response>
             </div>
-            <div>
-                <md-button class='topButton md-raised md-primary'
-                           ng-click='discussionController.showJSONButtonClicked()'>
-                    <md-icon>code</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
-                </md-button>
-                <span ng-if='discussionController.jsonStringChanged'>
-                    {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
-                </span>
-                <div ng-if='discussionController.showJSONAuthoring'>
-                    <md-input-container style='width: 100%;'>
-                        <textarea ng-model='discussionController.authoringComponentContentJSONString'
-                                  style='width: 90%; border: 1px solid black;'
-                                  ng-change='discussionController.authoringJSONChanged()'></textarea>
-                    </md-input-container>
-                </div>
+            <div class='discussion-posts'
+                ng-if='mdScreen && discussionController.topLevelResponses.length'
+                flex>
+              <class-response ng-repeat='componentState in discussionController.topLevelResponses.slice().reverse()'
+                  ng-if='$even'
+                  response='componentState'
+                  submitbuttonclicked='submitbuttonclicked(r)'
+                  mode='discussionController.mode'
+                  deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
+                  undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
+                  studentdatachanged='studentdatachanged()'
+                  class='animate-repeat'
+                  style='display: block;'>
+              </class-response>
             </div>
+          </div>
         </div>
-        <br/>
+      </div>
     </div>
-    <div ng-style='discussionController.mode === "authoring" && {"border": "1px solid black", "padding": "20px"}'>
-        <div ng-if='discussionController.mode === "authoring"'>
-            <h5>{{ 'PREVIEW' | translate }}</h5>
-        </div>
-        <div ng-switch="discussionController.mode">
-            <div ng-switch-when="grading|gradingRevision" ng-switch-when-separator="|" layout="row" layout-wrap>
-                <div flex="100" flex-gt-sm="66" layout="column" class="component--grading__response">
-                    <div class="component--grading__response__content">
-                        <div class="md-padding discussion-content">
-                            <div layout="row">
-                                <div class="discussion-posts" flex>
-                                    <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
-                                                    response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
-                                                    mode="discussionController.mode"
-                                                    deletebuttonclicked="discussionController.deletebuttonclicked(componentState)"
-                                                    undodeletebuttonclicked="discussionController.undodeletebuttonclicked(componentState)"
-                                                    studentdatachanged="studentdatachanged()"
-                                                    class="post animate-repeat"></class-response>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <span flex></span>
-                    <component-revisions-info node-id="discussionController.nodeId"
-                                              component-id="discussionController.componentId"
-                                              max-score="discussionController.componentContent.maxScore"
-                                              to-workgroup-id="workgroupId"
-                                              component-state="componentState"
-                                              active="discussionController.mode === 'grading'"></component-revisions-info>
-                </div>
-                <div flex="100" flex-gt-sm="33" class="component--grading__annotations">
-                    <component-grading node-id="discussionController.nodeId"
-                                       component-id="discussionController.componentId"
-                                       max-score="discussionController.componentContent.maxScore"
-                                       from-workgroup-id="teacherWorkgroupId"
-                                       to-workgroup-id="workgroupId"
-                                       component-state-id="componentState.id"
-                                       show-all-annotations="discussionController.mode !== 'grading'"
-                                       is-disabled="discussionController.mode !== 'grading'"></component-grading>
-                </div>
-            </div>
-            <div ng-switch-default>
-                <div class="component__prompt">
-                    <div class="component__prompt__content"><compile data='discussionController.getPrompt()'></compile></div>
-                    <possible-score max-score="discussionController.componentContent.maxScore"
-                                    ng-if="discussionController.mode === 'student' && !discussionController.latestAnnotations.score"></possible-score>
-                </div>
-                <div class="md-padding discussion-content">
-                    <component-annotations ng-if="discussionController.mode === 'student' || discussionController.mode === 'authoring'"
-                                           class="annotations--inside"
-                                           annotations='discussionController.latestAnnotations'
-                                           max-score="discussionController.componentContent.maxScore"></component-annotations>
-                    <div layout="row">
-                        <div class="discussion-posts" flex>
-                            <md-card class="discussion-new discussion-post"
-                                     ng-if="!discussionController.isDisabled"
-                                     ng-class="{'discussion-new--focused md-whiteframe-z3': discussionController.focus || discussionController.newResponse || discussionController.newAttachments.length}">
-                                <md-input-container class="input--placeholder-only discussion-new__input-container input-container"
-                                                    md-no-float>
-                                    <textarea ng-if="discussionController.isRichTextEnabled && !discussionController.isDisabled"
-                                              ui-tinymce="discussionController.tinymceOptions"
-                                              ng-model="discussionController.newResponse"
-                                              ng-model-options='{ debounce: 100 }'
-                                              ng-change="discussionController.studentDataChanged()"
-                                              ng-init="discussionController.focus = false"
-                                              ng-focus="discussionController.focus = true"
-                                              ng-blur="discussionController.focus = false"></textarea>
-                                    <div ng-if="discussionController.isDisabled"
-                                         class="discussion-new__input--textarea input--textarea--disabled"
-                                         ng-model="discussionController.newResponse"></div>
-                                    <textarea ng-if="!discussionController.isRichTextEnabled && !discussionController.isDisabled"
-                                              class="discussion-new__input--textarea"
-                                              placeholder="{{ 'shareWithClass' | translate }}"
-                                              ng-model="discussionController.newResponse"
-                                              ng-model-options='{ debounce: 100 }'
-                                              ng-disabled="discussionController.isDisabled"
-                                              ng-change="discussionController.studentDataChanged()"
-                                              ng-init="discussionController.focus = false"
-                                              ng-focus="discussionController.focus = true"
-                                              ng-blur="discussionController.focus = false"></textarea>
-                                </md-input-container>
-                                <div class="discussion-new__actions" ng-if="!discussionController.isDisabled && discussionController.isStudentAttachmentEnabled && discussionController.newAttachments.length">
-                                    <div class="component__attachment discussion-new__attachment" ng-repeat="attachment in discussionController.newAttachments">
-                                        <img ng-src="{{attachment.iconURL}}" alt="Image" class="discussion-post__attachment discussion-new__attachment__content" />
-                                        <md-button class="component__attachment__delete" ng-click='discussionController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
-                                    </div>
-                                </div>
-                                <div class="discussion-new__actions" layout="row" layout-align="end center">
-                                    <md-button class="md-accent md-icon-button"
-                                               ng-click='nodeController.showStudentAssets($event, discussionController.componentId, discussionController.isDisabled)'
-                                               ng-if="discussionController.isStudentAttachmentEnabled"
-                                               title="Add picture">
-                                        <md-icon>image</md-icon>
-                                    </md-button>
-                                    <!--<md-button class="md-primary"
-                                               ng-class="{'md-raised': !discussionController.showSubmitButton()}"
-                                               ng-click="discussionController.saveButtonClicked()"
-                                               ng-disabled="discussionController.isDisabled || !discussionController.newResponse"
-                                               ng-if="discussionController.showSaveButton()">Save Draft</md-button>-->
-                                    <md-button class="md-raised md-primary"
-                                               ng-click="discussionController.submitButtonClicked()"
-                                               ng-disabled="discussionController.isDisabled || (!discussionController.newResponse && discussionController.newAttachments.length == 0)">{{ 'discussion.post' | translate }}</md-button>
-                                </div>
-                            </md-card>
-
-                            <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
-                                            ng-if="mdScreen ? $odd : true"
-                                            response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
-                                            mode="discussionController.mode"
-                                            deletebuttonclicked="discussionController.deletebuttonclicked(componentState)"
-                                            undodeletebuttonclicked="discussionController.undodeletebuttonclicked(componentState)"
-                                            studentdatachanged="studentdatachanged()"
-                                            class="post animate-repeat"></class-response>
-                        </div>
-                        <div class="discussion-posts" ng-if="mdScreen && discussionController.topLevelResponses.length" flex>
-                            <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
-                                            ng-if="$even"
-                                            response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
-                                            mode="discussionController.mode"
-                                            deletebuttonclicked="discussionController.deletebuttonclicked(componentState)"
-                                            undodeletebuttonclicked="discussionController.undodeletebuttonclicked(componentState)"
-                                            studentdatachanged="studentdatachanged()"
-                                            class="animate-repeat"
-                                            style="display: block;"></class-response>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>

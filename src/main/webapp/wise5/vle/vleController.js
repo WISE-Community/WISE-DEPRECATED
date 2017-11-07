@@ -126,9 +126,7 @@ var VLEController = function () {
             _this.newNotifications = _this.getNewNotifications();
         });
 
-        this.$scope.$on('componentStudentDataChanged', function () {
-            _this.StudentDataService.updateNodeStatuses();
-        });
+        this.$scope.$on('componentStudentDataChanged', function () {});
 
         // listen for the pause screen event
         this.$scope.$on('pauseScreen', function (event, args) {
@@ -647,7 +645,7 @@ var VLEController = function () {
 
                 /*let notebookItem = this.NotebookService.getNotebookItemByNotebookItemId(notebookItemId, this.workgroupId);
                 if (notebookItem != null) {
-                        if (notebookItem.type === "note") {
+                      if (notebookItem.type === "note") {
                         // open note view
                         this.$rootScope.$broadcast('setNotebookFilter', {filter: "note", ev: event});
                         this.$rootScope.$broadcast('toggleNotebook', {ev: event, open: true});

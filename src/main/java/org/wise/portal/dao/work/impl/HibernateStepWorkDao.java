@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -39,244 +39,244 @@ import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 
 @Repository
-public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork> implements StepWorkDao<StepWork> {
+public class HibernateStepWorkDao extends AbstractHibernateDao<StepWork>
+    implements StepWorkDao<StepWork> {
 
-	@Override
-	protected String getFindAllQuery() {
-		return null;
-	}
+  @Override
+  protected String getFindAllQuery() {
+    return null;
+  }
 
-	@Override
-	protected Class<? extends StepWork> getDataObjectClass() {
-		return StepWork.class;
-	}
+  @Override
+  protected Class<? extends StepWork> getDataObjectClass() {
+    return StepWork.class;
+  }
 
-	public StepWork getStepWorkById(Long id) {
-		StepWork stepWork = null;
-		
-		try {
-			stepWork = getById(id);
-		} catch (ObjectNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		return stepWork;
-	}
-	
-	@Transactional
-	public void saveStepWork(StepWork stepWork) {
-		save(stepWork);
-	}
-	
-	/**
-	 * Returns a list of StepWork done by the specified workgroup with the specified id or null
-	 * if no such StepWork exists. The list will be ordered oldest to newest.
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	@Transactional(readOnly=true)
-	public List<StepWork> getStepWorksByUserInfo(UserInfo userInfo) {
-		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-          return session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo)).addOrder(Order.asc("id")).list();
-	}
+  public StepWork getStepWorkById(Long id) {
+    StepWork stepWork = null;
 
-	/**
-	 * Returns the latest StepWork done by the specified workgroup with the specified id or null
-	 * if no such StepWork exists.
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	@Transactional(readOnly=true)
-	public StepWork getLatestStepWorkByUserInfo(UserInfo userInfo) {
-		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        List<StepWork> list = session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo)).addOrder(Order.desc("id")).list();
-
-        StepWork result = null;
-        if (list.size() > 0) {
-        	result = list.get(0);
-        }
-        return result;
-	}
-	
-	/**
-	 * Returns the latest StepWork done by the specified workgroup with the specified id and specified node
-	 * or null if no such StepWork exists.
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	@Transactional(readOnly=true)
-	public StepWork getLatestStepWorkByUserInfoAndNode(UserInfo userInfo,Node node) {
-		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        List<StepWork> list = session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo))
-        	.add(Restrictions.eq("node",node)).addOrder(Order.desc("id")).list();
-        StepWork result = null;
-        if (list.size() > 0) {
-        	result = list.get(0);
-        }
-        return result;
-	}
-	
-	/**
-	 * Get the StepWork for the given UserInfo and Node. The list will be ordered from
-	 * newest to oldest.
-	 * @param userInfo
-	 * @param node
-	 * @return a list of StepWork for the user and node
-	 */
-	@SuppressWarnings("unchecked")
-	@Transactional(readOnly=true)
-	public List<StepWork> getStepWorksByUserInfoAndNode(UserInfo userInfo,Node node) {
-		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        List<StepWork> result = session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo))
-        	.add(Restrictions.eq("node",node)).addOrder(Order.desc("id")).list();
-
-        return result;
-	}
-	
-	
-	/**
-	 * Returns a list of StepWork done by the specified UserInfo user and have 
-	 * a nodeId that is in the nodeList. The list will be ordered oldest to newest.
-	 * @param userInfo a UserInfo object
-	 * @param nodeList a list of Node objects
-	 * @return a list of StepWork objects
-	 */
-	@SuppressWarnings("unchecked")
-	@Transactional(readOnly=true)
-	public List<StepWork> getStepWorksByUserInfoAndNodeList(UserInfo userInfo, List<Node> nodeList) {
-		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-          return session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo)).add(createNodeOrCriterion(nodeList, 0)).addOrder(Order.asc("id")).list();
-	}
-	
-	/**
-	 * A recursive function that chains "or" restrictions of nodes together
-	 * @param nodeList a list of Node objects, the list must not be empty
-	 * @param index the current index in the list to utilize
-	 * @return a Criterion of nodes "or"ed together
-	 */
-	private Criterion createNodeOrCriterion(List<Node> nodeList, int index) {
-		if(index == (nodeList.size() - 1)) {
-			/*
-			 * base case if the list has only one element just return a
-			 * restriction with the node
-			 */
-			return Restrictions.eq("node", nodeList.get(index));
-		} else {
-			/*
-			 * "or" together this first element with the recursive call
-			 * on the rest of the list
-			 */
-			return Restrictions.or(Restrictions.eq("node", nodeList.get(index)), createNodeOrCriterion(nodeList, index + 1));
-		}
-	}
-	
-	/**
-	 * Returns a list of StepWork done by the specified workgroup with the specified id or null
-	 * if no such Environment exists. The list will be ordered oldest to newest.
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	@Transactional(readOnly=true)
-	public List<StepWork> getStepWorksByUserInfosAndNode(List<UserInfo> userInfos, Node node) {
-		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-          return session.createCriteria(StepWork.class).add(createUserInfoOrCriterion(userInfos, 0)).add(Restrictions.eq("node", node)).addOrder(Order.asc("id")).list();
-	}
-	
-    /**
-     * Returns a list of StepWork objects from the users in the list of UserInfos
-     * @param userInfos a list of UserInfo objects
-     * @return a list of StepWork objects
-     */
-    @SuppressWarnings("unchecked")
-    @Transactional(readOnly=true)
-    public List<StepWork> getStepWorksByUserInfos(List<UserInfo> userInfos) {
-        Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        return session.createCriteria(StepWork.class).add(Restrictions.in("userInfo", userInfos)).list();
+    try {
+      stepWork = getById(id);
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
     }
-	
-	/**
-	 * A recursive function that chains "or" restrictions of userInfos together
-	 * @param userInfos a list of UserInfo objects, the list must not be empty
-	 * @param index the current index in the list to utilize
-	 * @return a Criterion of UserInfo "or"ed together
-	 */
-	private Criterion createUserInfoOrCriterion(List<UserInfo> userInfos, int index) {
-		if(index == (userInfos.size() - 1)) {
-			/*
-			 * base case if the list has only one element just return a
-			 * restriction with the UserInfo
-			 */
-			return Restrictions.eq("userInfo", userInfos.get(index));
-		} else {
-			/*
-			 * "or" together this first element with the recursive call
-			 * on the rest of the list
-			 */
-			return Restrictions.or(Restrictions.eq("userInfo", userInfos.get(index)), createUserInfoOrCriterion(userInfos, index + 1));			
-		}
-	}
-	
-	/**
-	 * A recursive function that chains "or" restrictions of ids together
-	 * @param ids a list of ids, the list must not be empty
-	 * @param index the current index in the list to utilize
-	 * @return a Criterion of id "or"ed together
-	 */
-	private Criterion createIdOrCriterion(List<Long> ids, int index) {
-		if(index == (ids.size() - 1)) {
-			/*
-			 * base case if the list has only one element just return a
-			 * restriction with the id
-			 */
-			return Restrictions.eq("id", ids.get(index));
-		} else {
-			/*
-			 * "or" together this first element with the recursive call
-			 * on the rest of the list
-			 */
-			return Restrictions.or(Restrictions.eq("id", ids.get(index)), createIdOrCriterion(ids, index + 1));			
-		}
-	}
-	
-	/**
-	 * Returns an Environment with the specified id or null
-	 * if no such Environment exists. The list will be ordered
-	 * oldest to newest.
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	@Transactional(readOnly=true)
-	public List<StepWork> getStepWorksByNode(Node node) {
-    	  Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-          return session.createCriteria(StepWork.class).add(Restrictions.eq("node", node)).addOrder(Order.asc("id")).list();
-	}
-	
-	/**
-	 * Returns the StepWork with the specified id
-	 * @param id
-	 * @return the StepWork object with the specified id
-	 */
-	@Transactional(readOnly=true)
-	public StepWork getStepWorkByStepWorkId(Long id) {
-		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-          return (StepWork) session.createCriteria(StepWork.class).add(Restrictions.eq("id", id)).uniqueResult();
-	}
-	
-	/**
-	 * Returns the StepWork with the specified userInfo and data
-	 * @param userInfo UserInfo of user to check
-	 * @param data String data to check for
-	 * @return the StepWork object with the specified userInfo and data or null if DNE.
-	 */
-	@Transactional(readOnly=true)
-	public StepWork getStepWorkByUserIdAndData(UserInfo userInfo,String data) {
-		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        return (StepWork) session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo)).add(Restrictions.eq("data",data)).uniqueResult();
-	}
 
-	@Transactional(readOnly=true)
-	public List<StepWork> getStepWorksByRunId(Long runId) {
-	    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-	    return session.createCriteria(StepWork.class).add(Restrictions.eq("runId", runId)).list();
-	}
+    return stepWork;
+  }
+
+  @Transactional
+  public void saveStepWork(StepWork stepWork) {
+    save(stepWork);
+  }
+
+  /**
+   * Returns a list of StepWork done by the specified workgroup with the specified id or null
+   * if no such StepWork exists. The list will be ordered oldest to newest.
+   * @return
+   */
+  @SuppressWarnings("unchecked")
+  @Transactional(readOnly=true)
+  public List<StepWork> getStepWorksByUserInfo(UserInfo userInfo) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo)).addOrder(Order.asc("id")).list();
+  }
+
+  /**
+   * Returns the latest StepWork done by the specified workgroup with the specified id or null
+   * if no such StepWork exists.
+   * @return
+   */
+  @SuppressWarnings("unchecked")
+  @Transactional(readOnly=true)
+  public StepWork getLatestStepWorkByUserInfo(UserInfo userInfo) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    List<StepWork> list = session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo)).addOrder(Order.desc("id")).list();
+
+    StepWork result = null;
+    if (list.size() > 0) {
+      result = list.get(0);
+    }
+    return result;
+  }
+
+  /**
+   * Returns the latest StepWork done by the specified workgroup with the specified id and specified node
+   * or null if no such StepWork exists.
+   * @return
+   */
+  @SuppressWarnings("unchecked")
+  @Transactional(readOnly=true)
+  public StepWork getLatestStepWorkByUserInfoAndNode(UserInfo userInfo,Node node) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    List<StepWork> list = session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo))
+      .add(Restrictions.eq("node",node)).addOrder(Order.desc("id")).list();
+    StepWork result = null;
+    if (list.size() > 0) {
+      result = list.get(0);
+    }
+    return result;
+  }
+
+  /**
+   * Get the StepWork for the given UserInfo and Node. The list will be ordered from
+   * newest to oldest.
+   * @param userInfo
+   * @param node
+   * @return a list of StepWork for the user and node
+   */
+  @SuppressWarnings("unchecked")
+  @Transactional(readOnly=true)
+  public List<StepWork> getStepWorksByUserInfoAndNode(UserInfo userInfo,Node node) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    List<StepWork> result = session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo))
+      .add(Restrictions.eq("node",node)).addOrder(Order.desc("id")).list();
+
+    return result;
+  }
+
+  /**
+   * Returns a list of StepWork done by the specified UserInfo user and have
+   * a nodeId that is in the nodeList. The list will be ordered oldest to newest.
+   * @param userInfo a UserInfo object
+   * @param nodeList a list of Node objects
+   * @return a list of StepWork objects
+   */
+  @SuppressWarnings("unchecked")
+  @Transactional(readOnly=true)
+  public List<StepWork> getStepWorksByUserInfoAndNodeList(UserInfo userInfo, List<Node> nodeList) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo)).add(createNodeOrCriterion(nodeList, 0)).addOrder(Order.asc("id")).list();
+  }
+
+  /**
+   * A recursive function that chains "or" restrictions of nodes together
+   * @param nodeList a list of Node objects, the list must not be empty
+   * @param index the current index in the list to utilize
+   * @return a Criterion of nodes "or"ed together
+   */
+  private Criterion createNodeOrCriterion(List<Node> nodeList, int index) {
+    if(index == (nodeList.size() - 1)) {
+      /*
+       * base case if the list has only one element just return a
+       * restriction with the node
+       */
+      return Restrictions.eq("node", nodeList.get(index));
+    } else {
+      /*
+       * "or" together this first element with the recursive call
+       * on the rest of the list
+       */
+      return Restrictions.or(Restrictions.eq("node", nodeList.get(index)), createNodeOrCriterion(nodeList, index + 1));
+    }
+  }
+
+  /**
+   * Returns a list of StepWork done by the specified workgroup with the specified id or null
+   * if no such Environment exists. The list will be ordered oldest to newest.
+   * @return
+   */
+  @SuppressWarnings("unchecked")
+  @Transactional(readOnly=true)
+  public List<StepWork> getStepWorksByUserInfosAndNode(List<UserInfo> userInfos, Node node) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.createCriteria(StepWork.class).add(createUserInfoOrCriterion(userInfos, 0)).add(Restrictions.eq("node", node)).addOrder(Order.asc("id")).list();
+  }
+
+  /**
+   * Returns a list of StepWork objects from the users in the list of UserInfos
+   * @param userInfos a list of UserInfo objects
+   * @return a list of StepWork objects
+   */
+  @SuppressWarnings("unchecked")
+  @Transactional(readOnly=true)
+  public List<StepWork> getStepWorksByUserInfos(List<UserInfo> userInfos) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.createCriteria(StepWork.class).add(Restrictions.in("userInfo", userInfos)).list();
+  }
+
+  /**
+   * A recursive function that chains "or" restrictions of userInfos together
+   * @param userInfos a list of UserInfo objects, the list must not be empty
+   * @param index the current index in the list to utilize
+   * @return a Criterion of UserInfo "or"ed together
+   */
+  private Criterion createUserInfoOrCriterion(List<UserInfo> userInfos, int index) {
+    if(index == (userInfos.size() - 1)) {
+      /*
+       * base case if the list has only one element just return a
+       * restriction with the UserInfo
+       */
+      return Restrictions.eq("userInfo", userInfos.get(index));
+    } else {
+      /*
+       * "or" together this first element with the recursive call
+       * on the rest of the list
+       */
+      return Restrictions.or(Restrictions.eq("userInfo", userInfos.get(index)), createUserInfoOrCriterion(userInfos, index + 1));
+    }
+  }
+
+  /**
+   * A recursive function that chains "or" restrictions of ids together
+   * @param ids a list of ids, the list must not be empty
+   * @param index the current index in the list to utilize
+   * @return a Criterion of id "or"ed together
+   */
+  private Criterion createIdOrCriterion(List<Long> ids, int index) {
+    if(index == (ids.size() - 1)) {
+      /*
+       * base case if the list has only one element just return a
+       * restriction with the id
+       */
+      return Restrictions.eq("id", ids.get(index));
+    } else {
+      /*
+       * "or" together this first element with the recursive call
+       * on the rest of the list
+       */
+      return Restrictions.or(Restrictions.eq("id", ids.get(index)), createIdOrCriterion(ids, index + 1));
+    }
+  }
+
+  /**
+   * Returns an Environment with the specified id or null
+   * if no such Environment exists. The list will be ordered
+   * oldest to newest.
+   * @return
+   */
+  @SuppressWarnings("unchecked")
+  @Transactional(readOnly=true)
+  public List<StepWork> getStepWorksByNode(Node node) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.createCriteria(StepWork.class).add(Restrictions.eq("node", node)).addOrder(Order.asc("id")).list();
+  }
+
+  /**
+   * Returns the StepWork with the specified id
+   * @param id
+   * @return the StepWork object with the specified id
+   */
+  @Transactional(readOnly=true)
+  public StepWork getStepWorkByStepWorkId(Long id) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return (StepWork) session.createCriteria(StepWork.class).add(Restrictions.eq("id", id)).uniqueResult();
+  }
+
+  /**
+   * Returns the StepWork with the specified userInfo and data
+   * @param userInfo UserInfo of user to check
+   * @param data String data to check for
+   * @return the StepWork object with the specified userInfo and data or null if DNE.
+   */
+  @Transactional(readOnly=true)
+  public StepWork getStepWorkByUserIdAndData(UserInfo userInfo,String data) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return (StepWork) session.createCriteria(StepWork.class).add(Restrictions.eq("userInfo", userInfo)).add(Restrictions.eq("data",data)).uniqueResult();
+  }
+
+  @Transactional(readOnly=true)
+  public List<StepWork> getStepWorksByRunId(Long runId) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    return session.createCriteria(StepWork.class).add(Restrictions.eq("runId", runId)).list();
+  }
 }

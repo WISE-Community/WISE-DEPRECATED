@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -26,128 +26,128 @@ package org.wise.portal.presentation.web;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 
 /**
- * StudentAccountForm encapsulates all of the data necessary to register/update 
+ * StudentAccountForm encapsulates all of the data necessary to register/update
  * a student account
  *
  * @author Hiroki Terashima
  */
 public class StudentAccountForm extends UserAccountForm {
 
-	private static final long serialVersionUID = 1L;
-	
-	private String projectCode;      // e.g. "Swan155-1"
-	private String runCode_part1;    // first part of projectcode, e.g. "Swan155"
-	private String runCode_part2;    // period, e.g. "1"
-	private String accountQuestion;
-	private String accountAnswer;
-	private String birthmonth;
-	private String birthdate;
-	
-	public StudentAccountForm() {
-		userDetails = new StudentUserDetails();
-		newAccount = true;
-	}
-	
-	public StudentAccountForm(StudentUserDetails studentUserDetails) {
-		userDetails = studentUserDetails;
-		newAccount = false;
-	}
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * @return the projectCode
-	 */
-	public String getProjectCode() {
-		return projectCode;
-	}
+  private String projectCode;      // e.g. "Swan155-1"
+  private String runCode_part1;    // first part of projectcode, e.g. "Swan155"
+  private String runCode_part2;    // period, e.g. "1"
+  private String accountQuestion;
+  private String accountAnswer;
+  private String birthmonth;
+  private String birthdate;
 
-	/**
-	 * @param projectCode the projectCode to set
-	 */
-	public void setProjectCode(String projectCode) {
-		this.projectCode = projectCode;
-	}
+  public StudentAccountForm() {
+    userDetails = new StudentUserDetails();
+    newAccount = true;
+  }
 
-	/**
-	 * @return the accountQuestion
-	 */
-	public String getAccountQuestion() {
-		return accountQuestion;
-	}
+  public StudentAccountForm(StudentUserDetails studentUserDetails) {
+    userDetails = studentUserDetails;
+    newAccount = false;
+  }
 
-	/**
-	 * @param accountQuestion the accountQuestion to set
-	 */
-	public void setAccountQuestion(String accountQuestion) {
-		this.accountQuestion = accountQuestion;
-	}
+  /**
+   * @return the projectCode
+   */
+  public String getProjectCode() {
+    return projectCode;
+  }
 
-	/**
-	 * @return the accountAnswer
-	 */
-	public String getAccountAnswer() {
-		return accountAnswer;
-	}
+  /**
+   * @param projectCode the projectCode to set
+   */
+  public void setProjectCode(String projectCode) {
+    this.projectCode = projectCode;
+  }
 
-	/**
-	 * @param accoiuntAnswer the accountAnswer to set
-	 */
-	public void setAccountAnswer(String accountAnswer) {
-		this.accountAnswer = accountAnswer;
-	}
+  /**
+   * @return the accountQuestion
+   */
+  public String getAccountQuestion() {
+    return accountQuestion;
+  }
 
-	/**
-	 * @return the birthdate
-	 */
-	public String getBirthdate() {
-		return birthdate;
-	}
+  /**
+   * @param accountQuestion the accountQuestion to set
+   */
+  public void setAccountQuestion(String accountQuestion) {
+    this.accountQuestion = accountQuestion;
+  }
 
-	/**
-	 * @param birthdate the birthdate to set
-	 */
-	public void setBirthdate(String birthdate) {
-		this.birthdate = birthdate;
-	}
+  /**
+   * @return the accountAnswer
+   */
+  public String getAccountAnswer() {
+    return accountAnswer;
+  }
 
-	/**
-	 * @return the birthmonth
-	 */
-	public String getBirthmonth() {
-		return birthmonth;
-	}
+  /**
+   * @param accoiuntAnswer the accountAnswer to set
+   */
+  public void setAccountAnswer(String accountAnswer) {
+    this.accountAnswer = accountAnswer;
+  }
 
-	/**
-	 * @param birthmonth the birthmonth to set
-	 */
-	public void setBirthmonth(String birthmonth) {
-		this.birthmonth = birthmonth;
-	}
+  /**
+   * @return the birthdate
+   */
+  public String getBirthdate() {
+    return birthdate;
+  }
 
-	/**
-	 * @return the runCode_part1
-	 */
-	public String getRunCode_part1() {
-		return runCode_part1;
-	}
+  /**
+   * @param birthdate the birthdate to set
+   */
+  public void setBirthdate(String birthdate) {
+    this.birthdate = birthdate;
+  }
 
-	/**
-	 * @param runCodePart1 the runCode_part1 to set
-	 */
-	public void setRunCode_part1(String runCodePart1) {
-		runCode_part1 = runCodePart1;
-	}
+  /**
+   * @return the birthmonth
+   */
+  public String getBirthmonth() {
+    return birthmonth;
+  }
 
-	/**
-	 * @return the runCode_part2
-	 */
-	public String getRunCode_part2() {
-		return runCode_part2;
-	}
+  /**
+   * @param birthmonth the birthmonth to set
+   */
+  public void setBirthmonth(String birthmonth) {
+    this.birthmonth = birthmonth;
+  }
 
-	/**
-	 * @param runCodePart2 the runCode_part2 to set
-	 */
-	public void setRunCode_part2(String runCodePart2) {
-		runCode_part2 = runCodePart2;
-	}
+  /**
+   * @return the runCode_part1
+   */
+  public String getRunCode_part1() {
+    return runCode_part1;
+  }
+
+  /**
+   * @param runCodePart1 the runCode_part1 to set
+   */
+  public void setRunCode_part1(String runCodePart1) {
+    runCode_part1 = runCodePart1;
+  }
+
+  /**
+   * @return the runCode_part2
+   */
+  public String getRunCode_part2() {
+    return runCode_part2;
+  }
+
+  /**
+   * @param runCodePart2 the runCode_part2 to set
+   */
+  public void setRunCode_part2(String runCodePart2) {
+    runCode_part2 = runCodePart2;
+  }
 }

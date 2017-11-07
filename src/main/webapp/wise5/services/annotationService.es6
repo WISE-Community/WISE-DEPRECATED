@@ -1012,6 +1012,21 @@ class AnnotationService {
 
         return null;
     }
+
+    /**
+     * Get the annotations for the given student work
+     * @param studentWorkId the student work id
+     * @return array of annotations for the given student work
+     */
+    getAnnotationsByStudentWorkId(studentWorkId) {
+        let annotations = [];
+        for (let annotation of this.annotations) {
+            if (annotation && studentWorkId == annotation.studentWorkId) {
+                annotations.push(annotation);
+            }
+        }
+        return annotations;
+    }
 }
 
 AnnotationService.$inject = [

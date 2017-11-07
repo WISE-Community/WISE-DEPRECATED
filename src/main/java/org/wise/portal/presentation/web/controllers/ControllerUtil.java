@@ -44,92 +44,92 @@ import java.util.Collection;
 @Component
 public class ControllerUtil {
 
-	private static UserService userService;
+  private static UserService userService;
 
-	private static PortalService portalService;
+  private static PortalService portalService;
 
-	@Autowired
-	public void setUserService(UserService userService){
-		ControllerUtil.userService = userService;
-	}
+  @Autowired
+  public void setUserService(UserService userService){
+    ControllerUtil.userService = userService;
+  }
 
-	@Autowired
-	public void setPortalService(PortalService portalService){
-		ControllerUtil.portalService = portalService;
-	}
+  @Autowired
+  public void setPortalService(PortalService portalService){
+    ControllerUtil.portalService = portalService;
+  }
 
-	/**
-	 * Returns signed in user. If not signed in, return null
-	 * @return User signed in user. If not logged in, returns null.
-	 */
-	public static User getSignedInUser() {
-		SecurityContext context = SecurityContextHolder.getContext();
-		try {
-			UserDetails userDetails = (UserDetails) context.getAuthentication().getPrincipal();
-			return userService.retrieveUser(userDetails);
-		} catch (ClassCastException cce) {
-			// the try-block throws class cast exception if user is not logged in.
-			return null;
-		} catch (NullPointerException npe) {
-			return null;
-		}
-	}
+  /**
+   * Returns signed in user. If not signed in, return null
+   * @return User signed in user. If not logged in, returns null.
+   */
+  public static User getSignedInUser() {
+    SecurityContext context = SecurityContextHolder.getContext();
+    try {
+      UserDetails userDetails = (UserDetails) context.getAuthentication().getPrincipal();
+      return userService.retrieveUser(userDetails);
+    } catch (ClassCastException cce) {
+      // the try-block throws class cast exception if user is not logged in.
+      return null;
+    } catch (NullPointerException npe) {
+      return null;
+    }
+  }
 
-	/**
-	 * Returns the base url of the specified request
-	 * ex: http://128.32.xxx.11:8080
-	 * or, http://wise3.telscenter.org if request.header is wise.telscenter.org
-	 */
-	public static String getBaseUrlString(HttpServletRequest request) {
-		String host = request.getHeader("Host");
-		String portalUrl = request.getScheme() + "://" + request.getServerName() + ":" +
-		request.getServerPort();
+  /**
+   * Returns the base url of the specified request
+   * ex: http://128.32.xxx.11:8080
+   * or, http://wise3.telscenter.org if request.header is wise.telscenter.org
+   */
+  public static String getBaseUrlString(HttpServletRequest request) {
+    String host = request.getHeader("Host");
+    String portalUrl = request.getScheme() + "://" + request.getServerName() + ":" +
+      request.getServerPort();
 
-		if (host != null) {
-			portalUrl = request.getScheme() + "://" + host;
-		}
-
-		return portalUrl;
-	}
-
-    /**
-     * Determines whether the logged-in user is an adminstrator currently logged in as somebody else
-     * @return true iff this user is currently logged in as somebody else
-     */
-	public static boolean isUserPreviousAdministrator() {
-
-        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-
-        for (GrantedAuthority grantedAuthority : authorities) {
-            if (SwitchUserFilter.ROLE_PREVIOUS_ADMINISTRATOR.equals(grantedAuthority.getAuthority())) {
-                return true;
-            }
-        }
-        return false;
+    if (host != null) {
+      portalUrl = request.getScheme() + "://" + host;
     }
 
-	/**
-	 * Returns the portal url
-	 * ex: http://128.32.xxx.11:8080/webapp
-	 */
-	public static String getPortalUrlString(HttpServletRequest request) {
-		return ControllerUtil.getBaseUrlString(request) + request.getContextPath();
-	}
+    return portalUrl;
+  }
 
-	/**
-	 * Returns the version of this WISE instance
-	 * @return wise instance version, or empty string if it cannot be found
-	 */
-	public static String getWISEVersion() {
-		String wiseVersion = "";
+  /**
+   * Determines whether the logged-in user is an adminstrator currently logged in as somebody else
+   * @return true iff this user is currently logged in as somebody else
+   */
+  public static boolean isUserPreviousAdministrator() {
 
-		// also show WISEVersion
-		try {
-			wiseVersion = ControllerUtil.portalService.getWISEVersion();
-		} catch (Exception e) {
-			// do nothing
-		}
+    Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
 
-		return wiseVersion;
-	}
+    for (GrantedAuthority grantedAuthority : authorities) {
+      if (SwitchUserFilter.ROLE_PREVIOUS_ADMINISTRATOR.equals(grantedAuthority.getAuthority())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Returns the portal url
+   * ex: http://128.32.xxx.11:8080/webapp
+   */
+  public static String getPortalUrlString(HttpServletRequest request) {
+    return ControllerUtil.getBaseUrlString(request) + request.getContextPath();
+  }
+
+  /**
+   * Returns the version of this WISE instance
+   * @return wise instance version, or empty string if it cannot be found
+   */
+  public static String getWISEVersion() {
+    String wiseVersion = "";
+
+    // also show WISEVersion
+    try {
+      wiseVersion = ControllerUtil.portalService.getWISEVersion();
+    } catch (Exception e) {
+      // do nothing
+    }
+
+    return wiseVersion;
+  }
 }

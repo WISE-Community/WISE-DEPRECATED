@@ -21,58 +21,58 @@ import java.util.List;
 @Repository("wise5AnnotationDao")
 public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> implements AnnotationDao<Annotation> {
 
-    @Override
-    protected String getFindAllQuery() {
-        return null;
+  @Override
+  protected String getFindAllQuery() {
+    return null;
+  }
+
+  @Override
+  protected Class<? extends Annotation> getDataObjectClass() {
+    return null;
+  }
+
+  @Override
+  public List<Annotation> getAnnotationsByParams(
+    Integer id, Run run, Group period, Workgroup fromWorkgroup, Workgroup toWorkgroup,
+    String nodeId, String componentId, StudentWork studentWork, String localNotebookItemId, NotebookItem notebookItem, String type) {
+
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    Criteria sessionCriteria = session.createCriteria(Annotation.class);
+
+    if (id != null) {
+      sessionCriteria.add(Restrictions.eq("id", id));
+    }
+    if (run != null) {
+      sessionCriteria.add(Restrictions.eq("run", run));
+    }
+    if (period != null) {
+      sessionCriteria.add(Restrictions.eq("period", period));
+    }
+    if (fromWorkgroup != null) {
+      sessionCriteria.add(Restrictions.eq("fromWorkgroup", fromWorkgroup));
+    }
+    if (toWorkgroup != null) {
+      sessionCriteria.add(Restrictions.eq("toWorkgroup", toWorkgroup));
+    }
+    if (nodeId != null) {
+      sessionCriteria.add(Restrictions.eq("nodeId", nodeId));
+    }
+    if (componentId != null) {
+      sessionCriteria.add(Restrictions.eq("componentId", componentId));
+    }
+    if (studentWork != null) {
+      sessionCriteria.add(Restrictions.eq("studentWork", studentWork));
+    }
+    if (notebookItem != null) {
+      sessionCriteria.add(Restrictions.eq("notebookItem", notebookItem));
+    }
+    if (localNotebookItemId != null) {
+      sessionCriteria.add(Restrictions.eq("localNotebookItemId", localNotebookItemId));
+    }
+    if (type != null) {
+      sessionCriteria.add(Restrictions.eq("type", type));
     }
 
-    @Override
-    protected Class<? extends Annotation> getDataObjectClass() {
-        return null;
-    }
-
-    @Override
-    public List<Annotation> getAnnotationsByParams(
-            Integer id, Run run, Group period, Workgroup fromWorkgroup, Workgroup toWorkgroup,
-            String nodeId, String componentId, StudentWork studentWork, String localNotebookItemId, NotebookItem notebookItem, String type) {
-
-        Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        Criteria sessionCriteria = session.createCriteria(Annotation.class);
-
-        if (id != null) {
-            sessionCriteria.add(Restrictions.eq("id", id));
-        }
-        if (run != null) {
-            sessionCriteria.add(Restrictions.eq("run", run));
-        }
-        if (period != null) {
-            sessionCriteria.add(Restrictions.eq("period", period));
-        }
-        if (fromWorkgroup != null) {
-            sessionCriteria.add(Restrictions.eq("fromWorkgroup", fromWorkgroup));
-        }
-        if (toWorkgroup != null) {
-            sessionCriteria.add(Restrictions.eq("toWorkgroup", toWorkgroup));
-        }
-        if (nodeId != null) {
-            sessionCriteria.add(Restrictions.eq("nodeId", nodeId));
-        }
-        if (componentId != null) {
-            sessionCriteria.add(Restrictions.eq("componentId", componentId));
-        }
-        if (studentWork != null) {
-            sessionCriteria.add(Restrictions.eq("studentWork", studentWork));
-        }
-        if (notebookItem != null) {
-            sessionCriteria.add(Restrictions.eq("notebookItem", notebookItem));
-        }
-        if (localNotebookItemId != null) {
-            sessionCriteria.add(Restrictions.eq("localNotebookItemId", localNotebookItemId));
-        }
-        if (type != null) {
-            sessionCriteria.add(Restrictions.eq("type", type));
-        }
-
-        return sessionCriteria.list();
-    }
+    return sessionCriteria.list();
+  }
 }

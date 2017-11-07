@@ -9,6 +9,7 @@ class DataExportController {
                 AnnotationService,
                 ConfigService,
                 FileSaver,
+                MatchService,
                 ProjectService,
                 StudentStatusService,
                 TeacherDataService,
@@ -22,6 +23,7 @@ class DataExportController {
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.FileSaver = FileSaver;
+        this.MatchService = MatchService;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
@@ -30,6 +32,10 @@ class DataExportController {
         this.exportStepSelectionType = "exportAllSteps";
         this.exportType = null;  // type of export: [latestWork, allWork, events]
         this.componentTypeToComponentService = {};
+
+        this.availableComponentDataExports = [
+            'Match'
+        ];
 
         this.setDefaultExportSettings();
 
@@ -101,6 +107,8 @@ class DataExportController {
             this.exportStudentAssets();
         } else if (exportType === "oneWorkgroupPerRow") {
             this.exportOneWorkgroupPerRow();
+        } else if (exportType === "componentData") {
+            this.showExportComponentDataPage();
         } else if (exportType === "rawData") {
             this.exportRawData();
         }
@@ -635,16 +643,7 @@ class DataExportController {
             }
         }
 
-        // create the {{nodeId}}_{{componentId}} key to look up the component revision counter
-        var nodeIdAndComponentId = componentState.nodeId + "_" + componentState.componentId;
-
-        if (componentRevisionCounter[nodeIdAndComponentId] == null) {
-            // initialize the component revision counter for this component to 1 if there is no entry
-            componentRevisionCounter[nodeIdAndComponentId] = 1;
-        }
-
-        // get the revision counter
-        var revisionCounter = componentRevisionCounter[nodeIdAndComponentId];
+        let revisionCounter = this.getRevisionCounter(componentRevisionCounter, componentState.nodeId, componentState.componentId);
 
         if (componentState.revisionCounter == null) {
             /*
@@ -663,8 +662,7 @@ class DataExportController {
             row[columnNameToNumber["Component Revision Counter"]] = componentState.revisionCounter;
         }
 
-        // increment the revision counter
-        componentRevisionCounter[nodeIdAndComponentId] = revisionCounter + 1;
+        this.incrementRevisionCounter(componentRevisionCounter, componentState.nodeId, componentState.componentId);
 
         var isSubmit = componentState.isSubmit;
 
@@ -686,6 +684,48 @@ class DataExportController {
         }
 
         return row;
+    }
+
+    /**
+     * Get the revision number for the next component state revision.
+     * @param componentRevisionCounter The mapping from component to revision
+     * counter.
+     * @param nodeId The node id the component is in.
+     * @param componentId The component id of the component.
+     */
+    getRevisionCounter(componentRevisionCounter, nodeId, componentId) {
+        // create the {{nodeId}}_{{componentId}} key to look up the component revision counter
+        let nodeIdAndComponentId = nodeId + "_" + componentId;
+
+        if (componentRevisionCounter[nodeIdAndComponentId] == null) {
+            // initialize the component revision counter for this component to 1 if there is no entry
+            componentRevisionCounter[nodeIdAndComponentId] = 1;
+        }
+
+        return componentRevisionCounter[nodeIdAndComponentId];
+    }
+
+    /**
+     * Increment the revision counter for the given {{nodeId}}_{{componentId}}.
+     * @param componentRevisionCounter The mapping from component to revision
+     * counter.
+     * @param nodeId The node id the component is in.
+     * @param componentId The component id of the component.
+     */
+    incrementRevisionCounter(componentRevisionCounter, nodeId, componentId) {
+        // create the {{nodeId}}_{{componentId}} key to look up the component revision counter
+        let nodeIdAndComponentId = nodeId + "_" + componentId;
+
+        if (componentRevisionCounter[nodeIdAndComponentId] == null) {
+            // initialize the component revision counter for this component to 1 if there is no entry
+            componentRevisionCounter[nodeIdAndComponentId] = 1;
+        }
+
+        // get the revision counter
+        let revisionCounter = componentRevisionCounter[nodeIdAndComponentId];
+
+        // increment the revision counter
+        componentRevisionCounter[nodeIdAndComponentId] = revisionCounter + 1;
     }
 
     /**
@@ -2821,6 +2861,336 @@ class DataExportController {
 
         return compositeId;
     }
+
+    /**
+     * Check if a component type has a specific export implemented for it.
+     * @param componentType The component type.
+     * @return Whether the component type has a specific export.
+     */
+    canExportComponentDataType(componentType) {
+        for (let tempComponentType of this.availableComponentDataExports) {
+            if (componentType == tempComponentType) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Show the page where users can export work for a specific component.
+     */
+    showExportComponentDataPage() {
+        this.workSelectionType = 'exportAllWork';
+        this.includeCorrectnessColumns = true;
+        this.includeOnlySubmits = false;
+        this.exportType = 'componentData';
+    }
+
+    /**
+     * Export the work for a specific component.
+     * @param nodeId The node id.
+     * @param component The component content object.
+     */
+    exportComponentClicked(nodeId, component) {
+        if (component.type == 'Match') {
+            this.exportMatchComponent(nodeId, component);
+        }
+    }
+
+    /**
+     * Generate an export for a specific match component.
+     * TODO: Move these Match export functions to the MatchService.
+     * @param nodeId The node id.
+     * @param component The component content object.
+     */
+    exportMatchComponent(nodeId, component) {
+        // request the student data from the server and then generate the export
+        this.TeacherDataService.getExport("allStudentWork").then((result) => {
+            // the column names in the header row
+            let columnNames = [];
+
+            // mapping from column name to column number
+            let columnNameToNumber = {};
+
+            // the rows that will be in the export
+            let rows = [];
+
+            // add the header row to the rows
+            rows.push(this.generateMatchComponentHeaderRow(component, columnNames, columnNameToNumber));
+
+            // add the student work rows
+            rows = rows.concat(this.generateMatchComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
+
+            // generate the file name of the csv file
+            let fileName = "";
+            let runId = this.ConfigService.getRunId();
+            let stepNumber = this.ProjectService.getNodePositionById(nodeId);
+            let componentNumber = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, component.id) + 1;
+            if (this.workSelectionType === 'exportAllWork') {
+                fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_all_match_work.csv';
+            } else if (this.workSelectionType === 'exportLatestWork') {
+                fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_latest_match_work.csv';
+            }
+
+            // generate the csv file and have the client download it
+            this.generateCSVFile(rows, fileName);
+        });
+    }
+
+    /**
+     * Populate the array of header column names.
+     * Populate the mappings of column name to column number.
+     * @param component The component content object.
+     * @param columnNames An array that we will populate with column names.
+     * @param columnNameToNumber An object that we will populate with mappings
+     * of column name to column number.
+     */
+    populateMatchColumnNames(component, columnNames, columnNameToNumber) {
+
+        // an array of column names
+        let defaultMatchColumnNames = [
+            "#",
+            "Workgroup ID",
+            "WISE ID 1",
+            "WISE ID 2",
+            "WISE ID 3",
+            "Class Period",
+            "Project ID",
+            "Project Name",
+            "Run ID",
+            "Start Date",
+            "End Date",
+            "Student Work ID",
+            "Server Timestamp",
+            "Client Timestamp",
+            "Node ID",
+            "Component ID",
+            "Component Part Number",
+            "Step Title",
+            "Component Type",
+            "Component Prompt",
+            "Student Data",
+            "Component Revision Counter",
+            "Is Submit",
+            "Submit Count"
+        ];
+
+        /*
+         * Add the default column names that contain the information about the
+         * student, project, run, node, and component.
+         */
+        for (let c = 0; c < defaultMatchColumnNames.length; c++) {
+            // get a column name
+            let defaultMatchColumnName = defaultMatchColumnNames[c];
+
+            // add a mapping from column name to column number
+            columnNameToNumber[defaultMatchColumnName] = c;
+
+            // add the column name to the header row
+            columnNames.push(defaultMatchColumnName);
+        }
+
+        // Add the header cells for the choices
+        for (let choice of component.choices) {
+            columnNameToNumber[choice.id] = columnNames.length;
+            columnNames.push(choice.value);
+        }
+
+        // Add the header cells for the choice correctness
+        if (this.includeCorrectnessColumns &&
+                this.MatchService.hasCorrectAnswer(component)) {
+            for (let choice of component.choices) {
+                columnNameToNumber[choice.id + '-boolean'] = columnNames.length;
+                columnNames.push(choice.value);
+            }
+            columnNameToNumber['Is Correct'] = columnNames.length;
+            columnNames.push('Is Correct');
+        }
+    }
+
+    /**
+     * Generate the header row.
+     * @param component The component content object.
+     * @param columnNames An array of column names.
+     * @param columnNameToNumber An object containing the mappings from column
+     * name to column number.
+     */
+    generateMatchComponentHeaderRow(component, columnNames, columnNameToNumber) {
+        this.populateMatchColumnNames(component, columnNames, columnNameToNumber);
+        let headerRow = [];
+
+        // generate the header row by looping through all the column names
+        for (let columnName of columnNames) {
+            // add the column name to the header row
+            headerRow.push(columnName);
+        }
+
+        return headerRow;
+    }
+
+    /**
+     * Generate all the rows for all the workgroups.
+     * @param component The component content object.
+     * @param columnNames All the header column names.
+     * @param columnNameToNumber The mapping from column name to column number.
+     * @param nodeId The node id the component is in.
+     * @return An array of rows.
+     */
+    generateMatchComponentWorkRows(component, columnNames, columnNameToNumber, nodeId) {
+        let componentId = component.id;
+
+        // get the workgroups in the class
+        let workgroups = this.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+
+        // the rows that will show up in the export
+        let rows = [];
+
+        let rowCounter = 1;
+
+        for (let workgroup of workgroups) {
+            let rowsForWorkgroup = this.generateMatchComponentWorkRowsForWorkgroup(component, workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter);
+            rows = rows.concat(rowsForWorkgroup);
+            rowCounter += rowsForWorkgroup.length;
+        }
+
+        return rows;
+    }
+
+    /**
+     * Generate all the rows for a workgroup.
+     * @param component The component content object.
+     * @param workgroup The workgroup.
+     * @param columnNames An array of column name headers.
+     * @param columnNameToNumber The mapping from column name to column number.
+     * @param nodeId The node the component is in.
+     * @param componentId The component id.
+     * @param rowCounter The current row number we will be creating.
+     */
+    generateMatchComponentWorkRowsForWorkgroup(component, workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter) {
+        let rows = [];
+
+        // get the workgroup information
+        let workgroupId = workgroup.workgroupId;
+        let periodName = workgroup.periodName;
+        let userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+
+        // get the WISE IDs
+        let wiseIds = this.ConfigService.getWISEIds(workgroupId);
+        let wiseId1 = wiseIds[0];
+        let wiseId2 = wiseIds[1];
+        let wiseId3 = wiseIds[2];
+
+        /*
+         * a mapping from component to component revision counter.
+         * the key will be {{nodeId}}_{{componentId}} and the
+         * value will be a number.
+         */
+        let componentRevisionCounter = {};
+
+        let matchComponentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId);
+
+        if (matchComponentStates != null) {
+            for (let c = 0; c < matchComponentStates.length; c++) {
+                let matchComponentState = matchComponentStates[c];
+                let exportRow = true;
+
+                if (this.includeOnlySubmits && !matchComponentState.isSubmit) {
+                    exportRow = false;
+                } else if (this.workSelectionType == 'exportLatestWork' &&
+                        c != matchComponentStates.length - 1) {
+                    /*
+                     * We are only exporting the latest work and this component state
+                     * is not the last component state for this workgroup.
+                     */
+                    exportRow = false;
+                }
+
+                if (exportRow) {
+                    // add the row to the rows that will show up in the export
+                    rows.push(this.generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState));
+                    rowCounter++;
+                } else {
+                    /*
+                     * We do not want to add this row in the export but
+                     * we still want to increment the revision counter.
+                     */
+                    this.incrementRevisionCounter(componentRevisionCounter, nodeId, componentId);
+                }
+            }
+        }
+
+        return rows;
+    }
+
+    /**
+     * Generate the row for the component state.
+     * @param component The component content object.
+     * @param columnNames All the header column names.
+     * @param columnNameToNumber The mapping from column name to column number.
+     * @param rowCounter The current row number.
+     * @param workgroupId The workgroup id.
+     * @param wiseId1 The WISE ID 1.
+     * @param wiseId2 The WISE ID 2.
+     * @param wiseId3 The WISE ID 3.
+     * @param periodName The period name.
+     * @param componentRevisionCounter The mapping of component to revision counter.
+     * @param matchComponentState The component state.
+     * @return The row with the student work.
+     */
+    generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState) {
+
+        /*
+         * Populate the cells in the row that contain the information about the
+         * student, project, run, step, and component.
+         */
+        let row = this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState);
+
+        for (let bucket of matchComponentState.studentData.buckets) {
+
+            // loop through all the choices that the student put in this bucket
+            for (let item of bucket.items) {
+                // put the bucket name in the column corresponding to the choice
+                row[columnNameToNumber[item.id]] = bucket.value;
+
+                if (this.includeCorrectnessColumns &&
+                        this.MatchService.hasCorrectAnswer(component)) {
+                    this.setCorrectnessValue(row, columnNameToNumber, item);
+                }
+            }
+        }
+
+        return row;
+    }
+
+    /**
+     * Set the correctness boolean value into the cell.
+     * @param row The row we are working on.
+     * @param columnNameToNumber The mapping from column name to column number.
+     * @param item The choice object.
+     */
+    setCorrectnessValue(row, columnNameToNumber, item) {
+        let columnName = item.id + '-boolean';
+        if (item.isCorrect == null) {
+            /*
+             * The item does not have an isCorrect field so we will not show
+             * anything in the cell.
+             */
+        } else if (item.isCorrect) {
+            // The student placed the choice in the correct bucket
+            row[columnNameToNumber[columnName]] = 1;
+        } else {
+            if (item.isIncorrectPosition) {
+                /*
+                 * The student placed the choice in the correct bucket but
+                 * in the wrong position.
+                 */
+                row[columnNameToNumber[columnName]] = 2;
+            } else {
+                // The student placed the choice in the wrong bucket
+                row[columnNameToNumber[columnName]] = 0;
+            }
+        }
+    }
 }
 
 DataExportController.$inject = [
@@ -2831,6 +3201,7 @@ DataExportController.$inject = [
     'AnnotationService',
     'ConfigService',
     'FileSaver',
+    'MatchService',
     'ProjectService',
     'StudentStatusService',
     'TeacherDataService',

@@ -58,87 +58,87 @@ import org.wise.portal.service.user.UserService;
 @RequestMapping("/teacher/management/removestudentfromrun.html")
 public class RemoveStudentFromRunController {
 
-	@Autowired
-	private RunService runService;
+  @Autowired
+  private RunService runService;
 
-	@Autowired
-	private StudentService studentService;
+  @Autowired
+  private StudentService studentService;
 
-	@Autowired
-	private UserService userService;
+  @Autowired
+  private UserService userService;
 
-	@Autowired
-	protected RemoveStudentFromRunParametersValidator removeStudentFromRunParametersValidator;
+  @Autowired
+  protected RemoveStudentFromRunParametersValidator removeStudentFromRunParametersValidator;
 
-	//the path to this form view
-	protected String formView = "teacher/management/removestudentfromrun";
+  //the path to this form view
+  protected String formView = "teacher/management/removestudentfromrun";
 
-	//the path to the success view
-	protected String successView = "teacher/management/removestudentfromrunsuccess";
+  //the path to the success view
+  protected String successView = "teacher/management/removestudentfromrunsuccess";
 
-	private static final String RUNID_PARAM_NAME = "runId";
+  private static final String RUNID_PARAM_NAME = "runId";
 
-	private static final String USERID_PARAM_NAME = "userId";
+  private static final String USERID_PARAM_NAME = "userId";
 
-	/**
-	 * Called before the page is loaded to initialize values
-	 * @param model the model object that contains values for the page to use when rendering the view
-	 * @param request the http request object
-	 * @return the path of the view to display
-	 */
-	@RequestMapping(method=RequestMethod.GET)
-    public String initializeForm(ModelMap model, HttpServletRequest request) {
-		RemoveStudentFromRunParameters params = new RemoveStudentFromRunParameters();
-		params.setRunId(Long.parseLong(request.getParameter(RUNID_PARAM_NAME)));
-		params.setUserId(Long.parseLong(request.getParameter(USERID_PARAM_NAME)));
-		model.addAttribute("removeStudentFromRunParameters", params);
+  /**
+   * Called before the page is loaded to initialize values
+   * @param model the model object that contains values for the page to use when rendering the view
+   * @param request the http request object
+   * @return the path of the view to display
+   */
+  @RequestMapping(method=RequestMethod.GET)
+  public String initializeForm(ModelMap model, HttpServletRequest request) {
+    RemoveStudentFromRunParameters params = new RemoveStudentFromRunParameters();
+    params.setRunId(Long.parseLong(request.getParameter(RUNID_PARAM_NAME)));
+    params.setUserId(Long.parseLong(request.getParameter(USERID_PARAM_NAME)));
+    model.addAttribute("removeStudentFromRunParameters", params);
 
-		return formView;
-	}
+    return formView;
+  }
 
-	/**
-     * On submission of the RemoveStudentFromRun form, the selected user is removed
-     * from the specified run. She is also removed from the workgroup that she was in
-     * for the run.
-     * @param params the object that contains values from the form
-     * @param bindingResult the object used for validation in which errors will be stored
-     * @param sessionStatus the session status object
-     * @return the path of the view to display
-     */
-    @RequestMapping(method = RequestMethod.POST)
-    protected String onSubmit(@ModelAttribute("removeStudentFromRunParameters") RemoveStudentFromRunParameters params,
-							  BindingResult bindingResult, SessionStatus sessionStatus) {
-    	String view = "";
-    	Long runId = params.getRunId();
-    	Long userId = params.getUserId();
-    	Run run = null;
-    	User studentUser = null;
+  /**
+   * On submission of the RemoveStudentFromRun form, the selected user is removed
+   * from the specified run. She is also removed from the workgroup that she was in
+   * for the run.
+   * @param params the object that contains values from the form
+   * @param bindingResult the object used for validation in which errors will be stored
+   * @param sessionStatus the session status object
+   * @return the path of the view to display
+   */
+  @RequestMapping(method = RequestMethod.POST)
+  protected String onSubmit(@ModelAttribute("removeStudentFromRunParameters") RemoveStudentFromRunParameters params,
+                            BindingResult bindingResult, SessionStatus sessionStatus) {
+    String view = "";
+    Long runId = params.getRunId();
+    Long userId = params.getUserId();
+    Run run = null;
+    User studentUser = null;
 
-    	removeStudentFromRunParametersValidator.validate(params, bindingResult);
+    removeStudentFromRunParametersValidator.validate(params, bindingResult);
 
-    	if (bindingResult.hasErrors()) {
-    		view = "errors/accessdenied";
-    	} else {
-        	try  {
-        		run = runService.retrieveById(runId);
-        		studentUser = userService.retrieveById(userId);
-        		User callingUser = ControllerUtil.getSignedInUser();
+    if (bindingResult.hasErrors()) {
+      view = "errors/accessdenied";
+    } else {
+      try  {
+        run = runService.retrieveById(runId);
+        studentUser = userService.retrieveById(userId);
+        User callingUser = ControllerUtil.getSignedInUser();
 
-        		if (callingUser.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) ||
-        				this.runService.hasRunPermission(run, callingUser, BasePermission.WRITE)) {
-    	    		studentService.removeStudentFromRun(studentUser, run);
+        if (callingUser.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) ||
+          this.runService.hasRunPermission(run, callingUser, BasePermission.WRITE)) {
+          studentService.removeStudentFromRun(studentUser, run);
 
-    	    		view = successView;
-    	    		sessionStatus.setComplete();
-        		} else {
-        			view = "errors/accessdenied";
-        		}
-        	} catch (ObjectNotFoundException e) {
-    			bindingResult.rejectValue("runId", "error.illegal-runId");
-    			view = formView;
-        	}
-    	}
-
-    	return view;
+          view = successView;
+          sessionStatus.setComplete();
+        } else {
+          view = "errors/accessdenied";
+        }
+      } catch (ObjectNotFoundException e) {
+        bindingResult.rejectValue("runId", "error.illegal-runId");
+        view = formView;
+      }
     }
+
+    return view;
+  }
 }

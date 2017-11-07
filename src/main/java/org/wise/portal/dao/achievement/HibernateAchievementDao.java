@@ -41,43 +41,43 @@ import java.util.List;
  */
 @Repository
 public class HibernateAchievementDao
-        extends AbstractHibernateDao<Achievement>
-        implements AchievementDao<Achievement> {
+  extends AbstractHibernateDao<Achievement>
+  implements AchievementDao<Achievement> {
 
-    @Override
-    public List<Achievement> getAchievementsByParams(Integer id, Run run, Workgroup workgroup, String achievementId, String type) {
-
-        Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        Criteria sessionCriteria = session.createCriteria(Achievement.class);
-        if (id != null) {
-            sessionCriteria.add(Restrictions.eq("id", id));
-        }
-        if (run != null) {
-            sessionCriteria.add(Restrictions.eq("run", run));
-        }
-        if (workgroup != null) {
-            sessionCriteria.add(Restrictions.eq("workgroup", workgroup));
-        }
-        if (achievementId != null) {
-            sessionCriteria.add(Restrictions.eq("achievementId", achievementId));
-        }
-        if (type != null) {
-            sessionCriteria.add(Restrictions.eq("type", type));
-        }
-
-        // order the achievements by achievement time from oldest to newest
-        sessionCriteria.addOrder(Order.asc("achievementTime"));
-
-        return sessionCriteria.list();
+  @Override
+  public List<Achievement> getAchievementsByParams(Integer id, Run run, Workgroup workgroup,
+      String achievementId, String type) {
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    Criteria sessionCriteria = session.createCriteria(Achievement.class);
+    if (id != null) {
+      sessionCriteria.add(Restrictions.eq("id", id));
+    }
+    if (run != null) {
+      sessionCriteria.add(Restrictions.eq("run", run));
+    }
+    if (workgroup != null) {
+      sessionCriteria.add(Restrictions.eq("workgroup", workgroup));
+    }
+    if (achievementId != null) {
+      sessionCriteria.add(Restrictions.eq("achievementId", achievementId));
+    }
+    if (type != null) {
+      sessionCriteria.add(Restrictions.eq("type", type));
     }
 
-    @Override
-    protected String getFindAllQuery() {
-        return null;
-    }
+    // order the achievements by achievement time from oldest to newest
+    sessionCriteria.addOrder(Order.asc("achievementTime"));
 
-    @Override
-    protected Class<? extends Achievement> getDataObjectClass() {
-        return Achievement.class;
-    }
+    return sessionCriteria.list();
+  }
+
+  @Override
+  protected String getFindAllQuery() {
+    return null;
+  }
+
+  @Override
+  protected Class<? extends Achievement> getDataObjectClass() {
+    return Achievement.class;
+  }
 }

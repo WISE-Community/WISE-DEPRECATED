@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -52,107 +52,107 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 @RequestMapping("/teacher/management/changeworkgroup.html")
 public class ChangeWorkgroupController {
 
-	@Autowired
-	private WorkgroupService workgroupService;
-	
-	@Autowired
-	private RunService runService;
-	
-	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	protected ChangeWorkgroupParametersValidator changeWorkgroupParametersValidator;
-	
-	private static final String STUDENT_PARAM_NAME = "student";
-	
-	private static final String WORKGROUPFROM_PARAM_NAME = "workgroupFrom";
-	
-	private static final String WORKGROUPS_TO = "workgroupsTo";
+  @Autowired
+  private WorkgroupService workgroupService;
 
-	private static final String RUN_ID = "runId";
+  @Autowired
+  private RunService runService;
 
-	private static final String PERIOD_ID = "periodId";
-	
-	//the path to this form view
-	protected String formView = "/teacher/management/changeworkgroup";
-	
-	//the path to the success view
-	protected String successView = "/teacher/management/changeworkgroupsuccess";
+  @Autowired
+  private UserService userService;
 
-	/**
-	 * Called before the page is loaded to initialize values
-	 * @param model the model object that contains values for the page to use when rendering the view
-	 * @param request the http request object
-	 * @return the path of the view to display
-	 * @throws Exception
-	 */
-	@RequestMapping(method = RequestMethod.GET)
-    public String initializeForm(ModelMap model, HttpServletRequest request) throws Exception {
-		ChangeWorkgroupParameters params = new ChangeWorkgroupParameters();
-		params.setStudent(userService.retrieveUserByUsername(request.getParameter(STUDENT_PARAM_NAME)));
-		params.setRunId(Long.parseLong(request.getParameter(RUN_ID)));
-		params.setPeriodId(Long.parseLong(request.getParameter(PERIOD_ID)));
-		String workgroupFromId = request.getParameter(WORKGROUPFROM_PARAM_NAME);
-		if (workgroupFromId == null) {
-			params.setWorkgroupFrom(null);
-		} else {
-		  params.setWorkgroupFrom(workgroupService.retrieveById(Long.parseLong(workgroupFromId)));
-		}
-		
-		model.addAttribute("changeWorkgroupParameters", params);
-		
-		Set<Workgroup> workgroups = runService.getWorkgroups(Long.parseLong(request.getParameter(RUN_ID)), Long.parseLong(request.getParameter(PERIOD_ID)));
-		model.addAttribute(WORKGROUPS_TO, workgroups);
-		
-		return formView;
-	}
-	
-	/**
-	 * Called when the user submits the form
-	 * @param params the object that contains values from the form
-	 * @param bindingResult the object used for validation in which errors will be stored
-	 * @return the path of the view to display
-	 */
-    @RequestMapping(method = RequestMethod.POST)
-    protected String onSubmit(
-    		@ModelAttribute("changeWorkgroupParameters") ChangeWorkgroupParameters params,
-    		BindingResult bindingResult,
-    		SessionStatus sessionStatus) {
-    	String view = "";
-    	
-    	//validate the parameters
-    	changeWorkgroupParametersValidator.validate(params, bindingResult);
-    	
-    	if(bindingResult.hasErrors()) {
-    		//there were errors
-    		
-    		view = formView;
-    	} else {
-    		//there were no errors
-    		
-    		//get the workgroup id
-        	Long workgroupToId = params.getWorkgroupToId();
-        	
-        	try {
-        		//set the workgroup id
-    			params.setWorkgroupTo(workgroupService.retrieveById(workgroupToId));
-    		} catch (ObjectNotFoundException e1) {
-    			params.setWorkgroupTo(null);
-    			view = formView;
-    		}
-        	
-        	try {
-        		//update the workgroup by modifying its members
-        		workgroupService.updateWorkgroupMembership(params);
-            	view = successView;
-            	sessionStatus.setComplete();
-        	} catch (Exception e){
-        		e.printStackTrace();
-        		view = formView;
-        	}
-    	}
-    	
-    	return view;
+  @Autowired
+  protected ChangeWorkgroupParametersValidator changeWorkgroupParametersValidator;
+
+  private static final String STUDENT_PARAM_NAME = "student";
+
+  private static final String WORKGROUPFROM_PARAM_NAME = "workgroupFrom";
+
+  private static final String WORKGROUPS_TO = "workgroupsTo";
+
+  private static final String RUN_ID = "runId";
+
+  private static final String PERIOD_ID = "periodId";
+
+  //the path to this form view
+  protected String formView = "/teacher/management/changeworkgroup";
+
+  //the path to the success view
+  protected String successView = "/teacher/management/changeworkgroupsuccess";
+
+  /**
+   * Called before the page is loaded to initialize values
+   * @param model the model object that contains values for the page to use when rendering the view
+   * @param request the http request object
+   * @return the path of the view to display
+   * @throws Exception
+   */
+  @RequestMapping(method = RequestMethod.GET)
+  public String initializeForm(ModelMap model, HttpServletRequest request) throws Exception {
+    ChangeWorkgroupParameters params = new ChangeWorkgroupParameters();
+    params.setStudent(userService.retrieveUserByUsername(request.getParameter(STUDENT_PARAM_NAME)));
+    params.setRunId(Long.parseLong(request.getParameter(RUN_ID)));
+    params.setPeriodId(Long.parseLong(request.getParameter(PERIOD_ID)));
+    String workgroupFromId = request.getParameter(WORKGROUPFROM_PARAM_NAME);
+    if (workgroupFromId == null) {
+      params.setWorkgroupFrom(null);
+    } else {
+      params.setWorkgroupFrom(workgroupService.retrieveById(Long.parseLong(workgroupFromId)));
     }
+
+    model.addAttribute("changeWorkgroupParameters", params);
+
+    Set<Workgroup> workgroups = runService.getWorkgroups(Long.parseLong(request.getParameter(RUN_ID)), Long.parseLong(request.getParameter(PERIOD_ID)));
+    model.addAttribute(WORKGROUPS_TO, workgroups);
+
+    return formView;
+  }
+
+  /**
+   * Called when the user submits the form
+   * @param params the object that contains values from the form
+   * @param bindingResult the object used for validation in which errors will be stored
+   * @return the path of the view to display
+   */
+  @RequestMapping(method = RequestMethod.POST)
+  protected String onSubmit(
+    @ModelAttribute("changeWorkgroupParameters") ChangeWorkgroupParameters params,
+    BindingResult bindingResult,
+    SessionStatus sessionStatus) {
+    String view = "";
+
+    //validate the parameters
+    changeWorkgroupParametersValidator.validate(params, bindingResult);
+
+    if(bindingResult.hasErrors()) {
+      //there were errors
+
+      view = formView;
+    } else {
+      //there were no errors
+
+      //get the workgroup id
+      Long workgroupToId = params.getWorkgroupToId();
+
+      try {
+        //set the workgroup id
+        params.setWorkgroupTo(workgroupService.retrieveById(workgroupToId));
+      } catch (ObjectNotFoundException e1) {
+        params.setWorkgroupTo(null);
+        view = formView;
+      }
+
+      try {
+        //update the workgroup by modifying its members
+        workgroupService.updateWorkgroupMembership(params);
+        view = successView;
+        sessionStatus.setComplete();
+      } catch (Exception e){
+        e.printStackTrace();
+        view = formView;
+      }
+    }
+
+    return view;
+  }
 }

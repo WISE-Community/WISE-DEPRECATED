@@ -287,12 +287,13 @@ class TeacherDataService {
         components = components.concat(showPreviousWorkNodeIdsAndComponentIds);
 
         var params = {};
-        params.runId = this.ConfigService.getRunId();
         //params.periodId = periodId;
         params.periodId = null;
         params.workgroupId = null;
         params.components = components;
         params.getAnnotations = false;
+        params.getEvents = false;
+        //params.event = 'nodeEntered';
 
         return this.retrieveStudentData(params);
     };
@@ -305,7 +306,6 @@ class TeacherDataService {
     retrieveStudentDataByWorkgroupId(workgroupId) {
 
         var params = {};
-        params.runId = this.ConfigService.getRunId();
         params.periodId = null;
         params.nodeId = null;
         params.workgroupId = workgroupId;
@@ -321,7 +321,6 @@ class TeacherDataService {
      */
     retrieveAnnotations() {
         var params = {};
-        params.runId = this.ConfigService.getRunId();
         params.periodId = null;
         params.nodeId = null;
         params.workgroupId = null;
@@ -340,6 +339,7 @@ class TeacherDataService {
      */
     retrieveStudentData(params) {
         let studentDataURL = this.ConfigService.getConfigParam('teacherDataURL');
+        params.runId = this.ConfigService.getRunId();
 
         if (params.getStudentWork == null) {
             params.getStudentWork = true;
@@ -421,6 +421,8 @@ class TeacherDataService {
 
                 this.AnnotationService.setAnnotations(this.studentData.annotations);
             }
+
+            return resultData;
         });
     };
 
@@ -913,7 +915,7 @@ class TeacherDataService {
         let previousPeriod = this.currentPeriod;
         this.currentPeriod = period;
         let periodId = this.currentPeriod.periodId;
-        
+
         /*
          * if currently selected workgroup is in a different period, clear the
          * currently selected workgroup

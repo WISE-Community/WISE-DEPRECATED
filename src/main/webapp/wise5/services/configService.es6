@@ -625,7 +625,7 @@ class ConfigService {
         let usernames = '';
 
         if (workgroupId != null) {
-            if (this.config.canViewStudentNames) {
+            if (this.getPermissions().canViewStudentNames) {
                 let names = this.getUserNamesByWorkgroupId(workgroupId);
                 let l = names.length;
                 for (let i = 0; i < l; i++) {
@@ -637,9 +637,7 @@ class ConfigService {
                     }
                 }
             } else {
-                // current user is not allowed to view student names, so return string with workgroupId and student ids
-                usernames = this.$translate('teamId', {id: workgroupId}) + ' (';
-
+                // current user is not allowed to view student names, so return string with student ids
                 let userIds = this.getUserIdsByWorkgroupId(workgroupId);
                 for (let i = 0; i < userIds.length; i++) {
                     let id = userIds[i];
@@ -648,7 +646,6 @@ class ConfigService {
                     }
                     usernames += this.$translate('studentId', {id: id});
                 }
-                usernames += ')';
             }
         }
 

@@ -37,24 +37,24 @@ import java.util.List;
  */
 public interface NotificationDao<T extends Notification> extends SimpleDao<T> {
 
-    /**
-     * Returns a list of notifications specified by params
-     * @param id id of the notification in the db
-     * @param run run this notification was created in
-     * @param period period this notification was created in
-     * @param toWorkgroup who should receive this notification
-     * @param groupId parent group this notification belongs in
-     * @param nodeId id of the node that generated this notification
-     * @param componentId id of the component that generated this notification
-     * @return a list of notifications that match the specified params
-     */
-    List<Notification> getNotificationListByParams(
-            Integer id, Run run, Group period, Workgroup toWorkgroup,
-            String groupId, String nodeId, String componentId);
+  /**
+   * Returns a list of notifications specified by params
+   * @param id id of the notification in the db
+   * @param run run this notification was created in
+   * @param period period this notification was created in
+   * @param toWorkgroup who should receive this notification
+   * @param groupId parent group this notification belongs in
+   * @param nodeId id of the node that generated this notification
+   * @param componentId id of the component that generated this notification
+   * @return a list of notifications that match the specified params
+   */
+  List<Notification> getNotificationListByParams(
+    Integer id, Run run, Group period, Workgroup toWorkgroup,
+    String groupId, String nodeId, String componentId);
 
-    /**
-     * Returns a list of Notification export rows
-     * @param runId
-     */
-    List<Object[]> getNotificationExport(Integer runId);
+  /**
+   * Returns a list of Notification export rows
+   * @param runId
+   */
+  List<Object[]> getNotificationExport(Integer runId);
 }

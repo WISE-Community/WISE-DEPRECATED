@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -26,27 +26,27 @@ import org.wise.portal.spring.SpringConfiguration;
 /**
  * Implementation of <code>SpringConfiguration</code> specifically for the
  * WISE portal.
- * 
+ *
  * @author Cynick Young
  * @author Hiroki Terashima
  */
 public final class SpringConfigurationImpl implements SpringConfiguration {
 
-    /**
-     * @see org.wise.portal.spring.SpringConfiguration#getDispatcherServletContextConfigLocations()
-     */
-    public String[] getDispatcherServletContextConfigLocations() {
-        return new String[] {
-                "classpath:configurations/dispatcherServletContexts.xml"
-        };
-    }
+  /**
+   * @see org.wise.portal.spring.SpringConfiguration#getDispatcherServletContextConfigLocations()
+   */
+  public String[] getDispatcherServletContextConfigLocations() {
+    return new String[] {
+      "classpath:configurations/dispatcherServletContexts.xml"
+    };
+  }
 
-    /**
-     * @see org.wise.portal.spring.SpringConfiguration#getRootApplicationContextConfigLocations()
-     */
-    public String[] getRootApplicationContextConfigLocations() {
-        return new String[] {
-            	"classpath:configurations/applicationContexts.xml"
-        };
-    }
+  /**
+   * @see org.wise.portal.spring.SpringConfiguration#getRootApplicationContextConfigLocations()
+   */
+  public String[] getRootApplicationContextConfigLocations() {
+    return new String[] {
+      "classpath:configurations/applicationContexts.xml"
+    };
+  }
 }

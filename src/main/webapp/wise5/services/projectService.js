@@ -26,7 +26,8 @@ var ProjectService = function () {
         this.project = null;
         this.transitions = [];
         this.applicationNodes = [];
-        this.inactiveNodes = [];
+        this.inactiveStepNodes = [];
+        this.inactiveGroupNodes = [];
         this.groupNodes = [];
         this.idToNode = {};
         this.idToElement = {};
@@ -42,6 +43,7 @@ var ProjectService = function () {
         this.nodeIdToBranchPathLetter = {};
         this.achievements = [];
         this.isNodeAffectedByConstraintResult = {};
+        this.flattenedProjectAsNodeIds = null;
 
         this.$translate = this.$filter('translate');
 
@@ -71,7 +73,8 @@ var ProjectService = function () {
         value: function clearProjectFields() {
             this.transitions = [];
             this.applicationNodes = [];
-            this.inactiveNodes = [];
+            this.inactiveStepNodes = [];
+            this.inactiveGroupNodes = [];
             this.groupNodes = [];
             this.idToNode = {};
             this.idToElement = {};
@@ -308,6 +311,29 @@ var ProjectService = function () {
         key: 'getGroups',
         value: function getGroups() {
             return this.groupNodes;
+        }
+    }, {
+        key: 'getInactiveGroupNodes',
+
+
+        /**
+         * Get the inactive group nodes.
+         * @return An array of inactive group nodes.
+         */
+        value: function getInactiveGroupNodes() {
+            return this.inactiveGroupNodes;
+        }
+
+        /**
+         * Get the inactive step nodes. This will include the inactive steps that
+         * are in an inactive group.
+         * @return An array of inactive step nodes.
+         */
+
+    }, {
+        key: 'getInactiveStepNodes',
+        value: function getInactiveStepNodes() {
+            return this.inactiveStepNodes;
         }
     }, {
         key: 'loadNodes',
@@ -1132,20 +1158,27 @@ var ProjectService = function () {
                 var node = this.getNodeById(nodeId);
 
                 if (node != null) {
+                    // Check if the node is a child of an active group.
                     var groupNodes = this.getGroupNodes();
-
                     for (var g = 0; g < groupNodes.length; g++) {
                         var groupNode = groupNodes[g];
-
                         if (this.isNodeDirectChildOfGroup(node, groupNode)) {
-                            result = groupNode;
-                            break;
+                            return groupNode;
+                        }
+                    }
+
+                    // Check if the node is a child of an inactive group.
+                    var inactiveGroupNodes = this.getInactiveGroupNodes();
+                    for (var ig = 0; ig < inactiveGroupNodes.length; ig++) {
+                        var inactiveGroupNode = inactiveGroupNodes[ig];
+                        if (this.isNodeDirectChildOfGroup(node, inactiveGroupNode)) {
+                            return inactiveGroupNode;
                         }
                     }
                 }
             }
 
-            return result;
+            return null;
         }
     }, {
         key: 'getParentGroupId',
@@ -1384,8 +1417,43 @@ var ProjectService = function () {
             return constraints;
         }
     }, {
-        key: 'isNodeAffectedByConstraint',
+        key: 'orderConstraints',
 
+
+        /**
+         * Order the constraints so that they show up in the same order as in the
+         * project.
+         * @param constraints An array of constraint objects.
+         * @return An array of ordered constraints.
+         */
+        value: function orderConstraints(constraints) {
+            var orderedNodeIds = this.getFlattenedProjectAsNodeIds();
+            return constraints.sort(this.constraintsComparatorGenerator(orderedNodeIds));
+        }
+
+        /**
+         * Create the constraints comparator function that is used for sorting an
+         * array of constraint objects.
+         * @param orderedNodeIds An array of node ids in the order in which they
+         * show up in the project.
+         * @return A comparator that orders constraint objects in the order in which
+         * the target ids show up in the project.
+         */
+
+    }, {
+        key: 'constraintsComparatorGenerator',
+        value: function constraintsComparatorGenerator(orderedNodeIds) {
+            return function (constraintA, constraintB) {
+                var constraintAIndex = orderedNodeIds.indexOf(constraintA.targetId);
+                var constraintBIndex = orderedNodeIds.indexOf(constraintB.targetId);
+                if (constraintAIndex < constraintBIndex) {
+                    return -1;
+                } else if (constraintAIndex > constraintBIndex) {
+                    return 1;
+                }
+                return 0;
+            };
+        }
 
         /**
          * Check if a node is affected by the constraint
@@ -1393,6 +1461,9 @@ var ProjectService = function () {
          * @param constraint the constraint that might affect the node
          * @returns whether the node is affected by the constraint
          */
+
+    }, {
+        key: 'isNodeAffectedByConstraint',
         value: function isNodeAffectedByConstraint(node, constraint) {
             var result = false;
 
@@ -2021,17 +2092,58 @@ var ProjectService = function () {
     }, {
         key: 'cleanupBeforeSave',
         value: function cleanupBeforeSave() {
-            var inactiveNodes = this.project.inactiveNodes;
+            var activeNodes = this.getActiveNodes();
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
 
-            if (inactiveNodes != null) {
+            try {
+                for (var _iterator2 = activeNodes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var activeNode = _step2.value;
 
-                // loop through all the inactive nodes
-                for (var i = 0; i < inactiveNodes.length; i++) {
-                    var inactiveNode = inactiveNodes[i];
+                    if (activeNode != null) {
+                        delete activeNode.checked;
+                    }
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
+
+            var inactiveNodes = this.getInactiveNodes();
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
+
+            try {
+                for (var _iterator3 = inactiveNodes[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var inactiveNode = _step3.value;
 
                     if (inactiveNode != null) {
-                        // remove the checked field
                         delete inactiveNode.checked;
+                    }
+                }
+            } catch (err) {
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                        _iterator3.return();
+                    }
+                } finally {
+                    if (_didIteratorError3) {
+                        throw _iteratorError3;
                     }
                 }
             }
@@ -2171,8 +2283,15 @@ var ProjectService = function () {
 
         /**
          * Flatten the project to obtain a list of node ids
+         * @param recalculate Whether to force recalculating the flattened node ids.
+         * @return An array of the flattened node ids in the project.
          */
-        value: function getFlattenedProjectAsNodeIds() {
+        value: function getFlattenedProjectAsNodeIds(recalculate) {
+            if (!recalculate && this.flattenedProjectAsNodeIds != null) {
+                // use the previously calculated flattened node ids
+                return this.flattenedProjectAsNodeIds;
+            }
+
             var nodeIds = [];
 
             // get the start node id
@@ -2190,7 +2309,12 @@ var ProjectService = function () {
 
             // consolidate all the paths to create a single list of node ids
             nodeIds = this.consolidatePaths(allPaths);
-            //nodeIds = this.consolidatePaths(allPaths.reverse());
+
+            /*
+             * Remember the flattened node ids so that we don't have to calculate
+             * it again.
+             */
+            this.flattenedProjectAsNodeIds = nodeIds;
 
             return nodeIds;
         }
@@ -3689,6 +3813,13 @@ var ProjectService = function () {
                 // add the node to our mapping of node id to node
                 this.setIdToNode(node.id, node);
                 this.setIdToElement(node.id, node);
+            } else if (nodeId == 'inactiveGroups') {
+                // add the node to the inactive groups
+                this.addInactiveNode(node);
+
+                // add the node to our mapping of node id to node
+                this.setIdToNode(node.id, node);
+                this.setIdToElement(node.id, node);
             } else {
                 // add the node to the active nodes
 
@@ -4370,21 +4501,48 @@ var ProjectService = function () {
     }, {
         key: 'getGroupIds',
         value: function getGroupIds() {
-
             var groupIds = [];
 
+            // Get the active group node ids.
             var groupNodes = this.groupNodes;
-
-            // loop through all the group nodes
             for (var g = 0; g < groupNodes.length; g++) {
                 var group = groupNodes[g];
-
                 if (group != null) {
                     var groupId = group.id;
-
                     if (groupId != null) {
-                        // add the group id
                         groupIds.push(groupId);
+                    }
+                }
+            }
+
+            // Get the inactive group node ids.
+            var inactiveGroupNodes = this.getInactiveGroupNodes();
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
+
+            try {
+                for (var _iterator4 = inactiveGroupNodes[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var inactiveGroup = _step4.value;
+
+                    if (inactiveGroup != null) {
+                        var inactiveGroupId = inactiveGroup.id;
+                        if (inactiveGroupId != null) {
+                            groupIds.push(inactiveGroupId);
+                        }
+                    }
+                }
+            } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
+                    }
+                } finally {
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
                     }
                 }
             }
@@ -6553,14 +6711,7 @@ var ProjectService = function () {
                 var removalConditional = constraint.removalConditional;
                 var removalCriteria = constraint.removalCriteria;
 
-                if (removalConditional === 'any') {
-                    message += this.$translate('TO_VISIT_STEP_YOU_MUST_PERFORM_ONE_OF_THE_ACTIONS_BELOW', { nodeTitle: nodeTitle }) + ':<br/>';
-                } else {
-                    message += this.$translate('TO_VISIT_STEP_YOU_MUST_PERFORM_ALL_OF_THE_ACTIONS_BELOW', { nodeTitle: nodeTitle }) + ':<br/>';
-                }
-
                 if (removalCriteria != null) {
-
                     var criteriaMessages = '';
 
                     // loop through all the criteria
@@ -7259,25 +7410,14 @@ var ProjectService = function () {
         }
 
         /**
-         * Get the inactive groups
-         * @returns the inactive groups
+         * Get the active nodes.
+         * @return An array of the active node objects.
          */
 
     }, {
-        key: 'getInactiveGroups',
-        value: function getInactiveGroups() {
-            var inactiveGroups = [];
-
-            if (this.project != null) {
-
-                if (this.project.inactiveGroups == null) {
-                    this.project.inactiveGroups = [];
-                }
-
-                inactiveGroups = this.project.inactiveGroups;
-            }
-
-            return inactiveGroups;
+        key: 'getActiveNodes',
+        value: function getActiveNodes() {
+            return this.project.nodes;
         }
 
         /**
@@ -7314,16 +7454,10 @@ var ProjectService = function () {
             var node = null;
 
             if (nodeId != null) {
-
-                // get the active nodes
                 var activeNodes = this.project.nodes;
-
                 if (activeNodes != null) {
-
-                    // loop through all the active nodes
                     for (var a = 0; a < activeNodes.length; a++) {
                         var activeNode = activeNodes[a];
-
                         if (activeNode != null) {
                             if (nodeId === activeNode.id) {
                                 // we have found the node we want to remove
@@ -7331,6 +7465,11 @@ var ProjectService = function () {
 
                                 // remove the node from the array
                                 activeNodes.splice(a, 1);
+
+                                if (activeNode.type == 'group') {
+                                    this.removeChildNodesFromActiveNodes(activeNode);
+                                }
+
                                 break;
                             }
                         }
@@ -7339,6 +7478,44 @@ var ProjectService = function () {
             }
 
             return node;
+        }
+
+        /**
+         * Move the child nodes of a group from the active nodes and put them into
+         * the inactive nodes.
+         * @param node The group node.
+         */
+
+    }, {
+        key: 'removeChildNodesFromActiveNodes',
+        value: function removeChildNodesFromActiveNodes(node) {
+            if (node != null) {
+                var childIds = node.ids;
+                var _iteratorNormalCompletion5 = true;
+                var _didIteratorError5 = false;
+                var _iteratorError5 = undefined;
+
+                try {
+                    for (var _iterator5 = childIds[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                        var childId = _step5.value;
+
+                        this.removeNodeFromActiveNodes(childId);
+                    }
+                } catch (err) {
+                    _didIteratorError5 = true;
+                    _iteratorError5 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                            _iterator5.return();
+                        }
+                    } finally {
+                        if (_didIteratorError5) {
+                            throw _iteratorError5;
+                        }
+                    }
+                }
+            }
         }
 
         /**
@@ -7353,6 +7530,12 @@ var ProjectService = function () {
             var node = null;
 
             if (nodeId != null) {
+
+                var parentGroup = this.getParentGroup(nodeId);
+                if (parentGroup != null) {
+                    // The node has a parent so we will remove it from the parent.
+                    this.removeChildFromParent(nodeId);
+                }
 
                 // get all the inactive nodes
                 var inactiveNodes = this.project.inactiveNodes;
@@ -7375,9 +7558,88 @@ var ProjectService = function () {
                         }
                     }
                 }
+
+                this.removeNodeFromInactiveStepNodes(nodeId);
+                this.removeNodeFromInactiveGroupNodes(nodeId);
             }
 
             return node;
+        }
+
+        /**
+         * Remove the child node from the parent group.
+         * @param nodeId The child node to remove from the parent.
+         */
+
+    }, {
+        key: 'removeChildFromParent',
+        value: function removeChildFromParent(nodeId) {
+            var parentGroup = this.getParentGroup(nodeId);
+            if (parentGroup != null) {
+                // Remove the child from the parent
+                for (var i = 0; i < parentGroup.ids.length; i++) {
+                    var childId = parentGroup.ids[i];
+                    if (nodeId == childId) {
+                        parentGroup.ids.splice(i, 1);
+                        break;
+                    }
+                }
+                if (nodeId == parentGroup.startId) {
+                    /*
+                     * The child we removed was the start id of the group so we
+                     * will update the start id.
+                     */
+                    var startIdUpdated = false;
+                    var transitions = this.getTransitionsByFromNodeId(nodeId);
+                    if (transitions != null && transitions.length > 0 && transitions[0] != null && transitions[0].to != null) {
+                        parentGroup.startId = transitions[0].to;
+                        startIdUpdated = true;
+                    }
+                    if (!startIdUpdated && parentGroup.ids.length > 0) {
+                        parentGroup.startId = parentGroup.ids[0];
+                        startIdUpdated = true;
+                    }
+                    if (!startIdUpdated) {
+                        parentGroup.startId = '';
+                    }
+                }
+            }
+        }
+
+        /**
+         * Remove the node from the inactive step nodes array.
+         * @param nodeId The node id of the node we want to remove from the
+         * inactive step nodes array.
+         */
+
+    }, {
+        key: 'removeNodeFromInactiveStepNodes',
+        value: function removeNodeFromInactiveStepNodes(nodeId) {
+            for (var i = 0; i < this.inactiveStepNodes.length; i++) {
+                var inactiveStepNode = this.inactiveStepNodes[i];
+                if (nodeId == inactiveStepNode.id) {
+                    this.inactiveStepNodes.splice(i, 1);
+                    break;
+                }
+            }
+        }
+
+        /**
+         * Remove the node from the inactive group nodes array.
+         * @param nodeId The node id of the group we want to remove from the
+         * inactive group nodes array.
+         */
+
+    }, {
+        key: 'removeNodeFromInactiveGroupNodes',
+        value: function removeNodeFromInactiveGroupNodes(nodeId) {
+            for (var i = 0; i < this.inactiveGroupNodes.length; i++) {
+                var inactiveGroupNode = this.inactiveGroupNodes[i];
+                if (nodeId == inactiveGroupNode.id) {
+                    this.inactiveGroupNodes.splice(i, 1);
+                    break;
+                }
+            }
         }
 
         /**
@@ -7399,8 +7661,11 @@ var ProjectService = function () {
                         // set the node into the mapping data structures
                         this.setIdToNode(nodeId, node);
                         this.setIdToElement(nodeId, node);
-
-                        this.inactiveNodes.push(node);
+                        if (node.type == 'group') {
+                            this.inactiveGroupNodes.push(node);
+                        } else {
+                            this.inactiveStepNodes.push(node);
+                        }
                     }
                 }
             }
@@ -7426,13 +7691,7 @@ var ProjectService = function () {
                     // this occurs when the author puts a group into the inactive groups
                     return false;
                 } else if (this.isGroupNode(nodeId)) {
-                    // the node is a group node
-
-                    /*
-                     * all group nodes are active since we don't have an inactive
-                     * groups section
-                     */
-                    return true;
+                    return this.isGroupActive(nodeId);
                 } else {
                     // the node is a step node
 
@@ -7497,6 +7756,44 @@ var ProjectService = function () {
         }
 
         /**
+         * Check if a group is active.
+         * @param nodeId the node id of the group
+         */
+
+    }, {
+        key: 'isGroupActive',
+        value: function isGroupActive(nodeId) {
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
+
+            try {
+                for (var _iterator6 = this.project.nodes[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var activeNode = _step6.value;
+
+                    if (nodeId == activeNode.id) {
+                        return true;
+                    }
+                }
+            } catch (err) {
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                        _iterator6.return();
+                    }
+                } finally {
+                    if (_didIteratorError6) {
+                        throw _iteratorError6;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /**
          * Move the node to the active nodes array
          */
 
@@ -7514,6 +7811,39 @@ var ProjectService = function () {
 
                     // add the node to the active array
                     this.addNode(node);
+
+                    if (this.isGroupNode(node.id)) {
+                        /*
+                         * This is a group node so we will also move all of its
+                         * children to active.
+                         */
+                        var childIds = node.ids;
+                        var _iteratorNormalCompletion7 = true;
+                        var _didIteratorError7 = false;
+                        var _iteratorError7 = undefined;
+
+                        try {
+                            for (var _iterator7 = childIds[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                                var childId = _step7.value;
+
+                                var childNode = this.removeNodeFromInactiveNodes(childId);
+                                this.addNode(childNode);
+                            }
+                        } catch (err) {
+                            _didIteratorError7 = true;
+                            _iteratorError7 = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                                    _iterator7.return();
+                                }
+                            } finally {
+                                if (_didIteratorError7) {
+                                    throw _iteratorError7;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -7561,7 +7891,7 @@ var ProjectService = function () {
                         node.transitionLogic.transitions = [];
                     }
 
-                    if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveSteps' || nodeIdToInsertAfter === 'inactiveNodes') {
+                    if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveNodes' || nodeIdToInsertAfter === 'inactiveSteps' || nodeIdToInsertAfter === 'inactiveGroups') {
                         // put the node at the beginning of the inactive steps
                         inactiveNodes.splice(0, 0, node);
                     } else {
@@ -7588,6 +7918,52 @@ var ProjectService = function () {
                              * to the end of the array
                              */
                             inactiveNodes.push(node);
+                        }
+                    }
+
+                    if (node.type == 'group') {
+                        this.inactiveGroupNodes.push(node.id);
+                        this.addGroupChildNodesToInactive(node);
+                    } else {
+                        this.inactiveStepNodes.push(node.id);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Add a group's child nodes to the inactive nodes.
+         * @param node The group node.
+         */
+
+    }, {
+        key: 'addGroupChildNodesToInactive',
+        value: function addGroupChildNodesToInactive(node) {
+            if (node != null) {
+                var childIds = node.ids;
+                var _iteratorNormalCompletion8 = true;
+                var _didIteratorError8 = false;
+                var _iteratorError8 = undefined;
+
+                try {
+                    for (var _iterator8 = childIds[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                        var childId = _step8.value;
+
+                        var childNode = this.getNodeById(childId);
+                        this.project.inactiveNodes.push(childNode);
+                        this.inactiveStepNodes.push(childNode);
+                    }
+                } catch (err) {
+                    _didIteratorError8 = true;
+                    _iteratorError8 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                            _iterator8.return();
+                        }
+                    } finally {
+                        if (_didIteratorError8) {
+                            throw _iteratorError8;
                         }
                     }
                 }
@@ -8317,7 +8693,6 @@ var ProjectService = function () {
                         }
                     }
                 },
-                "inactiveGroups": [],
                 "inactiveNodes": []
             };
         }
@@ -9094,7 +9469,7 @@ var ProjectService = function () {
         key: 'getNodeIdsInBranch',
         value: function getNodeIdsInBranch(fromNodeId, toNodeId) {
 
-            var nodesInBranch = [];
+            var nodeIdsInBranch = [];
 
             // get all the nodes in the project
             var nodes = this.getNodes();
@@ -9111,13 +9486,53 @@ var ProjectService = function () {
                              * this node has the the branch path taken constraint we are
                              * looking for
                              */
-                            nodesInBranch.push(node.id);
+                            nodeIdsInBranch.push(node.id);
                         }
                     }
                 }
             }
 
-            return nodesInBranch;
+            this.orderNodeIds(nodeIdsInBranch);
+
+            return nodeIdsInBranch;
+        }
+
+        /**
+         * Order the node ids so that they show up in the same order as in the
+         * project.
+         * @param constraints An array of node ids.
+         * @return An array of ordered node ids.
+         */
+
+    }, {
+        key: 'orderNodeIds',
+        value: function orderNodeIds(nodeIds) {
+            var orderedNodeIds = this.getFlattenedProjectAsNodeIds();
+            return nodeIds.sort(this.nodeIdsComparatorGenerator(orderedNodeIds));
+        }
+
+        /**
+         * Create the node ids comparator function that is used for sorting an
+         * array of node ids.
+         * @param orderedNodeIds An array of node ids in the order in which they
+         * show up in the project.
+         * @return A comparator that orders node ids in the order in which they show
+         * up in the project.
+         */
+
+    }, {
+        key: 'nodeIdsComparatorGenerator',
+        value: function nodeIdsComparatorGenerator(orderedNodeIds) {
+            return function (nodeIdA, nodeIdB) {
+                var nodeIdAIndex = orderedNodeIds.indexOf(nodeIdA);
+                var nodeIdBIndex = orderedNodeIds.indexOf(nodeIdB);
+                if (nodeIdAIndex < nodeIdBIndex) {
+                    return -1;
+                } else if (nodeIdAIndex > nodeIdBIndex) {
+                    return 1;
+                }
+                return 0;
+            };
         }
 
         /**
@@ -10660,6 +11075,17 @@ var ProjectService = function () {
         key: 'getIsNodeAffectedByConstraintResult',
         value: function getIsNodeAffectedByConstraintResult(nodeId, constraintId) {
             return this.isNodeAffectedByConstraintResult[nodeId + '-' + constraintId];
+        }
+
+        /**
+         * Get the id to node mappings.
+         * @return An object the keys as node ids and the values as nodes.
+         */
+
+    }, {
+        key: 'getIdToNode',
+        value: function getIdToNode() {
+            return this.idToNode;
         }
     }]);
 

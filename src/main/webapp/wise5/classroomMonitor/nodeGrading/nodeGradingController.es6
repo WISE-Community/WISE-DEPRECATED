@@ -8,6 +8,7 @@ class NodeGradingController {
                 $stateParams,
                 AnnotationService,
                 ConfigService,
+                NodeService,
                 NotificationService,
                 ProjectService,
                 StudentStatusService,
@@ -19,6 +20,7 @@ class NodeGradingController {
         this.$stateParams = $stateParams;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
+        this.NodeService = NodeService,
         this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
@@ -159,11 +161,6 @@ class NodeGradingController {
             workgroup.isVisible = completionStatus.isVisible ? 1 : 0;
             workgroup.completionStatus = this.getWorkgroupCompletionStatus(completionStatus);
             workgroup.score = this.getNodeScoreByWorkgroupId(workgroupId);
-
-            if (!this.canViewStudentNames) {
-                // TODO: i18n
-                workgroup.displayNames = 'Student ' + workgroupId;
-            }
 
             if (!init) {
                 this.workgroupsById[workgroupId] = angular.copy(workgroup);
@@ -407,91 +404,7 @@ class NodeGradingController {
      * component rubrics.
      */
     showRubric($event) {
-
-        // get the step number and title
-        let stepNumberAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
-        let rubricTitle = this.$translate('STEP_INFO');
-
-        /*
-         * create the dialog header, actions, and content elements
-         */
-        let dialogHeader =
-            `<md-toolbar>
-                <div class="md-toolbar-tools">
-                    <h2>${ stepNumberAndTitle }</h2>
-                </div>
-            </md-toolbar>`;
-
-        let dialogActions =
-            `<md-dialog-actions layout="row" layout-align="end center">
-                <md-button class="md-primary" ng-click="openInNewWindow()" aria-label="{{ 'openInNewWindow' | translate }}">{{ 'openInNewWindow' | translate }}</md-button>
-                <md-button class="md-primary" ng-click="close()" aria-label="{{ 'close' | translate }}">{{ 'close' | translate }}</md-button>
-            </md-dialog-actions>`;
-
-        let dialogContent =
-            `<md-dialog-content class="gray-lighter-bg">
-                <div class="md-dialog-content" id="nodeInfo_${ this.nodeId }">
-                    <node-info node-id="${ this.nodeId }"></node-info>
-                </div>
-            </md-dialog-content>`;
-
-        // create the dialog string
-        let dialogString = `<md-dialog class="dialog--wider" aria-label="${ stepNumberAndTitle } - ${ rubricTitle }">${ dialogHeader }${  dialogContent }${ dialogActions }</md-dialog>`;
-        let nodeId = this.nodeId;
-
-        // display the rubric in a popup
-        this.$mdDialog.show({
-            template : dialogString,
-            fullscreen: true,
-            controller: ['$scope', '$mdDialog',
-                function DialogController($scope, $mdDialog) {
-
-                    // display the rubric in a new tab
-                    $scope.openInNewWindow = function() {
-
-                        // open a new tab
-                        let w = window.open('', '_blank');
-
-                        /*
-                         * create the header for the new window that contains the project title
-                         */
-                        let windowHeader =
-                            `<md-toolbar class="layout-row">
-                                <div class="md-toolbar-tools primary-bg" style="color: #ffffff;">
-                                    <h2>${ stepNumberAndTitle }</h2>
-                                </div>
-                            </md-toolbar>`;
-
-                        let rubricContent = document.getElementById('nodeInfo_' + nodeId).innerHTML;
-
-                        // create the window string
-                        let windowString =
-                            `<link rel='stylesheet' href='../wise5/lib/bootstrap/css/bootstrap.min.css' />
-                            <link rel='stylesheet' href='../wise5/themes/default/style/monitor.css'>
-                            <link rel='stylesheet' href='../wise5/themes/default/style/angular-material.css'>
-                            <link rel='stylesheet' href='../wise5/lib/summernote/dist/summernote.css' />
-                            <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic%7CMaterial+Icons" media="all">
-                            <body class="layout-column">
-                                <div class="layout-column">${ windowHeader }<md-content class="md-padding">${ rubricContent }</div></md-content></div>
-                            </body>`;
-
-                        // write the rubric content to the new tab
-                        w.document.write(windowString);
-
-                        // close the popup
-                        $mdDialog.hide();
-                    }
-
-                    // close the popup
-                    $scope.close = () => {
-                        $mdDialog.hide();
-                    }
-                }
-            ],
-            targetEvent: $event,
-            clickOutsideToClose: true,
-            escapeToClose: true
-        });
+        this.NodeService.showNodeInfo(this.nodeId, $event);
     }
 
     setSort(value) {
@@ -529,22 +442,22 @@ class NodeGradingController {
 
         switch (this.sort) {
             case 'team':
-                orderBy = ['-isVisible', 'displayNames'];
+                orderBy = ['-isVisible', 'workgroupId'];
                 break;
             case '-team':
-                orderBy = ['-isVisible', '-displayNames'];
+                orderBy = ['-isVisible', '-workgroupId'];
                 break;
             case 'status':
-                orderBy = ['-isVisible', 'completionStatus', 'displayNames'];
+                orderBy = ['-isVisible', 'completionStatus', 'workgroupId'];
                 break;
             case '-status':
-                orderBy = ['-isVisible', '-completionStatus', 'displayNames'];
+                orderBy = ['-isVisible', '-completionStatus', 'workgroupId'];
                 break;
             case 'score':
-                orderBy = ['-isVisible', 'score', 'displayNames'];
+                orderBy = ['-isVisible', 'score', 'workgroupId'];
                 break;
             case '-score':
-                orderBy = ['-isVisible', '-score', 'displayNames'];
+                orderBy = ['-isVisible', '-score', 'workgroupId'];
                 break;
         }
 
@@ -631,6 +544,7 @@ NodeGradingController.$inject = [
     '$stateParams',
     'AnnotationService',
     'ConfigService',
+    'NodeService',
     'NotificationService',
     'ProjectService',
     'StudentStatusService',

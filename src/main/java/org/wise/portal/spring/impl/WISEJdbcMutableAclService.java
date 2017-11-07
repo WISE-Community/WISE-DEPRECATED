@@ -37,16 +37,15 @@ import org.springframework.security.acls.model.AclCache;
  */
 public class WISEJdbcMutableAclService extends JdbcMutableAclService {
 
-    public WISEJdbcMutableAclService(DataSource dataSource,
-                                     LookupStrategy lookupStrategy, AclCache aclCache, Properties wiseProperties) {
-        super(dataSource, lookupStrategy, aclCache);
-        if (wiseProperties.containsKey("hibernate.connection.driver_class")) {
-            String driverClass = (String) wiseProperties.get("hibernate.connection.driver_class");
-            if ("com.mysql.jdbc.Driver".equals(driverClass)) {
-                this.setClassIdentityQuery("SELECT @@IDENTITY");
-                this.setSidIdentityQuery("SELECT @@IDENTITY");
-            }
-        }
+  public WISEJdbcMutableAclService(DataSource dataSource, LookupStrategy lookupStrategy,
+      AclCache aclCache, Properties wiseProperties) {
+    super(dataSource, lookupStrategy, aclCache);
+    if (wiseProperties.containsKey("hibernate.connection.driver_class")) {
+      String driverClass = (String) wiseProperties.get("hibernate.connection.driver_class");
+      if ("com.mysql.jdbc.Driver".equals(driverClass)) {
+        this.setClassIdentityQuery("SELECT @@IDENTITY");
+        this.setSidIdentityQuery("SELECT @@IDENTITY");
+      }
     }
-
+  }
 }

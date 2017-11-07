@@ -523,9 +523,9 @@ var NodeAuthoringController = function () {
 
             try {
               for (var _iterator2 = nodeIdsInBranch[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                var _nodeId = _step2.value;
+                var nodeId = _step2.value;
 
-                var item = branch.items[_nodeId];
+                var item = branch.items[nodeId];
                 if (item != null) {
                   // make the item checked
                   item.checked = true;
@@ -773,14 +773,14 @@ var NodeAuthoringController = function () {
     value: function transitionCriteriaNodeIdChanged(transitionCriteria) {
       if (transitionCriteria != null && transitionCriteria.params != null) {
         // remember the node id
-        var _nodeId2 = transitionCriteria.params.nodeId;
+        var nodeId = transitionCriteria.params.nodeId;
 
         // clear the params
         transitionCriteria.params = {};
 
-        if (_nodeId2 != null) {
+        if (nodeId != null) {
           // set the node id back into the params
-          transitionCriteria.params.nodeId = _nodeId2;
+          transitionCriteria.params.nodeId = nodeId;
         }
       }
 
@@ -799,20 +799,20 @@ var NodeAuthoringController = function () {
     value: function transitionCriteriaComponentIdChanged(transitionCriteria) {
       if (transitionCriteria != null && transitionCriteria.params != null) {
         // remember the node id and component id
-        var _nodeId3 = transitionCriteria.params.nodeId;
-        var _componentId = transitionCriteria.params.componentId;
+        var nodeId = transitionCriteria.params.nodeId;
+        var componentId = transitionCriteria.params.componentId;
 
         // clear the params
         transitionCriteria.params = {};
 
-        if (_nodeId3 != null) {
+        if (nodeId != null) {
           // set the node id back into the params
-          transitionCriteria.params.nodeId = _nodeId3;
+          transitionCriteria.params.nodeId = nodeId;
         }
 
-        if (_componentId != null) {
+        if (componentId != null) {
           // set the component id back into the params
-          transitionCriteria.params.componentId = _componentId;
+          transitionCriteria.params.componentId = componentId;
         }
       }
 
@@ -1395,26 +1395,26 @@ var NodeAuthoringController = function () {
     key: 'transitionCriteriaNameChanged',
     value: function transitionCriteriaNameChanged(transitionCriteria) {
       if (transitionCriteria != null) {
-        var _nodeId4 = null;
-        var _componentId2 = null;
+        var nodeId = null;
+        var componentId = null;
 
         if (transitionCriteria.params != null) {
           // remember the node id and component id
-          _nodeId4 = transitionCriteria.params.nodeId;
-          _componentId2 = transitionCriteria.params.componentId;
+          nodeId = transitionCriteria.params.nodeId;
+          componentId = transitionCriteria.params.componentId;
         }
 
         // clear the params
         transitionCriteria.params = {};
 
-        if (_nodeId4 != null) {
+        if (nodeId != null) {
           // set the node id back into the params
-          transitionCriteria.params.nodeId = _nodeId4;
+          transitionCriteria.params.nodeId = nodeId;
         }
 
-        if (_componentId2 != null) {
+        if (componentId != null) {
           // set the component id back into the params
-          transitionCriteria.params.componentId = _componentId2;
+          transitionCriteria.params.componentId = componentId;
         }
       }
       this.authoringViewNodeChanged();
@@ -1818,31 +1818,31 @@ var NodeAuthoringController = function () {
     key: 'createBranchCriterionChanged',
     value: function createBranchCriterionChanged() {
       if (this.createBranchCriterion != null) {
-        var _nodeId5 = this.node.id;
+        var nodeId = this.node.id;
         if (this.createBranchCriterion == 'workgroupId') {
           // the branch is based on workgroup id
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'howToChooseAmongAvailablePaths', 'workgroupId');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'whenToChoosePath', 'enterNode');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'canChangePath', false);
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'maxPathsVisitable', 1);
+          this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'workgroupId');
+          this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'enterNode');
+          this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
+          this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
         } else if (this.createBranchCriterion == 'score') {
           // the branch is based on score
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'howToChooseAmongAvailablePaths', 'random');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'whenToChoosePath', 'studentDataChanged');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'canChangePath', false);
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'maxPathsVisitable', 1);
+          this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'random');
+          this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'studentDataChanged');
+          this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
+          this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
         } else if (this.createBranchCriterion == 'choiceChosen') {
           // the branch is based on choice chosen
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'howToChooseAmongAvailablePaths', 'random');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'whenToChoosePath', 'studentDataChanged');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'canChangePath', false);
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'maxPathsVisitable', 1);
+          this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'random');
+          this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'studentDataChanged');
+          this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
+          this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
         } else if (this.createBranchCriterion == 'random') {
           // the branch is based on random assignment
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'howToChooseAmongAvailablePaths', 'random');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'whenToChoosePath', 'enterNode');
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'canChangePath', false);
-          this.ProjectService.setTransitionLogicField(_nodeId5, 'maxPathsVisitable', 1);
+          this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'random');
+          this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'enterNode');
+          this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
+          this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
         }
       }
 
@@ -2061,6 +2061,9 @@ var NodeAuthoringController = function () {
   }, {
     key: 'createBranchUpdateChoiceChosenIdsHelper',
     value: function createBranchUpdateChoiceChosenIdsHelper(component) {
+      var nodeId = this.createBranchNodeId;
+      var componentId = this.createBranchComponentId;
+
       // get the choices from the component
       var choices = component.choices;
 
@@ -2575,56 +2578,56 @@ var NodeAuthoringController = function () {
   }, {
     key: 'removeBranchPath',
     value: function removeBranchPath(branch) {
-      if (branch != null && branch.checkedItemsInBranchPath != null) {
+      if (branch != null) {
         // get the checked items in the branch path
         var checkedItemsInBranchPath = branch.checkedItemsInBranchPath;
-        var _iteratorNormalCompletion10 = true;
-        var _didIteratorError10 = false;
-        var _iteratorError10 = undefined;
+        if (checkedItemsInBranchPath != null) {
+          var _iteratorNormalCompletion10 = true;
+          var _didIteratorError10 = false;
+          var _iteratorError10 = undefined;
 
-        try {
-          for (var _iterator10 = checkedItemsInBranchPath[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-            var checkedItem = _step10.value;
-
-            if (checkedItem != null) {
-              // get the node id of the checked item
-              var _nodeId6 = checkedItem.$key;
-
-              // remove the branchPathTaken constraints from the step
-              this.ProjectService.removeBranchPathTakenNodeConstraints(_nodeId6);
-
-              /*
-               * update the transition of the step to point to the next step
-               * in the project. this may be different than the next step
-               * if it was still in the branch path.
-               */
-              var nodeIdAfter = this.ProjectService.getNodeIdAfter(_nodeId6);
-              this.ProjectService.setTransition(_nodeId6, nodeIdAfter);
-            }
-          }
-
-          // get the index of the branch path
-        } catch (err) {
-          _didIteratorError10 = true;
-          _iteratorError10 = err;
-        } finally {
           try {
-            if (!_iteratorNormalCompletion10 && _iterator10.return) {
-              _iterator10.return();
+            for (var _iterator10 = checkedItemsInBranchPath[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+              var checkedItem = _step10.value;
+
+              if (checkedItem != null) {
+                // get the node id of the checked item
+                var nodeId = checkedItem.$key;
+
+                // remove the branchPathTaken constraints from the step
+                this.ProjectService.removeBranchPathTakenNodeConstraints(nodeId);
+
+                /*
+                 * update the transition of the step to point to the next step
+                 * in the project. this may be different than the next step
+                 * if it was still in the branch path.
+                 */
+                var nodeIdAfter = this.ProjectService.getNodeIdAfter(nodeId);
+                this.ProjectService.setTransition(nodeId, nodeIdAfter);
+              }
             }
+          } catch (err) {
+            _didIteratorError10 = true;
+            _iteratorError10 = err;
           } finally {
-            if (_didIteratorError10) {
-              throw _iteratorError10;
+            try {
+              if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                _iterator10.return();
+              }
+            } finally {
+              if (_didIteratorError10) {
+                throw _iteratorError10;
+              }
             }
           }
         }
-
+        // get the index of the branch path
         var branchPathIndex = this.createBranchBranches.indexOf(branch);
 
         // remove the branch path
         this.createBranchBranches.splice(branchPathIndex, 1);
 
-        // remove the transition the corresponds to the branch path
+        // remove the transition that corresponds to the branch path
         this.node.transitionLogic.transitions.splice(branchPathIndex, 1);
       }
     }
@@ -2919,20 +2922,24 @@ var NodeAuthoringController = function () {
   }, {
     key: 'moveButtonClicked',
     value: function moveButtonClicked() {
-      // hide the other views
-      this.nodeAuthoringViewButtonClicked('move');
+      if (this.getSelectedComponentIds().length == 0) {
+        alert(this.$translate('pleaseSelectAComponentToMoveAndThenClickTheMoveButtonAgain'));
+      } else {
+        // hide the other views
+        this.nodeAuthoringViewButtonClicked('move');
 
-      // turn off add component mode
-      this.turnOffAddComponentMode();
+        // turn off add component mode
+        this.turnOffAddComponentMode();
 
-      // turn on the move component mode
-      this.turnOnMoveComponentMode();
+        // turn on the move component mode
+        this.turnOnMoveComponentMode();
 
-      // turn on the insert component mode
-      this.turnOnInsertComponentMode();
+        // turn on the insert component mode
+        this.turnOnInsertComponentMode();
 
-      // hide the component authoring
-      this.hideComponentAuthoring();
+        // hide the component authoring
+        this.hideComponentAuthoring();
+      }
     }
 
     /**
@@ -2942,17 +2949,21 @@ var NodeAuthoringController = function () {
   }, {
     key: 'copyButtonClicked',
     value: function copyButtonClicked() {
-      // hide the other views
-      this.nodeAuthoringViewButtonClicked('copy');
+      if (this.getSelectedComponentIds().length == 0) {
+        alert(this.$translate('pleaseSelectAComponentToCopyAndThenClickTheCopyButtonAgain'));
+      } else {
+        // hide the other views
+        this.nodeAuthoringViewButtonClicked('copy');
 
-      // turn on the move component mode
-      this.turnOnCopyComponentMode();
+        // turn on the move component mode
+        this.turnOnCopyComponentMode();
 
-      // turn on the insert component mode
-      this.turnOnInsertComponentMode();
+        // turn on the insert component mode
+        this.turnOnInsertComponentMode();
 
-      // hide the component authoring views
-      this.hideComponentAuthoring();
+        // hide the component authoring views
+        this.hideComponentAuthoring();
+      }
     }
 
     /**
@@ -2965,109 +2976,113 @@ var NodeAuthoringController = function () {
     value: function deleteButtonClicked() {
       var _this3 = this;
 
-      this.scrollToTopOfPage();
-
-      /*
-       * hide all the component authoring so that the author only sees the
-       * component numbers and component types
-       */
-      this.hideComponentAuthoring();
-
-      /*
-       * Use a timeout to allow the effects of hideComponentAuthoring() to
-       * take effect. If we don't use a timeout, the user won't see any change
-       * in the UI.
-       */
-      this.$timeout(function () {
-        var confirmMessage = '';
-
-        // get the selected component numbers and types
-        var selectedComponentNumbersAndTypes = _this3.getSelectedComponentNumbersAndTypes();
-
-        if (selectedComponentNumbersAndTypes.length == 1) {
-          // there is one selected component
-          confirmMessage = 'Are you sure you want to delete this component?\n';
-        } else if (selectedComponentNumbersAndTypes.length > 1) {
-          // there are multiple selected components
-          confirmMessage = 'Are you sure you want to delete these components?\n';
-        }
-
-        // loop through all the selected components
-        for (var c = 0; c < selectedComponentNumbersAndTypes.length; c++) {
-
-          // get a component number and type
-          var selectedComponentNumberAndType = selectedComponentNumbersAndTypes[c];
-
-          // show the component number and type in the message
-          confirmMessage += '\n' + selectedComponentNumberAndType;
-        }
-
-        // ask the user if they are sure they want to delete
-        if (confirm(confirmMessage)) {
-          var selectedComponents = _this3.getSelectedComponentIds();
-
-          // data saved in the component deleted event
-          var data = {
-            "componentsDeleted": _this3.getComponentObjectsForEventData(selectedComponents)
-          };
-
-          /*
-           * loop through all the selected component ids and delete the
-           * components
-           */
-          var _iteratorNormalCompletion12 = true;
-          var _didIteratorError12 = false;
-          var _iteratorError12 = undefined;
-
-          try {
-            for (var _iterator12 = selectedComponents[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-              var _componentId3 = _step12.value;
-
-              _this3.ProjectService.deleteComponent(_this3.nodeId, _componentId3);
-            }
-          } catch (err) {
-            _didIteratorError12 = true;
-            _iteratorError12 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion12 && _iterator12.return) {
-                _iterator12.return();
-              }
-            } finally {
-              if (_didIteratorError12) {
-                throw _iteratorError12;
-              }
-            }
-          }
-
-          _this3.saveEvent('componentDeleted', 'Authoring', data);
-
-          // check if we need to show the node save or node submit buttons
-          _this3.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
-
-          _this3.ProjectService.saveProject();
-        } else {
-          // uncheck the component check boxes
-          _this3.clearComponentsToChecked();
-        }
+      if (this.getSelectedComponentIds().length == 0) {
+        alert(this.$translate('pleaseSelectAComponentToDeleteAndThenClickTheDeleteButtonAgain'));
+      } else {
+        this.scrollToTopOfPage();
 
         /*
-         * Wait a small amount of time before returning the UI back to the
-         * normal view. This allows the author to see the component number
-         * and type view a little longer so that they can see the change
-         * they just made before we switch back to the normal view.
+         * hide all the component authoring so that the author only sees the
+         * component numbers and component types
          */
-        _this3.$timeout(function () {
-          // turn off the insert component mode
-          _this3.turnOffInsertComponentMode();
+        this.hideComponentAuthoring();
 
-          // uncheck the component check boxes
-          _this3.clearComponentsToChecked();
+        /*
+         * Use a timeout to allow the effects of hideComponentAuthoring() to
+         * take effect. If we don't use a timeout, the user won't see any change
+         * in the UI.
+         */
+        this.$timeout(function () {
+          var confirmMessage = '';
 
-          // show the component authoring
-          _this3.showComponentAuthoring();
-        }, 2000);
-      });
+          // get the selected component numbers and types
+          var selectedComponentNumbersAndTypes = _this3.getSelectedComponentNumbersAndTypes();
+
+          if (selectedComponentNumbersAndTypes.length == 1) {
+            // there is one selected component
+            confirmMessage = _this3.$translate('areYouSureYouWantToDeleteThisComponent');
+          } else if (selectedComponentNumbersAndTypes.length > 1) {
+            // there are multiple selected components
+            confirmMessage = _this3.$translate('areYouSureYouWantToDeleteTheseComponents');
+          }
+
+          // loop through all the selected components
+          for (var c = 0; c < selectedComponentNumbersAndTypes.length; c++) {
+
+            // get a component number and type
+            var selectedComponentNumberAndType = selectedComponentNumbersAndTypes[c];
+
+            // show the component number and type in the message
+            confirmMessage += '\n' + selectedComponentNumberAndType;
+          }
+
+          // ask the user if they are sure they want to delete
+          if (confirm(confirmMessage)) {
+            var selectedComponents = _this3.getSelectedComponentIds();
+
+            // data saved in the component deleted event
+            var data = {
+              "componentsDeleted": _this3.getComponentObjectsForEventData(selectedComponents)
+            };
+
+            /*
+             * loop through all the selected component ids and delete the
+             * components
+             */
+            var _iteratorNormalCompletion12 = true;
+            var _didIteratorError12 = false;
+            var _iteratorError12 = undefined;
+
+            try {
+              for (var _iterator12 = selectedComponents[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+                var componentId = _step12.value;
+
+                _this3.ProjectService.deleteComponent(_this3.nodeId, componentId);
+              }
+            } catch (err) {
+              _didIteratorError12 = true;
+              _iteratorError12 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion12 && _iterator12.return) {
+                  _iterator12.return();
+                }
+              } finally {
+                if (_didIteratorError12) {
+                  throw _iteratorError12;
+                }
+              }
+            }
+
+            _this3.saveEvent('componentDeleted', 'Authoring', data);
+
+            // check if we need to show the node save or node submit buttons
+            _this3.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
+
+            _this3.ProjectService.saveProject();
+          } else {
+            // uncheck the component check boxes
+            _this3.clearComponentsToChecked();
+          }
+
+          /*
+           * Wait a small amount of time before returning the UI back to the
+           * normal view. This allows the author to see the component number
+           * and type view a little longer so that they can see the change
+           * they just made before we switch back to the normal view.
+           */
+          _this3.$timeout(function () {
+            // turn off the insert component mode
+            _this3.turnOffInsertComponentMode();
+
+            // uncheck the component check boxes
+            _this3.clearComponentsToChecked();
+
+            // show the component authoring
+            _this3.showComponentAuthoring();
+          }, 2000);
+        });
+      }
     }
 
     /**
@@ -3630,9 +3645,9 @@ var NodeAuthoringController = function () {
     key: 'previewImportNode',
     value: function previewImportNode(node) {
       if (node != null) {
-        var _nodeId7 = node.id;
+        var nodeId = node.id;
         var previewProjectURL = this.importProject.previewProjectURL;
-        var previewStepURL = previewProjectURL + '#/vle/' + _nodeId7;
+        var previewStepURL = previewProjectURL + '#/vle/' + nodeId;
         window.open(previewStepURL);
       }
     }
@@ -3647,9 +3662,9 @@ var NodeAuthoringController = function () {
     key: 'previewImportComponent',
     value: function previewImportComponent(node, componentId) {
       if (node != null) {
-        var _nodeId8 = node.id;
+        var nodeId = node.id;
         var previewProjectURL = this.importProject.previewProjectURL;
-        var previewStepURL = previewProjectURL + '#/vle/' + _nodeId8 + '/' + componentId;
+        var previewStepURL = previewProjectURL + '#/vle/' + nodeId + '/' + componentId;
         window.open(previewStepURL);
       }
     }
@@ -3768,11 +3783,11 @@ var NodeAuthoringController = function () {
 
         try {
           for (var _iterator17 = componentIds[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-            var _componentId4 = _step17.value;
+            var componentId = _step17.value;
 
-            if (_componentId4 != null) {
+            if (componentId != null) {
               // get the component
-              var component = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, _componentId4);
+              var component = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, componentId);
 
               if (component != null) {
                 // create an object with the component id and type
@@ -3920,6 +3935,19 @@ var NodeAuthoringController = function () {
           });
         }
       }
+    }
+
+    /**
+     * The advanced button was clicked on a component. We will broadcast an event
+     * so that the appropriate child component can display their advanced
+     * authoring options.
+     * @param componentId The component id whose advanced button was clicked.
+     */
+
+  }, {
+    key: 'componentAdvancedButtonClicked',
+    value: function componentAdvancedButtonClicked(componentId) {
+      this.$rootScope.$broadcast('componentAdvancedButtonClicked', { componentId: componentId });
     }
   }]);
 

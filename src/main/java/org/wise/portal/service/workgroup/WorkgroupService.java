@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -36,107 +36,109 @@ import org.wise.portal.domain.workgroup.Workgroup;
  * @author Hiroki Terashima
  */
 public interface WorkgroupService {
-    
-    /**
-     * Given a User, returns all of the workgroups that the user is in
-     * @param user the <code>User</code> to search for
-     * @return a list of workgroups that the specified user is in.
-     */
-    List<Workgroup> getWorkgroupsForUser(User user);
 
-    /**
-     * Gets a <code>List</code> of workgroups for a given run with the
-     * specified user as a member of that workgroup.
-     * 
-     * @param run for the workgroup
-     * @param user that is a member of the workgroup
-     * @return a list of workgroups that the user is in for the specified run
-     */
-    List<Workgroup> getWorkgroupListByRunAndUser(Run run, User user);
+  /**
+   * Given a User, returns all of the workgroups that the user is in
+   * @param user the <code>User</code> to search for
+   * @return a list of workgroups that the specified user is in.
+   */
+  List<Workgroup> getWorkgroupsForUser(User user);
 
-    /**
-     * Adds members to an already-existing workgroup. If a member is
-     * already in the group, do not add again. Also update the workgroup name.
-     * 
-     * @param workgroup an existing <code>Workgroup</code> to add the members to
-     * @param membersToAdd  <code>Set</code> of users to add to the group
-     */
-    void addMembers(Workgroup workgroup, Set<User> membersToAdd);
-    
-    /**
-     * Removes members from an already-existing workgroup. Also update the workgroup name.
-     * 
-     * @param workgroup an existing <code>Workgroup</code> to remove members from
-     * @param membersToRemove <code>Set</code> of users to remove from the workggroup
-     */
-	void removeMembers(Workgroup workgroup, Set<User> membersToRemove);
-    
-    /**
-     * Retrieves the Workgroup domain object using unique workgroupId
-     * 
-     * @param workgroupId <code>Long</code> workgroupId to use for lookup
-     * @return <code>Workgroup</code> the Workgroup object with the workgroupId
-     * @throws <code>ObjectNotFoundException</code> when workgroupId cannot
-     *     be used to find an existing workgroup
-     */
-    Workgroup retrieveById(Long workgroupId) throws ObjectNotFoundException;
-    
-    /**
-     * Retrieves the Workgroup domain object using unique workgroupId
-     * 
-     * @param workgroupId  <code>Long</code> workgroupId to use for lookup
-     * @param doEagerFetch <code>boolean</code> fetch all fields eagerly, same as EAGER-load
-     *     
-     * @return <code>Workgroup</code> the Workgroup object with the workgroupId
-     * @throws <code>ObjectNotFoundException</code> when workgroupId cannot
-     *     be used to find an existing workgroup
-     */
-    Workgroup retrieveById(Long workgroupId, boolean doEagerFetch);
+  /**
+   * Gets a <code>List</code> of workgroups for a given run with the
+   * specified user as a member of that workgroup.
+   *
+   * @param run for the workgroup
+   * @param user that is a member of the workgroup
+   * @return a list of workgroups that the user is in for the specified run
+   */
+  List<Workgroup> getWorkgroupListByRunAndUser(Run run, User user);
 
-    /**
-     * Updates the Workgroups by modifying its members
-     *
-     * @param params contains info needed to change workgroup membership
-     * @return updated workgroup
-     * @throws Exception when update fails
-     */
-    Workgroup updateWorkgroupMembership(ChangeWorkgroupParameters params) throws Exception;
-    
-	/**
-	 * Creates a <code>Workgroup</code> with given parameters
-	 * 
-	 * @param name Name of the workgroup
-	 * @param members members in the workgroup
-	 * @param run Run this workgroup is in
-	 * @param period period this workgroup is in
-	 * @return the created <code>Workgroup</code>
-	 * @throws ObjectNotFoundException
-	 */
-	Workgroup createWorkgroup(String name, Set<User> members, Run run, Group period) throws ObjectNotFoundException;
-	
-	/**
-     * Check if a user is in any workgroup for the run
-     * @param user the user to check
-     * @param run the run to check
-     * @return whether the user is in a workgroup for the specified run
-     */
-	boolean isUserInAnyWorkgroupForRun(User user, Run run);
-	
-    /**
-     * Check if a user is in a specific workgroup for the run
-     * @param user the user
-     * @param run the run
-     * @param workgroup the workgroup
-     * @return whether the user is in the workgroup
-     */
-	boolean isUserInWorkgroupForRun(User user, Run run, Workgroup workgroup);
-	
-	/**
-     * Check if a user is in a workgroup besides the one provided for the run
-     * @param user the user
-     * @param run the run
-     * @param workgroup the workgroup
-     * @return whether the user is in another workgroup for the run
-     */
-	boolean isUserInAnotherWorkgroupForRun(User user, Run run, Workgroup workgroup);
+  /**
+   * Adds members to an already-existing workgroup. If a member is
+   * already in the group, do not add again. Also update the workgroup name.
+   *
+   * @param workgroup an existing <code>Workgroup</code> to add the members to
+   * @param membersToAdd  <code>Set</code> of users to add to the group
+   */
+  void addMembers(Workgroup workgroup, Set<User> membersToAdd);
+
+  /**
+   * Removes members from an already-existing workgroup. Also update the workgroup name.
+   *
+   * @param workgroup an existing <code>Workgroup</code> to remove members from
+   * @param membersToRemove <code>Set</code> of users to remove from the workggroup
+   */
+  void removeMembers(Workgroup workgroup, Set<User> membersToRemove);
+
+  /**
+   * Retrieves the Workgroup domain object using unique workgroupId
+   *
+   * @param workgroupId <code>Long</code> workgroupId to use for lookup
+   * @return <code>Workgroup</code> the Workgroup object with the workgroupId
+   * @throws <code>ObjectNotFoundException</code> when workgroupId cannot
+   *     be used to find an existing workgroup
+   */
+  Workgroup retrieveById(Long workgroupId) throws ObjectNotFoundException;
+
+  /**
+   * Retrieves the Workgroup domain object using unique workgroupId
+   *
+   * @param workgroupId  <code>Long</code> workgroupId to use for lookup
+   * @param doEagerFetch <code>boolean</code> fetch all fields eagerly, same as EAGER-load
+   *
+   * @return <code>Workgroup</code> the Workgroup object with the workgroupId
+   * @throws <code>ObjectNotFoundException</code> when workgroupId cannot
+   *     be used to find an existing workgroup
+   */
+  Workgroup retrieveById(Long workgroupId, boolean doEagerFetch);
+
+  /**
+   * Updates the Workgroups by modifying its members
+   *
+   * @param params contains info needed to change workgroup membership
+   * @return updated workgroup
+   * @throws Exception when update fails
+   */
+  Workgroup updateWorkgroupMembership(ChangeWorkgroupParameters params)
+      throws Exception;
+
+  /**
+   * Creates a <code>Workgroup</code> with given parameters
+   *
+   * @param name Name of the workgroup
+   * @param members members in the workgroup
+   * @param run Run this workgroup is in
+   * @param period period this workgroup is in
+   * @return the created <code>Workgroup</code>
+   * @throws ObjectNotFoundException
+   */
+  Workgroup createWorkgroup(String name, Set<User> members, Run run, Group period)
+      throws ObjectNotFoundException;
+
+  /**
+   * Check if a user is in any workgroup for the run
+   * @param user the user to check
+   * @param run the run to check
+   * @return whether the user is in a workgroup for the specified run
+   */
+  boolean isUserInAnyWorkgroupForRun(User user, Run run);
+
+  /**
+   * Check if a user is in a specific workgroup for the run
+   * @param user the user
+   * @param run the run
+   * @param workgroup the workgroup
+   * @return whether the user is in the workgroup
+   */
+  boolean isUserInWorkgroupForRun(User user, Run run, Workgroup workgroup);
+
+  /**
+   * Check if a user is in a workgroup besides the one provided for the run
+   * @param user the user
+   * @param run the run
+   * @param workgroup the workgroup
+   * @return whether the user is in another workgroup for the run
+   */
+  boolean isUserInAnotherWorkgroupForRun(User user, Run run, Workgroup workgroup);
 }

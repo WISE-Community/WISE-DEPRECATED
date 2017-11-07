@@ -11,7 +11,8 @@ class NodeController {
                 NodeService,
                 NotebookService,
                 ProjectService,
-                StudentDataService) {
+                StudentDataService,
+                UtilService) {
 
         this.$compile = $compile;
         this.$filter = $filter;
@@ -26,6 +27,7 @@ class NodeController {
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
         this.$translate = this.$filter('translate');
 
         // the auto save interval in milliseconds
@@ -891,7 +893,7 @@ class NodeController {
             var componentEvents = null;
             var nodeStates = null;
 
-            if ((componentStates != null && componentStates.length) ||
+            if ((componentStates != null && this.UtilService.arrayHasNonNullElement(componentStates)) ||
                 (componentAnnotations != null && componentAnnotations.length) ||
                 (componentEvents != null && componentEvents.length)) {
 
@@ -1384,7 +1386,8 @@ NodeController.$inject = [
     'NodeService',
     'NotebookService',
     'ProjectService',
-    'StudentDataService'
+    'StudentDataService',
+    'UtilService'
 ];
 
 export default NodeController;

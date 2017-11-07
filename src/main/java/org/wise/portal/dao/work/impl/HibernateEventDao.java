@@ -46,134 +46,134 @@ import java.util.List;
 @Repository
 public class HibernateEventDao extends AbstractHibernateDao<Event> implements EventDao<Event> {
 
-    @Override
-    protected String getFindAllQuery() {
-        return null;
+  @Override
+  protected String getFindAllQuery() {
+    return null;
+  }
+
+  @Override
+  protected Class<? extends Event> getDataObjectClass() {
+    return Event.class;
+  }
+
+  public List<Object[]> getStudentEventExport(Integer runId) {
+    String queryString =
+      "SELECT e.id, e.nodeId, e.componentId, e.componentType, 'step number', 'step title', 'component part number', " +
+        "e.clientSaveTime, e.serverSaveTime, e.category, e.context, e.event, e.data, e.periodId, e.runId, e.workgroupId, " +
+        "g.name as \"Period Name\", ud.username as \"Teacher Username\", r.project_fk as \"Project ID\", GROUP_CONCAT(gu.user_fk SEPARATOR ', ') \"WISE IDs\" " +
+        "FROM events e, " +
+        "workgroups w, " +
+        "groups_related_to_users gu, " +
+        "groups g, " +
+        "runs r, " +
+        "users u, " +
+        "user_details ud " +
+        "where e.runId = :runId and e.workgroupId = w.id and w.group_fk = gu.group_fk and g.id = e.periodId and " +
+        "e.runId = r.id and r.owner_fk = u.id and u.user_details_fk = ud.id " +
+        "group by e.id, e.nodeId, e.componentId, e.componentType, e.clientSaveTime, e.serverSaveTime, e.category, e.context, e.event, e.data, e.periodId, e.runId, e.workgroupId, g.name, ud.username, r.project_fk order by workgroupId ";
+
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    SQLQuery query = session.createSQLQuery(queryString);
+    query.setParameter("runId", runId);
+    List resultList = new ArrayList<Object[]>();
+    Object[] headerRow = new String[]{"id","node id","component id","component type","step number","step title","component part number",
+      "client save time","server save time","category", "context", "event", "data","period id","run id","workgroup id",
+      "period name", "teacher username", "project id", "WISE ids"};
+    resultList.add(headerRow);
+    resultList.addAll(query.list());
+    return resultList;
+  }
+
+  @Override
+  public List<Event> getEventsByParams(Integer id, Run run, Group period, Workgroup workgroup,
+                                       String nodeId, String componentId, String componentType,
+                                       String context, String category, String event,
+                                       List<JSONObject> components) {
+
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    Criteria sessionCriteria = session.createCriteria(Event.class);
+
+    if (id != null) {
+      sessionCriteria.add(Restrictions.eq("id", id));
     }
-
-    @Override
-    protected Class<? extends Event> getDataObjectClass() {
-        return Event.class;
+    if (run != null) {
+      sessionCriteria.add(Restrictions.eq("run", run));
     }
-
-    public List<Object[]> getStudentEventExport(Integer runId) {
-        String queryString =
-                "SELECT e.id, e.nodeId, e.componentId, e.componentType, 'step number', 'step title', 'component part number', " +
-                        "e.clientSaveTime, e.serverSaveTime, e.category, e.context, e.event, e.data, e.periodId, e.runId, e.workgroupId, " +
-                        "g.name as \"Period Name\", ud.username as \"Teacher Username\", r.project_fk as \"Project ID\", GROUP_CONCAT(gu.user_fk SEPARATOR ', ') \"WISE IDs\" " +
-                        "FROM events e, " +
-                        "workgroups w, " +
-                        "groups_related_to_users gu, " +
-                        "groups g, " +
-                        "runs r, " +
-                        "users u, " +
-                        "user_details ud " +
-                        "where e.runId = :runId and e.workgroupId = w.id and w.group_fk = gu.group_fk and g.id = e.periodId and " +
-                        "e.runId = r.id and r.owner_fk = u.id and u.user_details_fk = ud.id " +
-                        "group by e.id, e.nodeId, e.componentId, e.componentType, e.clientSaveTime, e.serverSaveTime, e.category, e.context, e.event, e.data, e.periodId, e.runId, e.workgroupId, g.name, ud.username, r.project_fk order by workgroupId ";
-
-        Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        SQLQuery query = session.createSQLQuery(queryString);
-        query.setParameter("runId", runId);
-        List resultList = new ArrayList<Object[]>();
-        Object[] headerRow = new String[]{"id","node id","component id","component type","step number","step title","component part number",
-                "client save time","server save time","category", "context", "event", "data","period id","run id","workgroup id",
-                "period name", "teacher username", "project id", "WISE ids"};
-        resultList.add(headerRow);
-        resultList.addAll(query.list());
-        return resultList;
+    if (period != null) {
+      sessionCriteria.add(Restrictions.eq("period", period));
     }
+    if (workgroup != null) {
+      sessionCriteria.add(Restrictions.eq("workgroup", workgroup));
+    }
+    if (nodeId != null) {
+      sessionCriteria.add(Restrictions.eq("nodeId", nodeId));
+    }
+    if (componentId != null) {
+      sessionCriteria.add(Restrictions.eq("componentId", componentId));
+    }
+    if (componentType != null) {
+      sessionCriteria.add(Restrictions.eq("componentType", componentType));
+    }
+    if (context != null) {
+      sessionCriteria.add(Restrictions.eq("context", context));
+    }
+    if (category != null) {
+      sessionCriteria.add(Restrictions.eq("category", category));
+    }
+    if (event != null) {
+      sessionCriteria.add(Restrictions.eq("event", event));
+    }
+    if (components != null) {
 
-    @Override
-    public List<Event> getEventsByParams(Integer id, Run run, Group period, Workgroup workgroup,
-                                            String nodeId, String componentId, String componentType,
-                                            String context, String category, String event,
-                                            List<JSONObject> components) {
+      // create the criteria to accept any of the components by using an 'or' conditional
+      Disjunction disjunction = Restrictions.disjunction();
 
-        Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-        Criteria sessionCriteria = session.createCriteria(Event.class);
+      // loop through all the components
+      for (int c = 0; c < components.size(); c++) {
+        JSONObject component = components.get(c);
 
-        if (id != null) {
-            sessionCriteria.add(Restrictions.eq("id", id));
-        }
-        if (run != null) {
-            sessionCriteria.add(Restrictions.eq("run", run));
-        }
-        if (period != null) {
-            sessionCriteria.add(Restrictions.eq("period", period));
-        }
-        if (workgroup != null) {
-            sessionCriteria.add(Restrictions.eq("workgroup", workgroup));
-        }
-        if (nodeId != null) {
-            sessionCriteria.add(Restrictions.eq("nodeId", nodeId));
-        }
-        if (componentId != null) {
-            sessionCriteria.add(Restrictions.eq("componentId", componentId));
-        }
-        if (componentType != null) {
-            sessionCriteria.add(Restrictions.eq("componentType", componentType));
-        }
-        if (context != null) {
-            sessionCriteria.add(Restrictions.eq("context", context));
-        }
-        if (category != null) {
-            sessionCriteria.add(Restrictions.eq("category", category));
-        }
-        if (event != null) {
-            sessionCriteria.add(Restrictions.eq("event", event));
-        }
-        if (components != null) {
+        if (component != null) {
+          try {
 
-            // create the criteria to accept any of the components by using an 'or' conditional
-            Disjunction disjunction = Restrictions.disjunction();
+            Criterion nodeIdRestriction = null;
+            Criterion componentIdRestriction = null;
 
-            // loop through all the components
-            for (int c = 0; c < components.size(); c++) {
-                JSONObject component = components.get(c);
-
-                if (component != null) {
-                    try {
-
-                        Criterion nodeIdRestriction = null;
-                        Criterion componentIdRestriction = null;
-
-                        if (component.has("nodeId")) {
-                            // the node id was provided
-                            String tempNodeId = component.getString("nodeId");
-                            nodeIdRestriction = Restrictions.eq("nodeId", tempNodeId);
-                        } else {
-                            // the node id was not provided so we will require the nodeId to be null
-                            nodeIdRestriction = Restrictions.isNull("nodeId");
-                        }
-
-                        if (component.has("componentId")) {
-                            // the component id was provided
-                            String tempComponentId = component.getString("componentId");
-                            componentIdRestriction = Restrictions.eq("componentId", tempComponentId);
-                        } else {
-                            // the component id was not provided so we will require the componentId to be null
-                            componentIdRestriction = Restrictions.isNull("componentId");
-                        }
-
-                        // require the node id and component id to match by using an 'and' conditional
-                        Conjunction conjunction = Restrictions.conjunction(nodeIdRestriction, componentIdRestriction);
-
-                        // add the restriction to the 'or' conditional
-                        disjunction.add(conjunction);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+            if (component.has("nodeId")) {
+              // the node id was provided
+              String tempNodeId = component.getString("nodeId");
+              nodeIdRestriction = Restrictions.eq("nodeId", tempNodeId);
+            } else {
+              // the node id was not provided so we will require the nodeId to be null
+              nodeIdRestriction = Restrictions.isNull("nodeId");
             }
 
-            // add the restriction to the main criteria
-            sessionCriteria.add(disjunction);
+            if (component.has("componentId")) {
+              // the component id was provided
+              String tempComponentId = component.getString("componentId");
+              componentIdRestriction = Restrictions.eq("componentId", tempComponentId);
+            } else {
+              // the component id was not provided so we will require the componentId to be null
+              componentIdRestriction = Restrictions.isNull("componentId");
+            }
+
+            // require the node id and component id to match by using an 'and' conditional
+            Conjunction conjunction = Restrictions.conjunction(nodeIdRestriction, componentIdRestriction);
+
+            // add the restriction to the 'or' conditional
+            disjunction.add(conjunction);
+          } catch (JSONException e) {
+            e.printStackTrace();
+          }
         }
+      }
 
-        // order the student work by server save time from oldest to newest
-        sessionCriteria.addOrder(Order.asc("serverSaveTime"));
-
-        return sessionCriteria.list();
+      // add the restriction to the main criteria
+      sessionCriteria.add(disjunction);
     }
+
+    // order the student work by server save time from oldest to newest
+    sessionCriteria.addOrder(Order.asc("serverSaveTime"));
+
+    return sessionCriteria.list();
+  }
 }

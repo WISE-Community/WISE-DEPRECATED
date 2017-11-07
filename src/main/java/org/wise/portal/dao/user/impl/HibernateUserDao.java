@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -41,196 +41,195 @@ import org.wise.portal.domain.user.impl.UserImpl;
  * @author Cynick Young
  */
 @Repository
-public class HibernateUserDao extends AbstractHibernateDao<User> implements
-        UserDao<User> {
+public class HibernateUserDao extends AbstractHibernateDao<User> implements UserDao<User> {
 
-    private static final String FIND_ALL_QUERY = "from UserImpl";
+  private static final String FIND_ALL_QUERY = "from UserImpl";
 
-    /**
-     * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
-     */
-    @Override
-    protected String getFindAllQuery() {
-        return FIND_ALL_QUERY;
-    }
+  /**
+   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
+   */
+  @Override
+  protected String getFindAllQuery() {
+    return FIND_ALL_QUERY;
+  }
 
-    /**
-     * @see org.wise.portal.dao.user.UserDao#retrieveByUserDetails(org.acegisecurity.userdetails.UserDetails)
-     */
-    public User retrieveByUserDetails(UserDetails userDetails) {
-        return (User) DataAccessUtils
-                .uniqueResult(this
-                        .getHibernateTemplate()
-                        .findByNamedParam(
-                                "from UserImpl as user where user.userDetails = :userDetails",
-                                "userDetails", userDetails));
-    }
-
-	/**
-	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
-	 */
-	@Override
-	protected Class<UserImpl> getDataObjectClass() {
-		return UserImpl.class;
-	}
-
-	/**
-	 * @see org.wise.portal.dao.user.UserDao#retrieveAllUsernames()
-	 */
-	@SuppressWarnings("unchecked")
-	public List<String> retrieveAll(String selectClause) {
-		return (List<String>) this.getHibernateTemplate().find("select " + selectClause + " from UserImpl");
-	}
-
-    /**
-     * @see org.wise.portal.dao.user.UserDao#retrieveByUsername(java.lang.String)
-     */
-    public User retrieveByUsername(String username) {
-        return (User) DataAccessUtils
-                .requiredUniqueResult(this
-                        .getHibernateTemplate()
-                        .findByNamedParam(
-                                "from UserImpl as user where upper(user.userDetails.username) = :username",
-                                "username", username.toUpperCase()));
-    }
-    
-    /**
-     * @see org.wise.portal.dao.user.UserDao#retrieveByEmailAddress(java.lang.String)
-     */
-    @SuppressWarnings("unchecked")
-	public List<User> retrieveByEmailAddress(String emailAddress) {
-        return (List<User>) this
+  /**
+   * @see org.wise.portal.dao.user.UserDao#retrieveByUserDetails(org.acegisecurity.userdetails.UserDetails)
+   */
+  public User retrieveByUserDetails(UserDetails userDetails) {
+    return (User) DataAccessUtils
+      .uniqueResult(this
         .getHibernateTemplate()
         .findByNamedParam(
-                "from UserImpl as user where user.userDetails.emailAddress = :emailAddress",
-                "emailAddress", emailAddress);
-    }
+          "from UserImpl as user where user.userDetails = :userDetails",
+          "userDetails", userDetails));
+  }
 
-    /**
-     * @see org.wise.portal.dao.user.UserDao#retrieveDisabledUsers()
-     */
-    @SuppressWarnings("unchecked")
-	public List<User> retrieveDisabledUsers() {
-        return (List<User>) this
+  /**
+   * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
+   */
+  @Override
+  protected Class<UserImpl> getDataObjectClass() {
+    return UserImpl.class;
+  }
+
+  /**
+   * @see org.wise.portal.dao.user.UserDao#retrieveAllUsernames()
+   */
+  @SuppressWarnings("unchecked")
+  public List<String> retrieveAll(String selectClause) {
+    return (List<String>) this.getHibernateTemplate().find("select " + selectClause + " from UserImpl");
+  }
+
+  /**
+   * @see org.wise.portal.dao.user.UserDao#retrieveByUsername(java.lang.String)
+   */
+  public User retrieveByUsername(String username) {
+    return (User) DataAccessUtils
+      .requiredUniqueResult(this
         .getHibernateTemplate()
         .findByNamedParam(
-                "from UserImpl as user where user.userDetails.enabled = :enabled",
-                "enabled", false);
+          "from UserImpl as user where upper(user.userDetails.username) = :username",
+          "username", username.toUpperCase()));
+  }
+
+  /**
+   * @see org.wise.portal.dao.user.UserDao#retrieveByEmailAddress(java.lang.String)
+   */
+  @SuppressWarnings("unchecked")
+  public List<User> retrieveByEmailAddress(String emailAddress) {
+    return (List<User>) this
+      .getHibernateTemplate()
+      .findByNamedParam(
+        "from UserImpl as user where user.userDetails.emailAddress = :emailAddress",
+        "emailAddress", emailAddress);
+  }
+
+  /**
+   * @see org.wise.portal.dao.user.UserDao#retrieveDisabledUsers()
+   */
+  @SuppressWarnings("unchecked")
+  public List<User> retrieveDisabledUsers() {
+    return (List<User>) this
+      .getHibernateTemplate()
+      .findByNamedParam(
+        "from UserImpl as user where user.userDetails.enabled = :enabled",
+        "enabled", false);
+  }
+
+  /**
+   * @see org.wise.portal.dao.user.UserDao#retrieveByField(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+   */
+  @SuppressWarnings("unchecked")
+  public List<User> retrieveByField(String field, String type, Object term, String classVar){
+    if (field == null && type == null && term == null) {
+      return (List<User>) this.getHibernateTemplate().find(
+        "select user from UserImpl user, " + capitalizeFirst(classVar) + " " +
+          classVar +  " where user.userDetails.id = " + classVar + ".id");
+    } else if ("id".equals(field)) {
+      // handle id specifically by looking for user.id instead of user.userDetails.id
+      return (List<User>) this.getHibernateTemplate().findByNamedParam(
+        "select user from UserImpl user, " + capitalizeFirst(classVar) + " " +
+          classVar +  " where user.userDetails.id = " + classVar + ".id and user.id " + type + " :term", "term", term);
+    } else {
+      return (List<User>) this.getHibernateTemplate().findByNamedParam(
+        "select user from UserImpl user, " + capitalizeFirst(classVar) + " " +
+          classVar +  " where user.userDetails.id = " + classVar + ".id and " +
+          classVar + "."  + field + " " +  type + " :term", "term", term);
     }
-    
-    /**
-     * @see org.wise.portal.dao.user.UserDao#retrieveByField(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
-     */
-    @SuppressWarnings("unchecked")
-    public List<User> retrieveByField(String field, String type, Object term, String classVar){
-    	if (field == null && type == null && term == null) {
-    		return (List<User>) this.getHibernateTemplate().find(
-    				"select user from UserImpl user, " + capitalizeFirst(classVar) + " " +
-    				classVar +	" where user.userDetails.id = " + classVar + ".id");
-    	} else if ("id".equals(field)) {
-    		// handle id specifically by looking for user.id instead of user.userDetails.id
-			return (List<User>) this.getHibernateTemplate().findByNamedParam(
-					"select user from UserImpl user, " + capitalizeFirst(classVar) + " " +
-							classVar +	" where user.userDetails.id = " + classVar + ".id and user.id " + type + " :term", "term", term);
-		} else {
-    		return (List<User>) this.getHibernateTemplate().findByNamedParam(
-    				"select user from UserImpl user, " + capitalizeFirst(classVar) + " " +
-    				classVar +	" where user.userDetails.id = " + classVar + ".id and " +
-    				classVar + "."	+ field + " " +	type + " :term", "term", term);
-    	}
-    }
-    
-    /**
-     * Capitalizes the first letter of a given String
-     * 
-     * @param string
-     * @return String
-     */
-    private String capitalizeFirst(String string){
-    	return StringUtils.upperCase(StringUtils.left(string, 1)) 
-    		+ StringUtils.right(string, string.length() - 1);
-    }
+  }
 
-    /**
-     * Get all the Users that have fields with the given matching values
-     * @param fields an array of field names
-     * e.g.
-     * 'firstname'
-     * 'lastname'
-     * 'birthmonth'
-     * 'birthday'
-     * 
-     * @param values an array of values, the index of a value must line up with
-     * the index in the field array
-     * e.g.
-     * fields[0] = "firstname"
-     * fields[1] = "lastname"
-     * 
-     * values[0] = "Spongebob"
-     * values[1] = "Squarepants"
-     * 
-     * @param classVar 'studentUserDetails' or 'teacherUserDetails'
-     * @return a list of Users that have matching values for the given fields
-     */
-    @SuppressWarnings("unchecked")
-    public List<User> retrieveByFields(String[] fields, String[] values, String classVar) {
-		HashMap<String, Object> params = new HashMap<>();
-		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-		StringBuffer query = new StringBuffer();
+  /**
+   * Capitalizes the first letter of a given String
+   *
+   * @param string
+   * @return String
+   */
+  private String capitalizeFirst(String string){
+    return StringUtils.upperCase(StringUtils.left(string, 1))
+      + StringUtils.right(string, string.length() - 1);
+  }
 
-    	// make the beginning of the query
-    	query.append("select user from UserImpl user, " + capitalizeFirst(classVar) + " " + classVar + " where ");
-    	query.append("user.userDetails.id=" + classVar + ".id");
+  /**
+   * Get all the Users that have fields with the given matching values
+   * @param fields an array of field names
+   * e.g.
+   * 'firstname'
+   * 'lastname'
+   * 'birthmonth'
+   * 'birthday'
+   *
+   * @param values an array of values, the index of a value must line up with
+   * the index in the field array
+   * e.g.
+   * fields[0] = "firstname"
+   * fields[1] = "lastname"
+   *
+   * values[0] = "Spongebob"
+   * values[1] = "Squarepants"
+   *
+   * @param classVar 'studentUserDetails' or 'teacherUserDetails'
+   * @return a list of Users that have matching values for the given fields
+   */
+  @SuppressWarnings("unchecked")
+  public List<User> retrieveByFields(String[] fields, String[] values, String classVar) {
+    HashMap<String, Object> params = new HashMap<>();
+    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+    StringBuffer query = new StringBuffer();
 
-    	// loop through all the fields so we can add more constraints to the 'where' clause
-    	for (int x = 0; x < fields.length; x++) {
-    		query.append(" and ");
+    // make the beginning of the query
+    query.append("select user from UserImpl user, " + capitalizeFirst(classVar) + " " + classVar + " where ");
+    query.append("user.userDetails.id=" + classVar + ".id");
 
-    		if (fields[x] != null && (fields[x].equals("birthmonth") || fields[x].equals("birthday"))) {
-    			//field is a birth month or birth day so we need to use a special function call
-    			if (fields[x].equals("birthmonth")) {
-    				query.append("month(" + classVar + ".birthday)=:birthmonth");
-					params.put("birthmonth", Integer.parseInt(values[x]));
-    			} else if(fields[x].equals("birthday")) {
-    				query.append("day(" + classVar + ".birthday)=:birthday");
-					params.put("birthday", Integer.parseInt(values[x]));
-    			}
-    		} else {
-    			//add the constraint
-    			query.append(classVar + "." + fields[x] + "=:" + fields[x]);
-				params.put(fields[x], values[x]);
-    		}
-    	}
+    // loop through all the fields so we can add more constraints to the 'where' clause
+    for (int x = 0; x < fields.length; x++) {
+      query.append(" and ");
 
-		Query queryObject = session.createQuery(query.toString());
-		for (Map.Entry<String, Object> entry : params.entrySet()) {
-			queryObject.setParameter(entry.getKey(), entry.getValue());
-		}
-
-		// run the query and return the results
-		List<User> result = queryObject.list();
-    	return result;
+      if (fields[x] != null && (fields[x].equals("birthmonth") || fields[x].equals("birthday"))) {
+        //field is a birth month or birth day so we need to use a special function call
+        if (fields[x].equals("birthmonth")) {
+          query.append("month(" + classVar + ".birthday)=:birthmonth");
+          params.put("birthmonth", Integer.parseInt(values[x]));
+        } else if(fields[x].equals("birthday")) {
+          query.append("day(" + classVar + ".birthday)=:birthday");
+          params.put("birthday", Integer.parseInt(values[x]));
+        }
+      } else {
+        //add the constraint
+        query.append(classVar + "." + fields[x] + "=:" + fields[x]);
+        params.put(fields[x], values[x]);
+      }
     }
 
-    /**
-     * Given a reset password key retrieve a corresponding user.
-     * @param resetPasswordKey an alphanumeric key
-     * @return a User object or null if there is no user with the given reset password key
-     */
-	@Override
-	public User retrieveByResetPasswordKey(String resetPasswordKey) {
-		User user = null;
-		try {
-	        user = (User) DataAccessUtils
-	                .requiredUniqueResult(this
-	                        .getHibernateTemplate()
-	                        .findByNamedParam(
-	                                "from UserImpl as user where user.userDetails.resetPasswordKey = :resetPasswordKey",
-	                                "resetPasswordKey", resetPasswordKey));
-		} catch(EmptyResultDataAccessException e) {
-			e.printStackTrace();
-		}
-        
-        return user;
-	}
+    Query queryObject = session.createQuery(query.toString());
+    for (Map.Entry<String, Object> entry : params.entrySet()) {
+      queryObject.setParameter(entry.getKey(), entry.getValue());
+    }
+
+    // run the query and return the results
+    List<User> result = queryObject.list();
+    return result;
+  }
+
+  /**
+   * Given a reset password key retrieve a corresponding user.
+   * @param resetPasswordKey an alphanumeric key
+   * @return a User object or null if there is no user with the given reset password key
+   */
+  @Override
+  public User retrieveByResetPasswordKey(String resetPasswordKey) {
+    User user = null;
+    try {
+      user = (User) DataAccessUtils
+        .requiredUniqueResult(this
+          .getHibernateTemplate()
+          .findByNamedParam(
+            "from UserImpl as user where user.userDetails.resetPasswordKey = :resetPasswordKey",
+            "resetPasswordKey", resetPasswordKey));
+    } catch(EmptyResultDataAccessException e) {
+      e.printStackTrace();
+    }
+
+    return user;
+  }
 }
