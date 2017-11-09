@@ -357,22 +357,23 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
       String userName = wiseWebSocketSession.getUserName();
       Long runId = wiseWebSocketSession.getRunId();
 
-      // add the user name and run id
-      messageJSON.put("userName", userName);
-      messageJSON.put("runId", runId);
+      if (runId != null) {
+        // add the user name and run id
+        messageJSON.put("userName", userName);
+        messageJSON.put("runId", runId);
 
-      String message = messageJSON.toString();  // get the message as a string
+        String message = messageJSON.toString();  // get the message as a string
 
-      // get all the teachers that are currently connected for this run
-      Set<WISEWebSocketSession> teacherConnectionsForRun = getTeacherConnectionsForRun(runId);
+        // get all the teachers that are currently connected for this run
+        Set<WISEWebSocketSession> teacherConnectionsForRun = getTeacherConnectionsForRun(runId);
 
-      // send the message to all the teachers currently connected for this run
-      sendMessageToConnections(message, teacherConnectionsForRun);
+        // send the message to all the teachers currently connected for this run
+        sendMessageToConnections(message, teacherConnectionsForRun);
 
-      // also send updated studentsOnline list to all the teacher currently connected for this run
-      JSONObject studentsOnlineMessage = createStudentsOnlineMessage(wiseWebSocketSession);
-      sendMessageToConnections(studentsOnlineMessage.toString(), teacherConnectionsForRun);
-
+        // also send updated studentsOnline list to all the teacher currently connected for this run
+        JSONObject studentsOnlineMessage = createStudentsOnlineMessage(wiseWebSocketSession);
+        sendMessageToConnections(studentsOnlineMessage.toString(), teacherConnectionsForRun);
+      }
     } catch (JSONException e) {
       e.printStackTrace();
     }
@@ -497,37 +498,39 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    * @param wiseWebSocketSession the WISEWebSocketSession to remove from our collections
    */
   private void removeSession(WISEWebSocketSession wiseWebSocketSession) {
+    removeWebSocketSessionFromRunConnections(wiseWebSocketSession);
+    removeWebSocketSessionfromSessions(wiseWebSocketSession);
+    removeWebSocketSessionFromUsers(wiseWebSocketSession);
+  }
 
-    if (wiseWebSocketSession != null) {
+  private void removeWebSocketSessionFromUsers(WISEWebSocketSession wiseWebSocketSession) {
+    User user = wiseWebSocketSession.getUser();
+    userToWISEWebSocketSession.remove(user);
+  }
 
-      WebSocketSession session = wiseWebSocketSession.getSession();  // get the session
+  private void removeWebSocketSessionfromSessions(WISEWebSocketSession wiseWebSocketSession) {
+    WebSocketSession session = wiseWebSocketSession.getSession();
+    sessionToWISEWebSocketSession.remove(session);
+  }
 
-      User user = wiseWebSocketSession.getUser();  //get the user
-
-      if (session != null) {
-
-        Long runId = getValueFromSession(session, "runId");  //get the run id
-
-        if (wiseWebSocketSession.isTeacher()) {
-          // user is a teacher so we will get the set of teacher connections for the run
-          Set<WISEWebSocketSession> teacherConnectionsForRun = runToTeacherConnections.get(runId);
-
-          if (teacherConnectionsForRun != null) {
-            // remove the teacher session from the set of teacher connections for the run
-            teacherConnectionsForRun.remove(wiseWebSocketSession);
-          }
-        } else {
-          // user is a student so we will get the set of student connections for the run
-          Set<WISEWebSocketSession> studentConnectionsForRun = runToStudentConnections.get(runId);
-
-          if (studentConnectionsForRun != null) {
-            // remove the student session from the set of student connections for the run
-            studentConnectionsForRun.remove(wiseWebSocketSession);
-          }
+  private void removeWebSocketSessionFromRunConnections(WISEWebSocketSession wiseWebSocketSession) {
+    WebSocketSession session = wiseWebSocketSession.getSession();
+    Long runId = getValueFromSession(session, "runId");
+    if (runId != null) {
+      if (wiseWebSocketSession.isTeacher()) {
+        // user is a teacher so we will get the set of teacher connections for the run
+        Set<WISEWebSocketSession> teacherConnectionsForRun = runToTeacherConnections.get(runId);
+        if (teacherConnectionsForRun != null) {
+          // remove the teacher session from the set of teacher connections for the run
+          teacherConnectionsForRun.remove(wiseWebSocketSession);
         }
-
-        sessionToWISEWebSocketSession.remove(session);
-        userToWISEWebSocketSession.remove(user);
+      } else {
+        // user is a student so we will get the set of student connections for the run
+        Set<WISEWebSocketSession> studentConnectionsForRun = runToStudentConnections.get(runId);
+        if (studentConnectionsForRun != null) {
+          // remove the student session from the set of student connections for the run
+          studentConnectionsForRun.remove(wiseWebSocketSession);
+        }
       }
     }
   }
