@@ -1028,14 +1028,13 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
       setFirstName(firstName);
       setLastName(lastName);
 
-
-      if (WISETextWebSocketHandler.isTeacher(signedInUser)) {
+      if (signedInUser.isTeacher()) {
         //get the user name
         userName = getUserName(user);
 
         //the user is a teacher
         setTeacher(true);
-      } else if (WISETextWebSocketHandler.isStudent(signedInUser)) {
+      } else if (signedInUser.isStudent()) {
         //the user is a student so we will get the user names of everyone in their workgroup
         userName = getWorkgroupUserNames(workgroupId);
 
@@ -1282,12 +1281,12 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
     Long projectId = getValueFromSession(session, "projectId"); //get the project id
 
     if (user != null) {
-      if (isTeacher(user) && runId != null) {
+      if (user.isTeacher() && runId != null) {
         //user is a teacher using the classroom monitor
 
         //make sure the teacher is the owner of the run
         validated = validateTeacher(user, runId);
-      } else if (isStudent(user)) {
+      } else if (user.isStudent()) {
         //get the run id, period id, workgroup id
         Long periodId = getValueFromSession(session, "periodId");
         Long workgroupId = getValueFromSession(session, "workgroupId");
@@ -1368,54 +1367,6 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
     }
 
     return validated;
-  }
-
-  /**
-   * Check if the user is a teacher
-   * @param user the user
-   * @return whether the user is a teacher
-   */
-  private static boolean isTeacher(User user) {
-    boolean isTeacher = false;
-
-    if (user != null) {
-      //get the user details
-      MutableUserDetails userDetails = user.getUserDetails();
-
-      if (userDetails != null) {
-        //check if the user details is a teacher user details
-        if (userDetails instanceof TeacherUserDetails) {
-          //the user is a teacher
-          isTeacher = true;
-        }
-      }
-    }
-
-    return isTeacher;
-  }
-
-  /**
-   * Check if the user is a student
-   * @param user the user
-   * @return whether the user is a student
-   */
-  private static boolean isStudent(User user) {
-    boolean isStudent = false;
-
-    if (user != null) {
-      //get the user details
-      MutableUserDetails userDetails = user.getUserDetails();
-
-      if (userDetails != null) {
-        //check if the user details is a student user details
-        if (userDetails instanceof StudentUserDetails) {
-          //the user is a student
-          isStudent = true;
-        }
-      }
-    }
-
-    return isStudent;
   }
 
   /**

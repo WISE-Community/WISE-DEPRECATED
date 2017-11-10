@@ -80,7 +80,7 @@ public class UserImpl implements User {
   }
 
   /**
-   * @see User#isAdmin()
+   * @see User#isStudent()
    */
   public boolean isStudent(){
     return this.userDetails.hasGrantedAuthority(UserDetailsService.STUDENT_ROLE);
@@ -101,7 +101,7 @@ public class UserImpl implements User {
   }
 
   /**
-   * @see User#isAdmin()
+   * @see User#isTrustedAuthor()
    */
   public boolean isTrustedAuthor(){
     return this.userDetails.hasGrantedAuthority(UserDetailsService.TRUSTED_AUTHOR_ROLE);
