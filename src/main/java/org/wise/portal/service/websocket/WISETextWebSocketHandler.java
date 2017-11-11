@@ -40,8 +40,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.authentication.impl.StudentUserDetails;
-import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
@@ -753,13 +751,13 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
       Long workgroupId = getValueFromSession(session, "workgroupId");
       Long runId = getValueFromSession(session, "runId");
       Long projectId = getValueFromSession(session, "projectId");
-      String firstName = getFirstName(user);
-      String lastName = getLastName(user);
-      String userName = null;
       setUser(signedInUser);
+      String userName = null;
       setRunId(runId);
       setProjectId(projectId);
       setWorkgroupId(workgroupId);
+      String firstName = getFirstName(user);
+      String lastName = getLastName(user);
       setFirstName(firstName);
       setLastName(lastName);
       if (signedInUser.isTeacher()) {
@@ -775,61 +773,19 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
       setSession(session);
     }
 
-    /**
-     * Get the first name of the user
-     * @param user the user
-     * @return the first name of the user
-     */
     public String getFirstName(User user) {
-      String firstName = null;
-      if (user != null) {
-        MutableUserDetails userDetails = user.getUserDetails();
-        if (userDetails instanceof TeacherUserDetails) {
-          firstName = ((TeacherUserDetails) userDetails).getFirstname();
-        } else if (userDetails instanceof StudentUserDetails) {
-          firstName = ((StudentUserDetails) userDetails).getFirstname();
-        } else {
-        }
-      }
-      return firstName;
+      MutableUserDetails userDetails = user.getUserDetails();
+      return userDetails.getFirstname();
     }
 
-    /**
-     * Get the last name of the user
-     * @param user the user
-     * @return the last name of the user
-     */
     public String getLastName(User user) {
-      String lastName = null;
-      if (user != null) {
-        MutableUserDetails userDetails = user.getUserDetails();
-        if (userDetails instanceof TeacherUserDetails) {
-          lastName = ((TeacherUserDetails) userDetails).getLastname();
-        } else if (userDetails instanceof StudentUserDetails) {
-          lastName = ((StudentUserDetails) userDetails).getLastname();
-        } else {
-        }
-      }
-      return lastName;
+      MutableUserDetails userDetails = user.getUserDetails();
+      return userDetails.getLastname();
     }
 
-    /**
-     * Get the user name of the user
-     * @param user the user
-     * @return the user name of the user
-     */
     public String getUserName(User user) {
-      String userName = null;
-      if (user != null) {
-        MutableUserDetails userDetails = user.getUserDetails();
-        if (userDetails instanceof TeacherUserDetails) {
-          userName = ((TeacherUserDetails) userDetails).getUsername();
-        } else if (userDetails instanceof StudentUserDetails) {
-          userName = ((StudentUserDetails) userDetails).getUsername();
-        } else {
-        }
-      }
-      return userName;
+      MutableUserDetails userDetails = user.getUserDetails();
+      return userDetails.getUsername();
     }
 
     /**
