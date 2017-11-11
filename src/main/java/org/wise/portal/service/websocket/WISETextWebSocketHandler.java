@@ -126,34 +126,24 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    * @throws IOException
    */
   public void onOpen(WebSocketSession session) throws IOException {
-    if (session != null) {
-      Map<String, Object> attributes = session.getAttributes();
-      Object signedInUserObject = attributes.get("signedInUser");
-      User signedInUser = null;
-      if (signedInUserObject != null) {
-        try {
-          User signedInUserFromAttributes = (User) signedInUserObject;
-          Long signedInUserId = signedInUserFromAttributes.getId();
-          signedInUser = userService.retrieveById(signedInUserId);
-        } catch (ObjectNotFoundException e) {
-          e.printStackTrace();
-        }
+    Map<String, Object> attributes = session.getAttributes();
+    Object signedInUserObject = attributes.get("signedInUser");
+    User signedInUser = null;
+    if (signedInUserObject != null) {
+      try {
+        User signedInUserFromAttributes = (User) signedInUserObject;
+        Long signedInUserId = signedInUserFromAttributes.getId();
+        signedInUser = userService.retrieveById(signedInUserId);
+      } catch (ObjectNotFoundException e) {
+        e.printStackTrace();
+        return;
       }
-      validateUser(signedInUser, session);
+    }
 
-      /*
-       * create a WISEWebSocketSession object which wraps the session object
-       * along with other user related values
-       */
+    if (validateUser(signedInUser, session)) {
       WISEWebSocketSession wiseWebSocketSession = new WISEWebSocketSession(session, signedInUser);
-      if (wiseWebSocketSession != null) {
-        /*
-         * add this WISEWebSocketSession to our collection of WISEWebSocketSessions
-         * so we can access it again later when we send or receive messages from them
-         */
-        addSession(wiseWebSocketSession);
-        handleUserConnecting(wiseWebSocketSession);
-      }
+      addSession(wiseWebSocketSession);
+      handleUserConnecting(wiseWebSocketSession);
     }
   }
 
@@ -213,13 +203,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
         JSONObject studentsOnlineMessage = createStudentsOnlineMessage(wiseWebSocketSession);
         sendMessageToConnections(studentsOnlineMessage.toString(), teacherConnectionsForRun);
 
-        if (wiseWebSocketSession.isTeacher()) {
-          // the user that has just connected is a teacher so we will send
-          // them a list of students that are also currently connected
-          sendMessage(session, studentsOnlineMessage.toString());
-        } else if (!wiseWebSocketSession.isTeacher()) {
-          // the user that has just connected is a student so we will
-          // send them a list of teachers that are also currently connected
+        if (wiseWebSocketSession.isStudent()) {
           JSONObject teachersConnectedMessage = new JSONObject();
           teachersConnectedMessage.put("messageType", "teachersOnlineList");
           JSONArray teachersOnlineList = new JSONArray();
@@ -254,10 +238,6 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    */
   private void handleUserDisconnecting(WISEWebSocketSession wiseWebSocketSession) {
     try {
-      /*
-       * create the message JSON to notify signed in users that
-       * this user has disconnected
-       */
       JSONObject messageJSON = new JSONObject();
       if (wiseWebSocketSession.isTeacher()) {
         messageJSON.put("messageType", "teacherDisconnected");
@@ -414,10 +394,6 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
     for (WISEWebSocketSession studentConnection : studentConnectionsForRun) {
       Long studentConnectionWorkgroupId = studentConnection.getWorkgroupId();
       if (workgroupId.equals(studentConnectionWorkgroupId)) {
-        /*
-         * the period id matches so we will add this student connection to
-         * our set of student connections to return
-         */
         studentConnectionResult = studentConnection;
         break;
       }
@@ -440,12 +416,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
     }
     for (WISEWebSocketSession studentConnection : studentConnectionsForRun) {
       Long studentConnectionPeriodId = studentConnection.getPeriodId();
-      // check if the period id matches the one we want
       if (periodId.equals(studentConnectionPeriodId)) {
-        /*
-         * the period id matches so we will add this student connection to
-         * our set of student connections to return
-         */
         studentConnectionsForPeriod.add(studentConnection);
       }
     }
@@ -470,7 +441,6 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
 
     ArrayList<String> sessions = openedProjectsToSessions.get(projectId);
     if (sessions != null) {
-      // now get all the logged in users who are editing this same project
       HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
         .getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
       if (allLoggedInUsers != null) {
@@ -510,21 +480,6 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
       runToTeacherConnections.put(runId, teacherConnectionsForRun);
     }
     return teacherConnectionsForRun;
-  }
-
-  /**
-   * Get all the connections for a run
-   * @param runId the run id
-   * @return all the connections including student and teacher connections
-   * for a run
-   */
-  private Set<WISEWebSocketSession> getAllConnectionsForRun(Long runId) {
-    Set<WISEWebSocketSession> allConnectionsForRun = new CopyOnWriteArraySet<WISEWebSocketSession>();
-    Set<WISEWebSocketSession> studentConnectionsForRun = getStudentConnectionsForRun(runId);
-    Set<WISEWebSocketSession> teacherConnectionsForRun = getTeacherConnectionsForRun(runId);
-    allConnectionsForRun.addAll(studentConnectionsForRun);
-    allConnectionsForRun.addAll(teacherConnectionsForRun);
-    return allConnectionsForRun;
   }
 
   /**
@@ -638,7 +593,6 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
           } else if (messageParticipants.equals("studentToStudent")) {
             //TODO
           } else if (messageParticipants.equals("studentToTeachers")) {
-            //the student is sending a message to the teachers
             sendStudentToTeachersMessage(session, messageJSON);
           } else if (messageParticipants.equals("studentToGroup")) {
             //TODO
@@ -884,6 +838,10 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
       this.workgroupId = workgroupId;
     }
 
+    private boolean isStudent() {
+      return !isTeacher;
+    }
+
     private boolean isTeacher() {
       return isTeacher;
     }
@@ -901,16 +859,14 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    */
   private boolean validateUser(User user, WebSocketSession session) {
     boolean validated = false;
-    Long runId = getValueFromSession(session, "runId"); //get the run id
-    if (user != null) {
-      if (user.isTeacher() && runId != null) {
-        validated = validateTeacher(user, runId);
-      } else if (user.isStudent()) {
-        Long periodId = getValueFromSession(session, "periodId");
-        Long workgroupId = getValueFromSession(session, "workgroupId");
-        validated = validateStudent(user, runId, periodId, workgroupId);
-      } else {
-      }
+    Long runId = getValueFromSession(session, "runId");
+    if (user.isTeacher() && runId != null) {
+      validated = validateTeacher(user, runId);
+    } else if (user.isStudent()) {
+      Long periodId = getValueFromSession(session, "periodId");
+      Long workgroupId = getValueFromSession(session, "workgroupId");
+      validated = validateStudent(user, runId, periodId, workgroupId);
+    } else {
     }
     return validated;
   }
@@ -1101,20 +1057,18 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    * @param session the websocket session object
    * @param messageJSON the message JSON object
    */
-  private void sendStudentToClassmatesInPeriodMessage(
-      WebSocketSession session, JSONObject messageJSON) {
+  private void sendStudentToClassmatesInPeriodMessage(WebSocketSession session,
+      JSONObject messageJSON) {
     try {
-      if (session != null) {
-        WISEWebSocketSession wiseWebSocketSession = sessionToWISEWebSocketSession.get(session);
-        if (wiseWebSocketSession != null) {
-          Long runId = wiseWebSocketSession.getRunId();
-          Long periodId = wiseWebSocketSession.getPeriodId();
-          messageJSON.put("runId", runId);
-          String message = messageJSON.toString();
-          Set<WISEWebSocketSession> studentConnectionsForRun =
-              getStudentConnectionsForPeriod(runId, periodId);
-          sendMessageToConnections(message, studentConnectionsForRun);
-        }
+      WISEWebSocketSession wiseWebSocketSession = sessionToWISEWebSocketSession.get(session);
+      if (wiseWebSocketSession != null) {
+        Long runId = wiseWebSocketSession.getRunId();
+        Long periodId = wiseWebSocketSession.getPeriodId();
+        messageJSON.put("runId", runId);
+        String message = messageJSON.toString();
+        Set<WISEWebSocketSession> studentConnectionsForRun =
+            getStudentConnectionsForPeriod(runId, periodId);
+        sendMessageToConnections(message, studentConnectionsForRun);
       }
     } catch (JSONException e) {
       e.printStackTrace();
@@ -1128,22 +1082,20 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    */
   private void sendAuthorToAuthorsMessage(WebSocketSession session, JSONObject messageJSON) {
     try {
-      if (session != null) {
-        WISEWebSocketSession wiseWebSocketSession = sessionToWISEWebSocketSession.get(session);
-        if (wiseWebSocketSession != null) {
-          String messageType = messageJSON.getString("messageType");
-          if ("currentAuthors".equals(messageType)) {
-            String projectId = messageJSON.getString("projectId");
-            Set<WISEWebSocketSession> authorConnections = getAuthorConnectionsForProject(projectId);
-            Set<User> currentAuthors = getCurrentAuthors(projectId);
-            JSONArray currentAuthorsUsernames = new JSONArray();
-            for (User currentAuthor : currentAuthors) {
-              currentAuthorsUsernames.put(currentAuthor.getUserDetails().getUsername());
-            }
-            messageJSON.put("currentAuthorsUsernames", currentAuthorsUsernames);
-            String message = messageJSON.toString();
-            sendMessageToConnections(message, authorConnections);
+      WISEWebSocketSession wiseWebSocketSession = sessionToWISEWebSocketSession.get(session);
+      if (wiseWebSocketSession != null) {
+        String messageType = messageJSON.getString("messageType");
+        if ("currentAuthors".equals(messageType)) {
+          String projectId = messageJSON.getString("projectId");
+          Set<WISEWebSocketSession> authorConnections = getAuthorConnectionsForProject(projectId);
+          Set<User> currentAuthors = getCurrentAuthors(projectId);
+          JSONArray currentAuthorsUsernames = new JSONArray();
+          for (User currentAuthor : currentAuthors) {
+            currentAuthorsUsernames.put(currentAuthor.getUserDetails().getUsername());
           }
+          messageJSON.put("currentAuthorsUsernames", currentAuthorsUsernames);
+          String message = messageJSON.toString();
+          sendMessageToConnections(message, authorConnections);
         }
       }
     } catch (JSONException e) {
