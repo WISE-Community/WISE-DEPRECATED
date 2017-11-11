@@ -167,9 +167,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
       // get all the students that are currently connected for this run
       Set<WISEWebSocketSession> studentConnectionsForRun = getStudentConnectionsForRun(runId);
       JSONArray studentsOnlineList = new JSONArray();
-      Iterator<WISEWebSocketSession> studentConnectionIterator = studentConnectionsForRun.iterator();
-      while (studentConnectionIterator.hasNext()) {
-        WISEWebSocketSession studentConnection = studentConnectionIterator.next();
+      for (WISEWebSocketSession studentConnection : studentConnectionsForRun) {
         Long studentConnectionWorkgroupId = studentConnection.getWorkgroupId();
         studentsOnlineList.put(studentConnectionWorkgroupId);
       }
@@ -223,11 +221,9 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
           // the user that has just connected is a student so we will
           // send them a list of teachers that are also currently connected
           JSONObject teachersConnectedMessage = new JSONObject();
-          teachersConnectedMessage.put("messageType", "teachersOnlineList"); // set the message type
+          teachersConnectedMessage.put("messageType", "teachersOnlineList");
           JSONArray teachersOnlineList = new JSONArray();
-          Iterator<WISEWebSocketSession> teacherConnectionIterator = teacherConnectionsForRun.iterator();
-          while (teacherConnectionIterator.hasNext()) {
-            WISEWebSocketSession teacherConnection = teacherConnectionIterator.next();
+          for (WISEWebSocketSession teacherConnection : teacherConnectionsForRun) {
             Long teacherConnectionWorkgroupId = teacherConnection.getWorkgroupId();
             teachersOnlineList.put(teacherConnectionWorkgroupId);
           }
@@ -297,7 +293,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
   private void addSession(WISEWebSocketSession wiseWebSocketSession) {
     Long runId = wiseWebSocketSession.getRunId();
     if (runId != null) {
-      Set<WISEWebSocketSession> connectionsForRun = null;
+      Set<WISEWebSocketSession> connectionsForRun;
       if (wiseWebSocketSession.isTeacher()) {
         connectionsForRun = runToTeacherConnections.get(runId);
         if (connectionsForRun == null) {
@@ -394,8 +390,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    * @return a set of student connections for the run
    */
   private Set<WISEWebSocketSession> getStudentConnectionsForRun(Long runId) {
-    Set<WISEWebSocketSession> studentConnectionsForRun = null;
-    studentConnectionsForRun = runToStudentConnections.get(runId);
+    Set<WISEWebSocketSession> studentConnectionsForRun = runToStudentConnections.get(runId);
     if (studentConnectionsForRun == null) {
       studentConnectionsForRun = new CopyOnWriteArraySet<WISEWebSocketSession>();
       runToStudentConnections.put(runId, studentConnectionsForRun);
@@ -410,16 +405,13 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    * @return a set of student connections for the run
    */
   private WISEWebSocketSession getStudentConnection(Long runId, Long workgroupId) {
-    Set<WISEWebSocketSession> studentConnectionsForRun = null;
+    Set<WISEWebSocketSession> studentConnectionsForRun = runToStudentConnections.get(runId);
     WISEWebSocketSession studentConnectionResult = null;
-    studentConnectionsForRun = runToStudentConnections.get(runId);
     if (studentConnectionsForRun == null) {
       studentConnectionsForRun = new CopyOnWriteArraySet<WISEWebSocketSession>();
       runToStudentConnections.put(runId, studentConnectionsForRun);
     }
-    Iterator<WISEWebSocketSession> studentConnectionsForRunIter = studentConnectionsForRun.iterator();
-    while (studentConnectionsForRunIter.hasNext()) {
-      WISEWebSocketSession studentConnection = studentConnectionsForRunIter.next();
+    for (WISEWebSocketSession studentConnection : studentConnectionsForRun) {
       Long studentConnectionWorkgroupId = studentConnection.getWorkgroupId();
       if (workgroupId.equals(studentConnectionWorkgroupId)) {
         /*
@@ -440,16 +432,13 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    * @return a set of student connections for the period
    */
   private Set<WISEWebSocketSession> getStudentConnectionsForPeriod(Long runId, Long periodId) {
-    Set<WISEWebSocketSession> studentConnectionsForRun = null;
+    Set<WISEWebSocketSession> studentConnectionsForRun = runToStudentConnections.get(runId);
     Set<WISEWebSocketSession> studentConnectionsForPeriod = new CopyOnWriteArraySet<WISEWebSocketSession>();
-    studentConnectionsForRun = runToStudentConnections.get(runId);
     if (studentConnectionsForRun == null) {
       studentConnectionsForRun = new CopyOnWriteArraySet<WISEWebSocketSession>();
       runToStudentConnections.put(runId, studentConnectionsForRun);
     }
-    Iterator<WISEWebSocketSession> studentConnectionsForRunIter = studentConnectionsForRun.iterator();
-    while(studentConnectionsForRunIter.hasNext()) {
-      WISEWebSocketSession studentConnection = studentConnectionsForRunIter.next();
+    for (WISEWebSocketSession studentConnection : studentConnectionsForRun) {
       Long studentConnectionPeriodId = studentConnection.getPeriodId();
       // check if the period id matches the one we want
       if (periodId.equals(studentConnectionPeriodId)) {
@@ -515,8 +504,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    * @return a set of teacher connections
    */
   private Set<WISEWebSocketSession> getTeacherConnectionsForRun(Long runId) {
-    Set<WISEWebSocketSession> teacherConnectionsForRun = null;
-    teacherConnectionsForRun = runToTeacherConnections.get(runId);
+    Set<WISEWebSocketSession> teacherConnectionsForRun = runToTeacherConnections.get(runId);
     if (teacherConnectionsForRun == null) {
       teacherConnectionsForRun = new CopyOnWriteArraySet<WISEWebSocketSession>();
       runToTeacherConnections.put(runId, teacherConnectionsForRun);
@@ -581,8 +569,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
        */
       if (query != null) {
         String[] querySplit = query.split("&");
-        for (int x = 0; x < querySplit.length; x++) {
-          String parameter = querySplit[x];
+        for (String parameter : querySplit) {
           if (parameter != null) {
             /*
              * split the string by '=' so we obtain something like
@@ -638,7 +625,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
   public void handleMessage(WebSocketSession session, String message) {
     String messageString = message.toString();
     try {
-      if (messageString != null && !messageString.equals("")) {
+      if (!messageString.isEmpty()) {
         JSONObject messageJSON = new JSONObject(messageString);
         if (messageJSON.has("messageParticipants")) {
           /*
@@ -800,10 +787,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
       StringBuffer workgroupUserNames = new StringBuffer();
       try {
         Workgroup workgroup = workgroupService.retrieveById(workgroupId);
-        Set<User> members = workgroup.getMembers();
-        Iterator<User> membersIterator = members.iterator();
-        while (membersIterator.hasNext()) {
-          User user = membersIterator.next();
+        for (User user : workgroup.getMembers()) {
           String firstName = getFirstName(user);
           String lastName = getLastName(user);
           String userName = getUserName(user);
