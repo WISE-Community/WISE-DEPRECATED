@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -41,6 +42,9 @@ import org.json.JSONObject;
  */
 public class JGitUtils {
 
+  /**
+   * Returns commit history for the specified directory
+   */
   public static JSONArray getCommitHistoryJSONArray(String fullProjectDir)
       throws IOException, GitAPIException, JSONException {
     Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(fullProjectDir);
@@ -62,13 +66,6 @@ public class JGitUtils {
     return commitHistoryJSONArray;
   }
 
-  /**
-   * Returns commit history for specified directory
-   *
-   * @param directoryPath
-   * @throws IOException
-   * @throws GitAPIException
-   */
   private static Iterable<RevCommit> getCommitHistory(String directoryPath)
       throws IOException, GitAPIException {
     boolean doCreate = false;
@@ -84,47 +81,55 @@ public class JGitUtils {
   }
 
   /**
-   * Adds all changes in specified directory to git index and then commits them
+   * Adds changes to project.json file in specified directory to git index and then commits them
    * with the specified commit message
    *
    * @param directoryPath
    * @param author author username
+   * @param authorEmail
    * @param commitMessage
    * @throws IOException
    * @throws GitAPIException
    */
-  public static void commitAllChangesToCurriculumHistory(String directoryPath, String author,
-      String commitMessage) throws IOException, GitAPIException {
+  public static void commitChangesToProjectJSON(String directoryPath, String author,
+      String authorEmail, String commitMessage) throws IOException, GitAPIException {
     boolean doCreate = true;
     Repository gitRepository = getGitRepository(directoryPath, doCreate);
     Git git = new Git(gitRepository);
-    git.add().addFilepattern(".").call();
-    String email = "";
-    git.commit()
-        .setAll(true)
-        .setAuthor(author, email)
+    git
+        .add()
+        .addFilepattern("project.json")
+        .call();
+    git
+        .commit()
+        .setAuthor(author, authorEmail)
         .setMessage(commitMessage)
         .call();
     gitRepository.close();
   }
 
-  /**
-   * @param directoryPath
-   * @param doCreate create the directory if it doesn't exit
-   * @throws IOException
-   */
   private static Repository getGitRepository(String directoryPath, boolean doCreate)
       throws IOException {
-    File localPath = new File(directoryPath);
-    File gitDir = new File(localPath, ".git");
+    File projectPath = new File(directoryPath);
+    File gitDir = new File(projectPath, ".git");
     if (!doCreate && !gitDir.exists()) {
       return null;
     } else {
       Repository repository = FileRepositoryBuilder.create(gitDir);
       if (doCreate && !gitDir.exists()) {
         repository.create();
+        addGitIgnoreFileToProject(projectPath);
       }
       return repository;
+    }
+  }
+
+  private static void addGitIgnoreFileToProject(File projectPath) throws IOException {
+    File gitIgnore = new File(projectPath, ".gitignore");
+    if (!gitIgnore.exists()) {
+      gitIgnore.createNewFile();
+      String ignoreRule = "assets";
+      FileUtils.writeStringToFile(gitIgnore, ignoreRule);
     }
   }
 }

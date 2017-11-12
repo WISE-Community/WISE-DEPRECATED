@@ -330,10 +330,14 @@ public class PersistentUserDetails implements MutableUserDetails {
   }
 
   /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableUserDetails#getEmailAddress()
+   * @see MutableUserDetails#getEmailAddress()
    */
   public String getEmailAddress() {
-    return emailAddress;
+    if (emailAddress != null) {
+      return emailAddress;
+    } else {
+      return "";
+    }
   }
 
   /**

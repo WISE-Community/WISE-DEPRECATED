@@ -171,13 +171,7 @@ public class WISE5AuthorProjectController {
 
       Project project = projectService.createProject(pParams);
       response.getWriter().write(project.getId().toString());
-      try {
-        String author = user.getUserDetails().getUsername();
-        JGitUtils.commitAllChangesToCurriculumHistory(
-            newProjectPath.getAbsolutePath(), author, commitMessage);
-      } catch (GitAPIException e) {
-        e.printStackTrace();
-      }
+      commitChangesToProjectJSON(commitMessage, user, newProjectPath.getAbsolutePath());
     } catch(IOException e) {
       e.printStackTrace();
     } catch (ObjectNotFoundException e) {
@@ -245,18 +239,16 @@ public class WISE5AuthorProjectController {
   }
 
   /**
-   * Save project and and commit changes
+   * Save project and and commit changes to project.json file
    * @param projectId id of project to save
    * @param commitMessage commit message, can be null
    * @param projectJSONString a valid-JSON string of the project
-   * @param response
    */
   @RequestMapping(value = "/project/save/{projectId}", method = RequestMethod.POST)
   protected void saveProject(
       @PathVariable Long projectId,
       @RequestParam(value = "commitMessage") String commitMessage,
-      @RequestParam(value = "projectJSONString") String projectJSONString,
-      HttpServletResponse response) {
+      @RequestParam(value = "projectJSONString") String projectJSONString) {
     Project project;
     try {
       project = projectService.getById(projectId);
@@ -284,12 +276,11 @@ public class WISE5AuthorProjectController {
       writer.write(projectJSONString.toString());
       writer.close();
 
-      // check if we need to update the project name or metadata in the project table in the db
       try {
         JSONObject projectJSONObject = new JSONObject(projectJSONString);
         JSONObject projectMetadataJSON = projectJSONObject.getJSONObject("metadata");
         if (projectMetadataJSON != null) {
-          project.setMetadata(projectMetadataJSON.toString()); // update the project.metadata field with the metadata in project.json content
+          project.setMetadata(projectMetadataJSON.toString());
           String projectTitle = projectMetadataJSON.getString("title");
           if (projectTitle != null && !projectTitle.equals(project.getName())) {
             project.setName(projectTitle);
@@ -301,18 +292,20 @@ public class WISE5AuthorProjectController {
       } catch (NotAuthorizedException e) {
         e.printStackTrace();
       }
-
-      try {
-        String author = user.getUserDetails().getUsername();
-        JGitUtils.commitAllChangesToCurriculumHistory(fullProjectDir, author, commitMessage);
-        JSONArray commitHistoryJSONArray = JGitUtils.getCommitHistoryJSONArray(fullProjectDir);
-        response.getWriter().print(commitHistoryJSONArray);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      } catch (GitAPIException e) {
-        e.printStackTrace();
-      }
+      commitChangesToProjectJSON(commitMessage, user, fullProjectDir);
     } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void commitChangesToProjectJSON(String commitMessage, User user, String fullProjectDir)
+      throws IOException {
+    try {
+      String authorUsername = user.getUserDetails().getUsername();
+      String authorEmail = user.getUserDetails().getEmailAddress();
+      JGitUtils.commitChangesToProjectJSON(fullProjectDir, authorUsername,
+          authorEmail, commitMessage);
+    } catch (GitAPIException e) {
       e.printStackTrace();
     }
   }
