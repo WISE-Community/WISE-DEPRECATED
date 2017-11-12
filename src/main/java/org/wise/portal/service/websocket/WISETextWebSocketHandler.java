@@ -40,11 +40,13 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.listeners.WISESessionListener;
+import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.vle.VLEService;
@@ -60,6 +62,9 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
 
   @Autowired
   private RunService runService;
+
+  @Autowired
+  private ProjectService projectService;
 
   @Autowired
   private WorkgroupService workgroupService;
@@ -859,12 +864,12 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    */
   private boolean validateUser(User user, WebSocketSession session) {
     boolean validated = false;
-    Long runId = getValueFromSession(session, "runId");
-    if (user.isTeacher() && runId != null) {
-      validated = validateTeacher(user, runId);
+    if (user.isTeacher()) {
+      return validateTeacher(user, session);
     } else if (user.isStudent()) {
       Long periodId = getValueFromSession(session, "periodId");
       Long workgroupId = getValueFromSession(session, "workgroupId");
+      Long runId = getValueFromSession(session, "runId");
       validated = validateStudent(user, runId, periodId, workgroupId);
     } else {
     }
@@ -883,7 +888,7 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
    */
   private boolean validateStudent(User user, Long runId, Long periodId, Long workgroupId) {
     boolean result = false;
-    if (user != null && runId != null && periodId != null && workgroupId != null) {
+    if (runId != null && periodId != null && workgroupId != null) {
       try {
         Run run = runService.retrieveById(runId, true);
         if (run.isStudentAssociatedToThisRun(user)) {
@@ -900,28 +905,36 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
   }
 
   /**
-   * Validate the teacher by making sure they are the owner of the run
+   * Validate the teacher by making sure they are the owner of the run (CM) or project id (AT)
    * @param user the signed in user
-   * @param runId the run id
-   * @return whether the user is an owner of the run
+   * @param session the run id
+   * @return whether the user can access the run or project
    */
-  private boolean validateTeacher(User user, Long runId) {
-    boolean validated = false;
-    if (user != null && runId != null) {
+  private boolean validateTeacher(User user, WebSocketSession session) {
+    Long runId = getValueFromSession(session, "runId");
+    Long projectId = getValueFromSession(session, "projectId");
+    if (runId != null) {
       try {
         Run run = runService.retrieveById(runId);
-        if (run != null) {
-          User owner = run.getOwner();
-          Set<User> sharedowners = run.getSharedowners();
-          if (owner.equals(user) || sharedowners.contains(user) || user.isAdmin()) {
-            validated = true;
-          }
+        User owner = run.getOwner();
+        Set<User> sharedowners = run.getSharedowners();
+        if (owner.equals(user) || sharedowners.contains(user) || user.isAdmin()) {
+          return true;
+        }
+      } catch (ObjectNotFoundException e) {
+        e.printStackTrace();
+      }
+    } else if (projectId != null) {
+      try {
+        Project project = projectService.getById(projectId);
+        if (projectService.canAuthorProject(project, user)) {
+          return true;
         }
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
     }
-    return validated;
+    return false;
   }
 
   /**

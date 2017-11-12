@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -24,21 +24,21 @@ var AuthorWebSocketService = function () {
 
 
     _createClass(AuthorWebSocketService, [{
-        key: 'initialize',
+        key: "initialize",
         value: function initialize() {
             var _this = this;
 
             // start the websocket connection
             var webSocketURL = this.ConfigService.getWebSocketURL();
+            webSocketURL += "?projectId=" + this.ConfigService.getProjectId();
             this.dataStream = this.$websocket(webSocketURL);
-
             // this is the function that handles messages we receive from web sockets
             this.dataStream.onMessage(function (message) {
                 _this.handleMessage(message);
             });
         }
     }, {
-        key: 'handleMessage',
+        key: "handleMessage",
         value: function handleMessage(message) {
             var data = JSON.parse(message.data);
             var messageType = data.messageType;
@@ -48,7 +48,7 @@ var AuthorWebSocketService = function () {
             }
         }
     }, {
-        key: 'sendMessage',
+        key: "sendMessage",
         value: function sendMessage(messageJSON) {
             // send the websocket message
             this.dataStream.send(messageJSON);

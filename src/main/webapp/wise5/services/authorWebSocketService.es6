@@ -12,8 +12,8 @@ class AuthorWebSocketService {
     initialize() {
         // start the websocket connection
         var webSocketURL = this.ConfigService.getWebSocketURL();
+        webSocketURL += "?projectId=" + this.ConfigService.getProjectId();
         this.dataStream = this.$websocket(webSocketURL);
-
         // this is the function that handles messages we receive from web sockets
         this.dataStream.onMessage((message) => {
             this.handleMessage(message);
