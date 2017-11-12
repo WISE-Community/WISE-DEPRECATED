@@ -394,6 +394,11 @@
       <version>3.5</version>
     </dependency>
     <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>4.1</version>
+    </dependency>
+    <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
       <version>1.4.7</version>
@@ -426,7 +431,7 @@
     <dependency>
       <groupId>org.eclipse.jgit</groupId>
       <artifactId>org.eclipse.jgit</artifactId>
-      <version>4.5.0.201609210915-r</version>
+      <version>4.9.0.201710071750-r</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

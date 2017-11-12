@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents). Created
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3.
@@ -25,53 +25,56 @@ package org.wise.portal.presentation.web.controllers.author.project;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * @author Hiroki Terashima
  */
 public class JGitUtils {
 
-  /**
-   * @param directoryPath
-   * @param doCreate create the directory if it doesn't exit
-   * @return
-   * @throws IOException
-   */
-  public static Repository getGitRepository(String directoryPath, boolean doCreate)
-      throws IOException {
-    // prepare a new folder
-    File localPath = new File(directoryPath);
-    File gitDir = new File(localPath, ".git");
-    if (!doCreate && !gitDir.exists()) {
-      return null;
-    } else {
-      Repository repository = FileRepositoryBuilder.create(gitDir);
-      if (doCreate && !gitDir.exists()) {
-        repository.create();
-      }
-      return repository;
+  public static JSONArray getCommitHistoryJSONArray(String fullProjectDir)
+      throws IOException, GitAPIException, JSONException {
+    Iterable<RevCommit> commitHistory = JGitUtils.getCommitHistory(fullProjectDir);
+    JSONArray commitHistoryJSONArray = new JSONArray();
+    for (RevCommit commit : commitHistory) {
+      JSONObject commitHistoryJSONObject = new JSONObject();
+      ObjectId commitId = commit.getId();
+      commitHistoryJSONObject.put("commitId", commitId);
+      String commitName = commit.getName();
+      commitHistoryJSONObject.put("commitName", commitName);
+      String commitMessage = commit.getFullMessage();
+      commitHistoryJSONObject.put("commitMessage", commitMessage);
+      String commitAuthor = commit.getAuthorIdent().getName();
+      commitHistoryJSONObject.put("commitAuthor", commitAuthor);
+      long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
+      commitHistoryJSONObject.put("commitTime", commitTime);
+      commitHistoryJSONArray.put(commitHistoryJSONObject);
     }
+    return commitHistoryJSONArray;
   }
 
   /**
    * Returns commit history for specified directory
    *
    * @param directoryPath
-   * @return
    * @throws IOException
    * @throws GitAPIException
    */
-  public static Iterable<RevCommit> getCommitHistory(String directoryPath)
+  private static Iterable<RevCommit> getCommitHistory(String directoryPath)
       throws IOException, GitAPIException {
     boolean doCreate = false;
     Repository gitRepository = getGitRepository(directoryPath, doCreate);
     if (gitRepository == null) {
-      return null;
+      return IterableUtils.emptyIterable();
     } else {
       Git git = new Git(gitRepository);
       Iterable<RevCommit> commits = git.log().all().call();
@@ -90,22 +93,38 @@ public class JGitUtils {
    * @throws IOException
    * @throws GitAPIException
    */
-  public static void commitAllChangesToCurriculumHistory(
-      String directoryPath, String author, String commitMessage)
-      throws IOException, GitAPIException {
+  public static void commitAllChangesToCurriculumHistory(String directoryPath, String author,
+      String commitMessage) throws IOException, GitAPIException {
     boolean doCreate = true;
     Repository gitRepository = getGitRepository(directoryPath, doCreate);
     Git git = new Git(gitRepository);
-
     git.add().addFilepattern(".").call();
-
     String email = "";
-
     git.commit()
         .setAll(true)
         .setAuthor(author, email)
         .setMessage(commitMessage)
         .call();
     gitRepository.close();
+  }
+
+  /**
+   * @param directoryPath
+   * @param doCreate create the directory if it doesn't exit
+   * @throws IOException
+   */
+  private static Repository getGitRepository(String directoryPath, boolean doCreate)
+      throws IOException {
+    File localPath = new File(directoryPath);
+    File gitDir = new File(localPath, ".git");
+    if (!doCreate && !gitDir.exists()) {
+      return null;
+    } else {
+      Repository repository = FileRepositoryBuilder.create(gitDir);
+      if (doCreate && !gitDir.exists()) {
+        repository.create();
+      }
+      return repository;
+    }
   }
 }
