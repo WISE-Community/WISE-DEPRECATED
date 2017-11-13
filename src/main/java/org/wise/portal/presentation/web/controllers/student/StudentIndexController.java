@@ -23,10 +23,7 @@
  */
 package org.wise.portal.presentation.web.controllers.student;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -59,82 +56,49 @@ public class StudentIndexController {
   private StudentService studentService;
 
   @RequestMapping(method = RequestMethod.GET)
-  protected String handleGET(
-    ModelMap modelMap,
-    @RequestParam(value = "pLT", required = false) String previousLoginTime
-  ) throws Exception {
-
+  protected String handleGET(ModelMap modelMap,
+      @RequestParam(value = "pLT", required = false) String previousLoginTime) throws Exception {
     User user = ControllerUtil.getSignedInUser();
-
     List<Run> runlist = runService.getRunList(user);
     List<StudentRunInfo> current_run_list = new ArrayList<StudentRunInfo>();
     List<StudentRunInfo> ended_run_list = new ArrayList<StudentRunInfo>();
+    Date lastLoginTime = getLastLoginTime(previousLoginTime, user);
+
     boolean hasNewAnnouncements = false;
-
-    List<Long> announcementRuns = new ArrayList<Long>();
-
-    Date lastLoginTime = null;
-    if (user.getUserDetails() != null && user.getUserDetails() instanceof StudentUserDetails) {
-      lastLoginTime = ((StudentUserDetails) user.getUserDetails()).getLastLoginTime();
-
-      for (Run run : runlist) {
-        StudentRunInfo studentRunInfo = studentService.getStudentRunInfo(user, run);
-
-        if (run.isEnded()) {
-          ended_run_list.add(studentRunInfo);
-        } else {
-          current_run_list.add(studentRunInfo);
-        }
-
-        // check if there are new announcements for this run
-        if (previousLoginTime != null) {
-          Calendar cal = Calendar.getInstance();
-          try {
-            Long previousLogin = new Long(previousLoginTime);
-            cal.setTimeInMillis(previousLogin);
-            lastLoginTime = cal.getTime();
-          } catch (NumberFormatException nfe) {
-            // if there was an exception parsing previous last login time, such as user appending pLT=1302049863000\, assume this is the lasttimelogging in
-            //lastLoginTime = cal.getTime();
-          }
-        }
-        for (Announcement announcement : run.getAnnouncements()) {
-          if (lastLoginTime == null ||
-            lastLoginTime.before(announcement.getTimestamp())) {
-            hasNewAnnouncements = true;
-            if (!announcementRuns.contains(run.getId())) {
-              announcementRuns.add(run.getId());
-            }
-          }
+    for (Run run : runlist) {
+      StudentRunInfo studentRunInfo = studentService.getStudentRunInfo(user, run);
+      if (run.isEnded()) {
+        ended_run_list.add(studentRunInfo);
+      } else {
+        current_run_list.add(studentRunInfo);
+      }
+      for (Announcement announcement : run.getAnnouncements()) {
+        if (lastLoginTime.before(announcement.getTimestamp())) {
+          hasNewAnnouncements = true;
         }
       }
     }
 
-    List<StudentRunInfo> joinedRunInfo = new ArrayList<StudentRunInfo>();
-    joinedRunInfo.addAll(current_run_list);
-    joinedRunInfo.addAll(ended_run_list);
-
-    String announcementRunIds = "none";
-    if (hasNewAnnouncements) {
-      announcementRunIds = "";
-      for (int i = 0; i < announcementRuns.size(); i++) {
-        if (i == announcementRuns.size() - 1) {
-          announcementRunIds = announcementRunIds + (announcementRuns.get(i).toString());
-        } else {
-          announcementRunIds = announcementRunIds + (announcementRuns.get(i).toString()) + ",";
-        }
-      }
-    }
-
-    Integer newAnnouncements = announcementRuns.size();
     modelMap.put("user", user);
     modelMap.put("pLT", previousLoginTime);
     modelMap.put("lastLoginTime", lastLoginTime);
-    modelMap.put("newAnnouncements", newAnnouncements);
-    modelMap.put("announcementRunIds", announcementRunIds);
+    modelMap.put("hasNewAnnouncements", hasNewAnnouncements);
     modelMap.put("current_run_list", current_run_list);
     modelMap.put("ended_run_list", ended_run_list);
-
     return "student/index";
+  }
+
+  private Date getLastLoginTime(String previousLoginTime, User user) {
+    Date lastLoginTime = ((StudentUserDetails) user.getUserDetails()).getLastLoginTime();
+    if (previousLoginTime != null) {
+      Calendar cal = Calendar.getInstance();
+      try {
+        Long previousLogin = new Long(previousLoginTime);
+        cal.setTimeInMillis(previousLogin);
+        return cal.getTime();
+      } catch (NumberFormatException nfe) {
+      }
+    }
+    return lastLoginTime;
   }
 }

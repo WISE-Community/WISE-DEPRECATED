@@ -97,7 +97,7 @@ $(document).ready(function() {
 	});
 
 	// setup announcement link click handlers
-	$('.viewAnnouncements').on('click',function(){
+	$('.viewAnnouncements').on('click',function() {
 		var runIds = $(this).attr('id').replace('viewAnnouncements_','');
 		showAnnouncements(runIds);
 	});
@@ -107,13 +107,13 @@ $(document).ready(function() {
 	** @param title String for title of dialog window
 	** @param onlyNew Boolean whether to show all announcements or only new ones
 	*/
-	function showAnnouncements(runIds,title,onlyNew){
+	function showAnnouncements(runIds, title, onlyNew) {
 		var thisTitle = "<spring:message code="student.index.messages_title"/>";
-		if(title){
+		if (title) {
 			thisTitle = title;
 		}
 		var newOnly = 'false';
-		if(onlyNew){
+		if (onlyNew) {
 			newOnly = onlyNew;
 		}
 		var previousLogin = $.cookie("pLT");
@@ -135,18 +135,14 @@ $(document).ready(function() {
 		$("#announcementsDialog > #announceIfrm").attr('src',path);
 	};
 
-	// make tabs for current/archived runs
+    <c:if test="${hasNewAnnouncements}">
+        let announcementDialogTitle = "<spring:message code="student.index.messages_new"/>";
+        let onlyShowNewFlag = 'true';
+        showAnnouncements("", announcementDialogTitle, onlyShowNewFlag);
+    </c:if>
+
+    // make tabs for current/archived runs
     $("#tabSystem").tabs();
-
-	// check for new teacher announcements and display
-	var newAnnouncements = "<c:out value="${newAnnouncements}" />";
-
-	if(newAnnouncements > 0){
-		var title = "<spring:message code="student.index.messages_new"/>";
-		var announcementRunIds = "<c:out value="${announcementRunIds}" />";
-		showAnnouncements(announcementRunIds,title,'true');
-	}
-
 });
 </script>
 
@@ -432,7 +428,6 @@ $(document).ready(function() {
 
 	<%@ include file="../footer.jsp" %>
 </div>
-
 <div id="announcementsDialog" class="dialog" style="display:none; overflow:hidden;"></div>
 </body>
 </html>
