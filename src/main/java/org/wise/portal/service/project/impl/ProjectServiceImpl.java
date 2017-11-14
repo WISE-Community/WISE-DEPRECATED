@@ -310,77 +310,57 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   /**
-   * @see org.wise.portal.service.project.ProjectService#previewProject(org.wise.portal.domain.project.impl.PreviewProjectParameters)
+   * @see ProjectService#previewProject(PreviewProjectParameters)
    */
-  @Transactional()
   public ModelAndView previewProject(PreviewProjectParameters params) throws Exception {
-
-    User user = params.getUser();
     Project project = params.getProject();
-    Set<String> tagNames = new TreeSet<String>();
-    tagNames.add("library");
-    String step = params.getStep();
+    Integer wiseVersion = project.getWiseVersion();
+    if (wiseVersion == 5) {
+      return previewProjectWISE5(project);
+    } else {
+      return previewProjectWISE4(params, project);
+    }
+  }
+
+  private ModelAndView previewProjectWISE5(Project project) {
     String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+    String wise5URL = wiseBaseURL + "/project/" + project.getId();
+    return new ModelAndView(new RedirectView(wise5URL));
+  }
 
-    if (project != null) {
-      if (project.hasTags(tagNames) ||
-        project.getFamilytag().equals(FamilyTag.TELS) || this.canReadProject(project, user)) {
+  private ModelAndView previewProjectWISE4(PreviewProjectParameters params, Project project) {
+    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+    String vleConfigUrl =
+        wiseBaseURL + "/vleconfig" + "?projectId=" + project.getId() + "&mode=preview";
 
-        Integer wiseVersion = project.getWiseVersion();
-
-        if (wiseVersion != null && wiseVersion == 5) {
-          // load WISE5
-          String wise5URL = wiseBaseURL + "/project/" + project.getId();
-          return new ModelAndView(new RedirectView(wise5URL));
-        }
-
-        String vleurl = wiseBaseURL + "/vle/vle.html";
-
-        String vleConfigUrl = wiseBaseURL + "/vleconfig" + "?projectId=" + project.getId() + "&mode=preview";
-
-        if (step != null) {
-          //this is set if the request is to preview the project and load a specific step such as 1.2
-          vleConfigUrl += "&step=" + step;
-        }
-
-        String userSpecifiedLang = params.getLang();
-        if (userSpecifiedLang != null) {
-          vleConfigUrl += "&lang=" + userSpecifiedLang;
-        }
-
-        if (params.isConstraintsDisabled()) {
-          vleConfigUrl += "&isConstraintsDisabled=true";
-        }
-
-        // if preview request is coming from the run, pass along the version id when we make a request to get the config
-        String versionId = params.getVersionId();
-        if (versionId != null && !versionId.equals("")) {
-          vleConfigUrl += "&versionId=" + versionId;
-        }
-
-        String workgroupId = params.getWorkgroupId();
-        if (workgroupId != null && !workgroupId.equals("")) {
-          vleConfigUrl += "&workgroupId=" + workgroupId;
-        }
-
-        // get the path to the project json file
-        String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
-        String rawProjectUrl = project.getModulePath();
-        String contentUrl = curriculumBaseWWW + rawProjectUrl;
-
-
-        ModelAndView modelAndView = new ModelAndView("vle");
-        modelAndView.addObject("vleurl", vleurl);
-        modelAndView.addObject("vleConfigUrl", vleConfigUrl);
-        modelAndView.addObject("contentUrl", contentUrl);
-
-        return modelAndView;
-      } else {
-        return new ModelAndView("errors/accessdenied");
-      }
+    String step = params.getStep();
+    if (step != null) {
+      vleConfigUrl += "&step=" + step;
     }
 
-    return null;
+    String userSpecifiedLang = params.getLang();
+    if (userSpecifiedLang != null) {
+      vleConfigUrl += "&lang=" + userSpecifiedLang;
+    }
+
+    if (params.isConstraintsDisabled()) {
+      vleConfigUrl += "&isConstraintsDisabled=true";
+    }
+
+    String workgroupId = params.getWorkgroupId();
+    if (workgroupId != null) {
+      vleConfigUrl += "&workgroupId=" + workgroupId;
+    }
+
+    ModelAndView modelAndView = new ModelAndView("vle");
+    String vleurl = wiseBaseURL + "/vle/vle.html";
+    modelAndView.addObject("vleurl", vleurl);
+    modelAndView.addObject("vleConfigUrl", vleConfigUrl);
+    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String rawProjectUrl = project.getModulePath();
+    String contentUrl = curriculumBaseWWW + rawProjectUrl;
+    modelAndView.addObject("contentUrl", contentUrl);
+    return modelAndView;
   }
 
   /**

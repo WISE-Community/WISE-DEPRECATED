@@ -1,138 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- * Copyright (c) 2006 Encore Research Group, University of Toronto * 
-	* This library is free software; you can redistribute it and/or * modify 
-	it under the terms of the GNU Lesser General Public * License as published 
-	by the Free Software Foundation; either * version 2.1 of the License, or 
-	(at your option) any later version. * * This library is distributed in the 
-	hope that it will be useful, * but WITHOUT ANY WARRANTY; without even the 
-	implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
-	See the GNU * Lesser General Public License for more details. * * You should 
-	have received a copy of the GNU Lesser General Public * License along with 
-	this library; if not, write to the Free Software * Foundation, Inc., 51 Franklin 
-	Street, Fifth Floor, Boston, MA 02110-1301 USA -->
+<!-- * Copyright (c) 2007 Encore Research Group, University of Toronto *
+  * This library is free software; you can redistribute it and/or * modify
+  it under the terms of the GNU Lesser General Public * License as published
+  by the Free Software Foundation; either * version 2.1 of the License, or
+  (at your option) any later version. * * This library is distributed in the
+  hope that it will be useful, * but WITHOUT ANY WARRANTY; without even the
+  implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  See the GNU * Lesser General Public License for more details. * * You should
+  have received a copy of the GNU Lesser General Public * License along with
+  this library; if not, write to the Free Software * Foundation, Inc., 51 Franklin
+  Street, Fifth Floor, Boston, MA 02110-1301 USA -->
 
-<!-- $Id$ -->
+<!-- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+  Created * by TELS, Graduate School of Education, University of California
+  at Berkeley. * * This software is distributed under the GNU General Public
+  License, v3. * * Permission is hereby granted, without written agreement
+  and without license * or royalty fees, to use, copy, modify, and distribute
+  this software and its * documentation for any purpose, provided that the
+  above copyright notice and * the following two paragraphs appear in all copies
+  of this software. * * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING,
+  BUT NOT LIMITED TO, * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+  FOR A PARTICULAR * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF
+  ANY, PROVIDED * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION
+  TO PROVIDE * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+  * * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. -->
 
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-		version="3.1">
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+    version="3.1">
+  <display-name>Web-based Inquiry Science Environment</display-name>
 
+  <context-param>
+    <param-name>defaultHtmlEscape</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+    <param-name>contextConfigClass</param-name>
+    <param-value>org.wise.portal.spring.impl.SpringConfigurationImpl</param-value>
+  </context-param>
+  <context-param>
+    <param-name>webAppRootKey</param-name>
+    <param-value>wise</param-value>
+  </context-param>
 
-	<display-name>Web-based Inquiry Science Environment</display-name>
+  <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    <init-param>
+      <param-name>targetBeanName</param-name>
+      <param-value>filterChainProxy</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
-	<!-- Context Params -->
-	<context-param>
-		<param-name>defaultHtmlEscape</param-name>
-		<param-value>true</param-value>
-	</context-param>
+  <filter>
+    <filter-name>charsetFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>forceEncoding</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>charsetFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
-	<context-param>
-		<param-name>contextConfigClass</param-name>
-			<param-value>org.wise.portal.spring.impl.SpringConfigurationImpl
-		</param-value>
-	</context-param>
+  <listener>
+    <listener-class>org.wise.portal.spring.impl.CustomContextLoaderListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>org.wise.portal.presentation.web.listeners.WISESessionListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+  </listener>
 
-	<!-- used by Spring MVC -->
-	<context-param>
-		<param-name>webAppRootKey</param-name>
-		<param-value>wise</param-value>
-	</context-param>
+  <servlet>
+    <servlet-name>dispatcher</servlet-name>
+    <servlet-class>org.wise.portal.spring.impl.CustomDispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigClass</param-name>
+      <param-value>org.wise.portal.spring.impl.SpringConfigurationImpl</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>dispatcher</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
 
-	<!-- Filters -->
-	<filter>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy
-		</filter-class>
-		<init-param>
-			<param-name>targetBeanName</param-name>
-			<param-value>filterChainProxy</param-value>
-		</init-param>
-	</filter>
+  <!-- Make it distributable for load balancing purposes. That means HttpSessions
+    are serialized. Objects going into the session should be serializable -->
+  <distributable />
 
-	<!-- Filter Mappings -->
-	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
 
-	<filter>
-		<filter-name>charsetFilter</filter-name>
-		<filter-class>org.springframework.web.filter.CharacterEncodingFilter
-		</filter-class>
-		<init-param>
-			<param-name>encoding</param-name>
-			<param-value>UTF-8</param-value>
-		</init-param>
-		<init-param>
-			<param-name>forceEncoding</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</filter>
+  <!-- List of filenames that are automatically resolved for directory requests -->
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
 
-	<filter-mapping>
-		<filter-name>charsetFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
-	<listener>
-		<listener-class>
-			org.wise.portal.spring.impl.CustomContextLoaderListener
-		</listener-class>
-	</listener>
-
-	<listener>
-		<listener-class>
-			org.wise.portal.presentation.web.listeners.WISESessionListener
-		</listener-class>
-	</listener>
-
-
-	<!-- The HttpSessionEventPublisher will publish HttpSessionCreatedEvent 
-		and HttpSessionDestroyedEvent to the WebApplicationContext -->
-	<listener>
-		<listener-class>
-			org.springframework.security.web.session.HttpSessionEventPublisher
-		</listener-class>
-	</listener>
-
-	<!-- Servlets -->
-	<!-- Using Spring's web MVC -->
-	<servlet>
-		<servlet-name>dispatcher</servlet-name>
-		<servlet-class>
-			org.wise.portal.spring.impl.CustomDispatcherServlet
-		</servlet-class>
-		<init-param>
-			<param-name>contextConfigClass</param-name>
-			<param-value>org.wise.portal.spring.impl.SpringConfigurationImpl
-			</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-
-	<!-- Servlet Mappings -->
-	<servlet-mapping>
-		<servlet-name>dispatcher</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>
-
-	<!-- Make it distributable for load balancing purposes. That means HttpSessions
-		are serialized. Objects going into the session better be serializable! -->
-	<distributable />
-
-	<session-config>
-		<session-timeout>30</session-timeout>
-	</session-config>
-
-	<!-- List of filenames that are automatically resolved for directory requests -->
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
-
-	<error-page>
-		<error-code>500</error-code>
-		<location>/errors/outsideerror.html?msg=500</location>
-	</error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/errors/outsideerror.html?msg=500</location>
+  </error-page>
 
 </web-app>

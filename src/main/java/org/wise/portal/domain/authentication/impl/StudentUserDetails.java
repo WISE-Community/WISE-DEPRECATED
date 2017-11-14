@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -275,11 +275,16 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
   public void setAccountAnswer(String accountAnswer) {
     this.accountAnswer = accountAnswer;
   }
+
   /**
    * @return the lastLoginTime
    */
   public Date getLastLoginTime() {
-    return lastLoginTime;
+    if (lastLoginTime != null) {
+      return lastLoginTime;
+    } else {
+      return Calendar.getInstance().getTime();
+    }
   }
   /**
    * @param lastLoginTime the lastLoginTime to set
