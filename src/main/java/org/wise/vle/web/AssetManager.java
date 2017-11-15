@@ -582,6 +582,7 @@ public class AssetManager {
                 }
               }
               successMessage += "WISE also extracted files from the zip file! ";
+              asset.delete();
             } else {
             }
           }
