@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -9,307 +9,363 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentStatusService = function () {
-    function StudentStatusService($http, AnnotationService, ConfigService, ProjectService) {
-        _classCallCheck(this, StudentStatusService);
+  function StudentStatusService($http, AnnotationService, ConfigService, ProjectService) {
+    _classCallCheck(this, StudentStatusService);
 
-        this.$http = $http;
-        this.AnnotationService = AnnotationService;
-        this.ConfigService = ConfigService;
-        this.ProjectService = ProjectService;
-        this.studentStatuses = null;
+    this.$http = $http;
+    this.AnnotationService = AnnotationService;
+    this.ConfigService = ConfigService;
+    this.ProjectService = ProjectService;
+    this.studentStatuses = null;
+  }
+
+  _createClass(StudentStatusService, [{
+    key: 'retrieveStudentStatuses',
+    value: function retrieveStudentStatuses(config) {
+      var _this = this;
+
+      var studentStatusURL = this.ConfigService.getStudentStatusURL();
+      var runId = this.ConfigService.getRunId();
+
+      var requestConfig = {
+        params: {
+          runId: runId
+        }
+      };
+
+      return this.$http.get(studentStatusURL, requestConfig).then(function (result) {
+        var studentStatuses = result.data;
+
+        _this.studentStatuses = studentStatuses;
+
+        return studentStatuses;
+      });
+    }
+  }, {
+    key: 'getStudentStatuses',
+    value: function getStudentStatuses() {
+      return this.studentStatuses;
+    }
+  }, {
+    key: 'getCurrentNodePositionAndNodeTitleForWorkgroupId',
+
+
+    /**
+     * Get the current node position and title for a workgroup
+     * e.g. 2.2: Newton Scooter Concepts
+     * @param workgroupId the workgroup id
+     * @returns the node position and title
+     */
+    value: function getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId) {
+      var nodePositionAndTitle = null;
+
+      var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
+
+      if (studentStatus != null) {
+        var currentNodeId = studentStatus.currentNodeId;
+        nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(currentNodeId);
+      }
+
+      return nodePositionAndTitle;
+    }
+  }, {
+    key: 'getStudentStatusForWorkgroupId',
+    value: function getStudentStatusForWorkgroupId(workgroupId) {
+
+      var studentStatus = null;
+      var studentStatuses = this.getStudentStatuses();
+
+      for (var x = 0; x < studentStatuses.length; x++) {
+        var tempStudentStatus = studentStatuses[x];
+
+        if (tempStudentStatus != null) {
+          var tempWorkgroupId = tempStudentStatus.workgroupId;
+
+          if (workgroupId == tempWorkgroupId) {
+            studentStatus = tempStudentStatus;
+            break;
+          }
+        }
+      }
+
+      return studentStatus;
+    }
+  }, {
+    key: 'setStudentStatusForWorkgroupId',
+    value: function setStudentStatusForWorkgroupId(workgroupId, studentStatus) {
+
+      var studentStatuses = this.getStudentStatuses();
+
+      for (var x = 0; x < studentStatuses.length; x++) {
+        var tempStudentStatus = studentStatuses[x];
+
+        if (tempStudentStatus != null) {
+          var tempWorkgroupId = tempStudentStatus.workgroupId;
+
+          if (workgroupId === tempWorkgroupId) {
+            studentStatuses.splice(x, 1, studentStatus);
+            break;
+          }
+        }
+      }
+    }
+  }, {
+    key: 'getStudentProjectCompletion',
+
+
+    /**
+     * Get the student project completion data by workgroup id
+     * @param workgroupId the workgroup id
+     * @param excludeNonWorkNodes boolean whether to exclude nodes without
+     * @returns object with completed, total, and percent completed (integer
+     * between 0 and 100)
+     */
+    value: function getStudentProjectCompletion(workgroupId, excludeNonWorkNodes) {
+      var completion = {
+        totalItems: 0,
+        completedItems: 0,
+        completionPct: 0
+      };
+
+      // get the student status for the workgroup
+      var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
+
+      if (studentStatus) {
+        // get the project completion object
+        var projectCompletion = studentStatus.projectCompletion;
+
+        if (projectCompletion) {
+          if (excludeNonWorkNodes) {
+            // we're only looking for completion of nodes with work
+            var completionPctWithWork = projectCompletion.completionPctWithWork;
+
+            if (completionPctWithWork) {
+              completion.totalItems = projectCompletion.totalItemsWithWork;
+              completion.completedItems = projectCompletion.completedItemsWithWork;
+              completion.completionPct = projectCompletion.completionPctWithWork;
+            } else {
+              /*
+               * we have a legacy projectCompletion object that only includes information for all nodes
+               * so we need to calculate manually
+               */
+              completion = this.getNodeCompletion('group0', -1, workgroupId, true);
+            }
+          } else {
+            completion = projectCompletion;
+          }
+        }
+      }
+
+      return completion;
     }
 
-    _createClass(StudentStatusService, [{
-        key: 'retrieveStudentStatuses',
-        value: function retrieveStudentStatuses(config) {
-            var _this = this;
+    /**
+     * Get the workgroups on a node in the given period
+     * @param nodeId the node id
+     * @param periodId the period id. pass in -1 to select all periods.
+     * @returns an array of workgroup ids on a node in a period
+     */
 
-            var studentStatusURL = this.ConfigService.getStudentStatusURL();
-            var runId = this.ConfigService.getRunId();
+  }, {
+    key: 'getWorkgroupIdsOnNode',
+    value: function getWorkgroupIdsOnNode(nodeId, periodId) {
+      var workgroupIds = [];
+      var studentStatuses = this.studentStatuses;
 
-            var requestConfig = {
-                params: {
-                    runId: runId
-                }
-            };
+      // loop through all the student statuses
+      for (var ss = 0; ss < studentStatuses.length; ss++) {
+        var studentStatus = studentStatuses[ss];
 
-            return this.$http.get(studentStatusURL, requestConfig).then(function (result) {
-                var studentStatuses = result.data;
+        if (studentStatus != null) {
 
-                _this.studentStatuses = studentStatuses;
+          if (periodId == -1 || periodId == studentStatus.periodId) {
+            // the period matches the one we are looking for
+            var currentNodeId = studentStatus.currentNodeId;
+            if (nodeId === currentNodeId) {
+              // the node id matches the one we are looking for
+              workgroupIds.push(studentStatus.workgroupId);
+            } else if (this.ProjectService.isGroupNode(nodeId)) {
+              var currentNode = this.ProjectService.getNodeById(currentNodeId);
+              var group = this.ProjectService.getNodeById(nodeId);
 
-                return studentStatuses;
-            });
-        }
-    }, {
-        key: 'getStudentStatuses',
-        value: function getStudentStatuses() {
-            return this.studentStatuses;
-        }
-    }, {
-        key: 'getCurrentNodePositionAndNodeTitleForWorkgroupId',
-
-
-        /**
-         * Get the current node position and title for a workgroup
-         * e.g. 2.2: Newton Scooter Concepts
-         * @param workgroupId the workgroup id
-         * @returns the node position and title
-         */
-        value: function getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId) {
-            var nodePositionAndTitle = null;
-
-            var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
-
-            if (studentStatus != null) {
-                var currentNodeId = studentStatus.currentNodeId;
-                nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(currentNodeId);
+              if (this.ProjectService.isNodeDescendentOfGroup(currentNode, group)) {
+                // the node id is a descendent of the group we're looking for
+                workgroupIds.push(studentStatus.workgroupId);
+              }
             }
-
-            return nodePositionAndTitle;
+          }
         }
-    }, {
-        key: 'getStudentStatusForWorkgroupId',
-        value: function getStudentStatusForWorkgroupId(workgroupId) {
+      }
 
-            var studentStatus = null;
-            var studentStatuses = this.getStudentStatuses();
+      return workgroupIds;
+    }
 
-            for (var x = 0; x < studentStatuses.length; x++) {
-                var tempStudentStatus = studentStatuses[x];
+    /**
+     * Get node completion info for the given parameters
+     * @param nodeId the node id
+     * @param periodId the period id (pass in -1 to select all periods)
+     * @param workgroupId the workgroup id to limit results to (optional)
+     * @param excludeNonWorkNodes boolean whether to exclude nodes without
+     * student work or not (optional)
+     * @returns object with completed, total, and percent completed (integer
+     * between 0 and 100).
+     */
 
-                if (tempStudentStatus != null) {
-                    var tempWorkgroupId = tempStudentStatus.workgroupId;
+  }, {
+    key: 'getNodeCompletion',
+    value: function getNodeCompletion(nodeId, periodId, workgroupId, excludeNonWorkNodes) {
+      var numCompleted = 0;
+      var numTotal = 0;
+      var isGroupNode = this.ProjectService.isGroupNode(nodeId);
 
-                    if (workgroupId == tempWorkgroupId) {
-                        studentStatus = tempStudentStatus;
-                        break;
-                    }
-                }
-            }
+      var studentStatuses = this.studentStatuses;
 
-            return studentStatus;
-        }
-    }, {
-        key: 'setStudentStatusForWorkgroupId',
-        value: function setStudentStatusForWorkgroupId(workgroupId, studentStatus) {
+      // loop through all the student statuses
+      for (var ss = 0; ss < studentStatuses.length; ss++) {
+        var studentStatus = studentStatuses[ss];
 
-            var studentStatuses = this.getStudentStatuses();
+        if (studentStatus) {
 
-            for (var x = 0; x < studentStatuses.length; x++) {
-                var tempStudentStatus = studentStatuses[x];
+          if (periodId == -1 || periodId == studentStatus.periodId) {
+            // the period matches the one we are looking for
 
-                if (tempStudentStatus != null) {
-                    var tempWorkgroupId = tempStudentStatus.workgroupId;
+            if (!workgroupId || workgroupId === studentStatus.workgroupId) {
+              // either no workgroupId was specified or the workgroupId matches the one we're looking for
 
-                    if (workgroupId === tempWorkgroupId) {
-                        studentStatuses.splice(x, 1, studentStatus);
-                        break;
-                    }
-                }
-            }
-        }
-    }, {
-        key: 'getStudentProjectCompletion',
+              var nodeStatuses = studentStatus.nodeStatuses;
 
+              if (nodeStatuses) {
+                // get the node status for the node
+                var nodeStatus = nodeStatuses[nodeId];
 
-        /**
-         * Get the student project completion data by workgroup id
-         * @param workgroupId the workgroup id
-         * @param excludeNonWorkNodes boolean whether to exclude nodes without
-         * @returns object with completed, total, and percent completed (integer
-         * between 0 and 100)
-         */
-        value: function getStudentProjectCompletion(workgroupId, excludeNonWorkNodes) {
-            var completion = {
-                totalItems: 0,
-                completedItems: 0,
-                completionPct: 0
-            };
+                if (nodeStatus != null) {
+                  if (isGroupNode) {
+                    // given node is a group
+                    // get progress object from the nodeStatus
+                    var progress = nodeStatus.progress;
 
-            // get the student status for the workgroup
-            var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
-
-            if (studentStatus) {
-                // get the project completion object
-                var projectCompletion = studentStatus.projectCompletion;
-
-                if (projectCompletion) {
                     if (excludeNonWorkNodes) {
-                        // we're only looking for completion of nodes with work
-                        var completionPctWithWork = projectCompletion.completionPctWithWork;
+                      // we're looking for only nodes with student work
+                      if (progress && progress.totalItemsWithWork) {
+                        numTotal += progress.totalItemsWithWork;
+                        numCompleted += progress.completedItemsWithWork;
+                      } else {
+                        /*
+                         * we have a legacy nodeStatus.progress that only includes completion information for all nodes
+                         * so we need to calculate manually
+                         */
+                        var group = this.ProjectService.getNodeById(nodeId);
 
-                        if (completionPctWithWork) {
-                            completion.totalItems = projectCompletion.totalItemsWithWork;
-                            completion.completedItems = projectCompletion.completedItemsWithWork;
-                            completion.completionPct = projectCompletion.completionPctWithWork;
-                        } else {
-                            /*
-                             * we have a legacy projectCompletion object that only includes information for all nodes
-                             * so we need to calculate manually
-                             */
-                            completion = this.getNodeCompletion('group0', -1, workgroupId, true);
+                        // get all the descendants of the group
+                        var descendants = this.ProjectService.getDescendentsOfGroup(group);
+                        var l = descendants.length;
+
+                        // loop through all the descendants to check for completion
+                        for (var i = 0; i < l; i++) {
+                          var descendantId = descendants[i];
+
+                          if (!this.ProjectService.isGroupNode(descendantId)) {
+                            // node is not a group, so add to totals if visible and has student work
+                            var descendantStatus = nodeStatuses[descendantId];
+
+                            if (descendantStatus && descendantStatus.isVisible && this.ProjectService.nodeHasWork(descendantId)) {
+                              numTotal++;
+
+                              if (descendantStatus.isCompleted) {
+                                numCompleted++;
+                              }
+                            }
+                          }
                         }
+                      }
                     } else {
-                        completion = projectCompletion;
+                      // we're looking for completion percentage of all nodes
+                      if (progress) {
+                        numTotal += progress.totalItems;
+                        numCompleted += progress.completedItems;
+                      }
                     }
-                }
-            }
+                  } else {
+                    // given node is not a group
+                    if (nodeStatus.isVisible) {
+                      /*
+                       * the student can see the step. we need this check
+                       * for cases when a project has branching. this way
+                       * we only calculate the step completion percentage
+                       * based on the students that can actually go to
+                       * the step.
+                       */
 
-            return completion;
-        }
+                      /*
+                       * check whether we should include the node in the calculation
+                       * i.e. either includeNonWorkNodes is true or the node has student work
+                       */
+                      var includeNode = !excludeNonWorkNodes || this.ProjectService.nodeHasWork(nodeId);
 
-        /**
-         * Get the workgroups on a node in the given period
-         * @param nodeId the node id
-         * @param periodId the period id. pass in -1 to select all periods.
-         * @returns an array of workgroup ids on a node in a period
-         */
+                      if (includeNode) {
+                        numTotal++;
 
-    }, {
-        key: 'getWorkgroupIdsOnNode',
-        value: function getWorkgroupIdsOnNode(nodeId, periodId) {
-            var workgroupIds = [];
-            var studentStatuses = this.studentStatuses;
-
-            // loop through all the student statuses
-            for (var ss = 0; ss < studentStatuses.length; ss++) {
-                var studentStatus = studentStatuses[ss];
-
-                if (studentStatus != null) {
-
-                    if (periodId == -1 || periodId == studentStatus.periodId) {
-                        // the period matches the one we are looking for
-                        var currentNodeId = studentStatus.currentNodeId;
-                        if (nodeId === currentNodeId) {
-                            // the node id matches the one we are looking for
-                            workgroupIds.push(studentStatus.workgroupId);
-                        } else if (this.ProjectService.isGroupNode(nodeId)) {
-                            var currentNode = this.ProjectService.getNodeById(currentNodeId);
-                            var group = this.ProjectService.getNodeById(nodeId);
-
-                            if (this.ProjectService.isNodeDescendentOfGroup(currentNode, group)) {
-                                // the node id is a descendent of the group we're looking for
-                                workgroupIds.push(studentStatus.workgroupId);
-                            }
+                        if (nodeStatus.isCompleted) {
+                          // the student has completed the node
+                          numCompleted++;
                         }
+                      }
                     }
+                  }
                 }
+              }
             }
-
-            return workgroupIds;
+          }
         }
+      }
 
-        /**
-         * Get node completion info for the given parameters
-         * @param nodeId the node id
-         * @param periodId the period id (pass in -1 to select all periods)
-         * @param workgroupId the workgroup id to limit results to (optional)
-         * @param excludeNonWorkNodes boolean whether to exclude nodes without
-         * student work or not (optional)
-         * @returns object with completed, total, and percent completed (integer
-         * between 0 and 100).
-         */
+      // generate the percentage number rounded down to the nearest integer
+      var completionPercentage = numTotal > 0 ? Math.floor(100 * numCompleted / numTotal) : 0;
 
-    }, {
-        key: 'getNodeCompletion',
-        value: function getNodeCompletion(nodeId, periodId, workgroupId, excludeNonWorkNodes) {
-            var numCompleted = 0;
-            var numTotal = 0;
-            var isGroupNode = this.ProjectService.isGroupNode(nodeId);
+      return {
+        completedItems: numCompleted,
+        totalItems: numTotal,
+        completionPct: completionPercentage
+      };
+    }
 
-            var studentStatuses = this.studentStatuses;
-
-            // loop through all the student statuses
-            for (var ss = 0; ss < studentStatuses.length; ss++) {
-                var studentStatus = studentStatuses[ss];
-
-                if (studentStatus) {
-
-                    if (periodId == -1 || periodId == studentStatus.periodId) {
+    /**
+     * Get the total number of steps that are descendants of a given node
+     * @param nodeId the node id
+     * @returns the total number of step (application node) descendants; returns
+     * @param periodId the period id. pass in -1 to select all periods.
+     * an average for all students in the selected period if the group is a
+     * planning activity
+     */
+    /*getTotalApplicationNodeDescendents(nodeId, periodId) {
+        let numTotal = 0;
+        let numWorkgroups = 0;
+         let isGroupNode = this.ProjectService.isGroupNode(nodeId);
+         if (isGroupNode) {
+            let isPlanning = this.ProjectService.isPlanning(nodeId);
+            let studentStatuses = this.studentStatuses;
+             // loop through all the student statuses
+            for (let ss = 0; ss < studentStatuses.length; ss++) {
+                let studentStatus = studentStatuses[ss];
+                 if (studentStatus) {
+                     if (periodId == -1 || periodId == studentStatus.periodId) {
                         // the period matches the one we are looking for
-
-                        if (!workgroupId || workgroupId === studentStatus.workgroupId) {
-                            // either no workgroupId was specified or the workgroupId matches the one we're looking for
-
-                            var nodeStatuses = studentStatus.nodeStatuses;
-
-                            if (nodeStatuses) {
-                                // get the node status for the node
-                                var nodeStatus = nodeStatuses[nodeId];
-
-                                if (nodeStatus != null) {
-                                    if (isGroupNode) {
-                                        // given node is a group
-                                        // get progress object from the nodeStatus
-                                        var progress = nodeStatus.progress;
-
-                                        if (excludeNonWorkNodes) {
-                                            // we're looking for only nodes with student work
-                                            if (progress && progress.totalItemsWithWork) {
-                                                numTotal += progress.totalItemsWithWork;
-                                                numCompleted += progress.completedItemsWithWork;
-                                            } else {
-                                                /*
-                                                 * we have a legacy nodeStatus.progress that only includes completion information for all nodes
-                                                 * so we need to calculate manually
-                                                 */
-                                                var group = this.ProjectService.getNodeById(nodeId);
-
-                                                // get all the descendants of the group
-                                                var descendants = this.ProjectService.getDescendentsOfGroup(group);
-                                                var l = descendants.length;
-
-                                                // loop through all the descendants to check for completion
-                                                for (var i = 0; i < l; i++) {
-                                                    var descendantId = descendants[i];
-
-                                                    if (!this.ProjectService.isGroupNode(descendantId)) {
-                                                        // node is not a group, so add to totals if visible and has student work
-                                                        var descendantStatus = nodeStatuses[descendantId];
-
-                                                        if (descendantStatus && descendantStatus.isVisible && this.ProjectService.nodeHasWork(descendantId)) {
-                                                            numTotal++;
-
-                                                            if (descendantStatus.isCompleted) {
-                                                                numCompleted++;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
+                         let nodeStatuses = studentStatus.nodeStatuses;
+                         if (nodeStatuses) {
+                            // get the node status for the node
+                            let nodeStatus = nodeStatuses[nodeId];
+                             if (nodeStatus) {
+                                let progress = nodeStatus.progress;
+                                if (progress) {
+                                    let totalItems = progress.totalItems;
+                                    if (totalItems) {
+                                        numWorkgroups++;
+                                         if (isPlanning) {
+                                            numTotal += progress.totalItems;
                                         } else {
-                                            // we're looking for completion percentage of all nodes
-                                            if (progress) {
-                                                numTotal += progress.totalItems;
-                                                numCompleted += progress.completedItems;
-                                            }
-                                        }
-                                    } else {
-                                        // given node is not a group
-                                        if (nodeStatus.isVisible) {
-                                            /*
-                                             * the student can see the step. we need this check
-                                             * for cases when a project has branching. this way
-                                             * we only calculate the step completion percentage
-                                             * based on the students that can actually go to
-                                             * the step.
-                                             */
-
-                                            /*
-                                             * check whether we should include the node in the calculation
-                                             * i.e. either includeNonWorkNodes is true or the node has student work
-                                             */
-                                            var includeNode = !excludeNonWorkNodes || this.ProjectService.nodeHasWork(nodeId);
-
-                                            if (includeNode) {
-                                                numTotal++;
-
-                                                if (nodeStatus.isCompleted) {
-                                                    // the student has completed the node
-                                                    numCompleted++;
-                                                }
-                                            }
+                                            // this is not a planning activity, so we can assume the total number of items is the same for all students
+                                            numTotal = progress.totalItems;
+                                            break;
                                         }
                                     }
                                 }
@@ -318,200 +374,144 @@ var StudentStatusService = function () {
                     }
                 }
             }
-
-            // generate the percentage number rounded down to the nearest integer
-            var completionPercentage = numTotal > 0 ? Math.floor(100 * numCompleted / numTotal) : 0;
-
-            return {
-                completedItems: numCompleted,
-                totalItems: numTotal,
-                completionPct: completionPercentage
-            };
         }
+         return (numWorkgroups > 0 ? numTotal/numWorkgroups : 0);
+    };*/
 
-        /**
-         * Get the total number of steps that are descendants of a given node
-         * @param nodeId the node id
-         * @returns the total number of step (application node) descendants; returns
-         * @param periodId the period id. pass in -1 to select all periods.
-         * an average for all students in the selected period if the group is a
-         * planning activity
-         */
-        /*getTotalApplicationNodeDescendents(nodeId, periodId) {
-            let numTotal = 0;
-            let numWorkgroups = 0;
-              let isGroupNode = this.ProjectService.isGroupNode(nodeId);
-              if (isGroupNode) {
-                let isPlanning = this.ProjectService.isPlanning(nodeId);
-                let studentStatuses = this.studentStatuses;
-                  // loop through all the student statuses
-                for (let ss = 0; ss < studentStatuses.length; ss++) {
-                    let studentStatus = studentStatuses[ss];
-                      if (studentStatus) {
-                          if (periodId == -1 || periodId == studentStatus.periodId) {
-                            // the period matches the one we are looking for
-                              let nodeStatuses = studentStatus.nodeStatuses;
-                              if (nodeStatuses) {
-                                // get the node status for the node
-                                let nodeStatus = nodeStatuses[nodeId];
-                                  if (nodeStatus) {
-                                    let progress = nodeStatus.progress;
-                                    if (progress) {
-                                        let totalItems = progress.totalItems;
-                                        if (totalItems) {
-                                            numWorkgroups++;
-                                              if (isPlanning) {
-                                                numTotal += progress.totalItems;
-                                            } else {
-                                                // this is not a planning activity, so we can assume the total number of items is the same for all students
-                                                numTotal = progress.totalItems;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-              return (numWorkgroups > 0 ? numTotal/numWorkgroups : 0);
-        };*/
+    /**
+     * Check if there is a workgroup that is online and on the node
+     * @param workgroupsOnline the workgroup ids that are online
+     * @param nodeId the node id
+     * @param periodId the period id. pass in -1 to select all periods.
+     * @returns whether there is a workgroup that is online and on the node
+     */
 
-        /**
-         * Check if there is a workgroup that is online and on the node
-         * @param workgroupsOnline the workgroup ids that are online
-         * @param nodeId the node id
-         * @param periodId the period id. pass in -1 to select all periods.
-         * @returns whether there is a workgroup that is online and on the node
-         */
+  }, {
+    key: 'isWorkgroupOnlineOnNode',
+    value: function isWorkgroupOnlineOnNode(workgroupsOnline, nodeId, periodId) {
+      var result = false;
 
-    }, {
-        key: 'isWorkgroupOnlineOnNode',
-        value: function isWorkgroupOnlineOnNode(workgroupsOnline, nodeId, periodId) {
-            var result = false;
-
-            // find workgroups online in the given period
-            var workgroupsOnlineInPeriod = [];
-            var n = workgroupsOnline.length;
-            for (var i = 0; i < n; i++) {
-                var workgroup = workgroupsOnline[i];
-                var studentStatus = this.getStudentStatusForWorkgroupId(workgroup);
-                if (studentStatus) {
-                    var pId = studentStatus.periodId;
-                    if (periodId == -1 || pId == periodId) {
-                        workgroupsOnlineInPeriod.push(workgroup);
-                    }
-                }
-            }
-
-            if (workgroupsOnlineInPeriod.length) {
-                // get workgroups on the given node
-                var workgroupsOnNode = this.getWorkgroupIdsOnNode(nodeId, periodId);
-
-                // check if any online workgroups in the current period are on this node
-                result = workgroupsOnNode.some(function (w) {
-                    return workgroupsOnlineInPeriod.indexOf(w) > -1;
-                });
-            }
-
-            return result;
+      // find workgroups online in the given period
+      var workgroupsOnlineInPeriod = [];
+      var n = workgroupsOnline.length;
+      for (var i = 0; i < n; i++) {
+        var workgroup = workgroupsOnline[i];
+        var studentStatus = this.getStudentStatusForWorkgroupId(workgroup);
+        if (studentStatus) {
+          var pId = studentStatus.periodId;
+          if (periodId == -1 || pId == periodId) {
+            workgroupsOnlineInPeriod.push(workgroup);
+          }
         }
+      }
 
-        /**
-         * Get the average score for a node for a period
-         * @param nodeId the node id
-         * @param periodId the period id. pass in -1 to select all periods.
-         * @returns the average score for the node for the period
-         */
+      if (workgroupsOnlineInPeriod.length) {
+        // get workgroups on the given node
+        var workgroupsOnNode = this.getWorkgroupIdsOnNode(nodeId, periodId);
 
-    }, {
-        key: 'getNodeAverageScore',
-        value: function getNodeAverageScore(nodeId, periodId) {
-            var studentScoreSum = 0;
-            var numStudentsWithScore = 0;
+        // check if any online workgroups in the current period are on this node
+        result = workgroupsOnNode.some(function (w) {
+          return workgroupsOnlineInPeriod.indexOf(w) > -1;
+        });
+      }
 
-            var studentStatuses = this.studentStatuses;
+      return result;
+    }
 
-            // loop through all the student statuses
-            for (var ss = 0; ss < studentStatuses.length; ss++) {
-                var studentStatus = studentStatuses[ss];
+    /**
+     * Get the average score for a node for a period
+     * @param nodeId the node id
+     * @param periodId the period id. pass in -1 to select all periods.
+     * @returns the average score for the node for the period
+     */
 
-                if (studentStatus != null) {
+  }, {
+    key: 'getNodeAverageScore',
+    value: function getNodeAverageScore(nodeId, periodId) {
+      var studentScoreSum = 0;
+      var numStudentsWithScore = 0;
 
-                    if (periodId == -1 || periodId == studentStatus.periodId) {
-                        // the period matches the one we are looking for
+      var studentStatuses = this.studentStatuses;
 
-                        var workgroupId = studentStatus.workgroupId;
+      // loop through all the student statuses
+      for (var ss = 0; ss < studentStatuses.length; ss++) {
+        var studentStatus = studentStatuses[ss];
 
-                        // get the workgroups score on the node
-                        var score = this.AnnotationService.getScore(workgroupId, nodeId);
+        if (studentStatus != null) {
 
-                        if (score != null) {
-                            // increment the counter of students with a score for this node
-                            numStudentsWithScore++;
+          if (periodId == -1 || periodId == studentStatus.periodId) {
+            // the period matches the one we are looking for
 
-                            // accumulate the sum of the scores for this node
-                            studentScoreSum += score;
-                        }
-                    }
-                }
+            var workgroupId = studentStatus.workgroupId;
+
+            // get the workgroups score on the node
+            var score = this.AnnotationService.getScore(workgroupId, nodeId);
+
+            if (score != null) {
+              // increment the counter of students with a score for this node
+              numStudentsWithScore++;
+
+              // accumulate the sum of the scores for this node
+              studentScoreSum += score;
             }
-
-            var averageScore = null;
-
-            if (numStudentsWithScore != 0) {
-                // calculate the average score for this node rounded down to the nearest hundredth
-                averageScore = Math.floor(100 * studentScoreSum / numStudentsWithScore) / 100;
-            }
-
-            return averageScore;
+          }
         }
+      }
 
-        /**
-         * Get the max score for the project for the given workgroup id
-         * @param workgroupId
-         * @returns the sum of the max scores for all the nodes in the project visible
-         * to the given workgroupId or null if none of the visible components has max scores.
-         */
+      var averageScore = null;
 
-    }, {
-        key: 'getMaxScoreForWorkgroupId',
-        value: function getMaxScoreForWorkgroupId(workgroupId) {
-            var maxScore = null;
+      if (numStudentsWithScore != 0) {
+        // calculate the average score for this node rounded down to the nearest hundredth
+        averageScore = Math.floor(100 * studentScoreSum / numStudentsWithScore) / 100;
+      }
 
-            var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
+      return averageScore;
+    }
 
-            if (studentStatus) {
-                var nodeStatuses = studentStatus.nodeStatuses;
+    /**
+     * Get the max score for the project for the given workgroup id
+     * @param workgroupId
+     * @returns the sum of the max scores for all the nodes in the project visible
+     * to the given workgroupId or null if none of the visible components has max scores.
+     */
 
-                if (nodeStatuses) {
-                    // loop through all the node statuses
-                    for (var p in nodeStatuses) {
-                        if (nodeStatuses.hasOwnProperty(p)) {
-                            var nodeStatus = nodeStatuses[p];
-                            var nodeId = nodeStatus.nodeId;
+  }, {
+    key: 'getMaxScoreForWorkgroupId',
+    value: function getMaxScoreForWorkgroupId(workgroupId) {
+      var maxScore = null;
 
-                            if (nodeStatus.isVisible && !this.ProjectService.isGroupNode(nodeId)) {
-                                // node is visible and is not a group
-                                // get node max score
-                                var nodeMaxScore = this.ProjectService.getMaxScoreForNode(nodeId);
+      var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
 
-                                if (nodeMaxScore) {
-                                    // there is a max score for the node, so add to total
-                                    maxScore += nodeMaxScore;
-                                }
-                            }
-                        }
-                    }
+      if (studentStatus) {
+        var nodeStatuses = studentStatus.nodeStatuses;
+
+        if (nodeStatuses) {
+          // loop through all the node statuses
+          for (var p in nodeStatuses) {
+            if (nodeStatuses.hasOwnProperty(p)) {
+              var nodeStatus = nodeStatuses[p];
+              var nodeId = nodeStatus.nodeId;
+
+              if (nodeStatus.isVisible && !this.ProjectService.isGroupNode(nodeId)) {
+                // node is visible and is not a group
+                // get node max score
+                var nodeMaxScore = this.ProjectService.getMaxScoreForNode(nodeId);
+
+                if (nodeMaxScore) {
+                  // there is a max score for the node, so add to total
+                  maxScore += nodeMaxScore;
                 }
+              }
             }
-
-            return maxScore;
+          }
         }
-    }]);
+      }
 
-    return StudentStatusService;
+      return maxScore;
+    }
+  }]);
+
+  return StudentStatusService;
 }();
 
 StudentStatusService.$inject = ['$http', 'AnnotationService', 'ConfigService', 'ProjectService'];

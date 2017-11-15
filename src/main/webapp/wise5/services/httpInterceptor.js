@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -11,57 +11,57 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var self;
 
 var HttpInterceptor = function () {
-    function HttpInterceptor($q, $rootScope) {
-        _classCallCheck(this, HttpInterceptor);
+  function HttpInterceptor($q, $rootScope) {
+    _classCallCheck(this, HttpInterceptor);
 
-        self = this;
-        self.$q = $q;
-        self.$rootScope = $rootScope;
+    self = this;
+    self.$q = $q;
+    self.$rootScope = $rootScope;
+  }
+
+  // intercept request
+
+
+  _createClass(HttpInterceptor, [{
+    key: 'request',
+    value: function request(config) {
+      return config;
     }
 
-    // intercept request
+    // intercept request error
 
+  }, {
+    key: 'requestError',
+    value: function requestError(rejection) {
+      return self.$q.reject(rejection);
+    }
 
-    _createClass(HttpInterceptor, [{
-        key: 'request',
-        value: function request(config) {
-            return config;
-        }
+    // intercept response
 
-        // intercept request error
+  }, {
+    key: 'response',
+    value: function response(_response) {
+      // response received, clear any disconnection alerts
+      self.$rootScope.$broadcast('serverConnected');
 
-    }, {
-        key: 'requestError',
-        value: function requestError(rejection) {
-            return self.$q.reject(rejection);
-        }
+      return _response;
+    }
 
-        // intercept response
+    // intercept response error
 
-    }, {
-        key: 'response',
-        value: function response(_response) {
-            // response received, clear any disconnection alerts
-            self.$rootScope.$broadcast('serverConnected');
+  }, {
+    key: 'responseError',
+    value: function responseError(rejection) {
+      if (rejection.status === -1 || rejection.status === 500 || rejection.status === 503 || rejection.status === 504) {
+        // response error, broadcast disconnection alert
+        self.$rootScope.$broadcast('serverDisconnected');
+      }
 
-            return _response;
-        }
+      return self.$q.reject(rejection);
+    }
+  }]);
 
-        // intercept response error
-
-    }, {
-        key: 'responseError',
-        value: function responseError(rejection) {
-            if (rejection.status === -1 || rejection.status === 500 || rejection.status === 503 || rejection.status === 504) {
-                // response error, broadcast disconnection alert
-                self.$rootScope.$broadcast('serverDisconnected');
-            }
-
-            return self.$q.reject(rejection);
-        }
-    }]);
-
-    return HttpInterceptor;
+  return HttpInterceptor;
 }();
 
 HttpInterceptor.$inject = ['$q', '$rootScope'];
