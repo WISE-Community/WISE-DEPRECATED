@@ -162,9 +162,7 @@ class UtilService {
     var iframes = angular.element('iframe');
 
     // loop through all the iframes
-    for (var i = 0; i < iframes.length; i++) {
-      var iframe = iframes[i];
-
+    for (var iframe of iframes) {
       if (iframe != null) {
         // hide the iframe
         iframe.style.display = 'none';
@@ -184,9 +182,7 @@ class UtilService {
     var iframes = angular.element('iframe');
 
     // loop through all the iframes
-    for (var i = 0; i < iframes.length; i++) {
-      var iframe = iframes[i];
-
+    for (var iframe of iframes) {
       if (iframe != null) {
         // show the iframe
         iframe.style.display = '';
@@ -848,9 +844,7 @@ class UtilService {
       var connectedComponents = componentContent.connectedComponents;
 
       if (connectedComponents != null) {
-        for (var c = 0; c < connectedComponents.length; c++) {
-          var connectedComponent = connectedComponents[c];
-
+        for (var connectedComponent of connectedComponents) {
           if (connectedComponent != null) {
 
             if (connectedComponent.type == 'showWork') {
@@ -876,9 +870,7 @@ class UtilService {
       var connectedComponents = componentContent.connectedComponents;
 
       if (connectedComponents != null) {
-        for (var c = 0; c < connectedComponents.length; c++) {
-          var connectedComponent = connectedComponents[c];
-
+        for (var connectedComponent of connectedComponents) {
           if (connectedComponent != null) {
 
             if (connectedComponent.type == 'importWork') {

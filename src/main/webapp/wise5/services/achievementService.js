@@ -89,36 +89,54 @@ var AchievementService = function () {
           if (achievements != null) {
 
             // loop through all the student achievements
-            for (var i = 0; i < achievements.length; i++) {
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
 
-              // get a student achievement
-              var achievement = achievements[i];
+            try {
+              for (var _iterator = achievements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var achievement = _step.value;
 
-              // add the student achievement to our local data structure
-              _this.addOrUpdateAchievement(achievement);
 
-              if (_this.ConfigService.getMode() == 'studentRun') {
+                // add the student achievement to our local data structure
+                _this.addOrUpdateAchievement(achievement);
 
-                // get the project achievement object
-                var projectAchievement = _this.ProjectService.getAchievementByAchievementId(achievement.achievementId);
+                if (_this.ConfigService.getMode() == 'studentRun') {
 
-                if (projectAchievement != null) {
+                  // get the project achievement object
+                  var projectAchievement = _this.ProjectService.getAchievementByAchievementId(achievement.achievementId);
 
-                  /*
-                   * set the completed field to true in case we ever
-                   * need to easily see which achievements the student
-                   * has completed
-                   */
-                  projectAchievement.completed = true;
+                  if (projectAchievement != null) {
 
-                  if (projectAchievement.deregisterFunction != null) {
                     /*
-                     * the student has completed this achievement
-                     * so we no longer need to listen for it
+                     * set the completed field to true in case we ever
+                     * need to easily see which achievements the student
+                     * has completed
                      */
-                    projectAchievement.deregisterFunction();
-                    _this.debugOutput('deregistering ' + projectAchievement.id);
+                    projectAchievement.completed = true;
+
+                    if (projectAchievement.deregisterFunction != null) {
+                      /*
+                       * the student has completed this achievement
+                       * so we no longer need to listen for it
+                       */
+                      projectAchievement.deregisterFunction();
+                      _this.debugOutput('deregistering ' + projectAchievement.id);
+                    }
                   }
+                }
+              }
+            } catch (err) {
+              _didIteratorError = true;
+              _iteratorError = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                  _iterator.return();
+                }
+              } finally {
+                if (_didIteratorError) {
+                  throw _iteratorError;
                 }
               }
             }
@@ -144,24 +162,43 @@ var AchievementService = function () {
               if (projectAchievements != null) {
 
                 // loop through all the project achievements
-                for (var p = 0; p < projectAchievements.length; p++) {
-                  var projectAchievement = projectAchievements[p];
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
 
-                  if (projectAchievement != null) {
+                try {
+                  for (var _iterator2 = projectAchievements[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var projectAchievement = _step2.value;
 
-                    if (!_this.isAchievementCompleted(projectAchievement.id)) {
-                      /*
-                       * the student has not completed this project achievement
-                       * yet
-                       */
+                    if (projectAchievement != null) {
 
-                      if (_this.checkAchievement(projectAchievement)) {
+                      if (!_this.isAchievementCompleted(projectAchievement.id)) {
                         /*
-                         * the student has satisfied everything that is
-                         * required of the achievement
+                         * the student has not completed this project achievement
+                         * yet
                          */
-                        _this.studentCompletedAchievement(projectAchievement);
+
+                        if (_this.checkAchievement(projectAchievement)) {
+                          /*
+                           * the student has satisfied everything that is
+                           * required of the achievement
+                           */
+                          _this.studentCompletedAchievement(projectAchievement);
+                        }
                       }
+                    }
+                  }
+                } catch (err) {
+                  _didIteratorError2 = true;
+                  _iteratorError2 = err;
+                } finally {
+                  try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                      _iterator2.return();
+                    }
+                  } finally {
+                    if (_didIteratorError2) {
+                      throw _iteratorError2;
                     }
                   }
                 }
@@ -324,28 +361,47 @@ var AchievementService = function () {
           if (projectAchievementItems != null) {
 
             // loop through all the achievements in the project
-            for (var a = 0; a < projectAchievementItems.length; a++) {
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
 
-              var projectAchievement = projectAchievementItems[a];
+            try {
+              for (var _iterator3 = projectAchievementItems[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var projectAchievement = _step3.value;
 
-              if (projectAchievement != null) {
 
-                var deregisterFunction = null;
+                if (projectAchievement != null) {
 
-                // create a listener for the achievement
-                if (projectAchievement.type == 'milestone' || projectAchievement.type == 'completion') {
-                  deregisterFunction = this.createNodeCompletedListener(projectAchievement);
-                } else if (projectAchievement.type == 'aggregate') {
-                  deregisterFunction = this.createAggregateAchievementListener(projectAchievement);
+                  var deregisterFunction = null;
+
+                  // create a listener for the achievement
+                  if (projectAchievement.type == 'milestone' || projectAchievement.type == 'completion') {
+                    deregisterFunction = this.createNodeCompletedListener(projectAchievement);
+                  } else if (projectAchievement.type == 'aggregate') {
+                    deregisterFunction = this.createAggregateAchievementListener(projectAchievement);
+                  }
+
+                  /*
+                   * set the deregisterFunction into the project
+                   * achievement so that we can deregister the
+                   * listener after the student has completed the
+                   * achievement
+                   */
+                  projectAchievement.deregisterFunction = deregisterFunction;
                 }
-
-                /*
-                 * set the deregisterFunction into the project
-                 * achievement so that we can deregister the
-                 * listener after the student has completed the
-                 * achievement
-                 */
-                projectAchievement.deregisterFunction = deregisterFunction;
+              }
+            } catch (err) {
+              _didIteratorError3 = true;
+              _iteratorError3 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                  _iterator3.return();
+                }
+              } finally {
+                if (_didIteratorError3) {
+                  throw _iteratorError3;
+                }
               }
             }
           }
@@ -374,17 +430,36 @@ var AchievementService = function () {
         if (achievements != null) {
 
           // loop through all the achievements the student has completed
-          for (var a = 0; a < achievements.length; a++) {
-            var achievement = achievements[a];
+          var _iteratorNormalCompletion4 = true;
+          var _didIteratorError4 = false;
+          var _iteratorError4 = undefined;
 
-            if (achievement != null) {
-              if (achievement.achievementId == achievementId) {
-                /*
-                 * we have found the achievement with the matching
-                 * achievement id which means the student has
-                 * completed the achievement
-                 */
-                return true;
+          try {
+            for (var _iterator4 = achievements[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+              var achievement = _step4.value;
+
+              if (achievement != null) {
+                if (achievement.achievementId == achievementId) {
+                  /*
+                   * we have found the achievement with the matching
+                   * achievement id which means the student has
+                   * completed the achievement
+                   */
+                  return true;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError4 = true;
+            _iteratorError4 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                _iterator4.return();
+              }
+            } finally {
+              if (_didIteratorError4) {
+                throw _iteratorError4;
               }
             }
           }
@@ -739,31 +814,50 @@ var AchievementService = function () {
         if (workgroupIds != null) {
 
           // loop through all the workgroup ids
-          for (var w = 0; w < workgroupIds.length; w++) {
+          var _iteratorNormalCompletion5 = true;
+          var _didIteratorError5 = false;
+          var _iteratorError5 = undefined;
 
-            var workgroupId = workgroupIds[w];
+          try {
+            for (var _iterator5 = workgroupIds[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+              var workgroupId = _step5.value;
 
-            if (workgroupId != null) {
 
-              // get all the achievements this workgroup has completed
-              var achievementsForWorkgroup = this.achievementsByWorkgroupId[workgroupId];
+              if (workgroupId != null) {
 
-              if (achievementsForWorkgroup != null) {
+                // get all the achievements this workgroup has completed
+                var achievementsForWorkgroup = this.achievementsByWorkgroupId[workgroupId];
 
-                // loop through all the achievements this workgroup has completed
-                for (var a = achievementsForWorkgroup.length - 1; a >= 0; a--) {
-                  var achievement = achievementsForWorkgroup[a];
+                if (achievementsForWorkgroup != null) {
 
-                  if (achievement != null && achievement.data != null) {
-                    if (achievementId == achievement.data.id) {
-                      /*
-                       * the workgroup has completed the achievement we are
-                       * looking for
-                       */
-                      achievementsByAchievementId.push(achievement);
+                  // loop through all the achievements this workgroup has completed
+                  for (var a = achievementsForWorkgroup.length - 1; a >= 0; a--) {
+                    var achievement = achievementsForWorkgroup[a];
+
+                    if (achievement != null && achievement.data != null) {
+                      if (achievementId == achievement.data.id) {
+                        /*
+                         * the workgroup has completed the achievement we are
+                         * looking for
+                         */
+                        achievementsByAchievementId.push(achievement);
+                      }
                     }
                   }
                 }
+              }
+            }
+          } catch (err) {
+            _didIteratorError5 = true;
+            _iteratorError5 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                _iterator5.return();
+              }
+            } finally {
+              if (_didIteratorError5) {
+                throw _iteratorError5;
               }
             }
           }
@@ -794,16 +888,36 @@ var AchievementService = function () {
       if (projectAchievements != null) {
 
         // loop through all the project achievements
-        for (var a = 0; a < projectAchievements.length; a++) {
-          var projectAchievement = projectAchievements[a];
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
 
-          if (projectAchievement != null) {
+        try {
+          for (var _iterator6 = projectAchievements[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var projectAchievement = _step6.value;
 
-            // get an array of student achievements for the given achievement id
-            var studentAchievements = this.getAchievementsByAchievementId(projectAchievement.id);
 
-            // add the array to the mapping
-            achievementIdToAchievements[projectAchievement.id] = studentAchievements;
+            if (projectAchievement != null) {
+
+              // get an array of student achievements for the given achievement id
+              var studentAchievements = this.getAchievementsByAchievementId(projectAchievement.id);
+
+              // add the array to the mapping
+              achievementIdToAchievements[projectAchievement.id] = studentAchievements;
+            }
+          }
+        } catch (err) {
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
+            }
+          } finally {
+            if (_didIteratorError6) {
+              throw _iteratorError6;
+            }
           }
         }
       }
@@ -832,17 +946,36 @@ var AchievementService = function () {
         var achievements = this.ProjectService.getAchievementItems();
 
         // loop through all the achievements
-        for (var a = 0; a < achievements.length; a++) {
-          var achievement = achievements[a];
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
 
-          if (achievement != null) {
-            if (id == achievement.id) {
-              /*
-               * the id is already being used so we need to find
-               * a different one
-               */
-              id = null;
-              break;
+        try {
+          for (var _iterator7 = achievements[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var achievement = _step7.value;
+
+            if (achievement != null) {
+              if (id == achievement.id) {
+                /*
+                 * the id is already being used so we need to find
+                 * a different one
+                 */
+                id = null;
+                break;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
+            }
+          } finally {
+            if (_didIteratorError7) {
+              throw _iteratorError7;
             }
           }
         }

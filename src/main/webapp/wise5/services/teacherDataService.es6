@@ -367,8 +367,7 @@ class TeacherDataService {
           var componentStates = resultData.studentWorkList;
 
           // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId objects
-          for (var i = 0; i < componentStates.length; i++) {
-            var componentState = componentStates[i];
+          for (var componentState of componentStates) {
             this.addOrUpdateComponentState(componentState);
           }
         }
@@ -382,8 +381,7 @@ class TeacherDataService {
           this.studentData.allEvents = resultData.events;
           this.studentData.eventsByWorkgroupId = {};
           this.studentData.eventsByNodeId = {};
-          for (var i = 0; i < resultData.events.length; i++) {
-            var event = resultData.events[i];
+          for (var event of resultData.events) {
             var eventWorkgroupId = event.workgroupId;
             if (this.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
               this.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
@@ -403,8 +401,7 @@ class TeacherDataService {
           this.studentData.annotations = resultData.annotations;
           this.studentData.annotationsToWorkgroupId = {};
           this.studentData.annotationsByNodeId = {};
-          for (var i = 0; i < resultData.annotations.length; i++) {
-            var annotation = resultData.annotations[i];
+          for (var annotation of resultData.annotations) {
             var annotationWorkgroupId = annotation.toWorkgroupId;
             if (!this.studentData.annotationsToWorkgroupId[annotationWorkgroupId]) {
               this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
@@ -476,7 +473,7 @@ class TeacherDataService {
       let cs = this.studentData.componentStatesByComponentId[componentId][c];
       if (cs.id != null && cs.id === componentState.id) {
         // found the same component id, so just update it in place.
-        this.studentData.componentStatesByComponentId[componentId][c] = componentState
+        this.studentData.componentStatesByComponentId[componentId][c] = componentState;
         found = true; // remember this so we don't insert later.
         break;
       }
@@ -635,10 +632,7 @@ class TeacherDataService {
         var componentsFound = {};
 
         // loop through the component states forwards
-        for (var csf = 0; csf < componentStatesForWorkgroup.length; csf++) {
-
-          // get a component state
-          var componentState = componentStatesForWorkgroup[csf];
+        for (var componentState of componentStatesForWorkgroup) {
 
           if (componentState != null) {
 
@@ -864,9 +858,7 @@ class TeacherDataService {
     let runStatusPeriods = this.runStatus.periods;
 
     // loop through all the periods in the config
-    for (let p = 0; p < periods.length; p++) {
-      let period = periods[p];
-
+    for (let period of periods) {
       if (period != null) {
         // check if the period object is in the run status periods
 
@@ -874,9 +866,7 @@ class TeacherDataService {
 
         if (runStatusPeriods != null) {
           // loop through all the periods in the run status
-          for (let r = 0; r < runStatusPeriods.length; r++) {
-            let tempRunStatusPeriod = runStatusPeriods[r];
-
+          for (let tempRunStatusPeriod of runStatusPeriods) {
             if (tempRunStatusPeriod != null) {
               if (period.periodId == tempRunStatusPeriod.periodId) {
                 /*
@@ -1095,9 +1085,7 @@ class TeacherDataService {
       let nPeriodsPaused = 0;
 
       // loop through all the periods
-      for (let p = 0; p < periods.length; p++) {
-        let period = periods[p];
-
+      for (let period of periods) {
         if (period != null) {
           if (period.paused) {
             isPaused = true;
@@ -1128,9 +1116,7 @@ class TeacherDataService {
       let nPeriodsPaused = 0;
 
       // loop through all the periods
-      for (let p = 0; p < periods.length; p++) {
-        let period = periods[p];
-
+      for (let period of periods) {
         if (period != null) {
           isPaused = period.paused;
           if (periodId == period.periodId) {
@@ -1202,10 +1188,7 @@ class TeacherDataService {
     var periods = this.ConfigService.getPeriods();
 
     //loop through all the periods
-    for (var x = 0; x < periods.length; x++) {
-      //get a period
-      var period = periods[x];
-
+    for (var period of periods) {
       //set this to default to not paused
       period.paused = false;
     }

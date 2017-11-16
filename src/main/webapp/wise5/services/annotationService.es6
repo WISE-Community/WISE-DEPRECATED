@@ -86,8 +86,7 @@ class AnnotationService {
             }
             if (match && type) {
               if (type.constructor === Array) {
-                for (let i = 0; i < type.length; i++) {
-                  let thisType = type[i];
+                for (let thisType of type) {
                   if (tempAnnotation.type !== thisType) {
                     match = false;
                   }
@@ -162,9 +161,7 @@ class AnnotationService {
 
       // loop through all the annotations and inject a request token
       if (annotations != null && annotations.length > 0) {
-        for (let a = 0; a < annotations.length; a++) {
-          let annotation = annotations[a];
-
+        for (let annotation of annotations) {
           if (annotation != null) {
             annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
             this.addOrUpdateAnnotation(annotation);
@@ -226,9 +223,7 @@ class AnnotationService {
       if (savedAnnotations != null && localAnnotations != null) {
 
         // loop through all the saved annotations
-        for (let x = 0; x < savedAnnotations.length; x++) {
-          let savedAnnotation = savedAnnotations[x];
-
+        for (let savedAnnotation of savedAnnotations) {
           // loop through all the local annotations
           for (let y = localAnnotations.length - 1; y >= 0; y--) {
             localAnnotation = localAnnotations[y];
@@ -810,8 +805,7 @@ class AnnotationService {
   getAllGlobalAnnotations() {
     let globalAnnotations = [];
 
-    for (let a = 0; a < this.annotations.length; a++) {
-      let annotation = this.annotations[a];
+    for (let annotation of this.annotations) {
       if (annotation != null && annotation.data != null) {
         if (annotation.data.isGlobal) {
           globalAnnotations.push(annotation);
@@ -829,15 +823,13 @@ class AnnotationService {
   getAllGlobalAnnotationGroups() {
     let globalAnnotationGroups = [];
 
-    for (let a = 0; a < this.annotations.length; a++) {
-      let annotation = this.annotations[a];
+    for (let annotation of this.annotations) {
       if (annotation != null && annotation.data != null) {
         if (annotation.data.isGlobal) {
           // check if this global annotation can be grouped (has the same annotationGroupName as another that we've seen before)
           if (annotation.data.annotationGroupName != null && annotation.data.annotationGroupCreatedTime != null) {
             let sameGroupFound = false;
-            for (let g = 0; g < globalAnnotationGroups.length; g++) {
-              let globalAnnotationGroup = globalAnnotationGroups[g];
+            for (let globalAnnotationGroup of globalAnnotationGroups) {
               if (globalAnnotationGroup.annotationGroupNameAndTime == (annotation.data.annotationGroupName + annotation.data.annotationGroupCreatedTime)) {
                 // push this annotation to the end of the group
                 globalAnnotationGroup.annotations.push(annotation);
@@ -895,15 +887,13 @@ class AnnotationService {
   calculateActiveGlobalAnnotationGroups() {
     this.activeGlobalAnnotationGroups = [];
 
-    for (let a = 0; a < this.annotations.length; a++) {
-      let annotation = this.annotations[a];
+    for (let annotation of this.annotations) {
       if (annotation != null && annotation.data != null) {
         if (annotation.data.isGlobal && annotation.data.unGlobalizedTimestamp == null) {
           // check if this global annotation can be grouped (has the same annotationGroupName as another that we've seen before)
           if (annotation.data.annotationGroupName != null) {
             let sameGroupFound = false;
-            for (let ag = 0; ag < this.activeGlobalAnnotationGroups.length; ag++) {
-              let activeGlobalAnnotationGroup = this.activeGlobalAnnotationGroups[ag];
+            for (let activeGlobalAnnotationGroup of this.activeGlobalAnnotationGroups) {
               if (activeGlobalAnnotationGroup.annotationGroupName == (annotation.data.annotationGroupName + '_' + annotation.data.annotationGroupCreatedTime)) {
                 // push this annotation to the end of the group
                 activeGlobalAnnotationGroup.annotations.push(annotation);
@@ -937,8 +927,7 @@ class AnnotationService {
   getInActiveGlobalAnnotations() {
     let inActiveGlobalAnnotations = [];
 
-    for (let a = 0; a < this.annotations.length; a++) {
-      let annotation = this.annotations[a];
+    for (let annotation of this.annotations) {
       if (annotation != null && annotation.data != null) {
         if (annotation.data.isGlobal && annotation.data.unGlobalizedTimestamp != null) {
           inActiveGlobalAnnotations.push(annotation);

@@ -344,10 +344,7 @@ class NotificationService {
     if (nodeId && this.ProjectService.isGroupNode(nodeId)) {
       let groupNode = this.ProjectService.getNodeById(nodeId);
       let children = groupNode.ids;
-      let n = children.length;
-
-      for (let i = 0; i < n; i++) {
-        let childId = children[i];
+      for (let childId of children) {
         params.nodeId = childId;
         let childAlerts = this.getAlertNotifications(args);
         alertNotifications = alertNotifications.concat(childAlerts);

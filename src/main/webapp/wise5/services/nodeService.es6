@@ -8,8 +8,8 @@ class NodeService {
               ConfigService,
               ProjectService,
               StudentDataService) {
-    this.$filter = $filter,
-      this.$http = $http;
+    this.$filter = $filter;
+    this.$http = $http;
     this.$injector = $injector;
     this.$mdDialog = $mdDialog;
     this.$q = $q;
@@ -21,7 +21,7 @@ class NodeService {
     }
 
     if (this.ConfigService != null &&
-      (this.ConfigService.getMode() == "classroomMonitor" ||
+        (this.ConfigService.getMode() == "classroomMonitor" ||
         this.ConfigService.getMode() == "author")) {
       // in the classroom monitor, we need access to the TeacherDataService
       this.TeacherDataService = this.$injector.get('TeacherDataService');
@@ -152,9 +152,7 @@ class NodeService {
       if (components != null) {
 
         // loop through the components
-        for (var c = 0; c < components.length; c++) {
-          var tempComponent = components[c];
-
+        for (var tempComponent of components) {
           if (tempComponent != null) {
             var tempComponentId = tempComponent.id;
 
@@ -182,9 +180,7 @@ class NodeService {
     if (componentStates != null) {
 
       // loop through all the component states
-      for (var c = 0; c < componentStates.length; c++) {
-        var componentState = componentStates[c];
-
+      for (var componentState of componentStates) {
         if (componentState != null) {
 
           if (componentState.isSubmit) {
@@ -642,10 +638,7 @@ class NodeService {
         let availableTransitions = [];
 
         // loop through all the transitions
-        for (var t = 0; t < transitions.length; t++) {
-
-          // get a transition
-          var transition = transitions[t];
+        for (var transition of transitions) {
 
           // get the to node id
           var toNodeId = transition.to;
@@ -662,10 +655,7 @@ class NodeService {
             var tempResult = true;
 
             // loop through all of the criteria
-            for (var c = 0; c < criteria.length; c++) {
-
-              // get a criteria
-              var tempCriteria = criteria[c];
+            for (var tempCriteria of criteria) {
 
               // check if the criteria is satisfied
               tempResult = this.StudentDataService.evaluateCriteria(tempCriteria);

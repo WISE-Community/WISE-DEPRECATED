@@ -57,9 +57,7 @@ class StudentStatusService {
     var studentStatus = null;
     var studentStatuses = this.getStudentStatuses();
 
-    for (var x = 0; x < studentStatuses.length; x++) {
-      var tempStudentStatus = studentStatuses[x];
-
+    for (var tempStudentStatus of studentStatuses) {
       if (tempStudentStatus != null) {
         var tempWorkgroupId = tempStudentStatus.workgroupId;
 
@@ -148,9 +146,7 @@ class StudentStatusService {
     let studentStatuses = this.studentStatuses;
 
     // loop through all the student statuses
-    for (var ss = 0; ss < studentStatuses.length; ss++) {
-      var studentStatus = studentStatuses[ss];
-
+    for (var studentStatus of studentStatuses) {
       if (studentStatus != null) {
 
         if (periodId == -1 || periodId == studentStatus.periodId) {
@@ -193,9 +189,7 @@ class StudentStatusService {
     let studentStatuses = this.studentStatuses;
 
     // loop through all the student statuses
-    for (let ss = 0; ss < studentStatuses.length; ss++) {
-      let studentStatus = studentStatuses[ss];
-
+    for (let studentStatus of studentStatuses) {
       if (studentStatus) {
 
         if (periodId == -1 || periodId == studentStatus.periodId) {
@@ -230,12 +224,9 @@ class StudentStatusService {
 
                       // get all the descendants of the group
                       let descendants = this.ProjectService.getDescendentsOfGroup(group);
-                      let l = descendants.length;
 
                       // loop through all the descendants to check for completion
-                      for (let i = 0; i < l; i++) {
-                        let descendantId = descendants[i];
-
+                      for (let descendantId of descendants) {
                         if (!this.ProjectService.isGroupNode(descendantId)) {
                           // node is not a group, so add to totals if visible and has student work
                           let descendantStatus = nodeStatuses[descendantId];
@@ -372,9 +363,7 @@ class StudentStatusService {
 
     // find workgroups online in the given period
     let workgroupsOnlineInPeriod = [];
-    let n = workgroupsOnline.length;
-    for (let i = 0; i < n; i++) {
-      let workgroup = workgroupsOnline[i];
+    for (let workgroup of workgroupsOnline) {
       let studentStatus = this.getStudentStatusForWorkgroupId(workgroup);
       if (studentStatus) {
         let pId = studentStatus.periodId;
@@ -410,9 +399,7 @@ class StudentStatusService {
     var studentStatuses = this.studentStatuses;
 
     // loop through all the student statuses
-    for (var ss = 0; ss < studentStatuses.length; ss++) {
-      var studentStatus = studentStatuses[ss];
-
+    for (var studentStatus of studentStatuses) {
       if (studentStatus != null) {
 
         if (periodId == -1 || periodId == studentStatus.periodId) {

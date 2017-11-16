@@ -27,12 +27,33 @@ var StudentAssetService = function () {
   _createClass(StudentAssetService, [{
     key: 'getAssetById',
     value: function getAssetById(assetId) {
-      for (var a = 0; a < this.allAssets.length; a++) {
-        var asset = this.allAssets[a];
-        if (asset.id === assetId) {
-          return asset;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.allAssets[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var asset = _step.value;
+
+          if (asset.id === assetId) {
+            return asset;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
         }
       }
+
       return null;
     }
   }, {
@@ -59,23 +80,44 @@ var StudentAssetService = function () {
           var result = [];
           var assets = response.data;
           var studentUploadsBaseURL = _this.ConfigService.getStudentUploadsBaseURL();
-          for (var a = 0; a < assets.length; a++) {
-            var asset = assets[a];
-            if (!asset.isReferenced && asset.serverDeleteTime == null && asset.fileName !== '.DS_Store') {
-              asset.url = studentUploadsBaseURL + asset.filePath;
-              if (_this.isImage(asset)) {
-                asset.type = 'image';
-                asset.iconURL = asset.url;
-              } else if (_this.isAudio(asset)) {
-                asset.type = 'audio';
-                asset.iconURL = 'wise5/vle/notebook/audio.png';
-              } else {
-                asset.type = 'file';
-                asset.iconURL = 'wise5/vle/notebook/file.png';
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
+
+          try {
+            for (var _iterator2 = assets[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var asset = _step2.value;
+
+              if (!asset.isReferenced && asset.serverDeleteTime == null && asset.fileName !== '.DS_Store') {
+                asset.url = studentUploadsBaseURL + asset.filePath;
+                if (_this.isImage(asset)) {
+                  asset.type = 'image';
+                  asset.iconURL = asset.url;
+                } else if (_this.isAudio(asset)) {
+                  asset.type = 'audio';
+                  asset.iconURL = 'wise5/vle/notebook/audio.png';
+                } else {
+                  asset.type = 'file';
+                  asset.iconURL = 'wise5/vle/notebook/file.png';
+                }
+                result.push(asset);
               }
-              result.push(asset);
+            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
             }
           }
+
           _this.allAssets = result;
           return result;
         });

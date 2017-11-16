@@ -394,9 +394,29 @@ var TeacherDataService = function () {
             var componentStates = resultData.studentWorkList;
 
             // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId objects
-            for (var i = 0; i < componentStates.length; i++) {
-              var componentState = componentStates[i];
-              _this2.addOrUpdateComponentState(componentState);
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+              for (var _iterator = componentStates[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var componentState = _step.value;
+
+                _this2.addOrUpdateComponentState(componentState);
+              }
+            } catch (err) {
+              _didIteratorError = true;
+              _iteratorError = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                  _iterator.return();
+                }
+              } finally {
+                if (_didIteratorError) {
+                  throw _iteratorError;
+                }
+              }
             }
           }
 
@@ -409,19 +429,39 @@ var TeacherDataService = function () {
             _this2.studentData.allEvents = resultData.events;
             _this2.studentData.eventsByWorkgroupId = {};
             _this2.studentData.eventsByNodeId = {};
-            for (var i = 0; i < resultData.events.length; i++) {
-              var event = resultData.events[i];
-              var eventWorkgroupId = event.workgroupId;
-              if (_this2.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
-                _this2.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
-              }
-              _this2.studentData.eventsByWorkgroupId[eventWorkgroupId].push(event);
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
 
-              var eventNodeId = event.nodeId;
-              if (_this2.studentData.eventsByNodeId[eventNodeId] == null) {
-                _this2.studentData.eventsByNodeId[eventNodeId] = new Array();
+            try {
+              for (var _iterator2 = resultData.events[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var event = _step2.value;
+
+                var eventWorkgroupId = event.workgroupId;
+                if (_this2.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
+                  _this2.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
+                }
+                _this2.studentData.eventsByWorkgroupId[eventWorkgroupId].push(event);
+
+                var eventNodeId = event.nodeId;
+                if (_this2.studentData.eventsByNodeId[eventNodeId] == null) {
+                  _this2.studentData.eventsByNodeId[eventNodeId] = new Array();
+                }
+                _this2.studentData.eventsByNodeId[eventNodeId].push(event);
               }
-              _this2.studentData.eventsByNodeId[eventNodeId].push(event);
+            } catch (err) {
+              _didIteratorError2 = true;
+              _iteratorError2 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                  _iterator2.return();
+                }
+              } finally {
+                if (_didIteratorError2) {
+                  throw _iteratorError2;
+                }
+              }
             }
           }
 
@@ -430,19 +470,39 @@ var TeacherDataService = function () {
             _this2.studentData.annotations = resultData.annotations;
             _this2.studentData.annotationsToWorkgroupId = {};
             _this2.studentData.annotationsByNodeId = {};
-            for (var i = 0; i < resultData.annotations.length; i++) {
-              var annotation = resultData.annotations[i];
-              var annotationWorkgroupId = annotation.toWorkgroupId;
-              if (!_this2.studentData.annotationsToWorkgroupId[annotationWorkgroupId]) {
-                _this2.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
-              }
-              _this2.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
 
-              var annotationNodeId = annotation.nodeId;
-              if (!_this2.studentData.annotationsByNodeId[annotationNodeId]) {
-                _this2.studentData.annotationsByNodeId[annotationNodeId] = new Array();
+            try {
+              for (var _iterator3 = resultData.annotations[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var annotation = _step3.value;
+
+                var annotationWorkgroupId = annotation.toWorkgroupId;
+                if (!_this2.studentData.annotationsToWorkgroupId[annotationWorkgroupId]) {
+                  _this2.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
+                }
+                _this2.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
+
+                var annotationNodeId = annotation.nodeId;
+                if (!_this2.studentData.annotationsByNodeId[annotationNodeId]) {
+                  _this2.studentData.annotationsByNodeId[annotationNodeId] = new Array();
+                }
+                _this2.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
               }
-              _this2.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
+            } catch (err) {
+              _didIteratorError3 = true;
+              _iteratorError3 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                  _iterator3.return();
+                }
+              } finally {
+                if (_didIteratorError3) {
+                  throw _iteratorError3;
+                }
+              }
             }
           }
 
@@ -679,37 +739,56 @@ var TeacherDataService = function () {
           var componentsFound = {};
 
           // loop through the component states forwards
-          for (var csf = 0; csf < componentStatesForWorkgroup.length; csf++) {
+          var _iteratorNormalCompletion4 = true;
+          var _didIteratorError4 = false;
+          var _iteratorError4 = undefined;
 
-            // get a component state
-            var componentState = componentStatesForWorkgroup[csf];
+          try {
+            for (var _iterator4 = componentStatesForWorkgroup[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+              var componentState = _step4.value;
 
-            if (componentState != null) {
 
-              // get the node id and component id of the component state
-              var nodeId = componentState.nodeId;
-              var componentId = componentState.componentId;
+              if (componentState != null) {
 
-              // generate the component key e.g. "node2_bb83hs0sd8"
-              var key = nodeId + "-" + componentId;
+                // get the node id and component id of the component state
+                var nodeId = componentState.nodeId;
+                var componentId = componentState.componentId;
 
-              if (componentRevisionCounter[key] == null) {
-                // initialize the component revision counter for this component to 1 if there is no entry
-                componentRevisionCounter[key] = 1;
+                // generate the component key e.g. "node2_bb83hs0sd8"
+                var key = nodeId + "-" + componentId;
+
+                if (componentRevisionCounter[key] == null) {
+                  // initialize the component revision counter for this component to 1 if there is no entry
+                  componentRevisionCounter[key] = 1;
+                }
+
+                // get the revision counter
+                var revisionCounter = componentRevisionCounter[key];
+
+                // set the revision counter into the component state
+                componentState.revisionCounter = revisionCounter;
+
+                // increment the revision counter for the component
+                componentRevisionCounter[key] = revisionCounter + 1;
               }
+            }
 
-              // get the revision counter
-              var revisionCounter = componentRevisionCounter[key];
-
-              // set the revision counter into the component state
-              componentState.revisionCounter = revisionCounter;
-
-              // increment the revision counter for the component
-              componentRevisionCounter[key] = revisionCounter + 1;
+            // loop through the component states backwards
+          } catch (err) {
+            _didIteratorError4 = true;
+            _iteratorError4 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                _iterator4.return();
+              }
+            } finally {
+              if (_didIteratorError4) {
+                throw _iteratorError4;
+              }
             }
           }
 
-          // loop through the component states backwards
           for (var csb = componentStatesForWorkgroup.length - 1; csb >= 0; csb--) {
 
             // get a component state
@@ -924,40 +1003,78 @@ var TeacherDataService = function () {
       var runStatusPeriods = this.runStatus.periods;
 
       // loop through all the periods in the config
-      for (var p = 0; p < periods.length; p++) {
-        var period = periods[p];
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
 
-        if (period != null) {
-          // check if the period object is in the run status periods
+      try {
+        for (var _iterator5 = periods[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var period = _step5.value;
 
-          var runStatusPeriod = null;
+          if (period != null) {
+            // check if the period object is in the run status periods
 
-          if (runStatusPeriods != null) {
-            // loop through all the periods in the run status
-            for (var r = 0; r < runStatusPeriods.length; r++) {
-              var tempRunStatusPeriod = runStatusPeriods[r];
+            var runStatusPeriod = null;
 
-              if (tempRunStatusPeriod != null) {
-                if (period.periodId == tempRunStatusPeriod.periodId) {
-                  /*
-                   * We have found a period that is in the config and
-                   * the run status.
-                   */
-                  runStatusPeriod = tempRunStatusPeriod;
+            if (runStatusPeriods != null) {
+              // loop through all the periods in the run status
+              var _iteratorNormalCompletion6 = true;
+              var _didIteratorError6 = false;
+              var _iteratorError6 = undefined;
+
+              try {
+                for (var _iterator6 = runStatusPeriods[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                  var tempRunStatusPeriod = _step6.value;
+
+                  if (tempRunStatusPeriod != null) {
+                    if (period.periodId == tempRunStatusPeriod.periodId) {
+                      /*
+                       * We have found a period that is in the config and
+                       * the run status.
+                       */
+                      runStatusPeriod = tempRunStatusPeriod;
+                    }
+                  }
+                }
+              } catch (err) {
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                    _iterator6.return();
+                  }
+                } finally {
+                  if (_didIteratorError6) {
+                    throw _iteratorError6;
+                  }
                 }
               }
             }
-          }
 
-          if (runStatusPeriod == null) {
-            /*
-             * we did not find the period object in the run status so
-             * we will use the period object from the config
-             */
-            mergedPeriods.push(period);
-          } else {
-            // we found the period object in the run status so we will use it
-            mergedPeriods.push(runStatusPeriod);
+            if (runStatusPeriod == null) {
+              /*
+               * we did not find the period object in the run status so
+               * we will use the period object from the config
+               */
+              mergedPeriods.push(period);
+            } else {
+              // we found the period object in the run status so we will use it
+              mergedPeriods.push(runStatusPeriod);
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
           }
         }
       }
@@ -1190,13 +1307,32 @@ var TeacherDataService = function () {
         var nPeriodsPaused = 0;
 
         // loop through all the periods
-        for (var p = 0; p < periods.length; p++) {
-          var period = periods[p];
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
 
-          if (period != null) {
-            if (period.paused) {
-              isPaused = true;
-              break;
+        try {
+          for (var _iterator7 = periods[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var period = _step7.value;
+
+            if (period != null) {
+              if (period.paused) {
+                isPaused = true;
+                break;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
+            }
+          } finally {
+            if (_didIteratorError7) {
+              throw _iteratorError7;
             }
           }
         }
@@ -1226,20 +1362,39 @@ var TeacherDataService = function () {
         var nPeriodsPaused = 0;
 
         // loop through all the periods
-        for (var p = 0; p < periods.length; p++) {
-          var period = periods[p];
+        var _iteratorNormalCompletion8 = true;
+        var _didIteratorError8 = false;
+        var _iteratorError8 = undefined;
 
-          if (period != null) {
-            isPaused = period.paused;
-            if (periodId == period.periodId) {
-              // we have found the period we are looking for
-              break;
-            } else {
-              if (isPaused) {
-                nPeriodsPaused++;
-              } else {
+        try {
+          for (var _iterator8 = periods[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+            var period = _step8.value;
+
+            if (period != null) {
+              isPaused = period.paused;
+              if (periodId == period.periodId) {
+                // we have found the period we are looking for
                 break;
+              } else {
+                if (isPaused) {
+                  nPeriodsPaused++;
+                } else {
+                  break;
+                }
               }
+            }
+          }
+        } catch (err) {
+          _didIteratorError8 = true;
+          _iteratorError8 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+              _iterator8.return();
+            }
+          } finally {
+            if (_didIteratorError8) {
+              throw _iteratorError8;
             }
           }
         }
@@ -1310,15 +1465,34 @@ var TeacherDataService = function () {
       var periods = this.ConfigService.getPeriods();
 
       //loop through all the periods
-      for (var x = 0; x < periods.length; x++) {
-        //get a period
-        var period = periods[x];
+      var _iteratorNormalCompletion9 = true;
+      var _didIteratorError9 = false;
+      var _iteratorError9 = undefined;
 
-        //set this to default to not paused
-        period.paused = false;
+      try {
+        for (var _iterator9 = periods[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+          var period = _step9.value;
+
+          //set this to default to not paused
+          period.paused = false;
+        }
+
+        // set the periods into the run status
+      } catch (err) {
+        _didIteratorError9 = true;
+        _iteratorError9 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion9 && _iterator9.return) {
+            _iterator9.return();
+          }
+        } finally {
+          if (_didIteratorError9) {
+            throw _iteratorError9;
+          }
+        }
       }
 
-      // set the periods into the run status
       runStatus.periods = periods;
 
       // set the run status into the view so we can access it later

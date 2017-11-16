@@ -66,10 +66,7 @@ class AchievementService {
         if (achievements != null) {
 
           // loop through all the student achievements
-          for (let i = 0; i < achievements.length; i++) {
-
-            // get a student achievement
-            let achievement = achievements[i];
+          for (let achievement of achievements) {
 
             // add the student achievement to our local data structure
             this.addOrUpdateAchievement(achievement);
@@ -121,9 +118,7 @@ class AchievementService {
             if (projectAchievements != null) {
 
               // loop through all the project achievements
-              for (var p = 0; p < projectAchievements.length; p++) {
-                var projectAchievement = projectAchievements[p];
-
+              for (var projectAchievement of projectAchievements) {
                 if (projectAchievement != null) {
 
                   if (!this.isAchievementCompleted(projectAchievement.id)) {
@@ -287,9 +282,7 @@ class AchievementService {
         if (projectAchievementItems != null) {
 
           // loop through all the achievements in the project
-          for (var a = 0; a < projectAchievementItems.length; a++) {
-
-            var projectAchievement = projectAchievementItems[a];
+          for (var projectAchievement of projectAchievementItems) {
 
             if (projectAchievement != null) {
 
@@ -334,9 +327,7 @@ class AchievementService {
       if (achievements != null) {
 
         // loop through all the achievements the student has completed
-        for (var a = 0; a < achievements.length; a++) {
-          var achievement = achievements[a];
-
+        for (var achievement of achievements) {
           if (achievement != null) {
             if (achievement.achievementId == achievementId) {
               /*
@@ -671,9 +662,7 @@ class AchievementService {
       if (workgroupIds != null) {
 
         // loop through all the workgroup ids
-        for (var w = 0; w < workgroupIds.length; w++) {
-
-          var workgroupId = workgroupIds[w];
+        for (var workgroupId of workgroupIds) {
 
           if (workgroupId != null) {
 
@@ -723,8 +712,7 @@ class AchievementService {
     if (projectAchievements != null) {
 
       // loop through all the project achievements
-      for (var a = 0; a < projectAchievements.length; a++) {
-        var projectAchievement = projectAchievements[a];
+      for (var projectAchievement of projectAchievements) {
 
         if (projectAchievement != null) {
 
@@ -758,9 +746,7 @@ class AchievementService {
       var achievements = this.ProjectService.getAchievementItems();
 
       // loop through all the achievements
-      for (var a = 0; a < achievements.length; a++) {
-        var achievement = achievements[a];
-
+      for (var achievement of achievements) {
         if (achievement != null) {
           if (id == achievement.id) {
             /*

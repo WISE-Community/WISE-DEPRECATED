@@ -279,10 +279,7 @@ class ConfigService {
     let classmateUserInfos = this.getClassmateUserInfos();
 
     if (classmateUserInfos) {
-      let n = classmateUserInfos.length;
-
-      for (let i = 0; i < n; i++) {
-        let workgroup = classmateUserInfos[i];
+      for (let workgroup of classmateUserInfos) {
         workgroup.displayNames = this.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId);
       }
     }
@@ -306,8 +303,8 @@ class ConfigService {
        * loop through all the classmate user info objects and add it to
        * new array of classmate user infos
        */
-      for (var c = 0; c < classmateUserInfos.length; c++) {
-        sortedClassmateUserInfos.push(classmateUserInfos[c]);
+      for (var classmateUserInfo of classmateUserInfos) {
+        sortedClassmateUserInfos.push(classmateUserInfo);
       }
     }
 
@@ -382,9 +379,7 @@ class ConfigService {
     var classmateUserInfos = this.getClassmateUserInfos();
 
     if (classmateUserInfos != null) {
-      for (var c = 0; c < classmateUserInfos.length; c++) {
-        var classmateUserInfo = classmateUserInfos[c];
-
+      for (var classmateUserInfo of classmateUserInfos) {
         if (classmateUserInfo != null) {
           var workgroupId = classmateUserInfo.workgroupId;
 
@@ -476,9 +471,7 @@ class ConfigService {
         var classmateUserInfos = this.getClassmateUserInfos();
 
         if (classmateUserInfos != null) {
-          for (var c = 0; c < classmateUserInfos.length; c++) {
-            var classmateUserInfo = classmateUserInfos[c];
-
+          for (var classmateUserInfo of classmateUserInfos) {
             if (classmateUserInfo != null) {
               var tempWorkgroupId = classmateUserInfo.workgroupId;
 
@@ -531,9 +524,7 @@ class ConfigService {
 
       if (userNamesSplit != null) {
         // loop through each user name
-        for (var x = 0; x < userNamesSplit.length; x++) {
-          // get a user name e.g. "Spongebob Squarepants (spongebobs0101)"
-          var userName = userNamesSplit[x];
+        for (var userName of userNamesSplit) {
 
           // get the index of the first empty space
           var indexOfSpace = userName.indexOf(' ');
@@ -601,8 +592,7 @@ class ConfigService {
       if (userInfo != null) {
         let userNames = userInfo.userName.split(':');
 
-        for (let i = 0; i < userNames.length; i++) {
-          let name = userNames[i];
+        for (let name of userNames) {
           let id = "";
           let regex = /(.+) \((.+)\)/g;
           let matches = regex.exec(name);
@@ -733,9 +723,7 @@ class ConfigService {
 
       if (sharedTeacherUserInfos != null) {
 
-        for (var s = 0; s < sharedTeacherUserInfos.length; s++) {
-          var sharedTeacherUserInfo = sharedTeacherUserInfos[s];
-
+        for (var sharedTeacherUserInfo of sharedTeacherUserInfos) {
           if (sharedTeacherUserInfo != null) {
             if (workgroupId == sharedTeacherUserInfo.workgroupId) {
               result = true;
@@ -782,9 +770,7 @@ class ConfigService {
 
       if (sharedTeacherUserInfos != null) {
 
-        for (var s = 0; s < sharedTeacherUserInfos.length; s++) {
-          var sharedTeacherUserInfo = sharedTeacherUserInfos[s];
-
+        for (var sharedTeacherUserInfo of sharedTeacherUserInfos) {
           if (sharedTeacherUserInfo != null) {
             if (workgroupId == sharedTeacherUserInfo.workgroupId) {
               role = sharedTeacherUserInfo.role;

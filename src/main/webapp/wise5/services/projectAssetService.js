@@ -137,17 +137,36 @@ var ProjectAssetService = function () {
          * loop through all the asset files to find the text files that
          * are actually used in the project
          */
-        for (var a = 0; a < assets.files.length; a++) {
-          var asset = assets.files[a];
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-          if (asset != null) {
-            var fileName = asset.fileName;
+        try {
+          for (var _iterator = assets.files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var asset = _step.value;
 
-            // check if the file is a text file
-            if (this.UtilService.endsWith(fileName, ".html") || this.UtilService.endsWith(fileName, ".htm") || this.UtilService.endsWith(fileName, ".js")) {
+            if (asset != null) {
+              var fileName = asset.fileName;
 
-              // the file is a text file
-              allTextFiles.push(fileName);
+              // check if the file is a text file
+              if (this.UtilService.endsWith(fileName, ".html") || this.UtilService.endsWith(fileName, ".htm") || this.UtilService.endsWith(fileName, ".js")) {
+
+                // the file is a text file
+                allTextFiles.push(fileName);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
             }
           }
         }
@@ -201,67 +220,85 @@ var ProjectAssetService = function () {
           foundNewUsedTextFile = false;
 
           // loop through all the text files
-          for (var h = 0; h < textFiles.length; h++) {
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
 
-            // get a texzt file object
-            var textFile = textFiles[h];
+          try {
+            for (var _iterator2 = textFiles[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var textFile = _step2.value;
 
-            if (textFile != null) {
 
-              /*
-               * get the url to the text file
-               * e.g. /wise/curriculum/26/assets/whale.html
-               */
-              var url = textFile.config.url;
+              if (textFile != null) {
 
-              // get the file name
-              var fileName = '';
-
-              // get the last index of '/'
-              var lastIndexOfSlash = url.lastIndexOf('/');
-
-              if (lastIndexOfSlash == -1) {
-                // the url does not contain a '/'
-                fileName = url;
-              } else {
                 /*
-                 * the url does contain a '/' so we will get everything
-                 * after it
+                 * get the url to the text file
+                 * e.g. /wise/curriculum/26/assets/whale.html
                  */
-                fileName = url.substring(lastIndexOfSlash + 1);
-              }
+                var url = textFile.config.url;
 
-              /*
-               * check if we have already found that this text file
-               * is used
-               */
-              if (usedTextFileNames.indexOf(fileName) == -1) {
-                /*
-                 * this is a file name that isn't yet in the array
-                 * of file names that are used
-                 */
+                // get the file name
+                var fileName = '';
 
-                if (allUsedTextContent.indexOf(fileName) != -1) {
-                  // the file name is referenced in the content
+                // get the last index of '/'
+                var lastIndexOfSlash = url.lastIndexOf('/');
 
-                  // add the file name to our array of used text file names
-                  usedTextFileNames.push(fileName);
-
-                  // get the file content
-                  var data = textFile.data;
-
+                if (lastIndexOfSlash == -1) {
+                  // the url does not contain a '/'
+                  fileName = url;
+                } else {
                   /*
-                   * add the content of the file to our variable that
-                   * contains all the used text content
+                   * the url does contain a '/' so we will get everything
+                   * after it
                    */
-                  allUsedTextContent += data;
-
-                  /*
-                   * set the boolean flag so that we will iterate
-                   * the while loop again
-                   */
-                  foundNewUsedTextFile = true;
+                  fileName = url.substring(lastIndexOfSlash + 1);
                 }
+
+                /*
+                 * check if we have already found that this text file
+                 * is used
+                 */
+                if (usedTextFileNames.indexOf(fileName) == -1) {
+                  /*
+                   * this is a file name that isn't yet in the array
+                   * of file names that are used
+                   */
+
+                  if (allUsedTextContent.indexOf(fileName) != -1) {
+                    // the file name is referenced in the content
+
+                    // add the file name to our array of used text file names
+                    usedTextFileNames.push(fileName);
+
+                    // get the file content
+                    var data = textFile.data;
+
+                    /*
+                     * add the content of the file to our variable that
+                     * contains all the used text content
+                     */
+                    allUsedTextContent += data;
+
+                    /*
+                     * set the boolean flag so that we will iterate
+                     * the while loop again
+                     */
+                    foundNewUsedTextFile = true;
+                  }
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
               }
             }
           }
@@ -273,21 +310,40 @@ var ProjectAssetService = function () {
         if (assets != null && assets.files != null) {
 
           // loop through all the assets
-          for (var a = 0; a < assets.files.length; a++) {
-            var asset = assets.files[a];
+          var _iteratorNormalCompletion3 = true;
+          var _didIteratorError3 = false;
+          var _iteratorError3 = undefined;
 
-            if (asset != null) {
-              var fileName = asset.fileName;
+          try {
+            for (var _iterator3 = assets.files[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+              var asset = _step3.value;
 
-              if (allUsedTextContent.indexOf(fileName) != -1) {
-                // the file is used in the project
-                asset.used = true;
-              } else {
-                // the file is not used in the project
-                asset.used = false;
+              if (asset != null) {
+                var fileName = asset.fileName;
 
-                // add the file size to the total
-                totalUnusedFilesSize += asset.fileSize;
+                if (allUsedTextContent.indexOf(fileName) != -1) {
+                  // the file is used in the project
+                  asset.used = true;
+                } else {
+                  // the file is not used in the project
+                  asset.used = false;
+
+                  // add the file size to the total
+                  totalUnusedFilesSize += asset.fileSize;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError3 = true;
+            _iteratorError3 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
+              }
+            } finally {
+              if (_didIteratorError3) {
+                throw _iteratorError3;
               }
             }
           }
@@ -313,16 +369,34 @@ var ProjectAssetService = function () {
       var projectAssetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
 
       // loop through all the text file names
-      for (var t = 0; t < textFileNames.length; t++) {
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
 
-        // get an text file name
-        var textFileName = textFileNames[t];
+      try {
+        for (var _iterator4 = textFileNames[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var textFileName = _step4.value;
 
-        // create a promise that will return the contents of the text file
-        var promise = this.$http.get(projectAssetsDirectoryPath + '/' + textFileName);
 
-        // add the promise to our list of promises
-        promises.push(promise);
+          // create a promise that will return the contents of the text file
+          var promise = this.$http.get(projectAssetsDirectoryPath + '/' + textFileName);
+
+          // add the promise to our list of promises
+          promises.push(promise);
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
+          }
+        }
       }
 
       return this.$q.all(promises);

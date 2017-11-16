@@ -12,7 +12,8 @@ var NodeService = function () {
   function NodeService($filter, $http, $injector, $mdDialog, $q, ConfigService, ProjectService, StudentDataService) {
     _classCallCheck(this, NodeService);
 
-    this.$filter = $filter, this.$http = $http;
+    this.$filter = $filter;
+    this.$http = $http;
     this.$injector = $injector;
     this.$mdDialog = $mdDialog;
     this.$q = $q;
@@ -172,16 +173,35 @@ var NodeService = function () {
         if (components != null) {
 
           // loop through the components
-          for (var c = 0; c < components.length; c++) {
-            var tempComponent = components[c];
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
 
-            if (tempComponent != null) {
-              var tempComponentId = tempComponent.id;
+          try {
+            for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var tempComponent = _step.value;
 
-              if (tempComponentId === componentId) {
-                // we have found the component with the component id we want
-                componentContent = tempComponent;
-                break;
+              if (tempComponent != null) {
+                var tempComponentId = tempComponent.id;
+
+                if (tempComponentId === componentId) {
+                  // we have found the component with the component id we want
+                  componentContent = tempComponent;
+                  break;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
               }
             }
           }
@@ -205,14 +225,33 @@ var NodeService = function () {
       if (componentStates != null) {
 
         // loop through all the component states
-        for (var c = 0; c < componentStates.length; c++) {
-          var componentState = componentStates[c];
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
 
-          if (componentState != null) {
+        try {
+          for (var _iterator2 = componentStates[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var componentState = _step2.value;
 
-            if (componentState.isSubmit) {
-              result = true;
-              break;
+            if (componentState != null) {
+
+              if (componentState.isSubmit) {
+                result = true;
+                break;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
             }
           }
         }
@@ -702,52 +741,88 @@ var NodeService = function () {
           var availableTransitions = [];
 
           // loop through all the transitions
-          for (var t = 0; t < transitions.length; t++) {
+          var _iteratorNormalCompletion3 = true;
+          var _didIteratorError3 = false;
+          var _iteratorError3 = undefined;
 
-            // get a transition
-            var transition = transitions[t];
+          try {
+            for (var _iterator3 = transitions[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+              var transition = _step3.value;
 
-            // get the to node id
-            var toNodeId = transition.to;
 
-            // get the criteria for which this transition can be used
-            var criteria = transition.criteria;
+              // get the to node id
+              var toNodeId = transition.to;
 
-            // set the default result to true in case there is no criteria
-            var criteriaResult = true;
+              // get the criteria for which this transition can be used
+              var criteria = transition.criteria;
 
-            if (criteria != null) {
+              // set the default result to true in case there is no criteria
+              var criteriaResult = true;
 
-              var firstResult = true;
-              var tempResult = true;
+              if (criteria != null) {
 
-              // loop through all of the criteria
-              for (var c = 0; c < criteria.length; c++) {
+                var firstResult = true;
+                var tempResult = true;
 
-                // get a criteria
-                var tempCriteria = criteria[c];
+                // loop through all of the criteria
+                var _iteratorNormalCompletion4 = true;
+                var _didIteratorError4 = false;
+                var _iteratorError4 = undefined;
 
-                // check if the criteria is satisfied
-                tempResult = this.StudentDataService.evaluateCriteria(tempCriteria);
+                try {
+                  for (var _iterator4 = criteria[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var tempCriteria = _step4.value;
 
-                if (firstResult) {
-                  // this is the first criteria in this for loop
-                  criteriaResult = tempResult;
-                  firstResult = false;
-                } else {
-                  // this is not the first criteria in this for loop so we will && the result
-                  criteriaResult = criteriaResult && tempResult;
+
+                    // check if the criteria is satisfied
+                    tempResult = this.StudentDataService.evaluateCriteria(tempCriteria);
+
+                    if (firstResult) {
+                      // this is the first criteria in this for loop
+                      criteriaResult = tempResult;
+                      firstResult = false;
+                    } else {
+                      // this is not the first criteria in this for loop so we will && the result
+                      criteriaResult = criteriaResult && tempResult;
+                    }
+                  }
+                } catch (err) {
+                  _didIteratorError4 = true;
+                  _iteratorError4 = err;
+                } finally {
+                  try {
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                      _iterator4.return();
+                    }
+                  } finally {
+                    if (_didIteratorError4) {
+                      throw _iteratorError4;
+                    }
+                  }
+                }
+              }
+
+              if (toNodeId != null) {
+
+                // check if the criteria was satisfied and the to node is visitable
+                if (criteriaResult) {
+
+                  // the student is allowed to use the transition
+                  availableTransitions.push(transition);
                 }
               }
             }
-
-            if (toNodeId != null) {
-
-              // check if the criteria was satisfied and the to node is visitable
-              if (criteriaResult) {
-
-                // the student is allowed to use the transition
-                availableTransitions.push(transition);
+          } catch (err) {
+            _didIteratorError3 = true;
+            _iteratorError3 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
+              }
+            } finally {
+              if (_didIteratorError3) {
+                throw _iteratorError3;
               }
             }
           }

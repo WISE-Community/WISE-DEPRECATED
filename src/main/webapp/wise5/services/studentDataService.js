@@ -68,11 +68,32 @@ var StudentDataService = function () {
               if (unGlobalizeConditional === "any") {
                 // at least one criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
                 var anySatified = false;
-                for (var i = 0; i < unGlobalizeCriteriaArray.length; i++) {
-                  var unGlobalizeCriteria = unGlobalizeCriteriaArray[i];
-                  var unGlobalizeCriteriaResult = _this.evaluateCriteria(unGlobalizeCriteria);
-                  anySatified = anySatified || unGlobalizeCriteriaResult;
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                  for (var _iterator = unGlobalizeCriteriaArray[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var unGlobalizeCriteria = _step.value;
+
+                    var unGlobalizeCriteriaResult = _this.evaluateCriteria(unGlobalizeCriteria);
+                    anySatified = anySatified || unGlobalizeCriteriaResult;
+                  }
+                } catch (err) {
+                  _didIteratorError = true;
+                  _iteratorError = err;
+                } finally {
+                  try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                      _iterator.return();
+                    }
+                  } finally {
+                    if (_didIteratorError) {
+                      throw _iteratorError;
+                    }
+                  }
                 }
+
                 if (anySatified) {
                   globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date()); // save when criteria was satisfied
                   _this.saveAnnotations([globalAnnotation]); // save changes to server
@@ -80,11 +101,32 @@ var StudentDataService = function () {
               } else if (unGlobalizeConditional === "all") {
                 // all criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
                 var allSatisfied = true;
-                for (var _i = 0; _i < unGlobalizeCriteriaArray.length; _i++) {
-                  var _unGlobalizeCriteria = unGlobalizeCriteriaArray[_i];
-                  var _unGlobalizeCriteriaResult = _this.evaluateCriteria(_unGlobalizeCriteria);
-                  allSatisfied = allSatisfied && _unGlobalizeCriteriaResult;
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
+
+                try {
+                  for (var _iterator2 = unGlobalizeCriteriaArray[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var _unGlobalizeCriteria = _step2.value;
+
+                    var _unGlobalizeCriteriaResult = _this.evaluateCriteria(_unGlobalizeCriteria);
+                    allSatisfied = allSatisfied && _unGlobalizeCriteriaResult;
+                  }
+                } catch (err) {
+                  _didIteratorError2 = true;
+                  _iteratorError2 = err;
+                } finally {
+                  try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                      _iterator2.return();
+                    }
+                  } finally {
+                    if (_didIteratorError2) {
+                      throw _iteratorError2;
+                    }
+                  }
                 }
+
                 if (allSatisfied) {
                   globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date()); // save when criteria was satisfied
                   _this.saveAnnotations([globalAnnotation]); // save changes to server
@@ -165,46 +207,108 @@ var StudentDataService = function () {
             _this2.studentData.componentStates = [];
             _this2.studentData.nodeStates = [];
             var studentWorkList = resultData.studentWorkList;
-            for (var s = 0; s < studentWorkList.length; s++) {
-              var studentWork = studentWorkList[s];
-              if (studentWork.componentId != null) {
-                _this2.studentData.componentStates.push(studentWork);
-              } else {
-                _this2.studentData.nodeStates.push(studentWork);
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
+
+            try {
+              for (var _iterator3 = studentWorkList[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var studentWork = _step3.value;
+
+                if (studentWork.componentId != null) {
+                  _this2.studentData.componentStates.push(studentWork);
+                } else {
+                  _this2.studentData.nodeStates.push(studentWork);
+                }
+              }
+
+              // Check to see if this Project contains any Planning activities
+            } catch (err) {
+              _didIteratorError3 = true;
+              _iteratorError3 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                  _iterator3.return();
+                }
+              } finally {
+                if (_didIteratorError3) {
+                  throw _iteratorError3;
+                }
               }
             }
 
-            // Check to see if this Project contains any Planning activities
             if (_this2.ProjectService.project.nodes != null && _this2.ProjectService.project.nodes.length > 0) {
               // Overload/add new nodes based on student's work in the NodeState for the planning group.
-              for (var p = 0; p < _this2.ProjectService.project.nodes.length; p++) {
-                var planningGroupNode = _this2.ProjectService.project.nodes[p];
-                if (planningGroupNode.planning) {
-                  var lastestNodeStateForPlanningGroupNode = _this2.getLatestNodeStateByNodeId(planningGroupNode.id);
-                  if (lastestNodeStateForPlanningGroupNode != null) {
-                    var studentModifiedNodes = lastestNodeStateForPlanningGroupNode.studentData.nodes;
-                    if (studentModifiedNodes != null) {
-                      for (var _s = 0; _s < studentModifiedNodes.length; _s++) {
-                        var studentModifiedNode = studentModifiedNodes[_s]; // Planning Node that student modified or new instances.
-                        var studentModifiedNodeId = studentModifiedNode.id;
-                        if (studentModifiedNode.planning) {
-                          // If this is a Planning Node that exists in the project, replace the one in the original project with this one.
-                          for (var n = 0; n < _this2.ProjectService.project.nodes.length; n++) {
-                            if (_this2.ProjectService.project.nodes[n].id === studentModifiedNodeId) {
-                              // Only overload the ids. This will allow authors to add more planningNodes during the run if needed.
-                              _this2.ProjectService.project.nodes[n].ids = studentModifiedNode.ids;
+              var _iteratorNormalCompletion4 = true;
+              var _didIteratorError4 = false;
+              var _iteratorError4 = undefined;
+
+              try {
+                for (var _iterator4 = _this2.ProjectService.project.nodes[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                  var planningGroupNode = _step4.value;
+
+                  if (planningGroupNode.planning) {
+                    var lastestNodeStateForPlanningGroupNode = _this2.getLatestNodeStateByNodeId(planningGroupNode.id);
+                    if (lastestNodeStateForPlanningGroupNode != null) {
+                      var studentModifiedNodes = lastestNodeStateForPlanningGroupNode.studentData.nodes;
+                      if (studentModifiedNodes != null) {
+                        var _iteratorNormalCompletion5 = true;
+                        var _didIteratorError5 = false;
+                        var _iteratorError5 = undefined;
+
+                        try {
+                          for (var _iterator5 = studentModifiedNodes[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                            var studentModifiedNode = _step5.value;
+
+                            var studentModifiedNodeId = studentModifiedNode.id;
+                            if (studentModifiedNode.planning) {
+                              // If this is a Planning Node that exists in the project, replace the one in the original project with this one.
+                              for (var n = 0; n < _this2.ProjectService.project.nodes.length; n++) {
+                                if (_this2.ProjectService.project.nodes[n].id === studentModifiedNodeId) {
+                                  // Only overload the ids. This will allow authors to add more planningNodes during the run if needed.
+                                  _this2.ProjectService.project.nodes[n].ids = studentModifiedNode.ids;
+                                }
+                              }
+                            } else {
+                              // Otherwise, this is an instance of a PlanningNode template, so just append it to the end of the Project.nodes
+                              _this2.ProjectService.project.nodes.push(studentModifiedNode);
                             }
                           }
-                        } else {
-                          // Otherwise, this is an instance of a PlanningNode template, so just append it to the end of the Project.nodes
-                          _this2.ProjectService.project.nodes.push(studentModifiedNode);
+                        } catch (err) {
+                          _didIteratorError5 = true;
+                          _iteratorError5 = err;
+                        } finally {
+                          try {
+                            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                              _iterator5.return();
+                            }
+                          } finally {
+                            if (_didIteratorError5) {
+                              throw _iteratorError5;
+                            }
+                          }
                         }
                       }
                     }
                   }
                 }
+                // Re-parse the project with the modified changes
+              } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                    _iterator4.return();
+                  }
+                } finally {
+                  if (_didIteratorError4) {
+                    throw _iteratorError4;
+                  }
+                }
               }
-              // Re-parse the project with the modified changes
+
               _this2.ProjectService.parseProject();
             }
 
@@ -310,29 +414,90 @@ var StudentDataService = function () {
           nodes = nodes.concat(planningNodes);
         }
 
-        for (var n = 0; n < nodes.length; n++) {
-          var node = nodes[n];
-          if (!this.ProjectService.isGroupNode(node.id)) {
-            this.updateNodeStatusByNode(node);
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
+
+        try {
+          for (var _iterator6 = nodes[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var node = _step6.value;
+
+            if (!this.ProjectService.isGroupNode(node.id)) {
+              this.updateNodeStatusByNode(node);
+            }
+          }
+        } catch (err) {
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
+            }
+          } finally {
+            if (_didIteratorError6) {
+              throw _iteratorError6;
+            }
           }
         }
       }
 
       var group;
       if (groups != null) {
-        for (var g = 0; g < groups.length; g++) {
-          group = groups[g];
-          group.depth = this.ProjectService.getNodeDepth(group.id);
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
+
+        try {
+          for (var _iterator7 = groups[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var group = _step7.value;
+
+            group.depth = this.ProjectService.getNodeDepth(group.id);
+          }
+
+          // sort by descending depth order (need to calculate completion for lowest level groups first)
+        } catch (err) {
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
+            }
+          } finally {
+            if (_didIteratorError7) {
+              throw _iteratorError7;
+            }
+          }
         }
 
-        // sort by descending depth order (need to calculate completion for lowest level groups first)
         groups.sort(function (a, b) {
           return b.depth - a.depth;
         });
 
-        for (var i = 0; i < groups.length; i++) {
-          group = groups[i];
-          this.updateNodeStatusByNode(group);
+        var _iteratorNormalCompletion8 = true;
+        var _didIteratorError8 = false;
+        var _iteratorError8 = undefined;
+
+        try {
+          for (var _iterator8 = groups[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+            var group = _step8.value;
+
+            this.updateNodeStatusByNode(group);
+          }
+        } catch (err) {
+          _didIteratorError8 = true;
+          _iteratorError8 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+              _iterator8.return();
+            }
+          } finally {
+            if (_didIteratorError8) {
+              throw _iteratorError8;
+            }
+          }
         }
       }
 
@@ -388,30 +553,49 @@ var StudentDataService = function () {
           var firstResult = true;
 
           // loop through all the constraints that affect this node
-          for (var c = 0; c < constraintsForNode.length; c++) {
-            var constraintForNode = constraintsForNode[c];
+          var _iteratorNormalCompletion9 = true;
+          var _didIteratorError9 = false;
+          var _iteratorError9 = undefined;
 
-            if (constraintForNode != null) {
+          try {
+            for (var _iterator9 = constraintsForNode[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+              var constraintForNode = _step9.value;
 
-              // evaluate the constraint to see if the node can be visited
-              var tempResult = this.evaluateConstraint(node, constraintForNode);
+              if (constraintForNode != null) {
 
-              var action = constraintForNode.action;
+                // evaluate the constraint to see if the node can be visited
+                var tempResult = this.evaluateConstraint(node, constraintForNode);
 
-              if (action != null) {
-                if (action === 'makeThisNodeNotVisible') {
-                  isVisibleResults.push(tempResult);
-                } else if (action === 'makeThisNodeNotVisitable') {
-                  isVisitableResults.push(tempResult);
-                } else if (action === 'makeAllNodesAfterThisNotVisible') {
-                  isVisibleResults.push(tempResult);
-                } else if (action === 'makeAllNodesAfterThisNotVisitable') {
-                  isVisitableResults.push(tempResult);
-                } else if (action === 'makeAllOtherNodesNotVisible') {
-                  isVisibleResults.push(tempResult);
-                } else if (action === 'makeAllOtherNodesNotVisitable') {
-                  isVisitableResults.push(tempResult);
+                var action = constraintForNode.action;
+
+                if (action != null) {
+                  if (action === 'makeThisNodeNotVisible') {
+                    isVisibleResults.push(tempResult);
+                  } else if (action === 'makeThisNodeNotVisitable') {
+                    isVisitableResults.push(tempResult);
+                  } else if (action === 'makeAllNodesAfterThisNotVisible') {
+                    isVisibleResults.push(tempResult);
+                  } else if (action === 'makeAllNodesAfterThisNotVisitable') {
+                    isVisitableResults.push(tempResult);
+                  } else if (action === 'makeAllOtherNodesNotVisible') {
+                    isVisibleResults.push(tempResult);
+                  } else if (action === 'makeAllOtherNodesNotVisitable') {
+                    isVisitableResults.push(tempResult);
+                  }
                 }
+              }
+            }
+          } catch (err) {
+            _didIteratorError9 = true;
+            _iteratorError9 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                _iterator9.return();
+              }
+            } finally {
+              if (_didIteratorError9) {
+                throw _iteratorError9;
               }
             }
           }
@@ -419,16 +603,54 @@ var StudentDataService = function () {
           var isVisible = true;
           var isVisitable = true;
 
-          for (var a = 0; a < isVisibleResults.length; a++) {
-            var isVisibleResult = isVisibleResults[a];
+          var _iteratorNormalCompletion10 = true;
+          var _didIteratorError10 = false;
+          var _iteratorError10 = undefined;
 
-            isVisible = isVisible && isVisibleResult;
+          try {
+            for (var _iterator10 = isVisibleResults[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+              var isVisibleResult = _step10.value;
+
+              isVisible = isVisible && isVisibleResult;
+            }
+          } catch (err) {
+            _didIteratorError10 = true;
+            _iteratorError10 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                _iterator10.return();
+              }
+            } finally {
+              if (_didIteratorError10) {
+                throw _iteratorError10;
+              }
+            }
           }
 
-          for (var b = 0; b < isVisitableResults.length; b++) {
-            var isVisitableResult = isVisitableResults[b];
+          var _iteratorNormalCompletion11 = true;
+          var _didIteratorError11 = false;
+          var _iteratorError11 = undefined;
 
-            isVisitable = isVisitable && isVisitableResult;
+          try {
+            for (var _iterator11 = isVisitableResults[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+              var isVisitableResult = _step11.value;
+
+              isVisitable = isVisitable && isVisitableResult;
+            }
+          } catch (err) {
+            _didIteratorError11 = true;
+            _iteratorError11 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                _iterator11.return();
+              }
+            } finally {
+              if (_didIteratorError11) {
+                throw _iteratorError11;
+              }
+            }
           }
 
           tempNodeStatus.isVisible = isVisible;
@@ -532,16 +754,35 @@ var StudentDataService = function () {
           var transitionsToNodeId = [];
 
           // loop through all the ndoes that have been visited
-          for (var v = 0; v < visitedNodes.length; v++) {
-            var visitedNodeId = visitedNodes[v];
+          var _iteratorNormalCompletion12 = true;
+          var _didIteratorError12 = false;
+          var _iteratorError12 = undefined;
 
-            // get the transitions from the visited node to the node status node
-            var transitions = this.ProjectService.getTransitionsByFromAndToNodeId(visitedNodeId, nodeId);
+          try {
+            for (var _iterator12 = visitedNodes[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+              var visitedNodeId = _step12.value;
 
-            // TODO: check if the transition can be used by the student
+              // get the transitions from the visited node to the node status node
+              var transitions = this.ProjectService.getTransitionsByFromAndToNodeId(visitedNodeId, nodeId);
 
-            // concat the node ids
-            transitionsToNodeId = transitionsToNodeId.concat(transitions);
+              // TODO: check if the transition can be used by the student
+
+              // concat the node ids
+              transitionsToNodeId = transitionsToNodeId.concat(transitions);
+            }
+          } catch (err) {
+            _didIteratorError12 = true;
+            _iteratorError12 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion12 && _iterator12.return) {
+                _iterator12.return();
+              }
+            } finally {
+              if (_didIteratorError12) {
+                throw _iteratorError12;
+              }
+            }
           }
 
           if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
@@ -595,30 +836,48 @@ var StudentDataService = function () {
           var firstResult = true;
 
           // loop through all the criteria that need to be satisifed
-          for (var c = 0; c < removalCriteria.length; c++) {
+          var _iteratorNormalCompletion13 = true;
+          var _didIteratorError13 = false;
+          var _iteratorError13 = undefined;
 
-            // get a criteria
-            var tempCriteria = removalCriteria[c];
+          try {
+            for (var _iterator13 = removalCriteria[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+              var tempCriteria = _step13.value;
 
-            if (tempCriteria != null) {
 
-              // evaluate the criteria
-              var tempResult = this.evaluateCriteria(tempCriteria);
+              if (tempCriteria != null) {
 
-              if (firstResult) {
-                // this is the first criteria in this for loop
-                result = tempResult;
-                firstResult = false;
-              } else {
-                // this is not the first criteria
+                // evaluate the criteria
+                var tempResult = this.evaluateCriteria(tempCriteria);
 
-                if (removalConditional === 'any') {
-                  // any of the criteria can be true to remove the constraint
-                  result = result || tempResult;
+                if (firstResult) {
+                  // this is the first criteria in this for loop
+                  result = tempResult;
+                  firstResult = false;
                 } else {
-                  // all the criteria need to be true to remove the constraint
-                  result = result && tempResult;
+                  // this is not the first criteria
+
+                  if (removalConditional === 'any') {
+                    // any of the criteria can be true to remove the constraint
+                    result = result || tempResult;
+                  } else {
+                    // all the criteria need to be true to remove the constraint
+                    result = result && tempResult;
+                  }
                 }
+              }
+            }
+          } catch (err) {
+            _didIteratorError13 = true;
+            _iteratorError13 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion13 && _iterator13.return) {
+                _iterator13.return();
+              }
+            } finally {
+              if (_didIteratorError13) {
+                throw _iteratorError13;
               }
             }
           }
@@ -718,19 +977,38 @@ var StudentDataService = function () {
           if (componentStates != null) {
 
             // loop through all the component states
-            for (var c = 0; c < componentStates.length; c++) {
+            var _iteratorNormalCompletion14 = true;
+            var _didIteratorError14 = false;
+            var _iteratorError14 = undefined;
 
-              var componentState = componentStates[c];
+            try {
+              for (var _iterator14 = componentStates[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+                var componentState = _step14.value;
 
-              if (componentState != null) {
 
-                var studentData = componentState.studentData;
+                if (componentState != null) {
 
-                if (studentData != null) {
-                  if (studentData.isCorrect) {
-                    // the student answered correctly
-                    return true;
+                  var studentData = componentState.studentData;
+
+                  if (studentData != null) {
+                    if (studentData.isCorrect) {
+                      // the student answered correctly
+                      return true;
+                    }
                   }
+                }
+              }
+            } catch (err) {
+              _didIteratorError14 = true;
+              _iteratorError14 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion14 && _iterator14.return) {
+                  _iterator14.return();
+                }
+              } finally {
+                if (_didIteratorError14) {
+                  throw _iteratorError14;
                 }
               }
             }
@@ -807,13 +1085,32 @@ var StudentDataService = function () {
                   if (nodes != null) {
 
                     // loop through the nodes
-                    for (var n = 0; n < nodes.length; n++) {
-                      var node = nodes[n];
+                    var _iteratorNormalCompletion15 = true;
+                    var _didIteratorError15 = false;
+                    var _iteratorError15 = undefined;
 
-                      if (node != null) {
-                        if (node.type === 'node' && node.planningNodeTemplateId != null) {
-                          // we have found a planning step the student created
-                          planningStepCount++;
+                    try {
+                      for (var _iterator15 = nodes[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+                        var node = _step15.value;
+
+                        if (node != null) {
+                          if (node.type === 'node' && node.planningNodeTemplateId != null) {
+                            // we have found a planning step the student created
+                            planningStepCount++;
+                          }
+                        }
+                      }
+                    } catch (err) {
+                      _didIteratorError15 = true;
+                      _iteratorError15 = err;
+                    } finally {
+                      try {
+                        if (!_iteratorNormalCompletion15 && _iterator15.return) {
+                          _iterator15.return();
+                        }
+                      } finally {
+                        if (_didIteratorError15) {
+                          throw _iteratorError15;
                         }
                       }
                     }
@@ -873,21 +1170,40 @@ var StudentDataService = function () {
         if (branchPathTakenEvents != null) {
 
           // loop through all the branchPathTaken events
-          for (var b = 0; b < branchPathTakenEvents.length; b++) {
-            var branchPathTakenEvent = branchPathTakenEvents[b];
+          var _iteratorNormalCompletion16 = true;
+          var _didIteratorError16 = false;
+          var _iteratorError16 = undefined;
 
-            if (branchPathTakenEvent != null) {
-              var data = branchPathTakenEvent.data;
+          try {
+            for (var _iterator16 = branchPathTakenEvents[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+              var branchPathTakenEvent = _step16.value;
 
-              if (data != null) {
-                // get the from and to node ids of the event
-                var fromNodeId = data.fromNodeId;
-                var toNodeId = data.toNodeId;
+              if (branchPathTakenEvent != null) {
+                var data = branchPathTakenEvent.data;
 
-                if (expectedFromNodeId === fromNodeId && expectedToNodeId === toNodeId) {
-                  // the from and to node ids match the ones we are looking for
-                  result = true;
+                if (data != null) {
+                  // get the from and to node ids of the event
+                  var fromNodeId = data.fromNodeId;
+                  var toNodeId = data.toNodeId;
+
+                  if (expectedFromNodeId === fromNodeId && expectedToNodeId === toNodeId) {
+                    // the from and to node ids match the ones we are looking for
+                    result = true;
+                  }
                 }
+              }
+            }
+          } catch (err) {
+            _didIteratorError16 = true;
+            _iteratorError16 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion16 && _iterator16.return) {
+                _iterator16.return();
+              }
+            } finally {
+              if (_didIteratorError16) {
+                throw _iteratorError16;
               }
             }
           }
@@ -920,13 +1236,32 @@ var StudentDataService = function () {
         if (events != null) {
 
           // loop through all the events
-          for (var e = 0; e < events.length; e++) {
-            var event = events[e];
+          var _iteratorNormalCompletion17 = true;
+          var _didIteratorError17 = false;
+          var _iteratorError17 = undefined;
 
-            if (event != null) {
-              if (nodeId == event.nodeId && 'nodeEntered' === event.event) {
-                // the student has entered the node before
-                isVisited = true;
+          try {
+            for (var _iterator17 = events[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+              var event = _step17.value;
+
+              if (event != null) {
+                if (nodeId == event.nodeId && 'nodeEntered' === event.event) {
+                  // the student has entered the node before
+                  isVisited = true;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError17 = true;
+            _iteratorError17 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion17 && _iterator17.return) {
+                _iterator17.return();
+              }
+            } finally {
+              if (_didIteratorError17) {
+                throw _iteratorError17;
               }
             }
           }
@@ -960,13 +1295,32 @@ var StudentDataService = function () {
         if (events != null) {
 
           // loop through all the events
-          for (var e = 0; e < events.length; e++) {
-            var event = events[e];
+          var _iteratorNormalCompletion18 = true;
+          var _didIteratorError18 = false;
+          var _iteratorError18 = undefined;
 
-            if (event != null) {
-              if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
-                // the student has entered the node after the criteriaCreatedTimestamp
-                isVisitedAfter = true;
+          try {
+            for (var _iterator18 = events[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+              var event = _step18.value;
+
+              if (event != null) {
+                if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
+                  // the student has entered the node after the criteriaCreatedTimestamp
+                  isVisitedAfter = true;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError18 = true;
+            _iteratorError18 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion18 && _iterator18.return) {
+                _iterator18.return();
+              }
+            } finally {
+              if (_didIteratorError18) {
+                throw _iteratorError18;
               }
             }
           }
@@ -1032,17 +1386,36 @@ var StudentDataService = function () {
         if (events != null) {
 
           // loop through all the events
-          for (var e = 0; e < events.length; e++) {
-            var event = events[e];
+          var _iteratorNormalCompletion19 = true;
+          var _didIteratorError19 = false;
+          var _iteratorError19 = undefined;
 
-            if (event != null) {
-              if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
-                // the student has entered the node after the criteriaCreatedTimestamp.
-                // now check if student has revised the work after this event
-                var latestComponentStateForRevisedComponent = this.getLatestComponentStateByNodeIdAndComponentId(isRevisedAfterNodeId, isRevisedAfterComponentId);
-                if (latestComponentStateForRevisedComponent.clientSaveTime > event.clientSaveTime) {
-                  isVisitedAndRevisedAfter = true;
+          try {
+            for (var _iterator19 = events[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+              var event = _step19.value;
+
+              if (event != null) {
+                if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
+                  // the student has entered the node after the criteriaCreatedTimestamp.
+                  // now check if student has revised the work after this event
+                  var latestComponentStateForRevisedComponent = this.getLatestComponentStateByNodeIdAndComponentId(isRevisedAfterNodeId, isRevisedAfterComponentId);
+                  if (latestComponentStateForRevisedComponent.clientSaveTime > event.clientSaveTime) {
+                    isVisitedAndRevisedAfter = true;
+                  }
                 }
+              }
+            }
+          } catch (err) {
+            _didIteratorError19 = true;
+            _iteratorError19 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion19 && _iterator19.return) {
+                _iterator19.return();
+              }
+            } finally {
+              if (_didIteratorError19) {
+                throw _iteratorError19;
               }
             }
           }
@@ -1068,13 +1441,32 @@ var StudentDataService = function () {
       if (events != null) {
 
         // loop through all the events
-        for (var e = 0; e < events.length; e++) {
-          var event = events[e];
+        var _iteratorNormalCompletion20 = true;
+        var _didIteratorError20 = false;
+        var _iteratorError20 = undefined;
 
-          if (event != null) {
-            if (fromNodeId === event.nodeId && 'branchPathTaken' === event.event) {
-              // we have found a branchPathTaken event from the from node id
-              branchPathTakenEvents.push(event);
+        try {
+          for (var _iterator20 = events[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+            var event = _step20.value;
+
+            if (event != null) {
+              if (fromNodeId === event.nodeId && 'branchPathTaken' === event.event) {
+                // we have found a branchPathTaken event from the from node id
+                branchPathTakenEvents.push(event);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError20 = true;
+          _iteratorError20 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion20 && _iterator20.return) {
+              _iterator20.return();
+            }
+          } finally {
+            if (_didIteratorError20) {
+              throw _iteratorError20;
             }
           }
         }
@@ -1200,30 +1592,49 @@ var StudentDataService = function () {
              */
 
             // loop through all the component states
-            for (var c = 0; c < componentStates.length; c++) {
+            var _iteratorNormalCompletion21 = true;
+            var _didIteratorError21 = false;
+            var _iteratorError21 = undefined;
 
-              var componentState = componentStates[c];
+            try {
+              for (var _iterator21 = componentStates[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+                var componentState = _step21.value;
 
-              if (componentState != null) {
 
-                if (componentState.isSubmit) {
-                  // this is a submit component state
-                  manualSubmitCounter++;
-                }
+                if (componentState != null) {
 
-                var studentData = componentState.studentData;
+                  if (componentState.isSubmit) {
+                    // this is a submit component state
+                    manualSubmitCounter++;
+                  }
 
-                if (studentData != null) {
+                  var studentData = componentState.studentData;
 
-                  if (studentData.submitCounter != null) {
-                    if (studentData.submitCounter > highestSubmitCounter) {
-                      /*
-                       * the submit counter in the student data is higher
-                       * than we have previously seen
-                       */
-                      highestSubmitCounter = studentData.submitCounter;
+                  if (studentData != null) {
+
+                    if (studentData.submitCounter != null) {
+                      if (studentData.submitCounter > highestSubmitCounter) {
+                        /*
+                         * the submit counter in the student data is higher
+                         * than we have previously seen
+                         */
+                        highestSubmitCounter = studentData.submitCounter;
+                      }
                     }
                   }
+                }
+              }
+            } catch (err) {
+              _didIteratorError21 = true;
+              _iteratorError21 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion21 && _iterator21.return) {
+                  _iterator21.return();
+                }
+              } finally {
+                if (_didIteratorError21) {
+                  throw _iteratorError21;
                 }
               }
             }
@@ -1253,17 +1664,37 @@ var StudentDataService = function () {
       if (events != null) {
 
         // loop through all the events
-        for (var e = 0; e < events.length; e++) {
-          var event = events[e];
+        var _iteratorNormalCompletion22 = true;
+        var _didIteratorError22 = false;
+        var _iteratorError22 = undefined;
 
-          if (event != null) {
+        try {
+          for (var _iterator22 = events[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
+            var event = _step22.value;
 
-            // look for the nodeEntered event
-            if (event.event === 'nodeEntered') {
 
-              // the student has visited this node id before
-              this.updateStackHistory(event.nodeId);
-              this.updateVisitedNodesHistory(event.nodeId);
+            if (event != null) {
+
+              // look for the nodeEntered event
+              if (event.event === 'nodeEntered') {
+
+                // the student has visited this node id before
+                this.updateStackHistory(event.nodeId);
+                this.updateVisitedNodesHistory(event.nodeId);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError22 = true;
+          _iteratorError22 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion22 && _iterator22.return) {
+              _iterator22.return();
+            }
+          } finally {
+            if (_didIteratorError22) {
+              throw _iteratorError22;
             }
           }
         }
@@ -1380,14 +1811,34 @@ var StudentDataService = function () {
       if (this.studentData != null && this.studentData.nodeStates != null) {
         var nodeStates = this.studentData.nodeStates;
 
-        for (var n = 0; n < nodeStates.length; n++) {
-          var nodeState = nodeStates[n];
+        var _iteratorNormalCompletion23 = true;
+        var _didIteratorError23 = false;
+        var _iteratorError23 = undefined;
 
-          if (nodeState != null) {
-            var tempNodeId = nodeState.nodeId;
+        try {
+          for (var _iterator23 = nodeStates[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+            var nodeState = _step23.value;
 
-            if (nodeId === tempNodeId) {
-              nodeStatesByNodeId.push(nodeState);
+
+            if (nodeState != null) {
+              var tempNodeId = nodeState.nodeId;
+
+              if (nodeId === tempNodeId) {
+                nodeStatesByNodeId.push(nodeState);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError23 = true;
+          _iteratorError23 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion23 && _iterator23.return) {
+              _iterator23.return();
+            }
+          } finally {
+            if (_didIteratorError23) {
+              throw _iteratorError23;
             }
           }
         }
@@ -1517,36 +1968,93 @@ var StudentDataService = function () {
       // merge componentStates and nodeStates into StudentWork before posting
       var studentWorkList = [];
       if (componentStates != null && componentStates.length > 0) {
-        for (var c = 0; c < componentStates.length; c++) {
-          var componentState = componentStates[c];
+        var _iteratorNormalCompletion24 = true;
+        var _didIteratorError24 = false;
+        var _iteratorError24 = undefined;
 
-          if (componentState != null) {
-            componentState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
-            this.addComponentState(componentState);
-            studentWorkList.push(componentState);
+        try {
+          for (var _iterator24 = componentStates[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
+            var componentState = _step24.value;
+
+            if (componentState != null) {
+              componentState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
+              this.addComponentState(componentState);
+              studentWorkList.push(componentState);
+            }
+          }
+        } catch (err) {
+          _didIteratorError24 = true;
+          _iteratorError24 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion24 && _iterator24.return) {
+              _iterator24.return();
+            }
+          } finally {
+            if (_didIteratorError24) {
+              throw _iteratorError24;
+            }
           }
         }
       }
 
       if (nodeStates != null && nodeStates.length > 0) {
-        for (var n = 0; n < nodeStates.length; n++) {
-          var nodeState = nodeStates[n];
+        var _iteratorNormalCompletion25 = true;
+        var _didIteratorError25 = false;
+        var _iteratorError25 = undefined;
 
-          if (nodeState != null) {
-            nodeState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
-            this.addNodeState(nodeState);
-            studentWorkList.push(nodeState);
+        try {
+          for (var _iterator25 = nodeStates[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
+            var nodeState = _step25.value;
+
+            if (nodeState != null) {
+              nodeState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
+              this.addNodeState(nodeState);
+              studentWorkList.push(nodeState);
+            }
+          }
+        } catch (err) {
+          _didIteratorError25 = true;
+          _iteratorError25 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion25 && _iterator25.return) {
+              _iterator25.return();
+            }
+          } finally {
+            if (_didIteratorError25) {
+              throw _iteratorError25;
+            }
           }
         }
       }
 
       if (events != null && events.length > 0) {
-        for (var e = 0; e < events.length; e++) {
-          var event = events[e];
+        var _iteratorNormalCompletion26 = true;
+        var _didIteratorError26 = false;
+        var _iteratorError26 = undefined;
 
-          if (event != null) {
-            event.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved events.
-            this.addEvent(event);
+        try {
+          for (var _iterator26 = events[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
+            var event = _step26.value;
+
+            if (event != null) {
+              event.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved events.
+              this.addEvent(event);
+            }
+          }
+        } catch (err) {
+          _didIteratorError26 = true;
+          _iteratorError26 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion26 && _iterator26.return) {
+              _iterator26.return();
+            }
+          } finally {
+            if (_didIteratorError26) {
+              throw _iteratorError26;
+            }
           }
         }
       } else {
@@ -1554,14 +2062,33 @@ var StudentDataService = function () {
       }
 
       if (annotations != null && annotations.length > 0) {
-        for (var a = 0; a < annotations.length; a++) {
-          var annotation = annotations[a];
+        var _iteratorNormalCompletion27 = true;
+        var _didIteratorError27 = false;
+        var _iteratorError27 = undefined;
 
-          if (annotation != null) {
-            annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
-            if (annotation.id == null) {
-              // add to local annotation array if this annotation has not been saved to the server before.
-              this.addAnnotation(annotation);
+        try {
+          for (var _iterator27 = annotations[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+            var annotation = _step27.value;
+
+            if (annotation != null) {
+              annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
+              if (annotation.id == null) {
+                // add to local annotation array if this annotation has not been saved to the server before.
+                this.addAnnotation(annotation);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError27 = true;
+          _iteratorError27 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion27 && _iterator27.return) {
+              _iterator27.return();
+            }
+          } finally {
+            if (_didIteratorError27) {
+              throw _iteratorError27;
             }
           }
         }
@@ -1653,36 +2180,56 @@ var StudentDataService = function () {
         }
 
         // set the id and serverSaveTime in the local studentWorkList
-        for (var i = 0; i < savedStudentWorkList.length; i++) {
-          var savedStudentWork = savedStudentWorkList[i];
+        var _iteratorNormalCompletion28 = true;
+        var _didIteratorError28 = false;
+        var _iteratorError28 = undefined;
 
-          /*
-           * loop through all the student work that were posted
-           * to find the one with the matching request token
-           */
-          for (var l = localStudentWorkList.length - 1; l >= 0; l--) {
-            var localStudentWork = localStudentWorkList[l];
-            if (localStudentWork.requestToken && localStudentWork.requestToken === savedStudentWork.requestToken) {
-              localStudentWork.id = savedStudentWork.id;
-              localStudentWork.serverSaveTime = savedStudentWork.serverSaveTime ? savedStudentWork.serverSaveTime : serverSaveTime;
-              localStudentWork.requestToken = null; // requestToken is no longer needed.
+        try {
+          for (var _iterator28 = savedStudentWorkList[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
+            var savedStudentWork = _step28.value;
 
-              if (this.ConfigService.getMode() == "preview" && localStudentWork.id == null) {
-                /*
-                 * we are in preview mode so we will set a dummy
-                 * student work id into the student work
-                 */
-                localStudentWork.id = this.dummyStudentWorkId;
 
-                /*
-                 * increment the dummy student work id for the next
-                 * student work
-                 */
-                this.dummyStudentWorkId++;
+            /*
+             * loop through all the student work that were posted
+             * to find the one with the matching request token
+             */
+            for (var l = localStudentWorkList.length - 1; l >= 0; l--) {
+              var localStudentWork = localStudentWorkList[l];
+              if (localStudentWork.requestToken && localStudentWork.requestToken === savedStudentWork.requestToken) {
+                localStudentWork.id = savedStudentWork.id;
+                localStudentWork.serverSaveTime = savedStudentWork.serverSaveTime ? savedStudentWork.serverSaveTime : serverSaveTime;
+                localStudentWork.requestToken = null; // requestToken is no longer needed.
+
+                if (this.ConfigService.getMode() == "preview" && localStudentWork.id == null) {
+                  /*
+                   * we are in preview mode so we will set a dummy
+                   * student work id into the student work
+                   */
+                  localStudentWork.id = this.dummyStudentWorkId;
+
+                  /*
+                   * increment the dummy student work id for the next
+                   * student work
+                   */
+                  this.dummyStudentWorkId++;
+                }
+
+                this.$rootScope.$broadcast('studentWorkSavedToServer', { studentWork: localStudentWork });
+                break;
               }
-
-              this.$rootScope.$broadcast('studentWorkSavedToServer', { studentWork: localStudentWork });
-              break;
+            }
+          }
+        } catch (err) {
+          _didIteratorError28 = true;
+          _iteratorError28 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion28 && _iterator28.return) {
+              _iterator28.return();
+            }
+          } finally {
+            if (_didIteratorError28) {
+              throw _iteratorError28;
             }
           }
         }
@@ -1694,22 +2241,41 @@ var StudentDataService = function () {
         var localEvents = this.studentData.events;
 
         // set the id and serverSaveTime in the local event
-        for (var i = 0; i < savedEvents.length; i++) {
-          var savedEvent = savedEvents[i];
+        var _iteratorNormalCompletion29 = true;
+        var _didIteratorError29 = false;
+        var _iteratorError29 = undefined;
 
-          /*
-           * loop through all the events that were posted
-           * to find the one with the matching request token
-           */
-          for (var l = localEvents.length - 1; l >= 0; l--) {
-            var localEvent = localEvents[l];
-            if (localEvent.requestToken && localEvent.requestToken === savedEvent.requestToken) {
-              localEvent.id = savedEvent.id;
-              localEvent.serverSaveTime = savedEvent.serverSaveTime ? savedEvent.serverSaveTime : serverSaveTime;
-              localEvent.requestToken = null; // requestToken is no longer needed.
+        try {
+          for (var _iterator29 = savedEvents[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
+            var savedEvent = _step29.value;
 
-              this.$rootScope.$broadcast('eventSavedToServer', { event: localEvent });
-              break;
+            /*
+             * loop through all the events that were posted
+             * to find the one with the matching request token
+             */
+            for (var l = localEvents.length - 1; l >= 0; l--) {
+              var localEvent = localEvents[l];
+              if (localEvent.requestToken && localEvent.requestToken === savedEvent.requestToken) {
+                localEvent.id = savedEvent.id;
+                localEvent.serverSaveTime = savedEvent.serverSaveTime ? savedEvent.serverSaveTime : serverSaveTime;
+                localEvent.requestToken = null; // requestToken is no longer needed.
+
+                this.$rootScope.$broadcast('eventSavedToServer', { event: localEvent });
+                break;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError29 = true;
+          _iteratorError29 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion29 && _iterator29.return) {
+              _iterator29.return();
+            }
+          } finally {
+            if (_didIteratorError29) {
+              throw _iteratorError29;
             }
           }
         }
@@ -1722,22 +2288,41 @@ var StudentDataService = function () {
         var localAnnotations = this.studentData.annotations;
 
         // set the id and serverSaveTime in the local annotation
-        for (var i = 0; i < savedAnnotations.length; i++) {
-          var savedAnnotation = savedAnnotations[i];
+        var _iteratorNormalCompletion30 = true;
+        var _didIteratorError30 = false;
+        var _iteratorError30 = undefined;
 
-          /*
-           * loop through all the events that were posted
-           * to find the one with the matching request token
-           */
-          for (var l = localAnnotations.length - 1; l >= 0; l--) {
-            var localAnnotation = localAnnotations[l];
-            if (localAnnotation.requestToken && localAnnotation.requestToken === savedAnnotation.requestToken) {
-              localAnnotation.id = savedAnnotation.id;
-              localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime ? savedAnnotation.serverSaveTime : serverSaveTime;
-              localAnnotation.requestToken = null; // requestToken is no longer needed.
+        try {
+          for (var _iterator30 = savedAnnotations[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
+            var savedAnnotation = _step30.value;
 
-              this.$rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
-              break;
+            /*
+             * loop through all the events that were posted
+             * to find the one with the matching request token
+             */
+            for (var l = localAnnotations.length - 1; l >= 0; l--) {
+              var localAnnotation = localAnnotations[l];
+              if (localAnnotation.requestToken && localAnnotation.requestToken === savedAnnotation.requestToken) {
+                localAnnotation.id = savedAnnotation.id;
+                localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime ? savedAnnotation.serverSaveTime : serverSaveTime;
+                localAnnotation.requestToken = null; // requestToken is no longer needed.
+
+                this.$rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
+                break;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError30 = true;
+          _iteratorError30 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion30 && _iterator30.return) {
+              _iterator30.return();
+            }
+          } finally {
+            if (_didIteratorError30) {
+              throw _iteratorError30;
             }
           }
         }
@@ -1932,11 +2517,30 @@ var StudentDataService = function () {
         if (componentStates != null) {
 
           // loop through all the component states
-          for (var c = 0; c < componentStates.length; c++) {
-            var componentState = componentStates[c];
+          var _iteratorNormalCompletion31 = true;
+          var _didIteratorError31 = false;
+          var _iteratorError31 = undefined;
 
-            if (componentState != null && componentState.id === studentWorkId) {
-              return componentState;
+          try {
+            for (var _iterator31 = componentStates[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
+              var componentState = _step31.value;
+
+              if (componentState != null && componentState.id === studentWorkId) {
+                return componentState;
+              }
+            }
+          } catch (err) {
+            _didIteratorError31 = true;
+            _iteratorError31 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion31 && _iterator31.return) {
+                _iterator31.return();
+              }
+            } finally {
+              if (_didIteratorError31) {
+                throw _iteratorError31;
+              }
             }
           }
         }
@@ -1947,10 +2551,30 @@ var StudentDataService = function () {
         if (nodeStates != null) {
 
           // loop through all the node states
-          for (var n = 0; n < nodeStates.length; n++) {
-            var nodeState = nodeStates[n];
-            if (nodeState != null && nodeState.id === studentWorkId) {
-              return nodeState;
+          var _iteratorNormalCompletion32 = true;
+          var _didIteratorError32 = false;
+          var _iteratorError32 = undefined;
+
+          try {
+            for (var _iterator32 = nodeStates[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
+              var nodeState = _step32.value;
+
+              if (nodeState != null && nodeState.id === studentWorkId) {
+                return nodeState;
+              }
+            }
+          } catch (err) {
+            _didIteratorError32 = true;
+            _iteratorError32 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion32 && _iterator32.return) {
+                _iterator32.return();
+              }
+            } finally {
+              if (_didIteratorError32) {
+                throw _iteratorError32;
+              }
             }
           }
         }
@@ -1990,16 +2614,35 @@ var StudentDataService = function () {
           if (componentStates != null) {
 
             // loop through all the component states
-            for (var c = 0; c < componentStates.length; c++) {
-              var componentState = componentStates[c];
+            var _iteratorNormalCompletion33 = true;
+            var _didIteratorError33 = false;
+            var _iteratorError33 = undefined;
 
-              if (componentState != null) {
-                var componentStateNodeId = componentState.nodeId;
+            try {
+              for (var _iterator33 = componentStates[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
+                var componentState = _step33.value;
 
-                // compare the node id
-                if (nodeId == componentStateNodeId) {
+                if (componentState != null) {
+                  var componentStateNodeId = componentState.nodeId;
 
-                  componentStatesByNodeId.push(componentState);
+                  // compare the node id
+                  if (nodeId == componentStateNodeId) {
+
+                    componentStatesByNodeId.push(componentState);
+                  }
+                }
+              }
+            } catch (err) {
+              _didIteratorError33 = true;
+              _iteratorError33 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion33 && _iterator33.return) {
+                  _iterator33.return();
+                }
+              } finally {
+                if (_didIteratorError33) {
+                  throw _iteratorError33;
                 }
               }
             }
@@ -2034,17 +2677,36 @@ var StudentDataService = function () {
           if (componentStates != null) {
 
             // loop through all the component states
-            for (var c = 0; c < componentStates.length; c++) {
-              var componentState = componentStates[c];
+            var _iteratorNormalCompletion34 = true;
+            var _didIteratorError34 = false;
+            var _iteratorError34 = undefined;
 
-              if (componentState != null) {
-                var componentStateNodeId = componentState.nodeId;
-                var componentStateComponentId = componentState.componentId;
+            try {
+              for (var _iterator34 = componentStates[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
+                var componentState = _step34.value;
 
-                // compare the node id and component id
-                if (nodeId == componentStateNodeId && componentId == componentStateComponentId) {
+                if (componentState != null) {
+                  var componentStateNodeId = componentState.nodeId;
+                  var componentStateComponentId = componentState.componentId;
 
-                  componentStatesByNodeIdAndComponentId.push(componentState);
+                  // compare the node id and component id
+                  if (nodeId == componentStateNodeId && componentId == componentStateComponentId) {
+
+                    componentStatesByNodeIdAndComponentId.push(componentState);
+                  }
+                }
+              }
+            } catch (err) {
+              _didIteratorError34 = true;
+              _iteratorError34 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion34 && _iterator34.return) {
+                  _iterator34.return();
+                }
+              } finally {
+                if (_didIteratorError34) {
+                  throw _iteratorError34;
                 }
               }
             }
@@ -2089,15 +2751,34 @@ var StudentDataService = function () {
           var events = this.studentData.events;
 
           // loop through all the events
-          for (var e = 0; e < events.length; e++) {
-            var event = events[e];
+          var _iteratorNormalCompletion35 = true;
+          var _didIteratorError35 = false;
+          var _iteratorError35 = undefined;
 
-            if (event != null) {
-              var eventNodeId = event.nodeId;
+          try {
+            for (var _iterator35 = events[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
+              var event = _step35.value;
 
-              if (nodeId === eventNodeId) {
-                // this event is for the node id we are looking for
-                eventsByNodeId.push(event);
+              if (event != null) {
+                var eventNodeId = event.nodeId;
+
+                if (nodeId === eventNodeId) {
+                  // this event is for the node id we are looking for
+                  eventsByNodeId.push(event);
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError35 = true;
+            _iteratorError35 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion35 && _iterator35.return) {
+                _iterator35.return();
+              }
+            } finally {
+              if (_didIteratorError35) {
+                throw _iteratorError35;
               }
             }
           }
@@ -2127,16 +2808,35 @@ var StudentDataService = function () {
           var events = this.studentData.events;
 
           // loop through all the events
-          for (var e = 0; e < events.length; e++) {
-            var event = events[e];
+          var _iteratorNormalCompletion36 = true;
+          var _didIteratorError36 = false;
+          var _iteratorError36 = undefined;
 
-            if (event != null) {
-              var eventNodeId = event.nodeId;
-              var eventComponentId = event.componentId;
+          try {
+            for (var _iterator36 = events[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
+              var event = _step36.value;
 
-              if (nodeId === eventNodeId && componentId === eventComponentId) {
-                // this events is for the component id we are looking for
-                eventsByNodeId.push(event);
+              if (event != null) {
+                var eventNodeId = event.nodeId;
+                var eventComponentId = event.componentId;
+
+                if (nodeId === eventNodeId && componentId === eventComponentId) {
+                  // this events is for the component id we are looking for
+                  eventsByNodeId.push(event);
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError36 = true;
+            _iteratorError36 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion36 && _iterator36.return) {
+                _iterator36.return();
+              }
+            } finally {
+              if (_didIteratorError36) {
+                throw _iteratorError36;
               }
             }
           }
@@ -2263,39 +2963,59 @@ var StudentDataService = function () {
 
       if (this.ProjectService.isGroupNode(nodeId)) {
         var nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
-        for (var n = 0; n < nodeIds.length; n++) {
-          var id = nodeIds[n];
-          var status = this.nodeStatuses[id];
-          if (this.ProjectService.isGroupNode(id)) {
-            if (status.progress.totalItemsWithWork > -1) {
-              completedItems += status.progress.completedItems;
-              totalItems += status.progress.totalItems;
-              completedItemsWithWork += status.progress.completedItemsWithWork;
-              totalItemsWithWork += status.progress.totalItemsWithWork;
-            } else {
-              // we have a legacy node status so we'll need to calculate manually
-              var groupProgress = this.getNodeProgressById(id);
-              completedItems += groupProgress.completedItems;
-              totalItems += groupProgress.totalItems;
-              completedItemsWithWork += groupProgress.completedItemsWithWork;
-              totalItemsWithWork += groupProgress.totalItemsWithWork;
-            }
-          } else {
-            if (status.isVisible) {
-              totalItems++;
+        var _iteratorNormalCompletion37 = true;
+        var _didIteratorError37 = false;
+        var _iteratorError37 = undefined;
 
-              var hasWork = this.ProjectService.nodeHasWork(id);
-              if (hasWork) {
-                totalItemsWithWork++;
+        try {
+          for (var _iterator37 = nodeIds[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
+            var id = _step37.value;
+
+            var status = this.nodeStatuses[id];
+            if (this.ProjectService.isGroupNode(id)) {
+              if (status.progress.totalItemsWithWork > -1) {
+                completedItems += status.progress.completedItems;
+                totalItems += status.progress.totalItems;
+                completedItemsWithWork += status.progress.completedItemsWithWork;
+                totalItemsWithWork += status.progress.totalItemsWithWork;
+              } else {
+                // we have a legacy node status so we'll need to calculate manually
+                var groupProgress = this.getNodeProgressById(id);
+                completedItems += groupProgress.completedItems;
+                totalItems += groupProgress.totalItems;
+                completedItemsWithWork += groupProgress.completedItemsWithWork;
+                totalItemsWithWork += groupProgress.totalItemsWithWork;
               }
+            } else {
+              if (status.isVisible) {
+                totalItems++;
 
-              if (status.isCompleted) {
-                completedItems++;
-
+                var hasWork = this.ProjectService.nodeHasWork(id);
                 if (hasWork) {
-                  completedItemsWithWork++;
+                  totalItemsWithWork++;
+                }
+
+                if (status.isCompleted) {
+                  completedItems++;
+
+                  if (hasWork) {
+                    completedItemsWithWork++;
+                  }
                 }
               }
+            }
+          }
+        } catch (err) {
+          _didIteratorError37 = true;
+          _iteratorError37 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion37 && _iterator37.return) {
+              _iterator37.return();
+            }
+          } finally {
+            if (_didIteratorError37) {
+              throw _iteratorError37;
             }
           }
         }
@@ -2378,13 +3098,32 @@ var StudentDataService = function () {
           var nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
 
           if (nodeIds.length) {
-            for (var n = 0; n < nodeIds.length; n++) {
-              var id = nodeIds[n];
+            var _iteratorNormalCompletion38 = true;
+            var _didIteratorError38 = false;
+            var _iteratorError38 = undefined;
 
-              if (this.nodeStatuses[id] == null || !this.nodeStatuses[id].isVisible || !this.nodeStatuses[id].isCompleted) {
-                // the child is not visible or not completed so the group is not completed
-                tempResult = false;
-                break;
+            try {
+              for (var _iterator38 = nodeIds[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
+                var id = _step38.value;
+
+                if (this.nodeStatuses[id] == null || !this.nodeStatuses[id].isVisible || !this.nodeStatuses[id].isCompleted) {
+                  // the child is not visible or not completed so the group is not completed
+                  tempResult = false;
+                  break;
+                }
+              }
+            } catch (err) {
+              _didIteratorError38 = true;
+              _iteratorError38 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion38 && _iterator38.return) {
+                  _iterator38.return();
+                }
+              } finally {
+                if (_didIteratorError38) {
+                  throw _iteratorError38;
+                }
               }
             }
           } else {
@@ -2407,59 +3146,78 @@ var StudentDataService = function () {
            * so we will loop through all the components and check if they are
            * completed
            */
-          for (var c = 0; c < components.length; c++) {
-            var component = components[c];
+          var _iteratorNormalCompletion39 = true;
+          var _didIteratorError39 = false;
+          var _iteratorError39 = undefined;
 
-            if (component != null) {
-              var componentId = component.id;
-              var componentType = component.type;
-              var showPreviousWorkNodeId = component.showPreviousWorkNodeId;
-              var showPreviousWorkComponentId = component.showPreviousWorkComponentId;
+          try {
+            for (var _iterator39 = components[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
+              var component = _step39.value;
 
-              var tempNodeId = nodeId;
-              var tempNode = node;
-              var tempComponentId = componentId;
-              var tempComponent = component;
+              if (component != null) {
+                var componentId = component.id;
+                var componentType = component.type;
+                var showPreviousWorkNodeId = component.showPreviousWorkNodeId;
+                var showPreviousWorkComponentId = component.showPreviousWorkComponentId;
 
-              if (showPreviousWorkNodeId != null && showPreviousWorkComponentId != null) {
-                /*
-                 * this is a show previous work component so we will check if the
-                 * previous component was completed
-                 */
-                tempNodeId = showPreviousWorkNodeId;
-                tempComponentId = showPreviousWorkComponentId;
-                tempNode = this.ProjectService.getNodeById(tempNodeId);
-                tempComponent = this.ProjectService.getComponentByNodeIdAndComponentId(tempNodeId, tempComponentId);
-              }
+                var tempNodeId = nodeId;
+                var tempNode = node;
+                var tempComponentId = componentId;
+                var tempComponent = component;
 
-              if (componentType != null) {
-                try {
-
-                  // get the service name
-                  var serviceName = componentType + 'Service';
-
-                  if (this.$injector.has(serviceName)) {
-
-                    // get the service for the component type
-                    var service = this.$injector.get(serviceName);
-
-                    // get the component states for the component
-                    var componentStates = this.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
-
-                    // get the component events
-                    var componentEvents = this.getEventsByNodeIdAndComponentId(tempNodeId, tempComponentId);
-
-                    // get the node events
-                    var nodeEvents = this.getEventsByNodeId(tempNodeId);
-
-                    // check if the component is completed
-                    var isComponentCompleted = service.isCompleted(tempComponent, componentStates, componentEvents, nodeEvents, tempNode);
-
-                    tempResult = tempResult && isComponentCompleted;
-                  }
-                } catch (e) {
-                  console.log(this.$translate('ERROR_COULD_NOT_CALCULATE_IS_COMPLETED') + tempComponentId);
+                if (showPreviousWorkNodeId != null && showPreviousWorkComponentId != null) {
+                  /*
+                   * this is a show previous work component so we will check if the
+                   * previous component was completed
+                   */
+                  tempNodeId = showPreviousWorkNodeId;
+                  tempComponentId = showPreviousWorkComponentId;
+                  tempNode = this.ProjectService.getNodeById(tempNodeId);
+                  tempComponent = this.ProjectService.getComponentByNodeIdAndComponentId(tempNodeId, tempComponentId);
                 }
+
+                if (componentType != null) {
+                  try {
+
+                    // get the service name
+                    var serviceName = componentType + 'Service';
+
+                    if (this.$injector.has(serviceName)) {
+
+                      // get the service for the component type
+                      var service = this.$injector.get(serviceName);
+
+                      // get the component states for the component
+                      var componentStates = this.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
+
+                      // get the component events
+                      var componentEvents = this.getEventsByNodeIdAndComponentId(tempNodeId, tempComponentId);
+
+                      // get the node events
+                      var nodeEvents = this.getEventsByNodeId(tempNodeId);
+
+                      // check if the component is completed
+                      var isComponentCompleted = service.isCompleted(tempComponent, componentStates, componentEvents, nodeEvents, tempNode);
+
+                      tempResult = tempResult && isComponentCompleted;
+                    }
+                  } catch (e) {
+                    console.log(this.$translate('ERROR_COULD_NOT_CALCULATE_IS_COMPLETED') + tempComponentId);
+                  }
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError39 = true;
+            _iteratorError39 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion39 && _iterator39.return) {
+                _iterator39.return();
+              }
+            } finally {
+              if (_didIteratorError39) {
+                throw _iteratorError39;
               }
             }
           }
@@ -2729,41 +3487,80 @@ var StudentDataService = function () {
       if (nodeStates != null) {
 
         // loop through all the NodeStates
-        for (var ns = 0; ns < nodeStates.length; ns++) {
-          var nodeState = nodeStates[ns];
+        var _iteratorNormalCompletion40 = true;
+        var _didIteratorError40 = false;
+        var _iteratorError40 = undefined;
 
-          if (nodeState != null) {
-            var nodeStateNodeId = nodeState.nodeId;
-            if (this.ProjectService.isPlanning(nodeStateNodeId) && nodeState.studentData != null) {
-              var nodes = nodeState.studentData.nodes;
-              for (var n = 0; n < nodes.length; n++) {
-                var node = nodes[n];
-                var nodeId = node.id;
-                // regex to match the planning node id e.g. planningNode2
-                var planningNodeIdRegEx = /planningNode(.*)/;
+        try {
+          for (var _iterator40 = nodeStates[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
+            var nodeState = _step40.value;
 
-                // run the regex on the node id
-                var result = nodeId.match(planningNodeIdRegEx);
+            if (nodeState != null) {
+              var nodeStateNodeId = nodeState.nodeId;
+              if (this.ProjectService.isPlanning(nodeStateNodeId) && nodeState.studentData != null) {
+                var nodes = nodeState.studentData.nodes;
+                var _iteratorNormalCompletion41 = true;
+                var _didIteratorError41 = false;
+                var _iteratorError41 = undefined;
 
-                if (result != null) {
-                  // we have found a planning node instance node id
+                try {
+                  for (var _iterator41 = nodes[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
+                    var node = _step41.value;
 
-                  /*
-                   * get the number part of the planning node instance node id
-                   * e.g. if the nodeId is planningNode2, the number part
-                   * would be 2
-                   */
-                  var planningNodeNumber = parseInt(result[1]);
+                    var nodeId = node.id;
+                    // regex to match the planning node id e.g. planningNode2
+                    var planningNodeIdRegEx = /planningNode(.*)/;
 
-                  if (planningNodeNumber > currentMaxPlanningNodeNumber) {
-                    /*
-                     * update the max number part if we have found a new
-                     * higher number
-                     */
-                    currentMaxPlanningNodeNumber = planningNodeNumber;
+                    // run the regex on the node id
+                    var result = nodeId.match(planningNodeIdRegEx);
+
+                    if (result != null) {
+                      // we have found a planning node instance node id
+
+                      /*
+                       * get the number part of the planning node instance node id
+                       * e.g. if the nodeId is planningNode2, the number part
+                       * would be 2
+                       */
+                      var planningNodeNumber = parseInt(result[1]);
+
+                      if (planningNodeNumber > currentMaxPlanningNodeNumber) {
+                        /*
+                         * update the max number part if we have found a new
+                         * higher number
+                         */
+                        currentMaxPlanningNodeNumber = planningNodeNumber;
+                      }
+                    }
+                  }
+                } catch (err) {
+                  _didIteratorError41 = true;
+                  _iteratorError41 = err;
+                } finally {
+                  try {
+                    if (!_iteratorNormalCompletion41 && _iterator41.return) {
+                      _iterator41.return();
+                    }
+                  } finally {
+                    if (_didIteratorError41) {
+                      throw _iteratorError41;
+                    }
                   }
                 }
               }
+            }
+          }
+        } catch (err) {
+          _didIteratorError40 = true;
+          _iteratorError40 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion40 && _iterator40.return) {
+              _iterator40.return();
+            }
+          } finally {
+            if (_didIteratorError40) {
+              throw _iteratorError40;
             }
           }
         }
@@ -2826,27 +3623,46 @@ var StudentDataService = function () {
             if (components != null) {
 
               // loop through all the components
-              for (var c = 0; c < components.length; c++) {
-                var component = components[c];
+              var _iteratorNormalCompletion42 = true;
+              var _didIteratorError42 = false;
+              var _iteratorError42 = undefined;
 
-                if (component != null) {
-                  var componentId = component.id;
+              try {
+                for (var _iterator42 = components[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
+                  var component = _step42.value;
 
-                  // get the latest component state for the component
-                  var componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+                  if (component != null) {
+                    var componentId = component.id;
 
-                  if (componentState == null) {
-                    /*
-                     * there is no component state for the component so we will
-                     * create an object that just contains the node id and
-                     * component id
-                     */
-                    componentState = {};
-                    componentState.nodeId = nodeId;
-                    componentState.componentId = componentId;
+                    // get the latest component state for the component
+                    var componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
+                    if (componentState == null) {
+                      /*
+                       * there is no component state for the component so we will
+                       * create an object that just contains the node id and
+                       * component id
+                       */
+                      componentState = {};
+                      componentState.nodeId = nodeId;
+                      componentState.componentId = componentId;
+                    }
+
+                    latestComponentStates.push(componentState);
                   }
-
-                  latestComponentStates.push(componentState);
+                }
+              } catch (err) {
+                _didIteratorError42 = true;
+                _iteratorError42 = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion42 && _iterator42.return) {
+                    _iterator42.return();
+                  }
+                } finally {
+                  if (_didIteratorError42) {
+                    throw _iteratorError42;
+                  }
                 }
               }
             }
@@ -2908,61 +3724,79 @@ var StudentDataService = function () {
           var criteria = completionCriteria.criteria;
 
           // loop through all the criteria
-          for (var c = 0; c < criteria.length; c++) {
-            var tempResult = true;
+          var _iteratorNormalCompletion43 = true;
+          var _didIteratorError43 = false;
+          var _iteratorError43 = undefined;
 
-            // get a criterion
-            var completionCriterion = criteria[c];
+          try {
+            for (var _iterator43 = criteria[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
+              var completionCriterion = _step43.value;
 
-            if (completionCriterion != null) {
+              var tempResult = true;
 
-              // get the function name e.g. 'isVisited', 'isSaved', 'isSubmitted'
-              var functionName = completionCriterion.name;
+              if (completionCriterion != null) {
 
-              if (functionName == 'isSubmitted') {
-                var nodeId = completionCriterion.nodeId;
-                var componentId = completionCriterion.componentId;
+                // get the function name e.g. 'isVisited', 'isSaved', 'isSubmitted'
+                var functionName = completionCriterion.name;
 
-                // get the first submit component state after the timestamp
-                var tempComponentState = this.getComponentStateSubmittedAfter(nodeId, componentId, tempTimestamp);
+                if (functionName == 'isSubmitted') {
+                  var nodeId = completionCriterion.nodeId;
+                  var componentId = completionCriterion.componentId;
 
-                if (tempComponentState == null) {
-                  // we did not find a component state
-                  result = false;
-                  break;
-                } else {
-                  // we found a component state so we will update timestamp
-                  tempTimestamp = tempComponentState.serverSaveTime;
+                  // get the first submit component state after the timestamp
+                  var tempComponentState = this.getComponentStateSubmittedAfter(nodeId, componentId, tempTimestamp);
+
+                  if (tempComponentState == null) {
+                    // we did not find a component state
+                    result = false;
+                    break;
+                  } else {
+                    // we found a component state so we will update timestamp
+                    tempTimestamp = tempComponentState.serverSaveTime;
+                  }
+                } else if (functionName == 'isSaved') {
+                  var nodeId = completionCriterion.nodeId;
+                  var componentId = completionCriterion.componentId;
+
+                  // get the first save component state after the timestamp
+                  var tempComponentState = this.getComponentStateSavedAfter(nodeId, componentId, tempTimestamp);
+
+                  if (tempComponentState == null) {
+                    // we did not find a component state
+                    result = false;
+                    break;
+                  } else {
+                    // we found a component state so we will update timestamp
+                    tempTimestamp = tempComponentState.serverSaveTime;
+                  }
+                } else if (functionName == 'isVisited') {
+                  var nodeId = completionCriterion.nodeId;
+
+                  // get the first visit event after the timestamp
+                  var tempEvent = this.getVisitEventAfter(nodeId, tempTimestamp);
+
+                  if (tempEvent == null) {
+                    // we did not find a component state
+                    result = false;
+                    break;
+                  } else {
+                    // we found a component state so we will update timestamp
+                    tempTimestamp = tempEvent.serverSaveTime;
+                  }
                 }
-              } else if (functionName == 'isSaved') {
-                var nodeId = completionCriterion.nodeId;
-                var componentId = completionCriterion.componentId;
-
-                // get the first save component state after the timestamp
-                var tempComponentState = this.getComponentStateSavedAfter(nodeId, componentId, tempTimestamp);
-
-                if (tempComponentState == null) {
-                  // we did not find a component state
-                  result = false;
-                  break;
-                } else {
-                  // we found a component state so we will update timestamp
-                  tempTimestamp = tempComponentState.serverSaveTime;
-                }
-              } else if (functionName == 'isVisited') {
-                var nodeId = completionCriterion.nodeId;
-
-                // get the first visit event after the timestamp
-                var tempEvent = this.getVisitEventAfter(nodeId, tempTimestamp);
-
-                if (tempEvent == null) {
-                  // we did not find a component state
-                  result = false;
-                  break;
-                } else {
-                  // we found a component state so we will update timestamp
-                  tempTimestamp = tempEvent.serverSaveTime;
-                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError43 = true;
+            _iteratorError43 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion43 && _iterator43.return) {
+                _iterator43.return();
+              }
+            } finally {
+              if (_didIteratorError43) {
+                throw _iteratorError43;
               }
             }
           }
@@ -2990,16 +3824,34 @@ var StudentDataService = function () {
       if (componentStates != null) {
 
         // loop through all the component states
-        for (var c = 0; c < componentStates.length; c++) {
+        var _iteratorNormalCompletion44 = true;
+        var _didIteratorError44 = false;
+        var _iteratorError44 = undefined;
 
-          // get a component state
-          var tempComponentState = componentStates[c];
+        try {
+          for (var _iterator44 = componentStates[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
+            var tempComponentState = _step44.value;
 
-          if (tempComponentState != null && tempComponentState.serverSaveTime > timestamp && tempComponentState.nodeId === nodeId && tempComponentState.componentId === componentId) {
 
-            // we have found a save component state after the timestamp
-            componentState = tempComponentState;
-            break;
+            if (tempComponentState != null && tempComponentState.serverSaveTime > timestamp && tempComponentState.nodeId === nodeId && tempComponentState.componentId === componentId) {
+
+              // we have found a save component state after the timestamp
+              componentState = tempComponentState;
+              break;
+            }
+          }
+        } catch (err) {
+          _didIteratorError44 = true;
+          _iteratorError44 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion44 && _iterator44.return) {
+              _iterator44.return();
+            }
+          } finally {
+            if (_didIteratorError44) {
+              throw _iteratorError44;
+            }
           }
         }
       }
@@ -3025,14 +3877,33 @@ var StudentDataService = function () {
       if (componentStates != null) {
 
         // loop through all the component states
-        for (var c = 0; c < componentStates.length; c++) {
-          var tempComponentState = componentStates[c];
+        var _iteratorNormalCompletion45 = true;
+        var _didIteratorError45 = false;
+        var _iteratorError45 = undefined;
 
-          if (tempComponentState != null && tempComponentState.serverSaveTime > timestamp && tempComponentState.nodeId === nodeId && tempComponentState.componentId === componentId && tempComponentState.isSubmit) {
+        try {
+          for (var _iterator45 = componentStates[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
+            var tempComponentState = _step45.value;
 
-            // we have found a submit component state after the timestamp
-            componentState = tempComponentState;
-            break;
+            if (tempComponentState != null && tempComponentState.serverSaveTime > timestamp && tempComponentState.nodeId === nodeId && tempComponentState.componentId === componentId && tempComponentState.isSubmit) {
+
+              // we have found a submit component state after the timestamp
+              componentState = tempComponentState;
+              break;
+            }
+          }
+        } catch (err) {
+          _didIteratorError45 = true;
+          _iteratorError45 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion45 && _iterator45.return) {
+              _iterator45.return();
+            }
+          } finally {
+            if (_didIteratorError45) {
+              throw _iteratorError45;
+            }
           }
         }
       }
@@ -3055,14 +3926,33 @@ var StudentDataService = function () {
       if (events != null) {
 
         // loop through all the events
-        for (var e = 0; e < events.length; e++) {
-          var tempEvent = events[e];
+        var _iteratorNormalCompletion46 = true;
+        var _didIteratorError46 = false;
+        var _iteratorError46 = undefined;
 
-          if (tempEvent != null && tempEvent.serverSaveTime > timestamp && tempEvent.nodeId === nodeId && tempEvent.event === 'nodeEntered') {
+        try {
+          for (var _iterator46 = events[Symbol.iterator](), _step46; !(_iteratorNormalCompletion46 = (_step46 = _iterator46.next()).done); _iteratorNormalCompletion46 = true) {
+            var tempEvent = _step46.value;
 
-            // we have found a visit event after the timestamp
-            event = tempEvent;
-            break;
+            if (tempEvent != null && tempEvent.serverSaveTime > timestamp && tempEvent.nodeId === nodeId && tempEvent.event === 'nodeEntered') {
+
+              // we have found a visit event after the timestamp
+              event = tempEvent;
+              break;
+            }
+          }
+        } catch (err) {
+          _didIteratorError46 = true;
+          _iteratorError46 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion46 && _iterator46.return) {
+              _iterator46.return();
+            }
+          } finally {
+            if (_didIteratorError46) {
+              throw _iteratorError46;
+            }
           }
         }
       }

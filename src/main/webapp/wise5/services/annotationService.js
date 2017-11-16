@@ -121,10 +121,30 @@ var AnnotationService = function () {
               }
               if (match && type) {
                 if (type.constructor === Array) {
-                  for (var i = 0; i < type.length; i++) {
-                    var thisType = type[i];
-                    if (tempAnnotation.type !== thisType) {
-                      match = false;
+                  var _iteratorNormalCompletion2 = true;
+                  var _didIteratorError2 = false;
+                  var _iteratorError2 = undefined;
+
+                  try {
+                    for (var _iterator2 = type[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                      var thisType = _step2.value;
+
+                      if (tempAnnotation.type !== thisType) {
+                        match = false;
+                      }
+                    }
+                  } catch (err) {
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
+                  } finally {
+                    try {
+                      if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                      }
+                    } finally {
+                      if (_didIteratorError2) {
+                        throw _iteratorError2;
+                      }
                     }
                   }
                 } else {
@@ -200,12 +220,31 @@ var AnnotationService = function () {
 
         // loop through all the annotations and inject a request token
         if (annotations != null && annotations.length > 0) {
-          for (var a = 0; a < annotations.length; a++) {
-            var _annotation = annotations[a];
+          var _iteratorNormalCompletion3 = true;
+          var _didIteratorError3 = false;
+          var _iteratorError3 = undefined;
 
-            if (_annotation != null) {
-              _annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
-              this.addOrUpdateAnnotation(_annotation);
+          try {
+            for (var _iterator3 = annotations[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+              var _annotation = _step3.value;
+
+              if (_annotation != null) {
+                _annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
+                this.addOrUpdateAnnotation(_annotation);
+              }
+            }
+          } catch (err) {
+            _didIteratorError3 = true;
+            _iteratorError3 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
+              }
+            } finally {
+              if (_didIteratorError3) {
+                throw _iteratorError3;
+              }
             }
           }
         } else {
@@ -265,43 +304,62 @@ var AnnotationService = function () {
         if (savedAnnotations != null && localAnnotations != null) {
 
           // loop through all the saved annotations
-          for (var x = 0; x < savedAnnotations.length; x++) {
-            var savedAnnotation = savedAnnotations[x];
+          var _iteratorNormalCompletion4 = true;
+          var _didIteratorError4 = false;
+          var _iteratorError4 = undefined;
 
-            // loop through all the local annotations
-            for (var y = localAnnotations.length - 1; y >= 0; y--) {
-              localAnnotation = localAnnotations[y];
+          try {
+            for (var _iterator4 = savedAnnotations[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+              var savedAnnotation = _step4.value;
 
-              if (localAnnotation.id != null && localAnnotation.id === savedAnnotation.id) {
+              // loop through all the local annotations
+              for (var y = localAnnotations.length - 1; y >= 0; y--) {
+                localAnnotation = localAnnotations[y];
 
-                // we have found the matching local annotation so we will update it
-                localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
-                //localAnnotation.requestToken = null; // requestToken is no longer needed.
+                if (localAnnotation.id != null && localAnnotation.id === savedAnnotation.id) {
 
-                this.$rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
-                break;
-              } else if (localAnnotation.requestToken != null && localAnnotation.requestToken === savedAnnotation.requestToken) {
+                  // we have found the matching local annotation so we will update it
+                  localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
+                  //localAnnotation.requestToken = null; // requestToken is no longer needed.
 
-                // we have found the matching local annotation so we will update it
-                localAnnotation.id = savedAnnotation.id;
-                localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
-                localAnnotation.requestToken = null; // requestToken is no longer needed.
+                  this.$rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
+                  break;
+                } else if (localAnnotation.requestToken != null && localAnnotation.requestToken === savedAnnotation.requestToken) {
 
-                if (this.ConfigService.isPreview() && localAnnotation.id == null) {
-                  /*
-                   * we are in preview mode so we will set a dummy
-                   * annotation id into the annotation
-                   */
-                  localAnnotation.id = this.dummyAnnotationId;
-                  /*
-                   * increment the dummy annotation id for the next
-                   * annotation
-                   */
-                  this.dummyAnnotationId++;
+                  // we have found the matching local annotation so we will update it
+                  localAnnotation.id = savedAnnotation.id;
+                  localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
+                  localAnnotation.requestToken = null; // requestToken is no longer needed.
+
+                  if (this.ConfigService.isPreview() && localAnnotation.id == null) {
+                    /*
+                     * we are in preview mode so we will set a dummy
+                     * annotation id into the annotation
+                     */
+                    localAnnotation.id = this.dummyAnnotationId;
+                    /*
+                     * increment the dummy annotation id for the next
+                     * annotation
+                     */
+                    this.dummyAnnotationId++;
+                  }
+
+                  this.$rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
+                  break;
                 }
-
-                this.$rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
-                break;
+              }
+            }
+          } catch (err) {
+            _didIteratorError4 = true;
+            _iteratorError4 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                _iterator4.return();
+              }
+            } finally {
+              if (_didIteratorError4) {
+                throw _iteratorError4;
               }
             }
           }
@@ -872,11 +930,31 @@ var AnnotationService = function () {
     value: function getAllGlobalAnnotations() {
       var globalAnnotations = [];
 
-      for (var a = 0; a < this.annotations.length; a++) {
-        var annotation = this.annotations[a];
-        if (annotation != null && annotation.data != null) {
-          if (annotation.data.isGlobal) {
-            globalAnnotations.push(annotation);
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
+
+      try {
+        for (var _iterator5 = this.annotations[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var annotation = _step5.value;
+
+          if (annotation != null && annotation.data != null) {
+            if (annotation.data.isGlobal) {
+              globalAnnotations.push(annotation);
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
           }
         }
       }
@@ -894,32 +972,73 @@ var AnnotationService = function () {
     value: function getAllGlobalAnnotationGroups() {
       var globalAnnotationGroups = [];
 
-      for (var a = 0; a < this.annotations.length; a++) {
-        var annotation = this.annotations[a];
-        if (annotation != null && annotation.data != null) {
-          if (annotation.data.isGlobal) {
-            // check if this global annotation can be grouped (has the same annotationGroupName as another that we've seen before)
-            if (annotation.data.annotationGroupName != null && annotation.data.annotationGroupCreatedTime != null) {
-              var sameGroupFound = false;
-              for (var g = 0; g < globalAnnotationGroups.length; g++) {
-                var globalAnnotationGroup = globalAnnotationGroups[g];
-                if (globalAnnotationGroup.annotationGroupNameAndTime == annotation.data.annotationGroupName + annotation.data.annotationGroupCreatedTime) {
-                  // push this annotation to the end of the group
-                  globalAnnotationGroup.annotations.push(annotation);
-                  sameGroupFound = true;
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
+
+      try {
+        for (var _iterator6 = this.annotations[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var annotation = _step6.value;
+
+          if (annotation != null && annotation.data != null) {
+            if (annotation.data.isGlobal) {
+              // check if this global annotation can be grouped (has the same annotationGroupName as another that we've seen before)
+              if (annotation.data.annotationGroupName != null && annotation.data.annotationGroupCreatedTime != null) {
+                var sameGroupFound = false;
+                var _iteratorNormalCompletion7 = true;
+                var _didIteratorError7 = false;
+                var _iteratorError7 = undefined;
+
+                try {
+                  for (var _iterator7 = globalAnnotationGroups[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                    var globalAnnotationGroup = _step7.value;
+
+                    if (globalAnnotationGroup.annotationGroupNameAndTime == annotation.data.annotationGroupName + annotation.data.annotationGroupCreatedTime) {
+                      // push this annotation to the end of the group
+                      globalAnnotationGroup.annotations.push(annotation);
+                      sameGroupFound = true;
+                    }
+                  }
+                } catch (err) {
+                  _didIteratorError7 = true;
+                  _iteratorError7 = err;
+                } finally {
+                  try {
+                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                      _iterator7.return();
+                    }
+                  } finally {
+                    if (_didIteratorError7) {
+                      throw _iteratorError7;
+                    }
+                  }
                 }
+
+                if (!sameGroupFound) {
+                  var annotationGroup = {
+                    "annotationGroupNameAndTime": annotation.data.annotationGroupName + annotation.data.annotationGroupCreatedTime,
+                    "annotations": [annotation]
+                  };
+                  globalAnnotationGroups.push(annotationGroup);
+                }
+              } else {
+                // each global annotation should have a name, so it shouldn't get here
+                console.error(this.$translate('GLOBAL_ANNOTATION_DOES_NOT_HAVE_A_NAME') + annotation);
               }
-              if (!sameGroupFound) {
-                var annotationGroup = {
-                  "annotationGroupNameAndTime": annotation.data.annotationGroupName + annotation.data.annotationGroupCreatedTime,
-                  "annotations": [annotation]
-                };
-                globalAnnotationGroups.push(annotationGroup);
-              }
-            } else {
-              // each global annotation should have a name, so it shouldn't get here
-              console.error(this.$translate('GLOBAL_ANNOTATION_DOES_NOT_HAVE_A_NAME') + annotation);
             }
+          }
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
           }
         }
       }
@@ -966,35 +1085,76 @@ var AnnotationService = function () {
     value: function calculateActiveGlobalAnnotationGroups() {
       this.activeGlobalAnnotationGroups = [];
 
-      for (var a = 0; a < this.annotations.length; a++) {
-        var annotation = this.annotations[a];
-        if (annotation != null && annotation.data != null) {
-          if (annotation.data.isGlobal && annotation.data.unGlobalizedTimestamp == null) {
-            // check if this global annotation can be grouped (has the same annotationGroupName as another that we've seen before)
-            if (annotation.data.annotationGroupName != null) {
-              var sameGroupFound = false;
-              for (var ag = 0; ag < this.activeGlobalAnnotationGroups.length; ag++) {
-                var activeGlobalAnnotationGroup = this.activeGlobalAnnotationGroups[ag];
-                if (activeGlobalAnnotationGroup.annotationGroupName == annotation.data.annotationGroupName + '_' + annotation.data.annotationGroupCreatedTime) {
-                  // push this annotation to the end of the group
-                  activeGlobalAnnotationGroup.annotations.push(annotation);
-                  sameGroupFound = true;
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
+
+      try {
+        for (var _iterator8 = this.annotations[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var annotation = _step8.value;
+
+          if (annotation != null && annotation.data != null) {
+            if (annotation.data.isGlobal && annotation.data.unGlobalizedTimestamp == null) {
+              // check if this global annotation can be grouped (has the same annotationGroupName as another that we've seen before)
+              if (annotation.data.annotationGroupName != null) {
+                var sameGroupFound = false;
+                var _iteratorNormalCompletion9 = true;
+                var _didIteratorError9 = false;
+                var _iteratorError9 = undefined;
+
+                try {
+                  for (var _iterator9 = this.activeGlobalAnnotationGroups[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                    var activeGlobalAnnotationGroup = _step9.value;
+
+                    if (activeGlobalAnnotationGroup.annotationGroupName == annotation.data.annotationGroupName + '_' + annotation.data.annotationGroupCreatedTime) {
+                      // push this annotation to the end of the group
+                      activeGlobalAnnotationGroup.annotations.push(annotation);
+                      sameGroupFound = true;
+                    }
+                  }
+                } catch (err) {
+                  _didIteratorError9 = true;
+                  _iteratorError9 = err;
+                } finally {
+                  try {
+                    if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                      _iterator9.return();
+                    }
+                  } finally {
+                    if (_didIteratorError9) {
+                      throw _iteratorError9;
+                    }
+                  }
                 }
+
+                if (!sameGroupFound) {
+                  var annotationGroup = {
+                    "annotationGroupName": annotation.data.annotationGroupName + '_' + annotation.data.annotationGroupCreatedTime,
+                    "annotations": [annotation],
+                    "nodeId": annotation.nodeId,
+                    "componentId": annotation.componentId,
+                    "serverSaveTime": annotation.serverSaveTime
+                  };
+                  this.activeGlobalAnnotationGroups.push(annotationGroup);
+                }
+              } else {
+                // each global annotation should have a name, so it shouldn't get here
+                console.error(his.$translate('GLOBAL_ANNOTATION_DOES_NOT_HAVE_A_NAME') + annotation);
               }
-              if (!sameGroupFound) {
-                var annotationGroup = {
-                  "annotationGroupName": annotation.data.annotationGroupName + '_' + annotation.data.annotationGroupCreatedTime,
-                  "annotations": [annotation],
-                  "nodeId": annotation.nodeId,
-                  "componentId": annotation.componentId,
-                  "serverSaveTime": annotation.serverSaveTime
-                };
-                this.activeGlobalAnnotationGroups.push(annotationGroup);
-              }
-            } else {
-              // each global annotation should have a name, so it shouldn't get here
-              console.error(his.$translate('GLOBAL_ANNOTATION_DOES_NOT_HAVE_A_NAME') + annotation);
             }
+          }
+        }
+      } catch (err) {
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
+          }
+        } finally {
+          if (_didIteratorError8) {
+            throw _iteratorError8;
           }
         }
       }
@@ -1011,11 +1171,31 @@ var AnnotationService = function () {
     value: function getInActiveGlobalAnnotations() {
       var inActiveGlobalAnnotations = [];
 
-      for (var a = 0; a < this.annotations.length; a++) {
-        var annotation = this.annotations[a];
-        if (annotation != null && annotation.data != null) {
-          if (annotation.data.isGlobal && annotation.data.unGlobalizedTimestamp != null) {
-            inActiveGlobalAnnotations.push(annotation);
+      var _iteratorNormalCompletion10 = true;
+      var _didIteratorError10 = false;
+      var _iteratorError10 = undefined;
+
+      try {
+        for (var _iterator10 = this.annotations[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+          var annotation = _step10.value;
+
+          if (annotation != null && annotation.data != null) {
+            if (annotation.data.isGlobal && annotation.data.unGlobalizedTimestamp != null) {
+              inActiveGlobalAnnotations.push(annotation);
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError10 = true;
+        _iteratorError10 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion10 && _iterator10.return) {
+            _iterator10.return();
+          }
+        } finally {
+          if (_didIteratorError10) {
+            throw _iteratorError10;
           }
         }
       }
@@ -1112,29 +1292,29 @@ var AnnotationService = function () {
     key: 'getAnnotationsByStudentWorkId',
     value: function getAnnotationsByStudentWorkId(studentWorkId) {
       var annotations = [];
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iteratorNormalCompletion11 = true;
+      var _didIteratorError11 = false;
+      var _iteratorError11 = undefined;
 
       try {
-        for (var _iterator2 = this.annotations[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var annotation = _step2.value;
+        for (var _iterator11 = this.annotations[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+          var annotation = _step11.value;
 
           if (annotation && studentWorkId == annotation.studentWorkId) {
             annotations.push(annotation);
           }
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _didIteratorError11 = true;
+        _iteratorError11 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
+          if (!_iteratorNormalCompletion11 && _iterator11.return) {
+            _iterator11.return();
           }
         } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
+          if (_didIteratorError11) {
+            throw _iteratorError11;
           }
         }
       }
