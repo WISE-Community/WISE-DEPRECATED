@@ -2269,10 +2269,6 @@ class ProjectService {
                   if (allPathsFromToNode != null) {
                     // loop through all the paths from the to node
                     for (var tempPath of allPathsFromToNode) {
-
-                      // get a path
-                      var tempPath = allPathsFromToNode[a];
-
                       // prepend the current node id to the path
                       tempPath.unshift(nodeId);
 

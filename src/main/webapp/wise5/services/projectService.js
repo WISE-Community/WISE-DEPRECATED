@@ -3172,10 +3172,6 @@ var ProjectService = function () {
                           for (var _iterator34 = allPathsFromToNode[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
                             var tempPath = _step34.value;
 
-
-                            // get a path
-                            var tempPath = allPathsFromToNode[a];
-
                             // prepend the current node id to the path
                             tempPath.unshift(nodeId);
 
