@@ -51,16 +51,11 @@ public class JGitUtils {
     JSONArray commitHistoryJSONArray = new JSONArray();
     for (RevCommit commit : commitHistory) {
       JSONObject commitHistoryJSONObject = new JSONObject();
-      ObjectId commitId = commit.getId();
-      commitHistoryJSONObject.put("commitId", commitId);
-      String commitName = commit.getName();
-      commitHistoryJSONObject.put("commitName", commitName);
-      String commitMessage = commit.getFullMessage();
-      commitHistoryJSONObject.put("commitMessage", commitMessage);
-      String commitAuthor = commit.getAuthorIdent().getName();
-      commitHistoryJSONObject.put("commitAuthor", commitAuthor);
-      long commitTime = commit.getCommitTime() * 1000l; // x1000 to make into milliseconds since epoch
-      commitHistoryJSONObject.put("commitTime", commitTime);
+      commitHistoryJSONObject.put("commitId", commit.getId());
+      commitHistoryJSONObject.put("commitName", commit.getName());
+      commitHistoryJSONObject.put("commitMessage", commit.getFullMessage());
+      commitHistoryJSONObject.put("commitAuthor", commit.getAuthorIdent().getName());
+      commitHistoryJSONObject.put("commitTime", commit.getCommitTime() * 1000l);
       commitHistoryJSONArray.put(commitHistoryJSONObject);
     }
     return commitHistoryJSONArray;
