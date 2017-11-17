@@ -171,7 +171,8 @@ public class WISE5AuthorProjectController {
 
       Project project = projectService.createProject(pParams);
       response.getWriter().write(project.getId().toString());
-      commitChangesToProjectJSON(commitMessage, user, newProjectPath.getAbsolutePath());
+      // commented below until "W5 AT: new commit message convention #1016" is completed
+      //commitChangesToProjectJSON(commitMessage, user, newProjectPath.getAbsolutePath());
     } catch(IOException e) {
       e.printStackTrace();
     } catch (ObjectNotFoundException e) {
@@ -291,13 +292,15 @@ public class WISE5AuthorProjectController {
       } catch (NotAuthorizedException e) {
         e.printStackTrace();
       }
-      String projectDirPath = projectJSONPath.substring(0, projectJSONPath.lastIndexOf("/"));
-      commitChangesToProjectJSON(commitMessage, user, projectDirPath);
+      // commented below until "W5 AT: new commit message convention #1016" is completed
+      //String projectDirPath = projectJSONPath.substring(0, projectJSONPath.lastIndexOf("/"));
+      //commitChangesToProjectJSON(commitMessage, user, projectDirPath);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
+  @SuppressWarnings("unused")
   private void commitChangesToProjectJSON(String commitMessage, User user, String projectDirPath)
       throws IOException {
     try {
