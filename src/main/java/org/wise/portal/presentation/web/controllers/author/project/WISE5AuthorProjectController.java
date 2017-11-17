@@ -263,11 +263,10 @@ public class WISE5AuthorProjectController {
     }
 
     String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-    String rawProjectUrl = project.getModulePath();
-    String fullProjectPath = curriculumBaseDir + rawProjectUrl;
-    String fullProjectDir = fullProjectPath.substring(0, fullProjectPath.lastIndexOf("/"));
+    String projectModulePath = project.getModulePath();
+    String projectJSONPath = curriculumBaseDir + projectModulePath;
 
-    File projectFile = new File(fullProjectPath);
+    File projectFile = new File(projectJSONPath);
     try {
       if (!projectFile.exists()) {
         projectFile.createNewFile();
@@ -292,19 +291,20 @@ public class WISE5AuthorProjectController {
       } catch (NotAuthorizedException e) {
         e.printStackTrace();
       }
-      commitChangesToProjectJSON(commitMessage, user, fullProjectDir);
+      String projectDirPath = projectJSONPath.substring(0, projectJSONPath.lastIndexOf("/"));
+      commitChangesToProjectJSON(commitMessage, user, projectDirPath);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  private void commitChangesToProjectJSON(String commitMessage, User user, String fullProjectDir)
+  private void commitChangesToProjectJSON(String commitMessage, User user, String projectDirPath)
       throws IOException {
     try {
       String authorUsername = user.getUserDetails().getUsername();
       String authorEmail = user.getUserDetails().getEmailAddress();
-      JGitUtils.commitChangesToProjectJSON(fullProjectDir, authorUsername,
-          authorEmail, commitMessage);
+      JGitUtils.commitChangesToProjectJSON(projectDirPath, authorUsername, authorEmail,
+          commitMessage);
     } catch (GitAPIException e) {
       e.printStackTrace();
     }
@@ -528,16 +528,16 @@ public class WISE5AuthorProjectController {
       return;
     }
 
-    String fullProjectDir = getProjectDirectory(project);
-    JSONArray commitHistoryJSONArray = JGitUtils.getCommitHistoryJSONArray(fullProjectDir);
+    String projectDirPath = getProjectDirectoryPath(project);
+    JSONArray commitHistoryJSONArray = JGitUtils.getCommitHistoryJSONArray(projectDirPath);
     response.getWriter().print(commitHistoryJSONArray);
   }
 
-  private String getProjectDirectory(Project project) {
+  private String getProjectDirectoryPath(Project project) {
     String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
     String rawProjectUrl = project.getModulePath();
-    String fullProjectPath = curriculumBaseDir + rawProjectUrl;
-    return fullProjectPath.substring(0, fullProjectPath.lastIndexOf("/"));
+    String projectDirPath = curriculumBaseDir + rawProjectUrl;
+    return projectDirPath.substring(0, projectDirPath.lastIndexOf("/"));
   }
 
   /**
@@ -560,9 +560,9 @@ public class WISE5AuthorProjectController {
       Project project = projectService.getById(projectId);
       User user = ControllerUtil.getSignedInUser();
       if (projectService.canAuthorProject(project, user)) {
-        String projectAssetsPath = getProjectAssetsDirectoryPath(project);
-        File projectAssetsDirectory = new File(projectAssetsPath);
-        JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDirectory);
+        String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
+        File projectAssetsDir = new File(projectAssetsDirPath);
+        JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDir);
         PrintWriter writer = response.getWriter();
         writer.write(projectAssetsJSONObject.toString());
         writer.close();
@@ -586,8 +586,8 @@ public class WISE5AuthorProjectController {
       Project project = projectService.getById(projectId);
       User user = ControllerUtil.getSignedInUser();
       if (projectService.canAuthorProject(project, user)) {
-        String projectAssetsPath = getProjectAssetsDirectoryPath(project);
-        File projectAssetFile = new File(projectAssetsPath + "/" + assetFileName);
+        String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
+        File projectAssetFile = new File(projectAssetsDirPath + "/" + assetFileName);
         response.setContentType("application/octet-stream");
         response.setHeader("Content-Disposition", "attachment;filename=\"" + assetFileName + "\"");
         FileUtils.copyFile(projectAssetFile, response.getOutputStream());
@@ -610,8 +610,8 @@ public class WISE5AuthorProjectController {
       Project project = projectService.getById(projectId);
       User user = ControllerUtil.getSignedInUser();
       if (projectService.canAuthorProject(project, user)) {
-        String projectAssetsPath = getProjectAssetsDirectoryPath(project);
-        File projectAssetsDir = new File(projectAssetsPath);
+        String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
+        File projectAssetsDir = new File(projectAssetsDirPath);
 
         if (assetFileName != null) {
           // user wants to delete an existing asset
@@ -660,7 +660,7 @@ public class WISE5AuthorProjectController {
           }
         }
 
-        File projectAssetsDirectory = new File(projectAssetsPath);
+        File projectAssetsDirectory = new File(projectAssetsDirPath);
         JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDirectory);
         PrintWriter writer = response.getWriter();
         writer.write(projectAssetsJSONObject.toString());
