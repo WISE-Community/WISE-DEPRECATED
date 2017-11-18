@@ -1,0 +1,21 @@
+#!/bin/sh
+# usage: sh versionBump.sh NEW_VERSION_NUMBER
+# updates files containing version information in WISE and encourages user to commit them
+
+if [ $# -eq 0 ]
+  then
+    echo "Usage: versionBump.sh NEW_VERSION_NUMBER"
+    exit 1
+fi
+
+export NEW_VERSION_NUMBER=$1
+
+echo ${NEW_VERSION_NUMBER} > src/main/resources/version.txt
+
+# Note: this assumes that WISE version is the first "version":"..." field in package.json
+sed -i.bak "1,/\"version\": \".*\"/{s/\"version\": \".*\"/\"version\": \"${NEW_VERSION_NUMBER}\"/;}" package.json && rm package.json.bak
+
+# Note: this assumes that WISE version is the first <version>...</version> tag in pom.xml
+sed -i.bak "1,/<version>.*<\/version>/{s/<version>.*<\/version>/<version>${NEW_VERSION_NUMBER}<\/version>/;}" pom.xml && rm pom.xml.bak
+
+echo "Bumped version number to ${NEW_VERSION_NUMBER}.\nYou might want to commit changes now:\ngit commit -a -m \"Bumped version number to ${NEW_VERSION_NUMBER}\""
