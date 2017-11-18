@@ -128,8 +128,7 @@ class NotebookService {
   getTemplateReportItemByReportId(reportId) {
     let templateReportItem = null;
     let reportNotes = this.notebookConfig.itemTypes.report.notes;
-    for (let i = 0; i < reportNotes.length; i++) {
-      let reportNote = reportNotes[i];
+    for (let reportNote of reportNotes) {
       if (reportNote.reportId == reportId) {
         templateReportItem = {
           id: null,
@@ -171,8 +170,7 @@ class NotebookService {
   getReportNoteContentByReportId(reportId) {
     let result = null;
     let reportNotes = this.notebookConfig.itemTypes.report.notes;
-    for (let i = 0; i < reportNotes.length; i++) {
-      let reportNote = reportNotes[i];
+    for (let reportNote of reportNotes) {
       if (reportNote.reportId === reportId) {
         result = reportNote;
         break;
@@ -215,8 +213,7 @@ class NotebookService {
         // loop through the assets and make them into JSON object with more details
         this.notebooksByWorkgroup = {};
         let allNotebookItems = response.data;
-        for (let n = 0; n < allNotebookItems.length; n++) {
-          let notebookItem = allNotebookItems[n];
+        for (let notebookItem of allNotebookItems) {
           try {
             if (notebookItem.studentAssetId != null) {
               // if this notebook item is a StudentAsset item, add the association here
@@ -297,8 +294,7 @@ class NotebookService {
     let notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
     if (notebookByWorkgroup != null) {
       let allNotebookItems = notebookByWorkgroup.allItems;
-      for (let a = 0; a < allNotebookItems.length; a++) {
-        let notebookItem = allNotebookItems[a];
+      for (let notebookItem of allNotebookItems) {
         if (notebookItem.id === notebookItemId) {
           return notebookItem;
         }

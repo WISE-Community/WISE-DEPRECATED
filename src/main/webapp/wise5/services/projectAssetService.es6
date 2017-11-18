@@ -110,9 +110,7 @@ class ProjectAssetService {
        * loop through all the asset files to find the text files that
        * are actually used in the project
        */
-      for (var a = 0; a < assets.files.length; a++) {
-        var asset = assets.files[a];
-
+      for (var asset of assets.files) {
         if (asset != null) {
           var fileName = asset.fileName;
 
@@ -176,10 +174,7 @@ class ProjectAssetService {
         foundNewUsedTextFile = false;
 
         // loop through all the text files
-        for (var h = 0; h < textFiles.length; h++) {
-
-          // get a texzt file object
-          var textFile = textFiles[h];
+        for (var textFile of textFiles) {
 
           if (textFile != null) {
 
@@ -248,9 +243,7 @@ class ProjectAssetService {
       if (assets != null && assets.files != null) {
 
         // loop through all the assets
-        for (var a = 0; a < assets.files.length; a++) {
-          var asset = assets.files[a];
-
+        for (var asset of assets.files) {
           if (asset != null) {
             var fileName = asset.fileName;
 
@@ -285,10 +278,7 @@ class ProjectAssetService {
     var projectAssetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
 
     // loop through all the text file names
-    for (var t = 0; t < textFileNames.length; t++) {
-
-      // get an text file name
-      var textFileName = textFileNames[t];
+    for (var textFileName of textFileNames) {
 
       // create a promise that will return the contents of the text file
       var promise = this.$http.get(projectAssetsDirectoryPath + '/' + textFileName);

@@ -330,11 +330,29 @@ var ConfigService = function () {
       var classmateUserInfos = this.getClassmateUserInfos();
 
       if (classmateUserInfos) {
-        var n = classmateUserInfos.length;
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-        for (var i = 0; i < n; i++) {
-          var workgroup = classmateUserInfos[i];
-          workgroup.displayNames = this.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId);
+        try {
+          for (var _iterator = classmateUserInfos[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var workgroup = _step.value;
+
+            workgroup.displayNames = this.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId);
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
         }
       }
     }
@@ -360,8 +378,29 @@ var ConfigService = function () {
          * loop through all the classmate user info objects and add it to
          * new array of classmate user infos
          */
-        for (var c = 0; c < classmateUserInfos.length; c++) {
-          sortedClassmateUserInfos.push(classmateUserInfos[c]);
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = classmateUserInfos[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var classmateUserInfo = _step2.value;
+
+            sortedClassmateUserInfos.push(classmateUserInfo);
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
         }
       }
 
@@ -445,14 +484,33 @@ var ConfigService = function () {
       var classmateUserInfos = this.getClassmateUserInfos();
 
       if (classmateUserInfos != null) {
-        for (var c = 0; c < classmateUserInfos.length; c++) {
-          var classmateUserInfo = classmateUserInfos[c];
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
 
-          if (classmateUserInfo != null) {
-            var workgroupId = classmateUserInfo.workgroupId;
+        try {
+          for (var _iterator3 = classmateUserInfos[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var classmateUserInfo = _step3.value;
 
-            if (workgroupId != null) {
-              workgroupIds.push(workgroupId);
+            if (classmateUserInfo != null) {
+              var workgroupId = classmateUserInfo.workgroupId;
+
+              if (workgroupId != null) {
+                workgroupIds.push(workgroupId);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
             }
           }
         }
@@ -544,15 +602,34 @@ var ConfigService = function () {
           var classmateUserInfos = this.getClassmateUserInfos();
 
           if (classmateUserInfos != null) {
-            for (var c = 0; c < classmateUserInfos.length; c++) {
-              var classmateUserInfo = classmateUserInfos[c];
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
 
-              if (classmateUserInfo != null) {
-                var tempWorkgroupId = classmateUserInfo.workgroupId;
+            try {
+              for (var _iterator4 = classmateUserInfos[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                var classmateUserInfo = _step4.value;
 
-                if (workgroupId == tempWorkgroupId) {
-                  userInfo = classmateUserInfo;
-                  break;
+                if (classmateUserInfo != null) {
+                  var tempWorkgroupId = classmateUserInfo.workgroupId;
+
+                  if (workgroupId == tempWorkgroupId) {
+                    userInfo = classmateUserInfo;
+                    break;
+                  }
+                }
+              }
+            } catch (err) {
+              _didIteratorError4 = true;
+              _iteratorError4 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                  _iterator4.return();
+                }
+              } finally {
+                if (_didIteratorError4) {
+                  throw _iteratorError4;
                 }
               }
             }
@@ -605,18 +682,37 @@ var ConfigService = function () {
 
         if (userNamesSplit != null) {
           // loop through each user name
-          for (var x = 0; x < userNamesSplit.length; x++) {
-            // get a user name e.g. "Spongebob Squarepants (spongebobs0101)"
-            var userName = userNamesSplit[x];
+          var _iteratorNormalCompletion5 = true;
+          var _didIteratorError5 = false;
+          var _iteratorError5 = undefined;
 
-            // get the index of the first empty space
-            var indexOfSpace = userName.indexOf(' ');
+          try {
+            for (var _iterator5 = userNamesSplit[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+              var userName = _step5.value;
 
-            // get the student first name e.g. "Spongebob"
-            var studentFirstName = userName.substring(0, indexOfSpace);
 
-            // add the student name to the array
-            studentNames.push(studentFirstName);
+              // get the index of the first empty space
+              var indexOfSpace = userName.indexOf(' ');
+
+              // get the student first name e.g. "Spongebob"
+              var studentFirstName = userName.substring(0, indexOfSpace);
+
+              // add the student name to the array
+              studentNames.push(studentFirstName);
+            }
+          } catch (err) {
+            _didIteratorError5 = true;
+            _iteratorError5 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                _iterator5.return();
+              }
+            } finally {
+              if (_didIteratorError5) {
+                throw _iteratorError5;
+              }
+            }
           }
         }
       }
@@ -679,19 +775,39 @@ var ConfigService = function () {
         if (userInfo != null) {
           var userNames = userInfo.userName.split(':');
 
-          for (var i = 0; i < userNames.length; i++) {
-            var name = userNames[i];
-            var id = "";
-            var regex = /(.+) \((.+)\)/g;
-            var matches = regex.exec(name);
-            if (matches) {
-              name = matches[1];
-              id = matches[2];
+          var _iteratorNormalCompletion6 = true;
+          var _didIteratorError6 = false;
+          var _iteratorError6 = undefined;
+
+          try {
+            for (var _iterator6 = userNames[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+              var name = _step6.value;
+
+              var id = "";
+              var regex = /(.+) \((.+)\)/g;
+              var matches = regex.exec(name);
+              if (matches) {
+                name = matches[1];
+                id = matches[2];
+              }
+              userNamesObjects.push({
+                name: name,
+                id: id
+              });
             }
-            userNamesObjects.push({
-              name: name,
-              id: id
-            });
+          } catch (err) {
+            _didIteratorError6 = true;
+            _iteratorError6 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                _iterator6.return();
+              }
+            } finally {
+              if (_didIteratorError6) {
+                throw _iteratorError6;
+              }
+            }
           }
         }
       }
@@ -824,13 +940,32 @@ var ConfigService = function () {
         var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
 
         if (sharedTeacherUserInfos != null) {
+          var _iteratorNormalCompletion7 = true;
+          var _didIteratorError7 = false;
+          var _iteratorError7 = undefined;
 
-          for (var s = 0; s < sharedTeacherUserInfos.length; s++) {
-            var sharedTeacherUserInfo = sharedTeacherUserInfos[s];
+          try {
 
-            if (sharedTeacherUserInfo != null) {
-              if (workgroupId == sharedTeacherUserInfo.workgroupId) {
-                result = true;
+            for (var _iterator7 = sharedTeacherUserInfos[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+              var sharedTeacherUserInfo = _step7.value;
+
+              if (sharedTeacherUserInfo != null) {
+                if (workgroupId == sharedTeacherUserInfo.workgroupId) {
+                  result = true;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError7 = true;
+            _iteratorError7 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                _iterator7.return();
+              }
+            } finally {
+              if (_didIteratorError7) {
+                throw _iteratorError7;
               }
             }
           }
@@ -879,13 +1014,32 @@ var ConfigService = function () {
         var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
 
         if (sharedTeacherUserInfos != null) {
+          var _iteratorNormalCompletion8 = true;
+          var _didIteratorError8 = false;
+          var _iteratorError8 = undefined;
 
-          for (var s = 0; s < sharedTeacherUserInfos.length; s++) {
-            var sharedTeacherUserInfo = sharedTeacherUserInfos[s];
+          try {
 
-            if (sharedTeacherUserInfo != null) {
-              if (workgroupId == sharedTeacherUserInfo.workgroupId) {
-                role = sharedTeacherUserInfo.role;
+            for (var _iterator8 = sharedTeacherUserInfos[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+              var sharedTeacherUserInfo = _step8.value;
+
+              if (sharedTeacherUserInfo != null) {
+                if (workgroupId == sharedTeacherUserInfo.workgroupId) {
+                  role = sharedTeacherUserInfo.role;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError8 = true;
+            _iteratorError8 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                _iterator8.return();
+              }
+            } finally {
+              if (_didIteratorError8) {
+                throw _iteratorError8;
               }
             }
           }

@@ -21,8 +21,7 @@ class StudentAssetService {
   }
 
   getAssetById(assetId) {
-    for (var a = 0; a < this.allAssets.length; a++) {
-      var asset = this.allAssets[a];
+    for (var asset of this.allAssets) {
       if (asset.id === assetId) {
         return asset;
       }
@@ -50,8 +49,7 @@ class StudentAssetService {
         let result = [];
         let assets = response.data;
         let studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
-        for (let a = 0; a < assets.length; a++) {
-          let asset = assets[a];
+        for (let asset of assets) {
           if (!asset.isReferenced && asset.serverDeleteTime == null && asset.fileName !== '.DS_Store') {
             asset.url = studentUploadsBaseURL + asset.filePath;
             if (this.isImage(asset)) {

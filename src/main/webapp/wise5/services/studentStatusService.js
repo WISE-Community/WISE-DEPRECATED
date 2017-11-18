@@ -75,15 +75,34 @@ var StudentStatusService = function () {
       var studentStatus = null;
       var studentStatuses = this.getStudentStatuses();
 
-      for (var x = 0; x < studentStatuses.length; x++) {
-        var tempStudentStatus = studentStatuses[x];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-        if (tempStudentStatus != null) {
-          var tempWorkgroupId = tempStudentStatus.workgroupId;
+      try {
+        for (var _iterator = studentStatuses[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var tempStudentStatus = _step.value;
 
-          if (workgroupId == tempWorkgroupId) {
-            studentStatus = tempStudentStatus;
-            break;
+          if (tempStudentStatus != null) {
+            var tempWorkgroupId = tempStudentStatus.workgroupId;
+
+            if (workgroupId == tempWorkgroupId) {
+              studentStatus = tempStudentStatus;
+              break;
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
           }
         }
       }
@@ -173,26 +192,45 @@ var StudentStatusService = function () {
       var studentStatuses = this.studentStatuses;
 
       // loop through all the student statuses
-      for (var ss = 0; ss < studentStatuses.length; ss++) {
-        var studentStatus = studentStatuses[ss];
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
-        if (studentStatus != null) {
+      try {
+        for (var _iterator2 = studentStatuses[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var studentStatus = _step2.value;
 
-          if (periodId == -1 || periodId == studentStatus.periodId) {
-            // the period matches the one we are looking for
-            var currentNodeId = studentStatus.currentNodeId;
-            if (nodeId === currentNodeId) {
-              // the node id matches the one we are looking for
-              workgroupIds.push(studentStatus.workgroupId);
-            } else if (this.ProjectService.isGroupNode(nodeId)) {
-              var currentNode = this.ProjectService.getNodeById(currentNodeId);
-              var group = this.ProjectService.getNodeById(nodeId);
+          if (studentStatus != null) {
 
-              if (this.ProjectService.isNodeDescendentOfGroup(currentNode, group)) {
-                // the node id is a descendent of the group we're looking for
+            if (periodId == -1 || periodId == studentStatus.periodId) {
+              // the period matches the one we are looking for
+              var currentNodeId = studentStatus.currentNodeId;
+              if (nodeId === currentNodeId) {
+                // the node id matches the one we are looking for
                 workgroupIds.push(studentStatus.workgroupId);
+              } else if (this.ProjectService.isGroupNode(nodeId)) {
+                var currentNode = this.ProjectService.getNodeById(currentNodeId);
+                var group = this.ProjectService.getNodeById(nodeId);
+
+                if (this.ProjectService.isNodeDescendentOfGroup(currentNode, group)) {
+                  // the node id is a descendent of the group we're looking for
+                  workgroupIds.push(studentStatus.workgroupId);
+                }
               }
             }
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
           }
         }
       }
@@ -221,93 +259,117 @@ var StudentStatusService = function () {
       var studentStatuses = this.studentStatuses;
 
       // loop through all the student statuses
-      for (var ss = 0; ss < studentStatuses.length; ss++) {
-        var studentStatus = studentStatuses[ss];
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
 
-        if (studentStatus) {
+      try {
+        for (var _iterator3 = studentStatuses[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var studentStatus = _step3.value;
 
-          if (periodId == -1 || periodId == studentStatus.periodId) {
-            // the period matches the one we are looking for
+          if (studentStatus) {
 
-            if (!workgroupId || workgroupId === studentStatus.workgroupId) {
-              // either no workgroupId was specified or the workgroupId matches the one we're looking for
+            if (periodId == -1 || periodId == studentStatus.periodId) {
+              // the period matches the one we are looking for
 
-              var nodeStatuses = studentStatus.nodeStatuses;
+              if (!workgroupId || workgroupId === studentStatus.workgroupId) {
+                // either no workgroupId was specified or the workgroupId matches the one we're looking for
 
-              if (nodeStatuses) {
-                // get the node status for the node
-                var nodeStatus = nodeStatuses[nodeId];
+                var nodeStatuses = studentStatus.nodeStatuses;
 
-                if (nodeStatus != null) {
-                  if (isGroupNode) {
-                    // given node is a group
-                    // get progress object from the nodeStatus
-                    var progress = nodeStatus.progress;
+                if (nodeStatuses) {
+                  // get the node status for the node
+                  var nodeStatus = nodeStatuses[nodeId];
 
-                    if (excludeNonWorkNodes) {
-                      // we're looking for only nodes with student work
-                      if (progress && progress.totalItemsWithWork) {
-                        numTotal += progress.totalItemsWithWork;
-                        numCompleted += progress.completedItemsWithWork;
-                      } else {
-                        /*
-                         * we have a legacy nodeStatus.progress that only includes completion information for all nodes
-                         * so we need to calculate manually
-                         */
-                        var group = this.ProjectService.getNodeById(nodeId);
+                  if (nodeStatus != null) {
+                    if (isGroupNode) {
+                      // given node is a group
+                      // get progress object from the nodeStatus
+                      var progress = nodeStatus.progress;
 
-                        // get all the descendants of the group
-                        var descendants = this.ProjectService.getDescendentsOfGroup(group);
-                        var l = descendants.length;
+                      if (excludeNonWorkNodes) {
+                        // we're looking for only nodes with student work
+                        if (progress && progress.totalItemsWithWork) {
+                          numTotal += progress.totalItemsWithWork;
+                          numCompleted += progress.completedItemsWithWork;
+                        } else {
+                          /*
+                           * we have a legacy nodeStatus.progress that only includes completion information for all nodes
+                           * so we need to calculate manually
+                           */
+                          var group = this.ProjectService.getNodeById(nodeId);
 
-                        // loop through all the descendants to check for completion
-                        for (var i = 0; i < l; i++) {
-                          var descendantId = descendants[i];
+                          // get all the descendants of the group
+                          var descendants = this.ProjectService.getDescendentsOfGroup(group);
 
-                          if (!this.ProjectService.isGroupNode(descendantId)) {
-                            // node is not a group, so add to totals if visible and has student work
-                            var descendantStatus = nodeStatuses[descendantId];
+                          // loop through all the descendants to check for completion
+                          var _iteratorNormalCompletion4 = true;
+                          var _didIteratorError4 = false;
+                          var _iteratorError4 = undefined;
 
-                            if (descendantStatus && descendantStatus.isVisible && this.ProjectService.nodeHasWork(descendantId)) {
-                              numTotal++;
+                          try {
+                            for (var _iterator4 = descendants[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                              var descendantId = _step4.value;
 
-                              if (descendantStatus.isCompleted) {
-                                numCompleted++;
+                              if (!this.ProjectService.isGroupNode(descendantId)) {
+                                // node is not a group, so add to totals if visible and has student work
+                                var descendantStatus = nodeStatuses[descendantId];
+
+                                if (descendantStatus && descendantStatus.isVisible && this.ProjectService.nodeHasWork(descendantId)) {
+                                  numTotal++;
+
+                                  if (descendantStatus.isCompleted) {
+                                    numCompleted++;
+                                  }
+                                }
+                              }
+                            }
+                          } catch (err) {
+                            _didIteratorError4 = true;
+                            _iteratorError4 = err;
+                          } finally {
+                            try {
+                              if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                                _iterator4.return();
+                              }
+                            } finally {
+                              if (_didIteratorError4) {
+                                throw _iteratorError4;
                               }
                             }
                           }
                         }
+                      } else {
+                        // we're looking for completion percentage of all nodes
+                        if (progress) {
+                          numTotal += progress.totalItems;
+                          numCompleted += progress.completedItems;
+                        }
                       }
                     } else {
-                      // we're looking for completion percentage of all nodes
-                      if (progress) {
-                        numTotal += progress.totalItems;
-                        numCompleted += progress.completedItems;
-                      }
-                    }
-                  } else {
-                    // given node is not a group
-                    if (nodeStatus.isVisible) {
-                      /*
-                       * the student can see the step. we need this check
-                       * for cases when a project has branching. this way
-                       * we only calculate the step completion percentage
-                       * based on the students that can actually go to
-                       * the step.
-                       */
+                      // given node is not a group
+                      if (nodeStatus.isVisible) {
+                        /*
+                         * the student can see the step. we need this check
+                         * for cases when a project has branching. this way
+                         * we only calculate the step completion percentage
+                         * based on the students that can actually go to
+                         * the step.
+                         */
 
-                      /*
-                       * check whether we should include the node in the calculation
-                       * i.e. either includeNonWorkNodes is true or the node has student work
-                       */
-                      var includeNode = !excludeNonWorkNodes || this.ProjectService.nodeHasWork(nodeId);
+                        /*
+                         * check whether we should include the node in the calculation
+                         * i.e. either includeNonWorkNodes is true or the node has student work
+                         */
+                        var includeNode = !excludeNonWorkNodes || this.ProjectService.nodeHasWork(nodeId);
 
-                      if (includeNode) {
-                        numTotal++;
+                        if (includeNode) {
+                          numTotal++;
 
-                        if (nodeStatus.isCompleted) {
-                          // the student has completed the node
-                          numCompleted++;
+                          if (nodeStatus.isCompleted) {
+                            // the student has completed the node
+                            numCompleted++;
+                          }
                         }
                       }
                     }
@@ -317,9 +379,23 @@ var StudentStatusService = function () {
             }
           }
         }
+
+        // generate the percentage number rounded down to the nearest integer
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
       }
 
-      // generate the percentage number rounded down to the nearest integer
       var completionPercentage = numTotal > 0 ? Math.floor(100 * numCompleted / numTotal) : 0;
 
       return {
@@ -393,14 +469,33 @@ var StudentStatusService = function () {
 
       // find workgroups online in the given period
       var workgroupsOnlineInPeriod = [];
-      var n = workgroupsOnline.length;
-      for (var i = 0; i < n; i++) {
-        var workgroup = workgroupsOnline[i];
-        var studentStatus = this.getStudentStatusForWorkgroupId(workgroup);
-        if (studentStatus) {
-          var pId = studentStatus.periodId;
-          if (periodId == -1 || pId == periodId) {
-            workgroupsOnlineInPeriod.push(workgroup);
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
+
+      try {
+        for (var _iterator5 = workgroupsOnline[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var workgroup = _step5.value;
+
+          var studentStatus = this.getStudentStatusForWorkgroupId(workgroup);
+          if (studentStatus) {
+            var pId = studentStatus.periodId;
+            if (periodId == -1 || pId == periodId) {
+              workgroupsOnlineInPeriod.push(workgroup);
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
           }
         }
       }
@@ -434,26 +529,45 @@ var StudentStatusService = function () {
       var studentStatuses = this.studentStatuses;
 
       // loop through all the student statuses
-      for (var ss = 0; ss < studentStatuses.length; ss++) {
-        var studentStatus = studentStatuses[ss];
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
 
-        if (studentStatus != null) {
+      try {
+        for (var _iterator6 = studentStatuses[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var studentStatus = _step6.value;
 
-          if (periodId == -1 || periodId == studentStatus.periodId) {
-            // the period matches the one we are looking for
+          if (studentStatus != null) {
 
-            var workgroupId = studentStatus.workgroupId;
+            if (periodId == -1 || periodId == studentStatus.periodId) {
+              // the period matches the one we are looking for
 
-            // get the workgroups score on the node
-            var score = this.AnnotationService.getScore(workgroupId, nodeId);
+              var workgroupId = studentStatus.workgroupId;
 
-            if (score != null) {
-              // increment the counter of students with a score for this node
-              numStudentsWithScore++;
+              // get the workgroups score on the node
+              var score = this.AnnotationService.getScore(workgroupId, nodeId);
 
-              // accumulate the sum of the scores for this node
-              studentScoreSum += score;
+              if (score != null) {
+                // increment the counter of students with a score for this node
+                numStudentsWithScore++;
+
+                // accumulate the sum of the scores for this node
+                studentScoreSum += score;
+              }
             }
+          }
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
           }
         }
       }

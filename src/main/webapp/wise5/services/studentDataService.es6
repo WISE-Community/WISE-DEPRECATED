@@ -64,8 +64,7 @@ class StudentDataService {
               if (unGlobalizeConditional === "any") {
                 // at least one criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
                 let anySatified = false;
-                for (let i = 0; i < unGlobalizeCriteriaArray.length; i++) {
-                  let unGlobalizeCriteria = unGlobalizeCriteriaArray[i];
+                for (let unGlobalizeCriteria of unGlobalizeCriteriaArray) {
                   let unGlobalizeCriteriaResult = this.evaluateCriteria(unGlobalizeCriteria);
                   anySatified = anySatified || unGlobalizeCriteriaResult;
                 }
@@ -76,8 +75,7 @@ class StudentDataService {
               } else if (unGlobalizeConditional === "all") {
                 // all criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
                 let allSatisfied = true;
-                for (let i = 0; i < unGlobalizeCriteriaArray.length; i++) {
-                  let unGlobalizeCriteria = unGlobalizeCriteriaArray[i];
+                for (let unGlobalizeCriteria of unGlobalizeCriteriaArray) {
                   let unGlobalizeCriteriaResult = this.evaluateCriteria(unGlobalizeCriteria);
                   allSatisfied = allSatisfied && unGlobalizeCriteriaResult;
                 }
@@ -158,8 +156,7 @@ class StudentDataService {
           this.studentData.componentStates = [];
           this.studentData.nodeStates = [];
           var studentWorkList = resultData.studentWorkList;
-          for (var s = 0; s < studentWorkList.length; s++) {
-            var studentWork = studentWorkList[s];
+          for (var studentWork of studentWorkList) {
             if (studentWork.componentId != null) {
               this.studentData.componentStates.push(studentWork);
             } else {
@@ -170,15 +167,13 @@ class StudentDataService {
           // Check to see if this Project contains any Planning activities
           if (this.ProjectService.project.nodes != null && this.ProjectService.project.nodes.length > 0) {
             // Overload/add new nodes based on student's work in the NodeState for the planning group.
-            for (let p = 0; p < this.ProjectService.project.nodes.length; p++) {
-              let planningGroupNode = this.ProjectService.project.nodes[p];
+            for (let planningGroupNode of this.ProjectService.project.nodes) {
               if (planningGroupNode.planning) {
                 let lastestNodeStateForPlanningGroupNode = this.getLatestNodeStateByNodeId(planningGroupNode.id);
                 if (lastestNodeStateForPlanningGroupNode != null) {
                   let studentModifiedNodes = lastestNodeStateForPlanningGroupNode.studentData.nodes;
                   if (studentModifiedNodes != null) {
-                    for (let s = 0; s < studentModifiedNodes.length; s++) {
-                      let studentModifiedNode = studentModifiedNodes[s];  // Planning Node that student modified or new instances.
+                    for (let studentModifiedNode of studentModifiedNodes) {
                       let studentModifiedNodeId = studentModifiedNode.id;
                       if (studentModifiedNode.planning) {
                         // If this is a Planning Node that exists in the project, replace the one in the original project with this one.
@@ -295,8 +290,7 @@ class StudentDataService {
         nodes = nodes.concat(planningNodes);
       }
 
-      for (var n = 0; n < nodes.length; n++) {
-        var node = nodes[n];
+      for (var node of nodes) {
         if (!this.ProjectService.isGroupNode(node.id)) {
           this.updateNodeStatusByNode(node);
         }
@@ -305,8 +299,7 @@ class StudentDataService {
 
     var group;
     if (groups != null) {
-      for (var g = 0; g < groups.length; g++) {
-        group = groups[g];
+      for (var group of groups) {
         group.depth = this.ProjectService.getNodeDepth(group.id);
       }
 
@@ -315,8 +308,7 @@ class StudentDataService {
         return b.depth - a.depth;
       });
 
-      for (var i = 0; i < groups.length; i++) {
-        group = groups[i];
+      for (var group of groups) {
         this.updateNodeStatusByNode(group);
       }
     }
@@ -371,9 +363,7 @@ class StudentDataService {
         var firstResult = true;
 
         // loop through all the constraints that affect this node
-        for (var c = 0; c < constraintsForNode.length; c++) {
-          var constraintForNode = constraintsForNode[c];
-
+        for (var constraintForNode of constraintsForNode) {
           if (constraintForNode != null) {
 
             // evaluate the constraint to see if the node can be visited
@@ -402,15 +392,11 @@ class StudentDataService {
         var isVisible = true;
         var isVisitable = true;
 
-        for (var a = 0; a < isVisibleResults.length; a++) {
-          var isVisibleResult = isVisibleResults[a];
-
+        for (var isVisibleResult of isVisibleResults) {
           isVisible = isVisible && isVisibleResult;
         }
 
-        for (var b = 0; b < isVisitableResults.length; b++) {
-          var isVisitableResult = isVisitableResults[b];
-
+        for (var isVisitableResult of isVisitableResults) {
           isVisitable = isVisitable && isVisitableResult;
         }
 
@@ -509,9 +495,7 @@ class StudentDataService {
         var transitionsToNodeId = [];
 
         // loop through all the ndoes that have been visited
-        for (var v = 0; v < visitedNodes.length; v++) {
-          var visitedNodeId = visitedNodes[v];
-
+        for (var visitedNodeId of visitedNodes) {
           // get the transitions from the visited node to the node status node
           var transitions = this.ProjectService.getTransitionsByFromAndToNodeId(visitedNodeId, nodeId);
 
@@ -569,10 +553,7 @@ class StudentDataService {
         var firstResult = true;
 
         // loop through all the criteria that need to be satisifed
-        for (var c = 0; c < removalCriteria.length; c++) {
-
-          // get a criteria
-          var tempCriteria = removalCriteria[c];
+        for (var tempCriteria of removalCriteria) {
 
           if (tempCriteria != null) {
 
@@ -692,9 +673,7 @@ class StudentDataService {
         if (componentStates != null) {
 
           // loop through all the component states
-          for (var c = 0; c < componentStates.length; c++) {
-
-            var componentState = componentStates[c];
+          for (var componentState of componentStates) {
 
             if (componentState != null) {
 
@@ -778,9 +757,7 @@ class StudentDataService {
                 if (nodes != null) {
 
                   // loop through the nodes
-                  for (var n = 0; n < nodes.length; n++) {
-                    var node = nodes[n];
-
+                  for (var node of nodes) {
                     if (node != null) {
                       if (node.type === 'node' && node.planningNodeTemplateId != null) {
                         // we have found a planning step the student created
@@ -841,9 +818,7 @@ class StudentDataService {
       if (branchPathTakenEvents != null) {
 
         // loop through all the branchPathTaken events
-        for (var b = 0; b < branchPathTakenEvents.length; b++) {
-          var branchPathTakenEvent = branchPathTakenEvents[b];
-
+        for (var branchPathTakenEvent of branchPathTakenEvents) {
           if (branchPathTakenEvent != null) {
             var data = branchPathTakenEvent.data;
 
@@ -885,9 +860,7 @@ class StudentDataService {
       if (events != null) {
 
         // loop through all the events
-        for (var e = 0; e < events.length; e++) {
-          var event = events[e];
-
+        for (var event of events) {
           if (event != null) {
             if (nodeId == event.nodeId && 'nodeEntered' === event.event) {
               // the student has entered the node before
@@ -922,9 +895,7 @@ class StudentDataService {
       if (events != null) {
 
         // loop through all the events
-        for (let e = 0; e < events.length; e++) {
-          let event = events[e];
-
+        for (let event of events) {
           if (event != null) {
             if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
               // the student has entered the node after the criteriaCreatedTimestamp
@@ -988,9 +959,7 @@ class StudentDataService {
       if (events != null) {
 
         // loop through all the events
-        for (let e = 0; e < events.length; e++) {
-          let event = events[e];
-
+        for (let event of events) {
           if (event != null) {
             if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
               // the student has entered the node after the criteriaCreatedTimestamp.
@@ -1021,9 +990,7 @@ class StudentDataService {
     if (events != null) {
 
       // loop through all the events
-      for (var e = 0; e < events.length; e++) {
-        var event = events[e];
-
+      for (var event of events) {
         if (event != null) {
           if (fromNodeId === event.nodeId && 'branchPathTaken' === event.event) {
             // we have found a branchPathTaken event from the from node id
@@ -1144,9 +1111,7 @@ class StudentDataService {
            */
 
           // loop through all the component states
-          for (var c = 0; c < componentStates.length; c++) {
-
-            var componentState = componentStates[c];
+          for (var componentState of componentStates) {
 
             if (componentState != null) {
 
@@ -1194,8 +1159,7 @@ class StudentDataService {
     if (events != null) {
 
       // loop through all the events
-      for (var e = 0; e < events.length; e++) {
-        var event = events[e];
+      for (var event of events) {
 
         if (event != null) {
 
@@ -1306,8 +1270,7 @@ class StudentDataService {
     if (this.studentData != null && this.studentData.nodeStates != null) {
       var nodeStates = this.studentData.nodeStates;
 
-      for (var n = 0; n < nodeStates.length; n++) {
-        var nodeState = nodeStates[n];
+      for (var nodeState of nodeStates) {
 
         if (nodeState != null) {
           var tempNodeId = nodeState.nodeId;
@@ -1430,9 +1393,7 @@ class StudentDataService {
     // merge componentStates and nodeStates into StudentWork before posting
     var studentWorkList = [];
     if (componentStates != null && componentStates.length > 0) {
-      for (var c = 0; c < componentStates.length; c++) {
-        var componentState = componentStates[c];
-
+      for (var componentState of componentStates) {
         if (componentState != null) {
           componentState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
           this.addComponentState(componentState);
@@ -1442,9 +1403,7 @@ class StudentDataService {
     }
 
     if (nodeStates != null && nodeStates.length > 0) {
-      for (var n = 0; n < nodeStates.length; n++) {
-        var nodeState = nodeStates[n];
-
+      for (var nodeState of nodeStates) {
         if (nodeState != null) {
           nodeState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
           this.addNodeState(nodeState);
@@ -1454,9 +1413,7 @@ class StudentDataService {
     }
 
     if (events != null && events.length > 0) {
-      for (var e = 0; e < events.length; e++) {
-        var event = events[e];
-
+      for (var event of events) {
         if (event != null) {
           event.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved events.
           this.addEvent(event);
@@ -1467,9 +1424,7 @@ class StudentDataService {
     }
 
     if (annotations != null && annotations.length > 0) {
-      for (var a = 0; a < annotations.length; a++) {
-        var annotation = annotations[a];
-
+      for (var annotation of annotations) {
         if (annotation != null) {
           annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
           if (annotation.id == null) {
@@ -1567,8 +1522,7 @@ class StudentDataService {
       }
 
       // set the id and serverSaveTime in the local studentWorkList
-      for (var i = 0; i < savedStudentWorkList.length; i++) {
-        var savedStudentWork = savedStudentWorkList[i];
+      for (var savedStudentWork of savedStudentWorkList) {
 
         /*
          * loop through all the student work that were posted
@@ -1609,9 +1563,7 @@ class StudentDataService {
       var localEvents = this.studentData.events;
 
       // set the id and serverSaveTime in the local event
-      for (var i = 0; i < savedEvents.length; i++) {
-        var savedEvent = savedEvents[i];
-
+      for (var savedEvent of savedEvents) {
         /*
          * loop through all the events that were posted
          * to find the one with the matching request token
@@ -1638,9 +1590,7 @@ class StudentDataService {
       var localAnnotations = this.studentData.annotations;
 
       // set the id and serverSaveTime in the local annotation
-      for (var i = 0; i < savedAnnotations.length; i++) {
-        var savedAnnotation = savedAnnotations[i];
-
+      for (var savedAnnotation of savedAnnotations) {
         /*
          * loop through all the events that were posted
          * to find the one with the matching request token
@@ -1836,9 +1786,7 @@ class StudentDataService {
       if (componentStates != null) {
 
         // loop through all the component states
-        for (var c = 0; c < componentStates.length; c++) {
-          var componentState = componentStates[c];
-
+        for (var componentState of componentStates) {
           if (componentState != null && componentState.id === studentWorkId) {
             return componentState;
           }
@@ -1851,8 +1799,7 @@ class StudentDataService {
       if (nodeStates != null) {
 
         // loop through all the node states
-        for (var n = 0; n < nodeStates.length; n++) {
-          var nodeState = nodeStates[n];
+        for (var nodeState of nodeStates) {
           if (nodeState != null && nodeState.id === studentWorkId) {
             return nodeState;
           }
@@ -1889,9 +1836,7 @@ class StudentDataService {
         if (componentStates != null) {
 
           // loop through all the component states
-          for (var c = 0; c < componentStates.length; c++) {
-            var componentState = componentStates[c];
-
+          for (var componentState of componentStates) {
             if (componentState != null) {
               var componentStateNodeId = componentState.nodeId;
 
@@ -1930,9 +1875,7 @@ class StudentDataService {
         if (componentStates != null) {
 
           // loop through all the component states
-          for (var c = 0; c < componentStates.length; c++) {
-            var componentState = componentStates[c];
-
+          for (var componentState of componentStates) {
             if (componentState != null) {
               var componentStateNodeId = componentState.nodeId;
               var componentStateComponentId = componentState.componentId;
@@ -1980,9 +1923,7 @@ class StudentDataService {
         var events = this.studentData.events;
 
         // loop through all the events
-        for (var e = 0; e < events.length; e++) {
-          var event = events[e];
-
+        for (var event of events) {
           if (event != null) {
             var eventNodeId = event.nodeId;
 
@@ -2016,9 +1957,7 @@ class StudentDataService {
         var events = this.studentData.events;
 
         // loop through all the events
-        for (var e = 0; e < events.length; e++) {
-          var event = events[e];
-
+        for (var event of events) {
           if (event != null) {
             var eventNodeId = event.nodeId;
             var eventComponentId = event.componentId;
@@ -2140,8 +2079,7 @@ class StudentDataService {
 
     if (this.ProjectService.isGroupNode(nodeId)) {
       let nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
-      for (let n=0; n<nodeIds.length; n++) {
-        let id = nodeIds[n];
+      for (let id of nodeIds) {
         let status = this.nodeStatuses[id];
         if (this.ProjectService.isGroupNode(id)) {
           if (status.progress.totalItemsWithWork > -1) {
@@ -2252,9 +2190,7 @@ class StudentDataService {
         var nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
 
         if (nodeIds.length) {
-          for (var n=0; n<nodeIds.length; n++) {
-            var id = nodeIds[n];
-
+          for (var id of nodeIds) {
             if (this.nodeStatuses[id] == null || !this.nodeStatuses[id].isVisible || !this.nodeStatuses[id].isCompleted) {
               // the child is not visible or not completed so the group is not completed
               tempResult = false;
@@ -2281,9 +2217,7 @@ class StudentDataService {
          * so we will loop through all the components and check if they are
          * completed
          */
-        for (var c = 0; c < components.length; c++) {
-          var component = components[c];
-
+        for (var component of components) {
           if (component != null) {
             var componentId = component.id;
             var componentType = component.type;
@@ -2389,7 +2323,7 @@ class StudentDataService {
     if (previousCurrentNode !== node) {
       // the current node is about to change
 
-      if(previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)){
+      if (previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
         // set the previous node to the current node
         this.previousStep = previousCurrentNode;
       }
@@ -2579,15 +2513,12 @@ class StudentDataService {
     if (nodeStates != null) {
 
       // loop through all the NodeStates
-      for (var ns = 0; ns < nodeStates.length; ns++) {
-        let nodeState = nodeStates[ns];
-
+      for (var nodeState of nodeStates) {
         if (nodeState != null) {
           let nodeStateNodeId = nodeState.nodeId;
           if (this.ProjectService.isPlanning(nodeStateNodeId) && nodeState.studentData != null) {
             let nodes = nodeState.studentData.nodes;
-            for (var n = 0; n < nodes.length; n++) {
-              let node = nodes[n];
+            for (var node of nodes) {
               let nodeId = node.id;
               // regex to match the planning node id e.g. planningNode2
               let planningNodeIdRegEx = /planningNode(.*)/;
@@ -2670,9 +2601,7 @@ class StudentDataService {
           if (components != null) {
 
             // loop through all the components
-            for (var c = 0; c < components.length; c++) {
-              var component = components[c];
-
+            for (var component of components) {
               if (component != null) {
                 var componentId = component.id;
 
@@ -2746,11 +2675,8 @@ class StudentDataService {
         var criteria = completionCriteria.criteria;
 
         // loop through all the criteria
-        for (var c = 0; c < criteria.length; c++) {
+        for (var completionCriterion of criteria) {
           var tempResult = true;
-
-          // get a criterion
-          var completionCriterion = criteria[c];
 
           if (completionCriterion != null) {
 
@@ -2825,10 +2751,7 @@ class StudentDataService {
     if (componentStates != null) {
 
       // loop through all the component states
-      for (var c = 0; c < componentStates.length; c++) {
-
-        // get a component state
-        var tempComponentState = componentStates[c];
+      for (var tempComponentState of componentStates) {
 
         if (tempComponentState != null &&
           tempComponentState.serverSaveTime > timestamp &&
@@ -2860,9 +2783,7 @@ class StudentDataService {
     if (componentStates != null) {
 
       // loop through all the component states
-      for (var c = 0; c < componentStates.length; c++) {
-        var tempComponentState = componentStates[c];
-
+      for (var tempComponentState of componentStates) {
         if (tempComponentState != null &&
           tempComponentState.serverSaveTime > timestamp &&
           tempComponentState.nodeId === nodeId &&
@@ -2891,9 +2812,7 @@ class StudentDataService {
     if (events != null) {
 
       // loop through all the events
-      for (var e = 0; e < events.length; e++) {
-        var tempEvent = events[e];
-
+      for (var tempEvent of events) {
         if (tempEvent != null &&
           tempEvent.serverSaveTime > timestamp &&
           tempEvent.nodeId === nodeId &&

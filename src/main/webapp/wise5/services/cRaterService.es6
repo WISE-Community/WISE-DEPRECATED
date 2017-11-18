@@ -259,9 +259,7 @@ class CRaterService {
         if (scoringRules != null) {
 
           // loop through all the scoring rules
-          for (var s = 0; s < scoringRules.length; s++) {
-            var tempScoringRule = scoringRules[s];
-
+          for (var tempScoringRule of scoringRules) {
             if (tempScoringRule != null) {
 
               if (tempScoringRule.score == score) {
@@ -346,8 +344,7 @@ class CRaterService {
         if (multipleAttemptScoringRules != null) {
 
           // loop through all the multiple attempt scoring rules
-          for (var m = 0; m < multipleAttemptScoringRules.length; m++) {
-            var multipleAttemptScoringRule = multipleAttemptScoringRules[m];
+          for (var multipleAttemptScoringRule of multipleAttemptScoringRules) {
 
             if (multipleAttemptScoringRule != null) {
 

@@ -290,18 +290,37 @@ var CRaterService = function () {
           if (scoringRules != null) {
 
             // loop through all the scoring rules
-            for (var s = 0; s < scoringRules.length; s++) {
-              var tempScoringRule = scoringRules[s];
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
 
-              if (tempScoringRule != null) {
+            try {
+              for (var _iterator = scoringRules[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var tempScoringRule = _step.value;
 
-                if (tempScoringRule.score == score) {
-                  /*
-                   * the score matches so we have found
-                   * the scoring rule that we want
-                   */
-                  scoringRule = tempScoringRule;
-                  break;
+                if (tempScoringRule != null) {
+
+                  if (tempScoringRule.score == score) {
+                    /*
+                     * the score matches so we have found
+                     * the scoring rule that we want
+                     */
+                    scoringRule = tempScoringRule;
+                    break;
+                  }
+                }
+              }
+            } catch (err) {
+              _didIteratorError = true;
+              _iteratorError = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                  _iterator.return();
+                }
+              } finally {
+                if (_didIteratorError) {
+                  throw _iteratorError;
                 }
               }
             }
@@ -386,32 +405,52 @@ var CRaterService = function () {
           if (multipleAttemptScoringRules != null) {
 
             // loop through all the multiple attempt scoring rules
-            for (var m = 0; m < multipleAttemptScoringRules.length; m++) {
-              var multipleAttemptScoringRule = multipleAttemptScoringRules[m];
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
 
-              if (multipleAttemptScoringRule != null) {
+            try {
+              for (var _iterator2 = multipleAttemptScoringRules[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var multipleAttemptScoringRule = _step2.value;
 
-                // get a multiple attempt scoring rule
-                var scoreSequence = multipleAttemptScoringRule.scoreSequence;
 
-                if (scoreSequence != null) {
+                if (multipleAttemptScoringRule != null) {
 
-                  /*
-                   * get the expected previous score and current score
-                   * that will satisfy the rule
-                   */
-                  var previousScoreMatch = scoreSequence[0];
-                  var currentScoreMatch = scoreSequence[1];
+                  // get a multiple attempt scoring rule
+                  var scoreSequence = multipleAttemptScoringRule.scoreSequence;
 
-                  if (previousScore.toString().match("[" + previousScoreMatch + "]") && currentScore.toString().match("[" + currentScoreMatch + "]")) {
+                  if (scoreSequence != null) {
 
                     /*
-                     * the previous score and current score match the
-                     * expected scores so we have found the rule we want
+                     * get the expected previous score and current score
+                     * that will satisfy the rule
                      */
-                    scoringRule = multipleAttemptScoringRule;
-                    break;
+                    var previousScoreMatch = scoreSequence[0];
+                    var currentScoreMatch = scoreSequence[1];
+
+                    if (previousScore.toString().match("[" + previousScoreMatch + "]") && currentScore.toString().match("[" + currentScoreMatch + "]")) {
+
+                      /*
+                       * the previous score and current score match the
+                       * expected scores so we have found the rule we want
+                       */
+                      scoringRule = multipleAttemptScoringRule;
+                      break;
+                    }
                   }
+                }
+              }
+            } catch (err) {
+              _didIteratorError2 = true;
+              _iteratorError2 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                  _iterator2.return();
+                }
+              } finally {
+                if (_didIteratorError2) {
+                  throw _iteratorError2;
                 }
               }
             }
