@@ -29,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -246,6 +247,7 @@ public class WISE5AuthorProjectController {
    * @param projectJSONString a valid-JSON string of the project
    */
   @RequestMapping(value = "/project/save/{projectId}", method = RequestMethod.POST)
+  @ResponseStatus(value = HttpStatus.OK)
   protected void saveProject(
       @PathVariable Long projectId,
       @RequestParam(value = "commitMessage") String commitMessage,
