@@ -56,6 +56,7 @@
           <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.4.6" />
           <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.9" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.5" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-collections4:4.1" />
           <element id="library" level="project" name="Maven: javax.mail:mail:1.4.7" />
           <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
           <element id="library" level="project" name="Maven: com.google.code.maven-play-plugin.net.tanesha.recaptcha4j:recaptcha4j:0.0.8" />
@@ -66,9 +67,9 @@
           <element id="library" level="project" name="Maven: stax:stax-api:1.0.1" />
           <element id="library" level="project" name="Maven: org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:1.0" />
           <element id="library" level="project" name="Maven: net.sf.opencsv:opencsv:2.3" />
-          <element id="library" level="project" name="Maven: org.eclipse.jgit:org.eclipse.jgit:4.5.0.201609210915-r" />
-          <element id="library" level="project" name="Maven: com.jcraft:jsch:0.1.53" />
-          <element id="library" level="project" name="Maven: com.googlecode.javaewah:JavaEWAH:0.7.9" />
+          <element id="library" level="project" name="Maven: org.eclipse.jgit:org.eclipse.jgit:4.9.0.201710071750-r" />
+          <element id="library" level="project" name="Maven: com.jcraft:jsch:0.1.54" />
+          <element id="library" level="project" name="Maven: com.googlecode.javaewah:JavaEWAH:1.1.6" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.6.1" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.6.0" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.6.1" />
