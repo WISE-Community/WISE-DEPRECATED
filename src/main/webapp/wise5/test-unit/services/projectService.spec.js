@@ -16,8 +16,10 @@ describe('ProjectService Unit Test', function () {
 
   beforeEach(_angular2.default.mock.module(_main2.default.name));
 
-  var ConfigService, ProjectService, $rootScope, $httpBackend;
-
+  var ConfigService = void 0,
+      ProjectService = void 0,
+      $rootScope = void 0,
+      $httpBackend = void 0;
   beforeEach(inject(function (_ConfigService_, _ProjectService_, _$rootScope_, _$httpBackend_) {
     ConfigService = _ConfigService_;
     ProjectService = _ProjectService_;
@@ -412,7 +414,7 @@ describe('ProjectService Unit Test', function () {
 
     // TODO: add test for ProjectService.moveNodesInside()
     // TODO: add test for ProjectService.moveNodesAfter()
-    // TODO: add test for ProjectService.deleteNode()
+    // TODO: add test for ProjectService.deconsteNode()
     // TODO: add test for ProjectService.removeNodeIdFromTransitions()
     // TODO: add test for ProjectService.removeNodeIdFromGroups()
     // TODO: add test for ProjectService.removeNodeIdFromNodes()
@@ -420,7 +422,7 @@ describe('ProjectService Unit Test', function () {
     // TODO: add test for ProjectService.addComponentToNode()
     // TODO: add test for ProjectService.moveComponentUp()
     // TODO: add test for ProjectService.moveComponentDown()
-    // TODO: add test for ProjectService.deleteComponent()
+    // TODO: add test for ProjectService.deconsteComponent()
 
     // test ProjectService.getMaxScore()
     it('should return the max score of the project', function () {

@@ -14,10 +14,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 describe('UtilService Unit Test', function () {
 
-  var UtilService;
-
   beforeEach(_angular2.default.mock.module(_main2.default.name));
 
+  var UtilService = void 0;
   beforeEach(inject(function (_UtilService_) {
     UtilService = _UtilService_;
   }));
