@@ -315,10 +315,6 @@ public class CreateRunController {
     final ModelMap modelMap) {
 
     Project project = runParameters.getProject();
-    Integer projectWiseVersion = project.getWiseVersion();
-    if (projectWiseVersion == null) {
-      projectWiseVersion = 4;
-    }
     String relativeProjectFilePath = project.getModulePath();  // looks like this: "/109/new.project.json"
     int ndx = relativeProjectFilePath.lastIndexOf("/");
     String projectJSONFilename = relativeProjectFilePath.substring(ndx + 1, relativeProjectFilePath.length());  // looks like this: "new.project.json"
@@ -332,7 +328,7 @@ public class CreateRunController {
     modelMap.put("projectId", project.getId());
     modelMap.put("projectType", project.getProjectType());
     modelMap.put("projectName", projectName);
-    modelMap.put("projectWiseVersion", projectWiseVersion);
+    modelMap.put("projectWiseVersion", project.getWiseVersion());
     modelMap.put("projectJSONFilename", projectJSONFilename);
 
     return "teacher/run/create/createrunreview";
@@ -374,8 +370,7 @@ public class CreateRunController {
 
     Project project = runParameters.getProject();
     Project newProject;  // copied project that will be used for new run.
-    Integer projectWiseVersion = project.getWiseVersion();
-    if (projectWiseVersion != null && projectWiseVersion == 5) {
+    if (project.getWiseVersion().equals(5)) {
       User user = ControllerUtil.getSignedInUser();
       CredentialManager.setRequestCredentials(request, user);
       String pathAllowedToAccess = CredentialManager.getAllowedPathAccess(request);

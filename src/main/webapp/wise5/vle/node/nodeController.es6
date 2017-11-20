@@ -1101,7 +1101,7 @@ class NodeController {
                     }
                 }
 
-                return componentState
+                return componentState;
             }
         });
     }

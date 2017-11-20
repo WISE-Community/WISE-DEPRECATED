@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -57,16 +57,17 @@ public class ViewAnnouncementsController {
   private static final String PREVIOUS_LOGIN = "previousLoginTime";
 
   @RequestMapping(method = RequestMethod.GET)
-  protected ModelAndView handleRequestInternal(
-    HttpServletRequest request) throws Exception {
+  protected ModelAndView handleRequestInternal(HttpServletRequest request) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
     String runIdsStr = request.getParameter(RUNID);
-    String [] runIds = runIdsStr.split(",");
-
-    ModelAndView modelAndView = new ModelAndView();
     List<Run> runs = new ArrayList<Run>();
-    for (String runId : runIds) {
-      Run run = runService.retrieveById(new Long(runId));
-      runs.add(run);
+    if (!runIdsStr.isEmpty()) {
+      String [] runIds = runIdsStr.split(",");
+      for (String runId : runIds) {
+        runs.add(runService.retrieveById(new Long(runId)));
+      }
+    } else {
+      runs = runService.getRunList(user);
     }
 
     Date previousLoginTime;
@@ -80,7 +81,7 @@ public class ViewAnnouncementsController {
       previousLoginTime = cal.getTime();
     }
 
-    User user = ControllerUtil.getSignedInUser();
+    ModelAndView modelAndView = new ModelAndView();
     modelAndView.addObject("user", user);
     modelAndView.addObject(PREVIOUS_LOGIN, previousLoginTime);
     modelAndView.addObject(RUNS, runs);

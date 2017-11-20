@@ -4326,8 +4326,10 @@ class GraphController {
              * have any series it means it was automatically created by
              * the component.
              */
-            if (!firstTrial.series.length || (firstTrial.series.length === 1 && !firstTrial.series[0].data.length)) {
-              if (firstTrial.id !== latestStudentDataTrialId) {
+            if (firstTrial.series == null ||
+                firstTrial.series.length == 0 ||
+                (firstTrial.series.length == 1 && !firstTrial.series[0].data.length)) {
+              if (firstTrial.id == null || firstTrial.id !== latestStudentDataTrialId) {
                 // delete the first trial
                 this.trials.shift();
               }

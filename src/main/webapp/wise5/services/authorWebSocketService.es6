@@ -1,46 +1,46 @@
 class AuthorWebSocketService {
-    constructor($rootScope, $websocket, ConfigService) {
-        this.$rootScope = $rootScope;
-        this.$websocket = $websocket;
-        this.ConfigService = ConfigService;
-        this.dataStream = null;
+  constructor($rootScope, $websocket, ConfigService) {
+    this.$rootScope = $rootScope;
+    this.$websocket = $websocket;
+    this.ConfigService = ConfigService;
+    this.dataStream = null;
+  }
+
+  /**
+   * Initialize the websocket connection
+   */
+  initialize() {
+    // start the websocket connection
+    var webSocketURL = this.ConfigService.getWebSocketURL();
+    webSocketURL += "?projectId=" + this.ConfigService.getProjectId();
+    this.dataStream = this.$websocket(webSocketURL);
+    // this is the function that handles messages we receive from web sockets
+    this.dataStream.onMessage((message) => {
+      this.handleMessage(message);
+    });
+  };
+
+  handleMessage(message) {
+    let data = JSON.parse(message.data);
+    let messageType = data.messageType;
+
+    if (messageType === "currentAuthors") {
+      this.$rootScope.$broadcast('currentAuthorsReceived', {currentAuthorsUsernames: data.currentAuthorsUsernames});
     }
 
-    /**
-     * Initialize the websocket connection
-     */
-    initialize() {
-        // start the websocket connection
-        var webSocketURL = this.ConfigService.getWebSocketURL();
-        this.dataStream = this.$websocket(webSocketURL);
-
-        // this is the function that handles messages we receive from web sockets
-        this.dataStream.onMessage((message) => {
-            this.handleMessage(message);
-        });
-    };
-
-    handleMessage(message) {
-        let data = JSON.parse(message.data);
-        let messageType = data.messageType;
-
-        if (messageType === "currentAuthors") {
-            this.$rootScope.$broadcast('currentAuthorsReceived', {currentAuthorsUsernames: data.currentAuthorsUsernames});
-        }
-
-    };
+  };
 
 
-    sendMessage(messageJSON) {
-        // send the websocket message
-        this.dataStream.send(messageJSON);
-    }
+  sendMessage(messageJSON) {
+    // send the websocket message
+    this.dataStream.send(messageJSON);
+  }
 }
 
 AuthorWebSocketService.$inject = [
-    '$rootScope',
-    '$websocket',
-    'ConfigService'
+  '$rootScope',
+  '$websocket',
+  'ConfigService'
 ];
 
 export default AuthorWebSocketService;

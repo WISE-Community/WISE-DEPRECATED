@@ -244,6 +244,7 @@ public class ProjectMetadataController {
                 }
 
                 projectMetadata.setMaxScores(maxScoresJSONArray.toString());
+                project.setMetadata(projectMetadata);
                 projectService.updateProject(project, user);
 
                 //send the new max score entry back to the client
