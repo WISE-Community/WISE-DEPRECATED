@@ -13,18 +13,16 @@ require('angular-mocks');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 describe('ConfigService Unit Test', function () {
-
   beforeEach(_angular2.default.mock.module(_main2.default.name));
 
-  var ConfigService, $httpBackend;
-
+  var ConfigService = void 0,
+      $httpBackend = void 0;
   beforeEach(inject(function (_ConfigService_, _$httpBackend_) {
     ConfigService = _ConfigService_;
     $httpBackend = _$httpBackend_;
   }));
 
   describe('ConfigService', function () {
-
     var configURL = "http://localhost:8080/wise/config/1";
 
     // Load sample configs

@@ -3,11 +3,10 @@ import mainModule from 'vle/main';
 import 'angular-mocks';
 
 describe('UtilService Unit Test', () => {
-
-  var UtilService;
-
+  
   beforeEach(angular.mock.module(mainModule.name));
 
+  let UtilService;
   beforeEach(inject((_UtilService_) => {
     UtilService = _UtilService_;
   }));
@@ -16,20 +15,20 @@ describe('UtilService Unit Test', () => {
     // Test UtilService.generateKey()
     it('should return random keys', () => {
       // Calling generate key with no params should return length 10 string
-      let generatedKey1 = UtilService.generateKey();
-      let generatedKey2 = UtilService.generateKey();
+      const generatedKey1 = UtilService.generateKey();
+      const generatedKey2 = UtilService.generateKey();
       expect(generatedKey1.length).toEqual(10);
       expect(generatedKey2.length).toEqual(10);
       expect(generatedKey1).not.toEqual(generatedKey2);
 
       // Calling generate key with length key should produce key with specified length
-      let genetatedKey3 = UtilService.generateKey(5);
+      const genetatedKey3 = UtilService.generateKey(5);
       expect(genetatedKey3.length).toEqual(5);
 
       // Calling generate key 100 times should produce 100 unique random strings
-      let generatedKeysSoFar = [];
+      const generatedKeysSoFar = [];
       for (let i = 0; i < 100; i++) {
-        let generatedKey = UtilService.generateKey();
+        const generatedKey = UtilService.generateKey();
         expect(generatedKeysSoFar.indexOf(generatedKey)).toEqual(-1);
         generatedKeysSoFar.push(generatedKey);
       }
