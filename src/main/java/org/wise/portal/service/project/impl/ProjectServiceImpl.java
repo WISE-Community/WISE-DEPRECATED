@@ -314,11 +314,10 @@ public class ProjectServiceImpl implements ProjectService {
    */
   public ModelAndView previewProject(PreviewProjectParameters params) throws Exception {
     Project project = params.getProject();
-    Integer wiseVersion = project.getWiseVersion();
-    if (wiseVersion == 5) {
-      return previewProjectWISE5(project);
-    } else {
+    if (project.getWiseVersion().equals(4)) {
       return previewProjectWISE4(params, project);
+    } else {
+      return previewProjectWISE5(project);
     }
   }
 
@@ -403,9 +402,9 @@ public class ProjectServiceImpl implements ProjectService {
     Project project = run.getProject();
     Integer wiseVersion = project.getWiseVersion();
     String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-    if (wiseVersion == null || wiseVersion == 4) {
+    if (wiseVersion.equals(4)) {
       return wiseBaseURL + "/student/vle/vle.html?runId=" + run.getId() + "&workgroupId=" + workgroup.getId();
-    } else if (wiseVersion == 5) {
+    } else if (wiseVersion.equals(5)) {
       return wiseBaseURL + "/student/run/" + run.getId();
     }
     return null;

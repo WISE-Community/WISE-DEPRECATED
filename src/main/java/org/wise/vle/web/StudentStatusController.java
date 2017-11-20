@@ -247,7 +247,7 @@ public class StudentStatusController {
     try {
       Run run = runService.retrieveById(runId);
       Integer wiseVersion = run.getProject().getWiseVersion();
-      if (wiseVersion != null && wiseVersion == 5) {
+      if (wiseVersion.equals(5)) {
         if (webSocketHandler != null) {
           WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
 

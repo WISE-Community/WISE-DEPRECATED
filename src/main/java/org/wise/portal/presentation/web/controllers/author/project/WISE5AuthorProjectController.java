@@ -536,7 +536,7 @@ public class WISE5AuthorProjectController {
       List<Project> allProjectsOwnedByUser = projectService.getProjectList(user);
       List<JSONObject> wise5ProjectsOwnedByUser = new ArrayList<JSONObject>();
       for (Project project : allProjectsOwnedByUser) {
-        if (new Integer(5).equals(project.getWiseVersion())) {
+        if (project.getWiseVersion().equals(5)) {
           JSONObject projectJSONObject = new JSONObject();
           projectJSONObject.put("id", project.getId());
           projectJSONObject.put("name", project.getName());
@@ -565,7 +565,7 @@ public class WISE5AuthorProjectController {
       List<Project> sharedProjects = projectService.getSharedProjectList(user);
       List<JSONObject> wise5SharedProjects = new ArrayList<JSONObject>();
       for (Project project : sharedProjects) {
-        if (new Integer(5).equals(project.getWiseVersion())) {
+        if (project.getWiseVersion().equals(5)) {
 
           JSONObject projectJSONObject = new JSONObject();
           projectJSONObject.put("id", project.getId());

@@ -448,8 +448,7 @@ public class StudentDataController {
               if (run != null) {
                 org.wise.portal.domain.project.Project project = run.getProject();
                 if (project != null) {
-                  Integer wiseVersion = project.getWiseVersion();
-                  if (wiseVersion != null && wiseVersion == 5) {
+                  if (project.getWiseVersion().equals(5)) {
                     nodeVisitKeyName = "nodeVisits";  // used in WISE5
                   }
                 }
@@ -551,8 +550,7 @@ public class StudentDataController {
               if (run != null) {
                 org.wise.portal.domain.project.Project project = run.getProject();
                 if (project != null) {
-                  Integer wiseVersion = project.getWiseVersion();
-                  if (wiseVersion != null && wiseVersion == 5) {
+                  if (project.getWiseVersion().equals(5)) {
                     nodeVisitKeyName = "nodeVisits";  // used in WISE5
                   }
                 }
@@ -623,8 +621,7 @@ public class StudentDataController {
               if (run != null) {
                 org.wise.portal.domain.project.Project project = run.getProject();
                 if (project != null) {
-                  Integer wiseVersion = project.getWiseVersion();
-                  if (wiseVersion != null && wiseVersion == 5) {
+                  if (project.getWiseVersion().equals(5)) {
                     nodeVisitKeyName = "nodeVisits";  // used in WISE5
                   }
                 }
