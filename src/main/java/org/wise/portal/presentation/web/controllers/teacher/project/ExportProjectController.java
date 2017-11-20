@@ -107,8 +107,7 @@ public class ExportProjectController {
     ProjectMetadata metadata = project.getMetadata();
     String metadataJSONString = metadata.toJSONString();
 
-    Integer wiseVersion = project.getWiseVersion();
-    if (wiseVersion == null || wiseVersion == 4) {
+    if (project.getWiseVersion().equals(4)) {
       String metaFileName = projectJSONDir + sep + "wise4.project-meta.json";;
       PrintWriter metaOut = new PrintWriter(metaFileName);
       metaOut.println(metadataJSONString);
