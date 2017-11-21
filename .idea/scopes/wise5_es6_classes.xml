@@ -1,3 +1,0 @@
-<component name="DependencyValidationManager">
-  <scope name="wise5-es6-classes" pattern="file[wise]:src/main/webapp/wise5/classroomMonitor//*||file[wise]:src/main/webapp/wise5/components/*||file[wise]:src/main/webapp/wise5/components//*||file[wise]:src/main/webapp/wise5/controllers//*.es6||file[wise]:src/main/webapp/wise5/directives//*||file[wise]:src/main/webapp/wise5/filters//*||file[wise]:src/main/webapp/wise5/authoringTool//*||file[wise]:src/main/webapp/wise5/node//*||file[wise]:src/main/webapp/wise5/services//*||file[wise]:src/main/webapp/wise5/vle//*" />
-</component>
