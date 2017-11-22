@@ -461,6 +461,7 @@
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-websocket</artifactId>
       <version>7.0.52</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
