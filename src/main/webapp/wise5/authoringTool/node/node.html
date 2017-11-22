@@ -99,13 +99,13 @@
     <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'undo' | translate }}</md-tooltip>
   </md-button>
   <div style="float:right">
-    <md-button id='stepPreviewButton' class='topButton md-raised md-primary' ng-click='nodeAuthoringController.previewStep()'
+    <md-button id='stepPreviewButton' class='topButton md-raised md-primary' ng-click='nodeAuthoringController.previewStepInNewWindow()'
         ng-show='!projectController.isGroupNode(nodeAuthoringController.node.id)'
         ng-disabled='nodeAuthoringController.showEditTransitions || nodeAuthoringController.insertComponentMode'>
       <md-icon>visibility</md-icon>
       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'previewStep' | translate }}</md-tooltip>
     </md-button>
-    <md-button id='stepPreviewWithouConstraintsButton' class='topButton md-raised md-primary' ng-click="nodeAuthoringController.previewStepWithoutConstraints()"
+    <md-button id='stepPreviewWithouConstraintsButton' class='topButton md-raised md-primary' ng-click="nodeAuthoringController.previewStepWithoutConstraintsInNewWindow()"
         ng-show='!projectController.isGroupNode(nodeAuthoringController.node.id)'
         ng-disabled='nodeAuthoringController.showEditTransitions || nodeAuthoringController.insertComponentMode'>
       <md-icon>visibility_off</md-icon>

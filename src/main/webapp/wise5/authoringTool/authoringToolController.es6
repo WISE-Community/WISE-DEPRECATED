@@ -31,65 +31,65 @@ class AuthoringToolController {
 
     this.numberProject = true; // TODO: make dynamic or remove
     this.globalMessage = {
-      text: '',
-      time: ''
+        text: '',
+        time: ''
     };
     this.isMenuOpen = false;
 
     // ui-views and their corresponding names, labels, and icons
     this.views = {
       'root.project': {
-        id: 'projectHomeButton',
-        name: this.$translate('projectHome'),
-        label: this.$translate('projectHome'),
-        icon: 'home',
-        type: 'primary',
-        showToolbar: true,
-        active: true
+          id: 'projectHomeButton',
+          name: this.$translate('projectHome'),
+          label: this.$translate('projectHome'),
+          icon: 'home',
+          type: 'primary',
+          showToolbar: true,
+          active: true
       },
       'root.project.notebook': {
-        id: 'notebookButton',
-        name: this.$translate('notebookSettings'),
-        label: this.$translate('notebookSettings'),
-        icon: 'book',
-        type: 'primary',
-        showToolbar: true,
-        active: true
+          id: 'notebookButton',
+          name: this.$translate('notebookSettings'),
+          label: this.$translate('notebookSettings'),
+          icon: 'book',
+          type: 'primary',
+          showToolbar: true,
+          active: true
       },
       'root.project.asset': {
-        id: 'assetButton',
-        name: this.$translate('fileManager'),
-        label: this.$translate('fileManager'),
-        icon: 'attach_file',
-        type: 'primary',
-        showToolbar: true,
-        active: true
+          id: 'assetButton',
+          name: this.$translate('fileManager'),
+          label: this.$translate('fileManager'),
+          icon: 'attach_file',
+          type: 'primary',
+          showToolbar: true,
+          active: true
       },
       'root.project.info': {
-        id: 'infoButton',
-        name: this.$translate('PROJECT_INFO'),
-        label: this.$translate('PROJECT_INFO'),
-        icon: 'info',
-        type: 'primary',
-        showToolbar: true,
-        active: true
+          id: 'infoButton',
+          name: this.$translate('PROJECT_INFO'),
+          label: this.$translate('PROJECT_INFO'),
+          icon: 'info',
+          type: 'primary',
+          showToolbar: true,
+          active: true
       },
       'root.main': {
-        id: 'projectListButton',
-        name: this.$translate('projectsList'),
-        label: this.$translate('projectsList'),
-        icon: 'reorder',
-        type: 'primary',
-        showToolbar: false,
-        active: true
+          id: 'projectListButton',
+          name: this.$translate('projectsList'),
+          label: this.$translate('projectsList'),
+          icon: 'reorder',
+          type: 'primary',
+          showToolbar: false,
+          active: true
       },
       'root.project.node': {
-        name: '',
-        label: '',
-        icon: '',
-        type: 'secondary',
-        showToolbar: true,
-        active: false
+          name: '',
+          label: '',
+          icon: '',
+          type: 'secondary',
+          showToolbar: true,
+          active: false
       },
     };
 
@@ -105,12 +105,12 @@ class AuthoringToolController {
 
     $scope.$on('showSessionWarning', () => {
       let confirm = this.$mdDialog.confirm()
-        .parent(angular.element(document.body))
-        .title(this.$translate('sessionTimeout'))
-        .content(this.$translate('autoLogoutMessage'))
-        .ariaLabel(this.$translate('sessionTimeout'))
-        .ok(this.$translate('yes'))
-        .cancel(this.$translate('no'));
+          .parent(angular.element(document.body))
+          .title(this.$translate('sessionTimeout'))
+          .content(this.$translate('autoLogoutMessage'))
+          .ariaLabel(this.$translate('sessionTimeout'))
+          .ok(this.$translate('yes'))
+          .cancel(this.$translate('no'));
       this.$mdDialog.show(confirm).then(() => {
         this.SessionService.renewSession();
       }, () => {
@@ -121,12 +121,12 @@ class AuthoringToolController {
     // alert user when they're inactive for a long time
     this.$scope.$on('showRequestLogout', (ev) => {
       let alert = this.$mdDialog.confirm()
-        .parent(angular.element(document.body))
-        .title(this.$translate('serverUpdate'))
-        .textContent(this.$translate('serverUpdateRequestLogoutMessage'))
-        .ariaLabel(this.$translate('serverUpdate'))
-        .targetEvent(ev)
-        .ok(this.$translate('ok'));
+          .parent(angular.element(document.body))
+          .title(this.$translate('serverUpdate'))
+          .textContent(this.$translate('serverUpdateRequestLogoutMessage'))
+          .ariaLabel(this.$translate('serverUpdate'))
+          .targetEvent(ev)
+          .ok(this.$translate('ok'));
 
       this.$mdDialog.show(alert).then(() => {
         // do nothing
@@ -169,22 +169,22 @@ class AuthoringToolController {
     this.$scope.$on('openAssetChooser', (event, params) => {
       // create the params for opening the asset chooser
       const stateParams = {
-        isPopup: params.isPopup,
-        projectId: params.projectId,
-        nodeId: params.nodeId,
-        componentId: params.componentId,
-        target: params.target,
-        targetObject: params.targetObject
+          isPopup: params.isPopup,
+          projectId: params.projectId,
+          nodeId: params.nodeId,
+          componentId: params.componentId,
+          target: params.target,
+          targetObject: params.targetObject
       };
 
       // open the dialog that will display the assets for the user to choose
       this.$mdDialog.show({
-        templateUrl: 'wise5/authoringTool/asset/asset.html',
-        controller: 'ProjectAssetController',
-        controllerAs: 'projectAssetController',
-        $stateParams: stateParams,
-        clickOutsideToClose: true,
-        escapeToClose: true
+          templateUrl: 'wise5/authoringTool/asset/asset.html',
+          controller: 'ProjectAssetController',
+          controllerAs: 'projectAssetController',
+          $stateParams: stateParams,
+          clickOutsideToClose: true,
+          escapeToClose: true
       });
     });
 
@@ -195,20 +195,20 @@ class AuthoringToolController {
     this.$scope.$on('openWISELinkChooser', (event, params) => {
       // create the params for opening the WISE Link authoring popup
       const stateParams = {
-        projectId: params.projectId,
-        nodeId: params.nodeId,
-        componentId: params.componentId,
-        target: params.target
+          projectId: params.projectId,
+          nodeId: params.nodeId,
+          componentId: params.componentId,
+          target: params.target
       };
 
       // open the WISE Link authoring popup
       this.$mdDialog.show({
-        templateUrl: 'wise5/authoringTool/wiseLink/wiseLinkAuthoring.html',
-        controller: 'WISELinkAuthoringController',
-        controllerAs: 'wiseLinkAuthoringController',
-        $stateParams: stateParams,
-        clickOutsideToClose: true,
-        escapeToClose: true
+          templateUrl: 'wise5/authoringTool/wiseLink/wiseLinkAuthoring.html',
+          controller: 'WISELinkAuthoringController',
+          controllerAs: 'wiseLinkAuthoringController',
+          $stateParams: stateParams,
+          clickOutsideToClose: true,
+          escapeToClose: true
       });
     });
 
@@ -233,15 +233,15 @@ class AuthoringToolController {
     this.$anchorScroll('top');
 
     // set current view and whether to show the toolbars and step tools
-    this.showStepTools = (this.$state.$current.name === 'root.project' ||
-        this.$state.$current.name === 'root.project.node');
+    this.showStepTools = this.$state.$current.name === 'root.project' ||
+        this.$state.$current.name === 'root.project.node';
     const view = this.views[this.$state.$current.name];
     if (view) {
       this.currentViewName = view.name;
       this.showToolbar = view.showToolbar;
     } else {
-      this.showToolbar = false;
       this.currentViewName = '';
+      this.showToolbar = false;
     }
 
     this.projectId = this.ConfigService.getProjectId();
@@ -276,12 +276,9 @@ class AuthoringToolController {
   }
 
   exit() {
-    // notify others that we've finished authoring
     this.ProjectService.notifyAuthorProjectEnd().then(() => {
-      // send the user to the teacher home page
       let wiseBaseURL = this.ConfigService.getWISEBaseURL();
-      let teacherHomePageURL = wiseBaseURL + '/teacher';
-      window.location = teacherHomePageURL;
+      window.location = wiseBaseURL + '/teacher';
     });
   }
 
@@ -314,19 +311,19 @@ class AuthoringToolController {
 }
 
 AuthoringToolController.$inject = [
-    '$anchorScroll',
-    '$filter',
-    '$location',
-    '$mdDialog',
-    '$rootScope',
-    '$scope',
-    '$state',
-    '$timeout',
-    'ConfigService',
-    'ProjectService',
-    'SessionService',
-    'TeacherDataService',
-    'moment'
+  '$anchorScroll',
+  '$filter',
+  '$location',
+  '$mdDialog',
+  '$rootScope',
+  '$scope',
+  '$state',
+  '$timeout',
+  'ConfigService',
+  'ProjectService',
+  'SessionService',
+  'TeacherDataService',
+  'moment'
 ];
 
 export default AuthoringToolController;

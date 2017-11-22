@@ -208,8 +208,7 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
     controllerAs: 'authoringToolMainController',
     resolve: {
       config: function config(ConfigService) {
-        var configURL = window.configURL;
-        return ConfigService.retrieveConfig(configURL);
+        return ConfigService.retrieveConfig(window.configURL);
       },
       language: function language($translate, ConfigService, config) {
         $translate.use(ConfigService.getLocale());
@@ -225,8 +224,7 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
     controllerAs: 'authoringToolNewProjectController',
     resolve: {
       config: function config(ConfigService) {
-        var configURL = window.configURL;
-        return ConfigService.retrieveConfig(configURL);
+        return ConfigService.retrieveConfig(window.configURL);
       },
       language: function language($translate, ConfigService, config) {
         $translate.use(ConfigService.getLocale());

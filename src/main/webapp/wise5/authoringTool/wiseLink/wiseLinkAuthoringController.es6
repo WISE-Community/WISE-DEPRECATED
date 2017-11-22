@@ -35,9 +35,6 @@ class WISELinkAuthoringController {
     this.wiseLinkClass = '';
   }
 
-  /**
-   * The node id changed
-   */
   wiseLinkNodeIdChanged() {
     if (this.wiseLinkNodeId != null && this.wiseLinkNodeId != '') {
       // reset wiseLinkComonponentId
@@ -94,10 +91,8 @@ class WISELinkAuthoringController {
    */
   createWISELink() {
     if (this.wiseLinkNodeId == null || this.wiseLinkNodeId == '') {
-      // a step was not chosen yet
       alert('You must select a step.');
     } else if (this.wiseLinkText == null || this.wiseLinkText == '') {
-      // link text is empty and must be provided
       alert('You must enter text.');
     } else {
       // fire the event to notify listeners that a WISE Link should be created
@@ -116,19 +111,16 @@ class WISELinkAuthoringController {
     }
   }
 
-  /**
-   * Cancel the WISE Link authoring
-   */
-  cancelWISELink() {
+  cancelWISELinkAuthoring() {
     this.$mdDialog.hide();
   }
 }
 
 WISELinkAuthoringController.$inject = [
-    '$rootScope',
-    '$stateParams',
-    '$mdDialog',
-    'ProjectService'
+  '$rootScope',
+  '$stateParams',
+  '$mdDialog',
+  'ProjectService'
 ];
 
 export default WISELinkAuthoringController;
