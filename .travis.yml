@@ -9,9 +9,9 @@ before_install:
 before_script:
 script:
 - mvn test
-- npm test
 - ./wise.sh run &
 - sleep 180
+- npm test
 - npm run test-e2e
 notifications:
   email:
