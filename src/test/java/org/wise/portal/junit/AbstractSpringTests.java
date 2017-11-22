@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2007 Encore Research Group, University of Toronto
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -17,26 +17,18 @@
  */
 package org.wise.portal.junit;
 
-import org.springframework.test.AbstractDependencyInjectionSpringContextTests;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.wise.portal.spring.SpringConfiguration;
 import org.wise.portal.spring.impl.SpringConfigurationImpl;
 
 /**
  * @author Cynick Young
- * 
- * @version $Id$
- * 
  */
-public abstract class AbstractSpringTests extends
-	AbstractDependencyInjectionSpringContextTests {
+public abstract class AbstractSpringTests extends AbstractJUnit4SpringContextTests {
 
-    private static final SpringConfiguration SPRING_CONFIG = new SpringConfigurationImpl();
+  private static final SpringConfiguration SPRING_CONFIG = new SpringConfigurationImpl();
 
-    /**
-     * @see net.sf.sail.webapp.junit.AbstractSpringTests#getConfigLocations()
-     */
-    @Override
-    protected String[] getConfigLocations() {
-        return SPRING_CONFIG.getRootApplicationContextConfigLocations();
-    }
+  protected String[] getConfigLocations() {
+    return SPRING_CONFIG.getRootApplicationContextConfigLocations();
+  }
 }

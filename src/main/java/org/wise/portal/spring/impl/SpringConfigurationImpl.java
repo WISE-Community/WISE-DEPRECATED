@@ -19,9 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package org.wise.portal.spring.impl;
-
 import org.wise.portal.spring.SpringConfiguration;
-
 
 /**
  * Implementation of <code>SpringConfiguration</code> specifically for the

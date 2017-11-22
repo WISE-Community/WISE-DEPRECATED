@@ -26,38 +26,16 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * This is the all encompassing AllTests that includes all the other test suites
- * from every package. This file needs to be kept up-to-date by hand every time
- * a new package of unit tests is added. This will test the entire application.
- * 
+ * This is the all encompassing AllTests that includes all the other test suites from every package.
+ * This file needs to be kept up-to-date by hand every time a new package of unit tests is added.
+ *
  * @author Cynick Young
  * @author Laurel Williams
  * @author Hiroki Terashima
-
- * @version $Id$
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	   org.wise.portal.dao.authentication.impl.AllTests.class,
-	   org.wise.portal.dao.run.impl.AllTests.class,
-	   org.wise.portal.dao.project.impl.AllTests.class,
-	   org.wise.portal.dao.premadecomment.impl.AllTests.class,
-	   org.wise.portal.domain.impl.AllTests.class,
-	   org.wise.portal.domain.authentication.impl.AllTests.class,	   
-	   org.wise.portal.domain.webservice.http.AllTests.class,
-	   org.wise.portal.domain.run.AllTests.class,
-       org.wise.portal.presentation.validators.AllTests.class,
-	   org.wise.portal.presentation.web.controllers.AllTests.class,
-	   org.wise.portal.service.impl.AllTests.class,
-	   org.wise.portal.service.run.impl.AllTests.class,
-	   org.wise.portal.service.student.impl.AllTests.class,
-	   org.wise.portal.service.project.impl.AllTests.class,
-	   org.wise.portal.domain.premadecomment.impl.AllTests.class,
-	   org.wise.portal.dao.newsitem.impl.AllTests.class,
-	   org.wise.portal.domain.newsitem.impl.AllTests.class,
-	   org.wise.portal.service.newsitem.impl.AllTests.class,
-	   org.wise.portal.service.group.impl.GroupServiceImplTest.class,
-	   org.wise.portal.service.workgroup.impl.WorkgroupServiceImplTest.class
+  org.wise.portal.service.impl.AllTests.class
 })
 
 public class AllTests {

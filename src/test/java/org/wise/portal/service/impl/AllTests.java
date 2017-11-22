@@ -27,13 +27,10 @@ import org.junit.runners.Suite;
 
 /**
  * @author Hiroki Terashima
- * @version $Id$
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses( {
-	AclServiceImplTest.class,
-	UserServiceImplTest.class
+@Suite.SuiteClasses({
+  AclServiceImplTest.class
 })
-
 public class AllTests {
 }
