@@ -7,11 +7,11 @@ before_install:
 - npm install -g jspm
 - jspm config endpoints.github.auth $JSPM_GITHUB_AUTH_TOKEN
 before_script:
-- ./wise.sh run &
-- sleep 210
 script:
 - mvn test
 - npm test
+- ./wise.sh run &
+- sleep 180
 - npm run test-e2e
 notifications:
   email:
