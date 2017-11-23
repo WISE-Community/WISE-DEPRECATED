@@ -20,32 +20,32 @@ class ConfigService {
 
   retrieveConfig(configURL) {
     return this.$http.get(configURL).then((result) => {
-      var configJSON = result.data;
+      const configJSON = result.data;
 
       if (configJSON.retrievalTimestamp != null) {
         // get the client timestamp
-        var clientTimestamp = new Date().getTime();
+        const clientTimestamp = new Date().getTime();
 
         // get the server timestamp
-        var serverTimestamp = configJSON.retrievalTimestamp;
+        const serverTimestamp = configJSON.retrievalTimestamp;
 
         // get the difference between the client and server time
-        var timestampDiff = clientTimestamp - serverTimestamp;
+        const timestampDiff = clientTimestamp - serverTimestamp;
 
         // add the timestamp diff to the config object
         configJSON.timestampDiff = timestampDiff;
       }
 
-      var constraints = true;
+      let constraints = true;
 
+      // get the full url
+      const absURL = this.$location.$$absUrl;
+      
       if (configJSON.mode == 'preview') {
         // constraints can only be disabled using the url in preview mode
 
-        // get the full url
-        var absURL = this.$location.$$absUrl;
-
         // regex to match constraints=false in the url
-        var constraintsRegEx = new RegExp("constraints=false", 'gi');
+        const constraintsRegEx = new RegExp("constraints=false", 'gi');
 
         if (absURL != null && absURL.match(constraintsRegEx)) {
           // the url contains constraints=false
@@ -57,19 +57,19 @@ class ConfigService {
       configJSON.constraints = constraints;
 
       // regex to match showProjectPath=true in the url
-      var showProjectPathRegEx = new RegExp("showProjectPath=true", 'gi');
+      const showProjectPathRegEx = new RegExp("showProjectPath=true", 'gi');
 
       if (absURL != null && absURL.match(showProjectPathRegEx)) {
         // the url contains showProjectPath=true
 
         // get the host e.g. http://wise.berkeley.edu
-        var host = location.origin;
+        const host = location.origin;
 
         // get the project URL e.g. /wise/curriculum/123/project.json
-        var projectURL = configJSON.projectURL;
+        const projectURL = configJSON.projectURL;
 
         // get the full project path
-        var projectPath = host + projectURL;
+        const projectPath = host + projectURL;
 
         // output the full project path to the console
         console.log(projectPath);
@@ -79,7 +79,7 @@ class ConfigService {
 
       if (this.isPreview()) {
         // assign a random workgroup id
-        var myUserInfo = this.getMyUserInfo();
+        const myUserInfo = this.getMyUserInfo();
         if (myUserInfo != null) {
           // set the workgroup id to a random integer between 1 and 100
           myUserInfo.workgroupId = Math.floor(100 * Math.random()) + 1;
@@ -174,8 +174,8 @@ class ConfigService {
    * Returns the period id of the logged-in user.
    */
   getPeriodId() {
-    var periodId = null;
-    var myUserInfo = this.getMyUserInfo();
+    let periodId = null;
+    const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
       periodId = myUserInfo.periodId;
     }
@@ -187,12 +187,12 @@ class ConfigService {
    * @returns an array of period objects
    */
   getPeriods() {
-    var periods = [];
+    let periods = [];
 
-    var myUserInfo = this.getMyUserInfo();
+    const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
 
-      var myClassInfo = myUserInfo.myClassInfo;
+      const myClassInfo = myUserInfo.myClassInfo;
       if (myClassInfo != null) {
 
         if (myClassInfo.periods != null) {
@@ -205,9 +205,9 @@ class ConfigService {
   };
 
   getWorkgroupId() {
-    var workgroupId = null;
+    let workgroupId = null;
 
-    var myUserInfo = this.getMyUserInfo();
+    const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
       workgroupId = myUserInfo.workgroupId;
     }
@@ -221,9 +221,9 @@ class ConfigService {
    */
   getUserId() {
 
-    var userId = null;
+    let userId = null;
 
-    var myUserInfo = this.getMyUserInfo();
+    const myUserInfo = this.getMyUserInfo();
 
     if (myUserInfo != null) {
       userId = myUserInfo.id;
@@ -233,9 +233,9 @@ class ConfigService {
   }
 
   getMyUserInfo() {
-    var myUserInfo = null;
+    let myUserInfo = null;
 
-    var userInfo = this.getUserInfo();
+    const userInfo = this.getUserInfo();
     if (userInfo != null) {
       myUserInfo = userInfo.myUserInfo;
     }
@@ -249,10 +249,10 @@ class ConfigService {
    */
   getMyUserName() {
 
-    var userName = null;
+    let userName = null;
 
     // get my user info
-    var myUserInfo = this.getMyUserInfo();
+    const myUserInfo = this.getMyUserInfo();
 
     if (myUserInfo != null) {
       // get the user name
@@ -263,10 +263,10 @@ class ConfigService {
   }
 
   getClassmateUserInfos() {
-    var classmateUserInfos = null;
-    var myUserInfo = this.getMyUserInfo();
+    let classmateUserInfos = null;
+    const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
-      var myClassInfo = myUserInfo.myClassInfo;
+      const myClassInfo = myUserInfo.myClassInfo;
       if (myClassInfo != null) {
         classmateUserInfos = myClassInfo.classmateUserInfos;
       }
@@ -292,10 +292,10 @@ class ConfigService {
    */
   getClassmateUserInfosSortedByWorkgroupId() {
 
-    var sortedClassmateUserInfos = [];
+    const sortedClassmateUserInfos = [];
 
     // get all the classmate user info objects
-    var classmateUserInfos = this.getClassmateUserInfos();
+    const classmateUserInfos = this.getClassmateUserInfos();
 
     if (classmateUserInfos != null) {
 
@@ -303,7 +303,7 @@ class ConfigService {
        * loop through all the classmate user info objects and add it to
        * new array of classmate user infos
        */
-      for (var classmateUserInfo of classmateUserInfos) {
+      for (let classmateUserInfo of classmateUserInfos) {
         sortedClassmateUserInfos.push(classmateUserInfo);
       }
     }
@@ -334,8 +334,8 @@ class ConfigService {
   }
 
   getTeacherWorkgroupId() {
-    var teacherWorkgroupId = null;
-    var teacherUserInfo = this.getTeacherUserInfo();
+    let teacherWorkgroupId = null;
+    const teacherUserInfo = this.getTeacherUserInfo();
     if (teacherUserInfo != null) {
       teacherWorkgroupId = teacherUserInfo.workgroupId;
     }
@@ -343,10 +343,10 @@ class ConfigService {
   };
 
   getTeacherUserInfo() {
-    var teacherUserInfo = null;
-    var myUserInfo = this.getMyUserInfo();
+    let teacherUserInfo = null;
+    const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
-      var myClassInfo = myUserInfo.myClassInfo;
+      const myClassInfo = myUserInfo.myClassInfo;
       if (myClassInfo != null) {
         teacherUserInfo = myClassInfo.teacherUserInfo;
       }
@@ -358,10 +358,10 @@ class ConfigService {
    * Get the shared teacher user infos for the run
    */
   getSharedTeacherUserInfos() {
-    var sharedTeacherUserInfos = null;
-    var myUserInfo = this.getMyUserInfo();
+    let sharedTeacherUserInfos = null;
+    const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
-      var myClassInfo = myUserInfo.myClassInfo;
+      const myClassInfo = myUserInfo.myClassInfo;
       if (myClassInfo != null) {
         sharedTeacherUserInfos = myClassInfo.sharedTeacherUserInfos;
       }
@@ -370,18 +370,18 @@ class ConfigService {
   }
 
   getClassmateWorkgroupIds(includeSelf) {
-    var workgroupIds = [];
+    const workgroupIds = [];
 
     if (includeSelf) {
       workgroupIds.push(this.getWorkgroupId());
     }
 
-    var classmateUserInfos = this.getClassmateUserInfos();
+    const classmateUserInfos = this.getClassmateUserInfos();
 
     if (classmateUserInfos != null) {
-      for (var classmateUserInfo of classmateUserInfos) {
+      for (let classmateUserInfo of classmateUserInfos) {
         if (classmateUserInfo != null) {
-          var workgroupId = classmateUserInfo.workgroupId;
+          const workgroupId = classmateUserInfo.workgroupId;
 
           if (workgroupId != null) {
             workgroupIds.push(workgroupId);
@@ -394,7 +394,7 @@ class ConfigService {
   };
 
   sortClassmateUserInfosAlphabeticallyByName() {
-    var classmateUserInfos = this.getClassmateUserInfos();
+    const classmateUserInfos = this.getClassmateUserInfos();
 
     if (classmateUserInfos != null) {
       classmateUserInfos.sort(this.sortClassmateUserInfosAlphabeticallyByNameHelper);
@@ -404,11 +404,11 @@ class ConfigService {
   };
 
   sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
-    var result = 0;
+    let result = 0;
 
     if (a != null && a.userName != null && b != null && b.userName != null) {
-      var aUserName = a.userName.toLowerCase();
-      var bUserName = b.userName.toLowerCase();
+      const aUserName = a.userName.toLowerCase();
+      const bUserName = b.userName.toLowerCase();
 
       if (aUserName < bUserName) {
         result = -1;
@@ -453,14 +453,14 @@ class ConfigService {
   }
 
   getUserInfoByWorkgroupId(workgroupId) {
-    var userInfo = null;
+    let userInfo = null;
 
     if (workgroupId != null) {
 
-      var myUserInfo = this.getMyUserInfo();
+      const myUserInfo = this.getMyUserInfo();
 
       if (myUserInfo != null) {
-        var tempWorkgroupId = myUserInfo.workgroupId;
+        const tempWorkgroupId = myUserInfo.workgroupId;
 
         if (workgroupId === tempWorkgroupId) {
           userInfo = myUserInfo;
@@ -468,12 +468,12 @@ class ConfigService {
       }
 
       if (userInfo == null) {
-        var classmateUserInfos = this.getClassmateUserInfos();
+        const classmateUserInfos = this.getClassmateUserInfos();
 
         if (classmateUserInfos != null) {
-          for (var classmateUserInfo of classmateUserInfos) {
+          for (let classmateUserInfo of classmateUserInfos) {
             if (classmateUserInfo != null) {
-              var tempWorkgroupId = classmateUserInfo.workgroupId;
+              const tempWorkgroupId = classmateUserInfo.workgroupId;
 
               if (workgroupId == tempWorkgroupId) {
                 userInfo = classmateUserInfo;
@@ -494,10 +494,10 @@ class ConfigService {
    * @returns the period id the workgroup id is in
    */
   getPeriodIdByWorkgroupId(workgroupId) {
-    var periodId = null;
+    let periodId = null;
 
     if (workgroupId != null) {
-      var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+      const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
 
       if (userInfo != null) {
         periodId = userInfo.periodId;
@@ -513,24 +513,24 @@ class ConfigService {
    * @return an array containing the student names
    */
   getStudentFirstNamesByWorkgroupId(workgroupId) {
-    var studentNames = [];
+    const studentNames = [];
 
     // get the user names for the workgroup e.g. "Spongebob Squarepants (SpongebobS0101):Patrick Star (PatrickS0101)"
-    var userNames = this.getUserNameByWorkgroupId(workgroupId);
+    const userNames = this.getUserNameByWorkgroupId(workgroupId);
 
     if (userNames != null) {
       // split the user names string by ':'
-      var userNamesSplit = userNames.split(':');
+      const userNamesSplit = userNames.split(':');
 
       if (userNamesSplit != null) {
         // loop through each user name
-        for (var userName of userNamesSplit) {
+        for (let userName of userNamesSplit) {
 
           // get the index of the first empty space
-          var indexOfSpace = userName.indexOf(' ');
+          const indexOfSpace = userName.indexOf(' ');
 
           // get the student first name e.g. "Spongebob"
-          var studentFirstName = userName.substring(0, indexOfSpace);
+          const studentFirstName = userName.substring(0, indexOfSpace);
 
           // add the student name to the array
           studentNames.push(studentFirstName);
@@ -542,10 +542,10 @@ class ConfigService {
   };
 
   getUserIdsByWorkgroupId(workgroupId) {
-    var userIds = [];
+    let userIds = [];
 
     if (workgroupId != null) {
-      var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+      const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
 
       if (userInfo != null) {
         userIds = userInfo.userIds;
@@ -556,10 +556,10 @@ class ConfigService {
   };
 
   getUserNameByWorkgroupId(workgroupId) {
-    var userName = null;
+    let userName = null;
 
     if (workgroupId != null) {
-      var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+      const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
 
       if (userInfo != null) {
         userName = userInfo.userName;
@@ -570,10 +570,10 @@ class ConfigService {
   };
 
   getDisplayNamesByWorkgroupId(workgroupId) {
-    var displayNames = null;
+    let displayNames = null;
 
     if (workgroupId != null) {
-      var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+      const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
 
       if (userInfo != null) {
         displayNames = userInfo.displayNames;
@@ -643,9 +643,9 @@ class ConfigService {
   };
 
   isPreview() {
-    var result = false;
+    let result = false;
 
-    var mode = this.getMode();
+    const mode = this.getMode();
 
     if (mode != null && mode === 'preview') {
       result = true;
@@ -662,10 +662,10 @@ class ConfigService {
   convertToServerTimestamp(clientTimestamp) {
 
     // get the difference between the client time and server time
-    var timestampDiff = this.getConfigParam('timestampDiff');
+    const timestampDiff = this.getConfigParam('timestampDiff');
 
     // convert the client timestamp to a server timestamp
-    var serverTimestamp = clientTimestamp - timestampDiff;
+    const serverTimestamp = clientTimestamp - timestampDiff;
 
     return serverTimestamp;
   }
@@ -678,10 +678,10 @@ class ConfigService {
   convertToClientTimestamp(serverTimestamp) {
 
     // get the difference between the client time and server time
-    var timestampDiff = this.getConfigParam('timestampDiff');
+    const timestampDiff = this.getConfigParam('timestampDiff');
 
     // convert the client timestamp to a server timestamp
-    var clientTimestamp = serverTimestamp + timestampDiff;
+    const clientTimestamp = serverTimestamp + timestampDiff;
 
     return clientTimestamp;
   }
@@ -693,10 +693,10 @@ class ConfigService {
    */
   isRunOwner(workgroupId) {
 
-    var result = false;
+    let result = false;
 
     if (workgroupId != null) {
-      var teacherUserInfo = this.getTeacherUserInfo();
+      const teacherUserInfo = this.getTeacherUserInfo();
 
       if (teacherUserInfo != null) {
 
@@ -716,14 +716,14 @@ class ConfigService {
    */
   isRunSharedTeacher(workgroupId) {
 
-    var result = false;
+    let result = false;
 
     if (workgroupId != null) {
-      var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
+      const sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
 
       if (sharedTeacherUserInfos != null) {
 
-        for (var sharedTeacherUserInfo of sharedTeacherUserInfos) {
+        for (let sharedTeacherUserInfo of sharedTeacherUserInfos) {
           if (sharedTeacherUserInfo != null) {
             if (workgroupId == sharedTeacherUserInfo.workgroupId) {
               result = true;
@@ -743,7 +743,7 @@ class ConfigService {
    * 'owner', 'write', 'read'
    */
   getTeacherRole(workgroupId) {
-    var role = null;
+    let role = null;
 
     if (this.isRunOwner(workgroupId)) {
       // the teacher is the owner of the run
@@ -763,14 +763,14 @@ class ConfigService {
    * 'write' or 'read'
    */
   getSharedTeacherRole(workgroupId) {
-    var role = null;
+    let role = null;
 
     if (workgroupId != null) {
-      var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
+      const sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
 
       if (sharedTeacherUserInfos != null) {
 
-        for (var sharedTeacherUserInfo of sharedTeacherUserInfos) {
+        for (let sharedTeacherUserInfo of sharedTeacherUserInfos) {
           if (sharedTeacherUserInfo != null) {
             if (workgroupId == sharedTeacherUserInfo.workgroupId) {
               role = sharedTeacherUserInfo.role;
@@ -793,7 +793,7 @@ class ConfigService {
   replaceStudentNames(content) {
     if (content != null) {
 
-      var contentString = content;
+      let contentString = content;
 
       if (typeof content === 'object') {
         // get the content as a string
@@ -803,10 +803,10 @@ class ConfigService {
       if (contentString != null) {
 
         // get the workgroup id
-        var workgroupId = this.getWorkgroupId();
+        const workgroupId = this.getWorkgroupId();
 
         // get all the first names
-        var firstNames = this.getStudentFirstNamesByWorkgroupId(workgroupId);
+        const firstNames = this.getStudentFirstNamesByWorkgroupId(workgroupId);
 
         if (firstNames.length >= 1) {
           /*
@@ -855,8 +855,8 @@ class ConfigService {
   }
 
   getAvatarColorForWorkgroupId(workgroupId) {
-    var avatarColors = ['#E91E63', '#9C27B0', '#CDDC39', '#2196F3', '#FDD835', '#43A047', '#795548', '#EF6C00', '#C62828', '#607D8B'];
-    var modulo = workgroupId % 10;
+    const avatarColors = ['#E91E63', '#9C27B0', '#CDDC39', '#2196F3', '#FDD835', '#43A047', '#795548', '#EF6C00', '#C62828', '#607D8B'];
+    const modulo = workgroupId % 10;
     return avatarColors[modulo];
   }
 
@@ -866,14 +866,14 @@ class ConfigService {
   getLibraryProjects() {
 
     // get the URL to get the list of library projects
-    var getLibraryProjectsURL = this.getConfigParam('getLibraryProjectsURL');
+    const getLibraryProjectsURL = this.getConfigParam('getLibraryProjectsURL');
 
     if (getLibraryProjectsURL != null) {
 
       // request the list of library projects
       return this.$http.get(getLibraryProjectsURL).then((result) => {
 
-        var data = result.data;
+        const data = result.data;
 
         if (data != null) {
           // reverse the list so that it is ordered newest to oldest
@@ -896,15 +896,15 @@ class ConfigService {
    * /wise/curriculum/3/assets
    */
   getProjectAssetsDirectoryPath(includeHost) {
-    var projectAssetsDirectoryPath = null;
+    let projectAssetsDirectoryPath = null;
 
     // get the project base URL e.g. /wise/curriculum/3/
-    var projectBaseURL = this.getConfigParam('projectBaseURL');
+    const projectBaseURL = this.getConfigParam('projectBaseURL');
 
     if (projectBaseURL != null) {
       if (includeHost) {
         // get the host e.g. http://wise.berkeley.edu
-        var host = window.location.origin;
+        const host = window.location.origin;
 
         /*
          * get the full path including the host
@@ -938,17 +938,17 @@ class ConfigService {
      * e.g.
      * https://wise.berkeley.edu/wise/curriculum/3/assets/
      */
-    var includeHost = true;
-    var assetsDirectoryPathIncludingHost = this.getProjectAssetsDirectoryPath(includeHost);
-    var assetsDirectoryPathIncludingHostRegEx = new RegExp(assetsDirectoryPathIncludingHost, 'g');
+    const includeHost = true;
+    const assetsDirectoryPathIncludingHost = this.getProjectAssetsDirectoryPath(includeHost);
+    const assetsDirectoryPathIncludingHostRegEx = new RegExp(assetsDirectoryPathIncludingHost, 'g');
 
     /*
      * get the assets directory path without the host
      * e.g.
      * /wise/curriculum/3/assets/
      */
-    var assetsDirectoryPathNotIncludingHost = this.getProjectAssetsDirectoryPath() + '/';
-    var assetsDirectoryPathNotIncludingHostRegEx = new RegExp(assetsDirectoryPathNotIncludingHost, 'g');
+    const assetsDirectoryPathNotIncludingHost = this.getProjectAssetsDirectoryPath() + '/';
+    const assetsDirectoryPathNotIncludingHostRegEx = new RegExp(assetsDirectoryPathNotIncludingHost, 'g');
 
     /*
      * remove the directory path from the html so that only the file name
@@ -971,11 +971,11 @@ class ConfigService {
    */
   getWISEIds(workgroupId) {
 
-    var wiseIds = [];
+    let wiseIds = [];
 
     if (workgroupId != null) {
       // get the user info object for the workgroup id
-      var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+      const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
 
       if (userInfo != null) {
         // get the WISE IDs
@@ -992,12 +992,12 @@ class ConfigService {
   getAuthorableProjects() {
 
     // get the projects this teacher owns
-    var projects = this.getConfigParam('projects');
+    const projects = this.getConfigParam('projects');
 
     // get the projects that were shared with the teacher
-    var sharedProjects = this.getConfigParam('sharedProjects');
+    const sharedProjects = this.getConfigParam('sharedProjects');
 
-    var authorableProjects = [];
+    let authorableProjects = [];
 
     if (projects != null) {
       // add the owned projects
@@ -1040,8 +1040,8 @@ class ConfigService {
    * 0 if they are the same
    */
   sortByProjectId(projectA, projectB) {
-    var projectIdA = projectA.id;
-    var projectIdB = projectB.id;
+    const projectIdA = projectA.id;
+    const projectIdB = projectB.id;
 
     if (projectIdA < projectIdB) {
       return 1;
@@ -1051,7 +1051,7 @@ class ConfigService {
       return 0;
     }
   }
-};
+}
 
 ConfigService.$inject = [
   '$filter',

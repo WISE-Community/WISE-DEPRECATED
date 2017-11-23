@@ -24,11 +24,11 @@ class StudentWebSocketService {
       // We are previewing the project. Don't initialize websocket.
     } else {
       // We are in a run. Get the parameters for initializing the websocket connection
-      var runId = this.ConfigService.getRunId();
-      var periodId = this.ConfigService.getPeriodId();
-      var workgroupId = this.ConfigService.getWorkgroupId();
-      var webSocketURL = this.ConfigService.getWebSocketURL();
-      webSocketURL += "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
+      const runId = this.ConfigService.getRunId();
+      const periodId = this.ConfigService.getPeriodId();
+      const workgroupId = this.ConfigService.getWorkgroupId();
+      const webSocketURL = this.ConfigService.getWebSocketURL() +
+          "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
 
       try {
         // start the websocket connection
@@ -59,8 +59,8 @@ class StudentWebSocketService {
    * @param message the websocket message
    */
   handleMessage(message) {
-    var data = JSON.parse(message.data);
-    var messageType = data.messageType;
+    const data = JSON.parse(message.data);
+    const messageType = data.messageType;
 
     if (messageType === 'pauseScreen') {
       this.$rootScope.$broadcast('pauseScreen', {data: data});
@@ -94,10 +94,10 @@ class StudentWebSocketService {
       // we are in a run
 
       // get the current node id
-      var currentNodeId = this.StudentDataService.getCurrentNodeId();
+      const currentNodeId = this.StudentDataService.getCurrentNodeId();
 
       // make the websocket message
-      var messageJSON = {};
+      const messageJSON = {};
       messageJSON.messageType = messageType;
       messageJSON.messageParticipants = 'studentToTeachers';
       messageJSON.currentNodeId = currentNodeId;
@@ -118,10 +118,10 @@ class StudentWebSocketService {
       // we are in a run
 
       // get the current node id
-      var currentNodeId = this.StudentDataService.getCurrentNodeId();
+      const currentNodeId = this.StudentDataService.getCurrentNodeId();
 
       // make the websocket message
-      var messageJSON = {};
+      const messageJSON = {};
       messageJSON.messageType = messageType;
       messageJSON.messageParticipants = 'studentToClassmatesInPeriod';
       messageJSON.currentNodeId = currentNodeId;

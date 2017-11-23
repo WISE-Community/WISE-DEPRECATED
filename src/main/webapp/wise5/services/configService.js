@@ -54,11 +54,11 @@ var ConfigService = function () {
 
         var constraints = true;
 
+        // get the full url
+        var absURL = _this.$location.$$absUrl;
+
         if (configJSON.mode == 'preview') {
           // constraints can only be disabled using the url in preview mode
-
-          // get the full url
-          var absURL = _this.$location.$$absUrl;
 
           // regex to match constraints=false in the url
           var constraintsRegEx = new RegExp("constraints=false", 'gi');
@@ -611,9 +611,9 @@ var ConfigService = function () {
                 var classmateUserInfo = _step4.value;
 
                 if (classmateUserInfo != null) {
-                  var tempWorkgroupId = classmateUserInfo.workgroupId;
+                  var _tempWorkgroupId = classmateUserInfo.workgroupId;
 
-                  if (workgroupId == tempWorkgroupId) {
+                  if (workgroupId == _tempWorkgroupId) {
                     userInfo = classmateUserInfo;
                     break;
                   }
@@ -1346,8 +1346,6 @@ var ConfigService = function () {
 
   return ConfigService;
 }();
-
-;
 
 ConfigService.$inject = ['$filter', '$http', '$location'];
 

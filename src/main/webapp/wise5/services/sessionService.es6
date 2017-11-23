@@ -125,7 +125,7 @@ class SessionService {
   startWarningTimer() {
     // clear all the previous warning timers
     this.clearWarningTimers();
-    var warningId = setTimeout(angular.bind(this, this.showWarning), this.warningInterval);
+    const warningId = setTimeout(angular.bind(this, this.showWarning), this.warningInterval);
     this.warningIds.push(warningId);
   }
 
@@ -134,10 +134,10 @@ class SessionService {
    */
   clearWarningTimers() {
     // clear all the active warning timeouts
-    for (var w = 0; w < this.warningIds.length; w++) {
+    for (let w = 0; w < this.warningIds.length; w++) {
 
       // get a warning id
-      var warningId = this.warningIds[w];
+      const warningId = this.warningIds[w];
 
       // clear the timeout for the warning id
       clearTimeout(warningId);
@@ -164,7 +164,7 @@ class SessionService {
   startLogOutTimer() {
     // clear all the previou log out timers
     this.clearLogOutTimers();
-    var logOutId = setTimeout(angular.bind(this, this.forceLogOut), this.logOutInterval);
+    const logOutId = setTimeout(angular.bind(this, this.forceLogOut), this.logOutInterval);
     this.logOutIds.push(logOutId);
   };
 
@@ -173,10 +173,10 @@ class SessionService {
    */
   clearLogOutTimers() {
     // clear all the active log out timeouts
-    for (var l = 0; l < this.logOutIds.length; l++) {
+    for (let l = 0; l < this.logOutIds.length; l++) {
 
       // get a log out id
-      var logOutId = this.logOutIds[l];
+      const logOutId = this.logOutIds[l];
 
       // clear the timeout for the log out id
       clearTimeout(logOutId);
@@ -213,10 +213,10 @@ class SessionService {
    * Renew the session with the server and refresh the local timers
    */
   renewSession() {
-    var renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
+    const renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
     // make a request to the log out url
     this.$http.get(renewSessionURL).then((result) => {
-      var renewSessionResult = result.data;
+      const renewSessionResult = result.data;
 
       if (renewSessionResult === 'true') {
         // the session is still active
@@ -245,8 +245,8 @@ class SessionService {
    */
   mouseMoved() {
     // get the current timestamp
-    var date = new Date();
-    var timestamp = date.getTime();
+    const date = new Date();
+    const timestamp = date.getTime();
 
     // remember this timestamp
     this.lastMouseEventTimestamp = timestamp;
@@ -259,7 +259,7 @@ class SessionService {
    * @returns whether there was a mouse event recently
    */
   checkMouseEvent() {
-    var eventOccurred = false;
+    let eventOccurred = false;
 
     if (this.lastMouseEventTimestamp != null) {
       // there was a mouse event since the last time we checked
@@ -282,11 +282,11 @@ class SessionService {
    * @return the number of milliseconds
    */
   convertMinutesToMilliseconds(minutes) {
-    var milliseconds = null;
+    let milliseconds = null;
 
     if (minutes != null) {
       // get the number of seconds
-      var seconds = minutes * 60;
+      const seconds = minutes * 60;
 
       // get the number of milliseconds
       milliseconds = seconds * 1000;
@@ -319,7 +319,7 @@ class SessionService {
    */
   attemptExit() {
     // get all the components listening for the exit event
-    var exitListenerCount = this.$rootScope.$$listenerCount.exit;
+    const exitListenerCount = this.$rootScope.$$listenerCount.exit;
 
     /*
      * Check how many exit listeners are still listening for the
@@ -330,13 +330,13 @@ class SessionService {
       // don't log out yet because there are still listeners
     } else {
       // there are no more listeners so we will exit
-      var mainHomePageURL = this.ConfigService.getMainHomePageURL();
+      const mainHomePageURL = this.ConfigService.getMainHomePageURL();
 
       if (this.performLogOut) {
         // log out the user and bring them to the home page
 
         // get the url that will log out the user
-        var sessionLogOutURL = this.ConfigService.getSessionLogOutURL();
+        const sessionLogOutURL = this.ConfigService.getSessionLogOutURL();
 
         // take user to log out url
         window.location.href = sessionLogOutURL;
@@ -347,12 +347,12 @@ class SessionService {
          */
 
         // Get the wiseBaseURL e.g. /wise
-        var wiseBaseURL = this.ConfigService.getWISEBaseURL();
+        const wiseBaseURL = this.ConfigService.getWISEBaseURL();
 
-        var homePageURL = '';
+        let homePageURL = '';
 
         // get the user type
-        var userType = this.ConfigService.getConfigParam('userType');
+        const userType = this.ConfigService.getConfigParam('userType');
 
         if (userType === 'student') {
           // send the user to the student home page

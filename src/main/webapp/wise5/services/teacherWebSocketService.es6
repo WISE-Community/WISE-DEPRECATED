@@ -9,11 +9,12 @@ class TeacherWebSocketService {
   }
 
   initialize() {
-    var runId = this.ConfigService.getRunId();
-    var periodId = this.ConfigService.getPeriodId();
-    var workgroupId = this.ConfigService.getWorkgroupId();
-    var webSocketURL = this.ConfigService.getWebSocketURL();
-    webSocketURL += "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
+    const runId = this.ConfigService.getRunId();
+    const periodId = this.ConfigService.getPeriodId();
+    const workgroupId = this.ConfigService.getWorkgroupId();
+    const webSocketURL = this.ConfigService.getWebSocketURL() +
+        "?runId=" + runId + "&periodId=" + periodId +
+        "&workgroupId=" + workgroupId;
     this.dataStream = this.$websocket(webSocketURL);
 
     this.dataStream.onMessage((message) => {
@@ -22,8 +23,8 @@ class TeacherWebSocketService {
   };
 
   handleMessage(message) {
-    var data = JSON.parse(message.data);
-    var messageType = data.messageType;
+    const data = JSON.parse(message.data);
+    const messageType = data.messageType;
 
     if (messageType === 'studentStatus') {
       this.handleStudentStatusReceived(data);
@@ -73,7 +74,7 @@ class TeacherWebSocketService {
    * with messageType 'studentStatus'.
    */
   handleStudentStatusReceived(studentStatus) {
-    var workgroupId = studentStatus.workgroupId;
+    const workgroupId = studentStatus.workgroupId;
 
     // update the student status for the workgroup
     this.StudentStatusService.setStudentStatusForWorkgroupId(workgroupId, studentStatus);
@@ -99,7 +100,7 @@ class TeacherWebSocketService {
   pauseScreens(periodId) {
 
     // create the websocket message
-    var messageJSON = {};
+    const messageJSON = {};
 
     messageJSON.messageType = 'pauseScreen';
 
@@ -124,7 +125,7 @@ class TeacherWebSocketService {
   unPauseScreens(periodId) {
 
     // create the websocket message
-    var messageJSON = {};
+    const messageJSON = {};
 
     messageJSON.messageType = 'unPauseScreen';
 

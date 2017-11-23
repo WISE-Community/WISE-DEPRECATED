@@ -1024,7 +1024,9 @@ var NodeService = function () {
             alreadyBranched = true;
           }
 
-          var transition, fromNodeId, toNodeId;
+          var transition = void 0,
+              fromNodeId = void 0,
+              toNodeId = void 0;
 
           if (alreadyBranched) {
             // student has previously branched

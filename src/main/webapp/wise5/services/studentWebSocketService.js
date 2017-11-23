@@ -37,8 +37,7 @@ var StudentWebSocketService = function () {
         var runId = this.ConfigService.getRunId();
         var periodId = this.ConfigService.getPeriodId();
         var workgroupId = this.ConfigService.getWorkgroupId();
-        var webSocketURL = this.ConfigService.getWebSocketURL();
-        webSocketURL += "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
+        var webSocketURL = this.ConfigService.getWebSocketURL() + "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
 
         try {
           // start the websocket connection

@@ -745,31 +745,31 @@ var TeacherDataService = function () {
 
           try {
             for (var _iterator4 = componentStatesForWorkgroup[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-              var componentState = _step4.value;
+              var _componentState = _step4.value;
 
 
-              if (componentState != null) {
+              if (_componentState != null) {
 
                 // get the node id and component id of the component state
-                var nodeId = componentState.nodeId;
-                var componentId = componentState.componentId;
+                var _nodeId = _componentState.nodeId;
+                var _componentId = _componentState.componentId;
 
                 // generate the component key e.g. "node2_bb83hs0sd8"
-                var key = nodeId + "-" + componentId;
+                var _key = _nodeId + "-" + _componentId;
 
-                if (componentRevisionCounter[key] == null) {
+                if (componentRevisionCounter[_key] == null) {
                   // initialize the component revision counter for this component to 1 if there is no entry
-                  componentRevisionCounter[key] = 1;
+                  componentRevisionCounter[_key] = 1;
                 }
 
                 // get the revision counter
-                var revisionCounter = componentRevisionCounter[key];
+                var revisionCounter = componentRevisionCounter[_key];
 
                 // set the revision counter into the component state
-                componentState.revisionCounter = revisionCounter;
+                _componentState.revisionCounter = revisionCounter;
 
                 // increment the revision counter for the component
-                componentRevisionCounter[key] = revisionCounter + 1;
+                componentRevisionCounter[_key] = revisionCounter + 1;
               }
             }
 

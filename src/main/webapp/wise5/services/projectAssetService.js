@@ -238,37 +238,37 @@ var ProjectAssetService = function () {
                 var url = textFile.config.url;
 
                 // get the file name
-                var fileName = '';
+                var _fileName = '';
 
                 // get the last index of '/'
                 var lastIndexOfSlash = url.lastIndexOf('/');
 
                 if (lastIndexOfSlash == -1) {
                   // the url does not contain a '/'
-                  fileName = url;
+                  _fileName = url;
                 } else {
                   /*
                    * the url does contain a '/' so we will get everything
                    * after it
                    */
-                  fileName = url.substring(lastIndexOfSlash + 1);
+                  _fileName = url.substring(lastIndexOfSlash + 1);
                 }
 
                 /*
                  * check if we have already found that this text file
                  * is used
                  */
-                if (usedTextFileNames.indexOf(fileName) == -1) {
+                if (usedTextFileNames.indexOf(_fileName) == -1) {
                   /*
                    * this is a file name that isn't yet in the array
                    * of file names that are used
                    */
 
-                  if (allUsedTextContent.indexOf(fileName) != -1) {
+                  if (allUsedTextContent.indexOf(_fileName) != -1) {
                     // the file name is referenced in the content
 
                     // add the file name to our array of used text file names
-                    usedTextFileNames.push(fileName);
+                    usedTextFileNames.push(_fileName);
 
                     // get the file content
                     var data = textFile.data;
@@ -316,20 +316,20 @@ var ProjectAssetService = function () {
 
           try {
             for (var _iterator3 = assets.files[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-              var asset = _step3.value;
+              var _asset = _step3.value;
 
-              if (asset != null) {
-                var fileName = asset.fileName;
+              if (_asset != null) {
+                var _fileName2 = _asset.fileName;
 
-                if (allUsedTextContent.indexOf(fileName) != -1) {
+                if (allUsedTextContent.indexOf(_fileName2) != -1) {
                   // the file is used in the project
-                  asset.used = true;
+                  _asset.used = true;
                 } else {
                   // the file is not used in the project
-                  asset.used = false;
+                  _asset.used = false;
 
                   // add the file size to the total
-                  totalUnusedFilesSize += asset.fileSize;
+                  totalUnusedFilesSize += _asset.fileSize;
                 }
               }
             }

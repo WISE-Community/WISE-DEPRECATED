@@ -123,7 +123,7 @@ var UtilService = function () {
     key: 'dataURItoBlob',
     value: function dataURItoBlob(dataURI) {
 
-      var byteString;
+      var byteString = void 0;
       if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);else byteString = unescape(dataURI.split(',')[1]);
 
       // separate out the mime component

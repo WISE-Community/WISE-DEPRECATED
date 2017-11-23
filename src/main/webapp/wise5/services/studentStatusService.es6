@@ -11,17 +11,17 @@ class StudentStatusService {
   }
 
   retrieveStudentStatuses(config) {
-    var studentStatusURL = this.ConfigService.getStudentStatusURL();
-    var runId = this.ConfigService.getRunId();
+    const studentStatusURL = this.ConfigService.getStudentStatusURL();
+    const runId = this.ConfigService.getRunId();
 
-    var requestConfig = {
+    const requestConfig = {
       params: {
         runId: runId
       }
     };
 
     return this.$http.get(studentStatusURL, requestConfig).then((result) => {
-      var studentStatuses = result.data;
+      const studentStatuses = result.data;
 
       this.studentStatuses = studentStatuses;
 
@@ -40,12 +40,12 @@ class StudentStatusService {
    * @returns the node position and title
    */
   getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId) {
-    var nodePositionAndTitle = null;
+    let nodePositionAndTitle = null;
 
-    var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
+    const studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
 
     if(studentStatus != null) {
-      var currentNodeId = studentStatus.currentNodeId;
+      const currentNodeId = studentStatus.currentNodeId;
       nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(currentNodeId);
     }
 
@@ -54,12 +54,12 @@ class StudentStatusService {
 
   getStudentStatusForWorkgroupId(workgroupId) {
 
-    var studentStatus = null;
-    var studentStatuses = this.getStudentStatuses();
+    let studentStatus = null;
+    const studentStatuses = this.getStudentStatuses();
 
-    for (var tempStudentStatus of studentStatuses) {
+    for (let tempStudentStatus of studentStatuses) {
       if (tempStudentStatus != null) {
-        var tempWorkgroupId = tempStudentStatus.workgroupId;
+        const tempWorkgroupId = tempStudentStatus.workgroupId;
 
         if (workgroupId == tempWorkgroupId) {
           studentStatus = tempStudentStatus;
@@ -73,13 +73,13 @@ class StudentStatusService {
 
   setStudentStatusForWorkgroupId(workgroupId, studentStatus) {
 
-    var studentStatuses = this.getStudentStatuses();
+    const studentStatuses = this.getStudentStatuses();
 
-    for (var x = 0; x < studentStatuses.length; x++) {
-      var tempStudentStatus = studentStatuses[x];
+    for (let x = 0; x < studentStatuses.length; x++) {
+      const tempStudentStatus = studentStatuses[x];
 
       if (tempStudentStatus != null) {
-        var tempWorkgroupId = tempStudentStatus.workgroupId;
+        const tempWorkgroupId = tempStudentStatus.workgroupId;
 
         if (workgroupId === tempWorkgroupId) {
           studentStatuses.splice(x, 1, studentStatus);
@@ -146,7 +146,7 @@ class StudentStatusService {
     let studentStatuses = this.studentStatuses;
 
     // loop through all the student statuses
-    for (var studentStatus of studentStatuses) {
+    for (let studentStatus of studentStatuses) {
       if (studentStatus != null) {
 
         if (periodId == -1 || periodId == studentStatus.periodId) {
@@ -393,22 +393,22 @@ class StudentStatusService {
    * @returns the average score for the node for the period
    */
   getNodeAverageScore(nodeId, periodId) {
-    var studentScoreSum = 0;
-    var numStudentsWithScore = 0;
+    let studentScoreSum = 0;
+    let numStudentsWithScore = 0;
 
-    var studentStatuses = this.studentStatuses;
+    const studentStatuses = this.studentStatuses;
 
     // loop through all the student statuses
-    for (var studentStatus of studentStatuses) {
+    for (let studentStatus of studentStatuses) {
       if (studentStatus != null) {
 
         if (periodId == -1 || periodId == studentStatus.periodId) {
           // the period matches the one we are looking for
 
-          var workgroupId = studentStatus.workgroupId;
+          let workgroupId = studentStatus.workgroupId;
 
           // get the workgroups score on the node
-          var score = this.AnnotationService.getScore(workgroupId, nodeId);
+          let score = this.AnnotationService.getScore(workgroupId, nodeId);
 
           if (score != null) {
             // increment the counter of students with a score for this node
@@ -421,7 +421,7 @@ class StudentStatusService {
       }
     }
 
-    var averageScore = null;
+    let averageScore = null;
 
     if (numStudentsWithScore != 0) {
       // calculate the average score for this node rounded down to the nearest hundredth
@@ -447,7 +447,7 @@ class StudentStatusService {
 
       if (nodeStatuses) {
         // loop through all the node statuses
-        for (var p in nodeStatuses) {
+        for (let p in nodeStatuses) {
           if (nodeStatuses.hasOwnProperty(p)) {
             let nodeStatus = nodeStatuses[p];
             let nodeId = nodeStatus.nodeId;

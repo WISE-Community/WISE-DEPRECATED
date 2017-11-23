@@ -29,8 +29,8 @@ class UtilService {
     }
 
     /* generate the key */
-    var key = '';
-    for (var a = 0; a < length; a++) {
+    let key = '';
+    for (let a = 0; a < length; a++) {
       key += this.CHARS[Math.floor(Math.random() * (this.CHARS.length - 1))];
     }
 
@@ -46,7 +46,7 @@ class UtilService {
    * if we couldn't convert the string to a number we will just return the string.
    */
   convertStringToNumber(str) {
-    var result = str;
+    let result = str;
 
     if (str != null && str != '' && !isNaN(Number(str))) {
       result = Number(str);
@@ -61,11 +61,11 @@ class UtilService {
    * @return a copy of the JSON object that was passed in
    */
   makeCopyOfJSONObject(jsonObject) {
-    var copyOfJSONObject = null;
+    let copyOfJSONObject = null;
 
     if (jsonObject != null) {
       // create a JSON string from the JSON object
-      var jsonObjectString = angular.toJson(jsonObject);
+      const jsonObjectString = angular.toJson(jsonObject);
 
       // create a JSON object from the JSON string
       copyOfJSONObject = angular.fromJson(jsonObjectString);
@@ -82,11 +82,11 @@ class UtilService {
   getImageObjectFromBase64String(img_b64) {
 
     // create a blob from the base64 image string
-    var blob = this.dataURItoBlob(img_b64);
+    const blob = this.dataURItoBlob(img_b64);
 
-    var now = new Date().getTime();
-    var filename = encodeURIComponent('picture_' + now + '.png');
-    var pngFile = new File([blob], filename, {
+    const now = new Date().getTime();
+    const filename = encodeURIComponent('picture_' + now + '.png');
+    const pngFile = new File([blob], filename, {
       lastModified: now, // optional - default = now
       type: 'image/png' // optional - default = ''
     });
@@ -101,18 +101,18 @@ class UtilService {
    */
   dataURItoBlob(dataURI) {
 
-    var byteString;
+    let byteString;
     if (dataURI.split(',')[0].indexOf('base64') >= 0)
       byteString = atob(dataURI.split(',')[1]);
     else
       byteString = unescape(dataURI.split(',')[1]);
 
     // separate out the mime component
-    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
 
     // write the bytes of the string to a typed array
-    var ia = new Uint8Array(byteString.length);
-    for (var i = 0; i < byteString.length; i++) {
+    const ia = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
       ia[i] = byteString.charCodeAt(i);
     }
 
@@ -126,22 +126,22 @@ class UtilService {
    */
   getImageObjectFromImageElement(imageElement) {
 
-    var imageObject = null;
+    let imageObject = null;
 
     if (imageElement != null) {
       // create a canvas element that we will use to generate a base64 string
-      var canvas = document.createElement("canvas");
+      const canvas = document.createElement("canvas");
 
       // set the width and height of the canvas to match the image dimensions
       canvas.width = imageElement.naturalWidth;
       canvas.height = imageElement.naturalHeight;
 
       // draw the image onto the canvas
-      var ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext("2d");
       ctx.drawImage(imageElement, 0, 0);
 
       // create the base64 string representation of the image
-      var dataURL = canvas.toDataURL("image/png");
+      const dataURL = canvas.toDataURL("image/png");
 
       // get the image object
       imageObject = this.getImageObjectFromBase64String(dataURL);
@@ -159,10 +159,10 @@ class UtilService {
   hideIFrames() {
 
     // get all the iframes
-    var iframes = angular.element('iframe');
+    const iframes = angular.element('iframe');
 
     // loop through all the iframes
-    for (var iframe of iframes) {
+    for (let iframe of iframes) {
       if (iframe != null) {
         // hide the iframe
         iframe.style.display = 'none';
@@ -179,10 +179,10 @@ class UtilService {
   showIFrames() {
 
     // get all the iframes
-    var iframes = angular.element('iframe');
+    const iframes = angular.element('iframe');
 
     // loop through all the iframes
-    for (var iframe of iframes) {
+    for (let iframe of iframes) {
       if (iframe != null) {
         // show the iframe
         iframe.style.display = '';
@@ -196,15 +196,15 @@ class UtilService {
    * @return whether the asset is an image or not
    */
   isImage(fileName) {
-    var result = false;
+    let result = false;
 
     if (fileName != null) {
-      var lowerCaseFileName = fileName.toLowerCase();
+      const lowerCaseFileName = fileName.toLowerCase();
 
       // regex to match image extensions
-      var imageExtensionsRegEx = new RegExp('.*\.(png|jpg|jpeg|bmp|gif|tiff|svg)');
+      const imageExtensionsRegEx = new RegExp('.*\.(png|jpg|jpeg|bmp|gif|tiff|svg)');
 
-      var matchResult = lowerCaseFileName.match(imageExtensionsRegEx);
+      const matchResult = lowerCaseFileName.match(imageExtensionsRegEx);
 
       if (matchResult != null) {
         // we have found a match so the asset is an image
@@ -221,15 +221,15 @@ class UtilService {
    * @return whether the asset is a video or not
    */
   isVideo(fileName) {
-    var result = false;
+    let result = false;
 
     if (fileName != null) {
-      var lowerCaseFileName = fileName.toLowerCase();
+      const lowerCaseFileName = fileName.toLowerCase();
 
       // regex to match video extensions
-      var videoExtensionsRegEx = new RegExp('.*\.(mp4|mpg|mpeg|m4v|m2v|avi|gifv|mov|qt)');
+      const videoExtensionsRegEx = new RegExp('.*\.(mp4|mpg|mpeg|m4v|m2v|avi|gifv|mov|qt)');
 
-      var matchResult = lowerCaseFileName.match(videoExtensionsRegEx);
+      const matchResult = lowerCaseFileName.match(videoExtensionsRegEx);
 
       if (matchResult != null) {
         // we have found a match so the asset is a video
@@ -317,22 +317,22 @@ class UtilService {
   insertWISELinkButtons(html) {
 
     // find <button> elements with the parameter wiselink=true
-    var wiseLinkRegEx = new RegExp(/<button.*?wiselink="true".*?>(.*?)<\/button>/);
+    const wiseLinkRegEx = new RegExp(/<button.*?wiselink="true".*?>(.*?)<\/button>/);
 
     // find the first match
-    var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
+    let wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
 
     // loop until we have replaced all the matches
-    while(wiseLinkRegExMatchResult != null) {
+    while (wiseLinkRegExMatchResult != null) {
 
       // get the whole <button> element
-      var buttonHTML = wiseLinkRegExMatchResult[0];
+      const buttonHTML = wiseLinkRegExMatchResult[0];
 
       // get the inner html of the <button> element
-      var buttonText = wiseLinkRegExMatchResult[1];
+      const buttonText = wiseLinkRegExMatchResult[1];
 
       // get the node id parameter of the <button> element
-      var nodeId = this.getWISELinkNodeId(buttonHTML);
+      let nodeId = this.getWISELinkNodeId(buttonHTML);
 
       if (nodeId == null) {
         nodeId = '';
@@ -344,9 +344,8 @@ class UtilService {
         componentIdAttr = "component-id='" + componentId + "'";
       }
 
-
       // create the <wiselink> element
-      var wiselinkHtml = "<wiselink type='button' link-text='" + buttonText + "' node-id='" + nodeId + "' " + componentIdAttr + "/>";
+      const wiselinkHtml = "<wiselink type='button' link-text='" + buttonText + "' node-id='" + nodeId + "' " + componentIdAttr + "/>";
 
       // replace the <button> element with the <wiselink> element
       html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
@@ -556,14 +555,14 @@ class UtilService {
    */
   createInsertAssetButton(controller, projectId, nodeId, componentId, target, tooltip) {
 
-    var thisRootScope = this.$rootScope;
+    const thisRootScope = this.$rootScope;
 
     // a custom button that opens the asset chooser
-    var InsertAssetButton = function(context) {
-      var ui = $.summernote.ui;
+    const InsertAssetButton = function(context) {
+      const ui = $.summernote.ui;
 
       // create button
-      var button = ui.button({
+      const button = ui.button({
         contents: '<i class="note-icon-picture"></i>',
         tooltip: tooltip,
         click: function () {
@@ -571,7 +570,7 @@ class UtilService {
           context.invoke('editor.saveRange');
 
           // create the params for opening the asset chooser
-          var params = {};
+          const params = {};
           params.isPopup = true;
 
           if (projectId != null) {
@@ -613,14 +612,14 @@ class UtilService {
    */
   createInsertWISELinkButton(controller, projectId, nodeId, componentId, target, tooltip) {
 
-    var thisRootScope = this.$rootScope;
+    const thisRootScope = this.$rootScope;
 
     // a custom button that opens the WISE Link authoring popup
-    var InsertWISELinkButton = function(context) {
-      var ui = $.summernote.ui;
+    const InsertWISELinkButton = function(context) {
+      const ui = $.summernote.ui;
 
       // create button
-      var button = ui.button({
+      const button = ui.button({
         contents: '<i class="note-icon-link"></i>',
         tooltip: tooltip,
         click: function () {
@@ -628,7 +627,7 @@ class UtilService {
           context.invoke('editor.saveRange');
 
           // create the params for opening the WISE Link chooser
-          var params = {};
+          const params = {};
 
           if (projectId != null) {
             params.projectId = projectId;
@@ -650,7 +649,7 @@ class UtilService {
       });
 
       return button.render();   // return button as jquery object
-    }
+    };
 
     return InsertWISELinkButton;
   }
@@ -662,7 +661,7 @@ class UtilService {
    */
   removeHTMLTags(html) {
 
-    var text = '';
+    let text = '';
 
     if (html != null) {
       // remove tags
@@ -690,7 +689,7 @@ class UtilService {
       position = subjectString.length;
     }
     position -= searchString.length;
-    var lastIndex = subjectString.lastIndexOf(searchString, position);
+    const lastIndex = subjectString.lastIndexOf(searchString, position);
     return lastIndex !== -1 && lastIndex === position;
   }
 
@@ -722,10 +721,10 @@ class UtilService {
    */
   convertMillisecondsToFormattedDateTime(milliseconds) {
 
-    var dateTimeString = "";
+    let dateTimeString = "";
 
     // create a Date object with the milliseconds
-    var date = new Date(milliseconds);
+    const date = new Date(milliseconds);
 
     if (date != null) {
       // get the date time string e.g. Wed Apr 06 2016 9:05:38 AM
@@ -795,11 +794,11 @@ class UtilService {
 
     if (array1 != null && array2 != null) {
       // make a copy of array 1 and sort it
-      var array1Copy = this.makeCopyOfJSONObject(array1);
+      const array1Copy = this.makeCopyOfJSONObject(array1);
       array1Copy.sort();
 
       // make a copy of array 2 and sort it
-      var array2Copy = this.makeCopyOfJSONObject(array2);
+      const array2Copy = this.makeCopyOfJSONObject(array2);
       array2Copy.sort();
 
       // compare the string values of both array
@@ -822,7 +821,7 @@ class UtilService {
 
     if (componentContent != null) {
 
-      var connectedComponents = componentContent.connectedComponents;
+      const connectedComponents = componentContent.connectedComponents;
 
       if (connectedComponents != null && connectedComponents.length > 0) {
         return true;
@@ -841,10 +840,10 @@ class UtilService {
 
     if (componentContent != null) {
 
-      var connectedComponents = componentContent.connectedComponents;
+      const connectedComponents = componentContent.connectedComponents;
 
       if (connectedComponents != null) {
-        for (var connectedComponent of connectedComponents) {
+        for (let connectedComponent of connectedComponents) {
           if (connectedComponent != null) {
 
             if (connectedComponent.type == 'showWork') {
@@ -867,10 +866,10 @@ class UtilService {
 
     if (componentContent != null) {
 
-      var connectedComponents = componentContent.connectedComponents;
+      const connectedComponents = componentContent.connectedComponents;
 
       if (connectedComponents != null) {
-        for (var connectedComponent of connectedComponents) {
+        for (let connectedComponent of connectedComponents) {
           if (connectedComponent != null) {
 
             if (connectedComponent.type == 'importWork') {

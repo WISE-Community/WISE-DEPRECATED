@@ -28,8 +28,7 @@ var TeacherWebSocketService = function () {
       var runId = this.ConfigService.getRunId();
       var periodId = this.ConfigService.getPeriodId();
       var workgroupId = this.ConfigService.getWorkgroupId();
-      var webSocketURL = this.ConfigService.getWebSocketURL();
-      webSocketURL += "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
+      var webSocketURL = this.ConfigService.getWebSocketURL() + "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
       this.dataStream = this.$websocket(webSocketURL);
 
       this.dataStream.onMessage(function (message) {

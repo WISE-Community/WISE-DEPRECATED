@@ -442,7 +442,7 @@ var StudentDataService = function () {
         }
       }
 
-      var group;
+      var group = void 0;
       if (groups != null) {
         var _iteratorNormalCompletion7 = true;
         var _didIteratorError7 = false;
@@ -450,9 +450,9 @@ var StudentDataService = function () {
 
         try {
           for (var _iterator7 = groups[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-            var group = _step7.value;
+            var _group = _step7.value;
 
-            group.depth = this.ProjectService.getNodeDepth(group.id);
+            _group.depth = this.ProjectService.getNodeDepth(_group.id);
           }
 
           // sort by descending depth order (need to calculate completion for lowest level groups first)
@@ -481,9 +481,9 @@ var StudentDataService = function () {
 
         try {
           for (var _iterator8 = groups[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-            var group = _step8.value;
+            var _group2 = _step8.value;
 
-            this.updateNodeStatusByNode(group);
+            this.updateNodeStatusByNode(_group2);
           }
         } catch (err) {
           _didIteratorError8 = true;
@@ -2129,11 +2129,11 @@ var StudentDataService = function () {
         return this.$http(httpParams).then(function (result) {
           // get the local references to the component states that were posted and set their id and serverSaveTime
           if (result != null && result.data != null) {
-            var savedStudentDataResponse = result.data;
+            var _savedStudentDataResponse = result.data;
 
-            _this4.saveToServerSuccess(savedStudentDataResponse);
+            _this4.saveToServerSuccess(_savedStudentDataResponse);
 
-            return savedStudentDataResponse;
+            return _savedStudentDataResponse;
           }
         }, function (result) {
           // a server error occured
@@ -2253,8 +2253,8 @@ var StudentDataService = function () {
              * loop through all the events that were posted
              * to find the one with the matching request token
              */
-            for (var l = localEvents.length - 1; l >= 0; l--) {
-              var localEvent = localEvents[l];
+            for (var _l = localEvents.length - 1; _l >= 0; _l--) {
+              var localEvent = localEvents[_l];
               if (localEvent.requestToken && localEvent.requestToken === savedEvent.requestToken) {
                 localEvent.id = savedEvent.id;
                 localEvent.serverSaveTime = savedEvent.serverSaveTime ? savedEvent.serverSaveTime : serverSaveTime;
@@ -2300,8 +2300,8 @@ var StudentDataService = function () {
              * loop through all the events that were posted
              * to find the one with the matching request token
              */
-            for (var l = localAnnotations.length - 1; l >= 0; l--) {
-              var localAnnotation = localAnnotations[l];
+            for (var _l2 = localAnnotations.length - 1; _l2 >= 0; _l2--) {
+              var localAnnotation = localAnnotations[_l2];
               if (localAnnotation.requestToken && localAnnotation.requestToken === savedAnnotation.requestToken) {
                 localAnnotation.id = savedAnnotation.id;
                 localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime ? savedAnnotation.serverSaveTime : serverSaveTime;
@@ -3088,7 +3088,7 @@ var StudentDataService = function () {
         // check if node is a group
         var isGroup = this.ProjectService.isGroupNode(nodeId);
 
-        var node = this.ProjectService.getNodeById(nodeId);
+        var _node = this.ProjectService.getNodeById(nodeId);
 
         if (isGroup) {
           // node is a group
@@ -3139,7 +3139,7 @@ var StudentDataService = function () {
           var components = this.ProjectService.getComponentsByNodeId(nodeId);
 
           // we will default to is completed true
-          var tempResult = true;
+          var _tempResult = true;
 
           /*
            * All components must be completed in order for the node to be completed
@@ -3152,18 +3152,18 @@ var StudentDataService = function () {
 
           try {
             for (var _iterator39 = components[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
-              var component = _step39.value;
+              var _component = _step39.value;
 
-              if (component != null) {
-                var componentId = component.id;
-                var componentType = component.type;
-                var showPreviousWorkNodeId = component.showPreviousWorkNodeId;
-                var showPreviousWorkComponentId = component.showPreviousWorkComponentId;
+              if (_component != null) {
+                var _componentId = _component.id;
+                var _componentType = _component.type;
+                var showPreviousWorkNodeId = _component.showPreviousWorkNodeId;
+                var showPreviousWorkComponentId = _component.showPreviousWorkComponentId;
 
                 var tempNodeId = nodeId;
-                var tempNode = node;
-                var tempComponentId = componentId;
-                var tempComponent = component;
+                var tempNode = _node;
+                var tempComponentId = _componentId;
+                var tempComponent = _component;
 
                 if (showPreviousWorkNodeId != null && showPreviousWorkComponentId != null) {
                   /*
@@ -3176,30 +3176,30 @@ var StudentDataService = function () {
                   tempComponent = this.ProjectService.getComponentByNodeIdAndComponentId(tempNodeId, tempComponentId);
                 }
 
-                if (componentType != null) {
+                if (_componentType != null) {
                   try {
 
                     // get the service name
-                    var serviceName = componentType + 'Service';
+                    var serviceName = _componentType + 'Service';
 
                     if (this.$injector.has(serviceName)) {
 
                       // get the service for the component type
-                      var service = this.$injector.get(serviceName);
+                      var _service = this.$injector.get(serviceName);
 
                       // get the component states for the component
-                      var componentStates = this.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
+                      var _componentStates = this.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
 
                       // get the component events
-                      var componentEvents = this.getEventsByNodeIdAndComponentId(tempNodeId, tempComponentId);
+                      var _componentEvents = this.getEventsByNodeIdAndComponentId(tempNodeId, tempComponentId);
 
                       // get the node events
-                      var nodeEvents = this.getEventsByNodeId(tempNodeId);
+                      var _nodeEvents = this.getEventsByNodeId(tempNodeId);
 
                       // check if the component is completed
-                      var isComponentCompleted = service.isCompleted(tempComponent, componentStates, componentEvents, nodeEvents, tempNode);
+                      var isComponentCompleted = _service.isCompleted(tempComponent, _componentStates, _componentEvents, _nodeEvents, tempNode);
 
-                      tempResult = tempResult && isComponentCompleted;
+                      _tempResult = _tempResult && isComponentCompleted;
                     }
                   } catch (e) {
                     console.log(this.$translate('ERROR_COULD_NOT_CALCULATE_IS_COMPLETED') + tempComponentId);
@@ -3222,7 +3222,7 @@ var StudentDataService = function () {
             }
           }
 
-          result = tempResult;
+          result = _tempResult;
         }
       }
 
@@ -3408,11 +3408,11 @@ var StudentDataService = function () {
 
           // We found a quoted value. When we capture
           // this value, unescape any double quotes.
-          var strMatchedValue = arrMatches[2].replace(new RegExp("\"\"", "g"), "\"");
+          var _strMatchedValue = arrMatches[2].replace(new RegExp("\"\"", "g"), "\"");
         } else {
 
           // We found a non-quoted value.
-          var strMatchedValue = arrMatches[3];
+          var _strMatchedValue2 = arrMatches[3];
         }
 
         // Now that we have our value string, let's add
@@ -3755,25 +3755,25 @@ var StudentDataService = function () {
                     tempTimestamp = tempComponentState.serverSaveTime;
                   }
                 } else if (functionName == 'isSaved') {
-                  var nodeId = completionCriterion.nodeId;
-                  var componentId = completionCriterion.componentId;
+                  var _nodeId = completionCriterion.nodeId;
+                  var _componentId2 = completionCriterion.componentId;
 
                   // get the first save component state after the timestamp
-                  var tempComponentState = this.getComponentStateSavedAfter(nodeId, componentId, tempTimestamp);
+                  var _tempComponentState = this.getComponentStateSavedAfter(_nodeId, _componentId2, tempTimestamp);
 
-                  if (tempComponentState == null) {
+                  if (_tempComponentState == null) {
                     // we did not find a component state
                     result = false;
                     break;
                   } else {
                     // we found a component state so we will update timestamp
-                    tempTimestamp = tempComponentState.serverSaveTime;
+                    tempTimestamp = _tempComponentState.serverSaveTime;
                   }
                 } else if (functionName == 'isVisited') {
-                  var nodeId = completionCriterion.nodeId;
+                  var _nodeId2 = completionCriterion.nodeId;
 
                   // get the first visit event after the timestamp
-                  var tempEvent = this.getVisitEventAfter(nodeId, tempTimestamp);
+                  var tempEvent = this.getVisitEventAfter(_nodeId2, tempTimestamp);
 
                   if (tempEvent == null) {
                     // we did not find a component state

@@ -21,7 +21,7 @@ class StudentAssetService {
   }
 
   getAssetById(assetId) {
-    for (var asset of this.allAssets) {
+    for (let asset of this.allAssets) {
       if (asset.id === assetId) {
         return asset;
       }
@@ -72,10 +72,10 @@ class StudentAssetService {
   };
 
   getAssetContent(asset) {
-    var assetContentURL = asset.url;
+    const assetContentURL = asset.url;
 
     // retrieve the csv file and parse it
-    var config = {};
+    const config = {};
     config.method = 'GET';
     config.url = assetContentURL;
     return this.$http(config).then((response) => {
@@ -84,12 +84,12 @@ class StudentAssetService {
   };
 
   isImage(asset) {
-    var isImage = false;
-    var imageFileExtensions = ['png', 'jpg', 'jpeg', 'gif'];
+    let isImage = false;
+    const imageFileExtensions = ['png', 'jpg', 'jpeg', 'gif'];
     if (asset != null) {
-      var assetURL = asset.url;
+      const assetURL = asset.url;
       if (assetURL != null && assetURL.lastIndexOf('.') !== -1) {
-        var assetExtension = assetURL.substring(assetURL.lastIndexOf('.') + 1);
+        const assetExtension = assetURL.substring(assetURL.lastIndexOf('.') + 1);
         if (imageFileExtensions.indexOf(assetExtension.toLowerCase()) != -1) {
           isImage = true;
         }
@@ -99,12 +99,12 @@ class StudentAssetService {
   };
 
   isAudio(asset) {
-    var isAudio = false;
-    var imageFileExtensions = ['wav', 'mp3', 'ogg', 'm4a', 'm4p', 'raw', 'aiff'];
+    let isAudio = false;
+    const imageFileExtensions = ['wav', 'mp3', 'ogg', 'm4a', 'm4p', 'raw', 'aiff'];
     if (asset != null) {
-      var assetURL = asset.url;
+      const assetURL = asset.url;
       if (assetURL != null && assetURL.lastIndexOf('.') != -1) {
-        var assetExtension = assetURL.substring(assetURL.lastIndexOf('.') + 1);
+        const assetExtension = assetURL.substring(assetURL.lastIndexOf('.') + 1);
         if (imageFileExtensions.indexOf(assetExtension.toLowerCase()) != -1) {
           isAudio = true;
         }
@@ -116,7 +116,7 @@ class StudentAssetService {
   uploadAsset(file) {
     if (this.ConfigService.isPreview()) {
       return this.$q((resolve, reject) => {
-        var reader = new FileReader();
+        const reader = new FileReader();
 
         // Closure to capture the file information.
         reader.onload = ( (theFile) => {
@@ -141,8 +141,8 @@ class StudentAssetService {
         reader.readAsDataURL(file);
       });
     } else {
-      var studentAssetsURL = this.ConfigService.getStudentAssetsURL();
-      var deferred = this.$q.defer();
+      const studentAssetsURL = this.ConfigService.getStudentAssetsURL();
+      const deferred = this.$q.defer();
 
       this.Upload.upload({
         url: studentAssetsURL,
@@ -157,7 +157,7 @@ class StudentAssetService {
         if (asset === "error") {
           alert(this.$translate('THERE_WAS_AN_ERROR_UPLOADING'));
         } else {
-          var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
+          const studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
           asset.url = studentUploadsBaseURL + asset.filePath;
           if (this.isImage(asset)) {
             asset.type = 'image';
@@ -182,8 +182,8 @@ class StudentAssetService {
   };
 
   uploadAssets(files) {
-    var studentAssetsURL = this.ConfigService.getStudentAssetsURL();
-    var promises = files.map((file) => {
+    const studentAssetsURL = this.ConfigService.getStudentAssetsURL();
+    const promises = files.map((file) => {
       return this.Upload.upload({
         url: studentAssetsURL,
         fields: {
@@ -194,7 +194,7 @@ class StudentAssetService {
         },
         file: file
       }).progress((evt) => {
-        var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+        const progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
         //console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
       }).success((data, status, headers, config) => {
         //console.log('file ' + config.file.name + 'uploaded. Response: ' + JSON.stringify(data));
@@ -210,11 +210,11 @@ class StudentAssetService {
         return resolve(studentAsset);
       });
     } else {
-      var config = {};
+      const config = {};
       config.method = 'POST';
       config.url = this.ConfigService.getStudentAssetsURL() + '/copy';
       config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-      var params = {};
+      const params = {};
       params.studentAssetId = studentAsset.id;
       params.workgroupId = this.ConfigService.getWorkgroupId();
       params.periodId = this.ConfigService.getPeriodId();
@@ -223,9 +223,9 @@ class StudentAssetService {
       config.data = $.param(params);
 
       return this.$http(config).then((result) => {
-        var copiedAsset = result.data;
+        const copiedAsset = result.data;
         if (copiedAsset != null) {
-          var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
+          const studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
           if (copiedAsset.isReferenced && copiedAsset.fileName !== '.DS_Store') {
             copiedAsset.url = studentUploadsBaseURL + copiedAsset.filePath;
             if (this.isImage(copiedAsset)) {
@@ -248,11 +248,11 @@ class StudentAssetService {
   };
 
   deleteAsset(studentAsset) {
-    var config = {};
+    const config = {};
     config.method = 'POST';
     config.url = this.ConfigService.getStudentAssetsURL() + '/remove';
     config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    var params = {};
+    const params = {};
     params.studentAssetId = studentAsset.id;
     params.workgroupId = this.ConfigService.getWorkgroupId();
     params.periodId = this.ConfigService.getPeriodId();
@@ -260,7 +260,7 @@ class StudentAssetService {
     config.data = $.param(params);
 
     return this.$http(config).then((result) => {
-      //var deletedAsset = result.data;
+      //const deletedAsset = result.data;
       // also remove from local copy of all assets
       this.allAssets = this.allAssets.splice(this.allAssets.indexOf(studentAsset), 1);
       this.$rootScope.$broadcast('studentAssetsUpdated');
