@@ -50,7 +50,6 @@ class TeacherWebSocketService {
   };
 
   sendMessage(messageJSON) {
-    // send the websocket message
     this.dataStream.send(messageJSON);
   }
 
@@ -82,7 +81,6 @@ class TeacherWebSocketService {
     // update the student status for the workgroup
     this.StudentStatusService.setStudentStatusForWorkgroupId(workgroupId, studentStatus);
 
-    // fire the student status received event
     this.$rootScope.$emit('studentStatusReceived', {studentStatus: studentStatus});
   };
 
@@ -90,7 +88,6 @@ class TeacherWebSocketService {
    * Handle the student disconnected message
    */
   handleStudentDisconnected(studentDisconnectedMessage) {
-    // fire the student disconnected event
     this.$rootScope.$broadcast('studentDisconnected', {data: studentDisconnectedMessage});
   }
 
@@ -100,11 +97,10 @@ class TeacherWebSocketService {
    * all the periods
    */
   pauseScreens(periodId) {
-    // create the websocket message
     const messageJSON = {};
     messageJSON.messageType = 'pauseScreen';
 
-    if(periodId == null || periodId == -1) {
+    if (periodId == null || periodId == -1) {
       //we are going to pause all the students in a run
       messageJSON.messageParticipants = 'teacherToStudentsInRun';
     } else if(periodId != null) {
@@ -112,8 +108,6 @@ class TeacherWebSocketService {
       messageJSON.periodId = periodId;
       messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
     }
-
-    // send the websocket message
     this.sendMessage(messageJSON);
   }
 
@@ -123,7 +117,6 @@ class TeacherWebSocketService {
    * all the periods
    */
   unPauseScreens(periodId) {
-    // create the websocket message
     const messageJSON = {};
     messageJSON.messageType = 'unPauseScreen';
 
@@ -135,8 +128,6 @@ class TeacherWebSocketService {
       messageJSON.periodId = periodId;
       messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
     }
-
-    // send the websocket message
     this.sendMessage(messageJSON);
   }
 }

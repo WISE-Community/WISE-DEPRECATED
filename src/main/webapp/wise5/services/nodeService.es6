@@ -1,5 +1,10 @@
 class NodeService {
-  constructor($filter, $http, $injector, $mdDialog, $q,
+  constructor(
+      $filter,
+      $http,
+      $injector,
+      $mdDialog,
+      $q,
       ConfigService,
       ProjectService,
       StudentDataService) {

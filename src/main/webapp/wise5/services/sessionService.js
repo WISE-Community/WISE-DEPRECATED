@@ -144,21 +144,15 @@ var SessionService = function () {
     }
 
     /**
-     * Clear the warning timers
+     * Clear all the warning timers
      */
 
   }, {
     key: 'clearWarningTimers',
     value: function clearWarningTimers() {
-      // clear all the active warning timeouts
       for (var w = 0; w < this.warningIds.length; w++) {
-        // get a warning id
         var warningId = this.warningIds[w];
-
-        // clear the timeout for the warning id
         clearTimeout(warningId);
-
-        // remove the warning id from the array
         this.warningIds.splice(w, 1);
 
         // move the counter back now that we have removed a warning id

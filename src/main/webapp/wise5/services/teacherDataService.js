@@ -637,14 +637,11 @@ var TeacherDataService = function () {
       var latestComponentState = null;
       var componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
       if (componentStates != null) {
-        // loop through all the component states from newest to oldest
         for (var c = componentStates.length - 1; c >= 0; c--) {
           var componentState = componentStates[c];
           if (componentState != null) {
             var componentStateNodeId = componentState.nodeId;
             var componentStateComponentId = componentState.componentId;
-
-            // compare the node id and component id
             if (nodeId == componentStateNodeId && componentId == componentStateComponentId) {
               latestComponentState = componentState;
               break;
@@ -660,13 +657,10 @@ var TeacherDataService = function () {
       var latestComponentState = null;
       var componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
       if (componentStates != null) {
-        // loop through all the component states from newest to oldest
         for (var c = componentStates.length - 1; c >= 0; c--) {
           var componentState = componentStates[c];
           if (componentState != null) {
             var componentStateNodeId = componentState.nodeId;
-
-            // compare the node id and component id
             if (nodeId == componentStateNodeId) {
               latestComponentState = componentState;
               break;
@@ -689,9 +683,7 @@ var TeacherDataService = function () {
     value: function getLatestComponentStatesByWorkgroupId(workgroupId) {
       var componentStates = [];
       if (workgroupId != null) {
-        // get all the component states for a workgroup
         var componentStatesForWorkgroup = this.getComponentStatesByWorkgroupId(workgroupId);
-
         if (componentStatesForWorkgroup != null) {
           // mapping of component to revision counter
           var componentRevisionCounter = {};
@@ -701,8 +693,6 @@ var TeacherDataService = function () {
            * states for already
            */
           var componentsFound = {};
-
-          // loop through the component states forwards
           var _iteratorNormalCompletion4 = true;
           var _didIteratorError4 = false;
           var _iteratorError4 = undefined;
@@ -724,7 +714,6 @@ var TeacherDataService = function () {
                   componentRevisionCounter[_key] = 1;
                 }
 
-                // get the revision counter
                 var revisionCounter = componentRevisionCounter[_key];
 
                 // set the revision counter into the component state
@@ -734,8 +723,6 @@ var TeacherDataService = function () {
                 componentRevisionCounter[_key] = revisionCounter + 1;
               }
             }
-
-            // loop through the component states backwards
           } catch (err) {
             _didIteratorError4 = true;
             _iteratorError4 = err;
@@ -752,7 +739,6 @@ var TeacherDataService = function () {
           }
 
           for (var csb = componentStatesForWorkgroup.length - 1; csb >= 0; csb--) {
-            // get a component state
             var componentState = componentStatesForWorkgroup[csb];
 
             if (componentState != null) {
@@ -865,24 +851,12 @@ var TeacherDataService = function () {
      * no event is found with the matching parameters
      */
     value: function getLatestEventByWorkgroupIdAndNodeIdAndType(workgroupId, nodeId, eventType) {
-      // get all the events for a workgroup id
       var eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
-
       if (eventsByWorkgroupId != null) {
-        /*
-         * loop through all the events for the workgroup from newest to
-         * oldest
-         */
         for (var e = eventsByWorkgroupId.length - 1; e >= 0; e--) {
-          // get an event
           var event = eventsByWorkgroupId[e];
-
           if (event != null) {
             if (event.nodeId == nodeId && event.event == eventType) {
-              /*
-               * the event parameters match the ones we are looking
-               * for
-               */
               return event;
             }
           }
@@ -955,7 +929,6 @@ var TeacherDataService = function () {
        */
       var runStatusPeriods = this.runStatus.periods;
 
-      // loop through all the periods in the config
       var _iteratorNormalCompletion5 = true;
       var _didIteratorError5 = false;
       var _iteratorError5 = undefined;
@@ -968,7 +941,6 @@ var TeacherDataService = function () {
             // check if the period object is in the run status periods
             var runStatusPeriod = null;
             if (runStatusPeriods != null) {
-              // loop through all the periods in the run status
               var _iteratorNormalCompletion6 = true;
               var _didIteratorError6 = false;
               var _iteratorError6 = undefined;
@@ -979,10 +951,6 @@ var TeacherDataService = function () {
 
                   if (tempRunStatusPeriod != null) {
                     if (period.periodId == tempRunStatusPeriod.periodId) {
-                      /*
-                       * We have found a period that is in the config and
-                       * the run status.
-                       */
                       runStatusPeriod = tempRunStatusPeriod;
                     }
                   }
@@ -1246,8 +1214,6 @@ var TeacherDataService = function () {
         var periods = runStatus.periods;
         var nPeriods = periods.length;
         var nPeriodsPaused = 0;
-
-        // loop through all the periods
         var _iteratorNormalCompletion7 = true;
         var _didIteratorError7 = false;
         var _iteratorError7 = undefined;
@@ -1300,7 +1266,6 @@ var TeacherDataService = function () {
         var nPeriods = periods.length;
         var nPeriodsPaused = 0;
 
-        // loop through all the periods
         var _iteratorNormalCompletion8 = true;
         var _didIteratorError8 = false;
         var _iteratorError8 = undefined;
@@ -1394,14 +1359,8 @@ var TeacherDataService = function () {
     key: 'createRunStatus',
     value: function createRunStatus() {
       var runStatus = {};
-
-      // get the run id
       runStatus.runId = this.ConfigService.getConfigParam('runId');
-
-      // get all the periods objects
       var periods = this.ConfigService.getPeriods();
-
-      //loop through all the periods
       var _iteratorNormalCompletion9 = true;
       var _didIteratorError9 = false;
       var _iteratorError9 = undefined;
@@ -1410,11 +1369,8 @@ var TeacherDataService = function () {
         for (var _iterator9 = periods[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
           var period = _step9.value;
 
-          //set this to default to not paused
           period.paused = false;
         }
-
-        // set the periods into the run status
       } catch (err) {
         _didIteratorError9 = true;
         _iteratorError9 = err;
@@ -1431,10 +1387,7 @@ var TeacherDataService = function () {
       }
 
       runStatus.periods = periods;
-
-      // set the run status into the view so we can access it later
       this.runStatus = runStatus;
-
       return this.runStatus;
     }
 
@@ -1447,26 +1400,19 @@ var TeacherDataService = function () {
   }, {
     key: 'updatePausedRunStatusValue',
     value: function updatePausedRunStatusValue(periodId, value) {
-      //create the local run status object if necessary
       if (this.runStatus == null) {
         this.createRunStatus();
       }
 
-      //get the local run status object
       var runStatus = this.runStatus;
       var periods = runStatus.periods;
-
       var allPeriodsPaused = true;
 
       if (periods) {
         var l = periods.length,
             x = l - 1;
-        //loop through all the periods
         for (; x > -1; x--) {
-          //get a period
           var tempPeriod = periods[x];
-
-          //get the period id
           var tempPeriodId = tempPeriod.periodId;
 
           //check if the period id matches the one we need to update or if all periods has been selected
@@ -1495,24 +1441,14 @@ var TeacherDataService = function () {
   }, {
     key: 'sendRunStatus',
     value: function sendRunStatus(customPauseMessage) {
-      //get the run status url we will use to make the request
       var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
-
       if (runStatusURL != null) {
-        //make the request to the server for the student statuses
-
-        //get the run id
         var runId = this.ConfigService.getConfigParam('runId');
-
         if (customPauseMessage != null) {
-          //set the pause message if one was provided
           this.runStatus.pauseMessage = customPauseMessage;
         }
 
-        //get the run status as a string
         var runStatus = angular.toJson(this.runStatus);
-
-        //create the params for the request
         var runStatusParams = {
           runId: runId,
           status: runStatus
@@ -1523,8 +1459,6 @@ var TeacherDataService = function () {
         httpParams.url = runStatusURL;
         httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
         httpParams.data = $.param(runStatusParams);
-
-        // make the request
         this.$http(httpParams);
       }
     }

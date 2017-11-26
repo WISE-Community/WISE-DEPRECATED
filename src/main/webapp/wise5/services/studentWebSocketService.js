@@ -20,7 +20,7 @@ var StudentWebSocketService = function () {
   }
 
   /**
-   * Initialize the websocket connection
+   * Initialize the websocket connection and listen for messages
    */
 
 
@@ -39,10 +39,7 @@ var StudentWebSocketService = function () {
         var webSocketURL = this.ConfigService.getWebSocketURL() + "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
 
         try {
-          // start the websocket connection
           this.dataStream = this.$websocket(webSocketURL);
-
-          // this is the function that handles messages we receive from web sockets
           this.dataStream.onMessage(function (message) {
             _this.handleMessage(message);
           });
@@ -105,19 +102,12 @@ var StudentWebSocketService = function () {
     key: "sendStudentToTeacherMessage",
     value: function sendStudentToTeacherMessage(messageType, data) {
       if (!this.ConfigService.isPreview()) {
-        // we are in a run
-
-        // get the current node id
         var currentNodeId = this.StudentDataService.getCurrentNodeId();
-
-        // make the websocket message
         var messageJSON = {};
         messageJSON.messageType = messageType;
         messageJSON.messageParticipants = 'studentToTeachers';
         messageJSON.currentNodeId = currentNodeId;
         messageJSON.data = data;
-
-        // send the websocket message
         this.dataStream.send(messageJSON);
       }
     }
@@ -133,17 +123,12 @@ var StudentWebSocketService = function () {
       if (!this.ConfigService.isPreview()) {
         // we are in a run
 
-        // get the current node id
         var currentNodeId = this.StudentDataService.getCurrentNodeId();
-
-        // make the websocket message
         var messageJSON = {};
         messageJSON.messageType = messageType;
         messageJSON.messageParticipants = 'studentToClassmatesInPeriod';
         messageJSON.currentNodeId = currentNodeId;
         messageJSON.data = data;
-
-        // send the websocket message
         this.dataStream.send(messageJSON);
       }
     }

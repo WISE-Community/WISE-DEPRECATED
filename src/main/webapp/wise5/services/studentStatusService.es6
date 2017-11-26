@@ -130,8 +130,6 @@ class StudentStatusService {
   getWorkgroupIdsOnNode(nodeId, periodId) {
     let workgroupIds = [];
     let studentStatuses = this.studentStatuses;
-
-    // loop through all the student statuses
     for (let studentStatus of studentStatuses) {
       if (studentStatus != null) {
         if (periodId == -1 || periodId == studentStatus.periodId) {
@@ -172,7 +170,6 @@ class StudentStatusService {
 
     let studentStatuses = this.studentStatuses;
 
-    // loop through all the student statuses
     for (let studentStatus of studentStatuses) {
       if (studentStatus) {
         if (periodId == -1 || periodId == studentStatus.periodId) {
@@ -207,7 +204,6 @@ class StudentStatusService {
                       // get all the descendants of the group
                       let descendants = this.ProjectService.getDescendentsOfGroup(group);
 
-                      // loop through all the descendants to check for completion
                       for (let descendantId of descendants) {
                         if (!this.ProjectService.isGroupNode(descendantId)) {
                           // node is not a group, so add to totals if visible and has student work
@@ -379,7 +375,6 @@ class StudentStatusService {
     let numStudentsWithScore = 0;
     const studentStatuses = this.studentStatuses;
 
-    // loop through all the student statuses
     for (let studentStatus of studentStatuses) {
       if (studentStatus != null) {
         if (periodId == -1 || periodId == studentStatus.periodId) {
@@ -422,7 +417,6 @@ class StudentStatusService {
     if (studentStatus) {
       let nodeStatuses = studentStatus.nodeStatuses;
       if (nodeStatuses) {
-        // loop through all the node statuses
         for (let p in nodeStatuses) {
           if (nodeStatuses.hasOwnProperty(p)) {
             let nodeStatus = nodeStatuses[p];

@@ -151,8 +151,6 @@ class AnnotationService {
     if (annotation != null) {
       let annotations = [];
       annotations.push(annotation);
-
-      // loop through all the annotations and inject a request token
       if (annotations != null && annotations.length > 0) {
         for (let annotation of annotations) {
           if (annotation != null) {
@@ -206,18 +204,10 @@ class AnnotationService {
   saveToServerSuccess(savedAnnotationDataResponse) {
     let localAnnotation = null;
     if (savedAnnotationDataResponse != null) {
-
-      // get the saved annotations
       let savedAnnotations = savedAnnotationDataResponse.annotations;
-
-      // get the local annotations
       let localAnnotations = this.annotations;
-
       if (savedAnnotations != null && localAnnotations != null) {
-
-        // loop through all the saved annotations
         for (let savedAnnotation of savedAnnotations) {
-          // loop through all the local annotations
           for (let y = localAnnotations.length - 1; y >= 0; y--) {
             localAnnotation = localAnnotations[y];
 
@@ -270,12 +260,9 @@ class AnnotationService {
       let updated = false;
       const annotations = this.annotations;
       if (annotations != null) {
-        // loop through all the local annotations
         for (let a = annotations.length - 1; a >= 0; a--) {
           const tempAnnotation = annotations[a];
-
           if (tempAnnotation != null) {
-
             if (annotation.id == tempAnnotation.id &&
               annotation.nodeId == tempAnnotation.nodeId &&
               annotation.componentId == tempAnnotation.componentId &&
@@ -320,10 +307,7 @@ class AnnotationService {
     const scoresFound = [];
 
     if (annotations != null && workgroupId != null) {
-      // loop through all the annotations from newest to oldest
       for (let a = annotations.length - 1; a >= 0; a--) {
-
-        // get an annotation
         const annotation = annotations[a];
 
         // check that the annotation is for the workgroup id we are looking for
@@ -388,15 +372,10 @@ class AnnotationService {
      * has received a score multiple times for a node from the teacher.
      */
     const scoresFound = [];
-
-    // get all the annotations
     const annotations = this.annotations;
 
     if (workgroupId != null && nodeId != null) {
-      // loop through all the annotations from newest to oldest
       for (let a = annotations.length - 1; a >= 0; a--) {
-
-        // get an annotation
         const annotation = annotations[a];
 
         // check that the annotation is for the workgroup id we are looking for
@@ -404,14 +383,12 @@ class AnnotationService {
 
           // check that the annotation is a score annotation
           if (annotation.type === 'score' || annotation.type === 'autoScore') {
-
             const tempNodeId = annotation.nodeId;
 
             // check that the annotation is for the node we are looking for
             if (nodeId == tempNodeId) {
               const componentId = annotation.componentId;
               const data = annotation.data;
-
               const scoreFound = tempNodeId + '-' + componentId;
 
               // check if we have obtained a score from this component already
@@ -420,9 +397,7 @@ class AnnotationService {
 
                 if (data != null) {
                   const value = data.value;
-
                   if (!isNaN(value)) {
-
                     if (score == null) {
                       score = value;
                     } else {
@@ -545,11 +520,8 @@ class AnnotationService {
    */
   getLatestComponentAnnotations(nodeId, componentId, workgroupId, scoreType,
       commentType) {
-    // get the latest score annotation for this component
     let latestScoreAnnotation = this.getLatestScoreAnnotation(nodeId,
         componentId, workgroupId, scoreType);
-
-    // get the latest comment annotation for this component
     let latestCommentAnnotation = this.getLatestCommentAnnotation(nodeId,
         componentId, workgroupId, commentType);
 
@@ -567,11 +539,7 @@ class AnnotationService {
   getLatestNotebookItemAnnotations(workgroupId, localNotebookItemId) {
     let latestScoreAnnotation = null;
     let latestCommentAnnotation = null;
-
-    // get the latest score annotation for this component
     latestScoreAnnotation = this.getLatestNotebookItemScoreAnnotation(workgroupId, localNotebookItemId);
-
-    // get the latest comment annotation for this component
     latestCommentAnnotation = this.getLatestNotebookItemCommentAnnotation(workgroupId, localNotebookItemId);
 
     return {
@@ -587,10 +555,8 @@ class AnnotationService {
    */
   getLatestNotebookItemScoreAnnotation(workgroupId, localNotebookItemId) {
     let annotations = this.getAnnotations();
-    // loop through all the annotations from newest to oldest
     for (let a = annotations.length - 1; a >= 0; a--) {
       let annotation = annotations[a];
-
       if (annotation != null && annotation.type === "score" &&
           annotation.notebookItemId != null &&
           annotation.localNotebookItemId === localNotebookItemId) {
@@ -607,11 +573,8 @@ class AnnotationService {
    */
   getLatestNotebookItemCommentAnnotation(workgroupId, localNotebookItemId) {
     let annotations = this.getAnnotations();
-
-    // loop through all the annotations from newest to oldest
     for (let a = annotations.length - 1; a >= 0; a--) {
       let annotation = annotations[a];
-
       if (annotation != null && annotation.type === "comment" &&
           annotation.notebookItemId != null &&
           annotation.localNotebookItemId === localNotebookItemId) {
@@ -643,10 +606,8 @@ class AnnotationService {
       scoreType = 'any';
     }
 
-    // loop through all the annotations from newest to oldest
     for (let a = annotations.length - 1; a >= 0; a--) {
       const tempAnnotation = annotations[a];
-
       if (tempAnnotation != null) {
         let acceptAnnotation = false;
         const tempNodeId = tempAnnotation.nodeId;
@@ -700,7 +661,6 @@ class AnnotationService {
       commentType = 'any';
     }
 
-    // loop through all the annotations from newest to oldest
     for (let a = annotations.length - 1; a >= 0; a--) {
       const tempAnnotation = annotations[a];
       if (tempAnnotation != null) {
@@ -941,10 +901,7 @@ class AnnotationService {
    * @return the latest annotation for the given student work and annotation type
    */
   getLatestAnnotationByStudentWorkIdAndType(studentWorkId, type) {
-    // loop through all the annotations backwards
     for (let a = this.annotations.length - 1; a >= 0; a--) {
-
-      // get an annotation
       const annotation = this.annotations[a];
 
       if (annotation != null) {

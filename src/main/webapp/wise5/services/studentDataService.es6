@@ -347,7 +347,6 @@ class StudentDataService {
         let result = false;
         const firstResult = true;
 
-        // loop through all the constraints that affect this node
         for (let constraintForNode of constraintsForNode) {
           if (constraintForNode != null) {
             // evaluate the constraint to see if the node can be visited
@@ -468,7 +467,6 @@ class StudentDataService {
 
         let transitionsToNodeId = [];
 
-        // loop through all the ndoes that have been visited
         for (let visitedNodeId of visitedNodes) {
           // get the transitions from the visited node to the node status node
           const transitions = this.ProjectService.getTransitionsByFromAndToNodeId(visitedNodeId, nodeId);
@@ -523,8 +521,6 @@ class StudentDataService {
         result = true;
       } else {
         let firstResult = true;
-
-        // loop through all the criteria that need to be satisifed
         for (let tempCriteria of removalCriteria) {
           if (tempCriteria != null) {
             // evaluate the criteria
@@ -619,23 +615,18 @@ class StudentDataService {
    */
   evaluateIsCorrectCriteria(criteria) {
     if (criteria != null && criteria.params != null) {
-      // get the criteria params
       const params = criteria.params;
       const nodeId = params.nodeId;
       const componentId = params.componentId;
 
       if (nodeId != null && componentId != null) {
-        // get the component states for the component
         const componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
-
         if (componentStates != null) {
-          // loop through all the component states
           for (let componentState of componentStates) {
             if (componentState != null) {
               const studentData = componentState.studentData;
               if (studentData != null) {
                 if (studentData.isCorrect) {
-                  // the student answered correctly
                   return true;
                 }
               }
@@ -684,23 +675,14 @@ class StudentDataService {
         const nodeStates = this.getNodeStatesByNodeId(nodeId);
 
         if (nodeStates != null) {
-          /*
-           * loop through all the node states from newest to oldest
-           * for the sake of efficiency
-           */
           for (let ns = nodeStates.length - 1; ns >= 0; ns--) {
             let planningStepCount = 0;
             const nodeState = nodeStates[ns];
             if (nodeState != null) {
-              // get the student data
               const studentData = nodeState.studentData;
-
               if (studentData != null) {
-                // get the nodes
                 const nodes = studentData.nodes;
-
                 if (nodes != null) {
-                  // loop through the nodes
                   for (let node of nodes) {
                     if (node != null) {
                       if (node.type === 'node' && node.planningNodeTemplateId != null) {
@@ -758,7 +740,6 @@ class StudentDataService {
       const branchPathTakenEvents = this.getBranchPathTakenEventsByNodeId(expectedFromNodeId);
 
       if (branchPathTakenEvents != null) {
-        // loop through all the branchPathTaken events
         for (let branchPathTakenEvent of branchPathTakenEvents) {
           if (branchPathTakenEvent != null) {
             const data = branchPathTakenEvent.data;
@@ -789,14 +770,11 @@ class StudentDataService {
       // get the node id we want to check if was visited
       const nodeId = criteria.params.nodeId;
 
-      // get all the events
       const events = this.studentData.events;
       if (events != null) {
-        // loop through all the events
         for (let event of events) {
           if (event != null) {
             if (nodeId == event.nodeId && 'nodeEntered' === event.event) {
-              // the student has entered the node before
               isVisited = true;
             }
           }
@@ -818,11 +796,8 @@ class StudentDataService {
       let isVisitedAfterNodeId = criteria.params.isVisitedAfterNodeId;
       let criteriaCreatedTimestamp = criteria.params.criteriaCreatedTimestamp;
 
-      // get all the events
       let events = this.studentData.events;
-
       if (events != null) {
-        // loop through all the events
         for (let event of events) {
           if (event != null) {
             if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
@@ -873,11 +848,8 @@ class StudentDataService {
       let isRevisedAfterComponentId = criteria.params.isRevisedAfterComponentId;
       let criteriaCreatedTimestamp = criteria.params.criteriaCreatedTimestamp;
 
-      // get all the events
       let events = this.studentData.events;
-
       if (events != null) {
-        // loop through all the events
         for (let event of events) {
           if (event != null) {
             if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
@@ -904,7 +876,6 @@ class StudentDataService {
     const branchPathTakenEvents = [];
     const events = this.studentData.events;
     if (events != null) {
-      // loop through all the events
       for (let event of events) {
         if (event != null) {
           if (fromNodeId === event.nodeId && 'branchPathTaken' === event.event) {
@@ -1005,11 +976,9 @@ class StudentDataService {
            * updated submitCounter for the number of submits.
            */
 
-          // loop through all the component states
           for (let componentState of componentStates) {
             if (componentState != null) {
               if (componentState.isSubmit) {
-                // this is a submit component state
                 manualSubmitCounter++;
               }
               const studentData = componentState.studentData;
@@ -1046,10 +1015,8 @@ class StudentDataService {
     this.visitedNodesHistory = [];
 
     if (events != null) {
-      // loop through all the events
       for (let event of events) {
         if (event != null) {
-          // look for the nodeEntered event
           if (event.event === 'nodeEntered') {
             // the student has visited this node id before
             this.updateStackHistory(event.nodeId);
@@ -1603,13 +1570,10 @@ class StudentDataService {
         // get the component states
         const componentStates = studentData.componentStates;
         if (componentStates) {
-          // loop through all the component states from newest to oldest
           for (let c = componentStates.length - 1; c >= 0; c--) {
             const componentState = componentStates[c];
             if (componentState) {
               const componentStateNodeId = componentState.nodeId;
-
-              // compare the node id and component id
               if (nodeId === componentStateNodeId) {
                 if (componentId) {
                   const componentStateComponentId = componentState.componentId;
@@ -1637,10 +1601,8 @@ class StudentDataService {
    */
   getStudentWorkByStudentWorkId(studentWorkId) {
     if (studentWorkId != null) {
-      // get the component states
       const componentStates = this.studentData.componentStates;
       if (componentStates != null) {
-        // loop through all the component states
         for (let componentState of componentStates) {
           if (componentState != null && componentState.id === studentWorkId) {
             return componentState;
@@ -1648,10 +1610,8 @@ class StudentDataService {
         }
       }
 
-      // get the node states
       const nodeStates = this.studentData.nodeStates;
       if (nodeStates != null) {
-        // loop through all the node states
         for (let nodeState of nodeStates) {
           if (nodeState != null && nodeState.id === studentWorkId) {
             return nodeState;
@@ -1679,16 +1639,11 @@ class StudentDataService {
     if (nodeId != null) {
       const studentData = this.studentData;
       if (studentData != null) {
-        // get the component states
         const componentStates = studentData.componentStates;
-
         if (componentStates != null) {
-          // loop through all the component states
           for (let componentState of componentStates) {
             if (componentState != null) {
               const componentStateNodeId = componentState.nodeId;
-
-              // compare the node id
               if (nodeId == componentStateNodeId) {
                 componentStatesByNodeId.push(componentState);
               }
@@ -1712,17 +1667,12 @@ class StudentDataService {
     if (nodeId != null && componentId != null) {
       const studentData = this.studentData;
       if (studentData != null) {
-        // get the component states
         const componentStates = studentData.componentStates;
-
         if (componentStates != null) {
-          // loop through all the component states
           for (let componentState of componentStates) {
             if (componentState != null) {
               const componentStateNodeId = componentState.nodeId;
               const componentStateComponentId = componentState.componentId;
-
-              // compare the node id and component id
               if (nodeId == componentStateNodeId &&
                   componentId == componentStateComponentId) {
                 componentStatesByNodeIdAndComponentId.push(componentState);
@@ -1757,15 +1707,11 @@ class StudentDataService {
     const eventsByNodeId = [];
     if (nodeId != null) {
       if (this.studentData != null && this.studentData.events != null) {
-        // get all the events
         const events = this.studentData.events;
-
-        // loop through all the events
         for (let event of events) {
           if (event != null) {
             const eventNodeId = event.nodeId;
             if (nodeId === eventNodeId) {
-              // this event is for the node id we are looking for
               eventsByNodeId.push(event);
             }
           }
@@ -1774,7 +1720,6 @@ class StudentDataService {
     }
     return eventsByNodeId;
   };
-
 
   /**
    * Get the events for a component id
@@ -1786,16 +1731,12 @@ class StudentDataService {
     const eventsByNodeId = [];
     if (nodeId != null) {
       if (this.studentData != null && this.studentData.events != null) {
-        // get all the events
         const events = this.studentData.events;
-
-        // loop through all the events
         for (let event of events) {
           if (event != null) {
             const eventNodeId = event.nodeId;
             const eventComponentId = event.componentId;
             if (nodeId === eventNodeId && componentId === eventComponentId) {
-              // this events is for the component id we are looking for
               eventsByNodeId.push(event);
             }
           }
@@ -1815,29 +1756,16 @@ class StudentDataService {
    * that exists in the project
    */
   getLatestNodeEnteredEventNodeIdWithExistingNode() {
-    // get all the events
     const events = this.studentData.events;
-
-    // loop through all the events newest to oldest
     for (let e = events.length - 1; e >= 0; e--) {
-      // get an event
       const event = events[e];
       if (event != null) {
-        // get the event name
         const eventName = event.event;
         if (eventName == 'nodeEntered') {
-          // we have found a nodeEntered event
-
-          // get the node id of the event
           const nodeId = event.nodeId;
-
-          // check if the node exists in the project
           const node = this.ProjectService.getNodeById(nodeId);
-
           if (node != null) {
-            // check if the node is active
             if (this.ProjectService.isActive(nodeId)) {
-              // the node exists in the project and is active
               return nodeId;
             }
           }
@@ -2305,7 +2233,6 @@ class StudentDataService {
 
     let nodeStates = this.getNodeStates();
     if (nodeStates != null) {
-      // loop through all the NodeStates
       for (let nodeState of nodeStates) {
         if (nodeState != null) {
           let nodeStateNodeId = nodeState.nodeId;
@@ -2377,22 +2304,15 @@ class StudentDataService {
     if (nodeId) {
       const studentData = this.studentData;
       if (studentData) {
-        // get the node
         const node = this.ProjectService.getNodeById(nodeId);
-
         if (node != null) {
-          // get the components in the node
           const components = node.components;
-
           if (components != null) {
-            // loop through all the components
             for (let component of components) {
               if (component != null) {
                 const componentId = component.id;
-
-                // get the latest component state for the component
-                let componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
+                let componentState =
+                    this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
                 if (componentState == null) {
                   /*
                    * there is no component state for the component so we will
@@ -2445,11 +2365,7 @@ class StudentDataService {
         // the criteria need to be satisfied in order
 
         let tempTimestamp = 0;
-
-        // get all of the criteria
         const criteria = completionCriteria.criteria;
-
-        // loop through all the criteria
         for (let completionCriterion of criteria) {
           let tempResult = true;
           if (completionCriterion != null) {
@@ -2516,12 +2432,8 @@ class StudentDataService {
    */
   getComponentStateSavedAfter(nodeId, componentId, timestamp) {
     let componentState = null;
-
-    // get all the component states
     const componentStates = this.studentData.componentStates;
-
     if (componentStates != null) {
-      // loop through all the component states
       for (let tempComponentState of componentStates) {
         if (tempComponentState != null &&
             tempComponentState.serverSaveTime > timestamp &&
@@ -2544,12 +2456,8 @@ class StudentDataService {
    */
   getComponentStateSubmittedAfter(nodeId, componentId, timestamp) {
     let componentState = null;
-
-    // get all the component states
     const componentStates = this.studentData.componentStates;
-
     if (componentStates != null) {
-      // loop through all the component states
       for (let tempComponentState of componentStates) {
         if (tempComponentState != null &&
             tempComponentState.serverSaveTime > timestamp &&
@@ -2570,12 +2478,8 @@ class StudentDataService {
    */
   getVisitEventAfter(nodeId, timestamp) {
     let event = null;
-
-    // get all the events
     const events = this.studentData.events;
-
     if (events != null) {
-      // loop through all the events
       for (let tempEvent of events) {
         if (tempEvent != null &&
             tempEvent.serverSaveTime > timestamp &&
@@ -2644,8 +2548,6 @@ class StudentDataService {
    */
   getMaxScore() {
     let maxScore = null;
-
-    // loop through all the node statuses
     for (let p in this.nodeStatuses) {
       if (this.nodeStatuses.hasOwnProperty(p)) {
         let nodeStatus = this.nodeStatuses[p];

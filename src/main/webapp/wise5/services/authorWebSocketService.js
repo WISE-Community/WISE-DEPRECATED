@@ -19,7 +19,7 @@ var AuthorWebSocketService = function () {
   }
 
   /**
-   * Initialize the websocket connection
+   * Initialize the websocket connection and listens for messages
    */
 
 
@@ -28,10 +28,8 @@ var AuthorWebSocketService = function () {
     value: function initialize() {
       var _this = this;
 
-      // start the websocket connection
       var webSocketURL = this.ConfigService.getWebSocketURL() + "?projectId=" + this.ConfigService.getProjectId();
       this.dataStream = this.$websocket(webSocketURL);
-      // this is the function that handles messages we receive from web sockets
       this.dataStream.onMessage(function (message) {
         _this.handleMessage(message);
       });
@@ -48,7 +46,6 @@ var AuthorWebSocketService = function () {
   }, {
     key: "sendMessage",
     value: function sendMessage(messageJSON) {
-      // send the websocket message
       this.dataStream.send(messageJSON);
     }
   }]);

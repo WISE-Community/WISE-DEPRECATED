@@ -301,14 +301,14 @@ class NotificationService {
 
   /**
    * Returns all notifications for the given parameters
-   * @param args object of optional parameters to filter on (e.g. nodeId, componentId, toWorkgroupId, fromWorkgroupId, periodId, type)
+   * @param args object of optional parameters to filter on
+   * (e.g. nodeId, componentId, toWorkgroupId, fromWorkgroupId, periodId, type)
    * @returns array of notificaitons
    */
   getNotifications(args) {
     let notifications = this.notifications;
 
     if (args) {
-      // loop through all the given parameters and find notifications that match
       for (let p in args) {
         if (args.hasOwnProperty(p) && args[p] !== null) {
           notifications = notifications.filter(

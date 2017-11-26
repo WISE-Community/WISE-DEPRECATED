@@ -176,8 +176,6 @@ var StudentStatusService = function () {
     value: function getWorkgroupIdsOnNode(nodeId, periodId) {
       var workgroupIds = [];
       var studentStatuses = this.studentStatuses;
-
-      // loop through all the student statuses
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;
@@ -243,7 +241,6 @@ var StudentStatusService = function () {
 
       var studentStatuses = this.studentStatuses;
 
-      // loop through all the student statuses
       var _iteratorNormalCompletion3 = true;
       var _didIteratorError3 = false;
       var _iteratorError3 = undefined;
@@ -285,7 +282,6 @@ var StudentStatusService = function () {
                           // get all the descendants of the group
                           var descendants = this.ProjectService.getDescendentsOfGroup(group);
 
-                          // loop through all the descendants to check for completion
                           var _iteratorNormalCompletion4 = true;
                           var _didIteratorError4 = false;
                           var _iteratorError4 = undefined;
@@ -510,7 +506,6 @@ var StudentStatusService = function () {
       var numStudentsWithScore = 0;
       var studentStatuses = this.studentStatuses;
 
-      // loop through all the student statuses
       var _iteratorNormalCompletion6 = true;
       var _didIteratorError6 = false;
       var _iteratorError6 = undefined;
@@ -577,7 +572,6 @@ var StudentStatusService = function () {
       if (studentStatus) {
         var nodeStatuses = studentStatus.nodeStatuses;
         if (nodeStatuses) {
-          // loop through all the node statuses
           for (var p in nodeStatuses) {
             if (nodeStatuses.hasOwnProperty(p)) {
               var nodeStatus = nodeStatuses[p];

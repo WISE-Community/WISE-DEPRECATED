@@ -196,7 +196,6 @@ var AnnotationService = function () {
       annotation.type = annotationType;
       annotation.data = data;
       annotation.clientSaveTime = clientSaveTime;
-
       return annotation;
     }
   }, {
@@ -212,8 +211,6 @@ var AnnotationService = function () {
       if (annotation != null) {
         var annotations = [];
         annotations.push(annotation);
-
-        // loop through all the annotations and inject a request token
         if (annotations != null && annotations.length > 0) {
           var _iteratorNormalCompletion3 = true;
           var _didIteratorError3 = false;
@@ -289,16 +286,9 @@ var AnnotationService = function () {
     value: function saveToServerSuccess(savedAnnotationDataResponse) {
       var localAnnotation = null;
       if (savedAnnotationDataResponse != null) {
-
-        // get the saved annotations
         var savedAnnotations = savedAnnotationDataResponse.annotations;
-
-        // get the local annotations
         var localAnnotations = this.annotations;
-
         if (savedAnnotations != null && localAnnotations != null) {
-
-          // loop through all the saved annotations
           var _iteratorNormalCompletion4 = true;
           var _didIteratorError4 = false;
           var _iteratorError4 = undefined;
@@ -307,7 +297,6 @@ var AnnotationService = function () {
             for (var _iterator4 = savedAnnotations[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
               var savedAnnotation = _step4.value;
 
-              // loop through all the local annotations
               for (var y = localAnnotations.length - 1; y >= 0; y--) {
                 localAnnotation = localAnnotations[y];
 
@@ -375,12 +364,9 @@ var AnnotationService = function () {
         var updated = false;
         var annotations = this.annotations;
         if (annotations != null) {
-          // loop through all the local annotations
           for (var a = annotations.length - 1; a >= 0; a--) {
             var tempAnnotation = annotations[a];
-
             if (tempAnnotation != null) {
-
               if (annotation.id == tempAnnotation.id && annotation.nodeId == tempAnnotation.nodeId && annotation.componentId == tempAnnotation.componentId && annotation.fromWorkgroupId == tempAnnotation.fromWorkgroupId && annotation.toWorkgroupId == tempAnnotation.toWorkgroupId && annotation.type == tempAnnotation.type && annotation.studentWorkId == tempAnnotation.studentWorkId && annotation.runId == tempAnnotation.runId && annotation.periodId == tempAnnotation.periodId) {
 
                 // the annotation matches so we will update it
@@ -423,10 +409,7 @@ var AnnotationService = function () {
       var scoresFound = [];
 
       if (annotations != null && workgroupId != null) {
-        // loop through all the annotations from newest to oldest
         for (var a = annotations.length - 1; a >= 0; a--) {
-
-          // get an annotation
           var annotation = annotations[a];
 
           // check that the annotation is for the workgroup id we are looking for
@@ -494,15 +477,10 @@ var AnnotationService = function () {
        * has received a score multiple times for a node from the teacher.
        */
       var scoresFound = [];
-
-      // get all the annotations
       var annotations = this.annotations;
 
       if (workgroupId != null && nodeId != null) {
-        // loop through all the annotations from newest to oldest
         for (var a = annotations.length - 1; a >= 0; a--) {
-
-          // get an annotation
           var annotation = annotations[a];
 
           // check that the annotation is for the workgroup id we are looking for
@@ -510,14 +488,12 @@ var AnnotationService = function () {
 
             // check that the annotation is a score annotation
             if (annotation.type === 'score' || annotation.type === 'autoScore') {
-
               var tempNodeId = annotation.nodeId;
 
               // check that the annotation is for the node we are looking for
               if (nodeId == tempNodeId) {
                 var componentId = annotation.componentId;
                 var data = annotation.data;
-
                 var scoreFound = tempNodeId + '-' + componentId;
 
                 // check if we have obtained a score from this component already
@@ -526,9 +502,7 @@ var AnnotationService = function () {
 
                   if (data != null) {
                     var value = data.value;
-
                     if (!isNaN(value)) {
-
                       if (score == null) {
                         score = value;
                       } else {
@@ -649,14 +623,8 @@ var AnnotationService = function () {
   }, {
     key: 'getLatestComponentAnnotations',
     value: function getLatestComponentAnnotations(nodeId, componentId, workgroupId, scoreType, commentType) {
-      var latestScoreAnnotation = null;
-      var latestCommentAnnotation = null;
-
-      // get the latest score annotation for this component
-      latestScoreAnnotation = this.getLatestScoreAnnotation(nodeId, componentId, workgroupId, scoreType);
-
-      // get the latest comment annotation for this component
-      latestCommentAnnotation = this.getLatestCommentAnnotation(nodeId, componentId, workgroupId, commentType);
+      var latestScoreAnnotation = this.getLatestScoreAnnotation(nodeId, componentId, workgroupId, scoreType);
+      var latestCommentAnnotation = this.getLatestCommentAnnotation(nodeId, componentId, workgroupId, commentType);
 
       return {
         'score': latestScoreAnnotation,
@@ -675,11 +643,7 @@ var AnnotationService = function () {
     value: function getLatestNotebookItemAnnotations(workgroupId, localNotebookItemId) {
       var latestScoreAnnotation = null;
       var latestCommentAnnotation = null;
-
-      // get the latest score annotation for this component
       latestScoreAnnotation = this.getLatestNotebookItemScoreAnnotation(workgroupId, localNotebookItemId);
-
-      // get the latest comment annotation for this component
       latestCommentAnnotation = this.getLatestNotebookItemCommentAnnotation(workgroupId, localNotebookItemId);
 
       return {
@@ -698,10 +662,8 @@ var AnnotationService = function () {
      */
     value: function getLatestNotebookItemScoreAnnotation(workgroupId, localNotebookItemId) {
       var annotations = this.getAnnotations();
-      // loop through all the annotations from newest to oldest
       for (var a = annotations.length - 1; a >= 0; a--) {
         var annotation = annotations[a];
-
         if (annotation != null && annotation.type === "score" && annotation.notebookItemId != null && annotation.localNotebookItemId === localNotebookItemId) {
           return annotation;
         }
@@ -719,11 +681,8 @@ var AnnotationService = function () {
     key: 'getLatestNotebookItemCommentAnnotation',
     value: function getLatestNotebookItemCommentAnnotation(workgroupId, localNotebookItemId) {
       var annotations = this.getAnnotations();
-
-      // loop through all the annotations from newest to oldest
       for (var a = annotations.length - 1; a >= 0; a--) {
         var annotation = annotations[a];
-
         if (annotation != null && annotation.type === "comment" && annotation.notebookItemId != null && annotation.localNotebookItemId === localNotebookItemId) {
           return annotation;
         }
@@ -755,10 +714,8 @@ var AnnotationService = function () {
         scoreType = 'any';
       }
 
-      // loop through all the annotations from newest to oldest
       for (var a = annotations.length - 1; a >= 0; a--) {
         var tempAnnotation = annotations[a];
-
         if (tempAnnotation != null) {
           var acceptAnnotation = false;
           var tempNodeId = tempAnnotation.nodeId;
@@ -768,7 +725,6 @@ var AnnotationService = function () {
 
           // make sure the annotation values match what we are looking for
           if (nodeId == tempNodeId && componentId == tempComponentId && workgroupId == tempToWorkgroupId) {
-
             if (scoreType === 'any' && (tempAnnotationType === 'autoScore' || tempAnnotationType === 'score')) {
               // we are looking for an auto score or teacher score and have found one
               acceptAnnotation = true;
@@ -815,10 +771,8 @@ var AnnotationService = function () {
         commentType = 'any';
       }
 
-      // loop through all the annotations from newest to oldest
       for (var a = annotations.length - 1; a >= 0; a--) {
         var tempAnnotation = annotations[a];
-
         if (tempAnnotation != null) {
           var acceptAnnotation = false;
           var tempNodeId = tempAnnotation.nodeId;
@@ -828,7 +782,6 @@ var AnnotationService = function () {
 
           // make sure the annotation values match what we are looking for
           if (nodeId == tempNodeId && componentId == tempComponentId && workgroupId == tempToWorkgroupId) {
-
             if (commentType === 'any' && (tempAnnotationType === 'autoComment' || tempAnnotationType === 'comment')) {
               // we are looking for an auto comment or teacher comment and have found one
               acceptAnnotation = true;
@@ -1224,10 +1177,7 @@ var AnnotationService = function () {
   }, {
     key: 'getLatestAnnotationByStudentWorkIdAndType',
     value: function getLatestAnnotationByStudentWorkIdAndType(studentWorkId, type) {
-      // loop through all the annotations backwards
       for (var a = this.annotations.length - 1; a >= 0; a--) {
-
-        // get an annotation
         var annotation = this.annotations[a];
 
         if (annotation != null) {

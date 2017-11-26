@@ -1,5 +1,11 @@
 class ProjectAssetService {
-  constructor($q, $http, $rootScope, ConfigService, ProjectService, Upload,
+  constructor(
+      $q,
+      $http,
+      $rootScope,
+      ConfigService,
+      ProjectService,
+      Upload,
       UtilService) {
     this.$q = $q;
     this.$http = $http;
@@ -9,12 +15,12 @@ class ProjectAssetService {
     this.Upload = Upload;
     this.UtilService = UtilService;
     this.projectAssets = {};
-    this.projectAssetTotalSizeMax = this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
+    this.projectAssetTotalSizeMax =
+        this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
     this.projectAssetUsagePercentage = 0;
   }
 
   deleteAssetItem(assetItem) {
-
     let params = {
       assetFileName: assetItem.fileName
     };
@@ -37,7 +43,8 @@ class ProjectAssetService {
     let assetFileName = assetItem.fileName;
 
     // ask the browser to download this asset by setting the location
-    window.location = this.ConfigService.getConfigParam('projectAssetURL') + "/download?assetFileName=" + assetFileName;
+    window.location = this.ConfigService.getConfigParam('projectAssetURL') +
+        "/download?assetFileName=" + assetFileName;
   }
 
   getFullAssetItemURL(assetItem) {
@@ -92,7 +99,6 @@ class ProjectAssetService {
    * files use
    */
   calculateAssetUsage() {
-
     /*
      * a list of all the project assets. each element in the list is an
      * object that contains the file name and file size
@@ -106,7 +112,6 @@ class ProjectAssetService {
     const allTextFiles = [];
 
     if (assets != null && assets.files != null) {
-
       /*
        * loop through all the asset files to find the text files that
        * are actually used in the project
@@ -174,11 +179,8 @@ class ProjectAssetService {
          */
         foundNewUsedTextFile = false;
 
-        // loop through all the text files
         for (let textFile of textFiles) {
-
           if (textFile != null) {
-
             /*
              * get the url to the text file
              * e.g. /wise/curriculum/26/assets/whale.html
@@ -242,12 +244,9 @@ class ProjectAssetService {
       let totalUnusedFilesSize = 0;
 
       if (assets != null && assets.files != null) {
-
-        // loop through all the assets
         for (let asset of assets.files) {
           if (asset != null) {
             const fileName = asset.fileName;
-
             if (allUsedTextContent.indexOf(fileName) != -1) {
               // the file is used in the project
               asset.used = true;
@@ -277,10 +276,7 @@ class ProjectAssetService {
 
     // get the project assets path e.g. /wise/curriculum/3/assets
     const projectAssetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
-
-    // loop through all the text file names
     for (let textFileName of textFileNames) {
-
       // create a promise that will return the contents of the text file
       const promise = this.$http.get(projectAssetsDirectoryPath + '/' + textFileName);
 

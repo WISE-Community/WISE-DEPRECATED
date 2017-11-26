@@ -145,13 +145,9 @@ class UtilService {
    * certain elements.
    */
   hideIFrames() {
-    // get all the iframes
     const iframes = angular.element('iframe');
-
-    // loop through all the iframes
     for (let iframe of iframes) {
       if (iframe != null) {
-        // hide the iframe
         iframe.style.display = 'none';
       }
     }
@@ -164,13 +160,9 @@ class UtilService {
    * certain elements.
    */
   showIFrames() {
-    // get all the iframes
     const iframes = angular.element('iframe');
-
-    // loop through all the iframes
     for (let iframe of iframes) {
       if (iframe != null) {
-        // show the iframe
         iframe.style.display = '';
       }
     }
@@ -198,7 +190,7 @@ class UtilService {
     }
     return result;
   }
-  
+
   /**
    * Check if the asset is a video
    * @param fileName the file name of the asset
@@ -253,7 +245,7 @@ class UtilService {
     let wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
 
     // loop until we have replaced all the matches
-    while(wiseLinkRegExMatchResult != null) {
+    while (wiseLinkRegExMatchResult != null) {
       // get the whole <a> element
       let anchorHTML = wiseLinkRegExMatchResult[0];
 

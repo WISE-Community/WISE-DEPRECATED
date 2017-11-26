@@ -169,10 +169,7 @@ var UtilService = function () {
   }, {
     key: 'hideIFrames',
     value: function hideIFrames() {
-      // get all the iframes
       var iframes = angular.element('iframe');
-
-      // loop through all the iframes
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -182,7 +179,6 @@ var UtilService = function () {
           var iframe = _step.value;
 
           if (iframe != null) {
-            // hide the iframe
             iframe.style.display = 'none';
           }
         }
@@ -212,10 +208,7 @@ var UtilService = function () {
   }, {
     key: 'showIFrames',
     value: function showIFrames() {
-      // get all the iframes
       var iframes = angular.element('iframe');
-
-      // loop through all the iframes
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;
@@ -225,7 +218,6 @@ var UtilService = function () {
           var iframe = _step2.value;
 
           if (iframe != null) {
-            // show the iframe
             iframe.style.display = '';
           }
         }

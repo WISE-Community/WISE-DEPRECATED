@@ -118,7 +118,6 @@ var ProjectAssetService = function () {
   }, {
     key: 'calculateAssetUsage',
     value: function calculateAssetUsage() {
-
       /*
        * a list of all the project assets. each element in the list is an
        * object that contains the file name and file size
@@ -132,7 +131,6 @@ var ProjectAssetService = function () {
       var allTextFiles = [];
 
       if (assets != null && assets.files != null) {
-
         /*
          * loop through all the asset files to find the text files that
          * are actually used in the project
@@ -219,7 +217,6 @@ var ProjectAssetService = function () {
            */
           foundNewUsedTextFile = false;
 
-          // loop through all the text files
           var _iteratorNormalCompletion2 = true;
           var _didIteratorError2 = false;
           var _iteratorError2 = undefined;
@@ -228,9 +225,7 @@ var ProjectAssetService = function () {
             for (var _iterator2 = textFiles[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
               var textFile = _step2.value;
 
-
               if (textFile != null) {
-
                 /*
                  * get the url to the text file
                  * e.g. /wise/curriculum/26/assets/whale.html
@@ -308,8 +303,6 @@ var ProjectAssetService = function () {
         var totalUnusedFilesSize = 0;
 
         if (assets != null && assets.files != null) {
-
-          // loop through all the assets
           var _iteratorNormalCompletion3 = true;
           var _didIteratorError3 = false;
           var _iteratorError3 = undefined;
@@ -320,7 +313,6 @@ var ProjectAssetService = function () {
 
               if (_asset != null) {
                 var _fileName2 = _asset.fileName;
-
                 if (allUsedTextContent.indexOf(_fileName2) != -1) {
                   // the file is used in the project
                   _asset.used = true;
@@ -367,8 +359,6 @@ var ProjectAssetService = function () {
 
       // get the project assets path e.g. /wise/curriculum/3/assets
       var projectAssetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
-
-      // loop through all the text file names
       var _iteratorNormalCompletion4 = true;
       var _didIteratorError4 = false;
       var _iteratorError4 = undefined;
@@ -376,7 +366,6 @@ var ProjectAssetService = function () {
       try {
         for (var _iterator4 = textFileNames[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
           var textFileName = _step4.value;
-
 
           // create a promise that will return the contents of the text file
           var promise = this.$http.get(projectAssetsDirectoryPath + '/' + textFileName);

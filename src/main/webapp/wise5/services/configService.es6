@@ -20,16 +20,9 @@ class ConfigService {
     return this.$http.get(configURL).then((result) => {
       const configJSON = result.data;
       if (configJSON.retrievalTimestamp != null) {
-        // get the client timestamp
         const clientTimestamp = new Date().getTime();
-
-        // get the server timestamp
         const serverTimestamp = configJSON.retrievalTimestamp;
-
-        // get the difference between the client and server time
         const timestampDiff = clientTimestamp - serverTimestamp;
-
-        // add the timestamp diff to the config object
         configJSON.timestampDiff = timestampDiff;
       }
 
@@ -58,17 +51,9 @@ class ConfigService {
 
       if (absURL != null && absURL.match(showProjectPathRegEx)) {
         // the url contains showProjectPath=true
-
-        // get the host e.g. http://wise.berkeley.edu
         const host = location.origin;
-
-        // get the project URL e.g. /wise/curriculum/123/project.json
         const projectURL = configJSON.projectURL;
-
-        // get the full project path
         const projectPath = host + projectURL;
-
-        // output the full project path to the console
         console.log(projectPath);
       }
 
@@ -234,10 +219,8 @@ class ConfigService {
    */
   getMyUserName() {
     let userName = null;
-    // get my user info
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
-      // get the user name
       userName = myUserInfo.userName;
     }
     return userName;
@@ -271,13 +254,8 @@ class ConfigService {
    */
   getClassmateUserInfosSortedByWorkgroupId() {
     const sortedClassmateUserInfos = [];
-    // get all the classmate user info objects
     const classmateUserInfos = this.getClassmateUserInfos();
     if (classmateUserInfos != null) {
-      /*
-       * loop through all the classmate user info objects and add it to
-       * new array of classmate user infos
-       */
       for (let classmateUserInfo of classmateUserInfos) {
         sortedClassmateUserInfos.push(classmateUserInfo);
       }
@@ -385,7 +363,6 @@ class ConfigService {
   };
 
   setPermissions() {
-    // get the role of the teacher for the run e.g. 'owner', 'write', 'read'
     let role = this.getTeacherRole(this.getWorkgroupId());
     if (role === 'owner') {
       // the teacher is the owner of the run and has full access
@@ -466,8 +443,6 @@ class ConfigService {
    */
   getStudentFirstNamesByWorkgroupId(workgroupId) {
     const studentNames = [];
-
-    // get the user names for the workgroup e.g. "Spongebob Squarepants (SpongebobS0101):Patrick Star (PatrickS0101)"
     const userNames = this.getUserNameByWorkgroupId(workgroupId);
 
     if (userNames != null) {
@@ -475,16 +450,9 @@ class ConfigService {
       const userNamesSplit = userNames.split(':');
 
       if (userNamesSplit != null) {
-        // loop through each user name
         for (let userName of userNamesSplit) {
-
-          // get the index of the first empty space
           const indexOfSpace = userName.indexOf(' ');
-
-          // get the student first name e.g. "Spongebob"
           const studentFirstName = userName.substring(0, indexOfSpace);
-
-          // add the student name to the array
           studentNames.push(studentFirstName);
         }
       }
@@ -593,10 +561,7 @@ class ConfigService {
    * @param clientTimestamp the client timestamp
    */
   convertToServerTimestamp(clientTimestamp) {
-    // get the difference between the client time and server time
     const timestampDiff = this.getConfigParam('timestampDiff');
-
-    // convert the client timestamp to a server timestamp
     const serverTimestamp = clientTimestamp - timestampDiff;
     return serverTimestamp;
   }
@@ -607,10 +572,7 @@ class ConfigService {
    * @param serverTimestamp the client timestamp
    */
   convertToClientTimestamp(serverTimestamp) {
-    // get the difference between the client time and server time
     const timestampDiff = this.getConfigParam('timestampDiff');
-
-    // convert the client timestamp to a server timestamp
     const clientTimestamp = serverTimestamp + timestampDiff;
     return clientTimestamp;
   }
@@ -707,14 +669,10 @@ class ConfigService {
     if (content != null) {
       let contentString = content;
       if (typeof content === 'object') {
-        // get the content as a string
         contentString = JSON.stringify(content);
       }
       if (contentString != null) {
-        // get the workgroup id
         const workgroupId = this.getWorkgroupId();
-
-        // get all the first names
         const firstNames = this.getStudentFirstNamesByWorkgroupId(workgroupId);
 
         if (firstNames.length >= 1) {
@@ -772,7 +730,6 @@ class ConfigService {
    * Get the library projects
    */
   getLibraryProjects() {
-    // get the URL to get the list of library projects
     const getLibraryProjectsURL = this.getConfigParam('getLibraryProjectsURL');
 
     if (getLibraryProjectsURL != null) {
@@ -800,13 +757,10 @@ class ConfigService {
    */
   getProjectAssetsDirectoryPath(includeHost) {
     let projectAssetsDirectoryPath = null;
-
-    // get the project base URL e.g. /wise/curriculum/3/
     const projectBaseURL = this.getConfigParam('projectBaseURL');
 
     if (projectBaseURL != null) {
       if (includeHost) {
-        // get the host e.g. http://wise.berkeley.edu
         const host = window.location.origin;
 
         /*
@@ -873,10 +827,8 @@ class ConfigService {
   getWISEIds(workgroupId) {
     let wiseIds = [];
     if (workgroupId != null) {
-      // get the user info object for the workgroup id
       const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
       if (userInfo != null) {
-        // get the WISE IDs
         wiseIds = userInfo.userIds;
       }
     }
@@ -887,19 +839,14 @@ class ConfigService {
    * Get all the authorable projects
    */
   getAuthorableProjects() {
-    // get the projects this teacher owns
-    const projects = this.getConfigParam('projects');
-
-    // get the projects that were shared with the teacher
+    const ownedProjects = this.getConfigParam('projects');
     const sharedProjects = this.getConfigParam('sharedProjects');
     let authorableProjects = [];
-    if (projects != null) {
-      // add the owned projects
-      authorableProjects = authorableProjects.concat(projects);
+    if (ownedProjects != null) {
+      authorableProjects = authorableProjects.concat(ownedProjects);
     }
 
     if (sharedProjects != null) {
-      // add the shared projects
       authorableProjects = authorableProjects.concat(sharedProjects);
     }
 

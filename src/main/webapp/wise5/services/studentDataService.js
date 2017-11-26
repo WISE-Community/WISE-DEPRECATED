@@ -540,7 +540,6 @@ var StudentDataService = function () {
           var result = false;
           var firstResult = true;
 
-          // loop through all the constraints that affect this node
           var _iteratorNormalCompletion9 = true;
           var _didIteratorError9 = false;
           var _iteratorError9 = undefined;
@@ -730,7 +729,6 @@ var StudentDataService = function () {
 
           var transitionsToNodeId = [];
 
-          // loop through all the ndoes that have been visited
           var _iteratorNormalCompletion12 = true;
           var _didIteratorError12 = false;
           var _iteratorError12 = undefined;
@@ -809,8 +807,6 @@ var StudentDataService = function () {
           result = true;
         } else {
           var firstResult = true;
-
-          // loop through all the criteria that need to be satisifed
           var _iteratorNormalCompletion13 = true;
           var _didIteratorError13 = false;
           var _iteratorError13 = undefined;
@@ -926,17 +922,13 @@ var StudentDataService = function () {
     key: 'evaluateIsCorrectCriteria',
     value: function evaluateIsCorrectCriteria(criteria) {
       if (criteria != null && criteria.params != null) {
-        // get the criteria params
         var params = criteria.params;
         var nodeId = params.nodeId;
         var componentId = params.componentId;
 
         if (nodeId != null && componentId != null) {
-          // get the component states for the component
           var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
-
           if (componentStates != null) {
-            // loop through all the component states
             var _iteratorNormalCompletion14 = true;
             var _didIteratorError14 = false;
             var _iteratorError14 = undefined;
@@ -949,7 +941,6 @@ var StudentDataService = function () {
                   var studentData = componentState.studentData;
                   if (studentData != null) {
                     if (studentData.isCorrect) {
-                      // the student answered correctly
                       return true;
                     }
                   }
@@ -1015,23 +1006,14 @@ var StudentDataService = function () {
           var nodeStates = this.getNodeStatesByNodeId(nodeId);
 
           if (nodeStates != null) {
-            /*
-             * loop through all the node states from newest to oldest
-             * for the sake of efficiency
-             */
             for (var ns = nodeStates.length - 1; ns >= 0; ns--) {
               var planningStepCount = 0;
               var nodeState = nodeStates[ns];
               if (nodeState != null) {
-                // get the student data
                 var studentData = nodeState.studentData;
-
                 if (studentData != null) {
-                  // get the nodes
                   var nodes = studentData.nodes;
-
                   if (nodes != null) {
-                    // loop through the nodes
                     var _iteratorNormalCompletion15 = true;
                     var _didIteratorError15 = false;
                     var _iteratorError15 = undefined;
@@ -1113,7 +1095,6 @@ var StudentDataService = function () {
         var branchPathTakenEvents = this.getBranchPathTakenEventsByNodeId(expectedFromNodeId);
 
         if (branchPathTakenEvents != null) {
-          // loop through all the branchPathTaken events
           var _iteratorNormalCompletion16 = true;
           var _didIteratorError16 = false;
           var _iteratorError16 = undefined;
@@ -1168,10 +1149,8 @@ var StudentDataService = function () {
         // get the node id we want to check if was visited
         var nodeId = criteria.params.nodeId;
 
-        // get all the events
         var events = this.studentData.events;
         if (events != null) {
-          // loop through all the events
           var _iteratorNormalCompletion17 = true;
           var _didIteratorError17 = false;
           var _iteratorError17 = undefined;
@@ -1182,7 +1161,6 @@ var StudentDataService = function () {
 
               if (event != null) {
                 if (nodeId == event.nodeId && 'nodeEntered' === event.event) {
-                  // the student has entered the node before
                   isVisited = true;
                 }
               }
@@ -1221,11 +1199,8 @@ var StudentDataService = function () {
         var isVisitedAfterNodeId = criteria.params.isVisitedAfterNodeId;
         var criteriaCreatedTimestamp = criteria.params.criteriaCreatedTimestamp;
 
-        // get all the events
         var events = this.studentData.events;
-
         if (events != null) {
-          // loop through all the events
           var _iteratorNormalCompletion18 = true;
           var _didIteratorError18 = false;
           var _iteratorError18 = undefined;
@@ -1303,11 +1278,8 @@ var StudentDataService = function () {
         var isRevisedAfterComponentId = criteria.params.isRevisedAfterComponentId;
         var criteriaCreatedTimestamp = criteria.params.criteriaCreatedTimestamp;
 
-        // get all the events
         var events = this.studentData.events;
-
         if (events != null) {
-          // loop through all the events
           var _iteratorNormalCompletion19 = true;
           var _didIteratorError19 = false;
           var _iteratorError19 = undefined;
@@ -1358,7 +1330,6 @@ var StudentDataService = function () {
       var branchPathTakenEvents = [];
       var events = this.studentData.events;
       if (events != null) {
-        // loop through all the events
         var _iteratorNormalCompletion20 = true;
         var _didIteratorError20 = false;
         var _iteratorError20 = undefined;
@@ -1489,7 +1460,6 @@ var StudentDataService = function () {
              * updated submitCounter for the number of submits.
              */
 
-            // loop through all the component states
             var _iteratorNormalCompletion21 = true;
             var _didIteratorError21 = false;
             var _iteratorError21 = undefined;
@@ -1500,7 +1470,6 @@ var StudentDataService = function () {
 
                 if (componentState != null) {
                   if (componentState.isSubmit) {
-                    // this is a submit component state
                     manualSubmitCounter++;
                   }
                   var studentData = componentState.studentData;
@@ -1554,7 +1523,6 @@ var StudentDataService = function () {
       this.visitedNodesHistory = [];
 
       if (events != null) {
-        // loop through all the events
         var _iteratorNormalCompletion22 = true;
         var _didIteratorError22 = false;
         var _iteratorError22 = undefined;
@@ -1564,7 +1532,6 @@ var StudentDataService = function () {
             var event = _step22.value;
 
             if (event != null) {
-              // look for the nodeEntered event
               if (event.event === 'nodeEntered') {
                 // the student has visited this node id before
                 this.updateStackHistory(event.nodeId);
@@ -2334,13 +2301,10 @@ var StudentDataService = function () {
           // get the component states
           var componentStates = studentData.componentStates;
           if (componentStates) {
-            // loop through all the component states from newest to oldest
             for (var c = componentStates.length - 1; c >= 0; c--) {
               var componentState = componentStates[c];
               if (componentState) {
                 var componentStateNodeId = componentState.nodeId;
-
-                // compare the node id and component id
                 if (nodeId === componentStateNodeId) {
                   if (componentId) {
                     var componentStateComponentId = componentState.componentId;
@@ -2371,10 +2335,8 @@ var StudentDataService = function () {
      */
     value: function getStudentWorkByStudentWorkId(studentWorkId) {
       if (studentWorkId != null) {
-        // get the component states
         var componentStates = this.studentData.componentStates;
         if (componentStates != null) {
-          // loop through all the component states
           var _iteratorNormalCompletion31 = true;
           var _didIteratorError31 = false;
           var _iteratorError31 = undefined;
@@ -2403,10 +2365,8 @@ var StudentDataService = function () {
           }
         }
 
-        // get the node states
         var nodeStates = this.studentData.nodeStates;
         if (nodeStates != null) {
-          // loop through all the node states
           var _iteratorNormalCompletion32 = true;
           var _didIteratorError32 = false;
           var _iteratorError32 = undefined;
@@ -2461,11 +2421,8 @@ var StudentDataService = function () {
       if (nodeId != null) {
         var studentData = this.studentData;
         if (studentData != null) {
-          // get the component states
           var componentStates = studentData.componentStates;
-
           if (componentStates != null) {
-            // loop through all the component states
             var _iteratorNormalCompletion33 = true;
             var _didIteratorError33 = false;
             var _iteratorError33 = undefined;
@@ -2476,8 +2433,6 @@ var StudentDataService = function () {
 
                 if (componentState != null) {
                   var componentStateNodeId = componentState.nodeId;
-
-                  // compare the node id
                   if (nodeId == componentStateNodeId) {
                     componentStatesByNodeId.push(componentState);
                   }
@@ -2518,11 +2473,8 @@ var StudentDataService = function () {
       if (nodeId != null && componentId != null) {
         var studentData = this.studentData;
         if (studentData != null) {
-          // get the component states
           var componentStates = studentData.componentStates;
-
           if (componentStates != null) {
-            // loop through all the component states
             var _iteratorNormalCompletion34 = true;
             var _didIteratorError34 = false;
             var _iteratorError34 = undefined;
@@ -2534,8 +2486,6 @@ var StudentDataService = function () {
                 if (componentState != null) {
                   var componentStateNodeId = componentState.nodeId;
                   var componentStateComponentId = componentState.componentId;
-
-                  // compare the node id and component id
                   if (nodeId == componentStateNodeId && componentId == componentStateComponentId) {
                     componentStatesByNodeIdAndComponentId.push(componentState);
                   }
@@ -2589,10 +2539,7 @@ var StudentDataService = function () {
       var eventsByNodeId = [];
       if (nodeId != null) {
         if (this.studentData != null && this.studentData.events != null) {
-          // get all the events
           var events = this.studentData.events;
-
-          // loop through all the events
           var _iteratorNormalCompletion35 = true;
           var _didIteratorError35 = false;
           var _iteratorError35 = undefined;
@@ -2604,7 +2551,6 @@ var StudentDataService = function () {
               if (event != null) {
                 var eventNodeId = event.nodeId;
                 if (nodeId === eventNodeId) {
-                  // this event is for the node id we are looking for
                   eventsByNodeId.push(event);
                 }
               }
@@ -2641,10 +2587,7 @@ var StudentDataService = function () {
       var eventsByNodeId = [];
       if (nodeId != null) {
         if (this.studentData != null && this.studentData.events != null) {
-          // get all the events
           var events = this.studentData.events;
-
-          // loop through all the events
           var _iteratorNormalCompletion36 = true;
           var _didIteratorError36 = false;
           var _iteratorError36 = undefined;
@@ -2657,7 +2600,6 @@ var StudentDataService = function () {
                 var eventNodeId = event.nodeId;
                 var eventComponentId = event.componentId;
                 if (nodeId === eventNodeId && componentId === eventComponentId) {
-                  // this events is for the component id we are looking for
                   eventsByNodeId.push(event);
                 }
               }
@@ -2694,29 +2636,16 @@ var StudentDataService = function () {
      * that exists in the project
      */
     value: function getLatestNodeEnteredEventNodeIdWithExistingNode() {
-      // get all the events
       var events = this.studentData.events;
-
-      // loop through all the events newest to oldest
       for (var e = events.length - 1; e >= 0; e--) {
-        // get an event
         var event = events[e];
         if (event != null) {
-          // get the event name
           var eventName = event.event;
           if (eventName == 'nodeEntered') {
-            // we have found a nodeEntered event
-
-            // get the node id of the event
             var nodeId = event.nodeId;
-
-            // check if the node exists in the project
             var node = this.ProjectService.getNodeById(nodeId);
-
             if (node != null) {
-              // check if the node is active
               if (this.ProjectService.isActive(nodeId)) {
-                // the node exists in the project and is active
                 return nodeId;
               }
             }
@@ -3284,7 +3213,6 @@ var StudentDataService = function () {
 
       var nodeStates = this.getNodeStates();
       if (nodeStates != null) {
-        // loop through all the NodeStates
         var _iteratorNormalCompletion40 = true;
         var _didIteratorError40 = false;
         var _iteratorError40 = undefined;
@@ -3404,15 +3332,10 @@ var StudentDataService = function () {
       if (nodeId) {
         var studentData = this.studentData;
         if (studentData) {
-          // get the node
           var node = this.ProjectService.getNodeById(nodeId);
-
           if (node != null) {
-            // get the components in the node
             var components = node.components;
-
             if (components != null) {
-              // loop through all the components
               var _iteratorNormalCompletion42 = true;
               var _didIteratorError42 = false;
               var _iteratorError42 = undefined;
@@ -3423,10 +3346,7 @@ var StudentDataService = function () {
 
                   if (component != null) {
                     var componentId = component.id;
-
-                    // get the latest component state for the component
                     var componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
                     if (componentState == null) {
                       /*
                        * there is no component state for the component so we will
@@ -3499,11 +3419,7 @@ var StudentDataService = function () {
           // the criteria need to be satisfied in order
 
           var tempTimestamp = 0;
-
-          // get all of the criteria
           var criteria = completionCriteria.criteria;
-
-          // loop through all the criteria
           var _iteratorNormalCompletion43 = true;
           var _didIteratorError43 = false;
           var _iteratorError43 = undefined;
@@ -3594,12 +3510,8 @@ var StudentDataService = function () {
     key: 'getComponentStateSavedAfter',
     value: function getComponentStateSavedAfter(nodeId, componentId, timestamp) {
       var componentState = null;
-
-      // get all the component states
       var componentStates = this.studentData.componentStates;
-
       if (componentStates != null) {
-        // loop through all the component states
         var _iteratorNormalCompletion44 = true;
         var _didIteratorError44 = false;
         var _iteratorError44 = undefined;
@@ -3643,12 +3555,8 @@ var StudentDataService = function () {
     key: 'getComponentStateSubmittedAfter',
     value: function getComponentStateSubmittedAfter(nodeId, componentId, timestamp) {
       var componentState = null;
-
-      // get all the component states
       var componentStates = this.studentData.componentStates;
-
       if (componentStates != null) {
-        // loop through all the component states
         var _iteratorNormalCompletion45 = true;
         var _didIteratorError45 = false;
         var _iteratorError45 = undefined;
@@ -3689,12 +3597,8 @@ var StudentDataService = function () {
     key: 'getVisitEventAfter',
     value: function getVisitEventAfter(nodeId, timestamp) {
       var event = null;
-
-      // get all the events
       var events = this.studentData.events;
-
       if (events != null) {
-        // loop through all the events
         var _iteratorNormalCompletion46 = true;
         var _didIteratorError46 = false;
         var _iteratorError46 = undefined;
@@ -3787,8 +3691,6 @@ var StudentDataService = function () {
     key: 'getMaxScore',
     value: function getMaxScore() {
       var maxScore = null;
-
-      // loop through all the node statuses
       for (var p in this.nodeStatuses) {
         if (this.nodeStatuses.hasOwnProperty(p)) {
           var nodeStatus = this.nodeStatuses[p];

@@ -1,7 +1,6 @@
 'use strict';
 
 class TeacherDataService {
-
   constructor(
       $http,
       $filter,
@@ -534,16 +533,13 @@ class TeacherDataService {
     let latestComponentState = null;
     const componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
     if (componentStates != null) {
-      // loop through all the component states from newest to oldest
       for (let c = componentStates.length - 1; c >= 0; c--) {
         const componentState = componentStates[c];
         if (componentState != null) {
           const componentStateNodeId = componentState.nodeId;
           const componentStateComponentId = componentState.componentId;
-
-          // compare the node id and component id
           if (nodeId == componentStateNodeId &&
-            componentId == componentStateComponentId) {
+              componentId == componentStateComponentId) {
             latestComponentState = componentState;
             break;
           }
@@ -555,15 +551,13 @@ class TeacherDataService {
 
   getLatestComponentStateByWorkgroupIdNodeId(workgroupId, nodeId) {
     let latestComponentState = null;
-    const componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
+    const componentStates =
+        this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
     if (componentStates != null) {
-      // loop through all the component states from newest to oldest
       for (let c = componentStates.length - 1; c >= 0; c--) {
         const componentState = componentStates[c];
         if (componentState != null) {
           const componentStateNodeId = componentState.nodeId;
-
-          // compare the node id and component id
           if (nodeId == componentStateNodeId) {
             latestComponentState = componentState;
             break;
@@ -583,9 +577,8 @@ class TeacherDataService {
   getLatestComponentStatesByWorkgroupId(workgroupId) {
     const componentStates = [];
     if (workgroupId != null) {
-      // get all the component states for a workgroup
-      const componentStatesForWorkgroup = this.getComponentStatesByWorkgroupId(workgroupId);
-
+      const componentStatesForWorkgroup =
+          this.getComponentStatesByWorkgroupId(workgroupId);
       if (componentStatesForWorkgroup != null) {
         // mapping of component to revision counter
         const componentRevisionCounter = {};
@@ -595,8 +588,6 @@ class TeacherDataService {
          * states for already
          */
         const componentsFound = {};
-
-        // loop through the component states forwards
         for (let componentState of componentStatesForWorkgroup) {
           if (componentState != null) {
             // get the node id and component id of the component state
@@ -611,7 +602,6 @@ class TeacherDataService {
               componentRevisionCounter[key] = 1;
             }
 
-            // get the revision counter
             const revisionCounter = componentRevisionCounter[key];
 
             // set the revision counter into the component state
@@ -622,9 +612,7 @@ class TeacherDataService {
           }
         }
 
-        // loop through the component states backwards
         for (let csb = componentStatesForWorkgroup.length - 1; csb >= 0; csb--) {
-          // get a component state
           const componentState = componentStatesForWorkgroup[csb];
 
           if (componentState != null) {
@@ -727,24 +715,12 @@ class TeacherDataService {
    * no event is found with the matching parameters
    */
   getLatestEventByWorkgroupIdAndNodeIdAndType(workgroupId, nodeId, eventType) {
-    // get all the events for a workgroup id
     const eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
-
     if (eventsByWorkgroupId != null) {
-      /*
-       * loop through all the events for the workgroup from newest to
-       * oldest
-       */
       for (let e = eventsByWorkgroupId.length - 1; e >= 0; e--) {
-        // get an event
         const event = eventsByWorkgroupId[e];
-
         if (event != null) {
           if (event.nodeId == nodeId && event.event == eventType) {
-            /*
-             * the event parameters match the ones we are looking
-             * for
-             */
             return event;
           }
         }
@@ -811,20 +787,14 @@ class TeacherDataService {
      */
     let runStatusPeriods = this.runStatus.periods;
 
-    // loop through all the periods in the config
     for (let period of periods) {
       if (period != null) {
         // check if the period object is in the run status periods
         let runStatusPeriod = null;
         if (runStatusPeriods != null) {
-          // loop through all the periods in the run status
           for (let tempRunStatusPeriod of runStatusPeriods) {
             if (tempRunStatusPeriod != null) {
               if (period.periodId == tempRunStatusPeriod.periodId) {
-                /*
-                 * We have found a period that is in the config and
-                 * the run status.
-                 */
                 runStatusPeriod = tempRunStatusPeriod;
               }
             }
@@ -1025,8 +995,6 @@ class TeacherDataService {
       let periods = runStatus.periods;
       let nPeriods = periods.length;
       let nPeriodsPaused = 0;
-
-      // loop through all the periods
       for (let period of periods) {
         if (period != null) {
           if (period.paused) {
@@ -1055,7 +1023,6 @@ class TeacherDataService {
       let nPeriods = periods.length;
       let nPeriodsPaused = 0;
 
-      // loop through all the periods
       for (let period of periods) {
         if (period != null) {
           isPaused = period.paused;
@@ -1118,25 +1085,13 @@ class TeacherDataService {
    */
   createRunStatus() {
     const runStatus = {};
-
-    // get the run id
     runStatus.runId = this.ConfigService.getConfigParam('runId');
-
-    // get all the periods objects
     const periods = this.ConfigService.getPeriods();
-
-    //loop through all the periods
     for (let period of periods) {
-      //set this to default to not paused
       period.paused = false;
     }
-
-    // set the periods into the run status
     runStatus.periods = periods;
-
-    // set the run status into the view so we can access it later
     this.runStatus = runStatus;
-
     return this.runStatus;
   }
 
@@ -1146,25 +1101,18 @@ class TeacherDataService {
    * @param value whether the period is paused or not
    */
   updatePausedRunStatusValue(periodId, value) {
-    //create the local run status object if necessary
     if (this.runStatus == null) {
       this.createRunStatus();
     }
 
-    //get the local run status object
     let runStatus = this.runStatus;
     let periods = runStatus.periods;
-
     let allPeriodsPaused = true;
 
     if (periods) {
       let l = periods.length, x = l - 1;
-      //loop through all the periods
       for (; x > -1; x--) {
-        //get a period
         let tempPeriod = periods[x];
-
-        //get the period id
         let tempPeriodId = tempPeriod.periodId;
 
         //check if the period id matches the one we need to update or if all periods has been selected
@@ -1190,24 +1138,14 @@ class TeacherDataService {
    * @param customPauseMessage the custom pause message text to send to the students
    */
   sendRunStatus(customPauseMessage) {
-    //get the run status url we will use to make the request
     const runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
-
     if (runStatusURL != null) {
-      //make the request to the server for the student statuses
-
-      //get the run id
       const runId = this.ConfigService.getConfigParam('runId');
-
       if (customPauseMessage != null) {
-        //set the pause message if one was provided
         this.runStatus.pauseMessage = customPauseMessage;
       }
 
-      //get the run status as a string
       const runStatus = angular.toJson(this.runStatus);
-
-      //create the params for the request
       const runStatusParams = {
         runId:runId,
         status:runStatus
@@ -1218,8 +1156,6 @@ class TeacherDataService {
       httpParams.url = runStatusURL;
       httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
       httpParams.data = $.param(runStatusParams);
-
-      // make the request
       this.$http(httpParams);
     }
   };

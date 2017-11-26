@@ -60,7 +60,6 @@ var TeacherWebSocketService = function () {
   }, {
     key: "sendMessage",
     value: function sendMessage(messageJSON) {
-      // send the websocket message
       this.dataStream.send(messageJSON);
     }
   }, {
@@ -100,7 +99,6 @@ var TeacherWebSocketService = function () {
       // update the student status for the workgroup
       this.StudentStatusService.setStudentStatusForWorkgroupId(workgroupId, studentStatus);
 
-      // fire the student status received event
       this.$rootScope.$emit('studentStatusReceived', { studentStatus: studentStatus });
     }
   }, {
@@ -111,7 +109,6 @@ var TeacherWebSocketService = function () {
      * Handle the student disconnected message
      */
     value: function handleStudentDisconnected(studentDisconnectedMessage) {
-      // fire the student disconnected event
       this.$rootScope.$broadcast('studentDisconnected', { data: studentDisconnectedMessage });
     }
 
@@ -124,7 +121,6 @@ var TeacherWebSocketService = function () {
   }, {
     key: "pauseScreens",
     value: function pauseScreens(periodId) {
-      // create the websocket message
       var messageJSON = {};
       messageJSON.messageType = 'pauseScreen';
 
@@ -136,8 +132,6 @@ var TeacherWebSocketService = function () {
         messageJSON.periodId = periodId;
         messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
       }
-
-      // send the websocket message
       this.sendMessage(messageJSON);
     }
 
@@ -150,7 +144,6 @@ var TeacherWebSocketService = function () {
   }, {
     key: "unPauseScreens",
     value: function unPauseScreens(periodId) {
-      // create the websocket message
       var messageJSON = {};
       messageJSON.messageType = 'unPauseScreen';
 
@@ -162,8 +155,6 @@ var TeacherWebSocketService = function () {
         messageJSON.periodId = periodId;
         messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
       }
-
-      // send the websocket message
       this.sendMessage(messageJSON);
     }
   }]);

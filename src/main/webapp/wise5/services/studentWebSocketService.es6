@@ -14,7 +14,7 @@ class StudentWebSocketService {
   }
 
   /**
-   * Initialize the websocket connection
+   * Initialize the websocket connection and listen for messages
    */
   initialize() {
     if (this.ConfigService.isPreview()) {
@@ -28,10 +28,7 @@ class StudentWebSocketService {
           "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
 
       try {
-        // start the websocket connection
         this.dataStream = this.$websocket(webSocketURL);
-
-        // this is the function that handles messages we receive from web sockets
         this.dataStream.onMessage((message) => {
           this.handleMessage(message);
         });
@@ -85,19 +82,12 @@ class StudentWebSocketService {
    */
   sendStudentToTeacherMessage(messageType, data) {
     if (!this.ConfigService.isPreview()) {
-      // we are in a run
-
-      // get the current node id
       const currentNodeId = this.StudentDataService.getCurrentNodeId();
-
-      // make the websocket message
       const messageJSON = {};
       messageJSON.messageType = messageType;
       messageJSON.messageParticipants = 'studentToTeachers';
       messageJSON.currentNodeId = currentNodeId;
       messageJSON.data = data;
-
-      // send the websocket message
       this.dataStream.send(messageJSON);
     }
   };
@@ -110,17 +100,12 @@ class StudentWebSocketService {
     if (!this.ConfigService.isPreview()) {
       // we are in a run
 
-      // get the current node id
       const currentNodeId = this.StudentDataService.getCurrentNodeId();
-
-      // make the websocket message
       const messageJSON = {};
       messageJSON.messageType = messageType;
       messageJSON.messageParticipants = 'studentToClassmatesInPeriod';
       messageJSON.currentNodeId = currentNodeId;
       messageJSON.data = data;
-
-      // send the websocket message
       this.dataStream.send(messageJSON);
     }
   };

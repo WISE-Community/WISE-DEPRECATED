@@ -38,7 +38,6 @@ class AchievementService {
    */
   retrieveAchievements(workgroupId = null, type = null) {
     if (this.ConfigService.isPreview()) {
-      // get the signed in workgroup id
       const workgroupId = this.ConfigService.getWorkgroupId();
 
       // initialize the achievements for the workgroup to an empty array
@@ -56,7 +55,6 @@ class AchievementService {
       if (workgroupId != null) {
         config.params.workgroupId = workgroupId;
       } else if (this.ConfigService.getMode() !== 'classroomMonitor') {
-        // get the achievements for the logged-in workgroup
         config.params.workgroupId = this.ConfigService.getWorkgroupId();
         config.params.periodId = this.ConfigService.getPeriodId();
       }
@@ -68,18 +66,14 @@ class AchievementService {
         let achievements = response.data;
 
         if (achievements != null) {
-
-          // loop through all the student achievements
           for (let achievement of achievements) {
 
             // add the student achievement to our local data structure
             this.addOrUpdateAchievement(achievement);
 
             if (this.ConfigService.getMode() == 'studentRun') {
-
-              // get the project achievement object
-              const projectAchievement = this.ProjectService.getAchievementByAchievementId(achievement.achievementId);
-
+              const projectAchievement = this.ProjectService
+                  .getAchievementByAchievementId(achievement.achievementId);
               if (projectAchievement != null) {
 
                 /*
@@ -115,12 +109,9 @@ class AchievementService {
              * achievements each time the student loads the VLE.
              */
 
-            // get all the project achievements
-            const projectAchievements = this.ProjectService.getAchievementItems();
-
+            const projectAchievements =
+                this.ProjectService.getAchievementItems();
             if (projectAchievements != null) {
-
-              // loop through all the project achievements
               for (let projectAchievement of projectAchievements) {
                 if (projectAchievement != null) {
 
@@ -157,7 +148,6 @@ class AchievementService {
    */
   addOrUpdateAchievement(achievement) {
     if (achievement != null) {
-      // get the workgroup id
       let achievementWorkgroupId = achievement.workgroupId;
 
       /*
@@ -168,15 +158,10 @@ class AchievementService {
         this.achievementsByWorkgroupId[achievementWorkgroupId] = new Array();
       }
 
-      // get the achievements the workgroup has completed
       let achievements = this.achievementsByWorkgroupId[achievementWorkgroupId];
-
       let found = false;
 
-      // loop through all the achievements this workgroup has completed
       for (let w = 0; w < achievements.length; w++) {
-
-        // get an achievement the workgroup has compeleted
         let a = achievements[w];
 
         if (a.achievementId != null && a.achievementId === achievement.achievementId &&
@@ -273,14 +258,10 @@ class AchievementService {
     const projectAchievements = this.ProjectService.getAchievements();
     if (projectAchievements != null) {
       if (projectAchievements.isEnabled) {
-        // get all the achievements in the project
         const projectAchievementItems = projectAchievements.items;
         if (projectAchievementItems != null) {
-          // loop through all the achievements in the project
           for (let projectAchievement of projectAchievementItems) {
-
             if (projectAchievement != null) {
-
               let deregisterFunction = null;
 
               // create a listener for the achievement
@@ -311,14 +292,9 @@ class AchievementService {
    */
   isAchievementCompleted(achievementId) {
     if (achievementId != null) {
-      // get the student workgroup id
       const workgroupId = this.ConfigService.getWorkgroupId();
-
-      // get all the achievements the student has completed
       const achievements = this.getAchievementsByWorkgroupId(workgroupId);
-
       if (achievements != null) {
-        // loop through all the achievements the student has completed
         for (let achievement of achievements) {
           if (achievement != null) {
             if (achievement.achievementId == achievementId) {
@@ -351,9 +327,7 @@ class AchievementService {
         console.log("Congratulations you completed: " + achievement.name);
       }
 
-      // get the project achievement object
       const projectAchievement = this.ProjectService.getAchievementByAchievementId(achievement.id);
-
       if (projectAchievement != null && projectAchievement.deregisterFunction != null) {
         /*
          * deregister the achievement listener now that the student has
@@ -369,21 +343,13 @@ class AchievementService {
        */
       const achievement = this.UtilService.makeCopyOfJSONObject(achievement);
 
-      // get the student workgroup id
       const workgroupId = this.ConfigService.getWorkgroupId();
 
-      // get the parameters for creating an achievement
       const type = achievement.type;
       const id = achievement.id;
       const data = achievement;
-
-      // create the student achievement
       const newAchievement = this.createNewAchievement(type, id, data, workgroupId);
-
-      // get all the achievements the student has completed
       const achievements = this.getAchievementsByWorkgroupId(workgroupId);
-
-      // add the achievement to the array of student completed achievements
       achievements.push(newAchievement);
 
       // save the new achievement to the server
@@ -417,7 +383,6 @@ class AchievementService {
       const achievement = thisAchievement;
       if (achievement != null) {
         this.debugOutput('createNodeCompletedListener checking ' + achievement.id + ' completed ' + args.nodeId);
-        // get the id of the achievement we need to check
         const id = achievement.id;
 
         if (!this.isAchievementCompleted(id)) {
@@ -464,15 +429,9 @@ class AchievementService {
   checkNodeCompletedAchievement(achievement) {
     let completed = false;
     if (achievement != null) {
-      // get the achievement params
       const params = achievement.params;
       if (params != null) {
-        // get the node ids that need to be completed
         const nodeIds = params.nodeIds;
-        /*
-         * loop through all the node ids that need to be completed
-         * for the achievement
-         */
         for (let n = 0; n < nodeIds.length; n++) {
           const nodeId = nodeIds[n];
           if (n == 0) {
@@ -510,7 +469,6 @@ class AchievementService {
       if (achievement != null) {
         this.debugOutput('createAggregateAchievementListener checking ' + achievement.id + ' completed ' + args.achievementId);
 
-        // get the id of the achievement we need to check
         const id = achievement.id;
 
         // the achievement that was just completed
@@ -543,15 +501,9 @@ class AchievementService {
   checkAggregateAchievement(achievement) {
     let completed = false;
     if (achievement != null) {
-      // get the achievement params
       const params = achievement.params;
       if (params != null) {
-        // get the achievement ids that need to be completed
         const achievementIds = params.achievementIds;
-        /*
-         * loop through all the achievement ids that need to be
-         * completed
-         */
         for (let a = 0; a < achievementIds.length; a++) {
           const tempAchievementId = achievementIds[a];
           if (a == 0) {
@@ -578,7 +530,6 @@ class AchievementService {
   getAchievementsByWorkgroupId(workgroupId = null) {
     let achievements = [];
     if (workgroupId == null) {
-      // get the signed in workgroup id
       workgroupId = this.ConfigService.getWorkgroupId();
     }
     if (this.achievementsByWorkgroupId[workgroupId] == null) {
@@ -604,16 +555,12 @@ class AchievementService {
   getAchievementsByAchievementId(achievementId) {
     const achievementsByAchievementId = [];
     if (achievementId != null) {
-      // get all the workgroup ids
       const workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
       if (workgroupIds != null) {
-        // loop through all the workgroup ids
         for (let workgroupId of workgroupIds) {
           if (workgroupId != null) {
-            // get all the achievements this workgroup has completed
             const achievementsForWorkgroup = this.achievementsByWorkgroupId[workgroupId];
             if (achievementsForWorkgroup != null) {
-              // loop through all the achievements this workgroup has completed
               for (let a = achievementsForWorkgroup.length - 1; a >= 0; a--) {
                 const achievement = achievementsForWorkgroup[a];
                 if (achievement != null && achievement.data != null) {
@@ -642,13 +589,10 @@ class AchievementService {
    */
   getAchievementIdToAchievementsMappings(achievementId) {
     const achievementIdToAchievements = {};
-    // get all the project achievements
     const projectAchievements = this.ProjectService.getAchievementItems();
     if (projectAchievements != null) {
-      // loop through all the project achievements
       for (let projectAchievement of projectAchievements) {
         if (projectAchievement != null) {
-          // get an array of student achievements for the given achievement id
           const studentAchievements = this.getAchievementsByAchievementId(projectAchievement.id);
 
           // add the array to the mapping
@@ -672,7 +616,6 @@ class AchievementService {
       // check to make sure the id isn't already being used
       const achievements = this.ProjectService.getAchievementItems();
 
-      // loop through all the achievements
       for (let achievement of achievements) {
         if (achievement != null) {
           if (id == achievement.id) {
