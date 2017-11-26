@@ -194,9 +194,9 @@ var NotebookService = function () {
       /*
       let totalSizeSoFar = 0;
       for (let i = 0; i < this.getNotebookByWorkgroup().items.length; i++) {
-          let notebookItem = this.getNotebookByWorkgroup().items[i];
+          const notebookItem = this.getNotebookByWorkgroup().items[i];
           if (notebookItem.studentAsset != null) {
-              let notebookItemSize = notebookItem.studentAsset.fileSize;
+              const notebookItemSize = notebookItem.studentAsset.fileSize;
               totalSizeSoFar += notebookItemSize;
           }
       }

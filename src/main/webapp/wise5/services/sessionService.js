@@ -9,9 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var SessionService = function () {
-  function SessionService($http, $rootScope, ConfigService
-  //StudentDataService) {
-  ) {
+  function SessionService($http, $rootScope, ConfigService) {
     var _this = this;
 
     _classCallCheck(this, SessionService);
@@ -67,7 +65,6 @@ var SessionService = function () {
      * for, we will then log out.
      */
     this.$rootScope.$on('doneExiting', function () {
-
       // check if all components are done unloading so we can exit
       // no longer needed.
       //this.attemptExit();
@@ -82,7 +79,6 @@ var SessionService = function () {
      * event and then try to go home again.
      */
     this.$rootScope.$on('goHome', function () {
-
       // let other components know that we are exiting
       _this.$rootScope.$broadcast('exit');
 
@@ -99,7 +95,6 @@ var SessionService = function () {
      * event and then try to log out again.
      */
     this.$rootScope.$on('logOut', function () {
-
       /*
        * set the perform log out boolean to true so that we know to
        * log out the user later
@@ -149,22 +144,15 @@ var SessionService = function () {
     }
 
     /**
-     * Clear the warning timers
+     * Clear all the warning timers
      */
 
   }, {
     key: 'clearWarningTimers',
     value: function clearWarningTimers() {
-      // clear all the active warning timeouts
       for (var w = 0; w < this.warningIds.length; w++) {
-
-        // get a warning id
         var warningId = this.warningIds[w];
-
-        // clear the timeout for the warning id
         clearTimeout(warningId);
-
-        // remove the warning id from the array
         this.warningIds.splice(w, 1);
 
         // move the counter back now that we have removed a warning id
@@ -205,7 +193,6 @@ var SessionService = function () {
     value: function clearLogOutTimers() {
       // clear all the active log out timeouts
       for (var l = 0; l < this.logOutIds.length; l++) {
-
         // get a log out id
         var logOutId = this.logOutIds[l];
 
@@ -259,7 +246,6 @@ var SessionService = function () {
       // make a request to the log out url
       this.$http.get(renewSessionURL).then(function (result) {
         var renewSessionResult = result.data;
-
         if (renewSessionResult === 'true') {
           // the session is still active
           _this2.clearLogOutTimers();
@@ -311,7 +297,6 @@ var SessionService = function () {
      */
     value: function checkMouseEvent() {
       var eventOccurred = false;
-
       if (this.lastMouseEventTimestamp != null) {
         // there was a mouse event since the last time we checked
 
@@ -323,7 +308,6 @@ var SessionService = function () {
 
         eventOccurred = true;
       }
-
       return eventOccurred;
     }
   }, {
@@ -337,7 +321,6 @@ var SessionService = function () {
      */
     value: function convertMinutesToMilliseconds(minutes) {
       var milliseconds = null;
-
       if (minutes != null) {
         // get the number of seconds
         var seconds = minutes * 60;
@@ -345,7 +328,6 @@ var SessionService = function () {
         // get the number of milliseconds
         milliseconds = seconds * 1000;
       }
-
       return milliseconds;
     }
   }, {
@@ -424,7 +406,6 @@ var SessionService = function () {
             // send the user to the main home page
             homePageURL = mainHomePageURL;
           }
-
           window.location.href = homePageURL;
         }
       }

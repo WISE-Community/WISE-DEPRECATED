@@ -26,7 +26,6 @@ var StudentStatusService = function () {
 
       var studentStatusURL = this.ConfigService.getStudentStatusURL();
       var runId = this.ConfigService.getRunId();
-
       var requestConfig = {
         params: {
           runId: runId
@@ -35,9 +34,7 @@ var StudentStatusService = function () {
 
       return this.$http.get(studentStatusURL, requestConfig).then(function (result) {
         var studentStatuses = result.data;
-
         _this.studentStatuses = studentStatuses;
-
         return studentStatuses;
       });
     }
@@ -58,23 +55,18 @@ var StudentStatusService = function () {
      */
     value: function getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId) {
       var nodePositionAndTitle = null;
-
       var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
-
       if (studentStatus != null) {
         var currentNodeId = studentStatus.currentNodeId;
         nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(currentNodeId);
       }
-
       return nodePositionAndTitle;
     }
   }, {
     key: 'getStudentStatusForWorkgroupId',
     value: function getStudentStatusForWorkgroupId(workgroupId) {
-
       var studentStatus = null;
       var studentStatuses = this.getStudentStatuses();
-
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -85,7 +77,6 @@ var StudentStatusService = function () {
 
           if (tempStudentStatus != null) {
             var tempWorkgroupId = tempStudentStatus.workgroupId;
-
             if (workgroupId == tempWorkgroupId) {
               studentStatus = tempStudentStatus;
               break;
@@ -112,15 +103,11 @@ var StudentStatusService = function () {
   }, {
     key: 'setStudentStatusForWorkgroupId',
     value: function setStudentStatusForWorkgroupId(workgroupId, studentStatus) {
-
       var studentStatuses = this.getStudentStatuses();
-
       for (var x = 0; x < studentStatuses.length; x++) {
         var tempStudentStatus = studentStatuses[x];
-
         if (tempStudentStatus != null) {
           var tempWorkgroupId = tempStudentStatus.workgroupId;
-
           if (workgroupId === tempWorkgroupId) {
             studentStatuses.splice(x, 1, studentStatus);
             break;
@@ -174,7 +161,6 @@ var StudentStatusService = function () {
           }
         }
       }
-
       return completion;
     }
 
@@ -190,8 +176,6 @@ var StudentStatusService = function () {
     value: function getWorkgroupIdsOnNode(nodeId, periodId) {
       var workgroupIds = [];
       var studentStatuses = this.studentStatuses;
-
-      // loop through all the student statuses
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;
@@ -201,7 +185,6 @@ var StudentStatusService = function () {
           var studentStatus = _step2.value;
 
           if (studentStatus != null) {
-
             if (periodId == -1 || periodId == studentStatus.periodId) {
               // the period matches the one we are looking for
               var currentNodeId = studentStatus.currentNodeId;
@@ -258,7 +241,6 @@ var StudentStatusService = function () {
 
       var studentStatuses = this.studentStatuses;
 
-      // loop through all the student statuses
       var _iteratorNormalCompletion3 = true;
       var _didIteratorError3 = false;
       var _iteratorError3 = undefined;
@@ -268,7 +250,6 @@ var StudentStatusService = function () {
           var studentStatus = _step3.value;
 
           if (studentStatus) {
-
             if (periodId == -1 || periodId == studentStatus.periodId) {
               // the period matches the one we are looking for
 
@@ -276,7 +257,6 @@ var StudentStatusService = function () {
                 // either no workgroupId was specified or the workgroupId matches the one we're looking for
 
                 var nodeStatuses = studentStatus.nodeStatuses;
-
                 if (nodeStatuses) {
                   // get the node status for the node
                   var nodeStatus = nodeStatuses[nodeId];
@@ -302,7 +282,6 @@ var StudentStatusService = function () {
                           // get all the descendants of the group
                           var descendants = this.ProjectService.getDescendentsOfGroup(group);
 
-                          // loop through all the descendants to check for completion
                           var _iteratorNormalCompletion4 = true;
                           var _didIteratorError4 = false;
                           var _iteratorError4 = undefined;
@@ -525,10 +504,8 @@ var StudentStatusService = function () {
     value: function getNodeAverageScore(nodeId, periodId) {
       var studentScoreSum = 0;
       var numStudentsWithScore = 0;
-
       var studentStatuses = this.studentStatuses;
 
-      // loop through all the student statuses
       var _iteratorNormalCompletion6 = true;
       var _didIteratorError6 = false;
       var _iteratorError6 = undefined;
@@ -538,10 +515,8 @@ var StudentStatusService = function () {
           var studentStatus = _step6.value;
 
           if (studentStatus != null) {
-
             if (periodId == -1 || periodId == studentStatus.periodId) {
               // the period matches the one we are looking for
-
               var workgroupId = studentStatus.workgroupId;
 
               // get the workgroups score on the node
@@ -593,19 +568,14 @@ var StudentStatusService = function () {
     key: 'getMaxScoreForWorkgroupId',
     value: function getMaxScoreForWorkgroupId(workgroupId) {
       var maxScore = null;
-
       var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
-
       if (studentStatus) {
         var nodeStatuses = studentStatus.nodeStatuses;
-
         if (nodeStatuses) {
-          // loop through all the node statuses
           for (var p in nodeStatuses) {
             if (nodeStatuses.hasOwnProperty(p)) {
               var nodeStatus = nodeStatuses[p];
               var nodeId = nodeStatus.nodeId;
-
               if (nodeStatus.isVisible && !this.ProjectService.isGroupNode(nodeId)) {
                 // node is visible and is not a group
                 // get node max score
@@ -620,7 +590,6 @@ var StudentStatusService = function () {
           }
         }
       }
-
       return maxScore;
     }
   }]);

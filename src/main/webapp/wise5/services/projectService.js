@@ -221,7 +221,6 @@ var ProjectService = function () {
 
     // adds or update transition if exists
     value: function addTransition(transition) {
-
       var existingTransitions = this.getTransitions();
       var replaced = false;
       for (var t = 0; t < existingTransitions.length; t++) {
@@ -239,7 +238,6 @@ var ProjectService = function () {
     key: 'addNode',
     value: function addNode(node) {
       var existingNodes = this.project.nodes;
-
       var replaced = false;
       if (node != null && existingNodes != null) {
         for (var n = 0; n < existingNodes.length; n++) {
@@ -258,9 +256,7 @@ var ProjectService = function () {
   }, {
     key: 'addApplicationNode',
     value: function addApplicationNode(node) {
-
       var applicationNodes = this.applicationNodes;
-
       if (node != null && applicationNodes != null) {
         applicationNodes.push(node);
       }
@@ -268,13 +264,10 @@ var ProjectService = function () {
   }, {
     key: 'addGroupNode',
     value: function addGroupNode(node) {
-
       var groupNodes = this.groupNodes;
-
       if (node != null && groupNodes != null) {
         groupNodes.push(node);
       }
-
       this.$rootScope.$broadcast('groupsChanged');
     }
   }, {
@@ -296,34 +289,26 @@ var ProjectService = function () {
     key: 'isGroupNode',
     value: function isGroupNode(id) {
       var result = false;
-
       var groupNode = this.getNodeById(id);
-
       if (groupNode != null) {
         var type = groupNode.type;
-
         if (type === 'group') {
           result = true;
         }
       }
-
       return result;
     }
   }, {
     key: 'isApplicationNode',
     value: function isApplicationNode(id) {
       var result = false;
-
       var applicationNode = this.getNodeById(id);
-
       if (applicationNode != null) {
         var type = applicationNode.type;
-
         if (type !== 'group') {
           result = true;
         }
       }
-
       return result;
     }
   }, {
@@ -378,7 +363,6 @@ var ProjectService = function () {
 
               this.setIdToNode(nodeId, node);
               this.setIdToElement(nodeId, node);
-
               this.addNode(node);
 
               if (nodeType === 'group') {
@@ -456,8 +440,6 @@ var ProjectService = function () {
      */
     value: function loadPlanningNodes(planningNodes) {
       if (planningNodes != null) {
-
-        // loop through all the planning template nodes
         var _iteratorNormalCompletion4 = true;
         var _didIteratorError4 = false;
         var _iteratorError4 = undefined;
@@ -468,7 +450,6 @@ var ProjectService = function () {
 
             if (planningNode != null) {
               var nodeId = planningNode.id;
-
               this.setIdToNode(nodeId, planningNode);
               this.setIdToElement(nodeId, planningNode);
 
@@ -501,7 +482,6 @@ var ProjectService = function () {
     value: function parseProject() {
       var project = this.project;
       if (project != null) {
-
         // clear and initialize our project data structures
         this.clearProjectFields();
 
@@ -534,7 +514,6 @@ var ProjectService = function () {
               if (constraint != null) {
                 var constraintId = constraint.id;
                 constraint.active = true;
-
                 this.setIdToElement(constraintId, constraint);
               }
             }
@@ -566,7 +545,8 @@ var ProjectService = function () {
         var branchNodeIds = [];
 
         // set node positions
-        var id, pos;
+        var id = void 0,
+            pos = void 0;
 
         while (n--) {
           id = nodes[n].id;
@@ -682,7 +662,6 @@ var ProjectService = function () {
      * of nodes
      */
     value: function getNodeOrderOfProject(project) {
-
       var idToOrder = {};
 
       // initialize the node count used for counting the nodes
@@ -726,7 +705,6 @@ var ProjectService = function () {
   }, {
     key: 'getNodeOrderOfProjectHelper',
     value: function getNodeOrderOfProjectHelper(project, node, idToOrder, stepNumber, nodes) {
-
       /*
        * Create the item that we will add to the idToOrder mapping.
        * The 'order' field determines how the project nodes are displayed
@@ -750,14 +728,9 @@ var ProjectService = function () {
       if (node.type == 'group') {
         // the node is group so we also need to loop through its children
 
-        // get the child node ids
         var childIds = node.ids;
-
-        // loop through all the children
         for (var c = 0; c < childIds.length; c++) {
           var childId = childIds[c];
-
-          // get a child node
           var child = this.getNodeById(childId, project);
 
           // get the current step number e.g. 1
@@ -775,7 +748,6 @@ var ProjectService = function () {
           this.getNodeOrderOfProjectHelper(project, child, idToOrder, childStepNumber, nodes);
         }
       }
-
       return idToOrder;
     }
 
@@ -795,7 +767,6 @@ var ProjectService = function () {
           return path;
         }
       }
-
       return null;
     }
   }, {
@@ -811,7 +782,6 @@ var ProjectService = function () {
       if (this.idToOrder[id]) {
         return this.idToOrder[id].order;
       }
-
       return null;
     }
   }, {
@@ -824,7 +794,6 @@ var ProjectService = function () {
      */
     value: function getIdByOrder(order) {
       var nodeId = null;
-
       for (var id in this.idToOrder) {
         if (this.idToOrder[id].order === order) {
           if (this.isGroupNode(id) && order > 1) {
@@ -835,7 +804,6 @@ var ProjectService = function () {
           break;
         }
       }
-
       return nodeId;
     }
   }, {
@@ -875,7 +843,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return null;
     }
   }, {
@@ -940,19 +907,16 @@ var ProjectService = function () {
     key: 'getNodePositionById',
     value: function getNodePositionById(id) {
       var position = null;
-
       if (id != null) {
         //position = this.idToPosition[id] ? this.idToPosition[id] : null;
         position = this.nodeIdToNumber[id];
       }
-
       return position;
     }
   }, {
     key: 'getNodeIdByOrder',
     value: function getNodeIdByOrder(order) {
       var id = null;
-
       if (order != null) {
         var _iteratorNormalCompletion9 = true;
         var _didIteratorError9 = false;
@@ -984,18 +948,15 @@ var ProjectService = function () {
           }
         }
       }
-
       return id;
     }
   }, {
     key: 'getNodeOrderById',
     value: function getNodeOrderById(id) {
       var order = null;
-
       if (id != null) {
         order = this.idToOrder[id] ? this.idToOrder[id].order : null;
       }
-
       return order;
     }
   }, {
@@ -1027,27 +988,19 @@ var ProjectService = function () {
      * but with relative asset paths replaced with absolute paths
      */
     value: function injectAssetPaths(content) {
-
       if (content != null) {
-
         if ((typeof content === 'undefined' ? 'undefined' : _typeof(content)) === 'object') {
-
           var contentString = JSON.stringify(content);
-
           if (contentString != null) {
-
             // replace the relative asset paths with the absolute paths
             contentString = this.replaceAssetPaths(contentString);
-
             content = JSON.parse(contentString);
           }
         } else if (typeof content === 'string') {
-
           // replace the relative asset paths with the absolute paths
           content = this.replaceAssetPaths(content);
         }
       }
-
       return content;
     }
   }, {
@@ -1061,9 +1014,7 @@ var ProjectService = function () {
      * with absolute asset paths
      */
     value: function replaceAssetPaths(contentString) {
-
       if (contentString != null) {
-
         // get the content base url e.g. http://wise.berkeley.edu/curriculum/123456/
         var contentBaseURL = this.ConfigService.getConfigParam('projectBaseURL');
 
@@ -1101,13 +1052,12 @@ var ProjectService = function () {
              */
             return delimiter + matchedStringWithoutQuotes + delimiter;
           } else {
-            //var matchedStringWithoutFirstAndLastQuote = matchedString.substr(1, matchedString.length - 2);  // everything but the beginning and end quote (' or ")
+            //const matchedStringWithoutFirstAndLastQuote = matchedString.substr(1, matchedString.length - 2);  // everything but the beginning and end quote (' or ")
             // make a new string with the contentBaseURL + assets/ prepended to the path
             return delimiter + contentBaseURL + "assets/" + matchedStringWithoutQuotes + delimiter;
           }
         });
       }
-
       return contentString;
     }
   }, {
@@ -1121,25 +1071,19 @@ var ProjectService = function () {
      */
     value: function injectClickToSnipImage(content) {
       if (content != null) {
-
         if ((typeof content === 'undefined' ? 'undefined' : _typeof(content)) === 'object') {
-
           var contentString = JSON.stringify(content);
-
           if (contentString != null) {
-
             // replace the relative asset paths with the absolute paths
             contentString = this.injectClickToSnipImageIntoContentString(contentString);
 
             content = JSON.parse(contentString);
           }
         } else if (typeof content === 'string') {
-
           // replace the relative asset paths with the absolute paths
           content = this.injectClickToSnipImageIntoContentString(content);
         }
       }
-
       return content;
     }
 
@@ -1152,26 +1096,21 @@ var ProjectService = function () {
   }, {
     key: 'injectClickToSnipImageIntoContentString',
     value: function injectClickToSnipImageIntoContentString(contentString) {
-
       if (contentString != null) {
-
         // regex to match image elements
         var imgMatcher = new RegExp('<img.*?src=\\\\?[\'"](.*?)\\\\?[\'"].*?>', 'gi');
 
         // replace all instances that match
         contentString = contentString.replace(imgMatcher, function (matchedString, matchGroup1) {
-
           /*
            * insert the ng-click attribute
            * Before: <img src="abc.png"/>
            * After: <img ng-click="vleController.snipImage($event)" src="abc.png" />
            */
           var newString = matchedString.replace('img', 'img ng-click=\\\"$emit(\'snipImage\', $event)\\\"');
-
           return newString;
         });
       }
-
       return contentString;
     }
 
@@ -1199,8 +1138,6 @@ var ProjectService = function () {
          * the project argument is not null so we will get the node from
          * project that was passed in
          */
-
-        // loop through all the active nodes in the project
         var _iteratorNormalCompletion10 = true;
         var _didIteratorError10 = false;
         var _iteratorError10 = undefined;
@@ -1210,12 +1147,9 @@ var ProjectService = function () {
             var tempNode = _step10.value;
 
             if (tempNode != null && tempNode.id == nodeId) {
-              // we have found the node we are looking for
               return tempNode;
             }
           }
-
-          // loop through all the inactive nodes in the project
         } catch (err) {
           _didIteratorError10 = true;
           _iteratorError10 = err;
@@ -1237,11 +1171,10 @@ var ProjectService = function () {
 
         try {
           for (var _iterator11 = project.inactiveNodes[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-            var tempNode = _step11.value;
+            var _tempNode = _step11.value;
 
-            if (tempNode != null && tempNode.id == nodeId) {
-              // we have found the node we are looking for
-              return tempNode;
+            if (_tempNode != null && _tempNode.id == nodeId) {
+              return _tempNode;
             }
           }
         } catch (err) {
@@ -1259,7 +1192,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return element;
     }
   }, {
@@ -1272,13 +1204,10 @@ var ProjectService = function () {
      */
     value: function getNodeTitleByNodeId(nodeId) {
       var title = null;
-
       var node = this.getNodeById(nodeId);
-
       if (node != null) {
         title = node.title;
       }
-
       return title;
     }
   }, {
@@ -1292,20 +1221,15 @@ var ProjectService = function () {
      */
     value: function getNodePositionAndTitleByNodeId(nodeId) {
       var title = null;
-
       var node = this.getNodeById(nodeId);
-
       if (node != null) {
-
         var position = this.getNodePositionById(nodeId);
-
         if (position != null) {
           title = position + ': ' + node.title;
         } else {
           title = node.title;
         }
       }
-
       return title;
     }
   }, {
@@ -1313,7 +1237,6 @@ var ProjectService = function () {
     value: function getNodeIconByNodeId(nodeId) {
       var node = this.getNodeById(nodeId);
       var nodeIcon = null;
-
       if (node != null) {
         var nodeType = node.type;
 
@@ -1341,17 +1264,13 @@ var ProjectService = function () {
           nodeIcon.type = 'font';
         }
       }
-
       return nodeIcon;
     }
   }, {
     key: 'getParentGroup',
     value: function getParentGroup(nodeId) {
-      var result = null;
-
       if (nodeId != null) {
         var node = this.getNodeById(nodeId);
-
         if (node != null) {
           // Check if the node is a child of an active group.
           var groupNodes = this.getGroupNodes();
@@ -1413,7 +1332,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return null;
     }
   }, {
@@ -1426,24 +1344,19 @@ var ProjectService = function () {
      * @returns the parent group id
      */
     value: function getParentGroupId(nodeId) {
-
       var parentGroupId = null;
-
       if (nodeId != null) {
         var parentGroup = this.getParentGroup(nodeId);
-
         if (parentGroup != null) {
           parentGroupId = parentGroup.id;
         }
       }
-
       return parentGroupId;
     }
   }, {
     key: 'getNodeDepth',
     value: function getNodeDepth(nodeId, val) {
       var result = null;
-
       if (nodeId != null) {
         var depth = typeof val === "number" ? val : 0;
         var parent = this.getParentGroup(nodeId);
@@ -1452,29 +1365,24 @@ var ProjectService = function () {
         }
         result = depth;
       }
-
       return result;
     }
   }, {
     key: 'getRootNode',
     value: function getRootNode(nodeId) {
       var result = null;
-
       var parentGroup = this.getParentGroup(nodeId);
-
       if (parentGroup == null) {
         result = this.getNodeById(nodeId);
       } else {
         result = this.getRootNode(parentGroup.id);
       }
-
       return result;
     }
   }, {
     key: 'isNodeDirectChildOfGroup',
     value: function isNodeDirectChildOfGroup(node, group) {
       var result = false;
-
       if (node != null && group != null) {
         var nodeId = node.id;
         var groupIds = group.ids;
@@ -1483,14 +1391,12 @@ var ProjectService = function () {
           result = true;
         }
       }
-
       return result;
     }
   }, {
     key: 'isNodeDescendentOfGroup',
     value: function isNodeDescendentOfGroup(node, group) {
       var result = false;
-
       if (node != null && group != null) {
         var descendents = this.getDescendentsOfGroup(group);
         var nodeId = node.id;
@@ -1499,20 +1405,16 @@ var ProjectService = function () {
           result = true;
         }
       }
-
       return result;
     }
   }, {
     key: 'getDescendentsOfGroup',
     value: function getDescendentsOfGroup(group) {
       var descendents = [];
-
       if (group != null) {
         var childIds = group.ids;
-
         if (childIds != null) {
           descendents = childIds;
-
           var _iteratorNormalCompletion14 = true;
           var _didIteratorError14 = false;
           var _iteratorError14 = undefined;
@@ -1522,10 +1424,8 @@ var ProjectService = function () {
               var childId = _step14.value;
 
               var node = this.getNodeById(childId);
-
               if (node != null) {
                 var childDescendents = this.getDescendentsOfGroup(node);
-
                 descendents = descendents.concat(childDescendents);
               }
             }
@@ -1545,25 +1445,20 @@ var ProjectService = function () {
           }
         }
       }
-
       return descendents;
     }
   }, {
     key: 'isStartNode',
     value: function isStartNode(node) {
       var result = false;
-
       if (node != null) {
         var nodeId = node.id;
-
         var projectStartId = this.getStartNodeId();
-
         if (nodeId === projectStartId) {
           result = true;
         }
 
         var groups = this.getGroups();
-
         var _iteratorNormalCompletion15 = true;
         var _didIteratorError15 = false;
         var _iteratorError15 = undefined;
@@ -1572,10 +1467,8 @@ var ProjectService = function () {
           for (var _iterator15 = groups[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
             var group = _step15.value;
 
-
             if (group != null) {
               var groupStartId = group.startId;
-
               if (nodeId === groupStartId) {
                 result = true;
                 break;
@@ -1597,7 +1490,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return result;
     }
   }, {
@@ -1624,7 +1516,6 @@ var ProjectService = function () {
      * @param nodeId the new start node id
      */
     value: function setStartNodeId(nodeId) {
-
       if (nodeId != null) {
         var project = this.project;
         if (project != null) {
@@ -1642,12 +1533,10 @@ var ProjectService = function () {
     key: 'getStartGroupId',
     value: function getStartGroupId() {
       var startGroupId = null;
-
       var project = this.project;
       if (project != null) {
         startGroupId = project.startGroupId;
       }
-
       return startGroupId;
     }
 
@@ -1659,28 +1548,21 @@ var ProjectService = function () {
   }, {
     key: 'isStartNodeId',
     value: function isStartNodeId(nodeId) {
-
       var result = false;
-
       var project = this.project;
-
       if (project != null) {
         var startNodeId = project.startNodeId;
-
         if (nodeId === startNodeId) {
           result = true;
         }
       }
-
       return result;
     }
   }, {
     key: 'getConstraintsForNode',
     value: function getConstraintsForNode(node) {
       var constraints = [];
-
       var allConstraints = this.activeConstraints;
-
       var _iteratorNormalCompletion16 = true;
       var _didIteratorError16 = false;
       var _iteratorError16 = undefined;
@@ -1760,12 +1642,9 @@ var ProjectService = function () {
     key: 'isNodeAffectedByConstraint',
     value: function isNodeAffectedByConstraint(node, constraint) {
       var result = false;
-
       if (node != null && constraint != null) {
-
         // check if we have previously calculated the result before
         var rememberedResult = this.getIsNodeAffectedByConstraintResult(node.id, constraint.id, result);
-
         if (rememberedResult != null) {
           // we have calculated the result before
 
@@ -1773,7 +1652,6 @@ var ProjectService = function () {
           result = rememberedResult;
         } else {
           // we have not calculated the result before
-
           var nodeId = node.id;
           var targetId = constraint.targetId;
           var action = constraint.action;
@@ -1788,23 +1666,18 @@ var ProjectService = function () {
             }
           } else {
             var targetNode = this.getNodeById(targetId);
-
             if (targetNode != null) {
               var nodeType = targetNode.type;
-
               if (nodeType === 'node') {
                 // the target is an application
-
                 if (nodeId === targetId) {
                   result = true;
                 }
               } else if (nodeType === 'group') {
                 // the target is a group
-
                 if (nodeId === targetId) {
                   result = true;
                 }
-
                 if (this.isNodeDescendentOfGroup(node, targetNode)) {
                   result = true;
                 }
@@ -1816,7 +1689,6 @@ var ProjectService = function () {
           this.setIsNodeAffectedByConstraintResult(node.id, constraint.id, result);
         }
       }
-
       return result;
     }
   }, {
@@ -1830,9 +1702,7 @@ var ProjectService = function () {
      */
     value: function isNodeIdAfter(nodeIdBefore, nodeIdAfter) {
       var result = false;
-
       if (nodeIdBefore != null && nodeIdAfter != null) {
-
         if (this.isApplicationNode(nodeIdBefore)) {
           // the node id before is a step
 
@@ -1840,8 +1710,6 @@ var ProjectService = function () {
           var pathsToEnd = this.getAllPaths([], nodeIdBefore, true);
 
           if (pathsToEnd != null) {
-
-            // loop through all the paths
             var _iteratorNormalCompletion17 = true;
             var _didIteratorError17 = false;
             var _iteratorError17 = undefined;
@@ -1850,9 +1718,7 @@ var ProjectService = function () {
               for (var _iterator17 = pathsToEnd[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
                 var pathToEnd = _step17.value;
 
-
                 if (pathToEnd != null) {
-
                   /*
                    * remove the first node id and its parent id because
                    * we will check the remaining node ids in the array
@@ -1903,17 +1769,10 @@ var ProjectService = function () {
         } else {
           // the node id before is an activity
 
-          // get the group
           var group = this.getNodeById(nodeIdBefore);
-
           if (group != null) {
-
-            // get the transitions from the group
             var transitions = this.getTransitionsByFromNodeId(nodeIdBefore);
-
             if (transitions != null) {
-
-              // loop through all the transitions
               var _iteratorNormalCompletion18 = true;
               var _didIteratorError18 = false;
               var _iteratorError18 = undefined;
@@ -1926,19 +1785,18 @@ var ProjectService = function () {
                     var toNodeId = transition.to;
 
                     // get the paths between to toNodeId and the end of the project
-                    var pathsToEnd = this.getAllPaths([], toNodeId, true);
+                    var _pathsToEnd = this.getAllPaths([], toNodeId, true);
 
-                    // loop through all the paths
                     var _iteratorNormalCompletion19 = true;
                     var _didIteratorError19 = false;
                     var _iteratorError19 = undefined;
 
                     try {
-                      for (var _iterator19 = pathsToEnd[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
-                        var pathToEnd = _step19.value;
+                      for (var _iterator19 = _pathsToEnd[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+                        var _pathToEnd = _step19.value;
 
-                        if (pathToEnd != null) {
-                          if (pathToEnd.indexOf(nodeIdAfter) != -1) {
+                        if (_pathToEnd != null) {
+                          if (_pathToEnd.indexOf(nodeIdAfter) != -1) {
                             // we have found the nodeIdAfter in the path to the end of the project
                             result = true;
                           }
@@ -1978,7 +1836,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return result;
     }
   }, {
@@ -2033,9 +1890,7 @@ var ProjectService = function () {
      */
     value: function getTransitionLogicByFromNodeId(fromNodeId) {
       var transitionLogic = null;
-
       if (fromNodeId != null) {
-
         // get the node
         var node = this.getNodeById(fromNodeId);
 
@@ -2044,7 +1899,6 @@ var ProjectService = function () {
           transitionLogic = node.transitionLogic;
         }
       }
-
       return transitionLogic;
     }
   }, {
@@ -2057,9 +1911,7 @@ var ProjectService = function () {
      * @returns an array of transitions
      */
     value: function getTransitionsByFromNodeId(fromNodeId) {
-
       var transitions = null;
-
       if (fromNodeId != null) {
         // get the transition logic
         var transitionLogic = this.getTransitionLogicByFromNodeId(fromNodeId);
@@ -2069,7 +1921,6 @@ var ProjectService = function () {
           transitions = transitionLogic.transitions;
         }
       }
-
       return transitions;
     }
 
@@ -2084,13 +1935,8 @@ var ProjectService = function () {
     key: 'getNodesByToNodeId',
     value: function getNodesByToNodeId(toNodeId) {
       var nodesByToNodeId = [];
-
       if (toNodeId != null) {
-
-        // get all the nodes
         var nodes = this.project.nodes;
-
-        // loop through all the nodes
         var _iteratorNormalCompletion20 = true;
         var _didIteratorError20 = false;
         var _iteratorError20 = undefined;
@@ -2100,13 +1946,9 @@ var ProjectService = function () {
             var node = _step20.value;
 
             var transitionLogic = node.transitionLogic;
-
             if (transitionLogic != null) {
               var transitions = transitionLogic.transitions;
-
               if (transitions != null) {
-
-                // loop through all the transitions for the node
                 var _iteratorNormalCompletion21 = true;
                 var _didIteratorError21 = false;
                 var _iteratorError21 = undefined;
@@ -2154,7 +1996,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return nodesByToNodeId;
     }
   }, {
@@ -2168,13 +2009,8 @@ var ProjectService = function () {
      */
     value: function getNodeIdsByToNodeId(toNodeId) {
       var nodeIds = [];
-
-      // get all the nodes that transition to the toNodeId
       var nodes = this.getNodesByToNodeId(toNodeId);
-
       if (nodes != null) {
-
-        // loop through all the nodes to get the node ids
         var _iteratorNormalCompletion22 = true;
         var _didIteratorError22 = false;
         var _iteratorError22 = undefined;
@@ -2202,7 +2038,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return nodeIds;
     }
 
@@ -2215,10 +2050,8 @@ var ProjectService = function () {
     key: 'getGroupNodesByToNodeId',
     value: function getGroupNodesByToNodeId(toNodeId) {
       var groupsThatPointToNodeId = [];
-
       if (toNodeId != null) {
         var groups = this.getGroups();
-
         var _iteratorNormalCompletion23 = true;
         var _didIteratorError23 = false;
         var _iteratorError23 = undefined;
@@ -2248,7 +2081,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return groupsThatPointToNodeId;
     }
 
@@ -2263,13 +2095,10 @@ var ProjectService = function () {
     key: 'hasTransitionTo',
     value: function hasTransitionTo(node, toNodeId) {
       var result = false;
-
       if (node != null && toNodeId != null) {
         var transitionLogic = node.transitionLogic;
-
         if (transitionLogic != null) {
           var transitions = transitionLogic.transitions;
-
           if (transitions != null) {
             var _iteratorNormalCompletion24 = true;
             var _didIteratorError24 = false;
@@ -2300,7 +2129,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return result;
     }
 
@@ -2316,29 +2144,23 @@ var ProjectService = function () {
     key: 'getTransitionsByFromAndToNodeId',
     value: function getTransitionsByFromAndToNodeId(fromNodeId, toNodeId) {
       var transitionsResults = [];
-
       if (fromNodeId != null && toNodeId != null) {
         var node = this.getNodeById(fromNodeId);
-
         if (node != null) {
           var transitionLogic = node.transitionLogic;
-
           if (transitionLogic != null) {
             var transitions = transitionLogic.transitions;
-
             if (transitions != null) {
               var _iteratorNormalCompletion25 = true;
               var _didIteratorError25 = false;
               var _iteratorError25 = undefined;
 
               try {
-
                 for (var _iterator25 = transitions[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
                   var transition = _step25.value;
 
                   if (transition != null) {
                     var to = transition.to;
-
                     if (toNodeId === to) {
                       transitionsResults.push(transition);
                     }
@@ -2362,7 +2184,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return transitionsResults;
     }
   }, {
@@ -2377,7 +2198,6 @@ var ProjectService = function () {
       var _this = this;
 
       var projectURL = this.ConfigService.getConfigParam('projectURL');
-
       if (projectURL == null) {
         return null;
       } else {
@@ -2408,7 +2228,6 @@ var ProjectService = function () {
       var _this2 = this;
 
       if (projectId != null) {
-
         // get the config URL for the project
         var configURL = window.configURL + '/' + projectId;
 
@@ -2417,13 +2236,11 @@ var ProjectService = function () {
           var configJSON = result.data;
 
           if (configJSON != null) {
-
             // get the project URL and preview project URL
             var projectURL = configJSON.projectURL;
             var previewProjectURL = configJSON.previewProjectURL;
 
             if (projectURL != null) {
-
               // get the project JSON
               return _this2.$http.get(projectURL).then(function (result) {
                 var projectJSON = result.data;
@@ -2651,7 +2468,6 @@ var ProjectService = function () {
      */
     value: function registerNewProject(projectJSONString, commitMessage) {
       var registerNewProjectURL = this.ConfigService.getConfigParam('registerNewProjectURL');
-
       if (registerNewProjectURL == null) {
         return null;
       }
@@ -2691,7 +2507,6 @@ var ProjectService = function () {
      */
     value: function getCommitHistory() {
       var commitProjectURL = this.ConfigService.getConfigParam('commitProjectURL');
-
       return this.$http({
         url: commitProjectURL,
         method: 'GET'
@@ -2727,7 +2542,6 @@ var ProjectService = function () {
     value: function getThemeSettings() {
       var themeSettings = {};
       var project = this.project;
-
       if (project && project.themeSettings) {
         if (project.theme) {
           // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
@@ -2737,7 +2551,6 @@ var ProjectService = function () {
           themeSettings = project.themeSettings["default"];
         }
       }
-
       return themeSettings ? themeSettings : {};
     }
   }, {
@@ -2755,8 +2568,6 @@ var ProjectService = function () {
         return this.flattenedProjectAsNodeIds;
       }
 
-      var nodeIds = [];
-
       // get the start node id
       var startNodeId = this.getStartNodeId();
 
@@ -2771,7 +2582,7 @@ var ProjectService = function () {
       var allPaths = this.getAllPaths(pathsSoFar, startNodeId);
 
       // consolidate all the paths to create a single list of node ids
-      nodeIds = this.consolidatePaths(allPaths);
+      var nodeIds = this.consolidatePaths(allPaths);
 
       /*
        * Remember the flattened node ids so that we don't have to calculate
@@ -2808,12 +2619,10 @@ var ProjectService = function () {
           var transitions = this.getTransitionsByFromNodeId(nodeId);
 
           if (transitions != null) {
-
             if (includeGroups) {
               // get the parent group
               var parentGroup = this.getParentGroup(nodeId);
               if (parentGroup != null) {
-
                 // get the parent group id
                 var parentGroupId = parentGroup.id;
 
@@ -2839,8 +2648,8 @@ var ProjectService = function () {
 
               var addedCurrentNodeId = false;
 
-              var parentGroupId = this.getParentGroupId(nodeId);
-              var parentGroupTransitions = this.getTransitionsByFromNodeId(parentGroupId);
+              var _parentGroupId = this.getParentGroupId(nodeId);
+              var parentGroupTransitions = this.getTransitionsByFromNodeId(_parentGroupId);
 
               if (parentGroupTransitions != null) {
                 var _iteratorNormalCompletion28 = true;
@@ -2852,9 +2661,7 @@ var ProjectService = function () {
                     var parentGroupTransition = _step28.value;
 
                     if (parentGroupTransition != null) {
-
                       var toNodeId = parentGroupTransition.to;
-
                       if (pathSoFar.indexOf(toNodeId) == -1) {
                         /*
                          * recursively get the paths by getting all
@@ -2869,7 +2676,6 @@ var ProjectService = function () {
                         try {
                           for (var _iterator29 = allPathsFromToNode[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
                             var tempPath = _step29.value;
-
 
                             // prepend the current node id to the path
                             tempPath.unshift(nodeId);
@@ -2927,7 +2733,6 @@ var ProjectService = function () {
             } else {
               // there are transitions from this node id
 
-              // loop through all the transitions from this node id
               var _iteratorNormalCompletion30 = true;
               var _didIteratorError30 = false;
               var _iteratorError30 = undefined;
@@ -2936,47 +2741,40 @@ var ProjectService = function () {
                 for (var _iterator30 = transitions[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
                   var transition = _step30.value;
 
-                  var transitionResult = [];
-
                   if (transition != null) {
-                    // get the to node id
-                    var toNodeId = transition.to;
-
-                    if (toNodeId != null && pathSoFar.indexOf(toNodeId) == -1) {
+                    var _toNodeId = transition.to;
+                    if (_toNodeId != null && pathSoFar.indexOf(_toNodeId) == -1) {
                       // we have not found the to node in the path yet so we can traverse it
 
                       /*
                        * recursively get the paths by getting all
                        * the paths from the to node
                        */
-                      var allPathsFromToNode = this.getAllPaths(pathSoFar, toNodeId, includeGroups);
+                      var _allPathsFromToNode = this.getAllPaths(pathSoFar, _toNodeId, includeGroups);
 
-                      if (allPathsFromToNode != null) {
-                        // loop through all the paths from the to node
+                      if (_allPathsFromToNode != null) {
                         var _iteratorNormalCompletion31 = true;
                         var _didIteratorError31 = false;
                         var _iteratorError31 = undefined;
 
                         try {
-                          for (var _iterator31 = allPathsFromToNode[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
-                            var tempPath = _step31.value;
-
+                          for (var _iterator31 = _allPathsFromToNode[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
+                            var _tempPath = _step31.value;
 
                             if (includeGroups) {
                               // we need to add the group id to the path
 
-                              if (tempPath.length > 0) {
-
+                              if (_tempPath.length > 0) {
                                 // get the first node id in the path
-                                var firstNodeId = tempPath[0];
+                                var firstNodeId = _tempPath[0];
 
                                 // get the parent id of the first node
                                 var firstParentGroupId = this.getParentGroupId(firstNodeId);
 
                                 // get the parent id of the current node
-                                var parentGroupId = this.getParentGroupId(nodeId);
+                                var _parentGroupId2 = this.getParentGroupId(nodeId);
 
-                                if (parentGroupId != firstParentGroupId) {
+                                if (_parentGroupId2 != firstParentGroupId) {
                                   /*
                                    * the parent ids are different which means this is a boundary
                                    * between two groups. for example if the project looked like
@@ -2985,16 +2783,16 @@ var ProjectService = function () {
                                    * path would be node3 which means we would need to place
                                    * group2 on the path before node3
                                    */
-                                  tempPath.unshift(firstParentGroupId);
+                                  _tempPath.unshift(firstParentGroupId);
                                 }
                               }
                             }
 
                             // prepend the current node id to the path
-                            tempPath.unshift(nodeId);
+                            _tempPath.unshift(nodeId);
 
                             // add the path to our collection of paths
-                            allPaths.push(tempPath);
+                            allPaths.push(_tempPath);
                           }
                         } catch (err) {
                           _didIteratorError31 = true;
@@ -3068,7 +2866,6 @@ var ProjectService = function () {
 
             if (includeGroups) {
               if (pathSoFar.length == 1) {
-
                 /*
                  * we are including groups and we have traversed
                  * back up to the start node id for the project.
@@ -3078,22 +2875,20 @@ var ProjectService = function () {
                  * to all of the paths
                  */
 
-                // loop through all the paths
                 var _iteratorNormalCompletion32 = true;
                 var _didIteratorError32 = false;
                 var _iteratorError32 = undefined;
 
                 try {
                   for (var _iterator32 = allPaths[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
-                    var path = _step32.value;
+                    var _path = _step32.value;
 
-
-                    if (path != null) {
+                    if (_path != null) {
                       /*
                        * prepend the parent group of the start node id
                        * to the path
                        */
-                      path.unshift(pathSoFar[0]);
+                      _path.unshift(pathSoFar[0]);
                     }
                   }
 
@@ -3132,51 +2927,43 @@ var ProjectService = function () {
            */
           pathSoFar.push(nodeId);
 
-          // get the group node
           var groupNode = this.getNodeById(nodeId);
-
           if (groupNode != null) {
             var startId = groupNode.startId;
-
             if (startId == null || startId == "") {
               // there is no start id so we will take the transition from the group
               // TODO? there is no start id so we will loop through all the child nodes
 
-              // get the transitions from the group
-              var transitions = this.getTransitionsByFromNodeId(groupNode.id);
-
-              if (transitions != null && transitions.length > 0) {
-
-                // loop through all the transitions from the group
+              var _transitions = this.getTransitionsByFromNodeId(groupNode.id);
+              if (_transitions != null && _transitions.length > 0) {
                 var _iteratorNormalCompletion33 = true;
                 var _didIteratorError33 = false;
                 var _iteratorError33 = undefined;
 
                 try {
-                  for (var _iterator33 = transitions[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
-                    var transition = _step33.value;
+                  for (var _iterator33 = _transitions[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
+                    var _transition = _step33.value;
 
-                    if (transition != null) {
-                      var toNodeId = transition.to;
+                    if (_transition != null) {
+                      var _toNodeId2 = _transition.to;
 
                       // get the paths from the to node to the end of the project
-                      var allPathsFromToNode = this.getAllPaths(pathSoFar, toNodeId, includeGroups);
+                      var _allPathsFromToNode2 = this.getAllPaths(pathSoFar, _toNodeId2, includeGroups);
 
-                      if (allPathsFromToNode != null) {
-                        // loop through all the paths from the to node
+                      if (_allPathsFromToNode2 != null) {
                         var _iteratorNormalCompletion34 = true;
                         var _didIteratorError34 = false;
                         var _iteratorError34 = undefined;
 
                         try {
-                          for (var _iterator34 = allPathsFromToNode[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
-                            var tempPath = _step34.value;
+                          for (var _iterator34 = _allPathsFromToNode2[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
+                            var _tempPath2 = _step34.value;
 
                             // prepend the current node id to the path
-                            tempPath.unshift(nodeId);
+                            _tempPath2.unshift(nodeId);
 
                             // add the path to our collection of paths
-                            allPaths.push(tempPath);
+                            allPaths.push(_tempPath2);
                           }
                         } catch (err) {
                           _didIteratorError34 = true;
@@ -3215,36 +3002,34 @@ var ProjectService = function () {
                  * we have reached the end of this path
                  */
 
-                var tempPath = [];
+                var _tempPath3 = [];
 
                 // prepend the current node id to the path
-                tempPath.unshift(nodeId);
+                _tempPath3.unshift(nodeId);
 
                 // add the path to our collection of paths
-                allPaths.push(tempPath);
+                allPaths.push(_tempPath3);
               }
             } else {
               // there is a start id so we will traverse it
 
               // get the paths from the start id to the end of the project
-              var allPathsFromToNode = this.getAllPaths(pathSoFar, startId, includeGroups);
+              var _allPathsFromToNode3 = this.getAllPaths(pathSoFar, startId, includeGroups);
 
-              if (allPathsFromToNode != null) {
-                // loop through all the paths from the to node
+              if (_allPathsFromToNode3 != null) {
                 var _iteratorNormalCompletion35 = true;
                 var _didIteratorError35 = false;
                 var _iteratorError35 = undefined;
 
                 try {
-                  for (var _iterator35 = allPathsFromToNode[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
-                    var tempPath = _step35.value;
-
+                  for (var _iterator35 = _allPathsFromToNode3[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
+                    var _tempPath4 = _step35.value;
 
                     // prepend the current node id to the path
-                    tempPath.unshift(nodeId);
+                    _tempPath4.unshift(nodeId);
 
                     // add the path to our collection of paths
-                    allPaths.push(tempPath);
+                    allPaths.push(_tempPath4);
                   }
                 } catch (err) {
                   _didIteratorError35 = true;
@@ -3271,7 +3056,6 @@ var ProjectService = function () {
           pathSoFar.pop();
         }
       }
-
       return allPaths;
     }
   }, {
@@ -3287,20 +3071,17 @@ var ProjectService = function () {
       var consolidatedPath = [];
 
       if (paths != null) {
-
         /*
          * continue until all the paths are empty. as we consolidate
          * node ids, we will remove them from the paths. once all the
          * paths are empty we will be done consolidating the paths.
          */
         while (!this.arePathsEmpty(paths)) {
-
           // start with the first path
           var currentPath = this.getNonEmptyPathIndex(paths);
 
           // get the first node id in the current path
           var nodeId = this.getFirstNodeIdInPathAtIndex(paths, currentPath);
-
           if (this.areFirstNodeIdsInPathsTheSame(paths)) {
             // the first node ids in all the paths are the same
 
@@ -3343,7 +3124,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return consolidatedPath;
     }
   }, {
@@ -3360,11 +3140,7 @@ var ProjectService = function () {
       var consumedNodeIds = [];
 
       if (paths != null && nodeId != null) {
-
-        // loop through all the paths
         for (var p = 0; p < paths.length; p++) {
-
-          // get a path
           var path = paths[p];
 
           // check if the path contains the node id to stop consuming at
@@ -3375,10 +3151,7 @@ var ProjectService = function () {
              * we get to the given node id to stop consuming at
              */
 
-            // loop through the node ids in the path
             for (var x = 0; x < path.length; x++) {
-
-              // get a node id
               var tempNodeId = path[x];
 
               if (nodeId === tempNodeId) {
@@ -3415,7 +3188,6 @@ var ProjectService = function () {
 
                   var pathsToConsume = [];
 
-                  // loop through all the paths that contain the node id
                   var _iteratorNormalCompletion36 = true;
                   var _didIteratorError36 = false;
                   var _iteratorError36 = undefined;
@@ -3423,7 +3195,6 @@ var ProjectService = function () {
                   try {
                     for (var _iterator36 = pathsThatContainNodeId[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
                       var pathThatContainsNodeId = _step36.value;
-
 
                       // get the index of the node id we want to remove
                       var tempNodeIdIndex = pathThatContainsNodeId.indexOf(tempNodeId);
@@ -3495,7 +3266,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return consumedNodeIds;
     }
   }, {
@@ -3511,17 +3281,14 @@ var ProjectService = function () {
      */
     value: function getFirstNodeIdInPathAtIndex(paths, index) {
       var nodeId = null;
-
       if (paths != null && index != null) {
         // get the path at the given index
         var path = paths[index];
-
         if (path != null && path.length > 0) {
           // get the first node id in the path
           nodeId = path[0];
         }
       }
-
       return nodeId;
     }
   }, {
@@ -3534,9 +3301,7 @@ var ProjectService = function () {
      * @param paths an array of paths. each path is an array of node ids
      */
     value: function removeNodeIdFromPaths(nodeId, paths) {
-
       if (nodeId != null && paths != null) {
-        // loop through all the paths
         var _iteratorNormalCompletion37 = true;
         var _didIteratorError37 = false;
         var _iteratorError37 = undefined;
@@ -3545,10 +3310,7 @@ var ProjectService = function () {
           for (var _iterator37 = paths[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
             var path = _step37.value;
 
-
-            // loop through all the node ids in the path
             for (var x = 0; x < path.length; x++) {
-              // get a node id
               var tempNodeId = path[x];
 
               /*
@@ -3599,17 +3361,11 @@ var ProjectService = function () {
      * @param pathIndex the path to remove from
      */
     value: function removeNodeIdFromPath(nodeId, paths, pathIndex) {
-
       if (nodeId != null && paths != null && pathIndex != null) {
-
         // get the path at the given index
         var path = paths[pathIndex];
-
         if (path != null) {
-
-          // loop through all the node ids in the path
           for (var x = 0; x < path.length; x++) {
-            // get a ndoe id
             var tempNodeId = path[x];
 
             /*
@@ -3646,12 +3402,8 @@ var ProjectService = function () {
      */
     value: function areFirstNodeIdsInPathsTheSame(paths) {
       var result = true;
-
       var nodeId = null;
-
       if (paths != null) {
-
-        // loop through all the paths
         var _iteratorNormalCompletion38 = true;
         var _didIteratorError38 = false;
         var _iteratorError38 = undefined;
@@ -3660,10 +3412,8 @@ var ProjectService = function () {
           for (var _iterator38 = paths[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
             var path = _step38.value;
 
-
             // get the first node id in the path
             var tempNodeId = path[0];
-
             if (nodeId == null) {
               /*
                * this is the first path we have looked at so we will
@@ -3695,7 +3445,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return result;
     }
   }, {
@@ -3709,10 +3458,7 @@ var ProjectService = function () {
      */
     value: function arePathsEmpty(paths) {
       var result = true;
-
       if (paths != null) {
-
-        // loop through all the paths
         var _iteratorNormalCompletion39 = true;
         var _didIteratorError39 = false;
         var _iteratorError39 = undefined;
@@ -3721,12 +3467,8 @@ var ProjectService = function () {
           for (var _iterator39 = paths[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
             var path = _step39.value;
 
-
             if (path != null) {
-
-              // get the length of the path
               if (path.length !== 0) {
-                // the path is not empty
                 result = false;
                 break;
               }
@@ -3747,7 +3489,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return result;
     }
   }, {
@@ -3762,9 +3503,7 @@ var ProjectService = function () {
      */
     value: function getPathsThatContainNodeId(nodeId, paths) {
       var pathsThatContainNodeId = [];
-
       if (nodeId != null && paths != null) {
-        // loop through all the paths
         var _iteratorNormalCompletion40 = true;
         var _didIteratorError40 = false;
         var _iteratorError40 = undefined;
@@ -3772,7 +3511,6 @@ var ProjectService = function () {
         try {
           for (var _iterator40 = paths[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
             var path = _step40.value;
-
 
             // check if the path contains the node id
             if (path.indexOf(nodeId) != -1) {
@@ -3798,7 +3536,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return pathsThatContainNodeId;
     }
   }, {
@@ -3813,22 +3550,15 @@ var ProjectService = function () {
      */
     value: function getNonEmptyPathIndex(paths) {
       var index = null;
-
       if (paths != null) {
-        // loop through all the paths
         for (var p = 0; p < paths.length; p++) {
-          // get a path
           var path = paths[p];
-
-          // check the length of the path
           if (path.length !== 0) {
-            // the path is not empty so we will return this index
             index = p;
             break;
           }
         }
       }
-
       return index;
     }
   }, {
@@ -3839,7 +3569,6 @@ var ProjectService = function () {
      * Get the branches in the project
      */
     value: function getBranches() {
-
       // get the start node id
       var startNodeId = this.getStartNodeId();
 
@@ -3871,7 +3600,6 @@ var ProjectService = function () {
      */
     value: function findBranches(paths) {
       var branches = [];
-
       var previousNodeId = null;
 
       /*
@@ -3880,7 +3608,6 @@ var ProjectService = function () {
        * the branches
        */
       while (!this.arePathsEmpty(paths)) {
-
         // get the first node id in the first path
         var nodeId = this.getFirstNodeIdInPathAtIndex(paths, 0);
 
@@ -3918,7 +3645,6 @@ var ProjectService = function () {
           previousNodeId = nextCommonNodeId;
         }
       }
-
       return branches;
     }
   }, {
@@ -3933,11 +3659,9 @@ var ProjectService = function () {
      */
     value: function createBranchMetaObject() {
       var branchMetaObject = {};
-
       branchMetaObject.branchStartPoint = null;
       branchMetaObject.branchPaths = [];
       branchMetaObject.branchEndPoint = null;
-
       return branchMetaObject;
     }
   }, {
@@ -3952,14 +3676,11 @@ var ProjectService = function () {
      */
     value: function findNextCommonNodeId(paths) {
       var nextCommonNodeId = null;
-      var subPaths = [];
-
       if (paths != null) {
         if (paths.length > 0) {
           // get the first path
           var path = paths[0];
 
-          // loop through all the node ids in the first path
           var _iteratorNormalCompletion41 = true;
           var _didIteratorError41 = false;
           var _iteratorError41 = undefined;
@@ -3967,7 +3688,6 @@ var ProjectService = function () {
           try {
             for (var _iterator41 = path[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
               var tempNodeId = _step41.value;
-
 
               // check if the node id is in all the paths
               if (this.allPathsContainNodeId(paths, tempNodeId)) {
@@ -3995,7 +3715,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return nextCommonNodeId;
     }
   }, {
@@ -4010,10 +3729,7 @@ var ProjectService = function () {
      */
     value: function allPathsContainNodeId(paths, nodeId) {
       var result = false;
-
       if (paths != null) {
-
-        // loop through all the paths
         var _iteratorNormalCompletion42 = true;
         var _didIteratorError42 = false;
         var _iteratorError42 = undefined;
@@ -4022,10 +3738,7 @@ var ProjectService = function () {
           for (var _iterator42 = paths[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
             var path = _step42.value;
 
-
-            // get the index of the node id in the path
             var index = path.indexOf(nodeId);
-
             if (index == -1) {
               // the node id is not in the path
               result = false;
@@ -4050,7 +3763,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return result;
     }
   }, {
@@ -4066,7 +3778,6 @@ var ProjectService = function () {
      */
     value: function trimPathsUpToNodeId(paths, nodeId) {
       if (paths != null) {
-        // loop through all the paths
         var _iteratorNormalCompletion43 = true;
         var _didIteratorError43 = false;
         var _iteratorError43 = undefined;
@@ -4075,9 +3786,7 @@ var ProjectService = function () {
           for (var _iterator43 = paths[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
             var path = _step43.value;
 
-
             if (path != null) {
-              // get the index of the node id in the path
               var index = path.indexOf(nodeId);
 
               if (index == -1) {
@@ -4125,9 +3834,7 @@ var ProjectService = function () {
      */
     value: function extractPathsUpToNodeId(paths, nodeId) {
       var extractedPaths = [];
-
       if (paths != null) {
-        // loop through the paths
         var _iteratorNormalCompletion44 = true;
         var _didIteratorError44 = false;
         var _iteratorError44 = undefined;
@@ -4136,10 +3843,7 @@ var ProjectService = function () {
           for (var _iterator44 = paths[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
             var path = _step44.value;
 
-
             if (path != null) {
-
-              // get the index of the node id in the path
               var index = path.indexOf(nodeId);
 
               if (index == -1) {
@@ -4175,7 +3879,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return extractedPaths;
     }
   }, {
@@ -4189,9 +3892,7 @@ var ProjectService = function () {
      */
     value: function removeDuplicatePaths(paths) {
       var uniquePaths = [];
-
       if (paths != null) {
-        // loop through all the paths
         var _iteratorNormalCompletion45 = true;
         var _didIteratorError45 = false;
         var _iteratorError45 = undefined;
@@ -4200,10 +3901,7 @@ var ProjectService = function () {
           for (var _iterator45 = paths[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
             var path = _step45.value;
 
-
             var isPathInUniquePaths = false;
-
-            // loop through all the unique paths so far
             var _iteratorNormalCompletion46 = true;
             var _didIteratorError46 = false;
             var _iteratorError46 = undefined;
@@ -4212,9 +3910,7 @@ var ProjectService = function () {
               for (var _iterator46 = uniquePaths[Symbol.iterator](), _step46; !(_iteratorNormalCompletion46 = (_step46 = _iterator46.next()).done); _iteratorNormalCompletion46 = true) {
                 var uniquePath = _step46.value;
 
-                // check if the paths are equal
                 if (this.pathsEqual(path, uniquePath)) {
-                  // the paths are equal
                   isPathInUniquePaths = true;
                 }
               }
@@ -4254,7 +3950,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return uniquePaths;
     }
   }, {
@@ -4270,31 +3965,21 @@ var ProjectService = function () {
      */
     value: function pathsEqual(path1, path2) {
       var result = false;
-
       if (path1 != null && path2 != null) {
-
         // check if the paths are the same length
         if (path1.length === path2.length) {
           result = true;
 
-          // loop through each element of the first path
           for (var x = 0; x < path1.length; x++) {
-            // get the node id from the first path
             var path1NodeId = path1[x];
-
-            // get the node id from the second path
             var path2NodeId = path2[x];
-
-            // check if the node ids are the same
             if (path1NodeId !== path2NodeId) {
-              // the node ids are not the same to the paths are not equal
               result = false;
               break;
             }
           }
         }
       }
-
       return result;
     }
   }, {
@@ -4308,10 +3993,7 @@ var ProjectService = function () {
      * @return whether the node id is in any branch
      */
     value: function isNodeIdInABranch(branches, nodeId) {
-
       if (branches != null && nodeId != null) {
-
-        // loop through all the branch objects
         var _iteratorNormalCompletion47 = true;
         var _didIteratorError47 = false;
         var _iteratorError47 = undefined;
@@ -4320,15 +4002,11 @@ var ProjectService = function () {
           for (var _iterator47 = branches[Symbol.iterator](), _step47; !(_iteratorNormalCompletion47 = (_step47 = _iterator47.next()).done); _iteratorNormalCompletion47 = true) {
             var branch = _step47.value;
 
-
             if (branch != null) {
-
               // get the branch paths for this branch object
               var branchPaths = branch.branchPaths;
 
               if (branchPaths != null) {
-
-                // loop through all the branch paths
                 var _iteratorNormalCompletion48 = true;
                 var _didIteratorError48 = false;
                 var _iteratorError48 = undefined;
@@ -4337,9 +4015,7 @@ var ProjectService = function () {
                   for (var _iterator48 = branchPaths[Symbol.iterator](), _step48; !(_iteratorNormalCompletion48 = (_step48 = _iterator48.next()).done); _iteratorNormalCompletion48 = true) {
                     var branchPath = _step48.value;
 
-
                     if (branchPath != null) {
-
                       // check if the node id is in the branch path
                       var index = branchPath.indexOf(nodeId);
 
@@ -4381,7 +4057,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return false;
     }
   }, {
@@ -4396,10 +4071,7 @@ var ProjectService = function () {
      */
     value: function getBranchPathsByNodeId(branches, nodeId) {
       var branchPathsIn = [];
-
       if (branches != null && nodeId != null) {
-
-        // loop through all the branches
         var _iteratorNormalCompletion49 = true;
         var _didIteratorError49 = false;
         var _iteratorError49 = undefined;
@@ -4408,15 +4080,11 @@ var ProjectService = function () {
           for (var _iterator49 = branches[Symbol.iterator](), _step49; !(_iteratorNormalCompletion49 = (_step49 = _iterator49.next()).done); _iteratorNormalCompletion49 = true) {
             var branch = _step49.value;
 
-
             if (branch != null) {
-
               // get the branch paths
               var branchPaths = branch.branchPaths;
 
               if (branchPaths != null) {
-
-                // loop through all the branch paths
                 var _iteratorNormalCompletion50 = true;
                 var _didIteratorError50 = false;
                 var _iteratorError50 = undefined;
@@ -4425,9 +4093,7 @@ var ProjectService = function () {
                   for (var _iterator50 = branchPaths[Symbol.iterator](), _step50; !(_iteratorNormalCompletion50 = (_step50 = _iterator50.next()).done); _iteratorNormalCompletion50 = true) {
                     var branchPath = _step50.value;
 
-
                     if (branchPath != null) {
-
                       // get the index of the node id in the branch path
                       var index = branchPath.indexOf(nodeId);
 
@@ -4472,7 +4138,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return branchPathsIn;
     }
 
@@ -4487,12 +4152,9 @@ var ProjectService = function () {
     key: 'getComponentByNodeIdAndComponentId',
     value: function getComponentByNodeIdAndComponentId(nodeId, componentId) {
       var component = null;
-
       if (nodeId != null && componentId != null) {
-
         var components = this.getComponentsByNodeId(nodeId);
 
-        // loop through all the components
         var _iteratorNormalCompletion51 = true;
         var _didIteratorError51 = false;
         var _iteratorError51 = undefined;
@@ -4503,7 +4165,6 @@ var ProjectService = function () {
 
             if (tempComponent != null) {
               var tempComponentId = tempComponent.id;
-
               if (componentId === tempComponentId) {
                 // we have found the component we want
                 component = tempComponent;
@@ -4526,7 +4187,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return component;
     }
   }, {
@@ -4534,25 +4194,22 @@ var ProjectService = function () {
 
 
     /**
-     * Returns the position of the component in the node by node id and component id, 0-indexed.
+     * Returns the position of the component in the node by node id and
+     * component id, 0-indexed.
      * @param nodeId the node id
      * @param componentId the component id
-     * @returns the component's position or -1 if nodeId or componentId are null or doesn't exist in the project.
+     * @returns the component's position or -1 if nodeId or componentId are null
+     * or doesn't exist in the project.
      */
     value: function getComponentPositionByNodeIdAndComponentId(nodeId, componentId) {
       var componentPosition = -1;
-
       if (nodeId != null && componentId != null) {
-
         var components = this.getComponentsByNodeId(nodeId);
 
-        // loop through all the components
         for (var c = 0; c < components.length; c++) {
           var tempComponent = components[c];
-
           if (tempComponent != null) {
             var tempComponentId = tempComponent.id;
-
             if (componentId === tempComponentId) {
               // we have found the component we want
               componentPosition = c;
@@ -4561,7 +4218,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return componentPosition;
     }
   }, {
@@ -4571,41 +4227,35 @@ var ProjectService = function () {
     /**
      * Get the components in a node
      * @param nodeId the node id
-     * @returns an array of components or empty array if nodeId is null or doesn't exist in the project.
+     * @returns an array of components or empty array if nodeId is null or
+     * doesn't exist in the project.
      * if the node exists but doesn't have any components, returns an empty array.
      */
     value: function getComponentsByNodeId(nodeId) {
       var components = [];
-
       if (nodeId != null) {
-
         // get the node
         var node = this.getNodeById(nodeId);
 
         if (node != null) {
-
           // get the components
           if (node.components != null) {
             components = node.components;
           }
         }
       }
-
       return components;
     }
   }, {
     key: 'getNodeContentByNodeId',
     value: function getNodeContentByNodeId(nodeId) {
       var nodeContent = null;
-
       if (nodeId != null) {
         var node = this.getNodeById(nodeId);
-
         if (node != null) {
           nodeContent = node;
         }
       }
-
       return nodeContent;
     }
   }, {
@@ -4619,20 +4269,14 @@ var ProjectService = function () {
      * @param component the new component
      */
     value: function replaceComponent(nodeId, componentId, component) {
-
       if (nodeId != null && componentId != null && component != null) {
-
         // get all the components for the node
         var components = this.getComponentsByNodeId(nodeId);
 
         if (components != null) {
-
-          // loop through all the components
           for (var c = 0; c < components.length; c++) {
             var tempComponent = components[c];
-
             if (tempComponent != null) {
-
               if (tempComponent.id === componentId) {
                 // the component id matches the one we want so we will replace it
                 components[c] = component;
@@ -4653,7 +4297,6 @@ var ProjectService = function () {
      * @returns the group object
      */
     value: function createGroup(title) {
-
       // get the next available group id
       var newGroupId = this.getNextAvailableGroupId();
 
@@ -4664,7 +4307,6 @@ var ProjectService = function () {
       newGroup.title = title;
       newGroup.startId = '';
       newGroup.ids = [];
-
       return newGroup;
     }
   }, {
@@ -4677,7 +4319,6 @@ var ProjectService = function () {
      * @returns the node object
      */
     value: function createNode(title) {
-
       // get the next available node id
       var newNodeId = this.getNextAvailableNodeId();
 
@@ -4689,11 +4330,9 @@ var ProjectService = function () {
       newNode.constraints = [];
       newNode.transitionLogic = {};
       newNode.transitionLogic.transitions = [];
-
       newNode.showSaveButton = false;
       newNode.showSubmitButton = false;
       newNode.components = [];
-
       return newNode;
     }
   }, {
@@ -4706,7 +4345,6 @@ var ProjectService = function () {
      * @param nodeId the node id of the group to create the node in
      */
     value: function createNodeInside(node, nodeId) {
-
       if (nodeId == 'inactiveNodes') {
         // add the node to the inactive nodes
 
@@ -4749,7 +4387,6 @@ var ProjectService = function () {
   }, {
     key: 'createNodeAfter',
     value: function createNodeAfter(node, nodeId) {
-
       if (this.isInactive(nodeId)) {
         // we are adding the node after a node that is inactive
 
@@ -4779,14 +4416,13 @@ var ProjectService = function () {
          * we are creating a group node so we will update/create the
          * transitions that traverse from the previous group to this group
          */
-
+        // TODO geoffreykwan oldToGroupIds is declared here and below. Refactor
         var oldToGroupIds = [];
 
         // get the transitions that come out of the previous group
         var transitionsFromGroup = this.getTransitionsByFromNodeId(nodeId);
 
         if (transitionsFromGroup != null) {
-
           /*
            * loop through all the transitions that come out of the previous group
            * and get the node ids that the group transitions to
@@ -4801,7 +4437,6 @@ var ProjectService = function () {
 
               if (transitionFromGroup != null) {
                 var toNodeId = transitionFromGroup.to;
-
                 if (toNodeId != null) {
                   oldToGroupIds.push(toNodeId);
                 }
@@ -4824,6 +4459,7 @@ var ProjectService = function () {
         }
 
         var fromGroupId = nodeId;
+        // TODO geoffreykwan oldToGroupIds is declared here and above. Refactor
         var oldToGroupIds = oldToGroupIds;
         var newToGroupId = node.id;
 
@@ -4846,10 +4482,7 @@ var ProjectService = function () {
     key: 'insertNodeAfterInGroups',
     value: function insertNodeAfterInGroups(nodeIdToInsert, nodeIdToInsertAfter) {
       var groupNodes = this.getGroupNodes();
-
       if (groupNodes != null) {
-
-        // loop through the groups
         var _iteratorNormalCompletion53 = true;
         var _didIteratorError53 = false;
         var _iteratorError53 = undefined;
@@ -4858,16 +4491,11 @@ var ProjectService = function () {
           for (var _iterator53 = groupNodes[Symbol.iterator](), _step53; !(_iteratorNormalCompletion53 = (_step53 = _iterator53.next()).done); _iteratorNormalCompletion53 = true) {
             var group = _step53.value;
 
-
             if (group != null) {
               var ids = group.ids;
-
               if (ids != null) {
-
-                // loop through the children ids
                 for (var i = 0; i < ids.length; i++) {
                   var id = ids[i];
-
                   if (nodeIdToInsertAfter === id) {
                     // we have found the node id we want to insert after
 
@@ -4905,12 +4533,10 @@ var ProjectService = function () {
   }, {
     key: 'insertNodeAfterInTransitions',
     value: function insertNodeAfterInTransitions(node, nodeId) {
-
       // get the node that will end up before
       var previousNode = this.getNodeById(nodeId);
 
       if (previousNode != null) {
-
         if (previousNode.transitionLogic == null) {
           previousNode.transitionLogic = {};
           previousNode.transitionLogic.transitions = [];
@@ -4936,12 +4562,10 @@ var ProjectService = function () {
         var previousNodeTransitionLogic = previousNode.transitionLogic;
 
         if (previousNodeTransitionLogic != null) {
-
           // get the transitions from the before node
           var transitions = previousNodeTransitionLogic.transitions;
 
           if (transitions != null) {
-
             // make a copy of the transitions
             var transitionsJSONString = angular.toJson(transitions);
             var transitionsCopy = angular.fromJson(transitionsJSONString);
@@ -4962,13 +4586,10 @@ var ProjectService = function () {
           var parentGroupId = this.getParentGroupId(nodeId);
 
           if (parentGroupId != null && parentGroupId != '' && parentGroupId != 'group0') {
-
             // get the parent transitions
             var parentTransitions = this.getTransitionsByFromNodeId(parentGroupId);
 
             if (parentTransitions != null) {
-
-              // loop through all the parent transitions
               var _iteratorNormalCompletion54 = true;
               var _didIteratorError54 = false;
               var _iteratorError54 = undefined;
@@ -4978,10 +4599,8 @@ var ProjectService = function () {
                   var parentTransition = _step54.value;
 
                   var newTransition = {};
-
                   if (parentTransition != null) {
                     var toNodeId = parentTransition.to;
-
                     if (this.isGroupNode(toNodeId)) {
                       // the transition is to a group
 
@@ -5046,12 +4665,10 @@ var ProjectService = function () {
          * inserted node into the branch path
          */
         if (branchPathTakenConstraints != null && branchPathTakenConstraints.length > 0) {
-
           if (node.constraints == null) {
             node.constraints = [];
           }
 
-          // loop through all the branch path taken constraints
           var _iteratorNormalCompletion55 = true;
           var _didIteratorError55 = false;
           var _iteratorError55 = undefined;
@@ -5061,7 +4678,6 @@ var ProjectService = function () {
               var branchPathTakenConstraint = _step55.value;
 
               if (branchPathTakenConstraint != null) {
-
                 // create a new constraint with the same branch path taken parameters
                 var newConstraint = {};
                 newConstraint.id = this.getNextAvailableConstraintIdForNodeId(node.id);
@@ -5100,15 +4716,12 @@ var ProjectService = function () {
   }, {
     key: 'insertNodeInsideInGroups',
     value: function insertNodeInsideInGroups(nodeIdToInsert, nodeIdToInsertInside) {
-
       // get the group we will insert into
       var group = this.getNodeById(nodeIdToInsertInside);
 
       if (group != null) {
         var ids = group.ids;
-
         if (ids != null) {
-
           // insert the node node id into the beginning of the child ids
           ids.splice(0, 0, nodeIdToInsert);
 
@@ -5127,12 +4740,10 @@ var ProjectService = function () {
   }, {
     key: 'insertNodeInsideInTransitions',
     value: function insertNodeInsideInTransitions(nodeIdToInsert, nodeIdToInsertInside) {
-
       // get the node we are inserting
       var nodeToInsert = this.getNodeById(nodeIdToInsert);
 
       if (nodeToInsert != null && nodeToInsert.transitionLogic != null && nodeToInsert.transitionLogic.transitions != null) {
-
         // clear out any existing transitions
         nodeToInsert.transitionLogic.transitions = [];
 
@@ -5162,7 +4773,6 @@ var ProjectService = function () {
        * we are inserting.
        */
       if (nodeToInsert != null && group != null) {
-
         // get the start node
         var startId = group.startId;
 
@@ -5175,7 +4785,6 @@ var ProjectService = function () {
           // find all the groups that point to this group
           var previousGroups = this.getGroupNodesByToNodeId(nodeIdToInsertInside);
 
-          // loop through all the groups that point to this group
           var _iteratorNormalCompletion56 = true;
           var _didIteratorError56 = false;
           var _iteratorError56 = undefined;
@@ -5231,7 +4840,6 @@ var ProjectService = function () {
           }
         } else {
           // there are transitions to the start node
-
           var _iteratorNormalCompletion58 = true;
           var _didIteratorError58 = false;
           var _iteratorError58 = undefined;
@@ -5302,7 +4910,6 @@ var ProjectService = function () {
          */
         if (startId != null && startId != '') {
           // there is a start id
-
           var startNode = this.getNodeById(startId);
 
           if (startNode != null) {
@@ -5339,8 +4946,6 @@ var ProjectService = function () {
           var parentTransitions = this.getTransitionsByFromNodeId(nodeIdToInsertInside);
 
           if (parentTransitions != null) {
-
-            // loop through all the parent transitions
             var _iteratorNormalCompletion60 = true;
             var _didIteratorError60 = false;
             var _iteratorError60 = undefined;
@@ -5351,7 +4956,6 @@ var ProjectService = function () {
 
                 if (parentTransition != null) {
                   var toNodeId = parentTransition.to;
-
                   if (this.isGroupNode(toNodeId)) {
                     // the to node is a group
 
@@ -5359,16 +4963,15 @@ var ProjectService = function () {
                     var nextGroup = this.getNodeById(toNodeId);
 
                     if (nextGroup != null) {
-
                       // get the start id of the to group
-                      var startId = nextGroup.startId;
+                      var _startId = nextGroup.startId;
 
-                      if (startId == null || startId == '') {
+                      if (_startId == null || _startId == '') {
                         // there is no start id so we will just transition to the group
                         this.addToTransition(nodeToInsert, toNodeId);
                       } else {
                         // there is a start id so we will transition to that
-                        this.addToTransition(nodeToInsert, startId);
+                        this.addToTransition(nodeToInsert, _startId);
                       }
                     }
                   } else {
@@ -5457,7 +5060,6 @@ var ProjectService = function () {
 
         var transitions = node.transitionLogic.transitions;
 
-        // loop through all the transitions
         var _iteratorNormalCompletion61 = true;
         var _didIteratorError61 = false;
         var _iteratorError61 = undefined;
@@ -5468,7 +5070,6 @@ var ProjectService = function () {
 
             if (transition != null) {
               var toNodeId = transition.to;
-
               if (oldToNodeId === toNodeId) {
                 // we have found the transition we want to update
 
@@ -5504,16 +5105,11 @@ var ProjectService = function () {
     key: 'getLastNodesInGroup',
     value: function getLastNodesInGroup(groupId) {
       var lastNodes = [];
-
       if (groupId != null) {
         var group = this.getNodeById(groupId);
-
         if (group != null) {
           var childIds = group.ids;
-
           if (childIds != null) {
-
-            // loop through all the child ids
             var _iteratorNormalCompletion62 = true;
             var _didIteratorError62 = false;
             var _iteratorError62 = undefined;
@@ -5524,12 +5120,9 @@ var ProjectService = function () {
 
                 if (childId != null) {
                   var child = this.getNodeById(childId);
-
                   if (child != null) {
                     var transitionLogic = child.transitionLogic;
-
                     if (transitionLogic != null) {
-
                       // get the transitions
                       var transitions = transitionLogic.transitions;
 
@@ -5558,7 +5151,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return lastNodes;
     }
 
@@ -5570,13 +5162,11 @@ var ProjectService = function () {
   }, {
     key: 'getNextAvailableGroupId',
     value: function getNextAvailableGroupId() {
-
       // get all the group ids
       var groupIds = this.getGroupIds();
 
       var largestGroupIdNumber = null;
 
-      // loop through all the existing group ids
       var _iteratorNormalCompletion63 = true;
       var _didIteratorError63 = false;
       var _iteratorError63 = undefined;
@@ -5585,13 +5175,11 @@ var ProjectService = function () {
         for (var _iterator63 = groupIds[Symbol.iterator](), _step63; !(_iteratorNormalCompletion63 = (_step63 = _iterator63.next()).done); _iteratorNormalCompletion63 = true) {
           var groupId = _step63.value;
 
-
           // get the number from the group id e.g. the number of 'group2' would be 2
           var groupIdNumber = groupId.replace('group', '');
 
           // make sure the number is an actual number
           if (!isNaN(groupIdNumber)) {
-
             groupIdNumber = parseInt(groupIdNumber);
 
             // update the largest group id number if necessary
@@ -5720,13 +5308,11 @@ var ProjectService = function () {
   }, {
     key: 'getNextAvailableNodeId',
     value: function getNextAvailableNodeId(nodeIdsToSkip) {
-
       // get all the node ids
       var nodeIds = this.getNodeIds();
 
       var largestNodeIdNumber = null;
 
-      // loop through all the existing node ids
       var _iteratorNormalCompletion66 = true;
       var _didIteratorError66 = false;
       var _iteratorError66 = undefined;
@@ -5736,17 +5322,17 @@ var ProjectService = function () {
           var nodeId = _step66.value;
 
           // get the number from the node id e.g. the number of 'node2' would be 2
-          var nodeIdNumber = nodeId.replace('node', '');
+          var _nodeIdNumber = nodeId.replace('node', '');
 
           // make sure the number is an actual number
-          if (!isNaN(nodeIdNumber)) {
-            nodeIdNumber = parseInt(nodeIdNumber);
+          if (!isNaN(_nodeIdNumber)) {
+            _nodeIdNumber = parseInt(_nodeIdNumber);
 
             // update the largest node id number if necessary
             if (largestNodeIdNumber == null) {
-              largestNodeIdNumber = nodeIdNumber;
-            } else if (nodeIdNumber > largestNodeIdNumber) {
-              largestNodeIdNumber = nodeIdNumber;
+              largestNodeIdNumber = _nodeIdNumber;
+            } else if (_nodeIdNumber > largestNodeIdNumber) {
+              largestNodeIdNumber = _nodeIdNumber;
             }
           }
         }
@@ -5778,17 +5364,17 @@ var ProjectService = function () {
           var inactiveNodeId = _step67.value;
 
           // get the number from the node id e.g. the number of 'node2' would be 2
-          var nodeIdNumber = inactiveNodeId.replace('node', '');
+          var _nodeIdNumber2 = inactiveNodeId.replace('node', '');
 
           // make sure the number is an actual number
-          if (!isNaN(nodeIdNumber)) {
-            nodeIdNumber = parseInt(nodeIdNumber);
+          if (!isNaN(_nodeIdNumber2)) {
+            _nodeIdNumber2 = parseInt(_nodeIdNumber2);
 
             // update the largest node id number if necessary
             if (largestNodeIdNumber == null) {
-              largestNodeIdNumber = nodeIdNumber;
-            } else if (nodeIdNumber > largestNodeIdNumber) {
-              largestNodeIdNumber = nodeIdNumber;
+              largestNodeIdNumber = _nodeIdNumber2;
+            } else if (_nodeIdNumber2 > largestNodeIdNumber) {
+              largestNodeIdNumber = _nodeIdNumber2;
             }
           }
         }
@@ -5810,7 +5396,6 @@ var ProjectService = function () {
       if (nodeIdsToSkip != null) {
         // there are node ids to skip
 
-        // loop through all the node ids to skip
         var _iteratorNormalCompletion68 = true;
         var _didIteratorError68 = false;
         var _iteratorError68 = undefined;
@@ -5864,12 +5449,9 @@ var ProjectService = function () {
   }, {
     key: 'getNodeIds',
     value: function getNodeIds() {
-
       var nodeIds = [];
-
       var nodes = this.applicationNodes;
 
-      // loop through all the nodes
       var _iteratorNormalCompletion69 = true;
       var _didIteratorError69 = false;
       var _iteratorError69 = undefined;
@@ -5878,10 +5460,8 @@ var ProjectService = function () {
         for (var _iterator69 = nodes[Symbol.iterator](), _step69; !(_iteratorNormalCompletion69 = (_step69 = _iterator69.next()).done); _iteratorNormalCompletion69 = true) {
           var node = _step69.value;
 
-
           if (node != null) {
             var nodeId = node.id;
-
             if (nodeId != null) {
               nodeIds.push(nodeId);
             }
@@ -5913,14 +5493,9 @@ var ProjectService = function () {
   }, {
     key: 'getInactiveNodeIds',
     value: function getInactiveNodeIds() {
-
       var nodeIds = [];
-
       var inactiveNodes = this.project.inactiveNodes;
-
       if (inactiveNodes != null) {
-
-        // loop through all the inactive nodes
         var _iteratorNormalCompletion70 = true;
         var _didIteratorError70 = false;
         var _iteratorError70 = undefined;
@@ -5929,10 +5504,8 @@ var ProjectService = function () {
           for (var _iterator70 = inactiveNodes[Symbol.iterator](), _step70; !(_iteratorNormalCompletion70 = (_step70 = _iterator70.next()).done); _iteratorNormalCompletion70 = true) {
             var inactiveNode = _step70.value;
 
-
             if (inactiveNode != null) {
               var nodeId = inactiveNode.id;
-
               if (nodeId != null) {
                 nodeIds.push(nodeId);
               }
@@ -5953,7 +5526,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return nodeIds;
     }
 
@@ -5966,12 +5538,9 @@ var ProjectService = function () {
   }, {
     key: 'moveNodesInside',
     value: function moveNodesInside(nodeIds, nodeId) {
-
       var movedNodes = [];
 
-      // loop through all the nodes we are moving
       for (var n = 0; n < nodeIds.length; n++) {
-
         // get the node we are moving
         var tempNodeId = nodeIds[n];
         var tempNode = this.getNodeById(tempNodeId);
@@ -6048,7 +5617,6 @@ var ProjectService = function () {
          */
         nodeId = tempNode.id;
       }
-
       return movedNodes;
     }
 
@@ -6061,10 +5629,8 @@ var ProjectService = function () {
   }, {
     key: 'moveNodesAfter',
     value: function moveNodesAfter(nodeIds, nodeId) {
-
       var movedNodes = [];
 
-      // loop through all the nodes we are moving
       var _iteratorNormalCompletion71 = true;
       var _didIteratorError71 = false;
       var _iteratorError71 = undefined;
@@ -6072,7 +5638,6 @@ var ProjectService = function () {
       try {
         for (var _iterator71 = nodeIds[Symbol.iterator](), _step71; !(_iteratorNormalCompletion71 = (_step71 = _iterator71.next()).done); _iteratorNormalCompletion71 = true) {
           var tempNodeId = _step71.value;
-
 
           // get the node we are moving
           var node = this.getNodeById(tempNodeId);
@@ -6154,16 +5719,9 @@ var ProjectService = function () {
   }, {
     key: 'copyNodesInside',
     value: function copyNodesInside(nodeIds, nodeId) {
-
       var newNodes = [];
-
-      // loop through all the nodes we are copying
       for (var n = 0; n < nodeIds.length; n++) {
-
-        // get the node we are copying
         var nodeIdToCopy = nodeIds[n];
-
-        // create a copy of the node
         var newNode = this.copyNode(nodeIdToCopy);
         var newNodeId = newNode.id;
 
@@ -6183,7 +5741,6 @@ var ProjectService = function () {
 
         newNodes.push(newNode);
       }
-
       return newNodes;
     }
 
@@ -6196,10 +5753,7 @@ var ProjectService = function () {
   }, {
     key: 'copyNodesAfter',
     value: function copyNodesAfter(nodeIds, nodeId) {
-
       var newNodes = [];
-
-      // loop through all the nodes we are copying
       var _iteratorNormalCompletion72 = true;
       var _didIteratorError72 = false;
       var _iteratorError72 = undefined;
@@ -6208,11 +5762,8 @@ var ProjectService = function () {
         for (var _iterator72 = nodeIds[Symbol.iterator](), _step72; !(_iteratorNormalCompletion72 = (_step72 = _iterator72.next()).done); _iteratorNormalCompletion72 = true) {
           var nodeIdToCopy = _step72.value;
 
-
-          // create a copy of the node
           var newNode = this.copyNode(nodeIdToCopy);
           var newNodeId = newNode.id;
-
           this.createNodeAfter(newNode, nodeId);
 
           // remember the node id so we can put the next node (if any) after this one
@@ -6259,7 +5810,6 @@ var ProjectService = function () {
       // used to hold the new component ids
       var newComponentIds = [];
 
-      // loop through all the components and give them a new component id
       var _iteratorNormalCompletion73 = true;
       var _didIteratorError73 = false;
       var _iteratorError73 = undefined;
@@ -6268,14 +5818,8 @@ var ProjectService = function () {
         for (var _iterator73 = nodeCopy.components[Symbol.iterator](), _step73; !(_iteratorNormalCompletion73 = (_step73 = _iterator73.next()).done); _iteratorNormalCompletion73 = true) {
           var component = _step73.value;
 
-
-          // give the component a new id
           var newComponentId = this.getUnusedComponentId(newComponentIds);
-
-          // remember the new component id
           newComponentIds.push(newComponentId);
-
-          // set the new component id into the component
           component.id = newComponentId;
         }
       } catch (err) {
@@ -6304,7 +5848,6 @@ var ProjectService = function () {
   }, {
     key: 'deleteNode',
     value: function deleteNode(nodeId) {
-
       /*
        * flag for whether we are deleting the project start node id.
        * if we are deleting the project start node id, we will need
@@ -6321,8 +5864,6 @@ var ProjectService = function () {
 
         if (group != null) {
           var ids = group.ids;
-
-          // loop through all the children
           for (var i = 0; i < ids.length; i++) {
             var id = ids[i];
 
@@ -6357,7 +5898,6 @@ var ProjectService = function () {
          * the next node
          */
         if (nodeId === parentGroup.startId) {
-
           var hasSetNewStartId = false;
 
           // get the node
@@ -6365,18 +5905,13 @@ var ProjectService = function () {
 
           if (node != null) {
             var transitionLogic = node.transitionLogic;
-
             if (transitionLogic != null) {
               var transitions = transitionLogic.transitions;
-
               if (transitions != null && transitions.length > 0) {
                 var transition = transitions[0];
-
                 if (transition != null) {
                   var toNodeId = transition.to;
-
                   if (toNodeId != null) {
-
                     // check that the to node is in the same group
                     if (this.isNodeInGroup(toNodeId, parentGroup.id)) {
 
@@ -6415,9 +5950,9 @@ var ProjectService = function () {
            */
 
           // get the transitions of the group we are removing
-          var transitions = this.getTransitionsByFromNodeId(nodeId);
+          var _transitions2 = this.getTransitionsByFromNodeId(nodeId);
 
-          if (transitions == null || transitions.length == 0) {
+          if (_transitions2 == null || _transitions2.length == 0) {
             /*
              * the group doesn't have any transitions so we will set
              * the startNodeId to 'group0'
@@ -6428,9 +5963,9 @@ var ProjectService = function () {
 
             var nextNodeId = null;
 
-            if (transitions[0] != null && transitions[0].to != null) {
+            if (_transitions2[0] != null && _transitions2[0].to != null) {
               // get the first transition
-              nextNodeId = transitions[0].to;
+              nextNodeId = _transitions2[0].to;
             }
 
             if (nextNodeId != null) {
@@ -6441,7 +5976,6 @@ var ProjectService = function () {
                 var nextGroupNode = this.getNodeById(nextNodeId);
 
                 if (nextGroupNode != null) {
-
                   // get the start id of the next group
                   var nextGroupStartId = nextGroupNode.startId;
 
@@ -6477,9 +6011,9 @@ var ProjectService = function () {
            */
 
           // get the transitions from the step we are removing
-          var transitions = this.getTransitionsByFromNodeId(nodeId);
+          var _transitions3 = this.getTransitionsByFromNodeId(nodeId);
 
-          if (transitions == null || transitions.length == 0) {
+          if (_transitions3 == null || _transitions3.length == 0) {
             /*
              * the step doesn't have any transitions so we will use the
              * its parent group as the start node id
@@ -6489,12 +6023,12 @@ var ProjectService = function () {
           } else {
             // the step has transitions
 
-            if (transitions[0] != null && transitions[0].to != null) {
+            if (_transitions3[0] != null && _transitions3[0].to != null) {
               /*
                * get the first transition and set it as the project
                * start node id
                */
-              var transitionToNodeId = transitions[0].to;
+              var transitionToNodeId = _transitions3[0].to;
               this.setStartNodeId(transitionToNodeId);
             }
           }
@@ -6519,7 +6053,6 @@ var ProjectService = function () {
   }, {
     key: 'removeNodeIdFromTransitions',
     value: function removeNodeIdFromTransitions(nodeId) {
-
       // get the node we are removing
       var nodeToRemove = this.getNodeById(nodeId);
 
@@ -6535,20 +6068,16 @@ var ProjectService = function () {
       }
 
       var parentIdOfNodeToRemove = this.getParentGroupId(nodeId);
-
       var parentGroup = this.getNodeById(parentIdOfNodeToRemove);
 
       // update the start id if we are removing the start node of a group
       if (parentGroup != null) {
         var parentGroupStartId = parentGroup.startId;
-
         if (parentGroupStartId != null) {
           if (parentGroupStartId === nodeId) {
             // the node we are removing is the start node
 
             if (nodeToRemoveTransitions != null && nodeToRemoveTransitions.length > 0) {
-
-              // loop through all the transitions from the node to choose a new start id
               var _iteratorNormalCompletion74 = true;
               var _didIteratorError74 = false;
               var _iteratorError74 = undefined;
@@ -6559,7 +6088,6 @@ var ProjectService = function () {
 
                   if (nodeToRemoveTransition != null) {
                     var toNodeId = nodeToRemoveTransition.to;
-
                     if (toNodeId != null) {
                       /*
                        * we need to check that the to node id is in the
@@ -6568,7 +6096,6 @@ var ProjectService = function () {
                        * for the start id.
                        */
                       if (this.getParentGroupId(toNodeId) == parentIdOfNodeToRemove) {
-
                         // set the new start id
                         parentGroup.startId = toNodeId;
                       }
@@ -6597,24 +6124,17 @@ var ProjectService = function () {
         }
       }
 
-      // loop through all the nodes that transition to the node we are removing
       for (var n = 0; n < nodesByToNodeId.length; n++) {
-
-        // get a node that has a transition to the node we are removing
         var node = nodesByToNodeId[n];
 
         if (node != null) {
           var parentIdOfFromNode = this.getParentGroupId(node.id);
-
           var transitionLogic = node.transitionLogic;
 
           if (transitionLogic != null) {
             var transitions = transitionLogic.transitions;
-
-            // loop through all the transitions of this node
             for (var t = 0; t < transitions.length; t++) {
               var transition = transitions[t];
-
               if (nodeId === transition.to) {
                 // we have found the transition to the node we are removing
 
@@ -6629,16 +6149,12 @@ var ProjectService = function () {
                  */
 
                 if (parentIdOfFromNode != parentIdOfNodeToRemove) {
-
                   for (var tc = 0; tc < transitionsCopy.length; tc++) {
                     var tempTransition = transitionsCopy[tc];
-
                     if (tempTransition != null) {
                       var tempToNodeId = tempTransition.to;
-
                       if (tempToNodeId != null) {
                         var parentIdOfToNode = this.getParentGroupId(tempToNodeId);
-
                         if (parentIdOfNodeToRemove != parentIdOfToNode) {
                           // remove the transition
 
@@ -6662,8 +6178,6 @@ var ProjectService = function () {
                   var nodeIdsInBranch = this.getNodeIdsInBranch(node.id, nodeId);
 
                   if (nodeIdsInBranch != null) {
-
-                    // loop through all the node ids in the branch
                     var _iteratorNormalCompletion75 = true;
                     var _didIteratorError75 = false;
                     var _iteratorError75 = undefined;
@@ -6674,7 +6188,6 @@ var ProjectService = function () {
 
                         var nodeInBranch = this.getNodeById(nodeIdInBranch);
 
-                        // loop through all the transitions in the node we are removing
                         var _iteratorNormalCompletion76 = true;
                         var _didIteratorError76 = false;
                         var _iteratorError76 = undefined;
@@ -6735,7 +6248,6 @@ var ProjectService = function () {
                    */
                   var branches = this.getBranchesByBranchStartPointNodeId(nodeId);
 
-                  // loop through all branches
                   var _iteratorNormalCompletion77 = true;
                   var _didIteratorError77 = false;
                   var _iteratorError77 = undefined;
@@ -6744,9 +6256,7 @@ var ProjectService = function () {
                     for (var _iterator77 = branches[Symbol.iterator](), _step77; !(_iteratorNormalCompletion77 = (_step77 = _iterator77.next()).done); _iteratorNormalCompletion77 = true) {
                       var branch = _step77.value;
 
-
                       if (branch != null) {
-
                         /*
                          * get the branch paths. these paths do not
                          * contain the start point or merge point.
@@ -6754,8 +6264,6 @@ var ProjectService = function () {
                         var branchPaths = branch.branchPaths;
 
                         if (branchPaths != null) {
-
-                          // loop through all the branch paths
                           var _iteratorNormalCompletion78 = true;
                           var _didIteratorError78 = false;
                           var _iteratorError78 = undefined;
@@ -6764,22 +6272,19 @@ var ProjectService = function () {
                             for (var _iterator78 = branchPaths[Symbol.iterator](), _step78; !(_iteratorNormalCompletion78 = (_step78 = _iterator78.next()).done); _iteratorNormalCompletion78 = true) {
                               var branchPath = _step78.value;
 
-
                               if (branchPath != null) {
-
                                 // get the start point
-                                var currentFromNodeId = nodeId;
+                                var _currentFromNodeId = nodeId;
 
                                 // get the first node in this branch
-                                var currentToNodeId = branchPath[0];
+                                var _currentToNodeId = branchPath[0];
 
                                 // this will be the new start point
-                                var newFromNodeId = node.id;
+                                var _newFromNodeId = node.id;
 
                                 // get the first node in this branch
-                                var newToNodeId = branchPath[0];
+                                var _newToNodeId = branchPath[0];
 
-                                // loop through all the nodes in the branch path
                                 var _iteratorNormalCompletion79 = true;
                                 var _didIteratorError79 = false;
                                 var _iteratorError79 = undefined;
@@ -6788,12 +6293,10 @@ var ProjectService = function () {
                                   for (var _iterator79 = branchPath[Symbol.iterator](), _step79; !(_iteratorNormalCompletion79 = (_step79 = _iterator79.next()).done); _iteratorNormalCompletion79 = true) {
                                     var branchPathNodeId = _step79.value;
 
-
-                                    // get the node
                                     var branchPathNode = this.getNodeById(branchPathNodeId);
 
                                     // update the constraints related to the branching
-                                    this.updateBranchPathTakenConstraint(branchPathNode, currentFromNodeId, currentToNodeId, newFromNodeId, newToNodeId);
+                                    this.updateBranchPathTakenConstraint(branchPathNode, _currentFromNodeId, _currentToNodeId, _newFromNodeId, _newToNodeId);
                                   }
                                 } catch (err) {
                                   _didIteratorError79 = true;
@@ -6882,10 +6385,10 @@ var ProjectService = function () {
 
                   try {
                     for (var _iterator80 = transitionsCopy[Symbol.iterator](), _step80; !(_iteratorNormalCompletion80 = (_step80 = _iterator80.next()).done); _iteratorNormalCompletion80 = true) {
-                      var transitionCopy = _step80.value;
+                      var _transitionCopy = _step80.value;
 
                       // insert a transition from the node we are removing
-                      transitions.splice(insertIndex, 0, transitionCopy);
+                      transitions.splice(insertIndex, 0, _transitionCopy);
                       insertIndex++;
                     }
                   } catch (err) {
@@ -6959,12 +6462,8 @@ var ProjectService = function () {
      * @param nodeId the node id to remove
      */
     value: function removeNodeIdFromGroups(nodeId) {
-
       var groups = this.groupNodes;
-
       if (groups != null) {
-
-        // loop through all the groups
         var _iteratorNormalCompletion81 = true;
         var _didIteratorError81 = false;
         var _iteratorError81 = undefined;
@@ -6973,19 +6472,11 @@ var ProjectService = function () {
           for (var _iterator81 = groups[Symbol.iterator](), _step81; !(_iteratorNormalCompletion81 = (_step81 = _iterator81.next()).done); _iteratorNormalCompletion81 = true) {
             var group = _step81.value;
 
-
             if (group != null) {
-
-              // get the start id of the group
               var startId = group.startId;
-
-              // get the child ids of the group
               var ids = group.ids;
-
-              // loop through all the child ids
               for (var i = 0; i < ids.length; i++) {
                 var id = ids[i];
-
                 if (nodeId === id) {
                   // we have found the node id we want to remove
                   ids.splice(i, 1);
@@ -7008,7 +6499,6 @@ var ProjectService = function () {
                         var transitions = transitionLogic.transitions;
 
                         if (transitions != null && transitions.length > 0) {
-
                           // get the first transition
                           // TODO handle the case when the node we are removing is a branch point
                           var transition = transitions[0];
@@ -7064,34 +6554,22 @@ var ProjectService = function () {
   }, {
     key: 'removeNodeIdFromNodes',
     value: function removeNodeIdFromNodes(nodeId) {
-
-      // get all the nodes in the project
       var nodes = this.project.nodes;
-
-      // loop through all the nodes
       for (var n = 0; n < nodes.length; n++) {
         var node = nodes[n];
-
         if (node != null) {
           if (nodeId === node.id) {
-            // we have found the node we want to remove
             nodes.splice(n, 1);
           }
         }
       }
 
-      // get all the inactive nodes
       var inactiveNodes = this.project.inactiveNodes;
-
       if (inactiveNodes != null) {
-
-        // loop through all the inactive nodes
         for (var i = 0; i < inactiveNodes.length; i++) {
           var inactiveNode = inactiveNodes[i];
-
           if (inactiveNode != null) {
             if (nodeId === inactiveNode.id) {
-              // we have found the inactive node we want to remove
               inactiveNodes.splice(i, 1);
             }
           }
@@ -7107,19 +6585,14 @@ var ProjectService = function () {
   }, {
     key: 'removeNodeIdFromInactiveNodes',
     value: function removeNodeIdFromInactiveNodes(nodeId) {
-
       // get the inactive nodes array
       var inactiveNodes = this.project.inactiveNodes;
 
       if (inactiveNodes != null) {
-
-        // loop through the inactive nodes
         for (var i = 0; i < inactiveNodes.length; i++) {
           var inactiveNode = inactiveNodes[i];
-
           if (inactiveNode != null) {
             var inactiveNodeId = inactiveNode.id;
-
             if (nodeId === inactiveNodeId) {
               /*
                * we have found the node we are looking for so we will
@@ -7144,9 +6617,7 @@ var ProjectService = function () {
   }, {
     key: 'createComponent',
     value: function createComponent(nodeId, componentType, insertAfterComponentId) {
-
       var component = null;
-
       if (nodeId != null && componentType != null) {
         // get the node we will create the component in
         var node = this.getNodeById(nodeId);
@@ -7155,7 +6626,6 @@ var ProjectService = function () {
         var service = this.$injector.get(componentType + 'Service');
 
         if (node != null && service != null) {
-
           // create the new component
           component = service.createComponent();
 
@@ -7199,7 +6669,6 @@ var ProjectService = function () {
           this.addComponentToNode(node, component, insertAfterComponentId);
         }
       }
-
       return component;
     }
 
@@ -7212,18 +6681,10 @@ var ProjectService = function () {
   }, {
     key: 'doesAnyComponentHaveWork',
     value: function doesAnyComponentHaveWork(nodeId) {
-
-      // get the node
       var node = this.getNodeById(nodeId);
-
       if (node != null) {
-
-        // get the components in the node
         var components = node.components;
-
         if (components != null) {
-
-          // loop through all the components
           var _iteratorNormalCompletion82 = true;
           var _didIteratorError82 = false;
           var _iteratorError82 = undefined;
@@ -7232,13 +6693,9 @@ var ProjectService = function () {
             for (var _iterator82 = components[Symbol.iterator](), _step82; !(_iteratorNormalCompletion82 = (_step82 = _iterator82.next()).done); _iteratorNormalCompletion82 = true) {
               var component = _step82.value;
 
-
               if (component != null) {
                 var componentType = component.type;
-
-                // get the service for the component type
                 var service = this.$injector.get(componentType + 'Service');
-
                 if (service != null) {
                   if (service.componentHasWork()) {
                     return true;
@@ -7262,7 +6719,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return false;
     }
 
@@ -7275,20 +6731,11 @@ var ProjectService = function () {
   }, {
     key: 'doesAnyComponentShowSaveButton',
     value: function doesAnyComponentShowSaveButton(nodeId) {
-
       var result = false;
-
-      // get the node
       var node = this.getNodeById(nodeId);
-
       if (node != null) {
-
-        // get the components in the node
         var components = node.components;
-
         if (components != null) {
-
-          // loop through all the components
           var _iteratorNormalCompletion83 = true;
           var _didIteratorError83 = false;
           var _iteratorError83 = undefined;
@@ -7297,10 +6744,8 @@ var ProjectService = function () {
             for (var _iterator83 = components[Symbol.iterator](), _step83; !(_iteratorNormalCompletion83 = (_step83 = _iterator83.next()).done); _iteratorNormalCompletion83 = true) {
               var component = _step83.value;
 
-
               if (component != null) {
                 if (component.showSaveButton == true) {
-                  // the component is showing their save button
                   result = true;
                 }
               }
@@ -7321,7 +6766,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return result;
     }
 
@@ -7334,20 +6778,11 @@ var ProjectService = function () {
   }, {
     key: 'doesAnyComponentShowSubmitButton',
     value: function doesAnyComponentShowSubmitButton(nodeId) {
-
       var result = false;
-
-      // get the node
       var node = this.getNodeById(nodeId);
-
       if (node != null) {
-
-        // get the components in the node
         var components = node.components;
-
         if (components != null) {
-
-          // loop through all the components
           var _iteratorNormalCompletion84 = true;
           var _didIteratorError84 = false;
           var _iteratorError84 = undefined;
@@ -7356,10 +6791,8 @@ var ProjectService = function () {
             for (var _iterator84 = components[Symbol.iterator](), _step84; !(_iteratorNormalCompletion84 = (_step84 = _iterator84.next()).done); _iteratorNormalCompletion84 = true) {
               var component = _step84.value;
 
-
               if (component != null) {
                 if (component.showSubmitButton == true) {
-                  // the component is showing their save button
                   result = true;
                 }
               }
@@ -7380,7 +6813,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return result;
     }
 
@@ -7392,18 +6824,10 @@ var ProjectService = function () {
   }, {
     key: 'turnOnSaveButtonInComponents',
     value: function turnOnSaveButtonInComponents(nodeId) {
-
-      // get the node
       var node = this.getNodeById(nodeId);
-
       if (node != null) {
-
-        // get the components in the node
         var components = node.components;
-
         if (components != null) {
-
-          // loop through all the components
           var _iteratorNormalCompletion85 = true;
           var _didIteratorError85 = false;
           var _iteratorError85 = undefined;
@@ -7412,23 +6836,12 @@ var ProjectService = function () {
             for (var _iterator85 = components[Symbol.iterator](), _step85; !(_iteratorNormalCompletion85 = (_step85 = _iterator85.next()).done); _iteratorNormalCompletion85 = true) {
               var component = _step85.value;
 
-
               if (component != null) {
-
-                // get the component type
                 var componentType = component.type;
-
                 if (componentType != null) {
-
-                  // get the service for the component type
                   var service = this.$injector.get(componentType + 'Service');
-
                   if (service != null) {
-
-                    // check if this component uses a save button
                     if (service.componentUsesSaveButton()) {
-
-                      // turn on the save button in the component
                       component.showSaveButton = true;
                     }
                   }
@@ -7461,17 +6874,10 @@ var ProjectService = function () {
   }, {
     key: 'turnOffSaveButtonInComponents',
     value: function turnOffSaveButtonInComponents(nodeId) {
-      // get the node
       var node = this.getNodeById(nodeId);
-
       if (node != null) {
-
-        // get the components in the node
         var components = node.components;
-
         if (components != null) {
-
-          // loop through all the components
           var _iteratorNormalCompletion86 = true;
           var _didIteratorError86 = false;
           var _iteratorError86 = undefined;
@@ -7480,23 +6886,12 @@ var ProjectService = function () {
             for (var _iterator86 = components[Symbol.iterator](), _step86; !(_iteratorNormalCompletion86 = (_step86 = _iterator86.next()).done); _iteratorNormalCompletion86 = true) {
               var component = _step86.value;
 
-
               if (component != null) {
-
-                // get the component type
                 var componentType = component.type;
-
                 if (componentType != null) {
-
-                  // get the service for the component type
                   var service = this.$injector.get(componentType + 'Service');
-
                   if (service != null) {
-
-                    // check if this component uses a save button
                     if (service.componentUsesSaveButton()) {
-
-                      // turn on the save button in the component
                       component.showSaveButton = false;
                     }
                   }
@@ -7533,9 +6928,7 @@ var ProjectService = function () {
   }, {
     key: 'addComponentToNode',
     value: function addComponentToNode(node, component, insertAfterComponentId) {
-
       if (node != null && component != null) {
-
         if (insertAfterComponentId == null) {
           /*
            * insertAfterComponentId is null so we will place the new
@@ -7548,13 +6941,9 @@ var ProjectService = function () {
           // boolean flag for whether we have added the component yet
           var added = false;
 
-          // get the components in the step
           var components = node.components;
-
-          // loop through all the components
           for (var c = 0; c < components.length; c++) {
             var tempComponent = components[c];
-
             if (tempComponent != null && tempComponent.id != null && tempComponent.id == insertAfterComponentId) {
               /*
                * we have found the component we want to add the new
@@ -7591,7 +6980,6 @@ var ProjectService = function () {
   }, {
     key: 'moveComponent',
     value: function moveComponent(nodeId, componentIds, insertAfterComponentId) {
-
       // get the node for which we are moving components
       var node = this.getNodeById(nodeId);
 
@@ -7603,9 +6991,7 @@ var ProjectService = function () {
       // remove the component(s)
       for (var a = components.length - 1; a >= 0; a--) {
         var tempComponent = components[a];
-
         if (tempComponent != null) {
-
           if (componentIds.indexOf(tempComponent.id) != -1) {
             // we have found a component we want to move
 
@@ -7622,33 +7008,26 @@ var ProjectService = function () {
       if (insertAfterComponentId == null) {
         // insert the components at the beginning of the components list
 
-        // loop through all the components we are moving
         for (var c = 0; c < componentsToMove.length; c++) {
-
           // insert a component
           components.splice(c, 0, componentsToMove[c]);
         }
       } else {
         // insert the component(s) after the given insertAfterComponentId
 
-        // loop through all the components
         for (var b = 0; b < components.length; b++) {
-          var tempComponent = components[b];
-
-          if (tempComponent != null && tempComponent.id == insertAfterComponentId) {
+          var _tempComponent = components[b];
+          if (_tempComponent != null && _tempComponent.id == insertAfterComponentId) {
             // we have found the component we want to add after
 
-            // loop through all the components we are moving
-            for (var c = 0; c < componentsToMove.length; c++) {
+            for (var _c = 0; _c < componentsToMove.length; _c++) {
               // insert a component
-              components.splice(b + 1 + c, 0, componentsToMove[c]);
+              components.splice(b + 1 + _c, 0, componentsToMove[_c]);
             }
-
             break;
           }
         }
       }
-
       return componentsToMove;
     }
 
@@ -7663,16 +7042,11 @@ var ProjectService = function () {
     value: function deleteComponent(nodeId, componentId) {
       if (nodeId != null && componentId != null) {
         var node = this.getNodeById(nodeId);
-
         if (node != null) {
           var components = node.components;
-
           if (components != null) {
-
-            // loop through all the components
             for (var c = 0; c < components.length; c++) {
               var component = components[c];
-
               if (component.id === componentId) {
                 // we have found the component we want to delete
 
@@ -7698,21 +7072,14 @@ var ProjectService = function () {
   }, {
     key: 'getMaxScore',
     value: function getMaxScore() {
-
       var maxScore = null;
-
-      // get the start node id of the project
       var startNodeId = this.getStartNodeId();
 
       // get all the paths in the project
       var allPaths = this.getAllPaths([], startNodeId);
 
       if (allPaths != null && allPaths.length > 0) {
-
-        // get the first path
         var firstPath = allPaths[0];
-
-        // loop through all the node ids in the path
         var _iteratorNormalCompletion87 = true;
         var _didIteratorError87 = false;
         var _iteratorError87 = undefined;
@@ -7721,10 +7088,7 @@ var ProjectService = function () {
           for (var _iterator87 = firstPath[Symbol.iterator](), _step87; !(_iteratorNormalCompletion87 = (_step87 = _iterator87.next()).done); _iteratorNormalCompletion87 = true) {
             var nodeId = _step87.value;
 
-
-            // get the max score for the node
             var nodeMaxScore = this.getMaxScoreForNode(nodeId);
-
             if (nodeMaxScore != null) {
               if (maxScore == null) {
                 maxScore = nodeMaxScore;
@@ -7748,7 +7112,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return maxScore;
     }
 
@@ -7762,16 +7125,10 @@ var ProjectService = function () {
     key: 'getMaxScoreForNode',
     value: function getMaxScoreForNode(nodeId) {
       var maxScore = null;
-
-      // get the node
       var node = this.getNodeById(nodeId);
-
       if (node != null) {
         var components = node.components;
-
         if (components != null) {
-
-          // loop through all the components
           var _iteratorNormalCompletion88 = true;
           var _didIteratorError88 = false;
           var _iteratorError88 = undefined;
@@ -7780,18 +7137,13 @@ var ProjectService = function () {
             for (var _iterator88 = components[Symbol.iterator](), _step88; !(_iteratorNormalCompletion88 = (_step88 = _iterator88.next()).done); _iteratorNormalCompletion88 = true) {
               var component = _step88.value;
 
-
               if (component != null) {
-
-                // get the max score for the component
                 var componentMaxScore = component.maxScore;
 
                 // check if the component has a max score
                 if (componentMaxScore != null) {
-
                   // make sure the max score is a valid number
                   if (!isNaN(componentMaxScore)) {
-
                     if (maxScore == null) {
                       maxScore = componentMaxScore;
                     } else {
@@ -7818,7 +7170,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return maxScore;
     }
 
@@ -7832,13 +7183,10 @@ var ProjectService = function () {
     key: 'getMaxScoreForComponent',
     value: function getMaxScoreForComponent(nodeId, componentId) {
       var maxScore = null;
-
       var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
       if (component != null) {
         maxScore = component.maxScore;
       }
-
       return maxScore;
     }
 
@@ -7854,7 +7202,6 @@ var ProjectService = function () {
     value: function setMaxScoreForComponent(nodeId, componentId, maxScore) {
       if (nodeId != null && componentId != null && maxScore != null && typeof maxScore === 'number') {
         var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
         if (component != null) {
           component.maxScore = maxScore;
         }
@@ -7870,19 +7217,14 @@ var ProjectService = function () {
   }, {
     key: 'isNodeInGroup',
     value: function isNodeInGroup(nodeId, groupId) {
-
       var result = false;
-
       var group = this.getNodeById(groupId);
-
       var childIds = group.ids;
-
       if (childIds != null) {
         if (childIds.indexOf(nodeId) != -1) {
           result = true;
         }
       }
-
       return result;
     }
 
@@ -7894,20 +7236,13 @@ var ProjectService = function () {
   }, {
     key: 'getFirstLeafNodeId',
     value: function getFirstLeafNodeId() {
-
       var firstLeafNodeId = null;
-
-      // get the start group id
       var startGroupId = this.project.startGroupId;
-
-      // get the start group node
       var node = this.getNodeById(startGroupId);
-
       var done = false;
 
       // loop until we have found a leaf node id or something went wrong
       while (!done) {
-
         if (node == null) {
           done = true;
         } else if (this.isGroupNode(node.id)) {
@@ -7924,7 +7259,6 @@ var ProjectService = function () {
           done = true;
         }
       }
-
       return firstLeafNodeId;
     }
 
@@ -7938,9 +7272,7 @@ var ProjectService = function () {
   }, {
     key: 'replaceNode',
     value: function replaceNode(nodeId, node) {
-
       if (nodeId != null && node != null) {
-
         // set the id to node mapping
         this.setIdToNode(nodeId, node);
 
@@ -7951,13 +7283,10 @@ var ProjectService = function () {
         var nodes = this.getNodes();
 
         if (nodes != null) {
-
           for (var n = 0; n < nodes.length; n++) {
             var tempNode = nodes[n];
-
             if (tempNode != null) {
               var tempNodeId = tempNode.id;
-
               if (nodeId === tempNodeId) {
                 // we have found the node we want to replace
                 nodes.splice(n, 1, node);
@@ -7973,10 +7302,8 @@ var ProjectService = function () {
         if (applicationNodes != null) {
           for (var a = 0; a < applicationNodes.length; a++) {
             var tempApplicationNode = applicationNodes[a];
-
             if (tempApplicationNode != null) {
               var tempApplicationNodeId = tempApplicationNode.id;
-
               if (nodeId === tempApplicationNodeId) {
                 // we have found the node we want to replace
                 applicationNodes.splice(a, 1, node);
@@ -7997,17 +7324,14 @@ var ProjectService = function () {
     key: 'isPlanning',
     value: function isPlanning(nodeId) {
       var result = false;
-
       if (nodeId != null) {
         var node = this.getNodeById(nodeId);
-
         if (node != null) {
           if (node.planning) {
             result = true;
           }
         }
       }
-
       return result;
     }
 
@@ -8021,15 +7345,12 @@ var ProjectService = function () {
     key: 'isPlanningInstance',
     value: function isPlanningInstance(nodeId) {
       var result = false;
-
       if (nodeId != null) {
         var node = this.getNodeById(nodeId);
-
         if (node.planningNodeTemplateId) {
           result = true;
         }
       }
-
       return result;
     }
 
@@ -8043,15 +7364,12 @@ var ProjectService = function () {
     key: 'getAvailablePlanningNodeIds',
     value: function getAvailablePlanningNodeIds(nodeId) {
       var availablePlanningNodeIds = [];
-
       if (nodeId != null) {
         var node = this.getNodeById(nodeId);
-
         if (node != null && node.availablePlanningNodeIds != null) {
           availablePlanningNodeIds = node.availablePlanningNodeIds;
         }
       }
-
       return availablePlanningNodeIds;
     }
 
@@ -8065,14 +7383,10 @@ var ProjectService = function () {
     key: 'getAvailablePlanningNodes',
     value: function getAvailablePlanningNodes(nodeId) {
       var availablePlanningNodesSoFar = [];
-
       if (nodeId != null) {
         var node = this.getNodeById(nodeId);
-
         if (node != null && node.availablePlanningNodes != null) {
           var availablePlanningNodes = node.availablePlanningNodes;
-
-          // loop through all the nodes and retrieve the actual node
           var _iteratorNormalCompletion89 = true;
           var _didIteratorError89 = false;
           var _iteratorError89 = undefined;
@@ -8081,12 +7395,8 @@ var ProjectService = function () {
             for (var _iterator89 = availablePlanningNodes[Symbol.iterator](), _step89; !(_iteratorNormalCompletion89 = (_step89 = _iterator89.next()).done); _iteratorNormalCompletion89 = true) {
               var availablePlanningNode = _step89.value;
 
-
               if (availablePlanningNode != null) {
-
-                // get the node
                 var availablePlanningNodeActual = this.getNodeById(availablePlanningNode.nodeId);
-
                 if (availablePlanningNodeActual != null) {
                   if (availablePlanningNode.max != null) {
                     availablePlanningNodeActual.max = availablePlanningNode.max;
@@ -8111,7 +7421,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return availablePlanningNodesSoFar;
     }
 
@@ -8124,13 +7433,8 @@ var ProjectService = function () {
   }, {
     key: 'createPlanningNodeInstance',
     value: function createPlanningNodeInstance(groupId, nodeId, nextAvailablePlanningNodeId) {
-
       var planningNodeInstance = null;
-
       if (nodeId != null && nextAvailablePlanningNodeId != null) {
-        // get the planning node template
-        var node = this.getNodeById(nodeId);
-
         // create a planning node instance by copying the planning node template
         planningNodeInstance = this.copyNode(nodeId);
 
@@ -8140,7 +7444,6 @@ var ProjectService = function () {
         // set the planning node instance node id
         planningNodeInstance.id = nextAvailablePlanningNodeId;
       }
-
       return planningNodeInstance;
     }
 
@@ -8229,7 +7532,6 @@ var ProjectService = function () {
   }, {
     key: 'movePlanningNodeInstanceInside',
     value: function movePlanningNodeInstanceInside(nodeIdToMove, nodeIdToInsertInside) {
-
       // move the node inside the group node
       this.moveNodesInside([nodeIdToMove], nodeIdToInsertInside);
 
@@ -8252,7 +7554,6 @@ var ProjectService = function () {
   }, {
     key: 'movePlanningNodeInstanceAfter',
     value: function movePlanningNodeInstanceAfter(nodeIdToMove, nodeIdToInsertAfter) {
-
       // move the node after the other node
       this.moveNodesAfter([nodeIdToMove], nodeIdToInsertAfter);
 
@@ -8283,11 +7584,8 @@ var ProjectService = function () {
   }, {
     key: 'recalculatePositionsInGroup',
     value: function recalculatePositionsInGroup(groupId) {
-
       if (groupId != null) {
         var childIds = this.getChildNodeIdsById(groupId);
-
-        // loop through all the children
         var _iteratorNormalCompletion90 = true;
         var _didIteratorError90 = false;
         var _iteratorError90 = undefined;
@@ -8296,11 +7594,7 @@ var ProjectService = function () {
           for (var _iterator90 = childIds[Symbol.iterator](), _step90; !(_iteratorNormalCompletion90 = (_step90 = _iterator90.next()).done); _iteratorNormalCompletion90 = true) {
             var childId = _step90.value;
 
-
-            // calculate the position of the child id
             var pos = this.getPositionById(childId);
-
-            // set the mapping of node id to position
             this.setIdToPosition(childId, pos);
           }
         } catch (err) {
@@ -8332,11 +7626,9 @@ var ProjectService = function () {
   }, {
     key: 'getConstraintMessage',
     value: function getConstraintMessage(nodeId, constraint) {
-
       var message = '';
 
       if (nodeId != null && constraint != null) {
-
         // get the node title the student is trying to go to
         var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
 
@@ -8345,8 +7637,6 @@ var ProjectService = function () {
 
         if (removalCriteria != null) {
           var criteriaMessages = '';
-
-          // loop through all the criteria
           var _iteratorNormalCompletion91 = true;
           var _didIteratorError91 = false;
           var _iteratorError91 = undefined;
@@ -8356,7 +7646,6 @@ var ProjectService = function () {
               var tempRemovalCriteria = _step91.value;
 
               if (tempRemovalCriteria != null) {
-
                 // get the message that describes the criteria that needs to be satisfied
                 var criteriaMessage = this.getCriteriaMessage(tempRemovalCriteria);
 
@@ -8387,7 +7676,6 @@ var ProjectService = function () {
           message += criteriaMessages;
         }
       }
-
       return message;
     }
 
@@ -8415,63 +7703,61 @@ var ProjectService = function () {
             message += this.$translate('completeNodeTitle', { nodeTitle: nodeTitle });
           }
         } else if (name === 'isVisited') {
-          var nodeId = params.nodeId;
-          if (nodeId != null) {
-            var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-            message += this.$translate('visitNodeTitle', { nodeTitle: nodeTitle });
+          var _nodeId = params.nodeId;
+          if (_nodeId != null) {
+            var _nodeTitle = this.getNodePositionAndTitleByNodeId(_nodeId);
+            message += this.$translate('visitNodeTitle', { nodeTitle: _nodeTitle });
           }
         } else if (name === 'isCorrect') {
-          var nodeId = params.nodeId;
-          if (nodeId != null) {
-            var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-            message += this.$translate('correctlyAnswerNodeTitle', { nodeTitle: nodeTitle });
+          var _nodeId2 = params.nodeId;
+          if (_nodeId2 != null) {
+            var _nodeTitle2 = this.getNodePositionAndTitleByNodeId(_nodeId2);
+            message += this.$translate('correctlyAnswerNodeTitle', { nodeTitle: _nodeTitle2 });
           }
         } else if (name === 'score') {
-          var nodeId = params.nodeId;
-          var nodeTitle = '';
+          var _nodeId3 = params.nodeId;
+          var _nodeTitle3 = '';
           var scoresString = '';
 
-          if (nodeId != null) {
+          if (_nodeId3 != null) {
             // get the step number and title
-            nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+            _nodeTitle3 = this.getNodePositionAndTitleByNodeId(_nodeId3);
           }
 
           var scores = params.scores;
-
           if (scores != null) {
             // get the required score
             scoresString = scores.join(', ');
           }
 
           // generate the message
-          message += this.$translate('obtainAScoreOfXOnNodeTitle', { score: scoresString, nodeTitle: nodeTitle });
+          message += this.$translate('obtainAScoreOfXOnNodeTitle', { score: scoresString, nodeTitle: _nodeTitle3 });
         } else if (name === 'choiceChosen') {} else if (name === 'usedXSubmits') {
-          var nodeId = params.nodeId;
-          var nodeTitle = '';
+          var _nodeId4 = params.nodeId;
+          var _nodeTitle4 = '';
 
           // get the number of times the student must submit
           var requiredSubmitCount = params.requiredSubmitCount;
 
-          if (nodeId != null) {
+          if (_nodeId4 != null) {
             // get the step number and title
-            nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+            _nodeTitle4 = this.getNodePositionAndTitleByNodeId(_nodeId4);
           }
 
           // generate the message
           if (requiredSubmitCount == 1) {
-            message += this.$translate('submitXTimeOnNodeTitle', { requiredSubmitCount: requiredSubmitCount, nodeTitle: nodeTitle });
+            message += this.$translate('submitXTimeOnNodeTitle', { requiredSubmitCount: requiredSubmitCount, nodeTitle: _nodeTitle4 });
           } else {
-            message += this.$translate('submitXTimesOnNodeTitle', { requiredSubmitCount: requiredSubmitCount, nodeTitle: nodeTitle });
+            message += this.$translate('submitXTimesOnNodeTitle', { requiredSubmitCount: requiredSubmitCount, nodeTitle: _nodeTitle4 });
           }
         } else if (name === 'branchPathTaken') {} else if (name === 'isPlanningActivityCompleted') {
-          var nodeId = params.nodeId;
-          if (nodeId != null) {
-            var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-            message += this.$translate('completeNodeTitle', { nodeTitle: nodeTitle });
+          var _nodeId5 = params.nodeId;
+          if (_nodeId5 != null) {
+            var _nodeTitle5 = this.getNodePositionAndTitleByNodeId(_nodeId5);
+            message += this.$translate('completeNodeTitle', { nodeTitle: _nodeTitle5 });
           }
         }
       }
-
       return message;
     }
 
@@ -8484,11 +7770,8 @@ var ProjectService = function () {
   }, {
     key: 'getGroupStartId',
     value: function getGroupStartId(nodeId) {
-
       var startId = null;
-
       if (nodeId != null) {
-
         // get the group
         var node = this.getNodeById(nodeId);
 
@@ -8497,7 +7780,6 @@ var ProjectService = function () {
           startId = node.startId;
         }
       }
-
       return startId;
     }
 
@@ -8512,15 +7794,12 @@ var ProjectService = function () {
     key: 'getParentGroupStartId',
     value: function getParentGroupStartId(nodeId) {
       var parentGroupStartId = null;
-
       if (nodeId != null) {
         var parentGroup = this.getParentGroup(nodeId);
-
         if (parentGroup != null) {
           parentGroupStartId = parentGroup.startId;
         }
       }
-
       return parentGroupStartId;
     }
 
@@ -8538,7 +7817,6 @@ var ProjectService = function () {
   }, {
     key: 'updateTransitionsForExtractingGroup',
     value: function updateTransitionsForExtractingGroup(fromGroupId, oldToGroupId, newToGroupId) {
-
       /*
        * make the transitions
        * fromGroup -> newToGroup
@@ -8574,14 +7852,10 @@ var ProjectService = function () {
                 var transitions = this.getTransitionsByFromNodeId(childId);
 
                 if (transitions != null) {
-
-                  // loop through all the transitions from the from group
                   for (var t = 0; t < transitions.length; t++) {
                     var transition = transitions[t];
-
                     if (transition != null) {
                       var toNodeId = transition.to;
-
                       if (toNodeId === oldToGroupId) {
                         // the transition is to the group
                         if (newToGroupId == null && newToGroupStartId == null) {
@@ -8632,42 +7906,35 @@ var ProjectService = function () {
        * remove the transitions from the oldToGroup
        */
       if (oldToGroupId != null && newToGroupId != null) {
-
-        var oldToGroup = this.getNodeById(oldToGroupId);
-
-        if (oldToGroup != null) {
-          var childIds = oldToGroup.ids;
+        var _oldToGroup = this.getNodeById(oldToGroupId);
+        if (_oldToGroup != null) {
+          var _childIds = _oldToGroup.ids;
 
           // remove the transitions from the old to group that point to the new to group
-          if (childIds != null) {
+          if (_childIds != null) {
             var _iteratorNormalCompletion93 = true;
             var _didIteratorError93 = false;
             var _iteratorError93 = undefined;
 
             try {
-              for (var _iterator93 = childIds[Symbol.iterator](), _step93; !(_iteratorNormalCompletion93 = (_step93 = _iterator93.next()).done); _iteratorNormalCompletion93 = true) {
-                var childId = _step93.value;
+              for (var _iterator93 = _childIds[Symbol.iterator](), _step93; !(_iteratorNormalCompletion93 = (_step93 = _iterator93.next()).done); _iteratorNormalCompletion93 = true) {
+                var _childId = _step93.value;
 
-                var child = this.getNodeById(childId);
-                var transitions = this.getTransitionsByFromNodeId(childId);
-
-                if (transitions != null) {
-
-                  // loop through all the transitions from the old to group
-                  for (var t = 0; t < transitions.length; t++) {
-                    var transition = transitions[t];
-
-                    if (transition != null) {
-                      var toNodeId = transition.to;
-
-                      if (toNodeId === newToGroupId) {
+                var _child2 = this.getNodeById(_childId);
+                var _transitions4 = this.getTransitionsByFromNodeId(_childId);
+                if (_transitions4 != null) {
+                  for (var _t = 0; _t < _transitions4.length; _t++) {
+                    var _transition2 = _transitions4[_t];
+                    if (_transition2 != null) {
+                      var _toNodeId3 = _transition2.to;
+                      if (_toNodeId3 === newToGroupId) {
                         // the transition is to the group so we will remove it
-                        transitions.splice(t, 1);
-                        t--;
-                      } else if (this.isNodeInGroup(toNodeId, newToGroupId)) {
+                        _transitions4.splice(_t, 1);
+                        _t--;
+                      } else if (this.isNodeInGroup(_toNodeId3, newToGroupId)) {
                         // the transition is to a node in the group so we will remove it
-                        transitions.splice(t, 1);
-                        t--;
+                        _transitions4.splice(_t, 1);
+                        _t--;
                       }
                     }
                   }
@@ -8706,10 +7973,8 @@ var ProjectService = function () {
   }, {
     key: 'updateTransitionsForInsertingGroup',
     value: function updateTransitionsForInsertingGroup(fromGroupId, oldToGroupIds, newToGroupId) {
-
       var fromGroup = null;
       var newToGroup = null;
-
       if (fromGroupId != null) {
         fromGroup = this.getNodeById(fromGroupId);
       }
@@ -8726,10 +7991,7 @@ var ProjectService = function () {
       if (fromGroup != null && newToGroup != null) {
         var childIds = fromGroup.ids;
         var newToGroupStartId = newToGroup.startId;
-
         if (childIds != null) {
-
-          // loop through all the nodes in the from group
           var _iteratorNormalCompletion94 = true;
           var _didIteratorError94 = false;
           var _iteratorError94 = undefined;
@@ -8754,8 +8016,6 @@ var ProjectService = function () {
                   this.addToTransition(child, newToGroupStartId);
                 }
               } else if (transitions != null) {
-
-                // loop through all the transitions from the child
                 var _iteratorNormalCompletion95 = true;
                 var _didIteratorError95 = false;
                 var _iteratorError95 = undefined;
@@ -8766,13 +8026,7 @@ var ProjectService = function () {
 
                     if (transition != null) {
                       var toNodeId = transition.to;
-
                       if (oldToGroupIds != null) {
-
-                        /*
-                         * loop through all the old to group ids to find transitions
-                         * to the old to group
-                         */
                         var _iteratorNormalCompletion96 = true;
                         var _didIteratorError96 = false;
                         var _iteratorError96 = undefined;
@@ -8855,57 +8109,44 @@ var ProjectService = function () {
        * newToGroup -> oldToGroup
        */
       if (newToGroup != null) {
-        var childIds = newToGroup.ids;
-
-        if (childIds != null) {
-
-          // loop through all the children in the new group
+        var _childIds2 = newToGroup.ids;
+        if (_childIds2 != null) {
           var _iteratorNormalCompletion97 = true;
           var _didIteratorError97 = false;
           var _iteratorError97 = undefined;
 
           try {
-            for (var _iterator97 = childIds[Symbol.iterator](), _step97; !(_iteratorNormalCompletion97 = (_step97 = _iterator97.next()).done); _iteratorNormalCompletion97 = true) {
-              var childId = _step97.value;
+            for (var _iterator97 = _childIds2[Symbol.iterator](), _step97; !(_iteratorNormalCompletion97 = (_step97 = _iterator97.next()).done); _iteratorNormalCompletion97 = true) {
+              var _childId2 = _step97.value;
 
-              var child = this.getNodeById(childId);
+              var _child3 = this.getNodeById(_childId2);
+              var _transitions5 = this.getTransitionsByFromNodeId(_childId2);
 
-              // get the transitions for the child
-              var transitions = this.getTransitionsByFromNodeId(childId);
-
-              if (transitions == null || transitions.length == 0) {
-
+              if (_transitions5 == null || _transitions5.length == 0) {
                 if (oldToGroupIds != null) {
-
-                  // loop through all the old groups
                   var _iteratorNormalCompletion98 = true;
                   var _didIteratorError98 = false;
                   var _iteratorError98 = undefined;
 
                   try {
                     for (var _iterator98 = oldToGroupIds[Symbol.iterator](), _step98; !(_iteratorNormalCompletion98 = (_step98 = _iterator98.next()).done); _iteratorNormalCompletion98 = true) {
-                      var oldToGroupId = _step98.value;
+                      var _oldToGroupId = _step98.value;
 
-                      var oldToGroup = this.getNodeById(oldToGroupId);
-
+                      var oldToGroup = this.getNodeById(_oldToGroupId);
                       if (oldToGroup != null) {
-
                         var oldToGroupStartId = oldToGroup.startId;
-
-                        var transition = {};
-
-                        var toNodeId = '';
-
+                        var _transition3 = {};
+                        var _toNodeId4 = '';
                         if (oldToGroupStartId == null) {
                           // there is no start node id so we will just point to the group
-                          toNodeId = oldToGroup;
+                          _toNodeId4 = oldToGroup;
                         } else {
                           // there is a start node id so we will point to it
-                          toNodeId = oldToGroupStartId;
+                          _toNodeId4 = oldToGroupStartId;
                         }
 
                         // create the transition from the child to the old group
-                        this.addToTransition(child, toNodeId);
+                        this.addToTransition(_child3, _toNodeId4);
                       }
                     }
                   } catch (err) {
@@ -8971,7 +8212,6 @@ var ProjectService = function () {
        * group we are moving.
        */
 
-      // loop through all the groups that point to the group we are moving
       var _iteratorNormalCompletion99 = true;
       var _didIteratorError99 = false;
       var _iteratorError99 = undefined;
@@ -8999,16 +8239,16 @@ var ProjectService = function () {
 
             try {
               for (var _iterator102 = transitionsAfter[Symbol.iterator](), _step102; !(_iteratorNormalCompletion102 = (_step102 = _iterator102.next()).done); _iteratorNormalCompletion102 = true) {
-                var transitionAfter = _step102.value;
+                var _transitionAfter2 = _step102.value;
 
-                if (transitionAfter != null) {
-                  var toNodeId = transitionAfter.to;
+                if (_transitionAfter2 != null) {
+                  var _toNodeId6 = _transitionAfter2.to;
 
                   /*
                    * remove the transitions to the group we are moving and make
                    * new transitions from the from group to the new to group
                    */
-                  this.updateTransitionsForExtractingGroup(previousGroupNode.id, node.id, toNodeId);
+                  this.updateTransitionsForExtractingGroup(previousGroupNode.id, node.id, _toNodeId6);
                   extracted = true;
                 }
               }
@@ -9092,18 +8332,18 @@ var ProjectService = function () {
        */
       if (nodeId != null) {
         // get the transitions from the previous group to the next group
-        var transitionsAfter = this.getTransitionsByFromNodeId(nodeId);
+        var _transitionsAfter = this.getTransitionsByFromNodeId(nodeId);
 
         var _iteratorNormalCompletion101 = true;
         var _didIteratorError101 = false;
         var _iteratorError101 = undefined;
 
         try {
-          for (var _iterator101 = transitionsAfter[Symbol.iterator](), _step101; !(_iteratorNormalCompletion101 = (_step101 = _iterator101.next()).done); _iteratorNormalCompletion101 = true) {
-            var transitionAfter = _step101.value;
+          for (var _iterator101 = _transitionsAfter[Symbol.iterator](), _step101; !(_iteratorNormalCompletion101 = (_step101 = _iterator101.next()).done); _iteratorNormalCompletion101 = true) {
+            var _transitionAfter = _step101.value;
 
-            if (transitionAfter != null) {
-              var toNodeId = transitionAfter.to;
+            if (_transitionAfter != null) {
+              var _toNodeId5 = _transitionAfter.to;
 
               /*
                * create the transitions that traverse from the from group
@@ -9111,7 +8351,7 @@ var ProjectService = function () {
                * that traverse from the group we are moving to the old
                * to group.
                */
-              this.updateTransitionsForInsertingGroup(nodeId, [toNodeId], node.id);
+              this.updateTransitionsForInsertingGroup(nodeId, [_toNodeId5], node.id);
               inserted = true;
             }
           }
@@ -9148,12 +8388,10 @@ var ProjectService = function () {
           var startGroupId = this.getStartGroupId();
 
           if (startGroupId != null) {
-
             // get the start group for the whole project (group0)
             var startGroup = this.getNodeById(startGroupId);
 
             if (startGroup != null) {
-
               // get the first activity
               var firstGroupId = startGroup.startId;
 
@@ -9190,19 +8428,11 @@ var ProjectService = function () {
   }, {
     key: 'isConnectedComponent',
     value: function isConnectedComponent(nodeId, componentId, connectedComponentId) {
-
       var result = false;
-
-      // get the component
       var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
       if (component != null) {
-
         var connectedComponents = component.connectedComponents;
-
         if (connectedComponents != null) {
-
-          // loop through all the connected components
           var _iteratorNormalCompletion103 = true;
           var _didIteratorError103 = false;
           var _iteratorError103 = undefined;
@@ -9212,7 +8442,6 @@ var ProjectService = function () {
               var connectedComponent = _step103.value;
 
               if (connectedComponent != null) {
-
                 /*
                  * check if the connected component id matches the one
                  * we are looking for. connectedComponent.id is the old
@@ -9244,7 +8473,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return result;
     }
 
@@ -9257,17 +8485,10 @@ var ProjectService = function () {
   }, {
     key: 'getConnectedComponentParams',
     value: function getConnectedComponentParams(componentContent, componentId) {
-
       var connectedComponentParams = null;
-
       if (componentContent != null && componentId != null) {
-
-        // get the connected components
         var connectedComponents = componentContent.connectedComponents;
-
         if (connectedComponents != null) {
-
-          // loop through all the connected components
           var _iteratorNormalCompletion104 = true;
           var _didIteratorError104 = false;
           var _iteratorError104 = undefined;
@@ -9277,7 +8498,6 @@ var ProjectService = function () {
               var connectedComponent = _step104.value;
 
               if (connectedComponent != null) {
-
                 /*
                  * check if the connected component id matches the one
                  * we are looking for. connectedComponent.id is the old
@@ -9308,7 +8528,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return connectedComponentParams;
     }
 
@@ -9332,16 +8551,12 @@ var ProjectService = function () {
     key: 'getInactiveNodes',
     value: function getInactiveNodes() {
       var inactiveNodes = [];
-
       if (this.project != null) {
-
         if (this.project.inactiveNodes == null) {
           this.project.inactiveNodes = [];
         }
-
         inactiveNodes = this.project.inactiveNodes;
       }
-
       return inactiveNodes;
     }
 
@@ -9355,7 +8570,6 @@ var ProjectService = function () {
     key: 'removeNodeFromActiveNodes',
     value: function removeNodeFromActiveNodes(nodeId) {
       var node = null;
-
       if (nodeId != null) {
         var activeNodes = this.project.nodes;
         if (activeNodes != null) {
@@ -9372,14 +8586,12 @@ var ProjectService = function () {
                 if (activeNode.type == 'group') {
                   this.removeChildNodesFromActiveNodes(activeNode);
                 }
-
                 break;
               }
             }
           }
         }
       }
-
       return node;
     }
 
@@ -9431,27 +8643,19 @@ var ProjectService = function () {
     key: 'removeNodeFromInactiveNodes',
     value: function removeNodeFromInactiveNodes(nodeId) {
       var node = null;
-
       if (nodeId != null) {
-
         var parentGroup = this.getParentGroup(nodeId);
         if (parentGroup != null) {
           // The node has a parent so we will remove it from the parent.
           this.removeChildFromParent(nodeId);
         }
 
-        // get all the inactive nodes
         var inactiveNodes = this.project.inactiveNodes;
-
         if (inactiveNodes != null) {
-
-          // loop through all the inactive nodes
           for (var i = 0; i < inactiveNodes.length; i++) {
             var inactiveNode = inactiveNodes[i];
-
             if (inactiveNode != null) {
               if (nodeId === inactiveNode.id) {
-                // we have found the node we want to remove
                 node = inactiveNode;
 
                 // remove the node from the array
@@ -9461,11 +8665,9 @@ var ProjectService = function () {
             }
           }
         }
-
         this.removeNodeFromInactiveStepNodes(nodeId);
         this.removeNodeFromInactiveGroupNodes(nodeId);
       }
-
       return node;
     }
 
@@ -9553,7 +8755,6 @@ var ProjectService = function () {
   }, {
     key: 'loadInactiveNodes',
     value: function loadInactiveNodes(nodes) {
-
       if (nodes != null) {
         var _iteratorNormalCompletion106 = true;
         var _didIteratorError106 = false;
@@ -9603,9 +8804,7 @@ var ProjectService = function () {
   }, {
     key: 'isActive',
     value: function isActive(nodeId, componentId) {
-
       if (nodeId != null) {
-
         if (nodeId === 'inactiveNodes') {
           // this occurs when the author puts a step into the inactive nodes
           return false;
@@ -9617,12 +8816,8 @@ var ProjectService = function () {
         } else {
           // the node is a step node
 
-          // get all the active nodes
           var activeNodes = this.project.nodes;
-
           if (activeNodes != null) {
-
-            // loop through all the active nodes
             var _iteratorNormalCompletion107 = true;
             var _didIteratorError107 = false;
             var _iteratorError107 = undefined;
@@ -9631,24 +8826,17 @@ var ProjectService = function () {
               for (var _iterator107 = activeNodes[Symbol.iterator](), _step107; !(_iteratorNormalCompletion107 = (_step107 = _iterator107.next()).done); _iteratorNormalCompletion107 = true) {
                 var activeNode = _step107.value;
 
-
                 if (activeNode != null) {
-
-                  // get the active node id
                   var activeNodeId = activeNode.id;
-
                   if (nodeId == activeNodeId) {
                     // we have found the node id we are looking for
 
                     if (componentId != null) {
                       // we need to find the node id and component id
 
-                      // get the components in the node
                       var activeComponents = activeNode.components;
 
                       if (activeComponents != null) {
-
-                        // loop through all the components
                         var _iteratorNormalCompletion108 = true;
                         var _didIteratorError108 = false;
                         var _iteratorError108 = undefined;
@@ -9657,10 +8845,8 @@ var ProjectService = function () {
                           for (var _iterator108 = activeComponents[Symbol.iterator](), _step108; !(_iteratorNormalCompletion108 = (_step108 = _iterator108.next()).done); _iteratorNormalCompletion108 = true) {
                             var activeComponent = _step108.value;
 
-
                             if (activeComponent != null) {
                               var activeComponentId = activeComponent.id;
-
                               if (componentId == activeComponentId) {
                                 /*
                                  * we have found the component id we are
@@ -9709,7 +8895,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return false;
     }
 
@@ -9816,7 +9001,6 @@ var ProjectService = function () {
     key: 'moveToInactive',
     value: function moveToInactive(node, nodeIdToInsertAfter) {
       if (node != null) {
-
         // make sure the node is active
         if (this.isActive(node.id)) {
           // the node is active so we will move it to the inactive array
@@ -9843,7 +9027,6 @@ var ProjectService = function () {
         var inactiveNodes = this.project.inactiveNodes;
 
         if (inactiveNodes != null) {
-
           // clear the transitions from this node
           if (node.transitionLogic != null) {
             node.transitionLogic.transitions = [];
@@ -9856,11 +9039,8 @@ var ProjectService = function () {
             // put the node after one of the inactive nodes
 
             var added = false;
-
-            // loop through all the inactive nodes
             for (var i = 0; i < inactiveNodes.length; i++) {
               var inactiveNode = inactiveNodes[i];
-
               if (inactiveNode != null) {
                 if (nodeIdToInsertAfter === inactiveNode.id) {
                   // we have found the position to place the node
@@ -9937,18 +9117,13 @@ var ProjectService = function () {
   }, {
     key: 'moveInactiveNode',
     value: function moveInactiveNode(node, nodeIdToInsertAfter) {
-
       if (node != null) {
         var inactiveNodes = this.project.inactiveNodes;
-
         if (inactiveNodes != null) {
-
           // remove the node from inactive nodes
 
-          // loop through all the inactive nodes
           for (var i = 0; i < inactiveNodes.length; i++) {
             var inactiveNode = inactiveNodes[i];
-
             if (inactiveNode != null) {
               if (node.id === inactiveNode.id) {
                 // we have found the node we want to remove
@@ -9966,15 +9141,12 @@ var ProjectService = function () {
             // put the node after one of the inactive nodes
 
             var added = false;
-
-            // loop through all the inactive nodes
-            for (var i = 0; i < inactiveNodes.length; i++) {
-              var inactiveNode = inactiveNodes[i];
-
-              if (inactiveNode != null) {
-                if (nodeIdToInsertAfter === inactiveNode.id) {
+            for (var _i = 0; _i < inactiveNodes.length; _i++) {
+              var _inactiveNode = inactiveNodes[_i];
+              if (_inactiveNode != null) {
+                if (nodeIdToInsertAfter === _inactiveNode.id) {
                   // we have found the position to place the node
-                  inactiveNodes.splice(i + 1, 0, node);
+                  inactiveNodes.splice(_i + 1, 0, node);
                   added = true;
                 }
               }
@@ -10000,17 +9172,11 @@ var ProjectService = function () {
   }, {
     key: 'removeTransitionsIntoGroup',
     value: function removeTransitionsIntoGroup(nodeId) {
-
       if (nodeId != null) {
-
         var group = this.getNodeById(nodeId);
-
         if (group != null) {
           var childIds = group.ids;
-
           if (childIds != null) {
-
-            // loop through all the children
             var _iteratorNormalCompletion112 = true;
             var _didIteratorError112 = false;
             var _iteratorError112 = undefined;
@@ -10051,9 +9217,7 @@ var ProjectService = function () {
   }, {
     key: 'removeTransitionsThatPointToNodeIdFromOutsideGroup',
     value: function removeTransitionsThatPointToNodeIdFromOutsideGroup(nodeId) {
-
       if (nodeId != null) {
-
         // get the parent of the node
         var parentGroupId = this.getParentGroupId(nodeId);
 
@@ -10061,8 +9225,6 @@ var ProjectService = function () {
         var nodesThatPointToTargetNode = this.getNodesByToNodeId(nodeId);
 
         if (nodesThatPointToTargetNode != null) {
-
-          // loop through all the nodes that point to the node
           var _iteratorNormalCompletion113 = true;
           var _didIteratorError113 = false;
           var _iteratorError113 = undefined;
@@ -10071,9 +9233,7 @@ var ProjectService = function () {
             for (var _iterator113 = nodesThatPointToTargetNode[Symbol.iterator](), _step113; !(_iteratorNormalCompletion113 = (_step113 = _iterator113.next()).done); _iteratorNormalCompletion113 = true) {
               var nodeThatPointsToTargetNode = _step113.value;
 
-
               if (nodeThatPointsToTargetNode != null) {
-
                 // get the parent of the node that points to the node target node
                 var nodeThatPointsToTargetNodeParentGroupId = this.getParentGroupId(nodeThatPointsToTargetNode.id);
 
@@ -10113,20 +9273,13 @@ var ProjectService = function () {
   }, {
     key: 'removeTransition',
     value: function removeTransition(node, toNodeId) {
-
       if (node != null && toNodeId != null) {
-
         var transitionLogic = node.transitionLogic;
-
         if (transitionLogic != null) {
           var transitions = transitionLogic.transitions;
-
           if (transitions != null) {
-
-            // loop through all the transitions
             for (var t = 0; t < transitions.length; t++) {
               var transition = transitions[t];
-
               if (transition != null) {
                 if (toNodeId === transition.to) {
                   // we have found a transition that goes to the toNodeId
@@ -10152,13 +9305,9 @@ var ProjectService = function () {
     value: function removeTransitionsOutOfGroup(nodeId) {
       if (nodeId != null) {
         var group = this.getNodeById(nodeId);
-
         if (group != null) {
           var childIds = group.ids;
-
           if (childIds != null) {
-
-            // loop through all the child ids
             var _iteratorNormalCompletion114 = true;
             var _didIteratorError114 = false;
             var _iteratorError114 = undefined;
@@ -10167,28 +9316,15 @@ var ProjectService = function () {
               for (var _iterator114 = childIds[Symbol.iterator](), _step114; !(_iteratorNormalCompletion114 = (_step114 = _iterator114.next()).done); _iteratorNormalCompletion114 = true) {
                 var childId = _step114.value;
 
-
                 if (childId != null) {
-
-                  // get the transitions of the child
                   var transitions = this.getTransitionsByFromNodeId(childId);
-
                   if (transitions != null) {
-
-                    // loop through all the transitions
                     for (var t = 0; t < transitions.length; t++) {
                       var transition = transitions[t];
-
                       if (transition != null) {
-
-                        // get the to node id of the transition
                         var toNodeId = transition.to;
-
                         if (toNodeId != null) {
-
-                          // get the parent group id of the toNodeId
                           var toNodeIdParentGroupId = this.getParentGroupId(toNodeId);
-
                           if (nodeId != toNodeIdParentGroupId) {
                             /*
                              * the parent group is different which means it is a
@@ -10249,10 +9385,8 @@ var ProjectService = function () {
   }, {
     key: 'updateChildrenTransitionsIntoGroupWeAreMoving',
     value: function updateChildrenTransitionsIntoGroupWeAreMoving(groupThatTransitionsToGroupWeAreMoving, groupIdWeAreMoving) {
-
       if (groupThatTransitionsToGroupWeAreMoving != null && groupIdWeAreMoving != null) {
         var group = this.getNodeById(groupIdWeAreMoving);
-
         if (group != null) {
           // get all the nodes that have a transition to the node we are removing
           var nodesByToNodeId = this.getNodesByToNodeId(groupIdWeAreMoving);
@@ -10277,8 +9411,6 @@ var ProjectService = function () {
             var childIds = groupThatTransitionsToGroupWeAreMoving.ids;
 
             if (childIds != null) {
-
-              // loop through all the children
               var _iteratorNormalCompletion115 = true;
               var _didIteratorError115 = false;
               var _iteratorError115 = undefined;
@@ -10287,15 +9419,10 @@ var ProjectService = function () {
                 for (var _iterator115 = childIds[Symbol.iterator](), _step115; !(_iteratorNormalCompletion115 = (_step115 = _iterator115.next()).done); _iteratorNormalCompletion115 = true) {
                   var childId = _step115.value;
 
-
                   var transitionsFromChild = this.getTransitionsByFromNodeId(childId);
-
                   if (transitionsFromChild != null) {
-
-                    // loop through all the transitions from the child
                     for (var tfc = 0; tfc < transitionsFromChild.length; tfc++) {
                       var transitionFromChild = transitionsFromChild[tfc];
-
                       if (transitionFromChild != null) {
                         var toNodeId = transitionFromChild.to;
 
@@ -10334,58 +9461,51 @@ var ProjectService = function () {
               }
             }
           } else if (nodeToRemoveTransitions.length > 0) {
-
             // get the first group that comes after the group we are removing
             var firstNodeToRemoveTransition = nodeToRemoveTransitions[0];
             var firstNodeToRemoveTransitionToNodeId = firstNodeToRemoveTransition.to;
 
             if (this.isGroupNode(firstNodeToRemoveTransitionToNodeId)) {
-
               // get the group that comes after the group we are moving
               var groupNode = this.getNodeById(firstNodeToRemoveTransitionToNodeId);
 
               // get child ids of the group that comes before the group we are moving
-              var childIds = groupThatTransitionsToGroupWeAreMoving.ids;
+              var _childIds3 = groupThatTransitionsToGroupWeAreMoving.ids;
 
-              if (childIds != null) {
-
-                // loop through all the children
+              if (_childIds3 != null) {
                 var _iteratorNormalCompletion116 = true;
                 var _didIteratorError116 = false;
                 var _iteratorError116 = undefined;
 
                 try {
-                  for (var _iterator116 = childIds[Symbol.iterator](), _step116; !(_iteratorNormalCompletion116 = (_step116 = _iterator116.next()).done); _iteratorNormalCompletion116 = true) {
-                    var childId = _step116.value;
+                  for (var _iterator116 = _childIds3[Symbol.iterator](), _step116; !(_iteratorNormalCompletion116 = (_step116 = _iterator116.next()).done); _iteratorNormalCompletion116 = true) {
+                    var _childId3 = _step116.value;
 
-                    var transitionsFromChild = this.getTransitionsByFromNodeId(childId);
-
-                    if (transitionsFromChild != null) {
-
-                      // loop through all the transitions from the child
+                    var _transitionsFromChild = this.getTransitionsByFromNodeId(_childId3);
+                    if (_transitionsFromChild != null) {
                       var _iteratorNormalCompletion117 = true;
                       var _didIteratorError117 = false;
                       var _iteratorError117 = undefined;
 
                       try {
-                        for (var _iterator117 = transitionsFromChild[Symbol.iterator](), _step117; !(_iteratorNormalCompletion117 = (_step117 = _iterator117.next()).done); _iteratorNormalCompletion117 = true) {
-                          var transitionFromChild = _step117.value;
+                        for (var _iterator117 = _transitionsFromChild[Symbol.iterator](), _step117; !(_iteratorNormalCompletion117 = (_step117 = _iterator117.next()).done); _iteratorNormalCompletion117 = true) {
+                          var _transitionFromChild = _step117.value;
 
-                          if (transitionFromChild != null) {
-                            var toNodeId = transitionFromChild.to;
+                          if (_transitionFromChild != null) {
+                            var _toNodeId7 = _transitionFromChild.to;
 
                             // get the parent group id of the toNodeId
-                            var toNodeIdParentGroupId = this.getParentGroupId(toNodeId);
+                            var _toNodeIdParentGroupId = this.getParentGroupId(_toNodeId7);
 
-                            if (groupIdWeAreMoving === toNodeIdParentGroupId) {
+                            if (groupIdWeAreMoving === _toNodeIdParentGroupId) {
                               // the transition is to a child in the group we are moving
 
                               if (groupNode.startId == null) {
                                 // change the transition to point to the after group
-                                transitionFromChild.to = firstNodeToRemoveTransitionToNodeId;
+                                _transitionFromChild.to = firstNodeToRemoveTransitionToNodeId;
                               } else {
                                 // change the transition to point to the start id of the after group
-                                transitionFromChild.to = groupNode.startId;
+                                _transitionFromChild.to = groupNode.startId;
                               }
                             }
                           }
@@ -10437,20 +9557,12 @@ var ProjectService = function () {
   }, {
     key: 'getNodeIdsAndComponentIds',
     value: function getNodeIdsAndComponentIds(nodeId) {
-
       var nodeIdAndComponentIds = [];
-
       if (nodeId != null) {
-
         var nodeContent = this.getNodeContentByNodeId(nodeId);
-
         if (nodeContent != null) {
-
           var components = nodeContent.components;
-
           if (components != null) {
-
-            // loop through all the components in the node
             var _iteratorNormalCompletion118 = true;
             var _didIteratorError118 = false;
             var _iteratorError118 = undefined;
@@ -10460,7 +9572,6 @@ var ProjectService = function () {
                 var component = _step118.value;
 
                 if (component != null) {
-
                   var componentId = component.id;
 
                   // create an object to hold the node id and component id
@@ -10489,7 +9600,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return nodeIdAndComponentIds;
     }
 
@@ -10504,19 +9614,12 @@ var ProjectService = function () {
   }, {
     key: 'getShowPreviousWorkNodeIdsAndComponentIds',
     value: function getShowPreviousWorkNodeIdsAndComponentIds(nodeId) {
-
       var nodeIdAndComponentIds = [];
-
       if (nodeId != null) {
         var nodeContent = this.getNodeContentByNodeId(nodeId);
-
         if (nodeContent != null) {
-
           var components = nodeContent.components;
-
           if (components != null) {
-
-            // loop through all the components
             var _iteratorNormalCompletion119 = true;
             var _didIteratorError119 = false;
             var _iteratorError119 = undefined;
@@ -10528,9 +9631,7 @@ var ProjectService = function () {
                 if (component != null) {
                   var showPreviousWorkNodeId = component.showPreviousWorkNodeId;
                   var showPreviousWorkComponentId = component.showPreviousWorkComponentId;
-
                   if (showPreviousWorkNodeId != null && showPreviousWorkComponentId != null) {
-
                     // create an object to hold the node id and component id
                     var nodeIdAndComponentId = {};
                     nodeIdAndComponentId.nodeId = showPreviousWorkNodeId;
@@ -10558,7 +9659,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return nodeIdAndComponentIds;
     }
 
@@ -10571,9 +9671,7 @@ var ProjectService = function () {
   }, {
     key: 'displayAnnotation',
     value: function displayAnnotation(annotation) {
-
       var result = true;
-
       if (annotation != null) {
         var nodeId = annotation.nodeId;
         var componentId = annotation.componentId;
@@ -10596,7 +9694,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return result;
     }
 
@@ -10612,12 +9709,9 @@ var ProjectService = function () {
   }, {
     key: 'getGlobalAnnotationGroupByScore',
     value: function getGlobalAnnotationGroupByScore(component, previousScore, currentScore) {
-
       var annotationGroup = null;
-
       if (component.globalAnnotationSettings != null && component.globalAnnotationSettings.globalAnnotationGroups != null) {
         var globalAnnotationGroups = component.globalAnnotationSettings.globalAnnotationGroups;
-
         var _iteratorNormalCompletion120 = true;
         var _didIteratorError120 = false;
         var _iteratorError120 = undefined;
@@ -10628,7 +9722,6 @@ var ProjectService = function () {
 
             if (globalAnnotationGroup.enableCriteria != null && globalAnnotationGroup.enableCriteria.scoreSequence != null) {
               var scoreSequence = globalAnnotationGroup.enableCriteria.scoreSequence;
-
               if (scoreSequence != null) {
                 /*
                  * get the expected previous score and current score
@@ -10672,7 +9765,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return annotationGroup;
     }
 
@@ -10688,9 +9780,7 @@ var ProjectService = function () {
   }, {
     key: 'getNotificationByScore',
     value: function getNotificationByScore(component, previousScore, currentScore) {
-
       var notificationResult = null;
-
       if (component.notificationSettings != null && component.notificationSettings.notifications != null) {
         var notifications = component.notificationSettings.notifications;
         var _iteratorNormalCompletion121 = true;
@@ -10703,9 +9793,7 @@ var ProjectService = function () {
 
             if (notification.enableCriteria != null && notification.enableCriteria.scoreSequence != null) {
               var scoreSequence = notification.enableCriteria.scoreSequence;
-
               if (scoreSequence != null) {
-
                 /*
                  * get the expected previous score and current score
                  * that will satisfy the rule
@@ -10748,7 +9836,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return notificationResult;
     }
 
@@ -10859,18 +9946,11 @@ var ProjectService = function () {
     key: 'nodeHasWork',
     value: function nodeHasWork(nodeId) {
       var result = false;
-
       if (nodeId != null) {
-
-        // get the node content object
         var nodeContent = this.getNodeContentByNodeId(nodeId);
-
         if (nodeContent != null) {
           var components = nodeContent.components;
-
           if (components != null) {
-
-            // loop through all the components in the node
             var _iteratorNormalCompletion122 = true;
             var _didIteratorError122 = false;
             var _iteratorError122 = undefined;
@@ -10880,10 +9960,7 @@ var ProjectService = function () {
                 var component = _step122.value;
 
                 if (component != null) {
-
-                  // check if the component generates work
                   var componentHasWork = this.componentHasWork(component);
-
                   if (componentHasWork) {
                     return true;
                   }
@@ -10906,7 +9983,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return result;
     }
 
@@ -10921,18 +9997,11 @@ var ProjectService = function () {
     key: 'componentHasWorkByNodeIdAndComponentId',
     value: function componentHasWorkByNodeIdAndComponentId(nodeId, componentId) {
       var result = false;
-
       if (nodeId != null) {
-
-        // get the node content object
         var nodeContent = this.getNodeContentByNodeId(nodeId);
-
         if (nodeContent != null) {
           var components = nodeContent.components;
-
           if (components != null) {
-
-            // loop through the components
             var _iteratorNormalCompletion123 = true;
             var _didIteratorError123 = false;
             var _iteratorError123 = undefined;
@@ -10944,11 +10013,8 @@ var ProjectService = function () {
                 if (component != null && componentId == component.id) {
                   // we have found the component we are looking for
 
-                  // check if the component generates work
                   var componentHasWork = this.componentHasWork(component);
-
                   if (componentHasWork) {
-                    // the component generates work
                     return true;
                   }
                 }
@@ -10970,7 +10036,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return result;
     }
 
@@ -10984,7 +10049,6 @@ var ProjectService = function () {
     key: 'componentHasWork',
     value: function componentHasWork(component) {
       var result = false;
-
       if (component != null) {
         var componentType = component.type;
 
@@ -10996,7 +10060,6 @@ var ProjectService = function () {
           result = componentService.componentHasWork(component);
         }
       }
-
       return result;
     }
 
@@ -11009,11 +10072,8 @@ var ProjectService = function () {
   }, {
     key: 'getComponentService',
     value: function getComponentService(componentType) {
-
       var componentService = null;
-
       if (componentType != null) {
-
         // get the component service name e.g. 'OpenResponseService'
         var componentServiceName = componentType + 'Service';
 
@@ -11038,7 +10098,6 @@ var ProjectService = function () {
           this.componentServices[componentServiceName] = componentService;
         }
       }
-
       return componentService;
     }
 
@@ -11051,12 +10110,8 @@ var ProjectService = function () {
   }, {
     key: 'isInactive',
     value: function isInactive(nodeId) {
-
       var result = false;
-
       if (nodeId != null && this.project.inactiveNodes != null) {
-
-        // loop through all the inactive nodes
         var _iteratorNormalCompletion124 = true;
         var _didIteratorError124 = false;
         var _iteratorError124 = undefined;
@@ -11065,9 +10120,7 @@ var ProjectService = function () {
           for (var _iterator124 = this.project.inactiveNodes[Symbol.iterator](), _step124; !(_iteratorNormalCompletion124 = (_step124 = _iterator124.next()).done); _iteratorNormalCompletion124 = true) {
             var inactiveNode = _step124.value;
 
-
             if (inactiveNode != null) {
-
               if (nodeId === inactiveNode.id) {
                 /*
                  * we have found the node id we are looking for which
@@ -11093,7 +10146,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return result;
     }
 
@@ -11149,7 +10201,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return newComponentId;
     }
 
@@ -11164,8 +10215,6 @@ var ProjectService = function () {
     key: 'isComponentIdUsed',
     value: function isComponentIdUsed(componentId) {
       var isUsed = false;
-
-      // loop through all the active nodes
       var _iteratorNormalCompletion125 = true;
       var _didIteratorError125 = false;
       var _iteratorError125 = undefined;
@@ -11174,13 +10223,9 @@ var ProjectService = function () {
         for (var _iterator125 = this.project.nodes[Symbol.iterator](), _step125; !(_iteratorNormalCompletion125 = (_step125 = _iterator125.next()).done); _iteratorNormalCompletion125 = true) {
           var node = _step125.value;
 
-
           if (node != null) {
             var components = node.components;
-
             if (components != null) {
-
-              // loop through all the components
               var _iteratorNormalCompletion127 = true;
               var _didIteratorError127 = false;
               var _iteratorError127 = undefined;
@@ -11191,7 +10236,6 @@ var ProjectService = function () {
 
                   if (component != null) {
                     if (componentId === component.id) {
-                      // the component id is already being used
                       isUsed = true;
                     }
                   }
@@ -11213,8 +10257,6 @@ var ProjectService = function () {
             }
           }
         }
-
-        // loop through all the inactive nodes
       } catch (err) {
         _didIteratorError125 = true;
         _iteratorError125 = err;
@@ -11236,26 +10278,21 @@ var ProjectService = function () {
 
       try {
         for (var _iterator126 = this.project.inactiveNodes[Symbol.iterator](), _step126; !(_iteratorNormalCompletion126 = (_step126 = _iterator126.next()).done); _iteratorNormalCompletion126 = true) {
-          var node = _step126.value;
+          var _node = _step126.value;
 
-
-          if (node != null) {
-            var components = node.components;
-
-            if (components != null) {
-
-              // loop through all the components
+          if (_node != null) {
+            var _components = _node.components;
+            if (_components != null) {
               var _iteratorNormalCompletion128 = true;
               var _didIteratorError128 = false;
               var _iteratorError128 = undefined;
 
               try {
-                for (var _iterator128 = components[Symbol.iterator](), _step128; !(_iteratorNormalCompletion128 = (_step128 = _iterator128.next()).done); _iteratorNormalCompletion128 = true) {
-                  var component = _step128.value;
+                for (var _iterator128 = _components[Symbol.iterator](), _step128; !(_iteratorNormalCompletion128 = (_step128 = _iterator128.next()).done); _iteratorNormalCompletion128 = true) {
+                  var _component = _step128.value;
 
-                  if (component != null) {
-                    if (componentId === component.id) {
-                      // the component id is already being used
+                  if (_component != null) {
+                    if (componentId === _component.id) {
                       isUsed = true;
                     }
                   }
@@ -11306,7 +10343,6 @@ var ProjectService = function () {
     value: function isNodeIdUsed(nodeId) {
       var isUsed = false;
 
-      // loop through all the active nodes
       var _iteratorNormalCompletion129 = true;
       var _didIteratorError129 = false;
       var _iteratorError129 = undefined;
@@ -11315,16 +10351,12 @@ var ProjectService = function () {
         for (var _iterator129 = this.project.nodes[Symbol.iterator](), _step129; !(_iteratorNormalCompletion129 = (_step129 = _iterator129.next()).done); _iteratorNormalCompletion129 = true) {
           var node = _step129.value;
 
-
           if (node != null) {
-
             if (nodeId === node.id) {
               return true;
             }
           }
         }
-
-        // loop through all the inactive nodes
       } catch (err) {
         _didIteratorError129 = true;
         _iteratorError129 = err;
@@ -11346,12 +10378,10 @@ var ProjectService = function () {
 
       try {
         for (var _iterator130 = this.project.inactiveNodes[Symbol.iterator](), _step130; !(_iteratorNormalCompletion130 = (_step130 = _iterator130.next()).done); _iteratorNormalCompletion130 = true) {
-          var node = _step130.value;
+          var _node2 = _step130.value;
 
-
-          if (node != null) {
-
-            if (nodeId === node.id) {
+          if (_node2 != null) {
+            if (nodeId === _node2.id) {
               return true;
             }
           }
@@ -11414,7 +10444,6 @@ var ProjectService = function () {
        * name.
        */
       return this.$http(httpParams).then(function (result) {
-
         // get the selected nodes from the result that may have been modified
         selectedNodes = result.data;
 
@@ -11427,7 +10456,6 @@ var ProjectService = function () {
         // used to hold all the new node ids
         var newNodeIds = [];
 
-        // loop through the nodes we will import
         var _iteratorNormalCompletion131 = true;
         var _didIteratorError131 = false;
         var _iteratorError131 = undefined;
@@ -11436,9 +10464,7 @@ var ProjectService = function () {
           for (var _iterator131 = selectedNodes[Symbol.iterator](), _step131; !(_iteratorNormalCompletion131 = (_step131 = _iterator131.next()).done); _iteratorNormalCompletion131 = true) {
             var selectedNode = _step131.value;
 
-
             if (selectedNode != null) {
-
               // make a copy of the node so that we don't modify the source
               var tempNode = _this5.UtilService.makeCopyOfJSONObject(selectedNode);
 
@@ -11457,8 +10483,6 @@ var ProjectService = function () {
               var tempComponents = tempNode.components;
 
               if (tempComponents != null) {
-
-                // loop through all the components in the node we are importing
                 var _iteratorNormalCompletion133 = true;
                 var _didIteratorError133 = false;
                 var _iteratorError133 = undefined;
@@ -11467,10 +10491,7 @@ var ProjectService = function () {
                   for (var _iterator133 = tempComponents[Symbol.iterator](), _step133; !(_iteratorNormalCompletion133 = (_step133 = _iterator133.next()).done); _iteratorNormalCompletion133 = true) {
                     var tempComponent = _step133.value;
 
-
                     if (tempComponent != null) {
-
-                      // check if the component id is already being used
                       if (_this5.isComponentIdUsed(tempComponent.id)) {
                         // we are already using the component id so we will need to change it
 
@@ -11540,7 +10561,6 @@ var ProjectService = function () {
           }
         }
 
-        // loop through all the new nodes
         var _iteratorNormalCompletion132 = true;
         var _didIteratorError132 = false;
         var _iteratorError132 = undefined;
@@ -11605,23 +10625,15 @@ var ProjectService = function () {
   }, {
     key: 'getNextAvailableConstraintIdForNodeId',
     value: function getNextAvailableConstraintIdForNodeId(nodeId) {
-
       var nextAvailableConstraintId = null;
-
       if (nodeId != null) {
-
         // an array to hold the constraint ids that are already being used
         var usedConstraintIds = [];
-
-        // get the node
         var node = this.getNodeById(nodeId);
 
         if (node != null) {
           var constraints = node.constraints;
-
           if (constraints != null) {
-
-            // loop through all the constraints
             var _iteratorNormalCompletion134 = true;
             var _didIteratorError134 = false;
             var _iteratorError134 = undefined;
@@ -11659,7 +10671,6 @@ var ProjectService = function () {
 
         // loop until we have found a constraint id that hasn't been used
         while (!foundNextAvailableConstraintId) {
-
           // generate a constraint id
           var potentialConstraintId = nodeId + 'Constraint' + counter;
 
@@ -11676,7 +10687,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return nextAvailableConstraintId;
     }
 
@@ -11687,19 +10697,15 @@ var ProjectService = function () {
   }, {
     key: 'setTransitionLogicField',
     value: function setTransitionLogicField(nodeId, field, value) {
-
       if (nodeId != null && field != null) {
-
         // get the node
         var node = this.getNodeById(nodeId);
 
         if (node != null) {
-
           // get the transition logic
           var transitionLogic = node.transitionLogic;
 
           if (transitionLogic != null) {
-
             // set the value of the field
             transitionLogic[field] = value;
           }
@@ -11717,11 +10723,8 @@ var ProjectService = function () {
   }, {
     key: 'setCriteriaParamsField',
     value: function setCriteriaParamsField(criteria, field, value) {
-
       if (criteria != null) {
-
         if (criteria.params == null) {
-
           // create a params field since it does not exist
           criteria.params = {};
         }
@@ -11740,9 +10743,7 @@ var ProjectService = function () {
   }, {
     key: 'getCriteriaParamsField',
     value: function getCriteriaParamsField(criteria, field) {
-
       if (criteria != null) {
-
         // get the params
         var params = criteria.params;
 
@@ -11751,7 +10752,6 @@ var ProjectService = function () {
           return params[field];
         }
       }
-
       return null;
     }
 
@@ -11765,13 +10765,11 @@ var ProjectService = function () {
     key: 'setTransition',
     value: function setTransition(fromNodeId, toNodeId) {
       var node = this.getNodeById(fromNodeId);
-
       if (node != null) {
         // get the transition logic of the node
         var transitionLogic = node.transitionLogic;
 
         if (transitionLogic != null) {
-
           // get the transitions
           var transitions = transitionLogic.transitions;
 
@@ -11787,13 +10785,12 @@ var ProjectService = function () {
           }
 
           if (transitions != null && transitions.length > 0) {
-
             // get the first transition. we will assume there is only one transition.
-            var transition = transitions[0];
+            var _transition4 = transitions[0];
 
-            if (transition != null) {
+            if (_transition4 != null) {
               // set the to value
-              transition.to = toNodeId;
+              _transition4.to = toNodeId;
             }
           }
         }
@@ -11809,17 +10806,13 @@ var ProjectService = function () {
   }, {
     key: 'getNodeIdAfter',
     value: function getNodeIdAfter(nodeId) {
-
       var nodeIdAfter = null;
 
       // get an array of ordered items. each item represents a node
       var orderedItems = this.$filter('orderBy')(this.$filter('toArray')(this.idToOrder), 'order');
 
       if (orderedItems != null) {
-
         var foundNodeId = false;
-
-        // loop through all the items
         var _iteratorNormalCompletion135 = true;
         var _didIteratorError135 = false;
         var _iteratorError135 = undefined;
@@ -11828,9 +10821,7 @@ var ProjectService = function () {
           for (var _iterator135 = orderedItems[Symbol.iterator](), _step135; !(_iteratorNormalCompletion135 = (_step135 = _iterator135.next()).done); _iteratorNormalCompletion135 = true) {
             var item = _step135.value;
 
-
             if (item != null) {
-              // get the node id of the item
               var tempNodeId = item.$key;
 
               // check if we have found the node id that was passed in as a parameter
@@ -11842,7 +10833,6 @@ var ProjectService = function () {
                 nodeIdAfter = tempNodeId;
                 break;
               } else {
-
                 if (nodeId == tempNodeId) {
                   // we have found the node id that was passed in as a parameter
                   foundNodeId = true;
@@ -11865,7 +10855,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return nodeIdAfter;
     }
 
@@ -11880,15 +10869,9 @@ var ProjectService = function () {
   }, {
     key: 'getNodeIdsInBranch',
     value: function getNodeIdsInBranch(fromNodeId, toNodeId) {
-
       var nodeIdsInBranch = [];
-
-      // get all the nodes in the project
       var nodes = this.getNodes();
-
       if (nodes != null) {
-
-        // loop through all the nodes
         var _iteratorNormalCompletion136 = true;
         var _didIteratorError136 = false;
         var _iteratorError136 = undefined;
@@ -11922,9 +10905,7 @@ var ProjectService = function () {
           }
         }
       }
-
       this.orderNodeIds(nodeIdsInBranch);
-
       return nodeIdsInBranch;
     }
 
@@ -11978,15 +10959,9 @@ var ProjectService = function () {
   }, {
     key: 'hasBranchPathTakenConstraint',
     value: function hasBranchPathTakenConstraint(node, fromNodeId, toNodeId) {
-
       if (node != null) {
-
-        // get the constraints in the node
         var constraints = node.constraints;
-
         if (constraints != null) {
-
-          // loop through all the constraints
           var _iteratorNormalCompletion137 = true;
           var _didIteratorError137 = false;
           var _iteratorError137 = undefined;
@@ -11996,13 +10971,9 @@ var ProjectService = function () {
               var constraint = _step137.value;
 
               if (constraint != null) {
-
                 // get the removal criteria of the constraint
                 var removalCriteria = constraint.removalCriteria;
-
                 if (removalCriteria != null) {
-
-                  // loop through all the removal criterion
                   var _iteratorNormalCompletion138 = true;
                   var _didIteratorError138 = false;
                   var _iteratorError138 = undefined;
@@ -12011,9 +10982,7 @@ var ProjectService = function () {
                     for (var _iterator138 = removalCriteria[Symbol.iterator](), _step138; !(_iteratorNormalCompletion138 = (_step138 = _iterator138.next()).done); _iteratorNormalCompletion138 = true) {
                       var removalCriterion = _step138.value;
 
-
                       if (removalCriterion != null) {
-
                         // get the removal criterion name
                         var name = removalCriterion.name;
 
@@ -12065,7 +11034,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return false;
     }
 
@@ -12079,14 +11047,11 @@ var ProjectService = function () {
   }, {
     key: 'addBranchPathTakenConstraints',
     value: function addBranchPathTakenConstraints(targetNodeId, fromNodeId, toNodeId) {
-
       if (targetNodeId != null) {
-
         // get the node
         var node = this.getNodeById(targetNodeId);
 
         if (node != null) {
-
           /*
            * create the constraint that makes the node not visible until
            * the given branch path is taken
@@ -12134,29 +11099,16 @@ var ProjectService = function () {
   }, {
     key: 'removeBranchPathTakenNodeConstraints',
     value: function removeBranchPathTakenNodeConstraints(nodeId) {
-
-      // get a node
       var node = this.getNodeById(nodeId);
-
       if (node != null) {
-
-        // get the constraints
         var constraints = node.constraints;
-
         if (constraints != null) {
-
-          // loop through all the constraints
           for (var c = 0; c < constraints.length; c++) {
             var constraint = constraints[c];
-
             if (constraint != null) {
-
-              // get the removal criteria
               var removalCriteria = constraint.removalCriteria;
 
               if (removalCriteria != null) {
-
-                // loop through all the removal criteria
                 var _iteratorNormalCompletion139 = true;
                 var _didIteratorError139 = false;
                 var _iteratorError139 = undefined;
@@ -12164,7 +11116,6 @@ var ProjectService = function () {
                 try {
                   for (var _iterator139 = removalCriteria[Symbol.iterator](), _step139; !(_iteratorNormalCompletion139 = (_step139 = _iterator139.next()).done); _iteratorNormalCompletion139 = true) {
                     var removalCriterion = _step139.value;
-
 
                     if (removalCriterion != null) {
                       if (removalCriterion.name == 'branchPathTaken') {
@@ -12209,22 +11160,12 @@ var ProjectService = function () {
   }, {
     key: 'getBranchPathTakenConstraintsByNodeId',
     value: function getBranchPathTakenConstraintsByNodeId(nodeId) {
-
       var branchPathTakenConstraints = [];
-
       if (nodeId != null) {
-
-        // get the node
         var node = this.getNodeById(nodeId);
-
         if (node != null) {
-
-          // get the constraints from the node
           var constraints = node.constraints;
-
           if (constraints != null) {
-
-            // loop through all the constraints
             var _iteratorNormalCompletion140 = true;
             var _didIteratorError140 = false;
             var _iteratorError140 = undefined;
@@ -12234,13 +11175,8 @@ var ProjectService = function () {
                 var constraint = _step140.value;
 
                 if (constraint != null) {
-
-                  // get the removal criteria from the constraint
                   var removalCriteria = constraint.removalCriteria;
-
                   if (removalCriteria != null) {
-
-                    // loop through all the removal criteria
                     var _iteratorNormalCompletion141 = true;
                     var _didIteratorError141 = false;
                     var _iteratorError141 = undefined;
@@ -12294,7 +11230,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return branchPathTakenConstraints;
     }
 
@@ -12310,13 +11245,9 @@ var ProjectService = function () {
   }, {
     key: 'updateBranchPathTakenConstraint',
     value: function updateBranchPathTakenConstraint(node, currentFromNodeId, currentToNodeId, newFromNodeId, newToNodeId) {
-
       if (node != null) {
         var constraints = node.constraints;
-
         if (constraints != null) {
-
-          // loop through all the constraints for the node
           var _iteratorNormalCompletion142 = true;
           var _didIteratorError142 = false;
           var _iteratorError142 = undefined;
@@ -12326,12 +11257,8 @@ var ProjectService = function () {
               var constraint = _step142.value;
 
               if (constraint != null) {
-
                 var removalCriteria = constraint.removalCriteria;
-
                 if (removalCriteria != null) {
-
-                  // loop through all the removal criteria
                   var _iteratorNormalCompletion143 = true;
                   var _didIteratorError143 = false;
                   var _iteratorError143 = undefined;
@@ -12341,16 +11268,10 @@ var ProjectService = function () {
                       var removalCriterion = _step143.value;
 
                       if (removalCriterion != null) {
-
                         if (removalCriterion.name === 'branchPathTaken') {
-                          // we have found a branchPathTaken removal criterion
-
                           var params = removalCriterion.params;
-
                           if (params != null) {
-
                             if (params.fromNodeId === currentFromNodeId && params.toNodeId === currentToNodeId) {
-
                               /*
                                * we have found a branchPathTaken removal criterion
                                * with the fromNodeId and toNodeId that we are
@@ -12428,9 +11349,7 @@ var ProjectService = function () {
   }, {
     key: 'isBranchPoint',
     value: function isBranchPoint(nodeId) {
-
       var transitions = this.getTransitionsByFromNodeId(nodeId);
-
       if (transitions != null) {
         if (transitions.length > 1) {
           /*
@@ -12440,7 +11359,6 @@ var ProjectService = function () {
           return true;
         }
       }
-
       return false;
     }
 
@@ -12453,9 +11371,7 @@ var ProjectService = function () {
   }, {
     key: 'isFirstNodeInBranchPath',
     value: function isFirstNodeInBranchPath(nodeId) {
-
       var nodes = this.getNodes();
-
       if (nodes != null) {
         var _iteratorNormalCompletion144 = true;
         var _didIteratorError144 = false;
@@ -12466,7 +11382,6 @@ var ProjectService = function () {
             var node = _step144.value;
 
             if (node != null && node.transitionLogic != null && node.transitionLogic.transitions != null) {
-
               var transitions = node.transitionLogic.transitions;
 
               if (transitions.length > 1) {
@@ -12474,7 +11389,6 @@ var ProjectService = function () {
                  * there is more than one transition from this node
                  * which means it is a branch point
                  */
-
                 var _iteratorNormalCompletion145 = true;
                 var _didIteratorError145 = false;
                 var _iteratorError145 = undefined;
@@ -12485,7 +11399,6 @@ var ProjectService = function () {
 
                     if (transition != null) {
                       var transitionTo = transition.to;
-
                       if (transitionTo === nodeId) {
                         return true;
                       }
@@ -12536,9 +11449,7 @@ var ProjectService = function () {
   }, {
     key: 'isNodeInAnyBranchPath',
     value: function isNodeInAnyBranchPath(nodeId) {
-
       var result = false;
-
       if (this.nodeIdToIsInBranchPath[nodeId] == null) {
         /*
          * we have not calculated whether the node id is in a branch path
@@ -12560,7 +11471,6 @@ var ProjectService = function () {
          */
         result = this.nodeIdToIsInBranchPath[nodeId];
       }
-
       return result;
     }
 
@@ -12573,7 +11483,6 @@ var ProjectService = function () {
   }, {
     key: 'isBranchStartPoint',
     value: function isBranchStartPoint(nodeId) {
-
       /*
        * Get all the branches. Each branch is represented as an object that
        * contains the branchStartPoint, branchEndPoint, and branchPaths.
@@ -12581,8 +11490,6 @@ var ProjectService = function () {
       var branches = this.getBranches();
 
       if (branches != null) {
-
-        // loop through all the branches
         var _iteratorNormalCompletion146 = true;
         var _didIteratorError146 = false;
         var _iteratorError146 = undefined;
@@ -12616,7 +11523,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return false;
     }
 
@@ -12629,7 +11535,6 @@ var ProjectService = function () {
   }, {
     key: 'isBranchMergePoint',
     value: function isBranchMergePoint(nodeId) {
-
       /*
        * Get all the branches. Each branch is represented as an object that
        * contains the branchStartPoint, branchEndPoint, and branchPaths.
@@ -12637,8 +11542,6 @@ var ProjectService = function () {
       var branches = this.getBranches();
 
       if (branches != null) {
-
-        // loop through all the branches
         var _iteratorNormalCompletion147 = true;
         var _didIteratorError147 = false;
         var _iteratorError147 = undefined;
@@ -12672,7 +11575,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return false;
     }
 
@@ -12685,15 +11587,12 @@ var ProjectService = function () {
   }, {
     key: 'getBranchesByBranchStartPointNodeId',
     value: function getBranchesByBranchStartPointNodeId(nodeId) {
-
       var branches = [];
 
       // get all the branches in the project
       var allBranches = this.getBranches();
 
       if (allBranches != null) {
-
-        // loop through all the branches in the project
         var _iteratorNormalCompletion148 = true;
         var _didIteratorError148 = false;
         var _iteratorError148 = undefined;
@@ -12703,7 +11602,6 @@ var ProjectService = function () {
             var branch = _step148.value;
 
             if (branch != null) {
-
               if (nodeId == branch.branchStartPoint) {
                 /*
                  * the branch start point matches the node id we are
@@ -12728,7 +11626,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return branches;
     }
 
@@ -12739,7 +11636,6 @@ var ProjectService = function () {
   }, {
     key: 'calculateNodeNumbers',
     value: function calculateNodeNumbers() {
-
       // clear the node id to number mapping
       this.nodeIdToNumber = {};
 
@@ -12772,7 +11668,6 @@ var ProjectService = function () {
   }, {
     key: 'calculateNodeNumbersHelper',
     value: function calculateNodeNumbersHelper(nodeId, currentActivityNumber, currentStepNumber, branchLetterCode) {
-
       if (nodeId != null) {
         if (this.isApplicationNode(nodeId)) {
           // the node is a step node
@@ -12781,12 +11676,10 @@ var ProjectService = function () {
           var node = this.getNodeById(nodeId);
 
           if (node != null) {
-
             // get the parent group of the node
             var parentGroup = this.getParentGroup(nodeId);
 
             if (parentGroup != null) {
-
               // check if the parent group has previously been assigned a number
               if (this.nodeIdToNumber[parentGroup.id] == null) {
                 /*
@@ -12847,22 +11740,17 @@ var ProjectService = function () {
               // get the branch paths
               var branchPaths = branchesObject.branchPaths;
 
-              // loop through all the branch paths
               for (var bp = 0; bp < branchPaths.length; bp++) {
-
-                // get a branch path
                 var branchPath = branchPaths[bp];
 
                 // step number counter for this branch path
                 var branchCurrentStepNumber = currentStepNumber;
 
                 // get the letter code e.g. 1=A, 2=B, etc.
-                var branchLetterCode = bp;
+                var _branchLetterCode = bp;
 
-                // loop through all the nodes in the branch path
                 for (var bpn = 0; bpn < branchPath.length; bpn++) {
                   if (bpn == 0) {
-
                     /*
                      * Recursively call calculateNodeNumbersHelper on the
                      * first step in this branch path. This will recursively
@@ -12870,7 +11758,7 @@ var ProjectService = function () {
                      * branch path.
                      */
                     var branchPathNodeId = branchPath[bpn];
-                    this.calculateNodeNumbersHelper(branchPathNodeId, currentActivityNumber, branchCurrentStepNumber, branchLetterCode);
+                    this.calculateNodeNumbersHelper(branchPathNodeId, currentActivityNumber, branchCurrentStepNumber, _branchLetterCode);
                   }
 
                   // increment the step counter for this branch path
@@ -12949,7 +11837,6 @@ var ProjectService = function () {
               }
 
               if (transitions.length > 0) {
-
                 /*
                  * loop through all the transitions, there should only
                  * be one but we will loop through them just to be complete.
@@ -12965,7 +11852,6 @@ var ProjectService = function () {
                 try {
                   for (var _iterator149 = transitions[Symbol.iterator](), _step149; !(_iteratorNormalCompletion149 = (_step149 = _iterator149.next()).done); _iteratorNormalCompletion149 = true) {
                     var transition = _step149.value;
-
 
                     if (transition != null) {
                       if (this.isBranchMergePoint(transition.to)) {} else {
@@ -12996,12 +11882,11 @@ var ProjectService = function () {
                   var _iteratorError150 = undefined;
 
                   try {
-
                     for (var _iterator150 = parentGroup.transitionLogic.transitions[Symbol.iterator](), _step150; !(_iteratorNormalCompletion150 = (_step150 = _iterator150.next()).done); _iteratorNormalCompletion150 = true) {
-                      var transition = _step150.value;
+                      var _transition5 = _step150.value;
 
-                      if (transition != null) {
-                        this.calculateNodeNumbersHelper(transition.to, currentActivityNumber, currentStepNumber, branchLetterCode);
+                      if (_transition5 != null) {
+                        this.calculateNodeNumbersHelper(_transition5.to, currentActivityNumber, currentStepNumber, branchLetterCode);
                       }
                     }
                   } catch (err) {
@@ -13026,16 +11911,15 @@ var ProjectService = function () {
           // the node is a group node
 
           // get the node object
-          var node = this.getNodeById(nodeId);
+          var _node3 = this.getNodeById(nodeId);
 
-          if (node != null) {
+          if (_node3 != null) {
             // check if the group has previously been assigned a number
             if (this.nodeIdToNumber[nodeId] == null) {
               /*
                * the group has not been assigned a number so
                * we will assign a number now
                */
-
               if (nodeId == 'group0') {
                 // group 0 will always be given the activity number of 0
                 this.nodeIdToNumber[nodeId] = "" + 0;
@@ -13061,35 +11945,33 @@ var ProjectService = function () {
               return;
             }
 
-            if (node.startId != null && node.startId != '') {
+            if (_node3.startId != null && _node3.startId != '') {
               /*
                * calculate the node number for the first step in this
                * activity and any steps after it
                */
-              this.calculateNodeNumbersHelper(node.startId, currentActivityNumber, currentStepNumber, branchLetterCode);
+              this.calculateNodeNumbersHelper(_node3.startId, currentActivityNumber, currentStepNumber, branchLetterCode);
             } else {
               /*
                * this activity doesn't have a start step so we will
                * look for a transition
                */
 
-              if (node != null && node.transitionLogic != null && node.transitionLogic.transitions != null && node.transitionLogic.transitions.length > 0) {
-
-                // loop through all the transitions
+              if (_node3 != null && _node3.transitionLogic != null && _node3.transitionLogic.transitions != null && _node3.transitionLogic.transitions.length > 0) {
                 var _iteratorNormalCompletion151 = true;
                 var _didIteratorError151 = false;
                 var _iteratorError151 = undefined;
 
                 try {
-                  for (var _iterator151 = node.transitionLogic.transitions[Symbol.iterator](), _step151; !(_iteratorNormalCompletion151 = (_step151 = _iterator151.next()).done); _iteratorNormalCompletion151 = true) {
-                    var transition = _step151.value;
+                  for (var _iterator151 = _node3.transitionLogic.transitions[Symbol.iterator](), _step151; !(_iteratorNormalCompletion151 = (_step151 = _iterator151.next()).done); _iteratorNormalCompletion151 = true) {
+                    var _transition6 = _step151.value;
 
-                    if (transition != null) {
+                    if (_transition6 != null) {
                       /*
                        * calculate the node number for the next group
                        * and all its children steps
                        */
-                      this.calculateNodeNumbersHelper(transition.to, currentActivityNumber, currentStepNumber, branchLetterCode);
+                      this.calculateNodeNumbersHelper(_transition6.to, currentActivityNumber, currentStepNumber, branchLetterCode);
                     }
                   }
                 } catch (err) {
@@ -13197,12 +12079,10 @@ var ProjectService = function () {
       var flattenedNodeIds = this.getFlattenedProjectAsNodeIds();
 
       if (flattenedNodeIds != null) {
-
         // get the index of the node id
         var indexOfNodeId = flattenedNodeIds.indexOf(nodeId);
 
         if (indexOfNodeId != -1) {
-
           // get the index of the previous node id
           var indexOfPreviousNodeId = indexOfNodeId - 1;
 
@@ -13210,7 +12090,6 @@ var ProjectService = function () {
           previousNodeId = flattenedNodeIds[indexOfPreviousNodeId];
         }
       }
-
       return previousNodeId;
     }
 
@@ -13223,19 +12102,16 @@ var ProjectService = function () {
   }, {
     key: 'getNextNodeId',
     value: function getNextNodeId(nodeId) {
-
       var nextNodeId = null;
 
       // get the node ids in the project as a flat array
       var flattenedNodeIds = this.getFlattenedProjectAsNodeIds();
 
       if (flattenedNodeIds != null) {
-
         // get the index of the node id
         var indexOfNodeId = flattenedNodeIds.indexOf(nodeId);
 
         if (indexOfNodeId != -1) {
-
           // get the index of the next node id
           var indexOfNextNodeId = indexOfNodeId + 1;
 
@@ -13243,7 +12119,6 @@ var ProjectService = function () {
           nextNodeId = flattenedNodeIds[indexOfNextNodeId];
         }
       }
-
       return nextNodeId;
     }
 
@@ -13265,13 +12140,10 @@ var ProjectService = function () {
   }, {
     key: 'getProjectScriptFilename',
     value: function getProjectScriptFilename() {
-
       var scriptFilename = null;
-
       if (this.project != null && this.project.script != null) {
         scriptFilename = this.project.script;
       }
-
       return scriptFilename;
     }
 
@@ -13285,7 +12157,6 @@ var ProjectService = function () {
     key: 'getAchievements',
     value: function getAchievements() {
       var achievements = null;
-
       if (this.project != null) {
         if (this.project.achievements == null) {
           this.project.achievements = {
@@ -13295,7 +12166,6 @@ var ProjectService = function () {
         }
         achievements = this.project.achievements;
       }
-
       return achievements;
     }
 
@@ -13320,7 +12190,6 @@ var ProjectService = function () {
         // get the achievement items
         achievementItems = achievements.items;
       }
-
       return achievementItems;
     }
 
@@ -13333,20 +12202,11 @@ var ProjectService = function () {
   }, {
     key: 'getAchievementByAchievementId',
     value: function getAchievementByAchievementId(achievementId) {
-
       if (achievementId != null) {
-
-        // get the achievements object
         var achievements = this.getAchievements();
-
         if (achievements != null) {
-
-          // get the achievement items
           var achievementItems = achievements.items;
-
           if (achievementItems != null) {
-
-            // loop through the achievement items
             var _iteratorNormalCompletion152 = true;
             var _didIteratorError152 = false;
             var _iteratorError152 = undefined;
@@ -13354,7 +12214,6 @@ var ProjectService = function () {
             try {
               for (var _iterator152 = achievementItems[Symbol.iterator](), _step152; !(_iteratorNormalCompletion152 = (_step152 = _iterator152.next()).done); _iteratorNormalCompletion152 = true) {
                 var achievement = _step152.value;
-
 
                 if (achievement != null && achievement.id == achievementId) {
                   /*
@@ -13381,7 +12240,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return null;
     }
 
@@ -13394,15 +12252,11 @@ var ProjectService = function () {
   }, {
     key: 'hasRubrics',
     value: function hasRubrics() {
-
       if (this.project != null) {
-
         if (this.project.rubric != null && this.project.rubric != "") {
-          // there is a project rubric
           return true;
         }
 
-        // loop through all the nodes
         var _iteratorNormalCompletion153 = true;
         var _didIteratorError153 = false;
         var _iteratorError153 = undefined;
@@ -13413,12 +12267,10 @@ var ProjectService = function () {
 
             if (node != null) {
               if (node.rubric != null && node.rubric != "") {
-                // there is a node rubric
                 return true;
               }
 
               if (node.components != null) {
-                // loop through all the components
                 var _iteratorNormalCompletion154 = true;
                 var _didIteratorError154 = false;
                 var _iteratorError154 = undefined;
@@ -13429,7 +12281,6 @@ var ProjectService = function () {
 
                     if (component != null) {
                       if (component.rubric != null && component.rubric != "") {
-                        // there is a component rubric
                         return true;
                       }
                     }
@@ -13466,7 +12317,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return false;
     }
 
@@ -13481,16 +12331,12 @@ var ProjectService = function () {
   }, {
     key: 'getBranchLetter',
     value: function getBranchLetter(nodeId) {
-
       var branchLetter = null;
-
       if (nodeId != null) {
-
         // get the node position e.g. "1.8" or "1.9 A"
         var nodePosition = this.getNodePositionById(nodeId);
 
         if (nodePosition != null) {
-
           // regex for extracting the branch letter
           var branchLetterRegex = /.*([A-Z])/;
 
@@ -13506,7 +12352,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return branchLetter;
     }
 
@@ -13523,7 +12368,6 @@ var ProjectService = function () {
       var nodeContent = this.getNodeContentByNodeId(nodeId);
 
       if (nodeContent) {
-
         // get the step rubric if any
         var nodeRubric = nodeContent.rubric;
 
@@ -13536,8 +12380,6 @@ var ProjectService = function () {
         var components = nodeContent.components;
 
         if (components && components.length) {
-
-          // loop through all the components
           var _iteratorNormalCompletion155 = true;
           var _didIteratorError155 = false;
           var _iteratorError155 = undefined;
@@ -13547,8 +12389,6 @@ var ProjectService = function () {
               var component = _step155.value;
 
               if (component) {
-
-                // get a component rubric
                 var componentRubric = component.rubric;
 
                 if (componentRubric != null && componentRubric != '') {
@@ -13573,7 +12413,6 @@ var ProjectService = function () {
           }
         }
       }
-
       return n;
     }
 
@@ -13589,7 +12428,6 @@ var ProjectService = function () {
   }, {
     key: 'copyComponentAndInsert',
     value: function copyComponentAndInsert(nodeId, componentIds, insertAfterComponentId) {
-
       // get the node for which we are moving components
       var node = this.getNodeById(nodeId);
 
@@ -13599,7 +12437,6 @@ var ProjectService = function () {
       // array of new component ids
       var newComponentIds = [];
 
-      // loop through all the components we want to copy
       var _iteratorNormalCompletion156 = true;
       var _didIteratorError156 = false;
       var _iteratorError156 = undefined;
@@ -13608,14 +12445,11 @@ var ProjectService = function () {
         for (var _iterator156 = componentIds[Symbol.iterator](), _step156; !(_iteratorNormalCompletion156 = (_step156 = _iterator156.next()).done); _iteratorNormalCompletion156 = true) {
           var componentId = _step156.value;
 
-          // create a copy of the component
-          var newComponent = this.copyComponent(nodeId, componentId, newComponentIds);
+          var _newComponent = this.copyComponent(nodeId, componentId, newComponentIds);
 
-          newComponents.push(newComponent);
-          newComponentIds.push(newComponent.id);
+          newComponents.push(_newComponent);
+          newComponentIds.push(_newComponent.id);
         }
-
-        // get the components in the node
       } catch (err) {
         _didIteratorError156 = true;
         _iteratorError156 = err;
@@ -13634,7 +12468,6 @@ var ProjectService = function () {
       var components = node.components;
 
       if (components != null) {
-
         var insertPosition = 0;
 
         if (insertAfterComponentId == null) {
@@ -13645,7 +12478,6 @@ var ProjectService = function () {
           insertPosition = this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
         }
 
-        // loop through all the new components
         var _iteratorNormalCompletion157 = true;
         var _didIteratorError157 = false;
         var _iteratorError157 = undefined;
@@ -13694,7 +12526,6 @@ var ProjectService = function () {
   }, {
     key: 'copyComponent',
     value: function copyComponent(nodeId, componentId, componentIdsToSkip) {
-
       // get the component we want to copy
       var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
 
@@ -13740,12 +12571,9 @@ var ProjectService = function () {
           var component = _step158.value;
 
           if (component != null) {
-
-            // make a copy of the component object
             var newComponent = this.UtilService.makeCopyOfJSONObject(component);
             var newComponentId = newComponent.id;
 
-            // check if the component id is used in this project
             if (this.isComponentIdUsed(newComponentId)) {
               /*
                * the component id is already used so we will find a new
@@ -13811,7 +12639,6 @@ var ProjectService = function () {
        * name.
        */
       return this.$http(httpParams).then(function (result) {
-
         // get the components from the result that may have been modified
         newComponents = result.data;
 
@@ -13829,7 +12656,6 @@ var ProjectService = function () {
           insertPosition = _this6.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
         }
 
-        // loop through all the new components and add them to the project
         var _iteratorNormalCompletion159 = true;
         var _didIteratorError159 = false;
         var _iteratorError159 = undefined;
@@ -13837,7 +12663,6 @@ var ProjectService = function () {
         try {
           for (var _iterator159 = newComponents[Symbol.iterator](), _step159; !(_iteratorNormalCompletion159 = (_step159 = _iterator159.next()).done); _iteratorNormalCompletion159 = true) {
             var newComponent = _step159.value;
-
 
             // insert the new component
             currentComponents.splice(insertPosition, 0, newComponent);
@@ -13890,24 +12715,18 @@ var ProjectService = function () {
   }, {
     key: 'setNode',
     value: function setNode(nodeId, node) {
-
       if (nodeId != null && node != null) {
-
-        // loop through all the nodes
         for (var n = 0; n < this.project.nodes.length; n++) {
           var tempNode = this.project.nodes[n];
-
           if (tempNode != null && tempNode.id == nodeId) {
             // we have found the node we want to replace
             this.project.nodes[n] = node;
           }
         }
 
-        // loop through all the inactive nodes
         for (var i = 0; i < this.project.inactiveNodes.length; i++) {
-          var _tempNode = this.project.inactiveNodes[i];
-
-          if (_tempNode != null && _tempNode.id == nodeId) {
+          var _tempNode2 = this.project.inactiveNodes[i];
+          if (_tempNode2 != null && _tempNode2.id == nodeId) {
             // we have found the node we want to replace
             this.project.inactiveNodes[i] = node;
           }

@@ -339,7 +339,8 @@ var NotificationService = function () {
 
     /**
      * Returns all notifications for the given parameters
-     * @param args object of optional parameters to filter on (e.g. nodeId, componentId, toWorkgroupId, fromWorkgroupId, periodId, type)
+     * @param args object of optional parameters to filter on
+     * (e.g. nodeId, componentId, toWorkgroupId, fromWorkgroupId, periodId, type)
      * @returns array of notificaitons
      */
 
@@ -357,7 +358,6 @@ var NotificationService = function () {
           }
         };
 
-        // loop through all the given parameters and find notifications that match
         for (var p in args) {
           _loop(p);
         }

@@ -18,9 +18,7 @@ var StudentAssetService = function () {
     this.Upload = Upload;
     this.$rootScope = $rootScope;
     this.ConfigService = ConfigService;
-
     this.$translate = this.$filter('translate');
-
     this.allAssets = []; // keep track of student's assets
   }
 
@@ -330,7 +328,7 @@ var StudentAssetService = function () {
       config.data = $.param(params);
 
       return this.$http(config).then(function (result) {
-        //var deletedAsset = result.data;
+        //const deletedAsset = result.data;
         // also remove from local copy of all assets
         _this5.allAssets = _this5.allAssets.splice(_this5.allAssets.indexOf(studentAsset), 1);
         _this5.$rootScope.$broadcast('studentAssetsUpdated');

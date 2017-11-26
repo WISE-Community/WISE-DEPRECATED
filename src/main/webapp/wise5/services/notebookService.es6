@@ -1,12 +1,6 @@
 class NotebookService {
-  constructor($http,
-              $q,
-              $rootScope,
-              ConfigService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService) {
-
+  constructor($http, $q, $rootScope, ConfigService, ProjectService,
+      StudentAssetService, StudentDataService) {
     this.$http = $http;
     this.$q = $q;
     this.$rootScope = $rootScope;
@@ -95,10 +89,10 @@ class NotebookService {
   };
 
   deleteItem(itemToDelete) {
-    let items = this.getNotebookByWorkgroup().items;
-    let deletedItems = this.getNotebookByWorkgroup().deletedItems;
+    const items = this.getNotebookByWorkgroup().items;
+    const deletedItems = this.getNotebookByWorkgroup().deletedItems;
     for (let i = 0; i < items.length; i++) {
-      let item = items[i];
+      const item = items[i];
       if (item === itemToDelete) {
         items.splice(i, 1);
         deletedItems.push(itemToDelete);
@@ -109,10 +103,10 @@ class NotebookService {
   // looks up notebook item by local notebook item id, including deleted notes
   getLatestNotebookItemByLocalNotebookItemId(itemId, workgroupId = null) {
     if (this.getNotebookByWorkgroup(workgroupId).items.hasOwnProperty(itemId)) {
-      let items = this.getNotebookByWorkgroup(workgroupId).items[itemId];
+      const items = this.getNotebookByWorkgroup(workgroupId).items[itemId];
       return items.last();
     } else if (this.getNotebookByWorkgroup(workgroupId).deletedItems.hasOwnProperty(itemId)) {
-      let items = this.getNotebookByWorkgroup(workgroupId).deletedItems[itemId];
+      const items = this.getNotebookByWorkgroup(workgroupId).deletedItems[itemId];
       return items.last();
     } else {
       return null;
@@ -127,7 +121,7 @@ class NotebookService {
   // returns the authored report item
   getTemplateReportItemByReportId(reportId) {
     let templateReportItem = null;
-    let reportNotes = this.notebookConfig.itemTypes.report.notes;
+    const reportNotes = this.notebookConfig.itemTypes.report.notes;
     for (let reportNote of reportNotes) {
       if (reportNote.reportId == reportId) {
         templateReportItem = {
@@ -147,9 +141,9 @@ class NotebookService {
     /*
     let totalSizeSoFar = 0;
     for (let i = 0; i < this.getNotebookByWorkgroup().items.length; i++) {
-        let notebookItem = this.getNotebookByWorkgroup().items[i];
+        const notebookItem = this.getNotebookByWorkgroup().items[i];
         if (notebookItem.studentAsset != null) {
-            let notebookItemSize = notebookItem.studentAsset.fileSize;
+            const notebookItemSize = notebookItem.studentAsset.fileSize;
             totalSizeSoFar += notebookItemSize;
         }
     }
@@ -169,7 +163,7 @@ class NotebookService {
    */
   getReportNoteContentByReportId(reportId) {
     let result = null;
-    let reportNotes = this.notebookConfig.itemTypes.report.notes;
+    const reportNotes = this.notebookConfig.itemTypes.report.notes;
     for (let reportNote of reportNotes) {
       if (reportNote.reportId === reportId) {
         result = reportNote;
@@ -186,7 +180,7 @@ class NotebookService {
   retrieveNotebookItems(workgroupId = null, periodId = null) {
     if (this.ConfigService.isPreview()) {
       // we are previewing the project, initialize dummy student data
-      let workgroupId = this.ConfigService.getWorkgroupId();
+      const workgroupId = this.ConfigService.getWorkgroupId();
       this.notebooksByWorkgroup = {};
       this.notebooksByWorkgroup[workgroupId] = {};
       this.notebooksByWorkgroup[workgroupId].allItems = [];
@@ -194,11 +188,11 @@ class NotebookService {
       this.notebooksByWorkgroup[workgroupId].deletedItems = [];
       this.groupNotebookItems();
       // if we're in preview, don't make any request to the server but pretend we did
-      let deferred = this.$q.defer();
+      const deferred = this.$q.defer();
       deferred.resolve(this.notebooksByWorkgroup[workgroupId]);
       return deferred.promise;
     } else {
-      let config = {
+      const config = {
         method : 'GET',
         url : this.ConfigService.getStudentNotebookURL(),
         params : {}
@@ -212,7 +206,7 @@ class NotebookService {
       return this.$http(config).then((response) => {
         // loop through the assets and make them into JSON object with more details
         this.notebooksByWorkgroup = {};
-        let allNotebookItems = response.data;
+        const allNotebookItems = response.data;
         for (let notebookItem of allNotebookItems) {
           try {
             if (notebookItem.studentAssetId != null) {
@@ -224,7 +218,7 @@ class NotebookService {
             } else if (notebookItem.type === "note" || notebookItem.type === "report") {
               notebookItem.content = angular.fromJson(notebookItem.content);
             }
-            let workgroupId = notebookItem.workgroupId;
+            const workgroupId = notebookItem.workgroupId;
             if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
               // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
               this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
@@ -254,12 +248,12 @@ class NotebookService {
   groupNotebookItems() {
     for (let workgroupId in this.notebooksByWorkgroup) {
       if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
-        let notebookByWorkgroup = this.notebooksByWorkgroup[workgroupId];
+        const notebookByWorkgroup = this.notebooksByWorkgroup[workgroupId];
         notebookByWorkgroup.items = {};
         notebookByWorkgroup.deletedItems = {};  // reset deleted items
         for (let ni = 0; ni < notebookByWorkgroup.allItems.length; ni++) {
-          let notebookItem = notebookByWorkgroup.allItems[ni];
-          let notebookItemLocalNotebookItemId = notebookItem.localNotebookItemId;
+          const notebookItem = notebookByWorkgroup.allItems[ni];
+          const notebookItemLocalNotebookItemId = notebookItem.localNotebookItemId;
           if (notebookByWorkgroup.items.hasOwnProperty(notebookItemLocalNotebookItemId)) {
             // if this was already added before, we'll append this notebook item to the array
             notebookByWorkgroup.items[notebookItemLocalNotebookItemId].push(notebookItem);
@@ -272,9 +266,9 @@ class NotebookService {
         for (let notebookItemLocalNotebookItemIdKey in notebookByWorkgroup.items) {
           if (notebookByWorkgroup.items.hasOwnProperty(notebookItemLocalNotebookItemIdKey)) {
             // get the last note revision
-            let allRevisionsForThisLocalNotebookItemId = notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey];
+            const allRevisionsForThisLocalNotebookItemId = notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey];
             if (allRevisionsForThisLocalNotebookItemId != null) {
-              let lastRevision = allRevisionsForThisLocalNotebookItemId[allRevisionsForThisLocalNotebookItemId.length - 1];
+              const lastRevision = allRevisionsForThisLocalNotebookItemId[allRevisionsForThisLocalNotebookItemId.length - 1];
               if (lastRevision != null && lastRevision.serverDeleteTime != null) {
                 // the last revision for this not deleted, so move the entire note (with all its revisions) to deletedItems
                 notebookByWorkgroup.deletedItems[notebookItemLocalNotebookItemIdKey] = allRevisionsForThisLocalNotebookItemId;
@@ -291,9 +285,9 @@ class NotebookService {
    * Returns the notebook item with the specified notebook item id.
    */
   getNotebookItemByNotebookItemId(notebookItemId, workgroupId = null) {
-    let notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
+    const notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
     if (notebookByWorkgroup != null) {
-      let allNotebookItems = notebookByWorkgroup.allItems;
+      const allNotebookItems = notebookByWorkgroup.allItems;
       for (let notebookItem of allNotebookItems) {
         if (notebookItem.id === notebookItemId) {
           return notebookItem;

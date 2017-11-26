@@ -43,7 +43,6 @@ var HttpInterceptor = function () {
     value: function response(_response) {
       // response received, clear any disconnection alerts
       self.$rootScope.$broadcast('serverConnected');
-
       return _response;
     }
 
@@ -56,7 +55,6 @@ var HttpInterceptor = function () {
         // response error, broadcast disconnection alert
         self.$rootScope.$broadcast('serverDisconnected');
       }
-
       return self.$q.reject(rejection);
     }
   }]);

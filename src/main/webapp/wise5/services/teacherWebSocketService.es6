@@ -1,5 +1,9 @@
 class TeacherWebSocketService {
-  constructor($rootScope, $websocket, ConfigService, StudentStatusService) {
+  constructor(
+      $rootScope,
+      $websocket,
+      ConfigService,
+      StudentStatusService) {
     this.$rootScope = $rootScope;
     this.$websocket = $websocket;
     this.ConfigService = ConfigService;
@@ -9,11 +13,12 @@ class TeacherWebSocketService {
   }
 
   initialize() {
-    var runId = this.ConfigService.getRunId();
-    var periodId = this.ConfigService.getPeriodId();
-    var workgroupId = this.ConfigService.getWorkgroupId();
-    var webSocketURL = this.ConfigService.getWebSocketURL();
-    webSocketURL += "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
+    const runId = this.ConfigService.getRunId();
+    const periodId = this.ConfigService.getPeriodId();
+    const workgroupId = this.ConfigService.getWorkgroupId();
+    const webSocketURL = this.ConfigService.getWebSocketURL() +
+        "?runId=" + runId + "&periodId=" + periodId +
+        "&workgroupId=" + workgroupId;
     this.dataStream = this.$websocket(webSocketURL);
 
     this.dataStream.onMessage((message) => {
@@ -22,8 +27,8 @@ class TeacherWebSocketService {
   };
 
   handleMessage(message) {
-    var data = JSON.parse(message.data);
-    var messageType = data.messageType;
+    const data = JSON.parse(message.data);
+    const messageType = data.messageType;
 
     if (messageType === 'studentStatus') {
       this.handleStudentStatusReceived(data);
@@ -45,13 +50,11 @@ class TeacherWebSocketService {
   };
 
   sendMessage(messageJSON) {
-    // send the websocket message
     this.dataStream.send(messageJSON);
   }
 
   handleStudentsOnlineReceived(studentsOnlineMessage) {
     this.studentsOnlineArray = studentsOnlineMessage.studentsOnlineList;
-
     this.$rootScope.$broadcast('studentsOnlineReceived', {studentsOnline: this.studentsOnlineArray});
   };
 
@@ -73,12 +76,11 @@ class TeacherWebSocketService {
    * with messageType 'studentStatus'.
    */
   handleStudentStatusReceived(studentStatus) {
-    var workgroupId = studentStatus.workgroupId;
+    const workgroupId = studentStatus.workgroupId;
 
     // update the student status for the workgroup
     this.StudentStatusService.setStudentStatusForWorkgroupId(workgroupId, studentStatus);
 
-    // fire the student status received event
     this.$rootScope.$emit('studentStatusReceived', {studentStatus: studentStatus});
   };
 
@@ -86,8 +88,6 @@ class TeacherWebSocketService {
    * Handle the student disconnected message
    */
   handleStudentDisconnected(studentDisconnectedMessage) {
-
-    // fire the student disconnected event
     this.$rootScope.$broadcast('studentDisconnected', {data: studentDisconnectedMessage});
   }
 
@@ -97,13 +97,10 @@ class TeacherWebSocketService {
    * all the periods
    */
   pauseScreens(periodId) {
-
-    // create the websocket message
-    var messageJSON = {};
-
+    const messageJSON = {};
     messageJSON.messageType = 'pauseScreen';
 
-    if(periodId == null || periodId == -1) {
+    if (periodId == null || periodId == -1) {
       //we are going to pause all the students in a run
       messageJSON.messageParticipants = 'teacherToStudentsInRun';
     } else if(periodId != null) {
@@ -111,8 +108,6 @@ class TeacherWebSocketService {
       messageJSON.periodId = periodId;
       messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
     }
-
-    // send the websocket message
     this.sendMessage(messageJSON);
   }
 
@@ -122,10 +117,7 @@ class TeacherWebSocketService {
    * all the periods
    */
   unPauseScreens(periodId) {
-
-    // create the websocket message
-    var messageJSON = {};
-
+    const messageJSON = {};
     messageJSON.messageType = 'unPauseScreen';
 
     if(periodId == null || periodId == -1) {
@@ -136,12 +128,15 @@ class TeacherWebSocketService {
       messageJSON.periodId = periodId;
       messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
     }
-
-    // send the websocket message
     this.sendMessage(messageJSON);
   }
 }
 
-TeacherWebSocketService.$inject = ['$rootScope', '$websocket', 'ConfigService', 'StudentStatusService'];
+TeacherWebSocketService.$inject = [
+  '$rootScope',
+  '$websocket',
+  'ConfigService',
+  'StudentStatusService'
+];
 
 export default TeacherWebSocketService;

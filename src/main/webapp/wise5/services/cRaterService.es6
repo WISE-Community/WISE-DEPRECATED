@@ -13,13 +13,9 @@ class CRaterService {
    * @param studentData the student data
    * @returns a promise that returns the result of the CRater request
    */
-  makeCRaterRequest(cRaterItemType,
-                    cRaterItemId,
-                    cRaterRequestType,
-                    cRaterResponseId,
-                    studentData) {
-
-    var httpParams = {};
+  makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType,
+      cRaterResponseId, studentData) {
+    const httpParams = {};
     httpParams.method = 'GET';
     httpParams.url = this.ConfigService.getCRaterRequestURL();
     httpParams.params = {
@@ -45,13 +41,9 @@ class CRaterService {
    * @param studentData the student data
    * @returns a promise that returns the result of the CRater request
    */
-  makeCRaterScoringRequest(cRaterItemType,
-                           cRaterItemId,
-                           studentData) {
-
-    var cRaterRequestType = 'scoring';
-    var cRaterResponseId = new Date().getTime();
-
+  makeCRaterScoringRequest(cRaterItemType, cRaterItemId, studentData) {
+    const cRaterRequestType = 'scoring';
+    const cRaterResponseId = new Date().getTime();
     return this.makeCRaterRequest(cRaterItemType,
       cRaterItemId,
       cRaterRequestType,
@@ -67,18 +59,11 @@ class CRaterService {
    * @param studentData the student data
    * @returns a promise that returns the result of the CRater request
    */
-  makeCRaterVerifyRequest(cRaterItemType,
-                          cRaterItemId,
-                          studentData) {
-
-    var cRaterRequestType = 'verify';
-    var cRaterResponseId = new Date().getTime();
-
-    return this.makeCRaterRequest(cRaterItemType,
-      cRaterItemId,
-      cRaterRequestType,
-      cRaterResponseId,
-      studentData);
+  makeCRaterVerifyRequest(cRaterItemType, cRaterItemId, studentData) {
+    const cRaterRequestType = 'verify';
+    const cRaterResponseId = new Date().getTime();
+    return this.makeCRaterRequest(cRaterItemType, cRaterItemId,
+        cRaterRequestType, cRaterResponseId, studentData);
   }
 
   /**
@@ -86,12 +71,10 @@ class CRaterService {
    * @param component the component content
    */
   getCRaterItemType(component) {
-    var cRaterItemType = null;
-
+    let cRaterItemType = null;
     if (component != null && component.cRater != null) {
       cRaterItemType = component.cRater.itemType;
     }
-
     return cRaterItemType;
   }
 
@@ -100,12 +83,10 @@ class CRaterService {
    * @param component the component content
    */
   getCRaterItemId(component) {
-    var cRaterItemId = null;
-
+    let cRaterItemId = null;
     if (component != null && component.cRater != null) {
       cRaterItemId = component.cRater.itemId;
     }
-
     return cRaterItemId;
   }
 
@@ -115,10 +96,8 @@ class CRaterService {
    * @returns when to perform the CRater scoring e.g. 'submit', 'save', 'change', 'exit'
    */
   getCRaterScoreOn(component) {
-    var scoreOn = null;
-
+    let scoreOn = null;
     if (component != null) {
-
       /*
        * CRater can be enabled in two ways
        * 1. the enableCRater field is true
@@ -130,9 +109,7 @@ class CRaterService {
         // get the score on value e.g. 'submit', 'save', 'change', or 'exit'
         scoreOn = component.cRater.scoreOn;
       }
-
     }
-
     return scoreOn;
   }
 
@@ -141,19 +118,15 @@ class CRaterService {
    * @param component the component content
    */
   isCRaterEnabled(component) {
-    var result = false;
-
+    let result = false;
     if (component != null) {
-
       // get the item type and item id
-      var cRaterItemType = this.getCRaterItemType(component);
-      var cRaterItemId = this.getCRaterItemId(component);
-
+      const cRaterItemType = this.getCRaterItemType(component);
+      const cRaterItemId = this.getCRaterItemId(component);
       if (cRaterItemType != null && cRaterItemId != null) {
         result = true;
       }
     }
-
     return result;
   }
 
@@ -163,18 +136,14 @@ class CRaterService {
    * @returns whether the CRater is set to score on save
    */
   isCRaterScoreOnSave(component) {
-    var result = false;
-
+    let result = false;
     if (component != null) {
-
       // find when we should perform the CRater scoring
-      var scoreOn = this.getCRaterScoreOn(component);
-
+      const scoreOn = this.getCRaterScoreOn(component);
       if (scoreOn != null && scoreOn === 'save') {
         result = true;
       }
     }
-
     return result;
   }
 
@@ -184,18 +153,14 @@ class CRaterService {
    * @returns whether the CRater is set to score on submit
    */
   isCRaterScoreOnSubmit(component) {
-    var result = false;
-
+    let result = false;
     if (component != null) {
-
       // find when we should perform the CRater scoring
-      var scoreOn = this.getCRaterScoreOn(component);
-
+      const scoreOn = this.getCRaterScoreOn(component);
       if (scoreOn != null && scoreOn === 'submit') {
         result = true;
       }
     }
-
     return result;
   }
 
@@ -205,18 +170,14 @@ class CRaterService {
    * @returns whether the CRater is set to score on change
    */
   isCRaterScoreOnChange(component) {
-    var result = false;
-
+    let result = false;
     if (component != null) {
-
       // find when we should perform the CRater scoring
-      var scoreOn = this.getCRaterScoreOn(component);
-
+      const scoreOn = this.getCRaterScoreOn(component);
       if (scoreOn != null && scoreOn === 'change') {
         result = true;
       }
     }
-
     return result;
   }
 
@@ -226,18 +187,14 @@ class CRaterService {
    * @returns whether the CRater is set to score on exit
    */
   isCRaterScoreOnExit(component) {
-    var result = false;
-
+    let result = false;
     if (component != null) {
-
       // find when we should perform the CRater scoring
-      var scoreOn = this.getCRaterScoreOn(component);
-
+      const scoreOn = this.getCRaterScoreOn(component);
       if (scoreOn != null && scoreOn === 'exit') {
         result = true;
       }
     }
-
     return result;
   }
 
@@ -248,20 +205,15 @@ class CRaterService {
    * @returns the scoring rule for the given score
    */
   getCRaterScoringRuleByScore(component, score) {
-    var scoringRule = null;
-
+    let scoringRule = null;
     if (component != null && score != null) {
-      var cRater = component.cRater;
-
+      const cRater = component.cRater;
       if (cRater != null) {
-        var scoringRules = cRater.scoringRules;
-
+        const scoringRules = cRater.scoringRules;
         if (scoringRules != null) {
-
           // loop through all the scoring rules
-          for (var tempScoringRule of scoringRules) {
+          for (let tempScoringRule of scoringRules) {
             if (tempScoringRule != null) {
-
               if (tempScoringRule.score == score) {
                 /*
                  * the score matches so we have found
@@ -275,7 +227,6 @@ class CRaterService {
         }
       }
     }
-
     return scoringRule;
   }
 
@@ -286,17 +237,14 @@ class CRaterService {
    * @returns the feedback text for the given score
    */
   getCRaterFeedbackTextByScore(component, score) {
-
-    var feedbackText = null;
+    let feedbackText = null;
 
     // get the scoring rule for the given score
-    var scoringRule = this.getCRaterScoringRuleByScore(component, score);
-
+    const scoringRule = this.getCRaterScoringRuleByScore(component, score);
     if (scoringRule != null) {
       // get the feedback text
       feedbackText = scoringRule.feedbackText;
     }
-
     return feedbackText;
   }
 
@@ -307,18 +255,17 @@ class CRaterService {
    * @param currentScore the score from the current submit
    * @returns the feedback text for the given previous score and current score
    */
-  getMultipleAttemptCRaterFeedbackTextByScore(component, previousScore, currentScore) {
-
-    var feedbackText = null;
+  getMultipleAttemptCRaterFeedbackTextByScore(component, previousScore,
+      currentScore) {
+    let feedbackText = null;
 
     // get the scoring rule for the given score
-    var scoringRule = this.getMultipleAttemptCRaterScoringRuleByScore(component, previousScore, currentScore);
-
+    const scoringRule = this.getMultipleAttemptCRaterScoringRuleByScore(
+        component, previousScore, currentScore);
     if (scoringRule != null) {
       // get the feedback text
       feedbackText = scoringRule.feedbackText;
     }
-
     return feedbackText;
   }
 
@@ -330,26 +277,25 @@ class CRaterService {
    * @param currentScore the score from the current submit
    * @returns the scoring rule for the given previous score and current score
    */
-  getMultipleAttemptCRaterScoringRuleByScore(component, previousScore, currentScore) {
-    var scoringRule = null;
-
+  getMultipleAttemptCRaterScoringRuleByScore(component, previousScore,
+      currentScore) {
+    let scoringRule = null;
     if (component != null && previousScore != null && currentScore != null) {
-      var cRater = component.cRater;
-
+      const cRater = component.cRater;
       if (cRater != null) {
 
         // get the multiple attempt scoring rules
-        var multipleAttemptScoringRules = cRater.multipleAttemptScoringRules;
+        const multipleAttemptScoringRules = cRater.multipleAttemptScoringRules;
 
         if (multipleAttemptScoringRules != null) {
 
           // loop through all the multiple attempt scoring rules
-          for (var multipleAttemptScoringRule of multipleAttemptScoringRules) {
+          for (let multipleAttemptScoringRule of multipleAttemptScoringRules) {
 
             if (multipleAttemptScoringRule != null) {
 
               // get a multiple attempt scoring rule
-              var scoreSequence = multipleAttemptScoringRule.scoreSequence;
+              const scoreSequence = multipleAttemptScoringRule.scoreSequence;
 
               if (scoreSequence != null) {
 
@@ -357,8 +303,8 @@ class CRaterService {
                  * get the expected previous score and current score
                  * that will satisfy the rule
                  */
-                var previousScoreMatch = scoreSequence[0];
-                var currentScoreMatch = scoreSequence[1];
+                const previousScoreMatch = scoreSequence[0];
+                const currentScoreMatch = scoreSequence[1];
 
                 if (previousScore.toString().match("[" + previousScoreMatch + "]") &&
                   currentScore.toString().match("[" + currentScoreMatch + "]")) {
@@ -376,7 +322,6 @@ class CRaterService {
         }
       }
     }
-
     return scoringRule;
   }
 }

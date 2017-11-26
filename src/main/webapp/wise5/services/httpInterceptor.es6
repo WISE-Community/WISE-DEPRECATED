@@ -23,7 +23,6 @@ class HttpInterceptor {
   response(response) {
     // response received, clear any disconnection alerts
     self.$rootScope.$broadcast('serverConnected');
-
     return response;
   }
 
@@ -33,7 +32,6 @@ class HttpInterceptor {
       // response error, broadcast disconnection alert
       self.$rootScope.$broadcast('serverDisconnected');
     }
-
     return self.$q.reject(rejection);
   }
 }

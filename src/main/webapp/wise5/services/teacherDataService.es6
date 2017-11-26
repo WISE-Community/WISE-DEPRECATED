@@ -1,17 +1,17 @@
 'use strict';
 
 class TeacherDataService {
-
-  constructor($http,
-              $filter,
-              $q,
-              $rootScope,
-              AnnotationService,
-              ConfigService,
-              NotificationService,
-              ProjectService,
-              TeacherWebSocketService,
-              UtilService) {
+  constructor(
+      $http,
+      $filter,
+      $q,
+      $rootScope,
+      AnnotationService,
+      ConfigService,
+      NotificationService,
+      ProjectService,
+      TeacherWebSocketService,
+      UtilService) {
     this.$http = $http;
     this.$filter = $filter;
     this.$q = $q;
@@ -22,7 +22,6 @@ class TeacherDataService {
     this.ProjectService = ProjectService;
     this.TeacherWebSocketService = TeacherWebSocketService;
     this.UtilService = UtilService;
-
     this.$translate = this.$filter('translate');
 
     this.studentData = {
@@ -47,7 +46,6 @@ class TeacherDataService {
      * we receive the response from saving an annotation to the server
      */
     this.$rootScope.$on('annotationSavedToServer', (event, args) => {
-
       if (args) {
         // get the annotation that was saved to the server
         let annotation = args.annotation;
@@ -60,7 +58,6 @@ class TeacherDataService {
      * teacher receives a new annotation (usually on a student work) from the server
      */
     this.$rootScope.$on('newAnnotationReceived', (event, args) => {
-
       if (args) {
         // get the annotation that was saved to the server
         let annotation = args.annotation;
@@ -73,7 +70,6 @@ class TeacherDataService {
      * teacher receives a new student work from the server
      */
     this.$rootScope.$on('newStudentWorkReceived', (event, args) => {
-
       if (args) {
         // get the student work (component state) that was saved to the server
         let studentWork = args.studentWork;
@@ -166,7 +162,6 @@ class TeacherDataService {
       params.getAnnotations = true;
       params.getEvents = true;
       params.components = selectedNodes;
-
       return this.retrieveStudentData(params);
     } else if (exportType === "rawData") {
       let params = {};
@@ -175,7 +170,6 @@ class TeacherDataService {
       params.getAnnotations = true;
       params.getEvents = true;
       params.components = selectedNodes;
-
       return this.retrieveStudentData(params);
     }
   }
@@ -252,19 +246,14 @@ class TeacherDataService {
     httpParams.data = $.param(params);
 
     return this.$http(httpParams).then((result) => {
-
       let savedEvents = null;
-
       if (result != null && result.data != null) {
         let data = result.data;
-
         if (data != null) {
-
           // get the saved events
           savedEvents = data.events;
         }
       }
-
       return savedEvents;
     });
   };
@@ -275,18 +264,17 @@ class TeacherDataService {
    * @returns the student data for the node id
    */
   retrieveStudentDataByNodeId(nodeId) {
-
     // get the node ids and component ids in the node
-    var nodeIdsAndComponentIds = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
+    const nodeIdsAndComponentIds = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
 
     // get the show previous work node ids and component ids in the node
-    var showPreviousWorkNodeIdsAndComponentIds = this.ProjectService.getShowPreviousWorkNodeIdsAndComponentIds(nodeId);
+    const showPreviousWorkNodeIdsAndComponentIds = this.ProjectService.getShowPreviousWorkNodeIdsAndComponentIds(nodeId);
 
-    var components = [];
+    let components = [];
     components = components.concat(nodeIdsAndComponentIds);
     components = components.concat(showPreviousWorkNodeIdsAndComponentIds);
 
-    var params = {};
+    const params = {};
     //params.periodId = periodId;
     params.periodId = null;
     params.workgroupId = null;
@@ -304,14 +292,12 @@ class TeacherDataService {
    * @returns the student data for the workgroup id
    */
   retrieveStudentDataByWorkgroupId(workgroupId) {
-
-    var params = {};
+    const params = {};
     params.periodId = null;
     params.nodeId = null;
     params.workgroupId = workgroupId;
     params.toWorkgroupId = workgroupId;
     params.getAnnotations = false;
-
     return this.retrieveStudentData(params);
   };
 
@@ -320,7 +306,7 @@ class TeacherDataService {
    * @returns the annotations for the run
    */
   retrieveAnnotations() {
-    var params = {};
+    let params = {};
     params.periodId = null;
     params.nodeId = null;
     params.workgroupId = null;
@@ -328,7 +314,6 @@ class TeacherDataService {
     params.getStudentWork = false;
     params.getEvents = false;
     params.getAnnotations = true;
-
     return this.retrieveStudentData(params);
   };
 
@@ -360,14 +345,13 @@ class TeacherDataService {
     };
 
     return this.$http(httpParams).then((result) => {
-      var resultData = result.data;
+      const resultData = result.data;
       if (resultData != null) {
-
         if (resultData.studentWorkList != null) {
-          var componentStates = resultData.studentWorkList;
+          const componentStates = resultData.studentWorkList;
 
           // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId objects
-          for (var componentState of componentStates) {
+          for (let componentState of componentStates) {
             this.addOrUpdateComponentState(componentState);
           }
         }
@@ -381,14 +365,13 @@ class TeacherDataService {
           this.studentData.allEvents = resultData.events;
           this.studentData.eventsByWorkgroupId = {};
           this.studentData.eventsByNodeId = {};
-          for (var event of resultData.events) {
-            var eventWorkgroupId = event.workgroupId;
+          for (let event of resultData.events) {
+            const eventWorkgroupId = event.workgroupId;
             if (this.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
               this.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
             }
             this.studentData.eventsByWorkgroupId[eventWorkgroupId].push(event);
-
-            var eventNodeId = event.nodeId;
+            const eventNodeId = event.nodeId;
             if (this.studentData.eventsByNodeId[eventNodeId] == null) {
               this.studentData.eventsByNodeId[eventNodeId] = new Array();
             }
@@ -401,24 +384,21 @@ class TeacherDataService {
           this.studentData.annotations = resultData.annotations;
           this.studentData.annotationsToWorkgroupId = {};
           this.studentData.annotationsByNodeId = {};
-          for (var annotation of resultData.annotations) {
-            var annotationWorkgroupId = annotation.toWorkgroupId;
+          for (let annotation of resultData.annotations) {
+            const annotationWorkgroupId = annotation.toWorkgroupId;
             if (!this.studentData.annotationsToWorkgroupId[annotationWorkgroupId]) {
               this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
             }
             this.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
-
-            var annotationNodeId = annotation.nodeId;
+            const annotationNodeId = annotation.nodeId;
             if (!this.studentData.annotationsByNodeId[annotationNodeId]) {
               this.studentData.annotationsByNodeId[annotationNodeId] = new Array();
             }
             this.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
           }
         }
-
         this.AnnotationService.setAnnotations(this.studentData.annotations);
       }
-
       return resultData;
     });
   };
@@ -428,7 +408,7 @@ class TeacherDataService {
    * @param componentState the ComponentState to add
    */
   addOrUpdateComponentState(componentState) {
-    var componentStateWorkgroupId = componentState.workgroupId;
+    const componentStateWorkgroupId = componentState.workgroupId;
     if (this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
       this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
     }
@@ -446,7 +426,7 @@ class TeacherDataService {
       this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
     }
 
-    var componentStateNodeId = componentState.nodeId;
+    const componentStateNodeId = componentState.nodeId;
     if (this.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
       this.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
     }
@@ -464,7 +444,7 @@ class TeacherDataService {
       this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
     }
 
-    var componentId = componentState.componentId;
+    const componentId = componentState.componentId;
     if (this.studentData.componentStatesByComponentId[componentId] == null) {
       this.studentData.componentStatesByComponentId[componentId] = new Array();
     }
@@ -487,15 +467,15 @@ class TeacherDataService {
    * Retrieve the run status from the server
    */
   retrieveRunStatus() {
-    var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
-    var runId = this.ConfigService.getConfigParam('runId');
+    const runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
+    const runId = this.ConfigService.getConfigParam('runId');
 
     //create the params for the request
-    var params = {
+    const params = {
       runId:runId
     };
 
-    var httpParams = {};
+    const httpParams = {};
     httpParams.method = 'GET';
     httpParams.url = runStatusURL;
     httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
@@ -504,7 +484,7 @@ class TeacherDataService {
     // make the request
     return this.$http(httpParams).then((result) => {
       if (result != null) {
-        var data = result.data;
+        const data = result.data;
         if (data != null) {
           // save the run status
           this.runStatus = data;
@@ -518,7 +498,7 @@ class TeacherDataService {
     if (this.studentData.componentStatesByWorkgroupId == null) {
       //debugger;
     }
-    var componentStatesByWorkgroupId = this.studentData.componentStatesByWorkgroupId[workgroupId];
+    const componentStatesByWorkgroupId = this.studentData.componentStatesByWorkgroupId[workgroupId];
     if (componentStatesByWorkgroupId != null) {
       return componentStatesByWorkgroupId;
     } else {
@@ -527,7 +507,7 @@ class TeacherDataService {
   }
 
   getComponentStatesByNodeId(nodeId) {
-    var componentStatesByNodeId = this.studentData.componentStatesByNodeId[nodeId];
+    const componentStatesByNodeId = this.studentData.componentStatesByNodeId[nodeId];
     if (componentStatesByNodeId != null) {
       return componentStatesByNodeId;
     } else {
@@ -541,60 +521,43 @@ class TeacherDataService {
    * @returns an array containing component states for a component id
    */
   getComponentStatesByComponentId(componentId) {
-    var componentStates = [];
-
-    var componentStatesByComponentId = this.studentData.componentStatesByComponentId[componentId];
-
+    let componentStates = [];
+    const componentStatesByComponentId = this.studentData.componentStatesByComponentId[componentId];
     if (componentStatesByComponentId != null) {
       componentStates = componentStatesByComponentId;
     }
-
     return componentStates;
   }
 
   getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId) {
-    var latestComponentState = null;
-
-    var componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
-
+    let latestComponentState = null;
+    const componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
     if (componentStates != null) {
-
-      // loop through all the component states from newest to oldest
-      for (var c = componentStates.length - 1; c >= 0; c--) {
-        var componentState = componentStates[c];
-
+      for (let c = componentStates.length - 1; c >= 0; c--) {
+        const componentState = componentStates[c];
         if (componentState != null) {
-          var componentStateNodeId = componentState.nodeId;
-          var componentStateComponentId = componentState.componentId;
-
-          // compare the node id and component id
+          const componentStateNodeId = componentState.nodeId;
+          const componentStateComponentId = componentState.componentId;
           if (nodeId == componentStateNodeId &&
-            componentId == componentStateComponentId) {
+              componentId == componentStateComponentId) {
             latestComponentState = componentState;
             break;
           }
         }
       }
     }
-
     return latestComponentState;
   }
 
   getLatestComponentStateByWorkgroupIdNodeId(workgroupId, nodeId) {
-    var latestComponentState = null;
-
-    var componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
-
+    let latestComponentState = null;
+    const componentStates =
+        this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
     if (componentStates != null) {
-
-      // loop through all the component states from newest to oldest
-      for (var c = componentStates.length - 1; c >= 0; c--) {
-        var componentState = componentStates[c];
-
+      for (let c = componentStates.length - 1; c >= 0; c--) {
+        const componentState = componentStates[c];
         if (componentState != null) {
-          var componentStateNodeId = componentState.nodeId;
-
-          // compare the node id and component id
+          const componentStateNodeId = componentState.nodeId;
           if (nodeId == componentStateNodeId) {
             latestComponentState = componentState;
             break;
@@ -602,7 +565,6 @@ class TeacherDataService {
         }
       }
     }
-
     return latestComponentState;
   }
 
@@ -613,43 +575,34 @@ class TeacherDataService {
    * @return an array of latest component states
    */
   getLatestComponentStatesByWorkgroupId(workgroupId) {
-    var componentStates = [];
-
+    const componentStates = [];
     if (workgroupId != null) {
-
-      // get all the component states for a workgroup
-      var componentStatesForWorkgroup = this.getComponentStatesByWorkgroupId(workgroupId);
-
+      const componentStatesForWorkgroup =
+          this.getComponentStatesByWorkgroupId(workgroupId);
       if (componentStatesForWorkgroup != null) {
-
         // mapping of component to revision counter
-        var componentRevisionCounter = {};
+        const componentRevisionCounter = {};
 
         /*
          * used to keep track of the components we have found component
          * states for already
          */
-        var componentsFound = {};
-
-        // loop through the component states forwards
-        for (var componentState of componentStatesForWorkgroup) {
-
+        const componentsFound = {};
+        for (let componentState of componentStatesForWorkgroup) {
           if (componentState != null) {
-
             // get the node id and component id of the component state
-            var nodeId = componentState.nodeId;
-            var componentId = componentState.componentId;
+            const nodeId = componentState.nodeId;
+            const componentId = componentState.componentId;
 
             // generate the component key e.g. "node2_bb83hs0sd8"
-            var key = nodeId + "-" + componentId;
+            const key = nodeId + "-" + componentId;
 
             if (componentRevisionCounter[key] == null) {
               // initialize the component revision counter for this component to 1 if there is no entry
               componentRevisionCounter[key] = 1;
             }
 
-            // get the revision counter
-            var revisionCounter = componentRevisionCounter[key];
+            const revisionCounter = componentRevisionCounter[key];
 
             // set the revision counter into the component state
             componentState.revisionCounter = revisionCounter;
@@ -659,20 +612,16 @@ class TeacherDataService {
           }
         }
 
-        // loop through the component states backwards
-        for(var csb = componentStatesForWorkgroup.length - 1; csb >= 0; csb--) {
-
-          // get a component state
-          var componentState = componentStatesForWorkgroup[csb];
+        for (let csb = componentStatesForWorkgroup.length - 1; csb >= 0; csb--) {
+          const componentState = componentStatesForWorkgroup[csb];
 
           if (componentState != null) {
-
             // get the node id and component id of the component state
-            var nodeId = componentState.nodeId;
-            var componentId = componentState.componentId;
+            const nodeId = componentState.nodeId;
+            const componentId = componentState.componentId;
 
             // generate the component key e.g. "node2_bb83hs0sd8"
-            var key = nodeId + "-" + componentId;
+            const key = nodeId + "-" + componentId;
 
             if (componentsFound[key] == null) {
               /*
@@ -700,14 +649,12 @@ class TeacherDataService {
         componentStates.reverse();
       }
     }
-
     return componentStates;
   }
 
   getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId) {
-
-    var componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
-    var componentStatesByNodeId = this.getComponentStatesByNodeId(nodeId);
+    const componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
+    const componentStatesByNodeId = this.getComponentStatesByNodeId(nodeId);
 
     // find the intersect and return it
     return componentStatesByWorkgroupId.filter((n) => {
@@ -722,8 +669,8 @@ class TeacherDataService {
    * @returns an array of component states
    */
   getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId) {
-    var componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
-    var componentStatesByComponentId = this.getComponentStatesByComponentId(componentId);
+    const componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
+    const componentStatesByComponentId = this.getComponentStatesByComponentId(componentId);
 
     // find the intersect and return it
     return componentStatesByWorkgroupId.filter((n) => {
@@ -732,7 +679,7 @@ class TeacherDataService {
   }
 
   getEventsByWorkgroupId(workgroupId) {
-    var eventsByWorkgroupId = this.studentData.eventsByWorkgroupId[workgroupId];
+    const eventsByWorkgroupId = this.studentData.eventsByWorkgroupId[workgroupId];
     if (eventsByWorkgroupId != null) {
       return eventsByWorkgroupId;
     } else {
@@ -741,7 +688,7 @@ class TeacherDataService {
   };
 
   getEventsByNodeId(nodeId) {
-    var eventsByNodeId = this.studentData.eventsByNodeId[nodeId];
+    const eventsByNodeId = this.studentData.eventsByNodeId[nodeId];
     if (eventsByNodeId != null) {
       return eventsByNodeId;
     } else {
@@ -750,8 +697,8 @@ class TeacherDataService {
   };
 
   getEventsByWorkgroupIdAndNodeId(workgroupId, nodeId) {
-    var eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
-    var eventsByNodeId = this.getEventsByNodeId(nodeId);
+    const eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
+    const eventsByNodeId = this.getEventsByNodeId(nodeId);
 
     // find the intersect and return it
     return eventsByWorkgroupId.filter((n) => {
@@ -768,38 +715,22 @@ class TeacherDataService {
    * no event is found with the matching parameters
    */
   getLatestEventByWorkgroupIdAndNodeIdAndType(workgroupId, nodeId, eventType) {
-
-    // get all the events for a workgroup id
-    var eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
-
+    const eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
     if (eventsByWorkgroupId != null) {
-
-      /*
-       * loop through all the events for the workgroup from newest to
-       * oldest
-       */
-      for (var e = eventsByWorkgroupId.length - 1; e >= 0; e--) {
-
-        // get an event
-        var event = eventsByWorkgroupId[e];
-
+      for (let e = eventsByWorkgroupId.length - 1; e >= 0; e--) {
+        const event = eventsByWorkgroupId[e];
         if (event != null) {
           if (event.nodeId == nodeId && event.event == eventType) {
-            /*
-             * the event parameters match the ones we are looking
-             * for
-             */
             return event;
           }
         }
       }
     }
-
     return null;
   }
 
   getAnnotationsToWorkgroupId(workgroupId) {
-    var annotationsToWorkgroupId = this.studentData.annotationsToWorkgroupId[workgroupId];
+    const annotationsToWorkgroupId = this.studentData.annotationsToWorkgroupId[workgroupId];
     if (annotationsToWorkgroupId != null) {
       return annotationsToWorkgroupId;
     } else {
@@ -808,7 +739,7 @@ class TeacherDataService {
   }
 
   getAnnotationsByNodeId(nodeId) {
-    var annotationsByNodeId = this.studentData.annotationsByNodeId[nodeId];
+    const annotationsByNodeId = this.studentData.annotationsByNodeId[nodeId];
     if (annotationsByNodeId != null) {
       return annotationsByNodeId;
     } else {
@@ -817,8 +748,8 @@ class TeacherDataService {
   }
 
   getAnnotationsToWorkgroupIdAndNodeId(workgroupId, nodeId) {
-    var annotationsToWorkgroupId = this.getAnnotationsToWorkgroupId(workgroupId);
-    var annotationsByNodeId = this.getAnnotationsByNodeId(nodeId);
+    const annotationsToWorkgroupId = this.getAnnotationsToWorkgroupId(workgroupId);
+    const annotationsByNodeId = this.getAnnotationsByNodeId(nodeId);
 
     // find the intersect and return it
     return annotationsToWorkgroupId.filter((n) => {
@@ -830,7 +761,6 @@ class TeacherDataService {
    * Initialize the periods
    */
   initializePeriods() {
-
     // get the periods from the config
     let periods = this.ConfigService.getPeriods();
     let currentPeriod = null;
@@ -857,22 +787,14 @@ class TeacherDataService {
      */
     let runStatusPeriods = this.runStatus.periods;
 
-    // loop through all the periods in the config
     for (let period of periods) {
       if (period != null) {
         // check if the period object is in the run status periods
-
         let runStatusPeriod = null;
-
         if (runStatusPeriods != null) {
-          // loop through all the periods in the run status
           for (let tempRunStatusPeriod of runStatusPeriods) {
             if (tempRunStatusPeriod != null) {
               if (period.periodId == tempRunStatusPeriod.periodId) {
-                /*
-                 * We have found a period that is in the config and
-                 * the run status.
-                 */
                 runStatusPeriod = tempRunStatusPeriod;
               }
             }
@@ -969,12 +891,10 @@ class TeacherDataService {
    * @returns the current node id
    */
   getCurrentNodeId() {
-    var currentNodeId = null;
-
+    let currentNodeId = null;
     if (this.currentNode != null) {
       currentNodeId = this.currentNode.id;
     }
-
     return currentNodeId;
   }
 
@@ -985,7 +905,6 @@ class TeacherDataService {
   setCurrentNodeByNodeId(nodeId) {
     if (nodeId != null) {
       let node = this.ProjectService.getNodeById(nodeId);
-
       this.setCurrentNode(node);
     }
   }
@@ -996,7 +915,6 @@ class TeacherDataService {
    */
   setCurrentNode(node) {
     let previousCurrentNode = this.currentNode;
-
     if (previousCurrentNode !== node) {
       // the current node is about to change
 
@@ -1017,12 +935,10 @@ class TeacherDataService {
    * End the current node
    */
   endCurrentNode() {
-
     // get the current node
-    var previousCurrentNode = this.currentNode;
+    const previousCurrentNode = this.currentNode;
 
     if (previousCurrentNode != null) {
-
       // tell the node to exit
       this.$rootScope.$broadcast('exitNode', {nodeToExit: previousCurrentNode});
     }
@@ -1046,18 +962,14 @@ class TeacherDataService {
    * @returns the total score for the workgroup
    */
   getTotalScoreByWorkgroupId(workgroupId) {
-
-    var totalScore = null;
-
+    let totalScore = null;
     if (this.studentData.annotationsToWorkgroupId != null) {
-
       // get all the annotations for a workgroup
-      var annotations = this.studentData.annotationsToWorkgroupId[workgroupId];
+      const annotations = this.studentData.annotationsToWorkgroupId[workgroupId];
 
       // get the total score for the workgroup
       totalScore = this.AnnotationService.getTotalScore(annotations, workgroupId);
     }
-
     return totalScore;
   }
 
@@ -1083,8 +995,6 @@ class TeacherDataService {
       let periods = runStatus.periods;
       let nPeriods = periods.length;
       let nPeriodsPaused = 0;
-
-      // loop through all the periods
       for (let period of periods) {
         if (period != null) {
           if (period.paused) {
@@ -1094,7 +1004,6 @@ class TeacherDataService {
         }
       }
     }
-
     return isPaused;
   }
 
@@ -1104,7 +1013,6 @@ class TeacherDataService {
    * @returns Boolean whether the period is paused or not
    */
   isPeriodPaused(periodId) {
-
     let isPaused = false;
 
     // get the run status
@@ -1115,7 +1023,6 @@ class TeacherDataService {
       let nPeriods = periods.length;
       let nPeriodsPaused = 0;
 
-      // loop through all the periods
       for (let period of periods) {
         if (period != null) {
           isPaused = period.paused;
@@ -1136,7 +1043,6 @@ class TeacherDataService {
         isPaused = true;
       }
     }
-
     return isPaused;
   }
 
@@ -1169,7 +1075,6 @@ class TeacherDataService {
         event = "unPauseScreen";
       }
       this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
-
       this.$rootScope.$broadcast('pauseScreensChanged', {periods: this.runStatus.periods});
     }
   }
@@ -1179,26 +1084,14 @@ class TeacherDataService {
    * @returns the run status object
    */
   createRunStatus() {
-    var runStatus = {};
-
-    // get the run id
+    const runStatus = {};
     runStatus.runId = this.ConfigService.getConfigParam('runId');
-
-    // get all the periods objects
-    var periods = this.ConfigService.getPeriods();
-
-    //loop through all the periods
-    for (var period of periods) {
-      //set this to default to not paused
+    const periods = this.ConfigService.getPeriods();
+    for (let period of periods) {
       period.paused = false;
     }
-
-    // set the periods into the run status
     runStatus.periods = periods;
-
-    // set the run status into the view so we can access it later
     this.runStatus = runStatus;
-
     return this.runStatus;
   }
 
@@ -1208,25 +1101,18 @@ class TeacherDataService {
    * @param value whether the period is paused or not
    */
   updatePausedRunStatusValue(periodId, value) {
-    //create the local run status object if necessary
     if (this.runStatus == null) {
       this.createRunStatus();
     }
 
-    //get the local run status object
     let runStatus = this.runStatus;
     let periods = runStatus.periods;
-
     let allPeriodsPaused = true;
 
     if (periods) {
       let l = periods.length, x = l - 1;
-      //loop through all the periods
       for (; x > -1; x--) {
-        //get a period
         let tempPeriod = periods[x];
-
-        //get the period id
         let tempPeriodId = tempPeriod.periodId;
 
         //check if the period id matches the one we need to update or if all periods has been selected
@@ -1252,36 +1138,24 @@ class TeacherDataService {
    * @param customPauseMessage the custom pause message text to send to the students
    */
   sendRunStatus(customPauseMessage) {
-    //get the run status url we will use to make the request
-    var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
-
+    const runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
     if (runStatusURL != null) {
-      //make the request to the server for the student statuses
-
-      //get the run id
-      var runId = this.ConfigService.getConfigParam('runId');
-
+      const runId = this.ConfigService.getConfigParam('runId');
       if (customPauseMessage != null) {
-        //set the pause message if one was provided
         this.runStatus.pauseMessage = customPauseMessage;
       }
 
-      //get the run status as a string
-      var runStatus = angular.toJson(this.runStatus);
-
-      //create the params for the request
-      var runStatusParams = {
+      const runStatus = angular.toJson(this.runStatus);
+      const runStatusParams = {
         runId:runId,
         status:runStatus
       };
 
-      var httpParams = {};
+      const httpParams = {};
       httpParams.method = 'POST';
       httpParams.url = runStatusURL;
       httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
       httpParams.data = $.param(runStatusParams);
-
-      // make the request
       this.$http(httpParams);
     }
   };
