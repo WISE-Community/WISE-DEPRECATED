@@ -41,7 +41,6 @@ var AuthorWebSocketService = function () {
     value: function handleMessage(message) {
       var data = JSON.parse(message.data);
       var messageType = data.messageType;
-
       if (messageType === "currentAuthors") {
         this.$rootScope.$broadcast('currentAuthorsReceived', { currentAuthorsUsernames: data.currentAuthorsUsernames });
       }

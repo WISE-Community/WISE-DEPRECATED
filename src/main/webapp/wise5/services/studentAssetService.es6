@@ -1,22 +1,20 @@
 'use strict';
 
 class StudentAssetService {
-  constructor($filter,
-              $http,
-              $q,
-              Upload,
-              $rootScope,
-              ConfigService) {
-
+  constructor(
+      $filter,
+      $http,
+      $q,
+      Upload,
+      $rootScope,
+      ConfigService) {
     this.$filter = $filter;
     this.$http = $http;
     this.$q = $q;
     this.Upload = Upload;
     this.$rootScope = $rootScope;
     this.ConfigService = ConfigService;
-
     this.$translate = this.$filter('translate');
-
     this.allAssets = [];  // keep track of student's assets
   }
 

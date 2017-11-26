@@ -1,12 +1,6 @@
 class NotebookService {
-  constructor($http,
-              $q,
-              $rootScope,
-              ConfigService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService) {
-
+  constructor($http, $q, $rootScope, ConfigService, ProjectService,
+      StudentAssetService, StudentDataService) {
     this.$http = $http;
     this.$q = $q;
     this.$rootScope = $rootScope;

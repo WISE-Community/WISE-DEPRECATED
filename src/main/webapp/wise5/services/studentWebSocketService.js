@@ -16,7 +16,6 @@ var StudentWebSocketService = function () {
     this.$websocket = $websocket;
     this.ConfigService = ConfigService;
     this.StudentDataService = StudentDataService;
-
     this.dataStream = null;
   }
 
@@ -61,7 +60,6 @@ var StudentWebSocketService = function () {
      * @param data the data from the message
      */
     value: function handleWebSocketMessageReceived(data) {
-
       // broadcast the data to all listeners
       this.$rootScope.$broadcast('webSocketMessageRecieved', { data: data });
     }
@@ -95,7 +93,6 @@ var StudentWebSocketService = function () {
         var notificationData = data.notificationData;
         this.$rootScope.$broadcast('newNotification', notificationData);
       }
-
       this.handleWebSocketMessageReceived(data);
     }
 
@@ -107,7 +104,6 @@ var StudentWebSocketService = function () {
   }, {
     key: "sendStudentToTeacherMessage",
     value: function sendStudentToTeacherMessage(messageType, data) {
-
       if (!this.ConfigService.isPreview()) {
         // we are in a run
 
@@ -134,7 +130,6 @@ var StudentWebSocketService = function () {
      * @param data the data to send to the classmates
      */
     value: function sendStudentToClassmatesInPeriodMessage(messageType, data) {
-
       if (!this.ConfigService.isPreview()) {
         // we are in a run
 

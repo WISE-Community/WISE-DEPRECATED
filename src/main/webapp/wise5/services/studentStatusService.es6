@@ -1,8 +1,9 @@
 class StudentStatusService {
-  constructor($http,
-              AnnotationService,
-              ConfigService,
-              ProjectService) {
+  constructor(
+      $http,
+      AnnotationService,
+      ConfigService,
+      ProjectService) {
     this.$http = $http;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
@@ -13,7 +14,6 @@ class StudentStatusService {
   retrieveStudentStatuses(config) {
     const studentStatusURL = this.ConfigService.getStudentStatusURL();
     const runId = this.ConfigService.getRunId();
-
     const requestConfig = {
       params: {
         runId: runId
@@ -22,9 +22,7 @@ class StudentStatusService {
 
     return this.$http.get(studentStatusURL, requestConfig).then((result) => {
       const studentStatuses = result.data;
-
       this.studentStatuses = studentStatuses;
-
       return studentStatuses;
     });
   };
@@ -41,46 +39,35 @@ class StudentStatusService {
    */
   getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId) {
     let nodePositionAndTitle = null;
-
     const studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
-
-    if(studentStatus != null) {
+    if (studentStatus != null) {
       const currentNodeId = studentStatus.currentNodeId;
       nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(currentNodeId);
     }
-
     return nodePositionAndTitle;
   };
 
   getStudentStatusForWorkgroupId(workgroupId) {
-
     let studentStatus = null;
     const studentStatuses = this.getStudentStatuses();
-
     for (let tempStudentStatus of studentStatuses) {
       if (tempStudentStatus != null) {
         const tempWorkgroupId = tempStudentStatus.workgroupId;
-
         if (workgroupId == tempWorkgroupId) {
           studentStatus = tempStudentStatus;
           break;
         }
       }
     }
-
     return studentStatus;
   };
 
   setStudentStatusForWorkgroupId(workgroupId, studentStatus) {
-
     const studentStatuses = this.getStudentStatuses();
-
     for (let x = 0; x < studentStatuses.length; x++) {
       const tempStudentStatus = studentStatuses[x];
-
       if (tempStudentStatus != null) {
         const tempWorkgroupId = tempStudentStatus.workgroupId;
-
         if (workgroupId === tempWorkgroupId) {
           studentStatuses.splice(x, 1, studentStatus);
           break;
@@ -131,7 +118,6 @@ class StudentStatusService {
         }
       }
     }
-
     return completion;
   }
 
@@ -148,7 +134,6 @@ class StudentStatusService {
     // loop through all the student statuses
     for (let studentStatus of studentStatuses) {
       if (studentStatus != null) {
-
         if (periodId == -1 || periodId == studentStatus.periodId) {
           // the period matches the one we are looking for
           let currentNodeId = studentStatus.currentNodeId;
@@ -167,7 +152,6 @@ class StudentStatusService {
         }
       }
     }
-
     return workgroupIds;
   }
 
@@ -191,7 +175,6 @@ class StudentStatusService {
     // loop through all the student statuses
     for (let studentStatus of studentStatuses) {
       if (studentStatus) {
-
         if (periodId == -1 || periodId == studentStatus.periodId) {
           // the period matches the one we are looking for
 
@@ -199,7 +182,6 @@ class StudentStatusService {
             // either no workgroupId was specified or the workgroupId matches the one we're looking for
 
             let nodeStatuses = studentStatus.nodeStatuses;
-
             if (nodeStatuses) {
               // get the node status for the node
               let nodeStatus = nodeStatuses[nodeId];
@@ -395,16 +377,13 @@ class StudentStatusService {
   getNodeAverageScore(nodeId, periodId) {
     let studentScoreSum = 0;
     let numStudentsWithScore = 0;
-
     const studentStatuses = this.studentStatuses;
 
     // loop through all the student statuses
     for (let studentStatus of studentStatuses) {
       if (studentStatus != null) {
-
         if (periodId == -1 || periodId == studentStatus.periodId) {
           // the period matches the one we are looking for
-
           let workgroupId = studentStatus.workgroupId;
 
           // get the workgroups score on the node
@@ -439,19 +418,15 @@ class StudentStatusService {
    */
   getMaxScoreForWorkgroupId(workgroupId) {
     let maxScore = null;
-
     let studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
-
     if (studentStatus) {
       let nodeStatuses = studentStatus.nodeStatuses;
-
       if (nodeStatuses) {
         // loop through all the node statuses
         for (let p in nodeStatuses) {
           if (nodeStatuses.hasOwnProperty(p)) {
             let nodeStatus = nodeStatuses[p];
             let nodeId = nodeStatus.nodeId;
-
             if (nodeStatus.isVisible && !this.ProjectService.isGroupNode(nodeId)) {
               // node is visible and is not a group
               // get node max score
@@ -466,7 +441,6 @@ class StudentStatusService {
         }
       }
     }
-
     return maxScore;
   }
 }

@@ -18,9 +18,7 @@ var StudentAssetService = function () {
     this.Upload = Upload;
     this.$rootScope = $rootScope;
     this.ConfigService = ConfigService;
-
     this.$translate = this.$filter('translate');
-
     this.allAssets = []; // keep track of student's assets
   }
 

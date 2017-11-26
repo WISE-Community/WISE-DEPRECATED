@@ -18,7 +18,6 @@ var ConfigService = function () {
     this.$http = $http;
     this.$location = $location;
     this.config = null;
-
     this.$translate = this.$filter('translate');
   }
 
@@ -37,7 +36,6 @@ var ConfigService = function () {
 
       return this.$http.get(configURL).then(function (result) {
         var configJSON = result.data;
-
         if (configJSON.retrievalTimestamp != null) {
           // get the client timestamp
           var clientTimestamp = new Date().getTime();
@@ -241,7 +239,6 @@ var ConfigService = function () {
           }
         }
       }
-
       return periods;
     }
   }, {
@@ -265,27 +262,21 @@ var ConfigService = function () {
      * @return the user id
      */
     value: function getUserId() {
-
       var userId = null;
-
       var myUserInfo = this.getMyUserInfo();
-
       if (myUserInfo != null) {
         userId = myUserInfo.id;
       }
-
       return userId;
     }
   }, {
     key: 'getMyUserInfo',
     value: function getMyUserInfo() {
       var myUserInfo = null;
-
       var userInfo = this.getUserInfo();
       if (userInfo != null) {
         myUserInfo = userInfo.myUserInfo;
       }
-
       return myUserInfo;
     }
   }, {
@@ -297,17 +288,13 @@ var ConfigService = function () {
      * @return the user name of the signed in user
      */
     value: function getMyUserName() {
-
       var userName = null;
-
       // get my user info
       var myUserInfo = this.getMyUserInfo();
-
       if (myUserInfo != null) {
         // get the user name
         userName = myUserInfo.userName;
       }
-
       return userName;
     }
   }, {
@@ -321,14 +308,12 @@ var ConfigService = function () {
           classmateUserInfos = myClassInfo.classmateUserInfos;
         }
       }
-
       return classmateUserInfos;
     }
   }, {
     key: 'setClassmateDisplayNames',
     value: function setClassmateDisplayNames() {
       var classmateUserInfos = this.getClassmateUserInfos();
-
       if (classmateUserInfos) {
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
@@ -366,14 +351,10 @@ var ConfigService = function () {
   }, {
     key: 'getClassmateUserInfosSortedByWorkgroupId',
     value: function getClassmateUserInfosSortedByWorkgroupId() {
-
       var sortedClassmateUserInfos = [];
-
       // get all the classmate user info objects
       var classmateUserInfos = this.getClassmateUserInfos();
-
       if (classmateUserInfos != null) {
-
         /*
          * loop through all the classmate user info objects and add it to
          * new array of classmate user infos
@@ -403,10 +384,8 @@ var ConfigService = function () {
           }
         }
       }
-
       // sort the new classmate user infos array by ascending workgroup id
       sortedClassmateUserInfos.sort(this.compareClassmateUserInfosByWorkgroupId);
-
       return sortedClassmateUserInfos;
     }
 
@@ -476,13 +455,10 @@ var ConfigService = function () {
     key: 'getClassmateWorkgroupIds',
     value: function getClassmateWorkgroupIds(includeSelf) {
       var workgroupIds = [];
-
       if (includeSelf) {
         workgroupIds.push(this.getWorkgroupId());
       }
-
       var classmateUserInfos = this.getClassmateUserInfos();
-
       if (classmateUserInfos != null) {
         var _iteratorNormalCompletion3 = true;
         var _didIteratorError3 = false;
@@ -515,36 +491,30 @@ var ConfigService = function () {
           }
         }
       }
-
       return workgroupIds;
     }
   }, {
     key: 'sortClassmateUserInfosAlphabeticallyByName',
     value: function sortClassmateUserInfosAlphabeticallyByName() {
       var classmateUserInfos = this.getClassmateUserInfos();
-
       if (classmateUserInfos != null) {
         classmateUserInfos.sort(this.sortClassmateUserInfosAlphabeticallyByNameHelper);
       }
-
       return classmateUserInfos;
     }
   }, {
     key: 'sortClassmateUserInfosAlphabeticallyByNameHelper',
     value: function sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
       var result = 0;
-
       if (a != null && a.userName != null && b != null && b.userName != null) {
         var aUserName = a.userName.toLowerCase();
         var bUserName = b.userName.toLowerCase();
-
         if (aUserName < bUserName) {
           result = -1;
         } else if (aUserName > bUserName) {
           result = 1;
         }
       }
-
       return result;
     }
   }, {
@@ -574,7 +544,6 @@ var ConfigService = function () {
   }, {
     key: 'getPermissions',
     value: function getPermissions() {
-
       // a switched user (admin/researcher user impersonating a teacher) should not be able to view/grade
       return {
         canViewStudentNames: this.config.canViewStudentNames && !this.isSwitchedUser(),
@@ -585,14 +554,10 @@ var ConfigService = function () {
     key: 'getUserInfoByWorkgroupId',
     value: function getUserInfoByWorkgroupId(workgroupId) {
       var userInfo = null;
-
       if (workgroupId != null) {
-
         var myUserInfo = this.getMyUserInfo();
-
         if (myUserInfo != null) {
           var tempWorkgroupId = myUserInfo.workgroupId;
-
           if (workgroupId === tempWorkgroupId) {
             userInfo = myUserInfo;
           }
@@ -600,7 +565,6 @@ var ConfigService = function () {
 
         if (userInfo == null) {
           var classmateUserInfos = this.getClassmateUserInfos();
-
           if (classmateUserInfos != null) {
             var _iteratorNormalCompletion4 = true;
             var _didIteratorError4 = false;
@@ -612,7 +576,6 @@ var ConfigService = function () {
 
                 if (classmateUserInfo != null) {
                   var _tempWorkgroupId = classmateUserInfo.workgroupId;
-
                   if (workgroupId == _tempWorkgroupId) {
                     userInfo = classmateUserInfo;
                     break;
@@ -636,7 +599,6 @@ var ConfigService = function () {
           }
         }
       }
-
       return userInfo;
     }
   }, {
@@ -650,15 +612,12 @@ var ConfigService = function () {
      */
     value: function getPeriodIdByWorkgroupId(workgroupId) {
       var periodId = null;
-
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-
         if (userInfo != null) {
           periodId = userInfo.periodId;
         }
       }
-
       return periodId;
     }
   }, {
@@ -716,65 +675,52 @@ var ConfigService = function () {
           }
         }
       }
-
       return studentNames;
     }
   }, {
     key: 'getUserIdsByWorkgroupId',
     value: function getUserIdsByWorkgroupId(workgroupId) {
       var userIds = [];
-
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-
         if (userInfo != null) {
           userIds = userInfo.userIds;
         }
       }
-
       return userIds;
     }
   }, {
     key: 'getUserNameByWorkgroupId',
     value: function getUserNameByWorkgroupId(workgroupId) {
       var userName = null;
-
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-
         if (userInfo != null) {
           userName = userInfo.userName;
         }
       }
-
       return userName;
     }
   }, {
     key: 'getDisplayNamesByWorkgroupId',
     value: function getDisplayNamesByWorkgroupId(workgroupId) {
       var displayNames = null;
-
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-
         if (userInfo != null) {
           displayNames = userInfo.displayNames;
         }
       }
-
       return displayNames;
     }
   }, {
     key: 'getUserNamesByWorkgroupId',
     value: function getUserNamesByWorkgroupId(workgroupId) {
       var userNamesObjects = [];
-
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-
         if (userInfo != null) {
           var userNames = userInfo.userName.split(':');
-
           var _iteratorNormalCompletion6 = true;
           var _didIteratorError6 = false;
           var _iteratorError6 = undefined;
@@ -811,14 +757,12 @@ var ConfigService = function () {
           }
         }
       }
-
       return userNamesObjects;
     }
   }, {
     key: 'getDisplayUserNamesByWorkgroupId',
     value: function getDisplayUserNamesByWorkgroupId(workgroupId) {
       var usernames = '';
-
       if (workgroupId != null) {
         if (this.getPermissions().canViewStudentNames) {
           var names = this.getUserNamesByWorkgroupId(workgroupId);
@@ -843,20 +787,16 @@ var ConfigService = function () {
           }
         }
       }
-
       return usernames;
     }
   }, {
     key: 'isPreview',
     value: function isPreview() {
       var result = false;
-
       var mode = this.getMode();
-
       if (mode != null && mode === 'preview') {
         result = true;
       }
-
       return result;
     }
   }, {
@@ -869,7 +809,6 @@ var ConfigService = function () {
      * @param clientTimestamp the client timestamp
      */
     value: function convertToServerTimestamp(clientTimestamp) {
-
       // get the difference between the client time and server time
       var timestampDiff = this.getConfigParam('timestampDiff');
 
@@ -888,7 +827,6 @@ var ConfigService = function () {
   }, {
     key: 'convertToClientTimestamp',
     value: function convertToClientTimestamp(serverTimestamp) {
-
       // get the difference between the client time and server time
       var timestampDiff = this.getConfigParam('timestampDiff');
 
@@ -907,20 +845,15 @@ var ConfigService = function () {
   }, {
     key: 'isRunOwner',
     value: function isRunOwner(workgroupId) {
-
       var result = false;
-
       if (workgroupId != null) {
         var teacherUserInfo = this.getTeacherUserInfo();
-
         if (teacherUserInfo != null) {
-
           if (workgroupId == teacherUserInfo.workgroupId) {
             result = true;
           }
         }
       }
-
       return result;
     }
 
@@ -933,19 +866,15 @@ var ConfigService = function () {
   }, {
     key: 'isRunSharedTeacher',
     value: function isRunSharedTeacher(workgroupId) {
-
       var result = false;
-
       if (workgroupId != null) {
         var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
-
         if (sharedTeacherUserInfos != null) {
           var _iteratorNormalCompletion7 = true;
           var _didIteratorError7 = false;
           var _iteratorError7 = undefined;
 
           try {
-
             for (var _iterator7 = sharedTeacherUserInfos[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
               var sharedTeacherUserInfo = _step7.value;
 
@@ -971,7 +900,6 @@ var ConfigService = function () {
           }
         }
       }
-
       return result;
     }
 
@@ -1009,17 +937,14 @@ var ConfigService = function () {
     key: 'getSharedTeacherRole',
     value: function getSharedTeacherRole(workgroupId) {
       var role = null;
-
       if (workgroupId != null) {
         var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
-
         if (sharedTeacherUserInfos != null) {
           var _iteratorNormalCompletion8 = true;
           var _didIteratorError8 = false;
           var _iteratorError8 = undefined;
 
           try {
-
             for (var _iterator8 = sharedTeacherUserInfos[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
               var sharedTeacherUserInfo = _step8.value;
 
@@ -1045,7 +970,6 @@ var ConfigService = function () {
           }
         }
       }
-
       return role;
     }
 
@@ -1061,16 +985,12 @@ var ConfigService = function () {
     key: 'replaceStudentNames',
     value: function replaceStudentNames(content) {
       if (content != null) {
-
         var contentString = content;
-
         if ((typeof content === 'undefined' ? 'undefined' : _typeof(content)) === 'object') {
           // get the content as a string
           contentString = JSON.stringify(content);
         }
-
         if (contentString != null) {
-
           // get the workgroup id
           var workgroupId = this.getWorkgroupId();
 
@@ -1119,7 +1039,6 @@ var ConfigService = function () {
           content = contentString;
         }
       }
-
       return content;
     }
   }, {
@@ -1137,22 +1056,17 @@ var ConfigService = function () {
   }, {
     key: 'getLibraryProjects',
     value: function getLibraryProjects() {
-
       // get the URL to get the list of library projects
       var getLibraryProjectsURL = this.getConfigParam('getLibraryProjectsURL');
 
       if (getLibraryProjectsURL != null) {
-
         // request the list of library projects
         return this.$http.get(getLibraryProjectsURL).then(function (result) {
-
           var data = result.data;
-
           if (data != null) {
             // reverse the list so that it is ordered newest to oldest
             data.reverse();
           }
-
           return data;
         });
       }
@@ -1195,7 +1109,6 @@ var ConfigService = function () {
           projectAssetsDirectoryPath = projectBaseURL + 'assets';
         }
       }
-
       return projectAssetsDirectoryPath;
     }
 

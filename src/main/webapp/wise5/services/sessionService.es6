@@ -1,9 +1,5 @@
 class SessionService {
-  constructor($http,
-              $rootScope,
-              ConfigService
-              //StudentDataService) {
-  ) {
+  constructor($http, $rootScope, ConfigService) {
     this.$http = $http;
     this.$rootScope = $rootScope;
     this.ConfigService = ConfigService;
@@ -55,7 +51,6 @@ class SessionService {
      * for, we will then log out.
      */
     this.$rootScope.$on('doneExiting', () => {
-
       // check if all components are done unloading so we can exit
       // no longer needed.
       //this.attemptExit();
@@ -70,7 +65,6 @@ class SessionService {
      * event and then try to go home again.
      */
     this.$rootScope.$on('goHome', () => {
-
       // let other components know that we are exiting
       this.$rootScope.$broadcast('exit');
 
@@ -87,7 +81,6 @@ class SessionService {
      * event and then try to log out again.
      */
     this.$rootScope.$on('logOut', () => {
-
       /*
        * set the perform log out boolean to true so that we know to
        * log out the user later
@@ -135,7 +128,6 @@ class SessionService {
   clearWarningTimers() {
     // clear all the active warning timeouts
     for (let w = 0; w < this.warningIds.length; w++) {
-
       // get a warning id
       const warningId = this.warningIds[w];
 
@@ -174,7 +166,6 @@ class SessionService {
   clearLogOutTimers() {
     // clear all the active log out timeouts
     for (let l = 0; l < this.logOutIds.length; l++) {
-
       // get a log out id
       const logOutId = this.logOutIds[l];
 
@@ -217,7 +208,6 @@ class SessionService {
     // make a request to the log out url
     this.$http.get(renewSessionURL).then((result) => {
       const renewSessionResult = result.data;
-
       if (renewSessionResult === 'true') {
         // the session is still active
         this.clearLogOutTimers();
@@ -260,7 +250,6 @@ class SessionService {
    */
   checkMouseEvent() {
     let eventOccurred = false;
-
     if (this.lastMouseEventTimestamp != null) {
       // there was a mouse event since the last time we checked
 
@@ -272,7 +261,6 @@ class SessionService {
 
       eventOccurred = true;
     }
-
     return eventOccurred;
   };
 
@@ -283,7 +271,6 @@ class SessionService {
    */
   convertMinutesToMilliseconds(minutes) {
     let milliseconds = null;
-
     if (minutes != null) {
       // get the number of seconds
       const seconds = minutes * 60;
@@ -291,7 +278,6 @@ class SessionService {
       // get the number of milliseconds
       milliseconds = seconds * 1000;
     }
-
     return milliseconds;
   };
 
@@ -364,7 +350,6 @@ class SessionService {
           // send the user to the main home page
           homePageURL = mainHomePageURL;
         }
-
         window.location.href = homePageURL;
       }
     }

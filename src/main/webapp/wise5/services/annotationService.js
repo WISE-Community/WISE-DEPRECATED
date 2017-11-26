@@ -19,9 +19,7 @@ var AnnotationService = function () {
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
     this.UtilService = UtilService;
-
     this.$translate = this.$filter('translate');
-
     this.annotations = null;
 
     /*
@@ -162,7 +160,6 @@ var AnnotationService = function () {
           }
         }
       }
-
       return annotation;
     }
   }, {
@@ -185,7 +182,6 @@ var AnnotationService = function () {
      * @returns an annotation object
      */
     value: function createAnnotation(annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId, nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId, annotationType, data, clientSaveTime) {
-
       var annotation = {};
       annotation.id = annotationId;
       annotation.runId = runId;
@@ -213,7 +209,6 @@ var AnnotationService = function () {
      * @returns a promise
      */
     value: function saveAnnotation(annotation) {
-
       if (annotation != null) {
         var annotations = [];
         annotations.push(annotation);
@@ -376,15 +371,10 @@ var AnnotationService = function () {
   }, {
     key: 'addOrUpdateAnnotation',
     value: function addOrUpdateAnnotation(annotation) {
-
       if (annotation != null) {
-
         var updated = false;
-
         var annotations = this.annotations;
-
         if (annotations != null) {
-
           // loop through all the local annotations
           for (var a = annotations.length - 1; a >= 0; a--) {
             var tempAnnotation = annotations[a];
@@ -402,7 +392,6 @@ var AnnotationService = function () {
             }
           }
         }
-
         if (!updated) {
           // we did not find a match so we will add it
           annotations.push(annotation);
@@ -430,9 +419,7 @@ var AnnotationService = function () {
      * @param workgroupId the workgroup id
      */
     value: function getTotalScore(annotations, workgroupId) {
-
       var totalScore = 0;
-
       var scoresFound = [];
 
       if (annotations != null && workgroupId != null) {
@@ -486,7 +473,6 @@ var AnnotationService = function () {
           }
         }
       }
-
       return totalScore;
     }
 
@@ -500,7 +486,6 @@ var AnnotationService = function () {
   }, {
     key: 'getScore',
     value: function getScore(workgroupId, nodeId) {
-
       var score = null;
 
       /*
@@ -589,9 +574,7 @@ var AnnotationService = function () {
       var notebookItemId = null;
       var annotationType = 'autoScore';
       var clientSaveTime = Date.parse(new Date());
-
       var annotation = this.createAnnotation(annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId, nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId, annotationType, data, clientSaveTime);
-
       return annotation;
     }
 
@@ -616,9 +599,7 @@ var AnnotationService = function () {
       var notebookItemId = null;
       var annotationType = 'autoComment';
       var clientSaveTime = Date.parse(new Date());
-
       var annotation = this.createAnnotation(annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId, nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId, annotationType, data, clientSaveTime);
-
       return annotation;
     }
 
@@ -643,9 +624,7 @@ var AnnotationService = function () {
       var notebookItemId = null;
       var annotationType = 'inappropriateFlag';
       var clientSaveTime = Date.parse(new Date());
-
       var annotation = this.createAnnotation(annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId, nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId, annotationType, data, clientSaveTime);
-
       return annotation;
     }
 
@@ -718,9 +697,7 @@ var AnnotationService = function () {
      * @param localNotebookItemId unique id for note and its revisions ["finalReport", "xyzabc", ...]
      */
     value: function getLatestNotebookItemScoreAnnotation(workgroupId, localNotebookItemId) {
-
       var annotations = this.getAnnotations();
-
       // loop through all the annotations from newest to oldest
       for (var a = annotations.length - 1; a >= 0; a--) {
         var annotation = annotations[a];
@@ -729,7 +706,6 @@ var AnnotationService = function () {
           return annotation;
         }
       }
-
       return null;
     }
 
@@ -742,7 +718,6 @@ var AnnotationService = function () {
   }, {
     key: 'getLatestNotebookItemCommentAnnotation',
     value: function getLatestNotebookItemCommentAnnotation(workgroupId, localNotebookItemId) {
-
       var annotations = this.getAnnotations();
 
       // loop through all the annotations from newest to oldest
@@ -753,7 +728,6 @@ var AnnotationService = function () {
           return annotation;
         }
       }
-
       return null;
     }
 
@@ -773,9 +747,7 @@ var AnnotationService = function () {
   }, {
     key: 'getLatestScoreAnnotation',
     value: function getLatestScoreAnnotation(nodeId, componentId, workgroupId, scoreType) {
-
       var annotation = null;
-
       var annotations = this.getAnnotations();
 
       if (scoreType == null) {
@@ -816,7 +788,6 @@ var AnnotationService = function () {
           }
         }
       }
-
       return annotation;
     }
 
@@ -836,9 +807,7 @@ var AnnotationService = function () {
   }, {
     key: 'getLatestCommentAnnotation',
     value: function getLatestCommentAnnotation(nodeId, componentId, workgroupId, commentType) {
-
       var annotation = null;
-
       var annotations = this.getAnnotations();
 
       if (commentType == null) {
@@ -879,7 +848,6 @@ var AnnotationService = function () {
           }
         }
       }
-
       return annotation;
     }
 
@@ -893,7 +861,6 @@ var AnnotationService = function () {
     key: 'getScoreValueFromScoreAnnotation',
     value: function getScoreValueFromScoreAnnotation(scoreAnnotation) {
       var scoreValue = null;
-
       if (scoreAnnotation != null) {
         var data = scoreAnnotation.data;
 
@@ -901,7 +868,6 @@ var AnnotationService = function () {
           scoreValue = data.value;
         }
       }
-
       return scoreValue;
     }
 
@@ -929,7 +895,6 @@ var AnnotationService = function () {
      */
     value: function getAllGlobalAnnotations() {
       var globalAnnotations = [];
-
       var _iteratorNormalCompletion5 = true;
       var _didIteratorError5 = false;
       var _iteratorError5 = undefined;
@@ -971,7 +936,6 @@ var AnnotationService = function () {
      */
     value: function getAllGlobalAnnotationGroups() {
       var globalAnnotationGroups = [];
-
       var _iteratorNormalCompletion6 = true;
       var _didIteratorError6 = false;
       var _iteratorError6 = undefined;
@@ -1170,7 +1134,6 @@ var AnnotationService = function () {
     key: 'getInActiveGlobalAnnotations',
     value: function getInActiveGlobalAnnotations() {
       var inActiveGlobalAnnotations = [];
-
       var _iteratorNormalCompletion10 = true;
       var _didIteratorError10 = false;
       var _iteratorError10 = undefined;
@@ -1261,7 +1224,6 @@ var AnnotationService = function () {
   }, {
     key: 'getLatestAnnotationByStudentWorkIdAndType',
     value: function getLatestAnnotationByStudentWorkIdAndType(studentWorkId, type) {
-
       // loop through all the annotations backwards
       for (var a = this.annotations.length - 1; a >= 0; a--) {
 
@@ -1278,7 +1240,6 @@ var AnnotationService = function () {
           }
         }
       }
-
       return null;
     }
 

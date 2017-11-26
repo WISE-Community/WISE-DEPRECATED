@@ -1,5 +1,6 @@
 class ProjectAssetService {
-  constructor($q, $http, $rootScope, ConfigService, ProjectService, Upload, UtilService) {
+  constructor($q, $http, $rootScope, ConfigService, ProjectService, Upload,
+      UtilService) {
     this.$q = $q;
     this.$http = $http;
     this.$rootScope = $rootScope;

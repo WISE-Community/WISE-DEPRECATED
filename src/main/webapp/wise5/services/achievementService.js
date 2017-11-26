@@ -54,9 +54,7 @@ var AchievementService = function () {
       var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-
       if (this.ConfigService.isPreview()) {
-
         // get the signed in workgroup id
         var _workgroupId = this.ConfigService.getWorkgroupId();
 
@@ -142,7 +140,6 @@ var AchievementService = function () {
             }
 
             if (_this.ConfigService.getMode() == 'studentRun') {
-
               /*
                * Loop through all the project achievements and
                * re-evaluate whether the student has completed each.
@@ -221,9 +218,7 @@ var AchievementService = function () {
   }, {
     key: 'addOrUpdateAchievement',
     value: function addOrUpdateAchievement(achievement) {
-
       if (achievement != null) {
-
         // get the workgroup id
         var achievementWorkgroupId = achievement.workgroupId;
 
@@ -349,17 +344,12 @@ var AchievementService = function () {
   }, {
     key: 'loadAchievements',
     value: function loadAchievements() {
-
       var projectAchievements = this.ProjectService.getAchievements();
-
       if (projectAchievements != null) {
         if (projectAchievements.isEnabled) {
-
           // get all the achievements in the project
           var projectAchievementItems = projectAchievements.items;
-
           if (projectAchievementItems != null) {
-
             // loop through all the achievements in the project
             var _iteratorNormalCompletion3 = true;
             var _didIteratorError3 = false;
@@ -418,9 +408,7 @@ var AchievementService = function () {
   }, {
     key: 'isAchievementCompleted',
     value: function isAchievementCompleted(achievementId) {
-
       if (achievementId != null) {
-
         // get the student workgroup id
         var workgroupId = this.ConfigService.getWorkgroupId();
 
@@ -428,7 +416,6 @@ var AchievementService = function () {
         var achievements = this.getAchievementsByWorkgroupId(workgroupId);
 
         if (achievements != null) {
-
           // loop through all the achievements the student has completed
           var _iteratorNormalCompletion4 = true;
           var _didIteratorError4 = false;
@@ -465,7 +452,6 @@ var AchievementService = function () {
           }
         }
       }
-
       return false;
     }
 
@@ -477,9 +463,7 @@ var AchievementService = function () {
   }, {
     key: 'studentCompletedAchievement',
     value: function studentCompletedAchievement(achievement) {
-
       if (achievement != null) {
-
         if (_achievement.isVisible == true) {
           /*
            * this is a visible achievement so we will display a message
@@ -557,12 +541,9 @@ var AchievementService = function () {
          * the nodeCompleted event was fired so we will check if this
          * achievement has been completed
          */
-
         var achievement = thisAchievement;
-
         if (achievement != null) {
           _this3.debugOutput('createNodeCompletedListener checking ' + achievement.id + ' completed ' + args.nodeId);
-
           // get the id of the achievement we need to check
           var id = achievement.id;
 
@@ -571,10 +552,8 @@ var AchievementService = function () {
              * the student has not completed this achievement before
              * so we will now check if they have completed it
              */
-
             // check if the student has completed this node completed achievement
             var completed = _this3.checkNodeCompletedAchievement(achievement);
-
             if (completed) {
               // the student has just completed the achievement
               thisAchievementService.studentCompletedAchievement(achievement);
@@ -582,7 +561,6 @@ var AchievementService = function () {
           }
         }
       });
-
       return deregisterFunction;
     }
 
@@ -595,9 +573,7 @@ var AchievementService = function () {
   }, {
     key: 'checkAchievement',
     value: function checkAchievement(achievement) {
-
       var completed = false;
-
       if (achievement != null) {
         if (achievement.type == 'milestone' || achievement.type == 'completion') {
           // this is a milestone or completion achievement
@@ -607,7 +583,6 @@ var AchievementService = function () {
           completed = this.checkAggregateAchievement(achievement);
         }
       }
-
       return completed;
     }
 
@@ -620,26 +595,19 @@ var AchievementService = function () {
   }, {
     key: 'checkNodeCompletedAchievement',
     value: function checkNodeCompletedAchievement(achievement) {
-
       var completed = false;
-
       if (achievement != null) {
-
         // get the achievement params
         var params = achievement.params;
-
         if (params != null) {
-
           // get the node ids that need to be completed
           var nodeIds = params.nodeIds;
-
           /*
            * loop through all the node ids that need to be completed
            * for the achievement
            */
           for (var n = 0; n < nodeIds.length; n++) {
             var nodeId = nodeIds[n];
-
             if (n == 0) {
               // this is the first node id
               completed = this.StudentDataService.isCompleted(nodeId);
@@ -653,7 +621,6 @@ var AchievementService = function () {
           }
         }
       }
-
       return completed;
     }
 
@@ -670,18 +637,14 @@ var AchievementService = function () {
 
       var thisAchievementService = this;
       var thisAchievement = achievement;
-
       this.debugOutput('registering ' + achievement.id);
-
       // listen for the achievementCompleted event
       var deregisterFunction = this.$rootScope.$on('achievementCompleted', function (event, args) {
         /*
          * the achievementCompleted event was fired so we will check if this
          * achievement has been completed
          */
-
         var achievement = thisAchievement;
-
         if (achievement != null) {
           _this4.debugOutput('createAggregateAchievementListener checking ' + achievement.id + ' completed ' + args.achievementId);
 
@@ -707,7 +670,6 @@ var AchievementService = function () {
           }
         }
       });
-
       return deregisterFunction;
     }
 
@@ -720,26 +682,19 @@ var AchievementService = function () {
   }, {
     key: 'checkAggregateAchievement',
     value: function checkAggregateAchievement(achievement) {
-
       var completed = false;
-
       if (achievement != null) {
-
         // get the achievement params
         var params = achievement.params;
-
         if (params != null) {
-
           // get the achievement ids that need to be completed
           var achievementIds = params.achievementIds;
-
           /*
            * loop through all the achievement ids that need to be
            * completed
            */
           for (var a = 0; a < achievementIds.length; a++) {
             var tempAchievementId = achievementIds[a];
-
             if (a == 0) {
               // this is the first node id
               completed = this.isAchievementCompleted(tempAchievementId);
@@ -753,7 +708,6 @@ var AchievementService = function () {
           }
         }
       }
-
       return completed;
     }
 
@@ -768,14 +722,11 @@ var AchievementService = function () {
     value: function getAchievementsByWorkgroupId() {
       var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-
       var achievements = [];
-
       if (workgroupId == null) {
         // get the signed in workgroup id
         workgroupId = this.ConfigService.getWorkgroupId();
       }
-
       if (this.achievementsByWorkgroupId[workgroupId] == null) {
         /*
          * this workgroup does not have an array of achievements yet so we
@@ -787,7 +738,6 @@ var AchievementService = function () {
         // this workgroup has an array of achievements
         achievements = this.achievementsByWorkgroupId[workgroupId];
       }
-
       return achievements;
     }
 
@@ -801,16 +751,11 @@ var AchievementService = function () {
   }, {
     key: 'getAchievementsByAchievementId',
     value: function getAchievementsByAchievementId(achievementId) {
-
       var achievementsByAchievementId = [];
-
       if (achievementId != null) {
-
         // get all the workgroup ids
         var workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
-
         if (workgroupIds != null) {
-
           // loop through all the workgroup ids
           var _iteratorNormalCompletion5 = true;
           var _didIteratorError5 = false;
@@ -820,18 +765,13 @@ var AchievementService = function () {
             for (var _iterator5 = workgroupIds[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
               var workgroupId = _step5.value;
 
-
               if (workgroupId != null) {
-
                 // get all the achievements this workgroup has completed
                 var achievementsForWorkgroup = this.achievementsByWorkgroupId[workgroupId];
-
                 if (achievementsForWorkgroup != null) {
-
                   // loop through all the achievements this workgroup has completed
                   for (var a = achievementsForWorkgroup.length - 1; a >= 0; a--) {
                     var achievement = achievementsForWorkgroup[a];
-
                     if (achievement != null && achievement.data != null) {
                       if (achievementId == achievement.data.id) {
                         /*
@@ -861,7 +801,6 @@ var AchievementService = function () {
           }
         }
       }
-
       return achievementsByAchievementId;
     }
 
@@ -876,12 +815,9 @@ var AchievementService = function () {
     key: 'getAchievementIdToAchievementsMappings',
     value: function getAchievementIdToAchievementsMappings(achievementId) {
       var achievementIdToAchievements = {};
-
       // get all the project achievements
       var projectAchievements = this.ProjectService.getAchievementItems();
-
       if (projectAchievements != null) {
-
         // loop through all the project achievements
         var _iteratorNormalCompletion6 = true;
         var _didIteratorError6 = false;
@@ -891,9 +827,7 @@ var AchievementService = function () {
           for (var _iterator6 = projectAchievements[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
             var projectAchievement = _step6.value;
 
-
             if (projectAchievement != null) {
-
               // get an array of student achievements for the given achievement id
               var studentAchievements = this.getAchievementsByAchievementId(projectAchievement.id);
 
@@ -916,7 +850,6 @@ var AchievementService = function () {
           }
         }
       }
-
       return achievementIdToAchievements;
     }
 
@@ -928,16 +861,12 @@ var AchievementService = function () {
   }, {
     key: 'getAvailableAchievementId',
     value: function getAvailableAchievementId() {
-
       var id = null;
-
       while (id == null) {
-
         // generate a 10 character id
         id = this.UtilService.generateKey(10);
 
         // check to make sure the id isn't already being used
-
         var achievements = this.ProjectService.getAchievementItems();
 
         // loop through all the achievements
@@ -975,7 +904,6 @@ var AchievementService = function () {
           }
         }
       }
-
       return id;
     }
   }]);

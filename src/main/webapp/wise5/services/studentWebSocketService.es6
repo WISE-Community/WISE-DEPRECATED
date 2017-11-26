@@ -1,17 +1,15 @@
 'use strict';
 
 class StudentWebSocketService {
-
-  constructor($rootScope,
-              $websocket,
-              ConfigService,
-              StudentDataService) {
-
+  constructor(
+      $rootScope,
+      $websocket,
+      ConfigService,
+      StudentDataService) {
     this.$rootScope = $rootScope;
     this.$websocket = $websocket;
     this.ConfigService = ConfigService;
     this.StudentDataService = StudentDataService;
-
     this.dataStream = null;
   }
 
@@ -19,7 +17,6 @@ class StudentWebSocketService {
    * Initialize the websocket connection
    */
   initialize() {
-
     if (this.ConfigService.isPreview()) {
       // We are previewing the project. Don't initialize websocket.
     } else {
@@ -49,7 +46,6 @@ class StudentWebSocketService {
    * @param data the data from the message
    */
   handleWebSocketMessageReceived(data) {
-
     // broadcast the data to all listeners
     this.$rootScope.$broadcast('webSocketMessageRecieved', {data: data});
   };
@@ -80,7 +76,6 @@ class StudentWebSocketService {
       let notificationData = data.notificationData;
       this.$rootScope.$broadcast('newNotification', notificationData);
     }
-
     this.handleWebSocketMessageReceived(data);
   }
 
@@ -89,7 +84,6 @@ class StudentWebSocketService {
    * @param data the data to send to the teacher
    */
   sendStudentToTeacherMessage(messageType, data) {
-
     if (!this.ConfigService.isPreview()) {
       // we are in a run
 
@@ -113,7 +107,6 @@ class StudentWebSocketService {
    * @param data the data to send to the classmates
    */
   sendStudentToClassmatesInPeriodMessage(messageType, data) {
-
     if (!this.ConfigService.isPreview()) {
       // we are in a run
 

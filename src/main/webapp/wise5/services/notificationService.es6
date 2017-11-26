@@ -1,6 +1,6 @@
 class NotificationService {
-  constructor($http, $q, $rootScope, ConfigService, ProjectService, StudentWebSocketService, UtilService) {
-
+  constructor($http, $q, $rootScope, ConfigService, ProjectService,
+      StudentWebSocketService, UtilService) {
     this.$http = $http;
     this.$q = $q;
     this.$rootScope = $rootScope;

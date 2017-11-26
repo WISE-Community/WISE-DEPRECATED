@@ -67,7 +67,6 @@ var TeacherWebSocketService = function () {
     key: "handleStudentsOnlineReceived",
     value: function handleStudentsOnlineReceived(studentsOnlineMessage) {
       this.studentsOnlineArray = studentsOnlineMessage.studentsOnlineList;
-
       this.$rootScope.$broadcast('studentsOnlineReceived', { studentsOnline: this.studentsOnlineArray });
     }
   }, {
@@ -112,7 +111,6 @@ var TeacherWebSocketService = function () {
      * Handle the student disconnected message
      */
     value: function handleStudentDisconnected(studentDisconnectedMessage) {
-
       // fire the student disconnected event
       this.$rootScope.$broadcast('studentDisconnected', { data: studentDisconnectedMessage });
     }
@@ -126,10 +124,8 @@ var TeacherWebSocketService = function () {
   }, {
     key: "pauseScreens",
     value: function pauseScreens(periodId) {
-
       // create the websocket message
       var messageJSON = {};
-
       messageJSON.messageType = 'pauseScreen';
 
       if (periodId == null || periodId == -1) {
@@ -154,10 +150,8 @@ var TeacherWebSocketService = function () {
   }, {
     key: "unPauseScreens",
     value: function unPauseScreens(periodId) {
-
       // create the websocket message
       var messageJSON = {};
-
       messageJSON.messageType = 'unPauseScreen';
 
       if (periodId == null || periodId == -1) {

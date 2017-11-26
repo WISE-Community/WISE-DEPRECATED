@@ -23,13 +23,10 @@ class AuthorWebSocketService {
   handleMessage(message) {
     let data = JSON.parse(message.data);
     let messageType = data.messageType;
-
     if (messageType === "currentAuthors") {
       this.$rootScope.$broadcast('currentAuthorsReceived', {currentAuthorsUsernames: data.currentAuthorsUsernames});
     }
-
   };
-
 
   sendMessage(messageJSON) {
     // send the websocket message

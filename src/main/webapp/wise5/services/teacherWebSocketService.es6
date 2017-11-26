@@ -1,5 +1,9 @@
 class TeacherWebSocketService {
-  constructor($rootScope, $websocket, ConfigService, StudentStatusService) {
+  constructor(
+      $rootScope,
+      $websocket,
+      ConfigService,
+      StudentStatusService) {
     this.$rootScope = $rootScope;
     this.$websocket = $websocket;
     this.ConfigService = ConfigService;
@@ -52,7 +56,6 @@ class TeacherWebSocketService {
 
   handleStudentsOnlineReceived(studentsOnlineMessage) {
     this.studentsOnlineArray = studentsOnlineMessage.studentsOnlineList;
-
     this.$rootScope.$broadcast('studentsOnlineReceived', {studentsOnline: this.studentsOnlineArray});
   };
 
@@ -87,7 +90,6 @@ class TeacherWebSocketService {
    * Handle the student disconnected message
    */
   handleStudentDisconnected(studentDisconnectedMessage) {
-
     // fire the student disconnected event
     this.$rootScope.$broadcast('studentDisconnected', {data: studentDisconnectedMessage});
   }
@@ -98,10 +100,8 @@ class TeacherWebSocketService {
    * all the periods
    */
   pauseScreens(periodId) {
-
     // create the websocket message
     const messageJSON = {};
-
     messageJSON.messageType = 'pauseScreen';
 
     if(periodId == null || periodId == -1) {
@@ -123,10 +123,8 @@ class TeacherWebSocketService {
    * all the periods
    */
   unPauseScreens(periodId) {
-
     // create the websocket message
     const messageJSON = {};
-
     messageJSON.messageType = 'unPauseScreen';
 
     if(periodId == null || periodId == -1) {
@@ -143,6 +141,11 @@ class TeacherWebSocketService {
   }
 }
 
-TeacherWebSocketService.$inject = ['$rootScope', '$websocket', 'ConfigService', 'StudentStatusService'];
+TeacherWebSocketService.$inject = [
+  '$rootScope',
+  '$websocket',
+  'ConfigService',
+  'StudentStatusService'
+];
 
 export default TeacherWebSocketService;

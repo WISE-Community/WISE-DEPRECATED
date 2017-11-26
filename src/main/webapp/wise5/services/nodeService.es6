@@ -1,13 +1,8 @@
 class NodeService {
-
-  constructor($filter,
-              $http,
-              $injector,
-              $mdDialog,
-              $q,
-              ConfigService,
-              ProjectService,
-              StudentDataService) {
+  constructor($filter, $http, $injector, $mdDialog, $q,
+      ConfigService,
+      ProjectService,
+      StudentDataService) {
     this.$filter = $filter;
     this.$http = $http;
     this.$injector = $injector;
@@ -19,14 +14,12 @@ class NodeService {
     if (this.$filter) {
       this.$translate = this.$filter('translate');
     }
-
     if (this.ConfigService != null &&
         (this.ConfigService.getMode() == "classroomMonitor" ||
         this.ConfigService.getMode() == "author")) {
       // in the classroom monitor, we need access to the TeacherDataService
       this.TeacherDataService = this.$injector.get('TeacherDataService');
     }
-
     this.transitionResults = {};
     this.chooseTransitionPromises = {};
   }
@@ -40,7 +33,6 @@ class NodeService {
 
     // set the timestamp
     componentState.clientSaveTime = Date.parse(new Date());
-
     return componentState;
   };
 
@@ -56,7 +48,6 @@ class NodeService {
 
     // set the timestamp
     nodeState.clientSaveTime = Date.parse(new Date());
-
     return nodeState;
   };
 
@@ -69,19 +60,15 @@ class NodeService {
    */
   toCamelCase(nodeType) {
     let nodeTypeCamelCased = null;
-
     if (nodeType != null && nodeType.length > 0) {
 
       // get the first character
       const firstChar = nodeType.charAt(0);
-
       if (firstChar != null) {
 
         // make the first character lower case
         const firstCharLowerCase = firstChar.toLowerCase();
-
         if (firstCharLowerCase != null) {
-
           /*
            * replace the first character with the lower case
            * character
@@ -90,7 +77,6 @@ class NodeService {
         }
       }
     }
-
     return nodeTypeCamelCased;
   };
 
@@ -101,14 +87,12 @@ class NodeService {
    */
   isStringUpperCase(str) {
     let result = false;
-
     if (str != null) {
       if (str === str.toUpperCase()) {
         // the string is in all uppercase
         result = true;
       }
     }
-
     return result;
   };
 
@@ -118,7 +102,6 @@ class NodeService {
    * @return the path to the html template for the component
    */
   getComponentTemplatePath(componentType) {
-
     if (componentType == null) {
       // error
     } else if (this.isStringUpperCase(componentType)) {
@@ -143,19 +126,14 @@ class NodeService {
    */
   getComponentContentById(nodeContent, componentId) {
     let componentContent = null;
-
     if (nodeContent != null && componentId != null) {
-
       // get the components
       const components = nodeContent.components;
-
       if (components != null) {
-
         // loop through the components
         for (let tempComponent of components) {
           if (tempComponent != null) {
             const tempComponentId = tempComponent.id;
-
             if (tempComponentId === componentId) {
               // we have found the component with the component id we want
               componentContent = tempComponent;
@@ -165,7 +143,6 @@ class NodeService {
         }
       }
     }
-
     return componentContent;
   };
 
@@ -176,13 +153,10 @@ class NodeService {
    */
   isWorkSubmitted(componentStates) {
     let result = false;
-
     if (componentStates != null) {
-
       // loop through all the component states
       for (let componentState of componentStates) {
         if (componentState != null) {
-
           if (componentState.isSubmit) {
             result = true;
             break;
@@ -190,7 +164,6 @@ class NodeService {
         }
       }
     }
-
     return result;
   };
 
@@ -201,16 +174,12 @@ class NodeService {
    * @returns whether the specified node or component is completed
    */
   isCompleted(functionParams) {
-
     let result = false;
-
     if (functionParams != null) {
       const nodeId = functionParams.nodeId;
       const componentId = functionParams.componentId;
-
       result = this.StudentDataService.isCompleted(nodeId, componentId);
     }
-
     return result;
   };
 
@@ -219,7 +188,6 @@ class NodeService {
    * @return a promise that will return the next node id
    */
   goToNextNode() {
-
     // get the next node id
     return this.getNextNodeId().then((nextNodeId) => {
       if (nextNodeId != null) {
@@ -230,7 +198,6 @@ class NodeService {
           this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
         }
       }
-
       return nextNodeId;
     });
   };
@@ -246,7 +213,6 @@ class NodeService {
     // create a promise that will return the next node id
     let deferred = this.$q.defer();
     let promise = deferred.promise;
-
     let nextNodeId = null;
     let currentNodeId = null;
     let mode = this.ConfigService.getMode();
@@ -257,7 +223,6 @@ class NodeService {
     } else {
       // no current id was passed in, so get current node
       let currentNode = null;
-
       if (mode === 'classroomMonitor' || mode === 'author') {
         currentNode = this.TeacherDataService.getCurrentNode();
       } else {
@@ -271,11 +236,9 @@ class NodeService {
     if (currentNodeId) {
       if (mode === 'classroomMonitor' || mode === 'author') {
         let currentNodeOrder = this.ProjectService.getNodeOrderById(currentNodeId);
-
         if (currentNodeOrder) {
           let nextNodeOrder = currentNodeOrder + 1;
           let nextId = this.ProjectService.getNodeIdByOrder(nextNodeOrder);
-
           if (nextId) {
             if (this.ProjectService.isApplicationNode(nextId)) {
               // node is a step, so set it as the next node
@@ -303,12 +266,9 @@ class NodeService {
           // loop through all the branchPathTaken events from newest to oldest
           for (let b = branchPathTakenEvents.length - 1; b >= 0; b--) {
             const branchPathTakenEvent = branchPathTakenEvents[b];
-
             if (branchPathTakenEvent != null) {
-
               // get the data from the event
               const data = branchPathTakenEvent.data;
-
               if (data != null) {
                 // get the to node id
                 const toNodeId = data.toNodeId;
@@ -320,10 +280,8 @@ class NodeService {
           }
         } else {
           // the student has not branched on this node before
-
           if (transitionLogic != null) {
             const transitions = transitionLogic.transitions;
-
             if (transitions == null || transitions.length == 0) {
               /*
                * this node does not have any transitions so we will
@@ -333,29 +291,22 @@ class NodeService {
               // get the parent group id
               const parentGroupId = this.ProjectService.getParentGroupId(currentNodeId);
               let parentHasTransitionLogic = false;
-
               if (parentGroupId != null) {
-
                 // get the transition logic from the parent
                 const parentTransitionLogic = this.ProjectService.getTransitionLogicByFromNodeId(parentGroupId);
-
                 if (parentTransitionLogic != null) {
-
                   parentHasTransitionLogic = true;
 
                   // choose a transition
                   this.chooseTransition(parentGroupId, parentTransitionLogic).then((transition) => {
-
                     if (transition != null) {
                       // get the to node id
                       const transitionToNodeId = transition.to;
-
                       if (this.ProjectService.isGroupNode(transitionToNodeId)) {
                         // the to node is a group
 
                         // get the start id of the group
                         const startId = this.ProjectService.getGroupStartId(transitionToNodeId);
-
                         if (startId == null || startId == '') {
                           // the group does not have a start id so we will just use the group
                           nextNodeId = transitionToNodeId;
@@ -385,7 +336,6 @@ class NodeService {
             } else {
               // choose a transition
               this.chooseTransition(currentNodeId, transitionLogic).then((transition) => {
-
                 if (transition != null) {
                   // move the student to the toNodeId
                   nextNodeId = transition.to;
@@ -401,7 +351,6 @@ class NodeService {
     } else {
       deferred.resolve(null);
     }
-
     return promise;
   };
 
@@ -447,7 +396,6 @@ class NodeService {
    * Go to the previous node
    */
   goToPrevNode() {
-
     const prevNodeId = this.getPrevNodeId();
     const mode = this.ConfigService.getMode();
     if (mode === 'classroomMonitor' || mode === 'author') {
@@ -486,11 +434,9 @@ class NodeService {
     if (currentNodeId) {
       if (mode === 'classroomMonitor' || mode === 'author') {
         let currentNodeOrder = this.ProjectService.getNodeOrderById(currentNodeId);
-
         if (currentNodeOrder) {
           let prevNodeOrder = currentNodeOrder - 1;
           let prevId = this.ProjectService.getNodeIdByOrder(prevNodeOrder);
-
           if (prevId) {
             if (this.ProjectService.isApplicationNode(prevId)) {
               // node is a step, so set it as the next node
@@ -504,7 +450,6 @@ class NodeService {
       } else {
         // get all the nodes that transition to the current node
         const nodeIdsByToNodeId = this.ProjectService.getNodeIdsByToNodeId(currentNodeId);
-
         if (nodeIdsByToNodeId == null) {
 
         } else if (nodeIdsByToNodeId.length === 1) {
@@ -519,7 +464,6 @@ class NodeService {
           // loop through the stack history node ids from newest to oldest
           for (let s = stackHistory.length - 1; s >= 0; s--) {
             const stackHistoryNodeId = stackHistory[s];
-
             if (nodeIdsByToNodeId.indexOf(stackHistoryNodeId) != -1) {
               // we have found a node that we previously visited that transitions to the current node
               prevNodeId = stackHistoryNodeId;
@@ -529,7 +473,6 @@ class NodeService {
         }
       }
     }
-
     return prevNodeId;
   };
 
@@ -571,7 +514,6 @@ class NodeService {
   closeNode() {
     let mode = this.ConfigService.getMode();
     let currentNode = null;
-
     if (mode === 'classroomMonitor') {
       currentNode = this.TeacherDataService.getCurrentNode();
     } else {
@@ -579,12 +521,10 @@ class NodeService {
     }
 
     if (currentNode) {
-
       let currentNodeId = currentNode.id;
 
       // get the parent node of the current node
       let parentNode = this.ProjectService.getParentGroup(currentNodeId);
-
       let parentNodeId = parentNode.id;
 
       // set the current node to the parent node
@@ -604,7 +544,6 @@ class NodeService {
    * @returns a promise that will return a transition
    */
   chooseTransition(nodeId, transitionLogic) {
-
     const deferred = this.$q.defer();
 
     // see if there is already a promise for this step
@@ -622,7 +561,6 @@ class NodeService {
 
     // check if the transition was already previously calculated
     let transitionResult = this.getTransitionResultByNodeId(nodeId);
-
     if (transitionResult == null || (transitionLogic != null && transitionLogic.canChangePath == true)) {
       /*
        * we have not previously calculated the transition or the
@@ -632,14 +570,11 @@ class NodeService {
 
       // get the transitions
       const transitions = transitionLogic.transitions;
-
       if (transitions != null) {
-
         let availableTransitions = [];
 
         // loop through all the transitions
         for (let transition of transitions) {
-
           // get the to node id
           const toNodeId = transition.to;
 
@@ -648,15 +583,12 @@ class NodeService {
 
           // set the default result to true in case there is no criteria
           let criteriaResult = true;
-
           if (criteria != null) {
-
             let firstResult = true;
             let tempResult = true;
 
             // loop through all of the criteria
             for (let tempCriteria of criteria) {
-
               // check if the criteria is satisfied
               tempResult = this.StudentDataService.evaluateCriteria(tempCriteria);
 
@@ -672,10 +604,8 @@ class NodeService {
           }
 
           if (toNodeId != null) {
-
             // check if the criteria was satisfied and the to node is visitable
             if (criteriaResult) {
-
               // the student is allowed to use the transition
               availableTransitions.push(transition);
             }
@@ -690,13 +620,11 @@ class NodeService {
           transitionResult = availableTransitions[0];
         } else if (availableTransitions.length > 1) {
           // there are multiple available transitions for the student
-
           if (this.ConfigService.isPreview()) {
             /*
              * we are in preview mode so we will let the user choose
              * the branch path to go to
              */
-
             if (transitionResult != null) {
               /*
                * the user has previously chosen the branch path
@@ -707,9 +635,7 @@ class NodeService {
               // ask the user which branch path to go to
 
               resolvePromiseNow = false;
-
               let chooseBranchPathTemplateUrl = this.ProjectService.getThemePath() + '/templates/branchPathChooser.html';
-
               const dialogOptions = {
                 templateUrl: chooseBranchPathTemplateUrl,
                 controller: ChooseBranchPathController,
@@ -731,7 +657,6 @@ class NodeService {
                * @param nodeId the current node
                */
               function ChooseBranchPathController($scope, $mdDialog, NodeService, ProjectService, availableTransitions, deferred, nodeId) {
-
                 $scope.availableTransitions = availableTransitions;
                 $scope.NodeService = NodeService;
                 $scope.ProjectService = ProjectService;
@@ -752,12 +677,12 @@ class NodeService {
 
                   // close the dialog
                   $mdDialog.hide();
-                }
+                };
 
                 // obtains the step number and title
                 $scope.getNodePositionAndTitleByNodeId = (nodeId) => {
                   return $scope.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-                }
+                };
 
                 // called when the dialog is closed
                 $scope.close = () => {
@@ -778,9 +703,7 @@ class NodeService {
              * we are in regular student run mode so we will choose
              * the branch according to how the step was authored
              */
-
             const howToChooseAmongAvailablePaths = transitionLogic.howToChooseAmongAvailablePaths;
-
             if (howToChooseAmongAvailablePaths == null ||
               howToChooseAmongAvailablePaths === '' ||
               howToChooseAmongAvailablePaths === 'random') {
@@ -804,7 +727,6 @@ class NodeService {
               transitionResult = availableTransitions[0];
             } else if (howToChooseAmongAvailablePaths === 'lastAvailable') {
               // choose the last available transition
-
               transitionResult = availableTransitions[availableTransitions.length - 1];
             }
           }
@@ -826,23 +748,18 @@ class NodeService {
        */
       this.setChooseTransitionPromise(nodeId, promise);
     }
-
     return promise;
   };
 
   hasTransitionLogic() {
     let result = false;
-
     const currentNode = this.StudentDataService.getCurrentNode();
-
     if (currentNode != null) {
       const transitionLogic = currentNode.transitionLogic;
-
       if (transitionLogic != null) {
         result = true;
       }
     }
-
     return result;
   };
 
@@ -851,17 +768,12 @@ class NodeService {
    * path taken events if necessary.
    */
   evaluateTransitionLogic() {
-
     // get the current node
     const currentNode = this.StudentDataService.getCurrentNode();
-
     if (currentNode != null) {
-
       const nodeId = currentNode.id;
       const transitionLogic = currentNode.transitionLogic;
-
       if (transitionLogic != null) {
-
         // get all the transitions from the current node
         const transitions = transitionLogic.transitions;
         const canChangePath = transitionLogic.canChangePath;
@@ -876,10 +788,8 @@ class NodeService {
         }
 
         let transition, fromNodeId, toNodeId;
-
         if (alreadyBranched) {
           // student has previously branched
-
           if (canChangePath) {
             // student can change path
 
@@ -939,17 +849,13 @@ class NodeService {
 
     // get the current node
     const currentNode = this.StudentDataService.getCurrentNode();
-
     if (currentNode != null) {
       const transitionLogic = currentNode.transitionLogic;
-
       const whenToChoosePath = transitionLogic.whenToChoosePath;
-
       if (event === whenToChoosePath) {
         result = true;
       }
     }
-
     return result;
   };
 
@@ -1003,7 +909,6 @@ class NodeService {
    * plus the node rubric and all component rubrics.
    */
   showNodeInfo(nodeId, $event) {
-
     // get the step number and title
     let stepNumberAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
     let rubricTitle = this.$translate('STEP_INFO');
@@ -1040,10 +945,8 @@ class NodeService {
       fullscreen: true,
       controller: ['$scope', '$mdDialog',
         function DialogController($scope, $mdDialog) {
-
           // display the rubric in a new tab
           $scope.openInNewWindow = function() {
-
             // open a new tab
             let w = window.open('', '_blank');
 

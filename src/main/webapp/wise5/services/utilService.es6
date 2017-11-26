@@ -1,16 +1,14 @@
 'use strict';
 
 class UtilService {
-
-  constructor($filter,
-              $injector,
-              $rootScope) {
+  constructor(
+      $filter,
+      $injector,
+      $rootScope) {
     this.$filter = $filter;
     this.$injector = $injector;
     this.$rootScope = $rootScope;
-
     this.componentTypeToLabel = {};
-
     this.$translate = this.$filter('translate');
   }
 
@@ -20,8 +18,9 @@ class UtilService {
    * characters in length.
    */
   generateKey(length) {
-    this.CHARS = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r", "s","t",
-      "u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9"];
+    this.CHARS = ["a","b","c","d","e","f","g","h","i","j","k","l","m",
+        "n","o","p","q","r", "s","t","u","v","w","x","y","z",
+        "0","1","2","3","4","5","6","7","8","9"];
 
     /* set default length if not specified */
     if (!length) {
@@ -47,11 +46,9 @@ class UtilService {
    */
   convertStringToNumber(str) {
     let result = str;
-
     if (str != null && str != '' && !isNaN(Number(str))) {
       result = Number(str);
     }
-
     return result;
   };
 
@@ -62,7 +59,6 @@ class UtilService {
    */
   makeCopyOfJSONObject(jsonObject) {
     let copyOfJSONObject = null;
-
     if (jsonObject != null) {
       // create a JSON string from the JSON object
       const jsonObjectString = angular.toJson(jsonObject);
@@ -70,7 +66,6 @@ class UtilService {
       // create a JSON object from the JSON string
       copyOfJSONObject = angular.fromJson(jsonObjectString);
     }
-
     return copyOfJSONObject;
   };
 
@@ -80,7 +75,6 @@ class UtilService {
    * @returns an image object
    */
   getImageObjectFromBase64String(img_b64) {
-
     // create a blob from the base64 image string
     const blob = this.dataURItoBlob(img_b64);
 
@@ -90,7 +84,6 @@ class UtilService {
       lastModified: now, // optional - default = now
       type: 'image/png' // optional - default = ''
     });
-
     return pngFile;
   }
 
@@ -100,7 +93,6 @@ class UtilService {
    * @returns a Blob object
    */
   dataURItoBlob(dataURI) {
-
     let byteString;
     if (dataURI.split(',')[0].indexOf('base64') >= 0)
       byteString = atob(dataURI.split(',')[1]);
@@ -115,7 +107,6 @@ class UtilService {
     for (let i = 0; i < byteString.length; i++) {
       ia[i] = byteString.charCodeAt(i);
     }
-
     return new Blob([ia], {type:mimeString});
   };
 
@@ -125,9 +116,7 @@ class UtilService {
    * @returns an image object
    */
   getImageObjectFromImageElement(imageElement) {
-
     let imageObject = null;
-
     if (imageElement != null) {
       // create a canvas element that we will use to generate a base64 string
       const canvas = document.createElement("canvas");
@@ -146,7 +135,6 @@ class UtilService {
       // get the image object
       imageObject = this.getImageObjectFromBase64String(dataURL);
     }
-
     return imageObject;
   }
 
@@ -157,7 +145,6 @@ class UtilService {
    * certain elements.
    */
   hideIFrames() {
-
     // get all the iframes
     const iframes = angular.element('iframe');
 
@@ -177,7 +164,6 @@ class UtilService {
    * certain elements.
    */
   showIFrames() {
-
     // get all the iframes
     const iframes = angular.element('iframe');
 
@@ -197,7 +183,6 @@ class UtilService {
    */
   isImage(fileName) {
     let result = false;
-
     if (fileName != null) {
       const lowerCaseFileName = fileName.toLowerCase();
 
@@ -211,10 +196,9 @@ class UtilService {
         result = true;
       }
     }
-
     return result;
   }
-
+  
   /**
    * Check if the asset is a video
    * @param fileName the file name of the asset
@@ -222,7 +206,6 @@ class UtilService {
    */
   isVideo(fileName) {
     let result = false;
-
     if (fileName != null) {
       const lowerCaseFileName = fileName.toLowerCase();
 
@@ -236,7 +219,6 @@ class UtilService {
         result = true;
       }
     }
-
     return result;
   }
 
@@ -247,7 +229,6 @@ class UtilService {
    * @return the modified html with <wiselink> elements
    */
   insertWISELinks(html) {
-
     // replace <a> elements with <wiselink> elements
     html = this.insertWISELinkAnchors(html);
 
@@ -265,7 +246,6 @@ class UtilService {
    * <wiselink> elements
    */
   insertWISELinkAnchors(html) {
-
     // find <a> elements with the parameter wiselink=true
     let wiseLinkRegEx = new RegExp(/<a.*?wiselink="true".*?>(.*?)<\/a>/);
 
@@ -274,7 +254,6 @@ class UtilService {
 
     // loop until we have replaced all the matches
     while(wiseLinkRegExMatchResult != null) {
-
       // get the whole <a> element
       let anchorHTML = wiseLinkRegExMatchResult[0];
 
@@ -303,7 +282,6 @@ class UtilService {
       // search for the next <a> element with the parameter wiselink=true
       wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
     }
-
     return html;
   }
 
@@ -315,7 +293,6 @@ class UtilService {
    * <wiselink> elements
    */
   insertWISELinkButtons(html) {
-
     // find <button> elements with the parameter wiselink=true
     const wiseLinkRegEx = new RegExp(/<button.*?wiselink="true".*?>(.*?)<\/button>/);
 
@@ -324,7 +301,6 @@ class UtilService {
 
     // loop until we have replaced all the matches
     while (wiseLinkRegExMatchResult != null) {
-
       // get the whole <button> element
       const buttonHTML = wiseLinkRegExMatchResult[0];
 
@@ -353,7 +329,6 @@ class UtilService {
       // search for the next <button> element with the parameter wiselink=true
       wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
     }
-
     return html;
   }
 
@@ -366,9 +341,7 @@ class UtilService {
    * @return the node id from the node id parameter in the element
    */
   getWISELinkNodeId(html) {
-
     let nodeId = null;
-
     if (html != null) {
       // create the regex to find the node id parameter
       let nodeIdRegEx = new RegExp(/node-id=["'b](.*?)["']/, 'g');
@@ -381,7 +354,6 @@ class UtilService {
         nodeId = nodeIdRegExResult[1];
       }
     }
-
     return nodeId;
   }
 
@@ -394,9 +366,7 @@ class UtilService {
    * @return the component id from the component id parameter in the element
    */
   getWISELinkComponentId(html) {
-
     let componentId = null;
-
     if (html != null) {
       // create the regex to find the component id parameter
       let componentIdRegEx = new RegExp(/component-id=["'b](.*?)["']/, 'g');
@@ -409,7 +379,6 @@ class UtilService {
         componentId = componentIdRegExResult[1];
       }
     }
-
     return componentId;
   }
 
@@ -423,7 +392,6 @@ class UtilService {
    */
   getWISELinkType(html) {
     let type = null;
-
     if (html != null) {
       // create the regex to find the type
       let typeRegEx = new RegExp(/type=["'b](.*?)["']/, 'g');
@@ -436,7 +404,6 @@ class UtilService {
         type = typeRegExResult[1];
       }
     }
-
     return type;
   }
 
@@ -449,7 +416,6 @@ class UtilService {
    */
   getWISELinkLinkText(html) {
     let linkText = null;
-
     if (html != null) {
       // create the regex to find the link text
       let linkTextRegEx = new RegExp(/link-text=["'b](.*?)["']/, 'g');
@@ -462,7 +428,6 @@ class UtilService {
         linkText = linkTextRegExResult[1];
       }
     }
-
     return linkText;
   }
 
@@ -472,7 +437,6 @@ class UtilService {
    * @return the modified html without <wiselink> elements
    */
   replaceWISELinks(html) {
-
     // replace wiselinks that look like <wiselink/>
     html = this.replaceWISELinksHelper(html, '<wiselink.*?\/>');
 
@@ -490,7 +454,6 @@ class UtilService {
    * @return the html without <wiselink> elements
    */
   replaceWISELinksHelper(html, regex) {
-
     // create the regex
     let wiseLinkRegEx = new RegExp(regex);
 
@@ -499,7 +462,6 @@ class UtilService {
 
     // loop until we have replaced all the matches
     while (wiseLinkRegExMatchResult != null) {
-
       /*
        * get the whole match
        * e.g. <wiselink type='link' node-id='node5' link-text='Go to here'/>
@@ -537,7 +499,6 @@ class UtilService {
       // find the next match
       wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
     }
-
     return html;
   }
 
@@ -554,7 +515,6 @@ class UtilService {
    * @return custom summernote button
    */
   createInsertAssetButton(controller, projectId, nodeId, componentId, target, tooltip) {
-
     const thisRootScope = this.$rootScope;
 
     // a custom button that opens the asset chooser
@@ -591,10 +551,8 @@ class UtilService {
           thisRootScope.$broadcast('openAssetChooser', params);
         }
       });
-
       return button.render();   // return button as jquery object
     };
-
     return InsertAssetButton;
   }
 
@@ -611,7 +569,6 @@ class UtilService {
    * @return custom summernote button
    */
   createInsertWISELinkButton(controller, projectId, nodeId, componentId, target, tooltip) {
-
     const thisRootScope = this.$rootScope;
 
     // a custom button that opens the WISE Link authoring popup
@@ -647,10 +604,8 @@ class UtilService {
           thisRootScope.$broadcast('openWISELinkChooser', params);
         }
       });
-
       return button.render();   // return button as jquery object
     };
-
     return InsertWISELinkButton;
   }
 
@@ -660,9 +615,7 @@ class UtilService {
    * @return text without html tags
    */
   removeHTMLTags(html) {
-
     let text = '';
-
     if (html != null) {
       // remove tags
       text = html.replace(/<\/?[^>]+(>|$)/g, " ");
@@ -673,7 +626,6 @@ class UtilService {
       // remove line returns
       text = text.replace(/\r/g, " ");
     }
-
     return text;
   }
 
@@ -702,7 +654,6 @@ class UtilService {
    * 0 if object1 server save time is equal to object2 server save time
    */
   sortByServerSaveTime(object1, object2) {
-
     if (object1.serverSaveTime < object2.serverSaveTime) {
       return -1;
     } else if (object1.serverSaveTime > object2.serverSaveTime) {
@@ -720,7 +671,6 @@ class UtilService {
    * Wed Apr 06 2016 9:05:38 AM
    */
   convertMillisecondsToFormattedDateTime(milliseconds) {
-
     let dateTimeString = "";
 
     // create a Date object with the milliseconds
@@ -730,7 +680,6 @@ class UtilService {
       // get the date time string e.g. Wed Apr 06 2016 9:05:38 AM
       dateTimeString = date.toDateString() + " " + date.toLocaleTimeString();
     }
-
     return dateTimeString;
   }
 
@@ -740,7 +689,6 @@ class UtilService {
    * @return string label for the component type
    */
   getComponentTypeLabel(componentType) {
-
     /*
      * check if we have already obtained the label for this component type
      * before
@@ -754,7 +702,6 @@ class UtilService {
       let componentService = this.$injector.get(componentType + 'Service');
 
       if (componentService != null && componentService.getComponentTypeLabel != null) {
-
         // get the label for the component type
         label = componentService.getComponentTypeLabel();
 
@@ -770,7 +717,6 @@ class UtilService {
        */
       label = componentType;
     }
-
     return label;
   }
 
@@ -791,7 +737,6 @@ class UtilService {
    * @return whether the arrays contain the same values
    */
   arraysContainSameValues(array1, array2) {
-
     if (array1 != null && array2 != null) {
       // make a copy of array 1 and sort it
       const array1Copy = this.makeCopyOfJSONObject(array1);
@@ -818,16 +763,12 @@ class UtilService {
    * @return whether there are any connected components
    */
   hasConnectedComponent(componentContent) {
-
     if (componentContent != null) {
-
       const connectedComponents = componentContent.connectedComponents;
-
       if (connectedComponents != null && connectedComponents.length > 0) {
         return true;
       }
     }
-
     return false;
   }
 
@@ -837,15 +778,11 @@ class UtilService {
    * @return whether this component shows work from a connected component
    */
   hasShowWorkConnectedComponent(componentContent) {
-
     if (componentContent != null) {
-
       const connectedComponents = componentContent.connectedComponents;
-
       if (connectedComponents != null) {
         for (let connectedComponent of connectedComponents) {
           if (connectedComponent != null) {
-
             if (connectedComponent.type == 'showWork') {
               return true;
             }
@@ -853,7 +790,6 @@ class UtilService {
         }
       }
     }
-
     return false;
   }
 
@@ -863,15 +799,11 @@ class UtilService {
    * @return whether this component imports work from a connected component
    */
   hasImportWorkConnectedComponent(componentContent) {
-
     if (componentContent != null) {
-
       const connectedComponents = componentContent.connectedComponents;
-
       if (connectedComponents != null) {
         for (let connectedComponent of connectedComponents) {
           if (connectedComponent != null) {
-
             if (connectedComponent.type == 'importWork') {
               return true;
             }
@@ -879,7 +811,6 @@ class UtilService {
         }
       }
     }
-
     return false;
   }
 
@@ -906,7 +837,7 @@ if (!Array.prototype.last) {
   Array.prototype.last = function() {
     return this[this.length - 1];
   };
-};
+}
 
 UtilService.$inject = [
   '$filter',

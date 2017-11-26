@@ -1,13 +1,11 @@
 'use strict';
 
 class ConfigService {
-
   constructor($filter, $http, $location) {
     this.$filter = $filter;
     this.$http = $http;
     this.$location = $location;
     this.config = null;
-
     this.$translate = this.$filter('translate');
   };
 
@@ -21,7 +19,6 @@ class ConfigService {
   retrieveConfig(configURL) {
     return this.$http.get(configURL).then((result) => {
       const configJSON = result.data;
-
       if (configJSON.retrievalTimestamp != null) {
         // get the client timestamp
         const clientTimestamp = new Date().getTime();
@@ -40,7 +37,7 @@ class ConfigService {
 
       // get the full url
       const absURL = this.$location.$$absUrl;
-      
+
       if (configJSON.mode == 'preview') {
         // constraints can only be disabled using the url in preview mode
 
@@ -188,30 +185,24 @@ class ConfigService {
    */
   getPeriods() {
     let periods = [];
-
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
-
       const myClassInfo = myUserInfo.myClassInfo;
       if (myClassInfo != null) {
-
         if (myClassInfo.periods != null) {
           periods = myClassInfo.periods;
         }
       }
     }
-
     return periods;
   };
 
   getWorkgroupId() {
     let workgroupId = null;
-
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
       workgroupId = myUserInfo.workgroupId;
     }
-
     return workgroupId;
   };
 
@@ -220,26 +211,20 @@ class ConfigService {
    * @return the user id
    */
   getUserId() {
-
     let userId = null;
-
     const myUserInfo = this.getMyUserInfo();
-
     if (myUserInfo != null) {
       userId = myUserInfo.id;
     }
-
     return userId;
   }
 
   getMyUserInfo() {
     let myUserInfo = null;
-
     const userInfo = this.getUserInfo();
     if (userInfo != null) {
       myUserInfo = userInfo.myUserInfo;
     }
-
     return myUserInfo;
   };
 
@@ -248,17 +233,13 @@ class ConfigService {
    * @return the user name of the signed in user
    */
   getMyUserName() {
-
     let userName = null;
-
     // get my user info
     const myUserInfo = this.getMyUserInfo();
-
     if (myUserInfo != null) {
       // get the user name
       userName = myUserInfo.userName;
     }
-
     return userName;
   }
 
@@ -271,13 +252,11 @@ class ConfigService {
         classmateUserInfos = myClassInfo.classmateUserInfos;
       }
     }
-
     return classmateUserInfos;
   };
 
   setClassmateDisplayNames() {
     let classmateUserInfos = this.getClassmateUserInfos();
-
     if (classmateUserInfos) {
       for (let workgroup of classmateUserInfos) {
         workgroup.displayNames = this.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId);
@@ -291,14 +270,10 @@ class ConfigService {
    * workgroup id
    */
   getClassmateUserInfosSortedByWorkgroupId() {
-
     const sortedClassmateUserInfos = [];
-
     // get all the classmate user info objects
     const classmateUserInfos = this.getClassmateUserInfos();
-
     if (classmateUserInfos != null) {
-
       /*
        * loop through all the classmate user info objects and add it to
        * new array of classmate user infos
@@ -307,10 +282,8 @@ class ConfigService {
         sortedClassmateUserInfos.push(classmateUserInfo);
       }
     }
-
     // sort the new classmate user infos array by ascending workgroup id
     sortedClassmateUserInfos.sort(this.compareClassmateUserInfosByWorkgroupId);
-
     return sortedClassmateUserInfos;
   }
 
@@ -371,13 +344,10 @@ class ConfigService {
 
   getClassmateWorkgroupIds(includeSelf) {
     const workgroupIds = [];
-
     if (includeSelf) {
       workgroupIds.push(this.getWorkgroupId());
     }
-
     const classmateUserInfos = this.getClassmateUserInfos();
-
     if (classmateUserInfos != null) {
       for (let classmateUserInfo of classmateUserInfos) {
         if (classmateUserInfo != null) {
@@ -389,41 +359,34 @@ class ConfigService {
         }
       }
     }
-
     return workgroupIds;
   };
 
   sortClassmateUserInfosAlphabeticallyByName() {
     const classmateUserInfos = this.getClassmateUserInfos();
-
     if (classmateUserInfos != null) {
       classmateUserInfos.sort(this.sortClassmateUserInfosAlphabeticallyByNameHelper);
     }
-
     return classmateUserInfos;
   };
 
   sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
     let result = 0;
-
     if (a != null && a.userName != null && b != null && b.userName != null) {
       const aUserName = a.userName.toLowerCase();
       const bUserName = b.userName.toLowerCase();
-
       if (aUserName < bUserName) {
         result = -1;
       } else if (aUserName > bUserName) {
         result = 1;
       }
     }
-
     return result;
   };
 
   setPermissions() {
     // get the role of the teacher for the run e.g. 'owner', 'write', 'read'
     let role = this.getTeacherRole(this.getWorkgroupId());
-
     if (role === 'owner') {
       // the teacher is the owner of the run and has full access
       this.config.canViewStudentNames = true;
@@ -444,7 +407,6 @@ class ConfigService {
   }
 
   getPermissions() {
-
     // a switched user (admin/researcher user impersonating a teacher) should not be able to view/grade
     return {
       canViewStudentNames: this.config.canViewStudentNames && !this.isSwitchedUser(),
@@ -454,14 +416,10 @@ class ConfigService {
 
   getUserInfoByWorkgroupId(workgroupId) {
     let userInfo = null;
-
     if (workgroupId != null) {
-
       const myUserInfo = this.getMyUserInfo();
-
       if (myUserInfo != null) {
         const tempWorkgroupId = myUserInfo.workgroupId;
-
         if (workgroupId === tempWorkgroupId) {
           userInfo = myUserInfo;
         }
@@ -469,12 +427,10 @@ class ConfigService {
 
       if (userInfo == null) {
         const classmateUserInfos = this.getClassmateUserInfos();
-
         if (classmateUserInfos != null) {
           for (let classmateUserInfo of classmateUserInfos) {
             if (classmateUserInfo != null) {
               const tempWorkgroupId = classmateUserInfo.workgroupId;
-
               if (workgroupId == tempWorkgroupId) {
                 userInfo = classmateUserInfo;
                 break;
@@ -484,7 +440,6 @@ class ConfigService {
         }
       }
     }
-
     return userInfo;
   };
 
@@ -495,15 +450,12 @@ class ConfigService {
    */
   getPeriodIdByWorkgroupId(workgroupId) {
     let periodId = null;
-
     if (workgroupId != null) {
       const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-
       if (userInfo != null) {
         periodId = userInfo.periodId;
       }
     }
-
     return periodId;
   };
 
@@ -537,61 +489,48 @@ class ConfigService {
         }
       }
     }
-
     return studentNames;
   };
 
   getUserIdsByWorkgroupId(workgroupId) {
     let userIds = [];
-
     if (workgroupId != null) {
       const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-
       if (userInfo != null) {
         userIds = userInfo.userIds;
       }
     }
-
     return userIds;
   };
 
   getUserNameByWorkgroupId(workgroupId) {
     let userName = null;
-
     if (workgroupId != null) {
       const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-
       if (userInfo != null) {
         userName = userInfo.userName;
       }
     }
-
     return userName;
   };
 
   getDisplayNamesByWorkgroupId(workgroupId) {
     let displayNames = null;
-
     if (workgroupId != null) {
       const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-
       if (userInfo != null) {
         displayNames = userInfo.displayNames;
       }
     }
-
     return displayNames;
   };
 
   getUserNamesByWorkgroupId(workgroupId) {
     let userNamesObjects = [];
-
     if (workgroupId != null) {
       let userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-
       if (userInfo != null) {
         let userNames = userInfo.userName.split(':');
-
         for (let name of userNames) {
           let id = "";
           let regex = /(.+) \((.+)\)/g;
@@ -607,13 +546,11 @@ class ConfigService {
         }
       }
     }
-
     return userNamesObjects;
   };
 
   getDisplayUserNamesByWorkgroupId(workgroupId) {
     let usernames = '';
-
     if (workgroupId != null) {
       if (this.getPermissions().canViewStudentNames) {
         let names = this.getUserNamesByWorkgroupId(workgroupId);
@@ -638,19 +575,15 @@ class ConfigService {
         }
       }
     }
-
     return usernames;
   };
 
   isPreview() {
     let result = false;
-
     const mode = this.getMode();
-
     if (mode != null && mode === 'preview') {
       result = true;
     }
-
     return result;
   };
 
@@ -660,13 +593,11 @@ class ConfigService {
    * @param clientTimestamp the client timestamp
    */
   convertToServerTimestamp(clientTimestamp) {
-
     // get the difference between the client time and server time
     const timestampDiff = this.getConfigParam('timestampDiff');
 
     // convert the client timestamp to a server timestamp
     const serverTimestamp = clientTimestamp - timestampDiff;
-
     return serverTimestamp;
   }
 
@@ -676,13 +607,11 @@ class ConfigService {
    * @param serverTimestamp the client timestamp
    */
   convertToClientTimestamp(serverTimestamp) {
-
     // get the difference between the client time and server time
     const timestampDiff = this.getConfigParam('timestampDiff');
 
     // convert the client timestamp to a server timestamp
     const clientTimestamp = serverTimestamp + timestampDiff;
-
     return clientTimestamp;
   }
 
@@ -692,20 +621,15 @@ class ConfigService {
    * @returns whether the workgroup is the owner of the run
    */
   isRunOwner(workgroupId) {
-
     let result = false;
-
     if (workgroupId != null) {
       const teacherUserInfo = this.getTeacherUserInfo();
-
       if (teacherUserInfo != null) {
-
         if (workgroupId == teacherUserInfo.workgroupId) {
           result = true;
         }
       }
     }
-
     return result;
   }
 
@@ -715,14 +639,10 @@ class ConfigService {
    * @returns whether the workgroup is a shared teacher of the run
    */
   isRunSharedTeacher(workgroupId) {
-
     let result = false;
-
     if (workgroupId != null) {
       const sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
-
       if (sharedTeacherUserInfos != null) {
-
         for (let sharedTeacherUserInfo of sharedTeacherUserInfos) {
           if (sharedTeacherUserInfo != null) {
             if (workgroupId == sharedTeacherUserInfo.workgroupId) {
@@ -732,7 +652,6 @@ class ConfigService {
         }
       }
     }
-
     return result;
   }
 
@@ -744,7 +663,6 @@ class ConfigService {
    */
   getTeacherRole(workgroupId) {
     let role = null;
-
     if (this.isRunOwner(workgroupId)) {
       // the teacher is the owner of the run
       role = 'owner';
@@ -752,7 +670,6 @@ class ConfigService {
       // the teacher is a shared teacher so their role may be 'write' or 'read'
       role = this.getSharedTeacherRole(workgroupId);
     }
-
     return role;
   }
 
@@ -764,12 +681,9 @@ class ConfigService {
    */
   getSharedTeacherRole(workgroupId) {
     let role = null;
-
     if (workgroupId != null) {
       const sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
-
       if (sharedTeacherUserInfos != null) {
-
         for (let sharedTeacherUserInfo of sharedTeacherUserInfos) {
           if (sharedTeacherUserInfo != null) {
             if (workgroupId == sharedTeacherUserInfo.workgroupId) {
@@ -779,7 +693,6 @@ class ConfigService {
         }
       }
     }
-
     return role;
   }
 
@@ -792,16 +705,12 @@ class ConfigService {
    */
   replaceStudentNames(content) {
     if (content != null) {
-
       let contentString = content;
-
       if (typeof content === 'object') {
         // get the content as a string
         contentString = JSON.stringify(content);
       }
-
       if (contentString != null) {
-
         // get the workgroup id
         const workgroupId = this.getWorkgroupId();
 
@@ -850,7 +759,6 @@ class ConfigService {
         content = contentString;
       }
     }
-
     return content;
   }
 
@@ -864,22 +772,17 @@ class ConfigService {
    * Get the library projects
    */
   getLibraryProjects() {
-
     // get the URL to get the list of library projects
     const getLibraryProjectsURL = this.getConfigParam('getLibraryProjectsURL');
 
     if (getLibraryProjectsURL != null) {
-
       // request the list of library projects
       return this.$http.get(getLibraryProjectsURL).then((result) => {
-
         const data = result.data;
-
         if (data != null) {
           // reverse the list so that it is ordered newest to oldest
           data.reverse();
         }
-
         return data;
       });
     }
@@ -919,7 +822,6 @@ class ConfigService {
         projectAssetsDirectoryPath = projectBaseURL + 'assets';
       }
     }
-
     return projectAssetsDirectoryPath;
   }
 
@@ -960,7 +862,6 @@ class ConfigService {
      */
     html = html.replace(assetsDirectoryPathIncludingHostRegEx, '');
     html = html.replace(assetsDirectoryPathNotIncludingHostRegEx, '');
-
     return html
   }
 
@@ -970,19 +871,15 @@ class ConfigService {
    * @return an array of WISE IDs
    */
   getWISEIds(workgroupId) {
-
     let wiseIds = [];
-
     if (workgroupId != null) {
       // get the user info object for the workgroup id
       const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
-
       if (userInfo != null) {
         // get the WISE IDs
         wiseIds = userInfo.userIds;
       }
     }
-
     return wiseIds;
   }
 
@@ -990,15 +887,12 @@ class ConfigService {
    * Get all the authorable projects
    */
   getAuthorableProjects() {
-
     // get the projects this teacher owns
     const projects = this.getConfigParam('projects');
 
     // get the projects that were shared with the teacher
     const sharedProjects = this.getConfigParam('sharedProjects');
-
     let authorableProjects = [];
-
     if (projects != null) {
       // add the owned projects
       authorableProjects = authorableProjects.concat(projects);
@@ -1011,7 +905,6 @@ class ConfigService {
 
     // sort the projects by descending id
     authorableProjects.sort(this.sortByProjectId);
-
     return authorableProjects;
   }
 
@@ -1021,9 +914,7 @@ class ConfigService {
    */
   isSwitchedUser() {
     let myUserInfo = this.getMyUserInfo();
-
     if (myUserInfo != null) {
-
       if (myUserInfo.isSwitchedUser) {
         return true;
       }
@@ -1042,7 +933,6 @@ class ConfigService {
   sortByProjectId(projectA, projectB) {
     const projectIdA = projectA.id;
     const projectIdB = projectB.id;
-
     if (projectIdA < projectIdB) {
       return 1;
     } else if (projectIdA > projectIdB) {
