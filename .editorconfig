@@ -11,8 +11,8 @@ indent_style = space
 
 # Matches multiple files with brace expansion notation
 # Set default charset
-[*.{js,es6}]
+[*.{es6}]
 indent_size = 4
 
-[*.{java,xml}]
+[*.{java,xml,js}]
 indent_size = 2

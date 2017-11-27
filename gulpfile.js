@@ -26,9 +26,9 @@ const sass = require('gulp-sass');
 
 const sassOptions = { style: 'compact' };
 const paths = ['./src/main/webapp/wise5/style/**/*.scss',
-    './src/main/webapp/wise5/themes/*/style/**/*.scss'];
+  './src/main/webapp/wise5/themes/*/style/**/*.scss'];
 const autoprefixerOptions = { browsers: ['> 5%', 'last 2 versions',
-    'Firefox ESR', 'not ie <= 10'] };
+  'Firefox ESR', 'not ie <= 10'] };
 
 // -----------------------------------------------------------------------------
 // Sass compilation
@@ -37,20 +37,20 @@ gulp.task('compile-sass', function() {
   return gulp
     .src(paths, {base: './'})
     .pipe(gulpif(global.isWatching,
-        newer({dest: './', ext: '.css', extra: paths })))
+      newer({dest: './', ext: '.css', extra: paths })))
     .pipe(sourcemaps.init())
     .pipe(sass(sassOptions).on('error', sass.logError))
     .pipe(postcss([ autoprefixer(autoprefixerOptions),
-        cssnano({zindex: false})/*, rtlcss*/ ]) )
+      cssnano({zindex: false})/*, rtlcss*/ ]) )
     .pipe(sourcemaps.write('.'))
     //.pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest('./'))
     .pipe(print(function(filepath) {
       return 'Compiled: ' + filepath;
     }));
-    //.pipe(gulp.dest(function(file) {
-      //return file.base;
-    //}));
+  //.pipe(gulp.dest(function(file) {
+  //return file.base;
+  //}));
 });
 
 // -----------------------------------------------------------------------------
@@ -62,8 +62,8 @@ gulp.task('set-watch', function() {
 
 gulp.task('watch-sass', ['set-watch'], function() {
   return gulp
-    // Watch folders for *.scss changes in the specified paths,
-    // and run `compile-sass` task on change
+  // Watch folders for *.scss changes in the specified paths,
+  // and run `compile-sass` task on change
     .watch(paths, ['compile-sass'])
     .on('change', function(event) {
       console.log('File ' + event.path + ' was ' + event.type);
@@ -127,20 +127,25 @@ gulp.task('update-i18n', function() {
     const english = JSON.parse(fs.readFileSync(i18n_folder + 'i18n_en.json'));
     supportedLocales.map(function(supportedLocale) {
       let result = JSON.parse(fs.readFileSync(i18n_folder + 'i18n_en.json'));
+      let foreignLocaleStringBefore;
       let foreignLocale = {};
       try {
         // if the file doesn't exist, it will throw an exception
         foreignLocale = JSON.parse(fs.readFileSync(i18n_folder +
-            'i18n_' + supportedLocale + '.json'));
+          'i18n_' + supportedLocale + '.json'));
+        foreignLocaleStringBefore = fs.readFileSync(i18n_folder +
+          'i18n_' + supportedLocale + '.json');
       } catch (ex) {
         // do nothing. we'll use the default {} object
+        updatedAtLeasetOneI18NFile = true;
       }
       for (let key in foreignLocale) {
         if (result[key]) {
           result[key] = foreignLocale[key];
         }
       }
-      // look for keys that don't exist in the foreignLocale and set value to ''
+      // look for keys that don't exist in the foreignLocale
+      // remove it from the result
       for (let key in english) {
         if (foreignLocale[key] == null || foreignLocale[key] == '') {
           delete result[key];
@@ -149,14 +154,16 @@ gulp.task('update-i18n', function() {
 
       let jsonReplacer = null;
       let jsonSpace = 2;  // use 2 spaces
-      result = JSON.stringify(result, jsonReplacer, jsonSpace);
-      fs.writeFileSync(i18n_folder +
-          'i18n_' + supportedLocale + '.json', result);
+      let foreignLocaleStringAfter = JSON.stringify(result, jsonReplacer, jsonSpace);
+      if (foreignLocaleStringAfter != foreignLocaleStringBefore) {
+        fs.writeFileSync(i18n_folder + 'i18n_' + supportedLocale + '.json', foreignLocaleStringAfter);
+        updatedAtLeasetOneI18NFile = true;
+      }
     });
   });
   if (updatedAtLeasetOneI18NFile) {
     console.log('I18N file(s) were updated as a result of ' +
-        'running gulp update-i18n task.');
+      'running gulp update-i18n task.');
     process.exit(1);
   }
 });
