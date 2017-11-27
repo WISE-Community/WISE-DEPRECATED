@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -49,6 +49,7 @@ import org.wise.portal.service.user.UserService;
  * Implementation class that uses daos to interact with the data store.
  *
  * @author Laurel Williams
+ * @author Hiroki Terashima
  */
 @Service
 public class UserServiceImpl implements UserService {
@@ -69,7 +70,7 @@ public class UserServiceImpl implements UserService {
   private SaltSource saltSource;
 
   /**
-   * @see net.sf.sail.webapp.service.UserService#retrieveUser(org.acegisecurity.userdetails.UserDetails)
+   * @see UserService#retrieveUser(UserDetails)
    */
   @Transactional(readOnly = true)
   public User retrieveUser(UserDetails userDetails) {
@@ -77,22 +78,21 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * @see net.sf.sail.webapp.service.UserService#retrieveUserByUsername(java.lang.String)
+   * @see UserService#retrieveUserByUsername(String)
    */
   @Transactional(readOnly = true)
   public List<User> retrieveUsersByUsername(String username) {
-    return retrieveByField("username", "like", "%" + username + "%", "teacherUserDetails");
+    return retrieveByField("username", "like",
+        "%" + username + "%", "teacherUserDetails");
   }
-
 
   @Override
   public List<User> retrieveDisabledUsers() {
     return this.userDao.retrieveDisabledUsers();
   }
 
-
   /**
-   * @see net.sf.sail.webapp.service.UserService#retrieveUserByEmailAddress(java.lang.String)
+   * @see UserService#retrieveUserByEmailAddress(String)
    */
   @Transactional(readOnly = true)
   public List<User> retrieveUserByEmailAddress(String emailAddress) {
@@ -100,15 +100,13 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * @throws DuplicateUsernameException
-   * @see net.sf.sail.webapp.service.UserService#createUser(net.sf.sail.webapp.domain.authentication.MutableUserDetails)
+   * @see UserService#createUser(MutableUserDetails)
    */
   @Override
   @Transactional(rollbackFor = { DuplicateUsernameException.class})
-  public User createUser(final MutableUserDetails userDetails) throws DuplicateUsernameException {
-
-    org.wise.portal.domain.authentication.MutableUserDetails details =
-      (org.wise.portal.domain.authentication.MutableUserDetails) userDetails;
+  public User createUser(final MutableUserDetails userDetails)
+      throws DuplicateUsernameException {
+    MutableUserDetails details = userDetails;
 
     // assign roles
     if (userDetails instanceof StudentUserDetails) {
@@ -121,27 +119,18 @@ public class UserServiceImpl implements UserService {
     // trim firstname and lastname so it doesn't contain leading or trailing spaces
     details.setFirstname(details.getFirstname().trim());
     details.setLastname(details.getLastname().trim());
-    String coreUsername = details.getCoreUsername();
-
     details.setNumberOfLogins(0);
-
-    //set the sign up date
     details.setSignupdate(Calendar.getInstance().getTime());
 
-    //the username suffix
     String currentUsernameSuffix = null;
     User createdUser = null;
     boolean done = false;
 
-    //loop until we have successfully found a unique username
-    while(!done) {
+    while (!done) {
       try {
-        //get the next username suffix
         currentUsernameSuffix = details.getNextUsernameSuffix(currentUsernameSuffix);
-
-        //try to create a user with the given username
+        String coreUsername = details.getCoreUsername();
         details.setUsername(coreUsername + currentUsernameSuffix);
-        //createdUser = super.createUser(details);
         this.checkUserErrors(userDetails.getUsername());
         this.assignRole(userDetails, UserDetailsService.USER_ROLE);
         this.encodePassword(userDetails);
@@ -149,11 +138,9 @@ public class UserServiceImpl implements UserService {
         createdUser = new UserImpl();
         createdUser.setUserDetails(userDetails);
         this.userDao.save(createdUser);
-
-        //we were able to successfully create a user with the username
         done = true;
       } catch (DuplicateUsernameException e) {
-        //the username is already used so we will try the next possible username
+        // the username already exists; try the next possible username
         continue;
       }
     }
@@ -162,13 +149,12 @@ public class UserServiceImpl implements UserService {
   }
 
   void encodePassword(MutableUserDetails userDetails) {
-    userDetails.setPassword(this.passwordEncoder.encodePassword(userDetails
-      .getPassword(), this.saltSource.getSalt(userDetails)));
+    userDetails.setPassword(this.passwordEncoder.encodePassword(userDetails.getPassword(),
+        this.saltSource.getSalt(userDetails)));
   }
 
   protected void assignRole(MutableUserDetails userDetails, final String role) {
-    GrantedAuthority authority = this.grantedAuthorityDao
-      .retrieveByName(role);
+    GrantedAuthority authority = this.grantedAuthorityDao.retrieveByName(role);
     userDetails.addAuthority(authority);
   }
 
@@ -176,11 +162,9 @@ public class UserServiceImpl implements UserService {
    * Validates user input checks that the data store does not already contain
    * a user with the same username
    *
-   * @param username
-   *            The username to check for in the data store
-   * @throws DuplicateUsernameException
-   *             if the username is the same as a username already in data
-   *             store.
+   * @param username The username to check for in the data store
+   * @throws DuplicateUsernameException if the username is the same as a username already in data
+   * store.
    */
   private void checkUserErrors(final String username)
     throws DuplicateUsernameException {
@@ -190,7 +174,7 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * @see net.sf.sail.webapp.service.UserService#updateUserPassword(net.sf.sail.webapp.domain.User, java.lang.String)
+   * @see UserService#updateUserPassword(User, String)
    */
   @Transactional()
   public User updateUserPassword(User user, String newPassword) {
@@ -198,7 +182,6 @@ public class UserServiceImpl implements UserService {
     userDetails.setPassword(newPassword);
     this.encodePassword(userDetails);
     this.userDao.save(user);
-
     return user;
   }
 
@@ -206,15 +189,15 @@ public class UserServiceImpl implements UserService {
     return this.userDao.getList();
   }
 
-
   /**
-   * @see net.sf.sail.webapp.service.UserService#retrieveAllUsernames()
+   * @see UserService#retrieveAllUsernames()
    */
   public List<String> retrieveAllUsernames() {
     return this.userDao.retrieveAll("userDetails.username");
   }
+
   /**
-   * @see net.sf.sail.webapp.service.UserService#retrieveById(java.lang.Long)
+   * @see UserService#retrieveById(Long)
    */
   @Transactional(readOnly = true)
   public User retrieveById(Long userId) throws ObjectNotFoundException {
@@ -227,18 +210,17 @@ public class UserServiceImpl implements UserService {
   }
 
   /**
-   * @see net.sf.sail.webapp.service.UserService#retrieveByField(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+   * @see UserService#retrieveByField(String, String, Object, String)
    */
   @Transactional()
-  public List<User> retrieveByField(String field, String type, Object term, String classVar){
+  public List<User> retrieveByField(String field, String type, Object term, String classVar) {
     return this.userDao.retrieveByField(field, type, term, classVar);
   }
 
   /**
-   * Given an array of fields and an array of values and classVar, retrieves a list
-   * of Users
+   * Given an array of fields and an array of values and classVar, retrieves a list of Users
    * @param fields an array of field names
-   * @param values an array of values, the index of a value must line up with
+   * @param types an array of values, the index of a value must line up with
    * the index in the field array
    *
    * e.g.
@@ -251,25 +233,23 @@ public class UserServiceImpl implements UserService {
    * @param classVar 'studentUserDetails' or 'teacherUserDetails'
    * @return a list of Users that have matching values for the given fields
    */
-  public List<User> retrieveByFields(String[] fields, String[] types, String classVar){
+  public List<User> retrieveByFields(String[] fields, String[] types, String classVar) {
     return this.userDao.retrieveByFields(fields, types, classVar);
   }
 
   /**
-   * @see net.sf.sail.webapp.service.UserService#retrieveUserByUsername(java.lang.String)
+   * @see UserService#retrieveUserByUsername(String)
    */
   @Override
   public User retrieveUserByUsername(String username) {
     if (username == null || username.isEmpty()) {
       return null;
     }
-    User user = null;
     try {
-      user =  this.userDao.retrieveByUsername(username);
+      return this.userDao.retrieveByUsername(username);
     } catch (EmptyResultDataAccessException e) {
       return null;
     }
-    return user;
   }
 
   /**
@@ -281,5 +261,4 @@ public class UserServiceImpl implements UserService {
   public User retrieveByResetPasswordKey(String resetPasswordKey) {
     return this.userDao.retrieveByResetPasswordKey(resetPasswordKey);
   }
-
 }
