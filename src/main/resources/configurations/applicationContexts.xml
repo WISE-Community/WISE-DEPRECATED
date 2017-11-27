@@ -899,4 +899,8 @@
     <property name="configLocation" value="classpath:ehcache.xml" />
   </bean>
 
+  <bean id="studentUserDetails" class="org.wise.portal.domain.authentication.impl.StudentUserDetails"
+      scope="prototype">
+  </bean>
+
 </beans>

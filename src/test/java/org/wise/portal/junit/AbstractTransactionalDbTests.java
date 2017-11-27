@@ -18,7 +18,11 @@
 package org.wise.portal.junit;
 
 import org.hibernate.SessionFactory;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.wise.portal.spring.SpringConfiguration;
 import org.wise.portal.spring.impl.SpringConfigurationImpl;
 
@@ -28,6 +32,12 @@ import org.wise.portal.spring.impl.SpringConfigurationImpl;
  *
  * @author Cynick Young
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@ContextConfiguration(locations = {
+  "classpath:configurations/dispatcherServletContexts.xml",
+  "classpath:configurations/applicationContexts.xml"
+})
 public abstract class AbstractTransactionalDbTests extends
     AbstractTransactionalJUnit4SpringContextTests {
 

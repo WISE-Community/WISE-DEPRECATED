@@ -27,6 +27,9 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.easymock.EasyMock;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.dao.SaltSource;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
@@ -77,6 +80,7 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 
   private UserDetailsService userDetailsService;
 
+  @Autowired
   private UserService userService;
 
   private StudentUserDetails userDetailsCreate;
@@ -91,6 +95,11 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 
   private static final String DEFAULT_ACCOUNT_ANSWER = "John";
 
+  /**
+   * Create 2 users and attempt to save to DB.
+   * The second user should create a new user with similar username but with an added "a" at the end
+   */
+  @Test
   public void testDuplicateUserErrors() throws Exception {
     StudentUserDetails userDetails = (StudentUserDetails) this.applicationContext
         .getBean("studentUserDetails");
@@ -104,10 +113,6 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
     userDetails.setNumberOfLogins(DEFAULT_NUMBEROFLOGINS);
     userDetails.setAccountQuestion(DEFAULT_ACCOUNT_QUESTION);
     userDetails.setAccountAnswer(DEFAULT_ACCOUNT_ANSWER);
-
-    // create 2 users and attempt to save to DB
-    // second user should create a new user with similar username but with
-    // an added "a"
     this.userService.createUser(userDetails);
 
     StudentUserDetails userDetails2 = (StudentUserDetails) this.applicationContext
@@ -122,13 +127,11 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
     userDetails2.setNumberOfLogins(DEFAULT_NUMBEROFLOGINS);
     userDetails2.setAccountQuestion(DEFAULT_ACCOUNT_QUESTION);
     userDetails2.setAccountAnswer(DEFAULT_ACCOUNT_ANSWER);
-
     this.userService.createUser(userDetails2);
 
     assertEquals(userDetails.getUsername() + userDetails.getUsernameSuffixes()[1],
-        userDetails.getUsername());
+        userDetails2.getUsername());
   }
-
 
   /*
    * This test checks creation of a user within the portal. Tests for system integration are
@@ -146,9 +149,7 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
         .loadUserByUsername(userDetailsCreate.getUsername());
 
     assertEquals(expectedUserDetails.getFirstname(), actual.getFirstname());
-
     assertEquals(expectedUserDetails.getLastname(), actual.getLastname());
-
   }
 
   /*
@@ -169,12 +170,10 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 
     // retrieve user and compare
     MutableUserDetails actual =  (MutableUserDetails) this.userDetailsService
-      .loadUserByUsername(userDetailsCreate.getUsername());
+        .loadUserByUsername(userDetailsCreate.getUsername());
 
     assertEquals(expectedUserDetails.getFirstname(), actual.getFirstname());
-
     assertEquals(expectedUserDetails.getLastname(), actual.getLastname());
-
   }
 
   /*
@@ -191,7 +190,7 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 
     // retrieve user and compare
     UserDetails actual = this.userDetailsService
-      .loadUserByUsername(userDetailsCreate.getUsername());
+        .loadUserByUsername(userDetailsCreate.getUsername());
     assertEquals(expectedUserDetails, actual);
 
     checkPasswordEncoding(actual);
@@ -215,10 +214,9 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 
     User expectedUser = this.userService.createUser(userDetailsCreate);
 
-    MutableUserDetails expectedUserDetails = (MutableUserDetails) expectedUser
-      .getUserDetails();
+    MutableUserDetails expectedUserDetails = expectedUser.getUserDetails();
     UserDetails actual = this.userDetailsService
-      .loadUserByUsername(userDetailsCreate.getUsername());
+        .loadUserByUsername(userDetailsCreate.getUsername());
     assertEquals(expectedUserDetails, actual);
 
     checkPasswordEncoding(actual);
@@ -239,11 +237,11 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
     // since the DAO is being tested and does all the work
     UserDao<User> mockUserDao = EasyMock.createMock(UserDao.class);
     User expectedUser = new UserImpl();
-    EasyMock.expect(mockUserDao.retrieveByUsername(USERNAME)).andReturn(
-      new UserImpl());
+    EasyMock.expect(mockUserDao.retrieveByUsername(USERNAME)).andReturn(new UserImpl());
     EasyMock.replay(mockUserDao);
 
-    UserServiceImpl userService = (UserServiceImpl) this.applicationContext.getBean("userService");
+    UserServiceImpl userService = (UserServiceImpl)
+        this.applicationContext.getBean("userService");
     User returnedUser = userService.retrieveUserByUsername(USERNAME);
     assertNotNull(returnedUser);
     assertEquals(returnedUser, expectedUser);
@@ -251,8 +249,8 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 
     // Now check when USERNAME does not exist in data store
     EasyMock.reset(mockUserDao);
-    EasyMock.expect(mockUserDao.retrieveByUsername(USERNAME)).andThrow(
-      new EmptyResultDataAccessException(1));
+    EasyMock.expect(mockUserDao.retrieveByUsername(USERNAME))
+        .andThrow(new EmptyResultDataAccessException(1));
     EasyMock.replay(mockUserDao);
 
     //userService.setUserDao(mockUserDao);
@@ -262,33 +260,28 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
   }
 
   /**
-   * @param authorityDao
-   *            the authorityDao to set
+   * @param authorityDao the authorityDao to set
    */
-  public void setAuthorityDao(
-    GrantedAuthorityDao<MutableGrantedAuthority> authorityDao) {
+  public void setAuthorityDao(GrantedAuthorityDao<MutableGrantedAuthority> authorityDao) {
     this.authorityDao = authorityDao;
   }
 
   /**
-   * @param userDetailsService
-   *            the userDetailsService to set
+   * @param userDetailsService the userDetailsService to set
    */
   public void setUserDetailsService(UserDetailsService userDetailsService) {
     this.userDetailsService = userDetailsService;
   }
 
   /**
-   * @param userService
-   *            the userService to set
+   * @param userService the userService to set
    */
   public void setUserService(UserService userService) {
     this.userService = userService;
   }
 
   /**
-   * @param userDao
-   *            the userDao to set
+   * @param userDao the userDao to set
    */
   public void setUserDao(UserDao<User> userDao) {
     this.userDao = userDao;
@@ -296,17 +289,16 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
 
   private void setupCreateTest() {
     expectedAuthorityCreate = (MutableGrantedAuthority) this.applicationContext
-      .getBean("mutableGrantedAuthority");
+        .getBean("mutableGrantedAuthority");
     expectedAuthorityCreate.setAuthority(UserDetailsService.USER_ROLE);
     this.authorityDao.save(expectedAuthorityCreate);
     studentAuthority = (MutableGrantedAuthority) this.applicationContext
-      .getBean("mutableGrantedAuthority");
+        .getBean("mutableGrantedAuthority");
     studentAuthority.setAuthority(UserDetailsService.STUDENT_ROLE);
     this.authorityDao.save(studentAuthority);
 
-
     userDetailsCreate = (StudentUserDetails) this.applicationContext
-      .getBean("studentUserDetails");
+        .getBean("studentUserDetails");
     userDetailsCreate.setPassword(PASSWORD);
     userDetailsCreate.setFirstname(FIRSTNAME);
     userDetailsCreate.setLastname(LASTNAME);
@@ -316,14 +308,14 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
     userDetailsCreate.setNumberOfLogins(DEFAULT_NUMBEROFLOGINS);
     userDetailsCreate.setAccountQuestion(DEFAULT_ACCOUNT_QUESTION);
     userDetailsCreate.setAccountAnswer(DEFAULT_ACCOUNT_ANSWER);
-
   }
 
   private void checkRole(UserDetails actual) {
     // check role
     Collection<? extends GrantedAuthority> authorities = actual.getAuthorities();
-    if (authorities == null)
+    if (authorities == null) {
       fail("authorities is null");
+    }
     boolean foundUserRole = false;
     for (GrantedAuthority authority : authorities) {
       if (authority.getAuthority() == UserDetailsService.USER_ROLE) {
@@ -338,12 +330,11 @@ public class UserServiceImplTest extends AbstractTransactionalDbTests {
     // check password encoding
     assertFalse(PASSWORD.equals(actual.getPassword()));
     PasswordEncoder passwordEncoder = (PasswordEncoder) this.applicationContext
-      .getBean("passwordEncoder");
+        .getBean("passwordEncoder");
     SaltSource saltSource = (SaltSource) this.applicationContext
-      .getBean("systemSaltSource");
-    String encodedPassword = passwordEncoder.encodePassword(PASSWORD,
-      saltSource.getSalt(userDetailsCreate));
+        .getBean("systemSaltSource");
+    String encodedPassword = passwordEncoder.encodePassword(
+        PASSWORD, saltSource.getSalt(userDetailsCreate));
     assertEquals(encodedPassword, actual.getPassword());
   }
-
 }
