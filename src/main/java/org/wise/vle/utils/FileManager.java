@@ -2664,22 +2664,15 @@ public class FileManager {
   }
 
   /**
-   * Get the full project file path
+   * Get the full path to the project json file
    * @param project the project object
    * @return the full project file path
-   * e.g.
-   * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
+   * e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
    */
   public static String getProjectFilePath(Project project) {
-    String projectFilePath = null;
-
-    if(project != null) {
-      String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-      String projectUrl = (String) project.getModulePath();
-      projectFilePath = curriculumBaseDir + projectUrl;
-    }
-
-    return projectFilePath;
+    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String projectModulePath = project.getModulePath();
+    return curriculumBaseDir + projectModulePath;
   }
 
   /**
