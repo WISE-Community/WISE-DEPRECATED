@@ -90,7 +90,8 @@ public class FileManager {
     try {
       // Read properties file.
       wiseProperties = new Properties();
-      wiseProperties.load(FileManager.class.getClassLoader().getResourceAsStream("wise.properties"));
+      wiseProperties.load(
+          FileManager.class.getClassLoader().getResourceAsStream("wise.properties"));
     } catch (Exception e) {
       System.err.println("FileManager could not read in wiseProperties file");
       e.printStackTrace();
@@ -108,15 +109,15 @@ public class FileManager {
     List<String> projects = new ArrayList<String>();
     String projectList = "";
 
-    if(paths!=null && paths.length>0){
-      for(int p=0;p<paths.length;p++){
+    if (paths != null && paths.length > 0) {
+      for (int p = 0; p < paths.length; p++) {
         getProjectFiles(new File(paths[p]), projects, visited, projectExt);
       }
       CompareByLastModified compareByLastModified = new CompareByLastModified();
       Collections.sort(projects, compareByLastModified);
-      for(int q=0;q<projects.size();q++){
+      for (int q= 0;q<projects.size();q++) {
         projectList += projects.get(q);
-        if(q!=projects.size()-1){
+        if (q!=projects.size()-1) {
           projectList += "|";
         }
       }
@@ -130,24 +131,24 @@ public class FileManager {
    * Given a file, a List of projects, and a list of visited directories, recursively adds
    * any project files to the list of projects that are in any subdirectories (n-deep).
    *
-   * @param file
+   * @param f
    * @param projects
    * @param visited
    * @throws IOException
    */
   public static void getProjectFiles(File f, List<String> projects, List<String> visited, String projectExt) throws IOException{
-    if(f.exists() && !visited.contains(f.getCanonicalPath())){
-      if(f.isFile()){
-        if(f.getName().endsWith(projectExt)){
+    if (f.exists() && !visited.contains(f.getCanonicalPath())) {
+      if (f.isFile()) {
+        if (f.getName().endsWith(projectExt)) {
           projects.add(f.getAbsolutePath());
         } else {
           return;
         }
-      } else if(f.isDirectory()){
+      } else if (f.isDirectory()) {
         visited.add(f.getCanonicalPath());
-        if(!f.getCanonicalPath().contains(".svn")){
+        if (!f.getCanonicalPath().contains(".svn")) {
           String children[] = f.list();
-          for(int y=0;y<children.length;y++){
+          for (int y = 0; y < children.length; y++) {
             getProjectFiles(new File(f, children[y]), projects, visited, projectExt);
           }
         }
@@ -162,15 +163,14 @@ public class FileManager {
   /**
    * A Comparator that compares two <code>String</code> paths by the date it was last modified.
    */
-  public static class CompareByLastModified implements Comparator<String>{
-
+  public static class CompareByLastModified implements Comparator<String> {
     public int compare(String arg0, String arg1) {
       File file1 = new File(arg0);
       File file2 = new File(arg1);
 
-      if(file1.lastModified() == file2.lastModified()){
+      if (file1.lastModified() == file2.lastModified()) {
         return 0;
-      } else if(file1.lastModified() > file2.lastModified()){
+      } else if (file1.lastModified() > file2.lastModified()) {
         return -1;
       } else {
         return 1;
@@ -184,8 +184,8 @@ public class FileManager {
    *
    * @return boolean
    */
-  public static boolean ensureDir(File file){
-    if(file.isDirectory()){
+  public static boolean ensureDir(File file) {
+    if (file.isDirectory()) {
       return true;
     } else {
       return file.mkdir();
@@ -203,9 +203,9 @@ public class FileManager {
    * @throws <code>IOException</code>
    */
   public static void writeFile(File file, String data, boolean overwrite) throws IOException{
-    if(!file.exists() || overwrite){
+    if (!file.exists() || overwrite) {
       /* create a new file if it doesn't exist */
-      if(!file.exists()){
+      if (!file.exists()) {
         file.createNewFile();
       }
 
@@ -244,12 +244,13 @@ public class FileManager {
   public static String getFileText(File file) throws IOException {
     String result = "error";
 
-    if(file.exists()){
-      BufferedReader br = new BufferedReader( new InputStreamReader(new FileInputStream(file), "UTF8"));
+    if (file.exists()) {
+      BufferedReader br = new BufferedReader(
+          new InputStreamReader(new FileInputStream(file), "UTF8"));
 
       String current = br.readLine();
       String fullText = "";
-      while(current != null){
+      while (current != null) {
         fullText += current + System.getProperty("line.separator");
         current = br.readLine();
       }
@@ -290,18 +291,15 @@ public class FileManager {
    * @return the text that specifies whether we were successful or not
    * @throws IOException
    */
-  public static String updateFile(String projectFolderPath, String fileName, String data) throws IOException {
+  public static String updateFile(String projectFolderPath, String fileName, String data)
+      throws IOException {
     String result = "not authorized";
-
     File dir = new File(projectFolderPath);
-    if(dir.exists()) {
+    if (dir.exists()) {
       File file = new File(dir, fileName);
-
       writeFile(file, data, true);
-
       result = "success";
     }
-
     return result;
   }
 
@@ -319,11 +317,10 @@ public class FileManager {
    * @throws JSONException
    * @throws ServletException
    */
-  public static String createProject(String curriculumBaseDir, String projectName) throws IOException, ServletException {
+  public static String createProject(String curriculumBaseDir, String projectName)
+      throws IOException, ServletException {
     String result = "";
-
     File parent = new File(curriculumBaseDir);
-
     ensureDir(parent);
 
     //all project json files will be given the filename of wise4.project.json
@@ -336,18 +333,12 @@ public class FileManager {
     File newFile = new File(newProjectPath, "wise4.project.json");
 
     try {
-      //write the empty project json to the file
       writeFile(newFile, Template.getProjectTemplate(projectName).toString(3), false);
 
-      //get the folder name e.g. 513
       String folder = newFile.getParentFile().getName();
-
-      //get the file name e.g. wise4.project.json
       String fileName = newFile.getName();
-
-      //return the path to the file
       result = "/" + folder + "/" + fileName;
-    } catch(JSONException e) {
+    } catch (JSONException e) {
       e.printStackTrace();
     }
 
@@ -361,8 +352,6 @@ public class FileManager {
    * e.g.
    * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
    *
-   * @param projectName the project name
-   *
    * @return int
    * @throws IOException
    * @throws JSONException
@@ -370,36 +359,22 @@ public class FileManager {
    */
   public static String createWISE5Project(String curriculumBaseDir) {
     String result = "";
-
     File parent = new File(curriculumBaseDir);
-
     ensureDir(parent);
-
-    // get the path to the new project
     File newProjectPath = createNewprojectPath(parent);
-
-    // also make assets directory
     File newProjectAssetsDir = new File(newProjectPath, "assets");
     newProjectAssetsDir.mkdir();
 
     File newFile = new File(newProjectPath, "project.json");
 
     try {
-      //write the empty project json to the file
       writeFile(newFile, "", false);
-
-      //get the folder name e.g. 513
       String folder = newFile.getParentFile().getName();
-
-      //get the file name e.g. project.json
       String fileName = newFile.getName();
-
-      //return the path to the file e.g. /513/project.json
       result = "/" + folder + "/" + fileName;
-    } catch(IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
-
     return result;
   }
 
@@ -410,12 +385,12 @@ public class FileManager {
    * @param parent
    * @return
    */
-  public static File createNewprojectPath(File parent){
+  public static File createNewprojectPath(File parent) {
     Integer counter = 1;
 
-    while(true){
+    while (true) {
       File tryMe = new File(parent, String.valueOf(counter));
-      if(!tryMe.exists()){
+      if (!tryMe.exists()) {
         tryMe.mkdir();
         return tryMe;
       }
@@ -441,7 +416,8 @@ public class FileManager {
    * @throws IOException
    * @throws ServletException
    */
-  public static String createNode(String projectPath, String nodeClass, String title, String type, String nodeTemplateParams) throws IOException, ServletException{
+  public static String createNode(String projectPath, String nodeClass, String title, String type,
+      String nodeTemplateParams) throws IOException, ServletException {
     /*
      * the node name, "nodeNotProject" is the default value to return
      * which means there was an error creating the file. this variable
@@ -450,12 +426,12 @@ public class FileManager {
     String nodeName = "nodeNotProject";
 
     File dir = new File(projectPath).getParentFile();
-    if(dir.exists()){
+    if (dir.exists()) {
       try {
         //create the JSONArray of files to create
         JSONArray filesToCreate = new JSONArray(nodeTemplateParams);
 
-        if(filesToCreate != null) {
+        if (filesToCreate != null) {
 
           /*
            * get the root of the file name for the files we are about to make
@@ -463,25 +439,19 @@ public class FileManager {
            */
           String fileNamePrefix = getUniqueFileNamePrefix(dir);
 
-          //loop through each file to create
-          for(int x=0; x<filesToCreate.length(); x++) {
-            //get the a file to create
+          for (int x = 0; x < filesToCreate.length(); x++) {
             JSONObject fileToCreate = filesToCreate.getJSONObject(x);
-
-            //get the extension for the file type
             String nodeExtension = fileToCreate.getString("nodeExtension");
-
-            //get the content to put in the file
             String nodeTemplateContent = fileToCreate.getString("nodeTemplateContent");
 
-            if(nodeExtension != null && !nodeExtension.equals("") &&
+            if (nodeExtension != null && !nodeExtension.equals("") &&
               nodeTemplateContent != null && !nodeTemplateContent.equals("")) {
               /*
                * whether this is the main file for this step.
                */
               boolean mainNodeFile = false;
 
-              if(filesToCreate.length() == 1) {
+              if (filesToCreate.length() == 1) {
                 //in most cases there is only one file to create so it will be the main file
                 mainNodeFile = true;
               } else {
@@ -495,14 +465,9 @@ public class FileManager {
                 mainNodeFile = fileToCreate.getBoolean("mainNodeFile");
               }
 
-              //create the file handle e.g. 'node_1.or'
               File file = new File(dir, fileNamePrefix + "." + nodeExtension);
-
-              //write the contents to the file
               writeFile(file, nodeTemplateContent, false);
-
-              //add the node to the project
-              if(mainNodeFile && addNodeToProject(new File(projectPath), Template.getProjectNodeTemplate(type, file.getName(), title, nodeClass))){
+              if (mainNodeFile && addNodeToProject(new File(projectPath), Template.getProjectNodeTemplate(type, file.getName(), title, nodeClass))) {
                 nodeName = file.getName();
               }
             }
@@ -527,39 +492,39 @@ public class FileManager {
    * @throws ServletException
    */
   public static String getExtension(String type) throws ServletException {
-    if(type.equals("BrainstormNode")){
+    if (type.equals("BrainstormNode")) {
       return ".bs";
-    } else if(type.equals("FillinNode")){
+    } else if (type.equals("FillinNode")) {
       return ".fi";
-    } else if(type.equals("HtmlNode") || type.equals("DrawNode")){
+    } else if (type.equals("HtmlNode") || type.equals("DrawNode")) {
       return ".ht";
-    } else if(type.equals("MySystemNode")){
+    } else if (type.equals("MySystemNode")) {
       return ".my";
-    } else if(type.equals("MatchSequenceNode")){
+    } else if (type.equals("MatchSequenceNode")) {
       return ".ms";
-    } else if(type.equals("MultipleChoiceNode")){
+    } else if (type.equals("MultipleChoiceNode")) {
       return ".mc";
-    } else if(type.equals("NoteNode") || type.equals("OpenResponseNode")){
+    } else if (type.equals("NoteNode") || type.equals("OpenResponseNode")) {
       return ".or";
-    } else if(type.equals("OutsideUrlNode")){
+    } else if (type.equals("OutsideUrlNode")) {
       return ".ou";
-    } else if(type.equals("DataGraphNode")){
+    } else if (type.equals("DataGraphNode")) {
       return ".dg";
-    } else if(type.equals("SVGDrawNode")){
+    } else if (type.equals("SVGDrawNode")) {
       return ".sd";
-    } else if(type.equals("AnnotatorNode")){
+    } else if (type.equals("AnnotatorNode")) {
       return ".an";
-    } else if(type.equals("MWNode")){
+    } else if (type.equals("MWNode")) {
       return ".mw";
-    } else if(type.equals("AssessmentListNode")){
+    } else if (type.equals("AssessmentListNode")) {
       return ".al";
-    } else if(type.equals("ChallengeNode")){
+    } else if (type.equals("ChallengeNode")) {
       return ".ch";
-    } else if(type.equals("BranchNode")){
+    } else if (type.equals("BranchNode")) {
       return ".br";
-    } else if(type.equals("SensorNode")) {
+    } else if (type.equals("SensorNode")) {
       return ".se";
-    } else if(type.equals("ExplanationBuilderNode")) {
+    } else if (type.equals("ExplanationBuilderNode")) {
       return ".eb";
     } else {
       //throw new ServletException("I don't know how to handle nodes of type: " + type);
@@ -574,8 +539,8 @@ public class FileManager {
    * @param filename
    * @return String - extension
    */
-  public String getFileExtension(String filename){
-    if(filename.lastIndexOf(".")==-1){
+  public String getFileExtension(String filename) {
+    if (filename.lastIndexOf(".") == -1) {
       return filename;
     } else {
       return filename.substring(filename.lastIndexOf("."), filename.length());
@@ -590,13 +555,13 @@ public class FileManager {
    * @param ext
    * @return File
    */
-  public static File generateUniqueFile(File parent, String ext){
+  public static File generateUniqueFile(File parent, String ext) {
     String name = "node_";
     int count = 0;
 
-    while(true){
+    while (true) {
       File file = new File(parent, name + count + ext);
-      if(!file.exists() && !duplicateName(parent, name + count)){
+      if (!file.exists() && !duplicateName(parent, name + count)) {
         return file;
       }
       count ++;
@@ -613,13 +578,13 @@ public class FileManager {
     String name = "node_";
     int count = 0;
 
-    while(true){
-      //check if the file name prefix has been used yet
-      if(!duplicateName(parent, name + count)){
-        //it has not been used yet so we can return it
+    while (true) {
+      // check if the file name prefix has been used yet
+      if (!duplicateName(parent, name + count)) {
+        // it has not been used yet so we can return it
         return name + count;
       }
-      count ++;
+      count++;
     }
   }
 
@@ -632,19 +597,15 @@ public class FileManager {
    * @param name
    * @return boolean
    */
-  public static boolean duplicateName(File parent, String name){
+  public static boolean duplicateName(File parent, String name) {
     String[] children = parent.list();
-    for(int i=0;i<children.length;i++){
+    for (int i = 0; i < children.length; i++) {
       File childFile = new File(parent, children[i]);
-      if(!childFile.isDirectory()){
-        //find the last index of dot
+      if (!childFile.isDirectory()) {
         int lastIndexOfDot = children[i].lastIndexOf(".");
-
-        if(lastIndexOfDot != -1) {
-          //the filename contains a dot
-
+        if (lastIndexOfDot != -1) {
           String childName = children[i].substring(0, children[i].lastIndexOf("."));
-          if(childName.equals(name)){
+          if (childName.equals(name)) {
             return true;
           }
         }
@@ -665,12 +626,12 @@ public class FileManager {
    * @throws IOException
    */
   public static boolean addNodeToProject(File parent, JSONObject node) throws IOException{
-    try{
+    try {
       JSONObject project = new JSONObject(getFileText(parent));
       project.getJSONArray("nodes").put(node);
       writeFile(parent, project.toString(3), true);
       return true;
-    } catch(JSONException e){
+    } catch (JSONException e) {
       e.printStackTrace();
       throw new IOException("Unable to add node to project.");
     }
@@ -725,11 +686,11 @@ public class FileManager {
    * @throws <code>IOException</code>
    */
   public static void addSequenceToProject(File projectFile, JSONObject sequence) throws IOException{
-    try{
+    try {
       JSONObject project = new JSONObject(getFileText(projectFile));
       project.getJSONArray("sequences").put(sequence);
       writeFile(projectFile, project.toString(3), true);
-    } catch(JSONException e){
+    } catch (JSONException e) {
       e.printStackTrace();
       throw new IOException("Could not insert new sequence in project file.");
     }
@@ -766,7 +727,7 @@ public class FileManager {
    */
   public static String removeFile(String projectFolderPath, String fileName) throws IOException{
     File child = new File(new File(projectFolderPath), fileName);
-    if(child.exists() && child.delete()){
+    if (child.exists() && child.delete()) {
       return "success";
     } else {
       return "failure";
@@ -788,9 +749,9 @@ public class FileManager {
     String result = "";
 
     File srcDir = new File(projectFolderPath);
-    if(srcDir.exists() && srcDir.isDirectory()) {
+    if (srcDir.exists() && srcDir.isDirectory()) {
       File destDir;
-      if(curriculumBaseDir != null && curriculumBaseDir != ""){
+      if (curriculumBaseDir != null && curriculumBaseDir != "") {
         destDir = createNewprojectPath(new File(curriculumBaseDir));
       } else {
         destDir = createNewprojectPath(srcDir.getParentFile());
@@ -815,13 +776,13 @@ public class FileManager {
    * @throws IOException
    */
   public static void copy(File src, File dest) throws FileNotFoundException, IOException {
-    if(src.isDirectory()){
-      if(!dest.exists()){
+    if (src.isDirectory()) {
+      if (!dest.exists()) {
         dest.mkdir();
       }
 
       String[] files = src.list();
-      for(int a=0;a<files.length;a++){
+      for (int a= 0;a<files.length;a++) {
         copy(new File(src, files[a]), new File(dest, files[a]));
       }
     } else {
@@ -830,7 +791,7 @@ public class FileManager {
 
       byte[] buffer = new byte[2048];
       int len;
-      while((len = in.read(buffer)) > 0){
+      while ((len = in.read(buffer)) > 0) {
         out.write(buffer, 0, len);
       }
 
@@ -862,21 +823,21 @@ public class FileManager {
     String fullProjectFilePath = projectFolderPath + projectFileName;
 
     File dir = new File(fullProjectFilePath).getParentFile();
-    if(dir.exists()){
+    if (dir.exists()) {
       File file = generateUniqueFile(dir, getExtension(type));
 
 
       /* if this is an html type, change the src filename */
-      if(type.equals("HtmlNode") || type.equals("DrawNode") || type.equals("MySystemNode")){
-        try{
+      if (type.equals("HtmlNode") || type.equals("DrawNode") || type.equals("MySystemNode")) {
+        try {
           File content = new File(dir, contentFile);
-          if(content.exists()){
+          if (content.exists()) {
             writeFile(new File(dir, file.getName() + "ml"), getFileText(content), false);
           }
           JSONObject node = new JSONObject(data);
           node.put("src", file.getName() + "ml");
           writeFile(file, node.toString(3), false);
-        } catch(JSONException e){
+        } catch (JSONException e) {
           throw new ServletException(e);
         }
       } else {
@@ -884,13 +845,13 @@ public class FileManager {
       }
 
       File parent = new File(fullProjectFilePath);
-      try{
-        if(addNodeToProject(parent, Template.getProjectNodeTemplate(type, file.getName(), title, nodeClass))){
+      try {
+        if (addNodeToProject(parent, Template.getProjectNodeTemplate(type, file.getName(), title, nodeClass))) {
           result = file.getName();
         } else {
           throw new IOException("New node file created: " + file.getName() + "  but could not update project file.");
         }
-      } catch (JSONException e){
+      } catch (JSONException e) {
         e.printStackTrace();
         throw new IOException("New node file created: " + file.getName() + "  but could not update project file.");
       }
@@ -912,21 +873,17 @@ public class FileManager {
    */
   public static String createSequenceFromJSON(String projectFolderPath, String projectFileName, String data) throws IOException, ServletException {
     String result = "";
-
     String fullProjectFilePath = projectFolderPath + projectFileName;
-
     File projectFile = new File(fullProjectFilePath);
-    try{
+    try {
       JSONObject sequence = new JSONObject(data);
       JSONObject project = new JSONObject(getFileText(projectFile));
       project.getJSONArray("sequences").put(sequence);
-
       writeFile(projectFile, project.toString(3), true);
       result = "success";
-    } catch(JSONException e){
+    } catch (JSONException e) {
       throw new ServletException(e);
     }
-
     return result;
   }
 
@@ -939,16 +896,14 @@ public class FileManager {
    */
   public static String getScripts(ServletContext context, String data) throws IOException{
     String[] scripts = data.split("~");
-
     StringBuffer scriptsText = new StringBuffer();
-
     String out = "";
 
-    for(String script : scripts){
+    for (String script : scripts) {
       InputStream is = context.getResourceAsStream("/" + script);
-      if(is != null){
+      if (is != null) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        while((out = reader.readLine())!=null){
+        while ((out = reader.readLine()) != null) {
           scriptsText.append(out);
           scriptsText.append("\n");
         }
@@ -957,7 +912,6 @@ public class FileManager {
 
     scriptsText.append("scriptloader.scriptAvailable(scriptloader.baseUrl + \"vle/filemanager.html?command=getScripts&param1=" + data + "\");");
     scriptsText.append("\n");
-
     return scriptsText.toString();
   }
 
@@ -1078,9 +1032,8 @@ public class FileManager {
     //get all the node ids from the parent project
     Set<String> parentKeySet = parentNodeIdToStepNumber.keySet();
 
-    //loop through all the sequences and nodes in the parent project
     Iterator<String> parentIdIterator = parentKeySet.iterator();
-    while(parentIdIterator.hasNext()) {
+    while (parentIdIterator.hasNext()) {
       //get a node id
       String parentId = parentIdIterator.next();
 
@@ -1091,64 +1044,38 @@ public class FileManager {
       String nodeType = "";
 
       try {
-        //get the JSONObject for the node
         JSONObject parentNode = parentNodeIdToNodeOrSequence.get(parentId);
-
-        //get the title and node type
         title = parentNode.getString("title");
         nodeType = parentNode.getString("type");
       } catch (JSONException e) {
         e.printStackTrace();
       }
 
-      //create a NodeInfo object with the info from the node
       NodeInfo parentNodeInfo = new NodeInfo(stepNumber, parentId, title, nodeType, "parent");
-
-      //add the NodeInfo to the collection
       childAndParentNodes.add(parentNodeInfo);
-
-      //add the node id to the collection
       nodeIdsAdded.add(parentId);
     }
 
-    //get all the nod ids from the child project
     Set<String> childKeySet = childNodeIdToStepNumber.keySet();
-
-    //loop through all the sequences and nodes in the child project
     Iterator<String> childIdIterator = childKeySet.iterator();
-
-    while(childIdIterator.hasNext()) {
-      //get a node id
+    while (childIdIterator.hasNext()) {
       String childId = childIdIterator.next();
-
-      //get the step number for this node id
       String stepNumber = childNodeIdToStepNumber.get(childId);
 
       String title = "";
       String nodeType = "";
 
       try {
-        //get the JSONObject for the node
         JSONObject childNode = childNodeIdToNodeOrSequence.get(childId);
-
-        //get the title and node type
         title = childNode.getString("title");
         nodeType = childNode.getString("type");
       } catch (JSONException e) {
         e.printStackTrace();
       }
 
-      //check if we have already added a node with this node id
-      if(!nodeIdsAdded.contains(childId)) {
-        //we have not added it before
-
-        //create a NodeInfo object with the info from the node
+      if (!nodeIdsAdded.contains(childId)) {
         NodeInfo childNodeInfo = new NodeInfo(stepNumber, childId, title, nodeType, "child");
-
-        //add the NodeInfo to the collection
         childAndParentNodes.add(childNodeInfo);
-
-        //add the node id to the collection
         nodeIdsAdded.add(childId);
       }
     }
@@ -1159,13 +1086,9 @@ public class FileManager {
      */
     JSONArray nodeStatuses = new JSONArray();
 
-    //loop through all the NodeInfo objects
     Iterator<NodeInfo> childAndParentNodesIterator = childAndParentNodes.iterator();
-    while(childAndParentNodesIterator.hasNext()) {
-      //get a node
+    while (childAndParentNodesIterator.hasNext()) {
       NodeInfo node = childAndParentNodesIterator.next();
-
-      //get the info from the node
       String nodeId = node.getNodeId();
       String stepNumber = node.getStepNumber();
       String title = node.getTitle();
@@ -1177,18 +1100,17 @@ public class FileManager {
       //get whether the node was modified ("true" or "false")
       String modified = nodeIdToModified.get(nodeId);
 
-      if(status == null) {
+      if (status == null) {
         //if there is no status value it means it was not moved
         status = "not moved";
       }
 
-      if(modified == null) {
+      if (modified == null) {
         //if there was no modified value it means it was not modified
         modified = "false";
       }
 
       try {
-        //put all the values for this node into a JSONObject
         JSONObject nodeStatus = new JSONObject();
         nodeStatus.put("stepNumber", stepNumber);
         nodeStatus.put("title", title);
@@ -1196,15 +1118,11 @@ public class FileManager {
         nodeStatus.put("status", status);
         nodeStatus.put("modified", modified);
         nodeStatus.put("nodeType", nodeType);
-
-        //add the node to the array
         nodeStatuses.put(nodeStatus);
       } catch (JSONException e) {
         e.printStackTrace();
       }
     }
-
-    //return the status array to the client
     return nodeStatuses.toString();
   }
 
@@ -1286,18 +1204,13 @@ public class FileManager {
     JSONArray nodeIdsArray = null;
 
     try {
-      //get all the file names in an array
       nodeIdsArray = new JSONArray(nodeIds);
 
-      //loop through all the file names
-      for(int x=0; x<nodeIdsArray.length(); x++) {
-        //get node id
+      for (int x = 0; x < nodeIdsArray.length(); x++) {
         String nodeId = nodeIdsArray.getString(x);
-
-        //get the node object in the "from" project
         JSONObject fromNode = getNodeById(fromProjectJSON, nodeId);
 
-        if(fromNode != null) {
+        if (fromNode != null) {
           //get the attributes of the node in the "from" project
           String type = fromNode.optString("type");
           String id = nodeId;
@@ -1308,7 +1221,7 @@ public class FileManager {
           //make sure the file exists in the fromProjectFolder
           File fileToImport = new File(fromProjectFolder, fileName);
 
-          if(fileToImport.exists()) {
+          if (fileToImport.exists()) {
             //get the content from the step
             String fileContent = FileUtils.readFileToString(fileToImport);
 
@@ -1325,14 +1238,14 @@ public class FileManager {
              * check if we are importing a .ht or .wa file since we also need to
              * import the associated .html file
              */
-            if(fileNameExtension.equals(".ht")) {
+            if (fileNameExtension.equals(".ht")) {
               //get the html file name
               String htmlFileName = fileName + "ml";
 
               //get a handle on the html file in the "from" project
               File htmlFileToImport = new File(fromProjectFolder, htmlFileName);
 
-              if(htmlFileToImport.exists()) {
+              if (htmlFileToImport.exists()) {
                 //get the contents of the html file
                 String htmlString = FileUtils.readFileToString(htmlFileToImport);
 
@@ -1366,15 +1279,15 @@ public class FileManager {
                  */
                 fileContent = fileContent.replaceAll(htmlFileName, newHtmlFileName);
               }
-            } else if(fileNameExtension.equals(".wa")) {
+            } else if (fileNameExtension.equals(".wa")) {
               //we are importing a webapp step so we need to also import the associated .html file
 
-              if(fileContent != null) {
+              if (fileContent != null) {
                 try {
                   //get the step content
                   JSONObject fileContentJSON = new JSONObject(fileContent);
 
-                  if(fileContentJSON != null) {
+                  if (fileContentJSON != null) {
                     //get the file name of the associated .html file
                     String fromAssetFileName = fileContentJSON.getString("url");
 
@@ -1391,13 +1304,13 @@ public class FileManager {
                     String toAssetFileName = importAssetInContent(fromAssetFileName, toAssetFileContent, fromProjectAssetsFolder, toProjectAssetsFolder);
 
                     //replace references to the file name in the content if we changed the file name
-                    if(fromAssetFileName != null && toAssetFileName != null &&
+                    if (fromAssetFileName != null && toAssetFileName != null &&
                       !fromAssetFileName.equals(toAssetFileName)) {
                       fileContent = fileContent.replaceAll(fromAssetFileName, toAssetFileName);
                     }
                   }
 
-                } catch(JSONException e) {
+                } catch (JSONException e) {
 
                 }
               }
@@ -1451,18 +1364,15 @@ public class FileManager {
      * group(2)=myPicture.jpg
      */
     Pattern p = Pattern.compile("\\\\?[\\\"'](\\./)?assets/([^\\\"'\\\\]+)\\\\?[\\\"']");
-
-    //run the matcher
     Matcher m = p.matcher(content);
 
-    //loop through all the matches
-    while(m.find()) {
-      if(m.groupCount() == 2) {
+    while (m.find()) {
+      if (m.groupCount() == 2) {
         //the file name e.g. myPicture.jpg
         String fromAssetFileName = m.group(2);
 
-        if(fromAssetFileName != null && !fromAssetFileName.isEmpty()) {
-          if(fromAssetFileName.contains("?")) {
+        if (fromAssetFileName != null && !fromAssetFileName.isEmpty()) {
+          if (fromAssetFileName.contains("?")) {
             /*
              * the file name contains GET params e.g. sunlight.jpg?w=12&h=12
              * so we will remove everything after the ?
@@ -1474,7 +1384,7 @@ public class FileManager {
           String toAssetFileName = importAssetInContent(fromAssetFileName, null, fromProjectAssetsFolder, toProjectAssetsFolder);
 
           //replace references to the file name in the content if we changed the file name
-          if(fromAssetFileName != null && toAssetFileName != null &&
+          if (fromAssetFileName != null && toAssetFileName != null &&
             !fromAssetFileName.equals(toAssetFileName)) {
             content = content.replaceAll(fromAssetFileName, toAssetFileName);
           }
@@ -1513,22 +1423,18 @@ public class FileManager {
      * group(2)=Heat.png
      */
     Pattern p = Pattern.compile("(src|href)=[\"'](?!http)([^\"'\\?]*)[^\"']*[\"']");
-
-    //run the matcher
     Matcher m = p.matcher(content);
 
-    //loop through all the matches
-    while(m.find()) {
-      if(m.groupCount() == 2) {
-        //get the captured group 2
+    while (m.find()) {
+      if (m.groupCount() == 2) {
         String fromAssetFileName = m.group(2);
 
-        if(fromAssetFileName != null && !fromAssetFileName.isEmpty()) {
+        if (fromAssetFileName != null && !fromAssetFileName.isEmpty()) {
           //import the asset file into the project asset folder
           String toAssetFileName = importAssetInContent(fromAssetFileName, null, fromProjectAssetsFolder, toProjectAssetsFolder);
 
           //replace references to the file name in the content if we changed the file name
-          if(fromAssetFileName != null && toAssetFileName != null &&
+          if (fromAssetFileName != null && toAssetFileName != null &&
             !fromAssetFileName.equals(toAssetFileName)) {
             content = content.replaceAll(fromAssetFileName, toAssetFileName);
           }
@@ -1560,7 +1466,7 @@ public class FileManager {
     File fromAsset = new File(fromProjectAssetsFolder, fromAssetFileName);
 
     //make sure the file exists in the "from" project
-    if(fromAsset.exists()) {
+    if (fromAsset.exists()) {
       toAssetFileName = fromAssetFileName;
 
       //create the file handle for the "to" file
@@ -1577,12 +1483,9 @@ public class FileManager {
        *    if the content is different, we will look for another file name to use.
        * if the file does not exist, we will make it.
        */
-      while(!assetCompleted) {
-        if(toAsset.exists()) {
-          //file already exists
-
+      while (!assetCompleted) {
+        if (toAsset.exists()) {
           try {
-            //get the to asset file content
             toAssetFileContent = FileUtils.readFileToString(toAsset);
           } catch (IOException e1) {
             e1.printStackTrace();
@@ -1590,27 +1493,25 @@ public class FileManager {
 
           try {
             boolean contentMatches = false;
-
-            if(fromAssetFileContent != null) {
+            if (fromAssetFileContent != null) {
               /*
                * the from asset file content was passed in so we will compare it with
                * the to asset file content
                */
-              if(fromAssetFileContent.equals(toAssetFileContent)) {
+              if (fromAssetFileContent.equals(toAssetFileContent)) {
                 //the file content matches
                 contentMatches = true;
               }
-            } else if(FileUtils.contentEquals(fromAsset, toAsset)) {
+            } else if (FileUtils.contentEquals(fromAsset, toAsset)) {
               /*
                * the from asset file content was not passed in so we will compare
                * the contents from their file handles
                */
 
-              //the file content matches
               contentMatches = true;
             }
 
-            if(contentMatches) {
+            if (contentMatches) {
               //files are the same so we do not need to do anything
               assetCompleted = true;
             } else {
@@ -1632,7 +1533,7 @@ public class FileManager {
           //file does not exist so we will copy the file to the "to" assets folder
 
           try {
-            if(fromAssetFileContent != null) {
+            if (fromAssetFileContent != null) {
               //the content was passed in so we will use it
               FileUtils.write(toAsset, fromAssetFileContent);
             } else {
@@ -1640,8 +1541,6 @@ public class FileManager {
                * the content was not passed in so we will use the content
                * obtained from the file handle
                */
-
-              //copy the file into our new asset file
               FileUtils.copyFile(fromAsset, toAsset);
             }
 
@@ -1695,23 +1594,14 @@ public class FileManager {
    */
   public static JSONObject getNodeById(JSONObject projectJSON, String nodeId) {
     JSONObject node = null;
-
-    if(nodeId != null && !nodeId.equals("")) {
+    if (nodeId != null && !nodeId.equals("")) {
       try {
-        //get the array of nodes in the project
         JSONArray fromProjectNodes = projectJSON.getJSONArray("nodes");
-
-        //loop through all the nodes in the project
-        for(int x=0; x<fromProjectNodes.length(); x++) {
-          //get a node
+        for (int x = 0; x < fromProjectNodes.length(); x++) {
           JSONObject tempNode = fromProjectNodes.getJSONObject(x);
-
-          if(tempNode != null) {
-            //get the node id
+          if (tempNode != null) {
             String id = tempNode.getString("identifier");
-
-            if(nodeId.equals(id)) {
-              //the node id matches the one we want so we are done searching
+            if (nodeId.equals(id)) {
               node = tempNode;
               break;
             }
@@ -1721,7 +1611,6 @@ public class FileManager {
         e.printStackTrace();
       }
     }
-
     return node;
   }
 
@@ -1735,16 +1624,9 @@ public class FileManager {
    * @param projectUrl
    */
   public static void renameFolder(String projectUrl) {
-    //get a handle on the folder
     File originalFolder = new File(projectUrl);
-
-    //get the current time
     Date date = new Date();
-
-    //create a handle to the new folder name
     File backupFolder = new File(projectUrl + "-" + date.getTime());
-
-    //rename the original folder to the new folder name
     originalFolder.renameTo(backupFolder);
   }
 
@@ -1757,40 +1639,21 @@ public class FileManager {
    */
   public static void copyFile(File sourceLocation, File targetLocation) throws IOException {
     if (sourceLocation.isDirectory()) {
-      //current file is a folder
-
       if (!targetLocation.exists()) {
-        //make the folder in the target folder if it does not already exist
         targetLocation.mkdir();
       }
-
-      //get the files in the folder
       String[] children = sourceLocation.list();
-
-      //loop through all the files
-      for (int i=0; i<children.length; i++) {
-        //copy the file
-        copyFile(new File(sourceLocation, children[i]),
-          new File(targetLocation, children[i]));
+      for (int i = 0; i < children.length; i++) {
+        copyFile(new File(sourceLocation, children[i]), new File(targetLocation, children[i]));
       }
     } else {
-      //current file is a file
-
-      //create stream to read from the source and write to the target
       InputStream in = new FileInputStream(sourceLocation);
       OutputStream out = new FileOutputStream(targetLocation);
-
-      //buffer to hold the bytes to copy
       byte[] buf = new byte[1024];
       int len;
-
-      //loop through all the bytes in the source file
       while ((len = in.read(buf)) > 0) {
-        //write the byte to the target file
         out.write(buf, 0, len);
       }
-
-      //close the streams
       in.close();
       out.close();
     }
@@ -1898,9 +1761,9 @@ public class FileManager {
       String nodeId1 = node1.getNodeId();
       String nodeId2 = node2.getNodeId();
 
-      if(nodeId1 != null && nodeId2 != null) {
+      if (nodeId1 != null && nodeId2 != null) {
         //compare the node ids
-        if(nodeId1.equals(nodeId2)) {
+        if (nodeId1.equals(nodeId2)) {
           /*
            * the node ids are the same so we will return 0 to
            * specify that these two NodeInfo objects are the same
@@ -1909,7 +1772,7 @@ public class FileManager {
         }
       }
 
-      if(node1StepNumber != null && node2StepNumber != null) {
+      if (node1StepNumber != null && node2StepNumber != null) {
         //compare the step numbers
 
         /*
@@ -1932,9 +1795,8 @@ public class FileManager {
          */
         int maxLength = Math.max(node1Split.length, node2Split.length);
 
-        //loop through all the parts in the arrays
-        for(int x=0; x<maxLength; x++) {
-          if(node1Split.length - 1 < x) {
+        for (int x = 0; x < maxLength; x++) {
+          if (node1Split.length - 1 < x) {
             /*
              * node1 has run out of parts while node 2 still has parts.
              * this will only happen if the node1 array is shorter than
@@ -1942,7 +1804,7 @@ public class FileManager {
              */
             result = -1;
             break;
-          } else if(node2Split.length - 1 < x) {
+          } else if (node2Split.length - 1 < x) {
             /*
              * node2 has run out of parts while node 1 still has parts.
              * this will only happen if the node2 array is shorter than
@@ -1961,11 +1823,11 @@ public class FileManager {
             int node1PartNum = Integer.parseInt(node1Part);
             int node2PartNum = Integer.parseInt(node2Part);
 
-            if(node1PartNum > node2PartNum) {
+            if (node1PartNum > node2PartNum) {
               //node1 part is larger than node2 part
               result = 1;
               break;
-            } else if(node1PartNum < node2PartNum) {
+            } else if (node1PartNum < node2PartNum) {
               //node2 part is larger than node1 part
               result = -1;
               break;
@@ -1980,25 +1842,24 @@ public class FileManager {
         }
       }
 
-      if(result == 0) {
+      if (result == 0) {
         //step numbers are the same so we will now compare the node ids
 
-        if(nodeId1 != null && nodeId2 != null) {
-
-          if(!nodeId1.equals(nodeId2)) {
+        if (nodeId1 != null && nodeId2 != null) {
+          if (!nodeId1.equals(nodeId2)) {
             //node ids are not the same which means these are different nodes.
 
-            if(node1.getParentOrChild() == null) {
+            if (node1.getParentOrChild() == null) {
               //just return a non 0 value to specify that the nodes are different
               result = 1;
-            } else if(node1.getParentOrChild().equals("parent")) {
+            } else if (node1.getParentOrChild().equals("parent")) {
               /*
                * the nodes are different so we will return a non 0 value.
                * in this case we will try to be consistent by putting parent
                * nodes after child nodes
                */
               result = 1;
-            } else if(node1.getParentOrChild().equals("child")) {
+            } else if (node1.getParentOrChild().equals("child")) {
               /*
                * the nodes are different so we will return a non 0 value.
                * in this case we will try to be consistent by putting child
@@ -2023,22 +1884,15 @@ public class FileManager {
    */
   public static JSONObject getProjectJSONObject(String projectUrl) {
     JSONObject projectJSONObject = null;
-
-    //get the project file
     File projectFile = new File(projectUrl);
-
     try {
-      //get the contents of the file as a string
       String projectJSONString = FileUtils.readFileToString(projectFile);
-
-      //create a JSONObject from the string
       projectJSONObject = new JSONObject(projectJSONString);
     } catch (IOException e) {
       e.printStackTrace();
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return projectJSONObject;
   }
 
@@ -2053,50 +1907,30 @@ public class FileManager {
    * @param nodeIdToStepNumber a HashMap that stores node id to step number
    */
   public static void parseProjectJSONObject(JSONObject projectJSON,
-                                            HashMap<String, JSONObject> nodeIdToNodeOrSequence,
-                                            HashMap<String, String> fileNameToNodeId,
-                                            HashMap<String, String> nodeIdToStepNumber) {
-
+      HashMap<String, JSONObject> nodeIdToNodeOrSequence,
+      HashMap<String, String> fileNameToNodeId,
+      HashMap<String, String> nodeIdToStepNumber) {
     try {
-      //get the nodes in the project
       JSONArray projectNodes = projectJSON.getJSONArray("nodes");
 
-      //loop through all the nodes
-      for(int x=0; x<projectNodes.length(); x++) {
-        //get a node
+      for (int x = 0; x < projectNodes.length(); x++) {
         JSONObject node = projectNodes.getJSONObject(x);
-
-        //get the node id
         String identifier = node.getString("identifier");
-
-        //get the filename
         String ref = node.getString("ref");
-
-        //add the entries into the HashMaps
         fileNameToNodeId.put(ref, identifier);
         nodeIdToNodeOrSequence.put(identifier, node);
       }
 
-      //get the sequences in the project
       JSONArray projectSequences = projectJSON.getJSONArray("sequences");
 
-      //loop through all the sequences
-      for(int y=0; y<projectSequences.length(); y++) {
-        //get a sequence
+      for (int y = 0; y < projectSequences.length(); y++) {
         JSONObject sequence = projectSequences.getJSONObject(y);
-
-        //get the node id
         String identifier = sequence.getString("identifier");
-
-        //add an entry into the HashMap
         nodeIdToNodeOrSequence.put(identifier, sequence);
       }
 
-      //get the start point for the project
       String startPoint = projectJSON.getString("startPoint");
       JSONObject startPointSequence = nodeIdToNodeOrSequence.get(startPoint);
-
-      //parse the project by traversing through the project from start to finish
       parseNodeStepNumbers("", startPointSequence, nodeIdToNodeOrSequence, nodeIdToStepNumber);
     } catch (JSONException e) {
       e.printStackTrace();
@@ -2114,16 +1948,15 @@ public class FileManager {
    * @param nodeIdToStepNumber the HashMap that we will fill with node id to
    * step number
    */
-  public static void parseNodeStepNumbers(String stepNumber, JSONObject node, HashMap<String, JSONObject> nodeIdToNodeOrSequence, HashMap<String, String> nodeIdToStepNumber) {
-
+  public static void parseNodeStepNumbers(String stepNumber, JSONObject node,
+      HashMap<String, JSONObject> nodeIdToNodeOrSequence,
+      HashMap<String, String> nodeIdToStepNumber) {
     try {
-      //get the node type
       String nodeType = node.getString("type");
 
-      if(node.getString("type") != null && nodeType.equals("sequence")) {
+      if (node.getString("type") != null && nodeType.equals("sequence")) {
         //node is a sequence
 
-        //get the nodes in the sequence
         JSONArray refs = node.getJSONArray("refs");
 
         /*
@@ -2131,23 +1964,16 @@ public class FileManager {
          * start sequence and we do not need to add an entry for that
          * but we need to add an entry for all activities and steps
          */
-        if(!stepNumber.equals("")) {
+        if (!stepNumber.equals("")) {
           //this is an activity or step
 
-          //get the node id
           String identifier = node.getString("identifier");
-
-          //add an entry into the HashMap
           nodeIdToStepNumber.put(identifier, stepNumber);
         }
 
-        if(refs != null) {
-          //loop through all the nodes in the sequence
-          for(int x=0; x<refs.length(); x++) {
-            //get a child id
+        if (refs != null) {
+          for (int x = 0; x < refs.length(); x++) {
             String childRef = refs.getString(x);
-
-            //get the JSONObject for the child
             JSONObject childNode = nodeIdToNodeOrSequence.get(childRef);
 
             /*
@@ -2157,7 +1983,7 @@ public class FileManager {
              */
             String childStepNumber = stepNumber;
 
-            if(!childStepNumber.equals("")) {
+            if (!childStepNumber.equals("")) {
               //add a "." between each level
               childStepNumber += ".";
             }
@@ -2176,10 +2002,7 @@ public class FileManager {
       } else {
         //node is a leaf node
 
-        //get the node id
         String identifier = node.getString("identifier");
-
-        //add an entry into the HashMap
         nodeIdToStepNumber.put(identifier, stepNumber);
       }
     } catch (JSONException e) {
@@ -2195,9 +2018,11 @@ public class FileManager {
    * @param childProjectNode the JSONObject for the child project
    */
   public static void compareSequences(JSONObject parentProjectNode, JSONObject childProjectNode,
-                                      HashMap<String, JSONObject> parentNodeIdToNodeOrSequence, HashMap<String, JSONObject> childNodeIdToNodeOrSequence,
-                                      HashMap<String, String> parentNodeIdToStepNumber, HashMap<String, String> childNodeIdToStepNumber,
-                                      HashMap<String, String> nodeIdToStatus, HashMap<String, String> nodeIdToModified) {
+      HashMap<String, JSONObject> parentNodeIdToNodeOrSequence,
+      HashMap<String, JSONObject> childNodeIdToNodeOrSequence,
+      HashMap<String, String> parentNodeIdToStepNumber,
+      HashMap<String, String> childNodeIdToStepNumber, HashMap<String, String> nodeIdToStatus,
+      HashMap<String, String> nodeIdToModified) {
     //a TreeSet to gather all the unique sequence ids from the parent and child projects
     TreeSet<String> sequenceIds = new TreeSet<String>();
 
@@ -2212,10 +2037,8 @@ public class FileManager {
       extractNodeIdsFromSequenceNodeJSONArray(sequenceIds, parentProjectSequences);
       extractNodeIdsFromSequenceNodeJSONArray(sequenceIds, childProjectSequences);
 
-      //loop through all the sequence ids we have just collected
       Iterator<String> sequenceIdsIterator = sequenceIds.iterator();
-      while(sequenceIdsIterator.hasNext()) {
-        //get a sequence id
+      while (sequenceIdsIterator.hasNext()) {
         String sequenceId = sequenceIdsIterator.next();
 
         /*
@@ -2226,7 +2049,7 @@ public class FileManager {
         JSONObject childSequence = childNodeIdToNodeOrSequence.get(sequenceId);
         JSONObject parentSequence = parentNodeIdToNodeOrSequence.get(sequenceId);
 
-        if(childSequence != null && parentSequence != null) {
+        if (childSequence != null && parentSequence != null) {
           /*
            * both parent and child projects have this sequence so we will compare
            * the nodes within them
@@ -2251,17 +2074,13 @@ public class FileManager {
            */
           boolean sequenceModified = false;
 
-          //loop through all the node ids we found
           Iterator<String> nodeIdsIterator = nodeIds.iterator();
-          while(nodeIdsIterator.hasNext()) {
-            //get a node id
+          while (nodeIdsIterator.hasNext()) {
             String nodeId = nodeIdsIterator.next();
-
-            //get the node from the parent and child project
             JSONObject parentNode = parentNodeIdToNodeOrSequence.get(nodeId);
             JSONObject childNode = childNodeIdToNodeOrSequence.get(nodeId);
 
-            if(childNode != null && parentNode != null) {
+            if (childNode != null && parentNode != null) {
               /*
                * node exists in both parent and child project so we will
                * check if the node is in the same position or if it was moved
@@ -2271,8 +2090,8 @@ public class FileManager {
               String parentStepNumber = parentNodeIdToStepNumber.get(nodeId);
               String childStepNumber = childNodeIdToStepNumber.get(nodeId);
 
-              if(childStepNumber != null && parentStepNumber != null) {
-                if(!childStepNumber.equals(parentStepNumber)) {
+              if (childStepNumber != null && parentStepNumber != null) {
+                if (!childStepNumber.equals(parentStepNumber)) {
                   //step numbers are different so the step was moved
                   nodeIdToStatus.put(nodeId, "moved");
 
@@ -2280,7 +2099,7 @@ public class FileManager {
                   sequenceModified = true;
                 }
               }
-            } else if(childNode != null && parentNode == null) {
+            } else if (childNode != null && parentNode == null) {
               /*
                * node was only found in the child project which means
                * the node will be deleted from child project
@@ -2289,7 +2108,7 @@ public class FileManager {
 
               //the sequence is different between parent and child project
               sequenceModified = true;
-            } else if(childNode == null && parentNode != null) {
+            } else if (childNode == null && parentNode != null) {
               /*
                * node was only found in the parent project which means
                * the node will be added to child project
@@ -2301,7 +2120,7 @@ public class FileManager {
             }
           }
 
-          if(sequenceModified) {
+          if (sequenceModified) {
             //sequence was modified
             nodeIdToModified.put(sequenceId, "true");
           } else {
@@ -2309,7 +2128,7 @@ public class FileManager {
             nodeIdToModified.put(sequenceId, "false");
           }
 
-        } else if(childSequence != null && parentSequence == null) {
+        } else if (childSequence != null && parentSequence == null) {
           /*
            * child project has this sequence but parent project does not so
            * we will check if the nodes in the child project sequence are
@@ -2326,15 +2145,11 @@ public class FileManager {
           //get the array of node ids in the sequence from the child project
           JSONArray childRefs = childSequence.getJSONArray("refs");
 
-          //loop through all the node ids
-          for(int x=0; x<childRefs.length(); x++) {
-            //get a node id
+          for (int x = 0; x < childRefs.length(); x++) {
             String nodeId = childRefs.getString(x);
-
-            //try to retrieve the node with the given node id from the parent project
             JSONObject parentNode = parentNodeIdToNodeOrSequence.get(nodeId);
 
-            if(parentNode == null) {
+            if (parentNode == null) {
               //parent does not have this node so it will be deleted
               nodeIdToStatus.put(nodeId, "deleted");
             } else {
@@ -2342,7 +2157,7 @@ public class FileManager {
               nodeIdToStatus.put(nodeId, "moved");
             }
           }
-        } else if(childSequence == null && parentSequence != null) {
+        } else if (childSequence == null && parentSequence != null) {
           /*
            * parent project has this sequence but child project does not so
            * we will check if the nodes in the parent project sequence are
@@ -2358,15 +2173,11 @@ public class FileManager {
           //get the array of node ids in the sequence from the child project
           JSONArray parentRefs = parentSequence.getJSONArray("refs");
 
-          //loop through all the node is
-          for(int x=0; x<parentRefs.length(); x++) {
-            //get a node id
+          for (int x = 0; x < parentRefs.length(); x++) {
             String nodeId = parentRefs.getString(x);
-
-            //try to retrieve the node with the given node id from the child project
             JSONObject childNode = childNodeIdToNodeOrSequence.get(nodeId);
 
-            if(childNode == null) {
+            if (childNode == null) {
               //child does not have this node so it will be added
               nodeIdToStatus.put(nodeId, "added");
             } else {
@@ -2390,13 +2201,9 @@ public class FileManager {
    * @param nodeIdsArray a JSONArray of node id strings
    */
   public static void extractNodeIdsFromJSONArray(TreeSet<String> nodeIds, JSONArray nodeIdsArray) {
-    //loop through all the node ids in the array
-    for(int x=0; x<nodeIdsArray.length(); x++) {
+    for (int x = 0; x < nodeIdsArray.length(); x++) {
       try {
-        //get a node id
         String ref = nodeIdsArray.getString(x);
-
-        //add the node id to the TreeSet
         nodeIds.add(ref);
       } catch (JSONException e) {
         e.printStackTrace();
@@ -2411,24 +2218,18 @@ public class FileManager {
    * @param nodeIds a TreeSet to store the node ids in
    * @param sequenceNodes a JSONArray of sequence JSONObjects
    */
-  public static void extractNodeIdsFromSequenceNodeJSONArray(TreeSet<String> nodeIds, JSONArray sequenceNodes) {
-    //loop through all the sequences
-    for(int x=0; x<sequenceNodes.length(); x++) {
+  public static void extractNodeIdsFromSequenceNodeJSONArray(
+      TreeSet<String> nodeIds, JSONArray sequenceNodes) {
+    for (int x = 0; x < sequenceNodes.length(); x++) {
       try {
-        //get a sequence
         JSONObject sequence = sequenceNodes.getJSONObject(x);
-
-        //get the sequence id
         String identifier = sequence.getString("identifier");
-
-        //add the sequence id to the TreeSet
         nodeIds.add(identifier);
       } catch (JSONException e) {
         e.printStackTrace();
       }
     }
   }
-
 
   /**
    * Compares the files in the folders and checks whether they have been modified
@@ -2440,15 +2241,15 @@ public class FileManager {
    * @throws IOException
    */
   public static void compareFolder(File sourceLocation, File targetLocation,
-                                   HashMap<String, String> parentFileNameToNodeId, HashMap<String, String> htmlToHt,
-                                   HashMap<String, String> nodeIdToModified) throws IOException {
-    if(sourceLocation.exists() && targetLocation.exists()) {
+      HashMap<String, String> parentFileNameToNodeId, HashMap<String, String> htmlToHt,
+      HashMap<String, String> nodeIdToModified) throws IOException {
+    if (sourceLocation.exists() && targetLocation.exists()) {
       //file or folder exists in parent and child project
 
-      if(sourceLocation.isDirectory() && targetLocation.isDirectory()) {
+      if (sourceLocation.isDirectory() && targetLocation.isDirectory()) {
         //compare the contents of the folders
         compareFolderHelper(sourceLocation, targetLocation, parentFileNameToNodeId, htmlToHt, nodeIdToModified);
-      } else if(sourceLocation.isFile() && targetLocation.isFile()) {
+      } else if (sourceLocation.isFile() && targetLocation.isFile()) {
         /*
          * file exists in parent and child project so we will now compare the
          * file from the parent project and the child project
@@ -2468,10 +2269,9 @@ public class FileManager {
         String sourceFile = FileUtils.readFileToString(sourceLocation);
         String targetFile = FileUtils.readFileToString(targetLocation);
 
-        if(sourceFile != null && targetFile != null) {
+        if (sourceFile != null && targetFile != null) {
 
-          if(fileName.toLowerCase().endsWith(".ht")) {
-            //this is a .ht file
+          if (fileName.toLowerCase().endsWith(".ht")) {
             try {
               //retrieve the content of the .ht file
               JSONObject sourceFileContent = new JSONObject(sourceFile);
@@ -2484,8 +2284,7 @@ public class FileManager {
             } catch (JSONException e) {
               e.printStackTrace();
             }
-          } else if(fileName.toLowerCase().endsWith(".html")) {
-            //this is a .html file
+          } else if (fileName.toLowerCase().endsWith(".html")) {
 
             /*
              * obtain the node id associated with this .html file. we are
@@ -2510,7 +2309,7 @@ public class FileManager {
           }
 
           //check if there is any difference between the the content of the files
-          if(!sourceFile.equals(targetFile)) {
+          if (!sourceFile.equals(targetFile)) {
             //content in the files are not the same so the file was modified
             nodeIdToModified.put(nodeId, "true");
           } else {
@@ -2518,18 +2317,16 @@ public class FileManager {
             nodeIdToModified.put(nodeId, "false");
           }
         }
-      } else if(sourceLocation.isDirectory() && targetLocation.isFile()) {
+      } else if (sourceLocation.isDirectory() && targetLocation.isFile()) {
 
-      } else if(sourceLocation.isFile() && targetLocation.isDirectory()) {
+      } else if (sourceLocation.isFile() && targetLocation.isDirectory()) {
 
       }
-
-
-    } else if(sourceLocation.exists() && !targetLocation.exists()) {
-      if(sourceLocation.isDirectory()) {
+    } else if (sourceLocation.exists() && !targetLocation.exists()) {
+      if (sourceLocation.isDirectory()) {
         //compare the contents of the folders
         compareFolderHelper(sourceLocation, targetLocation, parentFileNameToNodeId, htmlToHt, nodeIdToModified);
-      } else if(sourceLocation.isFile()) {
+      } else if (sourceLocation.isFile()) {
         /*
          * file does not exist in the child project so it is new in the
          * parent project or was deleted in the child project. from the
@@ -2537,11 +2334,11 @@ public class FileManager {
          * project. this will be handled in compareSequences().
          */
       }
-    } else if(!sourceLocation.exists() && targetLocation.exists()) {
-      if(targetLocation.isDirectory()) {
+    } else if (!sourceLocation.exists() && targetLocation.exists()) {
+      if (targetLocation.isDirectory()) {
         //compare the contents of the folders
         compareFolderHelper(sourceLocation, targetLocation, parentFileNameToNodeId, htmlToHt, nodeIdToModified);
-      } else if(targetLocation.isFile()) {
+      } else if (targetLocation.isFile()) {
         /*
          * file does not exist in the parent project so it was either
          * deleted in the parent project or is new in the child project.
@@ -2560,12 +2357,12 @@ public class FileManager {
    * @throws IOException
    */
   public static void compareFolderHelper(File sourceLocation, File targetLocation,
-                                         HashMap<String, String> parentFileNameToNodeId, HashMap<String, String> htmlToHt,
-                                         HashMap<String, String> nodeIdToModified) throws IOException {
+      HashMap<String, String> parentFileNameToNodeId, HashMap<String, String> htmlToHt,
+      HashMap<String, String> nodeIdToModified) throws IOException {
     //used to retrieve all the file names
     TreeSet<String> files = new TreeSet<String>();
 
-    if(sourceLocation.isDirectory()) {
+    if (sourceLocation.isDirectory()) {
       //get all the files in the child project folder
       String[] sourceChildren = sourceLocation.list();
 
@@ -2573,7 +2370,7 @@ public class FileManager {
       addFileNamesToCollection(files, sourceChildren);
     }
 
-    if(targetLocation.isDirectory()) {
+    if (targetLocation.isDirectory()) {
       //get all the files in the parent project folder
       String[] targetChildren = targetLocation.list();
 
@@ -2581,9 +2378,8 @@ public class FileManager {
       addFileNamesToCollection(files, targetChildren);
     }
 
-    //loop through all the file names
     Iterator<String> iterator = files.iterator();
-    while(iterator.hasNext()) {
+    while (iterator.hasNext()) {
       //get a file name
       String file = iterator.next();
 
@@ -2601,9 +2397,7 @@ public class FileManager {
    * @param fileNames an array of file names
    */
   public static void addFileNamesToCollection(TreeSet<String> fileNameCollection, String[] fileNames) {
-    //loop through all the file names
-    for (int i=0; i<fileNames.length; i++) {
-      //add the file name to the collection
+    for (int i = 0; i < fileNames.length; i++) {
       fileNameCollection.add(fileNames[i]);
     }
   }
@@ -2633,9 +2427,7 @@ public class FileManager {
 
     //get the project folder size usage as a fraction
     String usageString = sizeUsed + "/" + projectMaxTotalAssetsSizeString;
-
     result = usageString;
-
     return result;
   }
 
@@ -2645,13 +2437,13 @@ public class FileManager {
    * @param path the path to the project folder
    * @return the size of the folder in bytes as a string
    */
-  public static String getProjectSize(String path){
-    if(path==null){
+  public static String getProjectSize(String path) {
+    if (path == null) {
       return "No project path specified";
     } else {
       File projectDir = new File(path);
-      if(projectDir.exists()){
-        if(projectDir.isDirectory()){
+      if (projectDir.exists()) {
+        if (projectDir.isDirectory()) {
           long sizeOfDirectory = FileUtils.sizeOfDirectory(projectDir);
           return String.valueOf(sizeOfDirectory);
         } else {
@@ -2664,22 +2456,15 @@ public class FileManager {
   }
 
   /**
-   * Get the full project file path
+   * Get the full path to the project json file
    * @param project the project object
    * @return the full project file path
-   * e.g.
-   * /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
+   * e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667/wise4.project.json
    */
   public static String getProjectFilePath(Project project) {
-    String projectFilePath = null;
-
-    if(project != null) {
-      String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-      String projectUrl = (String) project.getModulePath();
-      projectFilePath = curriculumBaseDir + projectUrl;
-    }
-
-    return projectFilePath;
+    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String projectModulePath = project.getModulePath();
+    return curriculumBaseDir + projectModulePath;
   }
 
   /**
@@ -2692,12 +2477,10 @@ public class FileManager {
    */
   public static String getFilePath(Project project, String fileName) {
     String filePath = null;
-
-    if(project != null) {
+    if (project != null) {
       String projectFolderPath = getProjectFolderPath(project);
       filePath = projectFolderPath + fileName;
     }
-
     return filePath;
   }
 
@@ -2710,12 +2493,10 @@ public class FileManager {
    */
   public static String getProjectFolderPath(Project project) {
     String projectFolderPath = null;
-
-    if(project != null) {
+    if (project != null) {
       String projectFilePath = getProjectFilePath(project);
       projectFolderPath = projectFilePath.substring(0, projectFilePath.lastIndexOf("/"));
     }
-
     return projectFolderPath;
   }
 }
