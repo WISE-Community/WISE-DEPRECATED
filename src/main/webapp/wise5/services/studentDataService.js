@@ -1992,21 +1992,6 @@ var StudentDataService = function () {
   }, {
     key: 'saveToServerSuccess',
     value: function saveToServerSuccess(savedStudentDataResponse) {
-      /*
-       * decrement the request count since we have received a response to
-       * one of our save requests
-       */
-      this.saveToServerRequestCount -= 1;
-
-      if (this.saveToServerRequestCount == 0) {
-        /*
-         * we have received the reponse to all of the saveToServer requests
-         * so we will now update the student status and save it to the
-         * server
-         */
-        this.updateNodeStatuses();
-        this.saveStudentStatus();
-      }
 
       // set dummy serverSaveTime for use if we're in preview mode
       var serverSaveTime = Date.parse(new Date());
@@ -2164,6 +2149,22 @@ var StudentDataService = function () {
             }
           }
         }
+      }
+
+      /*
+       * decrement the request count since we have received a response to
+       * one of our save requests
+       */
+      this.saveToServerRequestCount -= 1;
+
+      if (this.saveToServerRequestCount == 0) {
+        /*
+         * we have received the reponse to all of the saveToServer requests
+         * so we will now update the student status and save it to the
+         * server
+         */
+        this.updateNodeStatuses();
+        this.saveStudentStatus();
       }
     }
   }, {
