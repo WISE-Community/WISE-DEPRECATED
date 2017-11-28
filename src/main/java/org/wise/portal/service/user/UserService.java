@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -22,7 +22,6 @@ package org.wise.portal.service.user;
 
 import java.util.List;
 
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
@@ -34,6 +33,7 @@ import org.wise.portal.service.authentication.DuplicateUsernameException;
  *
  * @author Cynick Young
  * @author Laurel Williams
+ * @author Hiroki Terashima
  */
 public interface UserService {
 
@@ -41,19 +41,16 @@ public interface UserService {
    * Given a MutableUserDetails object with a unique name, creates a new user. If username is
    * not unique throws a DuplicateUsernameException.
    *
-   * @param userDetails
-   *            A user object.
+   * @param userDetails A user object.
    * @return A reference to a <code>User</code> object
-   * @throws DuplicateUsernameException
-   *             If username is not unique.
+   * @throws DuplicateUsernameException If username is not unique.
    */
   User createUser(MutableUserDetails userDetails) throws DuplicateUsernameException;
 
   /**
    * Retrieve user with the given user details.
    *
-   * @param userDetails
-   *            that has valid authentication credentials
+   * @param userDetails that has valid authentication credentials
    * @return <code>User</code> associated with the given user details
    */
   User retrieveUser(UserDetails userDetails);
@@ -86,7 +83,6 @@ public interface UserService {
   /**
    * Retrieve a list of users whose accounts have been disabled
    *
-   * @param emailAddress
    * @return <code>Users</code> whose accounts have been disabled
    */
   List<User> retrieveDisabledUsers();
@@ -94,11 +90,9 @@ public interface UserService {
   /**
    * Encodes a new password and updates a user in the persistent data store.
    *
-   * @param user
-   *            The user that you want to update
-   * @param newPassword
-   *            The UN-ENCODED new password that you want to put in place for
-   *            this user
+   * @param user The user that you want to update
+   * @param newPassword The UN-ENCODED new password that you want to put in place for
+   * this user
    * @return The user with the newly encoded password.
    */
   User updateUserPassword(final User user, String newPassword);
@@ -106,29 +100,23 @@ public interface UserService {
   /**
    * Gets all users from persistent data store.
    *
-   * Note: this is server-intensive. Consider using
-   * retrieveAllUsernames() instead
+   * Note: this is server-intensive. Consider using retrieveAllUsernames() instead
    *
    * @return a Set of all users.
    */
   List<User> retrieveAllUsers();
 
   /**
-   * Returns all usernames from persistent data store.
-   *
-   * @return
+   * @return a list of all usernames in the data store.
    */
   List<String> retrieveAllUsernames();
 
   /**
    * Retrieves User domain object using unique userId
    *
-   * @param userId
-   *      <code>Long</code> userId to use for lookup
-   * @return <code>User</code>
-   *      the User object with the given userId
-   * @throws ObjectNotFoundException when userId
-   *      cannot be used to find the existing user
+   * @param userId <code>Long</code> userId to use for lookup
+   * @return <code>User</code> the User object with the given userId
+   * @throws ObjectNotFoundException when userId cannot be used to find the existing user
    */
   User retrieveById(Long userId) throws ObjectNotFoundException;
 

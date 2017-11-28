@@ -30,7 +30,8 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-  AclServiceImplTest.class
+  AclServiceImplTest.class,
+  UserServiceImplTest.class
 })
 public class AllTests {
 }

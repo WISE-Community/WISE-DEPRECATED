@@ -39,7 +39,7 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
  * Implementation class of <code>MutableUserDetails</code> that uses an EJB3
  * compliant object persistence mechanism.
  *
- * UserDetails for a student in TELS Portal
+ * UserDetails for a student in WISE Portal
  *
  * @author Hiroki Terashima
  */
@@ -113,56 +113,66 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
   public String getFirstname() {
     return firstname;
   }
+
   /**
    * @param firstname the firstname to set
    */
   public void setFirstname(String firstname) {
     this.firstname = firstname;
   }
+
   /**
    * @return the gender
    */
   public Gender getGender() {
     return gender;
   }
+
   /**
    * @param gender the gender to set
    */
   public void setGender(Gender gender) {
     this.gender = gender;
   }
+
   /**
    * @return the lastname
    */
   public String getLastname() {
     return lastname;
   }
+
   /**
    * @param lastname the lastname to set
    */
   public void setLastname(String lastname) {
     this.lastname = lastname;
   }
+
   public Date getSignupdate() {
     return signupdate;
   }
+
   public void setSignupdate(Date signupdate) {
     this.signupdate = signupdate;
   }
+
   /**
    * @return the birthday
    */
   public Date getBirthday() {
     return birthday;
   }
+
   /**
    * @param birthday the birthday to set
    */
   public void setBirthday(Date birthday) {
     this.birthday = birthday;
   }
+
   /**
-   * @see org.wise.portal.domain.authenticationMutableUserDetails.getCoreUsername()
+   * @see MutableUserDetails#getCoreUsername()
    */
   public String getCoreUsername() {
     String firstname = getFirstname();
@@ -188,8 +198,9 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
 
     return username;
   }
+
   /**
-   * @see org.wise.portal.domain.authenticationMutableUserDetails.getUsernameSuffixes()
+   * @see MutableUserDetails#getUsernameSuffixes()
    */
   public String[] getUsernameSuffixes() {
     return new String[] {"", "a", "b", "c", "d", "e", "f", "g", "h",
@@ -207,24 +218,24 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
    * "aa"
    * "ab"
    * @param currentUsernameSuffix the current suffix
-   * @see org.wise.portal.domain.authentication.MutableUserDetails#getNextUsernameSuffix(java.lang.String)
+   * @see MutableUserDetails#getNextUsernameSuffix(String)
    * @return the next username suffix which will be the next letter in the alphabet
    */
   public String getNextUsernameSuffix(String currentUsernameSuffix) {
     String nextUsernameSuffix = "";
 
-    if(currentUsernameSuffix == null) {
+    if (currentUsernameSuffix == null) {
       //empty suffix string
       nextUsernameSuffix = "";
-    } else if("".equals(currentUsernameSuffix)) {
+    } else if ("".equals(currentUsernameSuffix)) {
       //if the previous was "" we will now return "a"
       nextUsernameSuffix = "a";
     } else {
-      if(currentUsernameSuffix.length() > 0) {
+      if (currentUsernameSuffix.length() > 0) {
         //get the last char in the suffix
         char lastChar = currentUsernameSuffix.charAt(currentUsernameSuffix.length() - 1);
 
-        if(lastChar == 'z') {
+        if (lastChar == 'z') {
           //the last char was 'z' so we need to move on to "aa"
           String beginningCurrentUsernameSuffix = currentUsernameSuffix.substring(0, currentUsernameSuffix.length() - 1);
           nextUsernameSuffix = beginningCurrentUsernameSuffix + "aa";
@@ -234,7 +245,6 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
         }
       }
     }
-
     return nextUsernameSuffix;
   }
 
@@ -251,24 +261,28 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
   public void setNumberOfLogins(Integer numberOfLogins) {
     this.numberOfLogins = numberOfLogins;
   }
+
   /**
    * @return the accountQuestion
    */
   public String getAccountQuestion() {
     return accountQuestion;
   }
+
   /**
    * @param accountQuestion the accountQuestion to set
    */
   public void setAccountQuestion(String accountQuestion) {
     this.accountQuestion = accountQuestion;
   }
+
   /**
    * @return the accountAnswer
    */
   public String getAccountAnswer() {
     return accountAnswer;
   }
+
   /**
    * @param accountAnswer the accountAnswer to set
    */
@@ -286,20 +300,23 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
       return Calendar.getInstance().getTime();
     }
   }
+
   /**
    * @param lastLoginTime the lastLoginTime to set
    */
   public void setLastLoginTime(Date lastLoginTime) {
     this.lastLoginTime = lastLoginTime;
   }
+
   /**
-   * @override @see org.wise.portal.domain.authentication.MutableUserDetails#incrementNumberOfLogins()
+   * @see MutableUserDetails#incrementNumberOfLogins()
    */
   public void incrementNumberOfLogins() {
     this.numberOfLogins++;
   }
+
   /**
-   * @override @see org.wise.portal.domain.authentication.MutableUserDetails#getInfo()
+   * @see MutableUserDetails#getInfo()
    */
   public HashMap<String, Object> getInfo() {
     HashMap<String, Object> infoMap = new HashMap<String, Object>();
