@@ -24,6 +24,7 @@ package org.wise.portal.presentation.validators;
 
 import java.util.Calendar;
 import java.util.Date;
+
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -40,7 +41,9 @@ public class UserAccountFormValidatorTest extends TestCase {
 
   protected static final String USERNAME = "NAME";
 
-  protected static final String PASSWORD = "PASS";
+  protected static final String VALID_PASSWORD = "PASS!@#$%^&*/";
+
+  protected static final String ILLEGALPASSWORD = "Ceki Gülcü";
 
   protected static final String FIRSTNAME = "firstname";
 
@@ -69,7 +72,7 @@ public class UserAccountFormValidatorTest extends TestCase {
     super.setUp();
     userDetails = new TeacherUserDetails();
     userDetails.setUsername(USERNAME);
-    userDetails.setPassword(PASSWORD);
+    userDetails.setPassword(VALID_PASSWORD);
     userDetails.setFirstname(FIRSTNAME);
     userDetails.setLastname(LASTNAME);
     userDetails.setSignupdate(SIGNUPDATE);
@@ -140,7 +143,7 @@ public class UserAccountFormValidatorTest extends TestCase {
   }
 
   public void testPasswordIllegalChars1Validate() {
-    userDetails.setPassword(ILLEGAL);
+    userDetails.setPassword(ILLEGALPASSWORD);
     userAccountFormValidator.validate(userAccountForm, errors);
 
     assertTrue(errors.hasErrors());
@@ -169,7 +172,7 @@ public class UserAccountFormValidatorTest extends TestCase {
     userAccountFormValidator.validate(userAccountForm, errors);
 
     assertTrue(errors.hasErrors());
-    assertEquals(1, errors.getErrorCount());
+    assertEquals(2, errors.getErrorCount());
     assertNotNull(errors.getFieldError("userDetails.firstname"));
 
     errors = new BeanPropertyBindingResult(userAccountForm, "");
@@ -177,7 +180,7 @@ public class UserAccountFormValidatorTest extends TestCase {
     userAccountFormValidator.validate(userAccountForm, errors);
 
     assertTrue(errors.hasErrors());
-    assertEquals(1, errors.getErrorCount());
+    assertEquals(2, errors.getErrorCount());
     assertNotNull(errors.getFieldError("userDetails.firstname"));
   }
 
@@ -187,7 +190,7 @@ public class UserAccountFormValidatorTest extends TestCase {
     userAccountFormValidator.validate(userAccountForm, errors);
 
     assertTrue(errors.hasErrors());
-    assertEquals(1, errors.getErrorCount());
+    assertEquals(2, errors.getErrorCount());
     assertNotNull(errors.getFieldError("userDetails.lastname"));
 
     errors = new BeanPropertyBindingResult(userAccountForm, "");
@@ -195,7 +198,7 @@ public class UserAccountFormValidatorTest extends TestCase {
     userAccountFormValidator.validate(userAccountForm, errors);
 
     assertTrue(errors.hasErrors());
-    assertEquals(1, errors.getErrorCount());
+    assertEquals(2, errors.getErrorCount());
     assertNotNull(errors.getFieldError("userDetails.lastname"));
   }
 
@@ -211,7 +214,7 @@ public class UserAccountFormValidatorTest extends TestCase {
     userAccountFormValidator.validate(userAccountForm, errors);
 
     assertTrue(errors.hasErrors());
-    assertEquals(1, errors.getErrorCount());
+    assertEquals(2, errors.getErrorCount());
     assertNotNull(errors.getFieldError("userDetails.username"));
   }
 

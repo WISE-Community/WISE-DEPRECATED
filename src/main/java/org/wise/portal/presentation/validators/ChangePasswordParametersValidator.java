@@ -50,18 +50,16 @@ public class ChangePasswordParametersValidator implements Validator {
   private SystemWideSaltSource systemSaltSource;
 
   /**
-   * @see org.springframework.validation.Validator#supports(java.lang.Class)
+   * @see Validator#supports(Class)
    */
   @SuppressWarnings("unchecked")
   public boolean supports(Class clazz) {
     return ChangePasswordParameters.class.isAssignableFrom(clazz)
-      || BatchStudentChangePasswordParameters.class
-      .isAssignableFrom(clazz);
+        || BatchStudentChangePasswordParameters.class.isAssignableFrom(clazz);
   }
 
   /**
-   * @see org.springframework.validation.Validator#validate(java.lang.Object,
-   *      org.springframework.validation.Errors)
+   * @see Validator#validate(Object, Errors)
    */
   public void validate(Object paramsIn, Errors errors) {
     ChangePasswordParameters params = (ChangePasswordParameters) paramsIn;
@@ -112,29 +110,17 @@ public class ChangePasswordParametersValidator implements Validator {
 
     //if the user is not an admin we need to make sure they typed in the current teacher password
     if (!userToCheckPasswordFor.isAdmin()) {
-      //the user is not an admin
-
       Md5PasswordEncoder encoder = new Md5PasswordEncoder();
-
-      //get the typed in current password the user has entered
       String typedInCurrentPassword = params.getPasswd0();
-
       if (typedInCurrentPassword != null) {
-        //get the hashed typed in current password
         String hashedTypedInCurrentPassword = encoder.encodePassword(typedInCurrentPassword, systemSaltSource.getSystemWideSalt());
-
-        //get the hashed actual current password
         String hashedActualCurrentPassword = userToCheckPasswordFor.getUserDetails().getPassword();
-
         if (hashedTypedInCurrentPassword != null && hashedActualCurrentPassword != null &&
           hashedTypedInCurrentPassword.equals(hashedActualCurrentPassword)) {
-          //the user has typed in the correct current password
         } else {
-          //the user has not typed in the correct current password
           errors.rejectValue("passwd0", "presentation.validators.ChangePasswordParametersValidator.errorIncorrectCurrentPassword");
         }
       } else {
-        //typed in current password is null
         errors.rejectValue("passwd0", "presentation.validators.ChangePasswordParametersValidator.errorCurrentPasswordMissing");
       }
     }
@@ -142,27 +128,25 @@ public class ChangePasswordParametersValidator implements Validator {
 
   public void validatePasswd1(Errors errors, ChangePasswordParameters params) {
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "passwd1",
-      "presentation.validators.ChangePasswordParametersValidator.errorNewPasswordMissing");
+        "presentation.validators.ChangePasswordParametersValidator.errorNewPasswordMissing");
 
     if (errors.getErrorCount() != 0) {
       return;
     }
-    this.validatePasswordAlphaNumeric(errors, params.getPasswd1());
+    this.validatePasswordAsciiPrintable(errors, params.getPasswd1());
   }
 
   public void validatePasswd2(Errors errors, ChangePasswordParameters params) {
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "passwd2",
-      "presentation.validators.ChangePasswordParametersValidator.errorNewPasswordMissing");
+        "presentation.validators.ChangePasswordParametersValidator.errorNewPasswordMissing");
 
     if (errors.getErrorCount() != 0) {
       return;
     }
-    this.validatePasswordAlphaNumeric(errors, params.getPasswd2());
+    this.validatePasswordAsciiPrintable(errors, params.getPasswd2());
   }
 
   private void validatePasswordsMatch(Errors errors, String password1, String password2, ChangePasswordParameters params) {
-
-    // lengths match
     validatePasswordLength(errors, params);
 
     if (!password1.equals(password2)) {
@@ -170,27 +154,16 @@ public class ChangePasswordParametersValidator implements Validator {
     }
   }
 
-  public void validatePasswordAlphaNumeric(Errors errors,
-                                           String passwd) {
-    if (!StringUtils.isAlphanumeric(passwd))
+  public void validatePasswordAsciiPrintable(Errors errors, String passwd) {
+    if (!StringUtils.isAsciiPrintable(passwd))
       errors.rejectValue("passwd1", "presentation.validators.ChangePasswordParametersValidator.errorPasswordContainsIllegalCharacters");
 
   }
 
-  public void validatePasswordLength(Errors errors,
-                                     ChangePasswordParameters params) {
+  public void validatePasswordLength(Errors errors, ChangePasswordParameters params) {
     if (params.getPasswd1().length() > MAX_PASSWORD_LENGTH
-      || params.getPasswd2().length() > MAX_PASSWORD_LENGTH) {
+        || params.getPasswd2().length() > MAX_PASSWORD_LENGTH) {
       errors.rejectValue("passwd1", "presentation.validators.ChangePasswordParametersValidator.errorPasswordTooLong");
     }
-  }
-
-
-  public String getInputFieldValidationMessage(String formInputId, String formInputValue) {
-    return "this is a message error";
-  }
-
-  public boolean test(String str) {
-    return true;
   }
 }

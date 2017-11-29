@@ -22,109 +22,114 @@
  */
 package org.wise.portal.presentation.validators;
 
+import org.easymock.EasyMock;
 import org.wise.portal.domain.authentication.impl.ChangePasswordParameters;
-import org.wise.portal.presentation.validators.ChangePasswordParametersValidator;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
 import junit.framework.TestCase;
+import org.wise.portal.domain.user.impl.UserImpl;
 
 /**
  * @author Sally Ahn
- * @version $Id: $
  */
-public class ChangePasswordParametersValidatorTest extends TestCase{
+public class ChangePasswordParametersValidatorTest extends TestCase {
 
-	private ChangePasswordParameters params;
-	
-	private ChangePasswordParametersValidator validator;
-	
-	private Errors errors;
-	
-	private final String LEGAL_PASSWORD1 = "Owl08963";
-	
-	private final String LEGAL_PASSWORD2 = "owl08963";
-	
-	private final String[] ILLEGAL_PASSWORDS = {"Owl 0896", "morethantwentyletters", "-3", "-"};	
-	
-	private final String EMPTY_PASSWORD = "";
-	
-	@Override
-	protected void setUp() {
-		validator = new ChangePasswordParametersValidator();
-		params = new ChangePasswordParameters();
-		params.setPasswd1(LEGAL_PASSWORD1);
-		params.setPasswd2(LEGAL_PASSWORD1);  // set up is correct (both passwords match)
-		errors = new BeanPropertyBindingResult(params, "");
-	}
-	
-	public void testNoProblemValidate() {
-		validator.validate(params, errors);
-		
-		assertTrue(!errors.hasErrors());
-	}
-	
-	public void testEmptyPasswordValidate() {
-		params.setPasswd1(EMPTY_PASSWORD);
-		validator.validate(params, errors);
-		
-		assertTrue(errors.hasErrors());
-		assertEquals(1, errors.getErrorCount());
-		assertNotNull(errors.getFieldError("passwd1"));
-		
-		setUp();
-		params.setPasswd2(EMPTY_PASSWORD);
-		validator.validate(params, errors);
-		
-		assertTrue(errors.hasErrors());
-		assertEquals(1, errors.getErrorCount());
-		assertNotNull(errors.getFieldError("passwd2"));
-		
-		setUp();
-		params.setPasswd1(EMPTY_PASSWORD);
-		params.setPasswd2(EMPTY_PASSWORD);
-		validator.validate(params, errors);
-		assertTrue(errors.hasErrors());
-		assertEquals(1, errors.getErrorCount());
-		assertNotNull(errors.getFieldError("passwd1"));
-	}
-	
-	
-	public void testIllegalPasswordsValidate() {
-		for (String illegalPassword : ILLEGAL_PASSWORDS) {
-			params.setPasswd1(illegalPassword);
-			validator.validate(params, errors);
+  private ChangePasswordParameters params;
 
-			assertTrue(errors.hasErrors());
-			assertEquals(1, errors.getErrorCount());
-			assertNotNull(errors.getFieldError("passwd1"));
-		}
-		
-		for (String illegalPassword : ILLEGAL_PASSWORDS) {
-			params.setPasswd2(illegalPassword);
-			validator.validate(params, errors);
+  private ChangePasswordParametersValidator validator;
 
-			assertTrue(errors.hasErrors());
-			assertEquals(1, errors.getErrorCount());
-			assertNotNull(errors.getFieldError("passwd1"));
-		}
-	}
-	
-	public void testMisMatchedPasswordsValidate() {
-		params.setPasswd1(LEGAL_PASSWORD1);
-		params.setPasswd2(LEGAL_PASSWORD2);
-		validator.validate(params, errors);
-		
-		assertTrue(errors.hasErrors());
-		assertEquals(1, errors.getErrorCount());
-		assertNotNull(errors.getFieldError("passwd1"));
-	}
-	
-	@Override
-	protected void tearDown() {
-		validator = null;
-		params = null;
-		errors = null;
-	}
+  private Errors errors;
+
+  private final String LEGAL_PASSWORD1 = "Owl08963!@#$%";
+
+  private final String LEGAL_PASSWORD2 = "owl08963^&*";
+
+  private final String ILLEGAL_PASSWORD1 = "morethantwentyletters";
+
+  private final String ILLEGAL_PASSWORD2 = "Ceki Gülcü";
+
+  private final String EMPTY_PASSWORD = "";
+
+  private UserImpl teacherUser;
+
+  public void setUp() {
+    validator = new ChangePasswordParametersValidator();
+    params = new ChangePasswordParameters();
+
+    teacherUser = EasyMock.createMock(UserImpl.class);
+    EasyMock.expect(teacherUser.isAdmin()).andReturn(true);
+    EasyMock.replay(teacherUser);
+    params.setTeacherUser(teacherUser);
+    params.setPasswd0(LEGAL_PASSWORD1);
+    params.setPasswd1(LEGAL_PASSWORD1);
+    params.setPasswd2(LEGAL_PASSWORD1);  // set up is correct (both passwords match)
+    errors = new BeanPropertyBindingResult(params, "");
+  }
+
+  public void testNoProblemValidate() {
+    validator.validate(params, errors);
+    EasyMock.verify(teacherUser);
+    assertTrue(!errors.hasErrors());
+  }
+
+  public void testEmptyPasswordValidate() {
+    params.setPasswd1(EMPTY_PASSWORD);
+    validator.validate(params, errors);
+
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getErrorCount());
+    assertNotNull(errors.getFieldError("passwd1"));
+
+    setUp();
+    params.setPasswd2(EMPTY_PASSWORD);
+    validator.validate(params, errors);
+
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getErrorCount());
+    assertNotNull(errors.getFieldError("passwd2"));
+
+    setUp();
+    params.setPasswd1(EMPTY_PASSWORD);
+    params.setPasswd2(EMPTY_PASSWORD);
+    validator.validate(params, errors);
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getErrorCount());
+    assertNotNull(errors.getFieldError("passwd1"));
+  }
+
+  public void testIllegalPassword1Validate() {
+    params.setPasswd1(ILLEGAL_PASSWORD1);
+    validator.validate(params, errors);
+    EasyMock.verify(teacherUser);
+    assertTrue(errors.hasErrors());
+    assertEquals(2, errors.getErrorCount());
+    assertNotNull(errors.getFieldError("passwd1"));
+  }
+
+  public void testIllegalPassword2Validate() {
+    params.setPasswd1(ILLEGAL_PASSWORD2);
+    validator.validate(params, errors);
+    EasyMock.verify(teacherUser);
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getErrorCount());
+    assertNotNull(errors.getFieldError("passwd1"));
+  }
+
+  public void testMisMatchedPasswordsValidate() {
+    params.setPasswd1(LEGAL_PASSWORD1);
+    params.setPasswd2(LEGAL_PASSWORD2);
+    validator.validate(params, errors);
+
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getErrorCount());
+    assertNotNull(errors.getFieldError("passwd1"));
+  }
+
+  @Override
+  protected void tearDown() {
+    validator = null;
+    params = null;
+    errors = null;
+  }
 }
-

@@ -65,7 +65,7 @@ public class UserAccountFormValidator implements Validator {
         return;
       }
 
-      if (!StringUtils.isAlphanumeric(userDetails.getPassword())) {
+      if (!StringUtils.isAsciiPrintable(userDetails.getPassword())) {
         errors.rejectValue("userDetails.password",
             "presentation.validators.ChangePasswordParametersValidator.errorPasswordContainsIllegalCharacters");
         return;
