@@ -66,11 +66,10 @@
         </div>
         <div>
           <div style='height: 50;'>
-            <label style='vertical-align: middle; display:inline-block;'>
+            <label class='node__label--vertical-alignment'>
               {{ 'CONNECTED_COMPONENTS' | translate }}
             </label>
             <md-button class='topButton md-raised md-primary'
-                style='vertical-align: middle; display:inline-block;'
                 ng-click='graphController.authoringAddConnectedComponent()'>
               <md-icon>add</md-icon>
               <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</md-tooltip>
@@ -193,9 +192,8 @@
         </div>
         <div style='margin-top: 10px; margin-bottom: 10px;'>
           <div style='height: 50;'>
-            <label style='vertical-align: middle; display:inline-block;'>{{ 'tags' | translate }}</label>
+            <label class='node__label--vertical-alignment'>{{ 'tags' | translate }}</label>
             <md-button class='topButton md-raised md-primary'
-                style='vertical-align: middle; display:inline-block;'
                 ng-click='graphController.addTag()'>
               <md-icon>add</md-icon>
               <md-tooltip md-direction='top'
@@ -230,6 +228,7 @@
           </div>
         </div>
         <div>
+          <label class='node__label--vertical-alignment'>{{ 'json' | translate }}</label>
           <md-button class='topButton md-raised md-primary'
                  ng-click='graphController.showJSONButtonClicked()'>
             <md-icon>code</md-icon>

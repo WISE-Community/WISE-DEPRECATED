@@ -190,7 +190,7 @@
     <div ng-if='nodeAuthoringController.showEditTransitions'
        class='bodyDiv'>
       <div>
-        <label>{{ 'paths' | translate }}</label>
+        <label class='node__label--vertical-alignment'>{{ 'paths' | translate }}</label>
         <md-button class='topButton md-raised md-primary'
                ng-click='nodeAuthoringController.addNewTransition()'>
           <md-icon>add</md-icon>
@@ -203,7 +203,7 @@
       <div ng-repeat='(transitionIndex, transition) in nodeAuthoringController.node.transitionLogic.transitions'
          style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
         <div style='margin-top: -10; margin-bottom: 10;'>
-          <label>{{ 'path' | translate }} {{ transitionIndex + 1 }}</label>
+          <label class='node__label--vertical-alignment'>{{ 'path' | translate }} {{ transitionIndex + 1 }}</label>
           <md-button class='topButton md-raised md-primary'
                  ng-click='nodeAuthoringController.deleteTransition(transition)'>
             <md-icon>delete</md-icon>
@@ -233,7 +233,7 @@
         </div>
         <div>
           <div>
-            <label>{{ 'requirements' | translate }}</label>
+            <label class='node__label--vertical-alignment'>{{ 'requirements' | translate }}</label>
             <md-button class='topButton md-raised md-primary'
                    ng-click='nodeAuthoringController.addNewTransitionCriteria(transition)'>
               <md-icon>add</md-icon>
