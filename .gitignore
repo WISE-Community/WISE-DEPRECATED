@@ -17,6 +17,7 @@ wise.iml
 *.sass-cache
 npm-debug.log
 hsqldb
+hsqldb_test
 src/main/webapp/curriculum/*
 !src/main/webapp/curriculum/demo/
 !src/main/webapp/curriculum/e2e-test1/
