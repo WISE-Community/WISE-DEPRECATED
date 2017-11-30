@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2007 Encore Research Group, University of Toronto
- * 
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -22,17 +22,10 @@ import org.junit.runners.Suite;
 
 /**
  * @author Cynick Young
- *
- * @version $Id$
- *
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	org.wise.portal.presentation.validators.LostPasswordDetailsValidatorTest.class,
-	org.wise.portal.presentation.validators.teacher.AllTests.class,
-	org.wise.portal.presentation.validators.student.AllTests.class,
-	org.wise.portal.presentation.validators.general.contactwise.AllTests.class
+  org.wise.portal.presentation.validators.general.contactwise.AllTests.class
 })
-
 public class AllTests {
 }

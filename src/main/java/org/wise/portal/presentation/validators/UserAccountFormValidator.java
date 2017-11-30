@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -39,14 +39,14 @@ public class UserAccountFormValidator implements Validator {
   protected static final int MAX_PASSWORD_LENGTH = 20;
 
   /**
-   * @see org.springframework.validation.Validator#supports(java.lang.Class)
+   * @see Validator#supports(Class)
    */
   public boolean supports(Class clazz) {
     return UserAccountForm.class.isAssignableFrom(clazz);
   }
 
   /**
-   * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
+   * @see Validator#validate(Object, Errors)
    */
   public void validate(Object userAccountFormIn, Errors errors) {
     UserAccountForm userAccountForm = (UserAccountForm) userAccountFormIn;
@@ -54,7 +54,7 @@ public class UserAccountFormValidator implements Validator {
 
     if (userAccountForm.isNewAccount()) {
       ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.password",
-        "error.password-not-specified");
+          "error.password-not-specified");
 
       if (errors.getFieldErrorCount("userDetails.password") > 0) {
         return;
@@ -65,8 +65,9 @@ public class UserAccountFormValidator implements Validator {
         return;
       }
 
-      if (!StringUtils.isAlphanumeric(userDetails.getPassword())) {
-        errors.rejectValue("userDetails.password", "presentation.validators.ChangePasswordParametersValidator.errorPasswordContainsIllegalCharacters");
+      if (!StringUtils.isAsciiPrintable(userDetails.getPassword())) {
+        errors.rejectValue("userDetails.password",
+            "presentation.validators.ChangePasswordParametersValidator.errorPasswordContainsIllegalCharacters");
         return;
       }
 
@@ -76,7 +77,7 @@ public class UserAccountFormValidator implements Validator {
       }
     } else {
       ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.username",
-        "error.username-not-specified");
+          "error.username-not-specified");
 
       if (!StringUtils.isAlphanumeric(userDetails.getUsername())) {
         errors.rejectValue("userDetails.username", "error.username-illegal-characters");
@@ -84,19 +85,19 @@ public class UserAccountFormValidator implements Validator {
     }
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.firstname",
-      "error.firstname-not-specified");
+        "error.firstname-not-specified");
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.lastname",
-      "error.lastname-not-specified");
+        "error.lastname-not-specified");
 
     if (!StringUtils.isAlphanumeric(userDetails.getFirstname()) ||
-      !StringUtils.isAsciiPrintable(userDetails.getFirstname())) {
+        !StringUtils.isAsciiPrintable(userDetails.getFirstname())) {
       errors.rejectValue("userDetails.firstname", "error.firstname-illegal-characters");
       return;
     }
 
     if (!StringUtils.isAlphanumeric(userDetails.getLastname()) ||
-      !StringUtils.isAsciiPrintable(userDetails.getLastname())) {
+        !StringUtils.isAsciiPrintable(userDetails.getLastname())) {
       errors.rejectValue("userDetails.lastname", "error.lastname-illegal-characters");
       return;
     }
