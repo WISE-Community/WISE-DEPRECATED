@@ -99,7 +99,7 @@
 								    <div class="viewport">
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${esProjects}">
-									    		<li class="libraryProject">
+									    		<li class="libraryProject" data-id="${project.id}">
 									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
@@ -126,7 +126,7 @@
 								    <div class="viewport">
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${lsProjects}">
-									    		<li class="libraryProject">
+									    		<li class="libraryProject" data-id="${project.id}">
 									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
@@ -153,7 +153,7 @@
 								    <div class="viewport">
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${psProjects}">
-									    		<li class="libraryProject">
+									    		<li class="libraryProject" data-id="${project.id}">
 									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
@@ -180,7 +180,7 @@
 								    <div class="viewport">
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${bioProjects}">
-									    		<li class="libraryProject">
+									    		<li class="libraryProject" data-id="${project.id}">
 									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
@@ -207,7 +207,7 @@
 								    <div class="viewport">
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${chemProjects}">
-									    		<li class="libraryProject">
+									    		<li class="libraryProject" data-id="${project.id}">
 									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
@@ -234,7 +234,7 @@
 								    <div class="viewport">
 								        <ul class="overview">
 									    	<c:forEach var="project" items="${physProjects}">
-									    		<li class="libraryProject">
+									    		<li class="libraryProject" data-id="${project.id}">
 									    			<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></div>
 										    		<div class="projectDetails">
 										    			<p class="name">${project.name}</p>
@@ -348,6 +348,14 @@
 		// set random opening slide for project showcase
 		var numSlides = $('#projectShowcase dt').length;
 		var start = Math.floor(Math.random()*numSlides);
+
+        $('.overview').each(function() {
+            var $projectEls = $('li', this);
+            $projectEls.sort(function(a,b) {
+              return $(a).data('id') < $(b).data('id');
+            });
+            $projectEls.detach().appendTo(this);
+        });
 
 		// initiate project showcase accordion
 		$('#project-showcase').easyAccordion({
