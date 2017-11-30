@@ -8,6 +8,27 @@
         </div>
         <div>
           <md-checkbox class='md-primary'
+                 ng-model='graphController.authoringComponentContent.showMouseXPlotLine'
+                 ng-change='graphController.authoringViewComponentChanged()'>
+            {{ 'graph.showMouseXPlotLine' | translate }}
+          </md-checkbox>
+        </div>
+        <div>
+          <md-checkbox class='md-primary'
+                 ng-model='graphController.authoringComponentContent.showMouseYPlotLine'
+                 ng-change='graphController.authoringViewComponentChanged()'>
+            {{ 'graph.showMouseYPlotLine' | translate }}
+          </md-checkbox>
+        </div>
+        <div>
+          <md-checkbox class='md-primary'
+                 ng-model='graphController.authoringComponentContent.saveMouseOverPoints'
+                 ng-change='graphController.authoringViewComponentChanged()'>
+            {{ 'graph.saveMouseOverPoints' | translate }}
+          </md-checkbox>
+        </div>
+        <div>
+          <md-checkbox class='md-primary'
                  ng-model='graphController.authoringComponentContent.showSaveButton'
                  ng-change='graphController.authoringViewComponentChanged()'>
             {{ 'SHOW_SAVE_BUTTON' | translate }}
