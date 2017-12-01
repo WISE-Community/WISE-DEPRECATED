@@ -992,36 +992,95 @@ var GraphController = function () {
     value: function setupMouseMoveListener() {
       var _this2 = this;
 
-      $('#' + this.chartId).unbind();
-      $('#' + this.chartId).bind('mousemove', function (e) {
-        var chart = $('#' + _this2.chartId).highcharts();
+      // Make sure we only add the listeners once.
+      if (!this.setupMouseMoveListenerDone) {
 
-        var xaxis = chart.xAxis[0];
-        var x = xaxis.toValue(e.offsetX, false);
-        if (_this2.componentContent.showMouseXPlotLine) {
-          _this2.showXPlotLine(x);
-        }
+        /*
+         * Remove all existing listeners on the chart div to make sure we don't
+         * bind a listener multiple times.
+         */
+        $('#' + this.chartId).unbind();
 
-        var yaxis = chart.yAxis[0];
-        var y = yaxis.toValue(e.offsetY, false);
-        if (_this2.componentContent.showMouseYPlotLine) {
-          _this2.showYPlotLine(y);
-        }
+        $('#' + this.chartId).bind('mousedown', function (e) {
+          _this2.mouseDown = true;
+          _this2.mouseDownEventOccurred(e);
+        });
 
-        if (_this2.componentContent.saveMouseOverPoints) {
-          x = _this2.makeSureXIsWithinXMinMaxLimits(x);
-          y = _this2.makeSureYIsWithinYMinMaxLimits(y);
+        $('#' + this.chartId).bind('mouseup', function (e) {
+          _this2.mouseDown = false;
+        });
 
-          var currentTimestamp = new Date().getTime();
-          var timeBetweenSendingMouseOverPoints = 100;
-
-          if (_this2.lastSavedMouseMoveTimestamp == null || currentTimestamp - _this2.lastSavedMouseMoveTimestamp > timeBetweenSendingMouseOverPoints) {
-            _this2.addMouseOverPoint(x, y);
-            _this2.studentDataChanged();
-            _this2.lastSavedMouseMoveTimestamp = currentTimestamp;
+        $('#' + this.chartId).bind('mousemove', function (e) {
+          if (_this2.mouseDown) {
+            _this2.mouseDownEventOccurred(e);
           }
+        });
+
+        $('#' + this.chartId).bind('mouseleave', function (e) {
+          _this2.mouseDown = false;
+        });
+
+        this.setupMouseMoveListenerDone = true;
+      }
+    }
+
+    /**
+     * The student has moved the mouse while holding the mouse button down.
+     * @param e The mouse event.
+     */
+
+  }, {
+    key: 'mouseDownEventOccurred',
+    value: function mouseDownEventOccurred(e) {
+      /*
+       * Firefox displays abnormal behavior when the student drags the plot line.
+       * In Firefox, when the mouse is on top of the plot line, the event will
+       * contain offset values relative to the plot line instead of relative to
+       * the graph container. We always want the offset values relative to the
+       * graph container so we will ignore events where the offset values are
+       * relative to the plot line.
+       */
+      if (e.offsetX < 10 || e.offsetY < 10) {
+        return;
+      }
+
+      var chart = $('#' + this.chartId).highcharts();
+
+      // handle the x position of the mouse
+      var chartXAxis = chart.xAxis[0];
+      var x = chartXAxis.toValue(e.offsetX, false);
+      x = this.makeSureXIsWithinXMinMaxLimits(x);
+      if (this.componentContent.showMouseXPlotLine) {
+        this.showXPlotLine(x);
+      }
+
+      // handle the y position of the mouse
+      var chartYAxis = chart.yAxis[0];
+      var y = chartYAxis.toValue(e.offsetY, false);
+      y = this.makeSureYIsWithinYMinMaxLimits(y);
+      if (this.componentContent.showMouseYPlotLine) {
+        this.showYPlotLine(y);
+      }
+
+      if (this.componentContent.saveMouseOverPoints) {
+        /*
+         * Make sure we aren't saving the points too frequently. We want to avoid
+         * saving too many unnecessary data points.
+         */
+        var currentTimestamp = new Date().getTime();
+
+        /*
+         * Make sure this many milliseconds has passed before saving another mouse
+         * over point.
+         */
+        var timeBetweenSendingMouseOverPoints = 200;
+
+        if (this.lastSavedMouseMoveTimestamp == null || currentTimestamp - this.lastSavedMouseMoveTimestamp > timeBetweenSendingMouseOverPoints) {
+          this.addMouseOverPoint(x, y);
+          this.studentDataChanged();
+          this.lastSavedMouseMoveTimestamp = currentTimestamp;
         }
-      });
+      }
     }
 
     /**
@@ -1033,9 +1092,9 @@ var GraphController = function () {
     key: 'showXPlotLine',
     value: function showXPlotLine(x) {
       var chart = $('#' + this.chartId).highcharts();
-      var xaxis = chart.xAxis[0];
-      xaxis.removePlotLine('plot-line-x');
-      xaxis.addPlotLine({
+      var chartXAxis = chart.xAxis[0];
+      chartXAxis.removePlotLine('plot-line-x');
+      chartXAxis.addPlotLine({
         value: x,
         color: 'red',
         width: 2,
@@ -1052,9 +1111,9 @@ var GraphController = function () {
     key: 'showYPlotLine',
     value: function showYPlotLine(y) {
       var chart = $('#' + this.chartId).highcharts();
-      var yaxis = chart.yAxis[0];
-      yaxis.removePlotLine('plot-line-y');
-      yaxis.addPlotLine({
+      var chartYAxis = chart.yAxis[0];
+      chartYAxis.removePlotLine('plot-line-y');
+      chartYAxis.addPlotLine({
         value: y,
         color: 'red',
         width: 2,
@@ -1070,10 +1129,10 @@ var GraphController = function () {
     key: 'clearPlotLines',
     value: function clearPlotLines() {
       var chart = Highcharts.charts[0];
-      var xaxis = chart.xAxis[0];
-      xaxis.removePlotLine('plot-line-x');
-      var yaxis = chart.yAxis[0];
-      yaxis.removePlotLine('plot-line-y');
+      var chartXAxis = chart.xAxis[0];
+      chartXAxis.removePlotLine('plot-line-x');
+      var chartYAxis = chart.yAxis[0];
+      chartYAxis.removePlotLine('plot-line-y');
     }
 
     /**
@@ -1086,14 +1145,12 @@ var GraphController = function () {
   }, {
     key: 'makeSureXIsWithinXMinMaxLimits',
     value: function makeSureXIsWithinXMinMaxLimits(x) {
-      if (x != null) {
-        if (x < this.xAxis.min) {
-          x = this.xAxis.min;
-        }
+      if (x < this.xAxis.min) {
+        x = this.xAxis.min;
+      }
 
-        if (x > this.xAxis.max) {
-          x = this.xAxis.max;
-        }
+      if (x > this.xAxis.max) {
+        x = this.xAxis.max;
       }
 
       return x;
@@ -1109,14 +1166,12 @@ var GraphController = function () {
   }, {
     key: 'makeSureYIsWithinYMinMaxLimits',
     value: function makeSureYIsWithinYMinMaxLimits(y) {
-      if (y != null) {
-        if (y < this.yAxis.min) {
-          y = this.yAxis.min;
-        }
+      if (y < this.yAxis.min) {
+        y = this.yAxis.min;
+      }
 
-        if (y > this.yAxis.max) {
-          y = this.yAxis.max;
-        }
+      if (y > this.yAxis.max) {
+        y = this.yAxis.max;
       }
 
       return y;

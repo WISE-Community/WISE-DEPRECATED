@@ -1030,37 +1030,94 @@ class GraphController {
    * mouse position.
    */
   setupMouseMoveListener() {
-    $('#' + this.chartId).unbind();
-    $('#' + this.chartId).bind('mousemove', (e) => {
-      let chart = $('#' + this.chartId).highcharts();
 
-      let xaxis = chart.xAxis[0];
-      let x = xaxis.toValue(e.offsetX, false);
-      if (this.componentContent.showMouseXPlotLine) {
-        this.showXPlotLine(x);
-      }
+    // Make sure we only add the listeners once.
+    if (!this.setupMouseMoveListenerDone) {
 
-      let yaxis = chart.yAxis[0];
-      let y = yaxis.toValue(e.offsetY, false);
-      if (this.componentContent.showMouseYPlotLine) {
-        this.showYPlotLine(y);
-      }
+      /*
+       * Remove all existing listeners on the chart div to make sure we don't
+       * bind a listener multiple times.
+       */
+      $('#' + this.chartId).unbind();
 
-      if (this.componentContent.saveMouseOverPoints) {
-        x = this.makeSureXIsWithinXMinMaxLimits(x);
-        y = this.makeSureYIsWithinYMinMaxLimits(y);
+      $('#' + this.chartId).bind('mousedown', (e) => {
+        this.mouseDown = true;
+        this.mouseDownEventOccurred(e);
+      });
 
-        let currentTimestamp = new Date().getTime();
-        let timeBetweenSendingMouseOverPoints = 100;
+      $('#' + this.chartId).bind('mouseup', (e) => {
+        this.mouseDown = false;
+      });
 
-        if (this.lastSavedMouseMoveTimestamp == null ||
-              currentTimestamp - this.lastSavedMouseMoveTimestamp > timeBetweenSendingMouseOverPoints) {
-          this.addMouseOverPoint(x, y);
-          this.studentDataChanged();
-          this.lastSavedMouseMoveTimestamp = currentTimestamp;
+      $('#' + this.chartId).bind('mousemove', (e) => {
+        if (this.mouseDown) {
+          this.mouseDownEventOccurred(e);
         }
+      });
+
+      $('#' + this.chartId).bind('mouseleave', (e) => {
+        this.mouseDown = false;
+      });
+
+      this.setupMouseMoveListenerDone = true;
+    }
+  }
+
+  /**
+   * The student has moved the mouse while holding the mouse button down.
+   * @param e The mouse event.
+   */
+  mouseDownEventOccurred(e) {
+    /*
+     * Firefox displays abnormal behavior when the student drags the plot line.
+     * In Firefox, when the mouse is on top of the plot line, the event will
+     * contain offset values relative to the plot line instead of relative to
+     * the graph container. We always want the offset values relative to the
+     * graph container so we will ignore events where the offset values are
+     * relative to the plot line.
+     */
+    if (e.offsetX < 10 || e.offsetY < 10) {
+      return;
+    }
+
+    let chart = $('#' + this.chartId).highcharts();
+
+    // handle the x position of the mouse
+    let chartXAxis = chart.xAxis[0];
+    let x = chartXAxis.toValue(e.offsetX, false);
+    x = this.makeSureXIsWithinXMinMaxLimits(x);
+    if (this.componentContent.showMouseXPlotLine) {
+      this.showXPlotLine(x);
+    }
+
+    // handle the y position of the mouse
+    let chartYAxis = chart.yAxis[0];
+    let y = chartYAxis.toValue(e.offsetY, false);
+    y = this.makeSureYIsWithinYMinMaxLimits(y);
+    if (this.componentContent.showMouseYPlotLine) {
+      this.showYPlotLine(y);
+    }
+
+    if (this.componentContent.saveMouseOverPoints) {
+      /*
+       * Make sure we aren't saving the points too frequently. We want to avoid
+       * saving too many unnecessary data points.
+       */
+      let currentTimestamp = new Date().getTime();
+
+      /*
+       * Make sure this many milliseconds has passed before saving another mouse
+       * over point.
+       */
+      let timeBetweenSendingMouseOverPoints = 200;
+
+      if (this.lastSavedMouseMoveTimestamp == null ||
+            currentTimestamp - this.lastSavedMouseMoveTimestamp > timeBetweenSendingMouseOverPoints) {
+        this.addMouseOverPoint(x, y);
+        this.studentDataChanged();
+        this.lastSavedMouseMoveTimestamp = currentTimestamp;
       }
-    });
+    }
   }
 
   /**
@@ -1069,9 +1126,9 @@ class GraphController {
    */
   showXPlotLine(x) {
     let chart = $('#' + this.chartId).highcharts();
-    let xaxis = chart.xAxis[0];
-    xaxis.removePlotLine('plot-line-x');
-    xaxis.addPlotLine({
+    let chartXAxis = chart.xAxis[0];
+    chartXAxis.removePlotLine('plot-line-x');
+    chartXAxis.addPlotLine({
         value: x,
         color: 'red',
         width: 2,
@@ -1085,9 +1142,9 @@ class GraphController {
    */
   showYPlotLine(y) {
     let chart = $('#' + this.chartId).highcharts();
-    let yaxis = chart.yAxis[0];
-    yaxis.removePlotLine('plot-line-y');
-    yaxis.addPlotLine({
+    let chartYAxis = chart.yAxis[0];
+    chartYAxis.removePlotLine('plot-line-y');
+    chartYAxis.addPlotLine({
         value: y,
         color: 'red',
         width: 2,
@@ -1100,10 +1157,10 @@ class GraphController {
    */
   clearPlotLines() {
     let chart = Highcharts.charts[0];
-    let xaxis = chart.xAxis[0];
-    xaxis.removePlotLine('plot-line-x');
-    let yaxis = chart.yAxis[0];
-    yaxis.removePlotLine('plot-line-y');
+    let chartXAxis = chart.xAxis[0];
+    chartXAxis.removePlotLine('plot-line-x');
+    let chartYAxis = chart.yAxis[0];
+    chartYAxis.removePlotLine('plot-line-y');
   }
 
   /**
@@ -1113,14 +1170,12 @@ class GraphController {
    * @return an x value between the x min and max limits
    */
   makeSureXIsWithinXMinMaxLimits(x) {
-    if (x != null) {
-      if (x < this.xAxis.min) {
-        x = this.xAxis.min;
-      }
+    if (x < this.xAxis.min) {
+      x = this.xAxis.min;
+    }
 
-      if (x > this.xAxis.max) {
-        x = this.xAxis.max;
-      }
+    if (x > this.xAxis.max) {
+      x = this.xAxis.max;
     }
 
     return x;
@@ -1133,14 +1188,12 @@ class GraphController {
    * @return a y value between the y min and max limits
    */
   makeSureYIsWithinYMinMaxLimits(y) {
-    if (y != null) {
-      if (y < this.yAxis.min) {
-        y = this.yAxis.min;
-      }
+    if (y < this.yAxis.min) {
+      y = this.yAxis.min;
+    }
 
-      if (y > this.yAxis.max) {
-        y = this.yAxis.max;
-      }
+    if (y > this.yAxis.max) {
+      y = this.yAxis.max;
     }
 
     return y;
