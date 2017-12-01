@@ -60,8 +60,8 @@ public class VLEController {
   @Autowired
   Properties wiseProperties;
 
-  @RequestMapping(value = {"/student/vle/vle.html", "/teacher/vle/vle.html"})
-  protected ModelAndView handleRequestInternal(HttpServletRequest request,
+  @RequestMapping(value = "/student/vle/vle.html")
+  protected ModelAndView launchStudentVLE(HttpServletRequest request,
                                                HttpServletResponse response) throws Exception {
 
     String runIdString = request.getParameter("runId");
