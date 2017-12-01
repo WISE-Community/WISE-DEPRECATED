@@ -387,6 +387,26 @@ class EmbeddedController {
     }
 
     /**
+     * A connected component has changed its student data so we will
+     * perform any necessary changes to this component
+     * @param connectedComponent the connected component
+     * @param connectedComponentParams the connected component params
+     * @param componentState the student data from the connected
+     * component that has changed
+     */
+    this.$scope.handleConnectedComponentStudentDataChanged =
+        (connectedComponent, connectedComponentParams, componentState) => {
+
+      // create the message
+      var message = {};
+      message.messageType = 'handleConnectedComponentStudentDataChanged';
+      message.componentState = componentState;
+
+      // send the student work to the embedded application
+      this.sendMessageToApplication(message);
+    }
+
+    /**
      * The parent node submit button was clicked
      */
     this.$scope.$on('nodeSubmitClicked', (event, args) => {
