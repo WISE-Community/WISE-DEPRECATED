@@ -40,11 +40,6 @@ var WISELinkAuthoringController = function () {
     this.wiseLinkClass = '';
   }
 
-  /**
-   * The node id changed
-   */
-
-
   _createClass(WISELinkAuthoringController, [{
     key: 'wiseLinkNodeIdChanged',
     value: function wiseLinkNodeIdChanged() {
@@ -118,10 +113,8 @@ var WISELinkAuthoringController = function () {
     key: 'createWISELink',
     value: function createWISELink() {
       if (this.wiseLinkNodeId == null || this.wiseLinkNodeId == '') {
-        // a step was not chosen yet
         alert('You must select a step.');
       } else if (this.wiseLinkText == null || this.wiseLinkText == '') {
-        // link text is empty and must be provided
         alert('You must enter text.');
       } else {
         // fire the event to notify listeners that a WISE Link should be created
@@ -139,14 +132,9 @@ var WISELinkAuthoringController = function () {
         this.$rootScope.$broadcast('createWISELink', params);
       }
     }
-
-    /**
-     * Cancel the WISE Link authoring
-     */
-
   }, {
-    key: 'cancelWISELink',
-    value: function cancelWISELink() {
+    key: 'cancelWISELinkAuthoring',
+    value: function cancelWISELinkAuthoring() {
       this.$mdDialog.hide();
     }
   }]);

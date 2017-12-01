@@ -23,12 +23,8 @@
  */
 package org.wise.portal.service.portal.impl;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Serializable;
+import java.io.*;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -74,7 +70,7 @@ public class PortalServiceImpl implements PortalService {
    * @see org.wise.portal.service.portal.PortalService#getWISEVersion()
    */
   public String getWISEVersion() throws Exception {
-    InputStream in = getClass().getResourceAsStream("/version.json");
+    InputStream in = getClass().getResourceAsStream("/version.txt");
     BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
     StringBuilder responseStrBuilder = new StringBuilder();
 
@@ -82,12 +78,7 @@ public class PortalServiceImpl implements PortalService {
     while ((inputStr = streamReader.readLine()) != null) {
       responseStrBuilder.append(inputStr);
     }
-    String thisWISEVersionJSONString = responseStrBuilder.toString();
-
-    JSONObject thisWISEVersionJSON = new JSONObject(thisWISEVersionJSONString);
-    String thisWISEMajorVersion = thisWISEVersionJSON.getString("major");
-    String thisWISEMinorVersion = thisWISEVersionJSON.getString("minor");
-    return thisWISEMajorVersion + "." + thisWISEMinorVersion;
+    return responseStrBuilder.toString();
   }
 
   /**

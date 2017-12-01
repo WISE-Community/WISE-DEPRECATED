@@ -322,6 +322,8 @@ class GraphController {
      */
     this.addNextComponentStateToUndoStack = false;
 
+    this.mouseOverPoints = [];
+
     if (this.componentContent != null) {
 
       // get the component id
@@ -467,6 +469,7 @@ class GraphController {
           this.setDefaultActiveSeries();
           this.trials = [];
           this.newTrial();
+          this.clearPlotLines();
           this.setupGraph();
         }.bind(this), true);
       }
@@ -1023,6 +1026,137 @@ class GraphController {
   }
 
   /**
+   * Set up the mouse over listener which will be used to draw plot lines at the
+   * mouse position.
+   */
+  setupMouseMoveListener() {
+    $('#' + this.chartId).unbind();
+    $('#' + this.chartId).bind('mousemove', (e) => {
+      let chart = $('#' + this.chartId).highcharts();
+
+      let xaxis = chart.xAxis[0];
+      let x = xaxis.toValue(e.offsetX, false);
+      if (this.componentContent.showMouseXPlotLine) {
+        this.showXPlotLine(x);
+      }
+
+      let yaxis = chart.yAxis[0];
+      let y = yaxis.toValue(e.offsetY, false);
+      if (this.componentContent.showMouseYPlotLine) {
+        this.showYPlotLine(y);
+      }
+
+      if (this.componentContent.saveMouseOverPoints) {
+        x = this.makeSureXIsWithinXMinMaxLimits(x);
+        y = this.makeSureYIsWithinYMinMaxLimits(y);
+
+        let currentTimestamp = new Date().getTime();
+        let timeBetweenSendingMouseOverPoints = 100;
+
+        if (this.lastSavedMouseMoveTimestamp == null ||
+              currentTimestamp - this.lastSavedMouseMoveTimestamp > timeBetweenSendingMouseOverPoints) {
+          this.addMouseOverPoint(x, y);
+          this.studentDataChanged();
+          this.lastSavedMouseMoveTimestamp = currentTimestamp;
+        }
+      }
+    });
+  }
+
+  /**
+   * Show the vertical plot line at the given x.
+   * @param x the x value to show the vertical line at
+   */
+  showXPlotLine(x) {
+    let chart = $('#' + this.chartId).highcharts();
+    let xaxis = chart.xAxis[0];
+    xaxis.removePlotLine('plot-line-x');
+    xaxis.addPlotLine({
+        value: x,
+        color: 'red',
+        width: 2,
+        id: 'plot-line-x'
+    });
+  }
+
+  /**
+   * Show the horizontal plot line at the given y.
+   * @param y the y value to show the horizontal line at
+   */
+  showYPlotLine(y) {
+    let chart = $('#' + this.chartId).highcharts();
+    let yaxis = chart.yAxis[0];
+    yaxis.removePlotLine('plot-line-y');
+    yaxis.addPlotLine({
+        value: y,
+        color: 'red',
+        width: 2,
+        id: 'plot-line-y'
+    });
+  }
+
+  /**
+   * Clear the x and y plot lines on the graph.
+   */
+  clearPlotLines() {
+    let chart = Highcharts.charts[0];
+    let xaxis = chart.xAxis[0];
+    xaxis.removePlotLine('plot-line-x');
+    let yaxis = chart.yAxis[0];
+    yaxis.removePlotLine('plot-line-y');
+  }
+
+  /**
+   * If the x value is not within the x min and max limits, we will modify the
+   * x value to be at the limit.
+   * @param x the x value
+   * @return an x value between the x min and max limits
+   */
+  makeSureXIsWithinXMinMaxLimits(x) {
+    if (x != null) {
+      if (x < this.xAxis.min) {
+        x = this.xAxis.min;
+      }
+
+      if (x > this.xAxis.max) {
+        x = this.xAxis.max;
+      }
+    }
+
+    return x;
+  }
+
+  /**
+   * If the y value is not within the y min and max limits, we will modify the
+   * y value to be at the limit.
+   * @param y the y value
+   * @return a y value between the y min and max limits
+   */
+  makeSureYIsWithinYMinMaxLimits(y) {
+    if (y != null) {
+      if (y < this.yAxis.min) {
+        y = this.yAxis.min;
+      }
+
+      if (y > this.yAxis.max) {
+        y = this.yAxis.max;
+      }
+    }
+
+    return y;
+  }
+
+  /**
+   * Add a mouse over point to the array of student mouse over points.
+   * @param x the x value in graph units
+   * @param y the y value in graph units
+   */
+  addMouseOverPoint(x, y) {
+    let mouseOverPoint = [x, y];
+    this.mouseOverPoints.push(mouseOverPoint);
+  }
+
+  /**
    * Setup the graph
    * @param useTimeout whether to call the setupGraphHelper() function in
    * a timeout callback
@@ -1057,6 +1191,18 @@ class GraphController {
     } else {
       // call the setup graph helper immediately
       this.setupGraphHelper();
+    }
+
+    if (this.componentContent.showMouseXPlotLine ||
+        this.componentContent.showMouseYPlotLine ||
+        this.componentContent.saveMouseOverPoints) {
+      /*
+       * we need to wait for highcharts to render the graph before we set up
+       * the mouse move listener
+       */
+      setTimeout(() => {
+        this.setupMouseMoveListener()
+      }, 1000);
     }
   }
 
@@ -2253,8 +2399,11 @@ class GraphController {
           this.submitCounter = submitCounter;
         }
 
-        this.processLatestSubmit();
+        if (studentData.mouseOverPoints != null) {
+          this.mouseOverPoints = studentData.mouseOverPoints;
+        }
 
+        this.processLatestSubmit();
       }
     }
   };
@@ -2572,6 +2721,10 @@ class GraphController {
 
     // set the submit counter
     studentData.submitCounter = this.submitCounter;
+
+    if (this.mouseOverPoints.length != 0) {
+      studentData.mouseOverPoints = this.mouseOverPoints;
+    }
 
     // set the flag for whether the student submitted this work
     componentState.isSubmit = this.isSubmit;
@@ -4326,8 +4479,10 @@ class GraphController {
              * have any series it means it was automatically created by
              * the component.
              */
-            if (!firstTrial.series.length || (firstTrial.series.length === 1 && !firstTrial.series[0].data.length)) {
-              if (firstTrial.id !== latestStudentDataTrialId) {
+            if (firstTrial.series == null ||
+                firstTrial.series.length == 0 ||
+                (firstTrial.series.length == 1 && !firstTrial.series[0].data.length)) {
+              if (firstTrial.id == null || firstTrial.id !== latestStudentDataTrialId) {
                 // delete the first trial
                 this.trials.shift();
               }

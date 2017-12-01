@@ -79,8 +79,6 @@
   "TEXT": "文本",
   "THERE_WAS_AN_ERROR_UPLOADING": "上传出错.",
   "THERE_WAS_AN_ERROR_UPLOADING_YOU_MIGHT_HAVE_REACHED_LIMIT": "上传中出错。您可能已经达到文件上传上限，或是由于上传的文件太大。请咨询您的老师！",
-  "TO_VISIT_STEP_YOU_MUST_PERFORM_ALL_OF_THE_ACTIONS_BELOW": "要访问 \"{{nodeTitle}}\" 您必须先完成下列动作",
-  "TO_VISIT_STEP_YOU_MUST_PERFORM_ONE_OF_THE_ACTIONS_BELOW": "要访问 \"{{nodeTitle}}\" 您必须先完成下列动作中的一项",
   "TYPE": "类型",
   "UP": "向上",
   "WIDTH": "宽度",

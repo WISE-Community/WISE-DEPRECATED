@@ -27,6 +27,9 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.easymock.EasyMock;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.dao.SaltSource;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
@@ -45,311 +48,293 @@ import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.user.impl.UserServiceImpl;
 
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.*;
+
 /**
- * Tests services available to TELS Portal User
- * 
+ * Tests services available to  User
+ *
  * @author Hiroki Terashima
- * 
- * @version $Id$
- * 
  */
 public class UserServiceImplTest extends AbstractTransactionalDbTests {
 
-	private static final String EMAIL = "billy@bob.com";
+  private static final String EMAIL = "billy@bob.com";
 
-	private static final String PASSWORD = "password";
+  private static final String PASSWORD = "password";
 
-	private static final String FIRSTNAME = "Billy";
+  private static final String FIRSTNAME = "Billy";
 
-	private static final String LASTNAME = "Bob";
-	
-	private static final String USERNAME = "BillyB619";
+  private static final String LASTNAME = "Bob";
 
-	private static final Date SIGNUPDATE = Calendar.getInstance().getTime();
+  private static final String USERNAME = "BillyB619";
 
-	private static final Gender GENDER = Gender.FEMALE;
+  private static final Date SIGNUPDATE = Calendar.getInstance().getTime();
 
-	private static final Date BIRTHDAY = Calendar.getInstance().getTime();
+  private static final Gender GENDER = Gender.FEMALE;
 
-	private GrantedAuthorityDao<MutableGrantedAuthority> authorityDao;
+  private static final Date BIRTHDAY = Calendar.getInstance().getTime();
 
-	private UserDao<User> userDao;
+  private GrantedAuthorityDao<MutableGrantedAuthority> authorityDao;
 
-	private UserDetailsService userDetailsService;
+  private UserDao<User> userDao;
 
-	private UserService userService;
+  private UserDetailsService userDetailsService;
 
-	private StudentUserDetails userDetailsCreate;
+  @Autowired
+  private UserService userService;
 
-	private MutableGrantedAuthority expectedAuthorityCreate;
-	
-	private MutableGrantedAuthority studentAuthority;
+  private StudentUserDetails userDetailsCreate;
 
-	private Integer DEFAULT_NUMBEROFLOGINS = new Integer(9);
-	
-	private static final String DEFAULT_ACCOUNT_QUESTION = "what is the name of your middle name?";
-	
-	private static final String DEFAULT_ACCOUNT_ANSWER = "John";
+  private MutableGrantedAuthority expectedAuthorityCreate;
 
-	public void testDuplicateUserErrors() throws Exception {
-		StudentUserDetails userDetails = (StudentUserDetails) this.applicationContext
-				.getBean("studentUserDetails");
-		userDetails.setPassword(PASSWORD);
-		userDetails.setEmailAddress(EMAIL);
-		userDetails.setFirstname(FIRSTNAME);
-		userDetails.setLastname(LASTNAME);
-		userDetails.setSignupdate(SIGNUPDATE);
-		userDetails.setGender(GENDER);
-		userDetails.setBirthday(BIRTHDAY);
-		userDetails.setNumberOfLogins(DEFAULT_NUMBEROFLOGINS);
-		userDetails.setAccountQuestion(DEFAULT_ACCOUNT_QUESTION);
-		userDetails.setAccountAnswer(DEFAULT_ACCOUNT_ANSWER);
+  private MutableGrantedAuthority studentAuthority;
 
-		// create 2 users and attempt to save to DB
-		// second user should create a new user with similar username but with
-		// an added "a"
-		this.userService.createUser(userDetails);
+  private Integer DEFAULT_NUMBEROFLOGINS = new Integer(9);
 
-		StudentUserDetails userDetails2 = (StudentUserDetails) this.applicationContext
-				.getBean("studentUserDetails");
-		userDetails2.setPassword(PASSWORD);
-		userDetails2.setEmailAddress(EMAIL);
-		userDetails2.setFirstname(FIRSTNAME);
-		userDetails2.setLastname(LASTNAME);
-		userDetails2.setSignupdate(SIGNUPDATE);
-		userDetails2.setGender(GENDER);
-		userDetails2.setBirthday(BIRTHDAY);
-		userDetails2.setNumberOfLogins(DEFAULT_NUMBEROFLOGINS);
-		userDetails2.setAccountQuestion(DEFAULT_ACCOUNT_QUESTION);
-		userDetails2.setAccountAnswer(DEFAULT_ACCOUNT_ANSWER);
-		
-		this.userService.createUser(userDetails2);
+  private static final String DEFAULT_ACCOUNT_QUESTION = "what is the name of your middle name?";
 
-		assertEquals(userDetails.getUsername()
-				+ userDetails.getUsernameSuffixes()[1], userDetails2
-				.getUsername());
-	}
+  private static final String DEFAULT_ACCOUNT_ANSWER = "John";
 
-	
-	/*
-	 * This test checks creation of a user within the portal. Tests for system integration are
-	 * beyond the scope of this testing mechanism.
-	 */
-	public void testCreateUserWithFirstNameLastName() throws Exception {
-			setupCreateTest();
-			
-			// create user (saves automatically)
-			User expectedUser = this.userService.createUser(userDetailsCreate);
-			MutableUserDetails expectedUserDetails = (MutableUserDetails) expectedUser.getUserDetails();
-			
-			// retrieve user and compare
-			MutableUserDetails actual =  (MutableUserDetails) this.userDetailsService
-					.loadUserByUsername(userDetailsCreate.getUsername());
-			
-			assertEquals(expectedUserDetails.getFirstname(), actual
-					.getFirstname());
-			
-			assertEquals(expectedUserDetails.getLastname(), actual
-					.getLastname());
-			
-	}
-	
-	/*
-	 * This test checks creation of a user within the portal. Tests for system integration are
-	 * beyond the scope of this testing mechanism.
-	 * 
-	 * Verifies that the leading and trailing whitespaces on firstname and lastname
-	 * get trimmed correctly
-	 */
-	public void testCreateUserWithFirstNameLastNameSpaces() throws Exception {
-			setupCreateTest();
-			
-			// create user (saves automatically)
-			userDetailsCreate.setFirstname(" " + FIRSTNAME + " ");
-			userDetailsCreate.setLastname(" " + LASTNAME + " ");
-			User expectedUser = this.userService.createUser(userDetailsCreate);
-			MutableUserDetails expectedUserDetails = (MutableUserDetails) expectedUser.getUserDetails();
-			
-			// retrieve user and compare
-			MutableUserDetails actual =  (MutableUserDetails) this.userDetailsService
-					.loadUserByUsername(userDetailsCreate.getUsername());
-			
-			assertEquals(expectedUserDetails.getFirstname(), actual
-					.getFirstname());
-			
-			assertEquals(expectedUserDetails.getLastname(), actual
-					.getLastname());
-			
-	}
-	
-	/*
-	 * This test checks creation of a user within the portal. Tests for system integration are
-	 * beyond the scope of this testing mechanism.
-	 */
-	public void testCreateUserWithEmail() throws Exception {
-		setupCreateTest();
-		userDetailsCreate.setEmailAddress(EMAIL);
+  /**
+   * Create 2 users and attempt to save to DB.
+   * The second user should create a new user with similar username but with an added "a" at the end
+   */
+  @Test
+  public void testDuplicateUserErrors() throws Exception {
+    StudentUserDetails userDetails = (StudentUserDetails) this.applicationContext
+        .getBean("studentUserDetails");
+    userDetails.setPassword(PASSWORD);
+    userDetails.setEmailAddress(EMAIL);
+    userDetails.setFirstname(FIRSTNAME);
+    userDetails.setLastname(LASTNAME);
+    userDetails.setSignupdate(SIGNUPDATE);
+    userDetails.setGender(GENDER);
+    userDetails.setBirthday(BIRTHDAY);
+    userDetails.setNumberOfLogins(DEFAULT_NUMBEROFLOGINS);
+    userDetails.setAccountQuestion(DEFAULT_ACCOUNT_QUESTION);
+    userDetails.setAccountAnswer(DEFAULT_ACCOUNT_ANSWER);
+    this.userService.createUser(userDetails);
 
-		// create user (saves automatically)
-		User expectedUser = this.userService.createUser(userDetailsCreate);
-		UserDetails expectedUserDetails = expectedUser.getUserDetails();
+    StudentUserDetails userDetails2 = (StudentUserDetails) this.applicationContext
+        .getBean("studentUserDetails");
+    userDetails2.setPassword(PASSWORD);
+    userDetails2.setEmailAddress(EMAIL);
+    userDetails2.setFirstname(FIRSTNAME);
+    userDetails2.setLastname(LASTNAME);
+    userDetails2.setSignupdate(SIGNUPDATE);
+    userDetails2.setGender(GENDER);
+    userDetails2.setBirthday(BIRTHDAY);
+    userDetails2.setNumberOfLogins(DEFAULT_NUMBEROFLOGINS);
+    userDetails2.setAccountQuestion(DEFAULT_ACCOUNT_QUESTION);
+    userDetails2.setAccountAnswer(DEFAULT_ACCOUNT_ANSWER);
+    this.userService.createUser(userDetails2);
 
-		// retrieve user and compare
-		UserDetails actual = this.userDetailsService
-				.loadUserByUsername(userDetailsCreate.getUsername());
-		assertEquals(expectedUserDetails, actual);
+    assertEquals(userDetails.getUsername() + userDetails.getUsernameSuffixes()[1],
+        userDetails2.getUsername());
+  }
 
-		checkPasswordEncoding(actual);
-		checkRole(actual);
+  /*
+   * This test checks creation of a user within the portal. Tests for system integration are
+   * beyond the scope of this testing mechanism.
+   */
+  public void testCreateUserWithFirstNameLastName() throws Exception {
+    setupCreateTest();
 
-		// added this end transaction to catch a transaction commit within a
-		// transaction rollback problem
-		this.userDao.delete(expectedUser);
-		this.authorityDao.delete(expectedAuthorityCreate);
-		this.authorityDao.delete(studentAuthority);
-		this.setComplete();
-		this.endTransaction();
-	}
+    // create user (saves automatically)
+    User expectedUser = this.userService.createUser(userDetailsCreate);
+    MutableUserDetails expectedUserDetails = (MutableUserDetails) expectedUser.getUserDetails();
 
-	/*
-	 * This test checks creation of a user within the portal. Tests for system integration are
-	 * beyond the scope of this testing mechanism.
-	 */
-	public void testCreateUserBlankEmail() throws Exception {
-		setupCreateTest();
+    // retrieve user and compare
+    MutableUserDetails actual =  (MutableUserDetails) this.userDetailsService
+        .loadUserByUsername(userDetailsCreate.getUsername());
 
-		User expectedUser = this.userService.createUser(userDetailsCreate);
+    assertEquals(expectedUserDetails.getFirstname(), actual.getFirstname());
+    assertEquals(expectedUserDetails.getLastname(), actual.getLastname());
+  }
 
-		MutableUserDetails expectedUserDetails = (MutableUserDetails) expectedUser
-				.getUserDetails();
-		UserDetails actual = this.userDetailsService
-				.loadUserByUsername(userDetailsCreate.getUsername());
-		assertEquals(expectedUserDetails, actual);
+  /*
+   * This test checks creation of a user within the portal. Tests for system integration are
+   * beyond the scope of this testing mechanism.
+   *
+   * Verifies that the leading and trailing whitespaces on firstname and lastname
+   * get trimmed correctly
+   */
+  public void testCreateUserWithFirstNameLastNameSpaces() throws Exception {
+    setupCreateTest();
 
-		checkPasswordEncoding(actual);
-		checkRole(actual);
+    // create user (saves automatically)
+    userDetailsCreate.setFirstname(" " + FIRSTNAME + " ");
+    userDetailsCreate.setLastname(" " + LASTNAME + " ");
+    User expectedUser = this.userService.createUser(userDetailsCreate);
+    MutableUserDetails expectedUserDetails = (MutableUserDetails) expectedUser.getUserDetails();
 
-		// added this end transaction to catch a transaction commit within a
-		// transaction rollback problem
-		this.userDao.delete(expectedUser);
-		this.authorityDao.delete(expectedAuthorityCreate);
-		this.authorityDao.delete(studentAuthority);
-		this.setComplete();
-		this.endTransaction();
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void testRetrieveUserByUsername() {
-		// this test simply confirms that the userDao is called appropriately,
-		// since the DAO is being tested and does all the work
-		UserDao<User> mockUserDao = EasyMock.createMock(UserDao.class);
-		User expectedUser = new UserImpl();
-		EasyMock.expect(mockUserDao.retrieveByUsername(USERNAME)).andReturn(
-				new UserImpl());
-		EasyMock.replay(mockUserDao);
+    // retrieve user and compare
+    MutableUserDetails actual =  (MutableUserDetails) this.userDetailsService
+        .loadUserByUsername(userDetailsCreate.getUsername());
 
-		UserServiceImpl userService = new UserServiceImpl();
-		userService.setUserDao(mockUserDao);
-		User returnedUser = userService.retrieveUserByUsername(USERNAME);
-		assertNotNull(returnedUser);
-		assertEquals(returnedUser, expectedUser);
-		EasyMock.verify(mockUserDao);
-		
-		// Now check when USERNAME does not exist in data store
-		EasyMock.reset(mockUserDao);
-		EasyMock.expect(mockUserDao.retrieveByUsername(USERNAME)).andThrow(
-				new EmptyResultDataAccessException(1));
-		EasyMock.replay(mockUserDao);
+    assertEquals(expectedUserDetails.getFirstname(), actual.getFirstname());
+    assertEquals(expectedUserDetails.getLastname(), actual.getLastname());
+  }
 
-		userService.setUserDao(mockUserDao);
-		returnedUser = userService.retrieveUserByUsername(USERNAME);
-		assertNull(returnedUser);
-		EasyMock.verify(mockUserDao);
-	}
+  /*
+   * This test checks creation of a user within the portal. Tests for system integration are
+   * beyond the scope of this testing mechanism.
+   */
+  public void testCreateUserWithEmail() throws Exception {
+    setupCreateTest();
+    userDetailsCreate.setEmailAddress(EMAIL);
 
-	/**
-	 * @param authorityDao
-	 *            the authorityDao to set
-	 */
-	public void setAuthorityDao(
-			GrantedAuthorityDao<MutableGrantedAuthority> authorityDao) {
-		this.authorityDao = authorityDao;
-	}
+    // create user (saves automatically)
+    User expectedUser = this.userService.createUser(userDetailsCreate);
+    UserDetails expectedUserDetails = expectedUser.getUserDetails();
 
-	/**
-	 * @param userDetailsService
-	 *            the userDetailsService to set
-	 */
-	public void setUserDetailsService(UserDetailsService userDetailsService) {
-		this.userDetailsService = userDetailsService;
-	}
+    // retrieve user and compare
+    UserDetails actual = this.userDetailsService
+        .loadUserByUsername(userDetailsCreate.getUsername());
+    assertEquals(expectedUserDetails, actual);
 
-	/**
-	 * @param userService
-	 *            the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
+    checkPasswordEncoding(actual);
+    checkRole(actual);
 
-	/**
-	 * @param userDao
-	 *            the userDao to set
-	 */
-	public void setUserDao(UserDao<User> userDao) {
-		this.userDao = userDao;
-	}
+    // added this end transaction to catch a transaction commit within a
+    // transaction rollback problem
+    this.userDao.delete(expectedUser);
+    this.authorityDao.delete(expectedAuthorityCreate);
+    this.authorityDao.delete(studentAuthority);
+    //this.setComplete();
+    //this.endTransaction();
+  }
 
-	private void setupCreateTest() {
-		expectedAuthorityCreate = (MutableGrantedAuthority) this.applicationContext
-				.getBean("mutableGrantedAuthority");
-		expectedAuthorityCreate.setAuthority(UserDetailsService.USER_ROLE);
-		this.authorityDao.save(expectedAuthorityCreate);
-		studentAuthority = (MutableGrantedAuthority) this.applicationContext
-		         .getBean("mutableGrantedAuthority");
-		studentAuthority.setAuthority(UserDetailsService.STUDENT_ROLE);
-		this.authorityDao.save(studentAuthority);
+  /*
+   * This test checks creation of a user within the portal. Tests for system integration are
+   * beyond the scope of this testing mechanism.
+   */
+  public void testCreateUserBlankEmail() throws Exception {
+    setupCreateTest();
 
-		
-		userDetailsCreate = (StudentUserDetails) this.applicationContext
-				.getBean("studentUserDetails");
-		userDetailsCreate.setPassword(PASSWORD);
-		userDetailsCreate.setFirstname(FIRSTNAME);
-		userDetailsCreate.setLastname(LASTNAME);
-		userDetailsCreate.setSignupdate(SIGNUPDATE);
-		userDetailsCreate.setGender(GENDER);
-		userDetailsCreate.setBirthday(BIRTHDAY);
-		userDetailsCreate.setNumberOfLogins(DEFAULT_NUMBEROFLOGINS);
-		userDetailsCreate.setAccountQuestion(DEFAULT_ACCOUNT_QUESTION);
-		userDetailsCreate.setAccountAnswer(DEFAULT_ACCOUNT_ANSWER);
+    User expectedUser = this.userService.createUser(userDetailsCreate);
 
-	}
+    MutableUserDetails expectedUserDetails = expectedUser.getUserDetails();
+    UserDetails actual = this.userDetailsService
+        .loadUserByUsername(userDetailsCreate.getUsername());
+    assertEquals(expectedUserDetails, actual);
 
-	private void checkRole(UserDetails actual) {
-		// check role
-		Collection<? extends GrantedAuthority> authorities = actual.getAuthorities();
-		if (authorities == null)
-			fail("authorities is null");
-		boolean foundUserRole = false;
-		for (GrantedAuthority authority : authorities) {
-			if (authority.getAuthority() == UserDetailsService.USER_ROLE) {
-				foundUserRole = true;
-				break;
-			}
-		}
-		assertTrue(foundUserRole);
-	}
+    checkPasswordEncoding(actual);
+    checkRole(actual);
 
-	private void checkPasswordEncoding(UserDetails actual) {
-		// check password encoding
-		assertFalse(PASSWORD.equals(actual.getPassword()));
-		PasswordEncoder passwordEncoder = (PasswordEncoder) this.applicationContext
-				.getBean("passwordEncoder");
-		SaltSource saltSource = (SaltSource) this.applicationContext
-				.getBean("systemSaltSource");
-		String encodedPassword = passwordEncoder.encodePassword(PASSWORD,
-				saltSource.getSalt(userDetailsCreate));
-		assertEquals(encodedPassword, actual.getPassword());
-	}
+    // added this end transaction to catch a transaction commit within a
+    // transaction rollback problem
+    this.userDao.delete(expectedUser);
+    this.authorityDao.delete(expectedAuthorityCreate);
+    this.authorityDao.delete(studentAuthority);
+    //this.setComplete();
+    //this.endTransaction();
+  }
 
+  @SuppressWarnings("unchecked")
+  public void testRetrieveUserByUsername() {
+    // this test simply confirms that the userDao is called appropriately,
+    // since the DAO is being tested and does all the work
+    UserDao<User> mockUserDao = EasyMock.createMock(UserDao.class);
+    User expectedUser = new UserImpl();
+    EasyMock.expect(mockUserDao.retrieveByUsername(USERNAME)).andReturn(new UserImpl());
+    EasyMock.replay(mockUserDao);
+
+    UserServiceImpl userService = (UserServiceImpl)
+        this.applicationContext.getBean("userService");
+    User returnedUser = userService.retrieveUserByUsername(USERNAME);
+    assertNotNull(returnedUser);
+    assertEquals(returnedUser, expectedUser);
+    EasyMock.verify(mockUserDao);
+
+    // Now check when USERNAME does not exist in data store
+    EasyMock.reset(mockUserDao);
+    EasyMock.expect(mockUserDao.retrieveByUsername(USERNAME))
+        .andThrow(new EmptyResultDataAccessException(1));
+    EasyMock.replay(mockUserDao);
+
+    //userService.setUserDao(mockUserDao);
+    returnedUser = userService.retrieveUserByUsername(USERNAME);
+    assertNull(returnedUser);
+    EasyMock.verify(mockUserDao);
+  }
+
+  /**
+   * @param authorityDao the authorityDao to set
+   */
+  public void setAuthorityDao(GrantedAuthorityDao<MutableGrantedAuthority> authorityDao) {
+    this.authorityDao = authorityDao;
+  }
+
+  /**
+   * @param userDetailsService the userDetailsService to set
+   */
+  public void setUserDetailsService(UserDetailsService userDetailsService) {
+    this.userDetailsService = userDetailsService;
+  }
+
+  /**
+   * @param userService the userService to set
+   */
+  public void setUserService(UserService userService) {
+    this.userService = userService;
+  }
+
+  /**
+   * @param userDao the userDao to set
+   */
+  public void setUserDao(UserDao<User> userDao) {
+    this.userDao = userDao;
+  }
+
+  private void setupCreateTest() {
+    expectedAuthorityCreate = (MutableGrantedAuthority) this.applicationContext
+        .getBean("mutableGrantedAuthority");
+    expectedAuthorityCreate.setAuthority(UserDetailsService.USER_ROLE);
+    this.authorityDao.save(expectedAuthorityCreate);
+    studentAuthority = (MutableGrantedAuthority) this.applicationContext
+        .getBean("mutableGrantedAuthority");
+    studentAuthority.setAuthority(UserDetailsService.STUDENT_ROLE);
+    this.authorityDao.save(studentAuthority);
+
+    userDetailsCreate = (StudentUserDetails) this.applicationContext
+        .getBean("studentUserDetails");
+    userDetailsCreate.setPassword(PASSWORD);
+    userDetailsCreate.setFirstname(FIRSTNAME);
+    userDetailsCreate.setLastname(LASTNAME);
+    userDetailsCreate.setSignupdate(SIGNUPDATE);
+    userDetailsCreate.setGender(GENDER);
+    userDetailsCreate.setBirthday(BIRTHDAY);
+    userDetailsCreate.setNumberOfLogins(DEFAULT_NUMBEROFLOGINS);
+    userDetailsCreate.setAccountQuestion(DEFAULT_ACCOUNT_QUESTION);
+    userDetailsCreate.setAccountAnswer(DEFAULT_ACCOUNT_ANSWER);
+  }
+
+  private void checkRole(UserDetails actual) {
+    // check role
+    Collection<? extends GrantedAuthority> authorities = actual.getAuthorities();
+    if (authorities == null) {
+      fail("authorities is null");
+    }
+    boolean foundUserRole = false;
+    for (GrantedAuthority authority : authorities) {
+      if (authority.getAuthority() == UserDetailsService.USER_ROLE) {
+        foundUserRole = true;
+        break;
+      }
+    }
+    assertTrue(foundUserRole);
+  }
+
+  private void checkPasswordEncoding(UserDetails actual) {
+    // check password encoding
+    assertFalse(PASSWORD.equals(actual.getPassword()));
+    PasswordEncoder passwordEncoder = (PasswordEncoder) this.applicationContext
+        .getBean("passwordEncoder");
+    SaltSource saltSource = (SaltSource) this.applicationContext
+        .getBean("systemSaltSource");
+    String encodedPassword = passwordEncoder.encodePassword(
+        PASSWORD, saltSource.getSalt(userDetailsCreate));
+    assertEquals(encodedPassword, actual.getPassword());
+  }
 }

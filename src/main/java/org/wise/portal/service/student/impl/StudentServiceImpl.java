@@ -60,7 +60,7 @@ public class StudentServiceImpl implements StudentService {
   private WorkgroupService workgroupService;
 
   /**
-   * @see org.wise.portal.service.student.StudentService#addStudentToRun(User, Projectcode)
+   * @see StudentService#addStudentToRun(User, Projectcode)
    */
   public synchronized void addStudentToRun(User studentUser, Projectcode projectcode)
     throws ObjectNotFoundException, PeriodNotFoundException, StudentUserAlreadyAssociatedWithRunException {
@@ -77,7 +77,7 @@ public class StudentServiceImpl implements StudentService {
       this.groupService.addMember(groupId, studentUser);
 
       //if teacher specified only one student/workgroup, create workgroup now
-      if(run.getMaxWorkgroupSize()==1){
+      if (run.getMaxWorkgroupSize() == 1) {
         String name = "Workgroup for user: " + studentUser.getUserDetails().getUsername();
         Set<User> members = new HashSet<User>();
         members.add(studentUser);
@@ -92,11 +92,9 @@ public class StudentServiceImpl implements StudentService {
    * @see org.wise.portal.service.student.StudentService#getTeachersOfStudent(User)
    */
   public List<User> getTeachersOfStudent(User studentUser) {
-    // get all runs that this student is associated with.
     List<Run> runList = runService.getRunList(studentUser);
     List<User> teachers = new ArrayList<User>();
     for (Run run : runList) {
-      // add all of the owners of the run to the list.
       teachers.add(run.getOwner());
       teachers.addAll(run.getSharedowners());
     }
@@ -104,7 +102,7 @@ public class StudentServiceImpl implements StudentService {
   }
 
   /**
-   * @see org.wise.portal.service.student.StudentService#isStudentAssociatedWithTeacher(net.sf.sail.webapp.domain.User, net.sf.sail.webapp.domain.User)
+   * @see StudentService#isStudentAssociatedWithTeacher(User, User)
    */
   public boolean isStudentAssociatedWithTeacher(User studentUser, User teacherUser) {
     List<User> teachersOfStudent = getTeachersOfStudent(studentUser);
@@ -112,7 +110,7 @@ public class StudentServiceImpl implements StudentService {
   }
 
   /**
-   * @see org.wise.portal.service.student.StudentService#removeStudentFromRun(net.sf.sail.webapp.domain.User, org.wise.portal.domain.Run)
+   * @see StudentService#removeStudentFromRun(User, Run)
    */
   public void removeStudentFromRun(User studentUser, Run run) {
     if (run.isStudentAssociatedToThisRun(studentUser)) {
@@ -133,7 +131,7 @@ public class StudentServiceImpl implements StudentService {
   }
 
   /**
-   * @see org.wise.portal.service.student.StudentService#getStudentRunInfo(User, Run)
+   * @see StudentService#getStudentRunInfo(User, Run)
    */
   public StudentRunInfo getStudentRunInfo(User studentUser, Run run) {
     StudentRunInfo studentRunInfo = new StudentRunInfo();
@@ -142,7 +140,7 @@ public class StudentServiceImpl implements StudentService {
     studentRunInfo.setGroup(run.getPeriodOfStudent(studentUser));
 
     List<Workgroup> workgroupsForThisRun =
-      workgroupService.getWorkgroupListByRunAndUser(run, studentUser);
+        workgroupService.getWorkgroupListByRunAndUser(run, studentUser);
     if (workgroupsForThisRun.size() > 0) {
       Workgroup workgroupForThisRun = workgroupsForThisRun.get(0);
       studentRunInfo.setWorkgroup(workgroupForThisRun);

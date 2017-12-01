@@ -2713,6 +2713,9 @@ class ConceptMapController {
 
     // make the link not highlighted
     this.clearHighlightedElement();
+
+    // handle the student data changing
+    this.studentDataChanged();
   }
 
   /**

@@ -228,8 +228,8 @@ var AuthoringToolController = function () {
         this.currentViewName = view.name;
         this.showToolbar = view.showToolbar;
       } else {
-        this.showToolbar = false;
         this.currentViewName = '';
+        this.showToolbar = false;
       }
 
       this.projectId = this.ConfigService.getProjectId();
@@ -276,12 +276,9 @@ var AuthoringToolController = function () {
     value: function exit() {
       var _this2 = this;
 
-      // notify others that we've finished authoring
       this.ProjectService.notifyAuthorProjectEnd().then(function () {
-        // send the user to the teacher home page
         var wiseBaseURL = _this2.ConfigService.getWISEBaseURL();
-        var teacherHomePageURL = wiseBaseURL + '/teacher';
-        window.location = teacherHomePageURL;
+        window.location = wiseBaseURL + '/teacher';
       });
     }
 

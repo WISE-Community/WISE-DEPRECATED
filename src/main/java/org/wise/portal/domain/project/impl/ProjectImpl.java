@@ -566,7 +566,11 @@ public class ProjectImpl implements Project {
   }
 
   public Integer getWiseVersion() {
-    return this.wiseVersion;
+    if (this.wiseVersion != null) {
+      return this.wiseVersion;
+    } else {
+      return new Integer(4);
+    }
   }
 
   public void setWISEVersion(Integer wiseVersion) {

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2006 Encore Research Group, University of Toronto
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -18,52 +18,48 @@
 package org.wise.portal.junit;
 
 import org.hibernate.SessionFactory;
-import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.wise.portal.spring.SpringConfiguration;
 import org.wise.portal.spring.impl.SpringConfigurationImpl;
 
 /**
- * Allows testers to perform data store integration tests. Provides transactions
- * and access to the Spring Beans.
- * 
+ * Allows testers to perform data store integration tests. Provides transactions and access
+ * to the Spring Beans.
+ *
  * @author Cynick Young
- * 
- * @version $Id: AbstractTransactionalDbTests.java 257 2007-03-30 14:59:02Z
- *          cynick $
- * 
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@ContextConfiguration(locations = {
+  "classpath:configurations/dispatcherServletContexts.xml",
+  "classpath:configurations/applicationContexts.xml"
+})
 public abstract class AbstractTransactionalDbTests extends
-        AbstractTransactionalDataSourceSpringContextTests {
+    AbstractTransactionalJUnit4SpringContextTests {
 
-    private static final SpringConfiguration SPRING_CONFIG = new SpringConfigurationImpl();
+  private static final SpringConfiguration SPRING_CONFIG = new SpringConfigurationImpl();
 
-    protected SessionFactory sessionFactory;
+  protected SessionFactory sessionFactory;
 
-    protected HibernateFlusher toilet;
+  protected HibernateFlusher toilet;
 
-    /**
-     * @see org.springframework.test.AbstractTransactionalSpringContextTests#onSetUpBeforeTransaction()
-     */
-    @Override
-    protected void onSetUpBeforeTransaction() throws Exception {
-        super.onSetUpBeforeTransaction();
-        this.toilet = new HibernateFlusher();
-        this.toilet.setSessionFactory(this.sessionFactory);
-    }
+  //@Override
+  protected void onSetUpBeforeTransaction() throws Exception {
+    //super.onSetUpBeforeTransaction();
+    this.toilet = new HibernateFlusher();
+    this.toilet.setSessionFactory(this.sessionFactory);
+  }
 
-    /**
-     * @see org.springframework.test.AbstractSingleSpringContextTests#getConfigLocations()
-     */
-    @Override
-    protected String[] getConfigLocations() {
-        return SPRING_CONFIG.getRootApplicationContextConfigLocations();
-    }
+  //@Override
+  protected String[] getConfigLocations() {
+    return SPRING_CONFIG.getRootApplicationContextConfigLocations();
+  }
 
-    /**
-     * @param sessionFactory
-     *            the sessionFactory to set
-     */
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+  public void setSessionFactory(SessionFactory sessionFactory) {
+    this.sessionFactory = sessionFactory;
+  }
 }

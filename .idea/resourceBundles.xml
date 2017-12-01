@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ResourceBundleManager">
-    <file url="file://$PROJECT_DIR$/src/main/resources/wise.properties" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/wise_sample.properties" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/wise_sample_embedded_tomcat.properties" />
-  </component>
-</project>

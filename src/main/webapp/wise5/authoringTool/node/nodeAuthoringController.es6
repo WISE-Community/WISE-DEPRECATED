@@ -445,8 +445,6 @@ class NodeAuthoringController {
     });
 
     this.$scope.$on('componentShowSubmitButtonValueChanged', (event, args) => {
-      let nodeId = args.nodeId;
-      let componentId = args.componentId;
       let showSubmitButton = args.showSubmitButton;
       if (showSubmitButton) {
         /*
@@ -647,7 +645,7 @@ class NodeAuthoringController {
   /**
    * Launch VLE with this current step as the initial step
    */
-  previewStep() {
+  previewStepInNewWindow() {
     let data = { "constraints": true };
     this.saveEvent('stepPreviewed', 'Navigation', data);
 
@@ -659,7 +657,7 @@ class NodeAuthoringController {
   /**
    * Launch VLE with this current step as the initial step without constraints
    */
-  previewStepWithoutConstraints() {
+  previewStepWithoutConstraintsInNewWindow() {
     let data = { "constraints": false };
     this.saveEvent('stepPreviewed', 'Navigation', data);
 
@@ -776,8 +774,7 @@ class NodeAuthoringController {
    */
   addNewTransitionCriteria(transition) {
     let nodeTransitions = this.node.transitionLogic.transitions;
-    for (let n = 0; n < nodeTransitions.length; n++) {
-      let nodeTransition = nodeTransitions[n];
+    for (let nodeTransition of nodeTransitions) {
       if (nodeTransition == transition) {
         if (nodeTransition.criteria == null) {
           nodeTransition.criteria = [];
@@ -3200,16 +3197,9 @@ class NodeAuthoringController {
     // hide all the authoring views
     this.nodeAuthoringViewButtonClicked();
 
-    // turn on add component mode
     this.turnOffAddComponentMode();
-
-    // turn on the move component mode
     this.turnOffMoveComponentMode();
-
-    // hide the insert buttons
     this.turnOffInsertComponentMode()
-
-    // show the component authoring views
     this.showComponentAuthoring();
   }
 
@@ -3275,12 +3265,10 @@ class NodeAuthoringController {
     if (componentIds != null) {
       for (let componentId of componentIds) {
         if (componentId != null) {
-          // get the component
           let component = this.ProjectService
               .getComponentByNodeIdAndComponentId(this.nodeId, componentId);
 
           if (component != null) {
-            // create an object with the component id and type
             let tempComponent = {
               "componentId": component.id,
               "type": component.type
@@ -3371,7 +3359,7 @@ class NodeAuthoringController {
   componentAdvancedButtonClicked(componentId) {
     this.$rootScope.$broadcast('componentAdvancedButtonClicked', { componentId: componentId });
   }
-};
+}
 
 NodeAuthoringController.$inject = [
     '$anchorScroll',

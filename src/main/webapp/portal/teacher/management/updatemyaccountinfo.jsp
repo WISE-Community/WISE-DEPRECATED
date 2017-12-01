@@ -41,7 +41,7 @@
 					</div>
 
 					<div>
-						<form:form method="post" action="updatemyaccountinfo.html" commandName="teacherAccountForm" id="teacherRegForm" autocomplete='off'>
+						<form:form method="post" action="updatemyaccountinfo" commandName="teacherAccountForm" id="teacherRegForm" autocomplete='off'>
 						  <table class="regTable">
 						  	<tr>
 						  		<td><label for="firstname" id="firstname1"><spring:message code="teacher.registerteacher.firstName" /></label></td>

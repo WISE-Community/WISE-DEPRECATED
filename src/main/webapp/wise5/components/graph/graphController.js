@@ -293,6 +293,8 @@ var GraphController = function () {
      */
     this.addNextComponentStateToUndoStack = false;
 
+    this.mouseOverPoints = [];
+
     if (this.componentContent != null) {
 
       // get the component id
@@ -427,6 +429,7 @@ var GraphController = function () {
           this.setDefaultActiveSeries();
           this.trials = [];
           this.newTrial();
+          this.clearPlotLines();
           this.setupGraph();
         }.bind(this), true);
       }
@@ -979,16 +982,169 @@ var GraphController = function () {
   }
 
   /**
-   * Setup the graph
-   * @param useTimeout whether to call the setupGraphHelper() function in
-   * a timeout callback
+   * Set up the mouse over listener which will be used to draw plot lines at the
+   * mouse position.
    */
 
 
   _createClass(GraphController, [{
+    key: 'setupMouseMoveListener',
+    value: function setupMouseMoveListener() {
+      var _this2 = this;
+
+      $('#' + this.chartId).unbind();
+      $('#' + this.chartId).bind('mousemove', function (e) {
+        var chart = $('#' + _this2.chartId).highcharts();
+
+        var xaxis = chart.xAxis[0];
+        var x = xaxis.toValue(e.offsetX, false);
+        if (_this2.componentContent.showMouseXPlotLine) {
+          _this2.showXPlotLine(x);
+        }
+
+        var yaxis = chart.yAxis[0];
+        var y = yaxis.toValue(e.offsetY, false);
+        if (_this2.componentContent.showMouseYPlotLine) {
+          _this2.showYPlotLine(y);
+        }
+
+        if (_this2.componentContent.saveMouseOverPoints) {
+          x = _this2.makeSureXIsWithinXMinMaxLimits(x);
+          y = _this2.makeSureYIsWithinYMinMaxLimits(y);
+
+          var currentTimestamp = new Date().getTime();
+          var timeBetweenSendingMouseOverPoints = 100;
+
+          if (_this2.lastSavedMouseMoveTimestamp == null || currentTimestamp - _this2.lastSavedMouseMoveTimestamp > timeBetweenSendingMouseOverPoints) {
+            _this2.addMouseOverPoint(x, y);
+            _this2.studentDataChanged();
+            _this2.lastSavedMouseMoveTimestamp = currentTimestamp;
+          }
+        }
+      });
+    }
+
+    /**
+     * Show the vertical plot line at the given x.
+     * @param x the x value to show the vertical line at
+     */
+
+  }, {
+    key: 'showXPlotLine',
+    value: function showXPlotLine(x) {
+      var chart = $('#' + this.chartId).highcharts();
+      var xaxis = chart.xAxis[0];
+      xaxis.removePlotLine('plot-line-x');
+      xaxis.addPlotLine({
+        value: x,
+        color: 'red',
+        width: 2,
+        id: 'plot-line-x'
+      });
+    }
+
+    /**
+     * Show the horizontal plot line at the given y.
+     * @param y the y value to show the horizontal line at
+     */
+
+  }, {
+    key: 'showYPlotLine',
+    value: function showYPlotLine(y) {
+      var chart = $('#' + this.chartId).highcharts();
+      var yaxis = chart.yAxis[0];
+      yaxis.removePlotLine('plot-line-y');
+      yaxis.addPlotLine({
+        value: y,
+        color: 'red',
+        width: 2,
+        id: 'plot-line-y'
+      });
+    }
+
+    /**
+     * Clear the x and y plot lines on the graph.
+     */
+
+  }, {
+    key: 'clearPlotLines',
+    value: function clearPlotLines() {
+      var chart = Highcharts.charts[0];
+      var xaxis = chart.xAxis[0];
+      xaxis.removePlotLine('plot-line-x');
+      var yaxis = chart.yAxis[0];
+      yaxis.removePlotLine('plot-line-y');
+    }
+
+    /**
+     * If the x value is not within the x min and max limits, we will modify the
+     * x value to be at the limit.
+     * @param x the x value
+     * @return an x value between the x min and max limits
+     */
+
+  }, {
+    key: 'makeSureXIsWithinXMinMaxLimits',
+    value: function makeSureXIsWithinXMinMaxLimits(x) {
+      if (x != null) {
+        if (x < this.xAxis.min) {
+          x = this.xAxis.min;
+        }
+
+        if (x > this.xAxis.max) {
+          x = this.xAxis.max;
+        }
+      }
+
+      return x;
+    }
+
+    /**
+     * If the y value is not within the y min and max limits, we will modify the
+     * y value to be at the limit.
+     * @param y the y value
+     * @return a y value between the y min and max limits
+     */
+
+  }, {
+    key: 'makeSureYIsWithinYMinMaxLimits',
+    value: function makeSureYIsWithinYMinMaxLimits(y) {
+      if (y != null) {
+        if (y < this.yAxis.min) {
+          y = this.yAxis.min;
+        }
+
+        if (y > this.yAxis.max) {
+          y = this.yAxis.max;
+        }
+      }
+
+      return y;
+    }
+
+    /**
+     * Add a mouse over point to the array of student mouse over points.
+     * @param x the x value in graph units
+     * @param y the y value in graph units
+     */
+
+  }, {
+    key: 'addMouseOverPoint',
+    value: function addMouseOverPoint(x, y) {
+      var mouseOverPoint = [x, y];
+      this.mouseOverPoints.push(mouseOverPoint);
+    }
+
+    /**
+     * Setup the graph
+     * @param useTimeout whether to call the setupGraphHelper() function in
+     * a timeout callback
+     */
+
+  }, {
     key: 'setupGraph',
     value: function setupGraph(useTimeout) {
-      var _this2 = this;
+      var _this3 = this;
 
       if (useTimeout) {
         // call the setup graph helper after a timeout
@@ -1013,11 +1169,21 @@ var GraphController = function () {
          * active series will react to mouseover.
          */
         this.$timeout(function () {
-          _this2.setupGraphHelper();
+          _this3.setupGraphHelper();
         });
       } else {
         // call the setup graph helper immediately
         this.setupGraphHelper();
+      }
+
+      if (this.componentContent.showMouseXPlotLine || this.componentContent.showMouseYPlotLine || this.componentContent.saveMouseOverPoints) {
+        /*
+         * we need to wait for highcharts to render the graph before we set up
+         * the mouse move listener
+         */
+        setTimeout(function () {
+          _this3.setupMouseMoveListener();
+        }, 1000);
       }
     }
 
@@ -2284,6 +2450,10 @@ var GraphController = function () {
             this.submitCounter = submitCounter;
           }
 
+          if (studentData.mouseOverPoints != null) {
+            this.mouseOverPoints = studentData.mouseOverPoints;
+          }
+
           this.processLatestSubmit();
         }
       }
@@ -2470,7 +2640,7 @@ var GraphController = function () {
      * Called when the student changes their work
      */
     value: function studentDataChanged(useTimeoutSetupGraph) {
-      var _this3 = this;
+      var _this4 = this;
 
       /*
        * set the dirty flags so we will know we need to save or submit the
@@ -2502,10 +2672,10 @@ var GraphController = function () {
       // create a component state populated with the student data
       this.createComponentState(action).then(function (componentState) {
 
-        if (_this3.addNextComponentStateToUndoStack) {
-          if (_this3.previousComponentState != null) {
+        if (_this4.addNextComponentStateToUndoStack) {
+          if (_this4.previousComponentState != null) {
             // push the previous component state onto our undo stack
-            _this3.undoStack.push(_this3.previousComponentState);
+            _this4.undoStack.push(_this4.previousComponentState);
           }
 
           /*
@@ -2519,13 +2689,13 @@ var GraphController = function () {
            * Basically the undoStack contains the component states from the
            * current visit except for the current component state.
            */
-          _this3.previousComponentState = componentState;
+          _this4.previousComponentState = componentState;
 
-          _this3.addNextComponentStateToUndoStack = false;
+          _this4.addNextComponentStateToUndoStack = false;
         }
 
         // check if a digest is in progress
-        if (!_this3.$scope.$$phase) {}
+        if (!_this4.$scope.$$phase) {}
         // digest is not in progress so we can force a redraw
         // TODO GK (from HT) this line was causing a lot of js errors ( $digest already in progress ), so I commented it out
         // and it still seems to work. Do we need this line?
@@ -2539,8 +2709,8 @@ var GraphController = function () {
          * listeners can initialize before this and are then able to process
          * this componentStudentDataChanged event
          */
-        _this3.$timeout(function () {
-          _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: componentId, componentState: componentState });
+        _this4.$timeout(function () {
+          _this4.$scope.$emit('componentStudentDataChanged', { nodeId: _this4.nodeId, componentId: componentId, componentState: componentState });
         }, 100);
       });
     }
@@ -2627,6 +2797,10 @@ var GraphController = function () {
 
       // set the submit counter
       studentData.submitCounter = this.submitCounter;
+
+      if (this.mouseOverPoints.length != 0) {
+        studentData.mouseOverPoints = this.mouseOverPoints;
+      }
 
       // set the flag for whether the student submitted this work
       componentState.isSubmit = this.isSubmit;
@@ -2899,7 +3073,7 @@ var GraphController = function () {
   }, {
     key: 'importWork',
     value: function importWork() {
-      var _this4 = this;
+      var _this5 = this;
 
       // get the component content
       var componentContent = this.componentContent;
@@ -3065,14 +3239,14 @@ var GraphController = function () {
             studentData.version = 2;
 
             // create a new component state
-            var newComponentState = _this4.NodeService.createNewComponentState();
+            var newComponentState = _this5.NodeService.createNewComponentState();
             newComponentState.studentData = studentData;
 
             // populate the component state into this component
-            _this4.setStudentWork(newComponentState);
+            _this5.setStudentWork(newComponentState);
 
             // make the work dirty so that it gets saved
-            _this4.studentDataChanged();
+            _this5.studentDataChanged();
           });
         }
       }
@@ -3091,7 +3265,7 @@ var GraphController = function () {
      * @return a promise that will return all the trials from the classmates
      */
     value: function getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource) {
-      var _this5 = this;
+      var _this6 = this;
 
       var deferred = this.$q.defer();
 
@@ -3107,12 +3281,12 @@ var GraphController = function () {
           if (componentState != null) {
 
             // get the trials from the component state
-            promises.push(_this5.getTrialsFromComponentState(nodeId, componentId, componentState));
+            promises.push(_this6.getTrialsFromComponentState(nodeId, componentId, componentState));
           }
         }
 
         // wait for all the promises of trials
-        _this5.$q.all(promises).then(function (promiseResults) {
+        _this6.$q.all(promises).then(function (promiseResults) {
 
           var mergedTrials = [];
 
@@ -3227,41 +3401,41 @@ var GraphController = function () {
   }, {
     key: 'attachStudentAsset',
     value: function attachStudentAsset(studentAsset) {
-      var _this6 = this;
+      var _this7 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
           if (copiedAsset != null) {
 
-            _this6.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
-              var rowData = _this6.StudentDataService.CSVToArray(assetContent);
+            _this7.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
+              var rowData = _this7.StudentDataService.CSVToArray(assetContent);
               var params = {};
               params.skipFirstRow = true; // first row contains header, so ignore it
               params.xColumn = 0; // assume (for now) x-axis data is in first column
               params.yColumn = 1; // assume (for now) y-axis data is in second column
 
-              var seriesData = _this6.convertRowDataToSeriesData(rowData, params);
+              var seriesData = _this7.convertRowDataToSeriesData(rowData, params);
 
               // get the index of the series that we will put the data into
-              var seriesIndex = _this6.series.length; // we're always appending a new series
+              var seriesIndex = _this7.series.length; // we're always appending a new series
 
               if (seriesIndex != null) {
 
                 // get the series
-                var series = _this6.series[seriesIndex];
+                var series = _this7.series[seriesIndex];
 
                 if (series == null) {
                   // the series is null so we will create a series
                   series = {};
                   series.name = copiedAsset.fileName;
-                  series.color = _this6.seriesColors[seriesIndex];
+                  series.color = _this7.seriesColors[seriesIndex];
                   series.marker = {
-                    'symbol': _this6.seriesMarkers[seriesIndex]
+                    'symbol': _this7.seriesMarkers[seriesIndex]
                   };
                   series.regression = false;
                   series.regressionSettings = {};
                   series.canEdit = false;
-                  _this6.series[seriesIndex] = series;
+                  _this7.series[seriesIndex] = series;
                 }
 
                 // set the data into the series
@@ -3269,15 +3443,15 @@ var GraphController = function () {
               }
 
               // the graph has changed
-              _this6.isDirty = true;
+              _this7.isDirty = true;
 
               /*
                * set the flag to add the next component state created in
                * studentDataChanged() to the undo stack
                */
-              _this6.addNextComponentStateToUndoStack = true;
+              _this7.addNextComponentStateToUndoStack = true;
 
-              _this6.studentDataChanged();
+              _this7.studentDataChanged();
             });
           }
         });
@@ -4509,8 +4683,8 @@ var GraphController = function () {
                * have any series it means it was automatically created by
                * the component.
                */
-              if (!firstTrial.series.length || firstTrial.series.length === 1 && !firstTrial.series[0].data.length) {
-                if (firstTrial.id !== latestStudentDataTrialId) {
+              if (firstTrial.series == null || firstTrial.series.length == 0 || firstTrial.series.length == 1 && !firstTrial.series[0].data.length) {
+                if (firstTrial.id == null || firstTrial.id !== latestStudentDataTrialId) {
                   // delete the first trial
                   this.trials.shift();
                 }
@@ -4939,7 +5113,7 @@ var GraphController = function () {
   }, {
     key: 'snipDrawing',
     value: function snipDrawing($event) {
-      var _this7 = this;
+      var _this8 = this;
 
       // get the highcharts div
       var highchartsDiv = angular.element('#' + this.chartId).find('.highcharts-container');
@@ -4954,10 +5128,10 @@ var GraphController = function () {
           var img_b64 = canvas.toDataURL('image/png');
 
           // get the image object
-          var imageObject = _this7.UtilService.getImageObjectFromBase64String(img_b64);
+          var imageObject = _this8.UtilService.getImageObjectFromBase64String(img_b64);
 
           // create a notebook item with the image populated into it
-          _this7.NotebookService.addNewItem($event, imageObject);
+          _this8.NotebookService.addNewItem($event, imageObject);
         });
       }
     }
@@ -5992,7 +6166,7 @@ var GraphController = function () {
   }, {
     key: 'handleConnectedComponents',
     value: function handleConnectedComponents() {
-      var _this8 = this;
+      var _this9 = this;
 
       // get the connected components
       var connectedComponents = this.componentContent.connectedComponents;
@@ -6118,22 +6292,22 @@ var GraphController = function () {
           studentData.version = 2;
 
           // create a new component state
-          var newComponentState = _this8.NodeService.createNewComponentState();
+          var newComponentState = _this9.NodeService.createNewComponentState();
           newComponentState.studentData = studentData;
 
-          if (_this8.componentContent.backgroundImage != null && _this8.componentContent.backgroundImage != '') {
+          if (_this9.componentContent.backgroundImage != null && _this9.componentContent.backgroundImage != '') {
             // use the background image from this component
-            newComponentState.studentData.backgroundImage = _this8.componentContent.backgroundImage;
+            newComponentState.studentData.backgroundImage = _this9.componentContent.backgroundImage;
           } else if (connectedComponentBackgroundImage != null) {
             // use the background image from the connected component
             newComponentState.studentData.backgroundImage = connectedComponentBackgroundImage;
           }
 
           // populate the component state into this component
-          _this8.setStudentWork(newComponentState);
+          _this9.setStudentWork(newComponentState);
 
           // make the work dirty so that it gets saved
-          _this8.studentDataChanged();
+          _this9.studentDataChanged();
         });
       }
     }

@@ -81,9 +81,7 @@ public class AdminIndexController {
   protected ModelAndView handleRequestInternal(HttpServletRequest request) throws Exception {
     ModelAndView modelAndView = new ModelAndView("admin/index");
 
-    String thisWISEVersion = null;  // local WISE version  e.g. "4.8", "4.9.1", etc
-
-    // get WISE version from src/main/resources/version.json
+    String thisWISEVersion;
     try {
       thisWISEVersion = portalService.getWISEVersion();
       modelAndView.addObject("thisWISEVersion", thisWISEVersion);
