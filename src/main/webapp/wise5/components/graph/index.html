@@ -484,14 +484,14 @@
             </md-checkbox>
           </div>
           <md-checkbox class='md-primary'
-                 ng-model='graphController.authoringComponentContent.enableFileUpload'
-                 ng-change='graphController.authoringViewEnableTrialsClicked()'>
+                 ng-model='graphController.authoringComponentContent.canStudentHideSeriesOnLegendClick'
+                 ng-change='graphController.authoringViewComponentChanged()'>
             {{ 'graph.canStudentHideSeriesOnLegendClick' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
-                 ng-model='graphController.authoringComponentContent.canStudentHideSeriesOnLegendClick'
-                 ng-change='graphController.authoringViewEnableTrialsClicked()'>
+                 ng-model='graphController.authoringComponentContent.enableFileUpload'
+                 ng-change='graphController.authoringViewComponentChanged()'>
             {{ 'graph.enableFileUpload' | translate }}
           </md-checkbox>
         </div>
