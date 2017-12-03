@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -130,7 +129,7 @@ public class StudentAccountFormValidator extends UserAccountFormValidator {
         }
       }
     } else {
-      // if this is not a new account form (student is updating account info), we don't need to check any more.
+      // if student is updating account, we don't need to check any more.
       return;
     }
 
@@ -142,7 +141,7 @@ public class StudentAccountFormValidator extends UserAccountFormValidator {
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.accountAnswer",
         "error.no-accountanswer");
-    
+
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "projectCode", "error.no-projectcode");
 
     if (errors.hasErrors()) {
