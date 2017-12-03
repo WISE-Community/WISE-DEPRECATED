@@ -57,6 +57,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.AccountQuestion;
 import org.wise.portal.domain.PeriodNotFoundException;
+import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.project.impl.Projectcode;
@@ -99,131 +100,111 @@ public class StudentAccountController {
     DuplicateUsernameException.class, ObjectNotFoundException.class,
     PeriodNotFoundException.class, HibernateOptimisticLockingFailureException.class,
     StaleObjectStateException.class})
-  @RequestMapping(value = {"/student/join", "/student/updatestudentaccount.html"}, method = RequestMethod.POST)
-  public synchronized String onSubmit(@ModelAttribute("studentAccountForm") StudentAccountForm accountForm,
+  @RequestMapping(value = "/student/join", method = RequestMethod.POST)
+  public synchronized String createStudent(@ModelAttribute("studentAccountForm") StudentAccountForm accountForm,
                                       BindingResult result,
                                       HttpServletRequest request,
                                       HttpServletResponse response,
                                       SessionStatus status,
-                                      ModelMap modelMap)
-    throws Exception {
+                                      ModelMap modelMap) {
     StudentUserDetails userDetails = (StudentUserDetails) accountForm.getUserDetails();
-    if (accountForm.isNewAccount()) {
-      userDetails.setSignupdate(Calendar.getInstance().getTime());
-      Calendar birthday       = Calendar.getInstance();
-      int birthmonth = Integer.parseInt(accountForm.getBirthmonth());
-      int birthdate = Integer.parseInt(accountForm.getBirthdate());
-      birthday.set(Calendar.MONTH, birthmonth-1);  // month is 0-based
-      birthday.set(Calendar.DATE, birthdate);
-      userDetails.setBirthday(birthday.getTime());
-    }
+    userDetails.setSignupdate(Calendar.getInstance().getTime());
+    Calendar birthday       = Calendar.getInstance();
+    int birthmonth = Integer.parseInt(accountForm.getBirthmonth());
+    int birthdate = Integer.parseInt(accountForm.getBirthdate());
+    birthday.set(Calendar.MONTH, birthmonth-1);  // month is 0-based
+    birthday.set(Calendar.DATE, birthdate);
+    userDetails.setBirthday(birthday.getTime());
 
     studentAccountFormValidator.validate(accountForm, result);
     if (result.hasErrors()) {
       return "student/join";
     }
 
-    String referrer = request.getHeader("referer");
-
-    //get the context path e.g. /wise
-    String contextPath = request.getContextPath();
-
-    String registerUrl = contextPath + "/student/join";
-    String updateAccountInfoUrl = contextPath + "/student/updatestudentaccount.html";
-
-    if (referrer != null &&
-      (referrer.contains(registerUrl) ||
-        referrer.contains(updateAccountInfoUrl) )) {
-
-      if (accountForm.isNewAccount()) {
-        try {
-          //get the first name and last name
-          String firstName = userDetails.getFirstname();
-          String lastName = userDetails.getLastname();
-
-          //check if first name and last name only contain letters
-          Pattern pattern = Pattern.compile("[a-zA-Z]*");
-          Matcher firstNameMatcher = pattern.matcher(firstName);
-          Matcher lastNameMatcher = pattern.matcher(lastName);
-
-          if(!firstNameMatcher.matches()) {
-            //first name contains non letter characters
-            result.rejectValue("userDetails.firstname", "error.firstname-illegal-characters");
-            return "student/join";
-          }
-
-          if(!lastNameMatcher.matches()) {
-            //last name contains non letter characters
-            result.rejectValue("userDetails.lastname", "error.lastname-illegal-characters");
-            return "student/join";
-          }
-
-          User user = userService.createUser(userDetails);
-          Projectcode projectcode = new Projectcode(accountForm.getProjectCode());
-
-          int maxLoop = 100;  // to ensure that the following while loop gets run at most this many times.
-          int currentLoopIndex = 0;
-          while (currentLoopIndex < maxLoop) {
-            try {
-              studentService.addStudentToRun(user, projectcode);  // add student to period
-            } catch (HibernateOptimisticLockingFailureException holfe) {
-              // multiple students tried to create an account at the same time, resulting in this exception. try saving again.
-              currentLoopIndex++;
-              continue;
-            } catch (StaleObjectStateException sose) {
-              // multiple students tried to create an account at the same time, resulting in this exception. try saving again.
-              currentLoopIndex++;
-              continue;
-            }
-            // if it reaches here, it means that hibernate optimisitic locking exception was not thrown, so we can exit the loop.
-            break;
-          }
-        } catch (DuplicateUsernameException e) {
-          result.rejectValue("userDetails.username", "error.duplicate-username",
-            new Object[] { userDetails.getUsername() }, "Duplicate Username.");
-          return "student/join";
-        } catch (ObjectNotFoundException e) {
-          result.rejectValue("projectCode", "error.illegal-projectcode");
-          return "student/join";
-        } catch (PeriodNotFoundException e) {
-          result.rejectValue("projectCode", "error.illegal-projectcode");
-          return "student/join";
-        }
-      } else {
-        User user = userService.retrieveUserByUsername(userDetails.getUsername());
-        StudentUserDetails studentUserDetails = (StudentUserDetails) user.getUserDetails();
-        studentUserDetails.setLanguage(userDetails.getLanguage());
-        String userLanguage = userDetails.getLanguage();
-        Locale locale = null;
-        if (userLanguage.contains("_")) {
-          String language = userLanguage.substring(0, userLanguage.indexOf("_"));
-          String country = userLanguage.substring(userLanguage.indexOf("_")+1);
-          locale = new Locale(language, country);
-        } else {
-          locale = new Locale(userLanguage);
-        }
-        request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
-
-        userService.updateUser(user);
-        // update user in session
-        request.getSession().setAttribute(
-          User.CURRENT_USER_SESSION_KEY, user);
-
-        //clear the command object from the session
-        status.setComplete();
-
-        return "student/updatestudentaccountsuccess";
+    try {
+      User newStudentUser = userService.createUser(userDetails);
+      String view = addNewStudentToRun(accountForm, result, newStudentUser);
+      if (view != null) {
+        return view;
       }
-
-      //clear the command object from the session
-      status.setComplete();
-
-      modelMap.put(USERNAME_KEY, userDetails.getUsername());
-      return "student/joinsuccess";
-    } else {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN);
-      return null;
+    } catch (DuplicateUsernameException e) {
+      result.rejectValue("userDetails.username", "error.duplicate-username",
+        new Object[] { userDetails.getUsername() }, "Duplicate Username.");
+      return "student/join";
     }
+
+    //clear the command object from the session
+    status.setComplete();
+
+    modelMap.put(USERNAME_KEY, userDetails.getUsername());
+    return "student/joinsuccess";
+  }
+
+  public String addNewStudentToRun(
+      @ModelAttribute("studentAccountForm") StudentAccountForm accountForm,
+      BindingResult result,
+      User newStudentUser) {
+    Projectcode projectcode = new Projectcode(accountForm.getProjectCode());
+
+    int maxLoop = 100;  // to ensure that the following while loop gets run at most this many times.
+    int currentLoopIndex = 0;
+    while (currentLoopIndex < maxLoop) {
+      try {
+        studentService.addStudentToRun(newStudentUser, projectcode);  // add student to period
+      } catch (HibernateOptimisticLockingFailureException holfe) {
+        // multiple students tried to create an account at the same time, resulting in this exception. try saving again.
+        currentLoopIndex++;
+        continue;
+      } catch (StaleObjectStateException sose) {
+        // multiple students tried to create an account at the same time, resulting in this exception. try saving again.
+        currentLoopIndex++;
+        continue;
+      } catch (ObjectNotFoundException e) {
+        result.rejectValue("projectCode", "error.illegal-projectcode");
+        return "student/join";
+      } catch (PeriodNotFoundException e) {
+        result.rejectValue("projectCode", "error.illegal-projectcode");
+        return "student/join";
+      } catch (StudentUserAlreadyAssociatedWithRunException e) {
+        result.rejectValue("projectCode", "student.index.error.studentAlreadyAssociatedWithRun");
+        return "student/join";
+      }
+      // if it reaches here, it means that hibernate optimisitic locking exception was not thrown, so we can exit the loop.
+      break;
+    }
+    return null;
+  }
+
+  @RequestMapping(value = "/student/updatestudentaccount.html", method = RequestMethod.POST)
+  protected String updateExitingStudent(
+      @ModelAttribute("studentAccountForm") StudentAccountForm accountForm,
+      BindingResult bindingResult,
+      HttpServletRequest request,
+      SessionStatus status,
+      ModelMap modelMap) {
+    StudentUserDetails userDetails = (StudentUserDetails) accountForm.getUserDetails();
+    User user = userService.retrieveUserByUsername(userDetails.getUsername());
+    StudentUserDetails studentUserDetails = (StudentUserDetails) user.getUserDetails();
+    studentUserDetails.setLanguage(userDetails.getLanguage());
+    String userLanguage = userDetails.getLanguage();
+    Locale locale = null;
+    if (userLanguage.contains("_")) {
+      String language = userLanguage.substring(0, userLanguage.indexOf("_"));
+      String country = userLanguage.substring(userLanguage.indexOf("_")+1);
+      locale = new Locale(language, country);
+    } else {
+      locale = new Locale(userLanguage);
+    }
+    request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
+
+    userService.updateUser(user);
+    // update user in session
+    request.getSession().setAttribute(User.CURRENT_USER_SESSION_KEY, user);
+
+    //clear the command object from the session
+    status.setComplete();
+
+    return "student/updatestudentaccountsuccess";
   }
 
   /**

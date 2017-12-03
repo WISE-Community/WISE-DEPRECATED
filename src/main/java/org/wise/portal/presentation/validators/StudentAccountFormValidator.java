@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -24,8 +24,8 @@
 package org.wise.portal.presentation.validators;
 
 import java.util.Set;
-
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,29 +59,45 @@ public class StudentAccountFormValidator extends UserAccountFormValidator {
   public void validate(Object userAccountFormIn, Errors errors) {
     super.validate(userAccountFormIn, errors);
 
-    if (errors.hasErrors())
+    if (errors.hasErrors()) {
       return;
+    }
 
     StudentAccountForm studentAccountForm = (StudentAccountForm) userAccountFormIn;
     StudentUserDetails userDetails = (StudentUserDetails) studentAccountForm.getUserDetails();
 
     if (studentAccountForm.isNewAccount()) {
       if (userDetails.getPassword() == null || userDetails.getPassword().length() < 1 ||
-        !userDetails.getPassword().equals(studentAccountForm.getRepeatedPassword())) {
+          !userDetails.getPassword().equals(studentAccountForm.getRepeatedPassword())) {
         errors.reject("error.passwords-mismatch",
-          "Passwords did not match or were not provided. Matching passwords are required.");
+            "Passwords did not match or were not provided. Matching passwords are required.");
+      }
+
+      String firstName = userDetails.getFirstname();
+      String lastName = userDetails.getLastname();
+
+      Pattern pattern = Pattern.compile("[a-zA-Z]*");
+      Matcher firstNameMatcher = pattern.matcher(firstName);
+      Matcher lastNameMatcher = pattern.matcher(lastName);
+
+      if (!firstNameMatcher.matches()) {
+        errors.rejectValue("userDetails.firstname", "error.firstname-illegal-characters");
+      }
+
+      if (!lastNameMatcher.matches()) {
+        errors.rejectValue("userDetails.lastname", "error.lastname-illegal-characters");
       }
 
       String projectCode = studentAccountForm.getProjectCode();
       if (projectCode == null || projectCode.length() < 1) {
         errors.reject("error.projectcode-empty",
-          "Project Code must be specified. Get this from your teacher.");
+            "Project Code must be specified. Get this from your teacher.");
         return;
       } else {
         Projectcode projectcode = new Projectcode(projectCode);
         if (!projectcode.isLegalProjectcode()) {
           errors.reject("error.projectcode-invalid",
-            "Project Code is invalid. Get this from your teacher.");
+              "Project Code is invalid. Get this from your teacher.");
           return;
         }
         String runcode = projectcode.getRuncode();
@@ -91,12 +107,12 @@ public class StudentAccountFormValidator extends UserAccountFormValidator {
           run = runService.retrieveRunByRuncode(runcode);
         } catch (ObjectNotFoundException e) {
           errors.reject("error.projectcode-not-in-db",
-            "Project Code is invalid. Get this from your teacher.");
+              "Project Code is invalid. Get this from your teacher.");
           return;
         }
         if (run == null) {
           errors.reject("error.projectcode-not-in-db",
-            "Project Code is invalid. Get this from your teacher.");
+              "Project Code is invalid. Get this from your teacher.");
           return;
         } else {
           boolean periodExists = false;
@@ -108,7 +124,7 @@ public class StudentAccountFormValidator extends UserAccountFormValidator {
           }
           if (!periodExists) {
             errors.reject("error.projectcode-not-in-db",
-              "Project Code is invalid. Get this from your teacher.");
+                "Project Code is invalid. Get this from your teacher.");
             return;
           }
         }
@@ -119,19 +135,18 @@ public class StudentAccountFormValidator extends UserAccountFormValidator {
     }
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.gender",
-      "error.gender-not-specified");
+        "error.gender-not-specified");
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.accountQuestion",
-      "error.no-accountquestion");
+        "error.no-accountquestion");
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.accountAnswer",
-      "error.no-accountanswer");
+        "error.no-accountanswer");
+    
+    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "projectCode", "error.no-projectcode");
 
-
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "projectCode",
-      "error.no-projectcode");
-
-    if (errors.hasErrors())
+    if (errors.hasErrors()) {
       userDetails.setPassword("");
+    }
   }
 }
