@@ -394,9 +394,7 @@ class NodeController {
 
     // add tour bubbles for each of the component rubrics
     const components = this.getComponents();
-    let l = components.length; i = 0;
-    for (; i < l; i++) {
-      const component = components[i];
+    for (let component of components) {
       if (component.rubric) {
         const thisTarget = '#rubric_' + component.id;
         this.rubricTour.steps.push(
@@ -436,9 +434,7 @@ class NodeController {
         }
 
         const components = this.getComponents();
-        let l = components.length, i = 0;
-        for (; i < l; i++) {
-          const component = components[i];
+        for (let component of components) {
           if (component.rubric) {
             thisTarget = '#rubric_' + component.id;
             if (component.id === id) {
@@ -648,21 +644,19 @@ class NodeController {
    * @return an array that contains the content for the components.
    */
   getComponents() {
-    const components = null;
+    let components = null;
     if (this.nodeContent != null) {
       components = this.nodeContent.components;
     }
 
     if (components != null && this.isDisabled) {
-      for (let c = 0; c < components.length; c++) {
-        const component = components[c];
+      for (const component of components) {
         component.isDisabled = true;
       }
     }
 
     if (components != null && this.nodeContent.lockAfterSubmit) {
-      for (c = 0; c < components.length; c++) {
-        component = components[c];
+      for (const component of components) {
         component.lockAfterSubmit = true;
       }
     }
@@ -678,8 +672,7 @@ class NodeController {
     let component = null;
     if (componentId != null) {
       const components = this.getComponents();
-      for (let c = 0; c < components.length; c++) {
-        const tempComponent = components[c];
+      for (const tempComponent of components) {
         if (tempComponent != null) {
           const tempComponentId = tempComponent.id;
           if (tempComponentId === componentId) {
@@ -701,8 +694,7 @@ class NodeController {
     let result = false;
     if (componentId != null) {
       const components = this.getComponents();
-      for (let c = 0; c < components.length; c++) {
-        const tempComponent = components[c];
+      for (const tempComponent of components) {
         if (tempComponent != null) {
           const tempComponentId = tempComponent.id;
           if (tempComponentId === componentId) {
@@ -816,8 +808,7 @@ class NodeController {
       if ((componentStates != null && this.UtilService.arrayHasNonNullElement(componentStates)) ||
           (componentAnnotations != null && componentAnnotations.length) ||
           (componentEvents != null && componentEvents.length)) {
-        for (let c = 0; c < componentStates.length; c++) {
-          let componentState = componentStates[c];
+        for (const componentState of componentStates) {
           if (componentState != null) {
             let annotations = componentState.annotations;
             if (annotations != null) {
@@ -843,8 +834,7 @@ class NodeController {
             if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('scoreChanged')) {
               if (componentAnnotations != null && componentAnnotations.length > 0) {
                 let evaluateTransitionLogic = false;
-                for (let c = 0; c < componentAnnotations.length; c++) {
-                  const componentAnnotation = componentAnnotations[c];
+                for (const componentAnnotation of componentAnnotations) {
                   if (componentAnnotation != null) {
                     if (componentAnnotation.type === 'autoScore') {
                       evaluateTransitionLogic = true;
@@ -911,8 +901,7 @@ class NodeController {
       const workgroupId = this.ConfigService.getWorkgroupId();
       const nodeId = this.nodeId;
 
-      for (let c = 0; c < components.length; c++) {
-        const component = components[c];
+      for (const component of components) {
         if (component != null) {
           const tempComponentId = component.id;
           const componentType = component.type;
@@ -1038,8 +1027,7 @@ class NodeController {
          * only notify components that are listening for changes
          * from the specific component id.
          */
-        for (let c = 0; c < components.length; c++) {
-          let tempComponent = components[c];
+        for (let tempComponent of components) {
           if (tempComponent != null) {
             let tempComponentId = tempComponent.id;
             /*
@@ -1048,8 +1036,7 @@ class NodeController {
              */
             let connectedComponents = tempComponent.connectedComponents;
             if (connectedComponents != null) {
-              for (let cc = 0; cc < connectedComponents.length; cc++) {
-                let connectedComponentParams = connectedComponents[cc];
+              for (let connectedComponentParams of connectedComponents) {
                 if (connectedComponentParams != null) {
                   let nodeId = connectedComponentParams.nodeId;
                   let componentId = connectedComponentParams.componentId;
@@ -1158,17 +1145,15 @@ class NodeController {
     const components = this.getComponents();
 
     if (components != null) {
-      for (let c = 0, l = components.length; c < l; c++) {
-        const id = components[c].id;
-        const latestState = this.getComponentStateByComponentId(id);
-
+      for (let component of components) {
+        const componentId = component.id;
+        const latestState = this.getComponentStateByComponentId(componentId);
         if (latestState && !latestState.isSubmit) {
           submitDirty = true;
           break;
         }
       }
     }
-
     return submitDirty;
   };
 

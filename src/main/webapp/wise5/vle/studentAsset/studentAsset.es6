@@ -2,7 +2,7 @@
 
 import StudentAssetController from './studentAssetController';
 
-let studentAssetModule = angular.module('studentAsset', [])
+const studentAssetModule = angular.module('studentAsset', [])
     .directive('studentassets', function() {
       return {
         scope: {

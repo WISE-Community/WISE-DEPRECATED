@@ -145,8 +145,7 @@ class VLEController {
       }
 
       if (args.imageObjects != null) {
-        for (let i = 0; i < args.imageObjects.length; i++) {
-          const imageObject = args.imageObjects[i];
+        for (const imageObject of args.imageObjects) {
           if (imageObject != null) {
             this.snippableItems.push(imageObject);
           }
@@ -204,8 +203,7 @@ class VLEController {
       if (periodId != null) {
         const periods = runStatus.periods;
         if (periods != null) {
-          for (let p = 0; p < periods.length; p++) {
-            const tempPeriod = periods[p];
+          for (const tempPeriod of periods) {
             if (periodId === tempPeriod.periodId) {
               if (tempPeriod.paused) {
                 pause = true;
@@ -236,12 +234,10 @@ class VLEController {
      */
     this.snippableItems = [];
 
-    for (let c = 0; c < currentComponents.length; c++) {
-      let currentComponent = currentComponents[c];
+    for (const currentComponent of currentComponents) {
       const args = {};
       args.nodeId = currentNodeId;
       args.componentId = currentComponent.id;
-
       this.$rootScope.$broadcast('requestImage', args);
     }
     this.$mdDialog.show({
@@ -262,8 +258,7 @@ class VLEController {
       $scope.ProjectService = ProjectService;
       $scope.snippableItems = snippableItems;
 
-      for (let s = 0; s < snippableItems.length; s++) {
-        const snippableItem = snippableItems[s];
+      for (const snippableItem of snippableItems) {
         if (snippableItem != null) {
           /*
            * create a local browser URL for the snippable item so

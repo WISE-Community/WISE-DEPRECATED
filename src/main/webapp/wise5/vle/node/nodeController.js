@@ -70,7 +70,6 @@ var NodeController = function () {
 
     // perform setup of this node only if the current node is not a group.
     if (this.StudentDataService.getCurrentNode() && this.ProjectService.isApplicationNode(this.StudentDataService.getCurrentNodeId())) {
-      // get the current node and node id
       var currentNode = this.StudentDataService.getCurrentNode();
       if (currentNode != null) {
         this.nodeId = currentNode.id;
@@ -395,22 +394,40 @@ var NodeController = function () {
 
       // add tour bubbles for each of the component rubrics
       var components = this.getComponents();
-      var l = components.length,
-          i = 0;
-      for (; i < l; i++) {
-        var _component = components[i];
-        if (_component.rubric) {
-          var _thisTarget = '#rubric_' + _component.id;
-          this.rubricTour.steps.push({
-            target: _thisTarget,
-            arrowOffset: 21,
-            placement: 'right',
-            yOffset: 1,
-            title: this.$translate('ITEM_INFO'),
-            content: this.ProjectService.replaceAssetPaths(_component.rubric),
-            onShow: this.onShowRubric,
-            viewed: false
-          });
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var component = _step.value;
+
+          if (component.rubric) {
+            var _thisTarget = '#rubric_' + component.id;
+            this.rubricTour.steps.push({
+              target: _thisTarget,
+              arrowOffset: 21,
+              placement: 'right',
+              yOffset: 1,
+              title: this.$translate('ITEM_INFO'),
+              content: this.ProjectService.replaceAssetPaths(component.rubric),
+              onShow: this.onShowRubric,
+              viewed: false
+            });
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
         }
       }
     }
@@ -439,18 +456,36 @@ var NodeController = function () {
           }
 
           var components = this.getComponents();
-          var l = components.length,
-              i = 0;
-          for (; i < l; i++) {
-            var _component2 = components[i];
-            if (_component2.rubric) {
-              thisTarget = '#rubric_' + _component2.id;
-              if (_component2.id === id) {
-                // the given id matches the current componentId
-                step = index;
-                break;
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
+
+          try {
+            for (var _iterator2 = components[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var component = _step2.value;
+
+              if (component.rubric) {
+                thisTarget = '#rubric_' + component.id;
+                if (component.id === id) {
+                  // the given id matches the current componentId
+                  step = index;
+                  break;
+                }
+                index++;
               }
-              index++;
+            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
             }
           }
         }
@@ -661,16 +696,56 @@ var NodeController = function () {
       }
 
       if (components != null && this.isDisabled) {
-        for (var _c = 0; _c < components.length; _c++) {
-          var _component3 = components[_c];
-          _component3.isDisabled = true;
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
+
+        try {
+          for (var _iterator3 = components[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var component = _step3.value;
+
+            component.isDisabled = true;
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
+            }
+          }
         }
       }
 
       if (components != null && this.nodeContent.lockAfterSubmit) {
-        for (c = 0; c < components.length; c++) {
-          component = components[c];
-          component.lockAfterSubmit = true;
+        var _iteratorNormalCompletion4 = true;
+        var _didIteratorError4 = false;
+        var _iteratorError4 = undefined;
+
+        try {
+          for (var _iterator4 = components[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var _component = _step4.value;
+
+            _component.lockAfterSubmit = true;
+          }
+        } catch (err) {
+          _didIteratorError4 = true;
+          _iteratorError4 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+              _iterator4.return();
+            }
+          } finally {
+            if (_didIteratorError4) {
+              throw _iteratorError4;
+            }
+          }
         }
       }
       return components;
@@ -688,13 +763,33 @@ var NodeController = function () {
       var component = null;
       if (componentId != null) {
         var components = this.getComponents();
-        for (var _c2 = 0; _c2 < components.length; _c2++) {
-          var tempComponent = components[_c2];
-          if (tempComponent != null) {
-            var tempComponentId = tempComponent.id;
-            if (tempComponentId === componentId) {
-              component = tempComponent;
-              break;
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
+
+        try {
+          for (var _iterator5 = components[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var tempComponent = _step5.value;
+
+            if (tempComponent != null) {
+              var tempComponentId = tempComponent.id;
+              if (tempComponentId === componentId) {
+                component = tempComponent;
+                break;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
+            }
+          } finally {
+            if (_didIteratorError5) {
+              throw _iteratorError5;
             }
           }
         }
@@ -714,13 +809,33 @@ var NodeController = function () {
       var result = false;
       if (componentId != null) {
         var components = this.getComponents();
-        for (var _c3 = 0; _c3 < components.length; _c3++) {
-          var tempComponent = components[_c3];
-          if (tempComponent != null) {
-            var tempComponentId = tempComponent.id;
-            if (tempComponentId === componentId) {
-              result = true;
-              break;
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
+
+        try {
+          for (var _iterator6 = components[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var tempComponent = _step6.value;
+
+            if (tempComponent != null) {
+              var tempComponentId = tempComponent.id;
+              if (tempComponentId === componentId) {
+                result = true;
+                break;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
+            }
+          } finally {
+            if (_didIteratorError6) {
+              throw _iteratorError6;
             }
           }
         }
@@ -854,18 +969,38 @@ var NodeController = function () {
         var nodeStates = null;
 
         if (componentStates != null && _this3.UtilService.arrayHasNonNullElement(componentStates) || componentAnnotations != null && componentAnnotations.length || componentEvents != null && componentEvents.length) {
-          for (var _c4 = 0; _c4 < componentStates.length; _c4++) {
-            var componentState = componentStates[_c4];
-            if (componentState != null) {
-              var annotations = componentState.annotations;
-              if (annotations != null) {
-                /*
-                 * add the annotations to our array of annotations that will
-                 * be saved to the server
-                 */
-                componentAnnotations = componentAnnotations.concat(annotations);
+          var _iteratorNormalCompletion7 = true;
+          var _didIteratorError7 = false;
+          var _iteratorError7 = undefined;
+
+          try {
+            for (var _iterator7 = componentStates[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+              var componentState = _step7.value;
+
+              if (componentState != null) {
+                var annotations = componentState.annotations;
+                if (annotations != null) {
+                  /*
+                   * add the annotations to our array of annotations that will
+                   * be saved to the server
+                   */
+                  componentAnnotations = componentAnnotations.concat(annotations);
+                }
+                delete componentState.annotations;
               }
-              delete componentState.annotations;
+            }
+          } catch (err) {
+            _didIteratorError7 = true;
+            _iteratorError7 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                _iterator7.return();
+              }
+            } finally {
+              if (_didIteratorError7) {
+                throw _iteratorError7;
+              }
             }
           }
 
@@ -881,11 +1016,31 @@ var NodeController = function () {
               if (_this3.NodeService.hasTransitionLogic() && _this3.NodeService.evaluateTransitionLogicOn('scoreChanged')) {
                 if (componentAnnotations != null && componentAnnotations.length > 0) {
                   var evaluateTransitionLogic = false;
-                  for (var _c5 = 0; _c5 < componentAnnotations.length; _c5++) {
-                    var componentAnnotation = componentAnnotations[_c5];
-                    if (componentAnnotation != null) {
-                      if (componentAnnotation.type === 'autoScore') {
-                        evaluateTransitionLogic = true;
+                  var _iteratorNormalCompletion8 = true;
+                  var _didIteratorError8 = false;
+                  var _iteratorError8 = undefined;
+
+                  try {
+                    for (var _iterator8 = componentAnnotations[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                      var componentAnnotation = _step8.value;
+
+                      if (componentAnnotation != null) {
+                        if (componentAnnotation.type === 'autoScore') {
+                          evaluateTransitionLogic = true;
+                        }
+                      }
+                    }
+                  } catch (err) {
+                    _didIteratorError8 = true;
+                    _iteratorError8 = err;
+                  } finally {
+                    try {
+                      if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                        _iterator8.return();
+                      }
+                    } finally {
+                      if (_didIteratorError8) {
+                        throw _iteratorError8;
                       }
                     }
                   }
@@ -938,9 +1093,9 @@ var NodeController = function () {
       var componentStatePromises = [];
 
       if (componentId) {
-        var _component4 = this.getComponentById(componentId);
-        if (_component4) {
-          components.push(_component4);
+        var component = this.getComponentById(componentId);
+        if (component) {
+          components.push(component);
         }
       } else {
         components = this.getComponents();
@@ -952,18 +1107,38 @@ var NodeController = function () {
         var workgroupId = this.ConfigService.getWorkgroupId();
         var nodeId = this.nodeId;
 
-        for (var _c6 = 0; _c6 < components.length; _c6++) {
-          var _component5 = components[_c6];
-          if (_component5 != null) {
-            var tempComponentId = _component5.id;
-            var componentType = _component5.type;
+        var _iteratorNormalCompletion9 = true;
+        var _didIteratorError9 = false;
+        var _iteratorError9 = undefined;
 
-            var childScope = this.componentToScope[tempComponentId];
-            if (childScope != null) {
-              if (childScope.getComponentState) {
-                var componentStatePromise = this.getComponentStateFromChildScope(childScope, runId, periodId, workgroupId, nodeId, componentId, tempComponentId, componentType, isAutoSave, isSubmit);
-                componentStatePromises.push(componentStatePromise);
+        try {
+          for (var _iterator9 = components[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+            var _component2 = _step9.value;
+
+            if (_component2 != null) {
+              var tempComponentId = _component2.id;
+              var componentType = _component2.type;
+
+              var childScope = this.componentToScope[tempComponentId];
+              if (childScope != null) {
+                if (childScope.getComponentState) {
+                  var componentStatePromise = this.getComponentStateFromChildScope(childScope, runId, periodId, workgroupId, nodeId, componentId, tempComponentId, componentType, isAutoSave, isSubmit);
+                  componentStatePromises.push(componentStatePromise);
+                }
               }
+            }
+          }
+        } catch (err) {
+          _didIteratorError9 = true;
+          _iteratorError9 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion9 && _iterator9.return) {
+              _iterator9.return();
+            }
+          } finally {
+            if (_didIteratorError9) {
+              throw _iteratorError9;
             }
           }
         }
@@ -1087,70 +1262,110 @@ var NodeController = function () {
            * only notify components that are listening for changes
            * from the specific component id.
            */
-          for (var _c7 = 0; _c7 < components.length; _c7++) {
-            var tempComponent = components[_c7];
-            if (tempComponent != null) {
-              var tempComponentId = tempComponent.id;
-              /*
-               * get the connected components that this component is
-               * listening for
-               */
-              var connectedComponents = tempComponent.connectedComponents;
-              if (connectedComponents != null) {
-                for (var cc = 0; cc < connectedComponents.length; cc++) {
-                  var connectedComponentParams = connectedComponents[cc];
-                  if (connectedComponentParams != null) {
-                    var nodeId = connectedComponentParams.nodeId;
-                    var componentId = connectedComponentParams.componentId;
+          var _iteratorNormalCompletion10 = true;
+          var _didIteratorError10 = false;
+          var _iteratorError10 = undefined;
 
-                    /*
-                     * get the id which is the old field that we used to store
-                     * the component id in. this is here to maintain backwards
-                     * compatibility.
-                     */
-                    var id = connectedComponentParams.id;
+          try {
+            for (var _iterator10 = components[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+              var tempComponent = _step10.value;
 
-                    if (nodeId != null && componentId != null) {
-                      var connectedComponentId = componentId;
-                      var connectedNodeId = nodeId;
-                      if (connectedNodeId == this.nodeId && connectedComponentId === changedComponentId) {
-                        var connectedComponent = this.getComponentById(connectedComponentId);
-                        var componentScope = this.componentToScope[tempComponentId];
-                        if (componentScope.handleConnectedComponentStudentDataChanged != null) {
-                          componentScope.handleConnectedComponentStudentDataChanged(connectedComponent, connectedComponentParams, componentState);
+              if (tempComponent != null) {
+                var tempComponentId = tempComponent.id;
+                /*
+                 * get the connected components that this component is
+                 * listening for
+                 */
+                var connectedComponents = tempComponent.connectedComponents;
+                if (connectedComponents != null) {
+                  var _iteratorNormalCompletion11 = true;
+                  var _didIteratorError11 = false;
+                  var _iteratorError11 = undefined;
+
+                  try {
+                    for (var _iterator11 = connectedComponents[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+                      var connectedComponentParams = _step11.value;
+
+                      if (connectedComponentParams != null) {
+                        var nodeId = connectedComponentParams.nodeId;
+                        var componentId = connectedComponentParams.componentId;
+
+                        /*
+                         * get the id which is the old field that we used to store
+                         * the component id in. this is here to maintain backwards
+                         * compatibility.
+                         */
+                        var id = connectedComponentParams.id;
+
+                        if (nodeId != null && componentId != null) {
+                          var connectedComponentId = componentId;
+                          var connectedNodeId = nodeId;
+                          if (connectedNodeId == this.nodeId && connectedComponentId === changedComponentId) {
+                            var connectedComponent = this.getComponentById(connectedComponentId);
+                            var componentScope = this.componentToScope[tempComponentId];
+                            if (componentScope.handleConnectedComponentStudentDataChanged != null) {
+                              componentScope.handleConnectedComponentStudentDataChanged(connectedComponent, connectedComponentParams, componentState);
+                            }
+                          }
+                        } else if (componentId != null) {
+                          /*
+                           * the node id was not provided but the component id was provided
+                           * so we will assume the component id is in the current node
+                           */
+                          var _connectedComponentId = componentId;
+                          if (_connectedComponentId === changedComponentId) {
+                            var _connectedComponent = this.getComponentById(_connectedComponentId);
+                            var _componentScope = this.componentToScope[tempComponentId];
+                            if (_componentScope.handleConnectedComponentStudentDataChanged != null) {
+                              _componentScope.handleConnectedComponentStudentDataChanged(_connectedComponent, connectedComponentParams, componentState);
+                            }
+                          }
+                        } else if (id != null) {
+                          /*
+                           * the node id and component id were not provided but the
+                           * id was provided which is the old field we used to set
+                           * the component id in. this is here to maintain backwards
+                           * compatibility.
+                           */
+                          var _connectedComponentId2 = id;
+                          if (_connectedComponentId2 === changedComponentId) {
+                            var _connectedComponent2 = this.getComponentById(_connectedComponentId2);
+                            var _componentScope2 = this.componentToScope[tempComponentId];
+                            if (_componentScope2.handleConnectedComponentStudentDataChanged != null) {
+                              _componentScope2.handleConnectedComponentStudentDataChanged(_connectedComponent2, connectedComponentParams, componentState);
+                            }
+                          }
                         }
                       }
-                    } else if (componentId != null) {
-                      /*
-                       * the node id was not provided but the component id was provided
-                       * so we will assume the component id is in the current node
-                       */
-                      var _connectedComponentId = componentId;
-                      if (_connectedComponentId === changedComponentId) {
-                        var _connectedComponent = this.getComponentById(_connectedComponentId);
-                        var _componentScope = this.componentToScope[tempComponentId];
-                        if (_componentScope.handleConnectedComponentStudentDataChanged != null) {
-                          _componentScope.handleConnectedComponentStudentDataChanged(_connectedComponent, connectedComponentParams, componentState);
-                        }
+                    }
+                  } catch (err) {
+                    _didIteratorError11 = true;
+                    _iteratorError11 = err;
+                  } finally {
+                    try {
+                      if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                        _iterator11.return();
                       }
-                    } else if (id != null) {
-                      /*
-                       * the node id and component id were not provided but the
-                       * id was provided which is the old field we used to set
-                       * the component id in. this is here to maintain backwards
-                       * compatibility.
-                       */
-                      var _connectedComponentId2 = id;
-                      if (_connectedComponentId2 === changedComponentId) {
-                        var _connectedComponent2 = this.getComponentById(_connectedComponentId2);
-                        var _componentScope2 = this.componentToScope[tempComponentId];
-                        if (_componentScope2.handleConnectedComponentStudentDataChanged != null) {
-                          _componentScope2.handleConnectedComponentStudentDataChanged(_connectedComponent2, connectedComponentParams, componentState);
-                        }
+                    } finally {
+                      if (_didIteratorError11) {
+                        throw _iteratorError11;
                       }
                     }
                   }
                 }
+              }
+            }
+          } catch (err) {
+            _didIteratorError10 = true;
+            _iteratorError10 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                _iterator10.return();
+              }
+            } finally {
+              if (_didIteratorError10) {
+                throw _iteratorError10;
               }
             }
           }
@@ -1217,17 +1432,36 @@ var NodeController = function () {
       var components = this.getComponents();
 
       if (components != null) {
-        for (var _c8 = 0, l = components.length; _c8 < l; _c8++) {
-          var id = components[_c8].id;
-          var latestState = this.getComponentStateByComponentId(id);
+        var _iteratorNormalCompletion12 = true;
+        var _didIteratorError12 = false;
+        var _iteratorError12 = undefined;
 
-          if (latestState && !latestState.isSubmit) {
-            submitDirty = true;
-            break;
+        try {
+          for (var _iterator12 = components[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+            var component = _step12.value;
+
+            var componentId = component.id;
+            var latestState = this.getComponentStateByComponentId(componentId);
+            if (latestState && !latestState.isSubmit) {
+              submitDirty = true;
+              break;
+            }
+          }
+        } catch (err) {
+          _didIteratorError12 = true;
+          _iteratorError12 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion12 && _iterator12.return) {
+              _iterator12.return();
+            }
+          } finally {
+            if (_didIteratorError12) {
+              throw _iteratorError12;
+            }
           }
         }
       }
-
       return submitDirty;
     }
   }, {

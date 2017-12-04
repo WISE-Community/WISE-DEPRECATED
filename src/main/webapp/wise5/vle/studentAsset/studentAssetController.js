@@ -57,16 +57,36 @@ var StudentAssetController = function () {
       var _this3 = this;
 
       if (files != null) {
-        for (var f = 0; f < files.length; f++) {
-          var file = files[f];
-          this.StudentAssetService.uploadAsset(file).then(function (studentAsset) {
-            if (_this3.componentController != null) {
-              // If the student asset dialog is a part of a component (e.g. attaching image to OR or Discussion)
-              // Also attach the file(s) to the componentstate's attachments
-              _this3.componentController.attachStudentAsset(studentAsset);
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var file = _step.value;
+
+            this.StudentAssetService.uploadAsset(file).then(function (studentAsset) {
+              if (_this3.componentController != null) {
+                // If the student asset dialog is a part of a component (e.g. attaching image to OR or Discussion)
+                // Also attach the file(s) to the componentstate's attachments
+                _this3.componentController.attachStudentAsset(studentAsset);
+              }
+              _this3.studentAssets = _this3.StudentAssetService.allAssets;
+            });
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
             }
-            _this3.studentAssets = _this3.StudentAssetService.allAssets;
-          });
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
         }
       }
     }

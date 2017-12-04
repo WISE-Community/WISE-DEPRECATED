@@ -44,8 +44,7 @@ class StudentAssetController {
 
   uploadStudentAssets(files) {
     if (files != null) {
-      for (let f = 0; f < files.length; f++) {
-        const file = files[f];
+      for (const file of files) {
         this.StudentAssetService.uploadAsset(file).then((studentAsset) => {
           if (this.componentController != null) {
             // If the student asset dialog is a part of a component (e.g. attaching image to OR or Discussion)
