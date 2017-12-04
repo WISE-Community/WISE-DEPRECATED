@@ -14,14 +14,14 @@ class NavigationController {
 
     this.$rootScope.$on('$stateChangeSuccess',
         function (event, toState, toParams, fromState, fromParams) {
-      var toNodeId = toParams.nodeId;
-      var fromNodeId = fromParams.nodeId;
+      const toNodeId = toParams.nodeId;
+      const fromNodeId = fromParams.nodeId;
       if (toNodeId && fromNodeId && toNodeId !== fromNodeId) {
         this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
       }
 
       if (toState.name === 'root.vle') {
-        let nodeId = toParams.nodeId;
+        const nodeId = toParams.nodeId;
         if (this.ProjectService.isApplicationNode(nodeId)) {
           // scroll to top when viewing a new step
           document.getElementById('content').scrollTop = 0;
@@ -38,8 +38,7 @@ class NavigationController {
     if (openCPUURL != null) {
       let allEvents = this.StudentDataService.getEvents();
       ocpu.seturl(openCPUURL);
-      //perform the request
-      var request = ocpu.call("getTotalTimeSpent", {
+      const request = ocpu.call("getTotalTimeSpent", {
         "events": allEvents
       }, (session) => {
         session.getStdout((echoedData) => {
@@ -47,7 +46,6 @@ class NavigationController {
         });
       });
 
-      //if R returns an error, alert the error message
       request.fail(() => {
         alert(this.$translate('serverError') + request.responseText);
       });

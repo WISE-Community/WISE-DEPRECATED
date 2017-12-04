@@ -140,11 +140,11 @@ var NodeController = function () {
       if (this.$state != null && this.$state.params != null && this.$state.params.componentId != null) {
 
         // get the component id
-        var componentId = this.$state.params.componentId;
+        var _componentId = this.$state.params.componentId;
 
         this.$timeout(function () {
           // get the UI element of the component
-          var componentElement = $("#component_" + componentId);
+          var componentElement = $("#component_" + _componentId);
 
           if (componentElement != null) {
             // save the original background color
@@ -179,16 +179,16 @@ var NodeController = function () {
       var isAutoSave = false;
 
       if (args != null) {
-        var nodeId = args.nodeId;
-        var componentId = args.componentId;
+        var _nodeId = args.nodeId;
+        var _componentId2 = args.componentId;
 
-        if (nodeId != null && componentId != null) {
-          if (_this.nodeId == nodeId && _this.nodeContainsComponent(componentId)) {
+        if (_nodeId != null && _componentId2 != null) {
+          if (_this.nodeId == _nodeId && _this.nodeContainsComponent(_componentId2)) {
             /*
              * obtain the component states from the children and save them
              * to the server
              */
-            _this.createAndSaveComponentData(isAutoSave, componentId);
+            _this.createAndSaveComponentData(isAutoSave, _componentId2);
           }
         }
       }
@@ -203,16 +203,16 @@ var NodeController = function () {
       var isSubmit = true;
 
       if (args != null) {
-        var nodeId = args.nodeId;
-        var componentId = args.componentId;
+        var _nodeId2 = args.nodeId;
+        var _componentId3 = args.componentId;
 
-        if (nodeId != null && componentId != null) {
-          if (_this.nodeId == nodeId && _this.nodeContainsComponent(componentId)) {
+        if (_nodeId2 != null && _componentId3 != null) {
+          if (_this.nodeId == _nodeId2 && _this.nodeContainsComponent(_componentId3)) {
             /*
              * obtain the component states from the children and save them
              * to the server
              */
-            _this.createAndSaveComponentData(isAutoSave, componentId, isSubmit);
+            _this.createAndSaveComponentData(isAutoSave, _componentId3, isSubmit);
           }
         }
       }
@@ -230,9 +230,9 @@ var NodeController = function () {
        * we will need to save
        */
       if (args != null) {
-        var componentId = args.componentId;
+        var _componentId4 = args.componentId;
         var componentState = args.componentState;
-        if (componentId != null && componentState != null) {
+        if (_componentId4 != null && componentState != null) {
           if (componentState.nodeId == null) {
             if (args.nodeId != null) {
               /*
@@ -260,7 +260,7 @@ var NodeController = function () {
            * notify the parts that are connected that the student
            * data has changed
            */
-          _this.notifyConnectedParts(componentId, componentState);
+          _this.notifyConnectedParts(_componentId4, componentState);
           _this.$scope.$broadcast('siblingComponentStudentDataChanged', args);
         }
       }
@@ -398,16 +398,16 @@ var NodeController = function () {
       var l = components.length,
           i = 0;
       for (; i < l; i++) {
-        var component = components[i];
-        if (component.rubric) {
-          var _thisTarget = '#rubric_' + component.id;
+        var _component = components[i];
+        if (_component.rubric) {
+          var _thisTarget = '#rubric_' + _component.id;
           this.rubricTour.steps.push({
             target: _thisTarget,
             arrowOffset: 21,
             placement: 'right',
             yOffset: 1,
             title: this.$translate('ITEM_INFO'),
-            content: this.ProjectService.replaceAssetPaths(component.rubric),
+            content: this.ProjectService.replaceAssetPaths(_component.rubric),
             onShow: this.onShowRubric,
             viewed: false
           });
@@ -442,10 +442,10 @@ var NodeController = function () {
           var l = components.length,
               i = 0;
           for (; i < l; i++) {
-            var component = components[i];
-            if (component.rubric) {
-              thisTarget = '#rubric_' + component.id;
-              if (component.id === id) {
+            var _component2 = components[i];
+            if (_component2.rubric) {
+              thisTarget = '#rubric_' + _component2.id;
+              if (_component2.id === id) {
                 // the given id matches the current componentId
                 step = index;
                 break;
@@ -661,9 +661,9 @@ var NodeController = function () {
       }
 
       if (components != null && this.isDisabled) {
-        for (var c = 0; c < components.length; c++) {
-          var component = components[c];
-          component.isDisabled = true;
+        for (var _c = 0; _c < components.length; _c++) {
+          var _component3 = components[_c];
+          _component3.isDisabled = true;
         }
       }
 
@@ -688,8 +688,8 @@ var NodeController = function () {
       var component = null;
       if (componentId != null) {
         var components = this.getComponents();
-        for (var c = 0; c < components.length; c++) {
-          var tempComponent = components[c];
+        for (var _c2 = 0; _c2 < components.length; _c2++) {
+          var tempComponent = components[_c2];
           if (tempComponent != null) {
             var tempComponentId = tempComponent.id;
             if (tempComponentId === componentId) {
@@ -714,8 +714,8 @@ var NodeController = function () {
       var result = false;
       if (componentId != null) {
         var components = this.getComponents();
-        for (var c = 0; c < components.length; c++) {
-          var tempComponent = components[c];
+        for (var _c3 = 0; _c3 < components.length; _c3++) {
+          var tempComponent = components[_c3];
           if (tempComponent != null) {
             var tempComponentId = tempComponent.id;
             if (tempComponentId === componentId) {
@@ -854,8 +854,8 @@ var NodeController = function () {
         var nodeStates = null;
 
         if (componentStates != null && _this3.UtilService.arrayHasNonNullElement(componentStates) || componentAnnotations != null && componentAnnotations.length || componentEvents != null && componentEvents.length) {
-          for (var c = 0; c < componentStates.length; c++) {
-            var componentState = componentStates[c];
+          for (var _c4 = 0; _c4 < componentStates.length; _c4++) {
+            var componentState = componentStates[_c4];
             if (componentState != null) {
               var annotations = componentState.annotations;
               if (annotations != null) {
@@ -881,8 +881,8 @@ var NodeController = function () {
               if (_this3.NodeService.hasTransitionLogic() && _this3.NodeService.evaluateTransitionLogicOn('scoreChanged')) {
                 if (componentAnnotations != null && componentAnnotations.length > 0) {
                   var evaluateTransitionLogic = false;
-                  for (var c = 0; c < componentAnnotations.length; c++) {
-                    var componentAnnotation = componentAnnotations[c];
+                  for (var _c5 = 0; _c5 < componentAnnotations.length; _c5++) {
+                    var componentAnnotation = componentAnnotations[_c5];
                     if (componentAnnotation != null) {
                       if (componentAnnotation.type === 'autoScore') {
                         evaluateTransitionLogic = true;
@@ -938,9 +938,9 @@ var NodeController = function () {
       var componentStatePromises = [];
 
       if (componentId) {
-        var component = this.getComponentById(componentId);
-        if (component) {
-          components.push(component);
+        var _component4 = this.getComponentById(componentId);
+        if (_component4) {
+          components.push(_component4);
         }
       } else {
         components = this.getComponents();
@@ -952,11 +952,11 @@ var NodeController = function () {
         var workgroupId = this.ConfigService.getWorkgroupId();
         var nodeId = this.nodeId;
 
-        for (var c = 0; c < components.length; c++) {
-          var component = components[c];
-          if (component != null) {
-            var tempComponentId = component.id;
-            var componentType = component.type;
+        for (var _c6 = 0; _c6 < components.length; _c6++) {
+          var _component5 = components[_c6];
+          if (_component5 != null) {
+            var tempComponentId = _component5.id;
+            var componentType = _component5.type;
 
             var childScope = this.componentToScope[tempComponentId];
             if (childScope != null) {
@@ -1087,8 +1087,8 @@ var NodeController = function () {
            * only notify components that are listening for changes
            * from the specific component id.
            */
-          for (var c = 0; c < components.length; c++) {
-            var tempComponent = components[c];
+          for (var _c7 = 0; _c7 < components.length; _c7++) {
+            var tempComponent = components[_c7];
             if (tempComponent != null) {
               var tempComponentId = tempComponent.id;
               /*
@@ -1125,12 +1125,12 @@ var NodeController = function () {
                        * the node id was not provided but the component id was provided
                        * so we will assume the component id is in the current node
                        */
-                      var connectedComponentId = componentId;
-                      if (connectedComponentId === changedComponentId) {
-                        var connectedComponent = this.getComponentById(connectedComponentId);
-                        var componentScope = this.componentToScope[tempComponentId];
-                        if (componentScope.handleConnectedComponentStudentDataChanged != null) {
-                          componentScope.handleConnectedComponentStudentDataChanged(connectedComponent, connectedComponentParams, componentState);
+                      var _connectedComponentId = componentId;
+                      if (_connectedComponentId === changedComponentId) {
+                        var _connectedComponent = this.getComponentById(_connectedComponentId);
+                        var _componentScope = this.componentToScope[tempComponentId];
+                        if (_componentScope.handleConnectedComponentStudentDataChanged != null) {
+                          _componentScope.handleConnectedComponentStudentDataChanged(_connectedComponent, connectedComponentParams, componentState);
                         }
                       }
                     } else if (id != null) {
@@ -1140,12 +1140,12 @@ var NodeController = function () {
                        * the component id in. this is here to maintain backwards
                        * compatibility.
                        */
-                      var connectedComponentId = id;
-                      if (connectedComponentId === changedComponentId) {
-                        var connectedComponent = this.getComponentById(connectedComponentId);
-                        var componentScope = this.componentToScope[tempComponentId];
-                        if (componentScope.handleConnectedComponentStudentDataChanged != null) {
-                          componentScope.handleConnectedComponentStudentDataChanged(connectedComponent, connectedComponentParams, componentState);
+                      var _connectedComponentId2 = id;
+                      if (_connectedComponentId2 === changedComponentId) {
+                        var _connectedComponent2 = this.getComponentById(_connectedComponentId2);
+                        var _componentScope2 = this.componentToScope[tempComponentId];
+                        if (_componentScope2.handleConnectedComponentStudentDataChanged != null) {
+                          _componentScope2.handleConnectedComponentStudentDataChanged(_connectedComponent2, connectedComponentParams, componentState);
                         }
                       }
                     }
@@ -1217,8 +1217,8 @@ var NodeController = function () {
       var components = this.getComponents();
 
       if (components != null) {
-        for (var c = 0, l = components.length; c < l; c++) {
-          var id = components[c].id;
+        for (var _c8 = 0, l = components.length; _c8 < l; _c8++) {
+          var id = components[_c8].id;
           var latestState = this.getComponentStateByComponentId(id);
 
           if (latestState && !latestState.isSubmit) {

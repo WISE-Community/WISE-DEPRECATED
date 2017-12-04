@@ -70,16 +70,16 @@ class VLEController {
     }
 
     this.$scope.$on('currentNodeChanged', (event, args) => {
-      var previousNode = args.previousNode;
-      var currentNode = this.StudentDataService.getCurrentNode();
-      var currentNodeId = currentNode.id;
+      let previousNode = args.previousNode;
+      let currentNode = this.StudentDataService.getCurrentNode();
+      let currentNodeId = currentNode.id;
 
       this.StudentDataService.updateStackHistory(currentNodeId);
       this.StudentDataService.updateVisitedNodesHistory(currentNodeId);
 
       this.$state.go('root.vle', {nodeId:currentNodeId});
 
-      var componentId, componentType, category, eventName, eventData, eventNodeId;
+      let componentId, componentType, category, eventName, eventData, eventNodeId;
       if (previousNode != null && this.ProjectService.isGroupNode(previousNode.id)) {
         // going from group to node or group to group
         componentId = null;
@@ -145,8 +145,8 @@ class VLEController {
       }
 
       if (args.imageObjects != null) {
-        for (var i = 0; i < args.imageObjects.length; i++) {
-          var imageObject = args.imageObjects[i];
+        for (let i = 0; i < args.imageObjects.length; i++) {
+          const imageObject = args.imageObjects[i];
           if (imageObject != null) {
             this.snippableItems.push(imageObject);
           }
@@ -169,9 +169,9 @@ class VLEController {
     this.themePath = this.ProjectService.getThemePath();
     this.notebookItemPath = this.themePath + '/notebook/notebookItem.html';
 
-    var nodeId = null;
-    var stateParams = null;
-    var stateParamNodeId = null;
+    let nodeId = null;
+    let stateParams = null;
+    let stateParamNodeId = null;
 
     if (this.$state != null) {
       stateParams = this.$state.params;
@@ -197,15 +197,15 @@ class VLEController {
 
     this.StudentDataService.setCurrentNodeByNodeId(nodeId);
 
-    var runStatus = this.StudentDataService.getRunStatus();
+    const runStatus = this.StudentDataService.getRunStatus();
     if (runStatus != null) {
-      var pause = false;
-      var periodId = this.ConfigService.getPeriodId();
+      let pause = false;
+      const periodId = this.ConfigService.getPeriodId();
       if (periodId != null) {
-        var periods = runStatus.periods;
+        const periods = runStatus.periods;
         if (periods != null) {
-          for (var p = 0; p < periods.length; p++) {
-            var tempPeriod = periods[p];
+          for (let p = 0; p < periods.length; p++) {
+            const tempPeriod = periods[p];
             if (periodId === tempPeriod.periodId) {
               if (tempPeriod.paused) {
                 pause = true;
@@ -238,7 +238,7 @@ class VLEController {
 
     for (let c = 0; c < currentComponents.length; c++) {
       let currentComponent = currentComponents[c];
-      var args = {};
+      const args = {};
       args.nodeId = currentNodeId;
       args.componentId = currentComponent.id;
 
@@ -262,8 +262,8 @@ class VLEController {
       $scope.ProjectService = ProjectService;
       $scope.snippableItems = snippableItems;
 
-      for (var s = 0; s < snippableItems.length; s++) {
-        var snippableItem = snippableItems[s];
+      for (let s = 0; s < snippableItems.length; s++) {
+        const snippableItem = snippableItems[s];
         if (snippableItem != null) {
           /*
            * create a local browser URL for the snippable item so
@@ -286,24 +286,24 @@ class VLEController {
   }
 
   goHome() {
-    var nodeId = null;
-    var componentId = null;
-    var componentType = null;
-    var category = "Navigation";
-    var event = "goHomeButtonClicked";
-    var eventData = {};
+    const nodeId = null;
+    const componentId = null;
+    const componentType = null;
+    const category = "Navigation";
+    const event = "goHomeButtonClicked";
+    const eventData = {};
     this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
 
     this.$rootScope.$broadcast('goHome');
   };
 
   logOut() {
-    var nodeId = null;
-    var componentId = null;
-    var componentType = null;
-    var category = "Navigation";
-    var event = "logOutButtonClicked";
-    var eventData = {};
+    const nodeId = null;
+    const componentId = null;
+    const componentType = null;
+    const category = "Navigation";
+    const event = "logOutButtonClicked";
+    const eventData = {};
     this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
 
     this.$rootScope.$broadcast('logOut');
@@ -514,8 +514,8 @@ class VLEController {
    * @return whether there are any constraints in the project
    */
   hasConstraints() {
-    var hasActiveConstraints = false;
-    var activeConstraints = this.ProjectService.activeConstraints;
+    let hasActiveConstraints = false;
+    const activeConstraints = this.ProjectService.activeConstraints;
     if (activeConstraints != null && activeConstraints.length > 0) {
       hasActiveConstraints = true;
     }

@@ -77,7 +77,12 @@ var VLEController = function () {
 
       _this.$state.go('root.vle', { nodeId: currentNodeId });
 
-      var componentId, componentType, category, eventName, eventData, eventNodeId;
+      var componentId = void 0,
+          componentType = void 0,
+          category = void 0,
+          eventName = void 0,
+          eventData = void 0,
+          eventNodeId = void 0;
       if (previousNode != null && _this.ProjectService.isGroupNode(previousNode.id)) {
         // going from group to node or group to group
         componentId = null;

@@ -50,7 +50,6 @@ var NavigationController = function () {
       if (openCPUURL != null) {
         var allEvents = this.StudentDataService.getEvents();
         ocpu.seturl(openCPUURL);
-        //perform the request
         var request = ocpu.call("getTotalTimeSpent", {
           "events": allEvents
         }, function (session) {
@@ -59,7 +58,6 @@ var NavigationController = function () {
           });
         });
 
-        //if R returns an error, alert the error message
         request.fail(function () {
           alert(_this.$translate('serverError') + request.responseText);
         });
