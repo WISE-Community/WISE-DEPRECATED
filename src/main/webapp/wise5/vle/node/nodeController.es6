@@ -33,19 +33,12 @@ class NodeController {
     // the auto save interval in milliseconds
     this.autoSaveInterval = 60000;
 
-    // the node id of the current node
     this.nodeId = null;
     this.nodeContent = null;
     this.nodeStatus = null;
     this.nodeTitle = null;
-
-    // hold ids of dirty components
     this.dirtyComponentIds = [];
-
-    // array to hold ids of components where student work has changed since last submission
     this.dirtySubmitComponentIds = [];
-
-    // whether the student work has changed since last submit
     this.submit = false;
     this.workgroupId = this.ConfigService.getWorkgroupId();
     this.teacherWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
@@ -56,44 +49,28 @@ class NodeController {
      */
     this.componentToScope = {};
 
-    // message to show next to save/submit buttons
     this.saveMessage = {
       text: '',
       time: ''
     };
 
-    // the step rubric
     this.rubric = null;
-
-    // get the mode e.g. 'preview', 'student', 'authoring', 'grading', etc.
     this.mode = this.ConfigService.getMode();
 
     // perform setup of this node only if the current node is not a group.
-    if (this.StudentDataService.getCurrentNode() && this.ProjectService.isApplicationNode(this.StudentDataService.getCurrentNodeId())) {
+    if (this.StudentDataService.getCurrentNode() &&
+        this.ProjectService.isApplicationNode(
+        this.StudentDataService.getCurrentNodeId())) {
       const currentNode = this.StudentDataService.getCurrentNode();
       if (currentNode != null) {
         this.nodeId = currentNode.id;
       }
 
-      // get the node content
       this.nodeContent = this.ProjectService.getNodeById(this.nodeId);
-
       this.nodeTitle = this.ProjectService.getNodeTitleByNodeId(this.nodeId);
-
       this.nodeStatus = this.StudentDataService.nodeStatuses[this.nodeId];
-
-      // populate the student work into this node
-      //this.setStudentWork();
-
-      // check if we need to lock this node
       this.calculateDisabled();
-
-      //this.importWork();
-
-      // start the auto save interval
       this.startAutoSaveInterval();
-
-      // register this controller to listen for the exit event
       this.registerExitListener();
 
       if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('enterNode')) {
@@ -113,7 +90,6 @@ class NodeController {
         }
       }
 
-      // save nodeEntered event
       const nodeId = this.nodeId;
       const componentId = null;
       const componentType = null;
@@ -121,54 +97,23 @@ class NodeController {
       const event = "nodeEntered";
       const eventData = {};
       eventData.nodeId = nodeId;
-      this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+      this.StudentDataService.saveVLEEvent(
+          nodeId, componentId, componentType, category, event, eventData);
 
       if (this.nodeContent != null) {
-        // get the step rubric
         this.rubric = this.nodeContent.rubric;
-
-        // create the rubric tour bubbles
         this.createRubricTour();
       }
 
       /*
-       * Check if the component id was provided in the state params. If
-       * it is provided, we will scroll to it and then briefly highlight
-       * it.
+       * If the component id was provided in the state params, scroll to it and
+        * then briefly highlight it to bring attention to it.
        */
       if (this.$state != null &&
-        this.$state.params != null &&
-        this.$state.params.componentId != null) {
-
-        // get the component id
+          this.$state.params != null &&
+          this.$state.params.componentId != null) {
         const componentId = this.$state.params.componentId;
-
-        this.$timeout(() => {
-          // get the UI element of the component
-          const componentElement = $("#component_" + componentId);
-
-          if (componentElement != null) {
-            // save the original background color
-            const originalBackgroundColor = componentElement.css("backgroundColor");
-
-            // highlight the background briefly to draw attention to it
-            componentElement.css("background-color", "#FFFF9C");
-
-            // scroll to the first new component that we've added
-            $('#content').animate({
-              scrollTop: componentElement.prop("offsetTop")
-            }, 1000);
-
-            /*
-             * remove the background highlighting so that it returns
-             * to its original color
-             */
-            componentElement.css({
-              'transition': 'background-color 3s ease-in-out',
-              'background-color': originalBackgroundColor
-            });
-          }
-        }, 1000);
+        this.scrollAndHighlightComponent(componentId);
       }
     }
 
@@ -177,8 +122,6 @@ class NodeController {
      * component is requesting student data to be saved
      */
     this.$scope.$on('componentSaveTriggered', (event, args) => {
-      const isAutoSave = false;
-
       if (args != null) {
         const nodeId = args.nodeId;
         const componentId = args.componentId;
@@ -189,6 +132,7 @@ class NodeController {
              * obtain the component states from the children and save them
              * to the server
              */
+            const isAutoSave = false;
             this.createAndSaveComponentData(isAutoSave, componentId);
           }
         }
@@ -200,9 +144,6 @@ class NodeController {
      * component is requesting student data to be submitted
      */
     this.$scope.$on('componentSubmitTriggered', (event, args) => {
-      const isAutoSave = false;
-      const isSubmit = true;
-
       if (args != null) {
         const nodeId = args.nodeId;
         const componentId = args.componentId;
@@ -213,6 +154,8 @@ class NodeController {
              * obtain the component states from the children and save them
              * to the server
              */
+            const isAutoSave = false;
+            const isSubmit = true;
             this.createAndSaveComponentData(isAutoSave, componentId, isSubmit);
           }
         }
@@ -246,7 +189,6 @@ class NodeController {
           }
 
           if (componentState.componentId == null) {
-
             if (args.componentId != null) {
               /*
                * set the component id into the component state
@@ -279,10 +221,8 @@ class NodeController {
         const isDirty = args.isDirty;
         const index = this.dirtyComponentIds.indexOf(componentId);
         if (isDirty && index === -1) {
-          // add component id to array of dirty components
           this.dirtyComponentIds.push(componentId);
         } else if (!isDirty && index > -1){
-          // remove component id from array of dirty components
           this.dirtyComponentIds.splice(index, 1);
         }
       }
@@ -301,10 +241,8 @@ class NodeController {
         const isDirty = args.isDirty;
         const index = this.dirtySubmitComponentIds.indexOf(componentId);
         if (isDirty && index === -1) {
-          // add component id to array of dirty submit components
           this.dirtySubmitComponentIds.push(componentId);
         } else if (!isDirty && index > -1){
-          // remove component id from array of dirty submit components
           this.dirtySubmitComponentIds.splice(index, 1);
         }
       }
@@ -424,7 +362,6 @@ class NodeController {
 
       let thisTarget = '#nodeRubric_' + this.nodeId;
       if (this.nodeId === id) {
-        // the given id matches this nodeId
         step = index;
       }
 
@@ -438,7 +375,6 @@ class NodeController {
           if (component.rubric) {
             thisTarget = '#rubric_' + component.id;
             if (component.id === id) {
-              // the given id matches the current componentId
               step = index;
               break;
             }
@@ -452,6 +388,28 @@ class NodeController {
       // show the rubric tour starting with the step for the matched index
       hopscotch.startTour(this.rubricTour, step);
     }
+  }
+
+  scrollAndHighlightComponent(componentId) {
+    this.$timeout(() => {
+      const componentElement = $("#component_" + componentId);
+      if (componentElement != null) {
+        const originalBackgroundColor = componentElement.css("backgroundColor");
+        componentElement.css("background-color", "#FFFF9C");
+        $('#content').animate({
+          scrollTop: componentElement.prop("offsetTop")
+        }, 1000);
+
+        /*
+         * remove the background highlighting so that it returns
+         * to its original color
+         */
+        componentElement.css({
+          'transition': 'background-color 3s ease-in-out',
+          'background-color': originalBackgroundColor
+        });
+      }
+    }, 1000);
   }
 
   /**
@@ -642,6 +600,7 @@ class NodeController {
   /**
    * Get the components for this node.
    * @return an array that contains the content for the components.
+   * TODO: can we not return null? This will simplify code a lot
    */
   getComponents() {
     let components = null;
@@ -669,20 +628,18 @@ class NodeController {
    * @return the component object with the given component id
    */
   getComponentById(componentId) {
-    let component = null;
     if (componentId != null) {
       const components = this.getComponents();
       for (const tempComponent of components) {
         if (tempComponent != null) {
           const tempComponentId = tempComponent.id;
           if (tempComponentId === componentId) {
-            component = tempComponent;
-            break;
+            return tempComponent;
           }
         }
       }
     }
-    return component;
+    return null;
   };
 
   /**
@@ -691,20 +648,18 @@ class NodeController {
    * @returns whether this node contains the component
    */
   nodeContainsComponent(componentId) {
-    let result = false;
     if (componentId != null) {
       const components = this.getComponents();
       for (const tempComponent of components) {
         if (tempComponent != null) {
           const tempComponentId = tempComponent.id;
           if (tempComponentId === componentId) {
-            result = true;
-            break;
+            return true;
           }
         }
       }
     }
-    return result;
+    return false;
   };
 
   /**
@@ -721,11 +676,7 @@ class NodeController {
    * @return whether to show the save button
    */
   showSaveButton() {
-    let result = false;
-    if (this.nodeContent != null && this.nodeContent.showSaveButton) {
-      result = true;
-    }
-    return result;
+    return this.nodeContent != null && this.nodeContent.showSaveButton;
   };
 
   /**
@@ -733,11 +684,7 @@ class NodeController {
    * @return whether to show the submit button
    */
   showSubmitButton() {
-    let result = false;
-    if (this.nodeContent != null && this.nodeContent.showSubmitButton) {
-      result = true;
-    }
-    return result;
+    return this.nodeContent != null && this.nodeContent.showSubmitButton;
   };
 
   /**
@@ -745,13 +692,8 @@ class NodeController {
    * submits an answer.
    */
   isLockAfterSubmit() {
-    let result = false;
-    if (this.componentContent != null) {
-      if (this.componentContent.lockAfterSubmit) {
-        result = true;
-      }
-    }
-    return result;
+    return this.componentContent != null &&
+        this.componentContent.lockAfterSubmit;
   };
 
   /**
@@ -1102,11 +1044,11 @@ class NodeController {
    * @return the student data for the given component
    */
   getComponentStateByComponentId(componentId) {
-    let componentState = null;
     if (componentId != null) {
-      componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, componentId);
+      return this.StudentDataService
+          .getLatestComponentStateByNodeIdAndComponentId(this.nodeId, componentId);
     }
-    return componentState;
+    return null;
   };
 
   /**
@@ -1116,11 +1058,11 @@ class NodeController {
    * @return the student data for the given component
    */
   getComponentStateByNodeIdAndComponentId(nodeId, componentId) {
-    let componentState = null;
     if (nodeId != null && componentId != null) {
-      componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+      return this.StudentDataService
+          .getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
     }
-    return componentState;
+    return null;
   };
 
   nodeUnloaded(nodeId) {
@@ -1133,7 +1075,8 @@ class NodeController {
     const event = "nodeExited";
     const eventData = {};
     eventData.nodeId = nodeId;
-    this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+    this.StudentDataService.saveVLEEvent(
+        nodeId, componentId, componentType, category, event, eventData);
   };
 
   /**
@@ -1141,20 +1084,17 @@ class NodeController {
    * @return boolean whether or not there is unsubmitted work
    */
   getSubmitDirty() {
-    let submitDirty = false;
     const components = this.getComponents();
-
     if (components != null) {
       for (let component of components) {
         const componentId = component.id;
         const latestState = this.getComponentStateByComponentId(componentId);
         if (latestState && !latestState.isSubmit) {
-          submitDirty = true;
-          break;
+          return true;
         }
       }
     }
-    return submitDirty;
+    return false;
   };
 
   /**

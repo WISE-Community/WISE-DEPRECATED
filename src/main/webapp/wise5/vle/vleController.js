@@ -40,16 +40,10 @@ var VLEController = function () {
 
     this.projectStyle = this.ProjectService.getStyle();
     this.projectName = this.ProjectService.getProjectTitle();
-
-    // get the total score for the workgroup
     this.totalScore = this.StudentDataService.getTotalScore();
-
-    // get the max possible score for the workgroup
     this.maxScore = this.StudentDataService.maxScore;
-
     this.notebookEnabled = this.NotebookService.isNotebookEnabled();
 
-    // get the notebook config
     this.notebookConfig = this.NotebookService.getNotebookConfig();
     // Get report, if enabled; assume only one report for now
     this.reportItem = this.notebookConfig.itemTypes.report.notes[0];

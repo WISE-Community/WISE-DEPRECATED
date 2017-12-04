@@ -53,6 +53,9 @@ var StudentAssetController = function () {
     }
   }, {
     key: 'uploadStudentAssets',
+
+
+    // TODO can we ensure files is not null?
     value: function uploadStudentAssets(files) {
       var _this3 = this;
 

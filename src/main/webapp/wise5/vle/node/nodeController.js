@@ -33,19 +33,12 @@ var NodeController = function () {
     // the auto save interval in milliseconds
     this.autoSaveInterval = 60000;
 
-    // the node id of the current node
     this.nodeId = null;
     this.nodeContent = null;
     this.nodeStatus = null;
     this.nodeTitle = null;
-
-    // hold ids of dirty components
     this.dirtyComponentIds = [];
-
-    // array to hold ids of components where student work has changed since last submission
     this.dirtySubmitComponentIds = [];
-
-    // whether the student work has changed since last submit
     this.submit = false;
     this.workgroupId = this.ConfigService.getWorkgroupId();
     this.teacherWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
@@ -56,16 +49,12 @@ var NodeController = function () {
      */
     this.componentToScope = {};
 
-    // message to show next to save/submit buttons
     this.saveMessage = {
       text: '',
       time: ''
     };
 
-    // the step rubric
     this.rubric = null;
-
-    // get the mode e.g. 'preview', 'student', 'authoring', 'grading', etc.
     this.mode = this.ConfigService.getMode();
 
     // perform setup of this node only if the current node is not a group.
@@ -75,25 +64,11 @@ var NodeController = function () {
         this.nodeId = currentNode.id;
       }
 
-      // get the node content
       this.nodeContent = this.ProjectService.getNodeById(this.nodeId);
-
       this.nodeTitle = this.ProjectService.getNodeTitleByNodeId(this.nodeId);
-
       this.nodeStatus = this.StudentDataService.nodeStatuses[this.nodeId];
-
-      // populate the student work into this node
-      //this.setStudentWork();
-
-      // check if we need to lock this node
       this.calculateDisabled();
-
-      //this.importWork();
-
-      // start the auto save interval
       this.startAutoSaveInterval();
-
-      // register this controller to listen for the exit event
       this.registerExitListener();
 
       if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('enterNode')) {
@@ -113,7 +88,6 @@ var NodeController = function () {
         }
       }
 
-      // save nodeEntered event
       var nodeId = this.nodeId;
       var componentId = null;
       var componentType = null;
@@ -124,49 +98,17 @@ var NodeController = function () {
       this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
 
       if (this.nodeContent != null) {
-        // get the step rubric
         this.rubric = this.nodeContent.rubric;
-
-        // create the rubric tour bubbles
         this.createRubricTour();
       }
 
       /*
-       * Check if the component id was provided in the state params. If
-       * it is provided, we will scroll to it and then briefly highlight
-       * it.
+       * If the component id was provided in the state params, scroll to it and
+        * then briefly highlight it to bring attention to it.
        */
       if (this.$state != null && this.$state.params != null && this.$state.params.componentId != null) {
-
-        // get the component id
         var _componentId = this.$state.params.componentId;
-
-        this.$timeout(function () {
-          // get the UI element of the component
-          var componentElement = $("#component_" + _componentId);
-
-          if (componentElement != null) {
-            // save the original background color
-            var originalBackgroundColor = componentElement.css("backgroundColor");
-
-            // highlight the background briefly to draw attention to it
-            componentElement.css("background-color", "#FFFF9C");
-
-            // scroll to the first new component that we've added
-            $('#content').animate({
-              scrollTop: componentElement.prop("offsetTop")
-            }, 1000);
-
-            /*
-             * remove the background highlighting so that it returns
-             * to its original color
-             */
-            componentElement.css({
-              'transition': 'background-color 3s ease-in-out',
-              'background-color': originalBackgroundColor
-            });
-          }
-        }, 1000);
+        this.scrollAndHighlightComponent(_componentId);
       }
     }
 
@@ -175,8 +117,6 @@ var NodeController = function () {
      * component is requesting student data to be saved
      */
     this.$scope.$on('componentSaveTriggered', function (event, args) {
-      var isAutoSave = false;
-
       if (args != null) {
         var _nodeId = args.nodeId;
         var _componentId2 = args.componentId;
@@ -187,6 +127,7 @@ var NodeController = function () {
              * obtain the component states from the children and save them
              * to the server
              */
+            var isAutoSave = false;
             _this.createAndSaveComponentData(isAutoSave, _componentId2);
           }
         }
@@ -198,9 +139,6 @@ var NodeController = function () {
      * component is requesting student data to be submitted
      */
     this.$scope.$on('componentSubmitTriggered', function (event, args) {
-      var isAutoSave = false;
-      var isSubmit = true;
-
       if (args != null) {
         var _nodeId2 = args.nodeId;
         var _componentId3 = args.componentId;
@@ -211,6 +149,8 @@ var NodeController = function () {
              * obtain the component states from the children and save them
              * to the server
              */
+            var isAutoSave = false;
+            var isSubmit = true;
             _this.createAndSaveComponentData(isAutoSave, _componentId3, isSubmit);
           }
         }
@@ -244,7 +184,6 @@ var NodeController = function () {
           }
 
           if (componentState.componentId == null) {
-
             if (args.componentId != null) {
               /*
                * set the component id into the component state
@@ -277,10 +216,8 @@ var NodeController = function () {
         var isDirty = args.isDirty;
         var index = _this.dirtyComponentIds.indexOf(componentId);
         if (isDirty && index === -1) {
-          // add component id to array of dirty components
           _this.dirtyComponentIds.push(componentId);
         } else if (!isDirty && index > -1) {
-          // remove component id from array of dirty components
           _this.dirtyComponentIds.splice(index, 1);
         }
       }
@@ -299,10 +236,8 @@ var NodeController = function () {
         var isDirty = args.isDirty;
         var index = _this.dirtySubmitComponentIds.indexOf(componentId);
         if (isDirty && index === -1) {
-          // add component id to array of dirty submit components
           _this.dirtySubmitComponentIds.push(componentId);
         } else if (!isDirty && index > -1) {
-          // remove component id from array of dirty submit components
           _this.dirtySubmitComponentIds.splice(index, 1);
         }
       }
@@ -446,7 +381,6 @@ var NodeController = function () {
 
         var thisTarget = '#nodeRubric_' + this.nodeId;
         if (this.nodeId === id) {
-          // the given id matches this nodeId
           step = index;
         }
 
@@ -467,7 +401,6 @@ var NodeController = function () {
               if (component.rubric) {
                 thisTarget = '#rubric_' + component.id;
                 if (component.id === id) {
-                  // the given id matches the current componentId
                   step = index;
                   break;
                 }
@@ -495,6 +428,29 @@ var NodeController = function () {
         // show the rubric tour starting with the step for the matched index
         hopscotch.startTour(this.rubricTour, step);
       }
+    }
+  }, {
+    key: 'scrollAndHighlightComponent',
+    value: function scrollAndHighlightComponent(componentId) {
+      this.$timeout(function () {
+        var componentElement = $("#component_" + componentId);
+        if (componentElement != null) {
+          var originalBackgroundColor = componentElement.css("backgroundColor");
+          componentElement.css("background-color", "#FFFF9C");
+          $('#content').animate({
+            scrollTop: componentElement.prop("offsetTop")
+          }, 1000);
+
+          /*
+           * remove the background highlighting so that it returns
+           * to its original color
+           */
+          componentElement.css({
+            'transition': 'background-color 3s ease-in-out',
+            'background-color': originalBackgroundColor
+          });
+        }
+      }, 1000);
     }
 
     /**
@@ -688,6 +644,7 @@ var NodeController = function () {
     /**
      * Get the components for this node.
      * @return an array that contains the content for the components.
+     * TODO: can we not return null? This will simplify code a lot
      */
     value: function getComponents() {
       var components = null;
@@ -760,7 +717,6 @@ var NodeController = function () {
      * @return the component object with the given component id
      */
     value: function getComponentById(componentId) {
-      var component = null;
       if (componentId != null) {
         var components = this.getComponents();
         var _iteratorNormalCompletion5 = true;
@@ -774,8 +730,7 @@ var NodeController = function () {
             if (tempComponent != null) {
               var tempComponentId = tempComponent.id;
               if (tempComponentId === componentId) {
-                component = tempComponent;
-                break;
+                return tempComponent;
               }
             }
           }
@@ -794,7 +749,7 @@ var NodeController = function () {
           }
         }
       }
-      return component;
+      return null;
     }
   }, {
     key: 'nodeContainsComponent',
@@ -806,7 +761,6 @@ var NodeController = function () {
      * @returns whether this node contains the component
      */
     value: function nodeContainsComponent(componentId) {
-      var result = false;
       if (componentId != null) {
         var components = this.getComponents();
         var _iteratorNormalCompletion6 = true;
@@ -820,8 +774,7 @@ var NodeController = function () {
             if (tempComponent != null) {
               var tempComponentId = tempComponent.id;
               if (tempComponentId === componentId) {
-                result = true;
-                break;
+                return true;
               }
             }
           }
@@ -840,7 +793,7 @@ var NodeController = function () {
           }
         }
       }
-      return result;
+      return false;
     }
   }, {
     key: 'getComponentTemplatePath',
@@ -863,11 +816,7 @@ var NodeController = function () {
      * @return whether to show the save button
      */
     value: function showSaveButton() {
-      var result = false;
-      if (this.nodeContent != null && this.nodeContent.showSaveButton) {
-        result = true;
-      }
-      return result;
+      return this.nodeContent != null && this.nodeContent.showSaveButton;
     }
   }, {
     key: 'showSubmitButton',
@@ -878,11 +827,7 @@ var NodeController = function () {
      * @return whether to show the submit button
      */
     value: function showSubmitButton() {
-      var result = false;
-      if (this.nodeContent != null && this.nodeContent.showSubmitButton) {
-        result = true;
-      }
-      return result;
+      return this.nodeContent != null && this.nodeContent.showSubmitButton;
     }
   }, {
     key: 'isLockAfterSubmit',
@@ -893,13 +838,7 @@ var NodeController = function () {
      * submits an answer.
      */
     value: function isLockAfterSubmit() {
-      var result = false;
-      if (this.componentContent != null) {
-        if (this.componentContent.lockAfterSubmit) {
-          result = true;
-        }
-      }
-      return result;
+      return this.componentContent != null && this.componentContent.lockAfterSubmit;
     }
   }, {
     key: 'setSaveMessage',
@@ -1382,11 +1321,10 @@ var NodeController = function () {
      * @return the student data for the given component
      */
     value: function getComponentStateByComponentId(componentId) {
-      var componentState = null;
       if (componentId != null) {
-        componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, componentId);
+        return this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, componentId);
       }
-      return componentState;
+      return null;
     }
   }, {
     key: 'getComponentStateByNodeIdAndComponentId',
@@ -1399,11 +1337,10 @@ var NodeController = function () {
      * @return the student data for the given component
      */
     value: function getComponentStateByNodeIdAndComponentId(nodeId, componentId) {
-      var componentState = null;
       if (nodeId != null && componentId != null) {
-        componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+        return this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
       }
-      return componentState;
+      return null;
     }
   }, {
     key: 'nodeUnloaded',
@@ -1428,9 +1365,7 @@ var NodeController = function () {
      * @return boolean whether or not there is unsubmitted work
      */
     value: function getSubmitDirty() {
-      var submitDirty = false;
       var components = this.getComponents();
-
       if (components != null) {
         var _iteratorNormalCompletion12 = true;
         var _didIteratorError12 = false;
@@ -1443,8 +1378,7 @@ var NodeController = function () {
             var componentId = component.id;
             var latestState = this.getComponentStateByComponentId(componentId);
             if (latestState && !latestState.isSubmit) {
-              submitDirty = true;
-              break;
+              return true;
             }
           }
         } catch (err) {
@@ -1462,7 +1396,7 @@ var NodeController = function () {
           }
         }
       }
-      return submitDirty;
+      return false;
     }
   }, {
     key: 'registerExitListener',

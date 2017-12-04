@@ -42,6 +42,7 @@ class StudentAssetController {
     });
   };
 
+  // TODO can we ensure files is not null?
   uploadStudentAssets(files) {
     if (files != null) {
       for (const file of files) {

@@ -131,7 +131,7 @@ let vleModule = angular.module('vle', [
         .state('root', {
           url: '',
           abstract: true,
-          templateProvider: ['$http', 'ProjectService', function ($http, ProjectService) {
+          templateProvider: ['$http', 'ProjectService', ($http, ProjectService) => {
             let themePath = ProjectService.getThemePath();
             return $http.get(themePath + '/vle.html').then(
               response => {
@@ -141,43 +141,43 @@ let vleModule = angular.module('vle', [
           controller: 'VLEController',
           controllerAs: 'vleController',
           resolve: {
-            config: function (ConfigService) {
+            config: (ConfigService) => {
               let configURL = window.configURL;
               return ConfigService.retrieveConfig(configURL);
             },
-            project: function (ProjectService, config) {
+            project: (ProjectService, config) => {
               return ProjectService.retrieveProject();
             },
-            studentData: function (StudentDataService, config, project) {
+            studentData: (StudentDataService, config, project) => {
               return StudentDataService.retrieveStudentData();
             },
-            notebook: function (NotebookService, ConfigService, StudentAssetService, studentData, config, project) {
+            notebook: (NotebookService, ConfigService, StudentAssetService, studentData, config, project) => {
               return StudentAssetService.retrieveAssets().then((studentAssets) => {
                 return NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then((notebook) => {
                   return notebook;
                 });
               });
             },
-            achievements: function (AchievementService, studentData, config, project) {
+            achievements: (AchievementService, studentData, config, project) => {
               return AchievementService.retrieveAchievements();
             },
-            notifications: function (NotificationService, studentData, config, project) {
+            notifications: (NotificationService, studentData, config, project) => {
               return NotificationService.retrieveNotifications();
             },
-            runStatus: function(StudentDataService, config) {
+            runStatus: (StudentDataService, config) => {
               return StudentDataService.retrieveRunStatus();
             },
-            sessionTimers: function (SessionService, config, project, studentData) {
+            sessionTimers: (SessionService, config, project, studentData) => {
               return SessionService.initializeSession();
             },
-            webSocket: function (StudentWebSocketService, config, project) {
+            webSocket: (StudentWebSocketService, config, project) => {
               return StudentWebSocketService.initialize();
             },
             language: ($translate, ConfigService, config) => {
               let locale = ConfigService.getLocale();  // defaults to "en"
               $translate.use(locale);
             },
-            theme: function (ProjectService, config, project, $ocLazyLoad, $q) {
+            theme: (ProjectService, config, project, $ocLazyLoad, $q) => {
               let theme = ProjectService.getThemePath() + '/theme.js';
               let def = $q.defer();
 
@@ -203,7 +203,7 @@ let vleModule = angular.module('vle', [
           url: '/vle/:nodeId',
           views: {
             'nodeView': {
-              templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
+              templateProvider: ['$http', 'ConfigService', ($http, ConfigService) => {
                 let wiseBaseURL = ConfigService.getWISEBaseURL();
                 return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(
                   response => {
@@ -220,7 +220,7 @@ let vleModule = angular.module('vle', [
           url: '/vle/:nodeId/:componentId',
           views: {
             'nodeView': {
-              templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
+              templateProvider: ['$http', 'ConfigService', ($http, ConfigService) => {
                 let wiseBaseURL = ConfigService.getWISEBaseURL();
                 return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(
                   response => {
