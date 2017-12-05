@@ -23,9 +23,6 @@ var NotificationService = function () {
     this.UtilService = UtilService;
     this.notifications = []; // an array of notifications that students haven't seen yet.
 
-    /**
-     * We received a new notification.
-     */
     this.$rootScope.$on('newNotification', function (event, notification) {
       if (notification != null) {
         var workgroupId = _this.ConfigService.getWorkgroupId();
@@ -46,7 +43,6 @@ var NotificationService = function () {
             }
           }
           if (isNotificationNew) {
-            // this is a new notification
             _this.notifications.push(notification);
             _this.$rootScope.$broadcast('notificationAdded', notification);
           }
@@ -111,9 +107,7 @@ var NotificationService = function () {
 
       var toWorkgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-
       var notificationURL = this.ConfigService.getNotificationURL();
-
       if (notificationURL == null) {
         // the notification url is null most likely because we are in preview mode
         return Promise.resolve(this.notifications);
@@ -230,15 +224,12 @@ var NotificationService = function () {
   }, {
     key: 'saveNotificationToServer',
     value: function saveNotificationToServer(notification) {
-
       if (this.ConfigService.isPreview()) {
-
         // if we're in preview, don't make any request to the server but pretend we did
         var deferred = this.$q.defer();
         deferred.resolve(notification);
         return deferred.promise;
       } else {
-
         var config = {
           method: "POST",
           url: this.ConfigService.getNotificationURL(),
@@ -274,7 +265,6 @@ var NotificationService = function () {
         return this.$http(config).then(function (result) {
           var notification = result.data;
           if (notification.data != null) {
-            // parse the data string into a JSON object
             notification.data = angular.fromJson(notification.data);
           }
           return notification;
@@ -295,7 +285,6 @@ var NotificationService = function () {
       notification.timeDismissed = Date.parse(new Date()); // set dismissed time to now.
 
       if (this.ConfigService.isPreview()) {
-
         // if we're in preview, don't make any request to the server but pretend we did
         var deferred = this.$q.defer();
         deferred.resolve(notification);
@@ -348,7 +337,6 @@ var NotificationService = function () {
     key: 'getNotifications',
     value: function getNotifications(args) {
       var notifications = this.notifications;
-
       if (args) {
         var _loop = function _loop(p) {
           if (args.hasOwnProperty(p) && args[p] !== null) {
@@ -362,7 +350,6 @@ var NotificationService = function () {
           _loop(p);
         }
       }
-
       return notifications;
     }
 
@@ -419,7 +406,6 @@ var NotificationService = function () {
       } else {
         alertNotifications = this.getNotifications(params);
       }
-
       return alertNotifications;
     }
   }]);

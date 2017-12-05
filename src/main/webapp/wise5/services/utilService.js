@@ -31,19 +31,15 @@ var UtilService = function () {
     value: function generateKey(length) {
       this.CHARS = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-      /* set default length if not specified */
       if (!length) {
         length = 10;
       }
 
-      /* generate the key */
       var key = '';
       for (var a = 0; a < length; a++) {
         key += this.CHARS[Math.floor(Math.random() * (this.CHARS.length - 1))];
       }
 
-      /* return the generated key */
-      // TODO: check that the new key is unique
       return key;
     }
   }, {
@@ -57,11 +53,10 @@ var UtilService = function () {
      * if we couldn't convert the string to a number we will just return the string.
      */
     value: function convertStringToNumber(str) {
-      var result = str;
       if (str != null && str != '' && !isNaN(Number(str))) {
-        result = Number(str);
+        return Number(str);
       }
-      return result;
+      return str;
     }
   }, {
     key: 'makeCopyOfJSONObject',
@@ -73,15 +68,11 @@ var UtilService = function () {
      * @return a copy of the JSON object that was passed in
      */
     value: function makeCopyOfJSONObject(jsonObject) {
-      var copyOfJSONObject = null;
       if (jsonObject != null) {
-        // create a JSON string from the JSON object
         var jsonObjectString = angular.toJson(jsonObject);
-
-        // create a JSON object from the JSON string
-        copyOfJSONObject = angular.fromJson(jsonObjectString);
+        return angular.fromJson(jsonObjectString);
       }
-      return copyOfJSONObject;
+      return null;
     }
   }, {
     key: 'getImageObjectFromBase64String',
@@ -150,10 +141,7 @@ var UtilService = function () {
         var ctx = canvas.getContext("2d");
         ctx.drawImage(imageElement, 0, 0);
 
-        // create the base64 string representation of the image
         var dataURL = canvas.toDataURL("image/png");
-
-        // get the image object
         imageObject = this.getImageObjectFromBase64String(dataURL);
       }
       return imageObject;
@@ -246,21 +234,16 @@ var UtilService = function () {
   }, {
     key: 'isImage',
     value: function isImage(fileName) {
-      var result = false;
       if (fileName != null) {
-        var lowerCaseFileName = fileName.toLowerCase();
-
-        // regex to match image extensions
         var imageExtensionsRegEx = new RegExp('.*\.(png|jpg|jpeg|bmp|gif|tiff|svg)');
-
+        var lowerCaseFileName = fileName.toLowerCase();
         var matchResult = lowerCaseFileName.match(imageExtensionsRegEx);
 
         if (matchResult != null) {
-          // we have found a match so the asset is an image
-          result = true;
+          return true;
         }
       }
-      return result;
+      return false;
     }
 
     /**
@@ -272,21 +255,16 @@ var UtilService = function () {
   }, {
     key: 'isVideo',
     value: function isVideo(fileName) {
-      var result = false;
       if (fileName != null) {
-        var lowerCaseFileName = fileName.toLowerCase();
-
-        // regex to match video extensions
         var videoExtensionsRegEx = new RegExp('.*\.(mp4|mpg|mpeg|m4v|m2v|avi|gifv|mov|qt)');
-
+        var lowerCaseFileName = fileName.toLowerCase();
         var matchResult = lowerCaseFileName.match(videoExtensionsRegEx);
 
         if (matchResult != null) {
-          // we have found a match so the asset is a video
-          result = true;
+          return true;
         }
       }
-      return result;
+      return false;
     }
 
     /**
@@ -299,12 +277,8 @@ var UtilService = function () {
   }, {
     key: 'insertWISELinks',
     value: function insertWISELinks(html) {
-      // replace <a> elements with <wiselink> elements
       html = this.insertWISELinkAnchors(html);
-
-      // replace <button> elements with <wiselink> elements
       html = this.insertWISELinkButtons(html);
-
       return html;
     }
 
@@ -319,10 +293,7 @@ var UtilService = function () {
   }, {
     key: 'insertWISELinkAnchors',
     value: function insertWISELinkAnchors(html) {
-      // find <a> elements with the parameter wiselink=true
       var wiseLinkRegEx = new RegExp(/<a.*?wiselink="true".*?>(.*?)<\/a>/);
-
-      // find the first match
       var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
 
       // loop until we have replaced all the matches
@@ -369,10 +340,7 @@ var UtilService = function () {
   }, {
     key: 'insertWISELinkButtons',
     value: function insertWISELinkButtons(html) {
-      // find <button> elements with the parameter wiselink=true
       var wiseLinkRegEx = new RegExp(/<button.*?wiselink="true".*?>(.*?)<\/button>/);
-
-      // find the first match
       var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
 
       // loop until we have replaced all the matches
@@ -420,20 +388,14 @@ var UtilService = function () {
   }, {
     key: 'getWISELinkNodeId',
     value: function getWISELinkNodeId(html) {
-      var nodeId = null;
       if (html != null) {
-        // create the regex to find the node id parameter
         var nodeIdRegEx = new RegExp(/node-id=["'b](.*?)["']/, 'g');
-
-        // try to find a match
         var nodeIdRegExResult = nodeIdRegEx.exec(html);
-
         if (nodeIdRegExResult != null) {
-          // we have found a node id
-          nodeId = nodeIdRegExResult[1];
+          return nodeIdRegExResult[1];
         }
       }
-      return nodeId;
+      return null;
     }
 
     /**
@@ -448,20 +410,14 @@ var UtilService = function () {
   }, {
     key: 'getWISELinkComponentId',
     value: function getWISELinkComponentId(html) {
-      var componentId = null;
       if (html != null) {
-        // create the regex to find the component id parameter
         var componentIdRegEx = new RegExp(/component-id=["'b](.*?)["']/, 'g');
-
-        // try to find a match
         var componentIdRegExResult = componentIdRegEx.exec(html);
-
         if (componentIdRegExResult != null) {
-          // we have found a node id
-          componentId = componentIdRegExResult[1];
+          return componentIdRegExResult[1];
         }
       }
-      return componentId;
+      return null;
     }
 
     /**
@@ -476,20 +432,14 @@ var UtilService = function () {
   }, {
     key: 'getWISELinkType',
     value: function getWISELinkType(html) {
-      var type = null;
       if (html != null) {
-        // create the regex to find the type
         var typeRegEx = new RegExp(/type=["'b](.*?)["']/, 'g');
-
-        // try to find a match
         var typeRegExResult = typeRegEx.exec(html);
-
         if (typeRegExResult != null) {
-          // we have found a type
-          type = typeRegExResult[1];
+          return typeRegExResult[1];
         }
       }
-      return type;
+      return null;
     }
 
     /**
@@ -503,20 +453,14 @@ var UtilService = function () {
   }, {
     key: 'getWISELinkLinkText',
     value: function getWISELinkLinkText(html) {
-      var linkText = null;
       if (html != null) {
-        // create the regex to find the link text
         var linkTextRegEx = new RegExp(/link-text=["'b](.*?)["']/, 'g');
-
-        // try to find a match
         var linkTextRegExResult = linkTextRegEx.exec(html);
-
         if (linkTextRegExResult != null) {
-          // we have found a link text
-          linkText = linkTextRegExResult[1];
+          return linkTextRegExResult[1];
         }
       }
-      return linkText;
+      return null;
     }
 
     /**
@@ -528,12 +472,8 @@ var UtilService = function () {
   }, {
     key: 'replaceWISELinks',
     value: function replaceWISELinks(html) {
-      // replace wiselinks that look like <wiselink/>
       html = this.replaceWISELinksHelper(html, '<wiselink.*?\/>');
-
-      // replace wiselinks that look like <wiselink></wiselink>
       html = this.replaceWISELinksHelper(html, '<wiselink.*?>.*?<\/wiselink>');
-
       return html;
     }
 
@@ -548,10 +488,7 @@ var UtilService = function () {
   }, {
     key: 'replaceWISELinksHelper',
     value: function replaceWISELinksHelper(html, regex) {
-      // create the regex
       var wiseLinkRegEx = new RegExp(regex);
-
-      // find the first match
       var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
 
       // loop until we have replaced all the matches
@@ -614,11 +551,9 @@ var UtilService = function () {
     value: function createInsertAssetButton(controller, projectId, nodeId, componentId, target, tooltip) {
       var thisRootScope = this.$rootScope;
 
-      // a custom button that opens the asset chooser
       var InsertAssetButton = function InsertAssetButton(context) {
         var ui = $.summernote.ui;
 
-        // create button
         var button = ui.button({
           contents: '<i class="note-icon-picture"></i>',
           tooltip: tooltip,
@@ -671,11 +606,9 @@ var UtilService = function () {
     value: function createInsertWISELinkButton(controller, projectId, nodeId, componentId, target, tooltip) {
       var thisRootScope = this.$rootScope;
 
-      // a custom button that opens the WISE Link authoring popup
       var InsertWISELinkButton = function InsertWISELinkButton(context) {
         var ui = $.summernote.ui;
 
-        // create button
         var button = ui.button({
           contents: '<i class="note-icon-link"></i>',
           tooltip: tooltip,
@@ -722,11 +655,7 @@ var UtilService = function () {
       if (html != null) {
         // remove tags
         text = html.replace(/<\/?[^>]+(>|$)/g, " ");
-
-        // remove new lines
         text = text.replace(/\n/g, " ");
-
-        // remove line returns
         text = text.replace(/\r/g, " ");
       }
       return text;
@@ -783,16 +712,11 @@ var UtilService = function () {
   }, {
     key: 'convertMillisecondsToFormattedDateTime',
     value: function convertMillisecondsToFormattedDateTime(milliseconds) {
-      var dateTimeString = "";
-
-      // create a Date object with the milliseconds
       var date = new Date(milliseconds);
-
       if (date != null) {
-        // get the date time string e.g. Wed Apr 06 2016 9:05:38 AM
-        dateTimeString = date.toDateString() + " " + date.toLocaleTimeString();
+        return date.toDateString() + " " + date.toLocaleTimeString();
       }
-      return dateTimeString;
+      return "";
     }
 
     /**
@@ -811,16 +735,9 @@ var UtilService = function () {
       var label = this.componentTypeToLabel[componentType];
 
       if (label == null) {
-        // we have not obtained the label before
-
-        // get the service for the component type
         var componentService = this.$injector.get(componentType + 'Service');
-
         if (componentService != null && componentService.getComponentTypeLabel != null) {
-          // get the label for the component type
           label = componentService.getComponentTypeLabel();
-
-          // add the entry of component type to label for future lookup
           this.componentTypeToLabel[componentType] = label;
         }
       }
@@ -856,22 +773,16 @@ var UtilService = function () {
     key: 'arraysContainSameValues',
     value: function arraysContainSameValues(array1, array2) {
       if (array1 != null && array2 != null) {
-        // make a copy of array 1 and sort it
         var array1Copy = this.makeCopyOfJSONObject(array1);
         array1Copy.sort();
 
-        // make a copy of array 2 and sort it
         var array2Copy = this.makeCopyOfJSONObject(array2);
         array2Copy.sort();
 
-        // compare the string values of both array
         if (angular.toJson(array1Copy) == angular.toJson(array2Copy)) {
-          // the arrays are the same
           return true;
         }
       }
-
-      // the arrays are not the same
       return false;
     }
 

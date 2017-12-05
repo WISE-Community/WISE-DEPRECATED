@@ -38,28 +38,25 @@ class StudentStatusService {
    * @returns the node position and title
    */
   getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId) {
-    let nodePositionAndTitle = null;
     const studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
     if (studentStatus != null) {
       const currentNodeId = studentStatus.currentNodeId;
-      nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(currentNodeId);
+      return this.ProjectService.getNodePositionAndTitleByNodeId(currentNodeId);
     }
-    return nodePositionAndTitle;
+    return null;
   };
 
   getStudentStatusForWorkgroupId(workgroupId) {
-    let studentStatus = null;
     const studentStatuses = this.getStudentStatuses();
     for (let tempStudentStatus of studentStatuses) {
       if (tempStudentStatus != null) {
         const tempWorkgroupId = tempStudentStatus.workgroupId;
         if (workgroupId == tempWorkgroupId) {
-          studentStatus = tempStudentStatus;
-          break;
+          return tempStudentStatus;
         }
       }
     }
-    return studentStatus;
+    return null;
   };
 
   setStudentStatusForWorkgroupId(workgroupId, studentStatus) {
@@ -94,7 +91,6 @@ class StudentStatusService {
     let studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
 
     if (studentStatus) {
-      // get the project completion object
       let projectCompletion = studentStatus.projectCompletion;
 
       if (projectCompletion) {
@@ -133,17 +129,14 @@ class StudentStatusService {
     for (let studentStatus of studentStatuses) {
       if (studentStatus != null) {
         if (periodId == -1 || periodId == studentStatus.periodId) {
-          // the period matches the one we are looking for
           let currentNodeId = studentStatus.currentNodeId;
           if (nodeId === currentNodeId) {
-            // the node id matches the one we are looking for
             workgroupIds.push(studentStatus.workgroupId);
           } else if (this.ProjectService.isGroupNode(nodeId)) {
             let currentNode = this.ProjectService.getNodeById(currentNodeId);
             let group = this.ProjectService.getNodeById(nodeId);
 
             if (this.ProjectService.isNodeDescendentOfGroup(currentNode, group)) {
-              // the node id is a descendent of the group we're looking for
               workgroupIds.push(studentStatus.workgroupId);
             }
           }
@@ -169,26 +162,16 @@ class StudentStatusService {
     let isGroupNode = this.ProjectService.isGroupNode(nodeId);
 
     let studentStatuses = this.studentStatuses;
-
     for (let studentStatus of studentStatuses) {
       if (studentStatus) {
         if (periodId == -1 || periodId == studentStatus.periodId) {
-          // the period matches the one we are looking for
-
           if (!workgroupId || workgroupId === studentStatus.workgroupId) {
-            // either no workgroupId was specified or the workgroupId matches the one we're looking for
-
             let nodeStatuses = studentStatus.nodeStatuses;
             if (nodeStatuses) {
-              // get the node status for the node
               let nodeStatus = nodeStatuses[nodeId];
-
               if (nodeStatus != null) {
                 if (isGroupNode) {
-                  // given node is a group
-                  // get progress object from the nodeStatus
                   let progress = nodeStatus.progress;
-
                   if (excludeNonWorkNodes) {
                     // we're looking for only nodes with student work
                     if (progress && progress.totalItemsWithWork) {
@@ -201,12 +184,10 @@ class StudentStatusService {
                        */
                       let group = this.ProjectService.getNodeById(nodeId);
 
-                      // get all the descendants of the group
                       let descendants = this.ProjectService.getDescendentsOfGroup(group);
 
                       for (let descendantId of descendants) {
                         if (!this.ProjectService.isGroupNode(descendantId)) {
-                          // node is not a group, so add to totals if visible and has student work
                           let descendantStatus = nodeStatuses[descendantId];
 
                           if (descendantStatus && descendantStatus.isVisible && this.ProjectService.nodeHasWork(descendantId)) {
@@ -271,65 +252,6 @@ class StudentStatusService {
   }
 
   /**
-   * Get the total number of steps that are descendants of a given node
-   * @param nodeId the node id
-   * @returns the total number of step (application node) descendants; returns
-   * @param periodId the period id. pass in -1 to select all periods.
-   * an average for all students in the selected period if the group is a
-   * planning activity
-   */
-  /*getTotalApplicationNodeDescendents(nodeId, periodId) {
-      let numTotal = 0;
-      let numWorkgroups = 0;
-
-      let isGroupNode = this.ProjectService.isGroupNode(nodeId);
-
-      if (isGroupNode) {
-          let isPlanning = this.ProjectService.isPlanning(nodeId);
-          let studentStatuses = this.studentStatuses;
-
-          // loop through all the student statuses
-          for (let ss = 0; ss < studentStatuses.length; ss++) {
-              let studentStatus = studentStatuses[ss];
-
-              if (studentStatus) {
-
-                  if (periodId == -1 || periodId == studentStatus.periodId) {
-                      // the period matches the one we are looking for
-
-                      let nodeStatuses = studentStatus.nodeStatuses;
-
-                      if (nodeStatuses) {
-                          // get the node status for the node
-                          let nodeStatus = nodeStatuses[nodeId];
-
-                          if (nodeStatus) {
-                              let progress = nodeStatus.progress;
-                              if (progress) {
-                                  let totalItems = progress.totalItems;
-                                  if (totalItems) {
-                                      numWorkgroups++;
-
-                                      if (isPlanning) {
-                                          numTotal += progress.totalItems;
-                                      } else {
-                                          // this is not a planning activity, so we can assume the total number of items is the same for all students
-                                          numTotal = progress.totalItems;
-                                          break;
-                                      }
-                                  }
-                              }
-                          }
-                      }
-                  }
-              }
-          }
-      }
-
-      return (numWorkgroups > 0 ? numTotal/numWorkgroups : 0);
-  };*/
-
-  /**
    * Check if there is a workgroup that is online and on the node
    * @param workgroupsOnline the workgroup ids that are online
    * @param nodeId the node id
@@ -337,9 +259,6 @@ class StudentStatusService {
    * @returns whether there is a workgroup that is online and on the node
    */
   isWorkgroupOnlineOnNode(workgroupsOnline, nodeId, periodId) {
-    let result = false;
-
-    // find workgroups online in the given period
     let workgroupsOnlineInPeriod = [];
     for (let workgroup of workgroupsOnline) {
       let studentStatus = this.getStudentStatusForWorkgroupId(workgroup);
@@ -352,16 +271,15 @@ class StudentStatusService {
     }
 
     if (workgroupsOnlineInPeriod.length) {
-      // get workgroups on the given node
       let workgroupsOnNode = this.getWorkgroupIdsOnNode(nodeId, periodId);
 
       // check if any online workgroups in the current period are on this node
-      result = workgroupsOnNode.some(w => {
+      return workgroupsOnNode.some(w => {
         return workgroupsOnlineInPeriod.indexOf(w) > -1;
       });
     }
 
-    return result;
+    return false;
   }
 
   /**
@@ -428,6 +346,7 @@ class StudentStatusService {
 
               if (nodeMaxScore) {
                 // there is a max score for the node, so add to total
+                // TODO geoffreykwan: trying to add to null?
                 maxScore += nodeMaxScore;
               }
             }

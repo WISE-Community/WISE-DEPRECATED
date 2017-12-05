@@ -24,7 +24,6 @@ var AchievementService = function () {
     // whether to print debug output to the console
     this.debug = false;
 
-    // load the achievements in the project
     this.loadAchievements();
   }
 
@@ -56,10 +55,7 @@ var AchievementService = function () {
 
       if (this.ConfigService.isPreview()) {
         var _workgroupId = this.ConfigService.getWorkgroupId();
-
-        // initialize the achievements for the workgroup to an empty array
         this.achievementsByWorkgroupId[_workgroupId] = [];
-
         return Promise.resolve(this.achievementsByWorkgroupId);
       } else {
         var achievementsURL = this.ConfigService.getAchievementsURL();
@@ -91,8 +87,6 @@ var AchievementService = function () {
               for (var _iterator = achievements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                 var achievement = _step.value;
 
-
-                // add the student achievement to our local data structure
                 _this.addOrUpdateAchievement(achievement);
 
                 if (_this.ConfigService.getMode() == 'studentRun') {
@@ -253,12 +247,12 @@ var AchievementService = function () {
       var _this2 = this;
 
       if (this.ConfigService.isPreview()) {
-        // if we're in preview, don't make any request to the server but pretend that we did
+        // if we're in preview, don't make any request to the server and resolve
+        // the promise right away
         var deferred = this.$q.defer();
         deferred.resolve(achievement);
         return deferred.promise;
       } else {
-
         var config = {
           method: "POST",
           url: this.ConfigService.getAchievementsURL(),
@@ -272,6 +266,7 @@ var AchievementService = function () {
           workgroupId: achievement.workgroupId,
           type: achievement.type
         };
+
         if (achievement.id != null) {
           params.id = achievement.id;
         }
@@ -284,7 +279,6 @@ var AchievementService = function () {
         return this.$http(config).then(function (result) {
           var achievement = result.data;
           if (achievement.data != null) {
-            // parse the data string into a JSON object
             achievement.data = angular.fromJson(achievement.data);
           }
           _this2.addOrUpdateAchievement(achievement);
@@ -499,7 +493,6 @@ var AchievementService = function () {
 
       this.debugOutput('registering ' + achievement.id);
 
-      // listen for the nodeCompleted event
       var deregisterFunction = this.$rootScope.$on('nodeCompleted', function (event, args) {
         /*
          * the nodeCompleted event was fired so we will check if this
@@ -518,7 +511,6 @@ var AchievementService = function () {
             // check if the student has completed this node completed achievement
             var completed = _this3.checkNodeCompletedAchievement(achievement);
             if (completed) {
-              // the student has just completed the achievement
               thisAchievementService.studentCompletedAchievement(achievement);
             }
           }
@@ -539,10 +531,8 @@ var AchievementService = function () {
       var completed = false;
       if (achievement != null) {
         if (achievement.type == 'milestone' || achievement.type == 'completion') {
-          // this is a milestone or completion achievement
           completed = this.checkNodeCompletedAchievement(achievement);
         } else if (achievement.type == 'aggregate') {
-          // this is an aggregate achievement
           completed = this.checkAggregateAchievement(achievement);
         }
       }
@@ -595,7 +585,6 @@ var AchievementService = function () {
       var thisAchievementService = this;
       var thisAchievement = achievement;
       this.debugOutput('registering ' + achievement.id);
-      // listen for the achievementCompleted event
       var deregisterFunction = this.$rootScope.$on('achievementCompleted', function (event, args) {
         /*
          * the achievementCompleted event was fired so we will check if this
@@ -606,8 +595,6 @@ var AchievementService = function () {
           _this4.debugOutput('createAggregateAchievementListener checking ' + achievement.id + ' completed ' + args.achievementId);
 
           var id = achievement.id;
-
-          // the achievement that was just completed
           var achievementId = args.achievementId;
 
           if (!_this4.isAchievementCompleted(id)) {
@@ -616,11 +603,8 @@ var AchievementService = function () {
              * so we will now check if they have completed it
              */
 
-            // check if the student has completed this aggregate achievement
             var completed = _this4.checkAggregateAchievement(achievement);
-
             if (completed) {
-              // the student has just completed the achievement
               thisAchievementService.studentCompletedAchievement(achievement);
             }
           }
@@ -672,7 +656,6 @@ var AchievementService = function () {
     value: function getAchievementsByWorkgroupId() {
       var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-      var achievements = [];
       if (workgroupId == null) {
         workgroupId = this.ConfigService.getWorkgroupId();
       }
@@ -682,12 +665,11 @@ var AchievementService = function () {
          * will make it
          */
         this.achievementsByWorkgroupId[workgroupId] = [];
-        achievements = this.achievementsByWorkgroupId[workgroupId];
+        return this.achievementsByWorkgroupId[workgroupId];
       } else if (this.achievementsByWorkgroupId[workgroupId] != null) {
-        // this workgroup has an array of achievements
-        achievements = this.achievementsByWorkgroupId[workgroupId];
+        return this.achievementsByWorkgroupId[workgroupId];
       }
-      return achievements;
+      return [];
     }
 
     /**
@@ -772,8 +754,6 @@ var AchievementService = function () {
 
             if (projectAchievement != null) {
               var studentAchievements = this.getAchievementsByAchievementId(projectAchievement.id);
-
-              // add the array to the mapping
               achievementIdToAchievements[projectAchievement.id] = studentAchievements;
             }
           }

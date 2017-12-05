@@ -20,7 +20,6 @@ class StudentWebSocketService {
     if (this.ConfigService.isPreview()) {
       // We are previewing the project. Don't initialize websocket.
     } else {
-      // We are in a run. Get the parameters for initializing the websocket connection
       const runId = this.ConfigService.getRunId();
       const periodId = this.ConfigService.getPeriodId();
       const workgroupId = this.ConfigService.getWorkgroupId();
@@ -43,7 +42,6 @@ class StudentWebSocketService {
    * @param data the data from the message
    */
   handleWebSocketMessageReceived(data) {
-    // broadcast the data to all listeners
     this.$rootScope.$broadcast('webSocketMessageRecieved', {data: data});
   };
 
@@ -98,8 +96,6 @@ class StudentWebSocketService {
    */
   sendStudentToClassmatesInPeriodMessage(messageType, data) {
     if (!this.ConfigService.isPreview()) {
-      // we are in a run
-
       const currentNodeId = this.StudentDataService.getCurrentNodeId();
       const messageJSON = {};
       messageJSON.messageType = messageType;

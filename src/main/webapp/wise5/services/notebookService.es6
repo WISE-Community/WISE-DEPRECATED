@@ -69,7 +69,6 @@ class NotebookService {
 
     this.notebookConfig = {};
     if (this.ProjectService.project) {
-      // get notebook config from project
       this.notebookConfig = this.ProjectService.project.notebook;
       // update local notebook config, preserving any defaults that aren't overriden
       if (this.notebookConfig !== null && typeof this.notebookConfig === 'object') {
@@ -79,12 +78,10 @@ class NotebookService {
   }
 
   editItem(ev, itemId) {
-    // broadcast edit notebook item event
     this.$rootScope.$broadcast('editNote', {itemId: itemId, ev: ev});
   };
 
   addNewItem(ev, file) {
-    // broadcast create new notebook item event
     this.$rootScope.$broadcast('addNewNote', {ev: ev, file: file});
   };
 
@@ -120,7 +117,6 @@ class NotebookService {
 
   // returns the authored report item
   getTemplateReportItemByReportId(reportId) {
-    let templateReportItem = null;
     const reportNotes = this.notebookConfig.itemTypes.report.notes;
     for (let reportNote of reportNotes) {
       if (reportNote.reportId == reportId) {
@@ -130,10 +126,10 @@ class NotebookService {
           localNotebookItemId: reportId,
           content: reportNote
         };
-        break;
+        return templateReportItem;
       }
     }
-    return templateReportItem;
+    return null;
   }
 
   calculateTotalUsage() {
@@ -162,15 +158,13 @@ class NotebookService {
    * @param reportId
    */
   getReportNoteContentByReportId(reportId) {
-    let result = null;
     const reportNotes = this.notebookConfig.itemTypes.report.notes;
     for (let reportNote of reportNotes) {
       if (reportNote.reportId === reportId) {
-        result = reportNote;
-        break;
+        return reportNote;
       }
     }
-    return result;
+    return null;
   }
 
   isNotebookEnabled() {
@@ -204,7 +198,6 @@ class NotebookService {
         config.params.periodId = periodId;
       }
       return this.$http(config).then((response) => {
-        // loop through the assets and make them into JSON object with more details
         this.notebooksByWorkgroup = {};
         const allNotebookItems = response.data;
         for (let notebookItem of allNotebookItems) {
@@ -241,9 +234,9 @@ class NotebookService {
   /**
    * Groups the notebook items together in to a map-like structure inside this.notebook.items.
    * {
-     *    "abc123": [{localNotebookItemId:"abc123", "text":"first revision"}, {localNotebookItemId:"abc123", "text":"second revision"}],
-     *    "def456": [{localNotebookItemId:"def456", "text":"hello"}, {localNotebookItemId:"def456", "text":"hello my friend"}]
-     * }
+   *    "abc123": [{localNotebookItemId:"abc123", "text":"first revision"}, {localNotebookItemId:"abc123", "text":"second revision"}],
+   *    "def456": [{localNotebookItemId:"def456", "text":"hello"}, {localNotebookItemId:"def456", "text":"hello my friend"}]
+   * }
    */
   groupNotebookItems() {
     for (let workgroupId in this.notebooksByWorkgroup) {
@@ -386,7 +379,6 @@ class NotebookService {
           }
 
           this.groupNotebookItems();
-
           this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId]});
         }
         return result.data;
@@ -400,8 +392,6 @@ class NotebookService {
       curentNodeId: currentNode == null ? null : currentNode.id
     };
     let event = isOpen ? "notebookOpened" : "notebookClosed";
-
-    // save notebook open/close event
     this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
   };
 }

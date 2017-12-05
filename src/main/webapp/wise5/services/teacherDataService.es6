@@ -47,7 +47,6 @@ class TeacherDataService {
      */
     this.$rootScope.$on('annotationSavedToServer', (event, args) => {
       if (args) {
-        // get the annotation that was saved to the server
         let annotation = args.annotation;
         this.handleAnnotationReceived(annotation);
       }
@@ -59,7 +58,6 @@ class TeacherDataService {
      */
     this.$rootScope.$on('newAnnotationReceived', (event, args) => {
       if (args) {
-        // get the annotation that was saved to the server
         let annotation = args.annotation;
         this.handleAnnotationReceived(annotation);
       }
@@ -71,17 +69,14 @@ class TeacherDataService {
      */
     this.$rootScope.$on('newStudentWorkReceived', (event, args) => {
       if (args) {
-        // get the student work (component state) that was saved to the server
         let studentWork = args.studentWork;
         this.addOrUpdateComponentState(studentWork);
-        // broadcast the event that a new work has been received
         this.$rootScope.$broadcast('studentWorkReceived', {studentWork: studentWork});
       }
     });
   }
 
   handleAnnotationReceived(annotation) {
-    // add the annotation to the local annotations array
     this.studentData.annotations.push(annotation);
 
     let toWorkgroupId = annotation.toWorkgroupId;
@@ -95,10 +90,7 @@ class TeacherDataService {
       this.studentData.annotationsByNodeId[nodeId] = new Array();
     }
     this.studentData.annotationsByNodeId[nodeId].push(annotation);
-
     this.AnnotationService.setAnnotations(this.studentData.annotations);
-
-    // broadcast the event that a new annotation has been received
     this.$rootScope.$broadcast('annotationReceived', {annotation: annotation});
   }
 
@@ -175,34 +167,6 @@ class TeacherDataService {
   }
 
   /**
-   * Retrieves the export given the export Type
-   * @param exportType
-   */
-  getExport0(exportType) {
-    let exportURL = this.ConfigService.getConfigParam('runDataExportURL');
-    let runId = this.ConfigService.getRunId();
-    exportURL += "/" + runId + "/" + exportType;
-
-    if (exportType === "studentAssets") {
-      window.location.href = exportURL;
-      let deferred = this.$q.defer();
-      let promise = deferred.promise;
-      deferred.resolve([]);
-      return promise;
-    } else {
-      let httpParams = {
-        method : 'GET',
-        url : exportURL,
-        params : {}
-      };
-
-      return this.$http(httpParams).then((result) => {
-        return result.data;
-      });
-    }
-  };
-
-  /**
    * Save events that occur in the Classroom Monitor to the server
    * @param event the event object
    * @returns a promise
@@ -264,24 +228,21 @@ class TeacherDataService {
    * @returns the student data for the node id
    */
   retrieveStudentDataByNodeId(nodeId) {
-    // get the node ids and component ids in the node
-    const nodeIdsAndComponentIds = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
-
-    // get the show previous work node ids and component ids in the node
-    const showPreviousWorkNodeIdsAndComponentIds = this.ProjectService.getShowPreviousWorkNodeIdsAndComponentIds(nodeId);
+    const nodeIdsAndComponentIds =
+        this.ProjectService.getNodeIdsAndComponentIds(nodeId);
+    const showPreviousWorkNodeIdsAndComponentIds =
+        this.ProjectService.getShowPreviousWorkNodeIdsAndComponentIds(nodeId);
 
     let components = [];
     components = components.concat(nodeIdsAndComponentIds);
     components = components.concat(showPreviousWorkNodeIdsAndComponentIds);
 
     const params = {};
-    //params.periodId = periodId;
     params.periodId = null;
     params.workgroupId = null;
     params.components = components;
     params.getAnnotations = false;
     params.getEvents = false;
-    //params.event = 'nodeEntered';
 
     return this.retrieveStudentData(params);
   };
@@ -470,7 +431,6 @@ class TeacherDataService {
     const runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
     const runId = this.ConfigService.getConfigParam('runId');
 
-    //create the params for the request
     const params = {
       runId:runId
     };
@@ -481,12 +441,10 @@ class TeacherDataService {
     httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     httpParams.params = params;
 
-    // make the request
     return this.$http(httpParams).then((result) => {
       if (result != null) {
         const data = result.data;
         if (data != null) {
-          // save the run status
           this.runStatus = data;
           this.initializePeriods();
         }
@@ -495,10 +453,8 @@ class TeacherDataService {
   }
 
   getComponentStatesByWorkgroupId(workgroupId) {
-    if (this.studentData.componentStatesByWorkgroupId == null) {
-      //debugger;
-    }
-    const componentStatesByWorkgroupId = this.studentData.componentStatesByWorkgroupId[workgroupId];
+    const componentStatesByWorkgroupId =
+        this.studentData.componentStatesByWorkgroupId[workgroupId];
     if (componentStatesByWorkgroupId != null) {
       return componentStatesByWorkgroupId;
     } else {
@@ -507,7 +463,8 @@ class TeacherDataService {
   }
 
   getComponentStatesByNodeId(nodeId) {
-    const componentStatesByNodeId = this.studentData.componentStatesByNodeId[nodeId];
+    const componentStatesByNodeId =
+        this.studentData.componentStatesByNodeId[nodeId];
     if (componentStatesByNodeId != null) {
       return componentStatesByNodeId;
     } else {
@@ -521,17 +478,19 @@ class TeacherDataService {
    * @returns an array containing component states for a component id
    */
   getComponentStatesByComponentId(componentId) {
-    let componentStates = [];
-    const componentStatesByComponentId = this.studentData.componentStatesByComponentId[componentId];
+    const componentStatesByComponentId =
+        this.studentData.componentStatesByComponentId[componentId];
     if (componentStatesByComponentId != null) {
-      componentStates = componentStatesByComponentId;
+      return componentStatesByComponentId;
     }
-    return componentStates;
+    return [];
   }
 
-  getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId) {
+  getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(
+      workgroupId, nodeId, componentId) {
     let latestComponentState = null;
-    const componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
+    const componentStates = this
+        .getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
     if (componentStates != null) {
       for (let c = componentStates.length - 1; c >= 0; c--) {
         const componentState = componentStates[c];
@@ -559,13 +518,12 @@ class TeacherDataService {
         if (componentState != null) {
           const componentStateNodeId = componentState.nodeId;
           if (nodeId == componentStateNodeId) {
-            latestComponentState = componentState;
-            break;
+            return componentState;
           }
         }
       }
     }
-    return latestComponentState;
+    return null;
   }
 
   /**
@@ -761,12 +719,10 @@ class TeacherDataService {
    * Initialize the periods
    */
   initializePeriods() {
-    // get the periods from the config
     let periods = this.ConfigService.getPeriods();
     let currentPeriod = null;
 
     if (periods.length > 1) {
-      // create an option for all periods
       let allPeriodsOption = {
         periodId: -1,
         periodName: this.$translate('allPeriods')
@@ -778,7 +734,6 @@ class TeacherDataService {
       currentPeriod = periods[0];
     }
 
-    // an array to gather all the periods
     let mergedPeriods = [];
 
     /*
@@ -789,7 +744,6 @@ class TeacherDataService {
 
     for (let period of periods) {
       if (period != null) {
-        // check if the period object is in the run status periods
         let runStatusPeriod = null;
         if (runStatusPeriods != null) {
           for (let tempRunStatusPeriod of runStatusPeriods) {
@@ -808,7 +762,6 @@ class TeacherDataService {
            */
           mergedPeriods.push(period);
         } else {
-          // we found the period object in the run status so we will use it
           mergedPeriods.push(runStatusPeriod);
         }
       }
@@ -817,7 +770,6 @@ class TeacherDataService {
     this.periods = mergedPeriods;
     this.runStatus.periods = mergedPeriods;
 
-    // set the current period
     if (currentPeriod) {
       this.setCurrentPeriod(currentPeriod);
     }
@@ -840,8 +792,8 @@ class TeacherDataService {
       }
     }
 
-    // broadcast the event that the current period has changed
-    this.$rootScope.$broadcast('currentPeriodChanged', {previousPeriod: previousPeriod, currentPeriod: this.currentPeriod});
+    this.$rootScope.$broadcast('currentPeriodChanged',
+        {previousPeriod: previousPeriod, currentPeriod: this.currentPeriod});
   }
 
   getCurrentPeriod() {
@@ -858,9 +810,8 @@ class TeacherDataService {
 
   setCurrentWorkgroup(workgroup) {
     this.currentWorkgroup = workgroup;
-
-    // broadcast the event that the current workgroup has changed
-    this.$rootScope.$broadcast('currentWorkgroupChanged', {currentWorkgroup: this.currentWorkgroup});
+    this.$rootScope.$broadcast('currentWorkgroupChanged',
+        {currentWorkgroup: this.currentWorkgroup});
   }
 
   getCurrentWorkgroup() {
@@ -869,9 +820,8 @@ class TeacherDataService {
 
   setCurrentStep(step) {
     this.currentStep = step;
-
-    // broadcast the event that the current step has changed
-    this.$rootScope.$broadcast('currentStepChanged', {currentStep: this.currentStep});
+    this.$rootScope.$broadcast('currentStepChanged',
+        {currentStep: this.currentStep});
   }
 
   getCurrentStep() {
@@ -891,11 +841,10 @@ class TeacherDataService {
    * @returns the current node id
    */
   getCurrentNodeId() {
-    let currentNodeId = null;
     if (this.currentNode != null) {
-      currentNodeId = this.currentNode.id;
+      return this.currentNode.id;
     }
-    return currentNodeId;
+    return null;
   }
 
   /**
@@ -916,18 +865,14 @@ class TeacherDataService {
   setCurrentNode(node) {
     let previousCurrentNode = this.currentNode;
     if (previousCurrentNode !== node) {
-      // the current node is about to change
-
-      if (previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)){
-        // set the previous node to the current node
+      if (previousCurrentNode &&
+          !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
         this.previousStep = previousCurrentNode;
       }
 
-      // set the current node to the new node
       this.currentNode = node;
-
-      // broadcast the event that the current node has changed
-      this.$rootScope.$broadcast('currentNodeChanged', {previousNode: previousCurrentNode, currentNode: this.currentNode});
+      this.$rootScope.$broadcast('currentNodeChanged',
+          {previousNode: previousCurrentNode, currentNode: this.currentNode});
     }
   }
 
@@ -935,11 +880,8 @@ class TeacherDataService {
    * End the current node
    */
   endCurrentNode() {
-    // get the current node
     const previousCurrentNode = this.currentNode;
-
     if (previousCurrentNode != null) {
-      // tell the node to exit
       this.$rootScope.$broadcast('exitNode', {nodeToExit: previousCurrentNode});
     }
   }
@@ -949,10 +891,7 @@ class TeacherDataService {
    * @param nodeId the node id of the new current node
    */
   endCurrentNodeAndSetCurrentNodeByNodeId(nodeId) {
-    // end the current node
     this.endCurrentNode();
-
-    // set the current node
     this.setCurrentNodeByNodeId(nodeId);
   }
 
@@ -962,15 +901,11 @@ class TeacherDataService {
    * @returns the total score for the workgroup
    */
   getTotalScoreByWorkgroupId(workgroupId) {
-    let totalScore = null;
     if (this.studentData.annotationsToWorkgroupId != null) {
-      // get all the annotations for a workgroup
       const annotations = this.studentData.annotationsToWorkgroupId[workgroupId];
-
-      // get the total score for the workgroup
-      totalScore = this.AnnotationService.getTotalScore(annotations, workgroupId);
+      return this.AnnotationService.getTotalScore(annotations, workgroupId);
     }
-    return totalScore;
+    return null;
   }
 
   /**
@@ -986,9 +921,6 @@ class TeacherDataService {
    * @returns Boolean whether any periods are paused
    */
   isAnyPeriodPaused(periodId) {
-    let isPaused = false;
-
-    // get the run status
     let runStatus = this.runStatus;
 
     if (runStatus && runStatus.periods) {
@@ -998,13 +930,12 @@ class TeacherDataService {
       for (let period of periods) {
         if (period != null) {
           if (period.paused) {
-            isPaused = true;
-            break;
+            return true;
           }
         }
       }
     }
-    return isPaused;
+    return false;
   }
 
   /**
@@ -1014,8 +945,6 @@ class TeacherDataService {
    */
   isPeriodPaused(periodId) {
     let isPaused = false;
-
-    // get the run status
     let runStatus = this.runStatus;
 
     if (runStatus && runStatus.periods) {
@@ -1053,21 +982,15 @@ class TeacherDataService {
    */
   pauseScreensChanged(periodId, isPaused) {
     if (periodId) {
-      // update the run status
       this.updatePausedRunStatusValue(periodId, isPaused);
 
       if (isPaused) {
-        // pause the student screens
         this.TeacherWebSocketService.pauseScreens(periodId);
       } else {
-        // unpause the student screens
         this.TeacherWebSocketService.unPauseScreens(periodId);
       }
 
-      // save the run status to the server
       this.sendRunStatus();
-
-      // save pause/unpause screen event
       let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
         category = "TeacherAction", data = { periodId: periodId };
       let event = "pauseScreen";
@@ -1117,7 +1040,6 @@ class TeacherDataService {
 
         //check if the period id matches the one we need to update or if all periods has been selected
         if (periodId === tempPeriodId || periodId === -1) {
-          //we have found the period we want to update
           tempPeriod.paused = value;
         }
 
@@ -1126,7 +1048,6 @@ class TeacherDataService {
         }
 
         if (tempPeriodId === -1) {
-          // set the paused status for the all periods option
           tempPeriod.paused = allPeriodsPaused;
         }
       }

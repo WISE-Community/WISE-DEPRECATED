@@ -49,7 +49,6 @@ var TeacherDataService = function () {
      */
     this.$rootScope.$on('annotationSavedToServer', function (event, args) {
       if (args) {
-        // get the annotation that was saved to the server
         var annotation = args.annotation;
         _this.handleAnnotationReceived(annotation);
       }
@@ -61,7 +60,6 @@ var TeacherDataService = function () {
      */
     this.$rootScope.$on('newAnnotationReceived', function (event, args) {
       if (args) {
-        // get the annotation that was saved to the server
         var annotation = args.annotation;
         _this.handleAnnotationReceived(annotation);
       }
@@ -73,10 +71,8 @@ var TeacherDataService = function () {
      */
     this.$rootScope.$on('newStudentWorkReceived', function (event, args) {
       if (args) {
-        // get the student work (component state) that was saved to the server
         var studentWork = args.studentWork;
         _this.addOrUpdateComponentState(studentWork);
-        // broadcast the event that a new work has been received
         _this.$rootScope.$broadcast('studentWorkReceived', { studentWork: studentWork });
       }
     });
@@ -85,7 +81,6 @@ var TeacherDataService = function () {
   _createClass(TeacherDataService, [{
     key: 'handleAnnotationReceived',
     value: function handleAnnotationReceived(annotation) {
-      // add the annotation to the local annotations array
       this.studentData.annotations.push(annotation);
 
       var toWorkgroupId = annotation.toWorkgroupId;
@@ -99,10 +94,7 @@ var TeacherDataService = function () {
         this.studentData.annotationsByNodeId[nodeId] = new Array();
       }
       this.studentData.annotationsByNodeId[nodeId].push(annotation);
-
       this.AnnotationService.setAnnotations(this.studentData.annotations);
-
-      // broadcast the event that a new annotation has been received
       this.$rootScope.$broadcast('annotationReceived', { annotation: annotation });
     }
 
@@ -182,44 +174,13 @@ var TeacherDataService = function () {
     }
 
     /**
-     * Retrieves the export given the export Type
-     * @param exportType
-     */
-
-  }, {
-    key: 'getExport0',
-    value: function getExport0(exportType) {
-      var exportURL = this.ConfigService.getConfigParam('runDataExportURL');
-      var runId = this.ConfigService.getRunId();
-      exportURL += "/" + runId + "/" + exportType;
-
-      if (exportType === "studentAssets") {
-        window.location.href = exportURL;
-        var deferred = this.$q.defer();
-        var promise = deferred.promise;
-        deferred.resolve([]);
-        return promise;
-      } else {
-        var httpParams = {
-          method: 'GET',
-          url: exportURL,
-          params: {}
-        };
-
-        return this.$http(httpParams).then(function (result) {
-          return result.data;
-        });
-      }
-    }
-  }, {
-    key: 'saveEvent',
-
-
-    /**
      * Save events that occur in the Classroom Monitor to the server
      * @param event the event object
      * @returns a promise
      */
+
+  }, {
+    key: 'saveEvent',
     value: function saveEvent(context, nodeId, componentId, componentType, category, event, data, projectId) {
       var newEvent = {
         projectId: this.ConfigService.getProjectId(),
@@ -280,10 +241,7 @@ var TeacherDataService = function () {
      * @returns the student data for the node id
      */
     value: function retrieveStudentDataByNodeId(nodeId) {
-      // get the node ids and component ids in the node
       var nodeIdsAndComponentIds = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
-
-      // get the show previous work node ids and component ids in the node
       var showPreviousWorkNodeIdsAndComponentIds = this.ProjectService.getShowPreviousWorkNodeIdsAndComponentIds(nodeId);
 
       var components = [];
@@ -291,13 +249,11 @@ var TeacherDataService = function () {
       components = components.concat(showPreviousWorkNodeIdsAndComponentIds);
 
       var params = {};
-      //params.periodId = periodId;
       params.periodId = null;
       params.workgroupId = null;
       params.components = components;
       params.getAnnotations = false;
       params.getEvents = false;
-      //params.event = 'nodeEntered';
 
       return this.retrieveStudentData(params);
     }
@@ -568,7 +524,6 @@ var TeacherDataService = function () {
       var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
       var runId = this.ConfigService.getConfigParam('runId');
 
-      //create the params for the request
       var params = {
         runId: runId
       };
@@ -579,12 +534,10 @@ var TeacherDataService = function () {
       httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
       httpParams.params = params;
 
-      // make the request
       return this.$http(httpParams).then(function (result) {
         if (result != null) {
           var data = result.data;
           if (data != null) {
-            // save the run status
             _this3.runStatus = data;
             _this3.initializePeriods();
           }
@@ -594,9 +547,6 @@ var TeacherDataService = function () {
   }, {
     key: 'getComponentStatesByWorkgroupId',
     value: function getComponentStatesByWorkgroupId(workgroupId) {
-      if (this.studentData.componentStatesByWorkgroupId == null) {
-        //debugger;
-      }
       var componentStatesByWorkgroupId = this.studentData.componentStatesByWorkgroupId[workgroupId];
       if (componentStatesByWorkgroupId != null) {
         return componentStatesByWorkgroupId;
@@ -624,12 +574,11 @@ var TeacherDataService = function () {
   }, {
     key: 'getComponentStatesByComponentId',
     value: function getComponentStatesByComponentId(componentId) {
-      var componentStates = [];
       var componentStatesByComponentId = this.studentData.componentStatesByComponentId[componentId];
       if (componentStatesByComponentId != null) {
-        componentStates = componentStatesByComponentId;
+        return componentStatesByComponentId;
       }
-      return componentStates;
+      return [];
     }
   }, {
     key: 'getLatestComponentStateByWorkgroupIdNodeIdAndComponentId',
@@ -662,13 +611,12 @@ var TeacherDataService = function () {
           if (componentState != null) {
             var componentStateNodeId = componentState.nodeId;
             if (nodeId == componentStateNodeId) {
-              latestComponentState = componentState;
-              break;
+              return componentState;
             }
           }
         }
       }
-      return latestComponentState;
+      return null;
     }
 
     /**
@@ -903,12 +851,10 @@ var TeacherDataService = function () {
   }, {
     key: 'initializePeriods',
     value: function initializePeriods() {
-      // get the periods from the config
       var periods = this.ConfigService.getPeriods();
       var currentPeriod = null;
 
       if (periods.length > 1) {
-        // create an option for all periods
         var allPeriodsOption = {
           periodId: -1,
           periodName: this.$translate('allPeriods')
@@ -920,7 +866,6 @@ var TeacherDataService = function () {
         currentPeriod = periods[0];
       }
 
-      // an array to gather all the periods
       var mergedPeriods = [];
 
       /*
@@ -938,7 +883,6 @@ var TeacherDataService = function () {
           var period = _step5.value;
 
           if (period != null) {
-            // check if the period object is in the run status periods
             var runStatusPeriod = null;
             if (runStatusPeriods != null) {
               var _iteratorNormalCompletion6 = true;
@@ -978,7 +922,6 @@ var TeacherDataService = function () {
                */
               mergedPeriods.push(period);
             } else {
-              // we found the period object in the run status so we will use it
               mergedPeriods.push(runStatusPeriod);
             }
           }
@@ -1001,7 +944,6 @@ var TeacherDataService = function () {
       this.periods = mergedPeriods;
       this.runStatus.periods = mergedPeriods;
 
-      // set the current period
       if (currentPeriod) {
         this.setCurrentPeriod(currentPeriod);
       }
@@ -1025,7 +967,6 @@ var TeacherDataService = function () {
         }
       }
 
-      // broadcast the event that the current period has changed
       this.$rootScope.$broadcast('currentPeriodChanged', { previousPeriod: previousPeriod, currentPeriod: this.currentPeriod });
     }
   }, {
@@ -1047,8 +988,6 @@ var TeacherDataService = function () {
     key: 'setCurrentWorkgroup',
     value: function setCurrentWorkgroup(workgroup) {
       this.currentWorkgroup = workgroup;
-
-      // broadcast the event that the current workgroup has changed
       this.$rootScope.$broadcast('currentWorkgroupChanged', { currentWorkgroup: this.currentWorkgroup });
     }
   }, {
@@ -1060,8 +999,6 @@ var TeacherDataService = function () {
     key: 'setCurrentStep',
     value: function setCurrentStep(step) {
       this.currentStep = step;
-
-      // broadcast the event that the current step has changed
       this.$rootScope.$broadcast('currentStepChanged', { currentStep: this.currentStep });
     }
   }, {
@@ -1089,11 +1026,10 @@ var TeacherDataService = function () {
   }, {
     key: 'getCurrentNodeId',
     value: function getCurrentNodeId() {
-      var currentNodeId = null;
       if (this.currentNode != null) {
-        currentNodeId = this.currentNode.id;
+        return this.currentNode.id;
       }
-      return currentNodeId;
+      return null;
     }
 
     /**
@@ -1120,17 +1056,11 @@ var TeacherDataService = function () {
     value: function setCurrentNode(node) {
       var previousCurrentNode = this.currentNode;
       if (previousCurrentNode !== node) {
-        // the current node is about to change
-
         if (previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
-          // set the previous node to the current node
           this.previousStep = previousCurrentNode;
         }
 
-        // set the current node to the new node
         this.currentNode = node;
-
-        // broadcast the event that the current node has changed
         this.$rootScope.$broadcast('currentNodeChanged', { previousNode: previousCurrentNode, currentNode: this.currentNode });
       }
     }
@@ -1142,11 +1072,8 @@ var TeacherDataService = function () {
   }, {
     key: 'endCurrentNode',
     value: function endCurrentNode() {
-      // get the current node
       var previousCurrentNode = this.currentNode;
-
       if (previousCurrentNode != null) {
-        // tell the node to exit
         this.$rootScope.$broadcast('exitNode', { nodeToExit: previousCurrentNode });
       }
     }
@@ -1159,10 +1086,7 @@ var TeacherDataService = function () {
   }, {
     key: 'endCurrentNodeAndSetCurrentNodeByNodeId',
     value: function endCurrentNodeAndSetCurrentNodeByNodeId(nodeId) {
-      // end the current node
       this.endCurrentNode();
-
-      // set the current node
       this.setCurrentNodeByNodeId(nodeId);
     }
 
@@ -1175,15 +1099,11 @@ var TeacherDataService = function () {
   }, {
     key: 'getTotalScoreByWorkgroupId',
     value: function getTotalScoreByWorkgroupId(workgroupId) {
-      var totalScore = null;
       if (this.studentData.annotationsToWorkgroupId != null) {
-        // get all the annotations for a workgroup
         var annotations = this.studentData.annotationsToWorkgroupId[workgroupId];
-
-        // get the total score for the workgroup
-        totalScore = this.AnnotationService.getTotalScore(annotations, workgroupId);
+        return this.AnnotationService.getTotalScore(annotations, workgroupId);
       }
-      return totalScore;
+      return null;
     }
 
     /**
@@ -1205,9 +1125,6 @@ var TeacherDataService = function () {
   }, {
     key: 'isAnyPeriodPaused',
     value: function isAnyPeriodPaused(periodId) {
-      var isPaused = false;
-
-      // get the run status
       var runStatus = this.runStatus;
 
       if (runStatus && runStatus.periods) {
@@ -1224,8 +1141,7 @@ var TeacherDataService = function () {
 
             if (period != null) {
               if (period.paused) {
-                isPaused = true;
-                break;
+                return true;
               }
             }
           }
@@ -1244,7 +1160,7 @@ var TeacherDataService = function () {
           }
         }
       }
-      return isPaused;
+      return false;
     }
 
     /**
@@ -1257,8 +1173,6 @@ var TeacherDataService = function () {
     key: 'isPeriodPaused',
     value: function isPeriodPaused(periodId) {
       var isPaused = false;
-
-      // get the run status
       var runStatus = this.runStatus;
 
       if (runStatus && runStatus.periods) {
@@ -1320,21 +1234,15 @@ var TeacherDataService = function () {
     key: 'pauseScreensChanged',
     value: function pauseScreensChanged(periodId, isPaused) {
       if (periodId) {
-        // update the run status
         this.updatePausedRunStatusValue(periodId, isPaused);
 
         if (isPaused) {
-          // pause the student screens
           this.TeacherWebSocketService.pauseScreens(periodId);
         } else {
-          // unpause the student screens
           this.TeacherWebSocketService.unPauseScreens(periodId);
         }
 
-        // save the run status to the server
         this.sendRunStatus();
-
-        // save pause/unpause screen event
         var context = "ClassroomMonitor",
             nodeId = null,
             componentId = null,
@@ -1417,7 +1325,6 @@ var TeacherDataService = function () {
 
           //check if the period id matches the one we need to update or if all periods has been selected
           if (periodId === tempPeriodId || periodId === -1) {
-            //we have found the period we want to update
             tempPeriod.paused = value;
           }
 
@@ -1426,7 +1333,6 @@ var TeacherDataService = function () {
           }
 
           if (tempPeriodId === -1) {
-            // set the paused status for the all periods option
             tempPeriod.paused = allPeriodsPaused;
           }
         }
