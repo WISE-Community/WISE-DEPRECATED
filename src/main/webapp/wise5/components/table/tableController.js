@@ -326,38 +326,38 @@ var TableController = function () {
 
       if (connectedComponent != null && connectedComponentParams != null && componentState != null) {
 
-        if (connectedComponentParams.updateOn === 'change') {
-          // get the component type that has changed
-          var componentType = connectedComponent.type;
+        if (connectedComponentParams.updateOn === 'change') {}
 
-          /*
-           * make a copy of the component state so we don't accidentally
-           * change any values in the referenced object
-           */
-          componentState = this.UtilService.makeCopyOfJSONObject(componentState);
+        // get the component type that has changed
+        var componentType = connectedComponent.type;
 
-          if (componentType === 'Table') {
+        /*
+         * make a copy of the component state so we don't accidentally
+         * change any values in the referenced object
+         */
+        componentState = this.UtilService.makeCopyOfJSONObject(componentState);
 
-            // set the table data
-            this.$scope.tableController.setStudentWork(componentState);
+        if (componentType === 'Table') {
 
-            // the table has changed
-            this.$scope.tableController.isDirty = true;
-          } else if (componentType === 'Graph') {
+          // set the table data
+          this.$scope.tableController.setStudentWork(componentState);
 
-            // set the graph data into the table
-            this.$scope.tableController.setGraphDataIntoTableData(componentState, connectedComponentParams);
+          // the table has changed
+          this.$scope.tableController.isDirty = true;
+        } else if (componentType === 'Graph') {
 
-            // the table has changed
-            this.$scope.tableController.isDirty = true;
-          } else if (componentType === 'Embedded') {
+          // set the graph data into the table
+          this.$scope.tableController.setGraphDataIntoTableData(componentState, connectedComponentParams);
 
-            // set the table data
-            this.$scope.tableController.setStudentWork(componentState);
+          // the table has changed
+          this.$scope.tableController.isDirty = true;
+        } else if (componentType === 'Embedded') {
 
-            // the table has changed
-            this.$scope.tableController.isDirty = true;
-          }
+          // set the table data
+          this.$scope.tableController.setStudentWork(componentState);
+
+          // the table has changed
+          this.$scope.tableController.isDirty = true;
         }
       }
     }.bind(this);

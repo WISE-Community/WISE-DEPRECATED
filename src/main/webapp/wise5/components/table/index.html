@@ -146,6 +146,13 @@
                   </md-tooltip>
                 </md-button>
               </md-input-container>
+              <md-input-container ng-if='tableController.authoringGetConnectedComponentType(connectedComponent) == "Graph"'>
+                <md-checkbox class='md-primary'
+                    ng-model='connectedComponent.showDataAtMouseX'
+                    ng-change='tableController.authoringViewComponentChanged()'>
+                  {{ 'table.onlyShowDataAtMouseXPosition' | translate }}
+                </md-checkbox>
+              </md-input-container>
             </div>
           </div>
         </div>

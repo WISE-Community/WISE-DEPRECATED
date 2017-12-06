@@ -19,5 +19,6 @@
   "table.insertRowBefore": "Insert Row Before",
   "table.makeAllCellsEditable": "Make All Cells Editable",
   "table.makeAllCellsUneditable": "Make All Cells Uneditable",
+  "table.onlyShowDataAtMouseXPosition": "Only Show Data at Mouse X Position",
   "table.rows": "Rows"
 }
