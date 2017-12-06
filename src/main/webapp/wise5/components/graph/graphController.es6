@@ -579,13 +579,8 @@ class GraphController {
 
       // setup the graph
       this.setupGraph().then(() => {
-        if (this.isMouseXPlotLineOn()) {
-          this.showXPlotLine(0, 'Drag Me');
-        }
-
-        if (this.isMouseYPlotLineOn()) {
-          this.showYPlotLine(0, 'Drag Me');
-        }
+        this.showXPlotLineIfOn('Drag Me');
+        this.showYPlotLineIfOn('Drag Me');
 
         if (this.isMouseXPlotLineOn() ||
             this.isMouseYPlotLineOn() ||
@@ -1271,7 +1266,10 @@ class GraphController {
        * active series will react to mouseover.
        */
       this.$timeout(() => {
-        this.setupGraphHelper(deferred);
+        this.setupGraphHelper(deferred).then(() => {
+          this.showXPlotLineIfOn();
+          this.showYPlotLineIfOn();
+        });
       });
     } else {
       // call the setup graph helper immediately
@@ -1870,6 +1868,8 @@ class GraphController {
         }, 1000);
       }
     };
+
+    return deferred.promise;
   };
 
   /**
@@ -2503,7 +2503,8 @@ class GraphController {
           this.submitCounter = submitCounter;
         }
 
-        if (studentData.mouseOverPoints != null) {
+        if (studentData.mouseOverPoints != null &&
+            studentData.mouseOverPoints.length > 0) {
           this.mouseOverPoints = studentData.mouseOverPoints;
         }
 
@@ -6401,6 +6402,66 @@ class GraphController {
    */
   isSaveMouseOverPoints() {
     return this.componentContent.saveMouseOverPoints;
+  }
+
+  /**
+   * @return The x value of the latest mouse over point.
+   */
+  getLatestMouseOverPointX() {
+    if (this.mouseOverPoints.length > 0) {
+      let latestMouseOverPoint = this.mouseOverPoints[this.mouseOverPoints.length - 1];
+      /*
+       * The latestMouseOverPoint is an array with the 0 element being x and the
+       * 1 element being y.
+       */
+      return latestMouseOverPoint[0];
+    }
+    return null;
+  }
+
+  /**
+   * @return The y value of the latest mouse over point.
+   */
+  getLatestMouseOverPointY() {
+    if (this.mouseOverPoints.length > 0) {
+      let latestMouseOverPoint = this.mouseOverPoints[this.mouseOverPoints.length - 1];
+      /*
+       * The latestMouseOverPoint is an array with the 0 element being x and the
+       * 1 element being y.
+       */
+      return latestMouseOverPoint[1];
+    }
+    return null;
+  }
+
+  /**
+   * Show the x plot line if it is enabled.
+   * @param text The text to show on the plot line.
+   */
+  showXPlotLineIfOn(text = null) {
+    if (this.isMouseXPlotLineOn()) {
+      // show the previous x plot line or default to 0
+      let x = this.getLatestMouseOverPointX();
+      if (x == null) {
+        x == 0;
+      }
+      this.showXPlotLine(x, text);
+    }
+  }
+
+  /**
+   * Show the y plot line if it is enabled.
+   * @param text The text to show on the plot line.
+   */
+  showYPlotLineIfOn(text = null) {
+    if (this.isMouseYPlotLineOn()) {
+      // show the previous y plot line or default to 0
+      let y = this.getLatestMouseOverPointY();
+      if (y == null) {
+        y == 0;
+      }
+      this.showYPlotLine(y, text);
+    }
   }
 }
 
