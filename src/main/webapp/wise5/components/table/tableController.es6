@@ -1177,6 +1177,11 @@ class TableController {
         // get the series index
         seriesIndex = params.seriesIndex;
       }
+
+      if (params.showDataAtMouseX) {
+        this.showDataAtMouseX(componentState, params);
+        return;
+      }
     }
 
     if (componentState != null && componentState.studentData != null) {
@@ -1230,6 +1235,142 @@ class TableController {
       }
     }
   };
+
+  /**
+   * Show the data at x for all the series.
+   * @param componentState The Graph component state.
+   * @param params The connected component params.
+   */
+  showDataAtMouseX(componentState, params) {
+    let studentData = componentState.studentData;
+    let mouseOverPoints = studentData.mouseOverPoints;
+    let x = null;
+
+    // get the x value from the latest mouse over point
+    if (mouseOverPoints != null && mouseOverPoints.length > 0) {
+      let latestMouseOverPoint = mouseOverPoints[mouseOverPoints.length - 1];
+      x = Math.round(latestMouseOverPoint[0]);
+    }
+    let xUnits = studentData.xAxis.units;
+    let yUnits = studentData.yAxis.units;
+    let xAxisTitle = studentData.xAxis.title.text;
+    let yAxisTitle = studentData.yAxis.title.text;
+    this.removeAllCellsFromTableData();
+    this.addTableDataRow(this.createTableRow(['Series Name', xAxisTitle, yAxisTitle]));
+    for (let trial of studentData.trials) {
+      let multipleSeries = trial.series;
+      for (let singleSeries of multipleSeries) {
+        if (singleSeries.show !== false) {
+          let closestDataPoint = this.getClosestDataPoint(singleSeries.data, x);
+          this.addTableDataRow(this.createTableRow([singleSeries.name,
+              Math.round(this.getXFromDataPoint(closestDataPoint)) + ' ' + xUnits,
+              Math.round(this.getYFromDataPoint(closestDataPoint)) + ' ' + yUnits]));
+        }
+      }
+    }
+  }
+
+  /**
+   * Remove all the rows and cells from the table data.
+   */
+  removeAllCellsFromTableData() {
+    this.tableData = [];
+  }
+
+  /**
+   * Append a row to the table data.
+   * @param row An array of objects. Each object represents a cell in the table.
+   */
+  addTableDataRow(row) {
+    this.tableData.push(row);
+  }
+
+  /**
+   * Create a cell object.
+   * @param text The text to show in the cell.
+   * @param editable Whether the student is allowed to edit the contents in the
+   * cell.
+   * @param size The with of the cell.
+   * @return An object.
+   */
+  createTableCell(text = '', editable = false, size = null) {
+    return { text: text, editable: editable, size: size };
+  }
+
+  /**
+   * Create a row.
+   * @param columns An array of strings or objects.
+   * @return An array of objects.
+   */
+  createTableRow(columns) {
+    let row = [];
+    for (let column of columns) {
+      if (column.constructor.name == 'String') {
+        row.push(this.createTableCell(column));
+      } else if (column.constructor.name == 'Object') {
+        row.push(this.createTableCell(column.text, column.editable, column.size));
+      }
+    }
+    return row;
+  }
+
+  /**
+   * Get the data point that has the closest x value to the given argument x.
+   * @param dataPoints An array of data points. Each data point can be an object
+   * or an array.
+   * @param x The argument x.
+   * @return A data point which can be an object or array.
+   */
+  getClosestDataPoint(dataPoints, x) {
+    let closestDataPoint = null;
+    let minNumericalXDifference = Infinity;
+    for (let dataPoint of dataPoints) {
+      let dataPointX = this.getXFromDataPoint(dataPoint);
+      let numericalDifference = this.getNumericalAbsoluteDifference(x, dataPointX);
+      if (numericalDifference < minNumericalXDifference) {
+        // we have found a new data point that is closer to x
+        closestDataPoint = dataPoint;
+        minNumericalXDifference = numericalDifference;
+      }
+    }
+    return closestDataPoint;
+  }
+
+  /**
+   * Get the absolute value of the difference between the two numbers.
+   * @param x1 A number.
+   * @param x2 A number.
+   * @return The absolute value of the difference between the two numbers.
+   */
+  getNumericalAbsoluteDifference(x1, x2) {
+    return Math.abs(x1 - x2);
+  }
+
+  /**
+   * Get the x value from the data point.
+   * @param dataPoint An object or array.
+   * @return The x value of the data point.
+   */
+  getXFromDataPoint(dataPoint) {
+    if (dataPoint.constructor.name == 'Object') {
+      return dataPoint.x;
+    } else if (dataPoint.constructor.name == 'Array') {
+      return dataPoint[0];
+    }
+  }
+
+  /**
+   * Get the y value from the data point.
+   * @param dataPoint An object or array.
+   * @return The y value of the data point.
+   */
+  getYFromDataPoint(dataPoint) {
+    if (dataPoint.constructor.name == 'Object') {
+      return dataPoint.y;
+    } else if (dataPoint.constructor.name == 'Array') {
+      return dataPoint[1];
+    }
+  }
 
   /**
    * Set the series data into the table
