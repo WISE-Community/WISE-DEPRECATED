@@ -1264,9 +1264,11 @@ class TableController {
       for (let singleSeries of multipleSeries) {
         if (singleSeries.show !== false) {
           let closestDataPoint = this.getClosestDataPoint(singleSeries.data, x);
-          this.addTableDataRow(this.createTableRow([singleSeries.name,
-              Math.round(this.getXFromDataPoint(closestDataPoint)) + ' ' + xUnits,
-              Math.round(this.getYFromDataPoint(closestDataPoint)) + ' ' + yUnits]));
+          if (closestDataPoint != null) {
+            this.addTableDataRow(this.createTableRow([singleSeries.name,
+                Math.round(this.getXFromDataPoint(closestDataPoint)) + ' ' + xUnits,
+                Math.round(this.getYFromDataPoint(closestDataPoint)) + ' ' + yUnits]));
+          }
         }
       }
     }
