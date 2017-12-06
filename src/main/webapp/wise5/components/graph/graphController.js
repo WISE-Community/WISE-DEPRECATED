@@ -538,7 +538,19 @@ var GraphController = function () {
       this.calculateDisabled();
 
       // setup the graph
-      this.setupGraph();
+      this.setupGraph().then(function () {
+        if (_this.isMouseXPlotLineOn()) {
+          _this.showXPlotLine(0, 'Drag Me');
+        }
+
+        if (_this.isMouseYPlotLineOn()) {
+          _this.showYPlotLine(0, 'Drag Me');
+        }
+
+        if (_this.isMouseXPlotLineOn() || _this.isMouseYPlotLineOn() || _this.isSaveMouseOverPoints()) {
+          _this.setupMouseMoveListener();
+        }
+      });
 
       if (this.$scope.$parent.nodeController != null) {
         // register this component with the parent node
@@ -1085,40 +1097,56 @@ var GraphController = function () {
 
     /**
      * Show the vertical plot line at the given x.
-     * @param x the x value to show the vertical line at
+     * @param x The x value to show the vertical line at.
+     * @param text The text to show on the plot line.
      */
 
   }, {
     key: 'showXPlotLine',
-    value: function showXPlotLine(x) {
+    value: function showXPlotLine(x, text) {
       var chart = $('#' + this.chartId).highcharts();
       var chartXAxis = chart.xAxis[0];
       chartXAxis.removePlotLine('plot-line-x');
-      chartXAxis.addPlotLine({
+      var plotLine = {
         value: x,
         color: 'red',
         width: 4,
         id: 'plot-line-x'
-      });
+      };
+      if (text != null && text != '') {
+        plotLine.label = {
+          text: text,
+          verticalAlign: 'top'
+        };
+      }
+      chartXAxis.addPlotLine(plotLine);
     }
 
     /**
      * Show the horizontal plot line at the given y.
-     * @param y the y value to show the horizontal line at
+     * @param y The y value to show the horizontal line at.
+     * @param text The text to show on the plot line.
      */
 
   }, {
     key: 'showYPlotLine',
-    value: function showYPlotLine(y) {
+    value: function showYPlotLine(y, text) {
       var chart = $('#' + this.chartId).highcharts();
       var chartYAxis = chart.yAxis[0];
       chartYAxis.removePlotLine('plot-line-y');
-      chartYAxis.addPlotLine({
+      var plotLine = {
         value: y,
         color: 'red',
         width: 2,
         id: 'plot-line-y'
-      });
+      };
+      if (text != null && text != '') {
+        plotLine.label = {
+          text: text,
+          align: 'right'
+        };
+      }
+      chartYAxis.addPlotLine(plotLine);
     }
 
     /**
@@ -1201,6 +1229,8 @@ var GraphController = function () {
     value: function setupGraph(useTimeout) {
       var _this3 = this;
 
+      var deferred = this.$q.defer();
+
       if (useTimeout) {
         // call the setup graph helper after a timeout
 
@@ -1224,31 +1254,25 @@ var GraphController = function () {
          * active series will react to mouseover.
          */
         this.$timeout(function () {
-          _this3.setupGraphHelper();
+          _this3.setupGraphHelper(deferred);
         });
       } else {
         // call the setup graph helper immediately
-        this.setupGraphHelper();
+        this.setupGraphHelper(deferred);
       }
 
-      if (this.componentContent.showMouseXPlotLine || this.componentContent.showMouseYPlotLine || this.componentContent.saveMouseOverPoints) {
-        /*
-         * we need to wait for highcharts to render the graph before we set up
-         * the mouse move listener
-         */
-        setTimeout(function () {
-          _this3.setupMouseMoveListener();
-        }, 1000);
-      }
+      return deferred.promise;
     }
 
     /**
-     * The helper function for setting up the graph
+     * The helper function for setting up the graph.
+     * @param deferred A promise that should be resolved after the graph is done
+     * rendering.
      */
 
   }, {
     key: 'setupGraphHelper',
-    value: function setupGraphHelper() {
+    value: function setupGraphHelper(deferred) {
 
       // get the title
       var title = this.componentContent.title;
@@ -1603,6 +1627,9 @@ var GraphController = function () {
             zoomType: zoomType,
             plotBackgroundImage: this.backgroundImage,
             events: {
+              load: function load() {
+                deferred.resolve(this);
+              },
               click: function click(e) {
                 if (thisGraphController.graphType == 'line' || thisGraphController.graphType == 'scatter') {
                   // only attempt to add a new point if the graph type is line or scatter
@@ -6781,11 +6808,41 @@ var GraphController = function () {
   }, {
     key: 'isMousePlotLineOn',
     value: function isMousePlotLineOn() {
-      if (this.componentContent.showMouseXPlotLine || this.componentContent.showMouseYPlotLine) {
+      if (this.isMouseXPlotLineOn() || this.isMouseYPlotLineOn()) {
         return true;
       } else {
         return false;
       }
+    }
+
+    /**
+     * @return Whether we are showing the vertical plot line on the graph.
+     */
+
+  }, {
+    key: 'isMouseXPlotLineOn',
+    value: function isMouseXPlotLineOn() {
+      return this.componentContent.showMouseXPlotLine;
+    }
+
+    /**
+     * @return Whether we are showing the horizontal plot line on the graph.
+     */
+
+  }, {
+    key: 'isMouseYPlotLineOn',
+    value: function isMouseYPlotLineOn() {
+      return this.componentContent.showMouseYPlotLine;
+    }
+
+    /**
+     * @return Whether we are saving the mouse points in the component state.
+     */
+
+  }, {
+    key: 'isSaveMouseOverPoints',
+    value: function isSaveMouseOverPoints() {
+      return this.componentContent.saveMouseOverPoints;
     }
   }]);
 
