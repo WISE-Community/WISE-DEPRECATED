@@ -1131,7 +1131,7 @@ class GraphController {
     chartXAxis.addPlotLine({
         value: x,
         color: 'red',
-        width: 2,
+        width: 4,
         id: 'plot-line-x'
     });
   }
@@ -1450,6 +1450,10 @@ class GraphController {
           tempSeries.shared = false;
           tempSeries.allowPointSelect = false;
         }
+
+        if (this.isMousePlotLineOn()) {
+          tempSeries.enableMouseTracking = true;
+        }
       }
     }
 
@@ -1695,11 +1699,15 @@ class GraphController {
                     // notify the controller that the student data has changed
                     thisGraphController.studentDataChanged();
                   } else {
-                    /*
-                     * the student is trying to add a point to a series
-                     * that can't be edited
-                     */
-                    alert(thisGraphController.$translate('graph.youCanNotEditThisSeriesPleaseChooseASeriesThatCanBeEdited'));
+                    if (thisGraphController.isMousePlotLineOn()) {
+                      // do nothing
+                    } else {
+                      /*
+                       * the student is trying to add a point to a series
+                       * that can't be edited
+                       */
+                      alert(thisGraphController.$translate('graph.youCanNotEditThisSeriesPleaseChooseASeriesThatCanBeEdited'));
+                    }
                   }
                 }
               }
@@ -1715,6 +1723,22 @@ class GraphController {
                 // the student clicked on a series in the legend
 
                 if (thisGraphController.componentContent.canStudentHideSeriesOnLegendClick != null) {
+                  if (thisGraphController.componentContent.canStudentHideSeriesOnLegendClick) {
+                    /*
+                     * Update the show field in all the series depending on
+                     * whether each line is active in the legend.
+                     */
+                    for (let yAxisSeries of this.yAxis.series) {
+                      let series = thisGraphController.getSeriesById(yAxisSeries.userOptions.id);
+                      if (this.userOptions.id == series.id) {
+                        series.show = !yAxisSeries.visible;
+                      } else {
+                        series.show = yAxisSeries.visible;
+                      }
+                    }
+                    thisGraphController.studentDataChanged();
+                  }
+
                   // the value has been authored so we will use it
                   return thisGraphController.componentContent.canStudentHideSeriesOnLegendClick;
                 } else {
@@ -3014,6 +3038,23 @@ class GraphController {
     }
 
     return series;
+  }
+
+  /**
+   * Get a series by the id
+   * @param id the id of the series
+   * @return the series object with the given id
+   */
+  getSeriesById(id) {
+    var seriesArray = this.getSeries();
+
+    for (let series of seriesArray) {
+      if (series.id == id) {
+        return series;
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -6299,6 +6340,20 @@ class GraphController {
    */
   authoringJSONChanged() {
     this.jsonStringChanged = true;
+  }
+
+  /**
+   * Whether we are showing a plot line where the mouse is.
+   * @return True if we are showing a plot line on the x or y axis where the
+   * mouse is.
+   */
+  isMousePlotLineOn() {
+    if (this.componentContent.showMouseXPlotLine ||
+        this.componentContent.showMouseYPlotLine) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 
