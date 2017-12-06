@@ -10,9 +10,6 @@ class NotificationService {
     this.UtilService = UtilService;
     this.notifications = [];  // an array of notifications that students haven't seen yet.
 
-    /**
-     * We received a new notification.
-     */
     this.$rootScope.$on('newNotification', (event, notification) => {
       if (notification != null) {
         const workgroupId = this.ConfigService.getWorkgroupId();
@@ -33,7 +30,6 @@ class NotificationService {
             }
           }
           if (isNotificationNew) {
-            // this is a new notification
             this.notifications.push(notification);
             this.$rootScope.$broadcast('notificationAdded', notification);
           }
@@ -84,9 +80,7 @@ class NotificationService {
    * Retrieves notifications from the server
    */
   retrieveNotifications(toWorkgroupId = null) {
-
     const notificationURL = this.ConfigService.getNotificationURL();
-
     if (notificationURL == null) {
       // the notification url is null most likely because we are in preview mode
       return Promise.resolve(this.notifications);
@@ -194,16 +188,12 @@ class NotificationService {
    * @param notification
    */
   saveNotificationToServer(notification) {
-
     if (this.ConfigService.isPreview()) {
-
       // if we're in preview, don't make any request to the server but pretend we did
       const deferred = this.$q.defer();
       deferred.resolve(notification);
       return deferred.promise;
-
     } else {
-
       const config = {
         method: "POST",
         url: this.ConfigService.getNotificationURL(),
@@ -239,7 +229,6 @@ class NotificationService {
       return this.$http(config).then((result) => {
         const notification = result.data;
         if (notification.data != null) {
-          // parse the data string into a JSON object
           notification.data = angular.fromJson(notification.data);
         }
         return notification;
@@ -252,16 +241,13 @@ class NotificationService {
    * @param notification
    */
   dismissNotificationToServer(notification) {
-
     notification.timeDismissed = Date.parse(new Date());  // set dismissed time to now.
 
     if (this.ConfigService.isPreview()) {
-
       // if we're in preview, don't make any request to the server but pretend we did
       const deferred = this.$q.defer();
       deferred.resolve(notification);
       return deferred.promise;
-
     } else {
       if (notification.id == null) {
         // cannot dismiss a notification that hasn't been saved to db yet
@@ -307,7 +293,6 @@ class NotificationService {
    */
   getNotifications(args) {
     let notifications = this.notifications;
-
     if (args) {
       for (let p in args) {
         if (args.hasOwnProperty(p) && args[p] !== null) {
@@ -319,7 +304,6 @@ class NotificationService {
         }
       }
     }
-
     return notifications;
   }
 
@@ -352,7 +336,6 @@ class NotificationService {
     } else {
       alertNotifications = this.getNotifications(params);
     }
-
     return alertNotifications;
   }
 }

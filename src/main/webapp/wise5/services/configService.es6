@@ -28,7 +28,6 @@ class ConfigService {
 
       let constraints = true;
 
-      // get the full url
       const absURL = this.$location.$$absUrl;
 
       if (configJSON.mode == 'preview') {
@@ -60,7 +59,6 @@ class ConfigService {
       this.setConfig(configJSON);
 
       if (this.isPreview()) {
-        // assign a random workgroup id
         const myUserInfo = this.getMyUserInfo();
         if (myUserInfo != null) {
           // set the workgroup id to a random integer between 1 and 100
@@ -156,12 +154,11 @@ class ConfigService {
    * Returns the period id of the logged-in user.
    */
   getPeriodId() {
-    let periodId = null;
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
-      periodId = myUserInfo.periodId;
+      return myUserInfo.periodId;
     }
-    return periodId;
+    return null;
   };
 
   /**
@@ -169,26 +166,24 @@ class ConfigService {
    * @returns an array of period objects
    */
   getPeriods() {
-    let periods = [];
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
       const myClassInfo = myUserInfo.myClassInfo;
       if (myClassInfo != null) {
         if (myClassInfo.periods != null) {
-          periods = myClassInfo.periods;
+          return myClassInfo.periods;
         }
       }
     }
-    return periods;
+    return [];
   };
 
   getWorkgroupId() {
-    let workgroupId = null;
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
-      workgroupId = myUserInfo.workgroupId;
+      return myUserInfo.workgroupId;
     }
-    return workgroupId;
+    return null;
   };
 
   /**
@@ -196,21 +191,19 @@ class ConfigService {
    * @return the user id
    */
   getUserId() {
-    let userId = null;
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
-      userId = myUserInfo.id;
+      return myUserInfo.id;
     }
-    return userId;
+    return null;
   }
 
   getMyUserInfo() {
-    let myUserInfo = null;
     const userInfo = this.getUserInfo();
     if (userInfo != null) {
-      myUserInfo = userInfo.myUserInfo;
+      return userInfo.myUserInfo;
     }
-    return myUserInfo;
+    return null;
   };
 
   /**
@@ -218,24 +211,22 @@ class ConfigService {
    * @return the user name of the signed in user
    */
   getMyUserName() {
-    let userName = null;
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
-      userName = myUserInfo.userName;
+      return myUserInfo.userName;
     }
-    return userName;
+    return null;
   }
 
   getClassmateUserInfos() {
-    let classmateUserInfos = null;
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
       const myClassInfo = myUserInfo.myClassInfo;
       if (myClassInfo != null) {
-        classmateUserInfos = myClassInfo.classmateUserInfos;
+        return myClassInfo.classmateUserInfos;
       }
     }
-    return classmateUserInfos;
+    return null;
   };
 
   setClassmateDisplayNames() {
@@ -285,39 +276,36 @@ class ConfigService {
   }
 
   getTeacherWorkgroupId() {
-    let teacherWorkgroupId = null;
     const teacherUserInfo = this.getTeacherUserInfo();
     if (teacherUserInfo != null) {
-      teacherWorkgroupId = teacherUserInfo.workgroupId;
+      return teacherUserInfo.workgroupId;
     }
-    return teacherWorkgroupId;
+    return null;
   };
 
   getTeacherUserInfo() {
-    let teacherUserInfo = null;
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
       const myClassInfo = myUserInfo.myClassInfo;
       if (myClassInfo != null) {
-        teacherUserInfo = myClassInfo.teacherUserInfo;
+        return myClassInfo.teacherUserInfo;
       }
     }
-    return teacherUserInfo;
+    return null;
   };
 
   /**
    * Get the shared teacher user infos for the run
    */
   getSharedTeacherUserInfos() {
-    let sharedTeacherUserInfos = null;
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
       const myClassInfo = myUserInfo.myClassInfo;
       if (myClassInfo != null) {
-        sharedTeacherUserInfos = myClassInfo.sharedTeacherUserInfos;
+        return myClassInfo.sharedTeacherUserInfos;
       }
     }
-    return sharedTeacherUserInfos;
+    return null;
   }
 
   getClassmateWorkgroupIds(includeSelf) {
@@ -349,17 +337,16 @@ class ConfigService {
   };
 
   sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
-    let result = 0;
     if (a != null && a.userName != null && b != null && b.userName != null) {
       const aUserName = a.userName.toLowerCase();
       const bUserName = b.userName.toLowerCase();
       if (aUserName < bUserName) {
-        result = -1;
+        return -1;
       } else if (aUserName > bUserName) {
-        result = 1;
+        return 1;
       }
     }
-    return result;
+    return 0;
   };
 
   setPermissions() {
@@ -426,14 +413,13 @@ class ConfigService {
    * @returns the period id the workgroup id is in
    */
   getPeriodIdByWorkgroupId(workgroupId) {
-    let periodId = null;
     if (workgroupId != null) {
       const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
       if (userInfo != null) {
-        periodId = userInfo.periodId;
+        return userInfo.periodId;
       }
     }
-    return periodId;
+    return null;
   };
 
   /**
@@ -461,36 +447,33 @@ class ConfigService {
   };
 
   getUserIdsByWorkgroupId(workgroupId) {
-    let userIds = [];
     if (workgroupId != null) {
       const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
       if (userInfo != null) {
-        userIds = userInfo.userIds;
+        return userInfo.userIds;
       }
     }
-    return userIds;
+    return [];
   };
 
   getUserNameByWorkgroupId(workgroupId) {
-    let userName = null;
     if (workgroupId != null) {
       const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
       if (userInfo != null) {
-        userName = userInfo.userName;
+        return userInfo.userName;
       }
     }
-    return userName;
+    return null;
   };
 
   getDisplayNamesByWorkgroupId(workgroupId) {
-    let displayNames = null;
     if (workgroupId != null) {
       const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
       if (userInfo != null) {
-        displayNames = userInfo.displayNames;
+        return userInfo.displayNames;
       }
     }
-    return displayNames;
+    return null;
   };
 
   getUserNamesByWorkgroupId(workgroupId) {
@@ -547,12 +530,8 @@ class ConfigService {
   };
 
   isPreview() {
-    let result = false;
     const mode = this.getMode();
-    if (mode != null && mode === 'preview') {
-      result = true;
-    }
-    return result;
+    return mode != null && mode === 'preview';
   };
 
   /**
@@ -583,16 +562,15 @@ class ConfigService {
    * @returns whether the workgroup is the owner of the run
    */
   isRunOwner(workgroupId) {
-    let result = false;
     if (workgroupId != null) {
       const teacherUserInfo = this.getTeacherUserInfo();
       if (teacherUserInfo != null) {
         if (workgroupId == teacherUserInfo.workgroupId) {
-          result = true;
+          return true;
         }
       }
     }
-    return result;
+    return false;
   }
 
   /**
@@ -601,20 +579,19 @@ class ConfigService {
    * @returns whether the workgroup is a shared teacher of the run
    */
   isRunSharedTeacher(workgroupId) {
-    let result = false;
     if (workgroupId != null) {
       const sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
       if (sharedTeacherUserInfos != null) {
         for (let sharedTeacherUserInfo of sharedTeacherUserInfos) {
           if (sharedTeacherUserInfo != null) {
             if (workgroupId == sharedTeacherUserInfo.workgroupId) {
-              result = true;
+              return true;
             }
           }
         }
       }
     }
-    return result;
+    return false;
   }
 
   /**
@@ -624,15 +601,12 @@ class ConfigService {
    * 'owner', 'write', 'read'
    */
   getTeacherRole(workgroupId) {
-    let role = null;
     if (this.isRunOwner(workgroupId)) {
-      // the teacher is the owner of the run
-      role = 'owner';
+      return 'owner';
     } else if (this.isRunSharedTeacher(workgroupId)) {
-      // the teacher is a shared teacher so their role may be 'write' or 'read'
-      role = this.getSharedTeacherRole(workgroupId);
+      return this.getSharedTeacherRole(workgroupId);
     }
-    return role;
+    return null;
   }
 
   /**
@@ -642,20 +616,19 @@ class ConfigService {
    * 'write' or 'read'
    */
   getSharedTeacherRole(workgroupId) {
-    let role = null;
     if (workgroupId != null) {
       const sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
       if (sharedTeacherUserInfos != null) {
         for (let sharedTeacherUserInfo of sharedTeacherUserInfos) {
           if (sharedTeacherUserInfo != null) {
             if (workgroupId == sharedTeacherUserInfo.workgroupId) {
-              role = sharedTeacherUserInfo.role;
+              return sharedTeacherUserInfo.role;
             }
           }
         }
       }
     }
-    return role;
+    return null;
   }
 
   /**
@@ -756,9 +729,7 @@ class ConfigService {
    * /wise/curriculum/3/assets
    */
   getProjectAssetsDirectoryPath(includeHost) {
-    let projectAssetsDirectoryPath = null;
     const projectBaseURL = this.getConfigParam('projectBaseURL');
-
     if (projectBaseURL != null) {
       if (includeHost) {
         const host = window.location.origin;
@@ -767,16 +738,16 @@ class ConfigService {
          * get the full path including the host
          * e.g. http://wise.berkeley.edu/wise/curriculum/3/assets
          */
-        projectAssetsDirectoryPath = host + projectBaseURL + 'assets';
+        return host + projectBaseURL + 'assets';
       } else {
         /*
          * get the full path not including the host
          * e.g. /wise/curriculum/3/assets
          */
-        projectAssetsDirectoryPath = projectBaseURL + 'assets';
+        return projectBaseURL + 'assets';
       }
     }
-    return projectAssetsDirectoryPath;
+    return null;
   }
 
   /**
@@ -825,14 +796,13 @@ class ConfigService {
    * @return an array of WISE IDs
    */
   getWISEIds(workgroupId) {
-    let wiseIds = [];
     if (workgroupId != null) {
       const userInfo = this.getUserInfoByWorkgroupId(workgroupId);
       if (userInfo != null) {
-        wiseIds = userInfo.userIds;
+        return userInfo.userIds;
       }
     }
-    return wiseIds;
+    return [];
   }
 
   /**

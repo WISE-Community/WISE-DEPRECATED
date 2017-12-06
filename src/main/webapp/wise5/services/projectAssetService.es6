@@ -170,7 +170,7 @@ class ProjectAssetService {
        * whale.html is used. Then in the second iteration of the while
        * loop, it will find that whale.js is used.
        */
-      while(foundNewUsedTextFile) {
+      while (foundNewUsedTextFile) {
 
         /*
          * reset this to false so that we can tell if a new text file
@@ -271,7 +271,6 @@ class ProjectAssetService {
    * @return a promise that will retrieve all the text files
    */
   getTextFiles(textFileNames) {
-
     const promises = [];
 
     // get the project assets path e.g. /wise/curriculum/3/assets
@@ -280,7 +279,6 @@ class ProjectAssetService {
       // create a promise that will return the contents of the text file
       const promise = this.$http.get(projectAssetsDirectoryPath + '/' + textFileName);
 
-      // add the promise to our list of promises
       promises.push(promise);
     }
 

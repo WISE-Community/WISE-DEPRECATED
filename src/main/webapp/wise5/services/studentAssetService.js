@@ -137,34 +137,32 @@ var StudentAssetService = function () {
   }, {
     key: 'isImage',
     value: function isImage(asset) {
-      var isImage = false;
       var imageFileExtensions = ['png', 'jpg', 'jpeg', 'gif'];
       if (asset != null) {
         var assetURL = asset.url;
         if (assetURL != null && assetURL.lastIndexOf('.') !== -1) {
           var assetExtension = assetURL.substring(assetURL.lastIndexOf('.') + 1);
           if (imageFileExtensions.indexOf(assetExtension.toLowerCase()) != -1) {
-            isImage = true;
+            return true;
           }
         }
       }
-      return isImage;
+      return false;
     }
   }, {
     key: 'isAudio',
     value: function isAudio(asset) {
-      var isAudio = false;
       var imageFileExtensions = ['wav', 'mp3', 'ogg', 'm4a', 'm4p', 'raw', 'aiff'];
       if (asset != null) {
         var assetURL = asset.url;
         if (assetURL != null && assetURL.lastIndexOf('.') != -1) {
           var assetExtension = assetURL.substring(assetURL.lastIndexOf('.') + 1);
           if (imageFileExtensions.indexOf(assetExtension.toLowerCase()) != -1) {
-            isAudio = true;
+            return true;
           }
         }
       }
-      return isAudio;
+      return false;
     }
   }, {
     key: 'uploadAsset',

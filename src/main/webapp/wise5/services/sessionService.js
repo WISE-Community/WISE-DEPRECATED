@@ -278,11 +278,8 @@ var SessionService = function () {
      * Called when the user moves the mouse
      */
     value: function mouseMoved() {
-      // get the current timestamp
       var date = new Date();
       var timestamp = date.getTime();
-
-      // remember this timestamp
       this.lastMouseEventTimestamp = timestamp;
     }
   }, {
@@ -296,19 +293,13 @@ var SessionService = function () {
      * @returns whether there was a mouse event recently
      */
     value: function checkMouseEvent() {
-      var eventOccurred = false;
       if (this.lastMouseEventTimestamp != null) {
         // there was a mouse event since the last time we checked
-
-        // reset the timers
         this.renewSession();
-
-        // clear the mouse event timestamp
         this.lastMouseEventTimestamp = null;
-
-        eventOccurred = true;
+        return true;
       }
-      return eventOccurred;
+      return false;
     }
   }, {
     key: 'convertMinutesToMilliseconds',
@@ -320,15 +311,11 @@ var SessionService = function () {
      * @return the number of milliseconds
      */
     value: function convertMinutesToMilliseconds(minutes) {
-      var milliseconds = null;
       if (minutes != null) {
-        // get the number of seconds
         var seconds = minutes * 60;
-
-        // get the number of milliseconds
-        milliseconds = seconds * 1000;
+        return seconds * 1000;
       }
-      return milliseconds;
+      return null;
     }
   }, {
     key: 'forceLogOut',

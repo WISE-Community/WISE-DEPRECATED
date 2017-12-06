@@ -309,31 +309,17 @@ class AnnotationService {
     if (annotations != null && workgroupId != null) {
       for (let a = annotations.length - 1; a >= 0; a--) {
         const annotation = annotations[a];
-
-        // check that the annotation is for the workgroup id we are looking for
         if (annotation != null && annotation.toWorkgroupId == workgroupId) {
-
-          // check that the annotation is a score annotation
           if (annotation.type === 'score' || annotation.type === "autoScore") {
-
             const nodeId = annotation.nodeId;
             const componentId = annotation.componentId;
             const data = annotation.data;
-
-            // make sure the annotation is for an active component
             if (this.ProjectService.isActive(nodeId, componentId)) {
-
               const scoreFound = nodeId + '-' + componentId;
-
-              // check if we have obtained a score from this component already
               if (scoresFound.indexOf(scoreFound) == -1) {
-                // we have not obtained a score from this component yet
-
                 if (data != null) {
                   const value = data.value;
-
                   if (!isNaN(value)) {
-
                     if (totalScore == null) {
                       totalScore = value;
                     } else {
@@ -377,24 +363,14 @@ class AnnotationService {
     if (workgroupId != null && nodeId != null) {
       for (let a = annotations.length - 1; a >= 0; a--) {
         const annotation = annotations[a];
-
-        // check that the annotation is for the workgroup id we are looking for
         if (annotation != null && annotation.toWorkgroupId == workgroupId) {
-
-          // check that the annotation is a score annotation
           if (annotation.type === 'score' || annotation.type === 'autoScore') {
             const tempNodeId = annotation.nodeId;
-
-            // check that the annotation is for the node we are looking for
             if (nodeId == tempNodeId) {
               const componentId = annotation.componentId;
               const data = annotation.data;
               const scoreFound = tempNodeId + '-' + componentId;
-
-              // check if we have obtained a score from this component already
               if (scoresFound.indexOf(scoreFound) == -1) {
-                // we have not obtained a score from this component yet
-
                 if (data != null) {
                   const value = data.value;
                   if (!isNaN(value)) {
@@ -602,7 +578,6 @@ class AnnotationService {
     const annotations = this.getAnnotations();
 
     if (scoreType == null) {
-      // default to 'any'
       scoreType = 'any';
     }
 
@@ -615,22 +590,17 @@ class AnnotationService {
         const tempToWorkgroupId = tempAnnotation.toWorkgroupId;
         const tempAnnotationType = tempAnnotation.type;
 
-        // make sure the annotation values match what we are looking for
         if (nodeId == tempNodeId && componentId == tempComponentId &&
             workgroupId == tempToWorkgroupId) {
           if (scoreType === 'any' && (tempAnnotationType === 'autoScore' || tempAnnotationType === 'score')) {
-            // we are looking for an auto score or teacher score and have found one
             acceptAnnotation = true;
           } else if (scoreType === 'autoScore' && tempAnnotationType === 'autoScore') {
-            // we are looking for an auto score and have found one
             acceptAnnotation = true;
           } else if (scoreType === 'score' && tempAnnotationType === 'score') {
-            // we are looking for a teacher score and have found one
             acceptAnnotation = true;
           }
 
           if (acceptAnnotation) {
-            // we have found the latest score annotation of the type we want
             annotation = tempAnnotation;
             break;
           }
@@ -657,7 +627,6 @@ class AnnotationService {
     const annotations = this.getAnnotations();
 
     if (commentType == null) {
-      // default to 'any'
       commentType = 'any';
     }
 
@@ -670,22 +639,17 @@ class AnnotationService {
         const tempToWorkgroupId = tempAnnotation.toWorkgroupId;
         const tempAnnotationType = tempAnnotation.type;
 
-        // make sure the annotation values match what we are looking for
         if (nodeId == tempNodeId && componentId == tempComponentId &&
             workgroupId == tempToWorkgroupId) {
           if (commentType === 'any' && (tempAnnotationType === 'autoComment' || tempAnnotationType === 'comment')) {
-            // we are looking for an auto comment or teacher comment and have found one
             acceptAnnotation = true;
           } else if (commentType === 'autoComment' && tempAnnotationType === 'autoComment') {
-            // we are looking for an auto comment and have found one
             acceptAnnotation = true;
           } else if (commentType === 'comment' && tempAnnotationType === 'comment') {
-            // we are looking for a teacher comment and have found one
             acceptAnnotation = true;
           }
 
           if (acceptAnnotation) {
-            // we have found the latest comment annotation of the type we want
             annotation = tempAnnotation;
             break;
           }
@@ -701,15 +665,14 @@ class AnnotationService {
    * @returns the score value e.g. 5
    */
   getScoreValueFromScoreAnnotation(scoreAnnotation) {
-    let scoreValue = null;
     if (scoreAnnotation != null) {
       const data = scoreAnnotation.data;
 
       if (data != null) {
-        scoreValue = data.value;
+        return data.value;
       }
     }
-    return scoreValue;
+    return null;
   }
 
   /**

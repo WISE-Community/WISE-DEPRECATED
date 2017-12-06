@@ -354,7 +354,6 @@ var ProjectAssetService = function () {
   }, {
     key: 'getTextFiles',
     value: function getTextFiles(textFileNames) {
-
       var promises = [];
 
       // get the project assets path e.g. /wise/curriculum/3/assets
@@ -370,7 +369,6 @@ var ProjectAssetService = function () {
           // create a promise that will return the contents of the text file
           var promise = this.$http.get(projectAssetsDirectoryPath + '/' + textFileName);
 
-          // add the promise to our list of promises
           promises.push(promise);
         }
       } catch (err) {
