@@ -578,16 +578,7 @@ class GraphController {
       this.calculateDisabled();
 
       // setup the graph
-      this.setupGraph().then(() => {
-        this.showXPlotLineIfOn('Drag Me');
-        this.showYPlotLineIfOn('Drag Me');
-
-        if (this.isMouseXPlotLineOn() ||
-            this.isMouseYPlotLineOn() ||
-            this.isSaveMouseOverPoints()) {
-          this.setupMouseMoveListener();
-        }
-      });
+      this.setupGraph();
 
       if (this.$scope.$parent.nodeController != null) {
         // register this component with the parent node
@@ -1266,10 +1257,7 @@ class GraphController {
        * active series will react to mouseover.
        */
       this.$timeout(() => {
-        this.setupGraphHelper(deferred).then(() => {
-          this.showXPlotLineIfOn();
-          this.showYPlotLineIfOn();
-        });
+        this.setupGraphHelper(deferred);
       });
     } else {
       // call the setup graph helper immediately
@@ -1864,6 +1852,14 @@ class GraphController {
       loading: false,
       func: function (chart) {
         timeout(function () {
+          thisGraphController.showXPlotLineIfOn('Drag Me');
+          thisGraphController.showYPlotLineIfOn('Drag Me');
+
+          if (thisGraphController.isMouseXPlotLineOn() ||
+              thisGraphController.isMouseYPlotLineOn() ||
+              thisGraphController.isSaveMouseOverPoints()) {
+            thisGraphController.setupMouseMoveListener();
+          }
           chart.reflow();
         }, 1000);
       }
@@ -4671,8 +4667,10 @@ class GraphController {
                * are specified in the params, we will only use
                * those series numbers.
                */
-              if (params == null || params.seriesNumbers == null ||
-                (params.seriesNumbers != null && params.seriesNumbers.indexOf(s) != -1)) {
+              if (params == null ||
+                  params.seriesNumbers == null ||
+                  params.seriesNumbers.length == 0 ||
+                  (params.seriesNumbers != null && params.seriesNumbers.indexOf(s) != -1)) {
 
                 // get a single series
                 var singleSeries = tempSeries[s];
@@ -4704,6 +4702,12 @@ class GraphController {
 
                   // add the series to the trial
                   latestTrial.series.push(newSeries);
+
+                  if (params.showXPlotLineOnLatestPoint && seriesData.length > 0) {
+                    let latestPoint = seriesData[seriesData.length - 1];
+                    let xValueFromDataPoint = this.getXValueFromDataPoint(latestPoint);
+                    this.showXPlotLine(xValueFromDataPoint);
+                  }
                 }
               }
             }
@@ -6405,16 +6409,43 @@ class GraphController {
   }
 
   /**
+   * Get the x value from the data point.
+   * @param dataPoint An object or an array that represents a data point.
+   * @return A number or null if there is no x value.
+   */
+  getXValueFromDataPoint(dataPoint) {
+    if (dataPoint.constructor.name == 'Object') {
+      return dataPoint.x;
+    } else if (dataPoint.constructor.name == 'Array') {
+      return dataPoint[0];
+    }
+    return null;
+  }
+
+  /**
+   * Get the y value from the data point.
+   * @param dataPoint An object or an array that represents a data point.
+   * @return A number or null if there is no y value.
+   */
+  getYValueFromDataPoint(dataPoint) {
+    if (dataPoint.constructor.name == 'Object') {
+      return dataPoint.y;
+    } else if (dataPoint.constructor.name == 'Array') {
+      return dataPoint[1];
+    }
+    return null;
+  }
+
+  /**
    * @return The x value of the latest mouse over point.
    */
   getLatestMouseOverPointX() {
     if (this.mouseOverPoints.length > 0) {
-      let latestMouseOverPoint = this.mouseOverPoints[this.mouseOverPoints.length - 1];
       /*
        * The latestMouseOverPoint is an array with the 0 element being x and the
        * 1 element being y.
        */
-      return latestMouseOverPoint[0];
+      return this.getXValueFromDataPoint(this.mouseOverPoints[this.mouseOverPoints.length - 1]);
     }
     return null;
   }
@@ -6424,12 +6455,11 @@ class GraphController {
    */
   getLatestMouseOverPointY() {
     if (this.mouseOverPoints.length > 0) {
-      let latestMouseOverPoint = this.mouseOverPoints[this.mouseOverPoints.length - 1];
       /*
        * The latestMouseOverPoint is an array with the 0 element being x and the
        * 1 element being y.
        */
-      return latestMouseOverPoint[1];
+      return this.getYValueFromDataPoint(this.mouseOverPoints[this.mouseOverPoints.length - 1]);
     }
     return null;
   }

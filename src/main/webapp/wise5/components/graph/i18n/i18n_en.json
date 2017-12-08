@@ -72,6 +72,7 @@
   "graph.shortDot": "Short Dot",
   "graph.showMouseXPlotLine": "Show Mouse X Plot Line",
   "graph.showMouseYPlotLine": "Show Mouse Y Plot Line",
+  "graph.showXPlotLineOnLatestPoint": "Show X Plot Line on Latest Point",
   "graph.skipFirstRow": "Skip First Row",
   "graph.solid": "Solid",
   "graph.square": "Square",
