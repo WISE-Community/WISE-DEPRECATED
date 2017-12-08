@@ -4811,6 +4811,7 @@ var GraphController = function () {
      * student data
      */
     value: function parseLatestTrial(studentData, params) {
+      var _this8 = this;
 
       if (studentData != null) {
 
@@ -4953,6 +4954,11 @@ var GraphController = function () {
                       var latestPoint = seriesData[seriesData.length - 1];
                       var xValueFromDataPoint = this.getXValueFromDataPoint(latestPoint);
                       this.showXPlotLine(xValueFromDataPoint);
+                      if (params.showTooltipOnLatestPoint) {
+                        this.$timeout(function () {
+                          _this8.showTooltipOnLatestPoint();
+                        }, 1);
+                      }
                     }
                   }
                 }
@@ -5284,7 +5290,7 @@ var GraphController = function () {
   }, {
     key: 'snipDrawing',
     value: function snipDrawing($event) {
-      var _this8 = this;
+      var _this9 = this;
 
       // get the highcharts div
       var highchartsDiv = angular.element('#' + this.chartId).find('.highcharts-container');
@@ -5299,10 +5305,10 @@ var GraphController = function () {
           var img_b64 = canvas.toDataURL('image/png');
 
           // get the image object
-          var imageObject = _this8.UtilService.getImageObjectFromBase64String(img_b64);
+          var imageObject = _this9.UtilService.getImageObjectFromBase64String(img_b64);
 
           // create a notebook item with the image populated into it
-          _this8.NotebookService.addNewItem($event, imageObject);
+          _this9.NotebookService.addNewItem($event, imageObject);
         });
       }
     }
@@ -6337,7 +6343,7 @@ var GraphController = function () {
   }, {
     key: 'handleConnectedComponents',
     value: function handleConnectedComponents() {
-      var _this9 = this;
+      var _this10 = this;
 
       // get the connected components
       var connectedComponents = this.componentContent.connectedComponents;
@@ -6463,22 +6469,22 @@ var GraphController = function () {
           studentData.version = 2;
 
           // create a new component state
-          var newComponentState = _this9.NodeService.createNewComponentState();
+          var newComponentState = _this10.NodeService.createNewComponentState();
           newComponentState.studentData = studentData;
 
-          if (_this9.componentContent.backgroundImage != null && _this9.componentContent.backgroundImage != '') {
+          if (_this10.componentContent.backgroundImage != null && _this10.componentContent.backgroundImage != '') {
             // use the background image from this component
-            newComponentState.studentData.backgroundImage = _this9.componentContent.backgroundImage;
+            newComponentState.studentData.backgroundImage = _this10.componentContent.backgroundImage;
           } else if (connectedComponentBackgroundImage != null) {
             // use the background image from the connected component
             newComponentState.studentData.backgroundImage = connectedComponentBackgroundImage;
           }
 
           // populate the component state into this component
-          _this9.setStudentWork(newComponentState);
+          _this10.setStudentWork(newComponentState);
 
           // make the work dirty so that it gets saved
-          _this9.studentDataChanged();
+          _this10.studentDataChanged();
         });
       }
     }
@@ -6952,6 +6958,24 @@ var GraphController = function () {
           y == 0;
         }
         this.showYPlotLine(y, text);
+      }
+    }
+
+    /**
+     * Show the tooltip on the newest point.
+     */
+
+  }, {
+    key: 'showTooltipOnLatestPoint',
+    value: function showTooltipOnLatestPoint() {
+      var chart = $('#' + this.chartId).highcharts();
+      if (chart.series.length > 0) {
+        var latestSeries = chart.series[chart.series.length - 1];
+        var points = latestSeries.points;
+        if (points.length > 0) {
+          var latestPoint = points[points.length - 1];
+          chart.tooltip.refresh(latestPoint);
+        }
       }
     }
   }]);

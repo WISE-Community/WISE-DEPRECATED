@@ -4707,6 +4707,11 @@ class GraphController {
                     let latestPoint = seriesData[seriesData.length - 1];
                     let xValueFromDataPoint = this.getXValueFromDataPoint(latestPoint);
                     this.showXPlotLine(xValueFromDataPoint);
+                    if (params.showTooltipOnLatestPoint) {
+                      this.$timeout(() => {
+                        this.showTooltipOnLatestPoint();
+                      }, 1);
+                    }
                   }
                 }
               }
@@ -6491,6 +6496,21 @@ class GraphController {
         y == 0;
       }
       this.showYPlotLine(y, text);
+    }
+  }
+
+  /**
+   * Show the tooltip on the newest point.
+   */
+  showTooltipOnLatestPoint() {
+    let chart = $('#' + this.chartId).highcharts();
+    if (chart.series.length > 0) {
+      let latestSeries = chart.series[chart.series.length - 1];
+      let points = latestSeries.points;
+      if (points.length > 0) {
+        let latestPoint = points[points.length - 1];
+        chart.tooltip.refresh(latestPoint);
+      }
     }
   }
 }

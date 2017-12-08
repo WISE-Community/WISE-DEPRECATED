@@ -177,13 +177,19 @@
               </md-input-container>
             </div>
             <div ng-if='graphController.authoringGetConnectedComponentType(connectedComponent) == "Embedded"' flex>
-              <md-input-container>
+              <div>
                 <md-checkbox class='md-primary'
                     ng-model='connectedComponent.showXPlotLineOnLatestPoint'
                     ng-change='graphController.authoringViewComponentChanged()'>
                   {{ 'graph.showXPlotLineOnLatestPoint' | translate }}
                 </md-checkbox>
-              </md-input-container>
+                <br/>
+                <md-checkbox class='md-primary'
+                    ng-model='connectedComponent.showTooltipOnLatestPoint'
+                    ng-change='graphController.authoringViewComponentChanged()'>
+                  {{ 'graph.showTooltipOnLatestPoint' | translate }}
+                </md-checkbox>
+              </div>
               <div layout='row'>
                 <h6>{{ 'graph.seriesNumbers' | translate }}</h6>
                 <md-button class='topButton md-raised md-primary'
