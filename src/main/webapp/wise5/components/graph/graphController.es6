@@ -123,11 +123,14 @@ class GraphController {
     // whether the snip drawing button is shown or not
     this.isSnipDrawingButtonVisible = true;
 
-    // the label for the notebook in thos project
+    // the label for the notebook in the project
     this.notebookConfig = this.NotebookService.getNotebookConfig();
 
     // whether to only show the new trial when a new trial is created
     this.hideAllTrialsOnNewTrial = true;
+
+    // whether to show the undo button
+    this.showUndoButton = false;
 
     // the id of the chart element
     this.chartId = 'chart1';
@@ -1402,6 +1405,8 @@ class GraphController {
 
     this.setDefaultActiveSeries();
 
+    this.showUndoButton = false;
+
     // loop through all the series and
     for (var s = 0; s < series.length; s++) {
       var tempSeries = series[s];
@@ -1450,6 +1455,8 @@ class GraphController {
           tempSeries.stickyTracking = false;
           tempSeries.shared = false;
           tempSeries.allowPointSelect = true;
+
+          this.showUndoButton = true;
         } else {
           // make the series uneditable
           tempSeries.draggableX = false;

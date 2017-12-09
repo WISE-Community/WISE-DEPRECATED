@@ -721,7 +721,7 @@
                 <md-icon> restore </md-icon> {{ 'graph.resetSeries' | translate }}
               </md-button>
             </md-input-container>
-            <md-input-container>
+            <md-input-container ng-if='graphController.showUndoButton'>
               <md-button class='md-accent'
                      ng-click='graphController.undoClicked()'>
                 <md-icon>undo</md-icon> {{ 'undo' | translate }}
