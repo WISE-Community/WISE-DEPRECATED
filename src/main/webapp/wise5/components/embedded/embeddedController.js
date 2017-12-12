@@ -41,25 +41,12 @@ var EmbeddedController = function () {
     this.StudentDataService = StudentDataService;
     this.UtilService = UtilService;
     this.idToOrder = this.ProjectService.idToOrder;
-
     this.$translate = this.$filter('translate');
-
-    // the node id of the current node
     this.nodeId = null;
-
-    // the component id
     this.componentId = null;
-
-    // field that will hold the component content
     this.componentContent = null;
-
-    // field that will hold the authoring component content
     this.authoringComponentContent = null;
-
-    // field that will hold the component type
     this.componentType = null;
-
-    // the url to the web page to display
     this.url = null;
 
     // the width of the iframe (optional)
@@ -74,73 +61,40 @@ var EmbeddedController = function () {
     // the max height of the iframe
     this.maxHeight = null;
 
-    // whether we have data to save
     this.isDirty = false;
-
-    // whether the student work has changed since last submit
     this.isSubmitDirty = false;
-
-    // whether the snip model button is shown or not
     this.isSnipModelButtonVisible = true;
-
-    // the label for the notebook in thos project
     this.notebookConfig = this.NotebookService.getNotebookConfig();
 
-    // message to show next to save/submit buttons
     this.saveMessage = {
       text: '',
       time: ''
     };
 
-    // the latest annotations
     this.latestAnnotations = null;
-
-    // the latest component state id
     this.componentStateId = null;
-
-    // the id of the embedded application's iframe
     this.embeddedApplicationIFrameId = '';
-
-    // whether the save button is shown or not
     this.isSaveButtonVisible = false;
-
-    // whether the submit button is shown or not
     this.isSubmitButtonVisible = false;
-
-    // flag for whether to show the advanced authoring
     this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
     this.showJSONAuthoring = false;
 
     this.messageEventListener = angular.bind(this, function (messageEvent) {
-      // handle messages received from iframe
       var messageEventData = messageEvent.data;
       if (messageEventData.messageType === 'event') {
-        // save event to WISE
         var nodeId = this.nodeId;
         var componentId = this.componentId;
         var componentType = this.componentType;
         var category = messageEventData.eventCategory;
         var event = messageEventData.event;
         var eventData = messageEventData.eventData;
-
-        // save notebook open/close event
         this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
       } else if (messageEventData.messageType === 'studentWork') {
-        // save student work to WISE
-
         if (messageEventData.id != null) {
-          /*
-           * the component state id was provided which means the model
-           * wants to update/overwrite an existing component state
-           */
+          //the model wants to update/overwrite an existing component state
           this.componentStateId = messageEventData.id;
         } else {
-          /*
-           * the component state id was not provided which means the
-           * model wants to create a new component state
-           */
+          // the model wants to create a new component state
           this.componentStateId = null;
         }
 
@@ -149,14 +103,11 @@ var EmbeddedController = function () {
         }
 
         this.isDirty = true;
-
-        // the student data in the model has changed
         this.studentDataChanged(messageEventData.studentData);
 
         // tell the parent node that this component wants to save
         this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
       } else if (messageEventData.messageType === 'applicationInitialized') {
-        // application has finished loading, so send latest component state to application
         this.sendLatestWorkToApplication();
         this.processLatestSubmit();
 
@@ -164,47 +115,28 @@ var EmbeddedController = function () {
         $('#' + this.embeddedApplicationIFrameId).iFrameResize({ scrolling: true });
       } else if (messageEventData.messageType === 'componentDirty') {
         var _isDirty = messageEventData.isDirty;
-
-        // set component dirty to true/false and notify node
         this.isDirty = _isDirty;
         this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: _isDirty });
       } else if (messageEventData.messageType === 'componentSubmitDirty') {
         var isSubmitDirty = messageEventData.isDirty;
-
-        // set component submit dirty to true/false and notify node
         this.isSubmitDirty = isSubmitDirty;
         this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
       } else if (messageEventData.messageType === 'studentDataChanged') {
         this.studentDataChanged(messageEventData.studentData);
       } else if (messageEventData.messageType === 'getStudentWork') {
-        // the embedded application is requesting the student work
-
-        // the params for getting the student work
         var getStudentWorkParams = messageEventData.getStudentWorkParams;
-
-        // get the student work
         var studentWork = this.getStudentWork(messageEventData.getStudentWorkParams);
-
         var message = studentWork;
         message.messageType = 'studentWork';
         message.getStudentWorkParams = getStudentWorkParams;
-
-        // send the student work to the embedded application
         this.sendMessageToApplication(message);
       } else if (messageEventData.messageType === 'getLatestStudentWork') {
-        // the embedded application is requesting the student work
-
-        // get the latest student work
         var latestComponentState = this.getLatestStudentWork();
-
         var message = {};
         message.messageType = 'latestStudentWork';
         message.latestStudentWork = latestComponentState;
-
-        // send the student work to the embedded application
         this.sendMessageToApplication(message);
       } else if (messageEventData.messageType === 'getParameters') {
-        // the embedded application is requesting the parameters
         var message = {};
         message.messageType = 'parameters';
         message.parameters = this.componentContent.parameters;
@@ -215,7 +147,6 @@ var EmbeddedController = function () {
     // listen for message events from embedded iframe application
     this.$window.addEventListener('message', this.messageEventListener);
 
-    // the options for when to update this component from a connected component
     this.connectedComponentUpdateOnOptions = [{
       value: 'change',
       text: 'Change'
@@ -224,10 +155,8 @@ var EmbeddedController = function () {
       text: 'Submit'
     }];
 
-    // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [{ type: 'Animation' }, { type: 'AudioOscillator' }, { type: 'ConceptMap' }, { type: 'Discussion' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Match' }, { type: 'MultipleChoice' }, { type: 'OpenResponse' }, { type: 'Table' }];
 
-    // get the current node and node id
     var currentNode = this.StudentDataService.getCurrentNode();
     if (currentNode != null) {
       this.nodeId = currentNode.id;
@@ -235,10 +164,7 @@ var EmbeddedController = function () {
       this.nodeId = this.$scope.nodeId;
     }
 
-    // get the component content from the scope
     this.componentContent = this.$scope.componentContent;
-
-    // get the authoring component content
     this.authoringComponentContent = this.$scope.authoringComponentContent;
 
     /*
@@ -254,42 +180,25 @@ var EmbeddedController = function () {
     this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
     if (this.componentContent != null) {
-
-      // get the component id
       this.componentId = this.componentContent.id;
-
-      // id of the iframe that embeds the application
       this.embeddedApplicationIFrameId = 'componentApp_' + this.componentId;
-
       this.componentType = this.componentContent.type;
 
       if (this.mode === 'student') {
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
         this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-        // get the latest annotations
         this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
         this.isSnipModelButtonVisible = true;
       } else if (this.mode === 'authoring') {
-        // generate the summernote rubric element id
         this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-
-        // set the component rubric into the summernote rubric
         this.summernoteRubricHTML = this.componentContent.rubric;
 
         // the tooltip text for the insert WISE asset button
         var insertAssetString = this.$translate('INSERT_ASSET');
 
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
+        // create the custom button for inserting WISE assets into summernote
         var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
 
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
         this.summernoteRubricOptions = {
           toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
           height: 300,
@@ -305,26 +214,17 @@ var EmbeddedController = function () {
           return this.authoringComponentContent;
         }.bind(this), function (newValue, oldValue) {
           this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
           this.isSaveButtonVisible = this.componentContent.showSaveButton;
           this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-          // get the width
           this.width = this.componentContent.width ? this.componentContent.width : '100%';
-
-          // get the height
           this.height = this.componentContent.height ? this.componentContent.height : '100%';
-
           this.setURL(this.componentContent.url);
         }.bind(this), true);
       } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isSnipModelButtonVisible = false;
-
-        // get the component state from the scope
         var componentState = this.$scope.componentState;
-
         if (componentState != null) {
           // create a unique id for the application iframe using this component state
           this.embeddedApplicationIFrameId = 'componentApp_' + componentState.id;
@@ -334,7 +234,6 @@ var EmbeddedController = function () {
         }
 
         if (this.mode === 'grading') {
-          // get the latest annotations
           this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
         }
       } else if (this.mode === 'onlyShowWork') {
@@ -348,18 +247,13 @@ var EmbeddedController = function () {
       }
 
       if (this.componentContent != null) {
-        // set the url
         this.setURL(this.componentContent.url);
       }
 
-      // get the width
       this.width = this.componentContent.width ? this.componentContent.width : '100%';
-
-      // get the height
       this.height = this.componentContent.height ? this.componentContent.height : '100%';
 
       if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
         this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
       }
     }
@@ -373,43 +267,26 @@ var EmbeddedController = function () {
      * component that has changed
      */
     this.$scope.handleConnectedComponentStudentDataChanged = function (connectedComponent, connectedComponentParams, componentState) {
-
-      // create the message
       var message = {};
       message.messageType = 'handleConnectedComponentStudentDataChanged';
       message.componentState = componentState;
-
-      // send the student work to the embedded application
       _this.sendMessageToApplication(message);
     };
 
-    /**
-     * The parent node submit button was clicked
-     */
     this.$scope.$on('nodeSubmitClicked', function (event, args) {
-
-      // get the node id of the node
       var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
       if (_this.nodeId === nodeId) {
         _this.isSubmit = true;
       }
     });
 
     this.$scope.$on('studentWorkSavedToServer', function (event, args) {
-
       var componentState = args.studentWork;
-
       if (componentState != null) {
         if (componentState.componentId === _this.componentId) {
-          // a component state for this component was saved
-
           // set isDirty to false because the component state was just saved and notify node
           _this.isDirty = false;
           _this.$scope.$emit('componentDirty', { componentId: _this.componentId, isDirty: false });
-
-          // clear out current componentState
           _this.$scope.embeddedController.componentState = null;
 
           var isAutoSave = componentState.isAutoSave;
@@ -417,13 +294,9 @@ var EmbeddedController = function () {
           var serverSaveTime = componentState.serverSaveTime;
           var clientSaveTime = _this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
-          // set save message
           if (isSubmit) {
             _this.setSaveMessage(_this.$translate('SUBMITTED'), clientSaveTime);
-
             _this.submit();
-
-            // set isSubmitDirty to false because the component state was just submitted and notify node
             _this.isSubmitDirty = false;
             _this.$scope.$emit('componentSubmitDirty', { componentId: _this.componentId, isDirty: false });
           } else if (isAutoSave) {
@@ -435,8 +308,6 @@ var EmbeddedController = function () {
           var message = {};
           message.messageType = 'componentStateSaved';
           message.componentState = componentState;
-
-          // send the student work to the embedded application
           _this.sendMessageToApplication(message);
         }
       }
@@ -468,7 +339,6 @@ var EmbeddedController = function () {
       }
 
       if (getState) {
-        // create a component state populated with the student data
         this.$scope.embeddedController.createComponentState(action).then(function (componentState) {
           deferred.resolve(componentState);
         });
@@ -489,22 +359,12 @@ var EmbeddedController = function () {
      * we receive the response from saving an annotation to the server
      */
     this.$scope.$on('annotationSavedToServer', function (event, args) {
-
       if (args != null) {
-
-        // get the annotation that was saved to the server
         var annotation = args.annotation;
-
         if (annotation != null) {
-
-          // get the node id and component id of the annotation
           var annotationNodeId = annotation.nodeId;
           var annotationComponentId = annotation.componentId;
-
-          // make sure the annotation was for this component
           if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
-
-            // get latest score and comment annotations for this component
             _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
           }
         }
@@ -517,7 +377,6 @@ var EmbeddedController = function () {
      * when the student exits the parent node.
      */
     this.$scope.$on('exitNode', angular.bind(this, function (event, args) {
-      // unregister messageEventListener
       this.$window.removeEventListener('message', this.messageEventListener);
     }));
 
@@ -526,33 +385,20 @@ var EmbeddedController = function () {
      * selects an asset from the choose asset popup
      */
     this.$scope.$on('assetSelected', function (event, args) {
-
       if (args != null) {
-
-        // make sure the event was fired for this component
         if (args.nodeId == _this.nodeId && args.componentId == _this.componentId) {
-          // the asset was selected for this component
           var assetItem = args.assetItem;
-
           if (assetItem != null) {
             var fileName = assetItem.fileName;
-
             if (fileName != null) {
-              /*
-               * get the assets directory path
-               * e.g.
-               * /wise/curriculum/3/
-               */
+              // get the assets directory path, e.g. /wise/curriculum/3/
               var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
               var fullAssetPath = assetsDirectoryPath + '/' + fileName;
-
               var summernoteId = '';
 
               if (args.target == 'prompt') {
-                // the target is the summernote prompt element
                 summernoteId = 'summernotePrompt_' + _this.nodeId + '_' + _this.componentId;
               } else if (args.target == 'rubric') {
-                // the target is the summernote rubric element
                 summernoteId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
               }
 
@@ -564,8 +410,6 @@ var EmbeddedController = function () {
                    */
                   $('#' + summernoteId).summernote('editor.restoreRange');
                   $('#' + summernoteId).summernote('editor.focus');
-
-                  // add the image html
                   $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
                 } else if (_this.UtilService.isVideo(fileName)) {
                   /*
@@ -575,7 +419,6 @@ var EmbeddedController = function () {
                   $('#' + summernoteId).summernote('editor.restoreRange');
                   $('#' + summernoteId).summernote('editor.focus');
 
-                  // insert the video element
                   var videoElement = document.createElement('video');
                   videoElement.controls = 'true';
                   videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
@@ -587,7 +430,6 @@ var EmbeddedController = function () {
         }
       }
 
-      // close the popup
       _this.$mdDialog.hide();
     });
 
@@ -596,47 +438,31 @@ var EmbeddedController = function () {
      * when the student data has changed for another component in this step
      */
     this.$scope.$on('siblingComponentStudentDataChanged', function (event, args) {
-
-      // create the message
       var message = {};
       message.messageType = 'siblingComponentStudentDataChanged';
       message.componentState = args.componentState;
-
-      // send the student work to the embedded application
       _this.sendMessageToApplication(message);
     });
 
-    /*
+    /* TODO geoffreykwan we're listening to assetSelected twice?
      * Listen for the assetSelected event which occurs when the user
      * selects an asset from the choose asset popup
      */
     this.$scope.$on('assetSelected', function (event, args) {
-
       if (args != null) {
-
-        // make sure the event was fired for this component
         if (args.nodeId == _this.nodeId && args.componentId == _this.componentId) {
-          // the asset was selected for this component
           var assetItem = args.assetItem;
-
           if (assetItem != null) {
             var fileName = assetItem.fileName;
-
             if (fileName != null) {
-
               if (args.target == 'modelFile') {
-                // the target is the model file name
                 _this.authoringComponentContent.url = fileName;
-
-                // save the project
                 _this.authoringViewComponentChanged();
               }
             }
           }
         }
       }
-
-      // close the popup
       _this.$mdDialog.hide();
     });
 
@@ -663,43 +489,30 @@ var EmbeddedController = function () {
     key: 'processLatestSubmit',
     value: function processLatestSubmit() {
       var latestState = this.$scope.componentState;
-
       if (latestState) {
         var serverSaveTime = latestState.serverSaveTime;
         var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
         if (latestState.isSubmit) {
-          // latest state is a submission, so set isSubmitDirty to false and notify node
           this.isSubmitDirty = false;
           this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          // set save message
           this.setSaveMessage(this.$translate('LAST_SUBMITTED'), clientSaveTime);
         } else {
-          // latest state is not a submission, so set isSubmitDirty to true and notify node
           this.isSubmitDirty = true;
           this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          // set save message
           this.setSaveMessage(this.$translate('LAST_SAVED'), clientSaveTime);
         }
       }
     }
   }, {
     key: 'setURL',
-
-
-    /**
-     * Set the url
-     * @param url the url
-     */
     value: function setURL(url) {
       if (url != null) {
-        var trustedURL = this.$sce.trustAsResourceUrl(url);
-        this.url = trustedURL;
+        this.url = this.$sce.trustAsResourceUrl(url);
       }
     }
   }, {
     key: 'submit',
     value: function submit() {
-      // check if we need to lock the component after the student submits
       if (this.isLockAfterSubmit()) {
         this.isDisabled = true;
       }
@@ -724,10 +537,7 @@ var EmbeddedController = function () {
       this.isSubmitDirty = true;
       this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
 
-      // clear out the save message
       this.setSaveMessage('', null);
-
-      // get this part id
       var componentId = this.getComponentId();
 
       /*
@@ -738,10 +548,8 @@ var EmbeddedController = function () {
        */
       var action = 'change';
 
-      // remember the student data
       this.studentData = data;
 
-      // create a component state populated with the student data
       this.createComponentState(action).then(function (componentState) {
         _this2.$scope.$emit('componentStudentDataChanged', { nodeId: _this2.nodeId, componentId: componentId, componentState: componentState });
       });
@@ -755,17 +563,13 @@ var EmbeddedController = function () {
      * @return the componentState after it has been populated
      */
     value: function createComponentState(action) {
-
-      // create a new component state
       var componentState = this.NodeService.createNewComponentState();
 
       if (this.componentStateId != null) {
-        // set the component state id
         componentState.id = this.componentStateId;
       }
 
       if (this.isSubmit) {
-        // the student submitted this work
         componentState.isSubmit = this.isSubmit;
 
         /*
@@ -775,16 +579,9 @@ var EmbeddedController = function () {
         this.isSubmit = false;
       }
 
-      // set the student data into the component state
       componentState.studentData = this.studentData;
-
-      // set the component type
       componentState.componentType = 'Embedded';
-
-      // set the node id
       componentState.nodeId = this.nodeId;
-
-      // set the component id
       componentState.componentId = this.componentId;
 
       var deferred = this.$q.defer();
@@ -794,7 +591,6 @@ var EmbeddedController = function () {
        * the component state
        */
       this.createComponentStateAdditionalProcessing(deferred, componentState, action);
-
       return deferred.promise;
     }
   }, {
@@ -821,19 +617,16 @@ var EmbeddedController = function () {
   }, {
     key: 'sendLatestWorkToApplication',
     value: function sendLatestWorkToApplication() {
-      // get the latest component state from the scope
       var message = {
         messageType: 'componentState',
         componentState: this.$scope.componentState
       };
 
-      // send the latest component state to embedded application
       this.sendMessageToApplication(message);
     }
   }, {
     key: 'sendMessageToApplication',
     value: function sendMessageToApplication(message) {
-      // send the message to embedded application via postMessage
       window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.postMessage(message, '*');
     }
   }, {
@@ -868,8 +661,6 @@ var EmbeddedController = function () {
      * The component has changed in the regular authoring view so we will save the project
      */
     value: function authoringViewComponentChanged() {
-
-      // update the JSON string in the advanced authoring view textarea
       this.updateAdvancedAuthoringView();
 
       /*
@@ -887,7 +678,6 @@ var EmbeddedController = function () {
      * the component and save the project.
      */
     value: function advancedAuthoringViewComponentChanged() {
-
       try {
         /*
          * create a new component by converting the JSON string in the advanced
@@ -895,10 +685,8 @@ var EmbeddedController = function () {
          */
         var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
 
-        // replace the component in the project
         this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
 
-        // set the new component into the controller
         this.componentContent = editedComponentContent;
 
         /*
@@ -931,27 +719,16 @@ var EmbeddedController = function () {
     value: function snipModel($event) {
       var _this3 = this;
 
-      // get the iframe
       var iframe = $('#' + this.embeddedApplicationIFrameId);
-
       if (iframe != null && iframe.length > 0) {
-
-        //get the html from the iframe
         var modelElement = iframe.contents().find('html');
-
         if (modelElement != null && modelElement.length > 0) {
           modelElement = modelElement[0];
 
           // convert the model element to a canvas element
           (0, _html2canvas2.default)(modelElement).then(function (canvas) {
-
-            // get the canvas as a base64 string
             var img_b64 = canvas.toDataURL('image/png');
-
-            // get the image object
             var imageObject = _this3.UtilService.getImageObjectFromBase64String(img_b64);
-
-            // create a notebook item with the image populated into it
             _this3.NotebookService.addNewItem($event, imageObject);
           });
         }
@@ -966,11 +743,7 @@ var EmbeddedController = function () {
   }, {
     key: 'showSnipModelButton',
     value: function showSnipModelButton() {
-      if (this.NotebookService.isNotebookEnabled() && this.isSnipModelButtonVisible) {
-        return true;
-      } else {
-        return false;
-      }
+      return this.NotebookService.isNotebookEnabled() && this.isSnipModelButtonVisible;
     }
 
     /**
@@ -981,7 +754,6 @@ var EmbeddedController = function () {
   }, {
     key: 'registerExitListener',
     value: function registerExitListener() {
-
       /*
        * Listen for the 'exit' event which is fired when the student exits
        * the VLE. This will perform saving before the VLE exits.
@@ -998,47 +770,21 @@ var EmbeddedController = function () {
      * @returns whether the node is an application node
      */
     value: function isApplicationNode(nodeId) {
-      var result = this.ProjectService.isApplicationNode(nodeId);
-
-      return result;
+      return this.ProjectService.isApplicationNode(nodeId);
     }
-
-    /**
-     * Get the step number and title
-     * @param nodeId get the step number and title for this node
-     * @returns the step number and title
-     */
-
   }, {
     key: 'getNodePositionAndTitleByNodeId',
     value: function getNodePositionAndTitleByNodeId(nodeId) {
-      var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-
-      return nodePositionAndTitle;
+      return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
     }
-
-    /**
-     * Get the components in a step
-     * @param nodeId get the components in the step
-     * @returns the components in the step
-     */
-
   }, {
     key: 'getComponentsByNodeId',
     value: function getComponentsByNodeId(nodeId) {
-      var components = this.ProjectService.getComponentsByNodeId(nodeId);
-
-      return components;
+      return this.ProjectService.getComponentsByNodeId(nodeId);
     }
-
-    /**
-     * The show previous work checkbox was clicked
-     */
-
   }, {
     key: 'authoringShowPreviousWorkClicked',
     value: function authoringShowPreviousWorkClicked() {
-
       if (!this.authoringComponentContent.showPreviousWork) {
         /*
          * show previous work has been turned off so we will clear the
@@ -1049,93 +795,50 @@ var EmbeddedController = function () {
         this.authoringComponentContent.showPreviousWorkComponentId = null;
         this.authoringComponentContent.showPreviousWorkPrompt = null;
 
-        // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
       }
     }
-
-    /**
-     * The show previous work node id has changed
-     */
-
   }, {
     key: 'authoringShowPreviousWorkNodeIdChanged',
     value: function authoringShowPreviousWorkNodeIdChanged() {
-
       if (this.authoringComponentContent.showPreviousWorkNodeId == null || this.authoringComponentContent.showPreviousWorkNodeId == '') {
-
         /*
          * the show previous work node id is null so we will also set the
          * show previous component id to null
          */
         this.authoringComponentContent.showPreviousWorkComponentId = '';
       }
-
-      // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
-
-    /**
-     * The show previous work component id has changed
-     */
-
   }, {
     key: 'authoringShowPreviousWorkComponentIdChanged',
     value: function authoringShowPreviousWorkComponentIdChanged() {
-
-      // get the show previous work node id
       var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-
-      // get the show previous work prompt boolean value
       var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-
-      // get the old show previous work component id
       var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-
-      // get the new show previous work component id
       var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-
-      // get the new show previous work component
       var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
 
       if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
-        // the new show previous work component is empty
-
         // save the component
         this.authoringViewComponentChanged();
       } else if (newShowPreviousWorkComponent != null) {
-
-        // get the current component type
         var currentComponentType = this.componentContent.type;
-
-        // get the new component type
         var newComponentType = newShowPreviousWorkComponent.type;
-
-        // check if the component types are different
         if (newComponentType != currentComponentType) {
           /*
            * the component types are different so we will need to change
            * the whole component
            */
 
-          // make sure the author really wants to change the component type
-          var answer = confirm(this.$translate('ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE'));
-
-          if (answer) {
-            // the author wants to change the component type
-
+          if (confirm(this.$translate('ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE'))) {
             /*
              * get the component service so we can make a new instance
              * of the component
              */
             var componentService = this.$injector.get(newComponentType + 'Service');
-
             if (componentService != null) {
-
-              // create a new component
               var newComponent = componentService.createComponent();
-
-              // set move over the values we need to keep
               newComponent.id = this.authoringComponentContent.id;
               newComponent.showPreviousWork = true;
               newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
@@ -1147,8 +850,6 @@ var EmbeddedController = function () {
                * change the component
                */
               this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-
-              // update the component in the project and save the project
               this.advancedAuthoringViewComponentChanged();
             }
           } else {
@@ -1167,85 +868,40 @@ var EmbeddedController = function () {
         }
       }
     }
-
-    /**
-     * Check if a component generates student work
-     * @param component the component
-     * @return whether the component generates student work
-     */
-
   }, {
     key: 'componentHasWork',
     value: function componentHasWork(component) {
-      var result = true;
-
       if (component != null) {
-        result = this.ProjectService.componentHasWork(component);
+        return this.ProjectService.componentHasWork(component);
       }
-
-      return result;
+      return true;
     }
-
-    /**
-     * Check whether we need to lock the component after the student
-     * submits an answer.
-     */
-
   }, {
     key: 'isLockAfterSubmit',
     value: function isLockAfterSubmit() {
-      var result = false;
-
       if (this.componentContent != null) {
-
-        // check the lockAfterSubmit field in the component content
         if (this.componentContent.lockAfterSubmit) {
-          result = true;
+          return true;
         }
       }
-
-      return result;
+      return false;
     }
-
-    /**
-     * Called when the student clicks the save button
-     */
-
   }, {
     key: 'saveButtonClicked',
     value: function saveButtonClicked() {
       this.isSubmit = false;
-
-      // tell the parent node that this component wants to save
       this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
     }
   }, {
     key: 'submitButtonClicked',
-
-
-    /**
-     * Called when the student clicks the submit button
-     */
     value: function submitButtonClicked() {
       this.isSubmit = true;
-
-      // tell the parent node that this component wants to submit
       this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
     }
   }, {
     key: 'getLatestStudentWork',
-
-
-    /**
-     * Get the latest component state from this component
-     * @return the latest component state
-     */
     value: function getLatestStudentWork() {
-
-      // get the latest component state from this component
-      var latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-      return latestComponentState;
+      return this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
     }
 
     /**
@@ -1269,112 +925,72 @@ var EmbeddedController = function () {
   }, {
     key: 'getStudentWork',
     value: function getStudentWork(params) {
-
       var studentWork = {};
 
       if (params != null && params.getLatestStudentWorkFromThisComponent) {
-        // get the latest student work from this component
         studentWork.latestStudentWorkFromThisComponent = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
       }
 
       if (params != null && params.getAllStudentWorkFromThisComponent) {
-        // get all the student work from this component
         studentWork.allStudentWorkFromThisComponent = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
       }
 
       if (params != null && params.getLatestStudentWorkFromThisNode) {
-        // get the latest student work from the components in this node
         studentWork.latestStudentWorkFromThisNode = this.StudentDataService.getLatestComponentStatesByNodeId(this.nodeId);
       }
 
       if (params != null && params.getAllStudentWorkFromThisNode) {
-        // get all the student work from the components in this node
         studentWork.allStudentWorkFromThisNode = this.StudentDataService.getComponentStatesByNodeId(this.nodeId);
       }
 
       if (params != null && params.getLatestStudentWorkFromOtherComponents) {
-        // get the latest student work from other specified components
-
         // an array of objects that contain a nodeId and component Id
         var otherComponents = params.otherComponents;
-
         var latestStudentWorkFromOtherComponents = [];
-
         if (otherComponents != null) {
-
-          // loop through all the components we need to get work from
           for (var c = 0; c < otherComponents.length; c++) {
             var otherComponent = otherComponents[c];
-
             if (otherComponent != null) {
-
-              // get the node id and component id
               var tempNodeId = otherComponent.nodeId;
               var tempComponentId = otherComponent.componentId;
 
               if (tempNodeId != null && tempComponentId != null) {
-
-                // get the latest component state for the given component
                 var tempComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(tempNodeId, tempComponentId);
-
                 if (tempComponentState != null) {
-                  // add the component state to the array
                   latestStudentWorkFromOtherComponents.push(tempComponentState);
                 }
               }
             }
           }
         }
-
         studentWork.latestStudentWorkFromOtherComponents = latestStudentWorkFromOtherComponents;
       }
 
       if (params != null && params.getAllStudentWorkFromOtherComponents) {
-        // get all the student work from other specified components
         var otherComponents = params.otherComponents;
-
         var allStudentWorkFromOtherComponents = [];
-
         if (otherComponents != null) {
-
-          // loop throuh all the components we need to get work from
           for (var c = 0; c < otherComponents.length; c++) {
             var otherComponent = otherComponents[c];
-
             if (otherComponent != null) {
-
-              // get the node id and component id
               var tempNodeId = otherComponent.nodeId;
               var tempComponentId = otherComponent.componentId;
-
               if (tempNodeId != null && tempComponentId != null) {
-
-                // get the component states for the given component
                 var tempComponentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
-
                 if (tempComponentStates != null && tempComponentStates.length > 0) {
-                  // add the component states to the array
                   allStudentWorkFromOtherComponents = allStudentWorkFromOtherComponents.concat(tempComponentStates);
                 }
               }
             }
           }
         }
-
         studentWork.allStudentWorkFromOtherComponents = allStudentWorkFromOtherComponents;
       }
-
       return studentWork;
     }
-
-    /**
-     * The import previous work checkbox was clicked
-     */
-
   }, {
     key: 'authoringImportPreviousWorkClicked',
     value: function authoringImportPreviousWorkClicked() {
-
       if (!this.authoringComponentContent.importPreviousWork) {
         /*
          * import previous work has been turned off so we will clear the
@@ -1384,21 +1000,13 @@ var EmbeddedController = function () {
         this.authoringComponentContent.importPreviousWorkNodeId = null;
         this.authoringComponentContent.importPreviousWorkComponentId = null;
 
-        // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
       }
     }
-
-    /**
-     * The import previous work node id has changed
-     */
-
   }, {
     key: 'authoringImportPreviousWorkNodeIdChanged',
     value: function authoringImportPreviousWorkNodeIdChanged() {
-
       if (this.authoringComponentContent.importPreviousWorkNodeId == null || this.authoringComponentContent.importPreviousWorkNodeId == '') {
-
         /*
          * the import previous work node id is null so we will also set the
          * import previous component id to null
@@ -1406,31 +1014,16 @@ var EmbeddedController = function () {
         this.authoringComponentContent.importPreviousWorkComponentId = '';
       }
 
-      // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
-
-    /**
-     * The import previous work component id has changed
-     */
-
   }, {
     key: 'authoringImportPreviousWorkComponentIdChanged',
     value: function authoringImportPreviousWorkComponentIdChanged() {
-
-      // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
-
-    /**
-     * The author has changed the rubric
-     */
-
   }, {
     key: 'summernoteRubricHTMLChanged',
     value: function summernoteRubricHTMLChanged() {
-
-      // get the summernote rubric html
       var html = this.summernoteRubricHTML;
 
       /*
@@ -1448,74 +1041,37 @@ var EmbeddedController = function () {
        */
       html = this.UtilService.insertWISELinks(html);
 
-      // update the component rubric
       this.authoringComponentContent.rubric = html;
-
-      // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
-
-    /**
-     * Add a connected component
-     */
-
   }, {
     key: 'addConnectedComponent',
     value: function addConnectedComponent() {
-
-      /*
-       * create the new connected component object that will contain a
-       * node id and component id
-       */
       var newConnectedComponent = {};
       newConnectedComponent.nodeId = this.nodeId;
       newConnectedComponent.componentId = null;
       newConnectedComponent.updateOn = 'change';
-
-      // initialize the array of connected components if it does not exist yet
       if (this.authoringComponentContent.connectedComponents == null) {
         this.authoringComponentContent.connectedComponents = [];
       }
-
-      // add the connected component
       this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-      // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
-
-    /**
-     * Delete a connected component
-     * @param index the index of the component to delete
-     */
-
   }, {
     key: 'deleteConnectedComponent',
-    value: function deleteConnectedComponent(index) {
-
+    value: function deleteConnectedComponent(indexOfComponentToDelete) {
       if (this.authoringComponentContent.connectedComponents != null) {
-        this.authoringComponentContent.connectedComponents.splice(index, 1);
+        this.authoringComponentContent.connectedComponents.splice(indexOfComponentToDelete, 1);
       }
-
-      // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
-
-    /**
-     * Set the show submit button value
-     * @param show whether to show the submit button
-     */
-
   }, {
     key: 'setShowSubmitButtonValue',
     value: function setShowSubmitButtonValue(show) {
-
       if (show == null || show == false) {
-        // we are hiding the submit button
         this.authoringComponentContent.showSaveButton = false;
         this.authoringComponentContent.showSubmitButton = false;
       } else {
-        // we are showing the submit button
         this.authoringComponentContent.showSaveButton = true;
         this.authoringComponentContent.showSubmitButton = true;
       }
@@ -1527,22 +1083,14 @@ var EmbeddedController = function () {
        */
       this.$scope.$emit('componentShowSubmitButtonValueChanged', { nodeId: this.nodeId, componentId: this.componentId, showSubmitButton: show });
     }
-
-    /**
-     * The showSubmitButton value has changed
-     */
-
   }, {
     key: 'showSubmitButtonValueChanged',
     value: function showSubmitButtonValueChanged() {
-
       /*
        * perform additional processing for when we change the showSubmitButton
        * value
        */
       this.setShowSubmitButtonValue(this.authoringComponentContent.showSubmitButton);
-
-      // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
 
@@ -1553,35 +1101,20 @@ var EmbeddedController = function () {
   }, {
     key: 'chooseModelFile',
     value: function chooseModelFile() {
-
-      // generate the parameters
       var params = {};
       params.isPopup = true;
       params.nodeId = this.nodeId;
       params.componentId = this.componentId;
       params.target = 'modelFile';
-
-      // display the asset chooser
       this.$rootScope.$broadcast('openAssetChooser', params);
     }
-
-    /**
-     * Add a tag
-     */
-
   }, {
     key: 'addTag',
     value: function addTag() {
-
       if (this.authoringComponentContent.tags == null) {
-        // initialize the tags array
         this.authoringComponentContent.tags = [];
       }
-
-      // add a tag
       this.authoringComponentContent.tags.push('');
-
-      // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
 
@@ -1593,21 +1126,12 @@ var EmbeddedController = function () {
   }, {
     key: 'moveTagUp',
     value: function moveTagUp(index) {
-
       if (index > 0) {
         // the index is not at the top so we can move it up
-
-        // remember the tag
         var tag = this.authoringComponentContent.tags[index];
-
-        // remove the tag
         this.authoringComponentContent.tags.splice(index, 1);
-
-        // insert the tag one index back
         this.authoringComponentContent.tags.splice(index - 1, 0, tag);
       }
-
-      // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
 
@@ -1619,44 +1143,20 @@ var EmbeddedController = function () {
   }, {
     key: 'moveTagDown',
     value: function moveTagDown(index) {
-
       if (index < this.authoringComponentContent.tags.length - 1) {
         // the index is not at the bottom so we can move it down
-
-        // remember the tag
         var tag = this.authoringComponentContent.tags[index];
-
-        // remove the tag
         this.authoringComponentContent.tags.splice(index, 1);
-
-        // insert the tag one index forward
         this.authoringComponentContent.tags.splice(index + 1, 0, tag);
       }
-
-      // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
-
-    /**
-     * Delete a tag
-     * @param index the index of the tag to delete
-     */
-
   }, {
     key: 'deleteTag',
-    value: function deleteTag(index) {
-
-      // ask the author if they are sure they want to delete the tag
-      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisTag'));
-
-      if (answer) {
-        // the author answered yes to delete the tag
-
-        // remove the tag
-        this.authoringComponentContent.tags.splice(index, 1);
+    value: function deleteTag(indexOfTagToDelete) {
+      if (confirm(this.$translate('areYouSureYouWantToDeleteThisTag'))) {
+        this.authoringComponentContent.tags.splice(indexOfTagToDelete, 1);
       }
-
-      // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
 
@@ -1667,41 +1167,25 @@ var EmbeddedController = function () {
   }, {
     key: 'handleConnectedComponents',
     value: function handleConnectedComponents() {
-
-      // get the connected components
       var connectedComponents = this.componentContent.connectedComponents;
-
       if (connectedComponents != null) {
-
         var componentStates = [];
-
-        // loop through all the connected components
         for (var c = 0; c < connectedComponents.length; c++) {
           var connectedComponent = connectedComponents[c];
-
           if (connectedComponent != null) {
             var nodeId = connectedComponent.nodeId;
             var componentId = connectedComponent.componentId;
             var type = connectedComponent.type;
-
             if (type == 'showWork') {
-              // we are getting the work from this student
-
-              // get the latest component state from the component
               var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
 
               if (componentState != null) {
                 componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
               }
-
               // we are showing work so we will not allow the student to edit it
               this.isDisabled = true;
             } else if (type == 'importWork' || type == null) {
-              // we are getting the work from this student
-
-              // get the latest component state from the component
               var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
               if (componentState != null) {
                 componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
               }
@@ -1709,13 +1193,8 @@ var EmbeddedController = function () {
           }
         }
 
-        // merge the student responses from all the component states
         var mergedComponentState = this.createMergedComponentState(componentStates);
-
-        // set the student work into the component
         this.setStudentWork(mergedComponentState);
-
-        // make the work dirty so that it gets saved
         this.studentDataChanged();
       }
     }
@@ -1729,8 +1208,6 @@ var EmbeddedController = function () {
   }, {
     key: 'createMergedComponentState',
     value: function createMergedComponentState(componentStates) {
-
-      // create a new component state
       var mergedComponentState = this.NodeService.createNewComponentState();
       if (componentStates != null) {
         // loop through all the component state
@@ -1746,18 +1223,11 @@ var EmbeddedController = function () {
           mergedComponentState.studentData = {};
         }
       }
-
       return mergedComponentState;
     }
-
-    /**
-     * Add a connected component
-     */
-
   }, {
     key: 'authoringAddConnectedComponent',
     value: function authoringAddConnectedComponent() {
-
       /*
        * create the new connected component object that will contain a
        * node id and component id
@@ -1768,15 +1238,10 @@ var EmbeddedController = function () {
       newConnectedComponent.type = null;
       this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(newConnectedComponent);
 
-      // initialize the array of connected components if it does not exist yet
       if (this.authoringComponentContent.connectedComponents == null) {
         this.authoringComponentContent.connectedComponents = [];
       }
-
-      // add the connected component
       this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-      // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
 
@@ -1845,18 +1310,10 @@ var EmbeddedController = function () {
   }, {
     key: 'authoringDeleteConnectedComponent',
     value: function authoringDeleteConnectedComponent(index) {
-
-      // ask the author if they are sure they want to delete the connected component
-      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
-
-      if (answer) {
-        // the author answered yes to delete
-
+      if (confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'))) {
         if (this.authoringComponentContent.connectedComponents != null) {
           this.authoringComponentContent.connectedComponents.splice(index, 1);
         }
-
-        // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
       }
     }
@@ -1870,24 +1327,16 @@ var EmbeddedController = function () {
   }, {
     key: 'authoringGetConnectedComponentType',
     value: function authoringGetConnectedComponentType(connectedComponent) {
-
       var connectedComponentType = null;
-
       if (connectedComponent != null) {
-
-        // get the node id and component id of the connected component
         var nodeId = connectedComponent.nodeId;
         var componentId = connectedComponent.componentId;
-
-        // get the component
         var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
 
         if (component != null) {
-          // get the component type
           connectedComponentType = component.type;
         }
       }
-
       return connectedComponentType;
     }
 
@@ -1903,8 +1352,6 @@ var EmbeddedController = function () {
         connectedComponent.componentId = null;
         connectedComponent.type = null;
         this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-
-        // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
       }
     }
@@ -1917,13 +1364,9 @@ var EmbeddedController = function () {
   }, {
     key: 'authoringConnectedComponentComponentIdChanged',
     value: function authoringConnectedComponentComponentIdChanged(connectedComponent) {
-
       if (connectedComponent != null) {
-
         // default the type to import work
         connectedComponent.type = 'importWork';
-
-        // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
       }
     }
@@ -1936,20 +1379,16 @@ var EmbeddedController = function () {
   }, {
     key: 'authoringConnectedComponentTypeChanged',
     value: function authoringConnectedComponentTypeChanged(connectedComponent) {
-
       if (connectedComponent != null) {
-
         if (connectedComponent.type == 'importWork') {
           /*
            * the type has changed to import work
            */
-        } else if (connectedComponent.type == 'showWork') {}
-        /*
-         * the type has changed to show work
-         */
-
-
-        // the authoring component content has changed so we will save the project
+        } else if (connectedComponent.type == 'showWork') {
+          /*
+           * the type has changed to show work
+           */
+        }
         this.authoringViewComponentChanged();
       }
     }
@@ -1963,24 +1402,17 @@ var EmbeddedController = function () {
   }, {
     key: 'isConnectedComponentTypeAllowed',
     value: function isConnectedComponentTypeAllowed(componentType) {
-
       if (componentType != null) {
-
         var allowedConnectedComponentTypes = this.allowedConnectedComponentTypes;
-
-        // loop through the allowed connected component types
         for (var a = 0; a < allowedConnectedComponentTypes.length; a++) {
           var allowedConnectedComponentType = allowedConnectedComponentTypes[a];
-
           if (allowedConnectedComponentType != null) {
             if (componentType == allowedConnectedComponentType.type) {
-              // the component type is allowed
               return true;
             }
           }
         }
       }
-
       return false;
     }
 
@@ -1991,9 +1423,7 @@ var EmbeddedController = function () {
   }, {
     key: 'showJSONButtonClicked',
     value: function showJSONButtonClicked() {
-      // toggle the JSON authoring textarea
       this.showJSONAuthoring = !this.showJSONAuthoring;
-
       if (this.jsonStringChanged && !this.showJSONAuthoring) {
         /*
          * the author has changed the JSON and has just closed the JSON
@@ -2001,9 +1431,7 @@ var EmbeddedController = function () {
          */
         this.advancedAuthoringViewComponentChanged();
 
-        // scroll to the top of the component
         this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
-
         this.jsonStringChanged = false;
       }
     }

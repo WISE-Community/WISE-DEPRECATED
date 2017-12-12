@@ -28,7 +28,6 @@ var EmbeddedService = function (_NodeService) {
 
     _this.$filter = $filter;
     _this.UtilService = UtilService;
-
     _this.$translate = _this.$filter('translate');
     return _this;
   }
@@ -91,26 +90,13 @@ var EmbeddedService = function (_NodeService) {
     key: 'isCompleted',
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
       var result = false;
-
       var isCompletedFieldInComponentState = false;
-
       if (componentStates != null) {
-
-        /*
-         * loop through all the component states and look for a component
-         * that has the isCompleted field set to true
-         */
         for (var c = 0; c < componentStates.length; c++) {
-
-          // get a component state
           var componentState = componentStates[c];
-
           if (componentState != null) {
-            // get the student data from the model
             var studentData = componentState.studentData;
-
             if (studentData != null) {
-
               if (studentData.isCompleted != null) {
                 /*
                  * the model has set the isCompleted field in the
@@ -138,13 +124,8 @@ var EmbeddedService = function (_NodeService) {
          */
 
         if (nodeEvents != null) {
-
-          // loop through all the events
           for (var e = 0; e < nodeEvents.length; e++) {
-
-            // get an event
             var event = nodeEvents[e];
-
             if (event != null && event.event === 'nodeEntered') {
               result = true;
               break;
@@ -152,7 +133,6 @@ var EmbeddedService = function (_NodeService) {
           }
         }
       }
-
       return result;
     }
   }, {
