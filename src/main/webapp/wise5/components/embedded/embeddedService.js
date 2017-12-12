@@ -92,26 +92,46 @@ var EmbeddedService = function (_NodeService) {
       var result = false;
       var isCompletedFieldInComponentState = false;
       if (componentStates != null) {
-        for (var c = 0; c < componentStates.length; c++) {
-          var componentState = componentStates[c];
-          if (componentState != null) {
-            var studentData = componentState.studentData;
-            if (studentData != null) {
-              if (studentData.isCompleted != null) {
-                /*
-                 * the model has set the isCompleted field in the
-                 * student data
-                 */
-                isCompletedFieldInComponentState = true;
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-                if (studentData.isCompleted === true) {
+        try {
+          for (var _iterator = componentStates[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var componentState = _step.value;
+
+            if (componentState != null) {
+              var studentData = componentState.studentData;
+              if (studentData != null) {
+                if (studentData.isCompleted != null) {
                   /*
-                   * the model has set the isCompleted field to true
-                   * which means the student has completed the component
+                   * the model has set the isCompleted field in the
+                   * student data
                    */
-                  return true;
+                  isCompletedFieldInComponentState = true;
+
+                  if (studentData.isCompleted === true) {
+                    /*
+                     * the model has set the isCompleted field to true
+                     * which means the student has completed the component
+                     */
+                    return true;
+                  }
                 }
               }
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
             }
           }
         }
@@ -124,11 +144,31 @@ var EmbeddedService = function (_NodeService) {
          */
 
         if (nodeEvents != null) {
-          for (var e = 0; e < nodeEvents.length; e++) {
-            var event = nodeEvents[e];
-            if (event != null && event.event === 'nodeEntered') {
-              result = true;
-              break;
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
+
+          try {
+            for (var _iterator2 = nodeEvents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var event = _step2.value;
+
+              if (event != null && event.event === 'nodeEntered') {
+                result = true;
+                break;
+              }
+            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
             }
           }
         }

@@ -918,8 +918,7 @@ class EmbeddedController {
       var otherComponents = params.otherComponents;
       var latestStudentWorkFromOtherComponents = [];
       if (otherComponents != null) {
-        for (var c = 0; c < otherComponents.length; c++) {
-          var otherComponent = otherComponents[c];
+        for (var otherComponent of otherComponents) {
           if (otherComponent != null) {
             var tempNodeId = otherComponent.nodeId;
             var tempComponentId = otherComponent.componentId;
@@ -940,8 +939,7 @@ class EmbeddedController {
       var otherComponents = params.otherComponents;
       var allStudentWorkFromOtherComponents = [];
       if (otherComponents != null) {
-        for (var c = 0; c < otherComponents.length; c++) {
-          var otherComponent = otherComponents[c];
+        for (var otherComponent of otherComponents) {
           if (otherComponent != null) {
             var tempNodeId = otherComponent.nodeId;
             var tempComponentId = otherComponent.componentId;
@@ -1119,8 +1117,7 @@ class EmbeddedController {
     var connectedComponents = this.componentContent.connectedComponents;
     if (connectedComponents != null) {
       var componentStates = [];
-      for (var c = 0; c < connectedComponents.length; c++) {
-        var connectedComponent = connectedComponents[c];
+      for (var connectedComponent of connectedComponents) {
         if (connectedComponent != null) {
           var nodeId = connectedComponent.nodeId;
           var componentId = connectedComponent.componentId;
@@ -1157,8 +1154,7 @@ class EmbeddedController {
     let mergedComponentState = this.NodeService.createNewComponentState();
     if (componentStates != null) {
       // loop through all the component state
-      for (let c = 0; c < componentStates.length; c++) {
-        let componentState = componentStates[c];
+      for (let componentState of componentStates) {
         if (componentState != null) {
           let studentData = componentState.studentData;
           if (studentData != null) {
@@ -1310,8 +1306,7 @@ class EmbeddedController {
   isConnectedComponentTypeAllowed(componentType) {
     if (componentType != null) {
       let allowedConnectedComponentTypes = this.allowedConnectedComponentTypes;
-      for (let a = 0; a < allowedConnectedComponentTypes.length; a++) {
-        let allowedConnectedComponentType = allowedConnectedComponentTypes[a];
+      for (let allowedConnectedComponentType of allowedConnectedComponentTypes) {
         if (allowedConnectedComponentType != null) {
           if (componentType == allowedConnectedComponentType.type) {
             return true;

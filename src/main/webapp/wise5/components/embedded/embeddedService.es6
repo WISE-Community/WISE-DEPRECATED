@@ -55,8 +55,7 @@ class EmbeddedService extends NodeService {
     var result = false;
     var isCompletedFieldInComponentState = false;
     if (componentStates != null) {
-      for (var c = 0; c < componentStates.length; c++) {
-        var componentState = componentStates[c];
+      for (var componentState of componentStates) {
         if (componentState != null) {
           var studentData = componentState.studentData;
           if (studentData != null) {
@@ -87,8 +86,7 @@ class EmbeddedService extends NodeService {
        */
 
       if (nodeEvents != null) {
-        for (var e = 0; e < nodeEvents.length; e++) {
-          var event = nodeEvents[e];
+        for (var event of nodeEvents) {
           if (event != null && event.event === 'nodeEntered') {
             result = true;
             break;

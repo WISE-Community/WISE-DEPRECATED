@@ -948,17 +948,37 @@ var EmbeddedController = function () {
         var otherComponents = params.otherComponents;
         var latestStudentWorkFromOtherComponents = [];
         if (otherComponents != null) {
-          for (var c = 0; c < otherComponents.length; c++) {
-            var otherComponent = otherComponents[c];
-            if (otherComponent != null) {
-              var tempNodeId = otherComponent.nodeId;
-              var tempComponentId = otherComponent.componentId;
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
 
-              if (tempNodeId != null && tempComponentId != null) {
-                var tempComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(tempNodeId, tempComponentId);
-                if (tempComponentState != null) {
-                  latestStudentWorkFromOtherComponents.push(tempComponentState);
+          try {
+            for (var _iterator = otherComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var otherComponent = _step.value;
+
+              if (otherComponent != null) {
+                var tempNodeId = otherComponent.nodeId;
+                var tempComponentId = otherComponent.componentId;
+
+                if (tempNodeId != null && tempComponentId != null) {
+                  var tempComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(tempNodeId, tempComponentId);
+                  if (tempComponentState != null) {
+                    latestStudentWorkFromOtherComponents.push(tempComponentState);
+                  }
                 }
+              }
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
               }
             }
           }
@@ -970,16 +990,36 @@ var EmbeddedController = function () {
         var otherComponents = params.otherComponents;
         var allStudentWorkFromOtherComponents = [];
         if (otherComponents != null) {
-          for (var c = 0; c < otherComponents.length; c++) {
-            var otherComponent = otherComponents[c];
-            if (otherComponent != null) {
-              var tempNodeId = otherComponent.nodeId;
-              var tempComponentId = otherComponent.componentId;
-              if (tempNodeId != null && tempComponentId != null) {
-                var tempComponentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
-                if (tempComponentStates != null && tempComponentStates.length > 0) {
-                  allStudentWorkFromOtherComponents = allStudentWorkFromOtherComponents.concat(tempComponentStates);
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
+
+          try {
+            for (var _iterator2 = otherComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var otherComponent = _step2.value;
+
+              if (otherComponent != null) {
+                var tempNodeId = otherComponent.nodeId;
+                var tempComponentId = otherComponent.componentId;
+                if (tempNodeId != null && tempComponentId != null) {
+                  var tempComponentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
+                  if (tempComponentStates != null && tempComponentStates.length > 0) {
+                    allStudentWorkFromOtherComponents = allStudentWorkFromOtherComponents.concat(tempComponentStates);
+                  }
                 }
+              }
+            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
               }
             }
           }
@@ -1170,25 +1210,45 @@ var EmbeddedController = function () {
       var connectedComponents = this.componentContent.connectedComponents;
       if (connectedComponents != null) {
         var componentStates = [];
-        for (var c = 0; c < connectedComponents.length; c++) {
-          var connectedComponent = connectedComponents[c];
-          if (connectedComponent != null) {
-            var nodeId = connectedComponent.nodeId;
-            var componentId = connectedComponent.componentId;
-            var type = connectedComponent.type;
-            if (type == 'showWork') {
-              var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
 
-              if (componentState != null) {
-                componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
+        try {
+          for (var _iterator3 = connectedComponents[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var connectedComponent = _step3.value;
+
+            if (connectedComponent != null) {
+              var nodeId = connectedComponent.nodeId;
+              var componentId = connectedComponent.componentId;
+              var type = connectedComponent.type;
+              if (type == 'showWork') {
+                var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
+                if (componentState != null) {
+                  componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
+                }
+                // we are showing work so we will not allow the student to edit it
+                this.isDisabled = true;
+              } else if (type == 'importWork' || type == null) {
+                var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+                if (componentState != null) {
+                  componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
+                }
               }
-              // we are showing work so we will not allow the student to edit it
-              this.isDisabled = true;
-            } else if (type == 'importWork' || type == null) {
-              var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-              if (componentState != null) {
-                componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
             }
           }
         }
@@ -1211,11 +1271,31 @@ var EmbeddedController = function () {
       var mergedComponentState = this.NodeService.createNewComponentState();
       if (componentStates != null) {
         // loop through all the component state
-        for (var c = 0; c < componentStates.length; c++) {
-          var componentState = componentStates[c];
-          if (componentState != null) {
-            var studentData = componentState.studentData;
-            if (studentData != null) {}
+        var _iteratorNormalCompletion4 = true;
+        var _didIteratorError4 = false;
+        var _iteratorError4 = undefined;
+
+        try {
+          for (var _iterator4 = componentStates[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var componentState = _step4.value;
+
+            if (componentState != null) {
+              var studentData = componentState.studentData;
+              if (studentData != null) {}
+            }
+          }
+        } catch (err) {
+          _didIteratorError4 = true;
+          _iteratorError4 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+              _iterator4.return();
+            }
+          } finally {
+            if (_didIteratorError4) {
+              throw _iteratorError4;
+            }
           }
         }
 
@@ -1259,13 +1339,13 @@ var EmbeddedController = function () {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
+          var _iteratorNormalCompletion5 = true;
+          var _didIteratorError5 = false;
+          var _iteratorError5 = undefined;
 
           try {
-            for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var component = _step.value;
+            for (var _iterator5 = components[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+              var component = _step5.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -1276,16 +1356,16 @@ var EmbeddedController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
+            _didIteratorError5 = true;
+            _iteratorError5 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
+              if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                _iterator5.return();
               }
             } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
+              if (_didIteratorError5) {
+                throw _iteratorError5;
               }
             }
           }
@@ -1404,11 +1484,31 @@ var EmbeddedController = function () {
     value: function isConnectedComponentTypeAllowed(componentType) {
       if (componentType != null) {
         var allowedConnectedComponentTypes = this.allowedConnectedComponentTypes;
-        for (var a = 0; a < allowedConnectedComponentTypes.length; a++) {
-          var allowedConnectedComponentType = allowedConnectedComponentTypes[a];
-          if (allowedConnectedComponentType != null) {
-            if (componentType == allowedConnectedComponentType.type) {
-              return true;
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
+
+        try {
+          for (var _iterator6 = allowedConnectedComponentTypes[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var allowedConnectedComponentType = _step6.value;
+
+            if (allowedConnectedComponentType != null) {
+              if (componentType == allowedConnectedComponentType.type) {
+                return true;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
+            }
+          } finally {
+            if (_didIteratorError6) {
+              throw _iteratorError6;
             }
           }
         }
