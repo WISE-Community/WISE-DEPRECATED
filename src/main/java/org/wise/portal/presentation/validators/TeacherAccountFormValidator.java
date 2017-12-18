@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -52,8 +52,9 @@ public class TeacherAccountFormValidator extends UserAccountFormValidator {
   public void validate(Object userAccountFormIn, Errors errors) {
     super.validate(userAccountFormIn, errors);
 
-    if (errors.hasErrors())
+    if (errors.hasErrors()) {
       return;
+    }
     TeacherAccountForm teacherAccountForm = (TeacherAccountForm) userAccountFormIn;
     TeacherUserDetails userDetails = (TeacherUserDetails) teacherAccountForm.getUserDetails();
 
@@ -61,8 +62,9 @@ public class TeacherAccountFormValidator extends UserAccountFormValidator {
       ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.displayname",
         "error.displayname-not-specified");
     } else {
-      if (!errors.hasErrors() && (userDetails.getPassword() == null || userDetails.getPassword().length() < 1 ||
-        !userDetails.getPassword().equals(teacherAccountForm.getRepeatedPassword()))) {
+      if (!errors.hasErrors() &&
+          (userDetails.getPassword() == null || userDetails.getPassword().length() < 1 ||
+          !userDetails.getPassword().equals(teacherAccountForm.getRepeatedPassword()))) {
         errors.reject("error.passwords-mismatch",
           "Passwords did not match or were not provided. Matching passwords are required.");
       }
@@ -76,9 +78,6 @@ public class TeacherAccountFormValidator extends UserAccountFormValidator {
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.schoolname",
       "error.schoolname-not-specified");
-
-    //ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.curriculumsubjects",
-    //        "error.curriculumsubjects-not-specified");
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userDetails.schoollevel",
       "error.schoollevel-not-specified");
@@ -96,13 +95,13 @@ public class TeacherAccountFormValidator extends UserAccountFormValidator {
     // TODO HT: CHECK FOR ILLEGAL EMAIL ADDRESS FORMAT
     String email = userDetails.getEmailAddress();
 
-    //validate email if it is not null and not empty
     if (email != null && !email.trim().equals("")) {
       validateEmail(email, errors);
     }
 
-    if (errors.hasErrors())
+    if (errors.hasErrors()) {
       userDetails.setPassword("");
+    }
   }
 
   /*

@@ -62,7 +62,7 @@
 				</div>
 				<sec:authorize access="!hasAnyRole('ROLE_STUDENT,ROLE_PREVIOUS_ADMINISTRATOR')">
 					<div>
-						<a href="${contextPath}/teacher/management/updatemyaccount"><spring:message code="accountmenu.myAccount" /></a>
+						<a href="${contextPath}/teacher/account"><spring:message code="accountmenu.myAccount" /></a>
 					</div>
 				</sec:authorize>
 				<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">

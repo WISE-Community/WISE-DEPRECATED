@@ -31,9 +31,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.BatchStudentChangePasswordParameters;
 import org.wise.portal.domain.authentication.impl.ChangePasswordParameters;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.service.user.UserService;
 
 /**
  * Validator for student's ChangePasswordParameters
@@ -49,13 +51,16 @@ public class ChangePasswordParametersValidator implements Validator {
   @Autowired
   private SystemWideSaltSource systemSaltSource;
 
+  @Autowired
+  private UserService userService;
+
   /**
    * @see Validator#supports(Class)
    */
   @SuppressWarnings("unchecked")
   public boolean supports(Class clazz) {
-    return ChangePasswordParameters.class.isAssignableFrom(clazz)
-        || BatchStudentChangePasswordParameters.class.isAssignableFrom(clazz);
+    return ChangePasswordParameters.class.isAssignableFrom(clazz) ||
+        BatchStudentChangePasswordParameters.class.isAssignableFrom(clazz);
   }
 
   /**
@@ -108,15 +113,19 @@ public class ChangePasswordParametersValidator implements Validator {
       userToCheckPasswordFor = params.getUser();
     }
 
-    //if the user is not an admin we need to make sure they typed in the current teacher password
+    try {
+      userToCheckPasswordFor = userService.retrieveById(userToCheckPasswordFor.getId());
+    } catch (ObjectNotFoundException e) {
+      errors.rejectValue("passwd0", "presentation.validators.ChangePasswordParametersValidator.errorIncorrectCurrentPassword");
+    }
     if (!userToCheckPasswordFor.isAdmin()) {
       Md5PasswordEncoder encoder = new Md5PasswordEncoder();
-      String typedInCurrentPassword = params.getPasswd0();
-      if (typedInCurrentPassword != null) {
-        String hashedTypedInCurrentPassword = encoder.encodePassword(typedInCurrentPassword, systemSaltSource.getSystemWideSalt());
+      String currentPassword = params.getPasswd0();
+      if (currentPassword != null) {
+        String hasedCurrentPassword = encoder.encodePassword(currentPassword, systemSaltSource.getSystemWideSalt());
         String hashedActualCurrentPassword = userToCheckPasswordFor.getUserDetails().getPassword();
-        if (hashedTypedInCurrentPassword != null && hashedActualCurrentPassword != null &&
-          hashedTypedInCurrentPassword.equals(hashedActualCurrentPassword)) {
+        if (hasedCurrentPassword != null && hashedActualCurrentPassword != null &&
+            hasedCurrentPassword.equals(hashedActualCurrentPassword)) {
         } else {
           errors.rejectValue("passwd0", "presentation.validators.ChangePasswordParametersValidator.errorIncorrectCurrentPassword");
         }
