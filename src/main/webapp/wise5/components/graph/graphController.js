@@ -446,71 +446,18 @@ var GraphController = function () {
       this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
       if (this.mode == 'student') {
-        if (this.GraphService.showClassmateWork(this.componentContent)) {
-          // we will show classmate work from another component
-          this.handleConnectedComponents();
-        } else if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-          // we will show work from another component
+        if (!this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
+          this.newTrial();
+        }
+        if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+          // this component has connected components
           this.handleConnectedComponents();
         } else if (this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          /*
-           * the student has work so we will populate the work into this
-           * component
-           */
+          // this does not have connected components but does have previous work
           this.setStudentWork(componentState);
-        } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          /*
-           * the student does not have any work and there are connected
-           * components so we will get the work from the connected
-           * components
-           */
-
-          /*
-           * trials are enabled so we will create an empty trial
-           * since there is no student work
-           */
-          this.newTrial();
-          this.handleConnectedComponents();
-        } else if (!this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          /*
-           * only import work if the student does not already have
-           * work for this component
-           */
-
-          // check if we need to import work
-          var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-          var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-          var importWork = this.componentContent.importWork;
-
-          if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-            /*
-             * check if the node id is in the field that we used to store
-             * the import previous work node id in
-             */
-            importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-          }
-
-          if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-            /*
-             * check if the component id is in the field that we used to store
-             * the import previous work component id in
-             */
-            importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-          }
-
-          /*
-           * trials are enabled so we will create an empty trial
-           * since there is no student work
-           */
-          this.newTrial();
-
-          if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-            // import the work from the other component
-            this.importWork();
-          } else if (importWork != null) {
-            // we are going to import work from one or more components
-            this.importWork();
-          }
+        } else {
+          // this does not have connected components and does not have previous work
+          //this.newTrial();
         }
       } else {
         // populate the student work into this component
@@ -632,22 +579,16 @@ var GraphController = function () {
             }
           }
         } else if (componentType == 'Embedded') {
-
           // convert the embedded data to series data
           if (componentState != null) {
-
             /*
              * make a copy of the component state so that we don't
              * reference the exact component state object from the
              * other component in case field values change.
              */
             componentState = this.UtilService.makeCopyOfJSONObject(componentState);
-
-            // get the student data
-            var studentData = componentState.studentData;
-
-            // parse the latest trial and set it into the component
-            this.parseLatestTrial(studentData, connectedComponentParams);
+            var _studentData = componentState.studentData;
+            this.processConnectedComponentStudentData(_studentData, connectedComponentParams);
 
             /*
              * notify the controller that the student data has
@@ -4808,8 +4749,114 @@ var GraphController = function () {
       }
     }
   }, {
-    key: 'parseLatestTrial',
+    key: 'processConnectedComponentStudentData',
 
+
+    /**
+     * Process the student data that we have received from a connected component.
+     * @param studentData The student data from a connected component.
+     * @param params The connected component params.
+     */
+    value: function processConnectedComponentStudentData(studentData, params) {
+      if (params.fields == null) {
+        /*
+         * we do not need to look at specific fields so we will directly
+         * parse the the trial data from the student data.
+         */
+        this.parseLatestTrial(studentData, params);
+      } else {
+        // we need to process specific fields in the student data
+        var fields = params.fields;
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
+
+        try {
+          for (var _iterator3 = fields[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var field = _step3.value;
+
+            var name = field.name;
+            var when = field.when;
+            var action = field.action;
+            var firstTime = false;
+            if (when == 'firstTime' && firstTime == true) {
+              if (action == 'write') {
+                // TODO
+              } else if (action == 'read') {
+                // TODO
+              }
+            } else if (when == 'always') {
+              if (action == 'write') {
+                // TODO
+              } else if (action == 'read') {
+                this.readConnectedComponentFieldFromStudentData(studentData, params, name);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * Read the field from the new student data and perform any processing on our
+     * existing student data based upon the new student data.
+     * @param studentData The new student data from the connected component.
+     * @param params The connected component params.
+     * @param name The field name to read and process.
+     */
+
+  }, {
+    key: 'readConnectedComponentFieldFromStudentData',
+    value: function readConnectedComponentFieldFromStudentData(studentData, params, name) {
+      if (name == 'selectedCells') {
+        // only show the trials that are specified in the selectedCells array
+        var selectedCells = studentData[name];
+        var selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
+        var _iteratorNormalCompletion4 = true;
+        var _didIteratorError4 = false;
+        var _iteratorError4 = undefined;
+
+        try {
+          for (var _iterator4 = this.trials[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var trial = _step4.value;
+
+            if (selectedTrialIds.includes(trial.id)) {
+              trial.show = true;
+            } else {
+              trial.show = false;
+            }
+          }
+        } catch (err) {
+          _didIteratorError4 = true;
+          _iteratorError4 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+              _iterator4.return();
+            }
+          } finally {
+            if (_didIteratorError4) {
+              throw _iteratorError4;
+            }
+          }
+        }
+      } else if (name == 'trial') {
+        this.parseLatestTrial(studentData, params);
+      }
+    }
 
     /**
      * Parse the latest trial and set it into the component
@@ -4817,6 +4864,9 @@ var GraphController = function () {
      * @param params (optional) parameters that specify what to use from the
      * student data
      */
+
+  }, {
+    key: 'parseLatestTrial',
     value: function parseLatestTrial(studentData, params) {
       var _this8 = this;
 
@@ -4957,15 +5007,10 @@ var GraphController = function () {
                     // add the series to the trial
                     latestTrial.series.push(newSeries);
 
-                    if (params.showXPlotLineOnLatestPoint && seriesData.length > 0) {
-                      var latestPoint = seriesData[seriesData.length - 1];
-                      var xValueFromDataPoint = this.getXValueFromDataPoint(latestPoint);
-                      this.showXPlotLine(xValueFromDataPoint);
-                      if (params.showTooltipOnLatestPoint) {
-                        this.$timeout(function () {
-                          _this8.showTooltipOnLatestPoint();
-                        }, 1);
-                      }
+                    if (params.showTooltipOnLatestPoint) {
+                      this.$timeout(function () {
+                        _this8.showTooltipOnX(studentData.trial.id, studentData.showTooltipOnX);
+                      }, 1);
                     }
                   }
                 }
@@ -4985,6 +5030,10 @@ var GraphController = function () {
           // make the last trial the active trial
           this.activeTrial = this.trials[this.trials.length - 1];
           this.activeTrial.show = true;
+        }
+
+        if (studentData.xPlotLine != null) {
+          this.showXPlotLine(studentData.xPlotLine);
         }
 
         this.setTrialIdsToShow();
@@ -5986,13 +6035,13 @@ var GraphController = function () {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+          var _iteratorNormalCompletion5 = true;
+          var _didIteratorError5 = false;
+          var _iteratorError5 = undefined;
 
           try {
-            for (var _iterator3 = components[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-              var component = _step3.value;
+            for (var _iterator5 = components[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+              var component = _step5.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -6003,16 +6052,16 @@ var GraphController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
+            _didIteratorError5 = true;
+            _iteratorError5 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
+              if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                _iterator5.return();
               }
             } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
+              if (_didIteratorError5) {
+                throw _iteratorError5;
               }
             }
           }
@@ -6447,6 +6496,10 @@ var GraphController = function () {
          * request the classmate work from the server
          */
         this.$q.all(promises).then(function (promiseResults) {
+          /*
+           * First we will accumulate all the trials into one new component state
+           * and then we will perform connected component processing.
+           */
 
           // this will hold all the trials
           var mergedTrials = [];
@@ -6470,7 +6523,7 @@ var GraphController = function () {
             }
           }
 
-          // create a new student data
+          // create a new student data with all the trials
           var studentData = {};
           studentData.trials = mergedTrials;
           studentData.version = 2;
@@ -6487,12 +6540,304 @@ var GraphController = function () {
             newComponentState.studentData.backgroundImage = connectedComponentBackgroundImage;
           }
 
+          newComponentState = _this10.handleConnectedComponentsHelper(newComponentState);
+
           // populate the component state into this component
           _this10.setStudentWork(newComponentState);
 
           // make the work dirty so that it gets saved
           _this10.studentDataChanged();
         });
+      }
+    }
+
+    /**
+     * Perform additional connected component processing.
+     * @param newComponentState The new component state generated by accumulating
+     * the trials from all the connected component student data.
+     */
+
+  }, {
+    key: 'handleConnectedComponentsHelper',
+    value: function handleConnectedComponentsHelper(newComponentState) {
+      var mergedComponentState = this.$scope.componentState;
+      var firstTime = true;
+      if (mergedComponentState == null) {
+        mergedComponentState = newComponentState;
+      } else {
+        /*
+         * This component has previous student data so this is not the first time
+         * this component is being loaded.
+         */
+        firstTime = false;
+      }
+      var connectedComponents = this.componentContent.connectedComponents;
+      if (connectedComponents != null) {
+        var componentStates = [];
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
+
+        try {
+          for (var _iterator6 = connectedComponents[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var connectedComponent = _step6.value;
+
+            if (connectedComponent != null) {
+              var nodeId = connectedComponent.nodeId;
+              var componentId = connectedComponent.componentId;
+              var type = connectedComponent.type;
+              var mergeFields = connectedComponent.mergeFields;
+              if (type == 'showWork') {
+                var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+                if (componentState != null) {
+                  componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
+                }
+                // we are showing work so we will not allow the student to edit it
+                this.isDisabled = true;
+              } else if (type == 'importWork' || type == null) {
+                var connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+                var fields = connectedComponent.fields;
+                if (connectedComponentState != null) {
+                  // the connected component has student work
+                  mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
+                } else {
+                  // the connected component does not have student work
+                  mergedComponentState = this.mergeNullComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
+                }
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
+            }
+          } finally {
+            if (_didIteratorError6) {
+              throw _iteratorError6;
+            }
+          }
+        }
+
+        if (mergedComponentState.studentData.version == null) {
+          mergedComponentState.studentData.version = this.studentDataVersion;
+        }
+
+        if (mergedComponentState != null) {
+          this.setStudentWork(mergedComponentState);
+          this.studentDataChanged();
+        }
+      }
+      return mergedComponentState;
+    }
+
+    /**
+     * Merge the component state from the connected component with the component
+     * state from this component.
+     * @param baseComponentState The component state from this component.
+     * @param newComponentState The component state from the connected component.
+     * @param mergeFields The field to look at in the newComponentState.
+     * @param firstTime Whether this is the first time this component is being
+     * visited.
+     * @return The merged component state.
+     */
+
+  }, {
+    key: 'mergeComponentState',
+    value: function mergeComponentState(baseComponentState, newComponentState, mergeFields, firstTime) {
+      if (mergeFields == null) {
+        if (baseComponentState.componentType == 'Graph') {
+          // there are no merge fields specified so we will get all of the fields
+          baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(newComponentState.studentData);
+        }
+      } else {
+        // we will merge specific fields
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
+
+        try {
+          for (var _iterator7 = mergeFields[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var mergeField = _step7.value;
+
+            var name = mergeField.name;
+            var when = mergeField.when;
+            var action = mergeField.action;
+            if (when == 'firstTime' && firstTime == true) {
+              if (action == 'write') {
+                baseComponentState.studentData[name] = newComponentState.studentData[name];
+              } else if (action == 'read') {
+                // TODO
+              }
+            } else if (when == 'always') {
+              if (action == 'write') {
+                baseComponentState.studentData[name] = newComponentState.studentData[name];
+              } else if (action == 'read') {
+                this.readConnectedComponentField(baseComponentState, newComponentState, name);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
+            }
+          } finally {
+            if (_didIteratorError7) {
+              throw _iteratorError7;
+            }
+          }
+        }
+      }
+      return baseComponentState;
+    }
+
+    /**
+     * We want to merge the component state from the connected component into this
+     * component but the connected component does not have any work. We will
+     * instead use default values.
+     * @param baseComponentState The component state from this component.
+     * @param mergeFields The field to look at in the newComponentState.
+     * @param firstTime Whether this is the first time this component is being
+     * visited.
+     * @return The merged component state.
+     */
+
+  }, {
+    key: 'mergeNullComponentState',
+    value: function mergeNullComponentState(baseComponentState, mergeFields, firstTime) {
+      var newComponentState = null;
+      if (mergeFields == null) {
+        // TODO
+      } else {
+        // we will merge specific fields
+        var _iteratorNormalCompletion8 = true;
+        var _didIteratorError8 = false;
+        var _iteratorError8 = undefined;
+
+        try {
+          for (var _iterator8 = mergeFields[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+            var mergeField = _step8.value;
+
+            var name = mergeField.name;
+            var when = mergeField.when;
+            var action = mergeField.action;
+
+            if (when == 'firstTime' && firstTime == true) {
+              if (action == 'write') {
+                // TODO
+              } else if (action == 'read') {
+                // TODO
+              }
+            } else if (when == 'always') {
+              if (action == 'write') {
+                // TODO
+              } else if (action == 'read') {
+                this.readConnectedComponentField(baseComponentState, newComponentState, name);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError8 = true;
+          _iteratorError8 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+              _iterator8.return();
+            }
+          } finally {
+            if (_didIteratorError8) {
+              throw _iteratorError8;
+            }
+          }
+        }
+      }
+      return baseComponentState;
+    }
+
+    /**
+     * Read the field from the connected component's component state.
+     * @param baseComponentState The component state from this component.
+     * @param newComponentState The component state from the connected component.
+     * @param field The field to look at in the connected component's component
+     * state.
+     */
+
+  }, {
+    key: 'readConnectedComponentField',
+    value: function readConnectedComponentField(baseComponentState, newComponentState, field) {
+      if (field == 'selectedCells') {
+        if (newComponentState == null) {
+          // we will default to hide all the trials
+          var _iteratorNormalCompletion9 = true;
+          var _didIteratorError9 = false;
+          var _iteratorError9 = undefined;
+
+          try {
+            for (var _iterator9 = baseComponentState.studentData.trials[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+              var trial = _step9.value;
+
+              trial.show = false;
+            }
+          } catch (err) {
+            _didIteratorError9 = true;
+            _iteratorError9 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                _iterator9.return();
+              }
+            } finally {
+              if (_didIteratorError9) {
+                throw _iteratorError9;
+              }
+            }
+          }
+        } else {
+          /*
+           * loop through all the trials and show the ones that are in the
+           * selected cells array.
+           */
+          var studentData = newComponentState.studentData;
+          var selectedCells = studentData[field];
+          var selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
+          var _iteratorNormalCompletion10 = true;
+          var _didIteratorError10 = false;
+          var _iteratorError10 = undefined;
+
+          try {
+            for (var _iterator10 = baseComponentState.studentData.trials[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+              var _trial = _step10.value;
+
+              if (selectedTrialIds.includes(_trial.id)) {
+                _trial.show = true;
+              } else {
+                _trial.show = false;
+              }
+            }
+          } catch (err) {
+            _didIteratorError10 = true;
+            _iteratorError10 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                _iterator10.return();
+              }
+            } finally {
+              if (_didIteratorError10) {
+                throw _iteratorError10;
+              }
+            }
+          }
+        }
+      } else if (field == 'trial') {
+        // TODO
       }
     }
 
@@ -6969,6 +7314,78 @@ var GraphController = function () {
     }
 
     /**
+     * Show the tooltip on the point with the given x value.
+     * @param seriesId The id of the series.
+     * @param x The x value we want to show the tooltip on.
+     */
+
+  }, {
+    key: 'showTooltipOnX',
+    value: function showTooltipOnX(seriesId, x) {
+      var chart = $('#' + this.chartId).highcharts();
+      if (chart.series.length > 0) {
+        var series = null;
+        if (seriesId == null) {
+          series = chart.series[chart.series.length - 1];
+        } else {
+          var _iteratorNormalCompletion11 = true;
+          var _didIteratorError11 = false;
+          var _iteratorError11 = undefined;
+
+          try {
+            for (var _iterator11 = chart.series[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+              var tempSeries = _step11.value;
+
+              if (tempSeries.userOptions.name == seriesId) {
+                series = tempSeries;
+              }
+            }
+          } catch (err) {
+            _didIteratorError11 = true;
+            _iteratorError11 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                _iterator11.return();
+              }
+            } finally {
+              if (_didIteratorError11) {
+                throw _iteratorError11;
+              }
+            }
+          }
+        }
+        var points = series.points;
+        var _iteratorNormalCompletion12 = true;
+        var _didIteratorError12 = false;
+        var _iteratorError12 = undefined;
+
+        try {
+          for (var _iterator12 = points[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+            var point = _step12.value;
+
+            if (point.x == x) {
+              chart.tooltip.refresh(point);
+            }
+          }
+        } catch (err) {
+          _didIteratorError12 = true;
+          _iteratorError12 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion12 && _iterator12.return) {
+              _iterator12.return();
+            }
+          } finally {
+            if (_didIteratorError12) {
+              throw _iteratorError12;
+            }
+          }
+        }
+      }
+    }
+
+    /**
      * Show the tooltip on the newest point.
      */
 
@@ -6984,6 +7401,49 @@ var GraphController = function () {
           chart.tooltip.refresh(latestPoint);
         }
       }
+    }
+
+    /**
+     * Convert the selected cells array into an array of trial ids.
+     * @param selectedCells An array of objects representing selected cells.
+     * @return An array of trial id strings.
+     */
+
+  }, {
+    key: 'convertSelectedCellsToTrialIds',
+    value: function convertSelectedCellsToTrialIds(selectedCells) {
+      var selectedTrialIds = [];
+      if (selectedCells != null) {
+        var _iteratorNormalCompletion13 = true;
+        var _didIteratorError13 = false;
+        var _iteratorError13 = undefined;
+
+        try {
+          for (var _iterator13 = selectedCells[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+            var selectedCell = _step13.value;
+
+            var material = selectedCell.material;
+            var bevTemp = selectedCell.bevTemp;
+            var airTemp = selectedCell.airTemp;
+            var selectedTrialId = material + '-' + bevTemp + 'Bev-' + airTemp + 'Air';
+            selectedTrialIds.push(selectedTrialId);
+          }
+        } catch (err) {
+          _didIteratorError13 = true;
+          _iteratorError13 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion13 && _iterator13.return) {
+              _iterator13.return();
+            }
+          } finally {
+            if (_didIteratorError13) {
+              throw _iteratorError13;
+            }
+          }
+        }
+      }
+      return selectedTrialIds;
     }
   }]);
 
