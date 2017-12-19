@@ -1260,14 +1260,16 @@ class TableController {
     this.removeAllCellsFromTableData();
     this.addTableDataRow(this.createTableRow(['Series Name', xAxisTitle, yAxisTitle]));
     for (let trial of studentData.trials) {
-      let multipleSeries = trial.series;
-      for (let singleSeries of multipleSeries) {
-        if (singleSeries.show !== false) {
-          let closestDataPoint = this.getClosestDataPoint(singleSeries.data, x);
-          if (closestDataPoint != null) {
-            this.addTableDataRow(this.createTableRow([singleSeries.name,
-                Math.round(this.getXFromDataPoint(closestDataPoint)) + ' ' + xUnits,
-                Math.round(this.getYFromDataPoint(closestDataPoint)) + ' ' + yUnits]));
+      if (trial.show) {
+        let multipleSeries = trial.series;
+        for (let singleSeries of multipleSeries) {
+          if (singleSeries.show !== false) {
+            let closestDataPoint = this.getClosestDataPoint(singleSeries.data, x);
+            if (closestDataPoint != null) {
+              this.addTableDataRow(this.createTableRow([singleSeries.name,
+                  Math.round(this.getXFromDataPoint(closestDataPoint)) + ' ' + xUnits,
+                  Math.round(this.getYFromDataPoint(closestDataPoint)) + ' ' + yUnits]));
+            }
           }
         }
       }
