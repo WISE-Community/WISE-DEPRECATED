@@ -63,26 +63,20 @@ public class ChangePasswordParametersValidator implements Validator {
         BatchStudentChangePasswordParameters.class.isAssignableFrom(clazz);
   }
 
-  /**
-   * @see Validator#validate(Object, Errors)
-   */
   public void validate(Object paramsIn, Errors errors) {
     ChangePasswordParameters params = (ChangePasswordParameters) paramsIn;
 
     validatePasswd0(errors,params);
-
     if (errors.getErrorCount() != 0) {
       return;
     }
 
     validatePasswd1(errors,params);
-
     if (errors.getErrorCount() != 0) {
       return;
     }
 
     validatePasswd2(errors,params);
-
     if (errors.getErrorCount() != 0) {
       return;
     }
@@ -96,7 +90,7 @@ public class ChangePasswordParametersValidator implements Validator {
    * @param params
    */
   public void validatePasswd0(Errors errors, ChangePasswordParameters params) {
-    User userToCheckPasswordFor = null;
+    User userToCheckPasswordFor;
 
     if (params.getTeacherUser() != null) {
       /*
@@ -117,6 +111,8 @@ public class ChangePasswordParametersValidator implements Validator {
       userToCheckPasswordFor = userService.retrieveById(userToCheckPasswordFor.getId());
     } catch (ObjectNotFoundException e) {
       errors.rejectValue("passwd0", "presentation.validators.ChangePasswordParametersValidator.errorIncorrectCurrentPassword");
+    } catch (Exception e) {
+      System.out.println("error");
     }
     if (!userToCheckPasswordFor.isAdmin()) {
       Md5PasswordEncoder encoder = new Md5PasswordEncoder();

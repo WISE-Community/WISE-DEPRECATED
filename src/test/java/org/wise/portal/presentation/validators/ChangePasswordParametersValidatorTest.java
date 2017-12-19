@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007 Regents of the University of California (Regents). Created
+ * Copyright (c) 2017 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU Lesser General Public License, v2.
@@ -23,21 +23,32 @@
 package org.wise.portal.presentation.validators;
 
 import org.easymock.EasyMock;
+import org.easymock.EasyMockRunner;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.ChangePasswordParameters;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
 import junit.framework.TestCase;
 import org.wise.portal.domain.user.impl.UserImpl;
+import org.wise.portal.service.user.impl.UserServiceImpl;
 
 /**
  * @author Sally Ahn
  */
+@RunWith(EasyMockRunner.class)
 public class ChangePasswordParametersValidatorTest extends TestCase {
 
   private ChangePasswordParameters params;
 
-  private ChangePasswordParametersValidator validator;
+  @TestSubject
+  private ChangePasswordParametersValidator validator = new ChangePasswordParametersValidator();
 
   private Errors errors;
 
@@ -51,45 +62,56 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
 
   private final String EMPTY_PASSWORD = "";
 
+  @Mock
   private UserImpl teacherUser;
 
-  public void setUp() {
-    validator = new ChangePasswordParametersValidator();
-    params = new ChangePasswordParameters();
+  @Mock
+  private UserServiceImpl userServiceImpl;
 
-    teacherUser = EasyMock.createMock(UserImpl.class);
+  @Before
+  public void setUp() throws ObjectNotFoundException {
+    params = new ChangePasswordParameters();
+    Long teacherId = new Long(1);
+    EasyMock.expect(teacherUser.getId()).andReturn(teacherId);
+    EasyMock.expect(userServiceImpl.retrieveById(teacherId)).andReturn(teacherUser);
     EasyMock.expect(teacherUser.isAdmin()).andReturn(true);
-    EasyMock.replay(teacherUser);
     params.setTeacherUser(teacherUser);
     params.setPasswd0(LEGAL_PASSWORD1);
     params.setPasswd1(LEGAL_PASSWORD1);
     params.setPasswd2(LEGAL_PASSWORD1);  // set up is correct (both passwords match)
     errors = new BeanPropertyBindingResult(params, "");
+    EasyMock.replay(userServiceImpl);
+    EasyMock.replay(teacherUser);
   }
 
-  public void testNoProblemValidate() {
+  @Test
+  public void noProblem() {
     validator.validate(params, errors);
-    EasyMock.verify(teacherUser);
     assertTrue(!errors.hasErrors());
   }
 
-  public void testEmptyPasswordValidate() {
+  @Test
+  public void emptyPassword1() {
     params.setPasswd1(EMPTY_PASSWORD);
     validator.validate(params, errors);
 
     assertTrue(errors.hasErrors());
     assertEquals(1, errors.getErrorCount());
     assertNotNull(errors.getFieldError("passwd1"));
+  }
 
-    setUp();
+  @Test
+  public void emptyPassword2() {
     params.setPasswd2(EMPTY_PASSWORD);
     validator.validate(params, errors);
 
     assertTrue(errors.hasErrors());
     assertEquals(1, errors.getErrorCount());
     assertNotNull(errors.getFieldError("passwd2"));
+  }
 
-    setUp();
+  @Test
+  public void emptyPasswords() {
     params.setPasswd1(EMPTY_PASSWORD);
     params.setPasswd2(EMPTY_PASSWORD);
     validator.validate(params, errors);
@@ -98,7 +120,8 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
     assertNotNull(errors.getFieldError("passwd1"));
   }
 
-  public void testIllegalPassword1Validate() {
+  @Test
+  public void illegalPassword1() {
     params.setPasswd1(ILLEGAL_PASSWORD1);
     validator.validate(params, errors);
     EasyMock.verify(teacherUser);
@@ -107,7 +130,8 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
     assertNotNull(errors.getFieldError("passwd1"));
   }
 
-  public void testIllegalPassword2Validate() {
+  @Test
+  public void illegalPassword2() {
     params.setPasswd1(ILLEGAL_PASSWORD2);
     validator.validate(params, errors);
     EasyMock.verify(teacherUser);
@@ -116,7 +140,8 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
     assertNotNull(errors.getFieldError("passwd1"));
   }
 
-  public void testMisMatchedPasswordsValidate() {
+  @Test
+  public void misMatchedPasswords() {
     params.setPasswd1(LEGAL_PASSWORD1);
     params.setPasswd2(LEGAL_PASSWORD2);
     validator.validate(params, errors);
@@ -126,8 +151,10 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
     assertNotNull(errors.getFieldError("passwd1"));
   }
 
-  @Override
-  protected void tearDown() {
+  @After
+  public void tearDown() {
+    EasyMock.verify(userServiceImpl);
+    EasyMock.verify(teacherUser);
     validator = null;
     params = null;
     errors = null;
