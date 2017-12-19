@@ -23,14 +23,10 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TreeMap;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,8 +37,10 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.service.newsitem.NewsItemService;
 import org.wise.portal.service.project.ProjectService;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
- * Controller for WISE main index page
+ * Controller for WISE main home page
  * @author Hiroki Terashima
  */
 @Controller
@@ -58,25 +56,19 @@ public class IndexController {
   @Autowired
   private Properties wiseProperties;
 
-  private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png"; // path to project thumb image relative to project folder
+  @Autowired
+  private MessageSource messageSource;
+
+  // path to project thumbnail image relative to project folder
+  private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 
   /**
-   * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+   * Displays the home page with news items and public library projects
    */
   @RequestMapping(method = RequestMethod.GET)
-  protected String handleGET(ModelMap modelMap) throws Exception {
-    List<NewsItem> newsItems = newsItemService.retrieveByType("public");
-    if (newsItems.size() == 0) {
-      NewsItem newsItem = new NewsItemImpl();
-      newsItem.setDate(Calendar.getInstance().getTime());
-      newsItem.setTitle("No News found - default News Title");
-      newsItem.setNews("This will be filled with the latest news " +
-        "once News Items are created. This can be done by your " +
-        "administrator or other helpful WISE personnel.");
-      newsItems.add(newsItem);
-    }
-
-    // a list of projects for each different subject areas.
+  protected String showHomePage(
+      HttpServletRequest request,
+      ModelMap modelMap) throws Exception {
     // TODO: allow each WISE instance to specify these
     List<Project> esProjects = new ArrayList<Project>();
     List<Project> lsProjects = new ArrayList<Project>();
@@ -85,8 +77,7 @@ public class IndexController {
     List<Project> chemProjects = new ArrayList<Project>();
     List<Project> physProjects = new ArrayList<Project>();
 
-    // get library projects and divide by subject area
-    List<Project> libraryProjectsList = this.projectService.getPublicLibraryProjectList();
+    List<Project> libraryProjectsList = projectService.getPublicLibraryProjectList();
     for (Project p: libraryProjectsList) {
       String subject = p.getMetadata().getSubject();
       if (subject != null) {
@@ -106,27 +97,25 @@ public class IndexController {
       }
     }
 
-    Map<Long,String> projectThumbMap = new TreeMap<Long,String>();  // map of projectId to project thumbnail url
-    String curriculumBaseWWW = this.wiseProperties.getProperty("curriculum_base_www");
+    Map<Long,String> projectThumbMap = new TreeMap<Long,String>();
+    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
     for (Project p : libraryProjectsList) {
       if (p.isCurrent()) {
-        String url = p.getModulePath();
-        if (url != null && url != "") {
-          int ndx = url.lastIndexOf("/");
-          if (ndx != -1) {
-            /*
-             * add project thumb url to projectThumbMap. for now this is the same (/assets/project_thumb.png)
-             * for all projects but this could be overwritten in the future
-             * e.g.
-             * /253/assets/projectThumb.png
-             */
-            projectThumbMap.put((Long) p.getId(), curriculumBaseWWW + url.substring(0, ndx) + PROJECT_THUMB_PATH);
-          }
+        String modulePath = p.getModulePath();
+        int lastIndexOfSlash = modulePath.lastIndexOf("/");
+        if (lastIndexOfSlash != -1) {
+          /*
+           * The project thumb url by default is the same (/assets/project_thumb.png)
+           * for all projects, but this could be overwritten in the future
+           * e.g. /253/assets/projectThumb.png
+           */
+          projectThumbMap.put((Long) p.getId(),
+              curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH);
         }
       }
     }
 
-    modelMap.put("newsItems", newsItems);
+    modelMap.put("newsItems", getNewsItems(request));
     modelMap.put("esProjects", esProjects);
     modelMap.put("lsProjects", lsProjects);
     modelMap.put("psProjects", psProjects);
@@ -135,5 +124,19 @@ public class IndexController {
     modelMap.put("physProjects", physProjects);
     modelMap.put("projectThumbMap", projectThumbMap);
     return "index";
+  }
+
+  private List<NewsItem> getNewsItems(HttpServletRequest request) {
+    List<NewsItem> newsItems = newsItemService.retrieveByType("public");
+    if (newsItems.size() == 0) {
+      NewsItem newsItem = new NewsItemImpl();
+      newsItem.setDate(Calendar.getInstance().getTime());
+      newsItem.setTitle(messageSource.getMessage("index.news.defaultTitle", null,
+          "Welcome to WISE news section!", request.getLocale()));
+      newsItem.setNews(messageSource.getMessage("index.news.defaultText", null,
+          "This section will show news items related to WISE!", request.getLocale()));
+      newsItems.add(newsItem);
+    }
+    return newsItems;
   }
 }
