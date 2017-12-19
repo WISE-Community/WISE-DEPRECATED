@@ -72,7 +72,7 @@ describe('WISE Authoring Tool Project View', function () {
     page.clickCreateNewStepButton();
     page.setCreateNodeTitle(newStepTitle);
     page.clickCreateNodeCreateButton();
-    page.clickToInsertStepInside(1);
+    page.clickToInsertStepInside(0);
     expect(page.getTitleOfStep(1, 0)).toBe('1.1: ' + newStepTitle);
   });
 
