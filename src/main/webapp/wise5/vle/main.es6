@@ -8,6 +8,7 @@ import angularFileUpload from 'ng-file-upload';
 import angularHighcharts from 'highcharts-ng';
 import angularMaterial from 'angular-material';
 import angularMoment from 'angular-moment';
+import angularOnload from 'ng-onload';
 import angularSanitize from 'angular-sanitize';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularTranslate from 'angular-translate';
@@ -76,6 +77,7 @@ let vleModule = angular.module('vle', [
     'ngAria',
     'ngFileUpload',
     'ngMaterial',
+    'ngOnload',
     'ngSanitize',
     'ngWebSocket',
     'oc.lazyLoad',
