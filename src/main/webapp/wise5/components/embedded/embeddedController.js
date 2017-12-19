@@ -19,7 +19,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var EmbeddedController = function () {
-  function EmbeddedController($filter, $injector, $mdDialog, $q, $rootScope, $scope, $sce, $window, AnnotationService, ConfigService, NodeService, NotebookService, EmbeddedService, ProjectService, StudentDataService, UtilService) {
+  function EmbeddedController($filter, $injector, $mdDialog, $q, $rootScope, $scope, $sce, $timeout, $window, AnnotationService, ConfigService, NodeService, NotebookService, EmbeddedService, ProjectService, StudentDataService, UtilService) {
     var _this = this;
 
     _classCallCheck(this, EmbeddedController);
@@ -31,6 +31,7 @@ var EmbeddedController = function () {
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.$sce = $sce;
+    this.$timeout = $timeout;
     this.$window = $window;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
@@ -78,74 +79,6 @@ var EmbeddedController = function () {
     this.isSubmitButtonVisible = false;
     this.showAdvancedAuthoring = false;
     this.showJSONAuthoring = false;
-
-    this.messageEventListener = angular.bind(this, function (messageEvent) {
-      var messageEventData = messageEvent.data;
-      if (messageEventData.messageType === 'event') {
-        var nodeId = this.nodeId;
-        var componentId = this.componentId;
-        var componentType = this.componentType;
-        var category = messageEventData.eventCategory;
-        var event = messageEventData.event;
-        var eventData = messageEventData.eventData;
-        this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-      } else if (messageEventData.messageType === 'studentWork') {
-        if (messageEventData.id != null) {
-          //the model wants to update/overwrite an existing component state
-          this.componentStateId = messageEventData.id;
-        } else {
-          // the model wants to create a new component state
-          this.componentStateId = null;
-        }
-
-        if (messageEventData.isSubmit) {
-          this.isSubmit = messageEventData.isSubmit;
-        }
-
-        this.isDirty = true;
-        this.studentDataChanged(messageEventData.studentData);
-
-        // tell the parent node that this component wants to save
-        this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-      } else if (messageEventData.messageType === 'applicationInitialized') {
-        this.sendLatestWorkToApplication();
-        this.processLatestSubmit();
-
-        // activate iframe-resizer on the embedded app's iframe
-        $('#' + this.embeddedApplicationIFrameId).iFrameResize({ scrolling: true });
-      } else if (messageEventData.messageType === 'componentDirty') {
-        var _isDirty = messageEventData.isDirty;
-        this.isDirty = _isDirty;
-        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: _isDirty });
-      } else if (messageEventData.messageType === 'componentSubmitDirty') {
-        var isSubmitDirty = messageEventData.isDirty;
-        this.isSubmitDirty = isSubmitDirty;
-        this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
-      } else if (messageEventData.messageType === 'studentDataChanged') {
-        this.studentDataChanged(messageEventData.studentData);
-      } else if (messageEventData.messageType === 'getStudentWork') {
-        var getStudentWorkParams = messageEventData.getStudentWorkParams;
-        var studentWork = this.getStudentWork(messageEventData.getStudentWorkParams);
-        var message = studentWork;
-        message.messageType = 'studentWork';
-        message.getStudentWorkParams = getStudentWorkParams;
-        this.sendMessageToApplication(message);
-      } else if (messageEventData.messageType === 'getLatestStudentWork') {
-        var latestComponentState = this.getLatestStudentWork();
-        var message = {};
-        message.messageType = 'latestStudentWork';
-        message.latestStudentWork = latestComponentState;
-        this.sendMessageToApplication(message);
-      } else if (messageEventData.messageType === 'getParameters') {
-        var message = {};
-        message.messageType = 'parameters';
-        message.parameters = this.componentContent.parameters;
-        this.sendMessageToApplication(message);
-      }
-    });
-
-    // listen for message events from embedded iframe application
-    this.$window.addEventListener('message', this.messageEventListener);
 
     this.connectedComponentUpdateOnOptions = [{
       value: 'change',
@@ -438,10 +371,12 @@ var EmbeddedController = function () {
      * when the student data has changed for another component in this step
      */
     this.$scope.$on('siblingComponentStudentDataChanged', function (event, args) {
-      var message = {};
-      message.messageType = 'siblingComponentStudentDataChanged';
-      message.componentState = args.componentState;
-      _this.sendMessageToApplication(message);
+      if (_this.nodeId == args.nodeId && _this.componentId != args.componentId) {
+        var message = {};
+        message.messageType = 'siblingComponentStudentDataChanged';
+        message.componentState = args.componentState;
+        _this.sendMessageToApplication(message);
+      }
     });
 
     /* TODO geoffreykwan we're listening to assetSelected twice?
@@ -478,14 +413,92 @@ var EmbeddedController = function () {
         }
       }
     });
+
+    this.messageEventListener = angular.bind(this, function (messageEvent) {
+      var messageEventData = messageEvent.data;
+      if (messageEventData.messageType === 'event') {
+        var nodeId = this.nodeId;
+        var componentId = this.componentId;
+        var componentType = this.componentType;
+        var category = messageEventData.eventCategory;
+        var event = messageEventData.event;
+        var eventData = messageEventData.eventData;
+        this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+      } else if (messageEventData.messageType === 'studentWork') {
+        if (messageEventData.id != null) {
+          //the model wants to update/overwrite an existing component state
+          this.componentStateId = messageEventData.id;
+        } else {
+          // the model wants to create a new component state
+          this.componentStateId = null;
+        }
+
+        if (messageEventData.isSubmit) {
+          this.isSubmit = messageEventData.isSubmit;
+        }
+
+        this.isDirty = true;
+        this.setStudentData(messageEventData.studentData);
+        this.studentDataChanged();
+
+        // tell the parent node that this component wants to save
+        this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+      } else if (messageEventData.messageType === 'applicationInitialized') {
+        this.sendLatestWorkToApplication();
+        this.processLatestSubmit();
+
+        // activate iframe-resizer on the embedded app's iframe
+        $('#' + this.embeddedApplicationIFrameId).iFrameResize({ scrolling: true });
+      } else if (messageEventData.messageType === 'componentDirty') {
+        var _isDirty = messageEventData.isDirty;
+        this.isDirty = _isDirty;
+        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: _isDirty });
+      } else if (messageEventData.messageType === 'componentSubmitDirty') {
+        var isSubmitDirty = messageEventData.isDirty;
+        this.isSubmitDirty = isSubmitDirty;
+        this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
+      } else if (messageEventData.messageType === 'studentDataChanged') {
+        this.setStudentData(messageEventData.studentData);
+        this.studentDataChanged();
+      } else if (messageEventData.messageType === 'getStudentWork') {
+        var getStudentWorkParams = messageEventData.getStudentWorkParams;
+        var studentWork = this.getStudentWork(messageEventData.getStudentWorkParams);
+        var message = studentWork;
+        message.messageType = 'studentWork';
+        message.getStudentWorkParams = getStudentWorkParams;
+        this.sendMessageToApplication(message);
+      } else if (messageEventData.messageType === 'getLatestStudentWork') {
+        var latestComponentState = this.getLatestStudentWork();
+        var message = {};
+        message.messageType = 'latestStudentWork';
+        message.latestStudentWork = latestComponentState;
+        this.sendMessageToApplication(message);
+      } else if (messageEventData.messageType === 'getParameters') {
+        var message = {};
+        message.messageType = 'parameters';
+        var parameters = {};
+        if (this.componentContent.parameters != null) {
+          parameters = this.UtilService.makeCopyOfJSONObject(this.componentContent.parameters);
+        }
+        parameters.nodeId = this.nodeId;
+        parameters.componentId = this.componentId;
+        message.parameters = parameters;
+        this.sendMessageToApplication(message);
+      }
+    });
   }
 
-  /**
-   * Check if latest component state is a submission and if not, set isSubmitDirty to true
-   */
-
-
   _createClass(EmbeddedController, [{
+    key: 'iframeLoaded',
+    value: function iframeLoaded(contentLocation) {
+      window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.addEventListener('message', this.messageEventListener);
+    }
+
+    /**
+     * Check if latest component state is a submission and if not, set isSubmitDirty to true
+     */
+
+  }, {
     key: 'processLatestSubmit',
     value: function processLatestSubmit() {
       var latestState = this.$scope.componentState;
@@ -524,7 +537,7 @@ var EmbeddedController = function () {
     /**
      * Called when the student changes their work
      */
-    value: function studentDataChanged(data) {
+    value: function studentDataChanged() {
       var _this2 = this;
 
       /*
@@ -547,8 +560,6 @@ var EmbeddedController = function () {
        * data has changed.
        */
       var action = 'change';
-
-      this.studentData = data;
 
       this.createComponentState(action).then(function (componentState) {
         _this2.$scope.$emit('componentStudentDataChanged', { nodeId: _this2.nodeId, componentId: componentId, componentState: componentState });
@@ -617,9 +628,13 @@ var EmbeddedController = function () {
   }, {
     key: 'sendLatestWorkToApplication',
     value: function sendLatestWorkToApplication() {
+      var componentState = this.$scope.componentState;
+      if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+        componentState = this.handleConnectedComponents();
+      }
       var message = {
         messageType: 'componentState',
-        componentState: this.$scope.componentState
+        componentState: componentState
       };
 
       this.sendMessageToApplication(message);
@@ -1207,6 +1222,14 @@ var EmbeddedController = function () {
   }, {
     key: 'handleConnectedComponents',
     value: function handleConnectedComponents() {
+      var mergedComponentState = this.$scope.componentState;
+      var firstTime = true;
+      if (mergedComponentState == null) {
+        mergedComponentState = this.NodeService.createNewComponentState();
+        mergedComponentState.studentData = {};
+      } else {
+        firstTime = false;
+      }
       var connectedComponents = this.componentContent.connectedComponents;
       if (connectedComponents != null) {
         var componentStates = [];
@@ -1222,18 +1245,19 @@ var EmbeddedController = function () {
               var nodeId = connectedComponent.nodeId;
               var componentId = connectedComponent.componentId;
               var type = connectedComponent.type;
+              var mergeFields = connectedComponent.mergeFields;
               if (type == 'showWork') {
                 var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
                 if (componentState != null) {
                   componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
                 }
                 // we are showing work so we will not allow the student to edit it
                 this.isDisabled = true;
               } else if (type == 'importWork' || type == null) {
-                var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-                if (componentState != null) {
-                  componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
+                var connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+                if (connectedComponentState != null) {
+                  var fields = connectedComponent.fields;
+                  mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
                 }
               }
             }
@@ -1253,35 +1277,56 @@ var EmbeddedController = function () {
           }
         }
 
-        var mergedComponentState = this.createMergedComponentState(componentStates);
-        this.setStudentWork(mergedComponentState);
-        this.studentDataChanged();
+        if (mergedComponentState != null) {
+          this.setStudentWork(mergedComponentState);
+          this.studentDataChanged();
+        }
       }
+      return mergedComponentState;
     }
 
     /**
-     * Create a component state with the merged student responses
-     * @param componentStates an array of component states
-     * @return a component state with the merged student responses
+     * Merge a new component state into a base component state.
+     * @param baseComponentState The component state we will be merging into.
+     * @param newComponentState The component state we will be merging from.
+     * @param mergeFields The fields to merge.
+     * @param firstTime Whether this is the first time the baseComponentState is
+     * being merged into.
      */
 
   }, {
-    key: 'createMergedComponentState',
-    value: function createMergedComponentState(componentStates) {
-      var mergedComponentState = this.NodeService.createNewComponentState();
-      if (componentStates != null) {
-        // loop through all the component state
+    key: 'mergeComponentState',
+    value: function mergeComponentState(baseComponentState, newComponentState, mergeFields, firstTime) {
+      if (mergeFields == null) {
+        if (baseComponentState.componentType == 'Embedded') {
+          // there are no merge fields specified so we will get all of the fields
+          baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(newComponentState.studentData);
+        }
+      } else {
+        // we will merge specific fields
         var _iteratorNormalCompletion4 = true;
         var _didIteratorError4 = false;
         var _iteratorError4 = undefined;
 
         try {
-          for (var _iterator4 = componentStates[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var componentState = _step4.value;
+          for (var _iterator4 = mergeFields[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var mergeField = _step4.value;
 
-            if (componentState != null) {
-              var studentData = componentState.studentData;
-              if (studentData != null) {}
+            var name = mergeField.name;
+            var when = mergeField.when;
+            var action = mergeField.action;
+            if (when == 'firstTime' && firstTime == true) {
+              if (action == 'write') {
+                baseComponentState.studentData[name] = newComponentState.studentData[name];
+              } else if (action == 'read') {
+                // TODO
+              }
+            } else if (when == 'always') {
+              if (action == 'write') {
+                baseComponentState.studentData[name] = newComponentState.studentData[name];
+              } else if (action == 'read') {
+                // TODO
+              }
             }
           }
         } catch (err) {
@@ -1298,12 +1343,30 @@ var EmbeddedController = function () {
             }
           }
         }
-
-        if (mergedResponse != null && mergedResponse != '') {
-          mergedComponentState.studentData = {};
-        }
       }
-      return mergedComponentState;
+      return baseComponentState;
+    }
+
+    /**
+     * Populate the student work into the component
+     * @param componentState the component state to populate into the component
+     */
+
+  }, {
+    key: 'setStudentWork',
+    value: function setStudentWork(componentState) {
+      this.studentData = componentState.studentData;
+    }
+  }, {
+    key: 'setStudentData',
+
+
+    /**
+     * Populate the student work into the component
+     * @param componentState the component state to populate into the component
+     */
+    value: function setStudentData(studentData) {
+      this.studentData = studentData;
     }
   }, {
     key: 'authoringAddConnectedComponent',
@@ -1550,7 +1613,7 @@ var EmbeddedController = function () {
   return EmbeddedController;
 }();
 
-EmbeddedController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', '$sce', '$window', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'EmbeddedService', 'ProjectService', 'StudentDataService', 'UtilService'];
+EmbeddedController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', '$sce', '$timeout', '$window', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'EmbeddedService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = EmbeddedController;
 //# sourceMappingURL=embeddedController.js.map
