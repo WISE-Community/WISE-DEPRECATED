@@ -1700,5 +1700,20 @@
   "metadata": {
     "title": "Demo Project"
   },
+  "inactiveNodes": [
+    {
+      "id": "node789",
+      "title": "inactive node",
+      "type": "node",
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": []
+      },
+      "showSaveButton": false,
+      "showSubmitButton": false,
+      "components": [],
+      "checked": false
+    }
+  ],
   "theme": "MyCustomTheme"
 }
