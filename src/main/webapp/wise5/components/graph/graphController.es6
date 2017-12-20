@@ -6142,6 +6142,8 @@ class GraphController {
             }
             // we are showing work so we will not allow the student to edit it
             this.isDisabled = true;
+          } else if (type == 'showClassmateWork') {
+            mergedComponentState = newComponentState;
           } else if (type == 'importWork' || type == null) {
             var connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
             let fields = connectedComponent.fields;
