@@ -114,14 +114,14 @@ public class ChangeUserPasswordController {
    * @param userToChange
    * @return
    */
-  private boolean canChangePassword(User loggedInUser,
-                                    User userToChange) {
-    return (loggedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) && !userToChange.getUserDetails().getUsername().equals("admin"))
-      || userToChange.equals(loggedInUser)
-      || (userToChange.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)
-      && loggedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE))
-      || (userToChange.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)
-      && studentService.isStudentAssociatedWithTeacher(userToChange, loggedInUser));
+  private boolean canChangePassword(User loggedInUser, User userToChange) {
+    return (loggedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) &&
+        !userToChange.getUserDetails().getUsername().equals("admin"))
+        || userToChange.equals(loggedInUser)
+        || (userToChange.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)
+        && loggedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE))
+        || (userToChange.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)
+        && studentService.isStudentAssociatedWithTeacher(userToChange, loggedInUser));
   }
 
   /**
@@ -135,10 +135,10 @@ public class ChangeUserPasswordController {
    */
   @RequestMapping(method = RequestMethod.POST)
   protected String onSubmit(
-    @ModelAttribute("changeStudentPasswordParameters") ChangeStudentPasswordParameters params,
-    HttpServletRequest request,
-    BindingResult bindingResult,
-    SessionStatus sessionStatus) {
+      @ModelAttribute("changeStudentPasswordParameters") ChangeStudentPasswordParameters params,
+      HttpServletRequest request,
+      BindingResult bindingResult,
+      SessionStatus sessionStatus) {
     String view = "";
 
     changePasswordParametersValidator.validate(params, bindingResult);

@@ -82,28 +82,28 @@ public class UserImpl implements User {
   /**
    * @see User#isStudent()
    */
-  public boolean isStudent(){
+  public boolean isStudent() {
     return this.userDetails.hasGrantedAuthority(UserDetailsService.STUDENT_ROLE);
   }
 
   /**
    * @see User#isTeacher()
    */
-  public boolean isTeacher(){
+  public boolean isTeacher() {
     return this.userDetails.hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
   }
 
   /**
    * @see User#isAdmin()
    */
-  public boolean isAdmin(){
+  public boolean isAdmin() {
     return this.userDetails.hasGrantedAuthority(UserDetailsService.ADMIN_ROLE);
   }
 
   /**
    * @see User#isTrustedAuthor()
    */
-  public boolean isTrustedAuthor(){
+  public boolean isTrustedAuthor() {
     return this.userDetails.hasGrantedAuthority(UserDetailsService.TRUSTED_AUTHOR_ROLE);
   }
 

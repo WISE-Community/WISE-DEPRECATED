@@ -29,7 +29,7 @@
 					    <div class="instructions"><spring:message code="teacher.registerTeacherConfirm.noteThereAreNoSpaces"/> <spring:message code="teacher.registerTeacherConfirm.aNumberMayBeAppended"/></div>
 
 						<br /><div><spring:message code="teacher.registerTeacherConfirm.yourNameDisplayedAs"/></div>
-						<div><span class="usernameDisplay">${displayname}</span> <a href="management/updatemyaccountinfo"><spring:message code="teacher.registerTeacherConfirm.edit"/></a></div>
+						<div><span class="usernameDisplay">${displayname}</span> <a href="account"><spring:message code="teacher.registerTeacherConfirm.edit"/></a></div>
 
 					</div>
 	  				<br /><div><a href="${contextPath}/login" class="wisebutton"><spring:message code="teacher.registerTeacherConfirm.signInToWise"/></a></div>
