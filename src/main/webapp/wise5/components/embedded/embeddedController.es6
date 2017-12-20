@@ -1181,7 +1181,7 @@ class EmbeddedController {
    */
   mergeComponentState(baseComponentState, newComponentState, mergeFields, firstTime) {
     if (mergeFields == null) {
-      if (baseComponentState.componentType == 'Embedded') {
+      if (newComponentState.componentType == 'Embedded') {
         // there are no merge fields specified so we will get all of the fields
         baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(newComponentState.studentData);
       }

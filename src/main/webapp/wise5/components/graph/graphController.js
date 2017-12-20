@@ -6649,7 +6649,7 @@ var GraphController = function () {
     key: 'mergeComponentState',
     value: function mergeComponentState(baseComponentState, newComponentState, mergeFields, firstTime) {
       if (mergeFields == null) {
-        if (baseComponentState.componentType == 'Graph') {
+        if (newComponentState.componentType == 'Graph') {
           // there are no merge fields specified so we will get all of the fields
           baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(newComponentState.studentData);
         }
