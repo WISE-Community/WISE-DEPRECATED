@@ -768,7 +768,7 @@ var GraphController = function () {
            * the active series already has data so we will ask the
            * student if they want to overwrite the data
            */
-          var answer = confirm(this.$translate('graph.areYouSureYouWantToOverwriteTheCurrentLineData'));
+          var answer = confirm(this.graphController.$translate('graph.areYouSureYouWantToOverwriteTheCurrentLineData'));
           if (!answer) {
             // the student does not want to overwrite the data
             overwrite = false;
