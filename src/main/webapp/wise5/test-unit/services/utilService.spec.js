@@ -37,7 +37,6 @@ describe('UtilService', function () {
     });
 
     it('should produce 100 unique random strings', function () {
-      // Calling generate key 100 times should produce 100 unique random strings
       var generatedKeysSoFar = [];
       for (var i = 0; i < 100; i++) {
         var generatedKey = UtilService.generateKey();
@@ -60,6 +59,20 @@ describe('UtilService', function () {
     it('should return non-null number string as is', function () {
       expect(UtilService.convertStringToNumber("abc")).toEqual("abc");
       expect(UtilService.convertStringToNumber("")).toEqual("");
+    });
+  });
+
+  describe('makeCopyOfJSONObject()', function () {
+    it('should copy an array object', function () {
+      var array1 = [1, 2, 3];
+      var copiedArray = UtilService.makeCopyOfJSONObject(array1);
+      expect(copiedArray).toEqual(array1);
+    });
+
+    it('should copy an object', function () {
+      var obj = { "name": "WISE", "address": "Berkeley" };
+      var copiedObj = UtilService.makeCopyOfJSONObject(obj);
+      expect(copiedObj).toEqual(obj);
     });
   });
 });

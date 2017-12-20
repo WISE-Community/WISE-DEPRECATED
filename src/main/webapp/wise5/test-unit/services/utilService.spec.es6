@@ -7,7 +7,7 @@ describe('UtilService', () => {
   beforeEach(angular.mock.module(mainModule.name));
 
   let UtilService;
-  
+
   beforeEach(inject((_UtilService_) => {
     UtilService = _UtilService_;
   }));
@@ -27,7 +27,6 @@ describe('UtilService', () => {
     });
 
     it('should produce 100 unique random strings', () => {
-      // Calling generate key 100 times should produce 100 unique random strings
       const generatedKeysSoFar = [];
       for (let i = 0; i < 100; i++) {
         const generatedKey = UtilService.generateKey();
@@ -52,4 +51,18 @@ describe('UtilService', () => {
       expect(UtilService.convertStringToNumber("")).toEqual("");
     });
   })
+
+  describe('makeCopyOfJSONObject()', () => {
+    it('should copy an array object', () => {
+      const array1 = [1, 2, 3];
+      const copiedArray = UtilService.makeCopyOfJSONObject(array1);
+      expect(copiedArray).toEqual(array1);
+    });
+
+    it('should copy an object', () => {
+      const obj = {"name":"WISE", "address":"Berkeley"};
+      const copiedObj = UtilService.makeCopyOfJSONObject(obj);
+      expect(copiedObj).toEqual(obj);
+    });
+  });
 });
