@@ -21,81 +21,81 @@
                 class="component__actions__info md-caption global-message">&nbsp</span>
           </div>
         </div>
+        <style>
+          #commitDiv {
+            padding: 10px 0px;
+          }
+          #editMessageLabel {
+            display:block;
+          }
+          #commitMessageInput {
+            line-height: 30px;
+            width: 75%;
+          }
+          #projectStylesDiv {
+          }
+          .groupHeader {
+            margin-left: 5px !important;
+          }
+          .stepHeader {
+            margin-left: 30px !important;
+          }
+          .branchPathStepHeader {
+            margin-left: 55px !important;
+          }
+          .componentHeader {
+            margin-left: 30px !important;
+          }
+          .topButton {
+            min-width: 50px;
+          }
+          .insertButton {
+            min-height: 23px !important;
+            min-width: 46px !important;
+            font-size: 10px !important;
+            line-height: 0px;
+          }
+          .moveComponentButton {
+            min-height: 30px !important;
+            max-height: 30px !important;
+            min-width: 46px !important;
+            font-size: 10px !important;
+            line-height: 0px;
+          }
+          .regularButton {
+            min-height: 36px !important;
+            max-height: 36px !important;
+            min-width: 50px !important;
+            font-size: 10px !important;
+            line-height: 0px;
+          }
+          .md-tooltip.projectButtonTooltip {
+             margin-top: 0px;
+          }
+          md-checkbox.md-checked .md-icon {
+            background-color: rgb(126,87,194);
+          }
+          .check {
+            margin-bottom: 0;
+          }
+          .createButton {
+            min-width: 50px;
+            height: 20px;
+          }
+          body md-select-menu, body md-select-menu md-content {
+            max-height: 625px;
+          }
+          .projectItem:hover {
+            background-color: #add8e6;
+          }
+          .projectItemTitleDiv:hover {
+            background-color: #add8e6;
+          }
+          .projectItemTitleDiv {
+            width: 100%;
+          }
+        </style>
         <div ng-if="projectController.$state.current.name == 'root.project'">  <!-- show this only when we're in the project view -->
-          <style>
-            #commitDiv {
-              padding: 10px 0px;
-            }
-            #editMessageLabel {
-              display:block;
-            }
-            #commitMessageInput {
-              line-height: 30px;
-              width: 75%;
-            }
-            #projectStylesDiv {
-            }
-            .groupHeader {
-              margin-left: 5px !important;
-            }
-            .stepHeader {
-              margin-left: 30px !important;
-            }
-            .branchPathStepHeader {
-              margin-left: 55px !important;
-            }
-            .componentHeader {
-              margin-left: 30px !important;
-            }
-            .topButton {
-              min-width: 50px;
-            }
-            .insertButton {
-              min-height: 23px !important;
-              min-width: 46px !important;
-              font-size: 10px !important;
-              line-height: 0px;
-            }
-            .moveComponentButton {
-              min-height: 30px !important;
-              max-height: 30px !important;
-              min-width: 46px !important;
-              font-size: 10px !important;
-              line-height: 0px;
-            }
-            .regularButton {
-              min-height: 36px !important;
-              max-height: 36px !important;
-              min-width: 50px !important;
-              font-size: 10px !important;
-              line-height: 0px;
-            }
-            .md-tooltip.projectButtonTooltip {
-               margin-top: 0px;
-            }
-            md-checkbox.md-checked .md-icon {
-              background-color: rgb(126,87,194);
-            }
-            .check {
-              margin-bottom: 0;
-            }
-            .createButton {
-              min-width: 50px;
-              height: 20px;
-            }
-            body md-select-menu, body md-select-menu md-content {
-              max-height: 625px;
-            }
-            .projectItem:hover {
-              background-color: #add8e6;
-            }
-            .projectItemTitleDiv:hover {
-              background-color: #add8e6;
-            }
-            .projectItemTitleDiv {
-              width: 100%;
-            }
-          </style>
           <div style='background-color: white; margin-bottom: 15px; position: sticky; top: 17px; z-index: 2;'>
             <md-button id='projectBackButton' class='topButton md-raised md-primary'
                 ng-click='projectController.backButtonClicked()'
