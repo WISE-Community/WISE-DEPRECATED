@@ -32,6 +32,7 @@ System.config({
     "jquery": "npm:jquery@2.2.4",
     "moment": "npm:moment@2.18.1",
     "ng-file-upload": "npm:ng-file-upload@12.2.13",
+    "ng-onload": "npm:ng-onload@0.8.0",
     "oclazyload": "npm:oclazyload@1.1.0",
     "svg.draggable.js": "npm:svg.draggable.js@2.2.0",
     "svg.js": "github:svgdotjs/svg.js@2.3.2",

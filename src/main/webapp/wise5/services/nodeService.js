@@ -41,8 +41,6 @@ var NodeService = function () {
     key: "createNewComponentState",
     value: function createNewComponentState() {
       var componentState = {};
-
-      // set the timestamp
       componentState.clientSaveTime = Date.parse(new Date());
       return componentState;
     }
@@ -59,8 +57,6 @@ var NodeService = function () {
       nodeState.runId = this.ConfigService.getRunId();
       nodeState.periodId = this.ConfigService.getPeriodId();
       nodeState.workgroupId = this.ConfigService.getWorkgroupId();
-
-      // set the timestamp
       nodeState.clientSaveTime = Date.parse(new Date());
       return nodeState;
     }
@@ -76,25 +72,16 @@ var NodeService = function () {
      * openResponse
      */
     value: function toCamelCase(nodeType) {
-      var nodeTypeCamelCased = null;
       if (nodeType != null && nodeType.length > 0) {
-
-        // get the first character
         var firstChar = nodeType.charAt(0);
         if (firstChar != null) {
-
-          // make the first character lower case
           var firstCharLowerCase = firstChar.toLowerCase();
           if (firstCharLowerCase != null) {
-            /*
-             * replace the first character with the lower case
-             * character
-             */
-            nodeTypeCamelCased = firstCharLowerCase + nodeType.substr(1);
+            return firstCharLowerCase + nodeType.substr(1);
           }
         }
       }
-      return nodeTypeCamelCased;
+      return null;
     }
   }, {
     key: "isStringUpperCase",
@@ -106,14 +93,7 @@ var NodeService = function () {
      * @return whether the string is in all uppercase
      */
     value: function isStringUpperCase(str) {
-      var result = false;
-      if (str != null) {
-        if (str === str.toUpperCase()) {
-          // the string is in all uppercase
-          result = true;
-        }
-      }
-      return result;
+      return str != null && str === str.toUpperCase();
     }
   }, {
     key: "getComponentTemplatePath",
@@ -134,7 +114,6 @@ var NodeService = function () {
          */
         componentType = componentType.toLowerCase();
       } else {
-        // get the component type in camel case
         componentType = this.toCamelCase(componentType);
       }
       var wiseBaseURL = this.ConfigService.getWISEBaseURL();
@@ -151,12 +130,9 @@ var NodeService = function () {
      * @return the component content
      */
     value: function getComponentContentById(nodeContent, componentId) {
-      var componentContent = null;
       if (nodeContent != null && componentId != null) {
-        // get the components
         var components = nodeContent.components;
         if (components != null) {
-          // loop through the components
           var _iteratorNormalCompletion = true;
           var _didIteratorError = false;
           var _iteratorError = undefined;
@@ -168,9 +144,7 @@ var NodeService = function () {
               if (tempComponent != null) {
                 var tempComponentId = tempComponent.id;
                 if (tempComponentId === componentId) {
-                  // we have found the component with the component id we want
-                  componentContent = tempComponent;
-                  break;
+                  return tempComponent;
                 }
               }
             }
@@ -190,7 +164,7 @@ var NodeService = function () {
           }
         }
       }
-      return componentContent;
+      return null;
     }
   }, {
     key: "isWorkSubmitted",
@@ -202,9 +176,7 @@ var NodeService = function () {
      * @return whether any of the component states were submitted
      */
     value: function isWorkSubmitted(componentStates) {
-      var result = false;
       if (componentStates != null) {
-        // loop through all the component states
         var _iteratorNormalCompletion2 = true;
         var _didIteratorError2 = false;
         var _iteratorError2 = undefined;
@@ -215,8 +187,7 @@ var NodeService = function () {
 
             if (componentState != null) {
               if (componentState.isSubmit) {
-                result = true;
-                break;
+                return true;
               }
             }
           }
@@ -235,7 +206,7 @@ var NodeService = function () {
           }
         }
       }
-      return result;
+      return false;
     }
   }, {
     key: "isCompleted",
@@ -248,13 +219,12 @@ var NodeService = function () {
      * @returns whether the specified node or component is completed
      */
     value: function isCompleted(functionParams) {
-      var result = false;
       if (functionParams != null) {
         var nodeId = functionParams.nodeId;
         var componentId = functionParams.componentId;
-        result = this.StudentDataService.isCompleted(nodeId, componentId);
+        return this.StudentDataService.isCompleted(nodeId, componentId);
       }
-      return result;
+      return false;
     }
   }, {
     key: "goToNextNode",
@@ -267,7 +237,6 @@ var NodeService = function () {
     value: function goToNextNode() {
       var _this = this;
 
-      // get the next node id
       return this.getNextNodeId().then(function (nextNodeId) {
         if (nextNodeId != null) {
           var mode = _this.ConfigService.getMode();
@@ -302,10 +271,8 @@ var NodeService = function () {
       var mode = this.ConfigService.getMode();
 
       if (currentId) {
-        // a current node id was passed in
         currentNodeId = currentId;
       } else {
-        // no current id was passed in, so get current node
         var currentNode = null;
         if (mode === 'classroomMonitor' || mode === 'author') {
           currentNode = this.TeacherDataService.getCurrentNode();
@@ -350,10 +317,8 @@ var NodeService = function () {
             for (var b = branchPathTakenEvents.length - 1; b >= 0; b--) {
               var branchPathTakenEvent = branchPathTakenEvents[b];
               if (branchPathTakenEvent != null) {
-                // get the data from the event
                 var data = branchPathTakenEvent.data;
                 if (data != null) {
-                  // get the to node id
                   var toNodeId = data.toNodeId;
                   nextNodeId = toNodeId;
                   deferred.resolve(nextNodeId);
@@ -371,16 +336,13 @@ var NodeService = function () {
                  * check if the parent group has transitions
                  */
 
-                // get the parent group id
                 var parentGroupId = this.ProjectService.getParentGroupId(currentNodeId);
                 var parentHasTransitionLogic = false;
                 if (parentGroupId != null) {
-                  // get the transition logic from the parent
                   var parentTransitionLogic = this.ProjectService.getTransitionLogicByFromNodeId(parentGroupId);
                   if (parentTransitionLogic != null) {
                     parentHasTransitionLogic = true;
 
-                    // choose a transition
                     this.chooseTransition(parentGroupId, parentTransitionLogic).then(function (transition) {
                       if (transition != null) {
                         // get the to node id
@@ -388,7 +350,6 @@ var NodeService = function () {
                         if (_this2.ProjectService.isGroupNode(transitionToNodeId)) {
                           // the to node is a group
 
-                          // get the start id of the group
                           var startId = _this2.ProjectService.getGroupStartId(transitionToNodeId);
                           if (startId == null || startId == '') {
                             // the group does not have a start id so we will just use the group
@@ -514,10 +475,8 @@ var NodeService = function () {
       var mode = this.ConfigService.getMode();
 
       if (currentId) {
-        // a current node id was passed in
         currentNodeId = currentId;
       } else {
-        // no current id was passed in, so get current node
         var currentNode = null;
 
         if (mode === 'classroomMonitor' || mode === 'author') {
@@ -555,7 +514,6 @@ var NodeService = function () {
           } else if (nodeIdsByToNodeId.length > 1) {
             // there are multiple nodes that transition to the current node
 
-            // get the stack history
             var stackHistory = this.StudentDataService.getStackHistory();
 
             // loop through the stack history node ids from newest to oldest
@@ -677,12 +635,9 @@ var NodeService = function () {
          * so we will calculate the transition again
          */
 
-        // get the transitions
         var transitions = transitionLogic.transitions;
         if (transitions != null) {
           var availableTransitions = [];
-
-          // loop through all the transitions
           var _iteratorNormalCompletion3 = true;
           var _didIteratorError3 = false;
           var _iteratorError3 = undefined;
@@ -691,10 +646,7 @@ var NodeService = function () {
             for (var _iterator3 = transitions[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
               var transition = _step3.value;
 
-              // get the to node id
               var toNodeId = transition.to;
-
-              // get the criteria for which this transition can be used
               var criteria = transition.criteria;
 
               // set the default result to true in case there is no criteria
@@ -864,12 +816,8 @@ var NodeService = function () {
               } else if (howToChooseAmongAvailablePaths === 'workgroupId') {
                 // use the workgroup id to choose the transition
 
-                // get the workgroup id
                 var workgroupId = this.ConfigService.getWorkgroupId();
-
-                // choose the transition index
                 var index = workgroupId % availableTransitions.length;
-
                 transitionResult = availableTransitions[index];
               } else if (howToChooseAmongAvailablePaths === 'firstAvailable') {
                 // choose the first available transition
@@ -903,15 +851,14 @@ var NodeService = function () {
   }, {
     key: "hasTransitionLogic",
     value: function hasTransitionLogic() {
-      var result = false;
       var currentNode = this.StudentDataService.getCurrentNode();
       if (currentNode != null) {
         var transitionLogic = currentNode.transitionLogic;
         if (transitionLogic != null) {
-          result = true;
+          return true;
         }
       }
-      return result;
+      return false;
     }
   }, {
     key: "evaluateTransitionLogic",
@@ -924,7 +871,6 @@ var NodeService = function () {
     value: function evaluateTransitionLogic() {
       var _this5 = this;
 
-      // get the current node
       var currentNode = this.StudentDataService.getCurrentNode();
       if (currentNode != null) {
         var nodeId = currentNode.id;
@@ -951,32 +897,23 @@ var NodeService = function () {
             if (canChangePath) {
               // student can change path
 
-              // choose a transition
               this.chooseTransition(nodeId, transitionLogic).then(function (transition) {
-
                 if (transition != null) {
                   fromNodeId = currentNode.id;
                   toNodeId = transition.to;
-
-                  // create a branchPathTaken event to signify taking the branch path
                   _this5.createBranchPathTakenEvent(fromNodeId, toNodeId);
                 }
               });
             } else {
               // student can't change path
-
             }
           } else {
             // student has not branched yet
 
-            // choose a transition
             this.chooseTransition(nodeId, transitionLogic).then(function (transition) {
-
               if (transition != null) {
                 fromNodeId = currentNode.id;
                 toNodeId = transition.to;
-
-                // create a branchPathTaken event to signify taking the branch path
                 _this5.createBranchPathTakenEvent(fromNodeId, toNodeId);
               }
             });
@@ -1007,18 +944,15 @@ var NodeService = function () {
   }, {
     key: "evaluateTransitionLogicOn",
     value: function evaluateTransitionLogicOn(event) {
-      var result = false;
-
-      // get the current node
       var currentNode = this.StudentDataService.getCurrentNode();
       if (currentNode != null) {
         var transitionLogic = currentNode.transitionLogic;
         var whenToChoosePath = transitionLogic.whenToChoosePath;
         if (event === whenToChoosePath) {
-          result = true;
+          return true;
         }
       }
-      return result;
+      return false;
     }
   }, {
     key: "getTransitionResultByNodeId",
@@ -1086,7 +1020,6 @@ var NodeService = function () {
   }, {
     key: "showNodeInfo",
     value: function showNodeInfo(nodeId, $event) {
-      // get the step number and title
       var stepNumberAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
       var rubricTitle = this.$translate('STEP_INFO');
 
@@ -1099,7 +1032,6 @@ var NodeService = function () {
 
       var dialogContent = "<md-dialog-content class=\"gray-lighter-bg\">\n                <div class=\"md-dialog-content\" id=\"nodeInfo_" + nodeId + "\">\n                    <node-info node-id=\"" + nodeId + "\"></node-info>\n                </div>\n            </md-dialog-content>";
 
-      // create the dialog string
       var dialogString = "<md-dialog class=\"dialog--wider\" aria-label=\"" + stepNumberAndTitle + " - " + rubricTitle + "\">" + dialogHeader + dialogContent + dialogActions + "</md-dialog>";
 
       // display the rubric in a popup

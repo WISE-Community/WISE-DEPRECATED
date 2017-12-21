@@ -82,33 +82,31 @@ class StudentAssetService {
   };
 
   isImage(asset) {
-    let isImage = false;
     const imageFileExtensions = ['png', 'jpg', 'jpeg', 'gif'];
     if (asset != null) {
       const assetURL = asset.url;
       if (assetURL != null && assetURL.lastIndexOf('.') !== -1) {
         const assetExtension = assetURL.substring(assetURL.lastIndexOf('.') + 1);
         if (imageFileExtensions.indexOf(assetExtension.toLowerCase()) != -1) {
-          isImage = true;
+          return true;
         }
       }
     }
-    return isImage;
+    return false;
   };
 
   isAudio(asset) {
-    let isAudio = false;
     const imageFileExtensions = ['wav', 'mp3', 'ogg', 'm4a', 'm4p', 'raw', 'aiff'];
     if (asset != null) {
       const assetURL = asset.url;
       if (assetURL != null && assetURL.lastIndexOf('.') != -1) {
         const assetExtension = assetURL.substring(assetURL.lastIndexOf('.') + 1);
         if (imageFileExtensions.indexOf(assetExtension.toLowerCase()) != -1) {
-          isAudio = true;
+          return true;
         }
       }
     }
-    return isAudio;
+    return false;
   };
 
   uploadAsset(file) {

@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _jquery = require('jquery');
@@ -35,6 +35,10 @@ var _angularMaterial2 = _interopRequireDefault(_angularMaterial);
 var _angularMoment = require('angular-moment');
 
 var _angularMoment2 = _interopRequireDefault(_angularMoment);
+
+var _ngOnload = require('ng-onload');
+
+var _ngOnload2 = _interopRequireDefault(_ngOnload);
 
 var _angularSanitize = require('angular-sanitize');
 
@@ -222,222 +226,196 @@ var _angularSummernote2 = _interopRequireDefault(_angularSummernote);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'animationComponentModule', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'filters', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'oc.lazyLoad', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'studentAsset', 'summernote', 'tableComponentModule', 'ui.router', 'ui.scrollpoint']).service(_achievementService2.default.name, _achievementService2.default).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_navigationController2.default.name, _navigationController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_vleController2.default.name, _vleController2.default).filter(_filters2.default.name, _filters2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', '$provide', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider, $provide) {
-    $urlRouterProvider.otherwise('/vle/');
+var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'animationComponentModule', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'filters', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngOnload', 'ngSanitize', 'ngWebSocket', 'oc.lazyLoad', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'studentAsset', 'summernote', 'tableComponentModule', 'ui.router', 'ui.scrollpoint']).service(_achievementService2.default.name, _achievementService2.default).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_navigationController2.default.name, _navigationController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_vleController2.default.name, _vleController2.default).filter(_filters2.default.name, _filters2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', '$provide', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider, $provide) {
+  $urlRouterProvider.otherwise('/vle/');
 
-    _angular2.default.module('vle').$controllerProvider = $controllerProvider;
+  _angular2.default.module('vle').$controllerProvider = $controllerProvider;
 
-    $stateProvider.state('root', {
-        url: '',
-        abstract: true,
-        templateProvider: ['$http', 'ProjectService', function ($http, ProjectService) {
-            var themePath = ProjectService.getThemePath();
-            return $http.get(themePath + '/vle.html').then(function (response) {
-                return response.data;
-            });
+  $stateProvider.state('root', {
+    url: '',
+    abstract: true,
+    templateProvider: ['$http', 'ProjectService', function ($http, ProjectService) {
+      var themePath = ProjectService.getThemePath();
+      return $http.get(themePath + '/vle.html').then(function (response) {
+        return response.data;
+      });
+    }],
+    controller: 'VLEController',
+    controllerAs: 'vleController',
+    resolve: {
+      config: function config(ConfigService) {
+        var configURL = window.configURL;
+        return ConfigService.retrieveConfig(configURL);
+      },
+      project: function project(ProjectService, config) {
+        return ProjectService.retrieveProject();
+      },
+      studentData: function studentData(StudentDataService, config, project) {
+        return StudentDataService.retrieveStudentData();
+      },
+      notebook: function notebook(NotebookService, ConfigService, StudentAssetService, studentData, config, project) {
+        return StudentAssetService.retrieveAssets().then(function (studentAssets) {
+          return NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then(function (notebook) {
+            return notebook;
+          });
+        });
+      },
+      achievements: function achievements(AchievementService, studentData, config, project) {
+        return AchievementService.retrieveAchievements();
+      },
+      notifications: function notifications(NotificationService, studentData, config, project) {
+        return NotificationService.retrieveNotifications();
+      },
+      runStatus: function runStatus(StudentDataService, config) {
+        return StudentDataService.retrieveRunStatus();
+      },
+      sessionTimers: function sessionTimers(SessionService, config, project, studentData) {
+        return SessionService.initializeSession();
+      },
+      webSocket: function webSocket(StudentWebSocketService, config, project) {
+        return StudentWebSocketService.initialize();
+      },
+      language: function language($translate, ConfigService, config) {
+        var locale = ConfigService.getLocale(); // defaults to "en"
+        $translate.use(locale);
+      },
+      theme: function theme(ProjectService, config, project, $ocLazyLoad, $q) {
+        var theme = ProjectService.getThemePath() + '/theme.js';
+        var def = $q.defer();
+
+        System.import(theme).then(function (m) {
+          var themeModule = m.default;
+          if (!m.default.name) {
+            var key = Object.keys(m.default);
+            themeModule = m.default[key[0]];
+          }
+
+          $ocLazyLoad.load(themeModule).then(function () {
+            def.resolve();
+          }, function (err) {
+            throw err;
+          });
+        });
+
+        return def.promise;
+      }
+    }
+  }).state('root.vle', {
+    url: '/vle/:nodeId',
+    views: {
+      'nodeView': {
+        templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
+          var wiseBaseURL = ConfigService.getWISEBaseURL();
+          return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(function (response) {
+            return response.data;
+          });
         }],
-        controller: 'VLEController',
-        controllerAs: 'vleController',
-        resolve: {
-            config: function config(ConfigService) {
-                var configURL = window.configURL;
-                return ConfigService.retrieveConfig(configURL);
-            },
-            project: function project(ProjectService, config) {
-                return ProjectService.retrieveProject();
-            },
-            studentData: function studentData(StudentDataService, config, project) {
-                return StudentDataService.retrieveStudentData();
-            },
-            notebook: function notebook(NotebookService, ConfigService, StudentAssetService, studentData, config, project) {
-                return StudentAssetService.retrieveAssets().then(function (studentAssets) {
-                    return NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then(function (notebook) {
-                        return notebook;
-                    });
-                });
-                /*
-                                            if (!ConfigService.isPreview()) {
-                                                StudentAssetService.retrieveAssets().then((studentAssets) => {
-                                                    NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then((notebook) => {
-                                                        return notebook;
-                                                    });
-                                                });
-                                            } else {
-                                                return NotebookService.notebook;
-                                            }
-                                            */
-            },
-            achievements: function achievements(AchievementService, studentData, config, project) {
-                return AchievementService.retrieveAchievements();
-            },
-            notifications: function notifications(NotificationService, studentData, config, project) {
-                return NotificationService.retrieveNotifications();
-            },
-            runStatus: function runStatus(StudentDataService, config) {
-                return StudentDataService.retrieveRunStatus();
-            },
-            sessionTimers: function sessionTimers(SessionService, config, project, studentData) {
-                return SessionService.initializeSession();
-            },
-            webSocket: function webSocket(StudentWebSocketService, config, project) {
-                return StudentWebSocketService.initialize();
-            },
-            language: function language($translate, ConfigService, config) {
-                var locale = ConfigService.getLocale(); // defaults to "en"
-                $translate.use(locale);
-            },
-            theme: function theme(ProjectService, config, project, $ocLazyLoad, $q) {
-                var theme = ProjectService.getThemePath() + '/theme.js';
-                var def = $q.defer();
+        controller: 'NodeController',
+        controllerAs: 'nodeController'
+      }
+    }
+  }).state('root.component', {
+    url: '/vle/:nodeId/:componentId',
+    views: {
+      'nodeView': {
+        templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
+          var wiseBaseURL = ConfigService.getWISEBaseURL();
+          return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(function (response) {
+            return response.data;
+          });
+        }],
+        controller: 'NodeController',
+        controllerAs: 'nodeController'
+      }
+    }
+  });
 
-                System.import(theme).then(function (m) {
-                    var themeModule = m.default;
-                    if (!m.default.name) {
-                        var key = Object.keys(m.default);
-                        themeModule = m.default[key[0]];
-                    }
+  $httpProvider.interceptors.push('HttpInterceptor');
 
-                    $ocLazyLoad.load(themeModule).then(function () {
-                        def.resolve();
-                    }, function (err) {
-                        throw err;
-                    });
-                });
+  // Set up Translations
+  $translatePartialLoaderProvider.addPart('i18n');
+  $translatePartialLoaderProvider.addPart('vle/i18n');
+  $translateProvider.useLoader('$translatePartialLoader', {
+    urlTemplate: 'wise5/{part}/i18n_{lang}.json'
+  }).fallbackLanguage(['en']).registerAvailableLanguageKeys(['el', 'en', 'es', 'ja', 'ko', 'pt', 'tr', 'zh_CN', 'zh_TW'], {
+    'en_US': 'en',
+    'en_UK': 'en'
+  }).determinePreferredLanguage().useSanitizeValueStrategy('sanitizeParameters', 'escape');
 
-                return def.promise;
-            }
-        }
-    }).state('root.vle', {
-        url: '/vle/:nodeId',
-        views: {
-            'nodeView': {
-                templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
-                    var wiseBaseURL = ConfigService.getWISEBaseURL();
-                    return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(function (response) {
-                        return response.data;
-                    });
-                }],
-                controller: 'NodeController',
-                controllerAs: 'nodeController'
-            }
-        }
-    }).state('root.component', {
-        url: '/vle/:nodeId/:componentId',
-        views: {
-            'nodeView': {
-                templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
-                    var wiseBaseURL = ConfigService.getWISEBaseURL();
-                    return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(function (response) {
-                        return response.data;
-                    });
-                }],
-                controller: 'NodeController',
-                controllerAs: 'nodeController'
-            }
-        }
-    })
-    /*.state('root.notebook', {
-        url: '/notebook/:nodeid',
-        views: {
-            'notebookView': {
-                templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
-                    let wiseBaseURL = ConfigService.getWISEBaseURL();
-                    return $http.get(wiseBaseURL + '/wise5/notebook/index.html').then(
-                        response => {
-                            return response.data;
-                        }
-                    );
-                }]
-            }
-        }
-    })*/;
+  // ngMaterial default theme configuration
+  // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
+  $mdThemingProvider.definePalette('primary', {
+    '50': 'e1f0f4',
+    '100': 'b8dbe4',
+    '200': '8ec6d4',
+    '300': '5faec2',
+    '400': '3d9db5',
+    '500': '1c8ca8',
+    '600': '197f98',
+    '700': '167188',
+    '800': '136377',
+    '900': '0e4957',
+    'A100': 'abf3ff',
+    'A200': '66e2ff',
+    'A400': '17bee5',
+    'A700': '00A1C6',
+    'contrastDefaultColor': 'light', // whether, by default, text (contrast)
+    // on this palette should be dark or light
+    'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
+    '200', '300', 'A100'],
+    'contrastLightColors': undefined // could also specify this if default was 'dark'
+  });
 
-    $httpProvider.interceptors.push('HttpInterceptor');
+  $mdThemingProvider.definePalette('accent', {
+    '50': 'fde9e6',
+    '100': 'fbcbc4',
+    '200': 'f8aca1',
+    '300': 'f4897b',
+    '400': 'f2705f',
+    '500': 'f05843',
+    '600': 'da503c',
+    '700': 'c34736',
+    '800': 'aa3e2f',
+    '900': '7d2e23',
+    'A100': 'ff897d',
+    'A200': 'ff7061',
+    'A400': 'ff3829',
+    'A700': 'cc1705',
+    'contrastDefaultColor': 'light',
+    'contrastDarkColors': ['50', '100', '200', '300', 'A100'],
+    'contrastLightColors': undefined
+  });
 
-    // Set up Translations
-    $translatePartialLoaderProvider.addPart('i18n');
-    $translatePartialLoaderProvider.addPart('vle/i18n');
-    $translateProvider.useLoader('$translatePartialLoader', {
-        urlTemplate: 'wise5/{part}/i18n_{lang}.json'
-    }).fallbackLanguage(['en']).registerAvailableLanguageKeys(['el', 'en', 'es', 'ja', 'ko', 'pt', 'tr', 'zh_CN', 'zh_TW'], {
-        'en_US': 'en',
-        'en_UK': 'en'
-    }).determinePreferredLanguage().useSanitizeValueStrategy('sanitizeParameters', 'escape');
+  $mdThemingProvider.theme('default').primaryPalette('primary').accentPalette('accent', {
+    'default': '500'
+  }).warnPalette('red', {
+    'default': '800'
+  });
 
-    // ngMaterial default theme configuration
-    // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
-    $mdThemingProvider.definePalette('primary', {
-        '50': 'e1f0f4',
-        '100': 'b8dbe4',
-        '200': '8ec6d4',
-        '300': '5faec2',
-        '400': '3d9db5',
-        '500': '1c8ca8',
-        '600': '197f98',
-        '700': '167188',
-        '800': '136377',
-        '900': '0e4957',
-        'A100': 'abf3ff',
-        'A200': '66e2ff',
-        'A400': '17bee5',
-        'A700': '00A1C6',
-        'contrastDefaultColor': 'light', // whether, by default, text (contrast)
-        // on this palette should be dark or light
-        'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
-        '200', '300', 'A100'],
-        'contrastLightColors': undefined // could also specify this if default was 'dark'
-    });
+  var lightMap = $mdThemingProvider.extendPalette('grey', {
+    'A100': 'ffffff'
+  });
+  $mdThemingProvider.definePalette('light', lightMap);
 
-    $mdThemingProvider.definePalette('accent', {
-        '50': 'fde9e6',
-        '100': 'fbcbc4',
-        '200': 'f8aca1',
-        '300': 'f4897b',
-        '400': 'f2705f',
-        '500': 'f05843',
-        '600': 'da503c',
-        '700': 'c34736',
-        '800': 'aa3e2f',
-        '900': '7d2e23',
-        'A100': 'ff897d',
-        'A200': 'ff7061',
-        'A400': 'ff3829',
-        'A700': 'cc1705',
-        'contrastDefaultColor': 'light',
-        'contrastDarkColors': ['50', '100', '200', '300', 'A100'],
-        'contrastLightColors': undefined
-    });
+  $mdThemingProvider.theme('light').primaryPalette('light', {
+    'default': 'A100'
+  }).accentPalette('primary');
 
-    $mdThemingProvider.theme('default').primaryPalette('primary').accentPalette('accent', {
-        'default': '500'
-    }).warnPalette('red', {
-        'default': '800'
-    });
+  $mdThemingProvider.setDefaultTheme('default');
+  $mdThemingProvider.enableBrowserColor();
 
-    var lightMap = $mdThemingProvider.extendPalette('grey', {
-        'A100': 'ffffff'
-    });
-    $mdThemingProvider.definePalette('light', lightMap);
-
-    $mdThemingProvider.theme('light').primaryPalette('light', {
-        'default': 'A100'
-    }).accentPalette('primary');
-
-    $mdThemingProvider.setDefaultTheme('default');
-    $mdThemingProvider.enableBrowserColor();
-
-    // moment.js default overrides
-    // TODO: add i18n support
-    _moment2.default.updateLocale('en', {
-        calendar: {
-            lastDay: '[Yesterday at] LT',
-            sameDay: '[Today at] LT',
-            nextDay: '[Tomorrow at] LT',
-            lastWeek: '[last] dddd [at] LT',
-            nextWeek: 'dddd [at] LT',
-            sameElse: 'll'
-        }
-    });
+  // moment.js default overrides
+  // TODO: add i18n support
+  _moment2.default.updateLocale('en', {
+    calendar: {
+      lastDay: '[Yesterday at] LT',
+      sameDay: '[Today at] LT',
+      nextDay: '[Tomorrow at] LT',
+      lastWeek: '[last] dddd [at] LT',
+      nextWeek: 'dddd [at] LT',
+      sameElse: 'll'
+    }
+  });
 }]);
 exports.default = vleModule;
 //# sourceMappingURL=main.js.map

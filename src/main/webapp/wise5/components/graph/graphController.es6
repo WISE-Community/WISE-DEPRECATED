@@ -123,11 +123,14 @@ class GraphController {
     // whether the snip drawing button is shown or not
     this.isSnipDrawingButtonVisible = true;
 
-    // the label for the notebook in thos project
+    // the label for the notebook in the project
     this.notebookConfig = this.NotebookService.getNotebookConfig();
 
     // whether to only show the new trial when a new trial is created
     this.hideAllTrialsOnNewTrial = true;
+
+    // whether to show the undo button
+    this.showUndoButton = false;
 
     // the id of the chart element
     this.chartId = 'chart1';
@@ -483,71 +486,18 @@ class GraphController {
       this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
       if (this.mode == 'student') {
-        if (this.GraphService.showClassmateWork(this.componentContent)) {
-          // we will show classmate work from another component
-          this.handleConnectedComponents();
-        } else if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-          // we will show work from another component
+        if (!this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
+          this.newTrial();
+        }
+        if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+          // this component has connected components
           this.handleConnectedComponents();
         } else if (this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          /*
-           * the student has work so we will populate the work into this
-           * component
-           */
+          // this does not have connected components but does have previous work
           this.setStudentWork(componentState);
-        } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          /*
-           * the student does not have any work and there are connected
-           * components so we will get the work from the connected
-           * components
-           */
-
-           /*
-            * trials are enabled so we will create an empty trial
-            * since there is no student work
-            */
-          this.newTrial();
-          this.handleConnectedComponents();
-        } else if (!this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          /*
-           * only import work if the student does not already have
-           * work for this component
-           */
-
-          // check if we need to import work
-          var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-          var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-          var importWork = this.componentContent.importWork;
-
-          if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-            /*
-             * check if the node id is in the field that we used to store
-             * the import previous work node id in
-             */
-            importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-          }
-
-          if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-            /*
-             * check if the component id is in the field that we used to store
-             * the import previous work component id in
-             */
-            importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-          }
-
-          /*
-           * trials are enabled so we will create an empty trial
-           * since there is no student work
-           */
-          this.newTrial();
-
-          if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-            // import the work from the other component
-            this.importWork();
-          } else if(importWork != null) {
-            // we are going to import work from one or more components
-            this.importWork();
-          }
+        } else {
+          // this does not have connected components and does not have previous work
+          //this.newTrial();
         }
       } else {
         // populate the student work into this component
@@ -669,22 +619,16 @@ class GraphController {
             }
           }
         } else if (componentType == 'Embedded') {
-
           // convert the embedded data to series data
           if (componentState != null) {
-
             /*
              * make a copy of the component state so that we don't
              * reference the exact component state object from the
              * other component in case field values change.
              */
             componentState = this.UtilService.makeCopyOfJSONObject(componentState);
-
-            // get the student data
-            var studentData = componentState.studentData;
-
-            // parse the latest trial and set it into the component
-            this.parseLatestTrial(studentData, connectedComponentParams);
+            let studentData = componentState.studentData;
+            this.processConnectedComponentStudentData(studentData, connectedComponentParams);
 
             /*
              * notify the controller that the student data has
@@ -868,7 +812,7 @@ class GraphController {
            * the active series already has data so we will ask the
            * student if they want to overwrite the data
            */
-          var answer = confirm(this.$translate('graph.areYouSureYouWantToOverwriteTheCurrentLineData'));
+          var answer = confirm(this.graphController.$translate('graph.areYouSureYouWantToOverwriteTheCurrentLineData'));
           if (!answer) {
             // the student does not want to overwrite the data
             overwrite = false;
@@ -1030,69 +974,142 @@ class GraphController {
    * mouse position.
    */
   setupMouseMoveListener() {
-    $('#' + this.chartId).unbind();
-    $('#' + this.chartId).bind('mousemove', (e) => {
-      let chart = $('#' + this.chartId).highcharts();
 
-      let xaxis = chart.xAxis[0];
-      let x = xaxis.toValue(e.offsetX, false);
-      if (this.componentContent.showMouseXPlotLine) {
-        this.showXPlotLine(x);
-      }
+    // Make sure we only add the listeners once.
+    if (!this.setupMouseMoveListenerDone) {
 
-      let yaxis = chart.yAxis[0];
-      let y = yaxis.toValue(e.offsetY, false);
-      if (this.componentContent.showMouseYPlotLine) {
-        this.showYPlotLine(y);
-      }
+      /*
+       * Remove all existing listeners on the chart div to make sure we don't
+       * bind a listener multiple times.
+       */
+      $('#' + this.chartId).unbind();
 
-      if (this.componentContent.saveMouseOverPoints) {
-        x = this.makeSureXIsWithinXMinMaxLimits(x);
-        y = this.makeSureYIsWithinYMinMaxLimits(y);
+      $('#' + this.chartId).bind('mousedown', (e) => {
+        this.mouseDown = true;
+        this.mouseDownEventOccurred(e);
+      });
 
-        let currentTimestamp = new Date().getTime();
-        let timeBetweenSendingMouseOverPoints = 100;
+      $('#' + this.chartId).bind('mouseup', (e) => {
+        this.mouseDown = false;
+      });
 
-        if (this.lastSavedMouseMoveTimestamp == null ||
-              currentTimestamp - this.lastSavedMouseMoveTimestamp > timeBetweenSendingMouseOverPoints) {
-          this.addMouseOverPoint(x, y);
-          this.studentDataChanged();
-          this.lastSavedMouseMoveTimestamp = currentTimestamp;
+      $('#' + this.chartId).bind('mousemove', (e) => {
+        if (this.mouseDown) {
+          this.mouseDownEventOccurred(e);
         }
+      });
+
+      $('#' + this.chartId).bind('mouseleave', (e) => {
+        this.mouseDown = false;
+      });
+
+      this.setupMouseMoveListenerDone = true;
+    }
+  }
+
+  /**
+   * The student has moved the mouse while holding the mouse button down.
+   * @param e The mouse event.
+   */
+  mouseDownEventOccurred(e) {
+    /*
+     * Firefox displays abnormal behavior when the student drags the plot line.
+     * In Firefox, when the mouse is on top of the plot line, the event will
+     * contain offset values relative to the plot line instead of relative to
+     * the graph container. We always want the offset values relative to the
+     * graph container so we will ignore events where the offset values are
+     * relative to the plot line.
+     */
+    if (e.offsetX < 10 || e.offsetY < 10) {
+      return;
+    }
+
+    let chart = $('#' + this.chartId).highcharts();
+
+    // handle the x position of the mouse
+    let chartXAxis = chart.xAxis[0];
+    let x = chartXAxis.toValue(e.offsetX, false);
+    x = this.makeSureXIsWithinXMinMaxLimits(x);
+    if (this.componentContent.showMouseXPlotLine) {
+      this.showXPlotLine(x);
+    }
+
+    // handle the y position of the mouse
+    let chartYAxis = chart.yAxis[0];
+    let y = chartYAxis.toValue(e.offsetY, false);
+    y = this.makeSureYIsWithinYMinMaxLimits(y);
+    if (this.componentContent.showMouseYPlotLine) {
+      this.showYPlotLine(y);
+    }
+
+    if (this.componentContent.saveMouseOverPoints) {
+      /*
+       * Make sure we aren't saving the points too frequently. We want to avoid
+       * saving too many unnecessary data points.
+       */
+      let currentTimestamp = new Date().getTime();
+
+      /*
+       * Make sure this many milliseconds has passed before saving another mouse
+       * over point.
+       */
+      let timeBetweenSendingMouseOverPoints = 200;
+
+      if (this.lastSavedMouseMoveTimestamp == null ||
+            currentTimestamp - this.lastSavedMouseMoveTimestamp > timeBetweenSendingMouseOverPoints) {
+        this.addMouseOverPoint(x, y);
+        this.studentDataChanged();
+        this.lastSavedMouseMoveTimestamp = currentTimestamp;
       }
-    });
+    }
   }
 
   /**
    * Show the vertical plot line at the given x.
-   * @param x the x value to show the vertical line at
+   * @param x The x value to show the vertical line at.
+   * @param text The text to show on the plot line.
    */
-  showXPlotLine(x) {
+  showXPlotLine(x, text) {
     let chart = $('#' + this.chartId).highcharts();
-    let xaxis = chart.xAxis[0];
-    xaxis.removePlotLine('plot-line-x');
-    xaxis.addPlotLine({
+    let chartXAxis = chart.xAxis[0];
+    chartXAxis.removePlotLine('plot-line-x');
+    let plotLine = {
         value: x,
         color: 'red',
-        width: 2,
+        width: 4,
         id: 'plot-line-x'
-    });
+    };
+    if (text != null && text != '') {
+      plotLine.label = {
+        text: text,
+        verticalAlign: 'top'
+      }
+    }
+    chartXAxis.addPlotLine(plotLine);
   }
 
   /**
    * Show the horizontal plot line at the given y.
-   * @param y the y value to show the horizontal line at
+   * @param y The y value to show the horizontal line at.
+   * @param text The text to show on the plot line.
    */
-  showYPlotLine(y) {
+  showYPlotLine(y, text) {
     let chart = $('#' + this.chartId).highcharts();
-    let yaxis = chart.yAxis[0];
-    yaxis.removePlotLine('plot-line-y');
-    yaxis.addPlotLine({
+    let chartYAxis = chart.yAxis[0];
+    chartYAxis.removePlotLine('plot-line-y');
+    let plotLine = {
         value: y,
         color: 'red',
         width: 2,
         id: 'plot-line-y'
-    });
+    };
+    if (text != null && text != '') {
+      plotLine.label = {
+        text: text,
+        align: 'right'
+      }
+    }
+    chartYAxis.addPlotLine(plotLine);
   }
 
   /**
@@ -1100,10 +1117,10 @@ class GraphController {
    */
   clearPlotLines() {
     let chart = Highcharts.charts[0];
-    let xaxis = chart.xAxis[0];
-    xaxis.removePlotLine('plot-line-x');
-    let yaxis = chart.yAxis[0];
-    yaxis.removePlotLine('plot-line-y');
+    let chartXAxis = chart.xAxis[0];
+    chartXAxis.removePlotLine('plot-line-x');
+    let chartYAxis = chart.yAxis[0];
+    chartYAxis.removePlotLine('plot-line-y');
   }
 
   /**
@@ -1113,14 +1130,12 @@ class GraphController {
    * @return an x value between the x min and max limits
    */
   makeSureXIsWithinXMinMaxLimits(x) {
-    if (x != null) {
-      if (x < this.xAxis.min) {
-        x = this.xAxis.min;
-      }
+    if (x < this.xAxis.min) {
+      x = this.xAxis.min;
+    }
 
-      if (x > this.xAxis.max) {
-        x = this.xAxis.max;
-      }
+    if (x > this.xAxis.max) {
+      x = this.xAxis.max;
     }
 
     return x;
@@ -1133,14 +1148,12 @@ class GraphController {
    * @return a y value between the y min and max limits
    */
   makeSureYIsWithinYMinMaxLimits(y) {
-    if (y != null) {
-      if (y < this.yAxis.min) {
-        y = this.yAxis.min;
-      }
+    if (y < this.yAxis.min) {
+      y = this.yAxis.min;
+    }
 
-      if (y > this.yAxis.max) {
-        y = this.yAxis.max;
-      }
+    if (y > this.yAxis.max) {
+      y = this.yAxis.max;
     }
 
     return y;
@@ -1162,6 +1175,8 @@ class GraphController {
    * a timeout callback
    */
   setupGraph(useTimeout) {
+
+    var deferred = this.$q.defer();
 
     if (useTimeout) {
       // call the setup graph helper after a timeout
@@ -1186,30 +1201,22 @@ class GraphController {
        * active series will react to mouseover.
        */
       this.$timeout(() => {
-        this.setupGraphHelper();
+        this.setupGraphHelper(deferred);
       });
     } else {
       // call the setup graph helper immediately
-      this.setupGraphHelper();
+      this.setupGraphHelper(deferred);
     }
 
-    if (this.componentContent.showMouseXPlotLine ||
-        this.componentContent.showMouseYPlotLine ||
-        this.componentContent.saveMouseOverPoints) {
-      /*
-       * we need to wait for highcharts to render the graph before we set up
-       * the mouse move listener
-       */
-      setTimeout(() => {
-        this.setupMouseMoveListener()
-      }, 1000);
-    }
+    return deferred.promise;
   }
 
   /**
-   * The helper function for setting up the graph
+   * The helper function for setting up the graph.
+   * @param deferred A promise that should be resolved after the graph is done
+   * rendering.
    */
-  setupGraphHelper() {
+  setupGraphHelper(deferred) {
 
     // get the title
     var title = this.componentContent.title;
@@ -1339,6 +1346,8 @@ class GraphController {
 
     this.setDefaultActiveSeries();
 
+    this.showUndoButton = false;
+
     // loop through all the series and
     for (var s = 0; s < series.length; s++) {
       var tempSeries = series[s];
@@ -1387,6 +1396,8 @@ class GraphController {
           tempSeries.stickyTracking = false;
           tempSeries.shared = false;
           tempSeries.allowPointSelect = true;
+
+          this.showUndoButton = true;
         } else {
           // make the series uneditable
           tempSeries.draggableX = false;
@@ -1396,6 +1407,10 @@ class GraphController {
           tempSeries.stickyTracking = false;
           tempSeries.shared = false;
           tempSeries.allowPointSelect = false;
+        }
+
+        if (this.isMousePlotLineOn()) {
+          tempSeries.enableMouseTracking = true;
         }
       }
     }
@@ -1568,6 +1583,9 @@ class GraphController {
           zoomType: zoomType,
           plotBackgroundImage: this.backgroundImage,
           events: {
+            load: function() {
+              deferred.resolve(this);
+            },
             click: function(e) {
               if (thisGraphController.graphType == 'line' ||
                 thisGraphController.graphType == 'scatter') {
@@ -1642,11 +1660,15 @@ class GraphController {
                     // notify the controller that the student data has changed
                     thisGraphController.studentDataChanged();
                   } else {
-                    /*
-                     * the student is trying to add a point to a series
-                     * that can't be edited
-                     */
-                    alert(thisGraphController.$translate('graph.youCanNotEditThisSeriesPleaseChooseASeriesThatCanBeEdited'));
+                    if (thisGraphController.isMousePlotLineOn()) {
+                      // do nothing
+                    } else {
+                      /*
+                       * the student is trying to add a point to a series
+                       * that can't be edited
+                       */
+                      alert(thisGraphController.$translate('graph.youCanNotEditThisSeriesPleaseChooseASeriesThatCanBeEdited'));
+                    }
                   }
                 }
               }
@@ -1662,6 +1684,22 @@ class GraphController {
                 // the student clicked on a series in the legend
 
                 if (thisGraphController.componentContent.canStudentHideSeriesOnLegendClick != null) {
+                  if (thisGraphController.componentContent.canStudentHideSeriesOnLegendClick) {
+                    /*
+                     * Update the show field in all the series depending on
+                     * whether each line is active in the legend.
+                     */
+                    for (let yAxisSeries of this.yAxis.series) {
+                      let series = thisGraphController.getSeriesById(yAxisSeries.userOptions.id);
+                      if (this.userOptions.id == series.id) {
+                        series.show = !yAxisSeries.visible;
+                      } else {
+                        series.show = yAxisSeries.visible;
+                      }
+                    }
+                    thisGraphController.studentDataChanged();
+                  }
+
                   // the value has been authored so we will use it
                   return thisGraphController.componentContent.canStudentHideSeriesOnLegendClick;
                 } else {
@@ -1762,10 +1800,20 @@ class GraphController {
       loading: false,
       func: function (chart) {
         timeout(function () {
+          thisGraphController.showXPlotLineIfOn('Drag Me');
+          thisGraphController.showYPlotLineIfOn('Drag Me');
+
+          if (thisGraphController.isMouseXPlotLineOn() ||
+              thisGraphController.isMouseYPlotLineOn() ||
+              thisGraphController.isSaveMouseOverPoints()) {
+            thisGraphController.setupMouseMoveListener();
+          }
           chart.reflow();
         }, 1000);
       }
     };
+
+    return deferred.promise;
   };
 
   /**
@@ -2399,7 +2447,8 @@ class GraphController {
           this.submitCounter = submitCounter;
         }
 
-        if (studentData.mouseOverPoints != null) {
+        if (studentData.mouseOverPoints != null &&
+            studentData.mouseOverPoints.length > 0) {
           this.mouseOverPoints = studentData.mouseOverPoints;
         }
 
@@ -2961,6 +3010,23 @@ class GraphController {
     }
 
     return series;
+  }
+
+  /**
+   * Get a series by the id
+   * @param id the id of the series
+   * @return the series object with the given id
+   */
+  getSeriesById(id) {
+    var seriesArray = this.getSeries();
+
+    for (let series of seriesArray) {
+      if (series.id == id) {
+        return series;
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -4436,6 +4502,67 @@ class GraphController {
   };
 
   /**
+   * Process the student data that we have received from a connected component.
+   * @param studentData The student data from a connected component.
+   * @param params The connected component params.
+   */
+  processConnectedComponentStudentData(studentData, params) {
+    if (params.fields == null) {
+      /*
+       * we do not need to look at specific fields so we will directly
+       * parse the the trial data from the student data.
+       */
+      this.parseLatestTrial(studentData, params);
+    } else {
+      // we need to process specific fields in the student data
+      let fields = params.fields;
+      for (let field of fields) {
+        let name = field.name;
+        let when = field.when;
+        let action = field.action;
+        let firstTime = false;
+        if (when == 'firstTime' && firstTime == true) {
+          if (action == 'write') {
+            // TODO
+          } else if (action == 'read') {
+            // TODO
+          }
+        } else if (when == 'always') {
+          if (action == 'write') {
+            // TODO
+          } else if (action == 'read') {
+            this.readConnectedComponentFieldFromStudentData(studentData, params, name);
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Read the field from the new student data and perform any processing on our
+   * existing student data based upon the new student data.
+   * @param studentData The new student data from the connected component.
+   * @param params The connected component params.
+   * @param name The field name to read and process.
+   */
+  readConnectedComponentFieldFromStudentData(studentData, params, name) {
+    if (name == 'selectedCells') {
+      // only show the trials that are specified in the selectedCells array
+      let selectedCells = studentData[name];
+      let selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
+      for (let trial of this.trials) {
+        if (selectedTrialIds.includes(trial.id)) {
+          trial.show = true;
+        } else {
+          trial.show = false;
+        }
+      }
+    } else if (name == 'trial') {
+      this.parseLatestTrial(studentData, params);
+    }
+  }
+
+  /**
    * Parse the latest trial and set it into the component
    * @param studentData the student data object that has a trials field
    * @param params (optional) parameters that specify what to use from the
@@ -4549,8 +4676,10 @@ class GraphController {
                * are specified in the params, we will only use
                * those series numbers.
                */
-              if (params == null || params.seriesNumbers == null ||
-                (params.seriesNumbers != null && params.seriesNumbers.indexOf(s) != -1)) {
+              if (params == null ||
+                  params.seriesNumbers == null ||
+                  params.seriesNumbers.length == 0 ||
+                  (params.seriesNumbers != null && params.seriesNumbers.indexOf(s) != -1)) {
 
                 // get a single series
                 var singleSeries = tempSeries[s];
@@ -4582,6 +4711,12 @@ class GraphController {
 
                   // add the series to the trial
                   latestTrial.series.push(newSeries);
+
+                  if (params.showTooltipOnLatestPoint) {
+                    this.$timeout(() => {
+                      this.showTooltipOnX(studentData.trial.id, studentData.showTooltipOnX);
+                    }, 1);
+                  }
                 }
               }
             }
@@ -4601,6 +4736,10 @@ class GraphController {
         // make the last trial the active trial
         this.activeTrial = this.trials[this.trials.length - 1];
         this.activeTrial.show = true;
+      }
+
+      if (studentData.xPlotLine != null) {
+        this.showXPlotLine(studentData.xPlotLine);
       }
 
       this.setTrialIdsToShow();
@@ -5914,6 +6053,10 @@ class GraphController {
        * request the classmate work from the server
        */
       this.$q.all(promises).then((promiseResults) => {
+        /*
+         * First we will accumulate all the trials into one new component state
+         * and then we will perform connected component processing.
+         */
 
         // this will hold all the trials
         var mergedTrials = [];
@@ -5937,7 +6080,7 @@ class GraphController {
           }
         }
 
-        // create a new student data
+        // create a new student data with all the trials
         var studentData = {};
         studentData.trials = mergedTrials;
         studentData.version = 2;
@@ -5955,12 +6098,189 @@ class GraphController {
           newComponentState.studentData.backgroundImage = connectedComponentBackgroundImage;
         }
 
+        newComponentState = this.handleConnectedComponentsHelper(newComponentState);
+
         // populate the component state into this component
         this.setStudentWork(newComponentState);
 
         // make the work dirty so that it gets saved
         this.studentDataChanged();
       });
+    }
+  }
+
+  /**
+   * Perform additional connected component processing.
+   * @param newComponentState The new component state generated by accumulating
+   * the trials from all the connected component student data.
+   */
+  handleConnectedComponentsHelper(newComponentState) {
+    let mergedComponentState = this.$scope.componentState;
+    let firstTime = true;
+    if (mergedComponentState == null) {
+      mergedComponentState = newComponentState;
+    } else {
+      /*
+       * This component has previous student data so this is not the first time
+       * this component is being loaded.
+       */
+      firstTime = false;
+    }
+    var connectedComponents = this.componentContent.connectedComponents;
+    if (connectedComponents != null) {
+      var componentStates = [];
+      for (var connectedComponent of connectedComponents) {
+        if (connectedComponent != null) {
+          var nodeId = connectedComponent.nodeId;
+          var componentId = connectedComponent.componentId;
+          var type = connectedComponent.type;
+          var mergeFields = connectedComponent.mergeFields;
+          if (type == 'showWork') {
+            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+            if (componentState != null) {
+              componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
+            }
+            // we are showing work so we will not allow the student to edit it
+            this.isDisabled = true;
+          } else if (type == 'showClassmateWork') {
+            mergedComponentState = newComponentState;
+          } else if (type == 'importWork' || type == null) {
+            var connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+            let fields = connectedComponent.fields;
+            if (connectedComponentState != null) {
+              // the connected component has student work
+              mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
+            } else {
+              // the connected component does not have student work
+              mergedComponentState = this.mergeNullComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
+            }
+          }
+        }
+      }
+
+      if (mergedComponentState.studentData.version == null) {
+        mergedComponentState.studentData.version = this.studentDataVersion;
+      }
+
+      if (mergedComponentState != null) {
+        this.setStudentWork(mergedComponentState);
+        this.studentDataChanged();
+      }
+    }
+    return mergedComponentState;
+  }
+
+  /**
+   * Merge the component state from the connected component with the component
+   * state from this component.
+   * @param baseComponentState The component state from this component.
+   * @param newComponentState The component state from the connected component.
+   * @param mergeFields The field to look at in the newComponentState.
+   * @param firstTime Whether this is the first time this component is being
+   * visited.
+   * @return The merged component state.
+   */
+  mergeComponentState(baseComponentState, newComponentState, mergeFields, firstTime) {
+    if (mergeFields == null) {
+      if (newComponentState.componentType == 'Graph') {
+        // there are no merge fields specified so we will get all of the fields
+        baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(newComponentState.studentData);
+      }
+    } else {
+      // we will merge specific fields
+      for (let mergeField of mergeFields) {
+        let name = mergeField.name;
+        let when = mergeField.when;
+        let action = mergeField.action;
+        if (when == 'firstTime' && firstTime == true) {
+          if (action == 'write') {
+            baseComponentState.studentData[name] = newComponentState.studentData[name];
+          } else if (action == 'read') {
+            // TODO
+          }
+        } else if (when == 'always') {
+          if (action == 'write') {
+            baseComponentState.studentData[name] = newComponentState.studentData[name];
+          } else if (action == 'read') {
+            this.readConnectedComponentField(baseComponentState, newComponentState, name);
+          }
+        }
+      }
+    }
+    return baseComponentState;
+  }
+
+  /**
+   * We want to merge the component state from the connected component into this
+   * component but the connected component does not have any work. We will
+   * instead use default values.
+   * @param baseComponentState The component state from this component.
+   * @param mergeFields The field to look at in the newComponentState.
+   * @param firstTime Whether this is the first time this component is being
+   * visited.
+   * @return The merged component state.
+   */
+  mergeNullComponentState(baseComponentState, mergeFields, firstTime) {
+    let newComponentState = null;
+    if (mergeFields == null) {
+      // TODO
+    } else {
+      // we will merge specific fields
+      for (let mergeField of mergeFields) {
+        let name = mergeField.name;
+        let when = mergeField.when;
+        let action = mergeField.action;
+
+        if (when == 'firstTime' && firstTime == true) {
+          if (action == 'write') {
+            // TODO
+          } else if (action == 'read') {
+            // TODO
+          }
+        } else if (when == 'always') {
+          if (action == 'write') {
+            // TODO
+          } else if (action == 'read') {
+            this.readConnectedComponentField(baseComponentState, newComponentState, name);
+          }
+        }
+      }
+    }
+    return baseComponentState;
+  }
+
+  /**
+   * Read the field from the connected component's component state.
+   * @param baseComponentState The component state from this component.
+   * @param newComponentState The component state from the connected component.
+   * @param field The field to look at in the connected component's component
+   * state.
+   */
+  readConnectedComponentField(baseComponentState, newComponentState, field) {
+    if (field == 'selectedCells') {
+      if (newComponentState == null) {
+        // we will default to hide all the trials
+        for (let trial of baseComponentState.studentData.trials) {
+          trial.show = false;
+        }
+      } else {
+        /*
+         * loop through all the trials and show the ones that are in the
+         * selected cells array.
+         */
+        let studentData = newComponentState.studentData;
+        let selectedCells = studentData[field];
+        let selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
+        for (let trial of baseComponentState.studentData.trials) {
+          if (selectedTrialIds.includes(trial.id)) {
+            trial.show = true;
+          } else {
+            trial.show = false;
+          }
+        }
+      }
+    } else if (field == 'trial') {
+      // TODO
     }
   }
 
@@ -6246,6 +6566,187 @@ class GraphController {
    */
   authoringJSONChanged() {
     this.jsonStringChanged = true;
+  }
+
+  /**
+   * Whether we are showing a plot line where the mouse is.
+   * @return True if we are showing a plot line on the x or y axis where the
+   * mouse is.
+   */
+  isMousePlotLineOn() {
+    if (this.isMouseXPlotLineOn() || this.isMouseYPlotLineOn()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * @return Whether we are showing the vertical plot line on the graph.
+   */
+  isMouseXPlotLineOn() {
+    return this.componentContent.showMouseXPlotLine;
+  }
+
+  /**
+   * @return Whether we are showing the horizontal plot line on the graph.
+   */
+  isMouseYPlotLineOn() {
+    return this.componentContent.showMouseYPlotLine;
+  }
+
+  /**
+   * @return Whether we are saving the mouse points in the component state.
+   */
+  isSaveMouseOverPoints() {
+    return this.componentContent.saveMouseOverPoints;
+  }
+
+  /**
+   * Get the x value from the data point.
+   * @param dataPoint An object or an array that represents a data point.
+   * @return A number or null if there is no x value.
+   */
+  getXValueFromDataPoint(dataPoint) {
+    if (dataPoint.constructor.name == 'Object') {
+      return dataPoint.x;
+    } else if (dataPoint.constructor.name == 'Array') {
+      return dataPoint[0];
+    }
+    return null;
+  }
+
+  /**
+   * Get the y value from the data point.
+   * @param dataPoint An object or an array that represents a data point.
+   * @return A number or null if there is no y value.
+   */
+  getYValueFromDataPoint(dataPoint) {
+    if (dataPoint.constructor.name == 'Object') {
+      return dataPoint.y;
+    } else if (dataPoint.constructor.name == 'Array') {
+      return dataPoint[1];
+    }
+    return null;
+  }
+
+  /**
+   * @return The x value of the latest mouse over point.
+   */
+  getLatestMouseOverPointX() {
+    if (this.mouseOverPoints.length > 0) {
+      /*
+       * The latestMouseOverPoint is an array with the 0 element being x and the
+       * 1 element being y.
+       */
+      return this.getXValueFromDataPoint(this.mouseOverPoints[this.mouseOverPoints.length - 1]);
+    }
+    return null;
+  }
+
+  /**
+   * @return The y value of the latest mouse over point.
+   */
+  getLatestMouseOverPointY() {
+    if (this.mouseOverPoints.length > 0) {
+      /*
+       * The latestMouseOverPoint is an array with the 0 element being x and the
+       * 1 element being y.
+       */
+      return this.getYValueFromDataPoint(this.mouseOverPoints[this.mouseOverPoints.length - 1]);
+    }
+    return null;
+  }
+
+  /**
+   * Show the x plot line if it is enabled.
+   * @param text The text to show on the plot line.
+   */
+  showXPlotLineIfOn(text = null) {
+    if (this.isMouseXPlotLineOn()) {
+      // show the previous x plot line or default to 0
+      let x = this.getLatestMouseOverPointX();
+      if (x == null) {
+        x == 0;
+      }
+      this.showXPlotLine(x, text);
+    }
+  }
+
+  /**
+   * Show the y plot line if it is enabled.
+   * @param text The text to show on the plot line.
+   */
+  showYPlotLineIfOn(text = null) {
+    if (this.isMouseYPlotLineOn()) {
+      // show the previous y plot line or default to 0
+      let y = this.getLatestMouseOverPointY();
+      if (y == null) {
+        y == 0;
+      }
+      this.showYPlotLine(y, text);
+    }
+  }
+
+  /**
+   * Show the tooltip on the point with the given x value.
+   * @param seriesId The id of the series.
+   * @param x The x value we want to show the tooltip on.
+   */
+  showTooltipOnX(seriesId, x) {
+    let chart = $('#' + this.chartId).highcharts();
+    if (chart.series.length > 0) {
+      let series = null;
+      if (seriesId == null) {
+        series = chart.series[chart.series.length - 1];
+      } else {
+        for (let tempSeries of chart.series) {
+          if (tempSeries.userOptions.name == seriesId) {
+            series = tempSeries;
+          }
+        }
+      }
+      let points = series.points;
+      for (let point of points) {
+        if (point.x == x) {
+          chart.tooltip.refresh(point);
+        }
+      }
+    }
+  }
+
+  /**
+   * Show the tooltip on the newest point.
+   */
+  showTooltipOnLatestPoint() {
+    let chart = $('#' + this.chartId).highcharts();
+    if (chart.series.length > 0) {
+      let latestSeries = chart.series[chart.series.length - 1];
+      let points = latestSeries.points;
+      if (points.length > 0) {
+        let latestPoint = points[points.length - 1];
+        chart.tooltip.refresh(latestPoint);
+      }
+    }
+  }
+
+  /**
+   * Convert the selected cells array into an array of trial ids.
+   * @param selectedCells An array of objects representing selected cells.
+   * @return An array of trial id strings.
+   */
+  convertSelectedCellsToTrialIds(selectedCells) {
+    let selectedTrialIds = [];
+    if (selectedCells != null) {
+      for (let selectedCell of selectedCells) {
+        let material = selectedCell.material;
+        let bevTemp = selectedCell.bevTemp;
+        let airTemp = selectedCell.airTemp;
+        let selectedTrialId = material + '-' + bevTemp + 'Bev-' + airTemp + 'Air';
+        selectedTrialIds.push(selectedTrialId);
+      }
+    }
+    return selectedTrialIds;
   }
 }
 

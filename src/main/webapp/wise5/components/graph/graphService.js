@@ -76,7 +76,7 @@ var GraphService = function (_NodeService) {
           text: this.$translate('graph.timeSeconds')
         },
         min: 0,
-        max: 10,
+        max: 100,
         units: this.$translate('graph.secondsUnit'),
         locked: true,
         type: 'limits'
@@ -86,7 +86,7 @@ var GraphService = function (_NodeService) {
           text: this.$translate('graph.positionMeters')
         },
         min: 0,
-        max: 10,
+        max: 100,
         units: this.$translate('graph.metersUnit'),
         locked: true
       };

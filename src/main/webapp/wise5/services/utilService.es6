@@ -22,19 +22,15 @@ class UtilService {
         "n","o","p","q","r", "s","t","u","v","w","x","y","z",
         "0","1","2","3","4","5","6","7","8","9"];
 
-    /* set default length if not specified */
     if (!length) {
       length = 10;
     }
 
-    /* generate the key */
     let key = '';
     for (let a = 0; a < length; a++) {
       key += this.CHARS[Math.floor(Math.random() * (this.CHARS.length - 1))];
     }
 
-    /* return the generated key */
-    // TODO: check that the new key is unique
     return key;
   };
 
@@ -45,11 +41,10 @@ class UtilService {
    * if we couldn't convert the string to a number we will just return the string.
    */
   convertStringToNumber(str) {
-    let result = str;
     if (str != null && str != '' && !isNaN(Number(str))) {
-      result = Number(str);
+      return Number(str);
     }
-    return result;
+    return str;
   };
 
   /**
@@ -58,15 +53,11 @@ class UtilService {
    * @return a copy of the JSON object that was passed in
    */
   makeCopyOfJSONObject(jsonObject) {
-    let copyOfJSONObject = null;
     if (jsonObject != null) {
-      // create a JSON string from the JSON object
       const jsonObjectString = angular.toJson(jsonObject);
-
-      // create a JSON object from the JSON string
-      copyOfJSONObject = angular.fromJson(jsonObjectString);
+      return angular.fromJson(jsonObjectString);
     }
-    return copyOfJSONObject;
+    return null;
   };
 
   /**
@@ -129,10 +120,7 @@ class UtilService {
       const ctx = canvas.getContext("2d");
       ctx.drawImage(imageElement, 0, 0);
 
-      // create the base64 string representation of the image
       const dataURL = canvas.toDataURL("image/png");
-
-      // get the image object
       imageObject = this.getImageObjectFromBase64String(dataURL);
     }
     return imageObject;
@@ -174,21 +162,17 @@ class UtilService {
    * @return whether the asset is an image or not
    */
   isImage(fileName) {
-    let result = false;
     if (fileName != null) {
+      const imageExtensionsRegEx =
+          new RegExp('.*\.(png|jpg|jpeg|bmp|gif|tiff|svg)');
       const lowerCaseFileName = fileName.toLowerCase();
-
-      // regex to match image extensions
-      const imageExtensionsRegEx = new RegExp('.*\.(png|jpg|jpeg|bmp|gif|tiff|svg)');
-
       const matchResult = lowerCaseFileName.match(imageExtensionsRegEx);
 
       if (matchResult != null) {
-        // we have found a match so the asset is an image
-        result = true;
+        return true;
       }
     }
-    return result;
+    return false;
   }
 
   /**
@@ -197,21 +181,17 @@ class UtilService {
    * @return whether the asset is a video or not
    */
   isVideo(fileName) {
-    let result = false;
     if (fileName != null) {
+      const videoExtensionsRegEx =
+          new RegExp('.*\.(mp4|mpg|mpeg|m4v|m2v|avi|gifv|mov|qt)');
       const lowerCaseFileName = fileName.toLowerCase();
-
-      // regex to match video extensions
-      const videoExtensionsRegEx = new RegExp('.*\.(mp4|mpg|mpeg|m4v|m2v|avi|gifv|mov|qt)');
-
       const matchResult = lowerCaseFileName.match(videoExtensionsRegEx);
 
       if (matchResult != null) {
-        // we have found a match so the asset is a video
-        result = true;
+        return true;
       }
     }
-    return result;
+    return false;
   }
 
   /**
@@ -221,12 +201,8 @@ class UtilService {
    * @return the modified html with <wiselink> elements
    */
   insertWISELinks(html) {
-    // replace <a> elements with <wiselink> elements
     html = this.insertWISELinkAnchors(html);
-
-    // replace <button> elements with <wiselink> elements
     html = this.insertWISELinkButtons(html);
-
     return html;
   }
 
@@ -238,10 +214,7 @@ class UtilService {
    * <wiselink> elements
    */
   insertWISELinkAnchors(html) {
-    // find <a> elements with the parameter wiselink=true
     let wiseLinkRegEx = new RegExp(/<a.*?wiselink="true".*?>(.*?)<\/a>/);
-
-    // find the first match
     let wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
 
     // loop until we have replaced all the matches
@@ -285,10 +258,7 @@ class UtilService {
    * <wiselink> elements
    */
   insertWISELinkButtons(html) {
-    // find <button> elements with the parameter wiselink=true
     const wiseLinkRegEx = new RegExp(/<button.*?wiselink="true".*?>(.*?)<\/button>/);
-
-    // find the first match
     let wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
 
     // loop until we have replaced all the matches
@@ -333,20 +303,14 @@ class UtilService {
    * @return the node id from the node id parameter in the element
    */
   getWISELinkNodeId(html) {
-    let nodeId = null;
     if (html != null) {
-      // create the regex to find the node id parameter
       let nodeIdRegEx = new RegExp(/node-id=["'b](.*?)["']/, 'g');
-
-      // try to find a match
       let nodeIdRegExResult = nodeIdRegEx.exec(html);
-
       if (nodeIdRegExResult != null) {
-        // we have found a node id
-        nodeId = nodeIdRegExResult[1];
+        return nodeIdRegExResult[1];
       }
     }
-    return nodeId;
+    return null;
   }
 
   /**
@@ -358,20 +322,14 @@ class UtilService {
    * @return the component id from the component id parameter in the element
    */
   getWISELinkComponentId(html) {
-    let componentId = null;
     if (html != null) {
-      // create the regex to find the component id parameter
       let componentIdRegEx = new RegExp(/component-id=["'b](.*?)["']/, 'g');
-
-      // try to find a match
       let componentIdRegExResult = componentIdRegEx.exec(html);
-
       if (componentIdRegExResult != null) {
-        // we have found a node id
-        componentId = componentIdRegExResult[1];
+        return componentIdRegExResult[1];
       }
     }
-    return componentId;
+    return null;
   }
 
   /**
@@ -383,20 +341,14 @@ class UtilService {
    * @return the link type from the type parameter in the element
    */
   getWISELinkType(html) {
-    let type = null;
     if (html != null) {
-      // create the regex to find the type
       let typeRegEx = new RegExp(/type=["'b](.*?)["']/, 'g');
-
-      // try to find a match
       let typeRegExResult = typeRegEx.exec(html);
-
       if (typeRegExResult != null) {
-        // we have found a type
-        type = typeRegExResult[1];
+        return typeRegExResult[1];
       }
     }
-    return type;
+    return null;
   }
 
   /**
@@ -407,20 +359,14 @@ class UtilService {
    * @return the link text from the link text parameter in the element
    */
   getWISELinkLinkText(html) {
-    let linkText = null;
     if (html != null) {
-      // create the regex to find the link text
       let linkTextRegEx = new RegExp(/link-text=["'b](.*?)["']/, 'g');
-
-      // try to find a match
       let linkTextRegExResult = linkTextRegEx.exec(html);
-
       if (linkTextRegExResult != null) {
-        // we have found a link text
-        linkText = linkTextRegExResult[1];
+        return linkTextRegExResult[1];
       }
     }
-    return linkText;
+    return null;
   }
 
   /**
@@ -429,12 +375,8 @@ class UtilService {
    * @return the modified html without <wiselink> elements
    */
   replaceWISELinks(html) {
-    // replace wiselinks that look like <wiselink/>
     html = this.replaceWISELinksHelper(html, '<wiselink.*?\/>');
-
-    // replace wiselinks that look like <wiselink></wiselink>
     html = this.replaceWISELinksHelper(html, '<wiselink.*?>.*?<\/wiselink>');
-
     return html;
   }
 
@@ -446,10 +388,7 @@ class UtilService {
    * @return the html without <wiselink> elements
    */
   replaceWISELinksHelper(html, regex) {
-    // create the regex
     let wiseLinkRegEx = new RegExp(regex);
-
-    // find the first match
     let wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
 
     // loop until we have replaced all the matches
@@ -509,11 +448,9 @@ class UtilService {
   createInsertAssetButton(controller, projectId, nodeId, componentId, target, tooltip) {
     const thisRootScope = this.$rootScope;
 
-    // a custom button that opens the asset chooser
     const InsertAssetButton = function(context) {
       const ui = $.summernote.ui;
 
-      // create button
       const button = ui.button({
         contents: '<i class="note-icon-picture"></i>',
         tooltip: tooltip,
@@ -563,11 +500,9 @@ class UtilService {
   createInsertWISELinkButton(controller, projectId, nodeId, componentId, target, tooltip) {
     const thisRootScope = this.$rootScope;
 
-    // a custom button that opens the WISE Link authoring popup
     const InsertWISELinkButton = function(context) {
       const ui = $.summernote.ui;
 
-      // create button
       const button = ui.button({
         contents: '<i class="note-icon-link"></i>',
         tooltip: tooltip,
@@ -611,11 +546,7 @@ class UtilService {
     if (html != null) {
       // remove tags
       text = html.replace(/<\/?[^>]+(>|$)/g, " ");
-
-      // remove new lines
       text = text.replace(/\n/g, " ");
-
-      // remove line returns
       text = text.replace(/\r/g, " ");
     }
     return text;
@@ -663,16 +594,11 @@ class UtilService {
    * Wed Apr 06 2016 9:05:38 AM
    */
   convertMillisecondsToFormattedDateTime(milliseconds) {
-    let dateTimeString = "";
-
-    // create a Date object with the milliseconds
     const date = new Date(milliseconds);
-
     if (date != null) {
-      // get the date time string e.g. Wed Apr 06 2016 9:05:38 AM
-      dateTimeString = date.toDateString() + " " + date.toLocaleTimeString();
+      return date.toDateString() + " " + date.toLocaleTimeString();
     }
-    return dateTimeString;
+    return "";
   }
 
   /**
@@ -688,16 +614,9 @@ class UtilService {
     let label = this.componentTypeToLabel[componentType];
 
     if (label == null) {
-      // we have not obtained the label before
-
-      // get the service for the component type
       let componentService = this.$injector.get(componentType + 'Service');
-
       if (componentService != null && componentService.getComponentTypeLabel != null) {
-        // get the label for the component type
         label = componentService.getComponentTypeLabel();
-
-        // add the entry of component type to label for future lookup
         this.componentTypeToLabel[componentType] = label;
       }
     }
@@ -730,22 +649,16 @@ class UtilService {
    */
   arraysContainSameValues(array1, array2) {
     if (array1 != null && array2 != null) {
-      // make a copy of array 1 and sort it
       const array1Copy = this.makeCopyOfJSONObject(array1);
       array1Copy.sort();
 
-      // make a copy of array 2 and sort it
       const array2Copy = this.makeCopyOfJSONObject(array2);
       array2Copy.sort();
 
-      // compare the string values of both array
       if (angular.toJson(array1Copy) == angular.toJson(array2Copy)) {
-        // the arrays are the same
         return true;
       }
     }
-
-    // the arrays are not the same
     return false;
   }
 

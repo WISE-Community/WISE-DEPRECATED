@@ -326,38 +326,38 @@ var TableController = function () {
 
       if (connectedComponent != null && connectedComponentParams != null && componentState != null) {
 
-        if (connectedComponentParams.updateOn === 'change') {
-          // get the component type that has changed
-          var componentType = connectedComponent.type;
+        if (connectedComponentParams.updateOn === 'change') {}
 
-          /*
-           * make a copy of the component state so we don't accidentally
-           * change any values in the referenced object
-           */
-          componentState = this.UtilService.makeCopyOfJSONObject(componentState);
+        // get the component type that has changed
+        var componentType = connectedComponent.type;
 
-          if (componentType === 'Table') {
+        /*
+         * make a copy of the component state so we don't accidentally
+         * change any values in the referenced object
+         */
+        componentState = this.UtilService.makeCopyOfJSONObject(componentState);
 
-            // set the table data
-            this.$scope.tableController.setStudentWork(componentState);
+        if (componentType === 'Table') {
 
-            // the table has changed
-            this.$scope.tableController.isDirty = true;
-          } else if (componentType === 'Graph') {
+          // set the table data
+          this.$scope.tableController.setStudentWork(componentState);
 
-            // set the graph data into the table
-            this.$scope.tableController.setGraphDataIntoTableData(componentState, connectedComponentParams);
+          // the table has changed
+          this.$scope.tableController.isDirty = true;
+        } else if (componentType === 'Graph') {
 
-            // the table has changed
-            this.$scope.tableController.isDirty = true;
-          } else if (componentType === 'Embedded') {
+          // set the graph data into the table
+          this.$scope.tableController.setGraphDataIntoTableData(componentState, connectedComponentParams);
 
-            // set the table data
-            this.$scope.tableController.setStudentWork(componentState);
+          // the table has changed
+          this.$scope.tableController.isDirty = true;
+        } else if (componentType === 'Embedded') {
 
-            // the table has changed
-            this.$scope.tableController.isDirty = true;
-          }
+          // set the table data
+          this.$scope.tableController.setStudentWork(componentState);
+
+          // the table has changed
+          this.$scope.tableController.isDirty = true;
         }
       }
     }.bind(this);
@@ -1223,6 +1223,11 @@ var TableController = function () {
           // get the series index
           seriesIndex = params.seriesIndex;
         }
+
+        if (params.showDataAtMouseX) {
+          this.showDataAtMouseX(componentState, params);
+          return;
+        }
       }
 
       if (componentState != null && componentState.studentData != null) {
@@ -1277,14 +1282,269 @@ var TableController = function () {
       }
     }
   }, {
-    key: 'setSeriesIntoTable',
+    key: 'showDataAtMouseX',
 
+
+    /**
+     * Show the data at x for all the series.
+     * @param componentState The Graph component state.
+     * @param params The connected component params.
+     */
+    value: function showDataAtMouseX(componentState, params) {
+      var studentData = componentState.studentData;
+      var mouseOverPoints = studentData.mouseOverPoints;
+      var x = null;
+
+      // get the x value from the latest mouse over point
+      if (mouseOverPoints != null && mouseOverPoints.length > 0) {
+        var latestMouseOverPoint = mouseOverPoints[mouseOverPoints.length - 1];
+        x = Math.round(latestMouseOverPoint[0]);
+      }
+      var xUnits = studentData.xAxis.units;
+      var yUnits = studentData.yAxis.units;
+      var xAxisTitle = studentData.xAxis.title.text;
+      var yAxisTitle = studentData.yAxis.title.text;
+      this.removeAllCellsFromTableData();
+      this.addTableDataRow(this.createTableRow(['Series Name', xAxisTitle, yAxisTitle]));
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = studentData.trials[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var trial = _step.value;
+
+          if (trial.show) {
+            var multipleSeries = trial.series;
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+              for (var _iterator2 = multipleSeries[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var singleSeries = _step2.value;
+
+                if (singleSeries.show !== false) {
+                  var closestDataPoint = this.getClosestDataPoint(singleSeries.data, x);
+                  if (closestDataPoint != null) {
+                    this.addTableDataRow(this.createTableRow([singleSeries.name, Math.round(this.getXFromDataPoint(closestDataPoint)) + ' ' + xUnits, Math.round(this.getYFromDataPoint(closestDataPoint)) + ' ' + yUnits]));
+                  }
+                }
+              }
+            } catch (err) {
+              _didIteratorError2 = true;
+              _iteratorError2 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                  _iterator2.return();
+                }
+              } finally {
+                if (_didIteratorError2) {
+                  throw _iteratorError2;
+                }
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+    }
+
+    /**
+     * Remove all the rows and cells from the table data.
+     */
+
+  }, {
+    key: 'removeAllCellsFromTableData',
+    value: function removeAllCellsFromTableData() {
+      this.tableData = [];
+    }
+
+    /**
+     * Append a row to the table data.
+     * @param row An array of objects. Each object represents a cell in the table.
+     */
+
+  }, {
+    key: 'addTableDataRow',
+    value: function addTableDataRow(row) {
+      this.tableData.push(row);
+    }
+
+    /**
+     * Create a cell object.
+     * @param text The text to show in the cell.
+     * @param editable Whether the student is allowed to edit the contents in the
+     * cell.
+     * @param size The with of the cell.
+     * @return An object.
+     */
+
+  }, {
+    key: 'createTableCell',
+    value: function createTableCell() {
+      var text = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      var editable = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      var size = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+      return { text: text, editable: editable, size: size };
+    }
+
+    /**
+     * Create a row.
+     * @param columns An array of strings or objects.
+     * @return An array of objects.
+     */
+
+  }, {
+    key: 'createTableRow',
+    value: function createTableRow(columns) {
+      var row = [];
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = columns[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var column = _step3.value;
+
+          if (column.constructor.name == 'String') {
+            row.push(this.createTableCell(column));
+          } else if (column.constructor.name == 'Object') {
+            row.push(this.createTableCell(column.text, column.editable, column.size));
+          }
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
+
+      return row;
+    }
+
+    /**
+     * Get the data point that has the closest x value to the given argument x.
+     * @param dataPoints An array of data points. Each data point can be an object
+     * or an array.
+     * @param x The argument x.
+     * @return A data point which can be an object or array.
+     */
+
+  }, {
+    key: 'getClosestDataPoint',
+    value: function getClosestDataPoint(dataPoints, x) {
+      var closestDataPoint = null;
+      var minNumericalXDifference = Infinity;
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
+
+      try {
+        for (var _iterator4 = dataPoints[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var dataPoint = _step4.value;
+
+          var dataPointX = this.getXFromDataPoint(dataPoint);
+          var numericalDifference = this.getNumericalAbsoluteDifference(x, dataPointX);
+          if (numericalDifference < minNumericalXDifference) {
+            // we have found a new data point that is closer to x
+            closestDataPoint = dataPoint;
+            minNumericalXDifference = numericalDifference;
+          }
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
+          }
+        }
+      }
+
+      return closestDataPoint;
+    }
+
+    /**
+     * Get the absolute value of the difference between the two numbers.
+     * @param x1 A number.
+     * @param x2 A number.
+     * @return The absolute value of the difference between the two numbers.
+     */
+
+  }, {
+    key: 'getNumericalAbsoluteDifference',
+    value: function getNumericalAbsoluteDifference(x1, x2) {
+      return Math.abs(x1 - x2);
+    }
+
+    /**
+     * Get the x value from the data point.
+     * @param dataPoint An object or array.
+     * @return The x value of the data point.
+     */
+
+  }, {
+    key: 'getXFromDataPoint',
+    value: function getXFromDataPoint(dataPoint) {
+      if (dataPoint.constructor.name == 'Object') {
+        return dataPoint.x;
+      } else if (dataPoint.constructor.name == 'Array') {
+        return dataPoint[0];
+      }
+    }
+
+    /**
+     * Get the y value from the data point.
+     * @param dataPoint An object or array.
+     * @return The y value of the data point.
+     */
+
+  }, {
+    key: 'getYFromDataPoint',
+    value: function getYFromDataPoint(dataPoint) {
+      if (dataPoint.constructor.name == 'Object') {
+        return dataPoint.y;
+      } else if (dataPoint.constructor.name == 'Array') {
+        return dataPoint[1];
+      }
+    }
 
     /**
      * Set the series data into the table
      * @param series an object that contains the data for a single series
      * @param params the parameters for where to place the points in the table
      */
+
+  }, {
+    key: 'setSeriesIntoTable',
     value: function setSeriesIntoTable(series, params) {
 
       /*
@@ -2767,13 +3027,13 @@ var TableController = function () {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
+          var _iteratorNormalCompletion5 = true;
+          var _didIteratorError5 = false;
+          var _iteratorError5 = undefined;
 
           try {
-            for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var component = _step.value;
+            for (var _iterator5 = components[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+              var component = _step5.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -2784,16 +3044,16 @@ var TableController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
+            _didIteratorError5 = true;
+            _iteratorError5 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
+              if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                _iterator5.return();
               }
             } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
+              if (_didIteratorError5) {
+                throw _iteratorError5;
               }
             }
           }

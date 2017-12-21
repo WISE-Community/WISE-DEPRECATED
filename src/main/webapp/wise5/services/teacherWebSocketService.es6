@@ -20,7 +20,6 @@ class TeacherWebSocketService {
         "?runId=" + runId + "&periodId=" + periodId +
         "&workgroupId=" + workgroupId;
     this.dataStream = this.$websocket(webSocketURL);
-
     this.dataStream.onMessage((message) => {
       this.handleMessage(message);
     });
@@ -68,7 +67,7 @@ class TeacherWebSocketService {
    * @returns boolean whether a workgroup is online
    */
   isStudentOnline(workgroupId) {
-    return (this.studentsOnlineArray.indexOf(workgroupId) > -1);
+    return this.studentsOnlineArray.indexOf(workgroupId) > -1;
   };
 
   /**
@@ -77,11 +76,10 @@ class TeacherWebSocketService {
    */
   handleStudentStatusReceived(studentStatus) {
     const workgroupId = studentStatus.workgroupId;
-
-    // update the student status for the workgroup
-    this.StudentStatusService.setStudentStatusForWorkgroupId(workgroupId, studentStatus);
-
-    this.$rootScope.$emit('studentStatusReceived', {studentStatus: studentStatus});
+    this.StudentStatusService
+        .setStudentStatusForWorkgroupId(workgroupId, studentStatus);
+    this.$rootScope
+        .$emit('studentStatusReceived', {studentStatus: studentStatus});
   };
 
   /**
@@ -101,10 +99,8 @@ class TeacherWebSocketService {
     messageJSON.messageType = 'pauseScreen';
 
     if (periodId == null || periodId == -1) {
-      //we are going to pause all the students in a run
       messageJSON.messageParticipants = 'teacherToStudentsInRun';
     } else if(periodId != null) {
-      //we are going to pause the students in a period
       messageJSON.periodId = periodId;
       messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
     }
@@ -121,10 +117,8 @@ class TeacherWebSocketService {
     messageJSON.messageType = 'unPauseScreen';
 
     if(periodId == null || periodId == -1) {
-      //we are going to unpause all the students in a run
       messageJSON.messageParticipants = 'teacherToStudentsInRun';
     } else if(periodId != null) {
-      //we are going to unpause the students in a period
       messageJSON.periodId = periodId;
       messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
     }

@@ -269,6 +269,7 @@
             </md-button>
             <br/>
             <iframe ng-attr-id='{{"componentApp_" + embeddedController.componentId}}' ng-src='{{embeddedController.url}}'
+                ng-onload='embeddedController.iframeLoaded(contentLocation)'
                 class='embedded-content__iframe'
                 style='width: {{embeddedController.width}}; height: {{embeddedController.height}};'></iframe>
           </div>

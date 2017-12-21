@@ -41,10 +41,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.RedirectView;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.Curriculumsubjects;
 import org.wise.portal.domain.authentication.Schoollevel;
+import org.wise.portal.domain.authentication.impl.ChangePasswordParameters;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.validators.ChangePasswordParametersValidator;
 import org.wise.portal.presentation.validators.TeacherAccountFormValidator;
 import org.wise.portal.presentation.web.TeacherAccountForm;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
@@ -58,7 +61,7 @@ import org.wise.portal.service.user.UserService;
  * @author Hiroki Terashima
  */
 @Controller
-@SessionAttributes("teacherAccountForm")
+@SessionAttributes({"teacherAccountForm", "changePasswordParameters"})
 public class TeacherAccountController {
 
   @Autowired
@@ -75,6 +78,9 @@ public class TeacherAccountController {
 
   @Autowired
   protected TeacherAccountFormValidator teacherAccountFormValidator;
+
+  @Autowired
+  protected ChangePasswordParametersValidator changePasswordParametersValidator;
 
   /**
    * Called before the page is loaded to initialize values.
@@ -93,33 +99,24 @@ public class TeacherAccountController {
   }
 
   /**
-   * Called before the page is loaded to initialize values.
-   * Adds the TeacherAccountForm object to the model so that the form
-   * can be populated.
-   * @param modelMap the model object that contains values for the page to use when rendering the view
-   * @return the path of the view to display
+   * Shows page where teacher can update account information
+   * Switched user (e.g. admin/researcher logged in as this user) should not be able to view/modify
+   * user account.
    */
-  @RequestMapping(value = "/teacher/management/updatemyaccountinfo", method = RequestMethod.GET)
-  public String initializeFormExistingTeacher(ModelMap modelMap) throws Exception {
-    User signedInUser = ControllerUtil.getSignedInUser();
-    TeacherUserDetails teacherUserDetails = (TeacherUserDetails) signedInUser.getUserDetails();
-    TeacherAccountForm teacherAccountForm = new TeacherAccountForm(teacherUserDetails);
-    modelMap.addAttribute("teacherAccountForm", teacherAccountForm);
-    populateModelMap(modelMap);
-    return "teacher/management/updatemyaccountinfo";
-  }
-
-  /**
-   * Shows page where teacher selects between changing password or changing other account information
-   * Switched user (e.g. admin/researcher logged in as this user)
-   * should not be able to view/modify user account.
-   */
-  @RequestMapping(value = "/teacher/management/updatemyaccount", method = RequestMethod.GET)
-  public String updateMyAccountIntialPage() {
+  @RequestMapping(value = "/teacher/account", method = RequestMethod.GET)
+  public String updateMyAccountPage(ModelMap modelMap) {
     if (ControllerUtil.isUserPreviousAdministrator()) {
       return "errors/accessdenied";
     } else {
-      return "teacher/management/updatemyaccount";
+      User signedInUser = ControllerUtil.getSignedInUser();
+      TeacherUserDetails teacherUserDetails = (TeacherUserDetails) signedInUser.getUserDetails();
+      TeacherAccountForm teacherAccountForm = new TeacherAccountForm(teacherUserDetails);
+      modelMap.addAttribute("teacherAccountForm", teacherAccountForm);
+      ChangePasswordParameters params = new ChangePasswordParameters();
+      params.setUser(signedInUser);
+      modelMap.addAttribute("changePasswordParameters", params);
+      populateModelMap(modelMap);
+      return "teacher/account";
     }
   }
 
@@ -188,7 +185,7 @@ public class TeacherAccountController {
    * @param modelMap the object that contains values to be displayed on the page
    * @return the path of the view to display
    */
-  @RequestMapping(value = "/teacher/management/updatemyaccountinfo", method = RequestMethod.POST)
+  @RequestMapping(value = "/teacher/account", method = RequestMethod.POST)
   protected String updateExistingTeacher(
       @ModelAttribute("teacherAccountForm") TeacherAccountForm accountForm,
       BindingResult bindingResult,
@@ -198,7 +195,7 @@ public class TeacherAccountController {
     teacherAccountFormValidator.validate(accountForm, bindingResult);
     if (bindingResult.hasErrors()) {
       populateModelMap(modelMap);
-      return "teacher/management/updatemyaccountinfo";
+      return "teacher/account";
     }
 
     User user = userService.retrieveUserByUsername(userDetails.getUsername());
@@ -206,7 +203,38 @@ public class TeacherAccountController {
     updateUserLocaleInSession(user, request);
     userService.updateUser(user);
     request.getSession().setAttribute(User.CURRENT_USER_SESSION_KEY, user);
-    return "teacher/management/updatemyaccount";
+    modelMap.put("accountInfoSavedMessage", "Changes saved!");
+    populateModelMap(modelMap);
+    return "teacher/account";
+  }
+
+  /**
+   * Updates an existing teacher record
+   * @param bindingResult the object used for validation in which errors will be stored
+   * @param request the http request object
+   * @param modelMap the object that contains values to be displayed on the page
+   * @return the path of the view to display
+   */
+  @RequestMapping(value = "/teacher/account/password", method = RequestMethod.POST)
+  protected String updateExistingTeacherPassword(
+      @ModelAttribute("changePasswordParameters") ChangePasswordParameters params,
+      BindingResult bindingResult,
+      HttpServletRequest request,
+      ModelMap modelMap) throws ObjectNotFoundException {
+
+    changePasswordParametersValidator.validate(params, bindingResult);
+
+    if (bindingResult.hasErrors()) {
+      populateModelMap(modelMap);
+      return "teacher/account";
+    } else {
+      User user = userService.retrieveById(params.getUser().getId());
+      userService.updateUserPassword(user, params.getPasswd1());
+      request.getSession().setAttribute(User.CURRENT_USER_SESSION_KEY, user);
+      modelMap.put("passwordSavedMessage", "Password changes saved!");
+      populateModelMap(modelMap);
+      return "teacher/account";
+    }
   }
 
   private void updateTeacherUserDetails(User user, TeacherUserDetails newUserDetails) {

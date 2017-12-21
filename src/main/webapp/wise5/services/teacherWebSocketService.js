@@ -30,7 +30,6 @@ var TeacherWebSocketService = function () {
       var workgroupId = this.ConfigService.getWorkgroupId();
       var webSocketURL = this.ConfigService.getWebSocketURL() + "?runId=" + runId + "&periodId=" + periodId + "&workgroupId=" + workgroupId;
       this.dataStream = this.$websocket(webSocketURL);
-
       this.dataStream.onMessage(function (message) {
         _this.handleMessage(message);
       });
@@ -95,10 +94,7 @@ var TeacherWebSocketService = function () {
      */
     value: function handleStudentStatusReceived(studentStatus) {
       var workgroupId = studentStatus.workgroupId;
-
-      // update the student status for the workgroup
       this.StudentStatusService.setStudentStatusForWorkgroupId(workgroupId, studentStatus);
-
       this.$rootScope.$emit('studentStatusReceived', { studentStatus: studentStatus });
     }
   }, {
@@ -125,10 +121,8 @@ var TeacherWebSocketService = function () {
       messageJSON.messageType = 'pauseScreen';
 
       if (periodId == null || periodId == -1) {
-        //we are going to pause all the students in a run
         messageJSON.messageParticipants = 'teacherToStudentsInRun';
       } else if (periodId != null) {
-        //we are going to pause the students in a period
         messageJSON.periodId = periodId;
         messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
       }
@@ -148,10 +142,8 @@ var TeacherWebSocketService = function () {
       messageJSON.messageType = 'unPauseScreen';
 
       if (periodId == null || periodId == -1) {
-        //we are going to unpause all the students in a run
         messageJSON.messageParticipants = 'teacherToStudentsInRun';
       } else if (periodId != null) {
-        //we are going to unpause the students in a period
         messageJSON.periodId = periodId;
         messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
       }

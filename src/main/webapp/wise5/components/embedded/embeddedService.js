@@ -28,7 +28,6 @@ var EmbeddedService = function (_NodeService) {
 
     _this.$filter = $filter;
     _this.UtilService = UtilService;
-
     _this.$translate = _this.$filter('translate');
     return _this;
   }
@@ -91,41 +90,48 @@ var EmbeddedService = function (_NodeService) {
     key: 'isCompleted',
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
       var result = false;
-
       var isCompletedFieldInComponentState = false;
-
       if (componentStates != null) {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-        /*
-         * loop through all the component states and look for a component
-         * that has the isCompleted field set to true
-         */
-        for (var c = 0; c < componentStates.length; c++) {
+        try {
+          for (var _iterator = componentStates[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var componentState = _step.value;
 
-          // get a component state
-          var componentState = componentStates[c];
-
-          if (componentState != null) {
-            // get the student data from the model
-            var studentData = componentState.studentData;
-
-            if (studentData != null) {
-
-              if (studentData.isCompleted != null) {
-                /*
-                 * the model has set the isCompleted field in the
-                 * student data
-                 */
-                isCompletedFieldInComponentState = true;
-
-                if (studentData.isCompleted === true) {
+            if (componentState != null) {
+              var studentData = componentState.studentData;
+              if (studentData != null) {
+                if (studentData.isCompleted != null) {
                   /*
-                   * the model has set the isCompleted field to true
-                   * which means the student has completed the component
+                   * the model has set the isCompleted field in the
+                   * student data
                    */
-                  return true;
+                  isCompletedFieldInComponentState = true;
+
+                  if (studentData.isCompleted === true) {
+                    /*
+                     * the model has set the isCompleted field to true
+                     * which means the student has completed the component
+                     */
+                    return true;
+                  }
                 }
               }
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
             }
           }
         }
@@ -138,21 +144,35 @@ var EmbeddedService = function (_NodeService) {
          */
 
         if (nodeEvents != null) {
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
 
-          // loop through all the events
-          for (var e = 0; e < nodeEvents.length; e++) {
+          try {
+            for (var _iterator2 = nodeEvents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var event = _step2.value;
 
-            // get an event
-            var event = nodeEvents[e];
-
-            if (event != null && event.event === 'nodeEntered') {
-              result = true;
-              break;
+              if (event != null && event.event === 'nodeEntered') {
+                result = true;
+                break;
+              }
+            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
             }
           }
         }
       }
-
       return result;
     }
   }, {

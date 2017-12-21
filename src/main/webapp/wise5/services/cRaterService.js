@@ -30,7 +30,6 @@ var CRaterService = function () {
   _createClass(CRaterService, [{
     key: 'makeCRaterRequest',
     value: function makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData) {
-
       var httpParams = {};
       httpParams.method = 'GET';
       httpParams.url = this.ConfigService.getCRaterRequestURL();
@@ -61,10 +60,8 @@ var CRaterService = function () {
   }, {
     key: 'makeCRaterScoringRequest',
     value: function makeCRaterScoringRequest(cRaterItemType, cRaterItemId, studentData) {
-
       var cRaterRequestType = 'scoring';
       var cRaterResponseId = new Date().getTime();
-
       return this.makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData);
     }
 
@@ -80,10 +77,8 @@ var CRaterService = function () {
   }, {
     key: 'makeCRaterVerifyRequest',
     value: function makeCRaterVerifyRequest(cRaterItemType, cRaterItemId, studentData) {
-
       var cRaterRequestType = 'verify';
       var cRaterResponseId = new Date().getTime();
-
       return this.makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData);
     }
 
@@ -95,13 +90,10 @@ var CRaterService = function () {
   }, {
     key: 'getCRaterItemType',
     value: function getCRaterItemType(component) {
-      var cRaterItemType = null;
-
       if (component != null && component.cRater != null) {
-        cRaterItemType = component.cRater.itemType;
+        return component.cRater.itemType;
       }
-
-      return cRaterItemType;
+      return null;
     }
 
     /**
@@ -112,13 +104,10 @@ var CRaterService = function () {
   }, {
     key: 'getCRaterItemId',
     value: function getCRaterItemId(component) {
-      var cRaterItemId = null;
-
       if (component != null && component.cRater != null) {
-        cRaterItemId = component.cRater.itemId;
+        return component.cRater.itemId;
       }
-
-      return cRaterItemId;
+      return null;
     }
 
     /**
@@ -130,10 +119,7 @@ var CRaterService = function () {
   }, {
     key: 'getCRaterScoreOn',
     value: function getCRaterScoreOn(component) {
-      var scoreOn = null;
-
       if (component != null) {
-
         /*
          * CRater can be enabled in two ways
          * 1. the enableCRater field is true
@@ -142,11 +128,10 @@ var CRaterService = function () {
         if (component.enableCRater && component.cRater != null || !component.hasOwnProperty('enableCRater') && component.cRater != null) {
 
           // get the score on value e.g. 'submit', 'save', 'change', or 'exit'
-          scoreOn = component.cRater.scoreOn;
+          return component.cRater.scoreOn;
         }
       }
-
-      return scoreOn;
+      return null;
     }
 
     /**
@@ -157,20 +142,15 @@ var CRaterService = function () {
   }, {
     key: 'isCRaterEnabled',
     value: function isCRaterEnabled(component) {
-      var result = false;
-
       if (component != null) {
-
         // get the item type and item id
         var cRaterItemType = this.getCRaterItemType(component);
         var cRaterItemId = this.getCRaterItemId(component);
-
         if (cRaterItemType != null && cRaterItemId != null) {
-          result = true;
+          return true;
         }
       }
-
-      return result;
+      return false;
     }
 
     /**
@@ -182,19 +162,14 @@ var CRaterService = function () {
   }, {
     key: 'isCRaterScoreOnSave',
     value: function isCRaterScoreOnSave(component) {
-      var result = false;
-
       if (component != null) {
-
         // find when we should perform the CRater scoring
         var scoreOn = this.getCRaterScoreOn(component);
-
         if (scoreOn != null && scoreOn === 'save') {
-          result = true;
+          return true;
         }
       }
-
-      return result;
+      return false;
     }
 
     /**
@@ -206,19 +181,14 @@ var CRaterService = function () {
   }, {
     key: 'isCRaterScoreOnSubmit',
     value: function isCRaterScoreOnSubmit(component) {
-      var result = false;
-
       if (component != null) {
-
         // find when we should perform the CRater scoring
         var scoreOn = this.getCRaterScoreOn(component);
-
         if (scoreOn != null && scoreOn === 'submit') {
-          result = true;
+          return true;
         }
       }
-
-      return result;
+      return false;
     }
 
     /**
@@ -230,19 +200,14 @@ var CRaterService = function () {
   }, {
     key: 'isCRaterScoreOnChange',
     value: function isCRaterScoreOnChange(component) {
-      var result = false;
-
       if (component != null) {
-
         // find when we should perform the CRater scoring
         var scoreOn = this.getCRaterScoreOn(component);
-
         if (scoreOn != null && scoreOn === 'change') {
-          result = true;
+          return true;
         }
       }
-
-      return result;
+      return false;
     }
 
     /**
@@ -254,19 +219,14 @@ var CRaterService = function () {
   }, {
     key: 'isCRaterScoreOnExit',
     value: function isCRaterScoreOnExit(component) {
-      var result = false;
-
       if (component != null) {
-
         // find when we should perform the CRater scoring
         var scoreOn = this.getCRaterScoreOn(component);
-
         if (scoreOn != null && scoreOn === 'exit') {
-          result = true;
+          return true;
         }
       }
-
-      return result;
+      return false;
     }
 
     /**
@@ -279,16 +239,11 @@ var CRaterService = function () {
   }, {
     key: 'getCRaterScoringRuleByScore',
     value: function getCRaterScoringRuleByScore(component, score) {
-      var scoringRule = null;
-
       if (component != null && score != null) {
         var cRater = component.cRater;
-
         if (cRater != null) {
           var scoringRules = cRater.scoringRules;
-
           if (scoringRules != null) {
-
             // loop through all the scoring rules
             var _iteratorNormalCompletion = true;
             var _didIteratorError = false;
@@ -299,14 +254,12 @@ var CRaterService = function () {
                 var tempScoringRule = _step.value;
 
                 if (tempScoringRule != null) {
-
                   if (tempScoringRule.score == score) {
                     /*
                      * the score matches so we have found
                      * the scoring rule that we want
                      */
-                    scoringRule = tempScoringRule;
-                    break;
+                    return tempScoringRule;
                   }
                 }
               }
@@ -327,8 +280,7 @@ var CRaterService = function () {
           }
         }
       }
-
-      return scoringRule;
+      return null;
     }
 
     /**
@@ -341,18 +293,11 @@ var CRaterService = function () {
   }, {
     key: 'getCRaterFeedbackTextByScore',
     value: function getCRaterFeedbackTextByScore(component, score) {
-
-      var feedbackText = null;
-
-      // get the scoring rule for the given score
       var scoringRule = this.getCRaterScoringRuleByScore(component, score);
-
       if (scoringRule != null) {
-        // get the feedback text
-        feedbackText = scoringRule.feedbackText;
+        return scoringRule.feedbackText;
       }
-
-      return feedbackText;
+      return null;
     }
 
     /**
@@ -366,18 +311,11 @@ var CRaterService = function () {
   }, {
     key: 'getMultipleAttemptCRaterFeedbackTextByScore',
     value: function getMultipleAttemptCRaterFeedbackTextByScore(component, previousScore, currentScore) {
-
-      var feedbackText = null;
-
-      // get the scoring rule for the given score
       var scoringRule = this.getMultipleAttemptCRaterScoringRuleByScore(component, previousScore, currentScore);
-
       if (scoringRule != null) {
-        // get the feedback text
-        feedbackText = scoringRule.feedbackText;
+        return scoringRule.feedbackText;
       }
-
-      return feedbackText;
+      return null;
     }
 
     /**
@@ -392,19 +330,11 @@ var CRaterService = function () {
   }, {
     key: 'getMultipleAttemptCRaterScoringRuleByScore',
     value: function getMultipleAttemptCRaterScoringRuleByScore(component, previousScore, currentScore) {
-      var scoringRule = null;
-
       if (component != null && previousScore != null && currentScore != null) {
         var cRater = component.cRater;
-
         if (cRater != null) {
-
-          // get the multiple attempt scoring rules
           var multipleAttemptScoringRules = cRater.multipleAttemptScoringRules;
-
           if (multipleAttemptScoringRules != null) {
-
-            // loop through all the multiple attempt scoring rules
             var _iteratorNormalCompletion2 = true;
             var _didIteratorError2 = false;
             var _iteratorError2 = undefined;
@@ -413,14 +343,9 @@ var CRaterService = function () {
               for (var _iterator2 = multipleAttemptScoringRules[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                 var multipleAttemptScoringRule = _step2.value;
 
-
                 if (multipleAttemptScoringRule != null) {
-
-                  // get a multiple attempt scoring rule
                   var scoreSequence = multipleAttemptScoringRule.scoreSequence;
-
                   if (scoreSequence != null) {
-
                     /*
                      * get the expected previous score and current score
                      * that will satisfy the rule
@@ -434,8 +359,7 @@ var CRaterService = function () {
                        * the previous score and current score match the
                        * expected scores so we have found the rule we want
                        */
-                      scoringRule = multipleAttemptScoringRule;
-                      break;
+                      return multipleAttemptScoringRule;
                     }
                   }
                 }
@@ -457,8 +381,7 @@ var CRaterService = function () {
           }
         }
       }
-
-      return scoringRule;
+      return null;
     }
   }]);
 

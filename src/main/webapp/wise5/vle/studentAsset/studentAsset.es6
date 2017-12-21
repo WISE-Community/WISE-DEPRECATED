@@ -2,19 +2,19 @@
 
 import StudentAssetController from './studentAssetController';
 
-let studentAssetModule = angular.module('studentAsset', [])
+const studentAssetModule = angular.module('studentAsset', [])
     .directive('studentassets', function() {
-        return {
-            scope: {
-                filter: '=',
-                templateUrl: '=',
-                componentController: '='
-            },
-            template: '<ng-include src="studentAssetController.getTemplateUrl()"></ng-include>',
-            controller: 'StudentAssetController',
-            controllerAs: 'studentAssetController',
-            bindToController: true
-        };
+      return {
+        scope: {
+          filter: '=',
+          templateUrl: '=',
+          componentController: '='
+        },
+        template: '<ng-include src="studentAssetController.getTemplateUrl()"></ng-include>',
+        controller: 'StudentAssetController',
+        controllerAs: 'studentAssetController',
+        bindToController: true
+      };
     })
     .controller('StudentAssetController', StudentAssetController);
 

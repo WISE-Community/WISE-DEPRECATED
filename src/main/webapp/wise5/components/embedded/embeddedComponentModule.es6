@@ -3,7 +3,7 @@
 import EmbeddedService from './embeddedService';
 import EmbeddedController from './embeddedController';
 
-let embeddedComponentModule = angular.module('embeddedComponentModule', [
+const embeddedComponentModule = angular.module('embeddedComponentModule', [
     'pascalprecht.translate'
   ])
   .service(EmbeddedService.name, EmbeddedService)

@@ -45,7 +45,6 @@ var ConfigService = function () {
 
         var constraints = true;
 
-        // get the full url
         var absURL = _this.$location.$$absUrl;
 
         if (configJSON.mode == 'preview') {
@@ -77,7 +76,6 @@ var ConfigService = function () {
         _this.setConfig(configJSON);
 
         if (_this.isPreview()) {
-          // assign a random workgroup id
           var myUserInfo = _this.getMyUserInfo();
           if (myUserInfo != null) {
             // set the workgroup id to a random integer between 1 and 100
@@ -195,12 +193,11 @@ var ConfigService = function () {
      * Returns the period id of the logged-in user.
      */
     value: function getPeriodId() {
-      var periodId = null;
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {
-        periodId = myUserInfo.periodId;
+        return myUserInfo.periodId;
       }
-      return periodId;
+      return null;
     }
   }, {
     key: 'getPeriods',
@@ -211,27 +208,25 @@ var ConfigService = function () {
      * @returns an array of period objects
      */
     value: function getPeriods() {
-      var periods = [];
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {
         var myClassInfo = myUserInfo.myClassInfo;
         if (myClassInfo != null) {
           if (myClassInfo.periods != null) {
-            periods = myClassInfo.periods;
+            return myClassInfo.periods;
           }
         }
       }
-      return periods;
+      return [];
     }
   }, {
     key: 'getWorkgroupId',
     value: function getWorkgroupId() {
-      var workgroupId = null;
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {
-        workgroupId = myUserInfo.workgroupId;
+        return myUserInfo.workgroupId;
       }
-      return workgroupId;
+      return null;
     }
   }, {
     key: 'getUserId',
@@ -242,22 +237,20 @@ var ConfigService = function () {
      * @return the user id
      */
     value: function getUserId() {
-      var userId = null;
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {
-        userId = myUserInfo.id;
+        return myUserInfo.id;
       }
-      return userId;
+      return null;
     }
   }, {
     key: 'getMyUserInfo',
     value: function getMyUserInfo() {
-      var myUserInfo = null;
       var userInfo = this.getUserInfo();
       if (userInfo != null) {
-        myUserInfo = userInfo.myUserInfo;
+        return userInfo.myUserInfo;
       }
-      return myUserInfo;
+      return null;
     }
   }, {
     key: 'getMyUserName',
@@ -268,25 +261,23 @@ var ConfigService = function () {
      * @return the user name of the signed in user
      */
     value: function getMyUserName() {
-      var userName = null;
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {
-        userName = myUserInfo.userName;
+        return myUserInfo.userName;
       }
-      return userName;
+      return null;
     }
   }, {
     key: 'getClassmateUserInfos',
     value: function getClassmateUserInfos() {
-      var classmateUserInfos = null;
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {
         var myClassInfo = myUserInfo.myClassInfo;
         if (myClassInfo != null) {
-          classmateUserInfos = myClassInfo.classmateUserInfos;
+          return myClassInfo.classmateUserInfos;
         }
       }
-      return classmateUserInfos;
+      return null;
     }
   }, {
     key: 'setClassmateDisplayNames',
@@ -386,25 +377,23 @@ var ConfigService = function () {
   }, {
     key: 'getTeacherWorkgroupId',
     value: function getTeacherWorkgroupId() {
-      var teacherWorkgroupId = null;
       var teacherUserInfo = this.getTeacherUserInfo();
       if (teacherUserInfo != null) {
-        teacherWorkgroupId = teacherUserInfo.workgroupId;
+        return teacherUserInfo.workgroupId;
       }
-      return teacherWorkgroupId;
+      return null;
     }
   }, {
     key: 'getTeacherUserInfo',
     value: function getTeacherUserInfo() {
-      var teacherUserInfo = null;
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {
         var myClassInfo = myUserInfo.myClassInfo;
         if (myClassInfo != null) {
-          teacherUserInfo = myClassInfo.teacherUserInfo;
+          return myClassInfo.teacherUserInfo;
         }
       }
-      return teacherUserInfo;
+      return null;
     }
   }, {
     key: 'getSharedTeacherUserInfos',
@@ -414,15 +403,14 @@ var ConfigService = function () {
      * Get the shared teacher user infos for the run
      */
     value: function getSharedTeacherUserInfos() {
-      var sharedTeacherUserInfos = null;
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {
         var myClassInfo = myUserInfo.myClassInfo;
         if (myClassInfo != null) {
-          sharedTeacherUserInfos = myClassInfo.sharedTeacherUserInfos;
+          return myClassInfo.sharedTeacherUserInfos;
         }
       }
-      return sharedTeacherUserInfos;
+      return null;
     }
   }, {
     key: 'getClassmateWorkgroupIds',
@@ -478,17 +466,16 @@ var ConfigService = function () {
   }, {
     key: 'sortClassmateUserInfosAlphabeticallyByNameHelper',
     value: function sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
-      var result = 0;
       if (a != null && a.userName != null && b != null && b.userName != null) {
         var aUserName = a.userName.toLowerCase();
         var bUserName = b.userName.toLowerCase();
         if (aUserName < bUserName) {
-          result = -1;
+          return -1;
         } else if (aUserName > bUserName) {
-          result = 1;
+          return 1;
         }
       }
-      return result;
+      return 0;
     }
   }, {
     key: 'setPermissions',
@@ -582,14 +569,13 @@ var ConfigService = function () {
      * @returns the period id the workgroup id is in
      */
     value: function getPeriodIdByWorkgroupId(workgroupId) {
-      var periodId = null;
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
         if (userInfo != null) {
-          periodId = userInfo.periodId;
+          return userInfo.periodId;
         }
       }
-      return periodId;
+      return null;
     }
   }, {
     key: 'getStudentFirstNamesByWorkgroupId',
@@ -642,38 +628,35 @@ var ConfigService = function () {
   }, {
     key: 'getUserIdsByWorkgroupId',
     value: function getUserIdsByWorkgroupId(workgroupId) {
-      var userIds = [];
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
         if (userInfo != null) {
-          userIds = userInfo.userIds;
+          return userInfo.userIds;
         }
       }
-      return userIds;
+      return [];
     }
   }, {
     key: 'getUserNameByWorkgroupId',
     value: function getUserNameByWorkgroupId(workgroupId) {
-      var userName = null;
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
         if (userInfo != null) {
-          userName = userInfo.userName;
+          return userInfo.userName;
         }
       }
-      return userName;
+      return null;
     }
   }, {
     key: 'getDisplayNamesByWorkgroupId',
     value: function getDisplayNamesByWorkgroupId(workgroupId) {
-      var displayNames = null;
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
         if (userInfo != null) {
-          displayNames = userInfo.displayNames;
+          return userInfo.displayNames;
         }
       }
-      return displayNames;
+      return null;
     }
   }, {
     key: 'getUserNamesByWorkgroupId',
@@ -754,12 +737,8 @@ var ConfigService = function () {
   }, {
     key: 'isPreview',
     value: function isPreview() {
-      var result = false;
       var mode = this.getMode();
-      if (mode != null && mode === 'preview') {
-        result = true;
-      }
-      return result;
+      return mode != null && mode === 'preview';
     }
   }, {
     key: 'convertToServerTimestamp',
@@ -799,16 +778,15 @@ var ConfigService = function () {
   }, {
     key: 'isRunOwner',
     value: function isRunOwner(workgroupId) {
-      var result = false;
       if (workgroupId != null) {
         var teacherUserInfo = this.getTeacherUserInfo();
         if (teacherUserInfo != null) {
           if (workgroupId == teacherUserInfo.workgroupId) {
-            result = true;
+            return true;
           }
         }
       }
-      return result;
+      return false;
     }
 
     /**
@@ -820,7 +798,6 @@ var ConfigService = function () {
   }, {
     key: 'isRunSharedTeacher',
     value: function isRunSharedTeacher(workgroupId) {
-      var result = false;
       if (workgroupId != null) {
         var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
         if (sharedTeacherUserInfos != null) {
@@ -834,7 +811,7 @@ var ConfigService = function () {
 
               if (sharedTeacherUserInfo != null) {
                 if (workgroupId == sharedTeacherUserInfo.workgroupId) {
-                  result = true;
+                  return true;
                 }
               }
             }
@@ -854,7 +831,7 @@ var ConfigService = function () {
           }
         }
       }
-      return result;
+      return false;
     }
 
     /**
@@ -867,15 +844,12 @@ var ConfigService = function () {
   }, {
     key: 'getTeacherRole',
     value: function getTeacherRole(workgroupId) {
-      var role = null;
       if (this.isRunOwner(workgroupId)) {
-        // the teacher is the owner of the run
-        role = 'owner';
+        return 'owner';
       } else if (this.isRunSharedTeacher(workgroupId)) {
-        // the teacher is a shared teacher so their role may be 'write' or 'read'
-        role = this.getSharedTeacherRole(workgroupId);
+        return this.getSharedTeacherRole(workgroupId);
       }
-      return role;
+      return null;
     }
 
     /**
@@ -888,7 +862,6 @@ var ConfigService = function () {
   }, {
     key: 'getSharedTeacherRole',
     value: function getSharedTeacherRole(workgroupId) {
-      var role = null;
       if (workgroupId != null) {
         var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
         if (sharedTeacherUserInfos != null) {
@@ -902,7 +875,7 @@ var ConfigService = function () {
 
               if (sharedTeacherUserInfo != null) {
                 if (workgroupId == sharedTeacherUserInfo.workgroupId) {
-                  role = sharedTeacherUserInfo.role;
+                  return sharedTeacherUserInfo.role;
                 }
               }
             }
@@ -922,7 +895,7 @@ var ConfigService = function () {
           }
         }
       }
-      return role;
+      return null;
     }
 
     /**
@@ -1033,9 +1006,7 @@ var ConfigService = function () {
   }, {
     key: 'getProjectAssetsDirectoryPath',
     value: function getProjectAssetsDirectoryPath(includeHost) {
-      var projectAssetsDirectoryPath = null;
       var projectBaseURL = this.getConfigParam('projectBaseURL');
-
       if (projectBaseURL != null) {
         if (includeHost) {
           var host = window.location.origin;
@@ -1044,16 +1015,16 @@ var ConfigService = function () {
            * get the full path including the host
            * e.g. http://wise.berkeley.edu/wise/curriculum/3/assets
            */
-          projectAssetsDirectoryPath = host + projectBaseURL + 'assets';
+          return host + projectBaseURL + 'assets';
         } else {
           /*
            * get the full path not including the host
            * e.g. /wise/curriculum/3/assets
            */
-          projectAssetsDirectoryPath = projectBaseURL + 'assets';
+          return projectBaseURL + 'assets';
         }
       }
-      return projectAssetsDirectoryPath;
+      return null;
     }
 
     /**
@@ -1108,14 +1079,13 @@ var ConfigService = function () {
   }, {
     key: 'getWISEIds',
     value: function getWISEIds(workgroupId) {
-      var wiseIds = [];
       if (workgroupId != null) {
         var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
         if (userInfo != null) {
-          wiseIds = userInfo.userIds;
+          return userInfo.userIds;
         }
       }
-      return wiseIds;
+      return [];
     }
 
     /**

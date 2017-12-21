@@ -228,11 +228,8 @@ class SessionService {
    * Called when the user moves the mouse
    */
   mouseMoved() {
-    // get the current timestamp
     const date = new Date();
     const timestamp = date.getTime();
-
-    // remember this timestamp
     this.lastMouseEventTimestamp = timestamp;
   };
 
@@ -243,19 +240,13 @@ class SessionService {
    * @returns whether there was a mouse event recently
    */
   checkMouseEvent() {
-    let eventOccurred = false;
     if (this.lastMouseEventTimestamp != null) {
       // there was a mouse event since the last time we checked
-
-      // reset the timers
       this.renewSession();
-
-      // clear the mouse event timestamp
       this.lastMouseEventTimestamp = null;
-
-      eventOccurred = true;
+      return true;
     }
-    return eventOccurred;
+    return false;
   };
 
   /**
@@ -264,15 +255,11 @@ class SessionService {
    * @return the number of milliseconds
    */
   convertMinutesToMilliseconds(minutes) {
-    let milliseconds = null;
     if (minutes != null) {
-      // get the number of seconds
       const seconds = minutes * 60;
-
-      // get the number of milliseconds
-      milliseconds = seconds * 1000;
+      return seconds * 1000;
     }
-    return milliseconds;
+    return null;
   };
 
   /**

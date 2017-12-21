@@ -82,7 +82,6 @@ var NotebookService = function () {
 
     this.notebookConfig = {};
     if (this.ProjectService.project) {
-      // get notebook config from project
       this.notebookConfig = this.ProjectService.project.notebook;
       // update local notebook config, preserving any defaults that aren't overriden
       if (this.notebookConfig !== null && _typeof(this.notebookConfig) === 'object') {
@@ -94,13 +93,11 @@ var NotebookService = function () {
   _createClass(NotebookService, [{
     key: "editItem",
     value: function editItem(ev, itemId) {
-      // broadcast edit notebook item event
       this.$rootScope.$broadcast('editNote', { itemId: itemId, ev: ev });
     }
   }, {
     key: "addNewItem",
     value: function addNewItem(ev, file) {
-      // broadcast create new notebook item event
       this.$rootScope.$broadcast('addNewNote', { ev: ev, file: file });
     }
   }, {
@@ -150,7 +147,6 @@ var NotebookService = function () {
   }, {
     key: "getTemplateReportItemByReportId",
     value: function getTemplateReportItemByReportId(reportId) {
-      var templateReportItem = null;
       var reportNotes = this.notebookConfig.itemTypes.report.notes;
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
@@ -167,7 +163,7 @@ var NotebookService = function () {
               localNotebookItemId: reportId,
               content: reportNote
             };
-            break;
+            return templateReportItem;
           }
         }
       } catch (err) {
@@ -185,7 +181,7 @@ var NotebookService = function () {
         }
       }
 
-      return templateReportItem;
+      return null;
     }
   }, {
     key: "calculateTotalUsage",
@@ -219,7 +215,6 @@ var NotebookService = function () {
      * @param reportId
      */
     value: function getReportNoteContentByReportId(reportId) {
-      var result = null;
       var reportNotes = this.notebookConfig.itemTypes.report.notes;
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
@@ -230,8 +225,7 @@ var NotebookService = function () {
           var reportNote = _step2.value;
 
           if (reportNote.reportId === reportId) {
-            result = reportNote;
-            break;
+            return reportNote;
           }
         }
       } catch (err) {
@@ -249,7 +243,7 @@ var NotebookService = function () {
         }
       }
 
-      return result;
+      return null;
     }
   }, {
     key: "isNotebookEnabled",
@@ -290,7 +284,6 @@ var NotebookService = function () {
           config.params.periodId = periodId;
         }
         return this.$http(config).then(function (response) {
-          // loop through the assets and make them into JSON object with more details
           _this.notebooksByWorkgroup = {};
           var allNotebookItems = response.data;
           var _iteratorNormalCompletion3 = true;
@@ -352,9 +345,9 @@ var NotebookService = function () {
     /**
      * Groups the notebook items together in to a map-like structure inside this.notebook.items.
      * {
-       *    "abc123": [{localNotebookItemId:"abc123", "text":"first revision"}, {localNotebookItemId:"abc123", "text":"second revision"}],
-       *    "def456": [{localNotebookItemId:"def456", "text":"hello"}, {localNotebookItemId:"def456", "text":"hello my friend"}]
-       * }
+     *    "abc123": [{localNotebookItemId:"abc123", "text":"first revision"}, {localNotebookItemId:"abc123", "text":"second revision"}],
+     *    "def456": [{localNotebookItemId:"def456", "text":"hello"}, {localNotebookItemId:"def456", "text":"hello my friend"}]
+     * }
      */
     value: function groupNotebookItems() {
       for (var workgroupId in this.notebooksByWorkgroup) {
@@ -532,7 +525,6 @@ var NotebookService = function () {
             }
 
             _this2.groupNotebookItems();
-
             _this2.$rootScope.$broadcast('notebookUpdated', { notebook: _this2.notebooksByWorkgroup[workgroupId] });
           }
           return result.data;
@@ -550,8 +542,6 @@ var NotebookService = function () {
         curentNodeId: currentNode == null ? null : currentNode.id
       };
       var event = isOpen ? "notebookOpened" : "notebookClosed";
-
-      // save notebook open/close event
       this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
     }
   }]);

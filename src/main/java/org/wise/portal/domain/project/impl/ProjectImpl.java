@@ -132,7 +132,7 @@ public class ProjectImpl implements Project {
   protected String metadata;
 
   @Column(name = "modulePath", nullable = false)
-  protected String modulePath;
+  protected String modulePath = "";
 
   @ManyToOne(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
   @JoinColumn(name = "owner_fk", nullable = false, unique = false)

@@ -71,11 +71,10 @@ class CRaterService {
    * @param component the component content
    */
   getCRaterItemType(component) {
-    let cRaterItemType = null;
     if (component != null && component.cRater != null) {
-      cRaterItemType = component.cRater.itemType;
+      return component.cRater.itemType;
     }
-    return cRaterItemType;
+    return null;
   }
 
   /**
@@ -83,11 +82,10 @@ class CRaterService {
    * @param component the component content
    */
   getCRaterItemId(component) {
-    let cRaterItemId = null;
     if (component != null && component.cRater != null) {
-      cRaterItemId = component.cRater.itemId;
+      return component.cRater.itemId;
     }
-    return cRaterItemId;
+    return null;
   }
 
   /**
@@ -96,7 +94,6 @@ class CRaterService {
    * @returns when to perform the CRater scoring e.g. 'submit', 'save', 'change', 'exit'
    */
   getCRaterScoreOn(component) {
-    let scoreOn = null;
     if (component != null) {
       /*
        * CRater can be enabled in two ways
@@ -107,10 +104,10 @@ class CRaterService {
         (!component.hasOwnProperty('enableCRater') && component.cRater != null)) {
 
         // get the score on value e.g. 'submit', 'save', 'change', or 'exit'
-        scoreOn = component.cRater.scoreOn;
+        return component.cRater.scoreOn;
       }
     }
-    return scoreOn;
+    return null;
   }
 
   /**
@@ -118,16 +115,15 @@ class CRaterService {
    * @param component the component content
    */
   isCRaterEnabled(component) {
-    let result = false;
     if (component != null) {
       // get the item type and item id
       const cRaterItemType = this.getCRaterItemType(component);
       const cRaterItemId = this.getCRaterItemId(component);
       if (cRaterItemType != null && cRaterItemId != null) {
-        result = true;
+        return true;
       }
     }
-    return result;
+    return false;
   }
 
   /**
@@ -136,15 +132,14 @@ class CRaterService {
    * @returns whether the CRater is set to score on save
    */
   isCRaterScoreOnSave(component) {
-    let result = false;
     if (component != null) {
       // find when we should perform the CRater scoring
       const scoreOn = this.getCRaterScoreOn(component);
       if (scoreOn != null && scoreOn === 'save') {
-        result = true;
+        return true;
       }
     }
-    return result;
+    return false;
   }
 
   /**
@@ -153,15 +148,14 @@ class CRaterService {
    * @returns whether the CRater is set to score on submit
    */
   isCRaterScoreOnSubmit(component) {
-    let result = false;
     if (component != null) {
       // find when we should perform the CRater scoring
       const scoreOn = this.getCRaterScoreOn(component);
       if (scoreOn != null && scoreOn === 'submit') {
-        result = true;
+        return true;
       }
     }
-    return result;
+    return false;
   }
 
   /**
@@ -170,15 +164,14 @@ class CRaterService {
    * @returns whether the CRater is set to score on change
    */
   isCRaterScoreOnChange(component) {
-    let result = false;
     if (component != null) {
       // find when we should perform the CRater scoring
       const scoreOn = this.getCRaterScoreOn(component);
       if (scoreOn != null && scoreOn === 'change') {
-        result = true;
+        return true;
       }
     }
-    return result;
+    return false;
   }
 
   /**
@@ -187,15 +180,14 @@ class CRaterService {
    * @returns whether the CRater is set to score on exit
    */
   isCRaterScoreOnExit(component) {
-    let result = false;
     if (component != null) {
       // find when we should perform the CRater scoring
       const scoreOn = this.getCRaterScoreOn(component);
       if (scoreOn != null && scoreOn === 'exit') {
-        result = true;
+        return true;
       }
     }
-    return result;
+    return false;
   }
 
   /**
@@ -205,7 +197,6 @@ class CRaterService {
    * @returns the scoring rule for the given score
    */
   getCRaterScoringRuleByScore(component, score) {
-    let scoringRule = null;
     if (component != null && score != null) {
       const cRater = component.cRater;
       if (cRater != null) {
@@ -219,15 +210,14 @@ class CRaterService {
                  * the score matches so we have found
                  * the scoring rule that we want
                  */
-                scoringRule = tempScoringRule;
-                break;
+                return tempScoringRule;
               }
             }
           }
         }
       }
     }
-    return scoringRule;
+    return null;
   }
 
   /**
@@ -237,15 +227,11 @@ class CRaterService {
    * @returns the feedback text for the given score
    */
   getCRaterFeedbackTextByScore(component, score) {
-    let feedbackText = null;
-
-    // get the scoring rule for the given score
     const scoringRule = this.getCRaterScoringRuleByScore(component, score);
     if (scoringRule != null) {
-      // get the feedback text
-      feedbackText = scoringRule.feedbackText;
+      return scoringRule.feedbackText;
     }
-    return feedbackText;
+    return null;
   }
 
   /**
@@ -257,16 +243,12 @@ class CRaterService {
    */
   getMultipleAttemptCRaterFeedbackTextByScore(component, previousScore,
       currentScore) {
-    let feedbackText = null;
-
-    // get the scoring rule for the given score
     const scoringRule = this.getMultipleAttemptCRaterScoringRuleByScore(
         component, previousScore, currentScore);
     if (scoringRule != null) {
-      // get the feedback text
-      feedbackText = scoringRule.feedbackText;
+      return scoringRule.feedbackText;
     }
-    return feedbackText;
+    return null;
   }
 
   /**
@@ -279,26 +261,15 @@ class CRaterService {
    */
   getMultipleAttemptCRaterScoringRuleByScore(component, previousScore,
       currentScore) {
-    let scoringRule = null;
     if (component != null && previousScore != null && currentScore != null) {
       const cRater = component.cRater;
       if (cRater != null) {
-
-        // get the multiple attempt scoring rules
         const multipleAttemptScoringRules = cRater.multipleAttemptScoringRules;
-
         if (multipleAttemptScoringRules != null) {
-
-          // loop through all the multiple attempt scoring rules
           for (let multipleAttemptScoringRule of multipleAttemptScoringRules) {
-
             if (multipleAttemptScoringRule != null) {
-
-              // get a multiple attempt scoring rule
               const scoreSequence = multipleAttemptScoringRule.scoreSequence;
-
               if (scoreSequence != null) {
-
                 /*
                  * get the expected previous score and current score
                  * that will satisfy the rule
@@ -313,8 +284,7 @@ class CRaterService {
                    * the previous score and current score match the
                    * expected scores so we have found the rule we want
                    */
-                  scoringRule = multipleAttemptScoringRule;
-                  break;
+                  return multipleAttemptScoringRule;
                 }
               }
             }
@@ -322,7 +292,7 @@ class CRaterService {
         }
       }
     }
-    return scoringRule;
+    return null;
   }
 }
 

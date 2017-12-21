@@ -1,6 +1,6 @@
 {
   "name": "wise",
-  "version": "5.6.2",
+  "version": "5.6.3",
   "description": "Web-based Inquiry Science Environment",
   "main": "app.js",
   "dependencies": {
@@ -10,7 +10,7 @@
     "autoprefixer": "^6.3.1",
     "babel-cli": "6.14.0",
     "babel-core": "6.24.1",
-    "babel-preset-env": "^1.6.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "6.14.0",
     "browser-sync": "^2.11.1",
     "concurrently": "^3.4.0",
@@ -99,6 +99,7 @@
       "jquery": "npm:jquery@^2.2.0",
       "moment": "npm:moment@^2.11.1",
       "ng-file-upload": "npm:ng-file-upload@^12.0.4",
+      "ng-onload": "npm:ng-onload@^0.8.0",
       "oclazyload": "npm:oclazyload@^1.0.9",
       "svg.draggable.js": "npm:svg.draggable.js@2.2.0",
       "svg.js": "github:svgdotjs/svg.js@2.3.2",
