@@ -4855,6 +4855,61 @@ var GraphController = function () {
         }
       } else if (name == 'trial') {
         this.parseLatestTrial(studentData, params);
+      } else if (name == 'trialIdsToDelete') {
+        this.deleteTrialsByTrialId(studentData.trialIdsToDelete);
+      }
+    }
+
+    /**
+     * Delete the trials
+     * @param trialIdsToDelete An array of trial ids to delete
+     */
+
+  }, {
+    key: 'deleteTrialsByTrialId',
+    value: function deleteTrialsByTrialId(trialIdsToDelete) {
+      if (trialIdsToDelete != null) {
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
+
+        try {
+          for (var _iterator5 = trialIdsToDelete[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var trialIdToDelete = _step5.value;
+
+            this.deleteTrialId(trialIdToDelete);
+          }
+        } catch (err) {
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
+            }
+          } finally {
+            if (_didIteratorError5) {
+              throw _iteratorError5;
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * Delete a trial
+     * @param trialId The trial id string to delete
+     */
+
+  }, {
+    key: 'deleteTrialId',
+    value: function deleteTrialId(trialId) {
+      for (var t = 0; t < this.trials.length; t++) {
+        var trial = this.trials[t];
+        if (trial.id == trialId) {
+          this.trials.splice(t, 1);
+          break;
+        }
       }
     }
 
@@ -6035,13 +6090,13 @@ var GraphController = function () {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion5 = true;
-          var _didIteratorError5 = false;
-          var _iteratorError5 = undefined;
+          var _iteratorNormalCompletion6 = true;
+          var _didIteratorError6 = false;
+          var _iteratorError6 = undefined;
 
           try {
-            for (var _iterator5 = components[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-              var component = _step5.value;
+            for (var _iterator6 = components[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+              var component = _step6.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -6052,16 +6107,16 @@ var GraphController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError5 = true;
-            _iteratorError5 = err;
+            _didIteratorError6 = true;
+            _iteratorError6 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                _iterator5.return();
+              if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                _iterator6.return();
               }
             } finally {
-              if (_didIteratorError5) {
-                throw _iteratorError5;
+              if (_didIteratorError6) {
+                throw _iteratorError6;
               }
             }
           }
@@ -6574,13 +6629,13 @@ var GraphController = function () {
       var connectedComponents = this.componentContent.connectedComponents;
       if (connectedComponents != null) {
         var componentStates = [];
-        var _iteratorNormalCompletion6 = true;
-        var _didIteratorError6 = false;
-        var _iteratorError6 = undefined;
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
 
         try {
-          for (var _iterator6 = connectedComponents[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-            var connectedComponent = _step6.value;
+          for (var _iterator7 = connectedComponents[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var connectedComponent = _step7.value;
 
             if (connectedComponent != null) {
               var nodeId = connectedComponent.nodeId;
@@ -6610,16 +6665,16 @@ var GraphController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError6 = true;
-          _iteratorError6 = err;
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-              _iterator6.return();
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
             }
           } finally {
-            if (_didIteratorError6) {
-              throw _iteratorError6;
+            if (_didIteratorError7) {
+              throw _iteratorError7;
             }
           }
         }
@@ -6657,13 +6712,13 @@ var GraphController = function () {
         }
       } else {
         // we will merge specific fields
-        var _iteratorNormalCompletion7 = true;
-        var _didIteratorError7 = false;
-        var _iteratorError7 = undefined;
+        var _iteratorNormalCompletion8 = true;
+        var _didIteratorError8 = false;
+        var _iteratorError8 = undefined;
 
         try {
-          for (var _iterator7 = mergeFields[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-            var mergeField = _step7.value;
+          for (var _iterator8 = mergeFields[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+            var mergeField = _step8.value;
 
             var name = mergeField.name;
             var when = mergeField.when;
@@ -6683,16 +6738,16 @@ var GraphController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError7 = true;
-          _iteratorError7 = err;
+          _didIteratorError8 = true;
+          _iteratorError8 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-              _iterator7.return();
+            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+              _iterator8.return();
             }
           } finally {
-            if (_didIteratorError7) {
-              throw _iteratorError7;
+            if (_didIteratorError8) {
+              throw _iteratorError8;
             }
           }
         }
@@ -6719,13 +6774,13 @@ var GraphController = function () {
         // TODO
       } else {
         // we will merge specific fields
-        var _iteratorNormalCompletion8 = true;
-        var _didIteratorError8 = false;
-        var _iteratorError8 = undefined;
+        var _iteratorNormalCompletion9 = true;
+        var _didIteratorError9 = false;
+        var _iteratorError9 = undefined;
 
         try {
-          for (var _iterator8 = mergeFields[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-            var mergeField = _step8.value;
+          for (var _iterator9 = mergeFields[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+            var mergeField = _step9.value;
 
             var name = mergeField.name;
             var when = mergeField.when;
@@ -6746,16 +6801,16 @@ var GraphController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError8 = true;
-          _iteratorError8 = err;
+          _didIteratorError9 = true;
+          _iteratorError9 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion8 && _iterator8.return) {
-              _iterator8.return();
+            if (!_iteratorNormalCompletion9 && _iterator9.return) {
+              _iterator9.return();
             }
           } finally {
-            if (_didIteratorError8) {
-              throw _iteratorError8;
+            if (_didIteratorError9) {
+              throw _iteratorError9;
             }
           }
         }
@@ -6777,51 +6832,15 @@ var GraphController = function () {
       if (field == 'selectedCells') {
         if (newComponentState == null) {
           // we will default to hide all the trials
-          var _iteratorNormalCompletion9 = true;
-          var _didIteratorError9 = false;
-          var _iteratorError9 = undefined;
-
-          try {
-            for (var _iterator9 = baseComponentState.studentData.trials[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-              var trial = _step9.value;
-
-              trial.show = false;
-            }
-          } catch (err) {
-            _didIteratorError9 = true;
-            _iteratorError9 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                _iterator9.return();
-              }
-            } finally {
-              if (_didIteratorError9) {
-                throw _iteratorError9;
-              }
-            }
-          }
-        } else {
-          /*
-           * loop through all the trials and show the ones that are in the
-           * selected cells array.
-           */
-          var studentData = newComponentState.studentData;
-          var selectedCells = studentData[field];
-          var selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
           var _iteratorNormalCompletion10 = true;
           var _didIteratorError10 = false;
           var _iteratorError10 = undefined;
 
           try {
             for (var _iterator10 = baseComponentState.studentData.trials[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-              var _trial = _step10.value;
+              var trial = _step10.value;
 
-              if (selectedTrialIds.includes(_trial.id)) {
-                _trial.show = true;
-              } else {
-                _trial.show = false;
-              }
+              trial.show = false;
             }
           } catch (err) {
             _didIteratorError10 = true;
@@ -6834,6 +6853,42 @@ var GraphController = function () {
             } finally {
               if (_didIteratorError10) {
                 throw _iteratorError10;
+              }
+            }
+          }
+        } else {
+          /*
+           * loop through all the trials and show the ones that are in the
+           * selected cells array.
+           */
+          var studentData = newComponentState.studentData;
+          var selectedCells = studentData[field];
+          var selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
+          var _iteratorNormalCompletion11 = true;
+          var _didIteratorError11 = false;
+          var _iteratorError11 = undefined;
+
+          try {
+            for (var _iterator11 = baseComponentState.studentData.trials[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+              var _trial = _step11.value;
+
+              if (selectedTrialIds.includes(_trial.id)) {
+                _trial.show = true;
+              } else {
+                _trial.show = false;
+              }
+            }
+          } catch (err) {
+            _didIteratorError11 = true;
+            _iteratorError11 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                _iterator11.return();
+              }
+            } finally {
+              if (_didIteratorError11) {
+                throw _iteratorError11;
               }
             }
           }
@@ -7330,57 +7385,57 @@ var GraphController = function () {
         if (seriesId == null) {
           series = chart.series[chart.series.length - 1];
         } else {
-          var _iteratorNormalCompletion11 = true;
-          var _didIteratorError11 = false;
-          var _iteratorError11 = undefined;
+          var _iteratorNormalCompletion12 = true;
+          var _didIteratorError12 = false;
+          var _iteratorError12 = undefined;
 
           try {
-            for (var _iterator11 = chart.series[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-              var tempSeries = _step11.value;
+            for (var _iterator12 = chart.series[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+              var tempSeries = _step12.value;
 
               if (tempSeries.userOptions.name == seriesId) {
                 series = tempSeries;
               }
             }
           } catch (err) {
-            _didIteratorError11 = true;
-            _iteratorError11 = err;
+            _didIteratorError12 = true;
+            _iteratorError12 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                _iterator11.return();
+              if (!_iteratorNormalCompletion12 && _iterator12.return) {
+                _iterator12.return();
               }
             } finally {
-              if (_didIteratorError11) {
-                throw _iteratorError11;
+              if (_didIteratorError12) {
+                throw _iteratorError12;
               }
             }
           }
         }
         var points = series.points;
-        var _iteratorNormalCompletion12 = true;
-        var _didIteratorError12 = false;
-        var _iteratorError12 = undefined;
+        var _iteratorNormalCompletion13 = true;
+        var _didIteratorError13 = false;
+        var _iteratorError13 = undefined;
 
         try {
-          for (var _iterator12 = points[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-            var point = _step12.value;
+          for (var _iterator13 = points[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+            var point = _step13.value;
 
             if (point.x == x) {
               chart.tooltip.refresh(point);
             }
           }
         } catch (err) {
-          _didIteratorError12 = true;
-          _iteratorError12 = err;
+          _didIteratorError13 = true;
+          _iteratorError13 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion12 && _iterator12.return) {
-              _iterator12.return();
+            if (!_iteratorNormalCompletion13 && _iterator13.return) {
+              _iterator13.return();
             }
           } finally {
-            if (_didIteratorError12) {
-              throw _iteratorError12;
+            if (_didIteratorError13) {
+              throw _iteratorError13;
             }
           }
         }
@@ -7416,13 +7471,13 @@ var GraphController = function () {
     value: function convertSelectedCellsToTrialIds(selectedCells) {
       var selectedTrialIds = [];
       if (selectedCells != null) {
-        var _iteratorNormalCompletion13 = true;
-        var _didIteratorError13 = false;
-        var _iteratorError13 = undefined;
+        var _iteratorNormalCompletion14 = true;
+        var _didIteratorError14 = false;
+        var _iteratorError14 = undefined;
 
         try {
-          for (var _iterator13 = selectedCells[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-            var selectedCell = _step13.value;
+          for (var _iterator14 = selectedCells[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+            var selectedCell = _step14.value;
 
             var material = selectedCell.material;
             var bevTemp = selectedCell.bevTemp;
@@ -7431,16 +7486,16 @@ var GraphController = function () {
             selectedTrialIds.push(selectedTrialId);
           }
         } catch (err) {
-          _didIteratorError13 = true;
-          _iteratorError13 = err;
+          _didIteratorError14 = true;
+          _iteratorError14 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion13 && _iterator13.return) {
-              _iterator13.return();
+            if (!_iteratorNormalCompletion14 && _iterator14.return) {
+              _iterator14.return();
             }
           } finally {
-            if (_didIteratorError13) {
-              throw _iteratorError13;
+            if (_didIteratorError14) {
+              throw _iteratorError14;
             }
           }
         }

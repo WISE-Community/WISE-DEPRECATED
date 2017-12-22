@@ -4559,6 +4559,34 @@ class GraphController {
       }
     } else if (name == 'trial') {
       this.parseLatestTrial(studentData, params);
+    } else if (name == 'trialIdsToDelete') {
+      this.deleteTrialsByTrialId(studentData.trialIdsToDelete);
+    }
+  }
+
+  /**
+   * Delete the trials
+   * @param trialIdsToDelete An array of trial ids to delete
+   */
+  deleteTrialsByTrialId(trialIdsToDelete) {
+    if (trialIdsToDelete != null) {
+      for (let trialIdToDelete of trialIdsToDelete) {
+        this.deleteTrialId(trialIdToDelete);
+      }
+    }
+  }
+
+  /**
+   * Delete a trial
+   * @param trialId The trial id string to delete
+   */
+  deleteTrialId(trialId) {
+    for (let t = 0; t < this.trials.length; t++) {
+      let trial = this.trials[t];
+      if (trial.id == trialId) {
+        this.trials.splice(t, 1);
+        break;
+      }
     }
   }
 
