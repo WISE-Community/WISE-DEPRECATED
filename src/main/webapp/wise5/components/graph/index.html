@@ -669,7 +669,6 @@
                accept='.csv'
                ng-if='graphController.componentContent.enableFileUpload'
                onchange='angular.element(this).scope().fileUploadChanged(this)'/>
-          <hr />
           <div class='component__actions' layout='row'>
             <md-input-container ng-if='graphController.componentContent.enableTrials'>
               <label>{{ 'graph.selectTrialsToShow' | translate }}</label>
@@ -772,7 +771,7 @@
                        ng-change='graphController.studentDataChanged()'/>
                 </md-input-container>
               </div>
-              <div>
+              <div style="width: 100%;">
                 <highchart id='{{graphController.chartId}}' config='graphController.chartConfig'></highchart>
               </div>
             </div>
