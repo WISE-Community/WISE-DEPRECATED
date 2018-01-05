@@ -200,6 +200,7 @@
         <version>2.2</version>
         <configuration>
           <port>8080</port>
+          <contextFile>src/main/resources/tomcat-context.xml</contextFile>
           <path>/${project.build.finalName}</path>
           <systemProperties>
             <JAVA_OPTS>-Xms512m -Xmx1024m -XX:MaxPermSize=512m</JAVA_OPTS>
