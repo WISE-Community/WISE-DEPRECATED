@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Pattern;
-
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,24 +51,19 @@ public abstract class AbstractHttpRequest {
   /**
    * Creates an AbstractHttpRequest object with all of the data required.
    *
-   * @param requestHeaders
-   *            is a map of HTTP request headers
-   * @param requestParameters
-   *            is a map of HTTP request parameters
-   * @param relativeUrl
-   *            is the target relative URL for this request
-   * @param expectedResponseStatusCode
-   *            is the HTTP status code that is expected to be returned by the
-   *            server
-   * @throws BadHeaderException
-   *             if the request headers contain any illegal characters either
-   *             in the request field name or the request field value
+   * @param requestHeaders is a map of HTTP request headers
+   * @param requestParameters is a map of HTTP request parameters
+   * @param relativeUrl is the target relative URL for this request
+   * @param expectedResponseStatusCode is the HTTP status code that is expected
+   * to be returned by the server
+   * @throws BadHeaderException if the request headers contain any illegal characters either
+   * in the request field name or the request field value
    */
   protected AbstractHttpRequest(final Map<String, String> requestHeaders,
       final Map<String, String> requestParameters, final String relativeUrl,
       final int expectedResponseStatusCode) throws BadHeaderException {
-    this.logger = LogFactory.getLog(this.getClass());
-    this.checkForLegalHeaders(requestHeaders);
+    logger = LogFactory.getLog(getClass());
+    checkForLegalHeaders(requestHeaders);
     this.requestHeaders = Collections.unmodifiableMap(requestHeaders);
     this.requestParameters = Collections.unmodifiableMap(requestParameters);
     this.relativeUrl = relativeUrl;
@@ -85,7 +79,6 @@ public abstract class AbstractHttpRequest {
 
   /**
    * Returns the expected response status code for this request.
-   *
    * @return the expectedResponseStatusCode
    */
   public int getExpectedResponseStatusCode() {
@@ -94,7 +87,6 @@ public abstract class AbstractHttpRequest {
 
   /**
    * Returns the request headers for this request.
-   *
    * @return the requestHeaders
    */
   public Map<String, String> getRequestHeaders() {
@@ -103,7 +95,6 @@ public abstract class AbstractHttpRequest {
 
   /**
    * Returns the request parameters for this request.
-   *
    * @return the requestParameters
    */
   public Map<String, String> getRequestParameters() {
@@ -112,7 +103,6 @@ public abstract class AbstractHttpRequest {
 
   /**
    * Returns the target URL for this request.
-   *
    * @return the relativeUrl
    */
   public String getRelativeUrl() {
@@ -120,14 +110,13 @@ public abstract class AbstractHttpRequest {
   }
 
   private static final Pattern ILLEGAL_HEADER_FIELD_NAME_PATTERN = Pattern
-    .compile("(.*[\\p{Cntrl}\t ()<>@,;:\\\"/\u001B\u001D?={}]+.*)+");
+      .compile("(.*[\\p{Cntrl}\t ()<>@,;:\\\"/\u001B\u001D?={}]+.*)+");
 
   private static final Pattern ILLEGAL_HEADER_FIELD_VALUE_PATTERN = Pattern
-    .compile("(.*[\\p{Cntrl}]+.*)+");
+      .compile("(.*[\\p{Cntrl}]+.*)+");
 
   /**
    * Checks that the request headers are legal
-   *
    * @param requestHeaders A map of the request headers
    * @throws BadHeaderException Thrown if the headers are illegal.
    */
@@ -149,19 +138,15 @@ public abstract class AbstractHttpRequest {
    * status code is not the expected one. Override this method to handle
    * specific status codes.
    *
-   * @param response
-   *            The response
+   * @param response The response
    * @return true if the status code matches the expected status code
-   * @throws IOException
-   *             when the http response body cannot be obtained.
-   * @throws HttpStatusCodeException
-   *             when the returned status code is not as expected.
-   *
+   * @throws IOException when the http response body cannot be obtained.
+   * @throws HttpStatusCodeException when the returned status code is not as expected.
    */
   public boolean isValidResponseStatus(HttpResponse response)
       throws IOException, HttpStatusCodeException {
     int actualStatusCode = response.getStatusLine().getStatusCode();
-    if (actualStatusCode == this.expectedResponseStatusCode) {
+    if (actualStatusCode == expectedResponseStatusCode) {
       return true;
     }
 
@@ -172,7 +157,6 @@ public abstract class AbstractHttpRequest {
 
   /**
    * Logs the HttpMethod response information
-   *
    * @param response the HttpResponse response.
    * @param actualStatusCode The status code retrieved from the response.
    * @throws IOException If the response body cannot be retrieved.

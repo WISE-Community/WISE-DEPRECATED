@@ -38,16 +38,10 @@ public class UserAccountFormValidator implements Validator {
 
   protected static final int MAX_PASSWORD_LENGTH = 20;
 
-  /**
-   * @see Validator#supports(Class)
-   */
   public boolean supports(Class clazz) {
     return UserAccountForm.class.isAssignableFrom(clazz);
   }
 
-  /**
-   * @see Validator#validate(Object, Errors)
-   */
   public void validate(Object userAccountFormIn, Errors errors) {
     UserAccountForm userAccountForm = (UserAccountForm) userAccountFormIn;
     MutableUserDetails userDetails = userAccountForm.getUserDetails();

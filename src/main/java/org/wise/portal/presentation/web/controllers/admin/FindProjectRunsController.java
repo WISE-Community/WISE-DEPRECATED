@@ -71,13 +71,13 @@ public class FindProjectRunsController {
       ModelMap modelMap) {
     List<Run> runList = new ArrayList<Run>();
     if ("runId".equals(runLookupType)) {
-      runList = this.getRunListByRunId(Long.parseLong(runLookupValue));
+      runList = getRunListByRunId(Long.parseLong(runLookupValue));
     } else if ("projectId".equals(runLookupType)) {
-      runList = this.getRunListByProjectId(Long.parseLong(runLookupValue));
+      runList = getRunListByProjectId(Long.parseLong(runLookupValue));
     } else if ("teacherUsername".equals(runLookupType)) {
-      runList = this.getRunListByUsername(runLookupValue);
+      runList = getRunListByUsername(runLookupValue);
     } else if ("runTitle".equals(runLookupType)) {
-      runList = this.getRunListByRunTitle(runLookupValue);
+      runList = getRunListByRunTitle(runLookupValue);
     }
     modelMap.put("runList", runList);
     return "admin/run/manageprojectruns";
@@ -136,7 +136,7 @@ public class FindProjectRunsController {
   private List<Run> getRunListByRunId(Long runId) {
     List<Run> runList = new ArrayList<Run>();
     try {
-      Run run = this.runService.retrieveById(runId);
+      Run run = runService.retrieveById(runId);
       if (run != null) {
         runList.add(run);
       }
@@ -154,6 +154,6 @@ public class FindProjectRunsController {
    * @return List<Run> - list of runs associated with the runTitle
    */
   private List<Run> getRunListByRunTitle(String runTitle) {
-    return this.runService.getRunsByTitle(runTitle);
+    return runService.getRunsByTitle(runTitle);
   }
 }

@@ -77,8 +77,6 @@ public class ChangeUserPasswordController {
     String userName = request.getParameter(USER_NAME);
     User userToChange;
     User teacherUser = null;
-    String view = "";
-
     if (userName != null) {
       // the username is provided which means a teacher is changing the password for a student
       userToChange = userService.retrieveUserByUsername(userName);
@@ -93,13 +91,10 @@ public class ChangeUserPasswordController {
       params.setUser(userToChange);
       params.setTeacherUser(teacherUser);
       model.addAttribute("changeStudentPasswordParameters", params);
-
-      view = getServletPath(request);
+      return getServletPath(request);
     } else {
-      view = "errors/accessdenied";
+      return "errors/accessdenied";
     }
-
-    return view;
   }
 
   /**
@@ -140,7 +135,6 @@ public class ChangeUserPasswordController {
       BindingResult bindingResult,
       SessionStatus sessionStatus) {
     String view = "";
-
     changePasswordParametersValidator.validate(params, bindingResult);
 
     String requestPath = getServletPath(request);
@@ -153,7 +147,6 @@ public class ChangeUserPasswordController {
       view = successView;
       sessionStatus.setComplete();
     }
-
     return view;
   }
 

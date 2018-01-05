@@ -47,12 +47,12 @@ public class NewsItemServiceImpl implements NewsItemService {
   @Autowired
   private NewsItemDao<NewsItem> newsItemDao;
 
-  @Cacheable(value = "news")
+  @Cacheable("news")
   public List<NewsItem> retrieveAllNewsItem() {
     return newsItemDao.getList();
   }
 
-  @Cacheable(value = "news")
+  @Cacheable("news")
   public List<NewsItem> retrieveByType(String type) {
     return newsItemDao.getListByType(type);
   }
@@ -74,7 +74,6 @@ public class NewsItemServiceImpl implements NewsItemService {
     newsItem.setTitle(title);
     newsItem.setNews(news);
     newsItem.setType(type);
-
     newsItemDao.save(newsItem);
     return newsItem;
   }

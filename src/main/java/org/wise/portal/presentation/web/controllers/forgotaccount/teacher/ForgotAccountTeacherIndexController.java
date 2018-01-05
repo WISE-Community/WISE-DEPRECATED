@@ -69,17 +69,10 @@ public class ForgotAccountTeacherIndexController {
   @Autowired
   private MessageSource messageSource;
 
-  //the path to this form view
   private String formView = "forgotaccount/teacher/index";
-
-  //the path to the success view
   private String successView = "forgotaccount/teacher/success";
-
-  //the path to the error view
   private String errorView = "/forgotaccount/teacher/error";
-
   private static final String EMAIL = "email";
-
   private static final String USERNAME = "username";
 
   /**
@@ -89,10 +82,8 @@ public class ForgotAccountTeacherIndexController {
    */
   @RequestMapping(method = RequestMethod.GET)
   public String initializeForm(ModelMap model) {
-    //create the user details object for the page
     TeacherUserDetails userDetails = new TeacherUserDetails();
     model.addAttribute("userDetails", userDetails);
-
     return formView;
   }
 
@@ -106,10 +97,8 @@ public class ForgotAccountTeacherIndexController {
    */
   @RequestMapping(method = RequestMethod.POST)
   protected String onSubmit(@ModelAttribute("userDetails") TeacherUserDetails userDetails,
-                            Model model,
-                            HttpServletRequest request)
-    throws Exception {
-
+      Model model,
+      HttpServletRequest request) {
     String username = null;
     String emailAddress = null;
     boolean userNameProvided = false;
@@ -117,8 +106,7 @@ public class ForgotAccountTeacherIndexController {
 
     try {
       username = StringUtils.trimToNull(userDetails.getUsername());
-      emailAddress = StringUtils
-        .trimToNull(userDetails.getEmailAddress());
+      emailAddress = StringUtils.trimToNull(userDetails.getEmailAddress());
       User user = null;
       if (username != null) {
         userNameProvided = true;
@@ -127,8 +115,7 @@ public class ForgotAccountTeacherIndexController {
           return errorView;
         }
 
-        user = userService.retrieveUserByUsername(userDetails
-          .getUsername());
+        user = userService.retrieveUserByUsername(userDetails.getUsername());
 
         if (user == null) {
           return errorView;
@@ -137,12 +124,11 @@ public class ForgotAccountTeacherIndexController {
       } else if (emailAddress != null) {
         emailProvided = true;
 
-        if (!this.isValidEmail(emailAddress)) {
+        if (!isValidEmail(emailAddress)) {
           return errorView;
         }
 
-        List<User> users = userService
-          .retrieveUserByEmailAddress(emailAddress);
+        List<User> users = userService.retrieveUserByEmailAddress(emailAddress);
 
         if (users.isEmpty()) {
           return errorView;
@@ -152,13 +138,8 @@ public class ForgotAccountTeacherIndexController {
         }
       }
 
-      //get a 64 character alphanumeric string
       String randomAlphanumeric = RandomStringUtils.randomAlphanumeric(64);
-
-      //get the current time
       Date now = new Date();
-
-      //set the values for the user
       user.getUserDetails().setResetPasswordKey(randomAlphanumeric);
       user.getUserDetails().setResetPasswordRequestTime(now);
       userService.updateUser(user);
@@ -172,23 +153,16 @@ public class ForgotAccountTeacherIndexController {
       String contextPath = request.getContextPath();
       String portalContextURL = "";
       if (contextPath.startsWith("http")) {
-        // in case contextPath is absolute, in the form "http://xyz:8080/wise"
         portalContextURL = contextPath;
       } else {
-        // in case contextPath is relative, in the form "/wise"
         portalContextURL = ControllerUtil.getPortalUrlString(request);
       }
       String passwordResetLink = portalContextURL + "/legacy/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
-
       String portalName = wiseProperties.getProperty("wise.name");
-
       String userEmail = user.getUserDetails().getEmailAddress();
-
       String[] recipients = new String[]{userEmail};
 
-      // get user Locale
       Locale userLocale = request.getLocale();
-
       String defaultSubject = "";
       String subject = "";
       String defaultBody = "";
@@ -209,13 +183,9 @@ public class ForgotAccountTeacherIndexController {
         body = messageSource.getMessage("forgotaccount.teacher.index.usernameRequestEmailBody", new Object[] {username,portalName}, defaultBody, userLocale);
       }
 
-      // send password in the email here
       mailService.postMail(recipients, subject, body, userEmail);
-
-      //add the email and username to the model so we can display them if we can't find the user account
       model.addAttribute(EMAIL, userEmail);
       model.addAttribute(USERNAME, username);
-
       return successView;
     } catch (Exception e) {
       e.printStackTrace();
@@ -223,9 +193,6 @@ public class ForgotAccountTeacherIndexController {
     }
   }
 
-  /**
-   * Validates the email against the email regular expression
-   */
   private boolean isValidEmail(String email) {
     return !StringUtils.isEmpty(email) && Pattern.matches(TeacherAccountFormValidator.EMAIL_REGEXP, email);
   }

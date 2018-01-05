@@ -54,7 +54,6 @@ public class CustomContextLoaderListener extends ContextLoaderListener {
    * setting of the config locations.
    *
    * @throws ClassNotFoundException
-   *
    * @see org.springframework.web.context.ContextLoader#createWebApplicationContext(ServletContext)
    */
   @Override
@@ -63,7 +62,7 @@ public class CustomContextLoaderListener extends ContextLoaderListener {
     Class<?> contextClass = determineContextClass(servletContext);
     if (!ConfigurableWebApplicationContext.class.isAssignableFrom(contextClass)) {
       throw new ApplicationContextException("Custom context class ["
-        + contextClass.getName() + "] is not of type ConfigurableWebApplicationContext");
+          + contextClass.getName() + "] is not of type ConfigurableWebApplicationContext");
     }
 
     ConfigurableWebApplicationContext webApplicationContext =
@@ -85,7 +84,7 @@ public class CustomContextLoaderListener extends ContextLoaderListener {
       }
     } else {
       throw new InvalidParameterException(
-        "No value defined for the required: " + CONFIG_CLASS_PARAM);
+          "No value defined for the required: " + CONFIG_CLASS_PARAM);
     }
     webApplicationContext.refresh();
     return webApplicationContext;

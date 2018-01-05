@@ -138,8 +138,7 @@ public class VLEServiceImpl implements VLEService {
   public JSONArray getNotebookExport(Integer runId) {
     SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
     List<Object[]> notebookItemExport = notebookItemDao.getNotebookItemExport(runId);
-    for (int i = 1; i < notebookItemExport.size(); i++) {
-      // skip header row
+    for (int i = 1; i < notebookItemExport.size(); i++) {  // skip header row
       Object[] notebookItemExportRow = notebookItemExport.get(i);
 
       // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
@@ -161,8 +160,7 @@ public class VLEServiceImpl implements VLEService {
   public JSONArray getStudentWorkExport(Integer runId) {
     SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
     List<Object[]> studentWorkExport = studentWorkDao.getStudentWorkExport(runId);
-    for (int i = 1; i < studentWorkExport.size(); i++) {
-      // skip header row
+    for (int i = 1; i < studentWorkExport.size(); i++) {  // skip header row
       Object[] studentWorkExportRow = studentWorkExport.get(i);
 
       // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
@@ -191,8 +189,7 @@ public class VLEServiceImpl implements VLEService {
   public JSONArray getStudentEventExport(Integer runId) {
     SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
     List<Object[]> studentEventExport = eventDao.getStudentEventExport(runId);
-    for (int i = 1; i < studentEventExport.size(); i++) {
-      // skip header row
+    for (int i = 1; i < studentEventExport.size(); i++) {  // skip header row
       Object[] studentEventExportRow = studentEventExport.get(i);
 
       // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
@@ -214,8 +211,7 @@ public class VLEServiceImpl implements VLEService {
   public JSONArray getNotificationExport(Integer runId) {
     SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
     List<Object[]> notificationExport = notificationDao.getNotificationExport(runId);
-    for (int i = 1; i < notificationExport.size(); i++) {
-      // skip header row
+    for (int i = 1; i < notificationExport.size(); i++) {  // skip header row
       Object[] notificationExportRow = notificationExport.get(i);
 
       // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
@@ -307,7 +303,6 @@ public class VLEServiceImpl implements VLEService {
       studentWork.setClientSaveTime(clientSaveTimestamp);
     }
 
-    // set postTime
     Calendar now = Calendar.getInstance();
     Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
     studentWork.setServerSaveTime(serverSaveTimestamp);
@@ -349,16 +344,14 @@ public class VLEServiceImpl implements VLEService {
         e.printStackTrace();
       }
     }
-
     return eventDao.getEventsByParams(id, run, period, workgroup, nodeId, componentId, componentType,
-      context, category, event, components);
+        context, category, event, components);
   }
 
   @Override
   public Event saveEvent(Integer id, Integer runId, Integer periodId, Integer workgroupId,
       String nodeId, String componentId, String componentType,  String context, String category,
-      String eventString, String data, String clientSaveTime, Integer projectId, Integer userId)
-      throws ObjectNotFoundException {
+      String eventString, String data, String clientSaveTime, Integer projectId, Integer userId) {
     Event event;
     if (id != null) {
       // if the id is passed in, the client is requesting an update, so fetch the Event from data store
@@ -434,11 +427,9 @@ public class VLEServiceImpl implements VLEService {
         e.printStackTrace();
       }
     }
-    // set postTime
     Calendar now = Calendar.getInstance();
     Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
     event.setServerSaveTime(serverSaveTimestamp);
-
     eventDao.save(event);
     return event;
   }
@@ -462,7 +453,6 @@ public class VLEServiceImpl implements VLEService {
         e.printStackTrace();
       }
     }
-
     return achievementDao.getAchievementsByParams(id, run, workgroup, achievementId, type);
   }
 
@@ -505,11 +495,9 @@ public class VLEServiceImpl implements VLEService {
     if (data != null) {
       achievement.setData(data);
     }
-    // set postTime
     Calendar now = Calendar.getInstance();
     Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
     achievement.setAchievementTime(serverSaveTimestamp);
-
     achievementDao.save(achievement);
     return achievement;
   }
@@ -569,7 +557,6 @@ public class VLEServiceImpl implements VLEService {
         e.printStackTrace();
       }
     }
-
     return annotationDao.getAnnotationsByParams(id, run, period, fromWorkgroup, toWorkgroup,
       nodeId, componentId, studentWork, localNotebookItemId,  notebookItem, type);
   }
@@ -578,7 +565,7 @@ public class VLEServiceImpl implements VLEService {
   public Annotation saveAnnotation(Integer id, Integer runId, Integer periodId,
       Integer fromWorkgroupId, Integer toWorkgroupId, String nodeId, String componentId,
       Integer studentWorkId, String localNotebookItemId, Integer notebookItemId,
-      String type, String data, String clientSaveTime) throws ObjectNotFoundException {
+      String type, String data, String clientSaveTime) {
     Annotation annotation;
     if (id != null) {
       // if the id is passed in, the client is requesting an update, so fetch the Event from data store
@@ -655,11 +642,9 @@ public class VLEServiceImpl implements VLEService {
       Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));
       annotation.setClientSaveTime(clientSaveTimestamp);
     }
-    // set postTime
     Calendar now = Calendar.getInstance();
     Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
     annotation.setServerSaveTime(serverSaveTimestamp);
-
     annotationDao.save(annotation);
     return annotation;
   }
@@ -668,7 +653,7 @@ public class VLEServiceImpl implements VLEService {
   public List<StudentAsset> getStudentAssets(
       Integer id, Integer runId, Integer periodId, Integer workgroupId,
       String nodeId, String componentId, String componentType,
-      Boolean isReferenced) throws ObjectNotFoundException {
+      Boolean isReferenced) {
     Run run = null;
     if (runId != null) {
       try {
@@ -694,7 +679,6 @@ public class VLEServiceImpl implements VLEService {
         e.printStackTrace();
       }
     }
-
     return studentAssetDao.getStudentAssetListByParams(
       id, run, period, workgroup,
       nodeId, componentId, componentType,
@@ -766,8 +750,6 @@ public class VLEServiceImpl implements VLEService {
     if (clientSaveTime != null) {
       Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));
       studentAsset.setClientSaveTime(clientSaveTimestamp);
-
-      // set serverSaveTime
       Calendar now = Calendar.getInstance();
       Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
       studentAsset.setServerSaveTime(serverSaveTimestamp);
@@ -775,13 +757,10 @@ public class VLEServiceImpl implements VLEService {
     if (clientDeleteTime != null) {
       Timestamp clientDeleteTimestamp = new Timestamp(new Long(clientDeleteTime));
       studentAsset.setClientDeleteTime(clientDeleteTimestamp);
-
-      // set serverDeleteTime
       Calendar now = Calendar.getInstance();
       Timestamp serverDeleteTimestamp = new Timestamp(now.getTimeInMillis());
       studentAsset.setServerDeleteTime(serverDeleteTimestamp);
     }
-
     studentAssetDao.save(studentAsset);
     return studentAsset;
   }
@@ -813,7 +792,6 @@ public class VLEServiceImpl implements VLEService {
   @Override
   public List<NotebookItem> getNotebookItems(Integer id, Integer runId, Integer periodId,
       Integer workgroupId, String nodeId, String componentId) {
-
     Run run = null;
     if (runId != null) {
       try {
@@ -839,7 +817,6 @@ public class VLEServiceImpl implements VLEService {
         e.printStackTrace();
       }
     }
-
     return notebookItemDao.getNotebookItemListByParams(
       id, run, period, workgroup,
       nodeId, componentId);
@@ -930,8 +907,6 @@ public class VLEServiceImpl implements VLEService {
     if (clientSaveTime != null && !clientSaveTime.isEmpty()) {
       Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));
       notebookItem.setClientSaveTime(clientSaveTimestamp);
-
-      // set serverSaveTime
       Calendar now = Calendar.getInstance();
       Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
       notebookItem.setServerSaveTime(serverSaveTimestamp);
@@ -939,8 +914,6 @@ public class VLEServiceImpl implements VLEService {
     if (clientDeleteTime != null && !clientDeleteTime.isEmpty()) {
       Timestamp clientDeleteTimestamp = new Timestamp(new Long(clientDeleteTime));
       notebookItem.setClientDeleteTime(clientDeleteTimestamp);
-
-      // set serverDeleteTime if not set already
       if (notebookItem.getServerDeleteTime() == null) {
         Calendar now = Calendar.getInstance();
         Timestamp serverDeleteTimestamp = new Timestamp(now.getTimeInMillis());
@@ -1046,15 +1019,13 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public List<Notification> getNotificationsByGroupId(String groupId)
-      throws ObjectNotFoundException {
-    return this.getNotifications(null, null, null, null, groupId, null, null);
+  public List<Notification> getNotificationsByGroupId(String groupId) {
+    return getNotifications(null, null, null, null, groupId, null, null);
   }
 
   @Override
-  public List<Notification> getNotifications(
-      Integer id, Integer runId, Integer periodId, Integer toWorkgroupId,
-      String groupId, String nodeId, String componentId) {
+  public List<Notification> getNotifications(Integer id, Integer runId, Integer periodId,
+      Integer toWorkgroupId, String groupId, String nodeId, String componentId) {
     Run run = null;
     if (runId != null) {
       try {
@@ -1080,15 +1051,13 @@ public class VLEServiceImpl implements VLEService {
         e.printStackTrace();
       }
     }
-
     return notificationDao.getNotificationListByParams(
       id, run, period, workgroup,
       groupId, nodeId, componentId);
   }
 
   @Override
-  public Notification saveNotification(
-      Integer id, Integer runId, Integer periodId,
+  public Notification saveNotification(Integer id, Integer runId, Integer periodId,
       Integer fromWorkgroupId, Integer toWorkgroupId,
       String groupId, String nodeId, String componentId, String componentType,
       String type, String message, String data,
@@ -1164,11 +1133,9 @@ public class VLEServiceImpl implements VLEService {
       Timestamp timeDismissedTimestamp = new Timestamp(new Long(timeDismissed));
       notification.setTimeDismissed(timeDismissedTimestamp);
     }
-    // set serverSaveTime
     Calendar now = Calendar.getInstance();
     Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
     notification.setServerSaveTime(serverSaveTimestamp);
-
     notificationDao.save(notification);
     return notification;
   }

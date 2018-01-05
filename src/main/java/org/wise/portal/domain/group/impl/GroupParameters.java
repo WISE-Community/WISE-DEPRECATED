@@ -27,7 +27,6 @@ import java.io.Serializable;
 
 /**
  * A class to represent parameters required to create or update a group from the UI.
- *
  * @author Laurel Williams
  */
 @Getter

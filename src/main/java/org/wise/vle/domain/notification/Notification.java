@@ -44,9 +44,9 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "notification",  indexes = {
-  @Index(columnList = "runId", name = "notificationRunIdIndex"),
-  @Index(columnList = "toWorkgroupId", name = "notificationToWorkgroupIdIndex"),
-  @Index(columnList = "fromWorkgroupId", name = "notificationFromWorkgroupIdIndex")
+    @Index(columnList = "runId", name = "notificationRunIdIndex"),
+    @Index(columnList = "toWorkgroupId", name = "notificationToWorkgroupIdIndex"),
+    @Index(columnList = "fromWorkgroupId", name = "notificationFromWorkgroupIdIndex")
 })
 @Getter
 @Setter
@@ -66,11 +66,11 @@ public class Notification extends PersistableDomain {
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "toWorkgroupId")
-  private Workgroup toWorkgroup;  // who this notification is for
+  private Workgroup toWorkgroup;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "fromWorkgroupId")
-  private Workgroup fromWorkgroup;  // who this notification is from
+  private Workgroup fromWorkgroup;
 
   @Column(name = "groupId", length = 30)
   private String groupId;  // id of the group of notifications this notification belongs to, if any.
@@ -115,67 +115,67 @@ public class Notification extends PersistableDomain {
   public JSONObject toJSON() {
     JSONObject notificationJSONObject = new JSONObject();
     try {
-      if (this.id != null) {
-        notificationJSONObject.put("id", this.id);
+      if (id != null) {
+        notificationJSONObject.put("id", id);
       }
 
-      if (this.run != null) {
-        Long runId = this.run.getId();
+      if (run != null) {
+        Long runId = run.getId();
         notificationJSONObject.put("runId", runId);
       }
 
-      if (this.period != null) {
-        Long periodId = this.period.getId();
+      if (period != null) {
+        Long periodId = period.getId();
         notificationJSONObject.put("periodId", periodId);
       }
 
-      if (this.toWorkgroup != null) {
-        Long toWorkgroupId = this.toWorkgroup.getId();
+      if (toWorkgroup != null) {
+        Long toWorkgroupId = toWorkgroup.getId();
         notificationJSONObject.put("toWorkgroupId", toWorkgroupId);
       }
 
-      if (this.fromWorkgroup != null) {
-        Long fromWorkgroupId = this.fromWorkgroup.getId();
+      if (fromWorkgroup != null) {
+        Long fromWorkgroupId = fromWorkgroup.getId();
         notificationJSONObject.put("fromWorkgroupId", fromWorkgroupId);
       }
 
-      if (this.groupId != null) {
-        notificationJSONObject.put("groupId", this.groupId);
+      if (groupId != null) {
+        notificationJSONObject.put("groupId", groupId);
       }
 
-      if (this.nodeId != null) {
-        notificationJSONObject.put("nodeId", this.nodeId);
+      if (nodeId != null) {
+        notificationJSONObject.put("nodeId", nodeId);
       }
 
-      if (this.componentId != null) {
-        notificationJSONObject.put("componentId", this.componentId);
+      if (componentId != null) {
+        notificationJSONObject.put("componentId", componentId);
       }
 
-      if (this.componentType != null) {
-        notificationJSONObject.put("componentType", this.componentType);
+      if (componentType != null) {
+        notificationJSONObject.put("componentType", componentType);
       }
 
-      if (this.type != null) {
-        notificationJSONObject.put("type", this.type);
+      if (type != null) {
+        notificationJSONObject.put("type", type);
       }
 
-      if (this.message != null) {
-        notificationJSONObject.put("message", this.message);
+      if (message != null) {
+        notificationJSONObject.put("message", message);
       }
 
-      if (this.data != null) {
-        notificationJSONObject.put("data", this.data);
+      if (data != null) {
+        notificationJSONObject.put("data", data);
       }
 
-      if (this.serverSaveTime != null) {
+      if (serverSaveTime != null) {
         notificationJSONObject.put("serverSaveTime", serverSaveTime.getTime());
       }
 
-      if (this.timeGenerated != null) {
+      if (timeGenerated != null) {
         notificationJSONObject.put("timeGenerated", timeGenerated.getTime());
       }
 
-      if (this.timeDismissed != null) {
+      if (timeDismissed != null) {
         notificationJSONObject.put("timeDismissed", timeDismissed.getTime());
       }
     } catch (JSONException e) {

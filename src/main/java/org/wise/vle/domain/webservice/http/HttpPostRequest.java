@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -27,7 +27,6 @@ import org.wise.vle.domain.webservice.BadHeaderException;
 /**
  * Immutable and thread-safe class to encapsulate data required for a post
  * request (headers, parameters, body, relativeUrl and expected response).
- *
  * @author Cynick Young
  */
 public final class HttpPostRequest extends AbstractHttpRequest {
@@ -36,21 +35,14 @@ public final class HttpPostRequest extends AbstractHttpRequest {
 
   /**
    * Creates an HttpPostRequest object with all of the data required.
-   *
-   * @param requestHeaders
-   *            is a map of HTTP request headers
-   * @param requestParameters
-   *            is a map of HTTP request parameters
-   * @param bodyData
-   *            is the serialized string of the body of a POST request
-   * @param relativeUrl
-   *            is the target relative URL for this request
-   * @param expectedResponseStatusCode
-   *            is the HTTP status code that is expected to be returned by the
-   *            server
-   * @throws BadHeaderException
-   *             if the request headers contain any illegal characters either
-   *             in the request field name or the request field value
+   * @param requestHeaders is a map of HTTP request headers
+   * @param requestParameters is a map of HTTP request parameters
+   * @param bodyData is the serialized string of the body of a POST request
+   * @param relativeUrl is the target relative URL for this request
+   * @param expectedResponseStatusCode is the HTTP status code that is expected to be returned
+   * by the server
+   * @throws BadHeaderException if the request headers contain any illegal characters either
+   * in the request field name or the request field value
    */
   public HttpPostRequest(final Map<String, String> requestHeaders,
       final Map<String, String> requestParameters, final String bodyData,
@@ -69,11 +61,9 @@ public final class HttpPostRequest extends AbstractHttpRequest {
 
   /**
    * Returns the body data for this request.
-   *
    * @return the bodyData
    */
   public String getBodyData() {
     return bodyData;
   }
-
 }

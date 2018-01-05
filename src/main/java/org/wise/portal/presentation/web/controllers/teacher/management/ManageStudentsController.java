@@ -90,13 +90,12 @@ public class ManageStudentsController {
    * @throws Exception
    */
   @RequestMapping("/teacher/management/viewmystudents")
-  protected ModelAndView viewMyStudents(
-    @RequestParam("runId") Long runId,
-    HttpServletRequest servletRequest) throws Exception {
+  protected ModelAndView viewMyStudents(@RequestParam("runId") Long runId,
+      HttpServletRequest servletRequest) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Run run = runService.retrieveById(runId);
     if (userCanViewRun(user, run)) {
-      Set<Workgroup> allworkgroups = this.runService.getWorkgroups(runId);
+      Set<Workgroup> allworkgroups = runService.getWorkgroups(runId);
       String workgroupsWithoutPeriod = "";
       Set<ViewMyStudentsPeriod> viewmystudentsallperiods = new TreeSet<ViewMyStudentsPeriod>();
 
@@ -119,9 +118,8 @@ public class ManageStudentsController {
           try {
             // don't include workgroups with no members
             if (workgroup.getMembers().size() > 0
-              && !workgroup.isTeacherWorkgroup()
-              && workgroup.getPeriod().getId().equals(period.getId())) {
-              // set url where this workgroup's work can be retrieved as PDF
+                && !workgroup.isTeacherWorkgroup()
+                && workgroup.getPeriod().getId().equals(period.getId())) {
               periodworkgroups.add(workgroup);
             }
           } catch (NullPointerException npe) {
@@ -159,9 +157,9 @@ public class ManageStudentsController {
 
   private boolean userCanViewRun(User user, Run run) {
     return user.isAdmin() ||
-      user.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE) ||
-      this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
-      this.aclService.hasPermission(run, BasePermission.READ, user);
+        user.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE) ||
+        aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
+        aclService.hasPermission(run, BasePermission.READ, user);
   }
 
   /**
@@ -171,8 +169,7 @@ public class ManageStudentsController {
    * @throws Exception
    */
   @RequestMapping("/teacher/management/studentlist")
-  protected ModelAndView getStudentList(
-    @RequestParam("runId") Long runId) throws Exception {
+  protected ModelAndView getStudentList(@RequestParam("runId") Long runId) throws Exception {
     Run run = runService.retrieveById(runId);
     if (userCanViewRun(ControllerUtil.getSignedInUser(), run)) {
       Set<Group> periods = run.getPeriods();
@@ -181,7 +178,6 @@ public class ManageStudentsController {
         // TODO in future: filter by period...for now, include all periods
         requestedPeriods.add(period);
       }
-
       ModelAndView modelAndView = new ModelAndView();
       modelAndView.addObject("run", run);
       modelAndView.addObject("periods", requestedPeriods);
@@ -199,9 +195,8 @@ public class ManageStudentsController {
    * @throws Exception
    */
   @RequestMapping("/teacher/management/studentListExport")
-  protected void exportStudentList(
-    @RequestParam("runId") Long runId,
-    HttpServletResponse response) throws Exception {
+  protected void exportStudentList(@RequestParam("runId") Long runId,
+      HttpServletResponse response) throws Exception {
     Run run = runService.retrieveById(runId);
     Project project = run.getProject();
     User owner = run.getOwner();
@@ -225,16 +220,10 @@ public class ManageStudentsController {
     int rowCounter = 0;
     int columnCounter = 0;
 
-    //the max number of columns used
     int maxColumn = 0;
-
-    //make the workbook
     HSSFWorkbook wb = new HSSFWorkbook();
-
-    //make the sheet
     HSSFSheet mainSheet = wb.createSheet();
 
-    //add the meta data header row
     columnCounter = 0;
     HSSFRow metaDataHeaderRow = mainSheet.createRow(rowCounter++);
     metaDataHeaderRow.createCell(columnCounter++).setCellValue("Teacher Login");
@@ -246,12 +235,10 @@ public class ManageStudentsController {
     metaDataHeaderRow.createCell(columnCounter++).setCellValue("Start Date");
     metaDataHeaderRow.createCell(columnCounter++).setCellValue("End Date");
 
-    //update the maxColumn count if necessary
     if (columnCounter > maxColumn) {
       maxColumn = columnCounter;
     }
 
-    //make the meta data row
     columnCounter = 0;
     HSSFRow metaDataRow = mainSheet.createRow(rowCounter++);
     metaDataRow.createCell(columnCounter++).setCellValue(teacherUserName);
@@ -263,15 +250,12 @@ public class ManageStudentsController {
     metaDataRow.createCell(columnCounter++).setCellValue(timestampToFormattedString(startTime));
     metaDataRow.createCell(columnCounter++).setCellValue(timestampToFormattedString(endTime));
 
-    //update the maxColumn count if necessary
     if (columnCounter > maxColumn) {
       maxColumn = columnCounter;
     }
 
-    //move the counter to create a blank row
     rowCounter++;
 
-    //create the header row for the student names
     columnCounter = 0;
     HSSFRow studentHeaderRow = mainSheet.createRow(rowCounter++);
     studentHeaderRow.createCell(columnCounter++).setCellValue("Period");
@@ -285,30 +269,18 @@ public class ManageStudentsController {
     while(periodsIterator.hasNext()) {
       Group group = periodsIterator.next();
 
-      //get the name of the period
       String periodName = group.getName();
-
-      //get all the students in the period
       Set<User> periodMembers = group.getMembers();
       Iterator<User> periodMembersIterator = periodMembers.iterator();
-
-      //loop through all the students in the period
       while(periodMembersIterator.hasNext()) {
-        //get a student
         User user = periodMembersIterator.next();
-
-        //get the workgroup the student is in
         List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run, user);
-        //get the workgroup id and wise id
         Long workgroupId = null;
         if (workgroupListByRunAndUser.size() > 0) {
           Workgroup workgroup = workgroupListByRunAndUser.get(0);
           workgroupId = workgroup.getId();
         }
-
         Long wiseId = user.getId();
-
-        //get the user details
         MutableUserDetails userDetails = (MutableUserDetails) user.getUserDetails();
 
         String userName = "";
@@ -317,33 +289,24 @@ public class ManageStudentsController {
         String fullName = "";
 
         if (userDetails != null) {
-          //get the student username
           userName = userDetails.getUsername();
-
-          //get the student name
           firstName = userDetails.getFirstname();
           lastName = userDetails.getLastname();
           fullName = firstName + " " + lastName;
         }
 
-        //make a row for this student
         columnCounter = 0;
         HSSFRow studentDataRow = mainSheet.createRow(rowCounter++);
-
         if (periodName != null && !periodName.equals("")) {
           try {
-            //try to convert the value to a number and then set the value into the cell
             studentDataRow.createCell(columnCounter).setCellValue(Long.parseLong(periodName));
           } catch(NumberFormatException e) {
             e.printStackTrace();
-            //set the string value into the cell
             studentDataRow.createCell(columnCounter).setCellValue(periodName);
           }
         }
 
         columnCounter++;
-
-        //insert the other values for this student
         if (workgroupId == null) {
           studentDataRow.createCell(columnCounter++).setCellValue("N/A");
         } else {
@@ -353,49 +316,36 @@ public class ManageStudentsController {
         studentDataRow.createCell(columnCounter++).setCellValue(userName);
         studentDataRow.createCell(columnCounter++).setCellValue(fullName);
 
-        //update the max column count if necessary
         if (columnCounter > maxColumn) {
           maxColumn = columnCounter;
         }
       }
     }
-
-    /*
-     * set the content type to an excel xls so the user is prompted to save
-     * the file as an excel xls
-     */
     response.setContentType("application/vnd.ms-excel");
-
-    //set the content type and file name to save it as
     response.setHeader("Content-Disposition", "attachment; filename=\"" + projectName + "-" + runId + "-student-names.xls\"");
-
-    //get the response output stream
     ServletOutputStream outputStream = response.getOutputStream();
-
     if (wb != null) {
-      //write the excel xls to the output stream
       wb.write(outputStream);
     }
   }
 
   /**
-   * Handle teacher's request to update workgroup membership
+   * Handle teacher's request to update workgroup membership.
+   * Possible scenarios:
+   * 0) workgroupFrom and workgroupTo are equal. -> do nothing
+   * 1) workgroupFrom and workgroupTo are both positive and exist
+   * 2) workgroupFrom is groupless and workgroupTo is positive
+   * 3) workgroupFrom is groupless and workgroupTo is negative
+   * 4) workgroupFrom is positive and workgroupTo is groupless
+   * 5) workgroupFrom is positive and workgroupTo is negative
+   *
    * @param request
    * @param response
    * @throws Exception
    */
-  @RequestMapping(method = RequestMethod.POST,
-    value = "/teacher/management/submitworkgroupchanges")
-  protected void handleWorkgroupChanges(
-    HttpServletRequest request,
-    HttpServletResponse response) throws Exception {
-    // scenarios
-    // 0) workgroupFrom and workgroupTo are equal. -> do nothing
-    // 1) workgroupFrom and workgroupTo are both positive and exist
-    // 2) workgroupFrom is groupless and workgroupTo is positive
-    // 3) workgroupFrom is groupless and workgroupTo is negative
-    // 4) workgroupFrom is positive and workgroupTo is groupless
-    // 5) workgroupFrom is positive and workgroupTo is negative
+  @RequestMapping(method = RequestMethod.POST, value = "/teacher/management/submitworkgroupchanges")
+  protected void handleWorkgroupChanges(HttpServletRequest request,
+      HttpServletResponse response) throws Exception {
     String periodId = request.getParameter("periodId");
     String runId = request.getParameter("runId");
     String tabIndex = request.getParameter("tabIndex");
@@ -403,7 +353,6 @@ public class ManageStudentsController {
     int numChanges = Integer.parseInt(request.getParameter("numChanges"));
     Map<Long, ArrayList<ChangeWorkgroupParameters>> newWorkgroupMap =
       new HashMap<Long, ArrayList<ChangeWorkgroupParameters>>();
-
     for (int i = 0; i < numChanges; i++) {
       String userId = request.getParameter("userId_" + i);
       String workgroupFromId = request.getParameter("workgroupFrom_" + i);
@@ -441,7 +390,6 @@ public class ManageStudentsController {
       }
     }
 
-    // go through all of the new workgroups, create them, and populate them
     for (Long key : newWorkgroupMap.keySet()) {
       ArrayList<ChangeWorkgroupParameters> newWGList =
         newWorkgroupMap.get(key);
@@ -472,14 +420,12 @@ public class ManageStudentsController {
    */
   private String timestampToFormattedString(Date date) {
     String timestampString = "";
-
     if (date != null) {
       DateFormat dateTimeInstance = DateFormat.getDateTimeInstance();
       long time = date.getTime();
       Date timestampDate = new Date(time);
       timestampString = dateTimeInstance.format(timestampDate);
     }
-
     return timestampString;
   }
 }

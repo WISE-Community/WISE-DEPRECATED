@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -74,10 +74,8 @@ public class ChangeWorkgroupController {
 
   private static final String PERIOD_ID = "periodId";
 
-  //the path to this form view
   protected String formView = "/teacher/management/changeworkgroup";
 
-  //the path to the success view
   protected String successView = "/teacher/management/changeworkgroupsuccess";
 
   /**
@@ -99,12 +97,12 @@ public class ChangeWorkgroupController {
     } else {
       params.setWorkgroupFrom(workgroupService.retrieveById(Long.parseLong(workgroupFromId)));
     }
-
     model.addAttribute("changeWorkgroupParameters", params);
 
-    Set<Workgroup> workgroups = runService.getWorkgroups(Long.parseLong(request.getParameter(RUN_ID)), Long.parseLong(request.getParameter(PERIOD_ID)));
+    Set<Workgroup> workgroups = runService
+        .getWorkgroups(Long.parseLong(request.getParameter(RUN_ID)),
+        Long.parseLong(request.getParameter(PERIOD_ID)));
     model.addAttribute(WORKGROUPS_TO, workgroups);
-
     return formView;
   }
 
@@ -116,26 +114,17 @@ public class ChangeWorkgroupController {
    */
   @RequestMapping(method = RequestMethod.POST)
   protected String onSubmit(
-    @ModelAttribute("changeWorkgroupParameters") ChangeWorkgroupParameters params,
-    BindingResult bindingResult,
-    SessionStatus sessionStatus) {
+      @ModelAttribute("changeWorkgroupParameters") ChangeWorkgroupParameters params,
+      BindingResult bindingResult,
+      SessionStatus sessionStatus) {
     String view = "";
-
-    //validate the parameters
     changeWorkgroupParametersValidator.validate(params, bindingResult);
 
-    if(bindingResult.hasErrors()) {
-      //there were errors
-
+    if (bindingResult.hasErrors()) {
       view = formView;
     } else {
-      //there were no errors
-
-      //get the workgroup id
       Long workgroupToId = params.getWorkgroupToId();
-
       try {
-        //set the workgroup id
         params.setWorkgroupTo(workgroupService.retrieveById(workgroupToId));
       } catch (ObjectNotFoundException e1) {
         params.setWorkgroupTo(null);
@@ -143,7 +132,6 @@ public class ChangeWorkgroupController {
       }
 
       try {
-        //update the workgroup by modifying its members
         workgroupService.updateWorkgroupMembership(params);
         view = successView;
         sessionStatus.setComplete();
@@ -152,7 +140,6 @@ public class ChangeWorkgroupController {
         view = formView;
       }
     }
-
     return view;
   }
 }

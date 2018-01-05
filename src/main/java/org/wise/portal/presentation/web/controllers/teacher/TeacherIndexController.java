@@ -37,7 +37,6 @@ import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 import java.util.*;
-
 /**
  * Controller for WISE Teacher index page
  *
@@ -69,10 +68,8 @@ public class TeacherIndexController {
   @RequestMapping(method = RequestMethod.GET)
   protected String getTeacherHomepage(ModelMap modelMap) throws Exception {
     User user = ControllerUtil.getSignedInUser();
-
-    // combine owned and shared runs
-    List<Run> runList = this.runService.getRunListByOwner(user);
-    runList.addAll(this.runService.getRunListBySharedOwner(user));
+    List<Run> runList = runService.getRunListByOwner(user);
+    runList.addAll(runService.getRunListBySharedOwner(user));
 
     List<Run> allCurrentRuns = new ArrayList<Run>();
     Map<Run, List<Workgroup>> workgroupMap = new HashMap<Run, List<Workgroup>>();
@@ -98,14 +95,11 @@ public class TeacherIndexController {
     modelMap.put("workgroup_map", workgroupMap);
     modelMap.put("teacherOnlyNewsItems", newsItemService.retrieveByType("teacherOnly"));
 
-    // if discourse is enabled for this WISE instance, add the link to the model
-    // so the view can display it
     String discourseURL = wiseProperties.getProperty("discourse_url");
     if (discourseURL != null && !discourseURL.isEmpty()) {
       String discourseSSOLoginURL = discourseURL + "/session/sso";
       modelMap.put("discourseSSOLoginURL", discourseSSOLoginURL);
     }
-
     return "teacher/index";
   }
 }

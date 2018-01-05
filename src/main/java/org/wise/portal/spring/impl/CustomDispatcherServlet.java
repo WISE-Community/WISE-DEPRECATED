@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -52,7 +52,7 @@ public class CustomDispatcherServlet extends DispatcherServlet {
    */
   public CustomDispatcherServlet() {
     super();
-    this.addRequiredProperty(CONFIG_CLASS_PARAM);
+    addRequiredProperty(CONFIG_CLASS_PARAM);
   }
 
   public void setContextConfigClass(String contextConfigClass) {
@@ -60,21 +60,21 @@ public class CustomDispatcherServlet extends DispatcherServlet {
   }
 
   @Override
-  protected WebApplicationContext createWebApplicationContext(
-    WebApplicationContext parent) throws BeansException {
+  protected WebApplicationContext createWebApplicationContext(WebApplicationContext parent)
+      throws BeansException {
     try {
       SpringConfiguration springConfig =
-          (SpringConfiguration) BeanUtils.instantiateClass(Class.forName(this.contextConfigClass));
+          (SpringConfiguration) BeanUtils.instantiateClass(Class.forName(contextConfigClass));
 
-      this.setContextConfigLocation(StringUtils.arrayToDelimitedString(
+      setContextConfigLocation(StringUtils.arrayToDelimitedString(
           springConfig.getDispatcherServletContextConfigLocations(),
           ConfigurableWebApplicationContext.CONFIG_LOCATION_DELIMITERS));
     } catch (ClassNotFoundException e) {
-      if (this.logger.isErrorEnabled()) {
-        this.logger.error(
-            CONFIG_CLASS_PARAM + " <"  + this.contextConfigClass + "> not found.", e);
+      if (logger.isErrorEnabled()) {
+        logger.error(
+            CONFIG_CLASS_PARAM + " <"  + contextConfigClass + "> not found.", e);
       }
-      throw new InvalidParameterException("ClassNotFoundException: " + this.contextConfigClass);
+      throw new InvalidParameterException("ClassNotFoundException: " + contextConfigClass);
     }
     return super.createWebApplicationContext(parent);
   }

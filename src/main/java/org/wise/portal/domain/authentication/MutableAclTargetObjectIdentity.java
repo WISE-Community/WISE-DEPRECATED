@@ -30,7 +30,7 @@ import org.wise.portal.domain.Persistable;
  *
  * @author Cynick Young
  *
- * @see org.acegisecurity.acls.objectidentity.ObjectIdentity
+ * @see ObjectIdentity
  */
 public interface MutableAclTargetObjectIdentity extends ObjectIdentity, Persistable {
 
@@ -60,7 +60,7 @@ public interface MutableAclTargetObjectIdentity extends ObjectIdentity, Persista
   Boolean isInheriting();
 
   /**
-   * @param inheriting the inheriting to set
+   * @param isInheriting the inheriting to set
    */
   void setInheriting(Boolean isInheriting);
 

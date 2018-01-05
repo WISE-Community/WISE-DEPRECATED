@@ -53,15 +53,15 @@ public class Achievement extends PersistableDomain {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private Integer id = null;  // unique id of the achievement
+  private Integer id = null;
 
   @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "runId", nullable = false)
-  private Run run;  // which run this achievement is for
+  private Run run;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "workgroupId", nullable = false)
-  private Workgroup workgroup;  // who this achievement is for
+  private Workgroup workgroup;
 
   @Column(name = "achievementId", length = 32, nullable = false)
   private String achievementId;  // id of this achievement like "xyzwbc" or "achievementX", defined in project content
@@ -80,52 +80,46 @@ public class Achievement extends PersistableDomain {
     return Achievement.class;
   }
 
-  /**
-   * Get the JSON representation of the Achievement
-   * @return a JSONObject with the values from the Achievement
-   */
   public JSONObject toJSON() {
     JSONObject achievementJSONObject = new JSONObject();
 
     try {
-      if (this.id != null) {
-        achievementJSONObject.put("id", this.id);
+      if (id != null) {
+        achievementJSONObject.put("id", id);
       }
 
-      if (this.run != null) {
-        Long runId = this.run.getId();
+      if (run != null) {
+        Long runId = run.getId();
         achievementJSONObject.put("runId", runId);
       }
 
-      if (this.workgroup != null) {
-        Long workgroupId = this.workgroup.getId();
+      if (workgroup != null) {
+        Long workgroupId = workgroup.getId();
         achievementJSONObject.put("workgroupId", workgroupId);
       }
 
-      if (this.achievementId != null) {
-        achievementJSONObject.put("achievementId", this.achievementId);
+      if (achievementId != null) {
+        achievementJSONObject.put("achievementId", achievementId);
       }
 
-      if (this.type != null) {
-        achievementJSONObject.put("type", this.type);
+      if (type != null) {
+        achievementJSONObject.put("type", type);
       }
 
-      if (this.achievementTime != null) {
-        achievementJSONObject.put("achievementTime", this.achievementTime.getTime());
+      if (achievementTime != null) {
+        achievementJSONObject.put("achievementTime", achievementTime.getTime());
       }
 
-      if (this.data != null) {
+      if (data != null) {
         try {
           achievementJSONObject.put("data", new JSONObject(data));
         } catch (JSONException e) {
-          achievementJSONObject.put("data", this.data);
+          achievementJSONObject.put("data", data);
         }
       }
-
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return achievementJSONObject;
   }
 }

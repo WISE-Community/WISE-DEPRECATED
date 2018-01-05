@@ -99,22 +99,21 @@ public class ContactWiseController {
   @Autowired
   private ContactWISEValidator contactWISEValidator;
 
-  /* change this to true if you are testing and do not want to send mail to
-       the actual groups */
+  // change this to true if you are testing and do not want to send mail to the actual groups
   private static final Boolean DEBUG = false;
 
-  //set this to your email
   private static final String DEBUG_EMAIL = "youremail@gmail.com";
 
   // the url to the user agent parse site
-  private static final String userAgentParseURL = "http://api.whatismybrowser.com/api/v1/user_agent_parse";
+  private static final String userAgentParseURL =
+      "http://api.whatismybrowser.com/api/v1/user_agent_parse";
 
-  @RequestMapping(method=RequestMethod.POST)
-  public String onSubmit(
-    @ModelAttribute("contactWISEForm")ContactWISEForm contactWISEForm,
-    BindingResult result,
-    HttpServletRequest request)
-    throws Exception {
+  @RequestMapping(method = RequestMethod.POST)
+  public String submitContactForm(
+      @ModelAttribute("contactWISEForm")ContactWISEForm contactWISEForm,
+      BindingResult result,
+      HttpServletRequest request)
+      throws Exception {
     contactWISEValidator.validate(contactWISEForm, result);
     checkRecaptcha(request, result);
     getTeacherNameAndSetInForm(contactWISEForm);
@@ -127,14 +126,10 @@ public class ContactWiseController {
     String userKey = wiseProperties.getProperty("userAgentParseKey");
 
     if (userKey != null && !userKey.equals("")) {
-
-      // get the user agent from the request
       String userAgent = request.getParameter("usersystem");
-
       HttpClient client = HttpClientBuilder.create().build();
       HttpPost post = new HttpPost(userAgentParseURL);
 
-      // add the user_key and user_agent parameters to the POST request
       List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
       urlParameters.add(new BasicNameValuePair("user_key", userKey));
       urlParameters.add(new BasicNameValuePair("user_agent", userAgent));
@@ -142,11 +137,7 @@ public class ContactWiseController {
       post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
       try {
-
-        // execute the POST
         HttpResponse response = client.execute(post);
-
-        // read the response
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         StringBuffer userAgentParseResult = new StringBuffer();
         String line = "";
@@ -157,24 +148,14 @@ public class ContactWiseController {
         String parseResultString = userAgentParseResult.toString();
 
         try {
-
-          // get the response as a JSON object
           JSONObject parseResultJSONObject = new JSONObject(parseResultString);
-
-          // get whether the request succeeded
           String parseResult = parseResultJSONObject.getString("result");
-
           if (parseResult != null && parseResult.equals("success")) {
-            // the request succeeded so we will get the data
             JSONObject parse = parseResultJSONObject.getJSONObject("parse");
-
-            // get the operating system and browser values
             String operatingSystemName = parse.getString("operating_system_name");
             String operatingSystemVersion = parse.getString("operating_system_version_full");
             String browserName = parse.getString("browser_name");
             String browserVersion = parse.getString("browser_version_full");
-
-            // set the values into the form so that we can use them later when creating the email message
             contactWISEForm.setOperatingSystemName(operatingSystemName);
             contactWISEForm.setOperatingSystemVersion(operatingSystemVersion);
             contactWISEForm.setBrowserName(browserName);
@@ -190,14 +171,12 @@ public class ContactWiseController {
       }
     }
 
-    //retrieves the contents of the email to be sent
     String[] recipients = getMailRecipients();
     String[] cc = getMailCcs(contactWISEForm);
     String subject = contactWISEForm.getMailSubject();
     String fromEmail = contactWISEForm.getEmail();
     String message = contactWISEForm.getMailMessage();
 
-    //fromEmail will be null if the signed in user is a student
     if (fromEmail == null) {
       /*
        * set the fromEmail to a non null and non empty string otherwise
@@ -206,7 +185,6 @@ public class ContactWiseController {
       fromEmail = "null";
     }
 
-    //get the run id
     Long runId = contactWISEForm.getRunId();
 
     /*
@@ -220,7 +198,6 @@ public class ContactWiseController {
       Vector<String> runOwnerEmailAddresses = new Vector<String>();
       User runOwner = run.getOwner();
       MutableUserDetails userDetails = runOwner.getUserDetails();
-      //get the run owner email address
       String emailAddress = userDetails.getEmailAddress();
 
       if (emailAddress != null) {
@@ -228,106 +205,68 @@ public class ContactWiseController {
       }
 
       if (!runOwnerEmailAddresses.isEmpty()) {
-        //we have run owner email addresses
-
         for (int x = 0; x < cc.length; x++) {
           if (!runOwnerEmailAddresses.contains(cc[x])) {
-            //add the cc emails to the run owner emails to merge them
             runOwnerEmailAddresses.add(cc[x]);
           }
         }
-
-        //create a new String array the same size as the runOwnerEmailAddresses
         cc = new String[runOwnerEmailAddresses.size()];
-
-        //put all the email addresses back into the cc array
         for (int x = 0; x < runOwnerEmailAddresses.size(); x++) {
           cc[x] = runOwnerEmailAddresses.get(x);
         }
       }
     }
 
-    //for testing out the email functionality without spamming the groups
     if (DEBUG) {
       cc = new String[1];
       cc[0] = fromEmail;
       recipients[0] = DEBUG_EMAIL;
     }
 
-    //sends the email to the recipients
     mailService.postMail(recipients, subject, message, fromEmail, cc);
-
     return "contact/contactwiseconfirm";
   }
 
-  @RequestMapping(method=RequestMethod.GET)
+  @RequestMapping(method = RequestMethod.GET)
   public String initializeForm(ModelMap modelMap, HttpServletRequest request)
-    throws NumberFormatException, ObjectNotFoundException {
-
+      throws NumberFormatException, ObjectNotFoundException {
     ContactWISEForm contactWISEForm = new ContactWISEForm();
-
-    //tries to retrieve the user from the session
     User user = ControllerUtil.getSignedInUser();
 
-    /* if the user is logged in to the session, auto populate the name and
-       email address in the form, if not, the fields will just be blank */
+    // if the user is logged in to the session, auto populate the name and
+    // email address in the form, if not, the fields will just be blank
     if (user != null) {
-      //set whether the user is a student
       contactWISEForm.setIsStudent(user);
+      MutableUserDetails userDetails = user.getUserDetails();
+      contactWISEForm.setName(userDetails.getFirstname() + " " + userDetails.getLastname());
 
-      MutableUserDetails userDetails =
-        (MutableUserDetails) user.getUserDetails();
-
-      contactWISEForm.setName(userDetails.getFirstname() + " " +
-        userDetails.getLastname());
-
-      //if user is a teacher, retrieve their email
-      /* NOTE: this check may be removed later if we never allow students
-         to submit feedback */
+      // TODO: this check may be removed later if we never allow students to submit feedback
       if (userDetails instanceof TeacherUserDetails) {
         contactWISEForm.setEmail(userDetails.getEmailAddress());
       }
     }
 
-    //tries to retrieve the project ID number from the request
     if (request.getParameter("projectId") != null) {
-      Project project = projectService.getById(Long.parseLong(
-        request.getParameter("projectId")));
-
+      Project project = projectService.getById(Long.parseLong(request.getParameter("projectId")));
       if (project != null) {
-        //sets the project and project name
-        contactWISEForm.setProjectName(
-          project.getName());
-        contactWISEForm.setProjectId(Long.parseLong(
-          request.getParameter("projectId")));
+        contactWISEForm.setProjectName(project.getName());
+        contactWISEForm.setProjectId(Long.parseLong(request.getParameter("projectId")));
       }
     }
 
     String runId = request.getParameter("runId");
-
     if (runId != null) {
-      //set the run id into the object so we can access it later
       contactWISEForm.setRunId(new Long(runId));
-
-      //get the run
       Run run = runService.retrieveById(new Long(runId));
-
-      //get the owner of the run
       User owner = run.getOwner();
-      //get the teacher name
       String teacherName = owner.getUserDetails().getFirstname() + " "+ owner.getUserDetails().getLastname();
-
-      //set the teacher id
       contactWISEForm.setTeacherName(teacherName);
     }
 
-    // these are necessary so that the enums can retrieve the values from the properties file
     IssueType.setProperties(i18nProperties);
     OperatingSystem.setProperties(i18nProperties);
     WebBrowser.setProperties(i18nProperties);
-
     modelMap.put("contactWISEForm", contactWISEForm);
-
     return "contact/contactwise";
   }
 
@@ -388,38 +327,22 @@ public class ContactWiseController {
    */
   @ModelAttribute("teachers")
   public Vector<User> populateTeachers() {
-    //the vector to accumulate the teachers associated with the student
     Vector<User> teachers = new Vector<User>();
-
-    // get the signed in user
     User user = ControllerUtil.getSignedInUser();
-
     if (user != null) {
-      // get the user details
       MutableUserDetails userDetails = user.getUserDetails();
-
-      //check that the user is a student
       if (userDetails != null && userDetails instanceof StudentUserDetails) {
-        //get all the runs that this student is in
         List<Run> runList = runService.getRunList(user);
         Iterator<Run> runListIterator = runList.iterator();
-
-        //loop through all the runs
         while (runListIterator.hasNext()) {
-          //get a run
           Run tempRun = runListIterator.next();
-
-          //get the owner of the run
           User owner = tempRun.getOwner();
-          //add the teacher to the list if they are not already in it
           if (!teachers.contains(owner)) {
-            //the teacher is not in the list so we will add them
             teachers.add(owner);
           }
         }
       }
     }
-
     return teachers;
   }
 
@@ -431,15 +354,9 @@ public class ContactWiseController {
   @ModelAttribute("discourseSSOLoginURL")
   public String populateDiscourseSSOLoginURL() {
     String discourseSSOLoginURL = null;
-
-    // get the signed in user
     User user = ControllerUtil.getSignedInUser();
-
     if (user != null) {
-
       MutableUserDetails userDetails = user.getUserDetails();
-
-      // check that the user is a teacher
       if (userDetails != null && userDetails instanceof TeacherUserDetails) {
         // if discourse is enabled for this WISE instance, add the link to the model
         // so the view can display it
@@ -449,7 +366,6 @@ public class ContactWiseController {
         }
       }
     }
-
     return discourseSSOLoginURL;
   }
 
@@ -458,46 +374,29 @@ public class ContactWiseController {
    * This is called after ContactWISEValidator.validate()
    */
   protected void checkRecaptcha(HttpServletRequest request, BindingResult result) {
-    //get the signed in user or null if not signed in
     User user = ControllerUtil.getSignedInUser();
-
     if (user == null) {
       /*
        * the user is not signed in so we will display a reCaptcha if the server
        * has been set up with reCaptcha
        */
 
-      //get the public and private keys from the wise.properties
       String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
       String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
 
-      //check if the public key is valid in case the admin entered it wrong
-      boolean reCaptchaKeyValid = WISEAuthenticationProcessingFilter.isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
-
+      boolean reCaptchaKeyValid = WISEAuthenticationProcessingFilter
+          .isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
       if (reCaptchaKeyValid) {
-
-        // get the google reCaptcha response
         String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
-
-        //check if the response is valid
         boolean isResponseValid = WISEAuthenticationProcessingFilter.checkReCaptchaResponse(reCaptchaPrivateKey, reCaptchaPublicKey, gRecaptchaResponse);
-
         if (!isResponseValid) {
-          // the reCaptcha failed so we will display an error
-
           String reCaptchaError = "";
-
           if (i18nProperties != null) {
-            //get the invalid reCaptcha message
             reCaptchaError = i18nProperties.getProperty("error.contactwise-recaptcha");
           }
-
-          //if the error.contactwise-recaptcha key is not in the properties, the value will be null
           if (reCaptchaError == null) {
             reCaptchaError = "";
           }
-
-          //create the error so that the form is not submitted and the message is displayed
           result.reject("400", reCaptchaError);
         }
       }
@@ -506,41 +405,26 @@ public class ContactWiseController {
 
   public String[] getMailRecipients() {
     String[] recipients = new String[0];
-
-    //get the email address that we will send this user request to
     String contactEmail = wiseProperties.getProperty("contact_email");
     recipients = contactEmail.split(",");
-
     if (recipients.length == 0) {
       /*
        * we did not have an email address for the issue type so we will try
        * to use the uber_admin email address
        */
-
-      //get the uber_admin email address
       String uberAdminEmailAddress = wiseProperties.getProperty("uber_admin");
-
       if (uberAdminEmailAddress != null && !uberAdminEmailAddress.equals("")) {
-        //set the uber_admin email address into the recipients
         recipients = uberAdminEmailAddress.split(",");
       }
     }
-
     return recipients;
   }
 
-  /*
-   * Returns a string array of emails to be cc'd
-   */
   public String[] getMailCcs(ContactWISEForm contactWISEForm) {
-    //get the email to cc
     String emailToCC = contactWISEForm.getEmail();
-
     String[] cc = {};
     List<String> list = new ArrayList<String>();
-
     if (emailToCC != null) {
-      //add the email to cc to the list
       list.add(emailToCC);
     }
 
@@ -551,16 +435,10 @@ public class ContactWiseController {
      * already have been added just above this.
      */
     Long tempTeacherId = contactWISEForm.getTeacherId();
-
-    //get the teacher email
     String teacherEmail = getTeacherEmail(tempTeacherId);
-
     if (teacherEmail != null) {
-      //add the teacher email to the list of emails to cc
       list.add(teacherEmail);
     }
-
-    //get the list as a String[]
     return list.toArray(cc);
   }
 
@@ -572,24 +450,17 @@ public class ContactWiseController {
    */
   protected String getTeacherEmail(Long userId) {
     String email = null;
-
     if (userId != null) {
       try {
-        //get the user
         User user = userService.retrieveById(userId);
-
         if (user != null) {
-          //get the user details
           MutableUserDetails userDetails = user.getUserDetails();
-
-          //get the email address of the user
           email = userDetails.getEmailAddress();
         }
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
     }
-
     return email;
   }
 
@@ -600,18 +471,12 @@ public class ContactWiseController {
    */
   protected void getTeacherNameAndSetInForm(ContactWISEForm contactWISEForm) {
     String name = null;
-
     if (contactWISEForm.getTeacherId() != null) {
       try {
-        //get the user
         User user = userService.retrieveById(contactWISEForm.getTeacherId());
-
         if (user != null) {
-          //get the user details
           MutableUserDetails userDetails = user.getUserDetails();
-
           if (userDetails instanceof TeacherUserDetails) {
-            //get the first and last name of the teacher
             String firstName = ((TeacherUserDetails) userDetails).getFirstname();
             String lastName = ((TeacherUserDetails) userDetails).getLastname();
             name = firstName + " " + lastName;

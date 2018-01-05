@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -51,34 +51,29 @@ public class ModeMaster extends HttpServlet implements Servlet{
 
   private boolean retrievedMode = false;
 
-  /* Constructor */
   public ModeMaster(){
     super();
   }
 
-  /**
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
-    this.doPost(request, response);
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    doPost(request, response);
   }
 
-  /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-    if(!this.retrievedMode){
-      this.getModeFromFile(request);
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    if(!retrievedMode){
+      getModeFromFile(request);
     }
 
     String mode = request.getParameter(PORTAL_MODE);
 
-    if(mode != null){
-      try{
-        response.getWriter().write(String.valueOf(this.portalMode));
+    if (mode != null) {
+      try {
+        response.getWriter().write(String.valueOf(portalMode));
         response.setStatus(HttpServletResponse.SC_OK);
         return;
-      } catch(IOException e){
+      } catch(IOException e) {
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         return;
       }
@@ -93,35 +88,29 @@ public class ModeMaster extends HttpServlet implements Servlet{
    *
    * @param request
    */
-  private void getModeFromFile(HttpServletRequest request){
-    try{
-      String settingsUrl = request.getRequestURL().toString().replace("modemaster.html","vle/settings.json");
+  private void getModeFromFile(HttpServletRequest request) {
+    try {
+      String settingsUrl = request.getRequestURL().toString()
+          .replace("modemaster.html","vle/settings.json");
       String settings = Connector.request(settingsUrl);
 
-      /* if there is no settings file or we failed to retrieve it, then we cannot assume portal mode */
-      if(settings == null || settings.equals("")){
+      if (settings == null || settings.equals("")) {
         return;
       }
 
       try {
         JSONObject settingsJSON = new JSONObject(settings);
-
-        if(settingsJSON.has("mode")) {
+        if (settingsJSON.has("mode")) {
           JSONObject modeJSON = settingsJSON.getJSONObject("mode");
-
-          if(modeJSON.has("portal")) {
-            this.portalMode = modeJSON.getBoolean("portal");
-
-            /* set status of retrieved mode */
-            this.retrievedMode = true;
+          if (modeJSON.has("portal")) {
+            portalMode = modeJSON.getBoolean("portal");
+            retrievedMode = true;
           }
         }
       } catch (JSONException e) {
         e.printStackTrace();
       }
-
-    } catch(IOException e){
-      //e.printStackTrace();
+    } catch(IOException e) {
     }
   }
 }

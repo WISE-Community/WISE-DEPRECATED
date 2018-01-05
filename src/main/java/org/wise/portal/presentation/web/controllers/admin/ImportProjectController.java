@@ -80,30 +80,25 @@ public class ImportProjectController {
 
   @RequestMapping(value = "/admin/project/importFromHub", method = RequestMethod.POST)
   protected String importFromHub(
-    @RequestParam(value = "importableProjectId", required = true) String importableProjectId,
-    ModelMap modelMap
-  ) throws Exception {
-
-    // URL to get the importableProject zip file
+      @RequestParam(value = "importableProjectId", required = true) String importableProjectId,
+      ModelMap modelMap) throws Exception {
     String getImportableProjectURL = getWISEProjectsURL + "?id=" + importableProjectId;
-
     try {
       URL url = new URL(getImportableProjectURL);
       URLConnection conn = url.openConnection();
       InputStream in = conn.getInputStream();
       URL downloadFileUrl = conn.getURL();
       String downloadFileUrlString = downloadFileUrl.toString();
-      String zipFilename = downloadFileUrlString.substring(downloadFileUrlString.lastIndexOf("/") + 1);
+      String zipFilename =
+          downloadFileUrlString.substring(downloadFileUrlString.lastIndexOf("/") + 1);
 
       byte[] fileBytes = IOUtils.toByteArray(in);
       String msg = "Import project complete!";
-
       Project project = importProject(zipFilename, fileBytes);
       if (project == null) {
         System.err.println("Error occured during project import.");
         msg = "Error occured during project import. Check the log for more information.";
       }
-
       modelMap.put("msg", msg);
       modelMap.put("newProject", project);
       return "admin/project/import";
@@ -111,7 +106,6 @@ public class ImportProjectController {
       System.err.println("Error occured during project import.");
       e.printStackTrace();
     }
-
     return "admin/project/import";
   }
 
@@ -119,69 +113,50 @@ public class ImportProjectController {
   protected String onSubmit(@ModelAttribute("projectZipFile") ProjectUpload projectUpload,
       ModelMap modelMap) throws Exception {
     // TODO: check zip contents for maliciousness. For now, it's only accessible to admin.
-
-    // uploaded file must be a zip file and have a .zip extension
     MultipartFile file = projectUpload.getFile();
     String zipFilename = file.getOriginalFilename();
     byte[] fileBytes = file.getBytes();
     String msg = "Import project complete!";
-
     Project project = importProject(zipFilename, fileBytes);
     if (project == null) {
       System.err.println("Error occured during project import.");
       msg = "Error occured during project import. Check the log for more information.";
     }
-
     modelMap.put("msg", msg);
     modelMap.put("newProject", project);
     return "admin/project/import";
   }
 
   private Project importProject(String zipFilename, byte[] fileBytes) throws Exception {
-    // upload the zipfile to curriculum_base_dir
     String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-
-    // make sure the curriculum_base_dir exists
     if (!new File(curriculumBaseDir).exists()) {
-      throw new Exception("Curriculum upload directory \"" + curriculumBaseDir + "\" does not exist. Please verify the path you specified for curriculum_base_dir in wise.properties.");
+      throw new Exception("Curriculum upload directory \"" +
+          curriculumBaseDir + "\" does not exist. Please verify the path you specified for curriculum_base_dir in wise.properties.");
     }
 
-    // save the upload zip file in the curriculum folder.
     String sep = "/";
     long timeInMillis = Calendar.getInstance().getTimeInMillis();
     String filename = zipFilename.substring(0, zipFilename.indexOf(".zip"));
     String newFilename = filename;
     if (new File(curriculumBaseDir + sep + filename).exists()) {
-      // if this directory already exists, add a date time in milliseconds to the filename to make it unique
       newFilename = filename + "-" + timeInMillis;
     }
     String newFileFullPath = curriculumBaseDir + sep + newFilename + ".zip";
 
-    // copy the zip file inside curriculum_base_dir temporarily
     File uploadedFile = new File(newFileFullPath);
     uploadedFile.createNewFile();
     FileCopyUtils.copy(fileBytes,uploadedFile);
-
-    // make a new folder where the contents of the zip should go
     String newFileFullDir = curriculumBaseDir + sep + newFilename;
     File newFileFullDirFile = new File(newFileFullDir);
     newFileFullDirFile.mkdir();
-
     Integer projectVersion = 0;
-
-    // unzip the zip file
     try {
       ZipFile zipFile = new ZipFile(newFileFullPath);
       Enumeration entries = zipFile.entries();
-
-      int i = 0;  // index used later to check for first folder in the zip file
-
+      int i = 0;
       while (entries.hasMoreElements()) {
         ZipEntry entry = (ZipEntry) entries.nextElement();
-
         if (entry.getName().startsWith("__MACOSX")) {
-          // if this entry starts with __MACOSX, this zip file was created by a user using mac's "compress" feature.
-          // ignore it.
           continue;
         }
 
@@ -196,9 +171,7 @@ public class ImportProjectController {
             i++;
           }
 
-          // Assume directories are stored parents first then children.
           System.out.println("Extracting directory: " + entry.getName());
-          // This is not robust, just for demonstration purposes.
           (new File(entry.getName().replace(filename, newFileFullDir))).mkdir();
           continue;
         }
@@ -211,9 +184,9 @@ public class ImportProjectController {
 
         System.out.println("Extracting file: " + entry.getName() );
         copyInputStream(zipFile.getInputStream(entry),
-          new BufferedOutputStream(new FileOutputStream(entry.getName().replaceFirst(filename, newFileFullDir))));
+            new BufferedOutputStream(
+            new FileOutputStream(entry.getName().replaceFirst(filename, newFileFullDir))));
       }
-
       zipFile.close();
     } catch (IOException ioe) {
       System.err.println("Unhandled exception during project import. Project was not properly imported.");
@@ -221,14 +194,10 @@ public class ImportProjectController {
       throw ioe;
     }
 
-    // remove the temp zip file
     uploadedFile.delete();
-
-    // now create a project in the db
     String path = "";
     String name = "";
 
-    // get the project path and name from zip file
     try {
       if (projectVersion == 4) {
         path = sep +  newFilename + sep + "wise4.project.json";
@@ -247,12 +216,10 @@ public class ImportProjectController {
         return null;
       }
     } catch (Exception e) {
-      // there was an error getting project title.
       name = "Undefined";
     }
 
     User signedInUser = ControllerUtil.getSignedInUser();
-
     ProjectParameters pParams = new ProjectParameters();
     pParams.setModulePath(path);
     pParams.setOwner(signedInUser);
@@ -261,8 +228,6 @@ public class ImportProjectController {
     pParams.setWiseVersion(projectVersion);
 
     ProjectMetadata metadata = null;
-
-    // see if a file called wise4.project-meta.json exists. if yes, try parsing it.
     try {
       metadata = new ProjectMetadataImpl();
       if (projectVersion == 4) {
@@ -278,7 +243,6 @@ public class ImportProjectController {
         metadata.populateFromJSON(metadataJSONObj);
       }
     } catch (Exception e) {
-      // if there is any error during the parsing of the metadata, set the metadata to null
       System.err.println("Error parsing metadata while import project.");
       e.printStackTrace();
       metadata = null;
@@ -291,9 +255,7 @@ public class ImportProjectController {
       metadata = new ProjectMetadataImpl();
       metadata.setTitle(name);
     }
-
     pParams.setMetadata(metadata);
-
     return projectService.createProject(pParams);
   }
 
@@ -313,17 +275,15 @@ public class ImportProjectController {
 
   @RequestMapping(value = "/admin/project/import", method = RequestMethod.GET)
   public void initializeForm(ModelMap modelMap) {
-
     modelMap.put("projectZipFile", new ProjectUpload());
   }
 
   public static final void copyInputStream(InputStream in, OutputStream out) throws IOException {
     byte[] buffer = new byte[1024];
     int len;
-
-    while ((len = in.read(buffer)) >= 0)
+    while ((len = in.read(buffer)) >= 0) {
       out.write(buffer, 0, len);
-
+    }
     in.close();
     out.close();
   }

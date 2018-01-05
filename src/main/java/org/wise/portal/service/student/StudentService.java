@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -36,7 +36,6 @@ import org.wise.portal.domain.user.User;
 
 /**
  * Represents the set of operations on a WISE Student user.
- *
  * @author Hiroki Terashima
  */
 public interface StudentService {
@@ -49,15 +48,12 @@ public interface StudentService {
    *
    * @param studentUser a <code>User</code> object of a WISE student
    * @param projectcode a <code>Projectcode</code>
-   * @throws ObjectNotFoundException when the runcode portion of
-   *      <code>Projectcode</code> could not be used to retrieve
-   *      an existing <code>Run</code>
-   * @throws PeriodNotFoundException when the periodname portion of
-   *      <code>Projectcode</code> could not be used to retrieve
-   *      an existing period associated with the <code>Run</code>
-   * @throws StudentUserAlreadyAssociatedWithRunException when the
-   *      studentUser to be added is already associated with the run in any
-   *      of the periods that the run has been set up for
+   * @throws ObjectNotFoundException when the runcode portion of <code>Projectcode</code>
+   * could not be used to retrieve an existing <code>Run</code>
+   * @throws PeriodNotFoundException when the periodname portion of <code>Projectcode</code>
+   * could not be used to retrieve an existing period associated with the <code>Run</code>
+   * @throws StudentUserAlreadyAssociatedWithRunException when the studentUser to be added
+   * is already associated with the run in any of the periods that the run has been set up for
    */
   @Transactional
   void addStudentToRun(User studentUser, Projectcode projectcode)
@@ -65,9 +61,7 @@ public interface StudentService {
       StudentUserAlreadyAssociatedWithRunException;
 
   /**
-   * Returns a list of teachers that this student is associated with through
-   * runs.
-   *
+   * Returns a list of teachers that this student is associated with through runs.
    * @param studentUser
    * @return
    */
@@ -87,7 +81,6 @@ public interface StudentService {
    * User is not associated with the run, nothing happens. If the specified
    * User was in a workgroup for the specified run, they will be removed
    * from that workgroup.
-   *
    * @param studentUser <code>User</code> student to remove from the run.
    * @param run <code>Run</code> the run to remove the student from.
    */
@@ -96,7 +89,6 @@ public interface StudentService {
   /**
    * Given a student user and a run, returns a populated
    * <code>StudentRunInfo</code> object.
-   *
    * @param studentUser <code>User</code> student to lookup
    * @param run <code>Run</code> run to lookup
    */

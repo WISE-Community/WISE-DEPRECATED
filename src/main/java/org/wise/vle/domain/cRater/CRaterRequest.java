@@ -56,7 +56,7 @@ public class CRaterRequest extends PersistableDomain {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id = null;
 
-  @Column(name = "cRaterItemId", nullable=false)
+  @Column(name = "cRaterItemId", nullable = false)
   private String cRaterItemId;
 
   @Column(name = "cRaterItemType")
@@ -66,10 +66,10 @@ public class CRaterRequest extends PersistableDomain {
   @ManyToOne(cascade = {CascadeType.PERSIST})
   private StepWork stepWork;   // the work that is being cRater annotated
 
-  @Column(name = "nodeStateId", nullable=false)
+  @Column(name = "nodeStateId", nullable = false)
   private Long nodeStateId;
 
-  @Column(name = "runId", nullable=false)
+  @Column(name = "runId", nullable = false)
   private Long runId;
 
   @Column(name = "timeCreated")
@@ -87,11 +87,6 @@ public class CRaterRequest extends PersistableDomain {
   public CRaterRequest() {
   }
 
-  /**
-   * @param cRaterItemId
-   * @param stepWork
-   * @param nodeStateId
-   */
   public CRaterRequest(String cRaterItemId, String cRaterItemType, StepWork stepWork,
       Long nodeStateId, Long runId) {
     super();

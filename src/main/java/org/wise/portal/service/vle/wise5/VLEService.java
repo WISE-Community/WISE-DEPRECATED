@@ -66,19 +66,19 @@ public interface VLEService {
    * Saves StudentWork in the data store
    */
   StudentWork saveStudentWork(
-    Integer id, Integer runId, Integer periodId, Integer workgroupId,
-    Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId, String componentType,
-    String studentData, String clientSaveTime) throws ObjectNotFoundException;
+      Integer id, Integer runId, Integer periodId, Integer workgroupId,
+      Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId, String componentType,
+      String studentData, String clientSaveTime) throws ObjectNotFoundException;
 
   /**
    * @return List of Event objects with the specified fields. If none matches,
    * return an empty list.
    */
   List<Event> getEvents(
-    Integer id, Integer runId, Integer periodId, Integer workgroupId,
-    String nodeId, String componentId, String componentType,
-    String context, String category, String event,
-    List<JSONObject> components);
+      Integer id, Integer runId, Integer periodId, Integer workgroupId,
+      String nodeId, String componentId, String componentType,
+      String context, String category, String event,
+      List<JSONObject> components);
 
   /**
    * @return JSONArray of student events for researcher export

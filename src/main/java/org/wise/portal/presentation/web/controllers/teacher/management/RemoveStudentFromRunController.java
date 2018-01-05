@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -70,10 +70,8 @@ public class RemoveStudentFromRunController {
   @Autowired
   protected RemoveStudentFromRunParametersValidator removeStudentFromRunParametersValidator;
 
-  //the path to this form view
   protected String formView = "teacher/management/removestudentfromrun";
 
-  //the path to the success view
   protected String successView = "teacher/management/removestudentfromrunsuccess";
 
   private static final String RUNID_PARAM_NAME = "runId";
@@ -92,7 +90,6 @@ public class RemoveStudentFromRunController {
     params.setRunId(Long.parseLong(request.getParameter(RUNID_PARAM_NAME)));
     params.setUserId(Long.parseLong(request.getParameter(USERID_PARAM_NAME)));
     model.addAttribute("removeStudentFromRunParameters", params);
-
     return formView;
   }
 
@@ -106,28 +103,26 @@ public class RemoveStudentFromRunController {
    * @return the path of the view to display
    */
   @RequestMapping(method = RequestMethod.POST)
-  protected String onSubmit(@ModelAttribute("removeStudentFromRunParameters") RemoveStudentFromRunParameters params,
-                            BindingResult bindingResult, SessionStatus sessionStatus) {
+  protected String onSubmit(
+      @ModelAttribute("removeStudentFromRunParameters") RemoveStudentFromRunParameters params,
+      BindingResult bindingResult, SessionStatus sessionStatus) {
     String view = "";
     Long runId = params.getRunId();
     Long userId = params.getUserId();
     Run run = null;
     User studentUser = null;
-
     removeStudentFromRunParametersValidator.validate(params, bindingResult);
-
     if (bindingResult.hasErrors()) {
       view = "errors/accessdenied";
     } else {
-      try  {
+      try {
         run = runService.retrieveById(runId);
         studentUser = userService.retrieveById(userId);
         User callingUser = ControllerUtil.getSignedInUser();
 
         if (callingUser.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) ||
-          this.runService.hasRunPermission(run, callingUser, BasePermission.WRITE)) {
+          runService.hasRunPermission(run, callingUser, BasePermission.WRITE)) {
           studentService.removeStudentFromRun(studentUser, run);
-
           view = successView;
           sessionStatus.setComplete();
         } else {
@@ -138,7 +133,6 @@ public class RemoveStudentFromRunController {
         view = formView;
       }
     }
-
     return view;
   }
 }

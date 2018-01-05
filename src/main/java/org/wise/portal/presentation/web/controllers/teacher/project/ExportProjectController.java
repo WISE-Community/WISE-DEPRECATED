@@ -79,22 +79,17 @@ public class ExportProjectController {
     User signedInUser = ControllerUtil.getSignedInUser();
     Project project = projectService.getById(projectId);
 
-    // check if user is authorized to export
-    boolean isAuthorized = authorize(signedInUser, project);
-    if (isAuthorized) {
-      // user is admin or is owner of project
+    if (authorize(signedInUser, project)) {
     } else if (projectService.projectContainsTag(project, "public")) {
-      // project is marked as being public
     } else {
-      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this page");
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+          "You are not authorized to access this page");
       return;
     }
 
     String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-
     String sep = "/";
-
-    String rawProjectUrl = (String) project.getModulePath();
+    String rawProjectUrl = project.getModulePath();
     projectJSONFilename = rawProjectUrl.substring(rawProjectUrl.lastIndexOf(sep) + 1);
     String projectJSONFullPath = curriculumBaseDir + sep + rawProjectUrl;
     String foldername = rawProjectUrl.substring(1, rawProjectUrl.lastIndexOf(sep));
@@ -103,7 +98,6 @@ public class ExportProjectController {
     response.setContentType("application/zip");
     response.addHeader("Content-Disposition", "attachment;filename=\"" + foldername+".zip" + "\"");
 
-    // add project metadata to zip
     ProjectMetadata metadata = project.getMetadata();
     String metadataJSONString = metadata.toJSONString();
 
@@ -114,15 +108,9 @@ public class ExportProjectController {
       metaOut.close();
     }
 
-    // zip the folder and write to outputstream
     ServletOutputStream outputStream = response.getOutputStream();
+    ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(outputStream));
 
-    // create ZipOutputStream object
-    ZipOutputStream out = new ZipOutputStream(
-      new BufferedOutputStream(outputStream));
-
-
-    // path to the folder to be zipped
     File zipFolder = new File(projectJSONDir);
 
     // get path prefix so that the zip file does not contain the whole path
@@ -137,7 +125,6 @@ public class ExportProjectController {
     }
     String baseName = zipFolderAbsolutePath.substring(0, len + 1);
     addFolderToZip(zipFolder, out, baseName);
-
     out.close();
   }
 
@@ -161,7 +148,6 @@ public class ExportProjectController {
         }
       }
     }
-    // other request methods are not authorized at this point
     return false;
   }
 
@@ -173,18 +159,17 @@ public class ExportProjectController {
    * @param baseName base name of the zip folder
    * @throws IOException
    */
-  private void addFolderToZip(File folder, ZipOutputStream zip, String baseName) throws IOException {
+  private void addFolderToZip(File folder, ZipOutputStream zip, String baseName)
+      throws IOException {
     File[] files = folder.listFiles();
     for (File file : files) {
       if (file.isDirectory()) {
-        // add folder to zip
         String name = file.getAbsolutePath().substring(baseName.length());
         ZipEntry zipEntry = new ZipEntry(name + "/");
         zip.putNextEntry(zipEntry);
         zip.closeEntry();
         addFolderToZip(file, zip, baseName);
       } else {
-        // it's a file.
         String name = file.getAbsolutePath().substring(baseName.length());
         String updatedFilename = null;
         if (name.endsWith("wise4.project.json") && !"wise4.project.json".equals(this.projectJSONFilename)) {

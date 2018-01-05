@@ -25,9 +25,7 @@ package org.wise.vle.domain.status;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
-
 import javax.persistence.*;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.wise.vle.domain.PersistableDomain;
@@ -36,7 +34,8 @@ import org.wise.vle.domain.PersistableDomain;
  * @author Geoffrey Kwan
  */
 @Entity
-@Table(name = "runstatus", indexes = { @Index(columnList = "runId", name = "runstatusRunIdIndex") } )
+@Table(name = "runstatus", indexes = {
+    @Index(columnList = "runId", name = "runstatusRunIdIndex") } )
 @Getter
 @Setter
 public class RunStatus extends PersistableDomain {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -24,7 +24,6 @@
 package org.wise.portal.presentation.web.controllers;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,30 +45,18 @@ public class CompatibilityCheckController {
   @Autowired
   private ProjectService projectService;
 
-  /**
-   * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-   */
   @RequestMapping(method = RequestMethod.GET)
-  protected ModelAndView handleRequestInternal(HttpServletRequest request) throws Exception {
+  protected ModelAndView getCheckPage(HttpServletRequest request) throws Exception {
     ModelAndView modelAndView = new ModelAndView();
-
-    String projectId = request.getParameter("projectId"); // get the projectId
-
+    String projectId = request.getParameter("projectId");
     if (projectId != null) {
-
-      Project project = projectService.getById(projectId); // get the metadata for the project
+      Project project = projectService.getById(projectId);
       ProjectMetadata metadata = project.getMetadata();
-
       if (metadata != null) {
-
-        // get the tech requirements from the metadata, this should be a JSON string
         String projectTechReqs = metadata.getTechReqs();
-
-        // set the JSON string into the model so the jsp can access it
         modelAndView.addObject("specificRequirements", projectTechReqs);
       }
     }
-
     return modelAndView;
   }
 }

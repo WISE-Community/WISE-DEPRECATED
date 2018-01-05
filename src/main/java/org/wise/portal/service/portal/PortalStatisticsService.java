@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -24,7 +24,6 @@
 package org.wise.portal.service.portal;
 
 import java.util.List;
-
 import org.wise.portal.domain.portal.PortalStatistics;
 
 public interface PortalStatisticsService {

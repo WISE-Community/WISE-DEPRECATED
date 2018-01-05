@@ -44,16 +44,16 @@ public class SearchForStudentUserNameValidator implements Validator {
   }
 
   public void validate(Object passwordReminderParameters, Errors errors) {
-    // make sure first name field is not empty and is alphanumeric
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName","error.firstname-not-specified");
-    if (!StringUtils.isAlphanumeric(((PasswordReminderParameters) passwordReminderParameters).getFirstName())) {
+    if (!StringUtils.isAlphanumeric(
+        ((PasswordReminderParameters) passwordReminderParameters).getFirstName())) {
       errors.rejectValue("username", "error.username-not-found");
       return;
     }
 
-    // make sure last name field is not empty and is alphanumeric
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName","error.lastname-not-specified");
-    if (!StringUtils.isAlphanumeric(((PasswordReminderParameters) passwordReminderParameters).getLastName())) {
+    if (!StringUtils.isAlphanumeric(
+        ((PasswordReminderParameters) passwordReminderParameters).getLastName())) {
       errors.rejectValue("username", "error.username-not-found");
       return;
     }

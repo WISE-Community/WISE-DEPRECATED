@@ -96,65 +96,61 @@ public class StudentWork extends PersistableDomain {
     return StudentWork.class;
   }
 
-  /**
-   * Get the JSON representation of the StudentWork
-   * @return a JSONObject with the values from the StudentWork
-   */
   public JSONObject toJSON() {
     JSONObject studentWorkJSONObject = new JSONObject();
     try {
-      if (this.id != null) {
-        studentWorkJSONObject.put("id", this.id);
+      if (id != null) {
+        studentWorkJSONObject.put("id", id);
       }
 
-      if (this.run != null) {
-        Long runId = this.run.getId();
+      if (run != null) {
+        Long runId = run.getId();
         studentWorkJSONObject.put("runId", runId);
       }
 
-      if (this.period != null) {
-        Long periodId = this.period.getId();
+      if (period != null) {
+        Long periodId = period.getId();
         studentWorkJSONObject.put("periodId", periodId);
       }
 
-      if (this.workgroup != null) {
-        Long workgroupId = this.workgroup.getId();
+      if (workgroup != null) {
+        Long workgroupId = workgroup.getId();
         studentWorkJSONObject.put("workgroupId", workgroupId);
       }
 
-      if (this.isAutoSave != null) {
-        studentWorkJSONObject.put("isAutoSave", this.isAutoSave);
+      if (isAutoSave != null) {
+        studentWorkJSONObject.put("isAutoSave", isAutoSave);
       }
 
-      if (this.isSubmit != null) {
-        studentWorkJSONObject.put("isSubmit", this.isSubmit);
+      if (isSubmit != null) {
+        studentWorkJSONObject.put("isSubmit", isSubmit);
       }
 
-      if (this.nodeId != null) {
-        studentWorkJSONObject.put("nodeId", this.nodeId);
+      if (nodeId != null) {
+        studentWorkJSONObject.put("nodeId", nodeId);
       }
 
-      if (this.componentId != null) {
-        studentWorkJSONObject.put("componentId", this.componentId);
+      if (componentId != null) {
+        studentWorkJSONObject.put("componentId", componentId);
       }
 
-      if (this.componentType != null) {
-        studentWorkJSONObject.put("componentType", this.componentType);
+      if (componentType != null) {
+        studentWorkJSONObject.put("componentType", componentType);
       }
 
-      if (this.clientSaveTime != null) {
+      if (clientSaveTime != null) {
         studentWorkJSONObject.put("clientSaveTime", clientSaveTime.getTime());
       }
 
-      if (this.serverSaveTime != null) {
+      if (serverSaveTime != null) {
         studentWorkJSONObject.put("serverSaveTime", serverSaveTime.getTime());
       }
 
-      if (this.studentData != null) {
+      if (studentData != null) {
         try {
           studentWorkJSONObject.put("studentData", new JSONObject(studentData));
         } catch (JSONException e) {
-          studentWorkJSONObject.put("studentData", this.studentData);
+          studentWorkJSONObject.put("studentData", studentData);
         }
       }
     } catch (JSONException e) {

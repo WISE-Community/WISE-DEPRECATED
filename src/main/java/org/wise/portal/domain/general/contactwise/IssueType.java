@@ -34,7 +34,6 @@ public enum IssueType {
   TROUBLE_LOGGING_IN, NEED_HELP_USING_WISE, PROJECT_PROBLEMS,
   STUDENT_MANAGEMENT, AUTHORING, FEEDBACK, OTHER;
 
-  //the properties file that contains the user friendly values
   private static Properties i18nProperties;
 
   /**

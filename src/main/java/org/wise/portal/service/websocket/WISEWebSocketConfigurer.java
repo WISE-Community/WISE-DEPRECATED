@@ -35,34 +35,21 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @EnableWebSocket
 public class WISEWebSocketConfigurer implements WebSocketConfigurer {
 
-  /**
-   * Register the websocket handler
-   */
   @Override
   public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-    // register our websocket handler
     registry.addHandler(webSocketHandler(), "/websocket")
-      .addInterceptors(new WISEHttpSessionHandshakeInterceptor())
-      .setAllowedOrigins("*");
+        .addInterceptors(new WISEHttpSessionHandshakeInterceptor())
+        .setAllowedOrigins("*");
   }
 
-  /**
-   * Create the websocket container
-   * @return the server container
-   */
   @Bean
   public ServletServerContainerFactoryBean createWebSocketContainer() {
-    // set the max message buffer size
     ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
     container.setMaxTextMessageBufferSize(32768);
     container.setMaxBinaryMessageBufferSize(32768);
     return container;
   }
 
-  /**
-   * Get the websocket handler
-   * @return the websocket handler
-   */
   @Bean
   public WebSocketHandler webSocketHandler() {
     return new WISETextWebSocketHandler();

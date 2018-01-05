@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -31,32 +31,18 @@ import org.wise.portal.domain.impl.LookupUserParameters;
 
 /**
  * @author Patrick Lawler
- *
  */
 @Component
 public class LookupUserParametersValidator implements Validator {
 
-  /**
-   * @see org.springframework.validation.Validator#supports(java.lang.Class)
-   */
   @SuppressWarnings("unchecked")
   public boolean supports(Class clazz) {
     return LookupUserParameters.class.isAssignableFrom(clazz);
   }
 
-  /**
-   * @see org.springframework.validation.Validator#validate(java.lang.Object,
-   *      org.springframework.validation.Errors)
-   */
   public void validate(Object paramsIn, Errors errors) {
-
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lookupData",
-      "error.invalid-parameters");
-
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lookupField",
-      "error.invalid-parameters");
-
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lookupCriteria",
-      "error.invalid-parameters");
+    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lookupData", "error.invalid-parameters");
+    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lookupField", "error.invalid-parameters");
+    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lookupCriteria", "error.invalid-parameters");
   }
 }
