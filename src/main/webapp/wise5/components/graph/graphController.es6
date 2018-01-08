@@ -6770,7 +6770,7 @@ class GraphController {
         let material = selectedCell.material;
         let bevTemp = selectedCell.bevTemp;
         let airTemp = selectedCell.airTemp;
-        let selectedTrialId = material + '-' + bevTemp + 'Bev-' + airTemp + 'Air';
+        let selectedTrialId = material + '-' + bevTemp + 'Liquid';
         selectedTrialIds.push(selectedTrialId);
       }
     }
