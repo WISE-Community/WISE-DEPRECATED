@@ -7482,7 +7482,7 @@ var GraphController = function () {
             var material = selectedCell.material;
             var bevTemp = selectedCell.bevTemp;
             var airTemp = selectedCell.airTemp;
-            var selectedTrialId = material + '-' + bevTemp + 'Bev-' + airTemp + 'Air';
+            var selectedTrialId = material + '-' + bevTemp + 'Liquid';
             selectedTrialIds.push(selectedTrialId);
           }
         } catch (err) {
