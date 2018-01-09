@@ -136,6 +136,8 @@ var GraphController = function () {
     // whether to show the undo button
     this.showUndoButton = false;
 
+    this.legendEnabled = true;
+
     // the id of the chart element
     this.chartId = 'chart1';
 
@@ -428,6 +430,7 @@ var GraphController = function () {
           this.graphType = this.componentContent.graphType;
           this.isResetSeriesButtonVisible = true;
           this.isSelectSeriesVisible = true;
+          this.legendEnabled = !this.componentContent.hideLegend;
           this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
           this.setDefaultActiveSeries();
           this.trials = [];
@@ -482,6 +485,10 @@ var GraphController = function () {
          * will disable the submit button
          */
         this.isSubmitButtonDisabled = true;
+      }
+
+      if (this.componentContent.hideLegend) {
+        this.legendEnabled = false;
       }
 
       // check if we need to lock this component
@@ -1443,8 +1450,13 @@ var GraphController = function () {
       // TODO: provide authoring option to allow zooming for students?
       var zoomType = this.mode === 'grading' || this.mode === 'gradingRevision' ? 'xy' : null;
 
+      var legendEnabled = this.legendEnabled;
+
       this.chartConfig = {
         options: {
+          legend: {
+            enabled: legendEnabled
+          },
           tooltip: {
             formatter: function formatter() {
               if (this.series != null) {

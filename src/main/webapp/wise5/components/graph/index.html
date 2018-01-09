@@ -506,6 +506,12 @@
                  ng-change='graphController.authoringViewComponentChanged()'>
             {{ 'graph.enableFileUpload' | translate }}
           </md-checkbox>
+          <br/>
+          <md-checkbox class='md-primary'
+                 ng-model='graphController.authoringComponentContent.hideLegend'
+                 ng-change='graphController.authoringViewComponentChanged()'>
+            {{ 'graph.hideLegend' | translate }}
+          </md-checkbox>
         </div>
         <br/>
         <div layout='row'>

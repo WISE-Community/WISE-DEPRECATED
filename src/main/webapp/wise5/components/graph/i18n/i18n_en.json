@@ -39,6 +39,7 @@
   "graph.graphType": "Graph Type",
   "graph.graphWidth": "Graph Width",
   "graph.hideExistingTrialsOnNewTrial": "Hide Existing Trials On New Trial",
+  "graph.hideLegend": "Hide Legend",
   "graph.importData": "Import Data",
   "graph.linePlot": "Line Plot",
   "graph.lineType": "Line Type",
