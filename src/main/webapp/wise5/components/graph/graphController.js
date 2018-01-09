@@ -138,6 +138,8 @@ var GraphController = function () {
 
     this.legendEnabled = true;
 
+    this.showTrialSelect = true;
+
     // the id of the chart element
     this.chartId = 'chart1';
 
@@ -431,6 +433,7 @@ var GraphController = function () {
           this.isResetSeriesButtonVisible = true;
           this.isSelectSeriesVisible = true;
           this.legendEnabled = !this.componentContent.hideLegend;
+          this.showTrialSelect = !this.componentContent.hideTrialSelect;
           this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
           this.setDefaultActiveSeries();
           this.trials = [];
@@ -489,6 +492,10 @@ var GraphController = function () {
 
       if (this.componentContent.hideLegend) {
         this.legendEnabled = false;
+      }
+
+      if (this.componentContent.hideTrialSelect) {
+        this.showTrialSelect = false;
       }
 
       // check if we need to lock this component

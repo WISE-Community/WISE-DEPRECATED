@@ -29,6 +29,13 @@
         </div>
         <div>
           <md-checkbox class='md-primary'
+                 ng-model='graphController.authoringComponentContent.hideTrialSelect'
+                 ng-change='graphController.authoringViewComponentChanged()'>
+            {{ 'graph.hideTrialSelect' | translate }}
+          </md-checkbox>
+        </div>
+        <div>
+          <md-checkbox class='md-primary'
                  ng-model='graphController.authoringComponentContent.showSaveButton'
                  ng-change='graphController.authoringViewComponentChanged()'>
             {{ 'SHOW_SAVE_BUTTON' | translate }}
@@ -675,7 +682,7 @@
                accept='.csv'
                ng-if='graphController.componentContent.enableFileUpload'
                onchange='angular.element(this).scope().fileUploadChanged(this)'/>
-          <div class='component__actions' layout='row'>
+          <div class='component__actions' layout='row' ng-if='graphController.showTrialSelect'>
             <md-input-container ng-if='graphController.componentContent.enableTrials'>
               <label>{{ 'graph.selectTrialsToShow' | translate }}</label>
               <md-select ng-model='graphController.trialIdsToShow'
