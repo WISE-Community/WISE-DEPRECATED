@@ -4752,9 +4752,10 @@ class GraphController {
                   // add the series to the trial
                   latestTrial.series.push(newSeries);
 
-                  if (params.showTooltipOnLatestPoint) {
+                  if (params.highlightLatestPoint) {
                     this.$timeout(() => {
-                      this.showTooltipOnX(studentData.trial.id, studentData.showTooltipOnX);
+                      //this.showTooltipOnX(studentData.trial.id, studentData.showTooltipOnX);
+                      this.highlightPointOnX(studentData.trial.id, studentData.xPointToHighlight);
                     }, 1);
                   }
                 }
@@ -6750,6 +6751,38 @@ class GraphController {
       for (let point of points) {
         if (point.x == x) {
           chart.tooltip.refresh(point);
+        }
+      }
+    }
+  }
+
+  /**
+   * Highlight the point with the given x value.
+   * @param seriesId The id of the series.
+   * @param x The x value we want to highlight.
+   */
+  highlightPointOnX(seriesId, x) {
+    let chart = $('#' + this.chartId).highcharts();
+    if (chart.series.length > 0) {
+      let series = null;
+      if (seriesId == null) {
+        series = chart.series[chart.series.length - 1];
+      } else {
+        for (let tempSeries of chart.series) {
+          if (tempSeries.userOptions.name == seriesId) {
+            series = tempSeries;
+          }
+          // remove the hover state from the other points
+          for (let point of tempSeries.points) {
+            point.setState('');
+          }
+        }
+      }
+      let points = series.points;
+      for (let point of points) {
+        if (point.x == x) {
+          // make the point larger and also have a highlight around it
+          point.setState('hover');
         }
       }
     }

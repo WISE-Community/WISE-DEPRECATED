@@ -5074,9 +5074,10 @@ var GraphController = function () {
                     // add the series to the trial
                     latestTrial.series.push(newSeries);
 
-                    if (params.showTooltipOnLatestPoint) {
+                    if (params.highlightLatestPoint) {
                       this.$timeout(function () {
-                        _this8.showTooltipOnX(studentData.trial.id, studentData.showTooltipOnX);
+                        //this.showTooltipOnX(studentData.trial.id, studentData.showTooltipOnX);
+                        _this8.highlightPointOnX(studentData.trial.id, studentData.xPointToHighlight);
                       }, 1);
                     }
                   }
@@ -7455,6 +7456,104 @@ var GraphController = function () {
     }
 
     /**
+     * Highlight the point with the given x value.
+     * @param seriesId The id of the series.
+     * @param x The x value we want to highlight.
+     */
+
+  }, {
+    key: 'highlightPointOnX',
+    value: function highlightPointOnX(seriesId, x) {
+      var chart = $('#' + this.chartId).highcharts();
+      if (chart.series.length > 0) {
+        var series = null;
+        if (seriesId == null) {
+          series = chart.series[chart.series.length - 1];
+        } else {
+          var _iteratorNormalCompletion14 = true;
+          var _didIteratorError14 = false;
+          var _iteratorError14 = undefined;
+
+          try {
+            for (var _iterator14 = chart.series[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+              var tempSeries = _step14.value;
+
+              if (tempSeries.userOptions.name == seriesId) {
+                series = tempSeries;
+              }
+              // remove the hover state from the other points
+              var _iteratorNormalCompletion15 = true;
+              var _didIteratorError15 = false;
+              var _iteratorError15 = undefined;
+
+              try {
+                for (var _iterator15 = tempSeries.points[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+                  var point = _step15.value;
+
+                  point.setState('');
+                }
+              } catch (err) {
+                _didIteratorError15 = true;
+                _iteratorError15 = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion15 && _iterator15.return) {
+                    _iterator15.return();
+                  }
+                } finally {
+                  if (_didIteratorError15) {
+                    throw _iteratorError15;
+                  }
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError14 = true;
+            _iteratorError14 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion14 && _iterator14.return) {
+                _iterator14.return();
+              }
+            } finally {
+              if (_didIteratorError14) {
+                throw _iteratorError14;
+              }
+            }
+          }
+        }
+        var points = series.points;
+        var _iteratorNormalCompletion16 = true;
+        var _didIteratorError16 = false;
+        var _iteratorError16 = undefined;
+
+        try {
+          for (var _iterator16 = points[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+            var _point = _step16.value;
+
+            if (_point.x == x) {
+              // make the point larger and also have a highlight around it
+              _point.setState('hover');
+            }
+          }
+        } catch (err) {
+          _didIteratorError16 = true;
+          _iteratorError16 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion16 && _iterator16.return) {
+              _iterator16.return();
+            }
+          } finally {
+            if (_didIteratorError16) {
+              throw _iteratorError16;
+            }
+          }
+        }
+      }
+    }
+
+    /**
      * Show the tooltip on the newest point.
      */
 
@@ -7483,13 +7582,13 @@ var GraphController = function () {
     value: function convertSelectedCellsToTrialIds(selectedCells) {
       var selectedTrialIds = [];
       if (selectedCells != null) {
-        var _iteratorNormalCompletion14 = true;
-        var _didIteratorError14 = false;
-        var _iteratorError14 = undefined;
+        var _iteratorNormalCompletion17 = true;
+        var _didIteratorError17 = false;
+        var _iteratorError17 = undefined;
 
         try {
-          for (var _iterator14 = selectedCells[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-            var selectedCell = _step14.value;
+          for (var _iterator17 = selectedCells[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+            var selectedCell = _step17.value;
 
             var material = selectedCell.material;
             var bevTemp = selectedCell.bevTemp;
@@ -7498,16 +7597,16 @@ var GraphController = function () {
             selectedTrialIds.push(selectedTrialId);
           }
         } catch (err) {
-          _didIteratorError14 = true;
-          _iteratorError14 = err;
+          _didIteratorError17 = true;
+          _iteratorError17 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion14 && _iterator14.return) {
-              _iterator14.return();
+            if (!_iteratorNormalCompletion17 && _iterator17.return) {
+              _iterator17.return();
             }
           } finally {
-            if (_didIteratorError14) {
-              throw _iteratorError14;
+            if (_didIteratorError17) {
+              throw _iteratorError17;
             }
           }
         }
