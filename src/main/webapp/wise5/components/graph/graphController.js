@@ -1066,6 +1066,58 @@ var GraphController = function () {
         };
       }
       chartXAxis.addPlotLine(plotLine);
+
+      if (this.componentContent.highlightXRangeFromZero) {
+        this.drawRangeRectangle(0, x, chart.yAxis[0].min, chart.yAxis[0].max);
+      }
+    }
+
+    /**
+     * Draw a rectangle on the graph. This is used for highlighting a range.
+     * @param xMin The left x value in the graph x axis units.
+     * @param xMax The right x value in the graph x axis units.
+     * @param yMin The bottom y value in the graph y axis units.
+     * @param yMax The top y value in the graph y axis units.
+     * @param strokeColor The color of the border.
+     * @param strokeWidth The width of the border.
+     * @param fillColor The color inside the rectangle.
+     * @param fillOpacity The opacity of the color inside the rectangle.
+     */
+
+  }, {
+    key: 'drawRangeRectangle',
+    value: function drawRangeRectangle(xMin, xMax, yMin, yMax) {
+      var strokeColor = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'black';
+      var strokeWidth = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : '.5';
+      var fillColor = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 'black';
+      var fillOpacity = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : '.1';
+
+
+      var chart = $('#' + this.chartId).highcharts();
+
+      // convert the x and y values to pixel values
+      xMin = chart.xAxis[0].translate(xMin);
+      xMax = chart.xAxis[0].translate(xMax);
+      yMin = chart.yAxis[0].translate(yMin);
+      yMax = chart.yAxis[0].translate(yMax);
+
+      // create the rectangle if it hasn't been created before
+      if (this.rectangle == null) {
+        this.rectangle = chart.renderer.rect(0, 0, 0, 0, 0).css({
+          stroke: strokeColor,
+          strokeWidth: strokeWidth,
+          fill: fillColor,
+          fillOpacity: fillOpacity
+        }).add();
+      }
+
+      // update the rectangle position and size
+      this.rectangle.attr({
+        x: xMin + chart.plotLeft,
+        y: chart.plotHeight + chart.plotTop - yMax,
+        width: xMax - xMin,
+        height: yMax - yMin
+      });
     }
 
     /**

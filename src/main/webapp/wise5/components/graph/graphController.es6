@@ -1100,6 +1100,52 @@ class GraphController {
       }
     }
     chartXAxis.addPlotLine(plotLine);
+
+    if (this.componentContent.highlightXRangeFromZero) {
+      this.drawRangeRectangle(0, x, chart.yAxis[0].min, chart.yAxis[0].max);
+    }
+  }
+
+  /**
+   * Draw a rectangle on the graph. This is used for highlighting a range.
+   * @param xMin The left x value in the graph x axis units.
+   * @param xMax The right x value in the graph x axis units.
+   * @param yMin The bottom y value in the graph y axis units.
+   * @param yMax The top y value in the graph y axis units.
+   * @param strokeColor The color of the border.
+   * @param strokeWidth The width of the border.
+   * @param fillColor The color inside the rectangle.
+   * @param fillOpacity The opacity of the color inside the rectangle.
+   */
+  drawRangeRectangle(xMin, xMax, yMin, yMax,
+      strokeColor = 'black', strokeWidth = '.5',
+      fillColor = 'black', fillOpacity = '.1') {
+
+    let chart = $('#' + this.chartId).highcharts();
+
+    // convert the x and y values to pixel values
+    xMin = chart.xAxis[0].translate(xMin);
+    xMax = chart.xAxis[0].translate(xMax);
+    yMin = chart.yAxis[0].translate(yMin);
+    yMax = chart.yAxis[0].translate(yMax);
+
+    // create the rectangle if it hasn't been created before
+    if (this.rectangle == null) {
+      this.rectangle = chart.renderer.rect(0,0,0,0,0).css({
+        stroke: strokeColor,
+        strokeWidth: strokeWidth,
+        fill: fillColor,
+        fillOpacity: fillOpacity
+      }).add();
+    }
+
+    // update the rectangle position and size
+    this.rectangle.attr({
+      x: xMin + chart.plotLeft,
+      y: chart.plotHeight + chart.plotTop - yMax,
+      width: xMax - xMin,
+      height: yMax - yMin
+    });
   }
 
   /**

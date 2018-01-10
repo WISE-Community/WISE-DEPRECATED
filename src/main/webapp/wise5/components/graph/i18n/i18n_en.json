@@ -41,6 +41,7 @@
   "graph.hideExistingTrialsOnNewTrial": "Hide Existing Trials On New Trial",
   "graph.hideLegend": "Hide Legend",
   "graph.highlightLatestPoint": "Highlight Latest Point",
+  "graph.highlightXRangeFromZero": "Highlight X Range From Zero",
   "graph.hideTrialSelect": "Hide Trial Select",
   "graph.importData": "Import Data",
   "graph.linePlot": "Line Plot",

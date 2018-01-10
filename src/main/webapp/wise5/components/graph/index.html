@@ -15,6 +15,15 @@
         </div>
         <div>
           <md-checkbox class='md-primary'
+                 style='left: 40;'
+                 ng-disabled='!graphController.authoringComponentContent.showMouseXPlotLine'
+                 ng-model='graphController.authoringComponentContent.highlightXRangeFromZero'
+                 ng-change='graphController.authoringViewComponentChanged()'>
+            {{ 'graph.highlightXRangeFromZero' | translate }}
+          </md-checkbox>
+        </div>
+        <div>
+          <md-checkbox class='md-primary'
                  ng-model='graphController.authoringComponentContent.showMouseYPlotLine'
                  ng-change='graphController.authoringViewComponentChanged()'>
             {{ 'graph.showMouseYPlotLine' | translate }}
