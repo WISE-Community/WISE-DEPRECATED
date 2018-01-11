@@ -6041,6 +6041,15 @@ class GraphController {
     this.plotLines = [
       plotLine
     ];
+
+    /*
+     * Call $apply() so that the red plot line position gets updated. If we
+     * don't call this, the line position won't get updated unless the student
+     * moves their mouse around which forces angular to update.
+     */
+    this.$timeout(() => {
+      this.$scope.$apply();
+    });
   }
 
   /**

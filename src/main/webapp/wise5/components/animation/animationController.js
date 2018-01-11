@@ -3641,6 +3641,7 @@ var AnimationController = function () {
   }, {
     key: 'resetButtonClicked',
     value: function resetButtonClicked() {
+      var _this7 = this;
 
       // set the animation state
       this.animationState = 'stopped';
@@ -3694,14 +3695,16 @@ var AnimationController = function () {
         }
       }
 
-      // set the display time to 0
-      this.showTime(0);
+      this.$timeout(function () {
+        // set the display time to 0
+        _this7.displayAndBroadcastTime(0);
 
-      // set the images back to their starting images in case they have changed
-      this.initializeObjectImages();
+        // set the images back to their starting images in case they have changed
+        _this7.initializeObjectImages();
 
-      // put the objects in their starting positions
-      this.initializeObjectPositions();
+        // put the objects in their starting positions
+        _this7.initializeObjectPositions();
+      }, 100);
     }
 
     /**

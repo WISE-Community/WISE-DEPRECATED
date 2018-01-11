@@ -6507,6 +6507,7 @@ var GraphController = function () {
   }, {
     key: 'setVerticalPlotLine',
     value: function setVerticalPlotLine(x) {
+      var _this10 = this;
 
       // make the plot line
       var plotLine = {
@@ -6517,6 +6518,15 @@ var GraphController = function () {
 
         // set the plot line into the plot lines array
       };this.plotLines = [plotLine];
+
+      /*
+       * Call $apply() so that the red plot line position gets updated. If we
+       * don't call this, the line position won't get updated unless the student
+       * moves their mouse around which forces angular to update.
+       */
+      this.$timeout(function () {
+        _this10.$scope.$apply();
+      });
     }
 
     /**
@@ -6526,7 +6536,7 @@ var GraphController = function () {
   }, {
     key: 'handleConnectedComponents',
     value: function handleConnectedComponents() {
-      var _this10 = this;
+      var _this11 = this;
 
       // get the connected components
       var connectedComponents = this.componentContent.connectedComponents;
@@ -6656,24 +6666,24 @@ var GraphController = function () {
           studentData.version = 2;
 
           // create a new component state
-          var newComponentState = _this10.NodeService.createNewComponentState();
+          var newComponentState = _this11.NodeService.createNewComponentState();
           newComponentState.studentData = studentData;
 
-          if (_this10.componentContent.backgroundImage != null && _this10.componentContent.backgroundImage != '') {
+          if (_this11.componentContent.backgroundImage != null && _this11.componentContent.backgroundImage != '') {
             // use the background image from this component
-            newComponentState.studentData.backgroundImage = _this10.componentContent.backgroundImage;
+            newComponentState.studentData.backgroundImage = _this11.componentContent.backgroundImage;
           } else if (connectedComponentBackgroundImage != null) {
             // use the background image from the connected component
             newComponentState.studentData.backgroundImage = connectedComponentBackgroundImage;
           }
 
-          newComponentState = _this10.handleConnectedComponentsHelper(newComponentState);
+          newComponentState = _this11.handleConnectedComponentsHelper(newComponentState);
 
           // populate the component state into this component
-          _this10.setStudentWork(newComponentState);
+          _this11.setStudentWork(newComponentState);
 
           // make the work dirty so that it gets saved
-          _this10.studentDataChanged();
+          _this11.studentDataChanged();
         });
       }
     }
