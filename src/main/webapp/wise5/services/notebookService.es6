@@ -120,7 +120,7 @@ class NotebookService {
     const reportNotes = this.notebookConfig.itemTypes.report.notes;
     for (let reportNote of reportNotes) {
       if (reportNote.reportId == reportId) {
-        templateReportItem = {
+        let templateReportItem = {
           id: null,
           type: "report",
           localNotebookItemId: reportId,
