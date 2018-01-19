@@ -279,6 +279,13 @@
               ng-model='labelController.authoringComponentContent.fontSize'
               ng-change='labelController.authoringViewComponentChanged()'/>
         </md-input-container>
+        <md-input-container>
+          <label>{{ 'label.labelWidth' | translate }}</label>
+          <input type='number'
+              style='width: 200'
+              ng-model='labelController.authoringComponentContent.labelWidth'
+              ng-change='labelController.authoringViewComponentChanged()'/>
+        </md-input-container>
       </div>
       <div>
         <md-checkbox class='md-primary'
@@ -501,9 +508,9 @@
           </span>
           <input id='editLabelTextInput'
               type='text'
-              ng-model='labelController.selectedLabel.text.text'
+              ng-model='labelController.selectedLabel.textString'
               ng-if='labelController.editLabelMode'
-              ng-change='labelController.selectedLabelTextChanged(labelController.selectedLabel.text, labelController.selectedLabel.text.text)'
+              ng-change='labelController.selectedLabelTextChanged(labelController.selectedLabel, labelController.selectedLabel.text, labelController.selectedLabel.textString)'
               size='50'/>
           <md-button class='studentButton md-raised md-primary'
               ng-click='labelController.saveLabelButtonClicked()'

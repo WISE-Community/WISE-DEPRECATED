@@ -69,6 +69,7 @@ var LabelService = function (_NodeService) {
       component.height = 600;
       component.pointSize = 5;
       component.fontSize = 20;
+      component.labelWidth = 20;
       component.labels = [];
       return component;
     }

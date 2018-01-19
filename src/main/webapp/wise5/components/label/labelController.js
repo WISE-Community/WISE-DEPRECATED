@@ -1154,44 +1154,41 @@ var LabelController = function () {
     value: function getLabelJSONObjectFromCircle(circle) {
       var labelJSONObject = {};
 
-      if (circle != null) {
+      // get the label object that contains the circle, line, and text objects
+      var label = this.getLabelFromCircle(circle);
 
-        // get the line associated with the circle
-        var lineObject = circle.line;
+      // get the line associated with the circle
+      var lineObject = circle.line;
 
-        // get the text object associated with the circle
-        var textObject = circle.text;
+      // get the text object associated with the circle
+      var textObject = circle.text;
 
-        if (lineObject != null && textObject != null) {
+      // get the position of the circle
+      var pointX = circle.get('left');
+      var pointY = circle.get('top');
 
-          // get the position of the circle
-          var pointX = circle.get('left');
-          var pointY = circle.get('top');
+      /*
+       * get the offset of the end of the line
+       * (this is where the text object is also located)
+       */
+      var xDiff = lineObject.x2 - lineObject.x1;
+      var yDiff = lineObject.y2 - lineObject.y1;
 
-          /*
-           * get the offset of the end of the line
-           * (this is where the text object is also located)
-           */
-          var xDiff = lineObject.x2 - lineObject.x1;
-          var yDiff = lineObject.y2 - lineObject.y1;
+      // get the position of the text object
+      var textX = xDiff;
+      var textY = yDiff;
 
-          // get the position of the text object
-          var textX = xDiff;
-          var textY = yDiff;
+      // get the text and background color of the text
+      var text = label.textString;
+      var color = textObject.backgroundColor;
 
-          // get the text and background color of the text
-          var text = textObject.text;
-          var color = textObject.backgroundColor;
-
-          // set all the values into the object
-          labelJSONObject.pointX = parseInt(pointX);
-          labelJSONObject.pointY = parseInt(pointY);
-          labelJSONObject.textX = parseInt(textX);
-          labelJSONObject.textY = parseInt(textY);
-          labelJSONObject.text = text;
-          labelJSONObject.color = color;
-        }
-      }
+      // set all the values into the object
+      labelJSONObject.pointX = parseInt(pointX);
+      labelJSONObject.pointY = parseInt(pointY);
+      labelJSONObject.textX = parseInt(textX);
+      labelJSONObject.textY = parseInt(textY);
+      labelJSONObject.text = text;
+      labelJSONObject.color = color;
 
       return labelJSONObject;
     }
@@ -1883,8 +1880,14 @@ var LabelController = function () {
         selectable: false
       });
 
+      // wrap the text if necessary
+      var wrappedTextString = textString;
+      if (this.componentContent.labelWidth) {
+        wrappedTextString = this.UtilService.wordWrap(textString, this.componentContent.labelWidth);
+      }
+
       // create an editable text element
-      var text = new fabric.IText(textString, {
+      var text = new fabric.IText(wrappedTextString, {
         left: x2,
         top: y2,
         originX: 'center',
@@ -1912,6 +1915,7 @@ var LabelController = function () {
       label.circle = circle;
       label.line = line;
       label.text = text;
+      label.textString = textString;
 
       return label;
     }
@@ -2001,16 +2005,26 @@ var LabelController = function () {
 
     /**
      * The student has changed the label text on the selected label
-     * @param textObject the label's canvas text object
-     * @param text the text string
+     * @param label The label that has changed.
+     * @param textObject The label's canvas text object.
+     * @param textString The text string.
      */
 
   }, {
     key: 'selectedLabelTextChanged',
-    value: function selectedLabelTextChanged(textObject, text) {
+    value: function selectedLabelTextChanged(label, textObject, textString) {
 
-      // set the text into the object
-      textObject.setText(text);
+      // save the text string into the label
+      label.textString = textString;
+
+      // wrap the text if necessary
+      var wrappedText = textString;
+      if (this.componentContent.labelWidth != null && this.componentContent.labelWidth != '') {
+        wrappedText = this.UtilService.wordWrap(textString, this.componentContent.labelWidth);
+      }
+
+      // set the wrapped text into the text object
+      textObject.setText(wrappedText);
 
       // notify the controller that the student data has changed
       this.studentDataChanged();
