@@ -6,6 +6,12 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _html2canvas = require('html2canvas');
+
+var _html2canvas2 = _interopRequireDefault(_html2canvas);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var LabelController = function () {
@@ -144,6 +150,15 @@ var LabelController = function () {
     // the background image path
     this.backgroundImage = null;
 
+    // whether to show the reset button
+    this.isResetButtonVisible = true;
+
+    /*
+     * This will hold canvas label objects. A canvas label object contains a
+     * circle object, line object, and text object.
+     */
+    this.labels = [];
+
     // the options for when to update this component from a connected component
     this.connectedComponentUpdateOnOptions = [{
       value: 'change',
@@ -156,6 +171,8 @@ var LabelController = function () {
     // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [{
       type: 'Label'
+    }, {
+      type: 'OpenResponse'
     }];
 
     // get the current node and node id
@@ -1083,14 +1100,14 @@ var LabelController = function () {
       });
     }
   }, {
-    key: 'getLabels',
+    key: 'getLabelData',
 
 
     /**
-     * Get the label objects from the canvas
-     * @returns an array of simple JSON objects that represent the labels
+     * Get the label data from the canvas.
+     * @returns An array of simple JSON objects that contain the label data.
      */
-    value: function getLabels() {
+    value: function getLabelData() {
       var labels = [];
 
       /*
@@ -1197,7 +1214,7 @@ var LabelController = function () {
 
       // set the labels into the student data
       var studentData = {};
-      studentData.labels = this.getLabels();
+      studentData.labels = this.getLabelData();
 
       var backgroundImage = this.getBackgroundImage();
 
@@ -1752,9 +1769,10 @@ var LabelController = function () {
 
           // make sure the active object is a circle which represents the label
           if (activeObject.get('type') === 'circle') {
+            var label = this.getLabelFromCircle(activeObject);
 
             // remove the label from the canvas
-            this.removeLabelFromCanvas(this.canvas, activeObject);
+            this.removeLabelFromCanvas(this.canvas, label);
 
             // notify others that the student data has changed
             this.studentDataChanged();
@@ -1763,8 +1781,44 @@ var LabelController = function () {
       }
     }
   }, {
-    key: 'createLabel',
+    key: 'getLabelFromCircle',
 
+
+    /**
+     * Get the label object given the canvas circle object.
+     * @param circle A canvas circle object.
+     * @return A label object.
+     */
+    value: function getLabelFromCircle(circle) {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.labels[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var label = _step.value;
+
+          if (circle == label.circle) {
+            return label;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return null;
+    }
 
     /**
      * Create a label object. The label object is represented by a circle
@@ -1779,6 +1833,9 @@ var LabelController = function () {
      * @param color the background color of the label
      * @returns an object containing a circle, line, and text
      */
+
+  }, {
+    key: 'createLabel',
     value: function createLabel(pointX, pointY, textX, textY, textString, color) {
       var label = {};
 
@@ -1906,6 +1963,8 @@ var LabelController = function () {
              */
             _this5.selectLabel(label);
           });
+
+          this.labels.push(label);
         }
       }
     }
@@ -1961,9 +2020,10 @@ var LabelController = function () {
     }
 
     /**
-     * Remove a label from the canvas
-     * @param canvas the canvas
-     * @param label the Fabric circle element that represents the label
+     * Remove a label from the canvas.
+     * @param canvas The canvas.
+     * @param label A label object that contains a circle object, line object, and
+     * text object.
      */
 
   }, {
@@ -1973,16 +2033,17 @@ var LabelController = function () {
       if (canvas != null && label != null) {
 
         // get the circle, line, and text elements
-        var circle = label;
+        var circle = label.circle;
         var line = label.line;
         var text = label.text;
 
         if (circle != null && line != null && text != null) {
-
           // remove the elements from the canvas
           canvas.remove(circle);
           canvas.remove(line);
           canvas.remove(text);
+
+          this.labels.splice(this.labels.indexOf(label), 1);
 
           // refresh the canvas
           canvas.renderAll();
@@ -2547,35 +2608,36 @@ var LabelController = function () {
 
         if (answer) {
           // the student is sure they want to delete the label
+          this.deleteLabel(this.selectedLabel);
 
           /*
-           * get the circle from the label since the circle has
-           * references to the line and text for the label
+           * remove the reference to the selected label since it will no
+           * longer be selected
            */
-          var circle = this.selectedLabel.circle;
+          this.selectedLabel = null;
 
-          if (circle != null) {
+          // turn off edit label mode
+          this.editLabelMode = false;
 
-            // remove the label from the canvas
-            this.removeLabelFromCanvas(this.canvas, circle);
+          // make the canvas object no longer the active object
+          this.canvas.discardActiveObject();
 
-            /*
-             * remove the reference to the selected label since it will no
-             * longer be selected
-             */
-            this.selectedLabel = null;
-
-            // turn off edit label mode
-            this.editLabelMode = false;
-
-            // make the canvas object no longer the active object
-            this.canvas.discardActiveObject();
-
-            // notify others that the student data has changed
-            this.studentDataChanged();
-          }
+          // notify others that the student data has changed
+          this.studentDataChanged();
         }
       }
+    }
+
+    /**
+     * Delete a label from the canvas.
+     * @param label A label object.
+     */
+
+  }, {
+    key: 'deleteLabel',
+    value: function deleteLabel(label) {
+      // remove the label from the canvas
+      this.removeLabelFromCanvas(this.canvas, label);
     }
 
     /**
@@ -2736,7 +2798,7 @@ var LabelController = function () {
         // the author answered yes to save the starter labels
 
         // get the labels in the component authoring preview
-        var labels = this.getLabels();
+        var labels = this.getLabelData();
 
         /*
          * make a copy of the labels so we don't run into any referencing issues
@@ -3032,6 +3094,7 @@ var LabelController = function () {
   }, {
     key: 'createMergedComponentState',
     value: function createMergedComponentState(componentStates) {
+      var _this6 = this;
 
       var mergedComponentState = this.NodeService.createNewComponentState();
 
@@ -3041,15 +3104,30 @@ var LabelController = function () {
         for (var c = 0; c < componentStates.length; c++) {
           var componentState = componentStates[c];
           if (componentState != null) {
-            var studentData = componentState.studentData;
-            if (studentData != null) {
-              var labels = studentData.labels;
-              var backgroundImage = studentData.backgroundImage;
-              if (labels != null && labels != '') {
-                mergedLabels = mergedLabels.concat(labels);
+            if (componentState.componentType == 'Label') {
+              var studentData = componentState.studentData;
+              if (studentData != null) {
+                var labels = studentData.labels;
+                var backgroundImage = studentData.backgroundImage;
+                if (labels != null && labels != '') {
+                  mergedLabels = mergedLabels.concat(labels);
+                }
+                if (backgroundImage != null && backgroundImage != '') {
+                  mergedBackgroundImage = backgroundImage;
+                }
               }
-              if (backgroundImage != null && backgroundImage != '') {
-                mergedBackgroundImage = backgroundImage;
+            } else if (componentState.componentType == 'OpenResponse') {
+              var _studentData = componentState.studentData;
+              if (_studentData != null) {
+                var response = _studentData.response;
+                // create an image from the concept map data
+                this.LabelService.createImageFromText(response).then(function (image) {
+                  // set the image as the background
+                  _this6.setBackgroundImage(image);
+
+                  // make the work dirty so that it gets saved
+                  _this6.studentDataChanged();
+                });
               }
             }
           }
@@ -3109,13 +3187,13 @@ var LabelController = function () {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
 
           try {
-            for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var component = _step.value;
+            for (var _iterator2 = components[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var component = _step2.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -3126,16 +3204,16 @@ var LabelController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
               }
             } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
+              if (_didIteratorError2) {
+                throw _iteratorError2;
               }
             }
           }
@@ -3331,6 +3409,100 @@ var LabelController = function () {
     key: 'authoringJSONChanged',
     value: function authoringJSONChanged() {
       this.jsonStringChanged = true;
+    }
+
+    /**
+     * The student clicked the reset button so we will delete all the labels and
+     * reset the background if applicable.
+     */
+
+  }, {
+    key: 'resetButtonClicked',
+    value: function resetButtonClicked() {
+      // confirm with the student that they want to delete the label
+      var answer = confirm(this.$translate('label.areYouSureYouWantToReset'));
+
+      if (answer) {
+        var tempLabels = [];
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
+
+        try {
+          for (var _iterator3 = this.labels[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var label = _step3.value;
+
+            tempLabels.push(label);
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
+            }
+          }
+        }
+
+        var _iteratorNormalCompletion4 = true;
+        var _didIteratorError4 = false;
+        var _iteratorError4 = undefined;
+
+        try {
+          for (var _iterator4 = tempLabels[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var tempLabel = _step4.value;
+
+            this.deleteLabel(tempLabel);
+          }
+
+          /*
+           * remove the reference to the selected label since it will no
+           * longer be selected
+           */
+        } catch (err) {
+          _didIteratorError4 = true;
+          _iteratorError4 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+              _iterator4.return();
+            }
+          } finally {
+            if (_didIteratorError4) {
+              throw _iteratorError4;
+            }
+          }
+        }
+
+        this.selectedLabel = null;
+
+        // turn off edit label mode
+        this.editLabelMode = false;
+
+        // make the canvas object no longer the active object
+        this.canvas.discardActiveObject();
+
+        if (this.componentContent.labels != null) {
+          /*
+           * the student has not done any work and there are starter labels
+           * so we will populate the canvas with the starter labels
+           */
+          this.addLabelsToCanvas(this.componentContent.labels);
+        }
+
+        if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+          // we will import work from another component
+          this.handleConnectedComponents();
+        }
+
+        // notify others that the student data has changed
+        this.studentDataChanged();
+      }
     }
   }]);
 

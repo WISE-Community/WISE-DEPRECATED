@@ -535,6 +535,12 @@
               {{ 'DELETE' | translate }}
             </md-tooltip>
           </md-button>
+          <md-button class='md-accent'
+              ng-click='labelController.resetButtonClicked()'
+              ng-if='labelController.isResetButtonVisible'>
+              <md-icon>restore</md-icon>
+              {{ 'RESET' | translate }}
+          </md-button>
           <md-button class='studentButton md-accent md-primary'
               ng-click='labelController.snipImage($event)'
               ng-if='labelController.showSnipImageButton()'>

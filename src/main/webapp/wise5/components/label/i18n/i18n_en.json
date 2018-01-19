@@ -7,6 +7,7 @@
   "label.areYouSureYouWantToChangeTheBackgroundImage": "Are you sure you want to change the background image?",
   "label.areYouSureYouWantToDeleteAllTheStarterLabels": "Are you sure you want to delete all the starter labels?",
   "label.areYouSureYouWantToDeleteThisLabel": "Are you sure you want to delete this label?\n\n{{selectedLabelText}}",
+  "label.areYouSureYouWantToReset": "Are you sure you want to reset?",
   "label.areYouSureYouWantToSaveTheStarterLabels": "Are you sure you want to save the starter labels?",
   "label.canStudentCreateLabels": "Can Student Create Labels",
   "label.canStudentDeleteLabels": "Can Student Delete Labels",
