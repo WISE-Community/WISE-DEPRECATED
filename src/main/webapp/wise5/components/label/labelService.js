@@ -350,17 +350,32 @@ var LabelService = function (_NodeService) {
 
   }, {
     key: 'createImageFromText',
-    value: function createImageFromText(text) {
-      var width = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 800;
-      var height = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 600;
-      var maxCharactersPerLine = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 100;
-      var xPositionOfText = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 10;
-
+    value: function createImageFromText(text, width, height, maxCharactersPerLine, xPositionOfText, spaceInbetweenLines, fontSize) {
       var _this2 = this;
 
-      var spaceInbetweenLines = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 40;
-      var fontSize = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 16;
+      if (width == null || width == '') {
+        width = 800;
+      }
 
+      if (height == null || height == '') {
+        height = 600;
+      }
+
+      if (maxCharactersPerLine == null || maxCharactersPerLine == '') {
+        maxCharactersPerLine = 100;
+      }
+
+      if (xPositionOfText == null || xPositionOfText == '') {
+        xPositionOfText = 10;
+      }
+
+      if (spaceInbetweenLines == null || spaceInbetweenLines == '') {
+        spaceInbetweenLines = 40;
+      }
+
+      if (fontSize == null || fontSize == '') {
+        fontSize = 16;
+      }
 
       /*
        * Line wrap the text so that each line does not exceed the max number of

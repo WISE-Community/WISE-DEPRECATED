@@ -739,6 +739,11 @@ class LabelController {
       } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
         // we will import work from another component
         this.handleConnectedComponents();
+
+        if (this.componentContent.labels != null) {
+          // populate the canvas with the starter labels
+          this.addLabelsToCanvas(this.componentContent.labels);
+        }
       } else if (componentState == null) {
         /*
          * only import work if the student does not already have
@@ -2232,7 +2237,7 @@ class LabelController {
   authoringDeleteLabelClicked(index, label) {
 
     // get the label text
-    var selectedLabelText = label.text;
+    var selectedLabelText = label.textString;
 
     // ask the author if they are sure they want to delete this label
     var answer = confirm(this.$translate('label.areYouSureYouWantToDeleteThisLabel', { selectedLabelText: selectedLabelText }));
@@ -2459,7 +2464,7 @@ class LabelController {
     if (this.selectedLabel != null) {
 
       // get the text from the label we are going to delete
-      var selectedLabelText = this.selectedLabel.text.text;
+      var selectedLabelText = this.selectedLabel.textString;
 
       // confirm with the student that they want to delete the label
       var answer = confirm(this.$translate('label.areYouSureYouWantToDeleteThisLabel', { selectedLabelText: selectedLabelText }));
@@ -2925,17 +2930,25 @@ class LabelController {
               }
             }
           } else if (componentState.componentType == 'OpenResponse') {
-            let studentData = componentState.studentData;
-            if (studentData != null) {
+            let connectedComponent = this.getConnectedComponentForComponentState(componentState);
+            if (connectedComponent != null) {
+              let studentData = componentState.studentData;
               let response = studentData.response;
-              // create an image from the concept map data
-              this.LabelService.createImageFromText(response).then((image) => {
-                // set the image as the background
-                this.setBackgroundImage(image);
+              if (connectedComponent.importWorkAsBackground) {
+                let charactersPerLine = connectedComponent.charactersPerLine;
+                let spaceInbetweenLines = connectedComponent.spaceInbetweenLines;
+                let fontSize = connectedComponent.fontSize;
 
-                // make the work dirty so that it gets saved
-                this.studentDataChanged();
-              });
+                // create an image from the concept map data
+                this.LabelService.createImageFromText(response, null, null,
+                    charactersPerLine, null, spaceInbetweenLines, fontSize).then((image) => {
+                  // set the image as the background
+                  this.setBackgroundImage(image);
+
+                  // make the work dirty so that it gets saved
+                  this.studentDataChanged();
+                });
+              }
             }
           }
         }
@@ -2949,6 +2962,22 @@ class LabelController {
     }
 
     return mergedComponentState;
+  }
+
+  /**
+   * Get the connected component associated with the component state.
+   * @param componentState A component state object that was obtained from a
+   * connected component.
+   * @return A connected component object.
+   */
+  getConnectedComponentForComponentState(componentState) {
+    for (let connectedComponent of this.componentContent.connectedComponents) {
+      if (componentState.nodeId == connectedComponent.nodeId &&
+          componentState.componentId == connectedComponent.componentId) {
+        return connectedComponent;
+      }
+    }
+    return null;
   }
 
   /**
@@ -3215,6 +3244,27 @@ class LabelController {
       // notify others that the student data has changed
       this.studentDataChanged();
     }
+  }
+
+  /**
+   * The "Import Work As Background" checkbox was clicked.
+   * @param connectedComponent The connected component associated with the
+   * checkbox.
+   */
+  authoringImportWorkAsBackgroundClicked(connectedComponent) {
+    if (connectedComponent.importWorkAsBackground) {
+      // the checkbox is checked
+      connectedComponent.charactersPerLine = 100;
+      connectedComponent.spaceInbetweenLines = 40;
+      connectedComponent.fontSize = 16;
+    } else {
+      // the checkbox is not checked
+      delete connectedComponent.charactersPerLine;
+      delete connectedComponent.spaceInbetweenLines;
+      delete connectedComponent.fontSize;
+    }
+
+    this.authoringViewComponentChanged();
   }
 }
 

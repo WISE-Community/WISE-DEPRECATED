@@ -721,6 +721,11 @@ var LabelController = function () {
         } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
           // we will import work from another component
           this.handleConnectedComponents();
+
+          if (this.componentContent.labels != null) {
+            // populate the canvas with the starter labels
+            this.addLabelsToCanvas(this.componentContent.labels);
+          }
         } else if (componentState == null) {
           /*
            * only import work if the student does not already have
@@ -2372,7 +2377,7 @@ var LabelController = function () {
     value: function authoringDeleteLabelClicked(index, label) {
 
       // get the label text
-      var selectedLabelText = label.text;
+      var selectedLabelText = label.textString;
 
       // ask the author if they are sure they want to delete this label
       var answer = confirm(this.$translate('label.areYouSureYouWantToDeleteThisLabel', { selectedLabelText: selectedLabelText }));
@@ -2632,7 +2637,7 @@ var LabelController = function () {
       if (this.selectedLabel != null) {
 
         // get the text from the label we are going to delete
-        var selectedLabelText = this.selectedLabel.text.text;
+        var selectedLabelText = this.selectedLabel.textString;
 
         // confirm with the student that they want to delete the label
         var answer = confirm(this.$translate('label.areYouSureYouWantToDeleteThisLabel', { selectedLabelText: selectedLabelText }));
@@ -3148,17 +3153,24 @@ var LabelController = function () {
                 }
               }
             } else if (componentState.componentType == 'OpenResponse') {
-              var _studentData = componentState.studentData;
-              if (_studentData != null) {
+              var connectedComponent = this.getConnectedComponentForComponentState(componentState);
+              if (connectedComponent != null) {
+                var _studentData = componentState.studentData;
                 var response = _studentData.response;
-                // create an image from the concept map data
-                this.LabelService.createImageFromText(response).then(function (image) {
-                  // set the image as the background
-                  _this6.setBackgroundImage(image);
+                if (connectedComponent.importWorkAsBackground) {
+                  var charactersPerLine = connectedComponent.charactersPerLine;
+                  var spaceInbetweenLines = connectedComponent.spaceInbetweenLines;
+                  var fontSize = connectedComponent.fontSize;
 
-                  // make the work dirty so that it gets saved
-                  _this6.studentDataChanged();
-                });
+                  // create an image from the concept map data
+                  this.LabelService.createImageFromText(response, null, null, charactersPerLine, null, spaceInbetweenLines, fontSize).then(function (image) {
+                    // set the image as the background
+                    _this6.setBackgroundImage(image);
+
+                    // make the work dirty so that it gets saved
+                    _this6.studentDataChanged();
+                  });
+                }
               }
             }
           }
@@ -3172,6 +3184,46 @@ var LabelController = function () {
       }
 
       return mergedComponentState;
+    }
+
+    /**
+     * Get the connected component associated with the component state.
+     * @param componentState A component state object that was obtained from a
+     * connected component.
+     * @return A connected component object.
+     */
+
+  }, {
+    key: 'getConnectedComponentForComponentState',
+    value: function getConnectedComponentForComponentState(componentState) {
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = this.componentContent.connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var connectedComponent = _step2.value;
+
+          if (componentState.nodeId == connectedComponent.nodeId && componentState.componentId == connectedComponent.componentId) {
+            return connectedComponent;
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      return null;
     }
 
     /**
@@ -3218,13 +3270,13 @@ var LabelController = function () {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion2 = true;
-          var _didIteratorError2 = false;
-          var _iteratorError2 = undefined;
+          var _iteratorNormalCompletion3 = true;
+          var _didIteratorError3 = false;
+          var _iteratorError3 = undefined;
 
           try {
-            for (var _iterator2 = components[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              var component = _step2.value;
+            for (var _iterator3 = components[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+              var component = _step3.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -3235,16 +3287,16 @@ var LabelController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
+            _didIteratorError3 = true;
+            _iteratorError3 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
+              if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
               }
             } finally {
-              if (_didIteratorError2) {
-                throw _iteratorError2;
+              if (_didIteratorError3) {
+                throw _iteratorError3;
               }
             }
           }
@@ -3455,46 +3507,16 @@ var LabelController = function () {
 
       if (answer) {
         var tempLabels = [];
-        var _iteratorNormalCompletion3 = true;
-        var _didIteratorError3 = false;
-        var _iteratorError3 = undefined;
-
-        try {
-          for (var _iterator3 = this.labels[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var label = _step3.value;
-
-            tempLabels.push(label);
-          }
-        } catch (err) {
-          _didIteratorError3 = true;
-          _iteratorError3 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-              _iterator3.return();
-            }
-          } finally {
-            if (_didIteratorError3) {
-              throw _iteratorError3;
-            }
-          }
-        }
-
         var _iteratorNormalCompletion4 = true;
         var _didIteratorError4 = false;
         var _iteratorError4 = undefined;
 
         try {
-          for (var _iterator4 = tempLabels[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var tempLabel = _step4.value;
+          for (var _iterator4 = this.labels[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var label = _step4.value;
 
-            this.deleteLabel(tempLabel);
+            tempLabels.push(label);
           }
-
-          /*
-           * remove the reference to the selected label since it will no
-           * longer be selected
-           */
         } catch (err) {
           _didIteratorError4 = true;
           _iteratorError4 = err;
@@ -3506,6 +3528,36 @@ var LabelController = function () {
           } finally {
             if (_didIteratorError4) {
               throw _iteratorError4;
+            }
+          }
+        }
+
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
+
+        try {
+          for (var _iterator5 = tempLabels[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var tempLabel = _step5.value;
+
+            this.deleteLabel(tempLabel);
+          }
+
+          /*
+           * remove the reference to the selected label since it will no
+           * longer be selected
+           */
+        } catch (err) {
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
+            }
+          } finally {
+            if (_didIteratorError5) {
+              throw _iteratorError5;
             }
           }
         }
@@ -3534,6 +3586,30 @@ var LabelController = function () {
         // notify others that the student data has changed
         this.studentDataChanged();
       }
+    }
+
+    /**
+     * The "Import Work As Background" checkbox was clicked.
+     * @param connectedComponent The connected component associated with the
+     * checkbox.
+     */
+
+  }, {
+    key: 'authoringImportWorkAsBackgroundClicked',
+    value: function authoringImportWorkAsBackgroundClicked(connectedComponent) {
+      if (connectedComponent.importWorkAsBackground) {
+        // the checkbox is checked
+        connectedComponent.charactersPerLine = 100;
+        connectedComponent.spaceInbetweenLines = 40;
+        connectedComponent.fontSize = 16;
+      } else {
+        // the checkbox is not checked
+        delete connectedComponent.charactersPerLine;
+        delete connectedComponent.spaceInbetweenLines;
+        delete connectedComponent.fontSize;
+      }
+
+      this.authoringViewComponentChanged();
     }
   }]);
 

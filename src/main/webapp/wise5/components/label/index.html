@@ -89,8 +89,7 @@
         </md-button>
       </div>
       <div ng-repeat='connectedComponent in labelController.authoringComponentContent.connectedComponents track by $index'
-          style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'
-          layout='row'>
+          style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
         <div flex>
           <md-input-container style='margin-right: 20; width: 300;'>
             <label>{{ 'step' | translate }}</label>
@@ -143,6 +142,36 @@
               </md-tooltip>
             </md-button>
           </md-input-container>
+        </div>
+        <div ng-if='labelController.authoringGetConnectedComponentType(connectedComponent) == "OpenResponse"' flex>
+          <md-input-container style='margin-right: 20;'>
+            <md-checkbox class='md-primary'
+                ng-model='connectedComponent.importWorkAsBackground'
+                ng-change='labelController.authoringImportWorkAsBackgroundClicked(connectedComponent)'>
+              {{ 'label.importWorkAsBackground' | translate }}
+            </md-checkbox>
+          </md-input-container>
+          <div ng-if='connectedComponent.importWorkAsBackground'
+              style='display: inline;'>
+            <md-input-container style='margin-right: 20; width: 200; height: 30;'>
+              <label>{{ 'label.charactersPerLine' | translate }}</label>
+              <input ng-model='connectedComponent.charactersPerLine'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='labelController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container style='margin-right: 20; width: 200; height: 30;'>
+              <label>{{ 'label.spaceInbetweenLines' | translate }}</label>
+              <input ng-model='connectedComponent.spaceInbetweenLines'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='labelController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container style='margin-right: 20; width: 100; height: 30;'>
+              <label>{{ 'label.fontSize' | translate }}</label>
+              <input ng-model='connectedComponent.fontSize'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='labelController.authoringViewComponentChanged()'/>
+            </md-input-container>
+          </div>
         </div>
       </div>
     </div>
@@ -535,7 +564,7 @@
           <md-button class='studentButton md-raised md-primary'
               ng-click='labelController.deleteLabelButtonClicked()'
               ng-disabled='labelController.isDisabled'
-              ng-if='labelController.editLabelMode'>
+              ng-if='labelController.canDeleteLabels && labelController.editLabelMode'>
             <md-icon>delete</md-icon>
             <md-tooltip md-direction='top'
                 class='projectButtonTooltip'>

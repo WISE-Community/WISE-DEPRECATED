@@ -302,8 +302,32 @@ class LabelService extends NodeService {
    * @param spaceInbetweenLines The amount of space inbetween each line.
    * @param fontSize The font size.
    */
-  createImageFromText(text, width = 800, height = 600, maxCharactersPerLine = 100,
-      xPositionOfText = 10, spaceInbetweenLines = 40, fontSize = 16) {
+  createImageFromText(text, width, height, maxCharactersPerLine,
+      xPositionOfText, spaceInbetweenLines, fontSize) {
+
+    if (width == null || width == '') {
+      width = 800;
+    }
+
+    if (height == null || height == '') {
+      height = 600;
+    }
+
+    if (maxCharactersPerLine == null || maxCharactersPerLine == '') {
+      maxCharactersPerLine = 100;
+    }
+
+    if (xPositionOfText == null || xPositionOfText == '') {
+      xPositionOfText = 10;
+    }
+
+    if (spaceInbetweenLines == null || spaceInbetweenLines == '') {
+      spaceInbetweenLines = 40;
+    }
+
+    if (fontSize == null || fontSize == '') {
+      fontSize = 16;
+    }
 
     /*
      * Line wrap the text so that each line does not exceed the max number of
