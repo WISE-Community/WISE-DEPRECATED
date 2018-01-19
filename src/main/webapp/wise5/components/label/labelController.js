@@ -1775,6 +1775,16 @@ var LabelController = function () {
             this.studentDataChanged();
           }
         }
+      } else if (keyCode === 13) {
+        // the enter key was pressed
+        if (this.selectedLabel != null) {
+          /*
+           * There is a selected label so we will treat the enter keypress as
+           * the intention of submitting any changes to the label text.
+           */
+          this.saveLabelButtonClicked();
+          this.$scope.$apply();
+        }
       }
     }
   }, {
@@ -1994,6 +2004,14 @@ var LabelController = function () {
 
       // turn on edit label mode
       this.editLabelMode = true;
+
+      /*
+       * Give focus to the label text input element so the student can immediately
+       * start typing.
+       */
+      this.$timeout(function () {
+        angular.element('#editLabelTextInput').focus();
+      });
 
       /*
        * force angular to refresh, otherwise angular will wait until the
@@ -2544,7 +2562,6 @@ var LabelController = function () {
   }, {
     key: 'saveLabelButtonClicked',
     value: function saveLabelButtonClicked() {
-
       if (this.selectedLabel != null) {
         /*
          * we do not need to perform any saving of the text since it has
