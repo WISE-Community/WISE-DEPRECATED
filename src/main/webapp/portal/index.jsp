@@ -173,6 +173,7 @@
 								    </ul>
 							    </div>
 						    </dd>
+                            <!--
 						    <dt><spring:message code="index.projects_biology" /></dt>
 						    <dd>
 						    	<div class="tinycarousel">
@@ -254,6 +255,7 @@
 								    </ul>
 							    </div>
 						    </dd>
+                            -->
 					   </dl>
 					  </div>
 				</div>
