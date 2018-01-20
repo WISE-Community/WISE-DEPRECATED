@@ -9,10 +9,10 @@ before_install:
 before_script:
 script:
 - mvn test
-- npm run test-angular-portal
 - ./wise.sh run &
 - sleep 180
 - npm test
+- npm run test-angular-portal
 - npm run test-e2e
 notifications:
   email:
