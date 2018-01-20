@@ -9,6 +9,7 @@ before_install:
 before_script:
 script:
 - mvn test
+- npm run test-angular-portal
 - ./wise.sh run &
 - sleep 180
 - npm test

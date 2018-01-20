@@ -9,7 +9,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
+  declarations: [ AboutComponent, NewsComponent ],
   imports: [ RouterModule.forRoot(routes) ],
-  exports: [ RouterModule ]
+  exports: [ RouterModule, AboutComponent, NewsComponent ]
 })
 export class AppRoutingModule { }
