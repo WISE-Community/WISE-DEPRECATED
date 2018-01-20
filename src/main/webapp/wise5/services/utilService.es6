@@ -782,6 +782,15 @@ class UtilService {
       var white = new RegExp(/^\s$/);
       return white.test(x.charAt(0));
   };
+
+  /**
+   * Get the number of words in the string.
+   * @param str The string.
+   * @return The number of words in the string.
+   */
+  wordCount(str) {
+    return str.trim().split(/\s+/).length;
+  }
 }
 
 // Get the last element of the array

@@ -5004,6 +5004,14 @@ class ProjectService {
           const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
           message += this.$translate('completeNodeTitle', { nodeTitle: nodeTitle });
         }
+      } else if (name === 'wroteXNumberOfWords') {
+        const nodeId = params.nodeId;
+        if (nodeId != null) {
+          const requiredNumberOfWords = params.requiredNumberOfWords;
+          const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+          message += this.$translate('writeXNumberOfWordsOnNodeTitle',
+              { requiredNumberOfWords: requiredNumberOfWords, nodeTitle: nodeTitle });
+        }
       }
     }
     return message;

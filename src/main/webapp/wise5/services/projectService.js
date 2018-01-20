@@ -51,10 +51,10 @@ var ProjectService = function () {
     this.additionalProcessingFunctionsMap = {};
 
     // filtering options for navigation displays
-    this.filters = [{ 'name': 'all', 'label': 'All' }
-    //{'name': 'todo', 'label': 'Todo'},
-    //{'name': 'completed', 'label': 'Completed'}
-    ];
+    this.filters = [{ 'name': 'all', 'label': 'All'
+      //{'name': 'todo', 'label': 'Todo'},
+      //{'name': 'completed', 'label': 'Completed'}
+    }];
   }
 
   _createClass(ProjectService, [{
@@ -7364,6 +7364,13 @@ var ProjectService = function () {
           if (_nodeId5 != null) {
             var _nodeTitle5 = this.getNodePositionAndTitleByNodeId(_nodeId5);
             message += this.$translate('completeNodeTitle', { nodeTitle: _nodeTitle5 });
+          }
+        } else if (name === 'wroteXNumberOfWords') {
+          var _nodeId6 = params.nodeId;
+          if (_nodeId6 != null) {
+            var requiredNumberOfWords = params.requiredNumberOfWords;
+            var _nodeTitle6 = this.getNodePositionAndTitleByNodeId(_nodeId6);
+            message += this.$translate('writeXNumberOfWordsOnNodeTitle', { requiredNumberOfWords: requiredNumberOfWords, nodeTitle: _nodeTitle6 });
           }
         }
       }

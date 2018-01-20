@@ -567,6 +567,12 @@
                 </md-optgroup>
               </md-select>
             </div>
+            <div ng-if='param.value == "requiredNumberOfWords"'>
+              <input type='number'
+                   ng-model='criteria.params.requiredNumberOfWords'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
+            </div>
           </div>
           <button ng-click='nodeAuthoringController.deleteRemovalCriteria(constraint, $index)' translate='deleteRemovalCriteria'></button>
         </div>

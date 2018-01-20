@@ -986,6 +986,18 @@ var UtilService = function () {
       var white = new RegExp(/^\s$/);
       return white.test(x.charAt(0));
     }
+  }, {
+    key: 'wordCount',
+
+
+    /**
+     * Get the number of words in the string.
+     * @param str The string.
+     * @return The number of words in the string.
+     */
+    value: function wordCount(str) {
+      return str.trim().split(/\s+/).length;
+    }
   }]);
 
   return UtilService;

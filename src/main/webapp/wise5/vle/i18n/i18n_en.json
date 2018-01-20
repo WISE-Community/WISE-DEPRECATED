@@ -102,6 +102,7 @@
   "viewDeletedNotes": "View deleted {{noteLabelPlural}}",
   "viewNote": "View {{noteLabel}}",
   "visitNodeTitle": "Visit <b>{{nodeTitle}}</b>",
+  "writeXNumberOfWordsOnNodeTitle": "Write <b>{{requiredNumberOfWords}}</b> words on <b>{{nodeTitle}}</br>",
   "yes": "Yes",
   "yourTeacherHasPausedAllTheScreensInTheClass": "Your teacher has paused all the screens in the class."
 }
