@@ -138,6 +138,8 @@ var GraphController = function () {
 
     this.legendEnabled = true;
 
+    this.hasCustomLegendBeenSet = false;
+
     this.showTrialSelect = true;
 
     // the id of the chart element
@@ -1271,6 +1273,7 @@ var GraphController = function () {
   }, {
     key: 'setupGraphHelper',
     value: function setupGraphHelper(deferred) {
+      var _this4 = this;
 
       // get the title
       var title = this.componentContent.title;
@@ -1881,11 +1884,88 @@ var GraphController = function () {
         }
       };
 
+      if (this.componentContent.useCustomLegend) {
+        /*
+         * Use a timeout so the graph has a chance to render before we set the
+         * custom legend.
+         */
+        this.$timeout(function () {
+          _this4.setCustomLegend();
+        });
+      }
+
       return deferred.promise;
     }
   }, {
-    key: 'addPointToSeries0',
+    key: 'setCustomLegend',
 
+
+    /**
+     * Overwrite the existing legend with the custom authored legend.
+     */
+    value: function setCustomLegend() {
+      if (!this.hasCustomLegendBeenSet) {
+        if ($('.highcharts-legend').length > 0) {
+          // move the legend to the very left by setting the x position to 0
+
+          var userAgent = navigator.userAgent;
+          if (userAgent.indexOf('Firefox') != -1) {
+            var currentTransform = $('.highcharts-legend').attr('transform');
+
+            /*
+             * Regex to split the transform string into three groups. We will use
+             * this to replace the x value of the translate.
+             * Example
+             * "translate(227, 294)"
+             * The regex will create three groups
+             * group 1 = "translate("
+             * group 2 = "227"
+             * group 3 = ", 294)"
+             * The x value of the translate is captured in group 2.
+             */
+            var matrixRegEx = /(translate\()(\d*)(,\s*\d*\))/;
+
+            // run the regex on the current transform
+            var results = matrixRegEx.exec(currentTransform);
+
+            // replace the second group with 0
+            var newTransform = currentTransform.replace(matrixRegEx, '$10$3');
+
+            // update the transform
+            $('.highcharts-legend').attr('transform', newTransform);
+          } else {
+            var _currentTransform = $('.highcharts-legend').css('transform');
+
+            /*
+             * Regex to split the transform string into three groups. We will use
+             * this to replace the x value of the matrix.
+             * Example
+             * "matrix(1, 0, 0, 1, 227, 294)"
+             * The regex will create three groups
+             * group 1 = "matrix(1, 0, 0, 1, "
+             * group 2 = "227"
+             * group 3 = ", 294)"
+             * The x value of the matrix is captured in group 2.
+             */
+            var _matrixRegEx = /(matrix\(\d*,\s*\d*,\s*\d*,\s*\d*,\s*)(\d*)(,\s*\d*\))/;
+
+            // run the regex on the current transform
+            var _results = _matrixRegEx.exec(_currentTransform);
+
+            // replace the second group with 0
+            var _newTransform = _currentTransform.replace(_matrixRegEx, '$10$3');
+
+            // update the transform
+            $('.highcharts-legend').css('transform', _newTransform);
+          }
+
+          // replace the legend with the custom legend
+          $('.highcharts-legend').html(this.componentContent.customLegend);
+        }
+
+        this.hasCustomLegendBeenSet = true;
+      }
+    }
 
     /**
      * Add a point to a series. The point will be inserted into the series
@@ -1894,6 +1974,9 @@ var GraphController = function () {
      * @param x the x value
      * @param y the y value
      */
+
+  }, {
+    key: 'addPointToSeries0',
     value: function addPointToSeries0(series, x, y) {
       if (series != null && x != null && y != null) {
 
@@ -2783,7 +2866,7 @@ var GraphController = function () {
      * Called when the student changes their work
      */
     value: function studentDataChanged(useTimeoutSetupGraph) {
-      var _this4 = this;
+      var _this5 = this;
 
       /*
        * set the dirty flags so we will know we need to save or submit the
@@ -2815,10 +2898,10 @@ var GraphController = function () {
       // create a component state populated with the student data
       this.createComponentState(action).then(function (componentState) {
 
-        if (_this4.addNextComponentStateToUndoStack) {
-          if (_this4.previousComponentState != null) {
+        if (_this5.addNextComponentStateToUndoStack) {
+          if (_this5.previousComponentState != null) {
             // push the previous component state onto our undo stack
-            _this4.undoStack.push(_this4.previousComponentState);
+            _this5.undoStack.push(_this5.previousComponentState);
           }
 
           /*
@@ -2832,13 +2915,13 @@ var GraphController = function () {
            * Basically the undoStack contains the component states from the
            * current visit except for the current component state.
            */
-          _this4.previousComponentState = componentState;
+          _this5.previousComponentState = componentState;
 
-          _this4.addNextComponentStateToUndoStack = false;
+          _this5.addNextComponentStateToUndoStack = false;
         }
 
         // check if a digest is in progress
-        if (!_this4.$scope.$$phase) {}
+        if (!_this5.$scope.$$phase) {}
         // digest is not in progress so we can force a redraw
         // TODO GK (from HT) this line was causing a lot of js errors ( $digest already in progress ), so I commented it out
         // and it still seems to work. Do we need this line?
@@ -2852,8 +2935,8 @@ var GraphController = function () {
          * listeners can initialize before this and are then able to process
          * this componentStudentDataChanged event
          */
-        _this4.$timeout(function () {
-          _this4.$scope.$emit('componentStudentDataChanged', { nodeId: _this4.nodeId, componentId: componentId, componentState: componentState });
+        _this5.$timeout(function () {
+          _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: componentId, componentState: componentState });
         }, 100);
       });
     }
@@ -3257,7 +3340,7 @@ var GraphController = function () {
   }, {
     key: 'importWork',
     value: function importWork() {
-      var _this5 = this;
+      var _this6 = this;
 
       // get the component content
       var componentContent = this.componentContent;
@@ -3423,14 +3506,14 @@ var GraphController = function () {
             studentData.version = 2;
 
             // create a new component state
-            var newComponentState = _this5.NodeService.createNewComponentState();
+            var newComponentState = _this6.NodeService.createNewComponentState();
             newComponentState.studentData = studentData;
 
             // populate the component state into this component
-            _this5.setStudentWork(newComponentState);
+            _this6.setStudentWork(newComponentState);
 
             // make the work dirty so that it gets saved
-            _this5.studentDataChanged();
+            _this6.studentDataChanged();
           });
         }
       }
@@ -3449,7 +3532,7 @@ var GraphController = function () {
      * @return a promise that will return all the trials from the classmates
      */
     value: function getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource) {
-      var _this6 = this;
+      var _this7 = this;
 
       var deferred = this.$q.defer();
 
@@ -3465,12 +3548,12 @@ var GraphController = function () {
           if (componentState != null) {
 
             // get the trials from the component state
-            promises.push(_this6.getTrialsFromComponentState(nodeId, componentId, componentState));
+            promises.push(_this7.getTrialsFromComponentState(nodeId, componentId, componentState));
           }
         }
 
         // wait for all the promises of trials
-        _this6.$q.all(promises).then(function (promiseResults) {
+        _this7.$q.all(promises).then(function (promiseResults) {
 
           var mergedTrials = [];
 
@@ -3585,41 +3668,41 @@ var GraphController = function () {
   }, {
     key: 'attachStudentAsset',
     value: function attachStudentAsset(studentAsset) {
-      var _this7 = this;
+      var _this8 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
           if (copiedAsset != null) {
 
-            _this7.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
-              var rowData = _this7.StudentDataService.CSVToArray(assetContent);
+            _this8.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
+              var rowData = _this8.StudentDataService.CSVToArray(assetContent);
               var params = {};
               params.skipFirstRow = true; // first row contains header, so ignore it
               params.xColumn = 0; // assume (for now) x-axis data is in first column
               params.yColumn = 1; // assume (for now) y-axis data is in second column
 
-              var seriesData = _this7.convertRowDataToSeriesData(rowData, params);
+              var seriesData = _this8.convertRowDataToSeriesData(rowData, params);
 
               // get the index of the series that we will put the data into
-              var seriesIndex = _this7.series.length; // we're always appending a new series
+              var seriesIndex = _this8.series.length; // we're always appending a new series
 
               if (seriesIndex != null) {
 
                 // get the series
-                var series = _this7.series[seriesIndex];
+                var series = _this8.series[seriesIndex];
 
                 if (series == null) {
                   // the series is null so we will create a series
                   series = {};
                   series.name = copiedAsset.fileName;
-                  series.color = _this7.seriesColors[seriesIndex];
+                  series.color = _this8.seriesColors[seriesIndex];
                   series.marker = {
-                    'symbol': _this7.seriesMarkers[seriesIndex]
+                    'symbol': _this8.seriesMarkers[seriesIndex]
                   };
                   series.regression = false;
                   series.regressionSettings = {};
                   series.canEdit = false;
-                  _this7.series[seriesIndex] = series;
+                  _this8.series[seriesIndex] = series;
                 }
 
                 // set the data into the series
@@ -3627,15 +3710,15 @@ var GraphController = function () {
               }
 
               // the graph has changed
-              _this7.isDirty = true;
+              _this8.isDirty = true;
 
               /*
                * set the flag to add the next component state created in
                * studentDataChanged() to the undo stack
                */
-              _this7.addNextComponentStateToUndoStack = true;
+              _this8.addNextComponentStateToUndoStack = true;
 
-              _this7.studentDataChanged();
+              _this8.studentDataChanged();
             });
           }
         });
@@ -4994,7 +5077,7 @@ var GraphController = function () {
   }, {
     key: 'parseLatestTrial',
     value: function parseLatestTrial(studentData, params) {
-      var _this8 = this;
+      var _this9 = this;
 
       if (studentData != null) {
 
@@ -5136,7 +5219,7 @@ var GraphController = function () {
                     if (params.highlightLatestPoint) {
                       this.$timeout(function () {
                         //this.showTooltipOnX(studentData.trial.id, studentData.showTooltipOnX);
-                        _this8.highlightPointOnX(studentData.trial.id, studentData.xPointToHighlight);
+                        _this9.highlightPointOnX(studentData.trial.id, studentData.xPointToHighlight);
                       }, 1);
                     }
                   }
@@ -5473,7 +5556,7 @@ var GraphController = function () {
   }, {
     key: 'snipDrawing',
     value: function snipDrawing($event) {
-      var _this9 = this;
+      var _this10 = this;
 
       // get the highcharts div
       var highchartsDiv = angular.element('#' + this.chartId).find('.highcharts-container');
@@ -5488,10 +5571,10 @@ var GraphController = function () {
           var img_b64 = canvas.toDataURL('image/png');
 
           // get the image object
-          var imageObject = _this9.UtilService.getImageObjectFromBase64String(img_b64);
+          var imageObject = _this10.UtilService.getImageObjectFromBase64String(img_b64);
 
           // create a notebook item with the image populated into it
-          _this9.NotebookService.addNewItem($event, imageObject);
+          _this10.NotebookService.addNewItem($event, imageObject);
         });
       }
     }
@@ -6507,7 +6590,7 @@ var GraphController = function () {
   }, {
     key: 'setVerticalPlotLine',
     value: function setVerticalPlotLine(x) {
-      var _this10 = this;
+      var _this11 = this;
 
       // make the plot line
       var plotLine = {
@@ -6525,7 +6608,7 @@ var GraphController = function () {
        * moves their mouse around which forces angular to update.
        */
       this.$timeout(function () {
-        _this10.$scope.$apply();
+        _this11.$scope.$apply();
       });
     }
 
@@ -6536,7 +6619,7 @@ var GraphController = function () {
   }, {
     key: 'handleConnectedComponents',
     value: function handleConnectedComponents() {
-      var _this11 = this;
+      var _this12 = this;
 
       // get the connected components
       var connectedComponents = this.componentContent.connectedComponents;
@@ -6666,24 +6749,24 @@ var GraphController = function () {
           studentData.version = 2;
 
           // create a new component state
-          var newComponentState = _this11.NodeService.createNewComponentState();
+          var newComponentState = _this12.NodeService.createNewComponentState();
           newComponentState.studentData = studentData;
 
-          if (_this11.componentContent.backgroundImage != null && _this11.componentContent.backgroundImage != '') {
+          if (_this12.componentContent.backgroundImage != null && _this12.componentContent.backgroundImage != '') {
             // use the background image from this component
-            newComponentState.studentData.backgroundImage = _this11.componentContent.backgroundImage;
+            newComponentState.studentData.backgroundImage = _this12.componentContent.backgroundImage;
           } else if (connectedComponentBackgroundImage != null) {
             // use the background image from the connected component
             newComponentState.studentData.backgroundImage = connectedComponentBackgroundImage;
           }
 
-          newComponentState = _this11.handleConnectedComponentsHelper(newComponentState);
+          newComponentState = _this12.handleConnectedComponentsHelper(newComponentState);
 
           // populate the component state into this component
-          _this11.setStudentWork(newComponentState);
+          _this12.setStudentWork(newComponentState);
 
           // make the work dirty so that it gets saved
-          _this11.studentDataChanged();
+          _this12.studentDataChanged();
         });
       }
     }
