@@ -38,6 +38,7 @@ class LabelService extends NodeService {
     component.showSubmitButton = false;
     component.backgroundImage = '';
     component.canCreateLabels = true;
+    component.canEditLabels = true;
     component.canDeleteLabels = true;
     component.width = 800;
     component.height = 600;

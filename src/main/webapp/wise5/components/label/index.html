@@ -324,6 +324,12 @@
         </md-checkbox>
         <br/>
         <md-checkbox class='md-primary'
+            ng-model='labelController.authoringComponentContent.canEditLabels'
+            ng-change='labelController.authoringViewComponentChanged()'>
+          {{ 'label.canStudentEditLabels' | translate }}
+        </md-checkbox>
+        <br/>
+        <md-checkbox class='md-primary'
             ng-model='labelController.authoringComponentContent.canDeleteLabels'
             ng-change='labelController.authoringViewComponentChanged()'>
           {{ 'label.canStudentDeleteLabels' | translate }}
@@ -540,6 +546,7 @@
               ng-model='labelController.selectedLabel.textString'
               ng-if='labelController.editLabelMode'
               ng-change='labelController.selectedLabelTextChanged(labelController.selectedLabel, labelController.selectedLabel.text, labelController.selectedLabel.textString)'
+              ng-disabled='!labelController.canEditLabels'
               size='50'/>
           <md-button class='studentButton md-raised md-primary'
               ng-click='labelController.saveLabelButtonClicked()'

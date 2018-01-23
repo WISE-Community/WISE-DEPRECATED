@@ -120,6 +120,9 @@ var LabelController = function () {
     // whether the student can create new labels
     this.canCreateLabels = true;
 
+    // whether the student can edit labels
+    this.canEditLabels = true;
+
     // whether the student can delete labels
     this.canDeleteLabels = true;
 
@@ -216,6 +219,10 @@ var LabelController = function () {
         this.canCreateLabels = this.componentContent.canCreateLabels;
       }
 
+      if (this.componentContent.canEditLabels != null) {
+        this.canEditLabels = this.componentContent.canEditLabels;
+      }
+
       if (this.componentContent.canDeleteLabels != null) {
         this.canDeleteLabels = this.componentContent.canDeleteLabels;
       }
@@ -246,6 +253,7 @@ var LabelController = function () {
         this.isSubmitButtonVisible = false;
         this.isNewLabelButtonVisible = false;
         this.isSnipImageButtonVisible = false;
+        this.canEditLabels = false;
         this.canDeleteLabels = false;
         this.isDisabled = true;
 
@@ -265,6 +273,7 @@ var LabelController = function () {
         this.isSubmitButtonVisible = false;
         this.isNewLabelButtonVisible = false;
         this.isSnipImageButtonVisible = false;
+        this.canEditLabels = false;
         this.canDeleteLabels = false;
         this.isDisabled = true;
       } else if (this.mode === 'showPreviousWork') {
@@ -272,6 +281,7 @@ var LabelController = function () {
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isNewLabelButtonVisible = false;
+        this.canEditLabels = false;
         this.canDeleteLabels = false;
         this.isDisabled = true;
       } else if (this.mode === 'authoring') {
@@ -1997,33 +2007,34 @@ var LabelController = function () {
      * @param label the label object
      */
     value: function selectLabel(label) {
+      if (this.canEditLabels) {
+        // create a reference to the selected label
+        this.selectedLabel = label;
 
-      // create a reference to the selected label
-      this.selectedLabel = label;
+        /*
+         * remember the label text before the student changes it in case the
+         * student wants to cancel any changes they make
+         */
+        this.selectedLabelText = label.text.text;
 
-      /*
-       * remember the label text before the student changes it in case the
-       * student wants to cancel any changes they make
-       */
-      this.selectedLabelText = label.text.text;
+        // turn on edit label mode
+        this.editLabelMode = true;
 
-      // turn on edit label mode
-      this.editLabelMode = true;
+        /*
+         * Give focus to the label text input element so the student can immediately
+         * start typing.
+         */
+        this.$timeout(function () {
+          angular.element('#editLabelTextInput').focus();
+        });
 
-      /*
-       * Give focus to the label text input element so the student can immediately
-       * start typing.
-       */
-      this.$timeout(function () {
-        angular.element('#editLabelTextInput').focus();
-      });
-
-      /*
-       * force angular to refresh, otherwise angular will wait until the
-       * user generates another input (such as moving the mouse) before
-       * refreshing
-       */
-      this.$scope.$apply();
+        /*
+         * force angular to refresh, otherwise angular will wait until the
+         * user generates another input (such as moving the mouse) before
+         * refreshing
+         */
+        this.$scope.$apply();
+      }
     }
 
     /**
