@@ -1,12 +1,12 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "name": "site"
+    "name": "WISE Portal"
   },
   "apps": [
     {
-      "root": "src",
-      "outDir": "dist",
+      "root": "src/main/webapp/site/src",
+      "outDir": "src/main/webapp/site/dist",
       "assets": [
         "assets",
         "favicon.ico"
