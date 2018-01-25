@@ -15,6 +15,15 @@
         </div>
         <div>
           <md-checkbox class='md-primary'
+                 style='left: 40;'
+                 ng-disabled='!graphController.authoringComponentContent.showMouseXPlotLine'
+                 ng-model='graphController.authoringComponentContent.highlightXRangeFromZero'
+                 ng-change='graphController.authoringViewComponentChanged()'>
+            {{ 'graph.highlightXRangeFromZero' | translate }}
+          </md-checkbox>
+        </div>
+        <div>
+          <md-checkbox class='md-primary'
                  ng-model='graphController.authoringComponentContent.showMouseYPlotLine'
                  ng-change='graphController.authoringViewComponentChanged()'>
             {{ 'graph.showMouseYPlotLine' | translate }}
@@ -25,6 +34,13 @@
                  ng-model='graphController.authoringComponentContent.saveMouseOverPoints'
                  ng-change='graphController.authoringViewComponentChanged()'>
             {{ 'graph.saveMouseOverPoints' | translate }}
+          </md-checkbox>
+        </div>
+        <div>
+          <md-checkbox class='md-primary'
+                 ng-model='graphController.authoringComponentContent.hideTrialSelect'
+                 ng-change='graphController.authoringViewComponentChanged()'>
+            {{ 'graph.hideTrialSelect' | translate }}
           </md-checkbox>
         </div>
         <div>
@@ -49,6 +65,24 @@
                  ng-model='graphController.authoringComponentContent.maxSubmitCount'
                  ng-model-options='{ debounce: 1000 }'
                  ng-change='graphController.authoringViewComponentChanged()'/>
+          </md-input-container>
+        </div>
+        <div>
+          <md-checkbox class='md-primary'
+              ng-model='graphController.authoringComponentContent.useCustomLegend'
+              ng-change='graphController.authoringViewComponentChanged()'>
+            {{ 'graph.useCustomLegend' | translate }}
+          </md-checkbox>
+        </div>
+        <div>
+          <md-input-container style='width:100%'
+              ng-if='graphController.authoringComponentContent.useCustomLegend'>
+            <label>{{ 'graph.customLegend' | translate }}</label>
+            <textarea rows='1'
+                  ng-model='graphController.authoringComponentContent.customLegend'
+                  ng-change='graphController.authoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'>
+            </textarea>
           </md-input-container>
         </div>
         <div>
@@ -185,9 +219,9 @@
                 </md-checkbox>
                 <br/>
                 <md-checkbox class='md-primary'
-                    ng-model='connectedComponent.showTooltipOnLatestPoint'
+                    ng-model='connectedComponent.highlightLatestPoint'
                     ng-change='graphController.authoringViewComponentChanged()'>
-                  {{ 'graph.showTooltipOnLatestPoint' | translate }}
+                  {{ 'graph.highlightLatestPoint' | translate }}
                 </md-checkbox>
               </div>
               <div layout='row'>
@@ -288,7 +322,7 @@
                 ng-change='graphController.authoringViewComponentChanged()'
                 ng-model-options='{ debounce: 1000 }'
                 placeholder='{{ "enterPromptHere" | translate }}'>
-        </textarea>
+          </textarea>
         </md-input-container>
         <div layout='row' style='height: 80px;'>
           <md-input-container style='margin-right: 20px'>
@@ -506,6 +540,12 @@
                  ng-change='graphController.authoringViewComponentChanged()'>
             {{ 'graph.enableFileUpload' | translate }}
           </md-checkbox>
+          <br/>
+          <md-checkbox class='md-primary'
+                 ng-model='graphController.authoringComponentContent.hideLegend'
+                 ng-change='graphController.authoringViewComponentChanged()'>
+            {{ 'graph.hideLegend' | translate }}
+          </md-checkbox>
         </div>
         <br/>
         <div layout='row'>
@@ -669,8 +709,7 @@
                accept='.csv'
                ng-if='graphController.componentContent.enableFileUpload'
                onchange='angular.element(this).scope().fileUploadChanged(this)'/>
-          <hr />
-          <div class='component__actions' layout='row'>
+          <div class='component__actions' layout='row' ng-if='graphController.showTrialSelect'>
             <md-input-container ng-if='graphController.componentContent.enableTrials'>
               <label>{{ 'graph.selectTrialsToShow' | translate }}</label>
               <md-select ng-model='graphController.trialIdsToShow'
@@ -772,7 +811,7 @@
                        ng-change='graphController.studentDataChanged()'/>
                 </md-input-container>
               </div>
-              <div>
+              <div style="width: 100%;">
                 <highchart id='{{graphController.chartId}}' config='graphController.chartConfig'></highchart>
               </div>
             </div>

@@ -157,7 +157,7 @@ var NotebookService = function () {
           var reportNote = _step.value;
 
           if (reportNote.reportId == reportId) {
-            templateReportItem = {
+            var templateReportItem = {
               id: null,
               type: "report",
               localNotebookItemId: reportId,

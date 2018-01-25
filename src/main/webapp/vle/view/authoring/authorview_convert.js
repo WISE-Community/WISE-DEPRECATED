@@ -1923,7 +1923,7 @@ View.prototype.convertCarGraph = function(node, nodeContent) {
     animationComponent.objects = [];
 
     // get the background image filename
-    var pathBackgroundImage = nodeContent.pathBackgroundImage;
+    var pathBackgroundImage = nodeContent.pathBackgroundImage ? nodeContent.pathBackgroundImage : '';
     pathBackgroundImage = pathBackgroundImage.replace('assets/', '');
 
     // create the background image object

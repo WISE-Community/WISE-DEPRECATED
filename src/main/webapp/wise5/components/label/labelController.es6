@@ -1,3 +1,5 @@
+import html2canvas from 'html2canvas';
+
 class LabelController {
   constructor($filter,
       $injector,
@@ -118,6 +120,9 @@ class LabelController {
     // whether the student can create new labels
     this.canCreateLabels = true;
 
+    // whether the student can edit labels
+    this.canEditLabels = true;
+
     // whether the student can delete labels
     this.canDeleteLabels = true;
 
@@ -148,6 +153,15 @@ class LabelController {
     // the background image path
     this.backgroundImage = null;
 
+    // whether to show the reset button
+    this.isResetButtonVisible = true;
+
+    /*
+     * This will hold canvas label objects. A canvas label object contains a
+     * circle object, line object, and text object.
+     */
+    this.labels = [];
+
     // the options for when to update this component from a connected component
     this.connectedComponentUpdateOnOptions = [
       {
@@ -164,6 +178,9 @@ class LabelController {
     this.allowedConnectedComponentTypes = [
       {
         type: 'Label'
+      },
+      {
+        type: 'OpenResponse'
       }
     ];
 
@@ -208,6 +225,10 @@ class LabelController {
         this.canCreateLabels = this.componentContent.canCreateLabels;
       }
 
+      if (this.componentContent.canEditLabels != null) {
+        this.canEditLabels = this.componentContent.canEditLabels;
+      }
+
       if (this.componentContent.canDeleteLabels != null) {
         this.canDeleteLabels = this.componentContent.canDeleteLabels;
       }
@@ -238,6 +259,7 @@ class LabelController {
         this.isSubmitButtonVisible = false;
         this.isNewLabelButtonVisible = false;
         this.isSnipImageButtonVisible = false;
+        this.canEditLabels = false;
         this.canDeleteLabels = false;
         this.isDisabled = true;
 
@@ -257,6 +279,7 @@ class LabelController {
         this.isSubmitButtonVisible = false;
         this.isNewLabelButtonVisible = false;
         this.isSnipImageButtonVisible = false;
+        this.canEditLabels = false;
         this.canDeleteLabels = false;
         this.isDisabled = true;
       } else if (this.mode === 'showPreviousWork') {
@@ -264,6 +287,7 @@ class LabelController {
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isNewLabelButtonVisible = false;
+        this.canEditLabels = false;
         this.canDeleteLabels = false;
         this.isDisabled = true;
       } else if (this.mode === 'authoring') {
@@ -725,6 +749,11 @@ class LabelController {
       } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
         // we will import work from another component
         this.handleConnectedComponents();
+
+        if (this.componentContent.labels != null) {
+          // populate the canvas with the starter labels
+          this.addLabelsToCanvas(this.componentContent.labels);
+        }
       } else if (componentState == null) {
         /*
          * only import work if the student does not already have
@@ -1072,10 +1101,10 @@ class LabelController {
   };
 
   /**
-   * Get the label objects from the canvas
-   * @returns an array of simple JSON objects that represent the labels
+   * Get the label data from the canvas.
+   * @returns An array of simple JSON objects that contain the label data.
    */
-  getLabels() {
+  getLabelData() {
     var labels = [];
 
     /*
@@ -1119,44 +1148,41 @@ class LabelController {
   getLabelJSONObjectFromCircle(circle) {
     var labelJSONObject = {};
 
-    if (circle != null) {
+    // get the label object that contains the circle, line, and text objects
+    var label = this.getLabelFromCircle(circle);
 
-      // get the line associated with the circle
-      var lineObject = circle.line;
+    // get the line associated with the circle
+    var lineObject = circle.line;
 
-      // get the text object associated with the circle
-      var textObject = circle.text;
+    // get the text object associated with the circle
+    var textObject = circle.text;
 
-      if (lineObject != null && textObject != null) {
+    // get the position of the circle
+    var pointX = circle.get('left');
+    var pointY = circle.get('top');
 
-        // get the position of the circle
-        var pointX = circle.get('left');
-        var pointY = circle.get('top');
+    /*
+     * get the offset of the end of the line
+     * (this is where the text object is also located)
+     */
+    var xDiff = lineObject.x2 - lineObject.x1;
+    var yDiff = lineObject.y2 - lineObject.y1;
 
-        /*
-         * get the offset of the end of the line
-         * (this is where the text object is also located)
-         */
-        var xDiff = lineObject.x2 - lineObject.x1;
-        var yDiff = lineObject.y2 - lineObject.y1;
+    // get the position of the text object
+    var textX = xDiff;
+    var textY = yDiff;
 
-        // get the position of the text object
-        var textX = xDiff;
-        var textY = yDiff;
+    // get the text and background color of the text
+    var text = label.textString;
+    var color = textObject.backgroundColor;
 
-        // get the text and background color of the text
-        var text = textObject.text;
-        var color = textObject.backgroundColor;
-
-        // set all the values into the object
-        labelJSONObject.pointX = parseInt(pointX);
-        labelJSONObject.pointY = parseInt(pointY);
-        labelJSONObject.textX = parseInt(textX);
-        labelJSONObject.textY = parseInt(textY);
-        labelJSONObject.text = text;
-        labelJSONObject.color = color;
-      }
-    }
+    // set all the values into the object
+    labelJSONObject.pointX = parseInt(pointX);
+    labelJSONObject.pointY = parseInt(pointY);
+    labelJSONObject.textX = parseInt(textX);
+    labelJSONObject.textY = parseInt(textY);
+    labelJSONObject.text = text;
+    labelJSONObject.color = color;
 
     return labelJSONObject;
   };
@@ -1176,7 +1202,7 @@ class LabelController {
 
     // set the labels into the student data
     var studentData = {};
-    studentData.labels = this.getLabels();
+    studentData.labels = this.getLabelData();
 
     var backgroundImage = this.getBackgroundImage();
 
@@ -1688,16 +1714,41 @@ class LabelController {
 
         // make sure the active object is a circle which represents the label
         if (activeObject.get('type') === 'circle') {
+          let label = this.getLabelFromCircle(activeObject);
 
           // remove the label from the canvas
-          this.removeLabelFromCanvas(this.canvas, activeObject);
+          this.removeLabelFromCanvas(this.canvas, label);
 
           // notify others that the student data has changed
           this.studentDataChanged();
         }
       }
+    } else if (keyCode === 13) {
+      // the enter key was pressed
+      if (this.selectedLabel != null) {
+        /*
+         * There is a selected label so we will treat the enter keypress as
+         * the intention of submitting any changes to the label text.
+         */
+        this.saveLabelButtonClicked();
+        this.$scope.$apply();
+      }
     }
   };
+
+  /**
+   * Get the label object given the canvas circle object.
+   * @param circle A canvas circle object.
+   * @return A label object.
+   */
+  getLabelFromCircle(circle) {
+    for (let label of this.labels) {
+      if (circle == label.circle) {
+        return label;
+      }
+    }
+    return null;
+  }
 
   /**
    * Create a label object. The label object is represented by a circle
@@ -1761,8 +1812,14 @@ class LabelController {
       selectable: false
     });
 
+    // wrap the text if necessary
+    let wrappedTextString = textString;
+    if (this.componentContent.labelWidth) {
+      wrappedTextString = this.UtilService.wordWrap(textString, this.componentContent.labelWidth);
+    }
+
     // create an editable text element
-    var text = new fabric.IText(textString, {
+    var text = new fabric.IText(wrappedTextString, {
       left: x2,
       top: y2,
       originX: 'center',
@@ -1790,6 +1847,7 @@ class LabelController {
     label.circle = circle;
     label.line = line;
     label.text = text;
+    label.textString = textString;
 
     return label;
   };
@@ -1837,6 +1895,8 @@ class LabelController {
            */
           this.selectLabel(label);
         });
+
+        this.labels.push(label);
       }
     }
   };
@@ -1847,36 +1907,56 @@ class LabelController {
    * @param label the label object
    */
   selectLabel(label) {
+    if (this.canEditLabels) {
+      // create a reference to the selected label
+      this.selectedLabel = label;
 
-    // create a reference to the selected label
-    this.selectedLabel = label;
+      /*
+       * remember the label text before the student changes it in case the
+       * student wants to cancel any changes they make
+       */
+      this.selectedLabelText = label.text.text;
 
-    /*
-     * remember the label text before the student changes it in case the
-     * student wants to cancel any changes they make
-     */
-    this.selectedLabelText = label.text.text;
+      // turn on edit label mode
+      this.editLabelMode = true;
 
-    // turn on edit label mode
-    this.editLabelMode = true;
+      /*
+       * Give focus to the label text input element so the student can immediately
+       * start typing.
+       */
+      this.$timeout(() => {
+        angular.element('#editLabelTextInput').focus();
+      });
 
-    /*
-     * force angular to refresh, otherwise angular will wait until the
-     * user generates another input (such as moving the mouse) before
-     * refreshing
-     */
-    this.$scope.$apply();
+      /*
+       * force angular to refresh, otherwise angular will wait until the
+       * user generates another input (such as moving the mouse) before
+       * refreshing
+       */
+      this.$scope.$apply();
+    }
   }
 
   /**
    * The student has changed the label text on the selected label
-   * @param textObject the label's canvas text object
-   * @param text the text string
+   * @param label The label that has changed.
+   * @param textObject The label's canvas text object.
+   * @param textString The text string.
    */
-  selectedLabelTextChanged(textObject, text) {
+  selectedLabelTextChanged(label, textObject, textString) {
 
-    // set the text into the object
-    textObject.setText(text);
+    // save the text string into the label
+    label.textString = textString;
+
+    // wrap the text if necessary
+    let wrappedText = textString;
+    if (this.componentContent.labelWidth != null &&
+        this.componentContent.labelWidth != '') {
+      wrappedText = this.UtilService.wordWrap(textString, this.componentContent.labelWidth);
+    }
+
+    // set the wrapped text into the text object
+    textObject.setText(wrappedText);
 
     // notify the controller that the student data has changed
     this.studentDataChanged();
@@ -1886,25 +1966,27 @@ class LabelController {
   }
 
   /**
-   * Remove a label from the canvas
-   * @param canvas the canvas
-   * @param label the Fabric circle element that represents the label
+   * Remove a label from the canvas.
+   * @param canvas The canvas.
+   * @param label A label object that contains a circle object, line object, and
+   * text object.
    */
   removeLabelFromCanvas(canvas, label) {
 
     if (canvas != null && label != null) {
 
       // get the circle, line, and text elements
-      var circle = label;
+      var circle = label.circle;
       var line = label.line;
       var text = label.text;
 
       if (circle != null && line != null && text != null) {
-
         // remove the elements from the canvas
         canvas.remove(circle);
         canvas.remove(line);
         canvas.remove(text);
+
+        this.labels.splice(this.labels.indexOf(label), 1);
 
         // refresh the canvas
         canvas.renderAll();
@@ -2166,7 +2248,7 @@ class LabelController {
   authoringDeleteLabelClicked(index, label) {
 
     // get the label text
-    var selectedLabelText = label.text;
+    var selectedLabelText = label.textString;
 
     // ask the author if they are sure they want to delete this label
     var answer = confirm(this.$translate('label.areYouSureYouWantToDeleteThisLabel', { selectedLabelText: selectedLabelText }));
@@ -2329,7 +2411,6 @@ class LabelController {
    * The student clicked the save button in the edit label mode
    */
   saveLabelButtonClicked() {
-
     if (this.selectedLabel != null) {
       /*
        * we do not need to perform any saving of the text since it has
@@ -2394,42 +2475,40 @@ class LabelController {
     if (this.selectedLabel != null) {
 
       // get the text from the label we are going to delete
-      var selectedLabelText = this.selectedLabel.text.text;
+      var selectedLabelText = this.selectedLabel.textString;
 
       // confirm with the student that they want to delete the label
       var answer = confirm(this.$translate('label.areYouSureYouWantToDeleteThisLabel', { selectedLabelText: selectedLabelText }));
 
       if (answer) {
         // the student is sure they want to delete the label
+        this.deleteLabel(this.selectedLabel);
 
         /*
-         * get the circle from the label since the circle has
-         * references to the line and text for the label
+         * remove the reference to the selected label since it will no
+         * longer be selected
          */
-        var circle = this.selectedLabel.circle;
+        this.selectedLabel = null;
 
-        if (circle != null) {
+        // turn off edit label mode
+        this.editLabelMode = false;
 
-          // remove the label from the canvas
-          this.removeLabelFromCanvas(this.canvas, circle);
+        // make the canvas object no longer the active object
+        this.canvas.discardActiveObject();
 
-          /*
-           * remove the reference to the selected label since it will no
-           * longer be selected
-           */
-          this.selectedLabel = null;
-
-          // turn off edit label mode
-          this.editLabelMode = false;
-
-          // make the canvas object no longer the active object
-          this.canvas.discardActiveObject();
-
-          // notify others that the student data has changed
-          this.studentDataChanged();
-        }
+        // notify others that the student data has changed
+        this.studentDataChanged();
       }
     }
+  }
+
+  /**
+   * Delete a label from the canvas.
+   * @param label A label object.
+   */
+  deleteLabel(label) {
+    // remove the label from the canvas
+    this.removeLabelFromCanvas(this.canvas, label);
   }
 
   /**
@@ -2570,7 +2649,7 @@ class LabelController {
       // the author answered yes to save the starter labels
 
       // get the labels in the component authoring preview
-      var labels = this.getLabels();
+      var labels = this.getLabelData();
 
       /*
        * make a copy of the labels so we don't run into any referencing issues
@@ -2849,15 +2928,38 @@ class LabelController {
       for (let c = 0; c < componentStates.length; c++) {
         let componentState = componentStates[c];
         if (componentState != null) {
-          let studentData = componentState.studentData;
-          if (studentData != null) {
-            let labels = studentData.labels;
-            let backgroundImage = studentData.backgroundImage;
-            if (labels != null && labels != '') {
-              mergedLabels = mergedLabels.concat(labels);
+          if (componentState.componentType == 'Label') {
+            let studentData = componentState.studentData;
+            if (studentData != null) {
+              let labels = studentData.labels;
+              let backgroundImage = studentData.backgroundImage;
+              if (labels != null && labels != '') {
+                mergedLabels = mergedLabels.concat(labels);
+              }
+              if (backgroundImage != null && backgroundImage != '') {
+                mergedBackgroundImage = backgroundImage;
+              }
             }
-            if (backgroundImage != null && backgroundImage != '') {
-              mergedBackgroundImage = backgroundImage;
+          } else if (componentState.componentType == 'OpenResponse') {
+            let connectedComponent = this.getConnectedComponentForComponentState(componentState);
+            if (connectedComponent != null) {
+              let studentData = componentState.studentData;
+              let response = studentData.response;
+              if (connectedComponent.importWorkAsBackground) {
+                let charactersPerLine = connectedComponent.charactersPerLine;
+                let spaceInbetweenLines = connectedComponent.spaceInbetweenLines;
+                let fontSize = connectedComponent.fontSize;
+
+                // create an image from the concept map data
+                this.LabelService.createImageFromText(response, null, null,
+                    charactersPerLine, null, spaceInbetweenLines, fontSize).then((image) => {
+                  // set the image as the background
+                  this.setBackgroundImage(image);
+
+                  // make the work dirty so that it gets saved
+                  this.studentDataChanged();
+                });
+              }
             }
           }
         }
@@ -2871,6 +2973,22 @@ class LabelController {
     }
 
     return mergedComponentState;
+  }
+
+  /**
+   * Get the connected component associated with the component state.
+   * @param componentState A component state object that was obtained from a
+   * connected component.
+   * @return A connected component object.
+   */
+  getConnectedComponentForComponentState(componentState) {
+    for (let connectedComponent of this.componentContent.connectedComponents) {
+      if (componentState.nodeId == connectedComponent.nodeId &&
+          componentState.componentId == connectedComponent.componentId) {
+        return connectedComponent;
+      }
+    }
+    return null;
   }
 
   /**
@@ -3089,6 +3207,75 @@ class LabelController {
    */
   authoringJSONChanged() {
     this.jsonStringChanged = true;
+  }
+
+  /**
+   * The student clicked the reset button so we will delete all the labels and
+   * reset the background if applicable.
+   */
+  resetButtonClicked() {
+    // confirm with the student that they want to delete the label
+    var answer = confirm(this.$translate('label.areYouSureYouWantToReset'));
+
+    if (answer) {
+      let tempLabels = [];
+      for (let label of this.labels) {
+        tempLabels.push(label);
+      }
+
+      for (let tempLabel of tempLabels) {
+        this.deleteLabel(tempLabel);
+      }
+
+      /*
+       * remove the reference to the selected label since it will no
+       * longer be selected
+       */
+      this.selectedLabel = null;
+
+      // turn off edit label mode
+      this.editLabelMode = false;
+
+      // make the canvas object no longer the active object
+      this.canvas.discardActiveObject();
+
+      if (this.componentContent.labels != null) {
+        /*
+         * the student has not done any work and there are starter labels
+         * so we will populate the canvas with the starter labels
+         */
+        this.addLabelsToCanvas(this.componentContent.labels);
+      }
+
+      if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+        // we will import work from another component
+        this.handleConnectedComponents();
+      }
+
+      // notify others that the student data has changed
+      this.studentDataChanged();
+    }
+  }
+
+  /**
+   * The "Import Work As Background" checkbox was clicked.
+   * @param connectedComponent The connected component associated with the
+   * checkbox.
+   */
+  authoringImportWorkAsBackgroundClicked(connectedComponent) {
+    if (connectedComponent.importWorkAsBackground) {
+      // the checkbox is checked
+      connectedComponent.charactersPerLine = 100;
+      connectedComponent.spaceInbetweenLines = 40;
+      connectedComponent.fontSize = 16;
+    } else {
+      // the checkbox is not checked
+      delete connectedComponent.charactersPerLine;
+      delete connectedComponent.spaceInbetweenLines;
+      delete connectedComponent.fontSize;
+    }
+
+    this.authoringViewComponentChanged();
   }
 }
 

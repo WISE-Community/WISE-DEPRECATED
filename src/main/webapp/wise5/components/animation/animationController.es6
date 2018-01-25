@@ -3471,14 +3471,16 @@ class AnimationController {
       }
     }
 
-    // set the display time to 0
-    this.showTime(0);
+    this.$timeout(() => {
+      // set the display time to 0
+      this.displayAndBroadcastTime(0);
 
-    // set the images back to their starting images in case they have changed
-    this.initializeObjectImages();
+      // set the images back to their starting images in case they have changed
+      this.initializeObjectImages();
 
-    // put the objects in their starting positions
-    this.initializeObjectPositions();
+      // put the objects in their starting positions
+      this.initializeObjectPositions();
+    }, 100);
   }
 
   /**

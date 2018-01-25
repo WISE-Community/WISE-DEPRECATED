@@ -132,6 +132,12 @@ class GraphController {
     // whether to show the undo button
     this.showUndoButton = false;
 
+    this.legendEnabled = true;
+
+    this.hasCustomLegendBeenSet = false;
+
+    this.showTrialSelect = true;
+
     // the id of the chart element
     this.chartId = 'chart1';
 
@@ -468,6 +474,8 @@ class GraphController {
           this.graphType = this.componentContent.graphType;
           this.isResetSeriesButtonVisible = true;
           this.isSelectSeriesVisible = true;
+          this.legendEnabled = !this.componentContent.hideLegend;
+          this.showTrialSelect = !this.componentContent.hideTrialSelect;
           this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
           this.setDefaultActiveSeries();
           this.trials = [];
@@ -522,6 +530,14 @@ class GraphController {
          * will disable the submit button
          */
         this.isSubmitButtonDisabled = true;
+      }
+
+      if (this.componentContent.hideLegend) {
+        this.legendEnabled = false;
+      }
+
+      if (this.componentContent.hideTrialSelect) {
+        this.showTrialSelect = false;
       }
 
       // check if we need to lock this component
@@ -1086,6 +1102,52 @@ class GraphController {
       }
     }
     chartXAxis.addPlotLine(plotLine);
+
+    if (this.componentContent.highlightXRangeFromZero) {
+      this.drawRangeRectangle(0, x, chart.yAxis[0].min, chart.yAxis[0].max);
+    }
+  }
+
+  /**
+   * Draw a rectangle on the graph. This is used for highlighting a range.
+   * @param xMin The left x value in the graph x axis units.
+   * @param xMax The right x value in the graph x axis units.
+   * @param yMin The bottom y value in the graph y axis units.
+   * @param yMax The top y value in the graph y axis units.
+   * @param strokeColor The color of the border.
+   * @param strokeWidth The width of the border.
+   * @param fillColor The color inside the rectangle.
+   * @param fillOpacity The opacity of the color inside the rectangle.
+   */
+  drawRangeRectangle(xMin, xMax, yMin, yMax,
+      strokeColor = 'black', strokeWidth = '.5',
+      fillColor = 'black', fillOpacity = '.1') {
+
+    let chart = $('#' + this.chartId).highcharts();
+
+    // convert the x and y values to pixel values
+    xMin = chart.xAxis[0].translate(xMin);
+    xMax = chart.xAxis[0].translate(xMax);
+    yMin = chart.yAxis[0].translate(yMin);
+    yMax = chart.yAxis[0].translate(yMax);
+
+    // create the rectangle if it hasn't been created before
+    if (this.rectangle == null) {
+      this.rectangle = chart.renderer.rect(0,0,0,0,0).css({
+        stroke: strokeColor,
+        strokeWidth: strokeWidth,
+        fill: fillColor,
+        fillOpacity: fillOpacity
+      }).add();
+    }
+
+    // update the rectangle position and size
+    this.rectangle.attr({
+      x: xMin + chart.plotLeft,
+      y: chart.plotHeight + chart.plotTop - yMax,
+      width: xMax - xMin,
+      height: yMax - yMin
+    });
   }
 
   /**
@@ -1457,8 +1519,13 @@ class GraphController {
     // TODO: provide authoring option to allow zooming for students?
     let zoomType = this.mode === 'grading' || this.mode === 'gradingRevision' ? 'xy' : null;
 
+    let legendEnabled = this.legendEnabled;
+
     this.chartConfig = {
       options: {
+        legend: {
+          enabled: legendEnabled
+        },
         tooltip: {
           formatter: function(){
             if (this.series != null) {
@@ -1813,8 +1880,85 @@ class GraphController {
       }
     };
 
+    if (this.componentContent.useCustomLegend) {
+      /*
+       * Use a timeout so the graph has a chance to render before we set the
+       * custom legend.
+       */
+      this.$timeout(() => {
+        this.setCustomLegend();
+      });
+    }
+
     return deferred.promise;
   };
+
+  /**
+   * Overwrite the existing legend with the custom authored legend.
+   */
+  setCustomLegend() {
+    if (!this.hasCustomLegendBeenSet) {
+      if ($('.highcharts-legend').length > 0) {
+        // move the legend to the very left by setting the x position to 0
+
+        let userAgent = navigator.userAgent;
+        if (userAgent.indexOf('Firefox') != -1) {
+          let currentTransform = $('.highcharts-legend').attr('transform');
+
+          /*
+           * Regex to split the transform string into three groups. We will use
+           * this to replace the x value of the translate.
+           * Example
+           * "translate(227, 294)"
+           * The regex will create three groups
+           * group 1 = "translate("
+           * group 2 = "227"
+           * group 3 = ", 294)"
+           * The x value of the translate is captured in group 2.
+           */
+          let matrixRegEx = /(translate\()(\d*)(,\s*\d*\))/;
+
+          // run the regex on the current transform
+          let results = matrixRegEx.exec(currentTransform);
+
+          // replace the second group with 0
+          let newTransform = currentTransform.replace(matrixRegEx, '$10$3');
+
+          // update the transform
+          $('.highcharts-legend').attr('transform', newTransform);
+        } else {
+          let currentTransform = $('.highcharts-legend').css('transform');
+
+          /*
+           * Regex to split the transform string into three groups. We will use
+           * this to replace the x value of the matrix.
+           * Example
+           * "matrix(1, 0, 0, 1, 227, 294)"
+           * The regex will create three groups
+           * group 1 = "matrix(1, 0, 0, 1, "
+           * group 2 = "227"
+           * group 3 = ", 294)"
+           * The x value of the matrix is captured in group 2.
+           */
+          let matrixRegEx = /(matrix\(\d*,\s*\d*,\s*\d*,\s*\d*,\s*)(\d*)(,\s*\d*\))/;
+
+          // run the regex on the current transform
+          let results = matrixRegEx.exec(currentTransform);
+
+          // replace the second group with 0
+          let newTransform = currentTransform.replace(matrixRegEx, '$10$3');
+
+          // update the transform
+          $('.highcharts-legend').css('transform', newTransform);
+        }
+
+        // replace the legend with the custom legend
+        $('.highcharts-legend').html(this.componentContent.customLegend);
+      }
+
+      this.hasCustomLegendBeenSet = true;
+    }
+  }
 
   /**
    * Add a point to a series. The point will be inserted into the series
@@ -4559,6 +4703,34 @@ class GraphController {
       }
     } else if (name == 'trial') {
       this.parseLatestTrial(studentData, params);
+    } else if (name == 'trialIdsToDelete') {
+      this.deleteTrialsByTrialId(studentData.trialIdsToDelete);
+    }
+  }
+
+  /**
+   * Delete the trials
+   * @param trialIdsToDelete An array of trial ids to delete
+   */
+  deleteTrialsByTrialId(trialIdsToDelete) {
+    if (trialIdsToDelete != null) {
+      for (let trialIdToDelete of trialIdsToDelete) {
+        this.deleteTrialId(trialIdToDelete);
+      }
+    }
+  }
+
+  /**
+   * Delete a trial
+   * @param trialId The trial id string to delete
+   */
+  deleteTrialId(trialId) {
+    for (let t = 0; t < this.trials.length; t++) {
+      let trial = this.trials[t];
+      if (trial.id == trialId) {
+        this.trials.splice(t, 1);
+        break;
+      }
     }
   }
 
@@ -4712,9 +4884,10 @@ class GraphController {
                   // add the series to the trial
                   latestTrial.series.push(newSeries);
 
-                  if (params.showTooltipOnLatestPoint) {
+                  if (params.highlightLatestPoint) {
                     this.$timeout(() => {
-                      this.showTooltipOnX(studentData.trial.id, studentData.showTooltipOnX);
+                      //this.showTooltipOnX(studentData.trial.id, studentData.showTooltipOnX);
+                      this.highlightPointOnX(studentData.trial.id, studentData.xPointToHighlight);
                     }, 1);
                   }
                 }
@@ -5947,6 +6120,15 @@ class GraphController {
     this.plotLines = [
       plotLine
     ];
+
+    /*
+     * Call $apply() so that the red plot line position gets updated. If we
+     * don't call this, the line position won't get updated unless the student
+     * moves their mouse around which forces angular to update.
+     */
+    this.$timeout(() => {
+      this.$scope.$apply();
+    });
   }
 
   /**
@@ -6716,6 +6898,38 @@ class GraphController {
   }
 
   /**
+   * Highlight the point with the given x value.
+   * @param seriesId The id of the series.
+   * @param x The x value we want to highlight.
+   */
+  highlightPointOnX(seriesId, x) {
+    let chart = $('#' + this.chartId).highcharts();
+    if (chart.series.length > 0) {
+      let series = null;
+      if (seriesId == null) {
+        series = chart.series[chart.series.length - 1];
+      } else {
+        for (let tempSeries of chart.series) {
+          if (tempSeries.userOptions.name == seriesId) {
+            series = tempSeries;
+          }
+          // remove the hover state from the other points
+          for (let point of tempSeries.points) {
+            point.setState('');
+          }
+        }
+      }
+      let points = series.points;
+      for (let point of points) {
+        if (point.x == x) {
+          // make the point larger and also have a highlight around it
+          point.setState('hover');
+        }
+      }
+    }
+  }
+
+  /**
    * Show the tooltip on the newest point.
    */
   showTooltipOnLatestPoint() {
@@ -6742,7 +6956,7 @@ class GraphController {
         let material = selectedCell.material;
         let bevTemp = selectedCell.bevTemp;
         let airTemp = selectedCell.airTemp;
-        let selectedTrialId = material + '-' + bevTemp + 'Bev-' + airTemp + 'Air';
+        let selectedTrialId = material + '-' + bevTemp + 'Liquid';
         selectedTrialIds.push(selectedTrialId);
       }
     }

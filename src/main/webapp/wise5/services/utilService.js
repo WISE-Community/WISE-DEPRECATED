@@ -934,6 +934,70 @@ var UtilService = function () {
       }
       return false;
     }
+
+    /**
+     * Takes a string and breaks it up into multiple lines so that the length of
+     * each line does not exceed a certain number of characters. This code was
+     * found on stackoverflow.
+     * https://stackoverflow.com/questions/14484787/wrap-text-in-javascript
+     * @param str The string to break up.
+     * @param maxWidth The max width of a line.
+     * @return A string that has been broken up into multiple lines using \n.
+     */
+
+  }, {
+    key: 'wordWrap',
+    value: function wordWrap(str, maxWidth) {
+      var newLineStr = "\n";
+      var done = false;
+      var res = '';
+      do {
+        var found = false;
+        // Inserts new line at first whitespace of the line
+        for (var i = maxWidth - 1; i >= 0; i--) {
+          if (this.testWhite(str.charAt(i))) {
+            res = res + [str.slice(0, i), newLineStr].join('');
+            str = str.slice(i + 1);
+            found = true;
+            break;
+          }
+        }
+        // Inserts new line at maxWidth position, the word is too long to wrap
+        if (!found) {
+          res += [str.slice(0, maxWidth), newLineStr].join('');
+          str = str.slice(maxWidth);
+        }
+
+        if (str.length < maxWidth) done = true;
+      } while (!done);
+
+      return res + str;
+    }
+
+    /**
+     * Helper function for wordWrap().
+     * @param x A single character string.
+     * @return Whether the single character is a whitespace character.
+     */
+
+  }, {
+    key: 'testWhite',
+    value: function testWhite(x) {
+      var white = new RegExp(/^\s$/);
+      return white.test(x.charAt(0));
+    }
+  }, {
+    key: 'wordCount',
+
+
+    /**
+     * Get the number of words in the string.
+     * @param str The string.
+     * @return The number of words in the string.
+     */
+    value: function wordCount(str) {
+      return str.trim().split(/\s+/).length;
+    }
   }]);
 
   return UtilService;

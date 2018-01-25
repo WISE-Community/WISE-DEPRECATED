@@ -136,6 +136,12 @@ var GraphController = function () {
     // whether to show the undo button
     this.showUndoButton = false;
 
+    this.legendEnabled = true;
+
+    this.hasCustomLegendBeenSet = false;
+
+    this.showTrialSelect = true;
+
     // the id of the chart element
     this.chartId = 'chart1';
 
@@ -428,6 +434,8 @@ var GraphController = function () {
           this.graphType = this.componentContent.graphType;
           this.isResetSeriesButtonVisible = true;
           this.isSelectSeriesVisible = true;
+          this.legendEnabled = !this.componentContent.hideLegend;
+          this.showTrialSelect = !this.componentContent.hideTrialSelect;
           this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
           this.setDefaultActiveSeries();
           this.trials = [];
@@ -482,6 +490,14 @@ var GraphController = function () {
          * will disable the submit button
          */
         this.isSubmitButtonDisabled = true;
+      }
+
+      if (this.componentContent.hideLegend) {
+        this.legendEnabled = false;
+      }
+
+      if (this.componentContent.hideTrialSelect) {
+        this.showTrialSelect = false;
       }
 
       // check if we need to lock this component
@@ -1052,6 +1068,58 @@ var GraphController = function () {
         };
       }
       chartXAxis.addPlotLine(plotLine);
+
+      if (this.componentContent.highlightXRangeFromZero) {
+        this.drawRangeRectangle(0, x, chart.yAxis[0].min, chart.yAxis[0].max);
+      }
+    }
+
+    /**
+     * Draw a rectangle on the graph. This is used for highlighting a range.
+     * @param xMin The left x value in the graph x axis units.
+     * @param xMax The right x value in the graph x axis units.
+     * @param yMin The bottom y value in the graph y axis units.
+     * @param yMax The top y value in the graph y axis units.
+     * @param strokeColor The color of the border.
+     * @param strokeWidth The width of the border.
+     * @param fillColor The color inside the rectangle.
+     * @param fillOpacity The opacity of the color inside the rectangle.
+     */
+
+  }, {
+    key: 'drawRangeRectangle',
+    value: function drawRangeRectangle(xMin, xMax, yMin, yMax) {
+      var strokeColor = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'black';
+      var strokeWidth = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : '.5';
+      var fillColor = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 'black';
+      var fillOpacity = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : '.1';
+
+
+      var chart = $('#' + this.chartId).highcharts();
+
+      // convert the x and y values to pixel values
+      xMin = chart.xAxis[0].translate(xMin);
+      xMax = chart.xAxis[0].translate(xMax);
+      yMin = chart.yAxis[0].translate(yMin);
+      yMax = chart.yAxis[0].translate(yMax);
+
+      // create the rectangle if it hasn't been created before
+      if (this.rectangle == null) {
+        this.rectangle = chart.renderer.rect(0, 0, 0, 0, 0).css({
+          stroke: strokeColor,
+          strokeWidth: strokeWidth,
+          fill: fillColor,
+          fillOpacity: fillOpacity
+        }).add();
+      }
+
+      // update the rectangle position and size
+      this.rectangle.attr({
+        x: xMin + chart.plotLeft,
+        y: chart.plotHeight + chart.plotTop - yMax,
+        width: xMax - xMin,
+        height: yMax - yMin
+      });
     }
 
     /**
@@ -1205,6 +1273,7 @@ var GraphController = function () {
   }, {
     key: 'setupGraphHelper',
     value: function setupGraphHelper(deferred) {
+      var _this4 = this;
 
       // get the title
       var title = this.componentContent.title;
@@ -1443,8 +1512,13 @@ var GraphController = function () {
       // TODO: provide authoring option to allow zooming for students?
       var zoomType = this.mode === 'grading' || this.mode === 'gradingRevision' ? 'xy' : null;
 
+      var legendEnabled = this.legendEnabled;
+
       this.chartConfig = {
         options: {
+          legend: {
+            enabled: legendEnabled
+          },
           tooltip: {
             formatter: function formatter() {
               if (this.series != null) {
@@ -1810,11 +1884,88 @@ var GraphController = function () {
         }
       };
 
+      if (this.componentContent.useCustomLegend) {
+        /*
+         * Use a timeout so the graph has a chance to render before we set the
+         * custom legend.
+         */
+        this.$timeout(function () {
+          _this4.setCustomLegend();
+        });
+      }
+
       return deferred.promise;
     }
   }, {
-    key: 'addPointToSeries0',
+    key: 'setCustomLegend',
 
+
+    /**
+     * Overwrite the existing legend with the custom authored legend.
+     */
+    value: function setCustomLegend() {
+      if (!this.hasCustomLegendBeenSet) {
+        if ($('.highcharts-legend').length > 0) {
+          // move the legend to the very left by setting the x position to 0
+
+          var userAgent = navigator.userAgent;
+          if (userAgent.indexOf('Firefox') != -1) {
+            var currentTransform = $('.highcharts-legend').attr('transform');
+
+            /*
+             * Regex to split the transform string into three groups. We will use
+             * this to replace the x value of the translate.
+             * Example
+             * "translate(227, 294)"
+             * The regex will create three groups
+             * group 1 = "translate("
+             * group 2 = "227"
+             * group 3 = ", 294)"
+             * The x value of the translate is captured in group 2.
+             */
+            var matrixRegEx = /(translate\()(\d*)(,\s*\d*\))/;
+
+            // run the regex on the current transform
+            var results = matrixRegEx.exec(currentTransform);
+
+            // replace the second group with 0
+            var newTransform = currentTransform.replace(matrixRegEx, '$10$3');
+
+            // update the transform
+            $('.highcharts-legend').attr('transform', newTransform);
+          } else {
+            var _currentTransform = $('.highcharts-legend').css('transform');
+
+            /*
+             * Regex to split the transform string into three groups. We will use
+             * this to replace the x value of the matrix.
+             * Example
+             * "matrix(1, 0, 0, 1, 227, 294)"
+             * The regex will create three groups
+             * group 1 = "matrix(1, 0, 0, 1, "
+             * group 2 = "227"
+             * group 3 = ", 294)"
+             * The x value of the matrix is captured in group 2.
+             */
+            var _matrixRegEx = /(matrix\(\d*,\s*\d*,\s*\d*,\s*\d*,\s*)(\d*)(,\s*\d*\))/;
+
+            // run the regex on the current transform
+            var _results = _matrixRegEx.exec(_currentTransform);
+
+            // replace the second group with 0
+            var _newTransform = _currentTransform.replace(_matrixRegEx, '$10$3');
+
+            // update the transform
+            $('.highcharts-legend').css('transform', _newTransform);
+          }
+
+          // replace the legend with the custom legend
+          $('.highcharts-legend').html(this.componentContent.customLegend);
+        }
+
+        this.hasCustomLegendBeenSet = true;
+      }
+    }
 
     /**
      * Add a point to a series. The point will be inserted into the series
@@ -1823,6 +1974,9 @@ var GraphController = function () {
      * @param x the x value
      * @param y the y value
      */
+
+  }, {
+    key: 'addPointToSeries0',
     value: function addPointToSeries0(series, x, y) {
       if (series != null && x != null && y != null) {
 
@@ -2712,7 +2866,7 @@ var GraphController = function () {
      * Called when the student changes their work
      */
     value: function studentDataChanged(useTimeoutSetupGraph) {
-      var _this4 = this;
+      var _this5 = this;
 
       /*
        * set the dirty flags so we will know we need to save or submit the
@@ -2744,10 +2898,10 @@ var GraphController = function () {
       // create a component state populated with the student data
       this.createComponentState(action).then(function (componentState) {
 
-        if (_this4.addNextComponentStateToUndoStack) {
-          if (_this4.previousComponentState != null) {
+        if (_this5.addNextComponentStateToUndoStack) {
+          if (_this5.previousComponentState != null) {
             // push the previous component state onto our undo stack
-            _this4.undoStack.push(_this4.previousComponentState);
+            _this5.undoStack.push(_this5.previousComponentState);
           }
 
           /*
@@ -2761,13 +2915,13 @@ var GraphController = function () {
            * Basically the undoStack contains the component states from the
            * current visit except for the current component state.
            */
-          _this4.previousComponentState = componentState;
+          _this5.previousComponentState = componentState;
 
-          _this4.addNextComponentStateToUndoStack = false;
+          _this5.addNextComponentStateToUndoStack = false;
         }
 
         // check if a digest is in progress
-        if (!_this4.$scope.$$phase) {}
+        if (!_this5.$scope.$$phase) {}
         // digest is not in progress so we can force a redraw
         // TODO GK (from HT) this line was causing a lot of js errors ( $digest already in progress ), so I commented it out
         // and it still seems to work. Do we need this line?
@@ -2781,8 +2935,8 @@ var GraphController = function () {
          * listeners can initialize before this and are then able to process
          * this componentStudentDataChanged event
          */
-        _this4.$timeout(function () {
-          _this4.$scope.$emit('componentStudentDataChanged', { nodeId: _this4.nodeId, componentId: componentId, componentState: componentState });
+        _this5.$timeout(function () {
+          _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: componentId, componentState: componentState });
         }, 100);
       });
     }
@@ -3186,7 +3340,7 @@ var GraphController = function () {
   }, {
     key: 'importWork',
     value: function importWork() {
-      var _this5 = this;
+      var _this6 = this;
 
       // get the component content
       var componentContent = this.componentContent;
@@ -3352,14 +3506,14 @@ var GraphController = function () {
             studentData.version = 2;
 
             // create a new component state
-            var newComponentState = _this5.NodeService.createNewComponentState();
+            var newComponentState = _this6.NodeService.createNewComponentState();
             newComponentState.studentData = studentData;
 
             // populate the component state into this component
-            _this5.setStudentWork(newComponentState);
+            _this6.setStudentWork(newComponentState);
 
             // make the work dirty so that it gets saved
-            _this5.studentDataChanged();
+            _this6.studentDataChanged();
           });
         }
       }
@@ -3378,7 +3532,7 @@ var GraphController = function () {
      * @return a promise that will return all the trials from the classmates
      */
     value: function getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource) {
-      var _this6 = this;
+      var _this7 = this;
 
       var deferred = this.$q.defer();
 
@@ -3394,12 +3548,12 @@ var GraphController = function () {
           if (componentState != null) {
 
             // get the trials from the component state
-            promises.push(_this6.getTrialsFromComponentState(nodeId, componentId, componentState));
+            promises.push(_this7.getTrialsFromComponentState(nodeId, componentId, componentState));
           }
         }
 
         // wait for all the promises of trials
-        _this6.$q.all(promises).then(function (promiseResults) {
+        _this7.$q.all(promises).then(function (promiseResults) {
 
           var mergedTrials = [];
 
@@ -3514,41 +3668,41 @@ var GraphController = function () {
   }, {
     key: 'attachStudentAsset',
     value: function attachStudentAsset(studentAsset) {
-      var _this7 = this;
+      var _this8 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
           if (copiedAsset != null) {
 
-            _this7.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
-              var rowData = _this7.StudentDataService.CSVToArray(assetContent);
+            _this8.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
+              var rowData = _this8.StudentDataService.CSVToArray(assetContent);
               var params = {};
               params.skipFirstRow = true; // first row contains header, so ignore it
               params.xColumn = 0; // assume (for now) x-axis data is in first column
               params.yColumn = 1; // assume (for now) y-axis data is in second column
 
-              var seriesData = _this7.convertRowDataToSeriesData(rowData, params);
+              var seriesData = _this8.convertRowDataToSeriesData(rowData, params);
 
               // get the index of the series that we will put the data into
-              var seriesIndex = _this7.series.length; // we're always appending a new series
+              var seriesIndex = _this8.series.length; // we're always appending a new series
 
               if (seriesIndex != null) {
 
                 // get the series
-                var series = _this7.series[seriesIndex];
+                var series = _this8.series[seriesIndex];
 
                 if (series == null) {
                   // the series is null so we will create a series
                   series = {};
                   series.name = copiedAsset.fileName;
-                  series.color = _this7.seriesColors[seriesIndex];
+                  series.color = _this8.seriesColors[seriesIndex];
                   series.marker = {
-                    'symbol': _this7.seriesMarkers[seriesIndex]
+                    'symbol': _this8.seriesMarkers[seriesIndex]
                   };
                   series.regression = false;
                   series.regressionSettings = {};
                   series.canEdit = false;
-                  _this7.series[seriesIndex] = series;
+                  _this8.series[seriesIndex] = series;
                 }
 
                 // set the data into the series
@@ -3556,15 +3710,15 @@ var GraphController = function () {
               }
 
               // the graph has changed
-              _this7.isDirty = true;
+              _this8.isDirty = true;
 
               /*
                * set the flag to add the next component state created in
                * studentDataChanged() to the undo stack
                */
-              _this7.addNextComponentStateToUndoStack = true;
+              _this8.addNextComponentStateToUndoStack = true;
 
-              _this7.studentDataChanged();
+              _this8.studentDataChanged();
             });
           }
         });
@@ -4855,6 +5009,61 @@ var GraphController = function () {
         }
       } else if (name == 'trial') {
         this.parseLatestTrial(studentData, params);
+      } else if (name == 'trialIdsToDelete') {
+        this.deleteTrialsByTrialId(studentData.trialIdsToDelete);
+      }
+    }
+
+    /**
+     * Delete the trials
+     * @param trialIdsToDelete An array of trial ids to delete
+     */
+
+  }, {
+    key: 'deleteTrialsByTrialId',
+    value: function deleteTrialsByTrialId(trialIdsToDelete) {
+      if (trialIdsToDelete != null) {
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
+
+        try {
+          for (var _iterator5 = trialIdsToDelete[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var trialIdToDelete = _step5.value;
+
+            this.deleteTrialId(trialIdToDelete);
+          }
+        } catch (err) {
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
+            }
+          } finally {
+            if (_didIteratorError5) {
+              throw _iteratorError5;
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * Delete a trial
+     * @param trialId The trial id string to delete
+     */
+
+  }, {
+    key: 'deleteTrialId',
+    value: function deleteTrialId(trialId) {
+      for (var t = 0; t < this.trials.length; t++) {
+        var trial = this.trials[t];
+        if (trial.id == trialId) {
+          this.trials.splice(t, 1);
+          break;
+        }
       }
     }
 
@@ -4868,7 +5077,7 @@ var GraphController = function () {
   }, {
     key: 'parseLatestTrial',
     value: function parseLatestTrial(studentData, params) {
-      var _this8 = this;
+      var _this9 = this;
 
       if (studentData != null) {
 
@@ -5007,9 +5216,10 @@ var GraphController = function () {
                     // add the series to the trial
                     latestTrial.series.push(newSeries);
 
-                    if (params.showTooltipOnLatestPoint) {
+                    if (params.highlightLatestPoint) {
                       this.$timeout(function () {
-                        _this8.showTooltipOnX(studentData.trial.id, studentData.showTooltipOnX);
+                        //this.showTooltipOnX(studentData.trial.id, studentData.showTooltipOnX);
+                        _this9.highlightPointOnX(studentData.trial.id, studentData.xPointToHighlight);
                       }, 1);
                     }
                   }
@@ -5346,7 +5556,7 @@ var GraphController = function () {
   }, {
     key: 'snipDrawing',
     value: function snipDrawing($event) {
-      var _this9 = this;
+      var _this10 = this;
 
       // get the highcharts div
       var highchartsDiv = angular.element('#' + this.chartId).find('.highcharts-container');
@@ -5361,10 +5571,10 @@ var GraphController = function () {
           var img_b64 = canvas.toDataURL('image/png');
 
           // get the image object
-          var imageObject = _this9.UtilService.getImageObjectFromBase64String(img_b64);
+          var imageObject = _this10.UtilService.getImageObjectFromBase64String(img_b64);
 
           // create a notebook item with the image populated into it
-          _this9.NotebookService.addNewItem($event, imageObject);
+          _this10.NotebookService.addNewItem($event, imageObject);
         });
       }
     }
@@ -6035,13 +6245,13 @@ var GraphController = function () {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion5 = true;
-          var _didIteratorError5 = false;
-          var _iteratorError5 = undefined;
+          var _iteratorNormalCompletion6 = true;
+          var _didIteratorError6 = false;
+          var _iteratorError6 = undefined;
 
           try {
-            for (var _iterator5 = components[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-              var component = _step5.value;
+            for (var _iterator6 = components[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+              var component = _step6.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -6052,16 +6262,16 @@ var GraphController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError5 = true;
-            _iteratorError5 = err;
+            _didIteratorError6 = true;
+            _iteratorError6 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                _iterator5.return();
+              if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                _iterator6.return();
               }
             } finally {
-              if (_didIteratorError5) {
-                throw _iteratorError5;
+              if (_didIteratorError6) {
+                throw _iteratorError6;
               }
             }
           }
@@ -6380,6 +6590,7 @@ var GraphController = function () {
   }, {
     key: 'setVerticalPlotLine',
     value: function setVerticalPlotLine(x) {
+      var _this11 = this;
 
       // make the plot line
       var plotLine = {
@@ -6390,6 +6601,15 @@ var GraphController = function () {
 
         // set the plot line into the plot lines array
       };this.plotLines = [plotLine];
+
+      /*
+       * Call $apply() so that the red plot line position gets updated. If we
+       * don't call this, the line position won't get updated unless the student
+       * moves their mouse around which forces angular to update.
+       */
+      this.$timeout(function () {
+        _this11.$scope.$apply();
+      });
     }
 
     /**
@@ -6399,7 +6619,7 @@ var GraphController = function () {
   }, {
     key: 'handleConnectedComponents',
     value: function handleConnectedComponents() {
-      var _this10 = this;
+      var _this12 = this;
 
       // get the connected components
       var connectedComponents = this.componentContent.connectedComponents;
@@ -6529,24 +6749,24 @@ var GraphController = function () {
           studentData.version = 2;
 
           // create a new component state
-          var newComponentState = _this10.NodeService.createNewComponentState();
+          var newComponentState = _this12.NodeService.createNewComponentState();
           newComponentState.studentData = studentData;
 
-          if (_this10.componentContent.backgroundImage != null && _this10.componentContent.backgroundImage != '') {
+          if (_this12.componentContent.backgroundImage != null && _this12.componentContent.backgroundImage != '') {
             // use the background image from this component
-            newComponentState.studentData.backgroundImage = _this10.componentContent.backgroundImage;
+            newComponentState.studentData.backgroundImage = _this12.componentContent.backgroundImage;
           } else if (connectedComponentBackgroundImage != null) {
             // use the background image from the connected component
             newComponentState.studentData.backgroundImage = connectedComponentBackgroundImage;
           }
 
-          newComponentState = _this10.handleConnectedComponentsHelper(newComponentState);
+          newComponentState = _this12.handleConnectedComponentsHelper(newComponentState);
 
           // populate the component state into this component
-          _this10.setStudentWork(newComponentState);
+          _this12.setStudentWork(newComponentState);
 
           // make the work dirty so that it gets saved
-          _this10.studentDataChanged();
+          _this12.studentDataChanged();
         });
       }
     }
@@ -6574,13 +6794,13 @@ var GraphController = function () {
       var connectedComponents = this.componentContent.connectedComponents;
       if (connectedComponents != null) {
         var componentStates = [];
-        var _iteratorNormalCompletion6 = true;
-        var _didIteratorError6 = false;
-        var _iteratorError6 = undefined;
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
 
         try {
-          for (var _iterator6 = connectedComponents[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-            var connectedComponent = _step6.value;
+          for (var _iterator7 = connectedComponents[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var connectedComponent = _step7.value;
 
             if (connectedComponent != null) {
               var nodeId = connectedComponent.nodeId;
@@ -6610,16 +6830,16 @@ var GraphController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError6 = true;
-          _iteratorError6 = err;
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-              _iterator6.return();
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
             }
           } finally {
-            if (_didIteratorError6) {
-              throw _iteratorError6;
+            if (_didIteratorError7) {
+              throw _iteratorError7;
             }
           }
         }
@@ -6657,13 +6877,13 @@ var GraphController = function () {
         }
       } else {
         // we will merge specific fields
-        var _iteratorNormalCompletion7 = true;
-        var _didIteratorError7 = false;
-        var _iteratorError7 = undefined;
+        var _iteratorNormalCompletion8 = true;
+        var _didIteratorError8 = false;
+        var _iteratorError8 = undefined;
 
         try {
-          for (var _iterator7 = mergeFields[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-            var mergeField = _step7.value;
+          for (var _iterator8 = mergeFields[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+            var mergeField = _step8.value;
 
             var name = mergeField.name;
             var when = mergeField.when;
@@ -6683,16 +6903,16 @@ var GraphController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError7 = true;
-          _iteratorError7 = err;
+          _didIteratorError8 = true;
+          _iteratorError8 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-              _iterator7.return();
+            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+              _iterator8.return();
             }
           } finally {
-            if (_didIteratorError7) {
-              throw _iteratorError7;
+            if (_didIteratorError8) {
+              throw _iteratorError8;
             }
           }
         }
@@ -6719,13 +6939,13 @@ var GraphController = function () {
         // TODO
       } else {
         // we will merge specific fields
-        var _iteratorNormalCompletion8 = true;
-        var _didIteratorError8 = false;
-        var _iteratorError8 = undefined;
+        var _iteratorNormalCompletion9 = true;
+        var _didIteratorError9 = false;
+        var _iteratorError9 = undefined;
 
         try {
-          for (var _iterator8 = mergeFields[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-            var mergeField = _step8.value;
+          for (var _iterator9 = mergeFields[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+            var mergeField = _step9.value;
 
             var name = mergeField.name;
             var when = mergeField.when;
@@ -6746,16 +6966,16 @@ var GraphController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError8 = true;
-          _iteratorError8 = err;
+          _didIteratorError9 = true;
+          _iteratorError9 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion8 && _iterator8.return) {
-              _iterator8.return();
+            if (!_iteratorNormalCompletion9 && _iterator9.return) {
+              _iterator9.return();
             }
           } finally {
-            if (_didIteratorError8) {
-              throw _iteratorError8;
+            if (_didIteratorError9) {
+              throw _iteratorError9;
             }
           }
         }
@@ -6777,51 +6997,15 @@ var GraphController = function () {
       if (field == 'selectedCells') {
         if (newComponentState == null) {
           // we will default to hide all the trials
-          var _iteratorNormalCompletion9 = true;
-          var _didIteratorError9 = false;
-          var _iteratorError9 = undefined;
-
-          try {
-            for (var _iterator9 = baseComponentState.studentData.trials[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-              var trial = _step9.value;
-
-              trial.show = false;
-            }
-          } catch (err) {
-            _didIteratorError9 = true;
-            _iteratorError9 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                _iterator9.return();
-              }
-            } finally {
-              if (_didIteratorError9) {
-                throw _iteratorError9;
-              }
-            }
-          }
-        } else {
-          /*
-           * loop through all the trials and show the ones that are in the
-           * selected cells array.
-           */
-          var studentData = newComponentState.studentData;
-          var selectedCells = studentData[field];
-          var selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
           var _iteratorNormalCompletion10 = true;
           var _didIteratorError10 = false;
           var _iteratorError10 = undefined;
 
           try {
             for (var _iterator10 = baseComponentState.studentData.trials[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-              var _trial = _step10.value;
+              var trial = _step10.value;
 
-              if (selectedTrialIds.includes(_trial.id)) {
-                _trial.show = true;
-              } else {
-                _trial.show = false;
-              }
+              trial.show = false;
             }
           } catch (err) {
             _didIteratorError10 = true;
@@ -6834,6 +7018,42 @@ var GraphController = function () {
             } finally {
               if (_didIteratorError10) {
                 throw _iteratorError10;
+              }
+            }
+          }
+        } else {
+          /*
+           * loop through all the trials and show the ones that are in the
+           * selected cells array.
+           */
+          var studentData = newComponentState.studentData;
+          var selectedCells = studentData[field];
+          var selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
+          var _iteratorNormalCompletion11 = true;
+          var _didIteratorError11 = false;
+          var _iteratorError11 = undefined;
+
+          try {
+            for (var _iterator11 = baseComponentState.studentData.trials[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+              var _trial = _step11.value;
+
+              if (selectedTrialIds.includes(_trial.id)) {
+                _trial.show = true;
+              } else {
+                _trial.show = false;
+              }
+            }
+          } catch (err) {
+            _didIteratorError11 = true;
+            _iteratorError11 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                _iterator11.return();
+              }
+            } finally {
+              if (_didIteratorError11) {
+                throw _iteratorError11;
               }
             }
           }
@@ -7330,57 +7550,155 @@ var GraphController = function () {
         if (seriesId == null) {
           series = chart.series[chart.series.length - 1];
         } else {
-          var _iteratorNormalCompletion11 = true;
-          var _didIteratorError11 = false;
-          var _iteratorError11 = undefined;
+          var _iteratorNormalCompletion12 = true;
+          var _didIteratorError12 = false;
+          var _iteratorError12 = undefined;
 
           try {
-            for (var _iterator11 = chart.series[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-              var tempSeries = _step11.value;
+            for (var _iterator12 = chart.series[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+              var tempSeries = _step12.value;
 
               if (tempSeries.userOptions.name == seriesId) {
                 series = tempSeries;
               }
             }
           } catch (err) {
-            _didIteratorError11 = true;
-            _iteratorError11 = err;
+            _didIteratorError12 = true;
+            _iteratorError12 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                _iterator11.return();
+              if (!_iteratorNormalCompletion12 && _iterator12.return) {
+                _iterator12.return();
               }
             } finally {
-              if (_didIteratorError11) {
-                throw _iteratorError11;
+              if (_didIteratorError12) {
+                throw _iteratorError12;
               }
             }
           }
         }
         var points = series.points;
-        var _iteratorNormalCompletion12 = true;
-        var _didIteratorError12 = false;
-        var _iteratorError12 = undefined;
+        var _iteratorNormalCompletion13 = true;
+        var _didIteratorError13 = false;
+        var _iteratorError13 = undefined;
 
         try {
-          for (var _iterator12 = points[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-            var point = _step12.value;
+          for (var _iterator13 = points[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+            var point = _step13.value;
 
             if (point.x == x) {
               chart.tooltip.refresh(point);
             }
           }
         } catch (err) {
-          _didIteratorError12 = true;
-          _iteratorError12 = err;
+          _didIteratorError13 = true;
+          _iteratorError13 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion12 && _iterator12.return) {
-              _iterator12.return();
+            if (!_iteratorNormalCompletion13 && _iterator13.return) {
+              _iterator13.return();
             }
           } finally {
-            if (_didIteratorError12) {
-              throw _iteratorError12;
+            if (_didIteratorError13) {
+              throw _iteratorError13;
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * Highlight the point with the given x value.
+     * @param seriesId The id of the series.
+     * @param x The x value we want to highlight.
+     */
+
+  }, {
+    key: 'highlightPointOnX',
+    value: function highlightPointOnX(seriesId, x) {
+      var chart = $('#' + this.chartId).highcharts();
+      if (chart.series.length > 0) {
+        var series = null;
+        if (seriesId == null) {
+          series = chart.series[chart.series.length - 1];
+        } else {
+          var _iteratorNormalCompletion14 = true;
+          var _didIteratorError14 = false;
+          var _iteratorError14 = undefined;
+
+          try {
+            for (var _iterator14 = chart.series[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+              var tempSeries = _step14.value;
+
+              if (tempSeries.userOptions.name == seriesId) {
+                series = tempSeries;
+              }
+              // remove the hover state from the other points
+              var _iteratorNormalCompletion15 = true;
+              var _didIteratorError15 = false;
+              var _iteratorError15 = undefined;
+
+              try {
+                for (var _iterator15 = tempSeries.points[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+                  var point = _step15.value;
+
+                  point.setState('');
+                }
+              } catch (err) {
+                _didIteratorError15 = true;
+                _iteratorError15 = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion15 && _iterator15.return) {
+                    _iterator15.return();
+                  }
+                } finally {
+                  if (_didIteratorError15) {
+                    throw _iteratorError15;
+                  }
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError14 = true;
+            _iteratorError14 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion14 && _iterator14.return) {
+                _iterator14.return();
+              }
+            } finally {
+              if (_didIteratorError14) {
+                throw _iteratorError14;
+              }
+            }
+          }
+        }
+        var points = series.points;
+        var _iteratorNormalCompletion16 = true;
+        var _didIteratorError16 = false;
+        var _iteratorError16 = undefined;
+
+        try {
+          for (var _iterator16 = points[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+            var _point = _step16.value;
+
+            if (_point.x == x) {
+              // make the point larger and also have a highlight around it
+              _point.setState('hover');
+            }
+          }
+        } catch (err) {
+          _didIteratorError16 = true;
+          _iteratorError16 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion16 && _iterator16.return) {
+              _iterator16.return();
+            }
+          } finally {
+            if (_didIteratorError16) {
+              throw _iteratorError16;
             }
           }
         }
@@ -7416,31 +7734,31 @@ var GraphController = function () {
     value: function convertSelectedCellsToTrialIds(selectedCells) {
       var selectedTrialIds = [];
       if (selectedCells != null) {
-        var _iteratorNormalCompletion13 = true;
-        var _didIteratorError13 = false;
-        var _iteratorError13 = undefined;
+        var _iteratorNormalCompletion17 = true;
+        var _didIteratorError17 = false;
+        var _iteratorError17 = undefined;
 
         try {
-          for (var _iterator13 = selectedCells[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-            var selectedCell = _step13.value;
+          for (var _iterator17 = selectedCells[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+            var selectedCell = _step17.value;
 
             var material = selectedCell.material;
             var bevTemp = selectedCell.bevTemp;
             var airTemp = selectedCell.airTemp;
-            var selectedTrialId = material + '-' + bevTemp + 'Bev-' + airTemp + 'Air';
+            var selectedTrialId = material + '-' + bevTemp + 'Liquid';
             selectedTrialIds.push(selectedTrialId);
           }
         } catch (err) {
-          _didIteratorError13 = true;
-          _iteratorError13 = err;
+          _didIteratorError17 = true;
+          _iteratorError17 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion13 && _iterator13.return) {
-              _iterator13.return();
+            if (!_iteratorNormalCompletion17 && _iterator17.return) {
+              _iterator17.return();
             }
           } finally {
-            if (_didIteratorError13) {
-              throw _iteratorError13;
+            if (_didIteratorError17) {
+              throw _iteratorError17;
             }
           }
         }

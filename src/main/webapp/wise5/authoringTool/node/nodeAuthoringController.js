@@ -179,6 +179,19 @@ var NodeAuthoringController = function () {
     }, {
       value: "isPlanningActivityCompleted",
       text: this.$translate('isPlanningActivityCompleted')
+    }, {
+      value: "wroteXNumberOfWords",
+      text: this.$translate('wroteXNumberOfWords'),
+      params: [{
+        value: "nodeId",
+        text: this.$translate('nodeID')
+      }, {
+        value: "componentId",
+        text: this.$translate('componentID')
+      }, {
+        value: "requiredNumberOfWords",
+        text: this.$translate('requiredNumberOfWords')
+      }]
     }];
 
     // available transitionCriterias
