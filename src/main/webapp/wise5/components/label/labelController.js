@@ -157,6 +157,13 @@ var LabelController = function () {
     this.isResetButtonVisible = true;
 
     /*
+     * Student data version 1 is where the text x and y positioning is relative
+     * to the circle.
+     * Student data version 2 is where the text x and y positioning is absolute.
+     */
+    this.studentDataVersion = 2;
+
+    /*
      * This will hold canvas label objects. A canvas label object contains a
      * circle object, line object, and text object.
      */
@@ -827,6 +834,12 @@ var LabelController = function () {
 
         if (studentData != null) {
 
+          if (studentData.version == null) {
+            this.setStudentDataVersion(1);
+          } else {
+            this.setStudentDataVersion(studentData.version);
+          }
+
           // get the labels from the student data
           var labels = studentData.labels;
 
@@ -1182,16 +1195,25 @@ var LabelController = function () {
       var pointX = circle.get('left');
       var pointY = circle.get('top');
 
-      /*
-       * get the offset of the end of the line
-       * (this is where the text object is also located)
-       */
-      var xDiff = lineObject.x2 - lineObject.x1;
-      var yDiff = lineObject.y2 - lineObject.y1;
-
       // get the position of the text object
-      var textX = xDiff;
-      var textY = yDiff;
+      var textX = null;
+      var textY = null;
+      if (this.isStudentDataVersion(1)) {
+        /*
+         * get the offset of the end of the line (this is where the text object is
+         * also located)
+         */
+        var xDiff = lineObject.x2 - lineObject.x1;
+        var yDiff = lineObject.y2 - lineObject.y1;
+
+        // the text x and y position is relative to the circle
+        textX = xDiff;
+        textY = yDiff;
+      } else {
+        // the text x and y position is absolute
+        textX = textObject.left;
+        textY = textObject.top;
+      }
 
       // get the text and background color of the text
       var text = label.textString;
@@ -1218,18 +1240,16 @@ var LabelController = function () {
      * @return a promise that will return a component state
      */
     value: function createComponentState(action) {
-
       var deferred = this.$q.defer();
 
       // create a new component state
       var componentState = this.NodeService.createNewComponentState();
 
-      // set the labels into the student data
       var studentData = {};
+      studentData.version = this.getStudentDataVersion();
       studentData.labels = this.getLabelData();
 
       var backgroundImage = this.getBackgroundImage();
-
       if (backgroundImage != null) {
         studentData.backgroundImage = backgroundImage;
       }
@@ -1579,8 +1599,8 @@ var LabelController = function () {
              * set the location of the text object to be down to the right
              * of the position the student clicked on
              */
-            var textX = 100;
-            var textY = 100;
+            var textX = x + 100;
+            var textY = y + 100;
 
             // create a new label
             var newLabel = this.createLabel(x, y, textX, textY, this.$translate('label.aNewLabel'), 'blue');
@@ -1650,8 +1670,13 @@ var LabelController = function () {
               xDiff = line.x2 - line.x1;
               yDiff = line.y2 - line.y1;
 
-              // set the new position of the two endpoints of the line
-              line.set({ x1: left, y1: top, x2: left + xDiff, y2: top + yDiff });
+              if (this.isStudentDataVersion(1)) {
+                // set the new position of the two endpoints of the line
+                line.set({ x1: left, y1: top, x2: left + xDiff, y2: top + yDiff });
+              } else {
+                // set the new position of the circle endpoint of the line
+                line.set({ x1: left, y1: top });
+              }
 
               // remove and add the line to refresh the element in the canvas
               canvas.remove(line);
@@ -1665,15 +1690,22 @@ var LabelController = function () {
             var text = target.text;
 
             if (text != null) {
-              // set the new position of the text element
-              text.set({ left: left + xDiff, top: top + yDiff });
+              if (this.isStudentDataVersion(1)) {
+                /*
+                 * In the old student data version the text position is relative
+                 * to the circle so we need to move the text along with the circle.
+                 */
 
-              // remove and add the line to refresh the element in the canvas
-              canvas.remove(text);
-              canvas.add(text);
+                // set the new position of the text element
+                text.set({ left: left + xDiff, top: top + yDiff });
 
-              // set the z index so it will be above line elements and below circle elements
-              canvas.moveTo(text, this.textZIndex);
+                // remove and add the line to refresh the element in the canvas
+                canvas.remove(text);
+                canvas.add(text);
+
+                // set the z index so it will be above line elements and below circle elements
+                canvas.moveTo(text, this.textZIndex);
+              }
             }
           } else if (type === 'i-text') {
             /*
@@ -1864,10 +1896,27 @@ var LabelController = function () {
       // get the position of the point
       var x1 = pointX;
       var y1 = pointY;
+      var x2 = null;
+      var y2 = null;
 
-      // get the absolute position of the text
-      var x2 = pointX + textX;
-      var y2 = pointY + textY;
+      if (this.isStudentDataVersion(1)) {
+        // get the absolute position of the text
+        x2 = pointX + textX;
+        y2 = pointY + textY;
+      } else {
+        x2 = textX;
+        y2 = textY;
+      }
+
+      /*
+       * Make sure all the positions are within the bounds of the canvas. If there
+       * are any positions that are outside the bounds, we will change the
+       * position to be within the bounds.
+       */
+      x1 = this.makeSureXIsWithinXMinMaxLimits(x1);
+      y1 = this.makeSureYIsWithinYMinMaxLimits(y1);
+      x2 = this.makeSureXIsWithinXMinMaxLimits(x2);
+      y2 = this.makeSureYIsWithinYMinMaxLimits(y2);
 
       if (color == null) {
         // the default background color for text elements will be blue
@@ -1945,8 +1994,47 @@ var LabelController = function () {
       return label;
     }
   }, {
-    key: 'addLabelToCanvas',
+    key: 'makeSureXIsWithinXMinMaxLimits',
 
+
+    /**
+     * Make sure the x coordinate is within the bounds of the canvas.
+     * @param x The x coordinate.
+     * @return The x coordinate that may have been modified to be within the
+     * bounds.
+     */
+    value: function makeSureXIsWithinXMinMaxLimits(x) {
+      // make sure the x is not to the left of the left edge
+      if (x < 0) {
+        x = 0;
+      }
+      // make sure the x is not to the right of the right edge
+      if (x > this.canvasWidth) {
+        x = this.canvasWidth;
+      }
+      return x;
+    }
+
+    /**
+     * Make sure the y coordinate is within the bounds of the canvas.
+     * @param y The y coordinate.
+     * @return The y coordinate that may have been modified to be within the
+     * bounds.
+     */
+
+  }, {
+    key: 'makeSureYIsWithinYMinMaxLimits',
+    value: function makeSureYIsWithinYMinMaxLimits(y) {
+      // make sure the y is not above the top edge
+      if (y < 0) {
+        y = 0;
+      }
+      // make sure the y is not below the bottom edge
+      if (y > this.canvasHeight) {
+        y = this.canvasHeight;
+      }
+      return y;
+    }
 
     /**
      * Add a label to canvas
@@ -1954,6 +2042,9 @@ var LabelController = function () {
      * @param label an object that contains a Fabric circle, Fabric line,
      * and Fabric itext elements
      */
+
+  }, {
+    key: 'addLabelToCanvas',
     value: function addLabelToCanvas(canvas, label) {
       var _this5 = this;
 
@@ -3148,12 +3239,16 @@ var LabelController = function () {
       if (componentStates != null) {
         var mergedLabels = [];
         var mergedBackgroundImage = null;
+        var studentDataVersion = null;
         for (var c = 0; c < componentStates.length; c++) {
           var componentState = componentStates[c];
           if (componentState != null) {
             if (componentState.componentType == 'Label') {
               var studentData = componentState.studentData;
               if (studentData != null) {
+                if (studentData.version != null) {
+                  studentDataVersion = studentData.version;
+                }
                 var labels = studentData.labels;
                 var backgroundImage = studentData.backgroundImage;
                 if (labels != null && labels != '') {
@@ -3191,6 +3286,9 @@ var LabelController = function () {
           mergedComponentState.studentData = {};
           mergedComponentState.studentData.labels = mergedLabels;
           mergedComponentState.studentData.backgroundImage = mergedBackgroundImage;
+        }
+        if (studentDataVersion != null) {
+          mergedComponentState.studentData.version = studentDataVersion;
         }
       }
 
@@ -3621,6 +3719,41 @@ var LabelController = function () {
       }
 
       this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Set the student data version for this controller.
+     * @param studentDataVersion The student data version.
+     */
+
+  }, {
+    key: 'setStudentDataVersion',
+    value: function setStudentDataVersion(studentDataVersion) {
+      this.studentDataVersion = studentDataVersion;
+    }
+
+    /**
+     * Get the student data version.
+     * @return The student data version.
+     */
+
+  }, {
+    key: 'getStudentDataVersion',
+    value: function getStudentDataVersion() {
+      return this.studentDataVersion;
+    }
+
+    /**
+     * Check if the student data version we are using matches the argument.
+     * @param studentDataVersion The studentDataVersion to compare.
+     * @return Whether the passed in studentDataVersion matches the
+     * studentDataVersion this controller is set to.
+     */
+
+  }, {
+    key: 'isStudentDataVersion',
+    value: function isStudentDataVersion(studentDataVersion) {
+      return this.getStudentDataVersion() == studentDataVersion;
     }
   }]);
 
