@@ -10,6 +10,13 @@ fi
 
 export NEW_VERSION_NUMBER=$1
 
+if [[ $NEW_VERSION_NUMBER =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "Valid version number...continuing."
+else 
+    echo "Invalid version number...must be like \"x.y.z\". Exiting without bumping version."
+    exit 1
+fi
+
 echo ${NEW_VERSION_NUMBER} > src/main/resources/version.txt
 
 # Note: this assumes that WISE version is the first "version":"..." field in package.json
