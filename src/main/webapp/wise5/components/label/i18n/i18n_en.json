@@ -20,6 +20,8 @@
   "label.componentTypeLabel": "Label",
   "label.deleteLabel": "Delete Label",
   "label.deleteStarterLabels": "Delete Starter Labels",
+  "label.enableCircles": "Enable Circles",
+  "label.enableDots": "Enable Dots",
   "label.enterLabelTextHere": "Enter label text here",
   "label.enterTextHere": "Enter text here",
   "label.fontSize": "Font Size",

@@ -40,6 +40,7 @@ class LabelService extends NodeService {
     component.canCreateLabels = true;
     component.canEditLabels = true;
     component.canDeleteLabels = true;
+    component.enableCircles = true;
     component.width = 800;
     component.height = 600;
     component.pointSize = 5;
@@ -60,9 +61,14 @@ class LabelService extends NodeService {
     component.showSubmitButton = componentToCopy.showSubmitButton;
     component.backgroundImage = componentToCopy.backgroundImage;
     component.canCreateLabels = componentToCopy.canCreateLabels;
+    component.canEditLabels = componentToCopy.canEditLabels;
     component.canDeleteLabels = componentToCopy.canDeleteLabels;
+    component.enableCircles = componentToCopy.enableCircles;
     component.width = componentToCopy.width;
     component.height = componentToCopy.height;
+    component.pointSize = componentToCopy.pointSize;
+    component.fontSize = componentToCopy.fontSize;
+    component.labelWidth = componentToCopy.labelWidth;
     component.labels = [];
     // go through the original labels and create new id's
     if (componentToCopy.labels != null && componentToCopy.labels.length > 0) {
