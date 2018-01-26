@@ -346,6 +346,15 @@ class LabelController {
           }
         };
 
+        if (this.componentContent.enableCircles == null) {
+          /*
+           * If this component was created before enableCircles was implemented,
+           * we will default it to true in the authoring so that the
+           * "Enable Dots" checkbox is checked.
+           */
+          this.authoringComponentContent.enableCircles = true;
+        }
+
         this.updateAdvancedAuthoringView();
 
         $scope.$watch(function() {
