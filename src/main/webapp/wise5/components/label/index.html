@@ -336,6 +336,12 @@
         </md-checkbox>
         <br/>
         <md-checkbox class='md-primary'
+            ng-model='labelController.authoringComponentContent.enableCircles'
+            ng-change='labelController.authoringViewComponentChanged()'>
+          {{ 'label.enableDots' | translate }}
+        </md-checkbox>
+        <br/>
+        <md-checkbox class='md-primary'
             ng-model='labelController.authoringComponentContent.enableStudentUploadBackground'
             ng-change='labelController.authoringViewComponentChanged()'>
           {{ 'label.allowStudentToUploadImageForBackground' | translate }}
@@ -382,7 +388,8 @@
               </md-tooltip>
             </md-button>
           </div>
-          <div style='height: 60px;'>
+          <div style='height: 60px;'
+              ng-if='labelController.enableCircles'>
             <md-input-container style='margin-right: 20px;'>
               <span>{{ 'label.pointLocation' | translate }}</span>
             </md-input-container>
@@ -405,12 +412,6 @@
               layout='row'>
             <md-input-container style='margin-right: 20;'>
               <span>{{ 'label.textLocation' | translate }}</span>
-              <span>
-                <md-icon>announcement</md-icon>
-                <md-tooltip md-direction='bottom'>
-                  ({{ 'label.relativeToTextLocation' | translate }})
-                </md-tooltip>
-              </span>
             </md-input-container>
             <md-input-container style='margin-right: 20px;'>
               <label>{{ 'label.x' | translate }}</label>

@@ -156,6 +156,8 @@ var LabelController = function () {
     // whether to show the reset button
     this.isResetButtonVisible = true;
 
+    this.enableCircles = true;
+
     /*
      * Student data version 1 is where the text x and y positioning is relative
      * to the circle.
@@ -240,6 +242,10 @@ var LabelController = function () {
 
       if (this.componentContent.height != null) {
         this.canvasHeight = this.componentContent.height;
+      }
+
+      if (this.componentContent.enableCircles != null) {
+        this.enableCircles = this.componentContent.enableCircles;
       }
 
       if (this.mode === 'student') {
@@ -339,6 +345,7 @@ var LabelController = function () {
           this.submitCounter = 0;
           this.isSaveButtonVisible = this.componentContent.showSaveButton;
           this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+          this.enableCircles = this.componentContent.enableCircles;
 
           if (this.canvas != null) {
 
@@ -365,6 +372,12 @@ var LabelController = function () {
 
           if (this.componentContent.canCreateLabels != null) {
             this.canCreateLabels = this.componentContent.canCreateLabels;
+          }
+          if (this.componentContent.canEditLabels != null) {
+            this.canEditLabels = this.componentContent.canEditLabels;
+          }
+          if (this.componentContent.canDeleteLabels != null) {
+            this.canDeleteLabels = this.componentContent.canDeleteLabels;
           }
 
           if (this.canCreateLabels) {
@@ -1142,7 +1155,7 @@ var LabelController = function () {
        * get all the circle objects from the canvas which each correspond to
        * a label point
        */
-      var objects = this.canvas.getObjects('circle');
+      var objects = this.canvas.getObjects('i-text');
 
       if (objects != null) {
 
@@ -1158,7 +1171,7 @@ var LabelController = function () {
           if (object != null) {
 
             // get the simple JSON object that represents the label
-            var labelJSONObject = this.getLabelJSONObjectFromCircle(object);
+            var labelJSONObject = this.getLabelJSONObjectFromText(object);
 
             if (labelJSONObject != null) {
               // add the object to our array of labels
@@ -1230,6 +1243,62 @@ var LabelController = function () {
       return labelJSONObject;
     }
   }, {
+    key: 'getLabelJSONObjectFromText',
+
+
+    /**
+     * Get the simple JSON object that represents the label
+     * @param text a Fabric text object
+     * @returns a simple JSON object that represents the label
+     */
+    value: function getLabelJSONObjectFromText(text) {
+      var labelJSONObject = {};
+
+      // get the label object that contains the circle, line, and text objects
+      var label = this.getLabelFromText(text);
+      var circleObject = label.circle;
+      var lineObject = label.line;
+      var textObject = label.text;
+
+      // get the position of the circle
+      var pointX = circleObject.get('left');
+      var pointY = circleObject.get('top');
+
+      // get the position of the text object
+      var textX = null;
+      var textY = null;
+      if (this.isStudentDataVersion(1)) {
+        /*
+         * get the offset of the end of the line (this is where the text object is
+         * also located)
+         */
+        var xDiff = lineObject.x2 - lineObject.x1;
+        var yDiff = lineObject.y2 - lineObject.y1;
+
+        // the text x and y position is relative to the circle
+        textX = xDiff;
+        textY = yDiff;
+      } else {
+        // the text x and y position is absolute
+        textX = textObject.left;
+        textY = textObject.top;
+      }
+
+      // get the text and background color of the text
+      var textString = label.textString;
+      var color = textObject.backgroundColor;
+
+      // set all the values into the object
+      labelJSONObject.pointX = parseInt(pointX);
+      labelJSONObject.pointY = parseInt(pointY);
+      labelJSONObject.textX = parseInt(textX);
+      labelJSONObject.textY = parseInt(textY);
+      labelJSONObject.text = textString;
+      labelJSONObject.color = color;
+
+      return labelJSONObject;
+    }
+  }, {
     key: 'createComponentState',
 
 
@@ -1262,7 +1331,7 @@ var LabelController = function () {
 
       // set the student data into the component state
       componentState.studentData = studentData;
-
+      console.log(studentData);
       // set the component type
       componentState.componentType = 'Label';
 
@@ -1601,12 +1670,21 @@ var LabelController = function () {
              */
             var textX = null;
             var textY = null;
-            if (this.isStudentDataVersion(1)) {
-              textX = 100;
-              textY = 100;
+            if (this.enableCircles) {
+              // place the text to the bottom right of the circle
+              if (this.isStudentDataVersion(1)) {
+                // text is relatively positioned
+                textX = 100;
+                textY = 100;
+              } else {
+                // text is absolutely positioned
+                textX = x + 100;
+                textY = y + 100;
+              }
             } else {
-              textX = x + 100;
-              textY = y + 100;
+              // circles are not enabled so we are only using the text
+              textX = x;
+              textY = y;
             }
 
             // create a new label
@@ -1715,24 +1793,33 @@ var LabelController = function () {
               }
             }
           } else if (type === 'i-text') {
-            /*
-             * the student is moving the text of the label so we need to update
-             * the endpoint of the line. the endpoint of the line should be in
-             * the same position as the text element.
-             */
+            if (this.enableCircles) {
+              /*
+               * the student is moving the text of the label so we need to update
+               * the endpoint of the line. the endpoint of the line should be in
+               * the same position as the text element.
+               */
+              var line = target.line;
+              if (line != null) {
+                // set the new position of the text element
+                line.set({ x2: left, y2: top });
 
-            var line = target.line;
+                // remove and add the line to refresh the element in the canvas
+                canvas.remove(line);
+                canvas.add(line);
 
-            if (line != null) {
-              // set the new position of the text element
-              line.set({ x2: left, y2: top });
-
-              // remove and add the line to refresh the element in the canvas
-              canvas.remove(line);
-              canvas.add(line);
-
-              // set the z index so it will be below the circle and text elements
-              canvas.moveTo(line, this.lineZIndex);
+                // set the z index so it will be below the circle and text elements
+                canvas.moveTo(line, this.lineZIndex);
+              }
+            } else {
+              /*
+               * Circles are not enabled so we are only showing the text. We will
+               * set the circle position to be the same as the text position.
+               */
+              var circle = target.circle;
+              var _line = target.line;
+              circle.set({ left: left, top: top });
+              _line.set({ x1: left, y1: top, x2: left, y2: top });
             }
           }
 
@@ -1747,11 +1834,8 @@ var LabelController = function () {
       // listen for the text changed event
       canvas.on('text:changed', angular.bind(this, function (options) {
         var target = options.target;
-
         if (target != null) {
-
           var type = target.get('type');
-
           if (type === 'i-text') {
             // notify others that the student data has changed
             this.studentDataChanged();
@@ -1770,7 +1854,6 @@ var LabelController = function () {
      * @param backgroundImagePath the url path to an image
      */
     value: function setBackgroundImage(backgroundImagePath) {
-
       if (backgroundImagePath != null) {
         this.backgroundImage = backgroundImagePath;
         this.canvas.setBackgroundImage(backgroundImagePath, this.canvas.renderAll.bind(this.canvas));
@@ -1874,6 +1957,45 @@ var LabelController = function () {
         } finally {
           if (_didIteratorError) {
             throw _iteratorError;
+          }
+        }
+      }
+
+      return null;
+    }
+
+    /**
+     * Get the label object given the canvas text object.
+     * @param text A canvas text object.
+     * @return A label object.
+     */
+
+  }, {
+    key: 'getLabelFromText',
+    value: function getLabelFromText(text) {
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = this.labels[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var label = _step2.value;
+
+          if (text == label.text) {
+            return label;
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
           }
         }
       }
@@ -1989,8 +2111,9 @@ var LabelController = function () {
       circle.line = line;
       circle.text = text;
 
-      // give the text element a reference to the line element
+      // give the text element a reference to the line and circle elements
       text.line = line;
+      text.circle = circle;
 
       // add the circle, line, and text elements to the label object
       label.circle = circle;
@@ -2064,24 +2187,35 @@ var LabelController = function () {
 
         if (circle != null && line != null && text != null) {
 
-          // add the elements to the canvas
-          canvas.add(circle, line, text);
+          if (this.enableCircles) {
+            // add the elements to the canvas
+            canvas.add(circle, line, text);
+          } else {
+            // add the text element to the canvas
+            canvas.add(text);
+          }
 
-          // set the z indexes for the elements
-          canvas.moveTo(line, this.lineZIndex);
-          canvas.moveTo(text, this.textZIndex);
-          canvas.moveTo(circle, this.circleZIndex);
+          if (this.enableCircles) {
+            // set the z indexes for the elements
+            canvas.moveTo(line, this.lineZIndex);
+            canvas.moveTo(text, this.textZIndex);
+            canvas.moveTo(circle, this.circleZIndex);
+          } else {
+            canvas.moveTo(text, this.textZIndex);
+          }
 
           // refresh the canvas
           canvas.renderAll();
 
-          circle.on('selected', function () {
-            /*
-             * the circle was clicked so we will make the associated
-             * label selected
-             */
-            _this5.selectLabel(label);
-          });
+          if (this.enableCircles) {
+            circle.on('selected', function () {
+              /*
+               * the circle was clicked so we will make the associated
+               * label selected
+               */
+              _this5.selectLabel(label);
+            });
+          }
 
           text.on('selected', function () {
             /*
@@ -2485,8 +2619,8 @@ var LabelController = function () {
       newLabel.color = 'blue';
       newLabel.pointX = 100;
       newLabel.pointY = 100;
-      newLabel.textX = 100;
-      newLabel.textY = -25;
+      newLabel.textX = 200;
+      newLabel.textY = 200;
 
       // add the label to the array of labels
       this.authoringComponentContent.labels.push(newLabel);
@@ -3331,29 +3465,29 @@ var LabelController = function () {
   }, {
     key: 'getConnectedComponentForComponentState',
     value: function getConnectedComponentForComponentState(componentState) {
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
 
       try {
-        for (var _iterator2 = this.componentContent.connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var connectedComponent = _step2.value;
+        for (var _iterator3 = this.componentContent.connectedComponents[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var connectedComponent = _step3.value;
 
           if (componentState.nodeId == connectedComponent.nodeId && componentState.componentId == connectedComponent.componentId) {
             return connectedComponent;
           }
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
           }
         } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
+          if (_didIteratorError3) {
+            throw _iteratorError3;
           }
         }
       }
@@ -3405,13 +3539,13 @@ var LabelController = function () {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+          var _iteratorNormalCompletion4 = true;
+          var _didIteratorError4 = false;
+          var _iteratorError4 = undefined;
 
           try {
-            for (var _iterator3 = components[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-              var component = _step3.value;
+            for (var _iterator4 = components[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+              var component = _step4.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -3422,16 +3556,16 @@ var LabelController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
+            _didIteratorError4 = true;
+            _iteratorError4 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
+              if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                _iterator4.return();
               }
             } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
+              if (_didIteratorError4) {
+                throw _iteratorError4;
               }
             }
           }
@@ -3642,46 +3776,16 @@ var LabelController = function () {
 
       if (answer) {
         var tempLabels = [];
-        var _iteratorNormalCompletion4 = true;
-        var _didIteratorError4 = false;
-        var _iteratorError4 = undefined;
-
-        try {
-          for (var _iterator4 = this.labels[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var label = _step4.value;
-
-            tempLabels.push(label);
-          }
-        } catch (err) {
-          _didIteratorError4 = true;
-          _iteratorError4 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-              _iterator4.return();
-            }
-          } finally {
-            if (_didIteratorError4) {
-              throw _iteratorError4;
-            }
-          }
-        }
-
         var _iteratorNormalCompletion5 = true;
         var _didIteratorError5 = false;
         var _iteratorError5 = undefined;
 
         try {
-          for (var _iterator5 = tempLabels[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-            var tempLabel = _step5.value;
+          for (var _iterator5 = this.labels[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var label = _step5.value;
 
-            this.deleteLabel(tempLabel);
+            tempLabels.push(label);
           }
-
-          /*
-           * remove the reference to the selected label since it will no
-           * longer be selected
-           */
         } catch (err) {
           _didIteratorError5 = true;
           _iteratorError5 = err;
@@ -3693,6 +3797,36 @@ var LabelController = function () {
           } finally {
             if (_didIteratorError5) {
               throw _iteratorError5;
+            }
+          }
+        }
+
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
+
+        try {
+          for (var _iterator6 = tempLabels[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var tempLabel = _step6.value;
+
+            this.deleteLabel(tempLabel);
+          }
+
+          /*
+           * remove the reference to the selected label since it will no
+           * longer be selected
+           */
+        } catch (err) {
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
+            }
+          } finally {
+            if (_didIteratorError6) {
+              throw _iteratorError6;
             }
           }
         }
