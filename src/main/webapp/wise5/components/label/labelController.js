@@ -1599,8 +1599,15 @@ var LabelController = function () {
              * set the location of the text object to be down to the right
              * of the position the student clicked on
              */
-            var textX = x + 100;
-            var textY = y + 100;
+            var textX = null;
+            var textY = null;
+            if (this.isStudentDataVersion(1)) {
+              textX = 100;
+              textY = 100;
+            } else {
+              textX = x + 100;
+              textY = y + 100;
+            }
 
             // create a new label
             var newLabel = this.createLabel(x, y, textX, textY, this.$translate('label.aNewLabel'), 'blue');
@@ -3258,7 +3265,7 @@ var LabelController = function () {
       if (componentStates != null) {
         var mergedLabels = [];
         var mergedBackgroundImage = null;
-        var studentDataVersion = null;
+        var studentDataVersion = 2;
         for (var c = 0; c < componentStates.length; c++) {
           var componentState = componentStates[c];
           if (componentState != null) {

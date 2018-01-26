@@ -1544,8 +1544,15 @@ class LabelController {
            * set the location of the text object to be down to the right
            * of the position the student clicked on
            */
-          var textX = x + 100;
-          var textY = y + 100;
+          let textX = null;
+          let textY = null;
+          if (this.isStudentDataVersion(1)) {
+            textX = 100;
+            textY = 100;
+          } else {
+            textX = x + 100;
+            textY = y + 100;
+          }
 
           // create a new label
           var newLabel = this.createLabel(x, y, textX, textY, this.$translate('label.aNewLabel'), 'blue');
@@ -3029,7 +3036,7 @@ class LabelController {
     if (componentStates != null) {
       let mergedLabels = [];
       let mergedBackgroundImage = null;
-      let studentDataVersion = null;
+      let studentDataVersion = 2;
       for (let c = 0; c < componentStates.length; c++) {
         let componentState = componentStates[c];
         if (componentState != null) {
