@@ -948,6 +948,9 @@ var UtilService = function () {
   }, {
     key: 'wordWrap',
     value: function wordWrap(str, maxWidth) {
+      if (str.length <= maxWidth) {
+        return str;
+      }
       var newLineStr = "\n";
       var done = false;
       var res = '';
