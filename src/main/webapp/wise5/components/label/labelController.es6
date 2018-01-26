@@ -1304,7 +1304,7 @@ class LabelController {
 
     // set the student data into the component state
     componentState.studentData = studentData;
-    console.log(studentData);
+
     // set the component type
     componentState.componentType = 'Label';
 
