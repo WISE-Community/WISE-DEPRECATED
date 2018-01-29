@@ -158,6 +158,17 @@ class LabelController {
 
     this.enableCircles = true;
 
+    // modify Fabric so that Text elements can utilize padding
+    fabric.Text.prototype.set({
+      _getNonTransformedDimensions() { // Object dimensions
+        return new fabric.Point(this.width, this.height).scalarAdd(this.padding);
+      },
+      _calculateCurrentDimensions() { // Controls dimensions
+        return fabric.util.transformPoint(this._getTransformedDimensions(),
+            this.getViewportTransform(), true);
+      }
+    });
+
     /*
      * Student data version 1 is where the text x and y positioning is relative
      * to the circle.
@@ -1992,7 +2003,8 @@ class LabelController {
       borderColor: 'red',
       selectable: true,
       cursorWidth: 0,
-      editable: false
+      editable: false,
+      padding: 16
     });
 
     // give the circle a reference to the line and text elements
@@ -2068,17 +2080,14 @@ class LabelController {
         if (this.enableCircles) {
           // add the elements to the canvas
           canvas.add(circle, line, text);
-        } else {
-          // add the text element to the canvas
-          canvas.add(text);
-        }
 
-        if (this.enableCircles) {
           // set the z indexes for the elements
           canvas.moveTo(line, this.lineZIndex);
           canvas.moveTo(text, this.textZIndex);
           canvas.moveTo(circle, this.circleZIndex);
         } else {
+          // add the text element to the canvas
+          canvas.add(text);
           canvas.moveTo(text, this.textZIndex);
         }
 

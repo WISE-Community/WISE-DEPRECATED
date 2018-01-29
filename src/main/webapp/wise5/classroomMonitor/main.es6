@@ -30,6 +30,7 @@ import DataExportController from './dataExport/dataExportController';
 import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
 import DrawComponentModule from '../components/draw/drawComponentModule';
 import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
+import Fabric from 'fabric';
 import GraphComponentModule from '../components/graph/graphComponentModule';
 import Highcharts from '../lib/highcharts@4.2.1';
 import highchartsng from 'highcharts-ng';

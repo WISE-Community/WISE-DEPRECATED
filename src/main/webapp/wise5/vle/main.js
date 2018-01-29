@@ -108,6 +108,10 @@ var _embeddedComponentModule = require('../components/embedded/embeddedComponent
 
 var _embeddedComponentModule2 = _interopRequireDefault(_embeddedComponentModule);
 
+var _fabric = require('fabric');
+
+var _fabric2 = _interopRequireDefault(_fabric);
+
 var _filters = require('../filters/filters');
 
 var _filters2 = _interopRequireDefault(_filters);
