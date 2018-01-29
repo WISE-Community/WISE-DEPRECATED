@@ -10,6 +10,10 @@ var _html2canvas = require('html2canvas');
 
 var _html2canvas2 = _interopRequireDefault(_html2canvas);
 
+var _fabric = require('fabric');
+
+var _fabric2 = _interopRequireDefault(_fabric);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }

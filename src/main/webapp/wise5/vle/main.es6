@@ -26,7 +26,6 @@ import Components from '../directives/components';
 import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
 import DrawComponentModule from '../components/draw/drawComponentModule';
 import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
-import Fabric from 'fabric';
 import Filters from '../filters/filters';
 import Highcharts from '../lib/highcharts@4.2.1';
 import draggablePoints from '../lib/draggable-points/draggable-points';

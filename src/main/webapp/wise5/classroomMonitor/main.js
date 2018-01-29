@@ -122,10 +122,6 @@ var _embeddedComponentModule = require('../components/embedded/embeddedComponent
 
 var _embeddedComponentModule2 = _interopRequireDefault(_embeddedComponentModule);
 
-var _fabric = require('fabric');
-
-var _fabric2 = _interopRequireDefault(_fabric);
-
 var _graphComponentModule = require('../components/graph/graphComponentModule');
 
 var _graphComponentModule2 = _interopRequireDefault(_graphComponentModule);

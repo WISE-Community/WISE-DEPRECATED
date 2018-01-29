@@ -84,10 +84,6 @@ require('../components/draw/drawComponentModule');
 
 require('../components/embedded/embeddedComponentModule');
 
-var _fabric = require('fabric');
-
-var _fabric2 = _interopRequireDefault(_fabric);
-
 require('../filters/filters');
 
 require('../lib/highcharts@4.2.1');
