@@ -30,6 +30,7 @@ import '../directives/components';
 import '../components/discussion/discussionComponentModule';
 import '../components/draw/drawComponentModule';
 import '../components/embedded/embeddedComponentModule';
+import Fabric from 'fabric';
 import '../filters/filters';
 import '../lib/highcharts@4.2.1';
 import '../components/graph/graphComponentModule';
