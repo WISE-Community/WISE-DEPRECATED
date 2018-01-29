@@ -19,7 +19,7 @@
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
-    "@angular/cli": "1.6.0",
+    "@angular/cli": "^1.6.0",
     "@angular/compiler-cli": "^5.0.0",
     "@angular/language-service": "^5.0.0",
     "@types/jasmine": "~2.5.53",
@@ -70,7 +70,8 @@
   "scripts": {
     "browser-sync": "./node_modules/browser-sync/bin/browser-sync.js start --config bs-config.js",
     "postinstall": "node ./node_modules/jspm/jspm.js install -y",
-    "watch-all": "node node_modules/concurrently/src/main.js \"node ./node_modules/gulp/bin/gulp.js\" \"npm run test-watch\"",
+    "watch-all-wise5": "node node_modules/concurrently/src/main.js \"node ./node_modules/gulp/bin/gulp.js\" \"npm run test-watch\"",
+    "watch-all-site": "ng build --watch --extract-css=true",
     "watch-sass": "npm rebuild node-sass && node ./node_modules/gulp/bin/gulp.js",
     "update-i18n": "node ./node_modules/gulp/bin/gulp.js update-i18n",
     "compile-sass": "node ./node_modules/gulp/bin/gulp.js compile-sass",
