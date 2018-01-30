@@ -271,10 +271,22 @@ class LabelController {
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
         this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
+        if (this.onlyHasShowWorkConnectedComponents()) {
+          this.isDisabled = true;
+        }
+
         if (this.canCreateLabels) {
           this.isNewLabelButtonVisible = true;
         } else {
           this.isNewLabelButtonVisible = false;
+        }
+
+        if (this.isDisabled) {
+          this.isNewLabelButtonVisible = false;
+          this.canCreateLabels = false;
+          this.canEditLabels = false;
+          this.canDeleteLabels = false;
+          this.isResetButtonVisible = false;
         }
 
         // get the latest annotations
@@ -3545,6 +3557,28 @@ class LabelController {
    */
   isStudentDataVersion(studentDataVersion) {
     return this.getStudentDataVersion() == studentDataVersion;
+  }
+
+  /**
+   * Check if this component only has show work connected components.
+   * @return If this component has connected components and all of them are
+   * 'showWork', then return true. Otherwise return false.
+   */
+  onlyHasShowWorkConnectedComponents() {
+    let connectedComponents = this.componentContent.connectedComponents;
+    let showWorkConnectedComponentCount = 0;
+    if (connectedComponents != null) {
+      for (let connectedComponent of connectedComponents) {
+        if (connectedComponent.type == 'showWork') {
+          showWorkConnectedComponentCount += 1;
+        }
+      }
+      if (connectedComponents.length > 0 &&
+          connectedComponents.length == showWorkConnectedComponentCount) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 
