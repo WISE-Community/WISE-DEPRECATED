@@ -10,14 +10,9 @@ const studentRoutes: Routes = [
     path: 'student',
     component: StudentComponent,
     children: [
-      {
-        path: '',
-        children: [
-          { path: '', component: StudentHomeComponent },
-          { path: 'profile', redirectTo: '', pathMatch: 'full' },
-          { path: 'profile/edit', component: StudentEditProfileComponent }
-        ]
-      }
+      { path: '', component: StudentHomeComponent },
+      { path: 'profile', redirectTo: '', pathMatch: 'full' },
+      { path: 'profile/edit', component: StudentEditProfileComponent }
     ]
   }
 ];
