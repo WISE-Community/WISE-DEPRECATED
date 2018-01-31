@@ -13,9 +13,9 @@ const studentRoutes: Routes = [
       {
         path: '',
         children: [
+          { path: '', component: StudentHomeComponent },
           { path: 'profile', redirectTo: '', pathMatch: 'full' },
-          { path: 'profile/edit', component: StudentEditProfileComponent },
-          { path: '', component: StudentHomeComponent }
+          { path: 'profile/edit', component: StudentEditProfileComponent }
         ]
       }
     ]
