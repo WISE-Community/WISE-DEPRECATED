@@ -52,7 +52,7 @@ import org.json.JSONArray;
  * @author Jonathan Lim-Breitbart
  */
 @RestController
-@RequestMapping("/site/dist/api/student")
+@RequestMapping("/site/api/student")
 public class StudentAPIController {
 
   @Autowired
