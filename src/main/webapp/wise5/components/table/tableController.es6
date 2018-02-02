@@ -2672,13 +2672,24 @@ class TableController {
         }
       }
 
+      // create a blank component state without student work
+      var defaultComponentState = this.createBlankComponentState();
+
+      if (defaultComponentState != null && defaultComponentState.studentData != null) {
+        // set the authored component content table data into the component state
+        defaultComponentState.studentData.tableData = this.getCopyOfTableData(this.componentContent.tableData);
+      }
+
+      // copy the cell text values into the default component state
+      var mergedComponentState = this.copyTableDataCellText(componentStates[0], defaultComponentState);
+
       /*
        * Populate the component state into this component. For now we will
        * only handle one component state from one connected component. In
        * the future we may allow multiple component states from multiple
        * connected components and merge the tables.
        */
-      this.setStudentWork(componentStates[0]);
+      this.setStudentWork(mergedComponentState);
 
       // make the work dirty so that it gets saved
       this.studentDataChanged();
