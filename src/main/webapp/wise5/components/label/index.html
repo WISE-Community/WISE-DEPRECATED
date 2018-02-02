@@ -324,18 +324,6 @@
         </md-checkbox>
         <br/>
         <md-checkbox class='md-primary'
-            ng-model='labelController.authoringComponentContent.canEditLabels'
-            ng-change='labelController.authoringViewComponentChanged()'>
-          {{ 'label.canStudentEditLabels' | translate }}
-        </md-checkbox>
-        <br/>
-        <md-checkbox class='md-primary'
-            ng-model='labelController.authoringComponentContent.canDeleteLabels'
-            ng-change='labelController.authoringViewComponentChanged()'>
-          {{ 'label.canStudentDeleteLabels' | translate }}
-        </md-checkbox>
-        <br/>
-        <md-checkbox class='md-primary'
             ng-model='labelController.authoringComponentContent.enableCircles'
             ng-change='labelController.authoringViewComponentChanged()'>
           {{ 'label.enableDots' | translate }}
@@ -387,6 +375,19 @@
                 {{ 'label.viewColors' | translate }}
               </md-tooltip>
             </md-button>
+          </div>
+          <div style='height: 80px; margin-top: 10px;'>
+            <md-checkbox class='md-primary'
+                ng-model='label.canEdit'
+                ng-change='labelController.authoringViewComponentChanged()'>
+              {{ 'label.canStudentEditLabel' | translate }}
+            </md-checkbox>
+            <br/>
+            <md-checkbox class='md-primary'
+                ng-model='label.canDelete'
+                ng-change='labelController.authoringViewComponentChanged()'>
+              {{ 'label.canStudentDeleteLabel' | translate }}
+            </md-checkbox>
           </div>
           <div style='height: 60px;'
               ng-if='labelController.enableCircles'>
@@ -512,11 +513,11 @@
               ng-if='labelController.mode === "student" && !labelController.latestAnnotations.score'>
           </possible-score>
         </div>
-        <div class='input-wrapper'>
+        <div class='input-wrapper' style='display: flex; align-items: center; width: 800px;'>
           <md-button class='studentButton md-raised md-primary'
               ng-click='labelController.newLabelButtonClicked()'
               ng-disabled='labelController.isDisabled'
-              ng-if='labelController.showNewLabelButton() && !labelController.createLabelMode && labelController.selectedLabel == null'>
+              ng-if='labelController.showNewLabelButton() && !labelController.createLabelMode && !labelController.editLabelMode'>
             <md-icon>add</md-icon>
             <md-tooltip md-direction='top'
                 class='projectButtonTooltip'>
@@ -524,7 +525,7 @@
             </md-tooltip>
           </md-button>
           <span ng-if='labelController.createLabelMode'>
-            {{ 'label.clickOnTheImageOr' | translate }}
+            {{ 'label.clickOnTheImageToCreateALabelOr' | translate }}
           </span>
           <md-button class='studentButton md-raised md-primary'
               ng-click='labelController.cancelButtonClicked()'
@@ -540,45 +541,24 @@
             {{ 'label.toCancel' | translate }}
           </span>
           <span ng-if='labelController.editLabelMode'>
-            {{ 'label.labelText' | translate }}:
+            {{ 'label.labelText' | translate }}:&nbsp
           </span>
           <input id='editLabelTextInput'
               type='text'
               ng-model='labelController.selectedLabel.textString'
               ng-if='labelController.editLabelMode'
               ng-change='labelController.selectedLabelTextChanged(labelController.selectedLabel, labelController.selectedLabel.text, labelController.selectedLabel.textString)'
-              ng-disabled='!labelController.canEditLabels'
               size='50'/>
           <md-button class='studentButton md-raised md-primary'
-              ng-click='labelController.saveLabelButtonClicked()'
-              ng-disabled='labelController.isDisabled'
-              ng-if='labelController.editLabelMode'>
-            <md-icon>done</md-icon>
-            <md-tooltip md-direction='top'
-                class='projectButtonTooltip'>
-              {{ 'SAVE' | translate }}
-            </md-tooltip>
-          </md-button>
-          <md-button class='studentButton md-raised md-primary'
-              ng-click='labelController.cancelLabelButtonClicked()'
-              ng-disabled='labelController.isDisabled'
-              ng-if='labelController.editLabelMode'>
-            <md-icon>clear</md-icon>
-            <md-tooltip md-direction='top'
-                class='projectButtonTooltip'>
-              {{ 'CANCEL' | translate }}
-            </md-tooltip>
-          </md-button>
-          <md-button class='studentButton md-raised md-primary'
               ng-click='labelController.deleteLabelButtonClicked()'
-              ng-disabled='labelController.isDisabled'
-              ng-if='labelController.canDeleteLabels && labelController.editLabelMode'>
+              ng-if='!labelController.isDisabled && labelController.selectedLabel != null && labelController.selectedLabel.canDelete'>
             <md-icon>delete</md-icon>
             <md-tooltip md-direction='top'
                 class='projectButtonTooltip'>
               {{ 'DELETE' | translate }}
             </md-tooltip>
           </md-button>
+          <span style='flex-grow: 1;'></span>
           <md-button class='md-accent'
               ng-click='labelController.resetButtonClicked()'
               ng-if='labelController.isResetButtonVisible'>
@@ -602,14 +582,13 @@
                 onchange='angular.element(this).scope().fileUploadChanged(this)'
                 style='display:inline'/>
           </div>
-          <br/>
-          <div id='canvasParent_{{labelController.canvasId}}'>
-            <canvas id='{{labelController.canvasId}}'
-                width='800'
-                height='600'
-                style='border:1px solid black;'>
-            </canvas>
-          </div>
+        </div>
+        <div id='canvasParent_{{labelController.canvasId}}' style='margin-top: 10px;'>
+          <canvas id='{{labelController.canvasId}}'
+              width='800'
+              height='600'
+              style='border:1px solid black;'>
+          </canvas>
         </div>
           <div class='component__actions'
               ng-if='labelController.attachments.length && labelController.isStudentAttachmentEnabled'

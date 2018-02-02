@@ -124,12 +124,6 @@ var LabelController = function () {
     // whether the student can create new labels
     this.canCreateLabels = true;
 
-    // whether the student can edit labels
-    this.canEditLabels = true;
-
-    // whether the student can delete labels
-    this.canDeleteLabels = true;
-
     // whether the student is in the mode to create a new label
     this.createLabelMode = false;
 
@@ -244,14 +238,6 @@ var LabelController = function () {
         this.canCreateLabels = this.componentContent.canCreateLabels;
       }
 
-      if (this.componentContent.canEditLabels != null) {
-        this.canEditLabels = this.componentContent.canEditLabels;
-      }
-
-      if (this.componentContent.canDeleteLabels != null) {
-        this.canDeleteLabels = this.componentContent.canDeleteLabels;
-      }
-
       if (this.componentContent.width != null) {
         this.canvasWidth = this.componentContent.width;
       }
@@ -282,8 +268,6 @@ var LabelController = function () {
         if (this.isDisabled) {
           this.isNewLabelButtonVisible = false;
           this.canCreateLabels = false;
-          this.canEditLabels = false;
-          this.canDeleteLabels = false;
           this.isResetButtonVisible = false;
         }
 
@@ -294,8 +278,6 @@ var LabelController = function () {
         this.isSubmitButtonVisible = false;
         this.isNewLabelButtonVisible = false;
         this.isSnipImageButtonVisible = false;
-        this.canEditLabels = false;
-        this.canDeleteLabels = false;
         this.isDisabled = true;
 
         if (componentState != null) {
@@ -314,16 +296,12 @@ var LabelController = function () {
         this.isSubmitButtonVisible = false;
         this.isNewLabelButtonVisible = false;
         this.isSnipImageButtonVisible = false;
-        this.canEditLabels = false;
-        this.canDeleteLabels = false;
         this.isDisabled = true;
       } else if (this.mode === 'showPreviousWork') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isNewLabelButtonVisible = false;
-        this.canEditLabels = false;
-        this.canDeleteLabels = false;
         this.isDisabled = true;
       } else if (this.mode === 'authoring') {
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
@@ -409,12 +387,6 @@ var LabelController = function () {
 
           if (this.componentContent.canCreateLabels != null) {
             this.canCreateLabels = this.componentContent.canCreateLabels;
-          }
-          if (this.componentContent.canEditLabels != null) {
-            this.canEditLabels = this.componentContent.canEditLabels;
-          }
-          if (this.componentContent.canDeleteLabels != null) {
-            this.canDeleteLabels = this.componentContent.canDeleteLabels;
           }
 
           if (this.canCreateLabels) {
@@ -767,7 +739,7 @@ var LabelController = function () {
       // get the component state from the scope
       var componentState = this.$scope.componentState;
 
-      if (this.canDeleteLabels && !this.disabled) {
+      if (!this.disabled) {
         // create the key down listener to listen for the delete key
         this.createKeydownListener();
       }
@@ -968,9 +940,11 @@ var LabelController = function () {
             var textY = label.textY;
             var text = label.text;
             var color = label.color;
+            var canEdit = label.canEdit;
+            var canDelete = label.canDelete;
 
             // create the label
-            var label = this.createLabel(pointX, pointY, textX, textY, text, color);
+            var label = this.createLabel(pointX, pointY, textX, textY, text, color, canEdit, canDelete);
 
             // add the label to the canvas
             this.addLabelToCanvas(this.canvas, label);
@@ -1332,6 +1306,18 @@ var LabelController = function () {
       labelJSONObject.textY = parseInt(textY);
       labelJSONObject.text = textString;
       labelJSONObject.color = color;
+
+      var canEdit = label.canEdit;
+      if (canEdit == null) {
+        canEdit = false;
+      }
+      labelJSONObject.canEdit = canEdit;
+
+      var canDelete = label.canDelete;
+      if (canDelete == null) {
+        canDelete = false;
+      }
+      labelJSONObject.canDelete = canDelete;
 
       return labelJSONObject;
     }
@@ -1724,8 +1710,11 @@ var LabelController = function () {
               textY = y;
             }
 
+            var canEdit = true;
+            var canDelete = true;
+
             // create a new label
-            var newLabel = this.createLabel(x, y, textX, textY, this.$translate('label.aNewLabel'), 'blue');
+            var newLabel = this.createLabel(x, y, textX, textY, this.$translate('label.aNewLabel'), 'blue', canEdit, canDelete);
 
             // add the label to the canvas
             this.addLabelToCanvas(this.canvas, newLabel);
@@ -1929,27 +1918,7 @@ var LabelController = function () {
 
       // get the key code of the key that was pressed
       var keyCode = e.keyCode;
-
-      // 8 is backspace and 46 is delete
-      if (keyCode === 8 || keyCode === 46) {
-
-        // get the active object
-        var activeObject = this.canvas.getActiveObject();
-
-        if (activeObject != null) {
-
-          // make sure the active object is a circle which represents the label
-          if (activeObject.get('type') === 'circle') {
-            var label = this.getLabelFromCircle(activeObject);
-
-            // remove the label from the canvas
-            this.removeLabelFromCanvas(this.canvas, label);
-
-            // notify others that the student data has changed
-            this.studentDataChanged();
-          }
-        }
-      } else if (keyCode === 13) {
+      if (keyCode === 13) {
         // the enter key was pressed
         if (this.selectedLabel != null) {
           /*
@@ -2051,12 +2020,14 @@ var LabelController = function () {
      * @param textY the y position of the text relative to the point (circle)
      * @param textString the text of the label
      * @param color the background color of the label
+     * @param canEdit whether the student can edit the label
+     * @param canDelete whether the student can delete the label
      * @returns an object containing a circle, line, and text
      */
 
   }, {
     key: 'createLabel',
-    value: function createLabel(pointX, pointY, textX, textY, textString, color) {
+    value: function createLabel(pointX, pointY, textX, textY, textString, color, canEdit, canDelete) {
       var label = {};
 
       // get the position of the point
@@ -2158,6 +2129,16 @@ var LabelController = function () {
       label.line = line;
       label.text = text;
       label.textString = textString;
+
+      if (canEdit == null) {
+        canEdit = true;
+      }
+      label.canEdit = canEdit;
+
+      if (canDelete == null) {
+        canDelete = true;
+      }
+      label.canDelete = canDelete;
 
       return label;
     }
@@ -2274,17 +2255,17 @@ var LabelController = function () {
      * @param label the label object
      */
     value: function selectLabel(label) {
-      if (this.canEditLabels) {
-        // create a reference to the selected label
-        this.selectedLabel = label;
+      // create a reference to the selected label
+      this.selectedLabel = label;
 
+      if (label.canEdit) {
         /*
          * remember the label text before the student changes it in case the
          * student wants to cancel any changes they make
          */
         this.selectedLabelText = label.text.text;
 
-        // turn on edit label mode
+        // show the label text input
         this.editLabelMode = true;
 
         /*
@@ -2313,14 +2294,17 @@ var LabelController = function () {
             angular.element('#editLabelTextInput').focus();
           }
         });
-
-        /*
-         * force angular to refresh, otherwise angular will wait until the
-         * user generates another input (such as moving the mouse) before
-         * refreshing
-         */
-        this.$scope.$apply();
+      } else {
+        // hide label text input
+        this.editLabelMode = false;
       }
+
+      /*
+       * force angular to refresh, otherwise angular will wait until the
+       * user generates another input (such as moving the mouse) before
+       * refreshing
+       */
+      this.$scope.$apply();
     }
 
     /**
@@ -2656,6 +2640,8 @@ var LabelController = function () {
       newLabel.pointY = 100;
       newLabel.textX = 200;
       newLabel.textY = 200;
+      newLabel.canEdit = false;
+      newLabel.canDelete = false;
 
       // add the label to the array of labels
       this.authoringComponentContent.labels.push(newLabel);
