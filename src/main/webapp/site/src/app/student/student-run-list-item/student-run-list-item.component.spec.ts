@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { StudentRun } from '../student-run';
 import { StudentRunListItemComponent } from './student-run-list-item.component';
 
 describe('StudentRunListItemComponent', () => {
@@ -16,10 +17,19 @@ describe('StudentRunListItemComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(StudentRunListItemComponent);
     component = fixture.componentInstance;
+    const run: StudentRun = new StudentRun();
+    run.id = 1;
+    run.name = "Photosynthesis";
+    run.teacherUsername = "Mr. Happy";
+    component.run = run;
     fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    try {
+      expect(component).toBeTruthy();
+    } catch (e) {
+      console.log(e);
+    }
   });
 });

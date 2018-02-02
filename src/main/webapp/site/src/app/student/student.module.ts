@@ -12,6 +12,12 @@ import { StudentRunListItemComponent } from './student-run-list-item/student-run
     CommonModule,
     StudentRoutingModule
   ],
-  declarations: [StudentComponent, StudentHomeComponent, StudentEditProfileComponent, StudentRunListComponent, StudentRunListItemComponent]
+  declarations: [
+    StudentComponent,
+    StudentHomeComponent,
+    StudentEditProfileComponent,
+    StudentRunListComponent,
+    StudentRunListItemComponent
+  ]
 })
 export class StudentModule { }
