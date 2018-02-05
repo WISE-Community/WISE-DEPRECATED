@@ -765,6 +765,9 @@ var LabelController = function () {
             // populate the canvas with the starter labels
             this.addLabelsToCanvas(this.componentContent.labels);
           }
+        } else if (this.LabelService.componentStateIsSameAsStarter(componentState, this.componentContent)) {
+          // the student labels are the same as the starter labels
+          this.setStudentWork(componentState);
         } else if (componentState == null) {
           /*
            * only import work if the student does not already have

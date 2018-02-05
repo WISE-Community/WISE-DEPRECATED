@@ -765,7 +765,7 @@ class LabelController {
       if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
         // we will show work from another component
         this.handleConnectedComponents();
-      }  else if (this.LabelService.componentStateHasStudentWork(componentState, this.componentContent)) {
+      } else if (this.LabelService.componentStateHasStudentWork(componentState, this.componentContent)) {
         /*
          * the student has work so we will populate the work into this
          * component
@@ -779,6 +779,9 @@ class LabelController {
           // populate the canvas with the starter labels
           this.addLabelsToCanvas(this.componentContent.labels);
         }
+      } else if (this.LabelService.componentStateIsSameAsStarter(componentState, this.componentContent)) {
+        // the student labels are the same as the starter labels
+        this.setStudentWork(componentState);
       } else if (componentState == null) {
         /*
          * only import work if the student does not already have

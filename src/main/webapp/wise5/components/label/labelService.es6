@@ -241,13 +241,48 @@ class LabelService extends NodeService {
   }
 
   /**
+   * Check if the component state has the exact same labels as the starter
+   * labels.
+   * @param componentState the component state object
+   * @param componentContent the component content
+   * @return whether the component state has the exact same labels as the
+   * starter labels
+   */
+  componentStateIsSameAsStarter(componentState, componentContent) {
+    if (componentState != null) {
+      let studentData = componentState.studentData;
+
+      // get the labels from the student data
+      let labels = studentData.labels;
+      let starterLabels = componentContent.labels;
+      if (starterLabels == null || starterLabels.length == 0) {
+        // there are no starter labels
+        if (labels.length == 0) {
+          // the student work doesn't have any labels either
+          return true;
+        } else if (labels != null && labels.length > 0) {
+          // the student has labels
+          return false;
+        }
+      } else {
+        // there are starter labels so we will compare it with the student labels
+        if (this.labelArraysAreTheSame(labels, starterLabels)) {
+          // the student labels are the same as the starter labels
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * Check if the two arrays of labels contain the same values
    * @param labels1 an array of label objects
    * @param labels2 an array of label objects
    * @return whether the labels contain the same values
    */
   labelArraysAreTheSame(labels1, labels2) {
-
     if (labels1 == null && labels2 == null) {
       return true;
     } else if ((labels1 == null && labels2 != null) ||
@@ -277,11 +312,10 @@ class LabelService extends NodeService {
    * @return whether the labels contain the same values
    */
   labelsAreTheSame(label1, label2) {
-
     if (label1 == null && label2 == null) {
       return true;
     } else if ((label1 == null && label2 != null) ||
-           (label1 != null && label2 == null)) {
+        (label1 != null && label2 == null)) {
       return false;
     } else {
       if ((label1.text != label2.text) ||
@@ -297,7 +331,6 @@ class LabelService extends NodeService {
 
     return true;
   }
-
 
   /**
    * Create an image from the text string.

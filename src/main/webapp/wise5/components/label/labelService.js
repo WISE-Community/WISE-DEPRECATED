@@ -288,6 +288,45 @@ var LabelService = function (_NodeService) {
     }
 
     /**
+     * Check if the component state has the exact same labels as the starter
+     * labels.
+     * @param componentState the component state object
+     * @param componentContent the component content
+     * @return whether the component state has the exact same labels as the
+     * starter labels
+     */
+
+  }, {
+    key: 'componentStateIsSameAsStarter',
+    value: function componentStateIsSameAsStarter(componentState, componentContent) {
+      if (componentState != null) {
+        var studentData = componentState.studentData;
+
+        // get the labels from the student data
+        var labels = studentData.labels;
+        var starterLabels = componentContent.labels;
+        if (starterLabels == null || starterLabels.length == 0) {
+          // there are no starter labels
+          if (labels.length == 0) {
+            // the student work doesn't have any labels either
+            return true;
+          } else if (labels != null && labels.length > 0) {
+            // the student has labels
+            return false;
+          }
+        } else {
+          // there are starter labels so we will compare it with the student labels
+          if (this.labelArraysAreTheSame(labels, starterLabels)) {
+            // the student labels are the same as the starter labels
+            return true;
+          }
+        }
+      }
+
+      return false;
+    }
+
+    /**
      * Check if the two arrays of labels contain the same values
      * @param labels1 an array of label objects
      * @param labels2 an array of label objects
@@ -297,7 +336,6 @@ var LabelService = function (_NodeService) {
   }, {
     key: 'labelArraysAreTheSame',
     value: function labelArraysAreTheSame(labels1, labels2) {
-
       if (labels1 == null && labels2 == null) {
         return true;
       } else if (labels1 == null && labels2 != null || labels1 != null && labels2 == null) {
@@ -329,7 +367,6 @@ var LabelService = function (_NodeService) {
   }, {
     key: 'labelsAreTheSame',
     value: function labelsAreTheSame(label1, label2) {
-
       if (label1 == null && label2 == null) {
         return true;
       } else if (label1 == null && label2 != null || label1 != null && label2 == null) {
