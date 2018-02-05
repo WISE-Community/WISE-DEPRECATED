@@ -1001,6 +1001,45 @@ var UtilService = function () {
     value: function wordCount(str) {
       return str.trim().split(/\s+/).length;
     }
+
+    /**
+     * Check if there is a 'nodeEntered' event in the array of events.
+     * @param events An array of events.
+     * @return Whether there is a 'nodeEntered' event in the array of events.
+     */
+
+  }, {
+    key: 'hasNodeEnteredEvent',
+    value: function hasNodeEnteredEvent(events) {
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
+
+      try {
+        for (var _iterator6 = events[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var event = _step6.value;
+
+          if (event.event == 'nodeEntered') {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
+          }
+        }
+      }
+
+      return false;
+    }
   }]);
 
   return UtilService;

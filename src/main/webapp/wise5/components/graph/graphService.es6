@@ -732,6 +732,13 @@ class GraphService extends NodeService {
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     let result = false;
 
+    if (!this.canEdit(component) && this.UtilService.hasNodeEnteredEvent(nodeEvents)) {
+      /*
+       * the student can't perform any work on this component and has visited
+       * this step so we will mark it as completed
+       */
+      return true;
+    }
     if (componentStates && componentStates.length) {
       let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
@@ -769,6 +776,24 @@ class GraphService extends NodeService {
 
     return result;
   };
+
+  /**
+   * Determine if the student can perform any work on this component.
+   * @param component The component content.
+   * @return Whether the student can perform any work on this component.
+   */
+  canEdit(component) {
+    let series = component.series;
+    for (let singleSeries of series) {
+      if (singleSeries.canEdit) {
+        return true;
+      }
+    }
+    if (this.hasImportWorkConnectedComponent(component)) {
+      return true;
+    }
+    return false;
+  }
 
   /**
    * Check if student data contains any series data
@@ -1077,29 +1102,49 @@ class GraphService extends NodeService {
   }
 
   /**
-   * Determine whether the component has been authored to show classmate work
-   * @param componentContent the component content
-   * @return whether to show classmate work in this component
+   * Determine whether the component has been authored to import work.
+   * @param componentContent The component content.
+   * @return Whether to import work in this component.
    */
-  showClassmateWork(componentContent) {
+  hasImportWorkConnectedComponent(componentContent) {
+    return this.hasXConnectedComponent(componentContent, 'importWork');
+  }
 
-    if (componentContent != null && componentContent.connectedComponents != null) {
+  /**
+   * Determine whether the component has been authored to show work.
+   * @param componentContent The component content.
+   * @return Whether to show work in this component.
+   */
+  hasShowWorkConnectedComponent(connectedComponent) {
+    return this.hasXConnectedComponent(componentContent, 'showWork');
+  }
 
+  /**
+   * Determine whether the component has been authored to show classmate work.
+   * @param componentContent The component content.
+   * @return Whether to show classmate work in this component.
+   */
+  hasShowClassmateWorkConnectedComponent(componentContent) {
+    return this.hasXConnectedComponent(componentContent, 'showClassmateWork');
+  }
+
+  /**
+   * Determine whether the component has a connected component of the given type.
+   * @param componentContent The component content.
+   * @param connectedComponentType The connected component type.
+   * @return Whether the component has a connected component of the given type.
+   */
+  hasXConnectedComponent(componentContent, connectedComponentType) {
+    if (componentContent.connectedComponents != null) {
       let connectedComponents = componentContent.connectedComponents;
-
-      // loop through all the connected components that we are importing from
-      for (let c = 0; c < connectedComponents.length; c++) {
-        let connectedComponent = connectedComponents[c];
-
-        if (connectedComponent != null) {
-          if (connectedComponent.type == 'showClassmateWork') {
-            // the connected component is importing work from classmates
-            return true;
-          }
+      // loop through all the connected components
+      for (let connectedComponent of connectedComponents) {
+        if (connectedComponent.type == connectedComponentType) {
+          // the connected component is the type we're looking for
+          return true;
         }
       }
     }
-
     return false;
   }
 }

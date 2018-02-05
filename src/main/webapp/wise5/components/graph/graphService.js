@@ -824,6 +824,13 @@ var GraphService = function (_NodeService) {
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
       var result = false;
 
+      if (!this.canEdit(component) && this.UtilService.hasNodeEnteredEvent(nodeEvents)) {
+        /*
+         * the student can't perform any work on this component and has visited
+         * this step so we will mark it as completed
+         */
+        return true;
+      }
       if (componentStates && componentStates.length) {
         var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
 
@@ -862,14 +869,57 @@ var GraphService = function (_NodeService) {
       return result;
     }
   }, {
-    key: 'hasSeriesData',
+    key: 'canEdit',
 
+
+    /**
+     * Determine if the student can perform any work on this component.
+     * @param component The component content.
+     * @return Whether the student can perform any work on this component.
+     */
+    value: function canEdit(component) {
+      var series = component.series;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = series[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var singleSeries = _step.value;
+
+          if (singleSeries.canEdit) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      if (this.hasImportWorkConnectedComponent(component)) {
+        return true;
+      }
+      return false;
+    }
 
     /**
      * Check if student data contains any series data
      * @param studentData student data from a component state
      * @returns whether the student data has series data
      */
+
+  }, {
+    key: 'hasSeriesData',
     value: function hasSeriesData(studentData) {
       var result = false;
 
@@ -1202,32 +1252,82 @@ var GraphService = function (_NodeService) {
     }
 
     /**
-     * Determine whether the component has been authored to show classmate work
-     * @param componentContent the component content
-     * @return whether to show classmate work in this component
+     * Determine whether the component has been authored to import work.
+     * @param componentContent The component content.
+     * @return Whether to import work in this component.
      */
 
   }, {
-    key: 'showClassmateWork',
-    value: function showClassmateWork(componentContent) {
+    key: 'hasImportWorkConnectedComponent',
+    value: function hasImportWorkConnectedComponent(componentContent) {
+      return this.hasXConnectedComponent(componentContent, 'importWork');
+    }
 
-      if (componentContent != null && componentContent.connectedComponents != null) {
+    /**
+     * Determine whether the component has been authored to show work.
+     * @param componentContent The component content.
+     * @return Whether to show work in this component.
+     */
 
+  }, {
+    key: 'hasShowWorkConnectedComponent',
+    value: function hasShowWorkConnectedComponent(connectedComponent) {
+      return this.hasXConnectedComponent(componentContent, 'showWork');
+    }
+
+    /**
+     * Determine whether the component has been authored to show classmate work.
+     * @param componentContent The component content.
+     * @return Whether to show classmate work in this component.
+     */
+
+  }, {
+    key: 'hasShowClassmateWorkConnectedComponent',
+    value: function hasShowClassmateWorkConnectedComponent(componentContent) {
+      return this.hasXConnectedComponent(componentContent, 'showClassmateWork');
+    }
+
+    /**
+     * Determine whether the component has a connected component of the given type.
+     * @param componentContent The component content.
+     * @param connectedComponentType The connected component type.
+     * @return Whether the component has a connected component of the given type.
+     */
+
+  }, {
+    key: 'hasXConnectedComponent',
+    value: function hasXConnectedComponent(componentContent, connectedComponentType) {
+      if (componentContent.connectedComponents != null) {
         var connectedComponents = componentContent.connectedComponents;
+        // loop through all the connected components
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
 
-        // loop through all the connected components that we are importing from
-        for (var c = 0; c < connectedComponents.length; c++) {
-          var connectedComponent = connectedComponents[c];
+        try {
+          for (var _iterator2 = connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var connectedComponent = _step2.value;
 
-          if (connectedComponent != null) {
-            if (connectedComponent.type == 'showClassmateWork') {
-              // the connected component is importing work from classmates
+            if (connectedComponent.type == connectedComponentType) {
+              // the connected component is the type we're looking for
               return true;
+            }
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
             }
           }
         }
       }
-
       return false;
     }
   }]);

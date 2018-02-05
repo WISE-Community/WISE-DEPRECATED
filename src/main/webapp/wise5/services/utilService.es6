@@ -794,6 +794,20 @@ class UtilService {
   wordCount(str) {
     return str.trim().split(/\s+/).length;
   }
+
+  /**
+   * Check if there is a 'nodeEntered' event in the array of events.
+   * @param events An array of events.
+   * @return Whether there is a 'nodeEntered' event in the array of events.
+   */
+  hasNodeEnteredEvent(events) {
+    for (let event of events) {
+      if (event.event == 'nodeEntered') {
+        return true;
+      }
+    }
+    return false;
+  }
 }
 
 // Get the last element of the array
