@@ -161,7 +161,13 @@ var LabelService = function (_NodeService) {
      */
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
       var result = false;
-
+      if (!this.canEdit(component) && this.UtilService.hasNodeEnteredEvent(nodeEvents)) {
+        /*
+         * the student can't perform any work on this component and has visited
+         * this step so we will mark it as completed
+         */
+        return true;
+      }
       if (componentStates && componentStates.length) {
         var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
 
@@ -197,8 +203,20 @@ var LabelService = function (_NodeService) {
       return result;
     }
   }, {
-    key: 'componentHasWork',
+    key: 'canEdit',
 
+
+    /**
+     * Determine if the student can perform any work on this component.
+     * @param component The component content.
+     * @return Whether the student can perform any work on this component.
+     */
+    value: function canEdit(component) {
+      if (this.UtilService.hasShowWorkConnectedComponent(component)) {
+        return false;
+      }
+      return true;
+    }
 
     /**
      * Whether this component generates student work
@@ -207,6 +225,9 @@ var LabelService = function (_NodeService) {
      * component type usually has work.
      * @return whether this component generates student work
      */
+
+  }, {
+    key: 'componentHasWork',
     value: function componentHasWork(component) {
       return true;
     }

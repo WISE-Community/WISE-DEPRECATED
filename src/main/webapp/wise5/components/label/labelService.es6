@@ -126,7 +126,13 @@ class LabelService extends NodeService {
    */
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     var result = false;
-
+    if (!this.canEdit(component) && this.UtilService.hasNodeEnteredEvent(nodeEvents)) {
+      /*
+       * the student can't perform any work on this component and has visited
+       * this step so we will mark it as completed
+       */
+      return true;
+    }
     if (componentStates && componentStates.length) {
       let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
@@ -161,6 +167,18 @@ class LabelService extends NodeService {
 
     return result;
   };
+
+  /**
+   * Determine if the student can perform any work on this component.
+   * @param component The component content.
+   * @return Whether the student can perform any work on this component.
+   */
+  canEdit(component) {
+    if (this.UtilService.hasShowWorkConnectedComponent(component)) {
+      return false;
+    }
+    return true;
+  }
 
   /**
    * Whether this component generates student work

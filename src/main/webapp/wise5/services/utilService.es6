@@ -808,6 +808,53 @@ class UtilService {
     }
     return false;
   }
+
+  /**
+   * Determine whether the component has been authored to import work.
+   * @param componentContent The component content.
+   * @return Whether to import work in this component.
+   */
+  hasImportWorkConnectedComponent(componentContent) {
+    return this.hasXConnectedComponent(componentContent, 'importWork');
+  }
+
+  /**
+   * Determine whether the component has been authored to show work.
+   * @param componentContent The component content.
+   * @return Whether to show work in this component.
+   */
+  hasShowWorkConnectedComponent(componentContent) {
+    return this.hasXConnectedComponent(componentContent, 'showWork');
+  }
+
+  /**
+   * Determine whether the component has been authored to show classmate work.
+   * @param componentContent The component content.
+   * @return Whether to show classmate work in this component.
+   */
+  hasShowClassmateWorkConnectedComponent(componentContent) {
+    return this.hasXConnectedComponent(componentContent, 'showClassmateWork');
+  }
+
+  /**
+   * Determine whether the component has a connected component of the given type.
+   * @param componentContent The component content.
+   * @param connectedComponentType The connected component type.
+   * @return Whether the component has a connected component of the given type.
+   */
+  hasXConnectedComponent(componentContent, connectedComponentType) {
+    if (componentContent.connectedComponents != null) {
+      let connectedComponents = componentContent.connectedComponents;
+      // loop through all the connected components
+      for (let connectedComponent of connectedComponents) {
+        if (connectedComponent.type == connectedComponentType) {
+          // the connected component is the type we're looking for
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 }
 
 // Get the last element of the array
