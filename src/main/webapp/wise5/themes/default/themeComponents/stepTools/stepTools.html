@@ -11,7 +11,8 @@
 
         <span flex></span>
         <div layout="row" layout-align="center center">
-            <md-button aria-label="{{ 'previousItem' | translate }}"
+            <md-button id="prevButton"
+                       aria-label="{{ 'previousItem' | translate }}"
                        class="md-icon-button toolbar__nav"
                        ng-disabled="!stepToolsCtrl.prevId" ng-click="stepToolsCtrl.goToPrevNode()">
                 <md-icon> chevron_left </md-icon>
@@ -36,7 +37,8 @@
                 </md-option>
             </md-select>
             <node-status-icon node-id="stepToolsCtrl.nodeId" style="width: 40; text-align: center;"></node-status-icon>
-            <md-button aria-label="{{ 'nextItem' | translate }}"
+            <md-button id="nextButton"
+                       aria-label="{{ 'nextItem' | translate }}"
                        class="md-icon-button toolbar__nav"
                        ng-disabled="!stepToolsCtrl.nextId" ng-click="stepToolsCtrl.goToNextNode()">
                 <md-icon> chevron_right </md-icon>

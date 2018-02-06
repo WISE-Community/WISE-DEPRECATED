@@ -181,7 +181,8 @@ const StepTools = {
   },
   template:
   `<div layout="row" layout-align="center center">
-      <md-button aria-label="{{ 'previousStep' | translate }}"
+      <md-button id="previousNodeButton"
+                 aria-label="{{ 'previousStep' | translate }}"
                  class="md-icon-button toolbar__nav"
                  ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevNode()">
           <md-icon> chevron_left </md-icon>
@@ -204,7 +205,8 @@ const StepTools = {
               </div>
           </md-option>
       </md-select>
-      <md-button aria-label="{{ 'nextStep' | translate }}"
+      <md-button id="nextNodeButton"
+                 aria-label="{{ 'nextStep' | translate }}"
                  class="md-icon-button toolbar__nav"
                  ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextNode()">
           <md-icon> chevron_right </md-icon>
