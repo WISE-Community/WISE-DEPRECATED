@@ -436,6 +436,9 @@
                     <p style='display:inline; cursor:pointer;'
                       ng-if='item.order!==0 && !projectController.isGroupNode(item.$key)'>
                       {{projectController.getNodePositionById(item.$key)}}: {{projectController.getNodeTitleByNodeId(item.$key)}}
+                      <span><md-icon ng-if='projectController.isBranchPoint(item.$key)' style='transform: rotate(180deg);'>call_split</md-icon><md-tooltip md-direction='right'>{{ 'branchPoint' | translate }}</md-tooltip></span>
+                      <span><md-icon ng-if='projectController.nodeHasConstraint(item.$key)'>block</md-icon><md-tooltip md-direction='right'>{{ 'hasConstraint' | translate }}</md-tooltip></span>
+                      <span><md-icon ng-if='projectController.nodeHasRubric(item.$key)'>message</md-icon><md-tooltip md-direction='right'>{{ 'hasRubric' | translate }}</md-tooltip></span>
                     </p>
                   </div>
                   <div layout='row'>

@@ -1062,6 +1062,29 @@ class ProjectService {
   };
 
   /**
+   * Get the constraints authored on the node.
+   * @param nodeId The node id of the node.
+   * @return An array of constraint JSON objects.
+   */
+  getConstraintsOnNode(nodeId) {
+    let node = this.getNodeById(nodeId);
+    return node.constraints;
+  }
+
+  /**
+   * Check if a node has constraints.
+   * @param nodeId The node id of the node.
+   * @return Whether the node has constraints authored on it.
+   */
+  nodeHasConstraint(nodeId) {
+    let constraints = this.getConstraintsOnNode(nodeId);
+    if (constraints.length > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Order the constraints so that they show up in the same order as in the
    * project.
    * @param constraints An array of constraint objects.
@@ -8147,6 +8170,19 @@ class ProjectService {
    */
   getIdToNode() {
     return this.idToNode;
+  }
+
+  /**
+   * Check if a node has rubrics.
+   * @param nodeId The node id of the node.
+   * @return Whether the node has rubrics authored on it.
+   */
+  nodeHasRubric(nodeId) {
+    let numberOfRubrics = this.getNumberOfRubricsByNodeId(nodeId);
+    if (numberOfRubrics > 0) {
+      return true;
+    }
+    return false;
   }
 }
 

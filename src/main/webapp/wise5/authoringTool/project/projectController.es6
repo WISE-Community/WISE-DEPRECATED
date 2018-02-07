@@ -1534,6 +1534,34 @@ class ProjectController {
       }
     }
   }
+
+  /**
+   * Check if a node is a branch point.
+   * @param nodeId The node id of the node.
+   * @return Whether the node is a branch point.
+   */
+  isBranchPoint(nodeId) {
+    return this.ProjectService.isBranchPoint(nodeId);
+  }
+
+  /**
+   * Check if a node has a constraint.
+   * @param nodeId The node id of the node.
+   * @return Whether the node has a constraint authored on it.
+   */
+  nodeHasConstraint(nodeId) {
+    return this.ProjectService.nodeHasConstraint(nodeId);
+  }
+
+  /**
+   * Check if a node has a rubric.
+   * @param nodeId The node id of the node.
+   * @return Whether the node or one of the node's components has a rubric
+   * authored on it.
+   */
+  nodeHasRubric(nodeId) {
+    return this.ProjectService.nodeHasRubric(nodeId);
+  }
 }
 
 ProjectController.$inject = [
