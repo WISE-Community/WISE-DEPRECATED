@@ -1,0 +1,23 @@
+@import '~@angular/material/theming';
+
+// Define a custom mixin that takes in the current material theme and colors
+@mixin theme-setup($theme, $colors) {
+  // Include angular material theme
+  @include angular-material-theme($theme);
+
+  // Create theme specfic styles
+  a {
+    color: map-get($colors, primary);
+  }
+
+  // Set classes for each named color in the $colors map
+  @each $key, $value in $colors {
+      .#{$key} {
+        color: $value;
+      }
+
+      .#{$key}-bg {
+        background-color: $value;
+      }
+  }
+}

@@ -31,5 +31,20 @@
   //'pages/home';
 
 // 7. Themes
-//@import
-  //'themes/default';
+// Angular Material themes
+@import '~@angular/material/theming';
+
+// always include only once per project
+@include mat-core();
+
+// import and set up default theme
+@import 'themes/default';
+@include theme-setup($default-theme, $default-colors);
+
+// import our custom themes
+//@import 'themes/dark';
+
+// specify custom theme classes eg: <body class="dark-theme"> ... </body>
+//.dark-theme {
+  //@include theme-setup($dark-theme, $dark-colors);
+//}
