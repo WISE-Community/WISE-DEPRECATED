@@ -86,6 +86,7 @@ var ProjectService = function () {
       this.nodeCount = 0;
       this.nodeIdToIsInBranchPath = {};
       this.achievements = [];
+      this.clearBranchesCache();
     }
   }, {
     key: 'getStyle',
@@ -3460,13 +3461,57 @@ var ProjectService = function () {
       return null;
     }
   }, {
-    key: 'getBranches',
+    key: 'setBranchesCache',
 
+
+    /**
+     * Remember the branches.
+     * @param branches An array of arrays of node ids.
+     */
+    value: function setBranchesCache(branches) {
+      this.branchesCache = branches;
+    }
+
+    /**
+     * Get the branches that were previously calculated.
+     * @returns An array of arrays of node ids.
+     */
+
+  }, {
+    key: 'getBranchesCache',
+    value: function getBranchesCache() {
+      return this.branchesCache;
+    }
+
+    /**
+     * Remove the branches cache.
+     */
+
+  }, {
+    key: 'clearBranchesCache',
+    value: function clearBranchesCache() {
+      this.branchesCache = null;
+    }
 
     /**
      * Get the branches in the project
      */
+
+  }, {
+    key: 'getBranches',
     value: function getBranches() {
+      /*
+       * Do not use the branches cache in the authoring tool because the branches
+       * may change when the author changes the project. In all other modes the
+       * branches can't change so we can use the cache.
+       */
+      if (this.ConfigService.getMode() != 'author') {
+        var branchesCache = this.getBranchesCache();
+        if (branchesCache != null) {
+          return branchesCache;
+        }
+      }
+
       var startNodeId = this.getStartNodeId();
 
       /*
@@ -3478,6 +3523,9 @@ var ProjectService = function () {
 
       var allPaths = this.getAllPaths(pathsSoFar, startNodeId);
       var branches = this.findBranches(allPaths);
+      if (this.ConfigService.getMode() != 'author') {
+        this.setBranchesCache(branches);
+      }
       return branches;
     }
   }, {

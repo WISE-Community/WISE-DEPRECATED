@@ -68,6 +68,7 @@ class ProjectService {
     this.nodeCount = 0;
     this.nodeIdToIsInBranchPath = {};
     this.achievements = [];
+    this.clearBranchesCache();
   };
 
   getStyle() {
@@ -2368,9 +2369,44 @@ class ProjectService {
   };
 
   /**
+   * Remember the branches.
+   * @param branches An array of arrays of node ids.
+   */
+  setBranchesCache(branches) {
+    this.branchesCache = branches;
+  }
+
+  /**
+   * Get the branches that were previously calculated.
+   * @returns An array of arrays of node ids.
+   */
+  getBranchesCache() {
+    return this.branchesCache;
+  }
+
+  /**
+   * Remove the branches cache.
+   */
+  clearBranchesCache() {
+    this.branchesCache = null;
+  }
+
+  /**
    * Get the branches in the project
    */
   getBranches() {
+    /*
+     * Do not use the branches cache in the authoring tool because the branches
+     * may change when the author changes the project. In all other modes the
+     * branches can't change so we can use the cache.
+     */
+    if (this.ConfigService.getMode() != 'author') {
+      let branchesCache = this.getBranchesCache();
+      if (branchesCache != null) {
+        return branchesCache;
+      }
+    }
+
     const startNodeId = this.getStartNodeId();
 
     /*
@@ -2382,6 +2418,9 @@ class ProjectService {
 
     const allPaths = this.getAllPaths(pathsSoFar, startNodeId);
     const branches = this.findBranches(allPaths);
+    if (this.ConfigService.getMode() != 'author') {
+      this.setBranchesCache(branches);
+    }
     return branches;
   };
 
