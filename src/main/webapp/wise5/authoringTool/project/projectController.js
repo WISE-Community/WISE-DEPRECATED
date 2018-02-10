@@ -1893,6 +1893,31 @@ var ProjectController = function () {
     }
 
     /**
+     * Get the number of branch paths. This is assuming the node is a branch point.
+     * @param nodeId The node id of the branch point node.
+     * @return The number of branch paths for this branch point.
+     */
+
+  }, {
+    key: 'getNumberOfBranchPaths',
+    value: function getNumberOfBranchPaths(nodeId) {
+      return this.ProjectService.getNumberOfBranchPaths(nodeId);
+    }
+
+    /**
+     * Get the description of the branch criteria.
+     * @param nodeId The node id of the branch point node.
+     * @returns A human readable string describing how we will decide which
+     * branch path a student goes down.
+     */
+
+  }, {
+    key: 'getBranchCriteriaDescription',
+    value: function getBranchCriteriaDescription(nodeId) {
+      return this.ProjectService.getBranchCriteriaDescription(nodeId);
+    }
+
+    /**
      * Check if a node has a constraint.
      * @param nodeId The node id of the node.
      * @return Whether the node has a constraint authored on it.
@@ -1902,6 +1927,39 @@ var ProjectController = function () {
     key: 'nodeHasConstraint',
     value: function nodeHasConstraint(nodeId) {
       return this.ProjectService.nodeHasConstraint(nodeId);
+    }
+
+    /**
+     * Get the number of constraints authored on a node.
+     * @param nodeId The node id of the node.
+     * @return The number of constraints authored on a node.
+     */
+
+  }, {
+    key: 'getNumberOfConstraintsOnNode',
+    value: function getNumberOfConstraintsOnNode(nodeId) {
+      var constraints = this.ProjectService.getConstraintsOnNode(nodeId);
+      return constraints.length;
+    }
+
+    /**
+     * Get the description of the constraints authored on the given step.
+     * @param nodeId The node id.
+     * @return A human readable string containing the description of the
+     * constraints authored on the given step.
+     */
+
+  }, {
+    key: 'getConstraintDescriptions',
+    value: function getConstraintDescriptions(nodeId) {
+      var constraintDescriptions = '';
+      var constraints = this.ProjectService.getConstraintsOnNode(nodeId);
+      for (var c = 0; c < constraints.length; c++) {
+        var constraint = constraints[c];
+        var description = this.ProjectService.getConstraintDescription(constraint);
+        constraintDescriptions += c + 1 + ' - ' + description + '\n';
+      }
+      return constraintDescriptions;
     }
 
     /**

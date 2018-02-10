@@ -501,7 +501,7 @@ var NodeAuthoringController = function () {
                       }
 
                       // get the choices from the component
-                      var choices = this.getChoicesByNodeIdAndComponentId(this.createBranchNodeId, this.createBranchComponentId);
+                      var choices = this.ProjectService.getChoicesByNodeIdAndComponentId(this.createBranchNodeId, this.createBranchComponentId);
 
                       if (choices != null) {
                         // set the choices into the branch object
@@ -1150,12 +1150,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'getChoicesByNodeIdAndComponentId',
     value: function getChoicesByNodeIdAndComponentId(nodeId, componentId) {
-      var choices = [];
-      var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-      if (component != null && component.choices != null) {
-        choices = component.choices;
-      }
-      return choices;
+      return this.ProjectService.getChoicesByNodeIdAndComponentId(nodeId, componentId);
     }
 
     /**

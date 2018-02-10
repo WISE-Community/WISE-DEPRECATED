@@ -94,6 +94,10 @@
           .projectItemTitleDiv {
             width: 100%;
           }
+          .md-tooltip {
+            height: auto !important;
+            white-space: pre-line;
+          }
         </style>
         <div ng-if="projectController.$state.current.name == 'root.project'">  <!-- show this only when we're in the project view -->
           <div style='background-color: white; margin-bottom: 15px; position: sticky; top: 17px; z-index: 2;'>
@@ -436,8 +440,9 @@
                     <p style='display:inline; cursor:pointer;'
                       ng-if='item.order!==0 && !projectController.isGroupNode(item.$key)'>
                       {{projectController.getNodePositionById(item.$key)}}: {{projectController.getNodeTitleByNodeId(item.$key)}}
-                      <span><md-icon ng-if='projectController.isBranchPoint(item.$key)' style='transform: rotate(180deg);'>call_split</md-icon><md-tooltip md-direction='right'>{{ 'branchPoint' | translate }}</md-tooltip></span>
-                      <span><md-icon ng-if='projectController.nodeHasConstraint(item.$key)'>block</md-icon><md-tooltip md-direction='right'>{{ 'hasConstraint' | translate }}</md-tooltip></span>
+                      <span><md-icon ng-if='projectController.isBranchPoint(item.$key)' style='transform: rotate(180deg);'>call_split</md-icon><md-tooltip md-direction='right'>{{ 'branchPointTooltip' | translate : '{ numberOfBranchPaths: ' + projectController.getNumberOfBranchPaths(item.$key) + ', branchCriteria: "' + projectController.getBranchCriteriaDescription(item.$key) + '"}'}}</md-tooltip></span>
+                      <span><md-icon ng-if='projectController.nodeHasConstraint(item.$key) && projectController.getNumberOfConstraintsOnNode(item.$key) == 1'>block</md-icon><md-tooltip md-direction='right'>{{ projectController.getNumberOfConstraintsOnNode(item.$key) }} {{ 'constraint' | translate }}<br/>{{ projectController.getConstraintDescriptions(item.$key) }}</md-tooltip></span>
+                      <span><md-icon ng-if='projectController.nodeHasConstraint(item.$key) && projectController.getNumberOfConstraintsOnNode(item.$key) > 1'>block</md-icon><md-tooltip md-direction='right'>{{ projectController.getNumberOfConstraintsOnNode(item.$key) }} {{ 'constraints' | translate }}<br/>{{ projectController.getConstraintDescriptions(item.$key) }}</md-tooltip></span>
                       <span><md-icon ng-if='projectController.nodeHasRubric(item.$key)'>message</md-icon><md-tooltip md-direction='right'>{{ 'hasRubric' | translate }}</md-tooltip></span>
                     </p>
                   </div>
