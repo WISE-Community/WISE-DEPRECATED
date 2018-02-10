@@ -4951,6 +4951,55 @@ class ProjectService {
   }
 
   /**
+   * Get the human readable description of the constraint.
+   * @param constraint The constraint object.
+   * @returns A human readable text string that describes the constraint.
+   * example
+   * 'All steps after this one will not be visitable until the student completes "3.7 Revise Your Bowls Explanation"'
+   */
+  getConstraintDescription(constraint) {
+    let message = '';
+    let action = constraint.action;
+    let actionMessage = this.getActionMessage(action);
+    for (let singleRemovalCriteria of constraint.removalCriteria) {
+      if (message != '') {
+        // this constraint has multiple removal criteria
+        if (constraint.removalConditional == 'any') {
+          message += ' or ';
+        } else if (constraint.removalConditional == 'all') {
+          message += ' and ';
+        }
+      }
+      message += this.getCriteriaMessage(singleRemovalCriteria);
+    }
+    message = actionMessage + message;
+    return message;
+  }
+
+  /**
+   * Get the constraint action as human readable text.
+   * @param action A constraint action.
+   * @return A human readable text string that describes the action
+   * example
+   * 'All steps after this one will not be visitable until '
+   */
+  getActionMessage(action) {
+    if (action == 'makeAllNodesAfterThisNotVisitable') {
+      return this.$translate('allStepsAfterThisOneWillNotBeVisitableUntil');
+    } else if (action == 'makeAllNodesAfterThisNotVisible') {
+      return this.$translate('allStepsAfterThisOneWillNotBeVisibleUntil');
+    } else if (action == 'makeAllOtherNodesNotVisitable') {
+      return this.$translate('allOtherStepsWillNotBeVisitableUntil');
+    } else if (action == 'makeAllOtherNodesNotVisible') {
+      return this.$translate('allOtherStepsWillNotBeVisibleUntil');
+    } else if (action == 'makeThisNodeNotVisitable') {
+      return this.$translate('thisStepWillNotBeVisitableUntil');
+    } else if (action == 'makeThisNodeNotVisible') {
+      return this.$translate('thisStepWillNotBeVisibleUntil');
+    }
+  }
+
+  /**
    * Get the message that describes how to satisfy the criteria
    * TODO: check if the criteria is satisfied
    * @param criteria the criteria object that needs to be satisfied
@@ -5000,7 +5049,13 @@ class ProjectService {
         // generate the message
         message += this.$translate('obtainAScoreOfXOnNodeTitle', { score: scoresString, nodeTitle: nodeTitle });
       } else if (name === 'choiceChosen') {
-
+        const nodeId = params.nodeId;
+        const componentId = params.componentId;
+        const choiceIds = params.choiceIds;
+        let nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+        let choices = this.getChoiceTextByNodeIdAndComponentId(nodeId, componentId, choiceIds);
+        let choiceText = choices.join(', ');
+        message += this.$translate('chooseChoiceOnNodeTitle', { choiceText: choiceText, nodeTitle: nodeTitle });
       } else if (name === 'usedXSubmits') {
         const nodeId = params.nodeId;
         let nodeTitle = '';
@@ -5020,7 +5075,11 @@ class ProjectService {
           message += this.$translate('submitXTimesOnNodeTitle', { requiredSubmitCount: requiredSubmitCount, nodeTitle: nodeTitle });
         }
       } else if (name === 'branchPathTaken') {
-
+        const fromNodeId = params.fromNodeId;
+        const fromNodeTitle = this.getNodePositionAndTitleByNodeId(fromNodeId);
+        const toNodeId = params.toNodeId;
+        const toNodeTitle = this.getNodePositionAndTitleByNodeId(toNodeId);
+        message += this.$translate('branchPathTakenFromTo', { fromNodeTitle: fromNodeTitle, toNodeTitle: toNodeTitle });
       } else if (name === 'isPlanningActivityCompleted') {
         const nodeId = params.nodeId;
         if (nodeId != null) {
@@ -5035,9 +5094,54 @@ class ProjectService {
           message += this.$translate('writeXNumberOfWordsOnNodeTitle',
               { requiredNumberOfWords: requiredNumberOfWords, nodeTitle: nodeTitle });
         }
+      } else if (name === 'isVisible') {
+        const nodeId = params.nodeId;
+        if (nodeId != null) {
+          const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+          message += this.$translate('nodeTitleIsVisible', { nodeTitle: nodeTitle });
+        }
+      } else if (name === 'isVisitable') {
+        const nodeId = params.nodeId;
+        if (nodeId != null) {
+          const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+          message += this.$translate('nodeTitleIsVisitable', { nodeTitle: nodeTitle });
+        }
       }
     }
     return message;
+  }
+
+  /**
+   * Get the choices of a Multiple Choice component.
+   * @param nodeId The node id.
+   * @param componentId The component id.
+   * @return The choices from the component.
+   */
+  getChoicesByNodeIdAndComponentId(nodeId, componentId) {
+    let choices = [];
+    let component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
+    if (component != null && component.choices != null) {
+      choices = component.choices;
+    }
+    return choices;
+  }
+
+  /**
+   * Get the choice text for the given choice ids of a multiple choice component.
+   * @param nodeId The node id of the component.
+   * @param componentId The component id of the component.
+   * @param choiceIds An array of choice ids.
+   * @return An array of choice text strings.
+   */
+  getChoiceTextByNodeIdAndComponentId(nodeId, componentId, choiceIds) {
+    let choices = this.getChoicesByNodeIdAndComponentId(nodeId, componentId);
+    let choicesText = [];
+    for (let choice of choices) {
+      if (choiceIds.indexOf(choice.id) != -1) {
+        choicesText.push(choice.text);
+      }
+    }
+    return choicesText;
   }
 
   /**
@@ -7284,6 +7388,54 @@ class ProjectService {
       }
     }
     return false;
+  }
+
+  /**
+   * Get the number of branch paths. This is assuming the node is a branch point.
+   * @param nodeId The node id of the branch point node.
+   * @return The number of branch paths for this branch point.
+   */
+  getNumberOfBranchPaths(nodeId) {
+    let transitions = this.getTransitionsByFromNodeId(nodeId);
+    if (transitions != null) {
+      return transitions.length;
+    }
+    return 0;
+  }
+
+  /**
+   * If this step is a branch point, we will return the criteria that is used
+   * to determine which path the student gets assigned to.
+   * @param nodeId The node id of the branch point.
+   * @returns A human readable string containing the criteria of how students
+   * are assigned branch paths on this branch point.
+   */
+  getBranchCriteriaDescription(nodeId) {
+    let transitionLogic = this.getTransitionLogicByFromNodeId(nodeId);
+    let transitions = transitionLogic.transitions;
+
+    // Loop through the transitions to try to find a transition criteria
+    for (let transition of transitions) {
+      if (transition.criteria != null && transition.criteria.length > 0) {
+        for (let singleCriteria of transition.criteria) {
+          if (singleCriteria.name == 'choiceChosen') {
+            return 'multiple choice';
+          } else if (singleCriteria.name == 'score') {
+            return 'score';
+          }
+        }
+      }
+    }
+
+    /*
+     * None of the transitions had a specific criteria so the branching is just
+     * based on the howToChooseAmongAvailablePaths field.
+     */
+    if (transitionLogic.howToChooseAmongAvailablePaths == 'workgroupId') {
+      return 'workgroup ID';
+    } else if (transitionLogic.howToChooseAmongAvailablePaths == 'random') {
+      return 'random assignment';
+    }
   }
 
   /**
