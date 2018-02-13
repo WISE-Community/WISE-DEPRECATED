@@ -1335,24 +1335,42 @@ class ProjectService {
     if (toNodeId != null) {
       const nodes = this.project.nodes;
       for (let node of nodes) {
-        const transitionLogic = node.transitionLogic;
-        if (transitionLogic != null) {
-          const transitions = transitionLogic.transitions;
-          if (transitions != null) {
-            for (let transition of transitions) {
-              if (transition != null) {
-                if (toNodeId === transition.to) {
-                  // this node has a transition to the node id
-                  nodesByToNodeId.push(node);
-                }
-              }
-            }
-          }
+        if (this.nodeHasTransitionToNodeId(node, toNodeId)) {
+          nodesByToNodeId.push(node);
+        }
+      }
+      const inactiveNodes = this.getInactiveNodes();
+      for (let inactiveNode of inactiveNodes) {
+        if (this.nodeHasTransitionToNodeId(inactiveNode, toNodeId)) {
+          nodesByToNodeId.push(inactiveNode);
         }
       }
     }
     return nodesByToNodeId;
   };
+
+  /**
+   * Check if a node has a transition to the given nodeId.
+   * @param node The node to check.
+   * @param toNodeId We are looking for a transition to this node id.
+   * @returns Whether the node has a transition to the given nodeId.
+   */
+  nodeHasTransitionToNodeId(node, toNodeId) {
+    const transitionLogic = node.transitionLogic;
+    if (transitionLogic != null) {
+      const transitions = transitionLogic.transitions;
+      if (transitions != null) {
+        for (let transition of transitions) {
+          if (transition != null) {
+            if (toNodeId === transition.to) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
 
   /**
    * Get node ids of all the nodes that have a to transition to the given node id
@@ -4125,57 +4143,66 @@ class ProjectService {
    * @param nodeId the node id to remove
    */
   removeNodeIdFromGroups(nodeId) {
-    const groups = this.groupNodes;
-    if (groups != null) {
-      for (let group of groups) {
-        if (group != null) {
-          const startId = group.startId;
-          const ids = group.ids;
-          for (let i = 0; i < ids.length; i++) {
-            const id = ids[i];
-            if (nodeId === id) {
-              ids.splice(i, 1);
+    const groups = this.getGroupNodes();
+    for (let group of groups) {
+      this.removeNodeIdFromGroup(group, nodeId);
+    }
+    const inactiveGroups = this.getInactiveGroupNodes();
+    for (let inactiveGroup of inactiveGroups) {
+      this.removeNodeIdFromGroup(inactiveGroup, nodeId);
+    }
+  }
 
-              if (nodeId === startId) {
-                /*
-                 * the node id is also the start id so we will get the
-                 * next node id and set it as the new start id
-                 */
+  /**
+   * Remove a node id from a group.
+   * @param group The group to remove from.
+   * @param nodeId The node id to remove.
+   */
+  removeNodeIdFromGroup(group, nodeId) {
+    const startId = group.startId;
+    const ids = group.ids;
+    for (let i = 0; i < ids.length; i++) {
+      const id = ids[i];
+      if (nodeId === id) {
+        ids.splice(i, 1);
 
-                let hasSetNewStartId = false;
+        if (nodeId === startId) {
+          /*
+           * the node id is also the start id so we will get the
+           * next node id and set it as the new start id
+           */
 
-                const node = this.getNodeById(id);
+          let hasSetNewStartId = false;
 
-                if (node != null) {
-                  const transitionLogic = node.transitionLogic;
-                  if (transitionLogic != null) {
-                    const transitions = transitionLogic.transitions;
-                    if (transitions != null && transitions.length > 0) {
-                      // get the first transition
-                      // TODO handle the case when the node we are removing is a branch point
-                      const transition = transitions[0];
+          const node = this.getNodeById(id);
 
-                      if (transition != null) {
-                        const to = transition.to;
+          if (node != null) {
+            const transitionLogic = node.transitionLogic;
+            if (transitionLogic != null) {
+              const transitions = transitionLogic.transitions;
+              if (transitions != null && transitions.length > 0) {
+                // get the first transition
+                // TODO handle the case when the node we are removing is a branch point
+                const transition = transitions[0];
 
-                        if (to != null) {
-                          group.startId = to;
-                          hasSetNewStartId = true;
-                        }
-                      }
-                    }
+                if (transition != null) {
+                  const to = transition.to;
+
+                  if (to != null) {
+                    group.startId = to;
+                    hasSetNewStartId = true;
                   }
-                }
-
-                if (!hasSetNewStartId) {
-                  /*
-                   * the node we are removing did not have a transition
-                   * so there will be no start id
-                   */
-                  group.startId = '';
                 }
               }
             }
+          }
+
+          if (!hasSetNewStartId) {
+            /*
+             * the node we are removing did not have a transition
+             * so there will be no start id
+             */
+            group.startId = '';
           }
         }
       }
