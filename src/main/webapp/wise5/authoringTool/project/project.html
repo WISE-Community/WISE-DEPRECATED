@@ -448,10 +448,10 @@
                         ng-if='projectController.isGroupNode(item.$key) && ((projectController.insertNodeMode && item.order!==0) || (projectController.insertGroupMode && item.order==0))'
                         ng-click='projectController.insertInside(item.$key); $event.stopPropagation();'>
                       <md-icon>call_received</md-icon>
-                      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'insertAsFirstStep' | translate }}</md-tooltip>
+                      <md-tooltip ng-if='item.order !== 0' md-direction='top' class='projectButtonTooltip'>{{ 'insertAsFirstStep' | translate }}</md-tooltip>
+                      <md-tooltip ng-if='item.order === 0' md-direction='top' class='projectButtonTooltip'>{{ 'insertAsFirstActivity' | translate }}</md-tooltip>
                     </md-button>
-                    <md-button class='insertButton md-raised md-primary' ng-if='(projectController.insertNodeMode && !projectController.isGroupNode(item.$key)) || (projectController.insertGroupMode && projectController.isGroupNode(item.$key))'
-                         ng-if='item.order!==0'
+                    <md-button class='insertButton md-raised md-primary' ng-if='item.order !== 0 && ((projectController.insertNodeMode && !projectController.isGroupNode(item.$key)) || (projectController.insertGroupMode && projectController.isGroupNode(item.$key)))'
                          ng-click='projectController.insertAfter(item.$key); $event.stopPropagation();'>
                       <md-icon>subdirectory_arrow_left</md-icon>
                       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'insertAfter' | translate }}</md-tooltip>

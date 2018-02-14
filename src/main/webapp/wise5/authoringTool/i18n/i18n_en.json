@@ -142,6 +142,7 @@
     "importWork": "Import Work",
     "insertAfter": "Insert After",
     "insertAsFirstComponent": "Insert As First Component",
+    "insertAsFirstActivity": "Insert As First Activity",
     "insertAsFirstStep": "Insert As First Step",
     "insertInside": "Insert Inside",
     "isCompleted": "Is Completed",
