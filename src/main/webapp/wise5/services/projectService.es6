@@ -3601,6 +3601,8 @@ class ProjectService {
       } else if (!movingNodeIsActive && !stationaryNodeIsActive) {
         // we are moving from inactive to inactive
 
+        this.removeNodeIdFromTransitions(tempNodeId);
+        this.removeNodeIdFromGroups(tempNodeId);
         this.moveInactiveNode(tempNode, nodeId);
       }
 
@@ -6120,6 +6122,11 @@ class ProjectService {
             if (inactiveNode != null) {
               if (nodeIdToInsertAfter === inactiveNode.id) {
                 // we have found the position to place the node
+                let parentGroup = this.getParentGroup(nodeIdToInsertAfter);
+                if (parentGroup != null) {
+                  this.insertNodeAfterInGroups(node.id, nodeIdToInsertAfter);
+                  this.insertNodeAfterInTransitions(node, nodeIdToInsertAfter);
+                }
                 inactiveNodes.splice(i + 1, 0, node);
                 added = true;
               }

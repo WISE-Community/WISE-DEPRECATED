@@ -5476,6 +5476,8 @@ var ProjectService = function () {
         } else if (!movingNodeIsActive && !stationaryNodeIsActive) {
           // we are moving from inactive to inactive
 
+          this.removeNodeIdFromTransitions(tempNodeId);
+          this.removeNodeIdFromGroups(tempNodeId);
           this.moveInactiveNode(tempNode, nodeId);
         }
 
@@ -9114,6 +9116,11 @@ var ProjectService = function () {
               if (_inactiveNode != null) {
                 if (nodeIdToInsertAfter === _inactiveNode.id) {
                   // we have found the position to place the node
+                  var parentGroup = this.getParentGroup(nodeIdToInsertAfter);
+                  if (parentGroup != null) {
+                    this.insertNodeAfterInGroups(node.id, nodeIdToInsertAfter);
+                    this.insertNodeAfterInTransitions(node, nodeIdToInsertAfter);
+                  }
                   inactiveNodes.splice(_i + 1, 0, node);
                   added = true;
                 }
