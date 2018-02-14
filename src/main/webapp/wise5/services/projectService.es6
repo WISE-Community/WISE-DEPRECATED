@@ -6069,6 +6069,25 @@ class ProjectService {
   moveFromInactiveToInactiveInsertInside(node, nodeIdToInsertInside) {
     this.removeNodeFromInactiveNodes(node.id);
 
+    if (this.isGroupNode(node.id)) {
+      /*
+       * remove the group's child nodes from our data structures so that we can
+       * add them back in later
+       */
+      let childIds = node.ids;
+      for (let childId of childIds) {
+        let childNode = this.getNodeById(childId);
+        let inactiveNodesIndex = this.project.inactiveNodes.indexOf(childNode);
+        if (inactiveNodesIndex != -1) {
+          this.project.inactiveNodes.splice(inactiveNodesIndex, 1);
+        }
+        let inactiveStepNodesIndex = this.inactiveStepNodes.indexOf(childNode);
+        if (inactiveStepNodesIndex != -1) {
+          this.inactiveStepNodes.splice(inactiveStepNodesIndex, 1);
+        }
+      }
+    }
+
     // add the node to the inactive array
     this.addInactiveNodeInsertInside(node, nodeIdToInsertInside);
   }
