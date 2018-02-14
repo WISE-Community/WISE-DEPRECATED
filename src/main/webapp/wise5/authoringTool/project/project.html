@@ -498,13 +498,13 @@
                     </div>
                     <div layout='row'>
                       <md-button class='insertButton md-raised md-primary'
-                                 ng-if='(projectController.insertNodeMode && projectController.isGroupNode(inactiveNode.id))'
+                                 ng-if='projectController.insertNodeMode'
                                  ng-click='projectController.insertInside(inactiveNode.id); $event.stopPropagation();'>
                         <md-icon>call_received</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'insertAfter' | translate }}</md-tooltip>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'insertInside' | translate }}</md-tooltip>
                       </md-button>
                       <md-button class='insertButton md-raised md-primary'
-                          ng-if='(projectController.insertNodeMode && !projectController.isGroupNode(inactiveNode.id))'
+                          ng-if='projectController.insertGroupMode'
                           ng-click='projectController.insertAfter(inactiveNode.id); $event.stopPropagation();'>
                         <md-icon>subdirectory_arrow_left</md-icon>
                         <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'insertAfter' | translate }}</md-tooltip>
