@@ -4296,10 +4296,16 @@ var ProjectService = function () {
         this.setIdToNode(node.id, node);
         this.setIdToElement(node.id, node);
       } else {
-        this.addNode(node);
+        if (this.isInactive(nodeId)) {
+          // we are creating an inactive node
+          this.addInactiveNodeInsertInside(node, nodeId);
+        } else {
+          // we are creating an active node
+          this.addNode(node);
+          this.insertNodeInsideInTransitions(node.id, nodeId);
+          this.insertNodeInsideInGroups(node.id, nodeId);
+        }
         this.setIdToNode(node.id, node);
-        this.insertNodeInsideInTransitions(node.id, nodeId);
-        this.insertNodeInsideInGroups(node.id, nodeId);
       }
     }
 

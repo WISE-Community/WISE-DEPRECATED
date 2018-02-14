@@ -1145,6 +1145,7 @@ var ProjectController = function () {
       this.inactiveGroupNodes = this.ProjectService.getInactiveGroupNodes();
       this.inactiveStepNodes = this.ProjectService.getInactiveStepNodes();
       this.inactiveNodes = this.ProjectService.getInactiveNodes();
+      this.idToNode = this.ProjectService.getIdToNode();
       this.unselectAllItems();
     }
 
