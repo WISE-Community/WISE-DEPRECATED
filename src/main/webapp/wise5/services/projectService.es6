@@ -2959,19 +2959,39 @@ class ProjectService {
     if (groupNodes != null) {
       for (let group of groupNodes) {
         if (group != null) {
-          const ids = group.ids;
-          if (ids != null) {
-            for (let i = 0; i < ids.length; i++) {
-              const id = ids[i];
-              if (nodeIdToInsertAfter === id) {
-                ids.splice(i + 1, 0, nodeIdToInsert);
-                return;
-              }
-            }
-          }
+          this.insertNodeAfterInGroup(group, nodeIdToInsert, nodeIdToInsertAfter);
         }
       }
     }
+    const inactiveGroupNodes = this.getInactiveGroupNodes();
+    if (inactiveGroupNodes != null) {
+      for (let inactiveGroup of inactiveGroupNodes) {
+        if (inactiveGroup != null) {
+          this.insertNodeAfterInGroup(inactiveGroup, nodeIdToInsert, nodeIdToInsertAfter);
+        }
+      }
+    }
+  }
+
+  /**
+   * Insert a node id in a group after another specific node id.
+   * @param group A group object.
+   * @param nodeIdToInsert The node id to insert.
+   * @param nodeIdToInsertAfter The node id to insert after.
+   * @returns {boolean} Whether we inserted the node id.
+   */
+  insertNodeAfterInGroup(group, nodeIdToInsert, nodeIdToInsertAfter) {
+    const ids = group.ids;
+    if (ids != null) {
+      for (let i = 0; i < ids.length; i++) {
+        const id = ids[i];
+        if (nodeIdToInsertAfter === id) {
+          ids.splice(i + 1, 0, nodeIdToInsert);
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /**
@@ -6019,6 +6039,11 @@ class ProjectService {
             const inactiveNode = inactiveNodes[i];
             if (inactiveNode != null) {
               if (nodeIdToInsertAfter === inactiveNode.id) {
+                let parentGroup = this.getParentGroup(nodeIdToInsertAfter);
+                if (parentGroup != null) {
+                  this.insertNodeAfterInGroups(node.id, nodeIdToInsertAfter);
+                  this.insertNodeAfterInTransitions(node, nodeIdToInsertAfter);
+                }
                 // we have found the position to place the node
                 inactiveNodes.splice(i + 1, 0, node);
                 added = true;
