@@ -172,6 +172,10 @@ var ProjectController = function () {
       _this.refreshProject();
     });
 
+    this.$rootScope.$on('scrollToBottom', function () {
+      _this.scrollToBottomOfPage();
+    });
+
     this.saveEvent('projectOpened', 'Navigation');
   }
 
@@ -1589,6 +1593,13 @@ var ProjectController = function () {
     value: function scrollToTopOfPage() {
       this.$anchorScroll('top');
     }
+  }, {
+    key: 'scrollToBottomOfPage',
+    value: function scrollToBottomOfPage() {
+      $('#content').animate({
+        scrollTop: $('#bottom').prop('offsetTop')
+      }, 1000);
+    }
 
     /**
      * Creating a group was cancelled, so show the project regular project view
@@ -1635,24 +1646,7 @@ var ProjectController = function () {
               var newNode = _step8.value;
 
               if (newNode != null) {
-                (function () {
-                  var nodeElement = $('#' + newNode.id);
-                  var originalBackgroundColor = nodeElement.css('backgroundColor');
-                  nodeElement.css('background-color', '#FFFF9C');
-
-                  /*
-                   * Use a timeout before starting to transition back to
-                   * the original background color. For some reason the
-                   * element won't get highlighted in the first place
-                   * unless this timeout is used.
-                   */
-                  _this12.$timeout(function () {
-                    nodeElement.css({
-                      'transition': 'background-color 3s ease-in-out',
-                      'background-color': originalBackgroundColor
-                    });
-                  });
-                })();
+                _this12.UtilService.temporarilyHighlightElement(newNode.id);
               }
             }
           } catch (err) {

@@ -417,12 +417,13 @@
       <div>
         <label class='node__label--vertical-alignment'>{{ 'addConstraint' | translate }}</label>
         <md-button class='topButton md-raised md-primary'
-                   ng-click='nodeAuthoringController.addConstraint()'>
+                   ng-click='nodeAuthoringController.addConstraintAndScrollToBottom()'>
           <md-icon>add</md-icon>
           <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'addConstraint' | translate }}</md-tooltip>
         </md-button>
       </div>
-      <div ng-repeat='constraint in nodeAuthoringController.node.constraints track by $index'
+      <div id={{constraint.id}}
+           ng-repeat='constraint in nodeAuthoringController.node.constraints track by $index'
            style="border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 10px 20px 10px 20px;">
         <b>{{ 'constraint' | translate }} {{ $index + 1 }}</b>
         <md-button class='topButton md-raised md-primary'
@@ -607,10 +608,10 @@
           </md-button>
         </div>
       </div>
-      <div>
-        <label class='node__label--vertical-alignment'>{{ 'constraints' | translate }}</label>
+      <div ng-if="nodeAuthoringController.node.constraints.length > 0">
+        <label class='node__label--vertical-alignment'>{{ 'addConstraint' | translate }}</label>
         <md-button class='topButton md-raised md-primary'
-                   ng-click='nodeAuthoringController.addConstraint()'>
+                   ng-click='nodeAuthoringController.addConstraintAndScrollToBottom()'>
           <md-icon>add</md-icon>
           <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'addConstraint' | translate }}</md-tooltip>
         </md-button>

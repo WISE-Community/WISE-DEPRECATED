@@ -4,10 +4,12 @@ class UtilService {
   constructor(
       $filter,
       $injector,
-      $rootScope) {
+      $rootScope,
+      $timeout) {
     this.$filter = $filter;
     this.$injector = $injector;
     this.$rootScope = $rootScope;
+    this.$timeout = $timeout;
     this.componentTypeToLabel = {};
     this.$translate = this.$filter('translate');
   }
@@ -855,6 +857,43 @@ class UtilService {
     }
     return false;
   }
+
+  /**
+   * Temporarily highlight an element in the DOM.
+   * @param id The id of the element.
+   * @param duration The number of milliseconds to keep the element highlighted.
+   */
+  temporarilyHighlightElement(id, duration = 1000) {
+    let element = $('#' + id);
+    let originalBackgroundColor = element.css('backgroundColor');
+    element.css('background-color', '#FFFF9C');
+
+    /*
+     * Use a timeout before starting to transition back to
+     * the original background color. For some reason the
+     * element won't get highlighted in the first place
+     * unless this timeout is used.
+     */
+    this.$timeout(() => {
+      // slowly fade back to the original background color
+      element.css({
+        'transition': 'background-color 2s ease-in-out',
+        'background-color': originalBackgroundColor
+      });
+
+      /*
+       * remove these styling fields after we perform
+       * the fade otherwise the regular mouseover
+       * background color change will not work
+       */
+      this.$timeout(() => {
+        element.css({
+          'transition': '',
+          'background-color': ''
+        });
+      }, 2000);
+    }, duration);
+  }
 }
 
 // Get the last element of the array
@@ -867,7 +906,8 @@ if (!Array.prototype.last) {
 UtilService.$inject = [
   '$filter',
   '$injector',
-  '$rootScope'
+  '$rootScope',
+  '$timeout'
 ];
 
 export default UtilService;

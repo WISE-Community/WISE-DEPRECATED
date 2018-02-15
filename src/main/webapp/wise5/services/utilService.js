@@ -9,12 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var UtilService = function () {
-  function UtilService($filter, $injector, $rootScope) {
+  function UtilService($filter, $injector, $rootScope, $timeout) {
     _classCallCheck(this, UtilService);
 
     this.$filter = $filter;
     this.$injector = $injector;
     this.$rootScope = $rootScope;
+    this.$timeout = $timeout;
     this.componentTypeToLabel = {};
     this.$translate = this.$filter('translate');
   }
@@ -1120,6 +1121,50 @@ var UtilService = function () {
       }
       return false;
     }
+
+    /**
+     * Temporarily highlight an element in the DOM.
+     * @param id The id of the element.
+     * @param duration The number of milliseconds to keep the element highlighted.
+     */
+
+  }, {
+    key: 'temporarilyHighlightElement',
+    value: function temporarilyHighlightElement(id) {
+      var _this = this;
+
+      var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1000;
+
+      var element = $('#' + id);
+      var originalBackgroundColor = element.css('backgroundColor');
+      element.css('background-color', '#FFFF9C');
+
+      /*
+       * Use a timeout before starting to transition back to
+       * the original background color. For some reason the
+       * element won't get highlighted in the first place
+       * unless this timeout is used.
+       */
+      this.$timeout(function () {
+        // slowly fade back to the original background color
+        element.css({
+          'transition': 'background-color 2s ease-in-out',
+          'background-color': originalBackgroundColor
+        });
+
+        /*
+         * remove these styling fields after we perform
+         * the fade otherwise the regular mouseover
+         * background color change will not work
+         */
+        _this.$timeout(function () {
+          element.css({
+            'transition': '',
+            'background-color': ''
+          });
+        }, 2000);
+      }, duration);
+    }
   }]);
 
   return UtilService;
@@ -1134,7 +1179,7 @@ if (!Array.prototype.last) {
   };
 }
 
-UtilService.$inject = ['$filter', '$injector', '$rootScope'];
+UtilService.$inject = ['$filter', '$injector', '$rootScope', '$timeout'];
 
 exports.default = UtilService;
 //# sourceMappingURL=utilService.js.map

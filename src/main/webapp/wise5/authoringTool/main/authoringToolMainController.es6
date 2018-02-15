@@ -10,7 +10,8 @@ class AuthoringToolMainController {
       $timeout,
       ConfigService,
       ProjectService,
-      TeacherDataService) {
+      TeacherDataService,
+      UtilService) {
     this.$anchorScroll = $anchorScroll;
     this.$filter = $filter;
     this.$rootScope = $rootScope;
@@ -19,6 +20,7 @@ class AuthoringToolMainController {
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
     this.TeacherDataService = TeacherDataService;
+    this.UtilService = UtilService;
 
     this.$translate = this.$filter('translate');
     this.projects = this.ConfigService.getConfigParam('projects');
@@ -86,9 +88,8 @@ class AuthoringToolMainController {
           this.scrollToTopOfPage();
           // the timeout is necessary for new element to appear on the page
           this.$timeout(() => {
-            let newProjectElement = $('#' + projectId);
             let highlightDuration = 3000;
-            this.highlightElement(newProjectElement, highlightDuration);
+            this.UtilService.temporarilyHighlightElement(projectId, highlightDuration);
           });
         });
       });
@@ -105,43 +106,6 @@ class AuthoringToolMainController {
       if (createGroupTitleInput != null) {
         createGroupTitleInput.focus();
       }
-    });
-  }
-
-  /**
-   * Highlights the specified element in yellow for specified duration, used
-   * to draw user's attention to new changes.
-   * @param componentElement DOM element to highlight
-   * @param duration Number how long (in ms) to highlight
-   */
-  highlightElement(componentElement, duration) {
-    let originalBackgroundColor = componentElement.css('backgroundColor');
-    componentElement.css('background-color', '#FFFF9C');
-
-    /*
-     * Use a timeout before starting to transition back to
-     * the original background color. For some reason the
-     * element won't get highlighted in the first place
-     * unless this timeout is used.
-     */
-    this.$timeout(() => {
-      // slowly fade back to original background color
-      componentElement.css({
-        'transition': 'background-color 3s ease-in-out',
-        'background-color': originalBackgroundColor
-      });
-
-      /*
-       * remove these styling fields after we perform
-       * the fade otherwise the regular mouseover
-       * background color change will not work
-       */
-      this.$timeout(() => {
-        componentElement.css({
-          'transition': '',
-          'background-color': ''
-        });
-      }, duration);
     });
   }
 
@@ -226,7 +190,8 @@ AuthoringToolMainController.$inject = [
     '$timeout',
     'ConfigService',
     'ProjectService',
-    'TeacherDataService'
+    'TeacherDataService',
+    'UtilService'
 ];
 
 export default AuthoringToolMainController;

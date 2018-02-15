@@ -1132,7 +1132,8 @@ class NodeAuthoringController {
   }
 
   /**
-   * Add a constraint
+   * Add a new constraint.
+   * @return The id of the DOM element associated with the constraint.
    */
   addConstraint() {
     // get a new constraint id
@@ -1162,6 +1163,20 @@ class NodeAuthoringController {
     }
     this.node.constraints.push(constraint);
     this.ProjectService.saveProject();
+
+    return newNodeConstraintId;
+  }
+
+  /**
+   * Add a new constraint and then scroll to the bottom of the screen because
+   * that's where the new constraint will appear.
+   */
+  addConstraintAndScrollToBottom() {
+    let newNodeConstraintId = this.addConstraint();
+    this.$timeout(() => {
+      this.$rootScope.$broadcast('scrollToBottom');
+      this.UtilService.temporarilyHighlightElement(newNodeConstraintId);
+    });
   }
 
   /**
@@ -2959,23 +2974,7 @@ class NodeAuthoringController {
       if (newComponents != null) {
         for (let newComponent of newComponents) {
           if (newComponent != null) {
-            let componentElement = $('#' + newComponent.id);
-            let componentOriginalBackgroundColor = componentElement.css('backgroundColor');
-            componentElement.css('background-color', '#FFFF9C');
-
-            /*
-             * Use a timeout before starting to transition back to
-             * the original background color. For some reason the
-             * element won't get highlighted in the first place
-             * unless this timeout is used.
-             */
-            this.$timeout(() => {
-              // slowly fade back to original background color
-              componentElement.css({
-                'transition': 'background-color 2s ease-in-out',
-                'background-color': componentOriginalBackgroundColor
-              });
-            });
+            this.UtilService.temporarilyHighlightElement(newComponent.id);
           }
         }
       }

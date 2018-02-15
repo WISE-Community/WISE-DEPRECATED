@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthoringToolMainController = function () {
-  function AuthoringToolMainController($anchorScroll, $filter, $rootScope, $state, $timeout, ConfigService, ProjectService, TeacherDataService) {
+  function AuthoringToolMainController($anchorScroll, $filter, $rootScope, $state, $timeout, ConfigService, ProjectService, TeacherDataService, UtilService) {
     var _this = this;
 
     _classCallCheck(this, AuthoringToolMainController);
@@ -22,6 +22,7 @@ var AuthoringToolMainController = function () {
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
     this.TeacherDataService = TeacherDataService;
+    this.UtilService = UtilService;
 
     this.$translate = this.$filter('translate');
     this.projects = this.ConfigService.getConfigParam('projects');
@@ -139,9 +140,8 @@ var AuthoringToolMainController = function () {
             _this2.scrollToTopOfPage();
             // the timeout is necessary for new element to appear on the page
             _this2.$timeout(function () {
-              var newProjectElement = $('#' + projectId);
               var highlightDuration = 3000;
-              _this2.highlightElement(newProjectElement, highlightDuration);
+              _this2.UtilService.temporarilyHighlightElement(projectId, highlightDuration);
             });
           });
         });
@@ -163,55 +163,13 @@ var AuthoringToolMainController = function () {
     }
 
     /**
-     * Highlights the specified element in yellow for specified duration, used
-     * to draw user's attention to new changes.
-     * @param componentElement DOM element to highlight
-     * @param duration Number how long (in ms) to highlight
-     */
-
-  }, {
-    key: 'highlightElement',
-    value: function highlightElement(componentElement, duration) {
-      var _this3 = this;
-
-      var originalBackgroundColor = componentElement.css('backgroundColor');
-      componentElement.css('background-color', '#FFFF9C');
-
-      /*
-       * Use a timeout before starting to transition back to
-       * the original background color. For some reason the
-       * element won't get highlighted in the first place
-       * unless this timeout is used.
-       */
-      this.$timeout(function () {
-        // slowly fade back to original background color
-        componentElement.css({
-          'transition': 'background-color 3s ease-in-out',
-          'background-color': originalBackgroundColor
-        });
-
-        /*
-         * remove these styling fields after we perform
-         * the fade otherwise the regular mouseover
-         * background color change will not work
-         */
-        _this3.$timeout(function () {
-          componentElement.css({
-            'transition': '',
-            'background-color': ''
-          });
-        }, duration);
-      });
-    }
-
-    /**
      * Create a new project and open it
      */
 
   }, {
     key: 'registerNewProject',
     value: function registerNewProject() {
-      var _this4 = this;
+      var _this3 = this;
 
       var projectTitle = this.project.metadata.title;
       if (projectTitle == null || projectTitle == '') {
@@ -220,9 +178,9 @@ var AuthoringToolMainController = function () {
         var projectJSONString = angular.toJson(this.project, 4);
         var commitMessage = this.$translate('projectCreatedOn') + new Date().getTime();
         this.ProjectService.registerNewProject(projectJSONString, commitMessage).then(function (projectId) {
-          _this4.showCreateProjectView = false;
-          _this4.saveEvent('projectCreated', 'Authoring', null, projectId);
-          _this4.$state.go('root.project', { projectId: projectId });
+          _this3.showCreateProjectView = false;
+          _this3.saveEvent('projectCreated', 'Authoring', null, projectId);
+          _this3.$state.go('root.project', { projectId: projectId });
         });
       }
     }
@@ -298,7 +256,7 @@ var AuthoringToolMainController = function () {
 
 ;
 
-AuthoringToolMainController.$inject = ['$anchorScroll', '$filter', '$rootScope', '$state', '$timeout', 'ConfigService', 'ProjectService', 'TeacherDataService'];
+AuthoringToolMainController.$inject = ['$anchorScroll', '$filter', '$rootScope', '$state', '$timeout', 'ConfigService', 'ProjectService', 'TeacherDataService', 'UtilService'];
 
 exports.default = AuthoringToolMainController;
 //# sourceMappingURL=authoringToolMainController.js.map
