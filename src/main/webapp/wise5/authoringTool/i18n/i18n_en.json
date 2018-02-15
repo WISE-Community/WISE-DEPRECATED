@@ -221,6 +221,7 @@
     "requirements": "Requirements",
     "random": "Random",
     "removalConditional": "Removal Conditional",
+    "removalCriteria": "Removal Criteria",
     "removalCriteriaName": "Removal Criteria Name",
     "removeBranch": "Remove Branch",
     "requireTextOnEveryNote": "Require students to write text on every note",
