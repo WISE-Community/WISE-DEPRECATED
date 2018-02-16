@@ -89,6 +89,22 @@ var AuthoringToolController = function () {
         type: 'secondary',
         showToolbar: true,
         active: false
+      },
+      'root.project.nodeConstraints': {
+        name: '',
+        label: '',
+        icon: '',
+        type: 'secondary',
+        showToolbar: true,
+        active: false
+      },
+      'root.project.nodeEditPaths': {
+        name: '',
+        label: '',
+        icon: '',
+        type: 'secondary',
+        showToolbar: true,
+        active: false
       }
     };
 
@@ -222,7 +238,7 @@ var AuthoringToolController = function () {
       this.$anchorScroll('top');
 
       // set current view and whether to show the toolbars and step tools
-      this.showStepTools = this.$state.$current.name === 'root.project' || this.$state.$current.name === 'root.project.node';
+      this.showStepTools = this.$state.$current.name === 'root.project' || this.$state.$current.name === 'root.project.node' || this.$state.$current.name === 'root.project.nodeConstraints' || this.$state.$current.name === 'root.project.nodeEditPaths';
       var view = this.views[this.$state.$current.name];
       if (view) {
         this.currentViewName = view.name;

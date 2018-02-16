@@ -331,12 +331,38 @@ var ProjectController = function () {
       this.$state.go('root.project.node', { projectId: this.projectId, nodeId: nodeId });
     }
   }, {
-    key: 'createGroup',
+    key: 'constraintIconClicked',
 
+
+    /**
+     * The constraint icon on a step in the project view was clicked.
+     * We will open the constraint view for the step.
+     * @param nodeId The node id of the step.
+     */
+    value: function constraintIconClicked(nodeId) {
+      this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+      this.$state.go('root.project.nodeConstraints', { projectId: this.projectId, nodeId: nodeId });
+    }
+
+    /**
+     * The branch icon on a step in the project view was clicked.
+     * We will open the transitions view for the step.
+     * @param nodeId The node id of the step.
+     */
+
+  }, {
+    key: 'branchIconClicked',
+    value: function branchIconClicked(nodeId) {
+      this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+      this.$state.go('root.project.nodeEditPaths', { projectId: this.projectId, nodeId: nodeId });
+    }
 
     /**
      * Create a new group (activity)
      */
+
+  }, {
+    key: 'createGroup',
     value: function createGroup() {
       /*
        * set the group into this variable to hold it temporarily while the

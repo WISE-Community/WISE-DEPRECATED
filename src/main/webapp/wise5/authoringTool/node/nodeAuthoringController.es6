@@ -505,6 +505,24 @@ class NodeAuthoringController {
       this.authoringViewNodeChanged();
     });
 
+    if (this.$state.current.name == 'root.project.nodeConstraints') {
+      this.$timeout(() => {
+        this.nodeAuthoringViewButtonClicked('advanced');
+        this.$timeout(() => {
+          this.nodeAuthoringViewButtonClicked('editConstraints');
+        });
+      });
+    }
+
+    if (this.$state.current.name == 'root.project.nodeEditPaths') {
+      this.$timeout(() => {
+        this.nodeAuthoringViewButtonClicked('advanced');
+        this.$timeout(() => {
+          this.nodeAuthoringViewButtonClicked('editTransitions');
+        });
+      });
+    }
+
     this.scrollToTopOfPage();
 
     let data = {

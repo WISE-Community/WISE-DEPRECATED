@@ -329,6 +329,30 @@ class ProjectController {
   };
 
   /**
+   * The constraint icon on a step in the project view was clicked.
+   * We will open the constraint view for the step.
+   * @param nodeId The node id of the step.
+   */
+  constraintIconClicked(nodeId) {
+    this.TeacherDataService
+      .endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+    this.$state
+      .go('root.project.nodeConstraints', {projectId: this.projectId, nodeId: nodeId});
+  }
+
+  /**
+   * The branch icon on a step in the project view was clicked.
+   * We will open the transitions view for the step.
+   * @param nodeId The node id of the step.
+   */
+  branchIconClicked(nodeId) {
+    this.TeacherDataService
+      .endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+    this.$state
+      .go('root.project.nodeEditPaths', {projectId: this.projectId, nodeId: nodeId});
+  }
+
+  /**
    * Create a new group (activity)
    */
   createGroup() {

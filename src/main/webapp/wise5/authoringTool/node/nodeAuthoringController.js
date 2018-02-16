@@ -398,6 +398,24 @@ var NodeAuthoringController = function () {
       _this.authoringViewNodeChanged();
     });
 
+    if (this.$state.current.name == 'root.project.nodeConstraints') {
+      this.$timeout(function () {
+        _this.nodeAuthoringViewButtonClicked('advanced');
+        _this.$timeout(function () {
+          _this.nodeAuthoringViewButtonClicked('editConstraints');
+        });
+      });
+    }
+
+    if (this.$state.current.name == 'root.project.nodeEditPaths') {
+      this.$timeout(function () {
+        _this.nodeAuthoringViewButtonClicked('advanced');
+        _this.$timeout(function () {
+          _this.nodeAuthoringViewButtonClicked('editTransitions');
+        });
+      });
+    }
+
     this.scrollToTopOfPage();
 
     var data = {
