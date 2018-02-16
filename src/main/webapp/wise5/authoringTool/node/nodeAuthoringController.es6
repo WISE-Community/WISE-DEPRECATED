@@ -3264,6 +3264,9 @@ class NodeAuthoringController {
 
       // we are in the import view so we will go back to the node view
       this.nodeAuthoringViewButtonClicked();
+
+      this.$state
+        .go('root.project.node', {projectId: this.projectId, nodeId: this.nodeId});
     } else {
       // we are in the node view so we will go back to the project view
       this.close();
