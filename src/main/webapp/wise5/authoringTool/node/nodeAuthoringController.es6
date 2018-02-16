@@ -1184,17 +1184,20 @@ class NodeAuthoringController {
    * @param constraintIndex delete the constraint at the index
    */
   deleteConstraint(constraintIndex) {
-    if (constraintIndex != null) {
-      let node = this.ProjectService.getNodeById(this.nodeId);
-      if (node != null) {
-        let constraints = node.constraints;
-        if (constraints != null) {
-          // remove the constraint at the given index
-          constraints.splice(constraintIndex, 1);
+    let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConstraint'));
+    if (answer) {
+      if (constraintIndex != null) {
+        let node = this.ProjectService.getNodeById(this.nodeId);
+        if (node != null) {
+          let constraints = node.constraints;
+          if (constraints != null) {
+            // remove the constraint at the given index
+            constraints.splice(constraintIndex, 1);
+          }
         }
       }
+      this.ProjectService.saveProject();
     }
-    this.ProjectService.saveProject();
   }
 
   /**
@@ -1220,15 +1223,18 @@ class NodeAuthoringController {
    * @param removalCriteriaIndex the index of the removal criteria to remove
    */
   deleteRemovalCriteria(constraint, removalCriteriaIndex) {
-    if (constraint != null) {
-      // get all the removal criteria
-      let removalCriteria = constraint.removalCriteria;
-      if (removalCriteria != null) {
-        // remove the single removal criteria
-        removalCriteria.splice(removalCriteriaIndex, 1);
+    let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisRemovalCriteria'));
+    if (answer) {
+      if (constraint != null) {
+        // get all the removal criteria
+        let removalCriteria = constraint.removalCriteria;
+        if (removalCriteria != null) {
+          // remove the single removal criteria
+          removalCriteria.splice(removalCriteriaIndex, 1);
+        }
       }
+      this.ProjectService.saveProject();
     }
-    this.ProjectService.saveProject();
   }
 
   /**

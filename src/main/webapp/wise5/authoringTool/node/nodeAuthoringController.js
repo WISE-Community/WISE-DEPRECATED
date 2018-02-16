@@ -1301,17 +1301,20 @@ var NodeAuthoringController = function () {
   }, {
     key: 'deleteConstraint',
     value: function deleteConstraint(constraintIndex) {
-      if (constraintIndex != null) {
-        var node = this.ProjectService.getNodeById(this.nodeId);
-        if (node != null) {
-          var constraints = node.constraints;
-          if (constraints != null) {
-            // remove the constraint at the given index
-            constraints.splice(constraintIndex, 1);
+      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConstraint'));
+      if (answer) {
+        if (constraintIndex != null) {
+          var node = this.ProjectService.getNodeById(this.nodeId);
+          if (node != null) {
+            var constraints = node.constraints;
+            if (constraints != null) {
+              // remove the constraint at the given index
+              constraints.splice(constraintIndex, 1);
+            }
           }
         }
+        this.ProjectService.saveProject();
       }
-      this.ProjectService.saveProject();
     }
 
     /**
@@ -1343,15 +1346,18 @@ var NodeAuthoringController = function () {
   }, {
     key: 'deleteRemovalCriteria',
     value: function deleteRemovalCriteria(constraint, removalCriteriaIndex) {
-      if (constraint != null) {
-        // get all the removal criteria
-        var removalCriteria = constraint.removalCriteria;
-        if (removalCriteria != null) {
-          // remove the single removal criteria
-          removalCriteria.splice(removalCriteriaIndex, 1);
+      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisRemovalCriteria'));
+      if (answer) {
+        if (constraint != null) {
+          // get all the removal criteria
+          var removalCriteria = constraint.removalCriteria;
+          if (removalCriteria != null) {
+            // remove the single removal criteria
+            removalCriteria.splice(removalCriteriaIndex, 1);
+          }
         }
+        this.ProjectService.saveProject();
       }
-      this.ProjectService.saveProject();
     }
 
     /**
