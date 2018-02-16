@@ -115,7 +115,7 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           }
         ]
       },
@@ -125,11 +125,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           },
           {
-            value: "componentId",
-            text: this.$translate('componentID')
+            value: "component",
+            text: this.$translate('component')
           },
           {
             value: "scores",
@@ -143,11 +143,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "fromNodeId",
-            text: this.$translate('fromNodeID')
+            text: this.$translate('fromStep')
           },
           {
             value: "toNodeId",
-            text: this.$translate('toNodeID')
+            text: this.$translate('toStep')
           }
         ]
       },
@@ -157,11 +157,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           },
           {
             value: "componentId",
-            text: this.$translate('componentID')
+            text: this.$translate('component')
           },
           {
             value: "choiceIds",
@@ -175,11 +175,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           },
           {
             value: "componentId",
-            text: this.$translate('componentID')
+            text: this.$translate('component')
           }
         ]
       },
@@ -189,11 +189,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           },
           {
             value: "componentId",
-            text: this.$translate('componentID')
+            text: this.$translate('component')
           },
           {
             value: "requiredSubmitCount",
@@ -207,7 +207,7 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           }
         ]
       },
@@ -217,7 +217,7 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           }
         ]
       },
@@ -227,7 +227,7 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           }
         ]
       },
@@ -241,11 +241,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           },
           {
             value: "componentId",
-            text: this.$translate('componentID')
+            text: this.$translate('component')
           },
           {
             value: "requiredNumberOfWords",
@@ -1144,7 +1144,7 @@ class NodeAuthoringController {
       "id": newNodeConstraintId,
       "action": '',
       "targetId": this.nodeId,
-      "removalConditional": 'all',
+      "removalConditional": 'any',
       "removalCriteria": []
     };
 
@@ -1268,7 +1268,7 @@ class NodeAuthoringController {
           if (paramObject != null) {
             let value = paramObject.value;
 
-            // intialize the param value
+            // initialize the param value
             criteria.params[value] = '';
 
             if (value == 'nodeId') {
@@ -3369,6 +3369,23 @@ class NodeAuthoringController {
    */
   componentAdvancedButtonClicked(componentId) {
     this.$rootScope.$broadcast('componentAdvancedButtonClicked', { componentId: componentId });
+  }
+
+  /**
+   * A constraint removal criteria step has changed.
+   * @param criteria The removal criteria object.
+   */
+  authoringViewConstraintRemovalCriteriaNodeIdChanged(criteria) {
+    criteria.params.componentId = '';
+    this.authoringViewNodeChanged();
+  }
+
+  /**
+   * A constraint removal criteria component has changed.
+   * @param criteria The removal criteria object.
+   */
+  authoringViewConstraintRemovalCriteriaComponentIdChanged(criteria) {
+    this.authoringViewNodeChanged();
   }
 }
 

@@ -94,17 +94,17 @@ var NodeAuthoringController = function () {
       text: this.$translate('isCompleted'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }]
     }, {
       value: "score",
       text: this.$translate('SCORE'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }, {
-        value: "componentId",
-        text: this.$translate('componentID')
+        value: "component",
+        text: this.$translate('component')
       }, {
         value: "scores",
         text: this.$translate('scoresParens')
@@ -114,20 +114,20 @@ var NodeAuthoringController = function () {
       text: this.$translate('branchPathTaken'),
       params: [{
         value: "fromNodeId",
-        text: this.$translate('fromNodeID')
+        text: this.$translate('fromStep')
       }, {
         value: "toNodeId",
-        text: this.$translate('toNodeID')
+        text: this.$translate('toStep')
       }]
     }, {
       value: "choiceChosen",
       text: this.$translate('choiceChosen'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }, {
         value: "componentId",
-        text: this.$translate('componentID')
+        text: this.$translate('component')
       }, {
         value: "choiceIds",
         text: this.$translate('choices')
@@ -137,20 +137,20 @@ var NodeAuthoringController = function () {
       text: this.$translate('IS_CORRECT'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }, {
         value: "componentId",
-        text: this.$translate('componentID')
+        text: this.$translate('component')
       }]
     }, {
       value: "usedXSubmits",
       text: this.$translate('usedXSubmits'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }, {
         value: "componentId",
-        text: this.$translate('componentID')
+        text: this.$translate('component')
       }, {
         value: "requiredSubmitCount",
         text: this.$translate('requiredSubmitCount')
@@ -160,21 +160,21 @@ var NodeAuthoringController = function () {
       text: this.$translate('isVisible'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }]
     }, {
       value: "isVisitable",
       text: this.$translate('isVisitable'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }]
     }, {
       value: "isVisited",
       text: this.$translate('isVisited'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }]
     }, {
       value: "isPlanningActivityCompleted",
@@ -184,10 +184,10 @@ var NodeAuthoringController = function () {
       text: this.$translate('wroteXNumberOfWords'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }, {
         value: "componentId",
-        text: this.$translate('componentID')
+        text: this.$translate('component')
       }, {
         value: "requiredNumberOfWords",
         text: this.$translate('requiredNumberOfWords')
@@ -1253,7 +1253,7 @@ var NodeAuthoringController = function () {
         "id": newNodeConstraintId,
         "action": '',
         "targetId": this.nodeId,
-        "removalConditional": 'all',
+        "removalConditional": 'any',
         "removalCriteria": []
       };
 
@@ -1404,7 +1404,7 @@ var NodeAuthoringController = function () {
               if (paramObject != null) {
                 var value = paramObject.value;
 
-                // intialize the param value
+                // initialize the param value
                 criteria.params[value] = '';
 
                 if (value == 'nodeId') {
@@ -3968,6 +3968,29 @@ var NodeAuthoringController = function () {
     key: 'componentAdvancedButtonClicked',
     value: function componentAdvancedButtonClicked(componentId) {
       this.$rootScope.$broadcast('componentAdvancedButtonClicked', { componentId: componentId });
+    }
+
+    /**
+     * A constraint removal criteria step has changed.
+     * @param criteria The removal criteria object.
+     */
+
+  }, {
+    key: 'authoringViewConstraintRemovalCriteriaNodeIdChanged',
+    value: function authoringViewConstraintRemovalCriteriaNodeIdChanged(criteria) {
+      criteria.params.componentId = '';
+      this.authoringViewNodeChanged();
+    }
+
+    /**
+     * A constraint removal criteria component has changed.
+     * @param criteria The removal criteria object.
+     */
+
+  }, {
+    key: 'authoringViewConstraintRemovalCriteriaComponentIdChanged',
+    value: function authoringViewConstraintRemovalCriteriaComponentIdChanged(criteria) {
+      this.authoringViewNodeChanged();
     }
   }]);
 
