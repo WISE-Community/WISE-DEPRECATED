@@ -208,7 +208,7 @@ export default class ProjectPage {
    */
   clickOnAStepIntheStepSelectMenu(activityNumber, stepNumber) {
     this.clickStepSelectMenu();
-    element(by.cssContainingText('md-select', activityNumber + '.' + stepNumber + ':')).click();
+    element(by.cssContainingText('md-option', activityNumber + '.' + stepNumber + ':')).click();
   }
 
   /**
