@@ -3426,7 +3426,7 @@ var NodeAuthoringController = function () {
         _this6.$timeout(function () {
           _this6.showComponentAuthoring();
           _this6.turnOffInsertComponentMode();
-          _this6.showCreateComponent = false;
+          _this6.nodeAuthoringViewButtonClicked();
           _this6.clearComponentsToChecked();
 
           /*
@@ -3441,11 +3441,11 @@ var NodeAuthoringController = function () {
               if (componentElement != null) {
                 // scroll to the first new component that we've added
                 $('#content').animate({
-                  scrollTop: componentElement.prop('offsetTop') - 60
+                  scrollTop: componentElement.offset().top - 200
                 }, 1000);
               }
             }
-          });
+          }, 1000);
         }, 1000);
       });
     }

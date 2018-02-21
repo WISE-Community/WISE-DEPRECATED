@@ -3012,7 +3012,7 @@ class NodeAuthoringController {
       this.$timeout(() => {
         this.showComponentAuthoring();
         this.turnOffInsertComponentMode();
-        this.showCreateComponent = false;
+        this.nodeAuthoringViewButtonClicked();
         this.clearComponentsToChecked();
 
         /*
@@ -3027,11 +3027,11 @@ class NodeAuthoringController {
             if (componentElement != null) {
               // scroll to the first new component that we've added
               $('#content').animate({
-                scrollTop: componentElement.prop('offsetTop') - 60
+                scrollTop: componentElement.offset().top - 200
               }, 1000);
             }
           }
-        });
+        }, 1000);
       }, 1000);
     });
   }
