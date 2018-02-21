@@ -277,7 +277,7 @@ var ProjectPage = function () {
     key: 'clickOnAStepIntheStepSelectMenu',
     value: function clickOnAStepIntheStepSelectMenu(activityNumber, stepNumber) {
       this.clickStepSelectMenu();
-      element(by.cssContainingText('span', activityNumber + '.' + stepNumber + ':')).click();
+      element(by.cssContainingText('md-select', activityNumber + '.' + stepNumber + ':')).click();
     }
 
     /**
