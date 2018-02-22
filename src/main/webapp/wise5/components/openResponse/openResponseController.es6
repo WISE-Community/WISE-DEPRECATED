@@ -118,6 +118,12 @@ class OpenResponseController {
     // whether this component uses a custom completion criteria
     this.useCustomCompletionCriteria = false;
 
+    // whether we are currently verifying a CRater item id
+    this.isVerifyingCRaterItemId = false;
+
+    // whether the CRater item id is valid
+    this.cRaterItemIdIsValid = null;
+
     //var scope = this;
     let themePath = this.ProjectService.getThemePath();
 
@@ -2888,6 +2894,26 @@ class OpenResponseController {
       // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
+  }
+
+  /**
+   * Check if the item id is a valid CRater item id.
+   * @param itemId A string.
+   */
+  verifyCRaterItemId(itemId) {
+    // clear the Valid/Invalid text
+    this.cRaterItemIdIsValid = null;
+
+    // turn on the "Verifying..." text
+    this.isVerifyingCRaterItemId = true;
+
+    this.CRaterService.verifyCRaterItemId(itemId).then((isValid) => {
+      // turn off the "Verifying..." text
+      this.isVerifyingCRaterItemId = false;
+
+      // set the Valid/Invalid text
+      this.cRaterItemIdIsValid = isValid;
+    });
   }
 };
 

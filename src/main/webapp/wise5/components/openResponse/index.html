@@ -36,6 +36,12 @@
              ng-model='openResponseController.authoringComponentContent.cRater.itemId'
              ng-change='openResponseController.authoringViewComponentChanged()'
              size='30'/>
+        <button ng-click="openResponseController.verifyCRaterItemId(openResponseController.authoringComponentContent.cRater.itemId)">
+          {{ 'openResponse.verify' | translate }}
+        </button>
+        <span ng-if="openResponseController.isVerifyingCRaterItemId === true">{{ 'openResponse.verifying' | translate }}...</span>
+        <span ng-if="openResponseController.cRaterItemIdIsValid === true" style="color: green;">{{ 'openResponse.valid' | translate }}</span>
+        <span ng-if="openResponseController.cRaterItemIdIsValid === false" style="color: red;">{{ 'openResponse.invalid' | translate }}</span>
         <br/>
         <span>{{ 'openResponse.scoreOn' | translate }}:</span>
         <input type='radio'
