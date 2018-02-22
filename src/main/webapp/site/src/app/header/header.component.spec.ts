@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppRoutingModule } from "../app-routing.module";
 
 import { HeaderComponent } from './header.component';
+import { HeaderAccountMenuComponent } from "./header-account-menu/header-account-menu.component";
+import { HeaderLinksComponent } from "./header-links/header-links.component";
+import { HeaderSigninComponent } from "./header-signin/header-signin.component";
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -8,7 +12,15 @@ describe('HeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ]
+      imports: [
+        AppRoutingModule
+      ],
+      declarations: [
+        HeaderComponent,
+        HeaderAccountMenuComponent,
+        HeaderLinksComponent,
+        HeaderSigninComponent
+      ]
     })
     .compileComponents();
   }));

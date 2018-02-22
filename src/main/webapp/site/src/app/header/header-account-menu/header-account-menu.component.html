@@ -1,0 +1,31 @@
+<button mat-icon-button [matMenuTriggerFor]="accountMenu">
+  <mat-icon aria-label="Account Menu" *ngIf="user.role === 'student' else teacher">account_circle</mat-icon>
+  <ng-template #teacher>
+    <mat-icon aria-label="Account Menu">account_box</mat-icon>
+  </ng-template>
+</button>
+<mat-menu #accountMenu="matMenu">
+  <div class="header-account-menu">
+    <div class="mat-subheading-1 user-info" fxLayout="row" fxLayoutAlign="left center">
+      <mat-icon aria-label="Account avatar" *ngIf="user.role === 'student' else teacherAvatar">account_circle</mat-icon>
+      <ng-template #teacherAvatar>
+        <mat-icon aria-label="Account avatar">account_box</mat-icon>
+      </ng-template>
+      <span>{{ user.firstName }} {{ user.lastName }}</span>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item>
+      <mat-icon>face</mat-icon>
+      <span>My Account</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>help</mat-icon>
+      <span>Help</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item>
+      <mat-icon color="warn">exit_to_app</mat-icon>
+      <span class="warn">Sign Out</span>
+    </button>
+  </div>
+</mat-menu>

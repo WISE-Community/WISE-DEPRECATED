@@ -1,0 +1,7 @@
+.mat-button, .mat-raised-button {
+  text-transform: uppercase;
+
+  &:hover, &:focus {
+    text-decoration: none;
+  }
+}

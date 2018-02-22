@@ -1,1 +1,60 @@
-$_primary-color: #1C8CA8;
+@import '~@angular/material/theming';
+
+// Create a config with the default Angular Material typography levels
+$config: mat-typography-config();
+
+// media queries and breakpoints
+$breakpoints: (
+  xs: (
+    min: 0px,
+    max: 599px
+  ),
+  gt-xs: (
+    min: 600px,
+    max: none
+  ),
+  lt-sm: (
+    min: none,
+    max: 599px
+  ),
+  sm: (
+    min: 600px,
+    max: 959px
+  ),
+  gt-sm: (
+    min: 960px,
+    max: none
+  ),
+  lt-md: (
+    min: none,
+    max: 959px
+  ),
+  md: (
+    min: 960px,
+    max: 1279px
+  ),
+  gt-md: (
+    min: 1280px,
+    max: none
+  ),
+  lt-lg: (
+    min: none,
+    max: 1279px
+  ),
+  lg: (
+    min: 1280px,
+    max: 1919px
+  ),
+  gt-lg: (
+    min: 1920px,
+    max: none
+  ),
+  lt-xl: (
+    min: none,
+    max: 1919px
+  ),
+  xl: (
+    min: 1920px,
+    max: none
+  )
+);

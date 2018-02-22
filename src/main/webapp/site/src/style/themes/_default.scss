@@ -1,80 +1,79 @@
 // define WISE Angular Material theme colors
 $default-primary: (
-    50 : #e4f1f5,
-    100 : #bbdde5,
-    200 : #8ec6d4,
-    300 : #60afc2,
-    400 : #3e9db5,
-    500 : #1c8ca8,
-    600 : #1984a0,
-    700 : #147997,
-    800 : #116f8d,
-    900 : #095c7d,
-    A100 : #ade5ff,
-    A200 : #7ad5ff,
-    A400 : #47c4ff,
-    A700 : #2dbcff,
-    contrast: (
-        50 : #000000,
-        100 : #000000,
-        200 : #000000,
-        300 : #000000,
-        400 : #000000,
-        500 : #ffffff,
-        600 : #ffffff,
-        700 : #ffffff,
-        800 : #ffffff,
-        900 : #ffffff,
-        A100 : #000000,
-        A200 : #000000,
-        A400 : #000000,
-        A700 : #000000,
-    )
+  50 : #e4f1f5,
+  100 : #bbdde5,
+  200 : #8ec6d4,
+  300 : #60afc2,
+  400 : #3e9db5,
+  500 : #1c8ca8,
+  600 : #1984a0,
+  700 : #147997,
+  800 : #116f8d,
+  900 : #095c7d,
+  A100 : #ade5ff,
+  A200 : #7ad5ff,
+  A400 : #47c4ff,
+  A700 : #2dbcff,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
 );
 
 $default-accent: (
-    50 : #fdebe8,
-    100 : #fbcdc7,
-    200 : #f8aca1,
-    300 : #f58a7b,
-    400 : #f2715f,
-    500 : #f05843,
-    600 : #ee503d,
-    700 : #ec4734,
-    800 : #e93d2c,
-    900 : #e52d1e,
-    A100 : #ffffff,
-    A200 : #ffe9e7,
-    A400 : #ffb9b4,
-    A700 : #ffa19b,
-    contrast: (
-        50 : #000000,
-        100 : #000000,
-        200 : #000000,
-        300 : #000000,
-        400 : #000000,
-        500 : #000000,
-        600 : #ffffff,
-        700 : #ffffff,
-        800 : #ffffff,
-        900 : #ffffff,
-        A100 : #000000,
-        A200 : #000000,
-        A400 : #000000,
-        A700 : #000000,
-    )
+  50 : #fdebe8,
+  100 : #fbcdc7,
+  200 : #f8aca1,
+  300 : #f58a7b,
+  400 : #f2715f,
+  500 : #f05843,
+  600 : #ee503d,
+  700 : #ec4734,
+  800 : #e93d2c,
+  900 : #e52d1e,
+  A100 : #ffffff,
+  A200 : #ffe9e7,
+  A400 : #ffb9b4,
+  A700 : #ffa19b,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
 );
 
 $default-theme-primary: mat-palette($default-primary);
 $default-theme-accent: mat-palette($default-accent);
 $default-theme-warn: mat-palette($mat-red, 800);
 
-
 // create Angular Material WISE theme
 $default-theme: mat-light-theme(
-    $default-theme-primary,
-    $default-theme-accent,
-    $default-theme-warn
+  $default-theme-primary,
+  $default-theme-accent,
+  $default-theme-warn
 );
 
 // get theme color variables
@@ -86,12 +85,15 @@ $background: map-get($default-theme, background);
 
 // create colors object (including additional colors)
 $default-colors: (
-  'primary': mat-color($primary),
   'accent': mat-color($accent),
   'accent-1': #795C3A,
   'accent-2': #CAD266,
+  'btn-bg': rgba(black, 0.02),
+  'content-block-bg': #EEEEEE,
   'disabled-text': mat-color($foreground, disabled-text),
   'info': #ef6c00,
+  'notice-bg': rgba(black, 0.08),
+  'primary': mat-color($primary),
   'score': #FFC107,
   'secondary-text': mat-color($foreground, secondary-text),
   'selected-bg': map-get($default-theme-primary, 50),

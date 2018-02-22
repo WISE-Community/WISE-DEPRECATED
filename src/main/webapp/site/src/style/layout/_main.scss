@@ -1,0 +1,12 @@
+.main {
+  margin: 96px 0 64px;
+  padding: 16px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    padding: 32px;
+  }
+
+  @media (min-width: breakpoint('md.min')) {
+    margin-top: 112px;
+  }
+}

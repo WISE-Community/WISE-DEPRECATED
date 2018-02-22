@@ -4,10 +4,33 @@
 @mixin theme-setup($theme, $colors) {
   // Include angular material theme
   @include angular-material-theme($theme);
+  $background: map-get($theme, background);
 
-  // Create theme specfic styles
-  a {
+  // Create theme-specific styles
+  a:not(.mat-button) {
     color: map-get($colors, primary);
+  }
+
+  .active {
+    color: map-get($colors, primary);
+  }
+
+  .content-block {
+    background-color: map-get($colors, content-block-bg);
+  }
+
+  .notice {
+    background-color: map-get($colors, notice-bg);
+  }
+
+  .search-bar, .select-menu {
+    .mat-form-field-flex {
+      background-color: map-get($background, raised-button);
+    }
+  }
+
+  button.mat-button {
+    background-color: map-get($colors, btn-bg);
   }
 
   // Set classes for each named color in the $colors map
@@ -19,5 +42,29 @@
       .#{$key}-bg {
         background-color: $value;
       }
+  }
+}
+
+// Set Angular Material icon size
+@mixin mat-icon-size($size: 24px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+  line-height: $size;
+}
+
+// Set Angular Material icon button size (use mat-icon size as the $size parameter)
+@mixin mat-icon-button-size($size: 24px) {
+  $button-size: $size + 16px;
+
+  height: $button-size;
+  width: $button-size;
+  line-height: $button-size;
+
+  .mat-icon {
+    font-size: $size;
+    height: $size;
+    width: $size;
+    line-height: $size;
   }
 }

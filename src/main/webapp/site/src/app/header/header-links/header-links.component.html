@@ -1,0 +1,25 @@
+<nav class="header__links" [ngSwitch]="user.role" fxLayout="row">
+  <div *ngSwitchCase="'admin'">
+    <a mat-button routerLink="/teacher" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Teacher Home</a>
+    <a mat-button routerLink="/projects" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Project Library</a>
+    <a mat-button routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Admin Tools</a>
+  </div>
+  <div *ngSwitchCase="'researcher'">
+    <a mat-button routerLink="/teacher" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Teacher Home</a>
+    <a mat-button routerLink="/projects" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Project Library</a>
+    <a mat-button routerLink="/researcher" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Researcher Tools</a>
+  </div>
+  <div *ngSwitchCase="'teacher'">
+    <a mat-button routerLink="/teacher" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Teacher Home</a>
+    <a mat-button routerLink="/projects" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Project Library</a>
+  </div>
+  <div *ngSwitchCase="'student'">
+    <a mat-button routerLink="/student" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Student Home</a>
+  </div>
+  <div *ngSwitchDefault>
+    <a mat-button routerLink="/features" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Features</a>
+    <a mat-button routerLink="/about" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">About Us</a>
+    <a mat-button routerLink="/news" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">News</a>
+  </div>
+  <app-header-signin *ngIf="!user.role"></app-header-signin>
+</nav>

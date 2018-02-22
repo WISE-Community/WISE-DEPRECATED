@@ -1,0 +1,139 @@
+// define WISE Angular Material theme colors
+$dark-primary: (
+  50 : #f9faed,
+  100 : #eff2d1,
+  200 : #e5e9b3,
+  300 : #dae094,
+  400 : #d2d97d,
+  500 : #cad266,
+  600 : #c5cd5e,
+  700 : #bdc753,
+  800 : #b7c149,
+  900 : #abb638,
+  A100 : #ffffff,
+  A200 : #fbffce,
+  A400 : #f6ff9b,
+  A700 : #f4ff81,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #000000,
+    600 : #000000,
+    700 : #000000,
+    800 : #000000,
+    900 : #000000,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+$dark-accent: (
+    50 : #fdebe8,
+    100 : #fbcdc7,
+    200 : #f8aca1,
+    300 : #f58a7b,
+    400 : #f2715f,
+    500 : #f05843,
+    600 : #ee503d,
+    700 : #ec4734,
+    800 : #e93d2c,
+    900 : #e52d1e,
+    A100 : #ffffff,
+    A200 : #ffe9e7,
+    A400 : #ffb9b4,
+    A700 : #ffa19b,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #000000,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+$dark-theme-primary: mat-palette($dark-primary);
+$dark-theme-accent: mat-palette($dark-accent);
+$dark-theme-warn: mat-palette($mat-red);
+
+// custom background and foreground palettes for this theme
+$dark-theme-background: (
+  status-bar: black,
+  app-bar:    #333333,
+  background: #303030,
+  hover:      rgba(white, 0.04),
+  card:       map_get($mat-grey, 800),
+  dialog:     map_get($mat-grey, 800),
+  disabled-button: rgba(white, 0.12),
+  raised-button: map-get($mat-grey, 800),
+  focused-button: $light-focused,
+  selected-button: map_get($mat-grey, 900),
+  selected-disabled-button: map_get($mat-grey, 800),
+  disabled-button-toggle: black,
+  unselected-chip: map_get($mat-grey, 700),
+  disabled-list-option: black,
+);
+
+$dark-theme-foreground: (
+  base:              white,
+  divider:           $light-dividers,
+  dividers:          $light-dividers,
+  disabled:          $light-disabled-text,
+  disabled-button:   rgba(white, 0.3),
+  disabled-text:     $light-disabled-text,
+  hint-text:         $light-disabled-text,
+  secondary-text:    $light-secondary-text,
+  icon:              white,
+  icons:             white,
+  text:              white,
+  slider-min:        white,
+  slider-off:        rgba(white, 0.3),
+  slider-off-active: rgba(white, 0.3),
+);
+
+// create Angular Material dark theme
+//$dark-theme: mat-dark-theme(
+    //$dark-theme-primary,
+    //$dark-theme-accent,
+    //$dark-theme-warn
+//);
+
+$dark-theme: create-custom-theme($dark-theme-primary, $dark-theme-accent, $dark-theme-warn, $dark-theme-foreground,
+  $dark-theme-background, true);
+
+// get theme color variables
+$primary: map-get($dark-theme, primary);
+$accent: map-get($dark-theme, accent);
+$warn: map-get($dark-theme, warn);
+$foreground: map-get($dark-theme, foreground);
+$background: map-get($dark-theme, background);
+
+// create colors object (including additional colors)
+$dark-colors: (
+  'accent': mat-color($accent),
+  'btn-bg': rgba(white, 0.02),
+  'content-block-bg': #222222,
+  'disabled-text': mat-color($foreground, disabled-text),
+  'info': #ef6c00,
+  'notice-bg': rgba(black, 0.87),
+  'primary': mat-color($primary),
+  'score': #FFC107,
+  'secondary-text': mat-color($foreground, secondary-text),
+  'selected-bg': map-get($dark-theme-primary, 50),
+  'success': #00C853,
+  'text': mat-color($foreground, text),
+  'warn': mat-color($warn)
+);

@@ -1,0 +1,12 @@
+.content-block {
+  padding: 16px;
+  border-radius: 4px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    padding: 24px;
+  }
+}
+
+.content-block__header {
+  margin-bottom: 8px;
+}

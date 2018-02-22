@@ -1,3 +1,15 @@
-<p>
-  header works!
-</p>
+<header>
+  <mat-toolbar class="header">
+    <div class="content" fxLayout="row" fxLayoutAlign="start center">
+      <a routerLink="/" class="header__logo">
+        <img src="assets/img/wise-web-header-img.svg" alt="WISE header logo" />
+      </a>
+      <span fxFlex="1 1 auto"></span>
+      <app-header-links fxHide fxShow.gt-sm [user]="user"></app-header-links>
+      <app-header-account-menu *ngIf="user.role" [user]="user"></app-header-account-menu>
+      <button mat-icon-button fxHide.gt-sm>
+        <mat-icon aria-label="Main menu">menu</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+</header>

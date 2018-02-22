@@ -18,13 +18,17 @@
   'base/helpers';
 
 // 4. Layout-related sections
-//@import
-  //'layout/header',
-  //'layout/footer';
+@import
+  'layout/content',
+  'layout/main';
 
 // 5. Components
-//@import
-  //'components/button';
+@import
+  'components/buttons',
+  'components/content-block',
+  'components/info-block',
+  'components/menu',
+  'components/notice';
 
 // 6. Page-specific styles
 //@import
@@ -37,14 +41,15 @@
 // always include only once per project
 @include mat-core();
 
-// import and set up default theme
+// import themes
 @import 'themes/default';
-@include theme-setup($default-theme, $default-colors);
+@import 'themes/dark';
 
-// import our custom themes
-//@import 'themes/dark';
+// specify theme classes eg: <body class="default-theme"> ... </body>
+.default-theme {
+  @include theme-setup($default-theme, $default-colors);
+}
 
-// specify custom theme classes eg: <body class="dark-theme"> ... </body>
-//.dark-theme {
-  //@include theme-setup($dark-theme, $dark-colors);
-//}
+.dark-theme {
+  @include theme-setup($dark-theme, $dark-colors);
+}
