@@ -16,6 +16,9 @@ describe('StudentComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        StudentRoutingModule,
+        RouterTestingModule.withRoutes([]) ],
       providers: [
         { provide: APP_BASE_HREF, useValue : '/' }
       ],
@@ -25,8 +28,7 @@ describe('StudentComponent', () => {
         StudentHomeComponent,
         StudentRunListComponent,
         StudentRunListItemComponent
-      ],
-      imports: [ RouterTestingModule.withRoutes([]) ],
+      ]
     })
     .compileComponents();
   }));

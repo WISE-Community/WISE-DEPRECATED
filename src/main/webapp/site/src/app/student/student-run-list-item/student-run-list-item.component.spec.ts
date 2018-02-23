@@ -20,7 +20,8 @@ describe('StudentRunListItemComponent', () => {
     const run: StudentRun = new StudentRun();
     run.id = 1;
     run.name = "Photosynthesis";
-    run.teacherUsername = "Mr. Happy";
+    run.teacherFirstname = "Mr.";
+    run.teacherLastname = "Happy";
     component.run = run;
     fixture.detectChanges();
   });

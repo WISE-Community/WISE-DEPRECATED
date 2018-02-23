@@ -1,6 +1,9 @@
 export class Run {
+  accessCode: string;
+  endTime: number;
   id: number;
   name: string;
-  startDate: number;
-  endDate: number;
+  projectId: number;
+  projectThumb: string;
+  startTime: number;
 }

@@ -1,0 +1,37 @@
+@import
+  '~style/abstracts/variables',
+  '~style/abstracts/functions';
+
+.mat-card {
+  margin-top: 16px;
+  padding-top: 12px;
+}
+
+.mat-card-content {
+  margin: 0 -4px 8px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    margin: 0 -12px 8px;
+  }
+}
+
+.mat-card-avatar {
+  background-size: cover;
+  border-radius: 4px;
+  margin-right: 12px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    height: 60px;
+    width: 60px;
+  }
+}
+
+.mat-card-title {
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.mat-card-subtitle {
+  margin-bottom: 2px;
+}

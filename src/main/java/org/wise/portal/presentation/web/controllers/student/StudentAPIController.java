@@ -33,10 +33,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.wise.portal.domain.announcement.Announcement;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
@@ -61,6 +64,13 @@ public class StudentAPIController {
   @Autowired
   private StudentService studentService;
 
+  @Autowired
+  private Properties wiseProperties;
+
+  // path to project thumbnail image relative to project folder
+  // TODO: make this dynamic, part of project metadata?
+  private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
+
   @RequestMapping(value = "/runs", method = RequestMethod.GET)
   protected String handleGET(ModelMap modelMap,
       @RequestParam(value = "pLT", required = false) String previousLoginTime) throws Exception {
@@ -69,11 +79,52 @@ public class StudentAPIController {
     JSONArray runListJSONArray = new JSONArray();
     for (Run run : runlist) {
       JSONObject runJSON = new JSONObject();
+      Project project = run.getProject();
+      String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+      String projectThumb = "";
+      String modulePath = project.getModulePath();
+      int lastIndexOfSlash = modulePath.lastIndexOf("/");
+      if (lastIndexOfSlash != -1) {
+        /*
+         * The project thumb url by default is the same (/assets/project_thumb.png)
+         * for all projects, but this could be overwritten in the future
+         * e.g. /253/assets/projectThumb.png
+         */
+        projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
+      }
+      StudentRunInfo studentRunInfo = studentService.getStudentRunInfo(user, run);
+      Workgroup workgroup = studentRunInfo.getWorkgroup();
+      JSONArray workgroupMembers = new JSONArray();
+      StringBuilder workgroupNames = new StringBuilder();
+      for (User member : workgroup.getMembers()) {
+        MutableUserDetails userDetails = (MutableUserDetails) member.getUserDetails();
+        JSONObject memberJSON = new JSONObject();
+        memberJSON.put("id", userDetails.getId());
+        String firstname = userDetails.getFirstname();
+        memberJSON.put("firstname", firstname);
+        String lastname = userDetails.getLastname();
+        memberJSON.put("lastname", lastname);
+        memberJSON.put("username", userDetails.getUsername());
+        workgroupMembers.put(memberJSON);
+        if (workgroupNames.length() > 0) {
+          workgroupNames.append(", ");
+        }
+        workgroupNames.append(firstname + " " + lastname);
+      }
+
+      runJSON.put("accessCode", run.getRuncode());
       runJSON.put("id", run.getId());
+      runJSON.put("periodName", run.getPeriodOfStudent(user).getName());
+      runJSON.put("projectId", project.getId());
+      runJSON.put("projectThumb", projectThumb);
       runJSON.put("name", run.getName());
       runJSON.put("startTime", run.getStarttime());
       runJSON.put("endTime", run.getEndtime());
-      runJSON.put("teacherUsername", run.getOwner().getUserDetails().getUsername());
+      runJSON.put("teacherFirstname", run.getOwner().getUserDetails().getFirstname());
+      runJSON.put("teacherLastname", run.getOwner().getUserDetails().getLastname());
+      runJSON.put("workgroupId", studentRunInfo.getWorkgroup().getId());
+      runJSON.put("workgroupNames", workgroupNames.toString());
+      runJSON.put("workgroupMembers", workgroupMembers);
       runListJSONArray.put(runJSON);
     }
     return runListJSONArray.toString();

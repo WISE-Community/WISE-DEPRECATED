@@ -1,0 +1,8 @@
+<mat-form-field class="select-menu" [floatLabel]="floatLabel">
+  <mat-select [placeholder]="placeholderText" [(value)]="value" [(ngModel)]="value" [disabled]="disable"
+    (ngModelChange)="changed($event)">
+    <mat-option *ngFor="let option of options" [value]="option.value">
+      {{ option.viewValue }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

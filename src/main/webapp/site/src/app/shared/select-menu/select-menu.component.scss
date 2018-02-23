@@ -1,0 +1,28 @@
+@import '~@angular/material/theming';
+
+.select-menu {
+  width: 100%;
+
+  .mat-form-field-flex {
+    display: flex;
+    width: auto;
+    padding: 0 8px;
+    border-radius: 2px;
+    line-height: 36px;
+    margin-top: 1.4375em;
+    @include mat-elevation(2);
+  }
+
+  .mat-form-field-infix {
+    border-top: 0;
+    padding: 0;
+  }
+
+  .mat-form-field-placeholder-wrapper {
+    top: -1.8375em;
+  }
+
+  .mat-form-field-underline {
+    display: none;
+  }
+}

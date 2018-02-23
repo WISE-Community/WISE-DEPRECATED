@@ -1,15 +1,34 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MomentModule } from 'angular2-moment';
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatIconModule } from '@angular/material';
+
+const materialModules = [
+  MatButtonModule,
+  MatCardModule,
+  MatIconModule
+];
+
+import { SharedModule } from "../shared/shared.module";
+import { StudentRoutingModule } from './student-routing.module';
+
 import { StudentComponent } from './student.component';
 import { StudentHomeComponent } from './student-home/student-home.component';
 import { StudentEditProfileComponent } from './student-edit-profile/student-edit-profile.component';
-import { StudentRoutingModule } from './student-routing.module';
 import { StudentRunListComponent } from './student-run-list/student-run-list.component';
 import { StudentRunListItemComponent } from './student-run-list-item/student-run-list-item.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    FlexLayoutModule,
+    MomentModule,
+    materialModules,
+    SharedModule,
     StudentRoutingModule
   ],
   declarations: [
@@ -18,6 +37,10 @@ import { StudentRunListItemComponent } from './student-run-list-item/student-run
     StudentEditProfileComponent,
     StudentRunListComponent,
     StudentRunListItemComponent
+  ],
+  exports: [
+    StudentComponent,
+    materialModules
   ]
 })
 export class StudentModule { }

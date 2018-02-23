@@ -1,5 +1,31 @@
-<ul class="runs">
-  <li *ngFor="let run of runs">
+<div class="content-block">
+  <div class="content-block__header" fxLayout="row" fxLayoutAlign="start center">
+    <h2 class="accent-1">My Projects <span *ngIf="loaded">({{ runs.length }})</span></h2>
+    <span fxFlex="1 1 auto"></span>
+    <button mat-raised-button (click)="addRun" aria-label="Add project" color="accent">
+      <mat-icon fxShow fxHide.gt-xs>add</mat-icon>
+      <span fxHide fxShow.gt-xs>Add Project</span>
+    </button>
+  </div>
+
+  <div fxLayout="row" fxLayout.xs="column" *ngIf="runs.length">
+    <app-select-menu fxFlex="0 1 auto" fxFlex.xs="100%" [options]="sortOptions" [placeholderText]="'Sort by'"
+                     [value]="sortValue" (update)="sortUpdated($event)"></app-select-menu>
+    <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
+    <app-search-bar fxFlex="0 0 auto" fxFlex.xs="0 0 100%" [placeholderText]="'Search projects'"
+                    (update)="searchUpdated($event)"></app-search-bar>
+  </div>
+
+  <div *ngIf="search && loaded" class="notice">
+    <p>Projects found: {{ filteredRuns.length }}</p>
+  </div>
+
+  <div class="notice" *ngIf="!runs.length && loaded">
+    <p>Hey there! Looks like you don't have any projects yet.</p>
+    <p>Ask your teacher for an <b>Access Code</b> and then tap the <b>Add Project</b> button to get started.</p>
+  </div>
+
+  <div *ngFor="let run of filteredRuns">
     <app-student-run-list-item [run]="run"></app-student-run-list-item>
-  </li>
-</ul>
+  </div>
+</div>
