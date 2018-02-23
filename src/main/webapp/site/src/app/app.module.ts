@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { HeaderModule } from './header/header.module';
+import { FooterModule } from './footer/footer.module';
 import { StudentModule } from './student/student.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -19,6 +20,7 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserAnimationsModule,
     AppRoutingModule,
     HeaderModule,
+    FooterModule,
     StudentModule,
     HttpClientModule
   ],

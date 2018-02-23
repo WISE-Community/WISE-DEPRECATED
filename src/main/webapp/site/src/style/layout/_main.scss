@@ -1,6 +1,7 @@
 .main {
-  margin: 96px 0 64px;
+  margin: 96px 0 32px;
   padding: 16px;
+  flex: 1 0 auto;
 
   @media (min-width: breakpoint('sm.min')) {
     padding: 32px;

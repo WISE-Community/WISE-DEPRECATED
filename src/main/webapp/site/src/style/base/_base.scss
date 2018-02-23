@@ -1,11 +1,23 @@
+html, body {
+  height: 100%;
+}
+
 body {
   margin: 0;
+}
+
+.app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 a {
   text-decoration: none;
 
-  &:hover, &:focus {
-    text-decoration: underline;
+  &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item) {
+    &:hover, &:focus {
+      text-decoration: underline;
+    }
   }
 }

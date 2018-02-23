@@ -7,8 +7,10 @@
   $background: map-get($theme, background);
 
   // Create theme-specific styles
-  a:not(.mat-button) {
-    color: map-get($colors, primary);
+  a {
+    &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item) {
+      color: map-get($colors, primary);
+    }
   }
 
   .active {
@@ -29,7 +31,7 @@
     }
   }
 
-  button.mat-button {
+  .mat-button {
     background-color: map-get($colors, btn-bg);
   }
 
