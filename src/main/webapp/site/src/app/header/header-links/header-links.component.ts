@@ -11,6 +11,9 @@ export class HeaderLinksComponent implements OnInit {
   @Input()
   user: User;
 
+  @Input()
+  location: string; // the current location
+
   constructor() { }
 
   ngOnInit() {

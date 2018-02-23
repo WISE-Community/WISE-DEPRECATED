@@ -1,17 +1,9 @@
-<nav class="header__links" [ngSwitch]="user.role" fxLayout="row">
-  <div *ngSwitchCase="'admin'">
-    <a mat-button routerLink="/teacher" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Teacher Home</a>
-    <a mat-button routerLink="/projects" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Project Library</a>
-    <a mat-button routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Admin Tools</a>
-  </div>
-  <div *ngSwitchCase="'researcher'">
-    <a mat-button routerLink="/teacher" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Teacher Home</a>
-    <a mat-button routerLink="/projects" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Project Library</a>
-    <a mat-button routerLink="/researcher" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Researcher Tools</a>
-  </div>
+<nav class="header__links" [ngSwitch]="location" fxLayout="row" fxLayoutAlign="start center">
   <div *ngSwitchCase="'teacher'">
     <a mat-button routerLink="/teacher" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Teacher Home</a>
     <a mat-button routerLink="/projects" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Project Library</a>
+    <a *ngIf="user.role === 'admin'" mat-button routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Admin Tools</a>
+    <a *ngIf="user.role === 'researcher'" mat-button routerLink="/researcher" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Researcher Tools</a>
   </div>
   <div *ngSwitchCase="'student'">
     <a mat-button routerLink="/student" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Student Home</a>

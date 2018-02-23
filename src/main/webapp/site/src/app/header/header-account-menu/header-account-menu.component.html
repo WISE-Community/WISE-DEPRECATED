@@ -14,18 +14,22 @@
       <span>{{ user.firstName }} {{ user.lastName }}</span>
     </div>
     <mat-divider></mat-divider>
-    <button mat-menu-item>
+    <a *ngIf="user.role === 'student'" mat-menu-item routerLink="/student">
       <mat-icon>face</mat-icon>
       <span>My Account</span>
-    </button>
-    <button mat-menu-item>
+    </a>
+    <a *ngIf="user.role !== 'student'" mat-menu-item routerLink="/teacher">
+      <mat-icon>face</mat-icon>
+      <span>My Account</span>
+    </a>
+    <a mat-menu-item>
       <mat-icon>help</mat-icon>
       <span>Help</span>
-    </button>
+    </a>
     <mat-divider></mat-divider>
-    <button mat-menu-item>
+    <a mat-menu-item>
       <mat-icon color="warn">exit_to_app</mat-icon>
       <span class="warn">Sign Out</span>
-    </button>
+    </a>
   </div>
 </mat-menu>
