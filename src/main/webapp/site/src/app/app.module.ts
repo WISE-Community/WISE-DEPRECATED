@@ -8,6 +8,7 @@ import { StudentModule } from './student/student.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { StudentService } from './student/student.service';
+import { UserService } from './user.service';
 import { HttpClientModule } from '@angular/common/http';
 
 
@@ -24,7 +25,10 @@ import { HttpClientModule } from '@angular/common/http';
     StudentModule,
     HttpClientModule
   ],
-  providers: [StudentService],
+  providers: [
+    StudentService,
+    UserService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
