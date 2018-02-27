@@ -2379,9 +2379,7 @@ var ProjectService = function () {
         for (var _iterator27 = activeNodes[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
           var activeNode = _step27.value;
 
-          if (activeNode != null) {
-            delete activeNode.checked;
-          }
+          this.cleanupNode(activeNode);
         }
       } catch (err) {
         _didIteratorError27 = true;
@@ -2407,9 +2405,7 @@ var ProjectService = function () {
         for (var _iterator28 = inactiveNodes[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
           var inactiveNode = _step28.value;
 
-          if (inactiveNode != null) {
-            delete inactiveNode.checked;
-          }
+          this.cleanupNode(inactiveNode);
         }
       } catch (err) {
         _didIteratorError28 = true;
@@ -2425,6 +2421,78 @@ var ProjectService = function () {
           }
         }
       }
+    }
+
+    /**
+     * Remove any fields that are used temporarily for display purposes.
+     * @param node The node object.
+     */
+
+  }, {
+    key: 'cleanupNode',
+    value: function cleanupNode(node) {
+      /*
+       * Remove fields that are added when the project is loaded in the authoring
+       * tool and grading tool.
+       */
+      delete node.checked;
+      delete node.hasWork;
+      delete node.hasAlert;
+      delete node.hasNewAlert;
+      delete node.isVisible;
+      delete node.completionStatus;
+      delete node.score;
+      delete node.hasScore;
+      delete node.maxScore;
+      delete node.hasMaxScore;
+      delete node.scorePct;
+      delete node.order;
+      delete node.show;
+
+      var components = node.components;
+      // activity nodes do not have components but step nodes do have components
+      if (components != null) {
+        var _iteratorNormalCompletion29 = true;
+        var _didIteratorError29 = false;
+        var _iteratorError29 = undefined;
+
+        try {
+          for (var _iterator29 = components[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
+            var component = _step29.value;
+
+            this.cleanupComponent(component);
+          }
+        } catch (err) {
+          _didIteratorError29 = true;
+          _iteratorError29 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion29 && _iterator29.return) {
+              _iterator29.return();
+            }
+          } finally {
+            if (_didIteratorError29) {
+              throw _iteratorError29;
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * Remove any fields that are used temporarily for display purposes.
+     * @param component The component object.
+     */
+
+  }, {
+    key: 'cleanupComponent',
+    value: function cleanupComponent(component) {
+      /*
+       * Remove fields that are added when the project is loaded in the authoring
+       * tool and grading tool.
+       */
+      delete component.checked;
+      delete component.hasWork;
     }
 
     /**
@@ -2638,13 +2706,13 @@ var ProjectService = function () {
               var parentGroupTransitions = this.getTransitionsByFromNodeId(_parentGroupId);
 
               if (parentGroupTransitions != null) {
-                var _iteratorNormalCompletion29 = true;
-                var _didIteratorError29 = false;
-                var _iteratorError29 = undefined;
+                var _iteratorNormalCompletion30 = true;
+                var _didIteratorError30 = false;
+                var _iteratorError30 = undefined;
 
                 try {
-                  for (var _iterator29 = parentGroupTransitions[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
-                    var parentGroupTransition = _step29.value;
+                  for (var _iterator30 = parentGroupTransitions[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
+                    var parentGroupTransition = _step30.value;
 
                     if (parentGroupTransition != null) {
                       var toNodeId = parentGroupTransition.to;
@@ -2655,29 +2723,29 @@ var ProjectService = function () {
                          */
                         var allPathsFromToNode = this.getAllPaths(pathSoFar, toNodeId, includeGroups);
 
-                        var _iteratorNormalCompletion30 = true;
-                        var _didIteratorError30 = false;
-                        var _iteratorError30 = undefined;
+                        var _iteratorNormalCompletion31 = true;
+                        var _didIteratorError31 = false;
+                        var _iteratorError31 = undefined;
 
                         try {
-                          for (var _iterator30 = allPathsFromToNode[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
-                            var tempPath = _step30.value;
+                          for (var _iterator31 = allPathsFromToNode[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
+                            var tempPath = _step31.value;
 
                             tempPath.unshift(nodeId);
                             allPaths.push(tempPath);
                             addedCurrentNodeId = true;
                           }
                         } catch (err) {
-                          _didIteratorError30 = true;
-                          _iteratorError30 = err;
+                          _didIteratorError31 = true;
+                          _iteratorError31 = err;
                         } finally {
                           try {
-                            if (!_iteratorNormalCompletion30 && _iterator30.return) {
-                              _iterator30.return();
+                            if (!_iteratorNormalCompletion31 && _iterator31.return) {
+                              _iterator31.return();
                             }
                           } finally {
-                            if (_didIteratorError30) {
-                              throw _iteratorError30;
+                            if (_didIteratorError31) {
+                              throw _iteratorError31;
                             }
                           }
                         }
@@ -2685,16 +2753,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError29 = true;
-                  _iteratorError29 = err;
+                  _didIteratorError30 = true;
+                  _iteratorError30 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion29 && _iterator29.return) {
-                      _iterator29.return();
+                    if (!_iteratorNormalCompletion30 && _iterator30.return) {
+                      _iterator30.return();
                     }
                   } finally {
-                    if (_didIteratorError29) {
-                      throw _iteratorError29;
+                    if (_didIteratorError30) {
+                      throw _iteratorError30;
                     }
                   }
                 }
@@ -2711,13 +2779,13 @@ var ProjectService = function () {
             } else {
               // there are transitions from this node id
 
-              var _iteratorNormalCompletion31 = true;
-              var _didIteratorError31 = false;
-              var _iteratorError31 = undefined;
+              var _iteratorNormalCompletion32 = true;
+              var _didIteratorError32 = false;
+              var _iteratorError32 = undefined;
 
               try {
-                for (var _iterator31 = transitions[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
-                  var transition = _step31.value;
+                for (var _iterator32 = transitions[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
+                  var transition = _step32.value;
 
                   if (transition != null) {
                     var _toNodeId = transition.to;
@@ -2731,13 +2799,13 @@ var ProjectService = function () {
                       var _allPathsFromToNode = this.getAllPaths(pathSoFar, _toNodeId, includeGroups);
 
                       if (_allPathsFromToNode != null) {
-                        var _iteratorNormalCompletion32 = true;
-                        var _didIteratorError32 = false;
-                        var _iteratorError32 = undefined;
+                        var _iteratorNormalCompletion33 = true;
+                        var _didIteratorError33 = false;
+                        var _iteratorError33 = undefined;
 
                         try {
-                          for (var _iterator32 = _allPathsFromToNode[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
-                            var _tempPath = _step32.value;
+                          for (var _iterator33 = _allPathsFromToNode[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
+                            var _tempPath = _step33.value;
 
                             if (includeGroups) {
                               // we need to add the group id to the path
@@ -2764,16 +2832,16 @@ var ProjectService = function () {
                             allPaths.push(_tempPath);
                           }
                         } catch (err) {
-                          _didIteratorError32 = true;
-                          _iteratorError32 = err;
+                          _didIteratorError33 = true;
+                          _iteratorError33 = err;
                         } finally {
                           try {
-                            if (!_iteratorNormalCompletion32 && _iterator32.return) {
-                              _iterator32.return();
+                            if (!_iteratorNormalCompletion33 && _iterator33.return) {
+                              _iterator33.return();
                             }
                           } finally {
-                            if (_didIteratorError32) {
-                              throw _iteratorError32;
+                            if (_didIteratorError33) {
+                              throw _iteratorError33;
                             }
                           }
                         }
@@ -2793,16 +2861,16 @@ var ProjectService = function () {
                   }
                 }
               } catch (err) {
-                _didIteratorError31 = true;
-                _iteratorError31 = err;
+                _didIteratorError32 = true;
+                _iteratorError32 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion31 && _iterator31.return) {
-                    _iterator31.return();
+                  if (!_iteratorNormalCompletion32 && _iterator32.return) {
+                    _iterator32.return();
                   }
                 } finally {
-                  if (_didIteratorError31) {
-                    throw _iteratorError31;
+                  if (_didIteratorError32) {
+                    throw _iteratorError32;
                   }
                 }
               }
@@ -2838,13 +2906,13 @@ var ProjectService = function () {
                  * to all of the paths
                  */
 
-                var _iteratorNormalCompletion33 = true;
-                var _didIteratorError33 = false;
-                var _iteratorError33 = undefined;
+                var _iteratorNormalCompletion34 = true;
+                var _didIteratorError34 = false;
+                var _iteratorError34 = undefined;
 
                 try {
-                  for (var _iterator33 = allPaths[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
-                    var _path = _step33.value;
+                  for (var _iterator34 = allPaths[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
+                    var _path = _step34.value;
 
                     if (_path != null) {
                       /*
@@ -2862,16 +2930,16 @@ var ProjectService = function () {
                    * calculating all the paths
                    */
                 } catch (err) {
-                  _didIteratorError33 = true;
-                  _iteratorError33 = err;
+                  _didIteratorError34 = true;
+                  _iteratorError34 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion33 && _iterator33.return) {
-                      _iterator33.return();
+                    if (!_iteratorNormalCompletion34 && _iterator34.return) {
+                      _iterator34.return();
                     }
                   } finally {
-                    if (_didIteratorError33) {
-                      throw _iteratorError33;
+                    if (_didIteratorError34) {
+                      throw _iteratorError34;
                     }
                   }
                 }
@@ -2898,13 +2966,13 @@ var ProjectService = function () {
 
               var _transitions = this.getTransitionsByFromNodeId(groupNode.id);
               if (_transitions != null && _transitions.length > 0) {
-                var _iteratorNormalCompletion34 = true;
-                var _didIteratorError34 = false;
-                var _iteratorError34 = undefined;
+                var _iteratorNormalCompletion35 = true;
+                var _didIteratorError35 = false;
+                var _iteratorError35 = undefined;
 
                 try {
-                  for (var _iterator34 = _transitions[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
-                    var _transition = _step34.value;
+                  for (var _iterator35 = _transitions[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
+                    var _transition = _step35.value;
 
                     if (_transition != null) {
                       var _toNodeId2 = _transition.to;
@@ -2912,28 +2980,28 @@ var ProjectService = function () {
                       var _allPathsFromToNode2 = this.getAllPaths(pathSoFar, _toNodeId2, includeGroups);
 
                       if (_allPathsFromToNode2 != null) {
-                        var _iteratorNormalCompletion35 = true;
-                        var _didIteratorError35 = false;
-                        var _iteratorError35 = undefined;
+                        var _iteratorNormalCompletion36 = true;
+                        var _didIteratorError36 = false;
+                        var _iteratorError36 = undefined;
 
                         try {
-                          for (var _iterator35 = _allPathsFromToNode2[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
-                            var _tempPath2 = _step35.value;
+                          for (var _iterator36 = _allPathsFromToNode2[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
+                            var _tempPath2 = _step36.value;
 
                             _tempPath2.unshift(nodeId);
                             allPaths.push(_tempPath2);
                           }
                         } catch (err) {
-                          _didIteratorError35 = true;
-                          _iteratorError35 = err;
+                          _didIteratorError36 = true;
+                          _iteratorError36 = err;
                         } finally {
                           try {
-                            if (!_iteratorNormalCompletion35 && _iterator35.return) {
-                              _iterator35.return();
+                            if (!_iteratorNormalCompletion36 && _iterator36.return) {
+                              _iterator36.return();
                             }
                           } finally {
-                            if (_didIteratorError35) {
-                              throw _iteratorError35;
+                            if (_didIteratorError36) {
+                              throw _iteratorError36;
                             }
                           }
                         }
@@ -2941,16 +3009,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError34 = true;
-                  _iteratorError34 = err;
+                  _didIteratorError35 = true;
+                  _iteratorError35 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion34 && _iterator34.return) {
-                      _iterator34.return();
+                    if (!_iteratorNormalCompletion35 && _iterator35.return) {
+                      _iterator35.return();
                     }
                   } finally {
-                    if (_didIteratorError34) {
-                      throw _iteratorError34;
+                    if (_didIteratorError35) {
+                      throw _iteratorError35;
                     }
                   }
                 }
@@ -2970,28 +3038,28 @@ var ProjectService = function () {
               var _allPathsFromToNode3 = this.getAllPaths(pathSoFar, startId, includeGroups);
 
               if (_allPathsFromToNode3 != null) {
-                var _iteratorNormalCompletion36 = true;
-                var _didIteratorError36 = false;
-                var _iteratorError36 = undefined;
+                var _iteratorNormalCompletion37 = true;
+                var _didIteratorError37 = false;
+                var _iteratorError37 = undefined;
 
                 try {
-                  for (var _iterator36 = _allPathsFromToNode3[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
-                    var _tempPath4 = _step36.value;
+                  for (var _iterator37 = _allPathsFromToNode3[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
+                    var _tempPath4 = _step37.value;
 
                     _tempPath4.unshift(nodeId);
                     allPaths.push(_tempPath4);
                   }
                 } catch (err) {
-                  _didIteratorError36 = true;
-                  _iteratorError36 = err;
+                  _didIteratorError37 = true;
+                  _iteratorError37 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion36 && _iterator36.return) {
-                      _iterator36.return();
+                    if (!_iteratorNormalCompletion37 && _iterator37.return) {
+                      _iterator37.return();
                     }
                   } finally {
-                    if (_didIteratorError36) {
-                      throw _iteratorError36;
+                    if (_didIteratorError37) {
+                      throw _iteratorError37;
                     }
                   }
                 }
@@ -3138,13 +3206,13 @@ var ProjectService = function () {
 
                   var pathsToConsume = [];
 
-                  var _iteratorNormalCompletion37 = true;
-                  var _didIteratorError37 = false;
-                  var _iteratorError37 = undefined;
+                  var _iteratorNormalCompletion38 = true;
+                  var _didIteratorError38 = false;
+                  var _iteratorError38 = undefined;
 
                   try {
-                    for (var _iterator37 = pathsThatContainNodeId[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
-                      var pathThatContainsNodeId = _step37.value;
+                    for (var _iterator38 = pathsThatContainNodeId[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
+                      var pathThatContainsNodeId = _step38.value;
 
                       // get the index of the node id we want to remove
                       var tempNodeIdIndex = pathThatContainsNodeId.indexOf(tempNodeId);
@@ -3183,16 +3251,16 @@ var ProjectService = function () {
                      * the paths until the given node id
                      */
                   } catch (err) {
-                    _didIteratorError37 = true;
-                    _iteratorError37 = err;
+                    _didIteratorError38 = true;
+                    _iteratorError38 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion37 && _iterator37.return) {
-                        _iterator37.return();
+                      if (!_iteratorNormalCompletion38 && _iterator38.return) {
+                        _iterator38.return();
                       }
                     } finally {
-                      if (_didIteratorError37) {
-                        throw _iteratorError37;
+                      if (_didIteratorError38) {
+                        throw _iteratorError38;
                       }
                     }
                   }
@@ -3250,13 +3318,13 @@ var ProjectService = function () {
      */
     value: function removeNodeIdFromPaths(nodeId, paths) {
       if (nodeId != null && paths != null) {
-        var _iteratorNormalCompletion38 = true;
-        var _didIteratorError38 = false;
-        var _iteratorError38 = undefined;
+        var _iteratorNormalCompletion39 = true;
+        var _didIteratorError39 = false;
+        var _iteratorError39 = undefined;
 
         try {
-          for (var _iterator38 = paths[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
-            var path = _step38.value;
+          for (var _iterator39 = paths[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
+            var path = _step39.value;
 
             for (var x = 0; x < path.length; x++) {
               var tempNodeId = path[x];
@@ -3283,16 +3351,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError38 = true;
-          _iteratorError38 = err;
+          _didIteratorError39 = true;
+          _iteratorError39 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion38 && _iterator38.return) {
-              _iterator38.return();
+            if (!_iteratorNormalCompletion39 && _iterator39.return) {
+              _iterator39.return();
             }
           } finally {
-            if (_didIteratorError38) {
-              throw _iteratorError38;
+            if (_didIteratorError39) {
+              throw _iteratorError39;
             }
           }
         }
@@ -3351,13 +3419,13 @@ var ProjectService = function () {
       var result = true;
       var nodeId = null;
       if (paths != null) {
-        var _iteratorNormalCompletion39 = true;
-        var _didIteratorError39 = false;
-        var _iteratorError39 = undefined;
+        var _iteratorNormalCompletion40 = true;
+        var _didIteratorError40 = false;
+        var _iteratorError40 = undefined;
 
         try {
-          for (var _iterator39 = paths[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
-            var path = _step39.value;
+          for (var _iterator40 = paths[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
+            var path = _step40.value;
 
             var tempNodeId = path[0];
             if (nodeId == null) {
@@ -3377,16 +3445,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError39 = true;
-          _iteratorError39 = err;
+          _didIteratorError40 = true;
+          _iteratorError40 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion39 && _iterator39.return) {
-              _iterator39.return();
+            if (!_iteratorNormalCompletion40 && _iterator40.return) {
+              _iterator40.return();
             }
           } finally {
-            if (_didIteratorError39) {
-              throw _iteratorError39;
+            if (_didIteratorError40) {
+              throw _iteratorError40;
             }
           }
         }
@@ -3404,13 +3472,13 @@ var ProjectService = function () {
      */
     value: function arePathsEmpty(paths) {
       if (paths != null) {
-        var _iteratorNormalCompletion40 = true;
-        var _didIteratorError40 = false;
-        var _iteratorError40 = undefined;
+        var _iteratorNormalCompletion41 = true;
+        var _didIteratorError41 = false;
+        var _iteratorError41 = undefined;
 
         try {
-          for (var _iterator40 = paths[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
-            var path = _step40.value;
+          for (var _iterator41 = paths[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
+            var path = _step41.value;
 
             if (path != null) {
               if (path.length !== 0) {
@@ -3419,16 +3487,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError40 = true;
-          _iteratorError40 = err;
+          _didIteratorError41 = true;
+          _iteratorError41 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion40 && _iterator40.return) {
-              _iterator40.return();
+            if (!_iteratorNormalCompletion41 && _iterator41.return) {
+              _iterator41.return();
             }
           } finally {
-            if (_didIteratorError40) {
-              throw _iteratorError40;
+            if (_didIteratorError41) {
+              throw _iteratorError41;
             }
           }
         }
@@ -3448,13 +3516,13 @@ var ProjectService = function () {
     value: function getPathsThatContainNodeId(nodeId, paths) {
       var pathsThatContainNodeId = [];
       if (nodeId != null && paths != null) {
-        var _iteratorNormalCompletion41 = true;
-        var _didIteratorError41 = false;
-        var _iteratorError41 = undefined;
+        var _iteratorNormalCompletion42 = true;
+        var _didIteratorError42 = false;
+        var _iteratorError42 = undefined;
 
         try {
-          for (var _iterator41 = paths[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
-            var path = _step41.value;
+          for (var _iterator42 = paths[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
+            var path = _step42.value;
 
             // check if the path contains the node id
             if (path.indexOf(nodeId) != -1) {
@@ -3466,16 +3534,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError41 = true;
-          _iteratorError41 = err;
+          _didIteratorError42 = true;
+          _iteratorError42 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion41 && _iterator41.return) {
-              _iterator41.return();
+            if (!_iteratorNormalCompletion42 && _iterator42.return) {
+              _iterator42.return();
             }
           } finally {
-            if (_didIteratorError41) {
-              throw _iteratorError41;
+            if (_didIteratorError42) {
+              throw _iteratorError42;
             }
           }
         }
@@ -3655,13 +3723,13 @@ var ProjectService = function () {
         if (paths.length > 0) {
           var path = paths[0];
 
-          var _iteratorNormalCompletion42 = true;
-          var _didIteratorError42 = false;
-          var _iteratorError42 = undefined;
+          var _iteratorNormalCompletion43 = true;
+          var _didIteratorError43 = false;
+          var _iteratorError43 = undefined;
 
           try {
-            for (var _iterator42 = path[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
-              var tempNodeId = _step42.value;
+            for (var _iterator43 = path[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
+              var tempNodeId = _step43.value;
 
               if (this.allPathsContainNodeId(paths, tempNodeId)) {
                 /*
@@ -3673,16 +3741,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError42 = true;
-            _iteratorError42 = err;
+            _didIteratorError43 = true;
+            _iteratorError43 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion42 && _iterator42.return) {
-                _iterator42.return();
+              if (!_iteratorNormalCompletion43 && _iterator43.return) {
+                _iterator43.return();
               }
             } finally {
-              if (_didIteratorError42) {
-                throw _iteratorError42;
+              if (_didIteratorError43) {
+                throw _iteratorError43;
               }
             }
           }
@@ -3703,13 +3771,13 @@ var ProjectService = function () {
     value: function allPathsContainNodeId(paths, nodeId) {
       var result = false;
       if (paths != null) {
-        var _iteratorNormalCompletion43 = true;
-        var _didIteratorError43 = false;
-        var _iteratorError43 = undefined;
+        var _iteratorNormalCompletion44 = true;
+        var _didIteratorError44 = false;
+        var _iteratorError44 = undefined;
 
         try {
-          for (var _iterator43 = paths[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
-            var path = _step43.value;
+          for (var _iterator44 = paths[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
+            var path = _step44.value;
 
             var index = path.indexOf(nodeId);
             if (index == -1) {
@@ -3720,16 +3788,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError43 = true;
-          _iteratorError43 = err;
+          _didIteratorError44 = true;
+          _iteratorError44 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion43 && _iterator43.return) {
-              _iterator43.return();
+            if (!_iteratorNormalCompletion44 && _iterator44.return) {
+              _iterator44.return();
             }
           } finally {
-            if (_didIteratorError43) {
-              throw _iteratorError43;
+            if (_didIteratorError44) {
+              throw _iteratorError44;
             }
           }
         }
@@ -3749,13 +3817,13 @@ var ProjectService = function () {
      */
     value: function trimPathsUpToNodeId(paths, nodeId) {
       if (paths != null) {
-        var _iteratorNormalCompletion44 = true;
-        var _didIteratorError44 = false;
-        var _iteratorError44 = undefined;
+        var _iteratorNormalCompletion45 = true;
+        var _didIteratorError45 = false;
+        var _iteratorError45 = undefined;
 
         try {
-          for (var _iterator44 = paths[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
-            var path = _step44.value;
+          for (var _iterator45 = paths[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
+            var path = _step45.value;
 
             if (path != null) {
               var index = path.indexOf(nodeId);
@@ -3777,16 +3845,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError44 = true;
-          _iteratorError44 = err;
+          _didIteratorError45 = true;
+          _iteratorError45 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion44 && _iterator44.return) {
-              _iterator44.return();
+            if (!_iteratorNormalCompletion45 && _iterator45.return) {
+              _iterator45.return();
             }
           } finally {
-            if (_didIteratorError44) {
-              throw _iteratorError44;
+            if (_didIteratorError45) {
+              throw _iteratorError45;
             }
           }
         }
@@ -3806,13 +3874,13 @@ var ProjectService = function () {
     value: function extractPathsUpToNodeId(paths, nodeId) {
       var extractedPaths = [];
       if (paths != null) {
-        var _iteratorNormalCompletion45 = true;
-        var _didIteratorError45 = false;
-        var _iteratorError45 = undefined;
+        var _iteratorNormalCompletion46 = true;
+        var _didIteratorError46 = false;
+        var _iteratorError46 = undefined;
 
         try {
-          for (var _iterator45 = paths[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
-            var path = _step45.value;
+          for (var _iterator46 = paths[Symbol.iterator](), _step46; !(_iteratorNormalCompletion46 = (_step46 = _iterator46.next()).done); _iteratorNormalCompletion46 = true) {
+            var path = _step46.value;
 
             if (path != null) {
               var index = path.indexOf(nodeId);
@@ -3835,16 +3903,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError45 = true;
-          _iteratorError45 = err;
+          _didIteratorError46 = true;
+          _iteratorError46 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion45 && _iterator45.return) {
-              _iterator45.return();
+            if (!_iteratorNormalCompletion46 && _iterator46.return) {
+              _iterator46.return();
             }
           } finally {
-            if (_didIteratorError45) {
-              throw _iteratorError45;
+            if (_didIteratorError46) {
+              throw _iteratorError46;
             }
           }
         }
@@ -3863,38 +3931,38 @@ var ProjectService = function () {
     value: function removeDuplicatePaths(paths) {
       var uniquePaths = [];
       if (paths != null) {
-        var _iteratorNormalCompletion46 = true;
-        var _didIteratorError46 = false;
-        var _iteratorError46 = undefined;
+        var _iteratorNormalCompletion47 = true;
+        var _didIteratorError47 = false;
+        var _iteratorError47 = undefined;
 
         try {
-          for (var _iterator46 = paths[Symbol.iterator](), _step46; !(_iteratorNormalCompletion46 = (_step46 = _iterator46.next()).done); _iteratorNormalCompletion46 = true) {
-            var path = _step46.value;
+          for (var _iterator47 = paths[Symbol.iterator](), _step47; !(_iteratorNormalCompletion47 = (_step47 = _iterator47.next()).done); _iteratorNormalCompletion47 = true) {
+            var path = _step47.value;
 
             var isPathInUniquePaths = false;
-            var _iteratorNormalCompletion47 = true;
-            var _didIteratorError47 = false;
-            var _iteratorError47 = undefined;
+            var _iteratorNormalCompletion48 = true;
+            var _didIteratorError48 = false;
+            var _iteratorError48 = undefined;
 
             try {
-              for (var _iterator47 = uniquePaths[Symbol.iterator](), _step47; !(_iteratorNormalCompletion47 = (_step47 = _iterator47.next()).done); _iteratorNormalCompletion47 = true) {
-                var uniquePath = _step47.value;
+              for (var _iterator48 = uniquePaths[Symbol.iterator](), _step48; !(_iteratorNormalCompletion48 = (_step48 = _iterator48.next()).done); _iteratorNormalCompletion48 = true) {
+                var uniquePath = _step48.value;
 
                 if (this.pathsEqual(path, uniquePath)) {
                   isPathInUniquePaths = true;
                 }
               }
             } catch (err) {
-              _didIteratorError47 = true;
-              _iteratorError47 = err;
+              _didIteratorError48 = true;
+              _iteratorError48 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion47 && _iterator47.return) {
-                  _iterator47.return();
+                if (!_iteratorNormalCompletion48 && _iterator48.return) {
+                  _iterator48.return();
                 }
               } finally {
-                if (_didIteratorError47) {
-                  throw _iteratorError47;
+                if (_didIteratorError48) {
+                  throw _iteratorError48;
                 }
               }
             }
@@ -3906,16 +3974,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError46 = true;
-          _iteratorError46 = err;
+          _didIteratorError47 = true;
+          _iteratorError47 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion46 && _iterator46.return) {
-              _iterator46.return();
+            if (!_iteratorNormalCompletion47 && _iterator47.return) {
+              _iterator47.return();
             }
           } finally {
-            if (_didIteratorError46) {
-              throw _iteratorError46;
+            if (_didIteratorError47) {
+              throw _iteratorError47;
             }
           }
         }
@@ -3963,24 +4031,24 @@ var ProjectService = function () {
      */
     value: function isNodeIdInABranch(branches, nodeId) {
       if (branches != null && nodeId != null) {
-        var _iteratorNormalCompletion48 = true;
-        var _didIteratorError48 = false;
-        var _iteratorError48 = undefined;
+        var _iteratorNormalCompletion49 = true;
+        var _didIteratorError49 = false;
+        var _iteratorError49 = undefined;
 
         try {
-          for (var _iterator48 = branches[Symbol.iterator](), _step48; !(_iteratorNormalCompletion48 = (_step48 = _iterator48.next()).done); _iteratorNormalCompletion48 = true) {
-            var branch = _step48.value;
+          for (var _iterator49 = branches[Symbol.iterator](), _step49; !(_iteratorNormalCompletion49 = (_step49 = _iterator49.next()).done); _iteratorNormalCompletion49 = true) {
+            var branch = _step49.value;
 
             if (branch != null) {
               var branchPaths = branch.branchPaths;
               if (branchPaths != null) {
-                var _iteratorNormalCompletion49 = true;
-                var _didIteratorError49 = false;
-                var _iteratorError49 = undefined;
+                var _iteratorNormalCompletion50 = true;
+                var _didIteratorError50 = false;
+                var _iteratorError50 = undefined;
 
                 try {
-                  for (var _iterator49 = branchPaths[Symbol.iterator](), _step49; !(_iteratorNormalCompletion49 = (_step49 = _iterator49.next()).done); _iteratorNormalCompletion49 = true) {
-                    var branchPath = _step49.value;
+                  for (var _iterator50 = branchPaths[Symbol.iterator](), _step50; !(_iteratorNormalCompletion50 = (_step50 = _iterator50.next()).done); _iteratorNormalCompletion50 = true) {
+                    var branchPath = _step50.value;
 
                     if (branchPath != null) {
                       var index = branchPath.indexOf(nodeId);
@@ -3990,16 +4058,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError49 = true;
-                  _iteratorError49 = err;
+                  _didIteratorError50 = true;
+                  _iteratorError50 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion49 && _iterator49.return) {
-                      _iterator49.return();
+                    if (!_iteratorNormalCompletion50 && _iterator50.return) {
+                      _iterator50.return();
                     }
                   } finally {
-                    if (_didIteratorError49) {
-                      throw _iteratorError49;
+                    if (_didIteratorError50) {
+                      throw _iteratorError50;
                     }
                   }
                 }
@@ -4007,16 +4075,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError48 = true;
-          _iteratorError48 = err;
+          _didIteratorError49 = true;
+          _iteratorError49 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion48 && _iterator48.return) {
-              _iterator48.return();
+            if (!_iteratorNormalCompletion49 && _iterator49.return) {
+              _iterator49.return();
             }
           } finally {
-            if (_didIteratorError48) {
-              throw _iteratorError48;
+            if (_didIteratorError49) {
+              throw _iteratorError49;
             }
           }
         }
@@ -4036,24 +4104,24 @@ var ProjectService = function () {
     value: function getBranchPathsByNodeId(branches, nodeId) {
       var branchPathsIn = [];
       if (branches != null && nodeId != null) {
-        var _iteratorNormalCompletion50 = true;
-        var _didIteratorError50 = false;
-        var _iteratorError50 = undefined;
+        var _iteratorNormalCompletion51 = true;
+        var _didIteratorError51 = false;
+        var _iteratorError51 = undefined;
 
         try {
-          for (var _iterator50 = branches[Symbol.iterator](), _step50; !(_iteratorNormalCompletion50 = (_step50 = _iterator50.next()).done); _iteratorNormalCompletion50 = true) {
-            var branch = _step50.value;
+          for (var _iterator51 = branches[Symbol.iterator](), _step51; !(_iteratorNormalCompletion51 = (_step51 = _iterator51.next()).done); _iteratorNormalCompletion51 = true) {
+            var branch = _step51.value;
 
             if (branch != null) {
               var branchPaths = branch.branchPaths;
               if (branchPaths != null) {
-                var _iteratorNormalCompletion51 = true;
-                var _didIteratorError51 = false;
-                var _iteratorError51 = undefined;
+                var _iteratorNormalCompletion52 = true;
+                var _didIteratorError52 = false;
+                var _iteratorError52 = undefined;
 
                 try {
-                  for (var _iterator51 = branchPaths[Symbol.iterator](), _step51; !(_iteratorNormalCompletion51 = (_step51 = _iterator51.next()).done); _iteratorNormalCompletion51 = true) {
-                    var branchPath = _step51.value;
+                  for (var _iterator52 = branchPaths[Symbol.iterator](), _step52; !(_iteratorNormalCompletion52 = (_step52 = _iterator52.next()).done); _iteratorNormalCompletion52 = true) {
+                    var branchPath = _step52.value;
 
                     if (branchPath != null) {
                       var index = branchPath.indexOf(nodeId);
@@ -4067,16 +4135,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError51 = true;
-                  _iteratorError51 = err;
+                  _didIteratorError52 = true;
+                  _iteratorError52 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion51 && _iterator51.return) {
-                      _iterator51.return();
+                    if (!_iteratorNormalCompletion52 && _iterator52.return) {
+                      _iterator52.return();
                     }
                   } finally {
-                    if (_didIteratorError51) {
-                      throw _iteratorError51;
+                    if (_didIteratorError52) {
+                      throw _iteratorError52;
                     }
                   }
                 }
@@ -4084,16 +4152,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError50 = true;
-          _iteratorError50 = err;
+          _didIteratorError51 = true;
+          _iteratorError51 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion50 && _iterator50.return) {
-              _iterator50.return();
+            if (!_iteratorNormalCompletion51 && _iterator51.return) {
+              _iterator51.return();
             }
           } finally {
-            if (_didIteratorError50) {
-              throw _iteratorError50;
+            if (_didIteratorError51) {
+              throw _iteratorError51;
             }
           }
         }
@@ -4113,13 +4181,13 @@ var ProjectService = function () {
     value: function getComponentByNodeIdAndComponentId(nodeId, componentId) {
       if (nodeId != null && componentId != null) {
         var components = this.getComponentsByNodeId(nodeId);
-        var _iteratorNormalCompletion52 = true;
-        var _didIteratorError52 = false;
-        var _iteratorError52 = undefined;
+        var _iteratorNormalCompletion53 = true;
+        var _didIteratorError53 = false;
+        var _iteratorError53 = undefined;
 
         try {
-          for (var _iterator52 = components[Symbol.iterator](), _step52; !(_iteratorNormalCompletion52 = (_step52 = _iterator52.next()).done); _iteratorNormalCompletion52 = true) {
-            var tempComponent = _step52.value;
+          for (var _iterator53 = components[Symbol.iterator](), _step53; !(_iteratorNormalCompletion53 = (_step53 = _iterator53.next()).done); _iteratorNormalCompletion53 = true) {
+            var tempComponent = _step53.value;
 
             if (tempComponent != null) {
               var tempComponentId = tempComponent.id;
@@ -4129,16 +4197,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError52 = true;
-          _iteratorError52 = err;
+          _didIteratorError53 = true;
+          _iteratorError53 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion52 && _iterator52.return) {
-              _iterator52.return();
+            if (!_iteratorNormalCompletion53 && _iterator53.return) {
+              _iterator53.return();
             }
           } finally {
-            if (_didIteratorError52) {
-              throw _iteratorError52;
+            if (_didIteratorError53) {
+              throw _iteratorError53;
             }
           }
         }
@@ -4347,13 +4415,13 @@ var ProjectService = function () {
            * loop through all the transitions that come out of the previous group
            * and get the node ids that the group transitions to
            */
-          var _iteratorNormalCompletion53 = true;
-          var _didIteratorError53 = false;
-          var _iteratorError53 = undefined;
+          var _iteratorNormalCompletion54 = true;
+          var _didIteratorError54 = false;
+          var _iteratorError54 = undefined;
 
           try {
-            for (var _iterator53 = transitionsFromGroup[Symbol.iterator](), _step53; !(_iteratorNormalCompletion53 = (_step53 = _iterator53.next()).done); _iteratorNormalCompletion53 = true) {
-              var transitionFromGroup = _step53.value;
+            for (var _iterator54 = transitionsFromGroup[Symbol.iterator](), _step54; !(_iteratorNormalCompletion54 = (_step54 = _iterator54.next()).done); _iteratorNormalCompletion54 = true) {
+              var transitionFromGroup = _step54.value;
 
               if (transitionFromGroup != null) {
                 var toNodeId = transitionFromGroup.to;
@@ -4363,16 +4431,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError53 = true;
-            _iteratorError53 = err;
+            _didIteratorError54 = true;
+            _iteratorError54 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion53 && _iterator53.return) {
-                _iterator53.return();
+              if (!_iteratorNormalCompletion54 && _iterator54.return) {
+                _iterator54.return();
               }
             } finally {
-              if (_didIteratorError53) {
-                throw _iteratorError53;
+              if (_didIteratorError54) {
+                throw _iteratorError54;
               }
             }
           }
@@ -4403,45 +4471,16 @@ var ProjectService = function () {
     value: function insertNodeAfterInGroups(nodeIdToInsert, nodeIdToInsertAfter) {
       var groupNodes = this.getGroupNodes();
       if (groupNodes != null) {
-        var _iteratorNormalCompletion54 = true;
-        var _didIteratorError54 = false;
-        var _iteratorError54 = undefined;
-
-        try {
-          for (var _iterator54 = groupNodes[Symbol.iterator](), _step54; !(_iteratorNormalCompletion54 = (_step54 = _iterator54.next()).done); _iteratorNormalCompletion54 = true) {
-            var group = _step54.value;
-
-            if (group != null) {
-              this.insertNodeAfterInGroup(group, nodeIdToInsert, nodeIdToInsertAfter);
-            }
-          }
-        } catch (err) {
-          _didIteratorError54 = true;
-          _iteratorError54 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion54 && _iterator54.return) {
-              _iterator54.return();
-            }
-          } finally {
-            if (_didIteratorError54) {
-              throw _iteratorError54;
-            }
-          }
-        }
-      }
-      var inactiveGroupNodes = this.getInactiveGroupNodes();
-      if (inactiveGroupNodes != null) {
         var _iteratorNormalCompletion55 = true;
         var _didIteratorError55 = false;
         var _iteratorError55 = undefined;
 
         try {
-          for (var _iterator55 = inactiveGroupNodes[Symbol.iterator](), _step55; !(_iteratorNormalCompletion55 = (_step55 = _iterator55.next()).done); _iteratorNormalCompletion55 = true) {
-            var inactiveGroup = _step55.value;
+          for (var _iterator55 = groupNodes[Symbol.iterator](), _step55; !(_iteratorNormalCompletion55 = (_step55 = _iterator55.next()).done); _iteratorNormalCompletion55 = true) {
+            var group = _step55.value;
 
-            if (inactiveGroup != null) {
-              this.insertNodeAfterInGroup(inactiveGroup, nodeIdToInsert, nodeIdToInsertAfter);
+            if (group != null) {
+              this.insertNodeAfterInGroup(group, nodeIdToInsert, nodeIdToInsertAfter);
             }
           }
         } catch (err) {
@@ -4455,6 +4494,35 @@ var ProjectService = function () {
           } finally {
             if (_didIteratorError55) {
               throw _iteratorError55;
+            }
+          }
+        }
+      }
+      var inactiveGroupNodes = this.getInactiveGroupNodes();
+      if (inactiveGroupNodes != null) {
+        var _iteratorNormalCompletion56 = true;
+        var _didIteratorError56 = false;
+        var _iteratorError56 = undefined;
+
+        try {
+          for (var _iterator56 = inactiveGroupNodes[Symbol.iterator](), _step56; !(_iteratorNormalCompletion56 = (_step56 = _iterator56.next()).done); _iteratorNormalCompletion56 = true) {
+            var inactiveGroup = _step56.value;
+
+            if (inactiveGroup != null) {
+              this.insertNodeAfterInGroup(inactiveGroup, nodeIdToInsert, nodeIdToInsertAfter);
+            }
+          }
+        } catch (err) {
+          _didIteratorError56 = true;
+          _iteratorError56 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion56 && _iterator56.return) {
+              _iterator56.return();
+            }
+          } finally {
+            if (_didIteratorError56) {
+              throw _iteratorError56;
             }
           }
         }
@@ -4546,13 +4614,13 @@ var ProjectService = function () {
             var parentTransitions = this.getTransitionsByFromNodeId(parentGroupId);
 
             if (parentTransitions != null) {
-              var _iteratorNormalCompletion56 = true;
-              var _didIteratorError56 = false;
-              var _iteratorError56 = undefined;
+              var _iteratorNormalCompletion57 = true;
+              var _didIteratorError57 = false;
+              var _iteratorError57 = undefined;
 
               try {
-                for (var _iterator56 = parentTransitions[Symbol.iterator](), _step56; !(_iteratorNormalCompletion56 = (_step56 = _iterator56.next()).done); _iteratorNormalCompletion56 = true) {
-                  var parentTransition = _step56.value;
+                for (var _iterator57 = parentTransitions[Symbol.iterator](), _step57; !(_iteratorNormalCompletion57 = (_step57 = _iterator57.next()).done); _iteratorNormalCompletion57 = true) {
+                  var parentTransition = _step57.value;
 
                   var newTransition = {};
                   if (parentTransition != null) {
@@ -4573,16 +4641,16 @@ var ProjectService = function () {
                   node.transitionLogic.transitions.push(newTransition);
                 }
               } catch (err) {
-                _didIteratorError56 = true;
-                _iteratorError56 = err;
+                _didIteratorError57 = true;
+                _iteratorError57 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion56 && _iterator56.return) {
-                    _iterator56.return();
+                  if (!_iteratorNormalCompletion57 && _iterator57.return) {
+                    _iterator57.return();
                   }
                 } finally {
-                  if (_didIteratorError56) {
-                    throw _iteratorError56;
+                  if (_didIteratorError57) {
+                    throw _iteratorError57;
                   }
                 }
               }
@@ -4611,13 +4679,13 @@ var ProjectService = function () {
             node.constraints = [];
           }
 
-          var _iteratorNormalCompletion57 = true;
-          var _didIteratorError57 = false;
-          var _iteratorError57 = undefined;
+          var _iteratorNormalCompletion58 = true;
+          var _didIteratorError58 = false;
+          var _iteratorError58 = undefined;
 
           try {
-            for (var _iterator57 = branchPathTakenConstraints[Symbol.iterator](), _step57; !(_iteratorNormalCompletion57 = (_step57 = _iterator57.next()).done); _iteratorNormalCompletion57 = true) {
-              var branchPathTakenConstraint = _step57.value;
+            for (var _iterator58 = branchPathTakenConstraints[Symbol.iterator](), _step58; !(_iteratorNormalCompletion58 = (_step58 = _iterator58.next()).done); _iteratorNormalCompletion58 = true) {
+              var branchPathTakenConstraint = _step58.value;
 
               if (branchPathTakenConstraint != null) {
                 // create a new constraint with the same branch path taken parameters
@@ -4630,16 +4698,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError57 = true;
-            _iteratorError57 = err;
+            _didIteratorError58 = true;
+            _iteratorError58 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion57 && _iterator57.return) {
-                _iterator57.return();
+              if (!_iteratorNormalCompletion58 && _iterator58.return) {
+                _iterator58.return();
               }
             } finally {
-              if (_didIteratorError57) {
-                throw _iteratorError57;
+              if (_didIteratorError58) {
+                throw _iteratorError58;
               }
             }
           }
@@ -4709,106 +4777,71 @@ var ProjectService = function () {
 
         if (previousNodes == null || previousNodes.length == 0) {
           var previousGroups = this.getGroupNodesByToNodeId(nodeIdToInsertInside);
-          var _iteratorNormalCompletion58 = true;
-          var _didIteratorError58 = false;
-          var _iteratorError58 = undefined;
+          var _iteratorNormalCompletion59 = true;
+          var _didIteratorError59 = false;
+          var _iteratorError59 = undefined;
 
           try {
-            for (var _iterator58 = previousGroups[Symbol.iterator](), _step58; !(_iteratorNormalCompletion58 = (_step58 = _iterator58.next()).done); _iteratorNormalCompletion58 = true) {
-              var previousGroup = _step58.value;
+            for (var _iterator59 = previousGroups[Symbol.iterator](), _step59; !(_iteratorNormalCompletion59 = (_step59 = _iterator59.next()).done); _iteratorNormalCompletion59 = true) {
+              var previousGroup = _step59.value;
 
               if (previousGroup != null) {
                 // get the nodes that do not have a transition in the previous group
                 var lastNodesInGroup = this.getLastNodesInGroup(previousGroup.id);
 
-                var _iteratorNormalCompletion59 = true;
-                var _didIteratorError59 = false;
-                var _iteratorError59 = undefined;
+                var _iteratorNormalCompletion60 = true;
+                var _didIteratorError60 = false;
+                var _iteratorError60 = undefined;
 
                 try {
-                  for (var _iterator59 = lastNodesInGroup[Symbol.iterator](), _step59; !(_iteratorNormalCompletion59 = (_step59 = _iterator59.next()).done); _iteratorNormalCompletion59 = true) {
-                    var node = _step59.value;
+                  for (var _iterator60 = lastNodesInGroup[Symbol.iterator](), _step60; !(_iteratorNormalCompletion60 = (_step60 = _iterator60.next()).done); _iteratorNormalCompletion60 = true) {
+                    var node = _step60.value;
 
                     // add a transition from the node to the node we are inserting
                     this.addToTransition(node, nodeIdToInsert);
                   }
                 } catch (err) {
-                  _didIteratorError59 = true;
-                  _iteratorError59 = err;
+                  _didIteratorError60 = true;
+                  _iteratorError60 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion59 && _iterator59.return) {
-                      _iterator59.return();
+                    if (!_iteratorNormalCompletion60 && _iterator60.return) {
+                      _iterator60.return();
                     }
                   } finally {
-                    if (_didIteratorError59) {
-                      throw _iteratorError59;
+                    if (_didIteratorError60) {
+                      throw _iteratorError60;
                     }
                   }
                 }
               }
             }
           } catch (err) {
-            _didIteratorError58 = true;
-            _iteratorError58 = err;
+            _didIteratorError59 = true;
+            _iteratorError59 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion58 && _iterator58.return) {
-                _iterator58.return();
+              if (!_iteratorNormalCompletion59 && _iterator59.return) {
+                _iterator59.return();
               }
             } finally {
-              if (_didIteratorError58) {
-                throw _iteratorError58;
+              if (_didIteratorError59) {
+                throw _iteratorError59;
               }
             }
           }
         } else {
-          var _iteratorNormalCompletion60 = true;
-          var _didIteratorError60 = false;
-          var _iteratorError60 = undefined;
-
-          try {
-            for (var _iterator60 = previousNodes[Symbol.iterator](), _step60; !(_iteratorNormalCompletion60 = (_step60 = _iterator60.next()).done); _iteratorNormalCompletion60 = true) {
-              var previousNode = _step60.value;
-
-              if (previousNode != null && previousNode.id != 'group0') {
-                // change the transition to point to the node we are inserting
-                this.updateToTransition(previousNode, startId, nodeIdToInsert);
-              }
-            }
-          } catch (err) {
-            _didIteratorError60 = true;
-            _iteratorError60 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion60 && _iterator60.return) {
-                _iterator60.return();
-              }
-            } finally {
-              if (_didIteratorError60) {
-                throw _iteratorError60;
-              }
-            }
-          }
-        }
-
-        /*
-         * update all the transitions that point to the group and change
-         * them to point to the new start id
-         */
-        var nodesThatTransitionToGroup = this.getNodesByToNodeId(nodeIdToInsertInside);
-
-        if (nodesThatTransitionToGroup != null) {
           var _iteratorNormalCompletion61 = true;
           var _didIteratorError61 = false;
           var _iteratorError61 = undefined;
 
           try {
-            for (var _iterator61 = nodesThatTransitionToGroup[Symbol.iterator](), _step61; !(_iteratorNormalCompletion61 = (_step61 = _iterator61.next()).done); _iteratorNormalCompletion61 = true) {
-              var nodeThatTransitionsToGroup = _step61.value;
+            for (var _iterator61 = previousNodes[Symbol.iterator](), _step61; !(_iteratorNormalCompletion61 = (_step61 = _iterator61.next()).done); _iteratorNormalCompletion61 = true) {
+              var previousNode = _step61.value;
 
-              if (!this.isGroupNode(nodeThatTransitionsToGroup.id)) {
-                this.updateToTransition(nodeThatTransitionsToGroup, nodeIdToInsertInside, nodeIdToInsert);
+              if (previousNode != null && previousNode.id != 'group0') {
+                // change the transition to point to the node we are inserting
+                this.updateToTransition(previousNode, startId, nodeIdToInsert);
               }
             }
           } catch (err) {
@@ -4822,6 +4855,41 @@ var ProjectService = function () {
             } finally {
               if (_didIteratorError61) {
                 throw _iteratorError61;
+              }
+            }
+          }
+        }
+
+        /*
+         * update all the transitions that point to the group and change
+         * them to point to the new start id
+         */
+        var nodesThatTransitionToGroup = this.getNodesByToNodeId(nodeIdToInsertInside);
+
+        if (nodesThatTransitionToGroup != null) {
+          var _iteratorNormalCompletion62 = true;
+          var _didIteratorError62 = false;
+          var _iteratorError62 = undefined;
+
+          try {
+            for (var _iterator62 = nodesThatTransitionToGroup[Symbol.iterator](), _step62; !(_iteratorNormalCompletion62 = (_step62 = _iterator62.next()).done); _iteratorNormalCompletion62 = true) {
+              var nodeThatTransitionsToGroup = _step62.value;
+
+              if (!this.isGroupNode(nodeThatTransitionsToGroup.id)) {
+                this.updateToTransition(nodeThatTransitionsToGroup, nodeIdToInsertInside, nodeIdToInsert);
+              }
+            }
+          } catch (err) {
+            _didIteratorError62 = true;
+            _iteratorError62 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion62 && _iterator62.return) {
+                _iterator62.return();
+              }
+            } finally {
+              if (_didIteratorError62) {
+                throw _iteratorError62;
               }
             }
           }
@@ -4867,13 +4935,13 @@ var ProjectService = function () {
           var parentTransitions = this.getTransitionsByFromNodeId(nodeIdToInsertInside);
 
           if (parentTransitions != null) {
-            var _iteratorNormalCompletion62 = true;
-            var _didIteratorError62 = false;
-            var _iteratorError62 = undefined;
+            var _iteratorNormalCompletion63 = true;
+            var _didIteratorError63 = false;
+            var _iteratorError63 = undefined;
 
             try {
-              for (var _iterator62 = parentTransitions[Symbol.iterator](), _step62; !(_iteratorNormalCompletion62 = (_step62 = _iterator62.next()).done); _iteratorNormalCompletion62 = true) {
-                var parentTransition = _step62.value;
+              for (var _iterator63 = parentTransitions[Symbol.iterator](), _step63; !(_iteratorNormalCompletion63 = (_step63 = _iterator63.next()).done); _iteratorNormalCompletion63 = true) {
+                var parentTransition = _step63.value;
 
                 if (parentTransition != null) {
                   var toNodeId = parentTransition.to;
@@ -4903,16 +4971,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError62 = true;
-              _iteratorError62 = err;
+              _didIteratorError63 = true;
+              _iteratorError63 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion62 && _iterator62.return) {
-                  _iterator62.return();
+                if (!_iteratorNormalCompletion63 && _iterator63.return) {
+                  _iterator63.return();
                 }
               } finally {
-                if (_didIteratorError62) {
-                  throw _iteratorError62;
+                if (_didIteratorError63) {
+                  throw _iteratorError63;
                 }
               }
             }
@@ -4968,13 +5036,13 @@ var ProjectService = function () {
         }
 
         var transitions = node.transitionLogic.transitions;
-        var _iteratorNormalCompletion63 = true;
-        var _didIteratorError63 = false;
-        var _iteratorError63 = undefined;
+        var _iteratorNormalCompletion64 = true;
+        var _didIteratorError64 = false;
+        var _iteratorError64 = undefined;
 
         try {
-          for (var _iterator63 = transitions[Symbol.iterator](), _step63; !(_iteratorNormalCompletion63 = (_step63 = _iterator63.next()).done); _iteratorNormalCompletion63 = true) {
-            var transition = _step63.value;
+          for (var _iterator64 = transitions[Symbol.iterator](), _step64; !(_iteratorNormalCompletion64 = (_step64 = _iterator64.next()).done); _iteratorNormalCompletion64 = true) {
+            var transition = _step64.value;
 
             if (transition != null) {
               var toNodeId = transition.to;
@@ -4984,16 +5052,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError63 = true;
-          _iteratorError63 = err;
+          _didIteratorError64 = true;
+          _iteratorError64 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion63 && _iterator63.return) {
-              _iterator63.return();
+            if (!_iteratorNormalCompletion64 && _iterator64.return) {
+              _iterator64.return();
             }
           } finally {
-            if (_didIteratorError63) {
-              throw _iteratorError63;
+            if (_didIteratorError64) {
+              throw _iteratorError64;
             }
           }
         }
@@ -5015,13 +5083,13 @@ var ProjectService = function () {
         if (group != null) {
           var childIds = group.ids;
           if (childIds != null) {
-            var _iteratorNormalCompletion64 = true;
-            var _didIteratorError64 = false;
-            var _iteratorError64 = undefined;
+            var _iteratorNormalCompletion65 = true;
+            var _didIteratorError65 = false;
+            var _iteratorError65 = undefined;
 
             try {
-              for (var _iterator64 = childIds[Symbol.iterator](), _step64; !(_iteratorNormalCompletion64 = (_step64 = _iterator64.next()).done); _iteratorNormalCompletion64 = true) {
-                var childId = _step64.value;
+              for (var _iterator65 = childIds[Symbol.iterator](), _step65; !(_iteratorNormalCompletion65 = (_step65 = _iterator65.next()).done); _iteratorNormalCompletion65 = true) {
+                var childId = _step65.value;
 
                 if (childId != null) {
                   var child = this.getNodeById(childId);
@@ -5037,16 +5105,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError64 = true;
-              _iteratorError64 = err;
+              _didIteratorError65 = true;
+              _iteratorError65 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion64 && _iterator64.return) {
-                  _iterator64.return();
+                if (!_iteratorNormalCompletion65 && _iterator65.return) {
+                  _iterator65.return();
                 }
               } finally {
-                if (_didIteratorError64) {
-                  throw _iteratorError64;
+                if (_didIteratorError65) {
+                  throw _iteratorError65;
                 }
               }
             }
@@ -5066,13 +5134,13 @@ var ProjectService = function () {
     value: function getNextAvailableGroupId() {
       var groupIds = this.getGroupIds();
       var largestGroupIdNumber = null;
-      var _iteratorNormalCompletion65 = true;
-      var _didIteratorError65 = false;
-      var _iteratorError65 = undefined;
+      var _iteratorNormalCompletion66 = true;
+      var _didIteratorError66 = false;
+      var _iteratorError66 = undefined;
 
       try {
-        for (var _iterator65 = groupIds[Symbol.iterator](), _step65; !(_iteratorNormalCompletion65 = (_step65 = _iterator65.next()).done); _iteratorNormalCompletion65 = true) {
-          var groupId = _step65.value;
+        for (var _iterator66 = groupIds[Symbol.iterator](), _step66; !(_iteratorNormalCompletion66 = (_step66 = _iterator66.next()).done); _iteratorNormalCompletion66 = true) {
+          var groupId = _step66.value;
 
           // get the number from the group id e.g. the number of 'group2' would be 2
           var groupIdNumber = groupId.replace('group', '');
@@ -5090,16 +5158,16 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError65 = true;
-        _iteratorError65 = err;
+        _didIteratorError66 = true;
+        _iteratorError66 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion65 && _iterator65.return) {
-            _iterator65.return();
+          if (!_iteratorNormalCompletion66 && _iterator66.return) {
+            _iterator66.return();
           }
         } finally {
-          if (_didIteratorError65) {
-            throw _iteratorError65;
+          if (_didIteratorError66) {
+            throw _iteratorError66;
           }
         }
       }
@@ -5119,49 +5187,18 @@ var ProjectService = function () {
       var groupIds = [];
 
       var groupNodes = this.groupNodes;
-      var _iteratorNormalCompletion66 = true;
-      var _didIteratorError66 = false;
-      var _iteratorError66 = undefined;
-
-      try {
-        for (var _iterator66 = groupNodes[Symbol.iterator](), _step66; !(_iteratorNormalCompletion66 = (_step66 = _iterator66.next()).done); _iteratorNormalCompletion66 = true) {
-          var group = _step66.value;
-
-          if (group != null) {
-            var groupId = group.id;
-            if (groupId != null) {
-              groupIds.push(groupId);
-            }
-          }
-        }
-      } catch (err) {
-        _didIteratorError66 = true;
-        _iteratorError66 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion66 && _iterator66.return) {
-            _iterator66.return();
-          }
-        } finally {
-          if (_didIteratorError66) {
-            throw _iteratorError66;
-          }
-        }
-      }
-
-      var inactiveGroupNodes = this.getInactiveGroupNodes();
       var _iteratorNormalCompletion67 = true;
       var _didIteratorError67 = false;
       var _iteratorError67 = undefined;
 
       try {
-        for (var _iterator67 = inactiveGroupNodes[Symbol.iterator](), _step67; !(_iteratorNormalCompletion67 = (_step67 = _iterator67.next()).done); _iteratorNormalCompletion67 = true) {
-          var inactiveGroup = _step67.value;
+        for (var _iterator67 = groupNodes[Symbol.iterator](), _step67; !(_iteratorNormalCompletion67 = (_step67 = _iterator67.next()).done); _iteratorNormalCompletion67 = true) {
+          var group = _step67.value;
 
-          if (inactiveGroup != null) {
-            var inactiveGroupId = inactiveGroup.id;
-            if (inactiveGroupId != null) {
-              groupIds.push(inactiveGroupId);
+          if (group != null) {
+            var groupId = group.id;
+            if (groupId != null) {
+              groupIds.push(groupId);
             }
           }
         }
@@ -5176,6 +5213,37 @@ var ProjectService = function () {
         } finally {
           if (_didIteratorError67) {
             throw _iteratorError67;
+          }
+        }
+      }
+
+      var inactiveGroupNodes = this.getInactiveGroupNodes();
+      var _iteratorNormalCompletion68 = true;
+      var _didIteratorError68 = false;
+      var _iteratorError68 = undefined;
+
+      try {
+        for (var _iterator68 = inactiveGroupNodes[Symbol.iterator](), _step68; !(_iteratorNormalCompletion68 = (_step68 = _iterator68.next()).done); _iteratorNormalCompletion68 = true) {
+          var inactiveGroup = _step68.value;
+
+          if (inactiveGroup != null) {
+            var inactiveGroupId = inactiveGroup.id;
+            if (inactiveGroupId != null) {
+              groupIds.push(inactiveGroupId);
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError68 = true;
+        _iteratorError68 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion68 && _iterator68.return) {
+            _iterator68.return();
+          }
+        } finally {
+          if (_didIteratorError68) {
+            throw _iteratorError68;
           }
         }
       }
@@ -5204,13 +5272,13 @@ var ProjectService = function () {
       var nodeIds = this.getNodeIds();
       var largestNodeIdNumber = null;
 
-      var _iteratorNormalCompletion68 = true;
-      var _didIteratorError68 = false;
-      var _iteratorError68 = undefined;
+      var _iteratorNormalCompletion69 = true;
+      var _didIteratorError69 = false;
+      var _iteratorError69 = undefined;
 
       try {
-        for (var _iterator68 = nodeIds[Symbol.iterator](), _step68; !(_iteratorNormalCompletion68 = (_step68 = _iterator68.next()).done); _iteratorNormalCompletion68 = true) {
-          var nodeId = _step68.value;
+        for (var _iterator69 = nodeIds[Symbol.iterator](), _step69; !(_iteratorNormalCompletion69 = (_step69 = _iterator69.next()).done); _iteratorNormalCompletion69 = true) {
+          var nodeId = _step69.value;
 
           // get the number from the node id e.g. the number of 'node2' would be 2
           var _nodeIdNumber = nodeId.replace('node', '');
@@ -5224,45 +5292,6 @@ var ProjectService = function () {
               largestNodeIdNumber = _nodeIdNumber;
             } else if (_nodeIdNumber > largestNodeIdNumber) {
               largestNodeIdNumber = _nodeIdNumber;
-            }
-          }
-        }
-      } catch (err) {
-        _didIteratorError68 = true;
-        _iteratorError68 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion68 && _iterator68.return) {
-            _iterator68.return();
-          }
-        } finally {
-          if (_didIteratorError68) {
-            throw _iteratorError68;
-          }
-        }
-      }
-
-      var inactiveNodeIds = this.getInactiveNodeIds();
-      var _iteratorNormalCompletion69 = true;
-      var _didIteratorError69 = false;
-      var _iteratorError69 = undefined;
-
-      try {
-        for (var _iterator69 = inactiveNodeIds[Symbol.iterator](), _step69; !(_iteratorNormalCompletion69 = (_step69 = _iterator69.next()).done); _iteratorNormalCompletion69 = true) {
-          var inactiveNodeId = _step69.value;
-
-          // get the number from the node id e.g. the number of 'node2' would be 2
-          var _nodeIdNumber2 = inactiveNodeId.replace('node', '');
-
-          // make sure the number is an actual number
-          if (!isNaN(_nodeIdNumber2)) {
-            _nodeIdNumber2 = parseInt(_nodeIdNumber2);
-
-            // update the largest node id number if necessary
-            if (largestNodeIdNumber == null) {
-              largestNodeIdNumber = _nodeIdNumber2;
-            } else if (_nodeIdNumber2 > largestNodeIdNumber) {
-              largestNodeIdNumber = _nodeIdNumber2;
             }
           }
         }
@@ -5281,16 +5310,55 @@ var ProjectService = function () {
         }
       }
 
+      var inactiveNodeIds = this.getInactiveNodeIds();
+      var _iteratorNormalCompletion70 = true;
+      var _didIteratorError70 = false;
+      var _iteratorError70 = undefined;
+
+      try {
+        for (var _iterator70 = inactiveNodeIds[Symbol.iterator](), _step70; !(_iteratorNormalCompletion70 = (_step70 = _iterator70.next()).done); _iteratorNormalCompletion70 = true) {
+          var inactiveNodeId = _step70.value;
+
+          // get the number from the node id e.g. the number of 'node2' would be 2
+          var _nodeIdNumber2 = inactiveNodeId.replace('node', '');
+
+          // make sure the number is an actual number
+          if (!isNaN(_nodeIdNumber2)) {
+            _nodeIdNumber2 = parseInt(_nodeIdNumber2);
+
+            // update the largest node id number if necessary
+            if (largestNodeIdNumber == null) {
+              largestNodeIdNumber = _nodeIdNumber2;
+            } else if (_nodeIdNumber2 > largestNodeIdNumber) {
+              largestNodeIdNumber = _nodeIdNumber2;
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError70 = true;
+        _iteratorError70 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion70 && _iterator70.return) {
+            _iterator70.return();
+          }
+        } finally {
+          if (_didIteratorError70) {
+            throw _iteratorError70;
+          }
+        }
+      }
+
       if (nodeIdsToSkip != null) {
         // there are node ids to skip
 
-        var _iteratorNormalCompletion70 = true;
-        var _didIteratorError70 = false;
-        var _iteratorError70 = undefined;
+        var _iteratorNormalCompletion71 = true;
+        var _didIteratorError71 = false;
+        var _iteratorError71 = undefined;
 
         try {
-          for (var _iterator70 = nodeIdsToSkip[Symbol.iterator](), _step70; !(_iteratorNormalCompletion70 = (_step70 = _iterator70.next()).done); _iteratorNormalCompletion70 = true) {
-            var nodeIdToSkip = _step70.value;
+          for (var _iterator71 = nodeIdsToSkip[Symbol.iterator](), _step71; !(_iteratorNormalCompletion71 = (_step71 = _iterator71.next()).done); _iteratorNormalCompletion71 = true) {
+            var nodeIdToSkip = _step71.value;
 
             // get the number from the node id e.g. the number of 'node2' would be 2
             var nodeIdNumber = nodeIdToSkip.replace('node', '');
@@ -5308,16 +5376,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError70 = true;
-          _iteratorError70 = err;
+          _didIteratorError71 = true;
+          _iteratorError71 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion70 && _iterator70.return) {
-              _iterator70.return();
+            if (!_iteratorNormalCompletion71 && _iterator71.return) {
+              _iterator71.return();
             }
           } finally {
-            if (_didIteratorError70) {
-              throw _iteratorError70;
+            if (_didIteratorError71) {
+              throw _iteratorError71;
             }
           }
         }
@@ -5336,13 +5404,13 @@ var ProjectService = function () {
     key: 'getNodeIds',
     value: function getNodeIds() {
       var nodeIds = [];
-      var _iteratorNormalCompletion71 = true;
-      var _didIteratorError71 = false;
-      var _iteratorError71 = undefined;
+      var _iteratorNormalCompletion72 = true;
+      var _didIteratorError72 = false;
+      var _iteratorError72 = undefined;
 
       try {
-        for (var _iterator71 = this.applicationNodes[Symbol.iterator](), _step71; !(_iteratorNormalCompletion71 = (_step71 = _iterator71.next()).done); _iteratorNormalCompletion71 = true) {
-          var node = _step71.value;
+        for (var _iterator72 = this.applicationNodes[Symbol.iterator](), _step72; !(_iteratorNormalCompletion72 = (_step72 = _iterator72.next()).done); _iteratorNormalCompletion72 = true) {
+          var node = _step72.value;
 
           if (node != null) {
             var nodeId = node.id;
@@ -5352,16 +5420,16 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError71 = true;
-        _iteratorError71 = err;
+        _didIteratorError72 = true;
+        _iteratorError72 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion71 && _iterator71.return) {
-            _iterator71.return();
+          if (!_iteratorNormalCompletion72 && _iterator72.return) {
+            _iterator72.return();
           }
         } finally {
-          if (_didIteratorError71) {
-            throw _iteratorError71;
+          if (_didIteratorError72) {
+            throw _iteratorError72;
           }
         }
       }
@@ -5380,13 +5448,13 @@ var ProjectService = function () {
       var nodeIds = [];
       var inactiveNodes = this.project.inactiveNodes;
       if (inactiveNodes != null) {
-        var _iteratorNormalCompletion72 = true;
-        var _didIteratorError72 = false;
-        var _iteratorError72 = undefined;
+        var _iteratorNormalCompletion73 = true;
+        var _didIteratorError73 = false;
+        var _iteratorError73 = undefined;
 
         try {
-          for (var _iterator72 = inactiveNodes[Symbol.iterator](), _step72; !(_iteratorNormalCompletion72 = (_step72 = _iterator72.next()).done); _iteratorNormalCompletion72 = true) {
-            var inactiveNode = _step72.value;
+          for (var _iterator73 = inactiveNodes[Symbol.iterator](), _step73; !(_iteratorNormalCompletion73 = (_step73 = _iterator73.next()).done); _iteratorNormalCompletion73 = true) {
+            var inactiveNode = _step73.value;
 
             if (inactiveNode != null) {
               var nodeId = inactiveNode.id;
@@ -5396,16 +5464,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError72 = true;
-          _iteratorError72 = err;
+          _didIteratorError73 = true;
+          _iteratorError73 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion72 && _iterator72.return) {
-              _iterator72.return();
+            if (!_iteratorNormalCompletion73 && _iterator73.return) {
+              _iterator73.return();
             }
           } finally {
-            if (_didIteratorError72) {
-              throw _iteratorError72;
+            if (_didIteratorError73) {
+              throw _iteratorError73;
             }
           }
         }
@@ -5533,13 +5601,13 @@ var ProjectService = function () {
     value: function moveNodesAfter(nodeIds, nodeId) {
       var movedNodes = [];
 
-      var _iteratorNormalCompletion73 = true;
-      var _didIteratorError73 = false;
-      var _iteratorError73 = undefined;
+      var _iteratorNormalCompletion74 = true;
+      var _didIteratorError74 = false;
+      var _iteratorError74 = undefined;
 
       try {
-        for (var _iterator73 = nodeIds[Symbol.iterator](), _step73; !(_iteratorNormalCompletion73 = (_step73 = _iterator73.next()).done); _iteratorNormalCompletion73 = true) {
-          var tempNodeId = _step73.value;
+        for (var _iterator74 = nodeIds[Symbol.iterator](), _step74; !(_iteratorNormalCompletion74 = (_step74 = _iterator74.next()).done); _iteratorNormalCompletion74 = true) {
+          var tempNodeId = _step74.value;
 
           var node = this.getNodeById(tempNodeId);
           movedNodes.push(node);
@@ -5578,16 +5646,16 @@ var ProjectService = function () {
           nodeId = node.id;
         }
       } catch (err) {
-        _didIteratorError73 = true;
-        _iteratorError73 = err;
+        _didIteratorError74 = true;
+        _iteratorError74 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion73 && _iterator73.return) {
-            _iterator73.return();
+          if (!_iteratorNormalCompletion74 && _iterator74.return) {
+            _iterator74.return();
           }
         } finally {
-          if (_didIteratorError73) {
-            throw _iteratorError73;
+          if (_didIteratorError74) {
+            throw _iteratorError74;
           }
         }
       }
@@ -5639,13 +5707,13 @@ var ProjectService = function () {
     key: 'copyNodesAfter',
     value: function copyNodesAfter(nodeIds, nodeId) {
       var newNodes = [];
-      var _iteratorNormalCompletion74 = true;
-      var _didIteratorError74 = false;
-      var _iteratorError74 = undefined;
+      var _iteratorNormalCompletion75 = true;
+      var _didIteratorError75 = false;
+      var _iteratorError75 = undefined;
 
       try {
-        for (var _iterator74 = nodeIds[Symbol.iterator](), _step74; !(_iteratorNormalCompletion74 = (_step74 = _iterator74.next()).done); _iteratorNormalCompletion74 = true) {
-          var nodeIdToCopy = _step74.value;
+        for (var _iterator75 = nodeIds[Symbol.iterator](), _step75; !(_iteratorNormalCompletion75 = (_step75 = _iterator75.next()).done); _iteratorNormalCompletion75 = true) {
+          var nodeIdToCopy = _step75.value;
 
           var newNode = this.copyNode(nodeIdToCopy);
           var newNodeId = newNode.id;
@@ -5658,16 +5726,16 @@ var ProjectService = function () {
           newNodes.push(newNode);
         }
       } catch (err) {
-        _didIteratorError74 = true;
-        _iteratorError74 = err;
+        _didIteratorError75 = true;
+        _iteratorError75 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion74 && _iterator74.return) {
-            _iterator74.return();
+          if (!_iteratorNormalCompletion75 && _iterator75.return) {
+            _iterator75.return();
           }
         } finally {
-          if (_didIteratorError74) {
-            throw _iteratorError74;
+          if (_didIteratorError75) {
+            throw _iteratorError75;
           }
         }
       }
@@ -5691,29 +5759,29 @@ var ProjectService = function () {
       nodeCopy.constraints = []; // clear constraints
 
       var newComponentIds = [];
-      var _iteratorNormalCompletion75 = true;
-      var _didIteratorError75 = false;
-      var _iteratorError75 = undefined;
+      var _iteratorNormalCompletion76 = true;
+      var _didIteratorError76 = false;
+      var _iteratorError76 = undefined;
 
       try {
-        for (var _iterator75 = nodeCopy.components[Symbol.iterator](), _step75; !(_iteratorNormalCompletion75 = (_step75 = _iterator75.next()).done); _iteratorNormalCompletion75 = true) {
-          var component = _step75.value;
+        for (var _iterator76 = nodeCopy.components[Symbol.iterator](), _step76; !(_iteratorNormalCompletion76 = (_step76 = _iterator76.next()).done); _iteratorNormalCompletion76 = true) {
+          var component = _step76.value;
 
           var newComponentId = this.getUnusedComponentId(newComponentIds);
           newComponentIds.push(newComponentId);
           component.id = newComponentId;
         }
       } catch (err) {
-        _didIteratorError75 = true;
-        _iteratorError75 = err;
+        _didIteratorError76 = true;
+        _iteratorError76 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion75 && _iterator75.return) {
-            _iterator75.return();
+          if (!_iteratorNormalCompletion76 && _iterator76.return) {
+            _iterator76.return();
           }
         } finally {
-          if (_didIteratorError75) {
-            throw _iteratorError75;
+          if (_didIteratorError76) {
+            throw _iteratorError76;
           }
         }
       }
@@ -5941,13 +6009,13 @@ var ProjectService = function () {
             // the node we are removing is the start node
 
             if (nodeToRemoveTransitions != null && nodeToRemoveTransitions.length > 0) {
-              var _iteratorNormalCompletion76 = true;
-              var _didIteratorError76 = false;
-              var _iteratorError76 = undefined;
+              var _iteratorNormalCompletion77 = true;
+              var _didIteratorError77 = false;
+              var _iteratorError77 = undefined;
 
               try {
-                for (var _iterator76 = nodeToRemoveTransitions[Symbol.iterator](), _step76; !(_iteratorNormalCompletion76 = (_step76 = _iterator76.next()).done); _iteratorNormalCompletion76 = true) {
-                  var nodeToRemoveTransition = _step76.value;
+                for (var _iterator77 = nodeToRemoveTransitions[Symbol.iterator](), _step77; !(_iteratorNormalCompletion77 = (_step77 = _iterator77.next()).done); _iteratorNormalCompletion77 = true) {
+                  var nodeToRemoveTransition = _step77.value;
 
                   if (nodeToRemoveTransition != null) {
                     var toNodeId = nodeToRemoveTransition.to;
@@ -5966,16 +6034,16 @@ var ProjectService = function () {
                   }
                 }
               } catch (err) {
-                _didIteratorError76 = true;
-                _iteratorError76 = err;
+                _didIteratorError77 = true;
+                _iteratorError77 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion76 && _iterator76.return) {
-                    _iterator76.return();
+                  if (!_iteratorNormalCompletion77 && _iterator77.return) {
+                    _iterator77.return();
                   }
                 } finally {
-                  if (_didIteratorError76) {
-                    throw _iteratorError76;
+                  if (_didIteratorError77) {
+                    throw _iteratorError77;
                   }
                 }
               }
@@ -6040,22 +6108,22 @@ var ProjectService = function () {
                   var nodeIdsInBranch = this.getNodeIdsInBranch(node.id, nodeId);
 
                   if (nodeIdsInBranch != null) {
-                    var _iteratorNormalCompletion77 = true;
-                    var _didIteratorError77 = false;
-                    var _iteratorError77 = undefined;
+                    var _iteratorNormalCompletion78 = true;
+                    var _didIteratorError78 = false;
+                    var _iteratorError78 = undefined;
 
                     try {
-                      for (var _iterator77 = nodeIdsInBranch[Symbol.iterator](), _step77; !(_iteratorNormalCompletion77 = (_step77 = _iterator77.next()).done); _iteratorNormalCompletion77 = true) {
-                        var nodeIdInBranch = _step77.value;
+                      for (var _iterator78 = nodeIdsInBranch[Symbol.iterator](), _step78; !(_iteratorNormalCompletion78 = (_step78 = _iterator78.next()).done); _iteratorNormalCompletion78 = true) {
+                        var nodeIdInBranch = _step78.value;
 
                         var nodeInBranch = this.getNodeById(nodeIdInBranch);
-                        var _iteratorNormalCompletion78 = true;
-                        var _didIteratorError78 = false;
-                        var _iteratorError78 = undefined;
+                        var _iteratorNormalCompletion79 = true;
+                        var _didIteratorError79 = false;
+                        var _iteratorError79 = undefined;
 
                         try {
-                          for (var _iterator78 = transitionsCopy[Symbol.iterator](), _step78; !(_iteratorNormalCompletion78 = (_step78 = _iterator78.next()).done); _iteratorNormalCompletion78 = true) {
-                            var transitionCopy = _step78.value;
+                          for (var _iterator79 = transitionsCopy[Symbol.iterator](), _step79; !(_iteratorNormalCompletion79 = (_step79 = _iterator79.next()).done); _iteratorNormalCompletion79 = true) {
+                            var transitionCopy = _step79.value;
 
                             if (transitionCopy != null) {
                               var currentFromNodeId = node.id;
@@ -6071,31 +6139,31 @@ var ProjectService = function () {
                             }
                           }
                         } catch (err) {
-                          _didIteratorError78 = true;
-                          _iteratorError78 = err;
+                          _didIteratorError79 = true;
+                          _iteratorError79 = err;
                         } finally {
                           try {
-                            if (!_iteratorNormalCompletion78 && _iterator78.return) {
-                              _iterator78.return();
+                            if (!_iteratorNormalCompletion79 && _iterator79.return) {
+                              _iterator79.return();
                             }
                           } finally {
-                            if (_didIteratorError78) {
-                              throw _iteratorError78;
+                            if (_didIteratorError79) {
+                              throw _iteratorError79;
                             }
                           }
                         }
                       }
                     } catch (err) {
-                      _didIteratorError77 = true;
-                      _iteratorError77 = err;
+                      _didIteratorError78 = true;
+                      _iteratorError78 = err;
                     } finally {
                       try {
-                        if (!_iteratorNormalCompletion77 && _iterator77.return) {
-                          _iterator77.return();
+                        if (!_iteratorNormalCompletion78 && _iterator78.return) {
+                          _iterator78.return();
                         }
                       } finally {
-                        if (_didIteratorError77) {
-                          throw _iteratorError77;
+                        if (_didIteratorError78) {
+                          throw _iteratorError78;
                         }
                       }
                     }
@@ -6107,13 +6175,13 @@ var ProjectService = function () {
                    */
                   var branches = this.getBranchesByBranchStartPointNodeId(nodeId);
 
-                  var _iteratorNormalCompletion79 = true;
-                  var _didIteratorError79 = false;
-                  var _iteratorError79 = undefined;
+                  var _iteratorNormalCompletion80 = true;
+                  var _didIteratorError80 = false;
+                  var _iteratorError80 = undefined;
 
                   try {
-                    for (var _iterator79 = branches[Symbol.iterator](), _step79; !(_iteratorNormalCompletion79 = (_step79 = _iterator79.next()).done); _iteratorNormalCompletion79 = true) {
-                      var branch = _step79.value;
+                    for (var _iterator80 = branches[Symbol.iterator](), _step80; !(_iteratorNormalCompletion80 = (_step80 = _iterator80.next()).done); _iteratorNormalCompletion80 = true) {
+                      var branch = _step80.value;
 
                       if (branch != null) {
                         /*
@@ -6123,57 +6191,57 @@ var ProjectService = function () {
                         var branchPaths = branch.branchPaths;
 
                         if (branchPaths != null) {
-                          var _iteratorNormalCompletion80 = true;
-                          var _didIteratorError80 = false;
-                          var _iteratorError80 = undefined;
+                          var _iteratorNormalCompletion81 = true;
+                          var _didIteratorError81 = false;
+                          var _iteratorError81 = undefined;
 
                           try {
-                            for (var _iterator80 = branchPaths[Symbol.iterator](), _step80; !(_iteratorNormalCompletion80 = (_step80 = _iterator80.next()).done); _iteratorNormalCompletion80 = true) {
-                              var branchPath = _step80.value;
+                            for (var _iterator81 = branchPaths[Symbol.iterator](), _step81; !(_iteratorNormalCompletion81 = (_step81 = _iterator81.next()).done); _iteratorNormalCompletion81 = true) {
+                              var branchPath = _step81.value;
 
                               if (branchPath != null) {
                                 var _currentFromNodeId = nodeId;
                                 var _currentToNodeId = branchPath[0];
                                 var _newFromNodeId = node.id;
                                 var _newToNodeId = branchPath[0];
-                                var _iteratorNormalCompletion81 = true;
-                                var _didIteratorError81 = false;
-                                var _iteratorError81 = undefined;
+                                var _iteratorNormalCompletion82 = true;
+                                var _didIteratorError82 = false;
+                                var _iteratorError82 = undefined;
 
                                 try {
-                                  for (var _iterator81 = branchPath[Symbol.iterator](), _step81; !(_iteratorNormalCompletion81 = (_step81 = _iterator81.next()).done); _iteratorNormalCompletion81 = true) {
-                                    var branchPathNodeId = _step81.value;
+                                  for (var _iterator82 = branchPath[Symbol.iterator](), _step82; !(_iteratorNormalCompletion82 = (_step82 = _iterator82.next()).done); _iteratorNormalCompletion82 = true) {
+                                    var branchPathNodeId = _step82.value;
 
                                     var branchPathNode = this.getNodeById(branchPathNodeId);
                                     this.updateBranchPathTakenConstraint(branchPathNode, _currentFromNodeId, _currentToNodeId, _newFromNodeId, _newToNodeId);
                                   }
                                 } catch (err) {
-                                  _didIteratorError81 = true;
-                                  _iteratorError81 = err;
+                                  _didIteratorError82 = true;
+                                  _iteratorError82 = err;
                                 } finally {
                                   try {
-                                    if (!_iteratorNormalCompletion81 && _iterator81.return) {
-                                      _iterator81.return();
+                                    if (!_iteratorNormalCompletion82 && _iterator82.return) {
+                                      _iterator82.return();
                                     }
                                   } finally {
-                                    if (_didIteratorError81) {
-                                      throw _iteratorError81;
+                                    if (_didIteratorError82) {
+                                      throw _iteratorError82;
                                     }
                                   }
                                 }
                               }
                             }
                           } catch (err) {
-                            _didIteratorError80 = true;
-                            _iteratorError80 = err;
+                            _didIteratorError81 = true;
+                            _iteratorError81 = err;
                           } finally {
                             try {
-                              if (!_iteratorNormalCompletion80 && _iterator80.return) {
-                                _iterator80.return();
+                              if (!_iteratorNormalCompletion81 && _iterator81.return) {
+                                _iterator81.return();
                               }
                             } finally {
-                              if (_didIteratorError80) {
-                                throw _iteratorError80;
+                              if (_didIteratorError81) {
+                                throw _iteratorError81;
                               }
                             }
                           }
@@ -6181,16 +6249,16 @@ var ProjectService = function () {
                       }
                     }
                   } catch (err) {
-                    _didIteratorError79 = true;
-                    _iteratorError79 = err;
+                    _didIteratorError80 = true;
+                    _iteratorError80 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion79 && _iterator79.return) {
-                        _iterator79.return();
+                      if (!_iteratorNormalCompletion80 && _iterator80.return) {
+                        _iterator80.return();
                       }
                     } finally {
-                      if (_didIteratorError79) {
-                        throw _iteratorError79;
+                      if (_didIteratorError80) {
+                        throw _iteratorError80;
                       }
                     }
                   }
@@ -6228,29 +6296,29 @@ var ProjectService = function () {
                    *     }
                    * ]
                    */
-                  var _iteratorNormalCompletion82 = true;
-                  var _didIteratorError82 = false;
-                  var _iteratorError82 = undefined;
+                  var _iteratorNormalCompletion83 = true;
+                  var _didIteratorError83 = false;
+                  var _iteratorError83 = undefined;
 
                   try {
-                    for (var _iterator82 = transitionsCopy[Symbol.iterator](), _step82; !(_iteratorNormalCompletion82 = (_step82 = _iterator82.next()).done); _iteratorNormalCompletion82 = true) {
-                      var _transitionCopy = _step82.value;
+                    for (var _iterator83 = transitionsCopy[Symbol.iterator](), _step83; !(_iteratorNormalCompletion83 = (_step83 = _iterator83.next()).done); _iteratorNormalCompletion83 = true) {
+                      var _transitionCopy = _step83.value;
 
                       // insert a transition from the node we are removing
                       transitions.splice(insertIndex, 0, _transitionCopy);
                       insertIndex++;
                     }
                   } catch (err) {
-                    _didIteratorError82 = true;
-                    _iteratorError82 = err;
+                    _didIteratorError83 = true;
+                    _iteratorError83 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion82 && _iterator82.return) {
-                        _iterator82.return();
+                      if (!_iteratorNormalCompletion83 && _iterator83.return) {
+                        _iterator83.return();
                       }
                     } finally {
-                      if (_didIteratorError82) {
-                        throw _iteratorError82;
+                      if (_didIteratorError83) {
+                        throw _iteratorError83;
                       }
                     }
                   }
@@ -6309,41 +6377,15 @@ var ProjectService = function () {
      */
     value: function removeNodeIdFromGroups(nodeId) {
       var groups = this.getGroupNodes();
-      var _iteratorNormalCompletion83 = true;
-      var _didIteratorError83 = false;
-      var _iteratorError83 = undefined;
-
-      try {
-        for (var _iterator83 = groups[Symbol.iterator](), _step83; !(_iteratorNormalCompletion83 = (_step83 = _iterator83.next()).done); _iteratorNormalCompletion83 = true) {
-          var group = _step83.value;
-
-          this.removeNodeIdFromGroup(group, nodeId);
-        }
-      } catch (err) {
-        _didIteratorError83 = true;
-        _iteratorError83 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion83 && _iterator83.return) {
-            _iterator83.return();
-          }
-        } finally {
-          if (_didIteratorError83) {
-            throw _iteratorError83;
-          }
-        }
-      }
-
-      var inactiveGroups = this.getInactiveGroupNodes();
       var _iteratorNormalCompletion84 = true;
       var _didIteratorError84 = false;
       var _iteratorError84 = undefined;
 
       try {
-        for (var _iterator84 = inactiveGroups[Symbol.iterator](), _step84; !(_iteratorNormalCompletion84 = (_step84 = _iterator84.next()).done); _iteratorNormalCompletion84 = true) {
-          var inactiveGroup = _step84.value;
+        for (var _iterator84 = groups[Symbol.iterator](), _step84; !(_iteratorNormalCompletion84 = (_step84 = _iterator84.next()).done); _iteratorNormalCompletion84 = true) {
+          var group = _step84.value;
 
-          this.removeNodeIdFromGroup(inactiveGroup, nodeId);
+          this.removeNodeIdFromGroup(group, nodeId);
         }
       } catch (err) {
         _didIteratorError84 = true;
@@ -6356,6 +6398,32 @@ var ProjectService = function () {
         } finally {
           if (_didIteratorError84) {
             throw _iteratorError84;
+          }
+        }
+      }
+
+      var inactiveGroups = this.getInactiveGroupNodes();
+      var _iteratorNormalCompletion85 = true;
+      var _didIteratorError85 = false;
+      var _iteratorError85 = undefined;
+
+      try {
+        for (var _iterator85 = inactiveGroups[Symbol.iterator](), _step85; !(_iteratorNormalCompletion85 = (_step85 = _iterator85.next()).done); _iteratorNormalCompletion85 = true) {
+          var inactiveGroup = _step85.value;
+
+          this.removeNodeIdFromGroup(inactiveGroup, nodeId);
+        }
+      } catch (err) {
+        _didIteratorError85 = true;
+        _iteratorError85 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion85 && _iterator85.return) {
+            _iterator85.return();
+          }
+        } finally {
+          if (_didIteratorError85) {
+            throw _iteratorError85;
           }
         }
       }
@@ -6558,56 +6626,6 @@ var ProjectService = function () {
       if (node != null) {
         var components = node.components;
         if (components != null) {
-          var _iteratorNormalCompletion85 = true;
-          var _didIteratorError85 = false;
-          var _iteratorError85 = undefined;
-
-          try {
-            for (var _iterator85 = components[Symbol.iterator](), _step85; !(_iteratorNormalCompletion85 = (_step85 = _iterator85.next()).done); _iteratorNormalCompletion85 = true) {
-              var component = _step85.value;
-
-              if (component != null) {
-                var componentType = component.type;
-                var service = this.$injector.get(componentType + 'Service');
-                if (service != null) {
-                  if (service.componentHasWork()) {
-                    return true;
-                  }
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError85 = true;
-            _iteratorError85 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion85 && _iterator85.return) {
-                _iterator85.return();
-              }
-            } finally {
-              if (_didIteratorError85) {
-                throw _iteratorError85;
-              }
-            }
-          }
-        }
-      }
-      return false;
-    }
-
-    /**
-     * Check if any of the components in the node are showing their save button
-     * @param nodeId the node id to check
-     * @return whether any of the components in the node show their save button
-     */
-
-  }, {
-    key: 'doesAnyComponentShowSaveButton',
-    value: function doesAnyComponentShowSaveButton(nodeId) {
-      var node = this.getNodeById(nodeId);
-      if (node != null) {
-        var components = node.components;
-        if (components != null) {
           var _iteratorNormalCompletion86 = true;
           var _didIteratorError86 = false;
           var _iteratorError86 = undefined;
@@ -6617,8 +6635,12 @@ var ProjectService = function () {
               var component = _step86.value;
 
               if (component != null) {
-                if (component.showSaveButton == true) {
-                  return true;
+                var componentType = component.type;
+                var service = this.$injector.get(componentType + 'Service');
+                if (service != null) {
+                  if (service.componentHasWork()) {
+                    return true;
+                  }
                 }
               }
             }
@@ -6642,14 +6664,14 @@ var ProjectService = function () {
     }
 
     /**
-     * Check if any of the components in the node are showing their submit button
+     * Check if any of the components in the node are showing their save button
      * @param nodeId the node id to check
-     * @return whether any of the components in the node show their submit button
+     * @return whether any of the components in the node show their save button
      */
 
   }, {
-    key: 'doesAnyComponentShowSubmitButton',
-    value: function doesAnyComponentShowSubmitButton(nodeId) {
+    key: 'doesAnyComponentShowSaveButton',
+    value: function doesAnyComponentShowSaveButton(nodeId) {
       var node = this.getNodeById(nodeId);
       if (node != null) {
         var components = node.components;
@@ -6663,7 +6685,7 @@ var ProjectService = function () {
               var component = _step87.value;
 
               if (component != null) {
-                if (component.showSubmitButton == true) {
+                if (component.showSaveButton == true) {
                   return true;
                 }
               }
@@ -6688,13 +6710,14 @@ var ProjectService = function () {
     }
 
     /**
-     * Turn on the save button in all the components in the step
-     * @param nodeId the node id
+     * Check if any of the components in the node are showing their submit button
+     * @param nodeId the node id to check
+     * @return whether any of the components in the node show their submit button
      */
 
   }, {
-    key: 'turnOnSaveButtonInComponents',
-    value: function turnOnSaveButtonInComponents(nodeId) {
+    key: 'doesAnyComponentShowSubmitButton',
+    value: function doesAnyComponentShowSubmitButton(nodeId) {
       var node = this.getNodeById(nodeId);
       if (node != null) {
         var components = node.components;
@@ -6708,14 +6731,8 @@ var ProjectService = function () {
               var component = _step88.value;
 
               if (component != null) {
-                var componentType = component.type;
-                if (componentType != null) {
-                  var service = this.$injector.get(componentType + 'Service');
-                  if (service != null) {
-                    if (service.componentUsesSaveButton()) {
-                      component.showSaveButton = true;
-                    }
-                  }
+                if (component.showSubmitButton == true) {
+                  return true;
                 }
               }
             }
@@ -6735,16 +6752,17 @@ var ProjectService = function () {
           }
         }
       }
+      return false;
     }
 
     /**
-     * Turn off the submit button in all the components in the step
+     * Turn on the save button in all the components in the step
      * @param nodeId the node id
      */
 
   }, {
-    key: 'turnOffSaveButtonInComponents',
-    value: function turnOffSaveButtonInComponents(nodeId) {
+    key: 'turnOnSaveButtonInComponents',
+    value: function turnOnSaveButtonInComponents(nodeId) {
       var node = this.getNodeById(nodeId);
       if (node != null) {
         var components = node.components;
@@ -6763,7 +6781,7 @@ var ProjectService = function () {
                   var service = this.$injector.get(componentType + 'Service');
                   if (service != null) {
                     if (service.componentUsesSaveButton()) {
-                      component.showSaveButton = false;
+                      component.showSaveButton = true;
                     }
                   }
                 }
@@ -6780,6 +6798,56 @@ var ProjectService = function () {
             } finally {
               if (_didIteratorError89) {
                 throw _iteratorError89;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * Turn off the submit button in all the components in the step
+     * @param nodeId the node id
+     */
+
+  }, {
+    key: 'turnOffSaveButtonInComponents',
+    value: function turnOffSaveButtonInComponents(nodeId) {
+      var node = this.getNodeById(nodeId);
+      if (node != null) {
+        var components = node.components;
+        if (components != null) {
+          var _iteratorNormalCompletion90 = true;
+          var _didIteratorError90 = false;
+          var _iteratorError90 = undefined;
+
+          try {
+            for (var _iterator90 = components[Symbol.iterator](), _step90; !(_iteratorNormalCompletion90 = (_step90 = _iterator90.next()).done); _iteratorNormalCompletion90 = true) {
+              var component = _step90.value;
+
+              if (component != null) {
+                var componentType = component.type;
+                if (componentType != null) {
+                  var service = this.$injector.get(componentType + 'Service');
+                  if (service != null) {
+                    if (service.componentUsesSaveButton()) {
+                      component.showSaveButton = false;
+                    }
+                  }
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError90 = true;
+            _iteratorError90 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion90 && _iterator90.return) {
+                _iterator90.return();
+              }
+            } finally {
+              if (_didIteratorError90) {
+                throw _iteratorError90;
               }
             }
           }
@@ -6949,13 +7017,13 @@ var ProjectService = function () {
 
       if (allPaths != null && allPaths.length > 0) {
         var firstPath = allPaths[0];
-        var _iteratorNormalCompletion90 = true;
-        var _didIteratorError90 = false;
-        var _iteratorError90 = undefined;
+        var _iteratorNormalCompletion91 = true;
+        var _didIteratorError91 = false;
+        var _iteratorError91 = undefined;
 
         try {
-          for (var _iterator90 = firstPath[Symbol.iterator](), _step90; !(_iteratorNormalCompletion90 = (_step90 = _iterator90.next()).done); _iteratorNormalCompletion90 = true) {
-            var nodeId = _step90.value;
+          for (var _iterator91 = firstPath[Symbol.iterator](), _step91; !(_iteratorNormalCompletion91 = (_step91 = _iterator91.next()).done); _iteratorNormalCompletion91 = true) {
+            var nodeId = _step91.value;
 
             var nodeMaxScore = this.getMaxScoreForNode(nodeId);
             if (nodeMaxScore != null) {
@@ -6967,16 +7035,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError90 = true;
-          _iteratorError90 = err;
+          _didIteratorError91 = true;
+          _iteratorError91 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion90 && _iterator90.return) {
-              _iterator90.return();
+            if (!_iteratorNormalCompletion91 && _iterator91.return) {
+              _iterator91.return();
             }
           } finally {
-            if (_didIteratorError90) {
-              throw _iteratorError90;
+            if (_didIteratorError91) {
+              throw _iteratorError91;
             }
           }
         }
@@ -6998,13 +7066,13 @@ var ProjectService = function () {
       if (node != null) {
         var components = node.components;
         if (components != null) {
-          var _iteratorNormalCompletion91 = true;
-          var _didIteratorError91 = false;
-          var _iteratorError91 = undefined;
+          var _iteratorNormalCompletion92 = true;
+          var _didIteratorError92 = false;
+          var _iteratorError92 = undefined;
 
           try {
-            for (var _iterator91 = components[Symbol.iterator](), _step91; !(_iteratorNormalCompletion91 = (_step91 = _iterator91.next()).done); _iteratorNormalCompletion91 = true) {
-              var component = _step91.value;
+            for (var _iterator92 = components[Symbol.iterator](), _step92; !(_iteratorNormalCompletion92 = (_step92 = _iterator92.next()).done); _iteratorNormalCompletion92 = true) {
+              var component = _step92.value;
 
               if (component != null) {
                 var componentMaxScore = component.maxScore;
@@ -7024,16 +7092,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError91 = true;
-            _iteratorError91 = err;
+            _didIteratorError92 = true;
+            _iteratorError92 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion91 && _iterator91.return) {
-                _iterator91.return();
+              if (!_iteratorNormalCompletion92 && _iterator92.return) {
+                _iterator92.return();
               }
             } finally {
-              if (_didIteratorError91) {
-                throw _iteratorError91;
+              if (_didIteratorError92) {
+                throw _iteratorError92;
               }
             }
           }
@@ -7240,13 +7308,13 @@ var ProjectService = function () {
         var node = this.getNodeById(nodeId);
         if (node != null && node.availablePlanningNodes != null) {
           var availablePlanningNodes = node.availablePlanningNodes;
-          var _iteratorNormalCompletion92 = true;
-          var _didIteratorError92 = false;
-          var _iteratorError92 = undefined;
+          var _iteratorNormalCompletion93 = true;
+          var _didIteratorError93 = false;
+          var _iteratorError93 = undefined;
 
           try {
-            for (var _iterator92 = availablePlanningNodes[Symbol.iterator](), _step92; !(_iteratorNormalCompletion92 = (_step92 = _iterator92.next()).done); _iteratorNormalCompletion92 = true) {
-              var availablePlanningNode = _step92.value;
+            for (var _iterator93 = availablePlanningNodes[Symbol.iterator](), _step93; !(_iteratorNormalCompletion93 = (_step93 = _iterator93.next()).done); _iteratorNormalCompletion93 = true) {
+              var availablePlanningNode = _step93.value;
 
               if (availablePlanningNode != null) {
                 var availablePlanningNodeActual = this.getNodeById(availablePlanningNode.nodeId);
@@ -7259,16 +7327,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError92 = true;
-            _iteratorError92 = err;
+            _didIteratorError93 = true;
+            _iteratorError93 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion92 && _iterator92.return) {
-                _iterator92.return();
+              if (!_iteratorNormalCompletion93 && _iterator93.return) {
+                _iterator93.return();
               }
             } finally {
-              if (_didIteratorError92) {
-                throw _iteratorError92;
+              if (_didIteratorError93) {
+                throw _iteratorError93;
               }
             }
           }
@@ -7430,28 +7498,28 @@ var ProjectService = function () {
     value: function recalculatePositionsInGroup(groupId) {
       if (groupId != null) {
         var childIds = this.getChildNodeIdsById(groupId);
-        var _iteratorNormalCompletion93 = true;
-        var _didIteratorError93 = false;
-        var _iteratorError93 = undefined;
+        var _iteratorNormalCompletion94 = true;
+        var _didIteratorError94 = false;
+        var _iteratorError94 = undefined;
 
         try {
-          for (var _iterator93 = childIds[Symbol.iterator](), _step93; !(_iteratorNormalCompletion93 = (_step93 = _iterator93.next()).done); _iteratorNormalCompletion93 = true) {
-            var childId = _step93.value;
+          for (var _iterator94 = childIds[Symbol.iterator](), _step94; !(_iteratorNormalCompletion94 = (_step94 = _iterator94.next()).done); _iteratorNormalCompletion94 = true) {
+            var childId = _step94.value;
 
             var pos = this.getPositionById(childId);
             this.setIdToPosition(childId, pos);
           }
         } catch (err) {
-          _didIteratorError93 = true;
-          _iteratorError93 = err;
+          _didIteratorError94 = true;
+          _iteratorError94 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion93 && _iterator93.return) {
-              _iterator93.return();
+            if (!_iteratorNormalCompletion94 && _iterator94.return) {
+              _iterator94.return();
             }
           } finally {
-            if (_didIteratorError93) {
-              throw _iteratorError93;
+            if (_didIteratorError94) {
+              throw _iteratorError94;
             }
           }
         }
@@ -7481,13 +7549,13 @@ var ProjectService = function () {
 
         if (removalCriteria != null) {
           var criteriaMessages = '';
-          var _iteratorNormalCompletion94 = true;
-          var _didIteratorError94 = false;
-          var _iteratorError94 = undefined;
+          var _iteratorNormalCompletion95 = true;
+          var _didIteratorError95 = false;
+          var _iteratorError95 = undefined;
 
           try {
-            for (var _iterator94 = removalCriteria[Symbol.iterator](), _step94; !(_iteratorNormalCompletion94 = (_step94 = _iterator94.next()).done); _iteratorNormalCompletion94 = true) {
-              var tempRemovalCriteria = _step94.value;
+            for (var _iterator95 = removalCriteria[Symbol.iterator](), _step95; !(_iteratorNormalCompletion95 = (_step95 = _iterator95.next()).done); _iteratorNormalCompletion95 = true) {
+              var tempRemovalCriteria = _step95.value;
 
               if (tempRemovalCriteria != null) {
                 // get the message that describes the criteria that needs to be satisfied
@@ -7503,16 +7571,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError94 = true;
-            _iteratorError94 = err;
+            _didIteratorError95 = true;
+            _iteratorError95 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion94 && _iterator94.return) {
-                _iterator94.return();
+              if (!_iteratorNormalCompletion95 && _iterator95.return) {
+                _iterator95.return();
               }
             } finally {
-              if (_didIteratorError94) {
-                throw _iteratorError94;
+              if (_didIteratorError95) {
+                throw _iteratorError95;
               }
             }
           }
@@ -7537,13 +7605,13 @@ var ProjectService = function () {
       var message = '';
       var action = constraint.action;
       var actionMessage = this.getActionMessage(action);
-      var _iteratorNormalCompletion95 = true;
-      var _didIteratorError95 = false;
-      var _iteratorError95 = undefined;
+      var _iteratorNormalCompletion96 = true;
+      var _didIteratorError96 = false;
+      var _iteratorError96 = undefined;
 
       try {
-        for (var _iterator95 = constraint.removalCriteria[Symbol.iterator](), _step95; !(_iteratorNormalCompletion95 = (_step95 = _iterator95.next()).done); _iteratorNormalCompletion95 = true) {
-          var singleRemovalCriteria = _step95.value;
+        for (var _iterator96 = constraint.removalCriteria[Symbol.iterator](), _step96; !(_iteratorNormalCompletion96 = (_step96 = _iterator96.next()).done); _iteratorNormalCompletion96 = true) {
+          var singleRemovalCriteria = _step96.value;
 
           if (message != '') {
             // this constraint has multiple removal criteria
@@ -7556,16 +7624,16 @@ var ProjectService = function () {
           message += this.getCriteriaMessage(singleRemovalCriteria);
         }
       } catch (err) {
-        _didIteratorError95 = true;
-        _iteratorError95 = err;
+        _didIteratorError96 = true;
+        _iteratorError96 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion95 && _iterator95.return) {
-            _iterator95.return();
+          if (!_iteratorNormalCompletion96 && _iterator96.return) {
+            _iterator96.return();
           }
         } finally {
-          if (_didIteratorError95) {
-            throw _iteratorError95;
+          if (_didIteratorError96) {
+            throw _iteratorError96;
           }
         }
       }
@@ -7745,29 +7813,29 @@ var ProjectService = function () {
     value: function getChoiceTextByNodeIdAndComponentId(nodeId, componentId, choiceIds) {
       var choices = this.getChoicesByNodeIdAndComponentId(nodeId, componentId);
       var choicesText = [];
-      var _iteratorNormalCompletion96 = true;
-      var _didIteratorError96 = false;
-      var _iteratorError96 = undefined;
+      var _iteratorNormalCompletion97 = true;
+      var _didIteratorError97 = false;
+      var _iteratorError97 = undefined;
 
       try {
-        for (var _iterator96 = choices[Symbol.iterator](), _step96; !(_iteratorNormalCompletion96 = (_step96 = _iterator96.next()).done); _iteratorNormalCompletion96 = true) {
-          var choice = _step96.value;
+        for (var _iterator97 = choices[Symbol.iterator](), _step97; !(_iteratorNormalCompletion97 = (_step97 = _iterator97.next()).done); _iteratorNormalCompletion97 = true) {
+          var choice = _step97.value;
 
           if (choiceIds.indexOf(choice.id) != -1) {
             choicesText.push(choice.text);
           }
         }
       } catch (err) {
-        _didIteratorError96 = true;
-        _iteratorError96 = err;
+        _didIteratorError97 = true;
+        _iteratorError97 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion96 && _iterator96.return) {
-            _iterator96.return();
+          if (!_iteratorNormalCompletion97 && _iterator97.return) {
+            _iterator97.return();
           }
         } finally {
-          if (_didIteratorError96) {
-            throw _iteratorError96;
+          if (_didIteratorError97) {
+            throw _iteratorError97;
           }
         }
       }
@@ -7850,13 +7918,13 @@ var ProjectService = function () {
 
           // update the children of the from group to point to the new to group
           if (childIds != null) {
-            var _iteratorNormalCompletion97 = true;
-            var _didIteratorError97 = false;
-            var _iteratorError97 = undefined;
+            var _iteratorNormalCompletion98 = true;
+            var _didIteratorError98 = false;
+            var _iteratorError98 = undefined;
 
             try {
-              for (var _iterator97 = childIds[Symbol.iterator](), _step97; !(_iteratorNormalCompletion97 = (_step97 = _iterator97.next()).done); _iteratorNormalCompletion97 = true) {
-                var childId = _step97.value;
+              for (var _iterator98 = childIds[Symbol.iterator](), _step98; !(_iteratorNormalCompletion98 = (_step98 = _iterator98.next()).done); _iteratorNormalCompletion98 = true) {
+                var childId = _step98.value;
 
                 var child = this.getNodeById(childId);
                 var transitions = this.getTransitionsByFromNodeId(childId);
@@ -7895,16 +7963,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError97 = true;
-              _iteratorError97 = err;
+              _didIteratorError98 = true;
+              _iteratorError98 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion97 && _iterator97.return) {
-                  _iterator97.return();
+                if (!_iteratorNormalCompletion98 && _iterator98.return) {
+                  _iterator98.return();
                 }
               } finally {
-                if (_didIteratorError97) {
-                  throw _iteratorError97;
+                if (_didIteratorError98) {
+                  throw _iteratorError98;
                 }
               }
             }
@@ -7922,13 +7990,13 @@ var ProjectService = function () {
 
           // remove the transitions from the old to group that point to the new to group
           if (_childIds != null) {
-            var _iteratorNormalCompletion98 = true;
-            var _didIteratorError98 = false;
-            var _iteratorError98 = undefined;
+            var _iteratorNormalCompletion99 = true;
+            var _didIteratorError99 = false;
+            var _iteratorError99 = undefined;
 
             try {
-              for (var _iterator98 = _childIds[Symbol.iterator](), _step98; !(_iteratorNormalCompletion98 = (_step98 = _iterator98.next()).done); _iteratorNormalCompletion98 = true) {
-                var _childId = _step98.value;
+              for (var _iterator99 = _childIds[Symbol.iterator](), _step99; !(_iteratorNormalCompletion99 = (_step99 = _iterator99.next()).done); _iteratorNormalCompletion99 = true) {
+                var _childId = _step99.value;
 
                 var _child2 = this.getNodeById(_childId);
                 var _transitions4 = this.getTransitionsByFromNodeId(_childId);
@@ -7951,16 +8019,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError98 = true;
-              _iteratorError98 = err;
+              _didIteratorError99 = true;
+              _iteratorError99 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion98 && _iterator98.return) {
-                  _iterator98.return();
+                if (!_iteratorNormalCompletion99 && _iterator99.return) {
+                  _iterator99.return();
                 }
               } finally {
-                if (_didIteratorError98) {
-                  throw _iteratorError98;
+                if (_didIteratorError99) {
+                  throw _iteratorError99;
                 }
               }
             }
@@ -8002,13 +8070,13 @@ var ProjectService = function () {
         var childIds = fromGroup.ids;
         var newToGroupStartId = newToGroup.startId;
         if (childIds != null) {
-          var _iteratorNormalCompletion99 = true;
-          var _didIteratorError99 = false;
-          var _iteratorError99 = undefined;
+          var _iteratorNormalCompletion100 = true;
+          var _didIteratorError100 = false;
+          var _iteratorError100 = undefined;
 
           try {
-            for (var _iterator99 = childIds[Symbol.iterator](), _step99; !(_iteratorNormalCompletion99 = (_step99 = _iterator99.next()).done); _iteratorNormalCompletion99 = true) {
-              var childId = _step99.value;
+            for (var _iterator100 = childIds[Symbol.iterator](), _step100; !(_iteratorNormalCompletion100 = (_step100 = _iterator100.next()).done); _iteratorNormalCompletion100 = true) {
+              var childId = _step100.value;
 
               var child = this.getNodeById(childId);
 
@@ -8026,24 +8094,24 @@ var ProjectService = function () {
                   this.addToTransition(child, newToGroupStartId);
                 }
               } else if (transitions != null) {
-                var _iteratorNormalCompletion100 = true;
-                var _didIteratorError100 = false;
-                var _iteratorError100 = undefined;
+                var _iteratorNormalCompletion101 = true;
+                var _didIteratorError101 = false;
+                var _iteratorError101 = undefined;
 
                 try {
-                  for (var _iterator100 = transitions[Symbol.iterator](), _step100; !(_iteratorNormalCompletion100 = (_step100 = _iterator100.next()).done); _iteratorNormalCompletion100 = true) {
-                    var transition = _step100.value;
+                  for (var _iterator101 = transitions[Symbol.iterator](), _step101; !(_iteratorNormalCompletion101 = (_step101 = _iterator101.next()).done); _iteratorNormalCompletion101 = true) {
+                    var transition = _step101.value;
 
                     if (transition != null) {
                       var toNodeId = transition.to;
                       if (oldToGroupIds != null) {
-                        var _iteratorNormalCompletion101 = true;
-                        var _didIteratorError101 = false;
-                        var _iteratorError101 = undefined;
+                        var _iteratorNormalCompletion102 = true;
+                        var _didIteratorError102 = false;
+                        var _iteratorError102 = undefined;
 
                         try {
-                          for (var _iterator101 = oldToGroupIds[Symbol.iterator](), _step101; !(_iteratorNormalCompletion101 = (_step101 = _iterator101.next()).done); _iteratorNormalCompletion101 = true) {
-                            var oldToGroupId = _step101.value;
+                          for (var _iterator102 = oldToGroupIds[Symbol.iterator](), _step102; !(_iteratorNormalCompletion102 = (_step102 = _iterator102.next()).done); _iteratorNormalCompletion102 = true) {
+                            var oldToGroupId = _step102.value;
 
                             if (toNodeId === oldToGroupId) {
                               /*
@@ -8064,16 +8132,16 @@ var ProjectService = function () {
                             }
                           }
                         } catch (err) {
-                          _didIteratorError101 = true;
-                          _iteratorError101 = err;
+                          _didIteratorError102 = true;
+                          _iteratorError102 = err;
                         } finally {
                           try {
-                            if (!_iteratorNormalCompletion101 && _iterator101.return) {
-                              _iterator101.return();
+                            if (!_iteratorNormalCompletion102 && _iterator102.return) {
+                              _iterator102.return();
                             }
                           } finally {
-                            if (_didIteratorError101) {
-                              throw _iteratorError101;
+                            if (_didIteratorError102) {
+                              throw _iteratorError102;
                             }
                           }
                         }
@@ -8081,32 +8149,32 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError100 = true;
-                  _iteratorError100 = err;
+                  _didIteratorError101 = true;
+                  _iteratorError101 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion100 && _iterator100.return) {
-                      _iterator100.return();
+                    if (!_iteratorNormalCompletion101 && _iterator101.return) {
+                      _iterator101.return();
                     }
                   } finally {
-                    if (_didIteratorError100) {
-                      throw _iteratorError100;
+                    if (_didIteratorError101) {
+                      throw _iteratorError101;
                     }
                   }
                 }
               }
             }
           } catch (err) {
-            _didIteratorError99 = true;
-            _iteratorError99 = err;
+            _didIteratorError100 = true;
+            _iteratorError100 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion99 && _iterator99.return) {
-                _iterator99.return();
+              if (!_iteratorNormalCompletion100 && _iterator100.return) {
+                _iterator100.return();
               }
             } finally {
-              if (_didIteratorError99) {
-                throw _iteratorError99;
+              if (_didIteratorError100) {
+                throw _iteratorError100;
               }
             }
           }
@@ -8121,26 +8189,26 @@ var ProjectService = function () {
       if (newToGroup != null) {
         var _childIds2 = newToGroup.ids;
         if (_childIds2 != null) {
-          var _iteratorNormalCompletion102 = true;
-          var _didIteratorError102 = false;
-          var _iteratorError102 = undefined;
+          var _iteratorNormalCompletion103 = true;
+          var _didIteratorError103 = false;
+          var _iteratorError103 = undefined;
 
           try {
-            for (var _iterator102 = _childIds2[Symbol.iterator](), _step102; !(_iteratorNormalCompletion102 = (_step102 = _iterator102.next()).done); _iteratorNormalCompletion102 = true) {
-              var _childId2 = _step102.value;
+            for (var _iterator103 = _childIds2[Symbol.iterator](), _step103; !(_iteratorNormalCompletion103 = (_step103 = _iterator103.next()).done); _iteratorNormalCompletion103 = true) {
+              var _childId2 = _step103.value;
 
               var _child3 = this.getNodeById(_childId2);
               var _transitions5 = this.getTransitionsByFromNodeId(_childId2);
 
               if (_transitions5 == null || _transitions5.length == 0) {
                 if (oldToGroupIds != null) {
-                  var _iteratorNormalCompletion103 = true;
-                  var _didIteratorError103 = false;
-                  var _iteratorError103 = undefined;
+                  var _iteratorNormalCompletion104 = true;
+                  var _didIteratorError104 = false;
+                  var _iteratorError104 = undefined;
 
                   try {
-                    for (var _iterator103 = oldToGroupIds[Symbol.iterator](), _step103; !(_iteratorNormalCompletion103 = (_step103 = _iterator103.next()).done); _iteratorNormalCompletion103 = true) {
-                      var _oldToGroupId = _step103.value;
+                    for (var _iterator104 = oldToGroupIds[Symbol.iterator](), _step104; !(_iteratorNormalCompletion104 = (_step104 = _iterator104.next()).done); _iteratorNormalCompletion104 = true) {
+                      var _oldToGroupId = _step104.value;
 
                       var oldToGroup = this.getNodeById(_oldToGroupId);
                       if (oldToGroup != null) {
@@ -8160,16 +8228,16 @@ var ProjectService = function () {
                       }
                     }
                   } catch (err) {
-                    _didIteratorError103 = true;
-                    _iteratorError103 = err;
+                    _didIteratorError104 = true;
+                    _iteratorError104 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion103 && _iterator103.return) {
-                        _iterator103.return();
+                      if (!_iteratorNormalCompletion104 && _iterator104.return) {
+                        _iterator104.return();
                       }
                     } finally {
-                      if (_didIteratorError103) {
-                        throw _iteratorError103;
+                      if (_didIteratorError104) {
+                        throw _iteratorError104;
                       }
                     }
                   }
@@ -8177,16 +8245,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError102 = true;
-            _iteratorError102 = err;
+            _didIteratorError103 = true;
+            _iteratorError103 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion102 && _iterator102.return) {
-                _iterator102.return();
+              if (!_iteratorNormalCompletion103 && _iterator103.return) {
+                _iterator103.return();
               }
             } finally {
-              if (_didIteratorError102) {
-                throw _iteratorError102;
+              if (_didIteratorError103) {
+                throw _iteratorError103;
               }
             }
           }
@@ -8222,13 +8290,13 @@ var ProjectService = function () {
        * group we are moving.
        */
 
-      var _iteratorNormalCompletion104 = true;
-      var _didIteratorError104 = false;
-      var _iteratorError104 = undefined;
+      var _iteratorNormalCompletion105 = true;
+      var _didIteratorError105 = false;
+      var _iteratorError105 = undefined;
 
       try {
-        for (var _iterator104 = previousGroupNodes[Symbol.iterator](), _step104; !(_iteratorNormalCompletion104 = (_step104 = _iterator104.next()).done); _iteratorNormalCompletion104 = true) {
-          var previousGroupNode = _step104.value;
+        for (var _iterator105 = previousGroupNodes[Symbol.iterator](), _step105; !(_iteratorNormalCompletion105 = (_step105 = _iterator105.next()).done); _iteratorNormalCompletion105 = true) {
+          var previousGroupNode = _step105.value;
 
           if (transitionsAfter == null || transitionsAfter.length == 0) {
             // the group we are moving does not have any transitions
@@ -8243,13 +8311,13 @@ var ProjectService = function () {
             // the group we are moving has transitions
 
             // make the previous group point to the new to group
-            var _iteratorNormalCompletion107 = true;
-            var _didIteratorError107 = false;
-            var _iteratorError107 = undefined;
+            var _iteratorNormalCompletion108 = true;
+            var _didIteratorError108 = false;
+            var _iteratorError108 = undefined;
 
             try {
-              for (var _iterator107 = transitionsAfter[Symbol.iterator](), _step107; !(_iteratorNormalCompletion107 = (_step107 = _iterator107.next()).done); _iteratorNormalCompletion107 = true) {
-                var _transitionAfter2 = _step107.value;
+              for (var _iterator108 = transitionsAfter[Symbol.iterator](), _step108; !(_iteratorNormalCompletion108 = (_step108 = _iterator108.next()).done); _iteratorNormalCompletion108 = true) {
+                var _transitionAfter2 = _step108.value;
 
                 if (_transitionAfter2 != null) {
                   var _toNodeId6 = _transitionAfter2.to;
@@ -8263,32 +8331,32 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError107 = true;
-              _iteratorError107 = err;
+              _didIteratorError108 = true;
+              _iteratorError108 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion107 && _iterator107.return) {
-                  _iterator107.return();
+                if (!_iteratorNormalCompletion108 && _iterator108.return) {
+                  _iterator108.return();
                 }
               } finally {
-                if (_didIteratorError107) {
-                  throw _iteratorError107;
+                if (_didIteratorError108) {
+                  throw _iteratorError108;
                 }
               }
             }
           }
         }
       } catch (err) {
-        _didIteratorError104 = true;
-        _iteratorError104 = err;
+        _didIteratorError105 = true;
+        _iteratorError105 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion104 && _iterator104.return) {
-            _iterator104.return();
+          if (!_iteratorNormalCompletion105 && _iterator105.return) {
+            _iterator105.return();
           }
         } finally {
-          if (_didIteratorError104) {
-            throw _iteratorError104;
+          if (_didIteratorError105) {
+            throw _iteratorError105;
           }
         }
       }
@@ -8301,13 +8369,13 @@ var ProjectService = function () {
 
         if (transitionsAfter != null) {
           // remove the transitions from the group we are moving
-          var _iteratorNormalCompletion105 = true;
-          var _didIteratorError105 = false;
-          var _iteratorError105 = undefined;
+          var _iteratorNormalCompletion106 = true;
+          var _didIteratorError106 = false;
+          var _iteratorError106 = undefined;
 
           try {
-            for (var _iterator105 = transitionsAfter[Symbol.iterator](), _step105; !(_iteratorNormalCompletion105 = (_step105 = _iterator105.next()).done); _iteratorNormalCompletion105 = true) {
-              var transitionAfter = _step105.value;
+            for (var _iterator106 = transitionsAfter[Symbol.iterator](), _step106; !(_iteratorNormalCompletion106 = (_step106 = _iterator106.next()).done); _iteratorNormalCompletion106 = true) {
+              var transitionAfter = _step106.value;
 
               if (transitionAfter != null) {
                 var toNodeId = transitionAfter.to;
@@ -8318,16 +8386,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError105 = true;
-            _iteratorError105 = err;
+            _didIteratorError106 = true;
+            _iteratorError106 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion105 && _iterator105.return) {
-                _iterator105.return();
+              if (!_iteratorNormalCompletion106 && _iterator106.return) {
+                _iterator106.return();
               }
             } finally {
-              if (_didIteratorError105) {
-                throw _iteratorError105;
+              if (_didIteratorError106) {
+                throw _iteratorError106;
               }
             }
           }
@@ -8344,13 +8412,13 @@ var ProjectService = function () {
         // get the transitions from the previous group to the next group
         var _transitionsAfter = this.getTransitionsByFromNodeId(nodeId);
 
-        var _iteratorNormalCompletion106 = true;
-        var _didIteratorError106 = false;
-        var _iteratorError106 = undefined;
+        var _iteratorNormalCompletion107 = true;
+        var _didIteratorError107 = false;
+        var _iteratorError107 = undefined;
 
         try {
-          for (var _iterator106 = _transitionsAfter[Symbol.iterator](), _step106; !(_iteratorNormalCompletion106 = (_step106 = _iterator106.next()).done); _iteratorNormalCompletion106 = true) {
-            var _transitionAfter = _step106.value;
+          for (var _iterator107 = _transitionsAfter[Symbol.iterator](), _step107; !(_iteratorNormalCompletion107 = (_step107 = _iterator107.next()).done); _iteratorNormalCompletion107 = true) {
+            var _transitionAfter = _step107.value;
 
             if (_transitionAfter != null) {
               var _toNodeId5 = _transitionAfter.to;
@@ -8366,16 +8434,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError106 = true;
-          _iteratorError106 = err;
+          _didIteratorError107 = true;
+          _iteratorError107 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion106 && _iterator106.return) {
-              _iterator106.return();
+            if (!_iteratorNormalCompletion107 && _iterator107.return) {
+              _iterator107.return();
             }
           } finally {
-            if (_didIteratorError106) {
-              throw _iteratorError106;
+            if (_didIteratorError107) {
+              throw _iteratorError107;
             }
           }
         }
@@ -8442,13 +8510,13 @@ var ProjectService = function () {
       if (component != null) {
         var connectedComponents = component.connectedComponents;
         if (connectedComponents != null) {
-          var _iteratorNormalCompletion108 = true;
-          var _didIteratorError108 = false;
-          var _iteratorError108 = undefined;
+          var _iteratorNormalCompletion109 = true;
+          var _didIteratorError109 = false;
+          var _iteratorError109 = undefined;
 
           try {
-            for (var _iterator108 = connectedComponents[Symbol.iterator](), _step108; !(_iteratorNormalCompletion108 = (_step108 = _iterator108.next()).done); _iteratorNormalCompletion108 = true) {
-              var connectedComponent = _step108.value;
+            for (var _iterator109 = connectedComponents[Symbol.iterator](), _step109; !(_iteratorNormalCompletion109 = (_step109 = _iterator109.next()).done); _iteratorNormalCompletion109 = true) {
+              var connectedComponent = _step109.value;
 
               if (connectedComponent != null) {
                 /*
@@ -8465,16 +8533,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError108 = true;
-            _iteratorError108 = err;
+            _didIteratorError109 = true;
+            _iteratorError109 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion108 && _iterator108.return) {
-                _iterator108.return();
+              if (!_iteratorNormalCompletion109 && _iterator109.return) {
+                _iterator109.return();
               }
             } finally {
-              if (_didIteratorError108) {
-                throw _iteratorError108;
+              if (_didIteratorError109) {
+                throw _iteratorError109;
               }
             }
           }
@@ -8496,13 +8564,13 @@ var ProjectService = function () {
       if (componentContent != null && componentId != null) {
         var connectedComponents = componentContent.connectedComponents;
         if (connectedComponents != null) {
-          var _iteratorNormalCompletion109 = true;
-          var _didIteratorError109 = false;
-          var _iteratorError109 = undefined;
+          var _iteratorNormalCompletion110 = true;
+          var _didIteratorError110 = false;
+          var _iteratorError110 = undefined;
 
           try {
-            for (var _iterator109 = connectedComponents[Symbol.iterator](), _step109; !(_iteratorNormalCompletion109 = (_step109 = _iterator109.next()).done); _iteratorNormalCompletion109 = true) {
-              var connectedComponent = _step109.value;
+            for (var _iterator110 = connectedComponents[Symbol.iterator](), _step110; !(_iteratorNormalCompletion110 = (_step110 = _iterator110.next()).done); _iteratorNormalCompletion110 = true) {
+              var connectedComponent = _step110.value;
 
               if (connectedComponent != null) {
                 /*
@@ -8519,16 +8587,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError109 = true;
-            _iteratorError109 = err;
+            _didIteratorError110 = true;
+            _iteratorError110 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion109 && _iterator109.return) {
-                _iterator109.return();
+              if (!_iteratorNormalCompletion110 && _iterator110.return) {
+                _iterator110.return();
               }
             } finally {
-              if (_didIteratorError109) {
-                throw _iteratorError109;
+              if (_didIteratorError110) {
+                throw _iteratorError110;
               }
             }
           }
@@ -8611,27 +8679,27 @@ var ProjectService = function () {
     value: function removeChildNodesFromActiveNodes(node) {
       if (node != null) {
         var childIds = node.ids;
-        var _iteratorNormalCompletion110 = true;
-        var _didIteratorError110 = false;
-        var _iteratorError110 = undefined;
+        var _iteratorNormalCompletion111 = true;
+        var _didIteratorError111 = false;
+        var _iteratorError111 = undefined;
 
         try {
-          for (var _iterator110 = childIds[Symbol.iterator](), _step110; !(_iteratorNormalCompletion110 = (_step110 = _iterator110.next()).done); _iteratorNormalCompletion110 = true) {
-            var childId = _step110.value;
+          for (var _iterator111 = childIds[Symbol.iterator](), _step111; !(_iteratorNormalCompletion111 = (_step111 = _iterator111.next()).done); _iteratorNormalCompletion111 = true) {
+            var childId = _step111.value;
 
             this.removeNodeFromActiveNodes(childId);
           }
         } catch (err) {
-          _didIteratorError110 = true;
-          _iteratorError110 = err;
+          _didIteratorError111 = true;
+          _iteratorError111 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion110 && _iterator110.return) {
-              _iterator110.return();
+            if (!_iteratorNormalCompletion111 && _iterator111.return) {
+              _iterator111.return();
             }
           } finally {
-            if (_didIteratorError110) {
-              throw _iteratorError110;
+            if (_didIteratorError111) {
+              throw _iteratorError111;
             }
           }
         }
@@ -8761,13 +8829,13 @@ var ProjectService = function () {
     key: 'loadInactiveNodes',
     value: function loadInactiveNodes(nodes) {
       if (nodes != null) {
-        var _iteratorNormalCompletion111 = true;
-        var _didIteratorError111 = false;
-        var _iteratorError111 = undefined;
+        var _iteratorNormalCompletion112 = true;
+        var _didIteratorError112 = false;
+        var _iteratorError112 = undefined;
 
         try {
-          for (var _iterator111 = nodes[Symbol.iterator](), _step111; !(_iteratorNormalCompletion111 = (_step111 = _iterator111.next()).done); _iteratorNormalCompletion111 = true) {
-            var node = _step111.value;
+          for (var _iterator112 = nodes[Symbol.iterator](), _step112; !(_iteratorNormalCompletion112 = (_step112 = _iterator112.next()).done); _iteratorNormalCompletion112 = true) {
+            var node = _step112.value;
 
             if (node != null) {
               var nodeId = node.id;
@@ -8782,16 +8850,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError111 = true;
-          _iteratorError111 = err;
+          _didIteratorError112 = true;
+          _iteratorError112 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion111 && _iterator111.return) {
-              _iterator111.return();
+            if (!_iteratorNormalCompletion112 && _iterator112.return) {
+              _iterator112.return();
             }
           } finally {
-            if (_didIteratorError111) {
-              throw _iteratorError111;
+            if (_didIteratorError112) {
+              throw _iteratorError112;
             }
           }
         }
@@ -8822,13 +8890,13 @@ var ProjectService = function () {
 
           var activeNodes = this.project.nodes;
           if (activeNodes != null) {
-            var _iteratorNormalCompletion112 = true;
-            var _didIteratorError112 = false;
-            var _iteratorError112 = undefined;
+            var _iteratorNormalCompletion113 = true;
+            var _didIteratorError113 = false;
+            var _iteratorError113 = undefined;
 
             try {
-              for (var _iterator112 = activeNodes[Symbol.iterator](), _step112; !(_iteratorNormalCompletion112 = (_step112 = _iterator112.next()).done); _iteratorNormalCompletion112 = true) {
-                var activeNode = _step112.value;
+              for (var _iterator113 = activeNodes[Symbol.iterator](), _step113; !(_iteratorNormalCompletion113 = (_step113 = _iterator113.next()).done); _iteratorNormalCompletion113 = true) {
+                var activeNode = _step113.value;
 
                 if (activeNode != null) {
                   var activeNodeId = activeNode.id;
@@ -8841,13 +8909,13 @@ var ProjectService = function () {
                       var activeComponents = activeNode.components;
 
                       if (activeComponents != null) {
-                        var _iteratorNormalCompletion113 = true;
-                        var _didIteratorError113 = false;
-                        var _iteratorError113 = undefined;
+                        var _iteratorNormalCompletion114 = true;
+                        var _didIteratorError114 = false;
+                        var _iteratorError114 = undefined;
 
                         try {
-                          for (var _iterator113 = activeComponents[Symbol.iterator](), _step113; !(_iteratorNormalCompletion113 = (_step113 = _iterator113.next()).done); _iteratorNormalCompletion113 = true) {
-                            var activeComponent = _step113.value;
+                          for (var _iterator114 = activeComponents[Symbol.iterator](), _step114; !(_iteratorNormalCompletion114 = (_step114 = _iterator114.next()).done); _iteratorNormalCompletion114 = true) {
+                            var activeComponent = _step114.value;
 
                             if (activeComponent != null) {
                               var activeComponentId = activeComponent.id;
@@ -8861,16 +8929,16 @@ var ProjectService = function () {
                             }
                           }
                         } catch (err) {
-                          _didIteratorError113 = true;
-                          _iteratorError113 = err;
+                          _didIteratorError114 = true;
+                          _iteratorError114 = err;
                         } finally {
                           try {
-                            if (!_iteratorNormalCompletion113 && _iterator113.return) {
-                              _iterator113.return();
+                            if (!_iteratorNormalCompletion114 && _iterator114.return) {
+                              _iterator114.return();
                             }
                           } finally {
-                            if (_didIteratorError113) {
-                              throw _iteratorError113;
+                            if (_didIteratorError114) {
+                              throw _iteratorError114;
                             }
                           }
                         }
@@ -8883,16 +8951,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError112 = true;
-              _iteratorError112 = err;
+              _didIteratorError113 = true;
+              _iteratorError113 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion112 && _iterator112.return) {
-                  _iterator112.return();
+                if (!_iteratorNormalCompletion113 && _iterator113.return) {
+                  _iterator113.return();
                 }
               } finally {
-                if (_didIteratorError112) {
-                  throw _iteratorError112;
+                if (_didIteratorError113) {
+                  throw _iteratorError113;
                 }
               }
             }
@@ -8910,29 +8978,29 @@ var ProjectService = function () {
   }, {
     key: 'isGroupActive',
     value: function isGroupActive(nodeId) {
-      var _iteratorNormalCompletion114 = true;
-      var _didIteratorError114 = false;
-      var _iteratorError114 = undefined;
+      var _iteratorNormalCompletion115 = true;
+      var _didIteratorError115 = false;
+      var _iteratorError115 = undefined;
 
       try {
-        for (var _iterator114 = this.project.nodes[Symbol.iterator](), _step114; !(_iteratorNormalCompletion114 = (_step114 = _iterator114.next()).done); _iteratorNormalCompletion114 = true) {
-          var activeNode = _step114.value;
+        for (var _iterator115 = this.project.nodes[Symbol.iterator](), _step115; !(_iteratorNormalCompletion115 = (_step115 = _iterator115.next()).done); _iteratorNormalCompletion115 = true) {
+          var activeNode = _step115.value;
 
           if (nodeId == activeNode.id) {
             return true;
           }
         }
       } catch (err) {
-        _didIteratorError114 = true;
-        _iteratorError114 = err;
+        _didIteratorError115 = true;
+        _iteratorError115 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion114 && _iterator114.return) {
-            _iterator114.return();
+          if (!_iteratorNormalCompletion115 && _iterator115.return) {
+            _iterator115.return();
           }
         } finally {
-          if (_didIteratorError114) {
-            throw _iteratorError114;
+          if (_didIteratorError115) {
+            throw _iteratorError115;
           }
         }
       }
@@ -8962,28 +9030,28 @@ var ProjectService = function () {
              * children to active.
              */
             var childIds = node.ids;
-            var _iteratorNormalCompletion115 = true;
-            var _didIteratorError115 = false;
-            var _iteratorError115 = undefined;
+            var _iteratorNormalCompletion116 = true;
+            var _didIteratorError116 = false;
+            var _iteratorError116 = undefined;
 
             try {
-              for (var _iterator115 = childIds[Symbol.iterator](), _step115; !(_iteratorNormalCompletion115 = (_step115 = _iterator115.next()).done); _iteratorNormalCompletion115 = true) {
-                var childId = _step115.value;
+              for (var _iterator116 = childIds[Symbol.iterator](), _step116; !(_iteratorNormalCompletion116 = (_step116 = _iterator116.next()).done); _iteratorNormalCompletion116 = true) {
+                var childId = _step116.value;
 
                 var childNode = this.removeNodeFromInactiveNodes(childId);
                 this.addNode(childNode);
               }
             } catch (err) {
-              _didIteratorError115 = true;
-              _iteratorError115 = err;
+              _didIteratorError116 = true;
+              _iteratorError116 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion115 && _iterator115.return) {
-                  _iterator115.return();
+                if (!_iteratorNormalCompletion116 && _iterator116.return) {
+                  _iterator116.return();
                 }
               } finally {
-                if (_didIteratorError115) {
-                  throw _iteratorError115;
+                if (_didIteratorError116) {
+                  throw _iteratorError116;
                 }
               }
             }
@@ -9045,13 +9113,13 @@ var ProjectService = function () {
          * add them back in later
          */
         var childIds = node.ids;
-        var _iteratorNormalCompletion116 = true;
-        var _didIteratorError116 = false;
-        var _iteratorError116 = undefined;
+        var _iteratorNormalCompletion117 = true;
+        var _didIteratorError117 = false;
+        var _iteratorError117 = undefined;
 
         try {
-          for (var _iterator116 = childIds[Symbol.iterator](), _step116; !(_iteratorNormalCompletion116 = (_step116 = _iterator116.next()).done); _iteratorNormalCompletion116 = true) {
-            var childId = _step116.value;
+          for (var _iterator117 = childIds[Symbol.iterator](), _step117; !(_iteratorNormalCompletion117 = (_step117 = _iterator117.next()).done); _iteratorNormalCompletion117 = true) {
+            var childId = _step117.value;
 
             var childNode = this.getNodeById(childId);
             var inactiveNodesIndex = this.project.inactiveNodes.indexOf(childNode);
@@ -9064,16 +9132,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError116 = true;
-          _iteratorError116 = err;
+          _didIteratorError117 = true;
+          _iteratorError117 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion116 && _iterator116.return) {
-              _iterator116.return();
+            if (!_iteratorNormalCompletion117 && _iterator117.return) {
+              _iterator117.return();
             }
           } finally {
-            if (_didIteratorError116) {
-              throw _iteratorError116;
+            if (_didIteratorError117) {
+              throw _iteratorError117;
             }
           }
         }
@@ -9169,13 +9237,13 @@ var ProjectService = function () {
             // put the node after one of the inactive nodes
 
             var added = false;
-            var _iteratorNormalCompletion117 = true;
-            var _didIteratorError117 = false;
-            var _iteratorError117 = undefined;
+            var _iteratorNormalCompletion118 = true;
+            var _didIteratorError118 = false;
+            var _iteratorError118 = undefined;
 
             try {
-              for (var _iterator117 = inactiveGroups[Symbol.iterator](), _step117; !(_iteratorNormalCompletion117 = (_step117 = _iterator117.next()).done); _iteratorNormalCompletion117 = true) {
-                var inactiveGroup = _step117.value;
+              for (var _iterator118 = inactiveGroups[Symbol.iterator](), _step118; !(_iteratorNormalCompletion118 = (_step118 = _iterator118.next()).done); _iteratorNormalCompletion118 = true) {
+                var inactiveGroup = _step118.value;
 
                 if (nodeIdToInsertInside == inactiveGroup.id) {
                   // we have found the group we want to insert into
@@ -9198,16 +9266,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError117 = true;
-              _iteratorError117 = err;
+              _didIteratorError118 = true;
+              _iteratorError118 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion117 && _iterator117.return) {
-                  _iterator117.return();
+                if (!_iteratorNormalCompletion118 && _iterator118.return) {
+                  _iterator118.return();
                 }
               } finally {
-                if (_didIteratorError117) {
-                  throw _iteratorError117;
+                if (_didIteratorError118) {
+                  throw _iteratorError118;
                 }
               }
             }
@@ -9241,29 +9309,29 @@ var ProjectService = function () {
     value: function addGroupChildNodesToInactive(node) {
       if (node != null) {
         var childIds = node.ids;
-        var _iteratorNormalCompletion118 = true;
-        var _didIteratorError118 = false;
-        var _iteratorError118 = undefined;
+        var _iteratorNormalCompletion119 = true;
+        var _didIteratorError119 = false;
+        var _iteratorError119 = undefined;
 
         try {
-          for (var _iterator118 = childIds[Symbol.iterator](), _step118; !(_iteratorNormalCompletion118 = (_step118 = _iterator118.next()).done); _iteratorNormalCompletion118 = true) {
-            var childId = _step118.value;
+          for (var _iterator119 = childIds[Symbol.iterator](), _step119; !(_iteratorNormalCompletion119 = (_step119 = _iterator119.next()).done); _iteratorNormalCompletion119 = true) {
+            var childId = _step119.value;
 
             var childNode = this.getNodeById(childId);
             this.project.inactiveNodes.push(childNode);
             this.inactiveStepNodes.push(childNode);
           }
         } catch (err) {
-          _didIteratorError118 = true;
-          _iteratorError118 = err;
+          _didIteratorError119 = true;
+          _iteratorError119 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion118 && _iterator118.return) {
-              _iterator118.return();
+            if (!_iteratorNormalCompletion119 && _iterator119.return) {
+              _iterator119.return();
             }
           } finally {
-            if (_didIteratorError118) {
-              throw _iteratorError118;
+            if (_didIteratorError119) {
+              throw _iteratorError119;
             }
           }
         }
@@ -9344,29 +9412,29 @@ var ProjectService = function () {
         if (group != null) {
           var childIds = group.ids;
           if (childIds != null) {
-            var _iteratorNormalCompletion119 = true;
-            var _didIteratorError119 = false;
-            var _iteratorError119 = undefined;
+            var _iteratorNormalCompletion120 = true;
+            var _didIteratorError120 = false;
+            var _iteratorError120 = undefined;
 
             try {
-              for (var _iterator119 = childIds[Symbol.iterator](), _step119; !(_iteratorNormalCompletion119 = (_step119 = _iterator119.next()).done); _iteratorNormalCompletion119 = true) {
-                var childId = _step119.value;
+              for (var _iterator120 = childIds[Symbol.iterator](), _step120; !(_iteratorNormalCompletion120 = (_step120 = _iterator120.next()).done); _iteratorNormalCompletion120 = true) {
+                var childId = _step120.value;
 
                 if (childId != null) {
                   this.removeTransitionsThatPointToNodeIdFromOutsideGroup(childId);
                 }
               }
             } catch (err) {
-              _didIteratorError119 = true;
-              _iteratorError119 = err;
+              _didIteratorError120 = true;
+              _iteratorError120 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion119 && _iterator119.return) {
-                  _iterator119.return();
+                if (!_iteratorNormalCompletion120 && _iterator120.return) {
+                  _iterator120.return();
                 }
               } finally {
-                if (_didIteratorError119) {
-                  throw _iteratorError119;
+                if (_didIteratorError120) {
+                  throw _iteratorError120;
                 }
               }
             }
@@ -9389,13 +9457,13 @@ var ProjectService = function () {
         var nodesThatPointToTargetNode = this.getNodesByToNodeId(nodeId);
 
         if (nodesThatPointToTargetNode != null) {
-          var _iteratorNormalCompletion120 = true;
-          var _didIteratorError120 = false;
-          var _iteratorError120 = undefined;
+          var _iteratorNormalCompletion121 = true;
+          var _didIteratorError121 = false;
+          var _iteratorError121 = undefined;
 
           try {
-            for (var _iterator120 = nodesThatPointToTargetNode[Symbol.iterator](), _step120; !(_iteratorNormalCompletion120 = (_step120 = _iterator120.next()).done); _iteratorNormalCompletion120 = true) {
-              var nodeThatPointsToTargetNode = _step120.value;
+            for (var _iterator121 = nodesThatPointToTargetNode[Symbol.iterator](), _step121; !(_iteratorNormalCompletion121 = (_step121 = _iterator121.next()).done); _iteratorNormalCompletion121 = true) {
+              var nodeThatPointsToTargetNode = _step121.value;
 
               if (nodeThatPointsToTargetNode != null) {
                 var nodeThatPointsToTargetNodeParentGroupId = this.getParentGroupId(nodeThatPointsToTargetNode.id);
@@ -9410,16 +9478,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError120 = true;
-            _iteratorError120 = err;
+            _didIteratorError121 = true;
+            _iteratorError121 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion120 && _iterator120.return) {
-                _iterator120.return();
+              if (!_iteratorNormalCompletion121 && _iterator121.return) {
+                _iterator121.return();
               }
             } finally {
-              if (_didIteratorError120) {
-                throw _iteratorError120;
+              if (_didIteratorError121) {
+                throw _iteratorError121;
               }
             }
           }
@@ -9471,13 +9539,13 @@ var ProjectService = function () {
         if (group != null) {
           var childIds = group.ids;
           if (childIds != null) {
-            var _iteratorNormalCompletion121 = true;
-            var _didIteratorError121 = false;
-            var _iteratorError121 = undefined;
+            var _iteratorNormalCompletion122 = true;
+            var _didIteratorError122 = false;
+            var _iteratorError122 = undefined;
 
             try {
-              for (var _iterator121 = childIds[Symbol.iterator](), _step121; !(_iteratorNormalCompletion121 = (_step121 = _iterator121.next()).done); _iteratorNormalCompletion121 = true) {
-                var childId = _step121.value;
+              for (var _iterator122 = childIds[Symbol.iterator](), _step122; !(_iteratorNormalCompletion122 = (_step122 = _iterator122.next()).done); _iteratorNormalCompletion122 = true) {
+                var childId = _step122.value;
 
                 if (childId != null) {
                   var transitions = this.getTransitionsByFromNodeId(childId);
@@ -9505,16 +9573,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError121 = true;
-              _iteratorError121 = err;
+              _didIteratorError122 = true;
+              _iteratorError122 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion121 && _iterator121.return) {
-                  _iterator121.return();
+                if (!_iteratorNormalCompletion122 && _iterator122.return) {
+                  _iterator122.return();
                 }
               } finally {
-                if (_didIteratorError121) {
-                  throw _iteratorError121;
+                if (_didIteratorError122) {
+                  throw _iteratorError122;
                 }
               }
             }
@@ -9574,13 +9642,13 @@ var ProjectService = function () {
             var childIds = groupThatTransitionsToGroupWeAreMoving.ids;
 
             if (childIds != null) {
-              var _iteratorNormalCompletion122 = true;
-              var _didIteratorError122 = false;
-              var _iteratorError122 = undefined;
+              var _iteratorNormalCompletion123 = true;
+              var _didIteratorError123 = false;
+              var _iteratorError123 = undefined;
 
               try {
-                for (var _iterator122 = childIds[Symbol.iterator](), _step122; !(_iteratorNormalCompletion122 = (_step122 = _iterator122.next()).done); _iteratorNormalCompletion122 = true) {
-                  var childId = _step122.value;
+                for (var _iterator123 = childIds[Symbol.iterator](), _step123; !(_iteratorNormalCompletion123 = (_step123 = _iterator123.next()).done); _iteratorNormalCompletion123 = true) {
+                  var childId = _step123.value;
 
                   var transitionsFromChild = this.getTransitionsByFromNodeId(childId);
                   if (transitionsFromChild != null) {
@@ -9609,16 +9677,16 @@ var ProjectService = function () {
                   }
                 }
               } catch (err) {
-                _didIteratorError122 = true;
-                _iteratorError122 = err;
+                _didIteratorError123 = true;
+                _iteratorError123 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion122 && _iterator122.return) {
-                    _iterator122.return();
+                  if (!_iteratorNormalCompletion123 && _iterator123.return) {
+                    _iterator123.return();
                   }
                 } finally {
-                  if (_didIteratorError122) {
-                    throw _iteratorError122;
+                  if (_didIteratorError123) {
+                    throw _iteratorError123;
                   }
                 }
               }
@@ -9636,23 +9704,23 @@ var ProjectService = function () {
               var _childIds3 = groupThatTransitionsToGroupWeAreMoving.ids;
 
               if (_childIds3 != null) {
-                var _iteratorNormalCompletion123 = true;
-                var _didIteratorError123 = false;
-                var _iteratorError123 = undefined;
+                var _iteratorNormalCompletion124 = true;
+                var _didIteratorError124 = false;
+                var _iteratorError124 = undefined;
 
                 try {
-                  for (var _iterator123 = _childIds3[Symbol.iterator](), _step123; !(_iteratorNormalCompletion123 = (_step123 = _iterator123.next()).done); _iteratorNormalCompletion123 = true) {
-                    var _childId3 = _step123.value;
+                  for (var _iterator124 = _childIds3[Symbol.iterator](), _step124; !(_iteratorNormalCompletion124 = (_step124 = _iterator124.next()).done); _iteratorNormalCompletion124 = true) {
+                    var _childId3 = _step124.value;
 
                     var _transitionsFromChild = this.getTransitionsByFromNodeId(_childId3);
                     if (_transitionsFromChild != null) {
-                      var _iteratorNormalCompletion124 = true;
-                      var _didIteratorError124 = false;
-                      var _iteratorError124 = undefined;
+                      var _iteratorNormalCompletion125 = true;
+                      var _didIteratorError125 = false;
+                      var _iteratorError125 = undefined;
 
                       try {
-                        for (var _iterator124 = _transitionsFromChild[Symbol.iterator](), _step124; !(_iteratorNormalCompletion124 = (_step124 = _iterator124.next()).done); _iteratorNormalCompletion124 = true) {
-                          var _transitionFromChild = _step124.value;
+                        for (var _iterator125 = _transitionsFromChild[Symbol.iterator](), _step125; !(_iteratorNormalCompletion125 = (_step125 = _iterator125.next()).done); _iteratorNormalCompletion125 = true) {
+                          var _transitionFromChild = _step125.value;
 
                           if (_transitionFromChild != null) {
                             var _toNodeId7 = _transitionFromChild.to;
@@ -9674,32 +9742,32 @@ var ProjectService = function () {
                           }
                         }
                       } catch (err) {
-                        _didIteratorError124 = true;
-                        _iteratorError124 = err;
+                        _didIteratorError125 = true;
+                        _iteratorError125 = err;
                       } finally {
                         try {
-                          if (!_iteratorNormalCompletion124 && _iterator124.return) {
-                            _iterator124.return();
+                          if (!_iteratorNormalCompletion125 && _iterator125.return) {
+                            _iterator125.return();
                           }
                         } finally {
-                          if (_didIteratorError124) {
-                            throw _iteratorError124;
+                          if (_didIteratorError125) {
+                            throw _iteratorError125;
                           }
                         }
                       }
                     }
                   }
                 } catch (err) {
-                  _didIteratorError123 = true;
-                  _iteratorError123 = err;
+                  _didIteratorError124 = true;
+                  _iteratorError124 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion123 && _iterator123.return) {
-                      _iterator123.return();
+                    if (!_iteratorNormalCompletion124 && _iterator124.return) {
+                      _iterator124.return();
                     }
                   } finally {
-                    if (_didIteratorError123) {
-                      throw _iteratorError123;
+                    if (_didIteratorError124) {
+                      throw _iteratorError124;
                     }
                   }
                 }
@@ -9726,13 +9794,13 @@ var ProjectService = function () {
         if (nodeContent != null) {
           var components = nodeContent.components;
           if (components != null) {
-            var _iteratorNormalCompletion125 = true;
-            var _didIteratorError125 = false;
-            var _iteratorError125 = undefined;
+            var _iteratorNormalCompletion126 = true;
+            var _didIteratorError126 = false;
+            var _iteratorError126 = undefined;
 
             try {
-              for (var _iterator125 = components[Symbol.iterator](), _step125; !(_iteratorNormalCompletion125 = (_step125 = _iterator125.next()).done); _iteratorNormalCompletion125 = true) {
-                var component = _step125.value;
+              for (var _iterator126 = components[Symbol.iterator](), _step126; !(_iteratorNormalCompletion126 = (_step126 = _iterator126.next()).done); _iteratorNormalCompletion126 = true) {
+                var component = _step126.value;
 
                 if (component != null) {
                   var componentId = component.id;
@@ -9743,16 +9811,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError125 = true;
-              _iteratorError125 = err;
+              _didIteratorError126 = true;
+              _iteratorError126 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion125 && _iterator125.return) {
-                  _iterator125.return();
+                if (!_iteratorNormalCompletion126 && _iterator126.return) {
+                  _iterator126.return();
                 }
               } finally {
-                if (_didIteratorError125) {
-                  throw _iteratorError125;
+                if (_didIteratorError126) {
+                  throw _iteratorError126;
                 }
               }
             }
@@ -9779,13 +9847,13 @@ var ProjectService = function () {
         if (nodeContent != null) {
           var components = nodeContent.components;
           if (components != null) {
-            var _iteratorNormalCompletion126 = true;
-            var _didIteratorError126 = false;
-            var _iteratorError126 = undefined;
+            var _iteratorNormalCompletion127 = true;
+            var _didIteratorError127 = false;
+            var _iteratorError127 = undefined;
 
             try {
-              for (var _iterator126 = components[Symbol.iterator](), _step126; !(_iteratorNormalCompletion126 = (_step126 = _iterator126.next()).done); _iteratorNormalCompletion126 = true) {
-                var component = _step126.value;
+              for (var _iterator127 = components[Symbol.iterator](), _step127; !(_iteratorNormalCompletion127 = (_step127 = _iterator127.next()).done); _iteratorNormalCompletion127 = true) {
+                var component = _step127.value;
 
                 if (component != null) {
                   var showPreviousWorkNodeId = component.showPreviousWorkNodeId;
@@ -9799,16 +9867,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError126 = true;
-              _iteratorError126 = err;
+              _didIteratorError127 = true;
+              _iteratorError127 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion126 && _iterator126.return) {
-                  _iterator126.return();
+                if (!_iteratorNormalCompletion127 && _iterator127.return) {
+                  _iterator127.return();
                 }
               } finally {
-                if (_didIteratorError126) {
-                  throw _iteratorError126;
+                if (_didIteratorError127) {
+                  throw _iteratorError127;
                 }
               }
             }
@@ -9862,13 +9930,13 @@ var ProjectService = function () {
       var annotationGroup = null;
       if (component.globalAnnotationSettings != null && component.globalAnnotationSettings.globalAnnotationGroups != null) {
         var globalAnnotationGroups = component.globalAnnotationSettings.globalAnnotationGroups;
-        var _iteratorNormalCompletion127 = true;
-        var _didIteratorError127 = false;
-        var _iteratorError127 = undefined;
+        var _iteratorNormalCompletion128 = true;
+        var _didIteratorError128 = false;
+        var _iteratorError128 = undefined;
 
         try {
-          for (var _iterator127 = globalAnnotationGroups[Symbol.iterator](), _step127; !(_iteratorNormalCompletion127 = (_step127 = _iterator127.next()).done); _iteratorNormalCompletion127 = true) {
-            var globalAnnotationGroup = _step127.value;
+          for (var _iterator128 = globalAnnotationGroups[Symbol.iterator](), _step128; !(_iteratorNormalCompletion128 = (_step128 = _iterator128.next()).done); _iteratorNormalCompletion128 = true) {
+            var globalAnnotationGroup = _step128.value;
 
             if (globalAnnotationGroup.enableCriteria != null && globalAnnotationGroup.enableCriteria.scoreSequence != null) {
               var scoreSequence = globalAnnotationGroup.enableCriteria.scoreSequence;
@@ -9901,16 +9969,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError127 = true;
-          _iteratorError127 = err;
+          _didIteratorError128 = true;
+          _iteratorError128 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion127 && _iterator127.return) {
-              _iterator127.return();
+            if (!_iteratorNormalCompletion128 && _iterator128.return) {
+              _iterator128.return();
             }
           } finally {
-            if (_didIteratorError127) {
-              throw _iteratorError127;
+            if (_didIteratorError128) {
+              throw _iteratorError128;
             }
           }
         }
@@ -9933,13 +10001,13 @@ var ProjectService = function () {
       var notificationResult = null;
       if (component.notificationSettings != null && component.notificationSettings.notifications != null) {
         var notifications = component.notificationSettings.notifications;
-        var _iteratorNormalCompletion128 = true;
-        var _didIteratorError128 = false;
-        var _iteratorError128 = undefined;
+        var _iteratorNormalCompletion129 = true;
+        var _didIteratorError129 = false;
+        var _iteratorError129 = undefined;
 
         try {
-          for (var _iterator128 = notifications[Symbol.iterator](), _step128; !(_iteratorNormalCompletion128 = (_step128 = _iterator128.next()).done); _iteratorNormalCompletion128 = true) {
-            var notification = _step128.value;
+          for (var _iterator129 = notifications[Symbol.iterator](), _step129; !(_iteratorNormalCompletion129 = (_step129 = _iterator129.next()).done); _iteratorNormalCompletion129 = true) {
+            var notification = _step129.value;
 
             if (notification.enableCriteria != null && notification.enableCriteria.scoreSequence != null) {
               var scoreSequence = notification.enableCriteria.scoreSequence;
@@ -9971,16 +10039,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError128 = true;
-          _iteratorError128 = err;
+          _didIteratorError129 = true;
+          _iteratorError129 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion128 && _iterator128.return) {
-              _iterator128.return();
+            if (!_iteratorNormalCompletion129 && _iterator129.return) {
+              _iterator129.return();
             }
           } finally {
-            if (_didIteratorError128) {
-              throw _iteratorError128;
+            if (_didIteratorError129) {
+              throw _iteratorError129;
             }
           }
         }
@@ -10099,13 +10167,13 @@ var ProjectService = function () {
         if (nodeContent != null) {
           var components = nodeContent.components;
           if (components != null) {
-            var _iteratorNormalCompletion129 = true;
-            var _didIteratorError129 = false;
-            var _iteratorError129 = undefined;
+            var _iteratorNormalCompletion130 = true;
+            var _didIteratorError130 = false;
+            var _iteratorError130 = undefined;
 
             try {
-              for (var _iterator129 = components[Symbol.iterator](), _step129; !(_iteratorNormalCompletion129 = (_step129 = _iterator129.next()).done); _iteratorNormalCompletion129 = true) {
-                var component = _step129.value;
+              for (var _iterator130 = components[Symbol.iterator](), _step130; !(_iteratorNormalCompletion130 = (_step130 = _iterator130.next()).done); _iteratorNormalCompletion130 = true) {
+                var component = _step130.value;
 
                 if (component != null) {
                   var componentHasWork = this.componentHasWork(component);
@@ -10115,16 +10183,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError129 = true;
-              _iteratorError129 = err;
+              _didIteratorError130 = true;
+              _iteratorError130 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion129 && _iterator129.return) {
-                  _iterator129.return();
+                if (!_iteratorNormalCompletion130 && _iterator130.return) {
+                  _iterator130.return();
                 }
               } finally {
-                if (_didIteratorError129) {
-                  throw _iteratorError129;
+                if (_didIteratorError130) {
+                  throw _iteratorError130;
                 }
               }
             }
@@ -10149,13 +10217,13 @@ var ProjectService = function () {
         if (nodeContent != null) {
           var components = nodeContent.components;
           if (components != null) {
-            var _iteratorNormalCompletion130 = true;
-            var _didIteratorError130 = false;
-            var _iteratorError130 = undefined;
+            var _iteratorNormalCompletion131 = true;
+            var _didIteratorError131 = false;
+            var _iteratorError131 = undefined;
 
             try {
-              for (var _iterator130 = components[Symbol.iterator](), _step130; !(_iteratorNormalCompletion130 = (_step130 = _iterator130.next()).done); _iteratorNormalCompletion130 = true) {
-                var component = _step130.value;
+              for (var _iterator131 = components[Symbol.iterator](), _step131; !(_iteratorNormalCompletion131 = (_step131 = _iterator131.next()).done); _iteratorNormalCompletion131 = true) {
+                var component = _step131.value;
 
                 if (component != null && componentId == component.id) {
                   var componentHasWork = this.componentHasWork(component);
@@ -10165,16 +10233,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError130 = true;
-              _iteratorError130 = err;
+              _didIteratorError131 = true;
+              _iteratorError131 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion130 && _iterator130.return) {
-                  _iterator130.return();
+                if (!_iteratorNormalCompletion131 && _iterator131.return) {
+                  _iterator131.return();
                 }
               } finally {
-                if (_didIteratorError130) {
-                  throw _iteratorError130;
+                if (_didIteratorError131) {
+                  throw _iteratorError131;
                 }
               }
             }
@@ -10250,13 +10318,13 @@ var ProjectService = function () {
     key: 'isInactive',
     value: function isInactive(nodeId) {
       if (nodeId != null && this.project.inactiveNodes != null) {
-        var _iteratorNormalCompletion131 = true;
-        var _didIteratorError131 = false;
-        var _iteratorError131 = undefined;
+        var _iteratorNormalCompletion132 = true;
+        var _didIteratorError132 = false;
+        var _iteratorError132 = undefined;
 
         try {
-          for (var _iterator131 = this.project.inactiveNodes[Symbol.iterator](), _step131; !(_iteratorNormalCompletion131 = (_step131 = _iterator131.next()).done); _iteratorNormalCompletion131 = true) {
-            var inactiveNode = _step131.value;
+          for (var _iterator132 = this.project.inactiveNodes[Symbol.iterator](), _step132; !(_iteratorNormalCompletion132 = (_step132 = _iterator132.next()).done); _iteratorNormalCompletion132 = true) {
+            var inactiveNode = _step132.value;
 
             if (inactiveNode != null) {
               if (nodeId === inactiveNode.id) {
@@ -10265,16 +10333,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError131 = true;
-          _iteratorError131 = err;
+          _didIteratorError132 = true;
+          _iteratorError132 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion131 && _iterator131.return) {
-              _iterator131.return();
+            if (!_iteratorNormalCompletion132 && _iterator132.return) {
+              _iterator132.return();
             }
           } finally {
-            if (_didIteratorError131) {
-              throw _iteratorError131;
+            if (_didIteratorError132) {
+              throw _iteratorError132;
             }
           }
         }
@@ -10346,84 +10414,27 @@ var ProjectService = function () {
   }, {
     key: 'isComponentIdUsed',
     value: function isComponentIdUsed(componentId) {
-      var _iteratorNormalCompletion132 = true;
-      var _didIteratorError132 = false;
-      var _iteratorError132 = undefined;
-
-      try {
-        for (var _iterator132 = this.project.nodes[Symbol.iterator](), _step132; !(_iteratorNormalCompletion132 = (_step132 = _iterator132.next()).done); _iteratorNormalCompletion132 = true) {
-          var node = _step132.value;
-
-          if (node != null) {
-            var components = node.components;
-            if (components != null) {
-              var _iteratorNormalCompletion134 = true;
-              var _didIteratorError134 = false;
-              var _iteratorError134 = undefined;
-
-              try {
-                for (var _iterator134 = components[Symbol.iterator](), _step134; !(_iteratorNormalCompletion134 = (_step134 = _iterator134.next()).done); _iteratorNormalCompletion134 = true) {
-                  var component = _step134.value;
-
-                  if (component != null) {
-                    if (componentId === component.id) {
-                      return true;
-                    }
-                  }
-                }
-              } catch (err) {
-                _didIteratorError134 = true;
-                _iteratorError134 = err;
-              } finally {
-                try {
-                  if (!_iteratorNormalCompletion134 && _iterator134.return) {
-                    _iterator134.return();
-                  }
-                } finally {
-                  if (_didIteratorError134) {
-                    throw _iteratorError134;
-                  }
-                }
-              }
-            }
-          }
-        }
-      } catch (err) {
-        _didIteratorError132 = true;
-        _iteratorError132 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion132 && _iterator132.return) {
-            _iterator132.return();
-          }
-        } finally {
-          if (_didIteratorError132) {
-            throw _iteratorError132;
-          }
-        }
-      }
-
       var _iteratorNormalCompletion133 = true;
       var _didIteratorError133 = false;
       var _iteratorError133 = undefined;
 
       try {
-        for (var _iterator133 = this.project.inactiveNodes[Symbol.iterator](), _step133; !(_iteratorNormalCompletion133 = (_step133 = _iterator133.next()).done); _iteratorNormalCompletion133 = true) {
-          var _node = _step133.value;
+        for (var _iterator133 = this.project.nodes[Symbol.iterator](), _step133; !(_iteratorNormalCompletion133 = (_step133 = _iterator133.next()).done); _iteratorNormalCompletion133 = true) {
+          var node = _step133.value;
 
-          if (_node != null) {
-            var _components = _node.components;
-            if (_components != null) {
+          if (node != null) {
+            var components = node.components;
+            if (components != null) {
               var _iteratorNormalCompletion135 = true;
               var _didIteratorError135 = false;
               var _iteratorError135 = undefined;
 
               try {
-                for (var _iterator135 = _components[Symbol.iterator](), _step135; !(_iteratorNormalCompletion135 = (_step135 = _iterator135.next()).done); _iteratorNormalCompletion135 = true) {
-                  var _component = _step135.value;
+                for (var _iterator135 = components[Symbol.iterator](), _step135; !(_iteratorNormalCompletion135 = (_step135 = _iterator135.next()).done); _iteratorNormalCompletion135 = true) {
+                  var component = _step135.value;
 
-                  if (_component != null) {
-                    if (componentId === _component.id) {
+                  if (component != null) {
+                    if (componentId === component.id) {
                       return true;
                     }
                   }
@@ -10460,6 +10471,63 @@ var ProjectService = function () {
         }
       }
 
+      var _iteratorNormalCompletion134 = true;
+      var _didIteratorError134 = false;
+      var _iteratorError134 = undefined;
+
+      try {
+        for (var _iterator134 = this.project.inactiveNodes[Symbol.iterator](), _step134; !(_iteratorNormalCompletion134 = (_step134 = _iterator134.next()).done); _iteratorNormalCompletion134 = true) {
+          var _node = _step134.value;
+
+          if (_node != null) {
+            var _components = _node.components;
+            if (_components != null) {
+              var _iteratorNormalCompletion136 = true;
+              var _didIteratorError136 = false;
+              var _iteratorError136 = undefined;
+
+              try {
+                for (var _iterator136 = _components[Symbol.iterator](), _step136; !(_iteratorNormalCompletion136 = (_step136 = _iterator136.next()).done); _iteratorNormalCompletion136 = true) {
+                  var _component = _step136.value;
+
+                  if (_component != null) {
+                    if (componentId === _component.id) {
+                      return true;
+                    }
+                  }
+                }
+              } catch (err) {
+                _didIteratorError136 = true;
+                _iteratorError136 = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion136 && _iterator136.return) {
+                    _iterator136.return();
+                  }
+                } finally {
+                  if (_didIteratorError136) {
+                    throw _iteratorError136;
+                  }
+                }
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError134 = true;
+        _iteratorError134 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion134 && _iterator134.return) {
+            _iterator134.return();
+          }
+        } finally {
+          if (_didIteratorError134) {
+            throw _iteratorError134;
+          }
+        }
+      }
+
       return false;
     }
 
@@ -10472,45 +10540,16 @@ var ProjectService = function () {
   }, {
     key: 'isNodeIdUsed',
     value: function isNodeIdUsed(nodeId) {
-      var _iteratorNormalCompletion136 = true;
-      var _didIteratorError136 = false;
-      var _iteratorError136 = undefined;
-
-      try {
-        for (var _iterator136 = this.project.nodes[Symbol.iterator](), _step136; !(_iteratorNormalCompletion136 = (_step136 = _iterator136.next()).done); _iteratorNormalCompletion136 = true) {
-          var node = _step136.value;
-
-          if (node != null) {
-            if (nodeId === node.id) {
-              return true;
-            }
-          }
-        }
-      } catch (err) {
-        _didIteratorError136 = true;
-        _iteratorError136 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion136 && _iterator136.return) {
-            _iterator136.return();
-          }
-        } finally {
-          if (_didIteratorError136) {
-            throw _iteratorError136;
-          }
-        }
-      }
-
       var _iteratorNormalCompletion137 = true;
       var _didIteratorError137 = false;
       var _iteratorError137 = undefined;
 
       try {
-        for (var _iterator137 = this.project.inactiveNodes[Symbol.iterator](), _step137; !(_iteratorNormalCompletion137 = (_step137 = _iterator137.next()).done); _iteratorNormalCompletion137 = true) {
-          var _node2 = _step137.value;
+        for (var _iterator137 = this.project.nodes[Symbol.iterator](), _step137; !(_iteratorNormalCompletion137 = (_step137 = _iterator137.next()).done); _iteratorNormalCompletion137 = true) {
+          var node = _step137.value;
 
-          if (_node2 != null) {
-            if (nodeId === _node2.id) {
+          if (node != null) {
+            if (nodeId === node.id) {
               return true;
             }
           }
@@ -10526,6 +10565,35 @@ var ProjectService = function () {
         } finally {
           if (_didIteratorError137) {
             throw _iteratorError137;
+          }
+        }
+      }
+
+      var _iteratorNormalCompletion138 = true;
+      var _didIteratorError138 = false;
+      var _iteratorError138 = undefined;
+
+      try {
+        for (var _iterator138 = this.project.inactiveNodes[Symbol.iterator](), _step138; !(_iteratorNormalCompletion138 = (_step138 = _iterator138.next()).done); _iteratorNormalCompletion138 = true) {
+          var _node2 = _step138.value;
+
+          if (_node2 != null) {
+            if (nodeId === _node2.id) {
+              return true;
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError138 = true;
+        _iteratorError138 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion138 && _iterator138.return) {
+            _iterator138.return();
+          }
+        } finally {
+          if (_didIteratorError138) {
+            throw _iteratorError138;
           }
         }
       }
@@ -10577,13 +10645,13 @@ var ProjectService = function () {
         var newNodes = [];
         var newNodeIds = [];
 
-        var _iteratorNormalCompletion138 = true;
-        var _didIteratorError138 = false;
-        var _iteratorError138 = undefined;
+        var _iteratorNormalCompletion139 = true;
+        var _didIteratorError139 = false;
+        var _iteratorError139 = undefined;
 
         try {
-          for (var _iterator138 = selectedNodes[Symbol.iterator](), _step138; !(_iteratorNormalCompletion138 = (_step138 = _iterator138.next()).done); _iteratorNormalCompletion138 = true) {
-            var selectedNode = _step138.value;
+          for (var _iterator139 = selectedNodes[Symbol.iterator](), _step139; !(_iteratorNormalCompletion139 = (_step139 = _iterator139.next()).done); _iteratorNormalCompletion139 = true) {
+            var selectedNode = _step139.value;
 
             if (selectedNode != null) {
               // make a copy of the node so that we don't modify the source
@@ -10604,13 +10672,13 @@ var ProjectService = function () {
               var tempComponents = tempNode.components;
 
               if (tempComponents != null) {
-                var _iteratorNormalCompletion140 = true;
-                var _didIteratorError140 = false;
-                var _iteratorError140 = undefined;
+                var _iteratorNormalCompletion141 = true;
+                var _didIteratorError141 = false;
+                var _iteratorError141 = undefined;
 
                 try {
-                  for (var _iterator140 = tempComponents[Symbol.iterator](), _step140; !(_iteratorNormalCompletion140 = (_step140 = _iterator140.next()).done); _iteratorNormalCompletion140 = true) {
-                    var tempComponent = _step140.value;
+                  for (var _iterator141 = tempComponents[Symbol.iterator](), _step141; !(_iteratorNormalCompletion141 = (_step141 = _iterator141.next()).done); _iteratorNormalCompletion141 = true) {
+                    var tempComponent = _step141.value;
 
                     if (tempComponent != null) {
                       if (_this5.isComponentIdUsed(tempComponent.id)) {
@@ -10622,16 +10690,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError140 = true;
-                  _iteratorError140 = err;
+                  _didIteratorError141 = true;
+                  _iteratorError141 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion140 && _iterator140.return) {
-                      _iterator140.return();
+                    if (!_iteratorNormalCompletion141 && _iterator141.return) {
+                      _iterator141.return();
                     }
                   } finally {
-                    if (_didIteratorError140) {
-                      throw _iteratorError140;
+                    if (_didIteratorError141) {
+                      throw _iteratorError141;
                     }
                   }
                 }
@@ -10646,16 +10714,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError138 = true;
-          _iteratorError138 = err;
+          _didIteratorError139 = true;
+          _iteratorError139 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion138 && _iterator138.return) {
-              _iterator138.return();
+            if (!_iteratorNormalCompletion139 && _iterator139.return) {
+              _iterator139.return();
             }
           } finally {
-            if (_didIteratorError138) {
-              throw _iteratorError138;
+            if (_didIteratorError139) {
+              throw _iteratorError139;
             }
           }
         }
@@ -10679,13 +10747,13 @@ var ProjectService = function () {
           }
         }
 
-        var _iteratorNormalCompletion139 = true;
-        var _didIteratorError139 = false;
-        var _iteratorError139 = undefined;
+        var _iteratorNormalCompletion140 = true;
+        var _didIteratorError140 = false;
+        var _iteratorError140 = undefined;
 
         try {
-          for (var _iterator139 = newNodes[Symbol.iterator](), _step139; !(_iteratorNormalCompletion139 = (_step139 = _iterator139.next()).done); _iteratorNormalCompletion139 = true) {
-            var newNode = _step139.value;
+          for (var _iterator140 = newNodes[Symbol.iterator](), _step140; !(_iteratorNormalCompletion140 = (_step140 = _iterator140.next()).done); _iteratorNormalCompletion140 = true) {
+            var newNode = _step140.value;
 
             if (_this5.isGroupNode(nodeIdToInsertInsideOrAfter)) {
               // we want to make the new step the first step in the given activity
@@ -10715,16 +10783,16 @@ var ProjectService = function () {
             nodeIdToInsertInsideOrAfter = newNode.id;
           }
         } catch (err) {
-          _didIteratorError139 = true;
-          _iteratorError139 = err;
+          _didIteratorError140 = true;
+          _iteratorError140 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion139 && _iterator139.return) {
-              _iterator139.return();
+            if (!_iteratorNormalCompletion140 && _iterator140.return) {
+              _iterator140.return();
             }
           } finally {
-            if (_didIteratorError139) {
-              throw _iteratorError139;
+            if (_didIteratorError140) {
+              throw _iteratorError140;
             }
           }
         }
@@ -10752,13 +10820,13 @@ var ProjectService = function () {
         if (node != null) {
           var constraints = node.constraints;
           if (constraints != null) {
-            var _iteratorNormalCompletion141 = true;
-            var _didIteratorError141 = false;
-            var _iteratorError141 = undefined;
+            var _iteratorNormalCompletion142 = true;
+            var _didIteratorError142 = false;
+            var _iteratorError142 = undefined;
 
             try {
-              for (var _iterator141 = constraints[Symbol.iterator](), _step141; !(_iteratorNormalCompletion141 = (_step141 = _iterator141.next()).done); _iteratorNormalCompletion141 = true) {
-                var constraint = _step141.value;
+              for (var _iterator142 = constraints[Symbol.iterator](), _step142; !(_iteratorNormalCompletion142 = (_step142 = _iterator142.next()).done); _iteratorNormalCompletion142 = true) {
+                var constraint = _step142.value;
 
                 if (constraint != null) {
                   var constraintId = constraint.id;
@@ -10768,16 +10836,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError141 = true;
-              _iteratorError141 = err;
+              _didIteratorError142 = true;
+              _iteratorError142 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion141 && _iterator141.return) {
-                  _iterator141.return();
+                if (!_iteratorNormalCompletion142 && _iterator142.return) {
+                  _iterator142.return();
                 }
               } finally {
-                if (_didIteratorError141) {
-                  throw _iteratorError141;
+                if (_didIteratorError142) {
+                  throw _iteratorError142;
                 }
               }
             }
@@ -10903,13 +10971,13 @@ var ProjectService = function () {
 
       if (orderedItems != null) {
         var foundNodeId = false;
-        var _iteratorNormalCompletion142 = true;
-        var _didIteratorError142 = false;
-        var _iteratorError142 = undefined;
+        var _iteratorNormalCompletion143 = true;
+        var _didIteratorError143 = false;
+        var _iteratorError143 = undefined;
 
         try {
-          for (var _iterator142 = orderedItems[Symbol.iterator](), _step142; !(_iteratorNormalCompletion142 = (_step142 = _iterator142.next()).done); _iteratorNormalCompletion142 = true) {
-            var item = _step142.value;
+          for (var _iterator143 = orderedItems[Symbol.iterator](), _step143; !(_iteratorNormalCompletion143 = (_step143 = _iterator143.next()).done); _iteratorNormalCompletion143 = true) {
+            var item = _step143.value;
 
             if (item != null) {
               var tempNodeId = item.$key;
@@ -10931,16 +10999,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError142 = true;
-          _iteratorError142 = err;
+          _didIteratorError143 = true;
+          _iteratorError143 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion142 && _iterator142.return) {
-              _iterator142.return();
+            if (!_iteratorNormalCompletion143 && _iterator143.return) {
+              _iterator143.return();
             }
           } finally {
-            if (_didIteratorError142) {
-              throw _iteratorError142;
+            if (_didIteratorError143) {
+              throw _iteratorError143;
             }
           }
         }
@@ -10962,13 +11030,13 @@ var ProjectService = function () {
       var nodeIdsInBranch = [];
       var nodes = this.getNodes();
       if (nodes != null) {
-        var _iteratorNormalCompletion143 = true;
-        var _didIteratorError143 = false;
-        var _iteratorError143 = undefined;
+        var _iteratorNormalCompletion144 = true;
+        var _didIteratorError144 = false;
+        var _iteratorError144 = undefined;
 
         try {
-          for (var _iterator143 = nodes[Symbol.iterator](), _step143; !(_iteratorNormalCompletion143 = (_step143 = _iterator143.next()).done); _iteratorNormalCompletion143 = true) {
-            var node = _step143.value;
+          for (var _iterator144 = nodes[Symbol.iterator](), _step144; !(_iteratorNormalCompletion144 = (_step144 = _iterator144.next()).done); _iteratorNormalCompletion144 = true) {
+            var node = _step144.value;
 
             if (node != null) {
               if (this.hasBranchPathTakenConstraint(node, fromNodeId, toNodeId)) {
@@ -10981,16 +11049,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError143 = true;
-          _iteratorError143 = err;
+          _didIteratorError144 = true;
+          _iteratorError144 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion143 && _iterator143.return) {
-              _iterator143.return();
+            if (!_iteratorNormalCompletion144 && _iterator144.return) {
+              _iterator144.return();
             }
           } finally {
-            if (_didIteratorError143) {
-              throw _iteratorError143;
+            if (_didIteratorError144) {
+              throw _iteratorError144;
             }
           }
         }
@@ -11052,24 +11120,24 @@ var ProjectService = function () {
       if (node != null) {
         var constraints = node.constraints;
         if (constraints != null) {
-          var _iteratorNormalCompletion144 = true;
-          var _didIteratorError144 = false;
-          var _iteratorError144 = undefined;
+          var _iteratorNormalCompletion145 = true;
+          var _didIteratorError145 = false;
+          var _iteratorError145 = undefined;
 
           try {
-            for (var _iterator144 = constraints[Symbol.iterator](), _step144; !(_iteratorNormalCompletion144 = (_step144 = _iterator144.next()).done); _iteratorNormalCompletion144 = true) {
-              var constraint = _step144.value;
+            for (var _iterator145 = constraints[Symbol.iterator](), _step145; !(_iteratorNormalCompletion145 = (_step145 = _iterator145.next()).done); _iteratorNormalCompletion145 = true) {
+              var constraint = _step145.value;
 
               if (constraint != null) {
                 var removalCriteria = constraint.removalCriteria;
                 if (removalCriteria != null) {
-                  var _iteratorNormalCompletion145 = true;
-                  var _didIteratorError145 = false;
-                  var _iteratorError145 = undefined;
+                  var _iteratorNormalCompletion146 = true;
+                  var _didIteratorError146 = false;
+                  var _iteratorError146 = undefined;
 
                   try {
-                    for (var _iterator145 = removalCriteria[Symbol.iterator](), _step145; !(_iteratorNormalCompletion145 = (_step145 = _iterator145.next()).done); _iteratorNormalCompletion145 = true) {
-                      var removalCriterion = _step145.value;
+                    for (var _iterator146 = removalCriteria[Symbol.iterator](), _step146; !(_iteratorNormalCompletion146 = (_step146 = _iterator146.next()).done); _iteratorNormalCompletion146 = true) {
+                      var removalCriterion = _step146.value;
 
                       if (removalCriterion != null) {
                         var name = removalCriterion.name;
@@ -11084,16 +11152,16 @@ var ProjectService = function () {
                       }
                     }
                   } catch (err) {
-                    _didIteratorError145 = true;
-                    _iteratorError145 = err;
+                    _didIteratorError146 = true;
+                    _iteratorError146 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion145 && _iterator145.return) {
-                        _iterator145.return();
+                      if (!_iteratorNormalCompletion146 && _iterator146.return) {
+                        _iterator146.return();
                       }
                     } finally {
-                      if (_didIteratorError145) {
-                        throw _iteratorError145;
+                      if (_didIteratorError146) {
+                        throw _iteratorError146;
                       }
                     }
                   }
@@ -11101,16 +11169,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError144 = true;
-            _iteratorError144 = err;
+            _didIteratorError145 = true;
+            _iteratorError145 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion144 && _iterator144.return) {
-                _iterator144.return();
+              if (!_iteratorNormalCompletion145 && _iterator145.return) {
+                _iterator145.return();
               }
             } finally {
-              if (_didIteratorError144) {
-                throw _iteratorError144;
+              if (_didIteratorError145) {
+                throw _iteratorError145;
               }
             }
           }
@@ -11190,13 +11258,13 @@ var ProjectService = function () {
               var removalCriteria = constraint.removalCriteria;
 
               if (removalCriteria != null) {
-                var _iteratorNormalCompletion146 = true;
-                var _didIteratorError146 = false;
-                var _iteratorError146 = undefined;
+                var _iteratorNormalCompletion147 = true;
+                var _didIteratorError147 = false;
+                var _iteratorError147 = undefined;
 
                 try {
-                  for (var _iterator146 = removalCriteria[Symbol.iterator](), _step146; !(_iteratorNormalCompletion146 = (_step146 = _iterator146.next()).done); _iteratorNormalCompletion146 = true) {
-                    var removalCriterion = _step146.value;
+                  for (var _iterator147 = removalCriteria[Symbol.iterator](), _step147; !(_iteratorNormalCompletion147 = (_step147 = _iterator147.next()).done); _iteratorNormalCompletion147 = true) {
+                    var removalCriterion = _step147.value;
 
                     if (removalCriterion != null) {
                       if (removalCriterion.name == 'branchPathTaken') {
@@ -11208,16 +11276,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError146 = true;
-                  _iteratorError146 = err;
+                  _didIteratorError147 = true;
+                  _iteratorError147 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion146 && _iterator146.return) {
-                      _iterator146.return();
+                    if (!_iteratorNormalCompletion147 && _iterator147.return) {
+                      _iterator147.return();
                     }
                   } finally {
-                    if (_didIteratorError146) {
-                      throw _iteratorError146;
+                    if (_didIteratorError147) {
+                      throw _iteratorError147;
                     }
                   }
                 }
@@ -11243,24 +11311,24 @@ var ProjectService = function () {
         if (node != null) {
           var constraints = node.constraints;
           if (constraints != null) {
-            var _iteratorNormalCompletion147 = true;
-            var _didIteratorError147 = false;
-            var _iteratorError147 = undefined;
+            var _iteratorNormalCompletion148 = true;
+            var _didIteratorError148 = false;
+            var _iteratorError148 = undefined;
 
             try {
-              for (var _iterator147 = constraints[Symbol.iterator](), _step147; !(_iteratorNormalCompletion147 = (_step147 = _iterator147.next()).done); _iteratorNormalCompletion147 = true) {
-                var constraint = _step147.value;
+              for (var _iterator148 = constraints[Symbol.iterator](), _step148; !(_iteratorNormalCompletion148 = (_step148 = _iterator148.next()).done); _iteratorNormalCompletion148 = true) {
+                var constraint = _step148.value;
 
                 if (constraint != null) {
                   var removalCriteria = constraint.removalCriteria;
                   if (removalCriteria != null) {
-                    var _iteratorNormalCompletion148 = true;
-                    var _didIteratorError148 = false;
-                    var _iteratorError148 = undefined;
+                    var _iteratorNormalCompletion149 = true;
+                    var _didIteratorError149 = false;
+                    var _iteratorError149 = undefined;
 
                     try {
-                      for (var _iterator148 = removalCriteria[Symbol.iterator](), _step148; !(_iteratorNormalCompletion148 = (_step148 = _iterator148.next()).done); _iteratorNormalCompletion148 = true) {
-                        var removalCriterion = _step148.value;
+                      for (var _iterator149 = removalCriteria[Symbol.iterator](), _step149; !(_iteratorNormalCompletion149 = (_step149 = _iterator149.next()).done); _iteratorNormalCompletion149 = true) {
+                        var removalCriterion = _step149.value;
 
                         if (removalCriterion != null) {
                           if (removalCriterion.name == 'branchPathTaken') {
@@ -11274,16 +11342,16 @@ var ProjectService = function () {
                         }
                       }
                     } catch (err) {
-                      _didIteratorError148 = true;
-                      _iteratorError148 = err;
+                      _didIteratorError149 = true;
+                      _iteratorError149 = err;
                     } finally {
                       try {
-                        if (!_iteratorNormalCompletion148 && _iterator148.return) {
-                          _iterator148.return();
+                        if (!_iteratorNormalCompletion149 && _iterator149.return) {
+                          _iterator149.return();
                         }
                       } finally {
-                        if (_didIteratorError148) {
-                          throw _iteratorError148;
+                        if (_didIteratorError149) {
+                          throw _iteratorError149;
                         }
                       }
                     }
@@ -11291,16 +11359,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError147 = true;
-              _iteratorError147 = err;
+              _didIteratorError148 = true;
+              _iteratorError148 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion147 && _iterator147.return) {
-                  _iterator147.return();
+                if (!_iteratorNormalCompletion148 && _iterator148.return) {
+                  _iterator148.return();
                 }
               } finally {
-                if (_didIteratorError147) {
-                  throw _iteratorError147;
+                if (_didIteratorError148) {
+                  throw _iteratorError148;
                 }
               }
             }
@@ -11325,24 +11393,24 @@ var ProjectService = function () {
       if (node != null) {
         var constraints = node.constraints;
         if (constraints != null) {
-          var _iteratorNormalCompletion149 = true;
-          var _didIteratorError149 = false;
-          var _iteratorError149 = undefined;
+          var _iteratorNormalCompletion150 = true;
+          var _didIteratorError150 = false;
+          var _iteratorError150 = undefined;
 
           try {
-            for (var _iterator149 = constraints[Symbol.iterator](), _step149; !(_iteratorNormalCompletion149 = (_step149 = _iterator149.next()).done); _iteratorNormalCompletion149 = true) {
-              var constraint = _step149.value;
+            for (var _iterator150 = constraints[Symbol.iterator](), _step150; !(_iteratorNormalCompletion150 = (_step150 = _iterator150.next()).done); _iteratorNormalCompletion150 = true) {
+              var constraint = _step150.value;
 
               if (constraint != null) {
                 var removalCriteria = constraint.removalCriteria;
                 if (removalCriteria != null) {
-                  var _iteratorNormalCompletion150 = true;
-                  var _didIteratorError150 = false;
-                  var _iteratorError150 = undefined;
+                  var _iteratorNormalCompletion151 = true;
+                  var _didIteratorError151 = false;
+                  var _iteratorError151 = undefined;
 
                   try {
-                    for (var _iterator150 = removalCriteria[Symbol.iterator](), _step150; !(_iteratorNormalCompletion150 = (_step150 = _iterator150.next()).done); _iteratorNormalCompletion150 = true) {
-                      var removalCriterion = _step150.value;
+                    for (var _iterator151 = removalCriteria[Symbol.iterator](), _step151; !(_iteratorNormalCompletion151 = (_step151 = _iterator151.next()).done); _iteratorNormalCompletion151 = true) {
+                      var removalCriterion = _step151.value;
 
                       if (removalCriterion != null) {
                         if (removalCriterion.name === 'branchPathTaken') {
@@ -11362,16 +11430,16 @@ var ProjectService = function () {
                       }
                     }
                   } catch (err) {
-                    _didIteratorError150 = true;
-                    _iteratorError150 = err;
+                    _didIteratorError151 = true;
+                    _iteratorError151 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion150 && _iterator150.return) {
-                        _iterator150.return();
+                      if (!_iteratorNormalCompletion151 && _iterator151.return) {
+                        _iterator151.return();
                       }
                     } finally {
-                      if (_didIteratorError150) {
-                        throw _iteratorError150;
+                      if (_didIteratorError151) {
+                        throw _iteratorError151;
                       }
                     }
                   }
@@ -11379,16 +11447,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError149 = true;
-            _iteratorError149 = err;
+            _didIteratorError150 = true;
+            _iteratorError150 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion149 && _iterator149.return) {
-                _iterator149.return();
+              if (!_iteratorNormalCompletion150 && _iterator150.return) {
+                _iterator150.return();
               }
             } finally {
-              if (_didIteratorError149) {
-                throw _iteratorError149;
+              if (_didIteratorError150) {
+                throw _iteratorError150;
               }
             }
           }
@@ -11470,22 +11538,22 @@ var ProjectService = function () {
       var transitions = transitionLogic.transitions;
 
       // Loop through the transitions to try to find a transition criteria
-      var _iteratorNormalCompletion151 = true;
-      var _didIteratorError151 = false;
-      var _iteratorError151 = undefined;
+      var _iteratorNormalCompletion152 = true;
+      var _didIteratorError152 = false;
+      var _iteratorError152 = undefined;
 
       try {
-        for (var _iterator151 = transitions[Symbol.iterator](), _step151; !(_iteratorNormalCompletion151 = (_step151 = _iterator151.next()).done); _iteratorNormalCompletion151 = true) {
-          var transition = _step151.value;
+        for (var _iterator152 = transitions[Symbol.iterator](), _step152; !(_iteratorNormalCompletion152 = (_step152 = _iterator152.next()).done); _iteratorNormalCompletion152 = true) {
+          var transition = _step152.value;
 
           if (transition.criteria != null && transition.criteria.length > 0) {
-            var _iteratorNormalCompletion152 = true;
-            var _didIteratorError152 = false;
-            var _iteratorError152 = undefined;
+            var _iteratorNormalCompletion153 = true;
+            var _didIteratorError153 = false;
+            var _iteratorError153 = undefined;
 
             try {
-              for (var _iterator152 = transition.criteria[Symbol.iterator](), _step152; !(_iteratorNormalCompletion152 = (_step152 = _iterator152.next()).done); _iteratorNormalCompletion152 = true) {
-                var singleCriteria = _step152.value;
+              for (var _iterator153 = transition.criteria[Symbol.iterator](), _step153; !(_iteratorNormalCompletion153 = (_step153 = _iterator153.next()).done); _iteratorNormalCompletion153 = true) {
+                var singleCriteria = _step153.value;
 
                 if (singleCriteria.name == 'choiceChosen') {
                   return 'multiple choice';
@@ -11494,16 +11562,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError152 = true;
-              _iteratorError152 = err;
+              _didIteratorError153 = true;
+              _iteratorError153 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion152 && _iterator152.return) {
-                  _iterator152.return();
+                if (!_iteratorNormalCompletion153 && _iterator153.return) {
+                  _iterator153.return();
                 }
               } finally {
-                if (_didIteratorError152) {
-                  throw _iteratorError152;
+                if (_didIteratorError153) {
+                  throw _iteratorError153;
                 }
               }
             }
@@ -11515,16 +11583,16 @@ var ProjectService = function () {
          * based on the howToChooseAmongAvailablePaths field.
          */
       } catch (err) {
-        _didIteratorError151 = true;
-        _iteratorError151 = err;
+        _didIteratorError152 = true;
+        _iteratorError152 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion151 && _iterator151.return) {
-            _iterator151.return();
+          if (!_iteratorNormalCompletion152 && _iterator152.return) {
+            _iterator152.return();
           }
         } finally {
-          if (_didIteratorError151) {
-            throw _iteratorError151;
+          if (_didIteratorError152) {
+            throw _iteratorError152;
           }
         }
       }
@@ -11547,13 +11615,13 @@ var ProjectService = function () {
     value: function isFirstNodeInBranchPath(nodeId) {
       var nodes = this.getNodes();
       if (nodes != null) {
-        var _iteratorNormalCompletion153 = true;
-        var _didIteratorError153 = false;
-        var _iteratorError153 = undefined;
+        var _iteratorNormalCompletion154 = true;
+        var _didIteratorError154 = false;
+        var _iteratorError154 = undefined;
 
         try {
-          for (var _iterator153 = nodes[Symbol.iterator](), _step153; !(_iteratorNormalCompletion153 = (_step153 = _iterator153.next()).done); _iteratorNormalCompletion153 = true) {
-            var node = _step153.value;
+          for (var _iterator154 = nodes[Symbol.iterator](), _step154; !(_iteratorNormalCompletion154 = (_step154 = _iterator154.next()).done); _iteratorNormalCompletion154 = true) {
+            var node = _step154.value;
 
             if (node != null && node.transitionLogic != null && node.transitionLogic.transitions != null) {
               var transitions = node.transitionLogic.transitions;
@@ -11563,13 +11631,13 @@ var ProjectService = function () {
                  * there is more than one transition from this node
                  * which means it is a branch point
                  */
-                var _iteratorNormalCompletion154 = true;
-                var _didIteratorError154 = false;
-                var _iteratorError154 = undefined;
+                var _iteratorNormalCompletion155 = true;
+                var _didIteratorError155 = false;
+                var _iteratorError155 = undefined;
 
                 try {
-                  for (var _iterator154 = transitions[Symbol.iterator](), _step154; !(_iteratorNormalCompletion154 = (_step154 = _iterator154.next()).done); _iteratorNormalCompletion154 = true) {
-                    var transition = _step154.value;
+                  for (var _iterator155 = transitions[Symbol.iterator](), _step155; !(_iteratorNormalCompletion155 = (_step155 = _iterator155.next()).done); _iteratorNormalCompletion155 = true) {
+                    var transition = _step155.value;
 
                     if (transition != null) {
                       var transitionTo = transition.to;
@@ -11579,16 +11647,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError154 = true;
-                  _iteratorError154 = err;
+                  _didIteratorError155 = true;
+                  _iteratorError155 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion154 && _iterator154.return) {
-                      _iterator154.return();
+                    if (!_iteratorNormalCompletion155 && _iterator155.return) {
+                      _iterator155.return();
                     }
                   } finally {
-                    if (_didIteratorError154) {
-                      throw _iteratorError154;
+                    if (_didIteratorError155) {
+                      throw _iteratorError155;
                     }
                   }
                 }
@@ -11596,16 +11664,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError153 = true;
-          _iteratorError153 = err;
+          _didIteratorError154 = true;
+          _iteratorError154 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion153 && _iterator153.return) {
-              _iterator153.return();
+            if (!_iteratorNormalCompletion154 && _iterator154.return) {
+              _iterator154.return();
             }
           } finally {
-            if (_didIteratorError153) {
-              throw _iteratorError153;
+            if (_didIteratorError154) {
+              throw _iteratorError154;
             }
           }
         }
@@ -11661,58 +11729,6 @@ var ProjectService = function () {
       var branches = this.getBranches();
 
       if (branches != null) {
-        var _iteratorNormalCompletion155 = true;
-        var _didIteratorError155 = false;
-        var _iteratorError155 = undefined;
-
-        try {
-          for (var _iterator155 = branches[Symbol.iterator](), _step155; !(_iteratorNormalCompletion155 = (_step155 = _iterator155.next()).done); _iteratorNormalCompletion155 = true) {
-            var branch = _step155.value;
-
-            if (branch != null) {
-              if (branch.branchStartPoint == nodeId) {
-                /*
-                 * we have found a branch with the given nodeId as the
-                 * start point
-                 */
-                return true;
-              }
-            }
-          }
-        } catch (err) {
-          _didIteratorError155 = true;
-          _iteratorError155 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion155 && _iterator155.return) {
-              _iterator155.return();
-            }
-          } finally {
-            if (_didIteratorError155) {
-              throw _iteratorError155;
-            }
-          }
-        }
-      }
-      return false;
-    }
-
-    /**
-     * Check if a node is a branch end point
-     * @param nodeId look for a branch with this end node id
-     * @return whether the node is a branch end point
-     */
-
-  }, {
-    key: 'isBranchMergePoint',
-    value: function isBranchMergePoint(nodeId) {
-      /*
-       * Get all the branches. Each branch is represented as an object that
-       * contains the branchStartPoint, branchEndPoint, and branchPaths.
-       */
-      var branches = this.getBranches();
-
-      if (branches != null) {
         var _iteratorNormalCompletion156 = true;
         var _didIteratorError156 = false;
         var _iteratorError156 = undefined;
@@ -11722,10 +11738,10 @@ var ProjectService = function () {
             var branch = _step156.value;
 
             if (branch != null) {
-              if (branch.branchEndPoint == nodeId) {
+              if (branch.branchStartPoint == nodeId) {
                 /*
                  * we have found a branch with the given nodeId as the
-                 * end point
+                 * start point
                  */
                 return true;
               }
@@ -11750,33 +11766,36 @@ var ProjectService = function () {
     }
 
     /**
-     * Get all the branches whose branch start point is the given node id
-     * @param nodeId the branch start point
-     * @return an array of branches that have the given branch start point
+     * Check if a node is a branch end point
+     * @param nodeId look for a branch with this end node id
+     * @return whether the node is a branch end point
      */
 
   }, {
-    key: 'getBranchesByBranchStartPointNodeId',
-    value: function getBranchesByBranchStartPointNodeId(nodeId) {
-      var branches = [];
-      var allBranches = this.getBranches();
+    key: 'isBranchMergePoint',
+    value: function isBranchMergePoint(nodeId) {
+      /*
+       * Get all the branches. Each branch is represented as an object that
+       * contains the branchStartPoint, branchEndPoint, and branchPaths.
+       */
+      var branches = this.getBranches();
 
-      if (allBranches != null) {
+      if (branches != null) {
         var _iteratorNormalCompletion157 = true;
         var _didIteratorError157 = false;
         var _iteratorError157 = undefined;
 
         try {
-          for (var _iterator157 = allBranches[Symbol.iterator](), _step157; !(_iteratorNormalCompletion157 = (_step157 = _iterator157.next()).done); _iteratorNormalCompletion157 = true) {
+          for (var _iterator157 = branches[Symbol.iterator](), _step157; !(_iteratorNormalCompletion157 = (_step157 = _iterator157.next()).done); _iteratorNormalCompletion157 = true) {
             var branch = _step157.value;
 
             if (branch != null) {
-              if (nodeId == branch.branchStartPoint) {
+              if (branch.branchEndPoint == nodeId) {
                 /*
-                 * the branch start point matches the node id we are
-                 * looking for
+                 * we have found a branch with the given nodeId as the
+                 * end point
                  */
-                branches.push(branch);
+                return true;
               }
             }
           }
@@ -11791,6 +11810,55 @@ var ProjectService = function () {
           } finally {
             if (_didIteratorError157) {
               throw _iteratorError157;
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Get all the branches whose branch start point is the given node id
+     * @param nodeId the branch start point
+     * @return an array of branches that have the given branch start point
+     */
+
+  }, {
+    key: 'getBranchesByBranchStartPointNodeId',
+    value: function getBranchesByBranchStartPointNodeId(nodeId) {
+      var branches = [];
+      var allBranches = this.getBranches();
+
+      if (allBranches != null) {
+        var _iteratorNormalCompletion158 = true;
+        var _didIteratorError158 = false;
+        var _iteratorError158 = undefined;
+
+        try {
+          for (var _iterator158 = allBranches[Symbol.iterator](), _step158; !(_iteratorNormalCompletion158 = (_step158 = _iterator158.next()).done); _iteratorNormalCompletion158 = true) {
+            var branch = _step158.value;
+
+            if (branch != null) {
+              if (nodeId == branch.branchStartPoint) {
+                /*
+                 * the branch start point matches the node id we are
+                 * looking for
+                 */
+                branches.push(branch);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError158 = true;
+          _iteratorError158 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion158 && _iterator158.return) {
+              _iterator158.return();
+            }
+          } finally {
+            if (_didIteratorError158) {
+              throw _iteratorError158;
             }
           }
         }
@@ -11986,13 +12054,13 @@ var ProjectService = function () {
                  * would have gone inside the other block of code where
                  * this.isBranchStartPoint() is true.
                  */
-                var _iteratorNormalCompletion158 = true;
-                var _didIteratorError158 = false;
-                var _iteratorError158 = undefined;
+                var _iteratorNormalCompletion159 = true;
+                var _didIteratorError159 = false;
+                var _iteratorError159 = undefined;
 
                 try {
-                  for (var _iterator158 = transitions[Symbol.iterator](), _step158; !(_iteratorNormalCompletion158 = (_step158 = _iterator158.next()).done); _iteratorNormalCompletion158 = true) {
-                    var transition = _step158.value;
+                  for (var _iterator159 = transitions[Symbol.iterator](), _step159; !(_iteratorNormalCompletion159 = (_step159 = _iterator159.next()).done); _iteratorNormalCompletion159 = true) {
+                    var transition = _step159.value;
 
                     if (transition != null) {
                       if (this.isBranchMergePoint(transition.to)) {} else {
@@ -12001,16 +12069,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError158 = true;
-                  _iteratorError158 = err;
+                  _didIteratorError159 = true;
+                  _iteratorError159 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion158 && _iterator158.return) {
-                      _iterator158.return();
+                    if (!_iteratorNormalCompletion159 && _iterator159.return) {
+                      _iterator159.return();
                     }
                   } finally {
-                    if (_didIteratorError158) {
-                      throw _iteratorError158;
+                    if (_didIteratorError159) {
+                      throw _iteratorError159;
                     }
                   }
                 }
@@ -12018,29 +12086,29 @@ var ProjectService = function () {
                 // if there are no transitions, check if the parent group has a transition
 
                 if (parentGroup != null && parentGroup.transitionLogic != null && parentGroup.transitionLogic.transitions != null && parentGroup.transitionLogic.transitions.length > 0) {
-                  var _iteratorNormalCompletion159 = true;
-                  var _didIteratorError159 = false;
-                  var _iteratorError159 = undefined;
+                  var _iteratorNormalCompletion160 = true;
+                  var _didIteratorError160 = false;
+                  var _iteratorError160 = undefined;
 
                   try {
-                    for (var _iterator159 = parentGroup.transitionLogic.transitions[Symbol.iterator](), _step159; !(_iteratorNormalCompletion159 = (_step159 = _iterator159.next()).done); _iteratorNormalCompletion159 = true) {
-                      var _transition5 = _step159.value;
+                    for (var _iterator160 = parentGroup.transitionLogic.transitions[Symbol.iterator](), _step160; !(_iteratorNormalCompletion160 = (_step160 = _iterator160.next()).done); _iteratorNormalCompletion160 = true) {
+                      var _transition5 = _step160.value;
 
                       if (_transition5 != null) {
                         this.calculateNodeNumbersHelper(_transition5.to, currentActivityNumber, currentStepNumber, branchLetterCode);
                       }
                     }
                   } catch (err) {
-                    _didIteratorError159 = true;
-                    _iteratorError159 = err;
+                    _didIteratorError160 = true;
+                    _iteratorError160 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion159 && _iterator159.return) {
-                        _iterator159.return();
+                      if (!_iteratorNormalCompletion160 && _iterator160.return) {
+                        _iterator160.return();
                       }
                     } finally {
-                      if (_didIteratorError159) {
-                        throw _iteratorError159;
+                      if (_didIteratorError160) {
+                        throw _iteratorError160;
                       }
                     }
                   }
@@ -12097,13 +12165,13 @@ var ProjectService = function () {
                */
 
               if (_node3 != null && _node3.transitionLogic != null && _node3.transitionLogic.transitions != null && _node3.transitionLogic.transitions.length > 0) {
-                var _iteratorNormalCompletion160 = true;
-                var _didIteratorError160 = false;
-                var _iteratorError160 = undefined;
+                var _iteratorNormalCompletion161 = true;
+                var _didIteratorError161 = false;
+                var _iteratorError161 = undefined;
 
                 try {
-                  for (var _iterator160 = _node3.transitionLogic.transitions[Symbol.iterator](), _step160; !(_iteratorNormalCompletion160 = (_step160 = _iterator160.next()).done); _iteratorNormalCompletion160 = true) {
-                    var _transition6 = _step160.value;
+                  for (var _iterator161 = _node3.transitionLogic.transitions[Symbol.iterator](), _step161; !(_iteratorNormalCompletion161 = (_step161 = _iterator161.next()).done); _iteratorNormalCompletion161 = true) {
+                    var _transition6 = _step161.value;
 
                     if (_transition6 != null) {
                       /*
@@ -12114,16 +12182,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError160 = true;
-                  _iteratorError160 = err;
+                  _didIteratorError161 = true;
+                  _iteratorError161 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion160 && _iterator160.return) {
-                      _iterator160.return();
+                    if (!_iteratorNormalCompletion161 && _iterator161.return) {
+                      _iterator161.return();
                     }
                   } finally {
-                    if (_didIteratorError160) {
-                      throw _iteratorError160;
+                    if (_didIteratorError161) {
+                      throw _iteratorError161;
                     }
                   }
                 }
@@ -12320,29 +12388,29 @@ var ProjectService = function () {
         if (achievements != null) {
           var achievementItems = achievements.items;
           if (achievementItems != null) {
-            var _iteratorNormalCompletion161 = true;
-            var _didIteratorError161 = false;
-            var _iteratorError161 = undefined;
+            var _iteratorNormalCompletion162 = true;
+            var _didIteratorError162 = false;
+            var _iteratorError162 = undefined;
 
             try {
-              for (var _iterator161 = achievementItems[Symbol.iterator](), _step161; !(_iteratorNormalCompletion161 = (_step161 = _iterator161.next()).done); _iteratorNormalCompletion161 = true) {
-                var achievement = _step161.value;
+              for (var _iterator162 = achievementItems[Symbol.iterator](), _step162; !(_iteratorNormalCompletion162 = (_step162 = _iterator162.next()).done); _iteratorNormalCompletion162 = true) {
+                var achievement = _step162.value;
 
                 if (achievement != null && achievement.id == achievementId) {
                   return achievement;
                 }
               }
             } catch (err) {
-              _didIteratorError161 = true;
-              _iteratorError161 = err;
+              _didIteratorError162 = true;
+              _iteratorError162 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion161 && _iterator161.return) {
-                  _iterator161.return();
+                if (!_iteratorNormalCompletion162 && _iterator162.return) {
+                  _iterator162.return();
                 }
               } finally {
-                if (_didIteratorError161) {
-                  throw _iteratorError161;
+                if (_didIteratorError162) {
+                  throw _iteratorError162;
                 }
               }
             }
@@ -12366,13 +12434,13 @@ var ProjectService = function () {
           return true;
         }
 
-        var _iteratorNormalCompletion162 = true;
-        var _didIteratorError162 = false;
-        var _iteratorError162 = undefined;
+        var _iteratorNormalCompletion163 = true;
+        var _didIteratorError163 = false;
+        var _iteratorError163 = undefined;
 
         try {
-          for (var _iterator162 = this.project.nodes[Symbol.iterator](), _step162; !(_iteratorNormalCompletion162 = (_step162 = _iterator162.next()).done); _iteratorNormalCompletion162 = true) {
-            var node = _step162.value;
+          for (var _iterator163 = this.project.nodes[Symbol.iterator](), _step163; !(_iteratorNormalCompletion163 = (_step163 = _iterator163.next()).done); _iteratorNormalCompletion163 = true) {
+            var node = _step163.value;
 
             if (node != null) {
               if (node.rubric != null && node.rubric != "") {
@@ -12380,13 +12448,13 @@ var ProjectService = function () {
               }
 
               if (node.components != null) {
-                var _iteratorNormalCompletion163 = true;
-                var _didIteratorError163 = false;
-                var _iteratorError163 = undefined;
+                var _iteratorNormalCompletion164 = true;
+                var _didIteratorError164 = false;
+                var _iteratorError164 = undefined;
 
                 try {
-                  for (var _iterator163 = node.components[Symbol.iterator](), _step163; !(_iteratorNormalCompletion163 = (_step163 = _iterator163.next()).done); _iteratorNormalCompletion163 = true) {
-                    var component = _step163.value;
+                  for (var _iterator164 = node.components[Symbol.iterator](), _step164; !(_iteratorNormalCompletion164 = (_step164 = _iterator164.next()).done); _iteratorNormalCompletion164 = true) {
+                    var component = _step164.value;
 
                     if (component != null) {
                       if (component.rubric != null && component.rubric != "") {
@@ -12395,16 +12463,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError163 = true;
-                  _iteratorError163 = err;
+                  _didIteratorError164 = true;
+                  _iteratorError164 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion163 && _iterator163.return) {
-                      _iterator163.return();
+                    if (!_iteratorNormalCompletion164 && _iterator164.return) {
+                      _iterator164.return();
                     }
                   } finally {
-                    if (_didIteratorError163) {
-                      throw _iteratorError163;
+                    if (_didIteratorError164) {
+                      throw _iteratorError164;
                     }
                   }
                 }
@@ -12412,16 +12480,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError162 = true;
-          _iteratorError162 = err;
+          _didIteratorError163 = true;
+          _iteratorError163 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion162 && _iterator162.return) {
-              _iterator162.return();
+            if (!_iteratorNormalCompletion163 && _iterator163.return) {
+              _iterator163.return();
             }
           } finally {
-            if (_didIteratorError162) {
-              throw _iteratorError162;
+            if (_didIteratorError163) {
+              throw _iteratorError163;
             }
           }
         }
@@ -12482,13 +12550,13 @@ var ProjectService = function () {
 
         var components = nodeContent.components;
         if (components && components.length) {
-          var _iteratorNormalCompletion164 = true;
-          var _didIteratorError164 = false;
-          var _iteratorError164 = undefined;
+          var _iteratorNormalCompletion165 = true;
+          var _didIteratorError165 = false;
+          var _iteratorError165 = undefined;
 
           try {
-            for (var _iterator164 = components[Symbol.iterator](), _step164; !(_iteratorNormalCompletion164 = (_step164 = _iterator164.next()).done); _iteratorNormalCompletion164 = true) {
-              var component = _step164.value;
+            for (var _iterator165 = components[Symbol.iterator](), _step165; !(_iteratorNormalCompletion165 = (_step165 = _iterator165.next()).done); _iteratorNormalCompletion165 = true) {
+              var component = _step165.value;
 
               if (component) {
                 var componentRubric = component.rubric;
@@ -12498,16 +12566,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError164 = true;
-            _iteratorError164 = err;
+            _didIteratorError165 = true;
+            _iteratorError165 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion164 && _iterator164.return) {
-                _iterator164.return();
+              if (!_iteratorNormalCompletion165 && _iterator165.return) {
+                _iterator165.return();
               }
             } finally {
-              if (_didIteratorError164) {
-                throw _iteratorError164;
+              if (_didIteratorError165) {
+                throw _iteratorError165;
               }
             }
           }
@@ -12531,29 +12599,29 @@ var ProjectService = function () {
       var node = this.getNodeById(nodeId);
       var newComponents = [];
       var newComponentIds = [];
-      var _iteratorNormalCompletion165 = true;
-      var _didIteratorError165 = false;
-      var _iteratorError165 = undefined;
+      var _iteratorNormalCompletion166 = true;
+      var _didIteratorError166 = false;
+      var _iteratorError166 = undefined;
 
       try {
-        for (var _iterator165 = componentIds[Symbol.iterator](), _step165; !(_iteratorNormalCompletion165 = (_step165 = _iterator165.next()).done); _iteratorNormalCompletion165 = true) {
-          var componentId = _step165.value;
+        for (var _iterator166 = componentIds[Symbol.iterator](), _step166; !(_iteratorNormalCompletion166 = (_step166 = _iterator166.next()).done); _iteratorNormalCompletion166 = true) {
+          var componentId = _step166.value;
 
           var _newComponent = this.copyComponent(nodeId, componentId, newComponentIds);
           newComponents.push(_newComponent);
           newComponentIds.push(_newComponent.id);
         }
       } catch (err) {
-        _didIteratorError165 = true;
-        _iteratorError165 = err;
+        _didIteratorError166 = true;
+        _iteratorError166 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion165 && _iterator165.return) {
-            _iterator165.return();
+          if (!_iteratorNormalCompletion166 && _iterator166.return) {
+            _iterator166.return();
           }
         } finally {
-          if (_didIteratorError165) {
-            throw _iteratorError165;
+          if (_didIteratorError166) {
+            throw _iteratorError166;
           }
         }
       }
@@ -12569,13 +12637,13 @@ var ProjectService = function () {
           insertPosition = this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
         }
 
-        var _iteratorNormalCompletion166 = true;
-        var _didIteratorError166 = false;
-        var _iteratorError166 = undefined;
+        var _iteratorNormalCompletion167 = true;
+        var _didIteratorError167 = false;
+        var _iteratorError167 = undefined;
 
         try {
-          for (var _iterator166 = newComponents[Symbol.iterator](), _step166; !(_iteratorNormalCompletion166 = (_step166 = _iterator166.next()).done); _iteratorNormalCompletion166 = true) {
-            var newComponent = _step166.value;
+          for (var _iterator167 = newComponents[Symbol.iterator](), _step167; !(_iteratorNormalCompletion167 = (_step167 = _iterator167.next()).done); _iteratorNormalCompletion167 = true) {
+            var newComponent = _step167.value;
 
             components.splice(insertPosition, 0, newComponent);
 
@@ -12586,16 +12654,16 @@ var ProjectService = function () {
             insertPosition += 1;
           }
         } catch (err) {
-          _didIteratorError166 = true;
-          _iteratorError166 = err;
+          _didIteratorError167 = true;
+          _iteratorError167 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion166 && _iterator166.return) {
-              _iterator166.return();
+            if (!_iteratorNormalCompletion167 && _iterator167.return) {
+              _iterator167.return();
             }
           } finally {
-            if (_didIteratorError166) {
-              throw _iteratorError166;
+            if (_didIteratorError167) {
+              throw _iteratorError167;
             }
           }
         }
@@ -12645,13 +12713,13 @@ var ProjectService = function () {
        * loop through all the components and make sure their ids are not
        * already used in the project
        */
-      var _iteratorNormalCompletion167 = true;
-      var _didIteratorError167 = false;
-      var _iteratorError167 = undefined;
+      var _iteratorNormalCompletion168 = true;
+      var _didIteratorError168 = false;
+      var _iteratorError168 = undefined;
 
       try {
-        for (var _iterator167 = components[Symbol.iterator](), _step167; !(_iteratorNormalCompletion167 = (_step167 = _iterator167.next()).done); _iteratorNormalCompletion167 = true) {
-          var component = _step167.value;
+        for (var _iterator168 = components[Symbol.iterator](), _step168; !(_iteratorNormalCompletion168 = (_step168 = _iterator168.next()).done); _iteratorNormalCompletion168 = true) {
+          var component = _step168.value;
 
           if (component != null) {
             var newComponent = this.UtilService.makeCopyOfJSONObject(component);
@@ -12668,16 +12736,16 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError167 = true;
-        _iteratorError167 = err;
+        _didIteratorError168 = true;
+        _iteratorError168 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion167 && _iterator167.return) {
-            _iterator167.return();
+          if (!_iteratorNormalCompletion168 && _iterator168.return) {
+            _iterator168.return();
           }
         } finally {
-          if (_didIteratorError167) {
-            throw _iteratorError167;
+          if (_didIteratorError168) {
+            throw _iteratorError168;
           }
         }
       }
@@ -12720,13 +12788,13 @@ var ProjectService = function () {
           insertPosition = _this6.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
         }
 
-        var _iteratorNormalCompletion168 = true;
-        var _didIteratorError168 = false;
-        var _iteratorError168 = undefined;
+        var _iteratorNormalCompletion169 = true;
+        var _didIteratorError169 = false;
+        var _iteratorError169 = undefined;
 
         try {
-          for (var _iterator168 = newComponents[Symbol.iterator](), _step168; !(_iteratorNormalCompletion168 = (_step168 = _iterator168.next()).done); _iteratorNormalCompletion168 = true) {
-            var newComponent = _step168.value;
+          for (var _iterator169 = newComponents[Symbol.iterator](), _step169; !(_iteratorNormalCompletion169 = (_step169 = _iterator169.next()).done); _iteratorNormalCompletion169 = true) {
+            var newComponent = _step169.value;
 
             // insert the new component
             currentComponents.splice(insertPosition, 0, newComponent);
@@ -12738,16 +12806,16 @@ var ProjectService = function () {
             insertPosition += 1;
           }
         } catch (err) {
-          _didIteratorError168 = true;
-          _iteratorError168 = err;
+          _didIteratorError169 = true;
+          _iteratorError169 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion168 && _iterator168.return) {
-              _iterator168.return();
+            if (!_iteratorNormalCompletion169 && _iterator169.return) {
+              _iterator169.return();
             }
           } finally {
-            if (_didIteratorError168) {
-              throw _iteratorError168;
+            if (_didIteratorError169) {
+              throw _iteratorError169;
             }
           }
         }

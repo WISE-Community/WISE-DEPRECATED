@@ -1619,17 +1619,58 @@ class ProjectService {
   cleanupBeforeSave() {
     let activeNodes = this.getActiveNodes();
     for (let activeNode of activeNodes) {
-      if (activeNode != null) {
-        delete activeNode.checked;
-      }
+      this.cleanupNode(activeNode);
     }
 
     let inactiveNodes = this.getInactiveNodes();
     for (let inactiveNode of inactiveNodes) {
-      if (inactiveNode != null) {
-        delete inactiveNode.checked;
+      this.cleanupNode(inactiveNode);
+    }
+  }
+
+  /**
+   * Remove any fields that are used temporarily for display purposes.
+   * @param node The node object.
+   */
+  cleanupNode(node) {
+    /*
+     * Remove fields that are added when the project is loaded in the authoring
+     * tool and grading tool.
+     */
+    delete node.checked;
+    delete node.hasWork;
+    delete node.hasAlert;
+    delete node.hasNewAlert;
+    delete node.isVisible;
+    delete node.completionStatus;
+    delete node.score;
+    delete node.hasScore;
+    delete node.maxScore;
+    delete node.hasMaxScore;
+    delete node.scorePct;
+    delete node.order;
+    delete node.show;
+
+    let components = node.components;
+    // activity nodes do not have components but step nodes do have components
+    if (components != null) {
+      for (let component of components) {
+        this.cleanupComponent(component);
       }
     }
+  }
+
+  /**
+   * Remove any fields that are used temporarily for display purposes.
+   * @param component The component object.
+   */
+  cleanupComponent(component) {
+    /*
+     * Remove fields that are added when the project is loaded in the authoring
+     * tool and grading tool.
+     */
+    delete component.checked;
+    delete component.hasWork;
   }
 
   /**
