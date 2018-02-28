@@ -13,11 +13,11 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getUser(): Observable<User[]> {
-    return this.http.get<User[]>(this.userUrl)
+  getUser(): Observable<User> {
+    return this.http.get<User>(this.userUrl)
       .pipe(
         tap(user => this.log(`fetched user`)),
-        catchError(this.handleError('getUser', []))
+        catchError(this.handleError('getUser', new User()))
       );
   }
 

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {UserService} from "./user.service";
+import {User} from "./user";
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,7 @@ import {UserService} from "./user.service";
 })
 export class AppComponent {
   title = 'app';
-  user: User = {};
+  user: User = new User();
 
   constructor(private userService: UserService) { }
 
