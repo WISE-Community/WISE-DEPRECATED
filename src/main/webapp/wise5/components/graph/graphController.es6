@@ -1432,18 +1432,9 @@ class GraphController {
           regressionSettings.numberOfPoints = 100;
         }
 
-        if (this.isDisabled) {
-          // disable dragging
-          tempSeries.draggableX = false;
-          tempSeries.draggableY = false;
-          tempSeries.allowPointSelect = false;
-          //tempSeries.enableMouseTracking = false;
-          tempSeries.stickyTracking = false;
-          tempSeries.shared = false;
-          tempSeries.allowPointSelect = false;
-        } else if (tempSeries.canEdit && this.isActiveSeries(tempSeries)) {
+        if (tempSeries.canEdit && this.isActiveSeries(tempSeries)) {
+          // the series is the active one so we will allow the student to interact with it
           // set the fields to allow points to be draggable
-
           if (this.graphType === 'line' || this.graphType === 'scatter') {
             // students can drag points horizontally on line and scatter plots
             tempSeries.draggableX = true;
@@ -1452,23 +1443,26 @@ class GraphController {
             tempSeries.draggableX = false;
           }
           tempSeries.draggableY = true;
-          tempSeries.allowPointSelect = true;
           tempSeries.cursor = 'move';
-          tempSeries.enableMouseTracking = true;
           tempSeries.stickyTracking = false;
           tempSeries.shared = false;
           tempSeries.allowPointSelect = true;
-
+          tempSeries.enableMouseTracking = true;
           this.showUndoButton = true;
         } else {
-          // make the series uneditable
+          // the series is not active so we will not allow the student to interact with it
           tempSeries.draggableX = false;
           tempSeries.draggableY = false;
-          tempSeries.allowPointSelect = false;
-          tempSeries.enableMouseTracking = false;
           tempSeries.stickyTracking = false;
           tempSeries.shared = false;
           tempSeries.allowPointSelect = false;
+          tempSeries.enableMouseTracking = false;
+        }
+
+        // a series can be customized to allow mousing over points even when not the active series
+        if (tempSeries.allowPointMouseOver === true) {
+          tempSeries.allowPointSelect = true;
+          tempSeries.enableMouseTracking = true;
         }
 
         if (this.isMousePlotLineOn()) {
@@ -1529,6 +1523,7 @@ class GraphController {
         tooltip: {
           formatter: function(){
             if (this.series != null) {
+              var text = '';
 
               var xText = '';
               var yText = '';
@@ -1555,7 +1550,7 @@ class GraphController {
                 thisGraphController.xAxis.type === '' ||
                 thisGraphController.xAxis.type === 'limits') {
 
-                var text = '';
+
                 var seriesName = this.series.name;
 
                 // get the x and y values
@@ -1606,8 +1601,6 @@ class GraphController {
                   // add the y text
                   text += yText;
                 }
-
-                return text;
               } else if (thisGraphController.xAxis.type === 'categories') {
 
                 var text = '';
@@ -1637,9 +1630,14 @@ class GraphController {
 
                 // add the x and y text
                 text += xText + ' ' + yText;
-
-                return text;
               }
+
+              if (this.point.tooltip != null && this.point.tooltip != '') {
+                // this point has a custom tooltip so we will display it
+                text += '<br/>' + this.point.tooltip;
+              }
+
+              return text;
             }
           }
         },
@@ -4862,6 +4860,7 @@ class GraphController {
                   var seriesName = singleSeries.name;
                   var seriesData = singleSeries.data;
                   var seriesColor = singleSeries.color;
+                  var allowPointMouseOver = singleSeries.allowPointMouseOver;
                   var marker = singleSeries.marker;
                   var dashStyle = singleSeries.dashStyle;
 
@@ -4879,6 +4878,10 @@ class GraphController {
 
                   if (dashStyle != null) {
                     newSeries.dashStyle = dashStyle;
+                  }
+
+                  if (allowPointMouseOver != null) {
+                    newSeries.allowPointMouseOver = allowPointMouseOver;
                   }
 
                   // add the series to the trial
