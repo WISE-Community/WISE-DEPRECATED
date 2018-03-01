@@ -1,30 +1,15 @@
 package org.wise.portal.presentation.web.controllers.user;
 
-import java.util.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
+import org.json.JSONObject;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.wise.portal.domain.announcement.Announcement;
+import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.authentication.impl.StudentUserDetails;
-import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.run.RunService;
-import org.wise.portal.service.student.StudentService;
-
-import org.json.JSONObject;
-import org.json.JSONArray;
 
 /**
  * Controller for Student REST API
