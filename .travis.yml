@@ -10,7 +10,7 @@ before_script:
 script:
 - mvn test
 - ./wise.sh run &
-- sleep 180
+- sleep 300
 - npm test
 - npm run test-angular-portal
 - npm run test-e2e
