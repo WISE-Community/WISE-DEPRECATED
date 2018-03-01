@@ -11,11 +11,10 @@ import { SafeStyle } from '@angular/platform-browser';
 export class StudentRunListItemComponent implements OnInit {
 
   @Input()
-  run: StudentRun;
+  run: StudentRun = new StudentRun();
 
   runLink: string = '';
   problemLink: string = '';
-
   thumbStyle: SafeStyle;
 
   constructor(private sanitizer: DomSanitizer) {
@@ -24,7 +23,7 @@ export class StudentRunListItemComponent implements OnInit {
 
   getThumbStyle() {
     const DEFAULT_THUMB = 'assets/img/default-picture.svg';
-    const STYLE = `background-image: url(${this.run.projectThumb}), url(${DEFAULT_THUMB})`;
+    const STYLE = `url(${this.run.projectThumb}), url(${DEFAULT_THUMB})`;
     return this.sanitizer.bypassSecurityTrustStyle(STYLE);
   }
 

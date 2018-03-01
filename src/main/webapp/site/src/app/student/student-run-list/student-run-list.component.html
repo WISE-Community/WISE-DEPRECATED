@@ -25,7 +25,7 @@
     <p>Ask your teacher for an <b>Access Code</b> and then tap the <b>Add Project</b> button to get started.</p>
   </div>
 
-  <div *ngFor="let run of filteredRuns">
+  <div id="studentRuns" *ngFor="let run of filteredRuns">
     <app-student-run-list-item [run]="run"></app-student-run-list-item>
   </div>
 </div>

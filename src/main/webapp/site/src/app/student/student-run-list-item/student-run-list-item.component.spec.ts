@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StudentRun } from '../student-run';
 import { StudentRunListItemComponent } from './student-run-list-item.component';
+import { MatCardModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule } from "@angular/material";
+import {MomentModule} from "angular2-moment";
 
 describe('StudentRunListItemComponent', () => {
   let component: StudentRunListItemComponent;
@@ -9,7 +11,14 @@ describe('StudentRunListItemComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StudentRunListItemComponent ]
+      declarations: [ StudentRunListItemComponent ],
+      imports: [
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatSelectModule,
+        MomentModule]
     })
     .compileComponents();
   }));
@@ -22,6 +31,7 @@ describe('StudentRunListItemComponent', () => {
     run.name = "Photosynthesis";
     run.teacherFirstname = "Mr.";
     run.teacherLastname = "Happy";
+    run.projectThumb = "Happy.png";
     component.run = run;
     fixture.detectChanges();
   });

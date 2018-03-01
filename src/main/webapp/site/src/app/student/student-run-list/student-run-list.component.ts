@@ -11,6 +11,7 @@ import { StudentService } from '../student.service';
 export class StudentRunListComponent implements OnInit {
 
   runs: StudentRun[] = []; // array of StudentRun objects for current user
+  abc: StudentRun[] = [];
   filteredRuns: StudentRun[] = []; // filtered array of StudentRun objects to show in template
   search: string = ''; // search string for filtering run list
   // sort options for run list
@@ -33,7 +34,7 @@ export class StudentRunListComponent implements OnInit {
     this.studentService.getRuns()
       .subscribe(runs => {
         this.runs = runs;
-        this.filteredRuns = this.runs;
+        this.filteredRuns = runs;
         this.sortUpdated(this.sortValue);
         this.loaded = true;
       });

@@ -6,6 +6,12 @@ import { StudentService } from '../student.service';
 
 import { StudentRunListComponent } from './student-run-list.component';
 import { StudentRunListItemComponent } from '../student-run-list-item/student-run-list-item.component';
+import { MatCardModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule } from "@angular/material";
+import { SelectMenuComponent } from "../../shared/select-menu/select-menu.component";
+import { SearchBarComponent } from "../../shared/search-bar/search-bar.component";
+import { FormsModule } from "@angular/forms";
+import { MomentModule } from "angular2-moment";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 describe('StudentRunListComponent', () => {
   let component: StudentRunListComponent;
@@ -24,8 +30,20 @@ describe('StudentRunListComponent', () => {
     }
     TestBed.configureTestingModule({
       declarations: [
+        SelectMenuComponent,
+        SearchBarComponent,
         StudentRunListComponent,
         StudentRunListItemComponent
+      ],
+      imports: [
+        BrowserAnimationsModule,
+        FormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatSelectModule,
+        MomentModule
       ],
       providers: [ {provide: StudentService, useValue: studentServiceStub } ]
     })
@@ -44,6 +62,6 @@ describe('StudentRunListComponent', () => {
 
   it('should show runs', () => {
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('ul').textContent).toContain('Plate Tectonics');
+    expect(compiled.querySelector('#studentRuns').textContent).toContain('Photosynthesis');
   })
 });

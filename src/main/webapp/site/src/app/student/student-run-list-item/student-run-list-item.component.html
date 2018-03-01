@@ -1,35 +1,36 @@
 <mat-card>
   <mat-card-content fxLayout="row">
-    <div mat-card-avatar [style]="thumbStyle"></div>
+    <div mat-card-avatar [style.background-image]="thumbStyle"></div>
     <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
-      <div fxLayout="column">
-        <mat-card-title>{{ run.name }}</mat-card-title>
-        <mat-card-subtitle>
-          <div class="mat-body-2" fxShow fxHide.gt-xs>
-            <span *ngIf="!run.endTime" class="success">Started: {{ run.startTime | amDateFormat:'ll' }}</span>
-            <span *ngIf="run.endTime">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
+        <div fxLayout="column">
+          <mat-card-title>{{ run.name }}</mat-card-title>
+          <mat-card-subtitle>
+            <div class="mat-body-2" fxShow fxHide.gt-xs>
+              <span *ngIf="!run.endTime" class="success">Started: {{ run.startTime | amDateFormat:'ll' }}</span>
+              <span *ngIf="run.endTime">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
+            </div>
+            <div>
+              Teacher: {{ run.teacherLastname }}
+              &nbsp;&bull;&nbsp;
+              Period: {{ run.periodName }}
+              &nbsp;&bull;&nbsp;
+              Code: {{ run.accessCode }}
+            </div>
+            <div>Team:
+              <span *ngFor="let user of run.workgroupMembers; let isLast=last">
+                {{ user.firstname }}{{ isLast ? '' : ', '}}
+              </span>
+            </div>
+          </mat-card-subtitle>
+        </div>
+        <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
+        <div class="mat-body-2" fxFlex="0 1 auto" fxFlex.xs="100%" fxHide fxShow.gt-xs>
+          <span *ngIf="!run.endTime" class="success">Started: {{ run.startTime | amDateFormat:'ll' }}</span>
+          <span *ngIf="run.endTime">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
+        </div>
+
           </div>
-          <div>
-            Teacher: {{ run.teacherLastname }}
-            &nbsp;&bull;&nbsp;
-            Period: {{ run.periodName }}
-            &nbsp;&bull;&nbsp;
-            Code: {{ run.accessCode }}
-          </div>
-          <div>Team:
-            <span *ngFor="let user of run.workgroupMembers; let isLast=last">
-              {{ user.firstname }}{{ isLast ? '' : ', '}}
-            </span>
-          </div>
-        </mat-card-subtitle>
-      </div>
-      <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
-      <div class="mat-body-2" fxFlex="0 1 auto" fxFlex.xs="100%" fxHide fxShow.gt-xs>
-        <span *ngIf="!run.endTime" class="success">Started: {{ run.startTime | amDateFormat:'ll' }}</span>
-        <span *ngIf="run.endTime">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
-      </div>
-    </div>
-  </mat-card-content>
+    </mat-card-content>
   <mat-card-actions>
     <span fxFlex="1 1 auto"></span>
     <a mat-button *ngIf="!run.endTime" href="{{ problemLink }}" class="secondary-text">Report Problem</a>

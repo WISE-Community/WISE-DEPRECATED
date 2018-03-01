@@ -6,6 +6,15 @@ import { StudentService } from '../student.service';
 import { StudentHomeComponent } from './student-home.component';
 import { StudentRunListComponent } from '../student-run-list/student-run-list.component';
 import { StudentRunListItemComponent } from '../student-run-list-item/student-run-list-item.component';
+import { SelectMenuComponent } from "../../shared/select-menu/select-menu.component";
+import { SearchBarComponent } from "../../shared/search-bar/search-bar.component";
+
+import { MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule } from "@angular/material";
+import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule } from "@angular/forms";
+import { MomentModule } from "angular2-moment";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+
 
 describe('StudentHomeComponent', () => {
   let component: StudentHomeComponent;
@@ -20,16 +29,20 @@ describe('StudentHomeComponent', () => {
           return Observable.create( observer => {
               observer.next(runs);
               observer.complete();
-          });}
+          });
+        }
     }
 
     TestBed.configureTestingModule({
       declarations: [
+        SearchBarComponent,
+        SelectMenuComponent,
         StudentHomeComponent,
         StudentRunListComponent,
         StudentRunListItemComponent
       ],
-      providers: [ {provide: StudentService, useValue: studentServiceStub } ]
+      providers: [ {provide: StudentService, useValue: studentServiceStub } ],
+      imports: [ BrowserAnimationsModule, FormsModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MomentModule, RouterTestingModule ]
     })
     .compileComponents();
   }));
@@ -46,6 +59,6 @@ describe('StudentHomeComponent', () => {
 
   it('should show home page', () => {
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('p').textContent).toContain('student-home works!');
+    expect(compiled.querySelector('h1').textContent).toContain('Demo User');
   });
 });

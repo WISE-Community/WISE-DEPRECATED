@@ -2,6 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HeaderLinksComponent } from './header-links.component';
 import {HeaderSigninComponent} from "../header-signin/header-signin.component";
+import { RouterTestingModule } from '@angular/router/testing';
+import {User} from "../../user";
 
 describe('HeaderLinksComponent', () => {
   let component: HeaderLinksComponent;
@@ -9,7 +11,9 @@ describe('HeaderLinksComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HeaderLinksComponent, HeaderSigninComponent ]
+      providers: [],
+      declarations: [ HeaderLinksComponent, HeaderSigninComponent ],
+      imports: [ RouterTestingModule ]
     })
     .compileComponents();
   }));
@@ -17,6 +21,13 @@ describe('HeaderLinksComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(HeaderLinksComponent);
     component = fixture.componentInstance;
+    const user: User = new User();
+    user.id = 1;
+    user.firstName = "Amanda";
+    user.lastName = "Panda";
+    user.role = "student";
+    user.userName = "AmandaP0101";
+    component.user = user;
     fixture.detectChanges();
   });
 
