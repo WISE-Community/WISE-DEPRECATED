@@ -28,6 +28,9 @@ var AuthoringToolMainController = function () {
     this.projects = this.ConfigService.getConfigParam('projects');
     this.sharedProjects = this.ConfigService.getConfigParam('sharedProjects');
     this.showCreateProjectView = false;
+    this.inProcessOfCreatingProject = false;
+    this.showCreatingProjectMessage = false;
+    this.showErrorCreatingProjectMessage = false;
 
     this.$rootScope.$on('goHome', function () {
       _this.saveEvent('goToTeacherHome', 'Navigation', null, null);
@@ -175,14 +178,111 @@ var AuthoringToolMainController = function () {
       if (projectTitle == null || projectTitle == '') {
         alert(this.$translate('pleaseEnterAProjectTitleForYourNewProject'));
       } else {
-        var projectJSONString = angular.toJson(this.project, 4);
-        var commitMessage = this.$translate('projectCreatedOn') + new Date().getTime();
-        this.ProjectService.registerNewProject(projectJSONString, commitMessage).then(function (projectId) {
-          _this3.showCreateProjectView = false;
-          _this3.saveEvent('projectCreated', 'Authoring', null, projectId);
-          _this3.$state.go('root.project', { projectId: projectId });
-        });
+        /*
+         * Make sure we are not already in the process of creating a project.
+         * This is used to make sure the author does not inadvertently click
+         * the register button twice which can lead to problems in the back
+         * end.
+         */
+        if (!this.isInProcessOfCreatingProject()) {
+          this.turnOnInProcessOfCreatingProject();
+          this.turnOnCreatingProjectMessage();
+          this.startErrorCreatingProjectTimeout();
+          var projectJSONString = angular.toJson(this.project, 4);
+          var commitMessage = this.$translate('projectCreatedOn') + new Date().getTime();
+          this.ProjectService.registerNewProject(projectJSONString, commitMessage).then(function (projectId) {
+            _this3.cancelErrorCreatingProjectTimeout();
+            _this3.saveEvent('projectCreated', 'Authoring', null, projectId);
+            _this3.$state.go('root.project', { projectId: projectId });
+          }).catch(function () {
+            _this3.turnOffInProcessOfCreatingProject();
+            _this3.turnOnErrorCreatingProjectMessage();
+            _this3.cancelErrorCreatingProjectTimeout();
+          });
+        }
       }
+    }
+  }, {
+    key: 'turnOnInProcessOfCreatingProject',
+    value: function turnOnInProcessOfCreatingProject() {
+      this.inProcessOfCreatingProject = true;
+    }
+  }, {
+    key: 'turnOffInProcessOfCreatingProject',
+    value: function turnOffInProcessOfCreatingProject() {
+      this.inProcessOfCreatingProject = false;
+    }
+
+    /**
+     * @returns {boolean} Whether we have made a request to the server to create
+     * a project and are now waiting for a response.
+     */
+
+  }, {
+    key: 'isInProcessOfCreatingProject',
+    value: function isInProcessOfCreatingProject() {
+      return this.inProcessOfCreatingProject;
+    }
+
+    /**
+     * Show the message that says "Creating Project..." after the author clicks
+     * the "Create" button that makes the request to create the project on the
+     * server.
+     */
+
+  }, {
+    key: 'turnOnCreatingProjectMessage',
+    value: function turnOnCreatingProjectMessage() {
+      this.showCreatingProjectMessage = true;
+      this.showErrorCreatingProjectMessage = false;
+    }
+
+    /**
+     * Show the message that says "Error Creating Project".
+     */
+
+  }, {
+    key: 'turnOnErrorCreatingProjectMessage',
+    value: function turnOnErrorCreatingProjectMessage() {
+      this.showCreatingProjectMessage = false;
+      this.showErrorCreatingProjectMessage = true;
+    }
+
+    /**
+     * Hide the messages that say "Creating Project..." and "Error Creating Project".
+     */
+
+  }, {
+    key: 'clearAllCreatingProjectMessages',
+    value: function clearAllCreatingProjectMessages() {
+      this.showCreatingProjectMessage = false;
+      this.showErrorCreatingProjectMessage = false;
+    }
+
+    /**
+     * Create a timeout to display the "Error Creating Project" message in case
+     * an error occurs and the server does not respond.
+     */
+
+  }, {
+    key: 'startErrorCreatingProjectTimeout',
+    value: function startErrorCreatingProjectTimeout() {
+      var _this4 = this;
+
+      this.errorCreatingProjectTimeout = this.$timeout(function () {
+        _this4.turnOffInProcessOfCreatingProject();
+        _this4.turnOnErrorCreatingProjectMessage();
+      }, 10000);
+    }
+
+    /**
+     * Cancel the timeout for displaying the "Error Creating Project" message.
+     */
+
+  }, {
+    key: 'cancelErrorCreatingProjectTimeout',
+    value: function cancelErrorCreatingProjectTimeout() {
+      this.$timeout.cancel(this.errorCreatingProjectTimeout);
     }
   }, {
     key: 'cancelRegisterNewProject',
@@ -190,6 +290,7 @@ var AuthoringToolMainController = function () {
       // clear the project template
       this.project = null;
       this.showCreateProjectView = false;
+      this.clearAllCreatingProjectMessages();
     }
 
     /**

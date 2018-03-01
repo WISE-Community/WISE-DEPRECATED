@@ -38,21 +38,26 @@
             <label translate="projectTitle"></label>
             <input id='newProjectTitle'
                  ng-model='authoringToolMainController.project.metadata.title'
+                 ng-disabled="authoringToolMainController.inProcessOfCreatingProject"
                  ng-keyup='$event.keyCode == 13 && authoringToolMainController.registerNewProject()'
                  placeholder='{{ "enterNewProjectTitleHere" | translate }}'/>
           </md-input-container>
           <md-button id="createProjectButton"
                  class="md-raised md-primary"
+                 ng-disabled="authoringToolMainController.inProcessOfCreatingProject"
                  ng-click="authoringToolMainController.registerNewProject()">
             <md-icon>done</md-icon>
             <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'create' | translate }}</md-tooltip>
           </md-button>
           <md-button id="cancelCreateProjectButton"
                  class="md-raised md-primary"
+                 ng-disabled="authoringToolMainController.inProcessOfCreatingProject"
                  ng-click="authoringToolMainController.cancelRegisterNewProject()">
             <md-icon>clear</md-icon>
             <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'CANCEL' | translate }}</md-tooltip>
           </md-button>
+          <span ng-if="authoringToolMainController.showCreatingProjectMessage">{{ 'creatingProject' | translate }}...</span>
+          <span ng-if="authoringToolMainController.showErrorCreatingProjectMessage" style="color: red;">{{ 'errorCreatingProject' | translate }}</span>
         </div>
         <div style="margin-left: 10px;">
           <h3 translate="myProjectsHeading"></h3>
