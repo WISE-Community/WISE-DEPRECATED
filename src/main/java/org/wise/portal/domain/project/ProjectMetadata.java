@@ -228,4 +228,6 @@ public interface ProjectMetadata{
   void setMaxScores(String maxScores);
 
   String toJSONString();
+
+  JSONObject toJSONObject();
 }

@@ -709,4 +709,13 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 
     return metadata.toString();
   }
+
+  public JSONObject toJSONObject() {
+    JSONObject result = new JSONObject();
+    try {
+      result = new JSONObject(toJSONString());
+    } catch (JSONException e) {
+    }
+    return result;
+  }
 }
