@@ -165,4 +165,5 @@ public interface Portal extends Persistable {
    */
   void setProjectMetadataSettings(String projectMetadataSettings);
 
+  String getProjectLibraryGroups();
 }

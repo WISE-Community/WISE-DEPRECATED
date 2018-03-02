@@ -71,6 +71,9 @@ public class PortalImpl implements Portal {
   @Column(name = "settings", length = 32768, columnDefinition = "text")
   private String settings;  // text (blob) 2^15
 
+  @Column(name = "projectLibraryGroups", length = 32768, columnDefinition = "text")
+  private String projectLibraryGroups;
+
   @Column(name = "run_survey_template", length = 32768, columnDefinition = "text")
   private String runSurveyTemplate;  // text (blob) 2^15
 
@@ -277,5 +280,9 @@ public class PortalImpl implements Portal {
    */
   public void setProjectMetadataSettings (String projectMetadataSettings) {
     this.projectMetadataSettings = projectMetadataSettings;
+  }
+
+  public String getProjectLibraryGroups() {
+    return projectLibraryGroups;
   }
 }
