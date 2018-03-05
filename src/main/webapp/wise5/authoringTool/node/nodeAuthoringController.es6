@@ -115,7 +115,7 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           }
         ]
       },
@@ -125,11 +125,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           },
           {
-            value: "componentId",
-            text: this.$translate('componentID')
+            value: "component",
+            text: this.$translate('component')
           },
           {
             value: "scores",
@@ -143,11 +143,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "fromNodeId",
-            text: this.$translate('fromNodeID')
+            text: this.$translate('fromStep')
           },
           {
             value: "toNodeId",
-            text: this.$translate('toNodeID')
+            text: this.$translate('toStep')
           }
         ]
       },
@@ -157,11 +157,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           },
           {
             value: "componentId",
-            text: this.$translate('componentID')
+            text: this.$translate('component')
           },
           {
             value: "choiceIds",
@@ -175,11 +175,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           },
           {
             value: "componentId",
-            text: this.$translate('componentID')
+            text: this.$translate('component')
           }
         ]
       },
@@ -189,11 +189,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           },
           {
             value: "componentId",
-            text: this.$translate('componentID')
+            text: this.$translate('component')
           },
           {
             value: "requiredSubmitCount",
@@ -207,7 +207,7 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           }
         ]
       },
@@ -217,7 +217,7 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           }
         ]
       },
@@ -227,13 +227,31 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           }
         ]
       },
       {
         value: "isPlanningActivityCompleted",
         text: this.$translate('isPlanningActivityCompleted')
+      },
+      {
+        value: "wroteXNumberOfWords",
+        text: this.$translate('wroteXNumberOfWords'),
+        params: [
+          {
+            value: "nodeId",
+            text: this.$translate('step')
+          },
+          {
+            value: "componentId",
+            text: this.$translate('component')
+          },
+          {
+            value: "requiredNumberOfWords",
+            text: this.$translate('requiredNumberOfWords')
+          }
+        ]
       }
     ];
 
@@ -487,6 +505,24 @@ class NodeAuthoringController {
       this.authoringViewNodeChanged();
     });
 
+    if (this.$state.current.name == 'root.project.nodeConstraints') {
+      this.$timeout(() => {
+        this.nodeAuthoringViewButtonClicked('advanced');
+        this.$timeout(() => {
+          this.nodeAuthoringViewButtonClicked('editConstraints');
+        });
+      });
+    }
+
+    if (this.$state.current.name == 'root.project.nodeEditPaths') {
+      this.$timeout(() => {
+        this.nodeAuthoringViewButtonClicked('advanced');
+        this.$timeout(() => {
+          this.nodeAuthoringViewButtonClicked('editTransitions');
+        });
+      });
+    }
+
     this.scrollToTopOfPage();
 
     let data = {
@@ -579,7 +615,7 @@ class NodeAuthoringController {
                   }
 
                   // get the choices from the component
-                  let choices = this.getChoicesByNodeIdAndComponentId(this.createBranchNodeId, this.createBranchComponentId);
+                  let choices = this.ProjectService.getChoicesByNodeIdAndComponentId(this.createBranchNodeId, this.createBranchComponentId);
 
                   if (choices != null) {
                     // set the choices into the branch object
@@ -1052,13 +1088,7 @@ class NodeAuthoringController {
    * @return the choices from the component
    */
   getChoicesByNodeIdAndComponentId(nodeId, componentId) {
-    let choices = [];
-    let component = this.ProjectService
-        .getComponentByNodeIdAndComponentId(nodeId, componentId);
-    if (component != null && component.choices != null) {
-      choices = component.choices;
-    }
-    return choices;
+    return this.ProjectService.getChoicesByNodeIdAndComponentId(nodeId, componentId);
   }
 
   /**
@@ -1120,7 +1150,8 @@ class NodeAuthoringController {
   }
 
   /**
-   * Add a constraint
+   * Add a new constraint.
+   * @return The id of the DOM element associated with the constraint.
    */
   addConstraint() {
     // get a new constraint id
@@ -1131,7 +1162,7 @@ class NodeAuthoringController {
       "id": newNodeConstraintId,
       "action": '',
       "targetId": this.nodeId,
-      "removalConditional": 'all',
+      "removalConditional": 'any',
       "removalCriteria": []
     };
 
@@ -1150,6 +1181,20 @@ class NodeAuthoringController {
     }
     this.node.constraints.push(constraint);
     this.ProjectService.saveProject();
+
+    return newNodeConstraintId;
+  }
+
+  /**
+   * Add a new constraint and then scroll to the bottom of the screen because
+   * that's where the new constraint will appear.
+   */
+  addConstraintAndScrollToBottom() {
+    let newNodeConstraintId = this.addConstraint();
+    this.$timeout(() => {
+      this.$rootScope.$broadcast('scrollToBottom');
+      this.UtilService.temporarilyHighlightElement(newNodeConstraintId);
+    });
   }
 
   /**
@@ -1157,17 +1202,20 @@ class NodeAuthoringController {
    * @param constraintIndex delete the constraint at the index
    */
   deleteConstraint(constraintIndex) {
-    if (constraintIndex != null) {
-      let node = this.ProjectService.getNodeById(this.nodeId);
-      if (node != null) {
-        let constraints = node.constraints;
-        if (constraints != null) {
-          // remove the constraint at the given index
-          constraints.splice(constraintIndex, 1);
+    let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConstraint'));
+    if (answer) {
+      if (constraintIndex != null) {
+        let node = this.ProjectService.getNodeById(this.nodeId);
+        if (node != null) {
+          let constraints = node.constraints;
+          if (constraints != null) {
+            // remove the constraint at the given index
+            constraints.splice(constraintIndex, 1);
+          }
         }
       }
+      this.ProjectService.saveProject();
     }
-    this.ProjectService.saveProject();
   }
 
   /**
@@ -1193,15 +1241,18 @@ class NodeAuthoringController {
    * @param removalCriteriaIndex the index of the removal criteria to remove
    */
   deleteRemovalCriteria(constraint, removalCriteriaIndex) {
-    if (constraint != null) {
-      // get all the removal criteria
-      let removalCriteria = constraint.removalCriteria;
-      if (removalCriteria != null) {
-        // remove the single removal criteria
-        removalCriteria.splice(removalCriteriaIndex, 1);
+    let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisRemovalCriteria'));
+    if (answer) {
+      if (constraint != null) {
+        // get all the removal criteria
+        let removalCriteria = constraint.removalCriteria;
+        if (removalCriteria != null) {
+          // remove the single removal criteria
+          removalCriteria.splice(removalCriteriaIndex, 1);
+        }
       }
+      this.ProjectService.saveProject();
     }
-    this.ProjectService.saveProject();
   }
 
   /**
@@ -1241,7 +1292,7 @@ class NodeAuthoringController {
           if (paramObject != null) {
             let value = paramObject.value;
 
-            // intialize the param value
+            // initialize the param value
             criteria.params[value] = '';
 
             if (value == 'nodeId') {
@@ -2947,23 +2998,7 @@ class NodeAuthoringController {
       if (newComponents != null) {
         for (let newComponent of newComponents) {
           if (newComponent != null) {
-            let componentElement = $('#' + newComponent.id);
-            let componentOriginalBackgroundColor = componentElement.css('backgroundColor');
-            componentElement.css('background-color', '#FFFF9C');
-
-            /*
-             * Use a timeout before starting to transition back to
-             * the original background color. For some reason the
-             * element won't get highlighted in the first place
-             * unless this timeout is used.
-             */
-            this.$timeout(() => {
-              // slowly fade back to original background color
-              componentElement.css({
-                'transition': 'background-color 2s ease-in-out',
-                'background-color': componentOriginalBackgroundColor
-              });
-            });
+            this.UtilService.temporarilyHighlightElement(newComponent.id);
           }
         }
       }
@@ -2977,7 +3012,7 @@ class NodeAuthoringController {
       this.$timeout(() => {
         this.showComponentAuthoring();
         this.turnOffInsertComponentMode();
-        this.showCreateComponent = false;
+        this.nodeAuthoringViewButtonClicked();
         this.clearComponentsToChecked();
 
         /*
@@ -2992,11 +3027,11 @@ class NodeAuthoringController {
             if (componentElement != null) {
               // scroll to the first new component that we've added
               $('#content').animate({
-                scrollTop: componentElement.prop('offsetTop') - 60
+                scrollTop: componentElement.offset().top - 200
               }, 1000);
             }
           }
-        });
+        }, 1000);
       }, 1000);
     });
   }
@@ -3229,6 +3264,9 @@ class NodeAuthoringController {
 
       // we are in the import view so we will go back to the node view
       this.nodeAuthoringViewButtonClicked();
+
+      this.$state
+        .go('root.project.node', {projectId: this.projectId, nodeId: this.nodeId});
     } else {
       // we are in the node view so we will go back to the project view
       this.close();
@@ -3358,6 +3396,23 @@ class NodeAuthoringController {
    */
   componentAdvancedButtonClicked(componentId) {
     this.$rootScope.$broadcast('componentAdvancedButtonClicked', { componentId: componentId });
+  }
+
+  /**
+   * A constraint removal criteria step has changed.
+   * @param criteria The removal criteria object.
+   */
+  authoringViewConstraintRemovalCriteriaNodeIdChanged(criteria) {
+    criteria.params.componentId = '';
+    this.authoringViewNodeChanged();
+  }
+
+  /**
+   * A constraint removal criteria component has changed.
+   * @param criteria The removal criteria object.
+   */
+  authoringViewConstraintRemovalCriteriaComponentIdChanged(criteria) {
+    this.authoringViewNodeChanged();
   }
 }
 

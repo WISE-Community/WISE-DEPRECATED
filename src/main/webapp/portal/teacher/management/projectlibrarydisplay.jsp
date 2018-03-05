@@ -11,9 +11,12 @@
 	var isTeacher = true;
 </script>
 </sec:authorize>
+<c:if test="${!fn:endsWith(pageContext.request.requestURI, 'projectlibrary.jsp')}">
+	<c:set var="isPublicLibrary" value="true" />
+</c:if>
 <div id="projectTabs" class="panelTabs">
 	<ul id="tabsUL">
-		<c:if test="${!fn:endsWith(pageContext.request.requestURI, 'projectlibrary.jsp')}">
+		<c:if test="${isPublicLibrary}">
 			<li><a href="#activeProjects"><spring:message code="current"/>  (${totalActiveProjects})</a></li>
 			<li><a href="#archivedProjects"><spring:message code="archived"/>  (${totalArchivedProjects})</a></li>
 		</c:if>
@@ -1954,6 +1957,7 @@
 					}
 				 ],
 				"aFilterOpts": [
+					<c:if test="${isPublicLibrary}">
 					{
 						"identifier": "bookmark", "label": "<spring:message code="teacher.management.projectlibrarydisplay.filter_favorites"/>", "column": 9,
 						"options": [
@@ -1969,6 +1973,7 @@
 							{"query": "teachershared", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_source_teacherShared"/>"}
 						]
 					},
+					</c:if>
 					{
 						"identifier": "subject", "label": "<spring:message code="teacher.management.projectlibrarydisplay.filter_subject"/>", "column": 3,
 						"options": [
@@ -2003,6 +2008,7 @@
 							{"query": "12+ Hours", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_time_12h+"/>"}
 						]
 					},
+					<c:if test="${isPublicLibrary}">
 					{
 						"identifier": "language", "label": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language"/>", "column": 7,
 						"options": [
@@ -2014,6 +2020,7 @@
 							{"query": "spanish", "display": "<spring:message code="teacher.management.projectlibrarydisplay.filter_language_spanish"/>"}
 						]
 					}
+					</c:if>
 				]
 			});
 

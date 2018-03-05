@@ -94,17 +94,17 @@ var NodeAuthoringController = function () {
       text: this.$translate('isCompleted'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }]
     }, {
       value: "score",
       text: this.$translate('SCORE'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }, {
-        value: "componentId",
-        text: this.$translate('componentID')
+        value: "component",
+        text: this.$translate('component')
       }, {
         value: "scores",
         text: this.$translate('scoresParens')
@@ -114,20 +114,20 @@ var NodeAuthoringController = function () {
       text: this.$translate('branchPathTaken'),
       params: [{
         value: "fromNodeId",
-        text: this.$translate('fromNodeID')
+        text: this.$translate('fromStep')
       }, {
         value: "toNodeId",
-        text: this.$translate('toNodeID')
+        text: this.$translate('toStep')
       }]
     }, {
       value: "choiceChosen",
       text: this.$translate('choiceChosen'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }, {
         value: "componentId",
-        text: this.$translate('componentID')
+        text: this.$translate('component')
       }, {
         value: "choiceIds",
         text: this.$translate('choices')
@@ -137,20 +137,20 @@ var NodeAuthoringController = function () {
       text: this.$translate('IS_CORRECT'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }, {
         value: "componentId",
-        text: this.$translate('componentID')
+        text: this.$translate('component')
       }]
     }, {
       value: "usedXSubmits",
       text: this.$translate('usedXSubmits'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }, {
         value: "componentId",
-        text: this.$translate('componentID')
+        text: this.$translate('component')
       }, {
         value: "requiredSubmitCount",
         text: this.$translate('requiredSubmitCount')
@@ -160,25 +160,38 @@ var NodeAuthoringController = function () {
       text: this.$translate('isVisible'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }]
     }, {
       value: "isVisitable",
       text: this.$translate('isVisitable'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }]
     }, {
       value: "isVisited",
       text: this.$translate('isVisited'),
       params: [{
         value: "nodeId",
-        text: this.$translate('nodeID')
+        text: this.$translate('step')
       }]
     }, {
       value: "isPlanningActivityCompleted",
       text: this.$translate('isPlanningActivityCompleted')
+    }, {
+      value: "wroteXNumberOfWords",
+      text: this.$translate('wroteXNumberOfWords'),
+      params: [{
+        value: "nodeId",
+        text: this.$translate('step')
+      }, {
+        value: "componentId",
+        text: this.$translate('component')
+      }, {
+        value: "requiredNumberOfWords",
+        text: this.$translate('requiredNumberOfWords')
+      }]
     }];
 
     // available transitionCriterias
@@ -385,6 +398,24 @@ var NodeAuthoringController = function () {
       _this.authoringViewNodeChanged();
     });
 
+    if (this.$state.current.name == 'root.project.nodeConstraints') {
+      this.$timeout(function () {
+        _this.nodeAuthoringViewButtonClicked('advanced');
+        _this.$timeout(function () {
+          _this.nodeAuthoringViewButtonClicked('editConstraints');
+        });
+      });
+    }
+
+    if (this.$state.current.name == 'root.project.nodeEditPaths') {
+      this.$timeout(function () {
+        _this.nodeAuthoringViewButtonClicked('advanced');
+        _this.$timeout(function () {
+          _this.nodeAuthoringViewButtonClicked('editTransitions');
+        });
+      });
+    }
+
     this.scrollToTopOfPage();
 
     var data = {
@@ -488,7 +519,7 @@ var NodeAuthoringController = function () {
                       }
 
                       // get the choices from the component
-                      var choices = this.getChoicesByNodeIdAndComponentId(this.createBranchNodeId, this.createBranchComponentId);
+                      var choices = this.ProjectService.getChoicesByNodeIdAndComponentId(this.createBranchNodeId, this.createBranchComponentId);
 
                       if (choices != null) {
                         // set the choices into the branch object
@@ -1137,12 +1168,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'getChoicesByNodeIdAndComponentId',
     value: function getChoicesByNodeIdAndComponentId(nodeId, componentId) {
-      var choices = [];
-      var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-      if (component != null && component.choices != null) {
-        choices = component.choices;
-      }
-      return choices;
+      return this.ProjectService.getChoicesByNodeIdAndComponentId(nodeId, componentId);
     }
 
     /**
@@ -1230,7 +1256,8 @@ var NodeAuthoringController = function () {
     }
 
     /**
-     * Add a constraint
+     * Add a new constraint.
+     * @return The id of the DOM element associated with the constraint.
      */
 
   }, {
@@ -1244,7 +1271,7 @@ var NodeAuthoringController = function () {
         "id": newNodeConstraintId,
         "action": '',
         "targetId": this.nodeId,
-        "removalConditional": 'all',
+        "removalConditional": 'any',
         "removalCriteria": []
       };
 
@@ -1263,6 +1290,25 @@ var NodeAuthoringController = function () {
       }
       this.node.constraints.push(constraint);
       this.ProjectService.saveProject();
+
+      return newNodeConstraintId;
+    }
+
+    /**
+     * Add a new constraint and then scroll to the bottom of the screen because
+     * that's where the new constraint will appear.
+     */
+
+  }, {
+    key: 'addConstraintAndScrollToBottom',
+    value: function addConstraintAndScrollToBottom() {
+      var _this2 = this;
+
+      var newNodeConstraintId = this.addConstraint();
+      this.$timeout(function () {
+        _this2.$rootScope.$broadcast('scrollToBottom');
+        _this2.UtilService.temporarilyHighlightElement(newNodeConstraintId);
+      });
     }
 
     /**
@@ -1273,17 +1319,20 @@ var NodeAuthoringController = function () {
   }, {
     key: 'deleteConstraint',
     value: function deleteConstraint(constraintIndex) {
-      if (constraintIndex != null) {
-        var node = this.ProjectService.getNodeById(this.nodeId);
-        if (node != null) {
-          var constraints = node.constraints;
-          if (constraints != null) {
-            // remove the constraint at the given index
-            constraints.splice(constraintIndex, 1);
+      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConstraint'));
+      if (answer) {
+        if (constraintIndex != null) {
+          var node = this.ProjectService.getNodeById(this.nodeId);
+          if (node != null) {
+            var constraints = node.constraints;
+            if (constraints != null) {
+              // remove the constraint at the given index
+              constraints.splice(constraintIndex, 1);
+            }
           }
         }
+        this.ProjectService.saveProject();
       }
-      this.ProjectService.saveProject();
     }
 
     /**
@@ -1315,15 +1364,18 @@ var NodeAuthoringController = function () {
   }, {
     key: 'deleteRemovalCriteria',
     value: function deleteRemovalCriteria(constraint, removalCriteriaIndex) {
-      if (constraint != null) {
-        // get all the removal criteria
-        var removalCriteria = constraint.removalCriteria;
-        if (removalCriteria != null) {
-          // remove the single removal criteria
-          removalCriteria.splice(removalCriteriaIndex, 1);
+      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisRemovalCriteria'));
+      if (answer) {
+        if (constraint != null) {
+          // get all the removal criteria
+          var removalCriteria = constraint.removalCriteria;
+          if (removalCriteria != null) {
+            // remove the single removal criteria
+            removalCriteria.splice(removalCriteriaIndex, 1);
+          }
         }
+        this.ProjectService.saveProject();
       }
-      this.ProjectService.saveProject();
     }
 
     /**
@@ -1376,7 +1428,7 @@ var NodeAuthoringController = function () {
               if (paramObject != null) {
                 var value = paramObject.value;
 
-                // intialize the param value
+                // initialize the param value
                 criteria.params[value] = '';
 
                 if (value == 'nodeId') {
@@ -2903,7 +2955,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'importButtonClicked',
     value: function importButtonClicked() {
-      var _this2 = this;
+      var _this3 = this;
 
       // clear all the import project values
       this.importProjectIdToOrder = {};
@@ -2928,7 +2980,7 @@ var NodeAuthoringController = function () {
         if (this.libraryProjectsList == null) {
           // populate the library projects drop down
           this.ConfigService.getLibraryProjects().then(function (libraryProjectsList) {
-            _this2.libraryProjectsList = libraryProjectsList;
+            _this3.libraryProjectsList = libraryProjectsList;
           });
         }
       }
@@ -2993,7 +3045,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'deleteButtonClicked',
     value: function deleteButtonClicked() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.getSelectedComponentIds().length == 0) {
         alert(this.$translate('pleaseSelectAComponentToDeleteAndThenClickTheDeleteButtonAgain'));
@@ -3015,14 +3067,14 @@ var NodeAuthoringController = function () {
           var confirmMessage = '';
 
           // get the selected component numbers and types
-          var selectedComponentNumbersAndTypes = _this3.getSelectedComponentNumbersAndTypes();
+          var selectedComponentNumbersAndTypes = _this4.getSelectedComponentNumbersAndTypes();
 
           if (selectedComponentNumbersAndTypes.length == 1) {
             // there is one selected component
-            confirmMessage = _this3.$translate('areYouSureYouWantToDeleteThisComponent');
+            confirmMessage = _this4.$translate('areYouSureYouWantToDeleteThisComponent');
           } else if (selectedComponentNumbersAndTypes.length > 1) {
             // there are multiple selected components
-            confirmMessage = _this3.$translate('areYouSureYouWantToDeleteTheseComponents');
+            confirmMessage = _this4.$translate('areYouSureYouWantToDeleteTheseComponents');
           }
 
           // loop through all the selected components
@@ -3037,11 +3089,11 @@ var NodeAuthoringController = function () {
 
           // ask the user if they are sure they want to delete
           if (confirm(confirmMessage)) {
-            var selectedComponents = _this3.getSelectedComponentIds();
+            var selectedComponents = _this4.getSelectedComponentIds();
 
             // data saved in the component deleted event
             var data = {
-              "componentsDeleted": _this3.getComponentObjectsForEventData(selectedComponents)
+              "componentsDeleted": _this4.getComponentObjectsForEventData(selectedComponents)
             };
 
             /*
@@ -3056,7 +3108,7 @@ var NodeAuthoringController = function () {
               for (var _iterator13 = selectedComponents[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
                 var componentId = _step13.value;
 
-                _this3.ProjectService.deleteComponent(_this3.nodeId, componentId);
+                _this4.ProjectService.deleteComponent(_this4.nodeId, componentId);
               }
             } catch (err) {
               _didIteratorError13 = true;
@@ -3073,15 +3125,15 @@ var NodeAuthoringController = function () {
               }
             }
 
-            _this3.saveEvent('componentDeleted', 'Authoring', data);
+            _this4.saveEvent('componentDeleted', 'Authoring', data);
 
             // check if we need to show the node save or node submit buttons
-            _this3.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
+            _this4.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
 
-            _this3.ProjectService.saveProject();
+            _this4.ProjectService.saveProject();
           } else {
             // uncheck the component check boxes
-            _this3.clearComponentsToChecked();
+            _this4.clearComponentsToChecked();
           }
 
           /*
@@ -3090,15 +3142,15 @@ var NodeAuthoringController = function () {
            * and type view a little longer so that they can see the change
            * they just made before we switch back to the normal view.
            */
-          _this3.$timeout(function () {
+          _this4.$timeout(function () {
             // turn off the insert component mode
-            _this3.turnOffInsertComponentMode();
+            _this4.turnOffInsertComponentMode();
 
             // uncheck the component check boxes
-            _this3.clearComponentsToChecked();
+            _this4.clearComponentsToChecked();
 
             // show the component authoring
-            _this3.showComponentAuthoring();
+            _this4.showComponentAuthoring();
           }, 2000);
         });
       }
@@ -3307,19 +3359,19 @@ var NodeAuthoringController = function () {
   }, {
     key: 'handleImportComponent',
     value: function handleImportComponent(componentId) {
-      var _this4 = this;
+      var _this5 = this;
 
       // import the selected components and insert them
       this.importComponents(this.nodeId, componentId).then(function (newComponents) {
-        _this4.turnOffImportComponentMode();
-        _this4.ProjectService.saveProject();
-        _this4.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+        _this5.turnOffImportComponentMode();
+        _this5.ProjectService.saveProject();
+        _this5.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
 
         /*
          * refresh the project assets in case any of the imported
          * components also imported assets
          */
-        _this4.ProjectAssetService.retrieveProjectAssets();
+        _this5.ProjectAssetService.retrieveProjectAssets();
       });
     }
 
@@ -3332,7 +3384,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'highlightNewComponentsAndThenShowComponentAuthoring',
     value: function highlightNewComponentsAndThenShowComponentAuthoring(newComponents) {
-      var _this5 = this;
+      var _this6 = this;
 
       // use a timeout to allow the components time to show up in the UI
       this.$timeout(function () {
@@ -3346,25 +3398,7 @@ var NodeAuthoringController = function () {
               var newComponent = _step14.value;
 
               if (newComponent != null) {
-                (function () {
-                  var componentElement = $('#' + newComponent.id);
-                  var componentOriginalBackgroundColor = componentElement.css('backgroundColor');
-                  componentElement.css('background-color', '#FFFF9C');
-
-                  /*
-                   * Use a timeout before starting to transition back to
-                   * the original background color. For some reason the
-                   * element won't get highlighted in the first place
-                   * unless this timeout is used.
-                   */
-                  _this5.$timeout(function () {
-                    // slowly fade back to original background color
-                    componentElement.css({
-                      'transition': 'background-color 2s ease-in-out',
-                      'background-color': componentOriginalBackgroundColor
-                    });
-                  });
-                })();
+                _this6.UtilService.temporarilyHighlightElement(newComponent.id);
               }
             }
           } catch (err) {
@@ -3389,17 +3423,17 @@ var NodeAuthoringController = function () {
          * and type view a little longer so that they can see the change
          * they just made before we switch back to the normal view.
          */
-        _this5.$timeout(function () {
-          _this5.showComponentAuthoring();
-          _this5.turnOffInsertComponentMode();
-          _this5.showCreateComponent = false;
-          _this5.clearComponentsToChecked();
+        _this6.$timeout(function () {
+          _this6.showComponentAuthoring();
+          _this6.turnOffInsertComponentMode();
+          _this6.nodeAuthoringViewButtonClicked();
+          _this6.clearComponentsToChecked();
 
           /*
            * use a timeout to wait for the UI to update and then scroll
            * to the first new component
            */
-          _this5.$timeout(function () {
+          _this6.$timeout(function () {
             if (newComponents != null && newComponents.length > 0) {
               // get the UI element of the first new component
               var componentElement = $('#' + newComponents[0].id);
@@ -3407,11 +3441,11 @@ var NodeAuthoringController = function () {
               if (componentElement != null) {
                 // scroll to the first new component that we've added
                 $('#content').animate({
-                  scrollTop: componentElement.prop('offsetTop') - 60
+                  scrollTop: componentElement.offset().top - 200
                 }, 1000);
               }
             }
-          });
+          }, 1000);
         }, 1000);
       });
     }
@@ -3450,7 +3484,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'showImportProject',
     value: function showImportProject(importProjectId) {
-      var _this6 = this;
+      var _this7 = this;
 
       this.importProjectId = importProjectId;
 
@@ -3467,13 +3501,13 @@ var NodeAuthoringController = function () {
         this.ProjectService.retrieveProjectById(this.importProjectId).then(function (projectJSON) {
 
           // create the mapping of node id to order for the import project
-          _this6.importProjectIdToOrder = {};
-          _this6.importProject = projectJSON;
+          _this7.importProjectIdToOrder = {};
+          _this7.importProject = projectJSON;
 
           // calculate the node order of the import project
-          var result = _this6.ProjectService.getNodeOrderOfProject(_this6.importProject);
-          _this6.importProjectIdToOrder = result.idToOrder;
-          _this6.importProjectItems = result.nodes;
+          var result = _this7.ProjectService.getNodeOrderOfProject(_this7.importProject);
+          _this7.importProjectIdToOrder = result.idToOrder;
+          _this7.importProjectItems = result.nodes;
         });
       }
     }
@@ -3582,7 +3616,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'importComponents',
     value: function importComponents(nodeId, insertAfterComponentId) {
-      var _this7 = this;
+      var _this8 = this;
 
       // data saved in the component imported event
       var data = {
@@ -3633,7 +3667,7 @@ var NodeAuthoringController = function () {
           componentImported.toComponentId = newComponentId;
         }
 
-        _this7.saveEvent('componentImported', 'Authoring', data);
+        _this8.saveEvent('componentImported', 'Authoring', data);
         return newComponents;
       });
     }
@@ -3749,6 +3783,8 @@ var NodeAuthoringController = function () {
 
         // we are in the import view so we will go back to the node view
         this.nodeAuthoringViewButtonClicked();
+
+        this.$state.go('root.project.node', { projectId: this.projectId, nodeId: this.nodeId });
       } else {
         // we are in the node view so we will go back to the project view
         this.close();
@@ -3910,7 +3946,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'saveAndParseJSON',
     value: function saveAndParseJSON() {
-      var _this8 = this;
+      var _this9 = this;
 
       if (this.showJSON) {
         /*
@@ -3941,7 +3977,7 @@ var NodeAuthoringController = function () {
 
           // save the project
           this.authoringViewNodeChanged().then(function () {
-            _this8.$rootScope.$broadcast('parseProject');
+            _this9.$rootScope.$broadcast('parseProject');
           });
         }
       }
@@ -3958,6 +3994,29 @@ var NodeAuthoringController = function () {
     key: 'componentAdvancedButtonClicked',
     value: function componentAdvancedButtonClicked(componentId) {
       this.$rootScope.$broadcast('componentAdvancedButtonClicked', { componentId: componentId });
+    }
+
+    /**
+     * A constraint removal criteria step has changed.
+     * @param criteria The removal criteria object.
+     */
+
+  }, {
+    key: 'authoringViewConstraintRemovalCriteriaNodeIdChanged',
+    value: function authoringViewConstraintRemovalCriteriaNodeIdChanged(criteria) {
+      criteria.params.componentId = '';
+      this.authoringViewNodeChanged();
+    }
+
+    /**
+     * A constraint removal criteria component has changed.
+     * @param criteria The removal criteria object.
+     */
+
+  }, {
+    key: 'authoringViewConstraintRemovalCriteriaComponentIdChanged',
+    value: function authoringViewConstraintRemovalCriteriaComponentIdChanged(criteria) {
+      this.authoringViewNodeChanged();
     }
   }]);
 

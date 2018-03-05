@@ -9,12 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var UtilService = function () {
-  function UtilService($filter, $injector, $rootScope) {
+  function UtilService($filter, $injector, $rootScope, $timeout) {
     _classCallCheck(this, UtilService);
 
     this.$filter = $filter;
     this.$injector = $injector;
     this.$rootScope = $rootScope;
+    this.$timeout = $timeout;
     this.componentTypeToLabel = {};
     this.$translate = this.$filter('translate');
   }
@@ -934,6 +935,236 @@ var UtilService = function () {
       }
       return false;
     }
+
+    /**
+     * Takes a string and breaks it up into multiple lines so that the length of
+     * each line does not exceed a certain number of characters. This code was
+     * found on stackoverflow.
+     * https://stackoverflow.com/questions/14484787/wrap-text-in-javascript
+     * @param str The string to break up.
+     * @param maxWidth The max width of a line.
+     * @return A string that has been broken up into multiple lines using \n.
+     */
+
+  }, {
+    key: 'wordWrap',
+    value: function wordWrap(str, maxWidth) {
+      if (str.length <= maxWidth) {
+        return str;
+      }
+      var newLineStr = "\n";
+      var done = false;
+      var res = '';
+      do {
+        var found = false;
+        // Inserts new line at first whitespace of the line
+        for (var i = maxWidth - 1; i >= 0; i--) {
+          if (this.testWhite(str.charAt(i))) {
+            res = res + [str.slice(0, i), newLineStr].join('');
+            str = str.slice(i + 1);
+            found = true;
+            break;
+          }
+        }
+        // Inserts new line at maxWidth position, the word is too long to wrap
+        if (!found) {
+          res += [str.slice(0, maxWidth), newLineStr].join('');
+          str = str.slice(maxWidth);
+        }
+
+        if (str.length < maxWidth) done = true;
+      } while (!done);
+
+      return res + str;
+    }
+
+    /**
+     * Helper function for wordWrap().
+     * @param x A single character string.
+     * @return Whether the single character is a whitespace character.
+     */
+
+  }, {
+    key: 'testWhite',
+    value: function testWhite(x) {
+      var white = new RegExp(/^\s$/);
+      return white.test(x.charAt(0));
+    }
+  }, {
+    key: 'wordCount',
+
+
+    /**
+     * Get the number of words in the string.
+     * @param str The string.
+     * @return The number of words in the string.
+     */
+    value: function wordCount(str) {
+      return str.trim().split(/\s+/).length;
+    }
+
+    /**
+     * Check if there is a 'nodeEntered' event in the array of events.
+     * @param events An array of events.
+     * @return Whether there is a 'nodeEntered' event in the array of events.
+     */
+
+  }, {
+    key: 'hasNodeEnteredEvent',
+    value: function hasNodeEnteredEvent(events) {
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
+
+      try {
+        for (var _iterator6 = events[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var event = _step6.value;
+
+          if (event.event == 'nodeEntered') {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
+          }
+        }
+      }
+
+      return false;
+    }
+
+    /**
+     * Determine whether the component has been authored to import work.
+     * @param componentContent The component content.
+     * @return Whether to import work in this component.
+     */
+
+  }, {
+    key: 'hasImportWorkConnectedComponent',
+    value: function hasImportWorkConnectedComponent(componentContent) {
+      return this.hasXConnectedComponent(componentContent, 'importWork');
+    }
+
+    /**
+     * Determine whether the component has been authored to show work.
+     * @param componentContent The component content.
+     * @return Whether to show work in this component.
+     */
+
+  }, {
+    key: 'hasShowWorkConnectedComponent',
+    value: function hasShowWorkConnectedComponent(componentContent) {
+      return this.hasXConnectedComponent(componentContent, 'showWork');
+    }
+
+    /**
+     * Determine whether the component has been authored to show classmate work.
+     * @param componentContent The component content.
+     * @return Whether to show classmate work in this component.
+     */
+
+  }, {
+    key: 'hasShowClassmateWorkConnectedComponent',
+    value: function hasShowClassmateWorkConnectedComponent(componentContent) {
+      return this.hasXConnectedComponent(componentContent, 'showClassmateWork');
+    }
+
+    /**
+     * Determine whether the component has a connected component of the given type.
+     * @param componentContent The component content.
+     * @param connectedComponentType The connected component type.
+     * @return Whether the component has a connected component of the given type.
+     */
+
+  }, {
+    key: 'hasXConnectedComponent',
+    value: function hasXConnectedComponent(componentContent, connectedComponentType) {
+      if (componentContent.connectedComponents != null) {
+        var connectedComponents = componentContent.connectedComponents;
+        // loop through all the connected components
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
+
+        try {
+          for (var _iterator7 = connectedComponents[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var connectedComponent = _step7.value;
+
+            if (connectedComponent.type == connectedComponentType) {
+              // the connected component is the type we're looking for
+              return true;
+            }
+          }
+        } catch (err) {
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
+            }
+          } finally {
+            if (_didIteratorError7) {
+              throw _iteratorError7;
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Temporarily highlight an element in the DOM.
+     * @param id The id of the element.
+     * @param duration The number of milliseconds to keep the element highlighted.
+     */
+
+  }, {
+    key: 'temporarilyHighlightElement',
+    value: function temporarilyHighlightElement(id) {
+      var _this = this;
+
+      var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1000;
+
+      var element = $('#' + id);
+      var originalBackgroundColor = element.css('backgroundColor');
+      element.css('background-color', '#FFFF9C');
+
+      /*
+       * Use a timeout before starting to transition back to
+       * the original background color. For some reason the
+       * element won't get highlighted in the first place
+       * unless this timeout is used.
+       */
+      this.$timeout(function () {
+        // slowly fade back to the original background color
+        element.css({
+          'transition': 'background-color 2s ease-in-out',
+          'background-color': originalBackgroundColor
+        });
+
+        /*
+         * remove these styling fields after we perform
+         * the fade otherwise the regular mouseover
+         * background color change will not work
+         */
+        _this.$timeout(function () {
+          element.css({
+            'transition': '',
+            'background-color': ''
+          });
+        }, 2000);
+      }, duration);
+    }
   }]);
 
   return UtilService;
@@ -948,7 +1179,7 @@ if (!Array.prototype.last) {
   };
 }
 
-UtilService.$inject = ['$filter', '$injector', '$rootScope'];
+UtilService.$inject = ['$filter', '$injector', '$rootScope', '$timeout'];
 
 exports.default = UtilService;
 //# sourceMappingURL=utilService.js.map

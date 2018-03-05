@@ -68,6 +68,7 @@ class ProjectService {
     this.nodeCount = 0;
     this.nodeIdToIsInBranchPath = {};
     this.achievements = [];
+    this.clearBranchesCache();
   };
 
   getStyle() {
@@ -685,7 +686,7 @@ class ProjectService {
       // the string we're looking for can't start with '/ and "/.
       // note that this also works for \"abc.png and \'abc.png, where the quotes are escaped
       contentString = contentString.replace(
-        new RegExp('(\'|\"|\\\\\'|\\\\\")[^:][^\/]?[^\/]?[a-zA-Z0-9@\\._\\/\\s\\-]*[\.](png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html.*?|js).*?(\'|\"|\\\\\'|\\\\\")', 'gi'),
+        new RegExp('(\'|\"|\\\\\'|\\\\\")[^:][^\/]?[^\/]?[a-zA-Z0-9@%&;\\._\\/\\s\\-]*[\.](png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html.*?|js).*?(\'|\"|\\\\\'|\\\\\")', 'gi'),
         (matchedString) => {
           // once found, we prepend the contentBaseURL + "assets/" to the string within the quotes and keep everything else the same.
           let delimiter = '';
@@ -1062,6 +1063,29 @@ class ProjectService {
   };
 
   /**
+   * Get the constraints authored on the node.
+   * @param nodeId The node id of the node.
+   * @return An array of constraint JSON objects.
+   */
+  getConstraintsOnNode(nodeId) {
+    let node = this.getNodeById(nodeId);
+    return node.constraints;
+  }
+
+  /**
+   * Check if a node has constraints.
+   * @param nodeId The node id of the node.
+   * @return Whether the node has constraints authored on it.
+   */
+  nodeHasConstraint(nodeId) {
+    let constraints = this.getConstraintsOnNode(nodeId);
+    if (constraints.length > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Order the constraints so that they show up in the same order as in the
    * project.
    * @param constraints An array of constraint objects.
@@ -1311,24 +1335,42 @@ class ProjectService {
     if (toNodeId != null) {
       const nodes = this.project.nodes;
       for (let node of nodes) {
-        const transitionLogic = node.transitionLogic;
-        if (transitionLogic != null) {
-          const transitions = transitionLogic.transitions;
-          if (transitions != null) {
-            for (let transition of transitions) {
-              if (transition != null) {
-                if (toNodeId === transition.to) {
-                  // this node has a transition to the node id
-                  nodesByToNodeId.push(node);
-                }
-              }
-            }
-          }
+        if (this.nodeHasTransitionToNodeId(node, toNodeId)) {
+          nodesByToNodeId.push(node);
+        }
+      }
+      const inactiveNodes = this.getInactiveNodes();
+      for (let inactiveNode of inactiveNodes) {
+        if (this.nodeHasTransitionToNodeId(inactiveNode, toNodeId)) {
+          nodesByToNodeId.push(inactiveNode);
         }
       }
     }
     return nodesByToNodeId;
   };
+
+  /**
+   * Check if a node has a transition to the given nodeId.
+   * @param node The node to check.
+   * @param toNodeId We are looking for a transition to this node id.
+   * @returns Whether the node has a transition to the given nodeId.
+   */
+  nodeHasTransitionToNodeId(node, toNodeId) {
+    const transitionLogic = node.transitionLogic;
+    if (transitionLogic != null) {
+      const transitions = transitionLogic.transitions;
+      if (transitions != null) {
+        for (let transition of transitions) {
+          if (transition != null) {
+            if (toNodeId === transition.to) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
 
   /**
    * Get node ids of all the nodes that have a to transition to the given node id
@@ -1577,17 +1619,58 @@ class ProjectService {
   cleanupBeforeSave() {
     let activeNodes = this.getActiveNodes();
     for (let activeNode of activeNodes) {
-      if (activeNode != null) {
-        delete activeNode.checked;
-      }
+      this.cleanupNode(activeNode);
     }
 
     let inactiveNodes = this.getInactiveNodes();
     for (let inactiveNode of inactiveNodes) {
-      if (inactiveNode != null) {
-        delete inactiveNode.checked;
+      this.cleanupNode(inactiveNode);
+    }
+  }
+
+  /**
+   * Remove any fields that are used temporarily for display purposes.
+   * @param node The node object.
+   */
+  cleanupNode(node) {
+    /*
+     * Remove fields that are added when the project is loaded in the authoring
+     * tool and grading tool.
+     */
+    delete node.checked;
+    delete node.hasWork;
+    delete node.hasAlert;
+    delete node.hasNewAlert;
+    delete node.isVisible;
+    delete node.completionStatus;
+    delete node.score;
+    delete node.hasScore;
+    delete node.maxScore;
+    delete node.hasMaxScore;
+    delete node.scorePct;
+    delete node.order;
+    delete node.show;
+
+    let components = node.components;
+    // activity nodes do not have components but step nodes do have components
+    if (components != null) {
+      for (let component of components) {
+        this.cleanupComponent(component);
       }
     }
+  }
+
+  /**
+   * Remove any fields that are used temporarily for display purposes.
+   * @param component The component object.
+   */
+  cleanupComponent(component) {
+    /*
+     * Remove fields that are added when the project is loaded in the authoring
+     * tool and grading tool.
+     */
+    delete component.checked;
+    delete component.hasWork;
   }
 
   /**
@@ -2345,9 +2428,44 @@ class ProjectService {
   };
 
   /**
+   * Remember the branches.
+   * @param branches An array of arrays of node ids.
+   */
+  setBranchesCache(branches) {
+    this.branchesCache = branches;
+  }
+
+  /**
+   * Get the branches that were previously calculated.
+   * @returns An array of arrays of node ids.
+   */
+  getBranchesCache() {
+    return this.branchesCache;
+  }
+
+  /**
+   * Remove the branches cache.
+   */
+  clearBranchesCache() {
+    this.branchesCache = null;
+  }
+
+  /**
    * Get the branches in the project
    */
   getBranches() {
+    /*
+     * Do not use the branches cache in the authoring tool because the branches
+     * may change when the author changes the project. In all other modes the
+     * branches can't change so we can use the cache.
+     */
+    if (this.ConfigService.getMode() != 'author') {
+      let branchesCache = this.getBranchesCache();
+      if (branchesCache != null) {
+        return branchesCache;
+      }
+    }
+
     const startNodeId = this.getStartNodeId();
 
     /*
@@ -2359,6 +2477,9 @@ class ProjectService {
 
     const allPaths = this.getAllPaths(pathsSoFar, startNodeId);
     const branches = this.findBranches(allPaths);
+    if (this.ConfigService.getMode() != 'author') {
+      this.setBranchesCache(branches);
+    }
     return branches;
   };
 
@@ -2803,10 +2924,16 @@ class ProjectService {
       this.setIdToNode(node.id, node);
       this.setIdToElement(node.id, node);
     } else {
-      this.addNode(node);
+      if (this.isInactive(nodeId)) {
+        // we are creating an inactive node
+        this.addInactiveNodeInsertInside(node, nodeId);
+      } else {
+        // we are creating an active node
+        this.addNode(node);
+        this.insertNodeInsideInTransitions(node.id, nodeId);
+        this.insertNodeInsideInGroups(node.id, nodeId);
+      }
       this.setIdToNode(node.id, node);
-      this.insertNodeInsideInTransitions(node.id, nodeId);
-      this.insertNodeInsideInGroups(node.id, nodeId);
     }
   }
 
@@ -2879,19 +3006,39 @@ class ProjectService {
     if (groupNodes != null) {
       for (let group of groupNodes) {
         if (group != null) {
-          const ids = group.ids;
-          if (ids != null) {
-            for (let i = 0; i < ids.length; i++) {
-              const id = ids[i];
-              if (nodeIdToInsertAfter === id) {
-                ids.splice(i + 1, 0, nodeIdToInsert);
-                return;
-              }
-            }
-          }
+          this.insertNodeAfterInGroup(group, nodeIdToInsert, nodeIdToInsertAfter);
         }
       }
     }
+    const inactiveGroupNodes = this.getInactiveGroupNodes();
+    if (inactiveGroupNodes != null) {
+      for (let inactiveGroup of inactiveGroupNodes) {
+        if (inactiveGroup != null) {
+          this.insertNodeAfterInGroup(inactiveGroup, nodeIdToInsert, nodeIdToInsertAfter);
+        }
+      }
+    }
+  }
+
+  /**
+   * Insert a node id in a group after another specific node id.
+   * @param group A group object.
+   * @param nodeIdToInsert The node id to insert.
+   * @param nodeIdToInsertAfter The node id to insert after.
+   * @returns {boolean} Whether we inserted the node id.
+   */
+  insertNodeAfterInGroup(group, nodeIdToInsert, nodeIdToInsertAfter) {
+    const ids = group.ids;
+    if (ids != null) {
+      for (let i = 0; i < ids.length; i++) {
+        const id = ids[i];
+        if (nodeIdToInsertAfter === id) {
+          ids.splice(i + 1, 0, nodeIdToInsert);
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /**
@@ -3477,7 +3624,20 @@ class ProjectService {
 
         this.removeNodeIdFromTransitions(tempNodeId);
         this.removeNodeIdFromGroups(tempNodeId);
-        this.moveToInactive(tempNode, nodeId);
+
+        if (n == 0) {
+          /*
+           * this is the first node we are moving so we will insert it
+           * into the beginning of the group
+           */
+          this.moveFromActiveToInactiveInsertInside(tempNode, nodeId);
+        } else {
+          /*
+           * this is not the first node we are moving so we will insert
+           * it after the node we previously inserted
+           */
+          this.moveToInactive(tempNode, nodeId);
+        }
       } else if (!movingNodeIsActive && stationaryNodeIsActive) {
         // we are moving from inactive to active
 
@@ -3501,7 +3661,22 @@ class ProjectService {
       } else if (!movingNodeIsActive && !stationaryNodeIsActive) {
         // we are moving from inactive to inactive
 
-        this.moveInactiveNode(tempNode, nodeId);
+        this.removeNodeIdFromTransitions(tempNodeId);
+        this.removeNodeIdFromGroups(tempNodeId);
+
+        if (n == 0) {
+          /*
+           * this is the first node we are moving so we will insert it
+           * into the beginning of the group
+           */
+          this.moveFromInactiveToInactiveInsertInside(tempNode, nodeId);
+        } else {
+          /*
+           * this is not the first node we are moving so we will insert
+           * it after the node we previously inserted
+           */
+          this.moveInactiveNode(tempNode, nodeId);
+        }
       }
 
       /*
@@ -3550,6 +3725,8 @@ class ProjectService {
       } else if (!movingNodeIsActive && !stationaryNodeIsActive) {
         // we are moving from inactive to inactive
 
+        this.removeNodeIdFromTransitions(tempNodeId);
+        this.removeNodeIdFromGroups(tempNodeId);
         this.moveInactiveNode(node, nodeId);
       }
 
@@ -4063,57 +4240,66 @@ class ProjectService {
    * @param nodeId the node id to remove
    */
   removeNodeIdFromGroups(nodeId) {
-    const groups = this.groupNodes;
-    if (groups != null) {
-      for (let group of groups) {
-        if (group != null) {
-          const startId = group.startId;
-          const ids = group.ids;
-          for (let i = 0; i < ids.length; i++) {
-            const id = ids[i];
-            if (nodeId === id) {
-              ids.splice(i, 1);
+    const groups = this.getGroupNodes();
+    for (let group of groups) {
+      this.removeNodeIdFromGroup(group, nodeId);
+    }
+    const inactiveGroups = this.getInactiveGroupNodes();
+    for (let inactiveGroup of inactiveGroups) {
+      this.removeNodeIdFromGroup(inactiveGroup, nodeId);
+    }
+  }
 
-              if (nodeId === startId) {
-                /*
-                 * the node id is also the start id so we will get the
-                 * next node id and set it as the new start id
-                 */
+  /**
+   * Remove a node id from a group.
+   * @param group The group to remove from.
+   * @param nodeId The node id to remove.
+   */
+  removeNodeIdFromGroup(group, nodeId) {
+    const startId = group.startId;
+    const ids = group.ids;
+    for (let i = 0; i < ids.length; i++) {
+      const id = ids[i];
+      if (nodeId === id) {
+        ids.splice(i, 1);
 
-                let hasSetNewStartId = false;
+        if (nodeId === startId) {
+          /*
+           * the node id is also the start id so we will get the
+           * next node id and set it as the new start id
+           */
 
-                const node = this.getNodeById(id);
+          let hasSetNewStartId = false;
 
-                if (node != null) {
-                  const transitionLogic = node.transitionLogic;
-                  if (transitionLogic != null) {
-                    const transitions = transitionLogic.transitions;
-                    if (transitions != null && transitions.length > 0) {
-                      // get the first transition
-                      // TODO handle the case when the node we are removing is a branch point
-                      const transition = transitions[0];
+          const node = this.getNodeById(id);
 
-                      if (transition != null) {
-                        const to = transition.to;
+          if (node != null) {
+            const transitionLogic = node.transitionLogic;
+            if (transitionLogic != null) {
+              const transitions = transitionLogic.transitions;
+              if (transitions != null && transitions.length > 0) {
+                // get the first transition
+                // TODO handle the case when the node we are removing is a branch point
+                const transition = transitions[0];
 
-                        if (to != null) {
-                          group.startId = to;
-                          hasSetNewStartId = true;
-                        }
-                      }
-                    }
+                if (transition != null) {
+                  const to = transition.to;
+
+                  if (to != null) {
+                    group.startId = to;
+                    hasSetNewStartId = true;
                   }
-                }
-
-                if (!hasSetNewStartId) {
-                  /*
-                   * the node we are removing did not have a transition
-                   * so there will be no start id
-                   */
-                  group.startId = '';
                 }
               }
             }
+          }
+
+          if (!hasSetNewStartId) {
+            /*
+             * the node we are removing did not have a transition
+             * so there will be no start id
+             */
+            group.startId = '';
           }
         }
       }
@@ -4928,6 +5114,55 @@ class ProjectService {
   }
 
   /**
+   * Get the human readable description of the constraint.
+   * @param constraint The constraint object.
+   * @returns A human readable text string that describes the constraint.
+   * example
+   * 'All steps after this one will not be visitable until the student completes "3.7 Revise Your Bowls Explanation"'
+   */
+  getConstraintDescription(constraint) {
+    let message = '';
+    let action = constraint.action;
+    let actionMessage = this.getActionMessage(action);
+    for (let singleRemovalCriteria of constraint.removalCriteria) {
+      if (message != '') {
+        // this constraint has multiple removal criteria
+        if (constraint.removalConditional == 'any') {
+          message += ' or ';
+        } else if (constraint.removalConditional == 'all') {
+          message += ' and ';
+        }
+      }
+      message += this.getCriteriaMessage(singleRemovalCriteria);
+    }
+    message = actionMessage + message;
+    return message;
+  }
+
+  /**
+   * Get the constraint action as human readable text.
+   * @param action A constraint action.
+   * @return A human readable text string that describes the action
+   * example
+   * 'All steps after this one will not be visitable until '
+   */
+  getActionMessage(action) {
+    if (action == 'makeAllNodesAfterThisNotVisitable') {
+      return this.$translate('allStepsAfterThisOneWillNotBeVisitableUntil');
+    } else if (action == 'makeAllNodesAfterThisNotVisible') {
+      return this.$translate('allStepsAfterThisOneWillNotBeVisibleUntil');
+    } else if (action == 'makeAllOtherNodesNotVisitable') {
+      return this.$translate('allOtherStepsWillNotBeVisitableUntil');
+    } else if (action == 'makeAllOtherNodesNotVisible') {
+      return this.$translate('allOtherStepsWillNotBeVisibleUntil');
+    } else if (action == 'makeThisNodeNotVisitable') {
+      return this.$translate('thisStepWillNotBeVisitableUntil');
+    } else if (action == 'makeThisNodeNotVisible') {
+      return this.$translate('thisStepWillNotBeVisibleUntil');
+    }
+  }
+
+  /**
    * Get the message that describes how to satisfy the criteria
    * TODO: check if the criteria is satisfied
    * @param criteria the criteria object that needs to be satisfied
@@ -4977,7 +5212,13 @@ class ProjectService {
         // generate the message
         message += this.$translate('obtainAScoreOfXOnNodeTitle', { score: scoresString, nodeTitle: nodeTitle });
       } else if (name === 'choiceChosen') {
-
+        const nodeId = params.nodeId;
+        const componentId = params.componentId;
+        const choiceIds = params.choiceIds;
+        let nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+        let choices = this.getChoiceTextByNodeIdAndComponentId(nodeId, componentId, choiceIds);
+        let choiceText = choices.join(', ');
+        message += this.$translate('chooseChoiceOnNodeTitle', { choiceText: choiceText, nodeTitle: nodeTitle });
       } else if (name === 'usedXSubmits') {
         const nodeId = params.nodeId;
         let nodeTitle = '';
@@ -4997,16 +5238,73 @@ class ProjectService {
           message += this.$translate('submitXTimesOnNodeTitle', { requiredSubmitCount: requiredSubmitCount, nodeTitle: nodeTitle });
         }
       } else if (name === 'branchPathTaken') {
-
+        const fromNodeId = params.fromNodeId;
+        const fromNodeTitle = this.getNodePositionAndTitleByNodeId(fromNodeId);
+        const toNodeId = params.toNodeId;
+        const toNodeTitle = this.getNodePositionAndTitleByNodeId(toNodeId);
+        message += this.$translate('branchPathTakenFromTo', { fromNodeTitle: fromNodeTitle, toNodeTitle: toNodeTitle });
       } else if (name === 'isPlanningActivityCompleted') {
         const nodeId = params.nodeId;
         if (nodeId != null) {
           const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
           message += this.$translate('completeNodeTitle', { nodeTitle: nodeTitle });
         }
+      } else if (name === 'wroteXNumberOfWords') {
+        const nodeId = params.nodeId;
+        if (nodeId != null) {
+          const requiredNumberOfWords = params.requiredNumberOfWords;
+          const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+          message += this.$translate('writeXNumberOfWordsOnNodeTitle',
+              { requiredNumberOfWords: requiredNumberOfWords, nodeTitle: nodeTitle });
+        }
+      } else if (name === 'isVisible') {
+        const nodeId = params.nodeId;
+        if (nodeId != null) {
+          const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+          message += this.$translate('nodeTitleIsVisible', { nodeTitle: nodeTitle });
+        }
+      } else if (name === 'isVisitable') {
+        const nodeId = params.nodeId;
+        if (nodeId != null) {
+          const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+          message += this.$translate('nodeTitleIsVisitable', { nodeTitle: nodeTitle });
+        }
       }
     }
     return message;
+  }
+
+  /**
+   * Get the choices of a Multiple Choice component.
+   * @param nodeId The node id.
+   * @param componentId The component id.
+   * @return The choices from the component.
+   */
+  getChoicesByNodeIdAndComponentId(nodeId, componentId) {
+    let choices = [];
+    let component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
+    if (component != null && component.choices != null) {
+      choices = component.choices;
+    }
+    return choices;
+  }
+
+  /**
+   * Get the choice text for the given choice ids of a multiple choice component.
+   * @param nodeId The node id of the component.
+   * @param componentId The component id of the component.
+   * @param choiceIds An array of choice ids.
+   * @return An array of choice text strings.
+   */
+  getChoiceTextByNodeIdAndComponentId(nodeId, componentId, choiceIds) {
+    let choices = this.getChoicesByNodeIdAndComponentId(nodeId, componentId);
+    let choicesText = [];
+    for (let choice of choices) {
+      if (choiceIds.indexOf(choice.id) != -1) {
+        choicesText.push(choice.text);
+      }
+    }
+    return choicesText;
   }
 
   /**
@@ -5793,6 +6091,49 @@ class ProjectService {
   }
 
   /**
+   * Move the node from active to inside an inactive group
+   * @param node the node to move
+   * @param nodeIdToInsertInside place the node inside this
+   */
+  moveFromActiveToInactiveInsertInside(node, nodeIdToInsertInside) {
+    this.removeNodeFromActiveNodes(node.id);
+
+    // add the node to the inactive array
+    this.addInactiveNodeInsertInside(node, nodeIdToInsertInside);
+  }
+
+  /**
+   * Move the node from inactive to inside an inactive group
+   * @param node the node to move
+   * @param nodeIdToInsertInside place the node inside this
+   */
+  moveFromInactiveToInactiveInsertInside(node, nodeIdToInsertInside) {
+    this.removeNodeFromInactiveNodes(node.id);
+
+    if (this.isGroupNode(node.id)) {
+      /*
+       * remove the group's child nodes from our data structures so that we can
+       * add them back in later
+       */
+      let childIds = node.ids;
+      for (let childId of childIds) {
+        let childNode = this.getNodeById(childId);
+        let inactiveNodesIndex = this.project.inactiveNodes.indexOf(childNode);
+        if (inactiveNodesIndex != -1) {
+          this.project.inactiveNodes.splice(inactiveNodesIndex, 1);
+        }
+        let inactiveStepNodesIndex = this.inactiveStepNodes.indexOf(childNode);
+        if (inactiveStepNodesIndex != -1) {
+          this.inactiveStepNodes.splice(inactiveStepNodesIndex, 1);
+        }
+      }
+    }
+
+    // add the node to the inactive array
+    this.addInactiveNodeInsertInside(node, nodeIdToInsertInside);
+  }
+
+  /**
    * Add the node to the inactive nodes array
    * @param node the node to move
    * @param nodeIdToInsertAfter place the node after this
@@ -5818,9 +6159,78 @@ class ProjectService {
             const inactiveNode = inactiveNodes[i];
             if (inactiveNode != null) {
               if (nodeIdToInsertAfter === inactiveNode.id) {
+                let parentGroup = this.getParentGroup(nodeIdToInsertAfter);
+                if (parentGroup != null) {
+                  this.insertNodeAfterInGroups(node.id, nodeIdToInsertAfter);
+                  this.insertNodeAfterInTransitions(node, nodeIdToInsertAfter);
+                }
                 // we have found the position to place the node
                 inactiveNodes.splice(i + 1, 0, node);
                 added = true;
+              }
+            }
+          }
+
+          if (!added) {
+            /*
+             * we haven't added the node yet so we will just add it
+             * to the end of the array
+             */
+            inactiveNodes.push(node);
+          }
+        }
+
+        if (node.type == 'group') {
+          this.inactiveGroupNodes.push(node.id);
+          this.addGroupChildNodesToInactive(node);
+        } else {
+          this.inactiveStepNodes.push(node.id);
+        }
+      }
+    }
+  }
+
+  /**
+   * Add the node to the inactive nodes array
+   * @param node the node to move
+   * @param nodeIdToInsertInside place the node inside this group
+   */
+  addInactiveNodeInsertInside(node, nodeIdToInsertInside) {
+    if (node != null) {
+      const inactiveNodes = this.project.inactiveNodes;
+      const inactiveGroups = this.getInactiveGroupNodes();
+
+      if (inactiveNodes != null) {
+        // clear the transitions from this node
+        if (node.transitionLogic != null) {
+          node.transitionLogic.transitions = [];
+        }
+
+        if (nodeIdToInsertInside == null || nodeIdToInsertInside === 'inactiveNodes' || nodeIdToInsertInside === 'inactiveSteps' || nodeIdToInsertInside === 'inactiveGroups') {
+          // put the node at the beginning of the inactive steps
+          inactiveNodes.splice(0, 0, node);
+        } else {
+          // put the node after one of the inactive nodes
+
+          let added = false;
+          for (let inactiveGroup of inactiveGroups) {
+            if (nodeIdToInsertInside == inactiveGroup.id) {
+              // we have found the group we want to insert into
+              this.insertNodeInsideInTransitions(node.id, nodeIdToInsertInside);
+              this.insertNodeInsideInGroups(node.id, nodeIdToInsertInside);
+
+              /*
+               * Loop through the inactive nodes array which contains all
+               * inactive groups and inactive nodes in a flattened array.
+               * Find the inactive group and place the node right after it
+               * for the sake of keeping things organized.
+               */
+              for (let i = 0; i < inactiveNodes.length; i++) {
+                let inactiveNode = inactiveNodes[i];
+                if (nodeIdToInsertInside == inactiveNode.id) {
+                  inactiveNodes.splice(i + 1, 0, node);
+                  added = true;
+                }
               }
             }
           }
@@ -5894,6 +6304,11 @@ class ProjectService {
             if (inactiveNode != null) {
               if (nodeIdToInsertAfter === inactiveNode.id) {
                 // we have found the position to place the node
+                let parentGroup = this.getParentGroup(nodeIdToInsertAfter);
+                if (parentGroup != null) {
+                  this.insertNodeAfterInGroups(node.id, nodeIdToInsertAfter);
+                  this.insertNodeAfterInTransitions(node, nodeIdToInsertAfter);
+                }
                 inactiveNodes.splice(i + 1, 0, node);
                 added = true;
               }
@@ -7256,6 +7671,54 @@ class ProjectService {
   }
 
   /**
+   * Get the number of branch paths. This is assuming the node is a branch point.
+   * @param nodeId The node id of the branch point node.
+   * @return The number of branch paths for this branch point.
+   */
+  getNumberOfBranchPaths(nodeId) {
+    let transitions = this.getTransitionsByFromNodeId(nodeId);
+    if (transitions != null) {
+      return transitions.length;
+    }
+    return 0;
+  }
+
+  /**
+   * If this step is a branch point, we will return the criteria that is used
+   * to determine which path the student gets assigned to.
+   * @param nodeId The node id of the branch point.
+   * @returns A human readable string containing the criteria of how students
+   * are assigned branch paths on this branch point.
+   */
+  getBranchCriteriaDescription(nodeId) {
+    let transitionLogic = this.getTransitionLogicByFromNodeId(nodeId);
+    let transitions = transitionLogic.transitions;
+
+    // Loop through the transitions to try to find a transition criteria
+    for (let transition of transitions) {
+      if (transition.criteria != null && transition.criteria.length > 0) {
+        for (let singleCriteria of transition.criteria) {
+          if (singleCriteria.name == 'choiceChosen') {
+            return 'multiple choice';
+          } else if (singleCriteria.name == 'score') {
+            return 'score';
+          }
+        }
+      }
+    }
+
+    /*
+     * None of the transitions had a specific criteria so the branching is just
+     * based on the howToChooseAmongAvailablePaths field.
+     */
+    if (transitionLogic.howToChooseAmongAvailablePaths == 'workgroupId') {
+      return 'workgroup ID';
+    } else if (transitionLogic.howToChooseAmongAvailablePaths == 'random') {
+      return 'random assignment';
+    }
+  }
+
+  /**
    * Check if a node is the first node in a branch path
    * @param nodeId the node id
    * @return whether the node is the first node in a branch path
@@ -8139,6 +8602,19 @@ class ProjectService {
    */
   getIdToNode() {
     return this.idToNode;
+  }
+
+  /**
+   * Check if a node has rubrics.
+   * @param nodeId The node id of the node.
+   * @return Whether the node has rubrics authored on it.
+   */
+  nodeHasRubric(nodeId) {
+    let numberOfRubrics = this.getNumberOfRubricsByNodeId(nodeId);
+    if (numberOfRubrics > 0) {
+      return true;
+    }
+    return false;
   }
 }
 

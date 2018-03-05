@@ -2,7 +2,7 @@
     <div class="md-toolbar-tools"
          ng-class="{'warn-bg': vleController.hasNewAmbientNotifications()}"
          ng-click="vleController.hasNewAmbientNotifications() ? vleController.viewCurrentAmbientNotification($event) : null">
-        <a ng-click="vleController.loadRoot(); $event.stopPropagation();"
+        <a href="{{vleController.homePath}}" target="_self"
            class="md-button logo-link">
             <img ng-src="{{vleController.themePath}}/images/WISE-logo-ffffff.svg" alt="WISE Logo" class="logo" />
         </a>

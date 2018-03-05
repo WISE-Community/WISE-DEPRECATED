@@ -180,35 +180,40 @@ const StepTools = {
     showPosition: '<'
   },
   template:
-    `<div layout="row" layout-align="center center">
-      <node-icon node-id="$ctrl.nodeId" size="18"></node-icon>
-      <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
-             aria-label="{{ 'selectAStep' | translate }}"
-             ng-model="$ctrl.nodeId"
-             ng-change="$ctrl.nodeIdChanged()"
-             md-selected-text="$ctrl.getSelectedText()">
-        <md-option ng-repeat="item in $ctrl.idToOrder | toArray | orderBy : 'order'"
-               ng-if="item.order !== 0"
-               value="{{ item.$key }}"
-               ng-class="{'node-select-option--node': !$ctrl.isGroupNode(item.$key)}">
-          <div layout="row" layout-align="start center">
-            <node-icon node-id="item.$key" size="18" custom-class="'node-select__icon'"></node-icon>
-            <span class="node-select__text">{{ $ctrl.getNodePositionAndTitleByNodeId(item.$key) }}</span>
-          </div>
-        </md-option>
+  `<div layout="row" layout-align="center center">
+      <md-button id="previousNodeButton"
+                 aria-label="{{ 'previousStep' | translate }}"
+                 class="md-icon-button toolbar__nav"
+                 ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevNode()">
+          <md-icon> chevron_left </md-icon>
+          <md-tooltip md-direction="bottom">{{ 'previousStep' | translate }}</md-tooltip>
+      </md-button>
+      <node-icon node-id="$ctrl.nodeId" size="18"></node-icon>&nbsp;
+      <md-select id="stepSelectMenu" md-theme="default"
+                 class="md-button md-no-underline toolbar__select toolbar__select--fixedwidth"
+                 md-container-class="stepSelectMenuContainer"
+                 aria-label="{{ 'selectAStep' | translate }}"
+                 ng-model="$ctrl.nodeId"
+                 ng-change="$ctrl.nodeIdChanged()"
+                 md-selected-text="$ctrl.getSelectedText()">
+          <md-option ng-repeat="item in $ctrl.idToOrder | toArray | orderBy : 'order'"
+                     ng-if="item.order !== 0"
+                     value="{{ item.$key }}"
+                     ng-class="{'node-select-option--group': $ctrl.isGroupNode(item.$key), 'node-select-option--node': !$ctrl.isGroupNode(item.$key)}">
+              <div layout="row" layout-align="start center">
+                  <node-icon node-id="item.$key" size="18" custom-class="'node-select__icon'"></node-icon>
+                  <span class="node-select__text">{{ $ctrl.getNodePositionAndTitleByNodeId(item.$key) }}</span>
+              </div>
+          </md-option>
       </md-select>
-      <span flex></span>
-      <md-button id='previousNodeButton' aria-label="{{'previousStep' | translate }}" class="md-icon-button node-nav"
-             ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevNode()">
-        <md-icon> arrow_back </md-icon>
-        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'previousStep' | translate }}</md-tooltip>
+      <md-button id="nextNodeButton"
+                 aria-label="{{ 'nextStep' | translate }}"
+                 class="md-icon-button toolbar__nav"
+                 ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextNode()">
+          <md-icon> chevron_right </md-icon>
+          <md-tooltip md-direction="bottom">{{ 'nextStep' | translate }}</md-tooltip>
       </md-button>
-      <md-button id='nextNodeButton' aria-label="{{ 'nextStep' | translate }}" class="md-icon-button node-nav"
-             ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextNode()" style="margin-right: 15px">
-        <md-icon> arrow_forward </md-icon>
-        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'nextStep' | translate }}</md-tooltip>
-      </md-button>
-    </div>`,
+  </div>`,
   controller: StepToolsController
 };
 

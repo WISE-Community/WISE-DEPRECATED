@@ -50,6 +50,15 @@ var VLEController = function () {
 
     this.constraintsDisabled = false;
 
+    var userType = this.ConfigService.getConfigParam('userType');
+    if (userType == 'student') {
+      this.homePath = '/wise/student';
+    } else if (userType == 'teacher') {
+      this.homePath = '/wise/teacher';
+    } else {
+      this.homePath = '/wise';
+    }
+
     if (this.ConfigService.getConfigParam('constraints') == false) {
       this.constraintsDisabled = true;
     }

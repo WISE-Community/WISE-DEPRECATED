@@ -4,10 +4,12 @@ class UtilService {
   constructor(
       $filter,
       $injector,
-      $rootScope) {
+      $rootScope,
+      $timeout) {
     this.$filter = $filter;
     this.$injector = $injector;
     this.$rootScope = $rootScope;
+    this.$timeout = $timeout;
     this.componentTypeToLabel = {};
     this.$translate = this.$filter('translate');
   }
@@ -735,6 +737,163 @@ class UtilService {
     }
     return false;
   }
+
+  /**
+   * Takes a string and breaks it up into multiple lines so that the length of
+   * each line does not exceed a certain number of characters. This code was
+   * found on stackoverflow.
+   * https://stackoverflow.com/questions/14484787/wrap-text-in-javascript
+   * @param str The string to break up.
+   * @param maxWidth The max width of a line.
+   * @return A string that has been broken up into multiple lines using \n.
+   */
+  wordWrap(str, maxWidth) {
+    if (str.length <= maxWidth) {
+      return str;
+    }
+    let newLineStr = "\n";
+    let done = false;
+    let res = '';
+    do {
+        let found = false;
+        // Inserts new line at first whitespace of the line
+        for (let i = maxWidth - 1; i >= 0; i--) {
+            if (this.testWhite(str.charAt(i))) {
+                res = res + [str.slice(0, i), newLineStr].join('');
+                str = str.slice(i + 1);
+                found = true;
+                break;
+            }
+        }
+        // Inserts new line at maxWidth position, the word is too long to wrap
+        if (!found) {
+            res += [str.slice(0, maxWidth), newLineStr].join('');
+            str = str.slice(maxWidth);
+        }
+
+        if (str.length < maxWidth)
+            done = true;
+    } while (!done);
+
+    return res + str;
+  }
+
+  /**
+   * Helper function for wordWrap().
+   * @param x A single character string.
+   * @return Whether the single character is a whitespace character.
+   */
+  testWhite(x) {
+    let white = new RegExp(/^\s$/);
+    return white.test(x.charAt(0));
+  };
+
+  /**
+   * Get the number of words in the string.
+   * @param str The string.
+   * @return The number of words in the string.
+   */
+  wordCount(str) {
+    return str.trim().split(/\s+/).length;
+  }
+
+  /**
+   * Check if there is a 'nodeEntered' event in the array of events.
+   * @param events An array of events.
+   * @return Whether there is a 'nodeEntered' event in the array of events.
+   */
+  hasNodeEnteredEvent(events) {
+    for (let event of events) {
+      if (event.event == 'nodeEntered') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Determine whether the component has been authored to import work.
+   * @param componentContent The component content.
+   * @return Whether to import work in this component.
+   */
+  hasImportWorkConnectedComponent(componentContent) {
+    return this.hasXConnectedComponent(componentContent, 'importWork');
+  }
+
+  /**
+   * Determine whether the component has been authored to show work.
+   * @param componentContent The component content.
+   * @return Whether to show work in this component.
+   */
+  hasShowWorkConnectedComponent(componentContent) {
+    return this.hasXConnectedComponent(componentContent, 'showWork');
+  }
+
+  /**
+   * Determine whether the component has been authored to show classmate work.
+   * @param componentContent The component content.
+   * @return Whether to show classmate work in this component.
+   */
+  hasShowClassmateWorkConnectedComponent(componentContent) {
+    return this.hasXConnectedComponent(componentContent, 'showClassmateWork');
+  }
+
+  /**
+   * Determine whether the component has a connected component of the given type.
+   * @param componentContent The component content.
+   * @param connectedComponentType The connected component type.
+   * @return Whether the component has a connected component of the given type.
+   */
+  hasXConnectedComponent(componentContent, connectedComponentType) {
+    if (componentContent.connectedComponents != null) {
+      let connectedComponents = componentContent.connectedComponents;
+      // loop through all the connected components
+      for (let connectedComponent of connectedComponents) {
+        if (connectedComponent.type == connectedComponentType) {
+          // the connected component is the type we're looking for
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Temporarily highlight an element in the DOM.
+   * @param id The id of the element.
+   * @param duration The number of milliseconds to keep the element highlighted.
+   */
+  temporarilyHighlightElement(id, duration = 1000) {
+    let element = $('#' + id);
+    let originalBackgroundColor = element.css('backgroundColor');
+    element.css('background-color', '#FFFF9C');
+
+    /*
+     * Use a timeout before starting to transition back to
+     * the original background color. For some reason the
+     * element won't get highlighted in the first place
+     * unless this timeout is used.
+     */
+    this.$timeout(() => {
+      // slowly fade back to the original background color
+      element.css({
+        'transition': 'background-color 2s ease-in-out',
+        'background-color': originalBackgroundColor
+      });
+
+      /*
+       * remove these styling fields after we perform
+       * the fade otherwise the regular mouseover
+       * background color change will not work
+       */
+      this.$timeout(() => {
+        element.css({
+          'transition': '',
+          'background-color': ''
+        });
+      }, 2000);
+    }, duration);
+  }
 }
 
 // Get the last element of the array
@@ -747,7 +906,8 @@ if (!Array.prototype.last) {
 UtilService.$inject = [
   '$filter',
   '$injector',
-  '$rootScope'
+  '$rootScope',
+  '$timeout'
 ];
 
 export default UtilService;

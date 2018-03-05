@@ -36,6 +36,12 @@
              ng-model='openResponseController.authoringComponentContent.cRater.itemId'
              ng-change='openResponseController.authoringViewComponentChanged()'
              size='30'/>
+        <button ng-click="openResponseController.verifyCRaterItemId(openResponseController.authoringComponentContent.cRater.itemId)">
+          {{ 'openResponse.verify' | translate }}
+        </button>
+        <span ng-if="openResponseController.isVerifyingCRaterItemId === true">{{ 'openResponse.verifying' | translate }}...</span>
+        <span ng-if="openResponseController.cRaterItemIdIsValid === true" style="color: green;">{{ 'openResponse.valid' | translate }}</span>
+        <span ng-if="openResponseController.cRaterItemIdIsValid === false" style="color: red;">{{ 'openResponse.invalid' | translate }}</span>
         <br/>
         <span>{{ 'openResponse.scoreOn' | translate }}:</span>
         <input type='radio'
@@ -231,6 +237,81 @@
                 rows='10'
                 cols='100'>
           </summernote>
+        </div>
+      </div>
+      <div>
+        <div style="border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;">
+          <md-checkbox class='md-primary'
+                       ng-model='openResponseController.useCustomCompletionCriteria'
+                       ng-change='openResponseController.useCustomCompletionCriteriaClicked()'>
+            {{ 'useCustomCompletionCriteria' | translate }}
+          </md-checkbox>
+          <div ng-if='openResponseController.useCustomCompletionCriteria'>
+            <div ng-repeat='criteria in openResponseController.authoringComponentContent.completionCriteria.criteria track by $index'>
+              <div flex>
+                <md-input-container style='margin-right: 20; width: 300;'>
+                  <label>{{ 'step' | translate }}</label>
+                  <md-select ng-model='criteria.nodeId'
+                             ng-change='openResponseController.authoringViewComponentChanged()'
+                             style='width: 300'>
+                    <md-option ng-repeat='item in openResponseController.idToOrder | toArray | orderBy : "order"'
+                               value='{{item.$key}}'
+                               ng-if='openResponseController.isApplicationNode(item.$key)'>
+                      {{ openResponseController.getNodePositionAndTitleByNodeId(item.$key) }}
+                    </md-option>
+                  </md-select>
+                </md-input-container>
+                <md-input-container style='margin-right: 20; width: 280;'>
+                  <label>{{ 'component' | translate }}</label>
+                  <md-select ng-model='criteria.componentId'
+                             ng-change='openResponseController.authoringViewComponentChanged()'
+                             style='width: 280'>
+                    <md-option ng-repeat='(componentIndex, component) in openResponseController.getComponentsByNodeId(criteria.nodeId)'
+                               value='{{component.id}}'>
+                      {{ componentIndex + 1 }}. {{ component.type }} <span ng-if='component.id == openResponseController.componentId'>({{ 'thisComponent' | translate }})</span>
+                    </md-option>
+                  </md-select>
+                </md-input-container>
+                <md-input-container style='margin-right: 20; width: 100;'>
+                  <label>Action</label>
+                  <md-select ng-model='criteria.name'
+                             ng-change='openResponseController.authoringViewComponentChanged()'
+                             style='width: 100'>
+                    <md-option value='isSubmitted'>
+                      {{ 'SUBMIT' | translate }}
+                    </md-option>
+                    <md-option value='isSaved'>
+                      {{ 'SAVE' | translate }}
+                    </md-option>
+                  </md-select>
+                </md-input-container>
+                <span flex></span>
+                <md-input-container style='margin-left: 20;'>
+                  <md-button class='topButton md-raised md-primary' ng-click='openResponseController.moveCompletionCriteriaUp($index)'>
+                    <md-icon>arrow_upward</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'moveUp' | translate }}</md-tooltip>
+                  </md-button>
+                  <md-button class='topButton md-raised md-primary' ng-click='openResponseController.moveCompletionCriteriaDown($index)'>
+                    <md-icon>arrow_downward</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'moveDown' | translate }}</md-tooltip>
+                  </md-button>
+                  <md-button class='topButton md-raised md-primary'
+                             ng-click='openResponseController.authoringDeleteCompletionCriteria($index)'>
+                    <md-icon>delete</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
+                  </md-button>
+                </md-input-container>
+              </div>
+            </div>
+            <md-button class='topButton md-raised md-primary'
+                       ng-click='openResponseController.authoringAddCompletionCriteria()'>
+              <md-icon>add</md-icon>
+              <md-tooltip md-direction='top'
+                          class='projectButtonTooltip'>
+                {{ 'addCompletionCriteria' | translate }}
+              </md-tooltip>
+            </md-button>
+          </div>
         </div>
       </div>
       <div>

@@ -110,6 +110,15 @@ var OpenResponseController = function () {
     // whether the JSON authoring is displayed
     this.showJSONAuthoring = false;
 
+    // whether this component uses a custom completion criteria
+    this.useCustomCompletionCriteria = false;
+
+    // whether we are currently verifying a CRater item id
+    this.isVerifyingCRaterItemId = false;
+
+    // whether the CRater item id is valid
+    this.cRaterItemIdIsValid = null;
+
     //var scope = this;
     var themePath = this.ProjectService.getThemePath();
 
@@ -277,6 +286,10 @@ var OpenResponseController = function () {
 
       // set whether studentAttachment is enabled
       this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+
+      if (this.componentContent.completionCriteria != null) {
+        this.useCustomCompletionCriteria = true;
+      }
 
       // get the component state from the scope
       componentState = this.$scope.componentState;
@@ -2988,6 +3001,162 @@ var OpenResponseController = function () {
     key: 'authoringJSONChanged',
     value: function authoringJSONChanged() {
       this.jsonStringChanged = true;
+    }
+
+    /**
+     * The Use Completion Criteria checkbox was clicked. We will toggle the
+     * completion criteria in the component content.
+     * @return False if we want to cancel the click and not perform any changes.
+     * True if we want to perform the changes.
+     */
+
+  }, {
+    key: 'useCustomCompletionCriteriaClicked',
+    value: function useCustomCompletionCriteriaClicked() {
+      if (this.useCustomCompletionCriteria == false) {
+        /*
+         * The completion criteria was changed from true to false which
+         * means we will delete the completionCriteria object. We will confirm
+         * with the author that they want to delete the completion criteria.
+         */
+        var answer = confirm(this.$translate('areYouSureYouWantToDeleteTheCustomCompletionCriteria'));
+        if (!answer) {
+          // the author answered no so we will abort
+          this.useCustomCompletionCriteria = true;
+          return false;
+        }
+      }
+
+      if (this.useCustomCompletionCriteria) {
+        /*
+         * We are using a completion criteria so we will populate it if it
+         * doesn't already exist.
+         */
+        if (this.authoringComponentContent.completionCriteria == null) {
+          this.authoringComponentContent.completionCriteria = {
+            inOrder: true,
+            criteria: []
+          };
+        }
+      } else {
+        // we are not using a completion criteria so we will delete it
+        delete this.authoringComponentContent.completionCriteria;
+      }
+
+      // the authoring component content has changed so we will save the project
+      this.authoringViewComponentChanged();
+      return true;
+    }
+
+    /**
+     * Move a completion criteria up.
+     * @param index The index of the completion criteria to move up.
+     */
+
+  }, {
+    key: 'moveCompletionCriteriaUp',
+    value: function moveCompletionCriteriaUp(index) {
+      if (index > 0) {
+        // the index is not at the top so we can move it up
+
+        // remember the criteria
+        var criteria = this.authoringComponentContent.completionCriteria.criteria[index];
+
+        // remove the criteria
+        this.authoringComponentContent.completionCriteria.criteria.splice(index, 1);
+
+        // insert the criteria one index back
+        this.authoringComponentContent.completionCriteria.criteria.splice(index - 1, 0, criteria);
+      }
+
+      // the authoring component content has changed so we will save the project
+      this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Move a completion criteria down.
+     * @param index The index of the completion criteria to move down.
+     */
+
+  }, {
+    key: 'moveCompletionCriteriaDown',
+    value: function moveCompletionCriteriaDown(index) {
+      if (index < this.authoringComponentContent.completionCriteria.criteria.length - 1) {
+        // the index is not at the bottom so we can move it down
+
+        // remember the criteria
+        var criteria = this.authoringComponentContent.completionCriteria.criteria[index];
+
+        // remove the criteria
+        this.authoringComponentContent.completionCriteria.criteria.splice(index, 1);
+
+        // insert the criteria one index forward
+        this.authoringComponentContent.completionCriteria.criteria.splice(index + 1, 0, criteria);
+      }
+
+      // the authoring component content has changed so we will save the project
+      this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Add a completion criteria.
+     */
+
+  }, {
+    key: 'authoringAddCompletionCriteria',
+    value: function authoringAddCompletionCriteria() {
+      var newCompletionCriteria = {
+        nodeId: this.nodeId,
+        componentId: this.componentId,
+        name: 'isSubmitted'
+      };
+      this.authoringComponentContent.completionCriteria.criteria.push(newCompletionCriteria);
+
+      // the authoring component content has changed so we will save the project
+      this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Delete a completion criteria.
+     * @param index The index of the completion criteria.
+     */
+
+  }, {
+    key: 'authoringDeleteCompletionCriteria',
+    value: function authoringDeleteCompletionCriteria(index) {
+      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisCompletionCriteria'));
+      if (answer) {
+        // remove the criteria
+        this.authoringComponentContent.completionCriteria.criteria.splice(index, 1);
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+      }
+    }
+
+    /**
+     * Check if the item id is a valid CRater item id.
+     * @param itemId A string.
+     */
+
+  }, {
+    key: 'verifyCRaterItemId',
+    value: function verifyCRaterItemId(itemId) {
+      var _this5 = this;
+
+      // clear the Valid/Invalid text
+      this.cRaterItemIdIsValid = null;
+
+      // turn on the "Verifying..." text
+      this.isVerifyingCRaterItemId = true;
+
+      this.CRaterService.verifyCRaterItemId(itemId).then(function (isValid) {
+        // turn off the "Verifying..." text
+        _this5.isVerifyingCRaterItemId = false;
+
+        // set the Valid/Invalid text
+        _this5.cRaterItemIdIsValid = isValid;
+      });
     }
   }]);
 

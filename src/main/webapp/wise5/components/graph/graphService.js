@@ -824,6 +824,13 @@ var GraphService = function (_NodeService) {
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
       var result = false;
 
+      if (!this.canEdit(component) && this.UtilService.hasNodeEnteredEvent(nodeEvents)) {
+        /*
+         * the student can't perform any work on this component and has visited
+         * this step so we will mark it as completed
+         */
+        return true;
+      }
       if (componentStates && componentStates.length) {
         var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
 
@@ -862,14 +869,57 @@ var GraphService = function (_NodeService) {
       return result;
     }
   }, {
-    key: 'hasSeriesData',
+    key: 'canEdit',
 
+
+    /**
+     * Determine if the student can perform any work on this component.
+     * @param component The component content.
+     * @return Whether the student can perform any work on this component.
+     */
+    value: function canEdit(component) {
+      var series = component.series;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = series[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var singleSeries = _step.value;
+
+          if (singleSeries.canEdit) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      if (this.UtilService.hasImportWorkConnectedComponent(component)) {
+        return true;
+      }
+      return false;
+    }
 
     /**
      * Check if student data contains any series data
      * @param studentData student data from a component state
      * @returns whether the student data has series data
      */
+
+  }, {
+    key: 'hasSeriesData',
     value: function hasSeriesData(studentData) {
       var result = false;
 
@@ -1199,36 +1249,6 @@ var GraphService = function (_NodeService) {
       }
 
       return hasDataPoint;
-    }
-
-    /**
-     * Determine whether the component has been authored to show classmate work
-     * @param componentContent the component content
-     * @return whether to show classmate work in this component
-     */
-
-  }, {
-    key: 'showClassmateWork',
-    value: function showClassmateWork(componentContent) {
-
-      if (componentContent != null && componentContent.connectedComponents != null) {
-
-        var connectedComponents = componentContent.connectedComponents;
-
-        // loop through all the connected components that we are importing from
-        for (var c = 0; c < connectedComponents.length; c++) {
-          var connectedComponent = connectedComponents[c];
-
-          if (connectedComponent != null) {
-            if (connectedComponent.type == 'showClassmateWork') {
-              // the connected component is importing work from classmates
-              return true;
-            }
-          }
-        }
-      }
-
-      return false;
     }
   }]);
 

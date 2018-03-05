@@ -294,6 +294,49 @@ class CRaterService {
     }
     return null;
   }
+
+  /**
+   * Check if the item id is a valid CRater item id.
+   * @param itemId A string.
+   * @return A promise that returns whether the item id is valid.
+   */
+  verifyCRaterItemId(itemId) {
+    const httpParams = {};
+    httpParams.method = 'GET';
+    httpParams.url = this.ConfigService.getCRaterRequestURL();
+    httpParams.params = {
+      cRaterItemType: 'CRATER',
+      itemId: itemId,
+      cRaterRequestType: 'verify'
+    };
+    return this.$http(httpParams).then((response) => {
+      return this.isCRaterVerifyResponseValid(response.data);
+    });
+  }
+
+  /**
+   * Parse the response to determine if the item id is valid.
+   * @param response A response string from a CRater verify request.
+   * @returns {boolean} Whether the item id is valid.
+   */
+  isCRaterVerifyResponseValid(response) {
+    /*
+     * Create the regex to match the part of the response that specifies whether
+     * the item id is valid or not.
+     *
+     * Example valid item id
+     * <item id="Chloroplast" avail="Y">
+     *
+     * Example invalid item id
+     * <item id="Chloroplast" avail="N">
+     */
+    let regEx = /item id=".*?" avail="(\w)"/;
+    let result = regEx.exec(response);
+    if (result[1] == 'Y') {
+      return true;
+    }
+    return false;
+  }
 }
 
 CRaterService.$inject = [

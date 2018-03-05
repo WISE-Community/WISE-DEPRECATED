@@ -732,6 +732,13 @@ class GraphService extends NodeService {
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     let result = false;
 
+    if (!this.canEdit(component) && this.UtilService.hasNodeEnteredEvent(nodeEvents)) {
+      /*
+       * the student can't perform any work on this component and has visited
+       * this step so we will mark it as completed
+       */
+      return true;
+    }
     if (componentStates && componentStates.length) {
       let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
@@ -769,6 +776,24 @@ class GraphService extends NodeService {
 
     return result;
   };
+
+  /**
+   * Determine if the student can perform any work on this component.
+   * @param component The component content.
+   * @return Whether the student can perform any work on this component.
+   */
+  canEdit(component) {
+    let series = component.series;
+    for (let singleSeries of series) {
+      if (singleSeries.canEdit) {
+        return true;
+      }
+    }
+    if (this.UtilService.hasImportWorkConnectedComponent(component)) {
+      return true;
+    }
+    return false;
+  }
 
   /**
    * Check if student data contains any series data
@@ -1074,33 +1099,6 @@ class GraphService extends NodeService {
     }
 
     return hasDataPoint;
-  }
-
-  /**
-   * Determine whether the component has been authored to show classmate work
-   * @param componentContent the component content
-   * @return whether to show classmate work in this component
-   */
-  showClassmateWork(componentContent) {
-
-    if (componentContent != null && componentContent.connectedComponents != null) {
-
-      let connectedComponents = componentContent.connectedComponents;
-
-      // loop through all the connected components that we are importing from
-      for (let c = 0; c < connectedComponents.length; c++) {
-        let connectedComponent = connectedComponents[c];
-
-        if (connectedComponent != null) {
-          if (connectedComponent.type == 'showClassmateWork') {
-            // the connected component is importing work from classmates
-            return true;
-          }
-        }
-      }
-    }
-
-    return false;
   }
 }
 

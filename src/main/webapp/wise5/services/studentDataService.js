@@ -866,6 +866,8 @@ var StudentDataService = function () {
           result = this.evaluateScoreCriteria(criteria);
         } else if (functionName === 'usedXSubmits') {
           result = this.evaluateUsedXSubmitsCriteria(criteria);
+        } else if (functionName === 'wroteXNumberOfWords') {
+          result = this.evaluateNumberOfWordsWrittenCriteria(criteria);
         } else if (functionName === '') {}
       }
       return result;
@@ -1456,6 +1458,37 @@ var StudentDataService = function () {
 
             if (manualSubmitCounter >= requiredSubmitCount || highestSubmitCounter >= requiredSubmitCount) {
               // the student submitted the required number of times
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Evaluate the number of words written criteria.
+     * @param criteria The criteria to evaluate.
+     * @return A boolean value whether the student wrote the required number of
+     * words.
+     */
+
+  }, {
+    key: 'evaluateNumberOfWordsWrittenCriteria',
+    value: function evaluateNumberOfWordsWrittenCriteria(criteria) {
+      if (criteria != null && criteria.params != null) {
+        var params = criteria.params;
+        var nodeId = params.nodeId;
+        var componentId = params.componentId;
+        var requiredNumberOfWords = params.requiredNumberOfWords;
+
+        if (nodeId != null && componentId != null) {
+          var componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+          if (componentState != null) {
+            var studentData = componentState.studentData;
+            var response = studentData.response;
+            var numberOfWords = this.UtilService.wordCount(response);
+            if (numberOfWords >= requiredNumberOfWords) {
               return true;
             }
           }

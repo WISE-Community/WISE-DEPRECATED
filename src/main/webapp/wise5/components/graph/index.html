@@ -68,6 +68,24 @@
           </md-input-container>
         </div>
         <div>
+          <md-checkbox class='md-primary'
+              ng-model='graphController.authoringComponentContent.useCustomLegend'
+              ng-change='graphController.authoringViewComponentChanged()'>
+            {{ 'graph.useCustomLegend' | translate }}
+          </md-checkbox>
+        </div>
+        <div>
+          <md-input-container style='width:100%'
+              ng-if='graphController.authoringComponentContent.useCustomLegend'>
+            <label>{{ 'graph.customLegend' | translate }}</label>
+            <textarea rows='1'
+                  ng-model='graphController.authoringComponentContent.customLegend'
+                  ng-change='graphController.authoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'>
+            </textarea>
+          </md-input-container>
+        </div>
+        <div>
           <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
             <label>{{ 'MAX_SCORE' | translate }}</label>
             <input type='number'
@@ -304,7 +322,7 @@
                 ng-change='graphController.authoringViewComponentChanged()'
                 ng-model-options='{ debounce: 1000 }'
                 placeholder='{{ "enterPromptHere" | translate }}'>
-        </textarea>
+          </textarea>
         </md-input-container>
         <div layout='row' style='height: 80px;'>
           <md-input-container style='margin-right: 20px'>

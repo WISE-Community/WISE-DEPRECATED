@@ -68,7 +68,9 @@ const TopBar = {
     `<md-toolbar class="l-header">
       <div class="md-toolbar-tools">
         <span class="md-button logo-link">
-          <img ng-src="{{ $ctrl.logoPath }}" alt="{{ 'WISE_LOGO' | translate }}" class="logo" />
+          <a href="/wise/teacher" target="_self">
+            <img ng-src="{{ $ctrl.logoPath }}" alt="{{ 'WISE_LOGO' | translate }}" class="logo" />
+          </a>
         </span>
         <h3>
           <span ng-if="$ctrl.projectTitle" id="projectTitleSpan">{{ $ctrl.projectTitle }}</span>

@@ -134,6 +134,8 @@ class GraphController {
 
     this.legendEnabled = true;
 
+    this.hasCustomLegendBeenSet = false;
+
     this.showTrialSelect = true;
 
     // the id of the chart element
@@ -1430,18 +1432,9 @@ class GraphController {
           regressionSettings.numberOfPoints = 100;
         }
 
-        if (this.isDisabled) {
-          // disable dragging
-          tempSeries.draggableX = false;
-          tempSeries.draggableY = false;
-          tempSeries.allowPointSelect = false;
-          //tempSeries.enableMouseTracking = false;
-          tempSeries.stickyTracking = false;
-          tempSeries.shared = false;
-          tempSeries.allowPointSelect = false;
-        } else if (tempSeries.canEdit && this.isActiveSeries(tempSeries)) {
+        if (tempSeries.canEdit && this.isActiveSeries(tempSeries)) {
+          // the series is the active one so we will allow the student to interact with it
           // set the fields to allow points to be draggable
-
           if (this.graphType === 'line' || this.graphType === 'scatter') {
             // students can drag points horizontally on line and scatter plots
             tempSeries.draggableX = true;
@@ -1450,23 +1443,26 @@ class GraphController {
             tempSeries.draggableX = false;
           }
           tempSeries.draggableY = true;
-          tempSeries.allowPointSelect = true;
           tempSeries.cursor = 'move';
-          tempSeries.enableMouseTracking = true;
           tempSeries.stickyTracking = false;
           tempSeries.shared = false;
           tempSeries.allowPointSelect = true;
-
+          tempSeries.enableMouseTracking = true;
           this.showUndoButton = true;
         } else {
-          // make the series uneditable
+          // the series is not active so we will not allow the student to interact with it
           tempSeries.draggableX = false;
           tempSeries.draggableY = false;
-          tempSeries.allowPointSelect = false;
-          tempSeries.enableMouseTracking = false;
           tempSeries.stickyTracking = false;
           tempSeries.shared = false;
           tempSeries.allowPointSelect = false;
+          tempSeries.enableMouseTracking = false;
+        }
+
+        // a series can be customized to allow mousing over points even when not the active series
+        if (tempSeries.allowPointMouseOver === true) {
+          tempSeries.allowPointSelect = true;
+          tempSeries.enableMouseTracking = true;
         }
 
         if (this.isMousePlotLineOn()) {
@@ -1527,6 +1523,7 @@ class GraphController {
         tooltip: {
           formatter: function(){
             if (this.series != null) {
+              var text = '';
 
               var xText = '';
               var yText = '';
@@ -1553,7 +1550,7 @@ class GraphController {
                 thisGraphController.xAxis.type === '' ||
                 thisGraphController.xAxis.type === 'limits') {
 
-                var text = '';
+
                 var seriesName = this.series.name;
 
                 // get the x and y values
@@ -1604,8 +1601,6 @@ class GraphController {
                   // add the y text
                   text += yText;
                 }
-
-                return text;
               } else if (thisGraphController.xAxis.type === 'categories') {
 
                 var text = '';
@@ -1635,9 +1630,14 @@ class GraphController {
 
                 // add the x and y text
                 text += xText + ' ' + yText;
-
-                return text;
               }
+
+              if (this.point.tooltip != null && this.point.tooltip != '') {
+                // this point has a custom tooltip so we will display it
+                text += '<br/>' + this.point.tooltip;
+              }
+
+              return text;
             }
           }
         },
@@ -1878,8 +1878,85 @@ class GraphController {
       }
     };
 
+    if (this.componentContent.useCustomLegend) {
+      /*
+       * Use a timeout so the graph has a chance to render before we set the
+       * custom legend.
+       */
+      this.$timeout(() => {
+        this.setCustomLegend();
+      });
+    }
+
     return deferred.promise;
   };
+
+  /**
+   * Overwrite the existing legend with the custom authored legend.
+   */
+  setCustomLegend() {
+    if (!this.hasCustomLegendBeenSet) {
+      if ($('.highcharts-legend').length > 0) {
+        // move the legend to the very left by setting the x position to 0
+
+        let userAgent = navigator.userAgent;
+        if (userAgent.indexOf('Firefox') != -1) {
+          let currentTransform = $('.highcharts-legend').attr('transform');
+
+          /*
+           * Regex to split the transform string into three groups. We will use
+           * this to replace the x value of the translate.
+           * Example
+           * "translate(227, 294)"
+           * The regex will create three groups
+           * group 1 = "translate("
+           * group 2 = "227"
+           * group 3 = ", 294)"
+           * The x value of the translate is captured in group 2.
+           */
+          let matrixRegEx = /(translate\()(\d*)(,\s*\d*\))/;
+
+          // run the regex on the current transform
+          let results = matrixRegEx.exec(currentTransform);
+
+          // replace the second group with 0
+          let newTransform = currentTransform.replace(matrixRegEx, '$10$3');
+
+          // update the transform
+          $('.highcharts-legend').attr('transform', newTransform);
+        } else {
+          let currentTransform = $('.highcharts-legend').css('transform');
+
+          /*
+           * Regex to split the transform string into three groups. We will use
+           * this to replace the x value of the matrix.
+           * Example
+           * "matrix(1, 0, 0, 1, 227, 294)"
+           * The regex will create three groups
+           * group 1 = "matrix(1, 0, 0, 1, "
+           * group 2 = "227"
+           * group 3 = ", 294)"
+           * The x value of the matrix is captured in group 2.
+           */
+          let matrixRegEx = /(matrix\(\d*,\s*\d*,\s*\d*,\s*\d*,\s*)(\d*)(,\s*\d*\))/;
+
+          // run the regex on the current transform
+          let results = matrixRegEx.exec(currentTransform);
+
+          // replace the second group with 0
+          let newTransform = currentTransform.replace(matrixRegEx, '$10$3');
+
+          // update the transform
+          $('.highcharts-legend').css('transform', newTransform);
+        }
+
+        // replace the legend with the custom legend
+        $('.highcharts-legend').html(this.componentContent.customLegend);
+      }
+
+      this.hasCustomLegendBeenSet = true;
+    }
+  }
 
   /**
    * Add a point to a series. The point will be inserted into the series
@@ -4783,6 +4860,7 @@ class GraphController {
                   var seriesName = singleSeries.name;
                   var seriesData = singleSeries.data;
                   var seriesColor = singleSeries.color;
+                  var allowPointMouseOver = singleSeries.allowPointMouseOver;
                   var marker = singleSeries.marker;
                   var dashStyle = singleSeries.dashStyle;
 
@@ -4800,6 +4878,10 @@ class GraphController {
 
                   if (dashStyle != null) {
                     newSeries.dashStyle = dashStyle;
+                  }
+
+                  if (allowPointMouseOver != null) {
+                    newSeries.allowPointMouseOver = allowPointMouseOver;
                   }
 
                   // add the series to the trial

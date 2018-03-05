@@ -12,8 +12,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var DataExportController = function () {
     function DataExportController($injector, $rootScope, $scope, $state, AnnotationService, ConfigService, FileSaver, MatchService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService) {
-        var _this = this;
-
         _classCallCheck(this, DataExportController);
 
         this.$injector = $injector;
@@ -36,16 +34,11 @@ var DataExportController = function () {
         this.availableComponentDataExports = ['Match'];
 
         this.setDefaultExportSettings();
-
-        // get the project
-        // create the mapping of node id to order for the import project
-        this.ProjectService.retrieveProject().then(function (projectJSON) {
-            _this.project = projectJSON;
-            // calculate the node order of the import project
-            var nodeOrderOfProject = _this.ProjectService.getNodeOrderOfProject(_this.project);
-            _this.projectIdToOrder = nodeOrderOfProject.idToOrder;
-            _this.projectItems = nodeOrderOfProject.nodes;
-        });
+        this.project = this.ProjectService.project;
+        // create the mapping of node id to order
+        var nodeOrderOfProject = this.ProjectService.getNodeOrderOfProject(this.project);
+        this.projectIdToOrder = nodeOrderOfProject.idToOrder;
+        this.projectItems = nodeOrderOfProject.nodes;
 
         // save event when data export view is displayed
         var context = "ClassroomMonitor",
@@ -157,7 +150,7 @@ var DataExportController = function () {
     }, {
         key: 'exportStudentWork',
         value: function exportStudentWork(exportType) {
-            var _this2 = this;
+            var _this = this;
 
             var selectedNodes = null;
             var selectedNodesMap = null;
@@ -188,10 +181,10 @@ var DataExportController = function () {
             this.TeacherDataService.getExport("allStudentWork", selectedNodes).then(function (result) {
 
                 // get the workgroups in the class
-                var workgroups = _this2.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+                var workgroups = _this.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
 
                 // get the run id
-                var runId = _this2.ConfigService.getRunId();
+                var runId = _this.ConfigService.getRunId();
 
                 // the rows that will show up in the export
                 var rows = [];
@@ -238,10 +231,10 @@ var DataExportController = function () {
                             // get the workgroup information
                             var workgroupId = workgroup.workgroupId;
                             var periodName = workgroup.periodName;
-                            var userInfo = _this2.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+                            var userInfo = _this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
 
                             // get the WISE IDs
-                            var wiseIds = _this2.ConfigService.getWISEIds(workgroupId);
+                            var wiseIds = _this.ConfigService.getWISEIds(workgroupId);
                             var wiseId1 = wiseIds[0];
                             var wiseId2 = wiseIds[1];
                             var wiseId3 = wiseIds[2];
@@ -257,9 +250,9 @@ var DataExportController = function () {
                             var componentStates = [];
 
                             if (exportType === "allStudentWork") {
-                                componentStates = _this2.TeacherDataService.getComponentStatesByWorkgroupId(workgroupId);
+                                componentStates = _this.TeacherDataService.getComponentStatesByWorkgroupId(workgroupId);
                             } else if (exportType === "latestStudentWork") {
-                                componentStates = _this2.TeacherDataService.getLatestComponentStatesByWorkgroupId(workgroupId);
+                                componentStates = _this.TeacherDataService.getLatestComponentStatesByWorkgroupId(workgroupId);
                             }
 
                             if (componentStates != null) {
@@ -274,9 +267,9 @@ var DataExportController = function () {
 
                                         var exportRow = true;
 
-                                        if (_this2.exportStepSelectionType === "exportSelectSteps") {
+                                        if (_this.exportStepSelectionType === "exportSelectSteps") {
                                             // we are only exporting selected steps
-                                            if (!_this2.isComponentSelected(selectedNodesMap, componentState.nodeId, componentState.componentId)) {
+                                            if (!_this.isComponentSelected(selectedNodesMap, componentState.nodeId, componentState.componentId)) {
                                                 // the component state is for a step that is not selected
                                                 exportRow = false;
                                             }
@@ -285,7 +278,7 @@ var DataExportController = function () {
                                         if (exportRow) {
 
                                             // create the export row
-                                            var row = _this2.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, componentState);
+                                            var row = _this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, componentState);
 
                                             // add the row to the rows
                                             rows.push(row);
@@ -310,7 +303,7 @@ var DataExportController = function () {
                 }
 
                 // generate the csv file and have the client download it
-                _this2.generateCSVFile(rows, fileName);
+                _this.generateCSVFile(rows, fileName);
             });
         }
 
@@ -879,7 +872,7 @@ var DataExportController = function () {
     }, {
         key: 'exportEvents',
         value: function exportEvents() {
-            var _this3 = this;
+            var _this2 = this;
 
             var selectedNodes = null;
             var selectedNodesMap = null;
@@ -910,10 +903,10 @@ var DataExportController = function () {
             this.TeacherDataService.getExport("events", selectedNodes).then(function (result) {
 
                 // get the workgroups in the class
-                var workgroups = _this3.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+                var workgroups = _this2.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
 
                 // get the run id
-                var runId = _this3.ConfigService.getRunId();
+                var runId = _this2.ConfigService.getRunId();
 
                 // the rows that will show up in the export
                 var rows = [];
@@ -960,10 +953,10 @@ var DataExportController = function () {
                             // get the workgroup information
                             var workgroupId = workgroup.workgroupId;
                             var periodName = workgroup.periodName;
-                            var userInfo = _this3.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+                            var userInfo = _this2.ConfigService.getUserInfoByWorkgroupId(workgroupId);
 
                             // get the WISE IDs
-                            var wiseIds = _this3.ConfigService.getWISEIds(workgroupId);
+                            var wiseIds = _this2.ConfigService.getWISEIds(workgroupId);
                             var wiseId1 = wiseIds[0];
                             var wiseId2 = wiseIds[1];
                             var wiseId3 = wiseIds[2];
@@ -978,7 +971,7 @@ var DataExportController = function () {
                             // get the events for the workgroup
                             var events = [];
 
-                            events = _this3.TeacherDataService.getEventsByWorkgroupId(workgroupId);
+                            events = _this2.TeacherDataService.getEventsByWorkgroupId(workgroupId);
 
                             if (events != null) {
 
@@ -992,20 +985,20 @@ var DataExportController = function () {
 
                                         var exportRow = true;
 
-                                        if (_this3.exportStepSelectionType === "exportSelectSteps") {
+                                        if (_this2.exportStepSelectionType === "exportSelectSteps") {
                                             // we are only exporting selected steps
 
                                             if (event.nodeId != null && event.componentId != null) {
                                                 // this is a component event
 
-                                                if (!_this3.isComponentSelected(selectedNodesMap, event.nodeId, event.componentId)) {
+                                                if (!_this2.isComponentSelected(selectedNodesMap, event.nodeId, event.componentId)) {
                                                     // the event is for a component that is not selected
                                                     exportRow = false;
                                                 }
                                             } else if (event.nodeId != null) {
                                                 // this is a node event
 
-                                                if (!_this3.isNodeSelected(selectedNodesMap, event.nodeId)) {
+                                                if (!_this2.isNodeSelected(selectedNodesMap, event.nodeId)) {
                                                     // the event is for a node that is not selected
                                                     exportRow = false;
                                                 }
@@ -1018,7 +1011,7 @@ var DataExportController = function () {
                                         if (exportRow) {
 
                                             // create the export row
-                                            var row = _this3.createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentEventCount, event);
+                                            var row = _this2.createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentEventCount, event);
 
                                             // add the row to the rows
                                             rows.push(row);
@@ -1036,7 +1029,7 @@ var DataExportController = function () {
                 var fileName = runId + "_events.csv";
 
                 // generate the csv file and have the client download it
-                _this3.generateCSVFile(rows, fileName);
+                _this2.generateCSVFile(rows, fileName);
             });
         }
 
@@ -1241,10 +1234,10 @@ var DataExportController = function () {
     }, {
         key: 'exportNotebookItems',
         value: function exportNotebookItems(exportType) {
-            var _this4 = this;
+            var _this3 = this;
 
             this.TeacherDataService.getExport(exportType).then(function (result) {
-                var runId = _this4.ConfigService.getRunId();
+                var runId = _this3.ConfigService.getRunId();
                 var exportFilename = "";
 
                 var csvString = ""; // resulting csv string
@@ -1297,9 +1290,9 @@ var DataExportController = function () {
                         // for all non-header rows, fill in step numbers, titles, and component part numbers.
                         var nodeId = row[COLUMN_INDEX_NODE_ID];
                         var componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                        row[COLUMN_INDEX_STEP_NUMBER] = _this4.ProjectService.getNodePositionById(nodeId);
-                        row[COLUMN_INDEX_STEP_TITLE] = _this4.ProjectService.getNodeTitleByNodeId(nodeId);
-                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this4.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
+                        row[COLUMN_INDEX_STEP_NUMBER] = _this3.ProjectService.getNodePositionById(nodeId);
+                        row[COLUMN_INDEX_STEP_TITLE] = _this3.ProjectService.getNodeTitleByNodeId(nodeId);
+                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this3.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
                         var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
                         var wiseIDsArray = wiseIDs.split(",");
                         row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
@@ -1311,14 +1304,14 @@ var DataExportController = function () {
                         if (row[COLUMN_INDEX_TYPE] === "report") {
                             if (studentDataJSONCell.content != null) {
                                 //row[COLUMN_INDEX_STUDENT_RESPONSE] = this.escapeContent(studentDataJSONCell.content);
-                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this4.UtilService.removeHTMLTags(studentDataJSONCell.content);
+                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this3.UtilService.removeHTMLTags(studentDataJSONCell.content);
                             } else {
                                 row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
                             }
                         } else if (row[COLUMN_INDEX_TYPE] === "note") {
                             if (studentDataJSONCell.text != null) {
                                 //row[COLUMN_INDEX_STUDENT_RESPONSE] = this.escapeContent(studentDataJSONCell.text);
-                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this4.UtilService.removeHTMLTags(studentDataJSONCell.text);
+                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this3.UtilService.removeHTMLTags(studentDataJSONCell.text);
                             } else {
                                 row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
                             }
@@ -1355,10 +1348,10 @@ var DataExportController = function () {
     }, {
         key: 'exportNotifications',
         value: function exportNotifications() {
-            var _this5 = this;
+            var _this4 = this;
 
             this.TeacherDataService.getExport("notifications").then(function (result) {
-                var runId = _this5.ConfigService.getRunId();
+                var runId = _this4.ConfigService.getRunId();
                 var exportFilename = "";
 
                 var csvString = ""; // resulting csv string
@@ -1388,9 +1381,9 @@ var DataExportController = function () {
                         // for all non-header rows, fill in step numbers, titles, and component part numbers.
                         var nodeId = row[COLUMN_INDEX_NODE_ID];
                         var componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                        row[COLUMN_INDEX_STEP_NUMBER] = _this5.ProjectService.getNodePositionById(nodeId);
-                        row[COLUMN_INDEX_STEP_TITLE] = _this5.ProjectService.getNodeTitleByNodeId(nodeId);
-                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this5.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
+                        row[COLUMN_INDEX_STEP_NUMBER] = _this4.ProjectService.getNodePositionById(nodeId);
+                        row[COLUMN_INDEX_STEP_TITLE] = _this4.ProjectService.getNodeTitleByNodeId(nodeId);
+                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this4.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
                         var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
                         var wiseIDsArray = wiseIDs.split(",");
                         row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
@@ -1717,10 +1710,9 @@ var DataExportController = function () {
     }, {
         key: 'exportOneWorkgroupPerRow',
         value: function exportOneWorkgroupPerRow() {
-            var _this6 = this;
+            var _this5 = this;
 
-            // get the steps that were selected
-            var selectedNodes = this.getSelectedNodesToExport();
+            var selectedNodes = null;
 
             /*
              * holds the mappings from nodeid or nodeid-componentid to a boolean
@@ -1732,6 +1724,9 @@ var DataExportController = function () {
             var selectedNodesMap = null;
 
             if (this.exportStepSelectionType === "exportSelectSteps") {
+                // get the steps that were selected
+                selectedNodes = this.getSelectedNodesToExport();
+
                 if (selectedNodes == null || selectedNodes.length == 0) {
                     /*
                      * the user did not select any steps to export so we will not
@@ -1755,38 +1750,38 @@ var DataExportController = function () {
                 var rows = [];
 
                 // get the project id
-                var projectId = _this6.ConfigService.getProjectId();
+                var projectId = _this5.ConfigService.getProjectId();
 
                 // get the project title
-                var projectTitle = _this6.ProjectService.getProjectTitle();
+                var projectTitle = _this5.ProjectService.getProjectTitle();
 
                 // get the run id
-                var runId = _this6.ConfigService.getRunId();
+                var runId = _this5.ConfigService.getRunId();
 
                 var startDate = "";
 
                 var endDate = "";
 
                 // get the column ids that we will use for this export
-                var columnIds = _this6.getColumnIdsForOneWorkgroupPerRow(selectedNodesMap);
+                var columnIds = _this5.getColumnIdsForOneWorkgroupPerRow(selectedNodesMap);
 
                 // get all the step node ids
-                var nodeIds = _this6.ProjectService.getFlattenedProjectAsNodeIds();
+                var nodeIds = _this5.ProjectService.getFlattenedProjectAsNodeIds();
 
                 // the headers for the description row
                 var descriptionRowHeaders = ["Workgroup ID", "WISE ID 1", "WISE ID 2", "WISE ID 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date"];
 
                 // generate the mapping from column id to column index
-                var columnIdToColumnIndex = _this6.getColumnIdToColumnIndex(columnIds, descriptionRowHeaders);
+                var columnIdToColumnIndex = _this5.getColumnIdToColumnIndex(columnIds, descriptionRowHeaders);
 
                 // generate the top rows that contain the header cells
-                var topRows = _this6.getOneWorkgroupPerRowTopRows(columnIds, columnIdToColumnIndex, descriptionRowHeaders);
+                var topRows = _this5.getOneWorkgroupPerRowTopRows(columnIds, columnIdToColumnIndex, descriptionRowHeaders);
 
                 // add the top rows
                 rows = rows.concat(topRows);
 
                 // get the workgroups in the class
-                var workgroups = _this6.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+                var workgroups = _this5.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
 
                 // loop through all the workgroups
                 for (var w = 0; w < workgroups.length; w++) {
@@ -1809,10 +1804,10 @@ var DataExportController = function () {
                         // get the workgroup information
                         var workgroupId = workgroup.workgroupId;
                         var periodName = workgroup.periodName;
-                        var userInfo = _this6.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+                        var userInfo = _this5.ConfigService.getUserInfoByWorkgroupId(workgroupId);
 
                         // get the WISE IDs
-                        var wiseIds = _this6.ConfigService.getWISEIds(workgroupId);
+                        var wiseIds = _this5.ConfigService.getWISEIds(workgroupId);
                         var wiseId1 = wiseIds[0];
                         var wiseId2 = wiseIds[1];
                         var wiseId3 = wiseIds[2];
@@ -1843,7 +1838,7 @@ var DataExportController = function () {
                             var nodeId = nodeIds[n];
 
                             // get all the components in the step
-                            var components = _this6.ProjectService.getComponentsByNodeId(nodeId);
+                            var components = _this5.ProjectService.getComponentsByNodeId(nodeId);
 
                             if (components != null) {
 
@@ -1854,19 +1849,19 @@ var DataExportController = function () {
                                     if (component != null) {
                                         var componentId = component.id;
 
-                                        if (_this6.exportComponent(selectedNodesMap, nodeId, componentId)) {
+                                        if (_this5.exportComponent(selectedNodesMap, nodeId, componentId)) {
                                             // the researcher wants to export this component
 
                                             // get the column prefix
                                             var columnIdPrefix = nodeId + "-" + componentId;
 
                                             // get the latest component state
-                                            var componentState = _this6.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId);
+                                            var componentState = _this5.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId);
 
                                             if (componentState != null) {
 
                                                 // get the component service for the given component type
-                                                var componentService = _this6.getComponentService(componentState.componentType);
+                                                var componentService = _this5.getComponentService(componentState.componentType);
 
                                                 var studentDataString = " ";
 
@@ -1877,7 +1872,7 @@ var DataExportController = function () {
                                                     studentDataString = componentService.getStudentDataString(componentState);
 
                                                     // get the student data string with the html tags removed
-                                                    studentDataString = _this6.UtilService.removeHTMLTags(studentDataString);
+                                                    studentDataString = _this5.UtilService.removeHTMLTags(studentDataString);
 
                                                     // replace " with ""
                                                     studentDataString = studentDataString.replace(/"/g, '""');
@@ -1889,17 +1884,17 @@ var DataExportController = function () {
                                                     studentDataString = componentState.studentData;
                                                 }
 
-                                                if (_this6.includeStudentWorkIds) {
+                                                if (_this5.includeStudentWorkIds) {
                                                     // we are exporting student work ids
                                                     workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = componentState.id;
                                                 }
 
-                                                if (_this6.includeStudentWorkTimestamps) {
+                                                if (_this5.includeStudentWorkTimestamps) {
                                                     // we are exporting student work timestamps
 
                                                     if (componentState.serverSaveTime != null) {
                                                         // get the time stamp as a pretty printed date time string
-                                                        var formattedDateTime = _this6.UtilService.convertMillisecondsToFormattedDateTime(componentState.serverSaveTime);
+                                                        var formattedDateTime = _this5.UtilService.convertMillisecondsToFormattedDateTime(componentState.serverSaveTime);
 
                                                         // set the time stamp string e.g. Wed Apr 06 2016 9:05:38 AM
                                                         workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkTimestamp"]] = formattedDateTime;
@@ -1909,11 +1904,11 @@ var DataExportController = function () {
                                                 // set the student data string
                                                 workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = studentDataString;
 
-                                                if (_this6.includeScores || _this6.includeComments) {
+                                                if (_this5.includeScores || _this5.includeComments) {
                                                     // we are exporting scores or comments
 
                                                     // get the latest score and comment annotation
-                                                    var latestComponentAnnotations = _this6.AnnotationService.getLatestComponentAnnotations(nodeId, componentId, workgroupId);
+                                                    var latestComponentAnnotations = _this5.AnnotationService.getLatestComponentAnnotations(nodeId, componentId, workgroupId);
 
                                                     if (latestComponentAnnotations != null) {
                                                         var scoreAnnotation = latestComponentAnnotations.score;
@@ -1921,17 +1916,17 @@ var DataExportController = function () {
 
                                                         if (scoreAnnotation != null) {
 
-                                                            if (_this6.includeScoreTimestamps) {
+                                                            if (_this5.includeScoreTimestamps) {
                                                                 // we are exporting score timestamps
 
                                                                 // get the score timestamp as a pretty printed date time
-                                                                var scoreTimestamp = _this6.UtilService.convertMillisecondsToFormattedDateTime(scoreAnnotation.serverSaveTime);
+                                                                var scoreTimestamp = _this5.UtilService.convertMillisecondsToFormattedDateTime(scoreAnnotation.serverSaveTime);
 
                                                                 // set the score timestamp
                                                                 workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-scoreTimestamp"]] = scoreTimestamp;
                                                             }
 
-                                                            if (_this6.includeScores) {
+                                                            if (_this5.includeScores) {
                                                                 // we are exporting scores
 
                                                                 if (scoreAnnotation.data != null && scoreAnnotation.data.value != null) {
@@ -1946,17 +1941,17 @@ var DataExportController = function () {
 
                                                         if (commentAnnotation != null) {
 
-                                                            if (_this6.includeCommentTimestamps) {
+                                                            if (_this5.includeCommentTimestamps) {
                                                                 // we are exporting comment timestamps
 
                                                                 // get the comment timestamp as a pretty printed date time
-                                                                var commentTimestamp = _this6.UtilService.convertMillisecondsToFormattedDateTime(commentAnnotation.serverSaveTime);
+                                                                var commentTimestamp = _this5.UtilService.convertMillisecondsToFormattedDateTime(commentAnnotation.serverSaveTime);
 
                                                                 // set the comment timestamp
                                                                 workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-commentTimestamp"]] = commentTimestamp;
                                                             }
 
-                                                            if (_this6.includeComments) {
+                                                            if (_this5.includeComments) {
                                                                 // we are exporting comments
 
                                                                 if (commentAnnotation.data != null && commentAnnotation.data.value != null) {
@@ -1975,10 +1970,10 @@ var DataExportController = function () {
                                 }
                             }
 
-                            if (_this6.exportNode(selectedNodesMap, nodeId)) {
+                            if (_this5.exportNode(selectedNodesMap, nodeId)) {
                                 // the researcher wants to export this step
 
-                                if (_this6.ProjectService.isBranchPoint(nodeId)) {
+                                if (_this5.ProjectService.isBranchPoint(nodeId)) {
                                     // this step is a branch point
 
                                     var toNodeId = null;
@@ -1990,7 +1985,7 @@ var DataExportController = function () {
                                      * get the latest branchPathTaken event for this
                                      * step
                                      */
-                                    var latestBranchPathTakenEvent = _this6.TeacherDataService.getLatestEventByWorkgroupIdAndNodeIdAndType(workgroupId, nodeId, eventType);
+                                    var latestBranchPathTakenEvent = _this5.TeacherDataService.getLatestEventByWorkgroupIdAndNodeIdAndType(workgroupId, nodeId, eventType);
 
                                     if (latestBranchPathTakenEvent != null && latestBranchPathTakenEvent.data != null && latestBranchPathTakenEvent.data.toNodeId != null) {
 
@@ -1998,10 +1993,10 @@ var DataExportController = function () {
                                         toNodeId = latestBranchPathTakenEvent.data.toNodeId;
 
                                         // get the title of the step
-                                        stepTitle = _this6.ProjectService.getNodePositionAndTitleByNodeId(toNodeId);
+                                        stepTitle = _this5.ProjectService.getNodePositionAndTitleByNodeId(toNodeId);
                                     }
 
-                                    if (_this6.includeBranchPathTakenNodeId) {
+                                    if (_this5.includeBranchPathTakenNodeId) {
                                         // we are exporting the branch path taken node ids
 
                                         if (toNodeId != null) {
@@ -2011,10 +2006,10 @@ var DataExportController = function () {
                                         }
                                     }
 
-                                    if (_this6.includeBranchPathTaken) {
+                                    if (_this5.includeBranchPathTaken) {
                                         // we are exporting branch path taken
 
-                                        var branchLetter = _this6.ProjectService.getBranchLetter(toNodeId);
+                                        var branchLetter = _this5.ProjectService.getBranchLetter(toNodeId);
 
                                         if (stepTitle != null) {
                                             workgroupRow[columnIdToColumnIndex[nodeId + "-branchPathTaken"]] = branchLetter;
@@ -2023,7 +2018,7 @@ var DataExportController = function () {
                                         }
                                     }
 
-                                    if (_this6.includeBranchPathTakenStepTitle) {
+                                    if (_this5.includeBranchPathTakenStepTitle) {
                                         // we are exporting branch path taken step titles
 
                                         if (stepTitle != null) {
@@ -2045,7 +2040,7 @@ var DataExportController = function () {
                 var fileName = runId + "_one_workgroup_per_row.csv";
 
                 // generate the csv file and have the client download it
-                _this6.generateCSVFile(rows, fileName);
+                _this5.generateCSVFile(rows, fileName);
             });
         }
 
@@ -2705,6 +2700,12 @@ var DataExportController = function () {
             // settings for raw data export
             this.includeAnnotations = false;
             this.includeEvents = false;
+
+            /*
+             * remove checked fields that may have been accidentally saved by the
+             * authoring tool or grading tool
+             */
+            this.ProjectService.cleanupBeforeSave();
         }
 
         /**
@@ -2725,10 +2726,9 @@ var DataExportController = function () {
     }, {
         key: 'exportRawData',
         value: function exportRawData() {
-            var _this7 = this;
+            var _this6 = this;
 
-            // get the steps that were selected
-            var selectedNodes = this.getSelectedNodesToExport();
+            var selectedNodes = null;
 
             /*
              * holds the mappings from nodeid or nodeid-componentid to a boolean
@@ -2740,6 +2740,9 @@ var DataExportController = function () {
             var selectedNodesMap = null;
 
             if (this.exportStepSelectionType === "exportSelectSteps") {
+                // get the steps that were selected
+                var selectedNodes = this.getSelectedNodesToExport();
+
                 if (selectedNodes == null || selectedNodes.length == 0) {
                     /*
                      * the user did not select any steps to export so we will not
@@ -2760,15 +2763,15 @@ var DataExportController = function () {
             this.TeacherDataService.getExport("rawData", selectedNodes).then(function (result) {
 
                 // get the run id
-                var runId = _this7.ConfigService.getRunId();
+                var runId = _this6.ConfigService.getRunId();
 
                 var data = {};
 
                 // get the workgroups in the class
-                var workgroups = _this7.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+                var workgroups = _this6.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
 
                 // make a copy of the workgroups array to prevent referencing issues
-                workgroups = _this7.UtilService.makeCopyOfJSONObject(workgroups);
+                workgroups = _this6.UtilService.makeCopyOfJSONObject(workgroups);
 
                 // loop through all the workgroups
                 for (var w = 0; w < workgroups.length; w++) {
@@ -2783,12 +2786,12 @@ var DataExportController = function () {
                         // get the workgroup id
                         var workgroupId = workgroup.workgroupId;
 
-                        if (_this7.includeStudentWork) {
+                        if (_this6.includeStudentWork) {
                             // the user wants to export the student work
                             workgroup.studentWork = [];
 
                             // get all the component states for the workgroup
-                            var componentStates = _this7.TeacherDataService.getComponentStatesByWorkgroupId(workgroupId);
+                            var componentStates = _this6.TeacherDataService.getComponentStatesByWorkgroupId(workgroupId);
 
                             if (componentStates != null) {
 
@@ -2799,7 +2802,7 @@ var DataExportController = function () {
                                     if (componentState != null) {
 
                                         // get the composite id. example 'node2-b34gaf0ug2'
-                                        var compositeId = _this7.getCompositeId(componentState);
+                                        var compositeId = _this6.getCompositeId(componentState);
 
                                         if (selectedNodesMap == null || compositeId != null && selectedNodesMap[compositeId] == true) {
                                             /*
@@ -2813,12 +2816,12 @@ var DataExportController = function () {
                             }
                         }
 
-                        if (_this7.includeAnnotations) {
+                        if (_this6.includeAnnotations) {
                             // the user wants to export the annotations
                             workgroup.annotations = [];
 
                             // get all the annotations for the workgroup
-                            var annotations = _this7.TeacherDataService.getAnnotationsToWorkgroupId(workgroupId);
+                            var annotations = _this6.TeacherDataService.getAnnotationsToWorkgroupId(workgroupId);
 
                             if (annotations != null) {
 
@@ -2829,7 +2832,7 @@ var DataExportController = function () {
                                     if (annotation != null) {
 
                                         // get the composite id. example 'node2-b34gaf0ug2'
-                                        var compositeId = _this7.getCompositeId(annotation);
+                                        var compositeId = _this6.getCompositeId(annotation);
 
                                         if (selectedNodesMap == null || compositeId != null && selectedNodesMap[compositeId] == true) {
                                             /*
@@ -2843,14 +2846,14 @@ var DataExportController = function () {
                             }
                         }
 
-                        if (_this7.includeEvents) {
+                        if (_this6.includeEvents) {
                             // the user wants to export the events
                             workgroup.events = [];
 
                             var events = [];
 
                             // get all the events for the workgroup
-                            var events = _this7.TeacherDataService.getEventsByWorkgroupId(workgroupId);
+                            var events = _this6.TeacherDataService.getEventsByWorkgroupId(workgroupId);
 
                             if (events != null) {
 
@@ -2861,7 +2864,7 @@ var DataExportController = function () {
                                     if (event != null) {
 
                                         // get the composite id. example 'node2-b34gaf0ug2'
-                                        var compositeId = _this7.getCompositeId(event);
+                                        var compositeId = _this6.getCompositeId(event);
 
                                         if (selectedNodesMap == null || compositeId != null && selectedNodesMap[compositeId] == true) {
                                             /*
@@ -2887,7 +2890,7 @@ var DataExportController = function () {
                 var blob = new Blob([dataJSONString]);
 
                 // generate a file and download it to the user's computer
-                _this7.FileSaver.saveAs(blob, runId + "_raw_data.json");
+                _this6.FileSaver.saveAs(blob, runId + "_raw_data.json");
             });
         }
 
@@ -2994,7 +2997,7 @@ var DataExportController = function () {
     }, {
         key: 'exportMatchComponent',
         value: function exportMatchComponent(nodeId, component) {
-            var _this8 = this;
+            var _this7 = this;
 
             // request the student data from the server and then generate the export
             this.TeacherDataService.getExport("allStudentWork").then(function (result) {
@@ -3008,24 +3011,24 @@ var DataExportController = function () {
                 var rows = [];
 
                 // add the header row to the rows
-                rows.push(_this8.generateMatchComponentHeaderRow(component, columnNames, columnNameToNumber));
+                rows.push(_this7.generateMatchComponentHeaderRow(component, columnNames, columnNameToNumber));
 
                 // add the student work rows
-                rows = rows.concat(_this8.generateMatchComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
+                rows = rows.concat(_this7.generateMatchComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
 
                 // generate the file name of the csv file
                 var fileName = "";
-                var runId = _this8.ConfigService.getRunId();
-                var stepNumber = _this8.ProjectService.getNodePositionById(nodeId);
-                var componentNumber = _this8.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, component.id) + 1;
-                if (_this8.workSelectionType === 'exportAllWork') {
+                var runId = _this7.ConfigService.getRunId();
+                var stepNumber = _this7.ProjectService.getNodePositionById(nodeId);
+                var componentNumber = _this7.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, component.id) + 1;
+                if (_this7.workSelectionType === 'exportAllWork') {
                     fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_all_match_work.csv';
-                } else if (_this8.workSelectionType === 'exportLatestWork') {
+                } else if (_this7.workSelectionType === 'exportLatestWork') {
                     fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_latest_match_work.csv';
                 }
 
                 // generate the csv file and have the client download it
-                _this8.generateCSVFile(rows, fileName);
+                _this7.generateCSVFile(rows, fileName);
             });
         }
 
