@@ -9,11 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var UtilService = function () {
-  function UtilService($filter, $injector, $rootScope, $timeout) {
+  function UtilService($filter, $injector, $mdDialog, $q, $rootScope, $timeout) {
     _classCallCheck(this, UtilService);
 
     this.$filter = $filter;
     this.$injector = $injector;
+    this.$mdDialog = $mdDialog;
+    this.$q = $q;
     this.$rootScope = $rootScope;
     this.$timeout = $timeout;
     this.componentTypeToLabel = {};
@@ -1165,6 +1167,69 @@ var UtilService = function () {
         }, 2000);
       }, duration);
     }
+
+    /**
+     * Render the component state and then generate an image from it.
+     * @param componentState The component state to render.
+     * @return A promise that will return an image.
+     */
+
+  }, {
+    key: 'generateImageFromComponentState',
+    value: function generateImageFromComponentState(componentState) {
+      var _this2 = this;
+
+      var deferred = this.$q.defer();
+      this.$mdDialog.show({
+        template: '\n        <div style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.2); z-index: 2;"></div>\n        <div align="center" style="position: absolute; top: 200px; left: 200px; z-index: 1000;">\n          <span>Importing Work...</span>\n          <br/>\n          <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n        </div>\n        <component node-id="{{nodeId}}"\n                   component-id="{{componentId}}"\n                   component-state="{{componentState}}"\n                   mode="showPreviousWork"></component>\n      ',
+        locals: {
+          nodeId: componentState.nodeId,
+          componentId: componentState.componentId,
+          componentState: componentState
+        },
+        controller: DialogController
+      });
+      function DialogController($scope, $mdDialog, nodeId, componentId, componentState) {
+        $scope.nodeId = nodeId;
+        $scope.componentId = componentId;
+        $scope.componentState = componentState;
+        $scope.closeDialog = function () {
+          $mdDialog.hide();
+        };
+      }
+      DialogController.$inject = ['$scope', '$mdDialog', 'nodeId', 'componentId', 'componentState'];
+      this.$rootScope.$on('doneRenderingComponent', function (event, args) {
+        if (componentState.nodeId == args.nodeId && componentState.componentId == args.componentId) {
+          _this2.$timeout(function () {
+            _this2.generateImageFromComponentStateHelper(componentState).then(function (image) {
+              deferred.resolve(image);
+            });
+          }, 1000);
+        }
+      });
+      return deferred.promise;
+    }
+
+    /**
+     * The component state has been rendered in the DOM and now we want to create an image
+     * from it.
+     * @param componentState The component state that has been rendered.
+     * @return A promise that will return an image.
+     */
+
+  }, {
+    key: 'generateImageFromComponentStateHelper',
+    value: function generateImageFromComponentStateHelper(componentState) {
+      var _this3 = this;
+
+      var deferred = this.$q.defer();
+      var componentService = this.$injector.get(componentState.componentType + 'Service');
+      componentService.generateImageFromRenderedComponentState(componentState).then(function (image) {
+        _this3.$mdDialog.hide();
+        deferred.resolve(image);
+      });
+      return deferred.promise;
+    }
   }]);
 
   return UtilService;
@@ -1179,7 +1244,7 @@ if (!Array.prototype.last) {
   };
 }
 
-UtilService.$inject = ['$filter', '$injector', '$rootScope', '$timeout'];
+UtilService.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$timeout'];
 
 exports.default = UtilService;
 //# sourceMappingURL=utilService.js.map

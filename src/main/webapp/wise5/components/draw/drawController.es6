@@ -1,5 +1,6 @@
 import drawingTool from 'lib/drawingTool/drawing-tool';
 import drawingToolVendor from 'lib/drawingTool/vendor.min';
+import html2canvas from 'html2canvas';
 
 class DrawController {
   constructor($filter,
@@ -152,6 +153,9 @@ class DrawController {
     this.allowedConnectedComponentTypes = [
       {
         type: 'Draw'
+      },
+      {
+        type: 'Graph'
       }
     ];
 
@@ -281,7 +285,7 @@ class DrawController {
      * @return a component state containing the student data
      */
     this.$scope.getComponentState = function(isSubmit) {
-      var deferred = this.$q.defer();
+      let deferred = this.$q.defer();
       let getState = false;
       let action = 'change';
 
@@ -2534,8 +2538,7 @@ class DrawController {
       // loop through all the component state
       for (let c = 0; c < componentStates.length; c++) {
         let componentState = componentStates[c];
-
-        if (componentState != null) {
+        if (componentState.componentType == 'Draw') {
           let studentData = componentState.studentData;
 
           if (studentData != null) {
@@ -2561,6 +2564,8 @@ class DrawController {
               }
             }
           }
+        } else if (componentState.componentType == 'Graph') {
+          this.handleGraphConnectedComponent(componentState);
         }
       }
 
@@ -2583,6 +2588,16 @@ class DrawController {
     }
 
     return mergedComponentState;
+  }
+
+  /**
+   * Retrieve the work from a graph component.
+   * @param componentState A graph component state.
+   */
+  handleGraphConnectedComponent(componentState) {
+    this.UtilService.generateImageFromComponentState(componentState).then((image) => {
+      this.drawingTool.setBackgroundImage(image.url);
+    });
   }
 
   /**

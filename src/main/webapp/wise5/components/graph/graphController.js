@@ -504,7 +504,9 @@ var GraphController = function () {
       this.calculateDisabled();
 
       // setup the graph
-      this.setupGraph();
+      this.setupGraph().then(function () {
+        _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.$scope.nodeId, componentId: _this.componentId });
+      });
 
       if (this.$scope.$parent.nodeController != null) {
         // register this component with the parent node

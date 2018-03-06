@@ -10,6 +10,10 @@ var _nodeService = require('../../services/nodeService');
 
 var _nodeService2 = _interopRequireDefault(_nodeService);
 
+var _html2canvas = require('html2canvas');
+
+var _html2canvas2 = _interopRequireDefault(_html2canvas);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21,12 +25,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var GraphService = function (_NodeService) {
   _inherits(GraphService, _NodeService);
 
-  function GraphService($filter, StudentDataService, UtilService) {
+  function GraphService($filter, $q, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, GraphService);
 
     var _this = _possibleConstructorReturn(this, (GraphService.__proto__ || Object.getPrototypeOf(GraphService)).call(this));
 
     _this.$filter = $filter;
+    _this.$q = $q;
+    _this.StudentAssetService = StudentAssetService;
     _this.StudentDataService = StudentDataService;
     _this.UtilService = UtilService;
     _this.$translate = _this.$filter('translate');
@@ -1250,12 +1256,48 @@ var GraphService = function (_NodeService) {
 
       return hasDataPoint;
     }
+
+    /**
+     * The component state has been rendered in a <component></component> element
+     * and now we want take a snapshot of the work.
+     * @param componentState The component state that has been rendered.
+     * @return A promise that will return an image object.
+     */
+
+  }, {
+    key: 'generateImageFromRenderedComponentState',
+    value: function generateImageFromRenderedComponentState(componentState) {
+      var _this2 = this;
+
+      var deferred = this.$q.defer();
+      var componentId = componentState.componentId;
+      var highchartsDiv = angular.element('#chart_' + componentId).find('.highcharts-container');
+      if (highchartsDiv != null && highchartsDiv.length > 0) {
+        highchartsDiv = highchartsDiv[0];
+
+        // convert the div element to a canvas element
+        (0, _html2canvas2.default)(highchartsDiv).then(function (canvas) {
+
+          // get the canvas as a base64 string
+          var img_b64 = canvas.toDataURL('image/png');
+
+          // get the image object
+          var imageObject = _this2.UtilService.getImageObjectFromBase64String(img_b64);
+
+          // add the image to the student assets
+          _this2.StudentAssetService.uploadAsset(imageObject).then(function (asset) {
+            deferred.resolve(asset);
+          });
+        });
+      }
+      return deferred.promise;
+    }
   }]);
 
   return GraphService;
 }(_nodeService2.default);
 
-GraphService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
+GraphService.$inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = GraphService;
 //# sourceMappingURL=graphService.js.map

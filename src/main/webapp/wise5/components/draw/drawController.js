@@ -14,6 +14,10 @@ var _vendor = require('lib/drawingTool/vendor.min');
 
 var _vendor2 = _interopRequireDefault(_vendor);
 
+var _html2canvas = require('html2canvas');
+
+var _html2canvas2 = _interopRequireDefault(_html2canvas);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -153,6 +157,8 @@ var DrawController = function () {
     // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [{
       type: 'Draw'
+    }, {
+      type: 'Graph'
     }];
 
     // get the current node and node id
@@ -2710,8 +2716,7 @@ var DrawController = function () {
         // loop through all the component state
         for (var c = 0; c < componentStates.length; c++) {
           var componentState = componentStates[c];
-
-          if (componentState != null) {
+          if (componentState.componentType == 'Draw') {
             var studentData = componentState.studentData;
 
             if (studentData != null) {
@@ -2735,6 +2740,8 @@ var DrawController = function () {
                 }
               }
             }
+          } else if (componentState.componentType == 'Graph') {
+            this.handleGraphConnectedComponent(componentState);
           }
         }
 
@@ -2755,6 +2762,21 @@ var DrawController = function () {
       }
 
       return mergedComponentState;
+    }
+
+    /**
+     * Retrieve the work from a graph component.
+     * @param componentState A graph component state.
+     */
+
+  }, {
+    key: 'handleGraphConnectedComponent',
+    value: function handleGraphConnectedComponent(componentState) {
+      var _this5 = this;
+
+      this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
+        _this5.drawingTool.setBackgroundImage(image.url);
+      });
     }
 
     /**

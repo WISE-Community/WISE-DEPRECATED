@@ -4,10 +4,14 @@ class UtilService {
   constructor(
       $filter,
       $injector,
+      $mdDialog,
+      $q,
       $rootScope,
       $timeout) {
     this.$filter = $filter;
     this.$injector = $injector;
+    this.$mdDialog = $mdDialog;
+    this.$q = $q;
     this.$rootScope = $rootScope;
     this.$timeout = $timeout;
     this.componentTypeToLabel = {};
@@ -894,6 +898,70 @@ class UtilService {
       }, 2000);
     }, duration);
   }
+
+  /**
+   * Render the component state and then generate an image from it.
+   * @param componentState The component state to render.
+   * @return A promise that will return an image.
+   */
+  generateImageFromComponentState(componentState) {
+    let deferred = this.$q.defer();
+    this.$mdDialog.show({
+      template: `
+        <div style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.2); z-index: 2;"></div>
+        <div align="center" style="position: absolute; top: 200px; left: 200px; z-index: 1000;">
+          <span>Importing Work...</span>
+          <br/>
+          <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+        <component node-id="{{nodeId}}"
+                   component-id="{{componentId}}"
+                   component-state="{{componentState}}"
+                   mode="showPreviousWork"></component>
+      `,
+      locals: {
+        nodeId: componentState.nodeId,
+        componentId: componentState.componentId,
+        componentState: componentState
+      },
+      controller: DialogController
+    });
+    function DialogController($scope, $mdDialog, nodeId, componentId, componentState) {
+      $scope.nodeId = nodeId;
+      $scope.componentId = componentId;
+      $scope.componentState = componentState;
+      $scope.closeDialog = function() {
+        $mdDialog.hide();
+      }
+    }
+    DialogController.$inject = ['$scope', '$mdDialog', 'nodeId', 'componentId', 'componentState'];
+    this.$rootScope.$on('doneRenderingComponent', (event, args) => {
+      if (componentState.nodeId == args.nodeId && componentState.componentId == args.componentId) {
+        this.$timeout(() => {
+          this.generateImageFromComponentStateHelper(componentState).then((image) => {
+            deferred.resolve(image);
+          });
+        }, 1000);
+      }
+    });
+    return deferred.promise;
+  }
+
+  /**
+   * The component state has been rendered in the DOM and now we want to create an image
+   * from it.
+   * @param componentState The component state that has been rendered.
+   * @return A promise that will return an image.
+   */
+  generateImageFromComponentStateHelper(componentState) {
+    let deferred = this.$q.defer();
+    let componentService = this.$injector.get(componentState.componentType + 'Service');
+    componentService.generateImageFromRenderedComponentState(componentState).then((image) => {
+      this.$mdDialog.hide();
+      deferred.resolve(image);
+    });
+    return deferred.promise;
+  }
 }
 
 // Get the last element of the array
@@ -906,6 +974,8 @@ if (!Array.prototype.last) {
 UtilService.$inject = [
   '$filter',
   '$injector',
+  '$mdDialog',
+  '$q',
   '$rootScope',
   '$timeout'
 ];
