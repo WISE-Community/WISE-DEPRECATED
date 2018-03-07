@@ -29,8 +29,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.dao.SystemWideSaltSource;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -63,9 +61,6 @@ public class TeamSignInFormValidator implements Validator {
   @Autowired
   private WorkgroupService workgroupService;
 
-  @Autowired
-  private SystemWideSaltSource systemSaltSource;
-
   /**
    * @see org.springframework.validation.Validator#supports(java.lang.Class)
    */
@@ -79,7 +74,6 @@ public class TeamSignInFormValidator implements Validator {
    */
   public void validate(Object teamSignInFormIn, Errors errors) {
     TeamSignInForm teamSignInForm = (TeamSignInForm) teamSignInFormIn;
-    Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username1",
       "error.teamsignin-username-not-specified");
@@ -192,14 +186,10 @@ public class TeamSignInFormValidator implements Validator {
 
               if (needToCheckPassword) {
                 // the user is allowed to join the workgroup so we will now check the password
-
-                // get the hashed password
-                String hashedPassword = encoder.encodePassword(password, systemSaltSource.getSystemWideSalt());
-
                 if (StringUtils.isEmpty(password)) {
                   //the password field is empty
                   errors.rejectValue(passwordField, "error.teamsignin-password-not-specified");
-                } else if (!user.getUserDetails().getPassword().equals(hashedPassword)) {
+                } else if (!userService.isPasswordCorrect(user, password)) {
                   //password is incorrect
                   errors.rejectValue(passwordField, "error.teamsignin-incorrect-password");
                 }

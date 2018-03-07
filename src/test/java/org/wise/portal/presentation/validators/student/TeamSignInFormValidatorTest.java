@@ -25,21 +25,37 @@ package org.wise.portal.presentation.validators.student;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
+import org.easymock.EasyMockRunner;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
+import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.presentation.web.TeamSignInForm;
-import org.wise.portal.service.user.UserService;
+import org.wise.portal.service.run.impl.RunServiceImpl;
+import org.wise.portal.service.user.impl.UserServiceImpl;
+import org.wise.portal.service.workgroup.impl.WorkgroupServiceImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Hiroki Terashima
- * @version $Id: $
  */
+@RunWith(EasyMockRunner.class)
 public class TeamSignInFormValidatorTest extends TestCase {
-	
+
 	private static final String USERNAME1 = "HirokiT619";
 
 	private static final String USERNAME2 = "FrodoH11";
@@ -50,233 +66,188 @@ public class TeamSignInFormValidatorTest extends TestCase {
 
 	private static final String PASSWORD3 = "pass3";
 
+	private static final Long RUNID = 1L;
+
 	private static final String EMPTY = "";
 
-	private TeamSignInForm form;
-	
-	private TeamSignInFormValidator validator;
-	
+  private TeamSignInForm form;
+
+	private Run run;
+
+	private User user1;
+
+	private User user2;
+
+	private User user3;
+
+	@TestSubject
+	private TeamSignInFormValidator validator = new TeamSignInFormValidator();
+
 	private Errors errors;
-	
-	private UserService mockUserService;
 
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	protected void setUp() {
-		form = new TeamSignInForm();
+  @Mock
+  private UserServiceImpl userService;
+
+  @Mock
+  private RunServiceImpl runService;
+
+  @Mock
+  private WorkgroupServiceImpl workgroupService;
+
+  @Before
+  public void setUp() {
+	  run = new RunImpl();
+    user1 = new UserImpl();
+    user2 = new UserImpl();
+    user2.setUserDetails(new PersistentUserDetails());
+    user3 = new UserImpl();
+    user3.setUserDetails(new PersistentUserDetails());
+
+    form = new TeamSignInForm();
 		form.setUsername1(USERNAME1);
-		validator = new TeamSignInFormValidator();
+		form.setRunId(RUNID);
 		errors = new BeanPropertyBindingResult(form, "");
-		mockUserService = EasyMock.createMock(UserService.class);
-		validator.setUserService(mockUserService);
 	}
-	
-	public void testOneMemberNoProblemValidate() {
-		// only one user (the user who is logged in) decided to run the project
-		User user1 = new UserImpl();
-		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
-		EasyMock.replay(mockUserService);
-		
+
+	@Test
+	public void validate_OneMemberOnly_OK() {
+		EasyMock.expect(userService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
+    EasyMock.replay(userService);
+    try {
+      EasyMock.expect(runService.retrieveById(RUNID)).andReturn(run);
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+    }
+    EasyMock.replay(runService);
 		validator.validate(form, errors);
-		
 		assertTrue(!errors.hasErrors());
-		EasyMock.verify(mockUserService);
+    EasyMock.verify(userService);
+    EasyMock.verify(runService);
 	}
-	
-	public void testOneMemberProblemValidate() {
-		// only one user (the user who is logged in) decided to run the project
-		// but his username doesn't exist in the datastore or is empty
-		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME1)).andReturn(null);
-		EasyMock.replay(mockUserService);
-		
+
+  @Test
+  public void validate_oneMemberOnlyEmptyUsername_error() {
+    form.setUsername1(EMPTY);
+    validator.validate(form, errors);
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getErrorCount());
+    assertNotNull(errors.getFieldValue("username1"));
+  }
+
+  @Test
+	public void validate_OneMemberOnlyNullUser_error() {
+		EasyMock.expect(userService.retrieveUserByUsername(USERNAME1)).andReturn(null);
+		EasyMock.replay(userService);
 		validator.validate(form, errors);
-		
 		assertTrue(errors.hasErrors());
 		assertEquals(1, errors.getErrorCount());
 		assertNotNull(errors.getFieldValue("username1"));
-		EasyMock.verify(mockUserService);
-		
-		form.setUsername1(EMPTY);
-		validator.validate(form, errors);
-		
-		assertTrue(errors.hasErrors());
-		assertEquals(1, errors.getErrorCount());
-		assertNotNull(errors.getFieldValue("username1"));
-	}
-	
-	public void testTwoMembersNoProblemValidate() {
-		// two users {user1, user2} decide to run the project
-		User user1 = new UserImpl();
-		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
-		User user2 = new UserImpl();
-		MutableUserDetails userDetails2 = new PersistentUserDetails();
-		userDetails2.setPassword(PASSWORD2);
-		user2.setUserDetails(userDetails2);
-		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME2)).andReturn(user2);		
-		EasyMock.replay(mockUserService);
+    EasyMock.verify(userService);
+  }
+
+  @Test
+	public void validate_UserOneUserTwo_OK() throws ObjectNotFoundException {
+		EasyMock.expect(userService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
+    EasyMock.expect(runService.retrieveById(RUNID)).andReturn(run);
+    EasyMock.replay(runService);
+    List<Workgroup> workgroups = new ArrayList<Workgroup>();
+    Workgroup workgroup = new WorkgroupImpl();
+    workgroups.add(workgroup);
+		EasyMock.expect(workgroupService.getWorkgroupListByRunAndUser(run, user1))
+        .andReturn(workgroups);
+		EasyMock.expect(userService.retrieveUserByUsername(USERNAME2)).andReturn(user2);
+    EasyMock.expect(workgroupService.isUserInWorkgroupForRun(user2, run, workgroup))
+      .andReturn(true);
+    EasyMock.expect(userService.isPasswordCorrect(user2, PASSWORD2)).andReturn(true);
+    EasyMock.replay(workgroupService);
+    EasyMock.replay(userService);
 
 		form.setUsername2(USERNAME2);
 		form.setPassword2(PASSWORD2);
 		validator.validate(form, errors);
-		
+
 		assertTrue(!errors.hasErrors());
-		EasyMock.verify(mockUserService);
-		EasyMock.reset(mockUserService);
-
-		// two users {user1, user3} decide to run the project
-		form = new TeamSignInForm();
-		form.setUsername1(USERNAME1);
-
-		user1 = new UserImpl();
-		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
-		User user3 = new UserImpl();
-		MutableUserDetails userDetails3 = new PersistentUserDetails();
-		userDetails3.setPassword(PASSWORD3);
-		user3.setUserDetails(userDetails3);
-		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME3)).andReturn(user3);		
-		EasyMock.replay(mockUserService);
-
-		form.setUsername3(USERNAME3);
-		form.setPassword3(PASSWORD3);
-		validator.validate(form, errors);
-		
-		assertTrue(!errors.hasErrors());
-		EasyMock.verify(mockUserService);
-		EasyMock.reset(mockUserService);
+		EasyMock.verify(userService);
+    EasyMock.verify(runService);
 	}
-	
-	public void testTwoMembersProblemValidate() {
-		// user2 entered a username that does not exist in the datastore
-		User user1 = new UserImpl();
-		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
-		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME2)).andReturn(null);
-		EasyMock.replay(mockUserService);
 
-		form.setUsername2(USERNAME2);
-		form.setPassword2(PASSWORD2);
-		validator.validate(form, errors);
-		
-		assertTrue(errors.hasErrors());
-		assertEquals(1, errors.getErrorCount());
-		assertNotNull(errors.getFieldValue("username2"));
-		EasyMock.verify(mockUserService);
-		EasyMock.reset(mockUserService);
-		
-		// user2 entered a password that does not match user2's password
-//		form = new TeamSignInForm();
-//		form.setUsername1(USERNAME1);
-//		errors = new BeanPropertyBindingResult(form, "");
-//
-//		user1 = new UserImpl();
-//		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
-//		User user2 = new UserImpl();
-//		MutableUserDetails userDetails2 = new PersistentUserDetails();
-//		userDetails2.setPassword(PASSWORD2);
-//		user2.setUserDetails(userDetails2);
-//		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME2)).andReturn(user2);
-//		EasyMock.replay(mockUserService);
-//
-//		form.setUsername2(USERNAME2);
-//		form.setPassword2(BAD_PASSWORD);
-//		validator.validate(form, errors);
-//		
-//		assertTrue(errors.hasErrors());
-//		assertEquals(1, errors.getErrorCount());
-//		assertNotNull(errors.getFieldValue("password2"));
-//		EasyMock.verify(mockUserService);
-//		EasyMock.reset(mockUserService);
-	}
-	
-	public void testThreeMembersNoProblemValidate() {
-		// three users {user1, user2, user3} decide to run the project
-		// they enter correct information
-		User user1 = new UserImpl();
-		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
-		User user2 = new UserImpl();
-		MutableUserDetails userDetails2 = new PersistentUserDetails();
-		userDetails2.setPassword(PASSWORD2);
-		user2.setUserDetails(userDetails2);
-		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME2)).andReturn(user2);		
-		User user3 = new UserImpl();
-		MutableUserDetails userDetails3 = new PersistentUserDetails();
-		userDetails3.setPassword(PASSWORD3);
-		user3.setUserDetails(userDetails3);
-		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME3)).andReturn(user3);	
-		EasyMock.replay(mockUserService);
+  @Test
+  public void validate_UserTwoBadUsername_Error() throws ObjectNotFoundException {
+    EasyMock.expect(userService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
+    EasyMock.expect(runService.retrieveById(RUNID)).andReturn(run);
+    EasyMock.replay(runService);
+    List<Workgroup> workgroups = new ArrayList<Workgroup>();
+    Workgroup workgroup = new WorkgroupImpl();
+    workgroups.add(workgroup);
+    EasyMock.expect(workgroupService.getWorkgroupListByRunAndUser(run, user1))
+      .andReturn(workgroups);
+    EasyMock.expect(userService.retrieveUserByUsername(USERNAME2)).andReturn(null);
+    EasyMock.replay(workgroupService);
+    EasyMock.replay(userService);
 
-		form.setUsername2(USERNAME2);
-		form.setPassword2(PASSWORD2);
-		form.setUsername3(USERNAME3);
-		form.setPassword3(PASSWORD3);
-		validator.validate(form, errors);
-		
-		assertTrue(!errors.hasErrors());
-		EasyMock.verify(mockUserService);
-		EasyMock.reset(mockUserService);
-	}
-	
-	public void testThreeMembersProblemValidate() {
-		// three users {user1, user2, user3} decide to run the project
-		// user2 enters username that doesn't exist in datastore
-		User user1 = new UserImpl();
-		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
-		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME2)).andReturn(null);
-		User user3 = new UserImpl();
-		MutableUserDetails userDetails3 = new PersistentUserDetails();
-		userDetails3.setPassword(PASSWORD3);
-		user3.setUserDetails(userDetails3);
-		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME3)).andReturn(user3);
-		EasyMock.replay(mockUserService);
+    form.setUsername2(USERNAME2);
+    form.setPassword2(PASSWORD2);
+    validator.validate(form, errors);
 
-		form.setUsername2(USERNAME2);
-		form.setPassword2(PASSWORD2);
-		form.setUsername3(USERNAME3);
-		form.setPassword3(PASSWORD3);
-		validator.validate(form, errors);
-		
-		assertTrue(errors.hasErrors());
-		assertEquals(1, errors.getErrorCount());
-		assertNotNull(errors.getFieldValue("username2"));
-		EasyMock.verify(mockUserService);
-		EasyMock.reset(mockUserService);
-		
-		// user2 entered a password that does not match user2's password
-//		form = new TeamSignInForm();
-//		form.setUsername1(USERNAME1);
-//		errors = new BeanPropertyBindingResult(form, "");
-//
-//		user1 = new UserImpl();
-//		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
-//		User user2 = new UserImpl();
-//		MutableUserDetails userDetails2 = new PersistentUserDetails();
-//		userDetails2.setPassword(PASSWORD2);
-//		user2.setUserDetails(userDetails2);
-//		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME2)).andReturn(user2);
-//		user3 = new UserImpl();
-//		userDetails3 = new PersistentUserDetails();
-//		userDetails3.setPassword(PASSWORD3);
-//		user3.setUserDetails(userDetails3);
-//		EasyMock.expect(mockUserService.retrieveUserByUsername(USERNAME3)).andReturn(user3);
-//		EasyMock.replay(mockUserService);
-//
-//		form.setUsername2(USERNAME2);
-//		form.setPassword2(BAD_PASSWORD);
-//		form.setUsername3(USERNAME3);
-//		form.setPassword3(PASSWORD3);
-//		validator.validate(form, errors);
-//		
-//		assertTrue(errors.hasErrors());
-//		assertEquals(1, errors.getErrorCount());
-//		assertNotNull(errors.getFieldValue("password2"));
-//		EasyMock.verify(mockUserService);
-//		EasyMock.reset(mockUserService);
-	}
-	
-	/**
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown() {
+    assertTrue(errors.hasErrors());
+    EasyMock.verify(userService);
+    EasyMock.verify(runService);
+  }
+
+  @Test
+  public void validate_UserTwoBadPassword_Error() throws ObjectNotFoundException {
+    EasyMock.expect(userService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
+    EasyMock.expect(runService.retrieveById(RUNID)).andReturn(run);
+    EasyMock.replay(runService);
+    List<Workgroup> workgroups = new ArrayList<Workgroup>();
+    Workgroup workgroup = new WorkgroupImpl();
+    workgroups.add(workgroup);
+    EasyMock.expect(workgroupService.getWorkgroupListByRunAndUser(run, user1))
+      .andReturn(workgroups);
+    EasyMock.expect(userService.retrieveUserByUsername(USERNAME2)).andReturn(user2);
+    EasyMock.expect(workgroupService.isUserInWorkgroupForRun(user2, run, workgroup))
+      .andReturn(true);
+    EasyMock.expect(userService.isPasswordCorrect(user2, PASSWORD3)).andReturn(false);
+    EasyMock.replay(workgroupService);
+    EasyMock.replay(userService);
+
+    form.setUsername2(USERNAME2);
+    form.setPassword2(PASSWORD3);
+    validator.validate(form, errors);
+
+    assertTrue(errors.hasErrors());
+    EasyMock.verify(userService);
+    EasyMock.verify(runService);
+  }
+
+  @Test
+  public void validate_UserOneUserThree_OK() throws ObjectNotFoundException {
+    EasyMock.expect(userService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
+    EasyMock.expect(runService.retrieveById(RUNID)).andReturn(run);
+    EasyMock.replay(runService);
+    List<Workgroup> workgroups = new ArrayList<Workgroup>();
+    Workgroup workgroup = new WorkgroupImpl();
+    workgroups.add(workgroup);
+    EasyMock.expect(workgroupService.getWorkgroupListByRunAndUser(run, user1))
+      .andReturn(workgroups);
+    EasyMock.expect(userService.retrieveUserByUsername(USERNAME3)).andReturn(user3);
+    EasyMock.expect(workgroupService.isUserInWorkgroupForRun(user3, run, workgroup))
+      .andReturn(true);
+    EasyMock.expect(userService.isPasswordCorrect(user3, PASSWORD3)).andReturn(true);
+    EasyMock.replay(workgroupService);
+    EasyMock.replay(userService);
+
+    form.setUsername3(USERNAME3);
+    form.setPassword3(PASSWORD3);
+    validator.validate(form, errors);
+
+    assertTrue(!errors.hasErrors());
+    EasyMock.verify(userService);
+    EasyMock.verify(runService);
+  }
+
+	@After
+	public void tearDown() {
 		form = null;
 		validator = null;
 		errors = null;

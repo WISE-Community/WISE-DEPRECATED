@@ -261,4 +261,10 @@ public class UserServiceImpl implements UserService {
   public User retrieveByResetPasswordKey(String resetPasswordKey) {
     return this.userDao.retrieveByResetPasswordKey(resetPasswordKey);
   }
+
+  public boolean isPasswordCorrect(User user, String password) {
+    String hasedPassword = passwordEncoder.encodePassword(
+      password, saltSource.getSalt(user.getUserDetails()));
+    return hasedPassword.equals(user.getUserDetails().getPassword());
+  }
 }
