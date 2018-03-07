@@ -169,13 +169,7 @@ var DrawController = function () {
       type: 'Table'
     }];
 
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     if (this.componentContent != null) {
 
@@ -605,6 +599,8 @@ var DrawController = function () {
         }
       }
     });
+
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   } // end of constructor
 
   /**

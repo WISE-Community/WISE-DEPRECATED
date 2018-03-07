@@ -2,10 +2,14 @@ import NodeService from '../../services/nodeService';
 
 class DrawService extends NodeService {
   constructor($filter,
+      $q,
+      StudentAssetService,
       StudentDataService,
       UtilService) {
     super();
     this.$filter = $filter;
+    this.$q = $q;
+    this.StudentAssetService = StudentAssetService;
     this.StudentDataService = StudentDataService;
     this.UtilService = UtilService;
 
@@ -307,10 +311,39 @@ class DrawService extends NodeService {
 
     return false;
   }
+
+  /**
+   * The component state has been rendered in a <component></component> element
+   * and now we want to take a snapshot of the work.
+   * @param componentState The component state that has been rendered.
+   * @return A promise that will return an image object.
+   */
+  generateImageFromRenderedComponentState(componentState) {
+    let deferred = this.$q.defer();
+    var canvas = angular.element('#drawingtool_' + componentState.nodeId + '_' + componentState.componentId + ' canvas');
+    if (canvas != null && canvas.length > 0) {
+      // get the top canvas
+      canvas = canvas[0];
+
+      // get the canvas as a base64 string
+      var img_b64 = canvas.toDataURL('image/png');
+
+      // get the image object
+      var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+
+      // add the image to the student assets
+      this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
+        deferred.resolve(asset);
+      });
+    }
+    return deferred.promise;
+  }
 }
 
 DrawService.$inject = [
   '$filter',
+  '$q',
+  'StudentAssetService',
   'StudentDataService',
   'UtilService'
 ];

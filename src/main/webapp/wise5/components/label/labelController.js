@@ -192,9 +192,19 @@ var LabelController = function () {
 
     // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [{
+      type: 'ConceptMap'
+    }, {
+      type: 'Draw'
+    }, {
+      type: 'Embedded'
+    }, {
+      type: 'Graph'
+    }, {
       type: 'Label'
     }, {
       type: 'OpenResponse'
+    }, {
+      type: 'Table'
     }];
 
     this.nodeId = this.$scope.nodeId;
@@ -3460,6 +3470,16 @@ var LabelController = function () {
                   });
                 }
               }
+            } else if (componentState.componentType == 'ConceptMap') {
+              this.setComponentStateAsBackgroundImage(componentState);
+            } else if (componentState.componentType == 'Draw') {
+              this.setComponentStateAsBackgroundImage(componentState);
+            } else if (componentState.componentType == 'Embedded') {
+              this.setComponentStateAsBackgroundImage(componentState);
+            } else if (componentState.componentType == 'Graph') {
+              this.setComponentStateAsBackgroundImage(componentState);
+            } else if (componentState.componentType == 'Table') {
+              this.setComponentStateAsBackgroundImage(componentState);
             }
           }
         }
@@ -3515,6 +3535,21 @@ var LabelController = function () {
       }
 
       return null;
+    }
+
+    /**
+     * Create an image from a component state and set the image as the background.
+     * @param componentState A component state.
+     */
+
+  }, {
+    key: 'setComponentStateAsBackgroundImage',
+    value: function setComponentStateAsBackgroundImage(componentState) {
+      var _this7 = this;
+
+      this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
+        _this7.setBackgroundImage(image.url);
+      });
     }
 
     /**

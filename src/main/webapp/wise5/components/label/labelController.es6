@@ -192,10 +192,25 @@ class LabelController {
     // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [
       {
+        type: 'ConceptMap'
+      },
+      {
+        type: 'Draw'
+      },
+      {
+        type: 'Embedded'
+      },
+      {
+        type: 'Graph'
+      },
+      {
         type: 'Label'
       },
       {
         type: 'OpenResponse'
+      },
+      {
+        type: 'Table'
       }
     ];
 
@@ -3202,6 +3217,16 @@ class LabelController {
                 });
               }
             }
+          } else if (componentState.componentType == 'ConceptMap') {
+            this.setComponentStateAsBackgroundImage(componentState);
+          } else if (componentState.componentType == 'Draw') {
+            this.setComponentStateAsBackgroundImage(componentState);
+          } else if (componentState.componentType == 'Embedded') {
+            this.setComponentStateAsBackgroundImage(componentState);
+          } else if (componentState.componentType == 'Graph') {
+            this.setComponentStateAsBackgroundImage(componentState);
+          } else if (componentState.componentType == 'Table') {
+            this.setComponentStateAsBackgroundImage(componentState);
           }
         }
       }
@@ -3233,6 +3258,16 @@ class LabelController {
       }
     }
     return null;
+  }
+
+  /**
+   * Create an image from a component state and set the image as the background.
+   * @param componentState A component state.
+   */
+  setComponentStateAsBackgroundImage(componentState) {
+    this.UtilService.generateImageFromComponentState(componentState).then((image) => {
+      this.setBackgroundImage(image.url);
+    });
   }
 
   /**

@@ -21,12 +21,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var DrawService = function (_NodeService) {
   _inherits(DrawService, _NodeService);
 
-  function DrawService($filter, StudentDataService, UtilService) {
+  function DrawService($filter, $q, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, DrawService);
 
     var _this = _possibleConstructorReturn(this, (DrawService.__proto__ || Object.getPrototypeOf(DrawService)).call(this));
 
     _this.$filter = $filter;
+    _this.$q = $q;
+    _this.StudentAssetService = StudentAssetService;
     _this.StudentDataService = StudentDataService;
     _this.UtilService = UtilService;
 
@@ -353,12 +355,42 @@ var DrawService = function (_NodeService) {
 
       return false;
     }
+
+    /**
+     * The component state has been rendered in a <component></component> element
+     * and now we want to take a snapshot of the work.
+     * @param componentState The component state that has been rendered.
+     * @return A promise that will return an image object.
+     */
+
+  }, {
+    key: 'generateImageFromRenderedComponentState',
+    value: function generateImageFromRenderedComponentState(componentState) {
+      var deferred = this.$q.defer();
+      var canvas = angular.element('#drawingtool_' + componentState.nodeId + '_' + componentState.componentId + ' canvas');
+      if (canvas != null && canvas.length > 0) {
+        // get the top canvas
+        canvas = canvas[0];
+
+        // get the canvas as a base64 string
+        var img_b64 = canvas.toDataURL('image/png');
+
+        // get the image object
+        var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+
+        // add the image to the student assets
+        this.StudentAssetService.uploadAsset(imageObject).then(function (asset) {
+          deferred.resolve(asset);
+        });
+      }
+      return deferred.promise;
+    }
   }]);
 
   return DrawService;
 }(_nodeService2.default);
 
-DrawService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
+DrawService.$inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = DrawService;
 //# sourceMappingURL=drawService.js.map
