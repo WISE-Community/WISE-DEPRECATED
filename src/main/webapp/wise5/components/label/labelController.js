@@ -197,13 +197,7 @@ var LabelController = function () {
       type: 'OpenResponse'
     }];
 
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     // get the component content from the scope
     this.componentContent = this.$scope.componentContent;
@@ -727,6 +721,8 @@ var LabelController = function () {
         }
       }
     });
+
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
   _createClass(LabelController, [{
@@ -1652,6 +1648,8 @@ var LabelController = function () {
       // set the width and height of the canvas
       canvas.setWidth(this.canvasWidth);
       canvas.setHeight(this.canvasHeight);
+      document.getElementById(this.canvasId).width = this.canvasWidth;
+      document.getElementById(this.canvasId).height = this.canvasHeight;
 
       // set the height on the parent div so that a vertical scrollbar doesn't show up
       $('#canvasParent_' + this.canvasId).css('height', this.canvasHeight + 2);
