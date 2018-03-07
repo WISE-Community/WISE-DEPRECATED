@@ -172,9 +172,7 @@ var ConceptMapController = function () {
     }];
 
     // the component types we are allowed to connect to
-    this.allowedConnectedComponentTypes = [{
-      type: 'ConceptMap'
-    }];
+    this.allowedConnectedComponentTypes = [{ type: 'ConceptMap' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Table' }];
 
     this.nodeId = this.$scope.nodeId;
 
@@ -5445,7 +5443,7 @@ var ConceptMapController = function () {
         for (var c = 0; c < componentStates.length; c++) {
           var componentState = componentStates[c];
 
-          if (componentState != null) {
+          if (componentState.componentType == 'ConceptMap') {
             var studentData = componentState.studentData;
 
             if (studentData != null) {
@@ -5469,6 +5467,8 @@ var ConceptMapController = function () {
                 }
               }
             }
+          } else if (componentState.componentType == 'Draw' || componentState.componentType == 'Embedded' || componentState.componentType == 'Graph' || componentState.componentType == 'Label' || componentState.componentType == 'Table') {
+            this.setComponentStateAsBackgroundImage(componentState);
           }
         }
 
@@ -5502,6 +5502,21 @@ var ConceptMapController = function () {
       mergedComponentState = this.ProjectService.injectAssetPaths(mergedComponentState);
 
       return mergedComponentState;
+    }
+
+    /**
+     * Create an image from a component state and set the image as the background.
+     * @param componentState A component state.
+     */
+
+  }, {
+    key: 'setComponentStateAsBackgroundImage',
+    value: function setComponentStateAsBackgroundImage(componentState) {
+      var _this9 = this;
+
+      this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
+        _this9.setBackgroundImage(image.url);
+      });
     }
 
     /**

@@ -191,27 +191,13 @@ class LabelController {
 
     // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [
-      {
-        type: 'ConceptMap'
-      },
-      {
-        type: 'Draw'
-      },
-      {
-        type: 'Embedded'
-      },
-      {
-        type: 'Graph'
-      },
-      {
-        type: 'Label'
-      },
-      {
-        type: 'OpenResponse'
-      },
-      {
-        type: 'Table'
-      }
+      { type: 'ConceptMap' },
+      { type: 'Draw' },
+      { type: 'Embedded' },
+      { type: 'Graph' },
+      { type: 'Label' },
+      { type: 'OpenResponse' },
+      { type: 'Table' }
     ];
 
     this.nodeId = this.$scope.nodeId;
@@ -3217,15 +3203,11 @@ class LabelController {
                 });
               }
             }
-          } else if (componentState.componentType == 'ConceptMap') {
-            this.setComponentStateAsBackgroundImage(componentState);
-          } else if (componentState.componentType == 'Draw') {
-            this.setComponentStateAsBackgroundImage(componentState);
-          } else if (componentState.componentType == 'Embedded') {
-            this.setComponentStateAsBackgroundImage(componentState);
-          } else if (componentState.componentType == 'Graph') {
-            this.setComponentStateAsBackgroundImage(componentState);
-          } else if (componentState.componentType == 'Table') {
+          } else if (componentState.componentType == 'ConceptMap' ||
+              componentState.componentType == 'Draw' ||
+              componentState.componentType == 'Embedded' ||
+              componentState.componentType == 'Graph' ||
+              componentState.componentType == 'Table') {
             this.setComponentStateAsBackgroundImage(componentState);
           }
         }
