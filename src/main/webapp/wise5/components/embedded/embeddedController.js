@@ -90,12 +90,7 @@ var EmbeddedController = function () {
 
     this.allowedConnectedComponentTypes = [{ type: 'Animation' }, { type: 'AudioOscillator' }, { type: 'ConceptMap' }, { type: 'Discussion' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Match' }, { type: 'MultipleChoice' }, { type: 'OpenResponse' }, { type: 'Table' }];
 
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     this.componentContent = this.$scope.componentContent;
     this.authoringComponentContent = this.$scope.authoringComponentContent;
@@ -189,6 +184,8 @@ var EmbeddedController = function () {
       if (this.$scope.$parent.nodeController != null) {
         this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
       }
+
+      this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.$scope.nodeId, componentId: this.componentId });
     }
 
     /**

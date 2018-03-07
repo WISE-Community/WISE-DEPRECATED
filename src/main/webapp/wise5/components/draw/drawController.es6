@@ -158,6 +158,9 @@ class DrawController {
         type: 'Draw'
       },
       {
+        type: 'Embedded'
+      },
+      {
         type: 'Graph'
       }
     ];
@@ -2570,6 +2573,8 @@ class DrawController {
         } else if (componentState.componentType == 'Graph') {
           this.setComponentStateAsBackgroundImage(componentState);
         } else if (componentState.componentType == 'ConceptMap') {
+          this.setComponentStateAsBackgroundImage(componentState);
+        } else if (componentState.componentType == 'Embedded') {
           this.setComponentStateAsBackgroundImage(componentState);
         }
       }

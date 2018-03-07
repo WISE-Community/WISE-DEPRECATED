@@ -102,12 +102,7 @@ class EmbeddedController {
       { type: 'Table' }
     ];
 
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     this.componentContent = this.$scope.componentContent;
     this.authoringComponentContent = this.$scope.authoringComponentContent;
@@ -213,6 +208,8 @@ class EmbeddedController {
       if (this.$scope.$parent.nodeController != null) {
         this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
       }
+
+      this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.$scope.nodeId, componentId: this.componentId });
     }
 
     /**
