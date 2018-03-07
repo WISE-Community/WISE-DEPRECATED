@@ -2264,69 +2264,20 @@ var TableController = function () {
       var tableElement = angular.element('#table_' + this.nodeId + '_' + this.componentId);
 
       if (tableElement != null && tableElement.length > 0) {
-
-        // hide all the iframes otherwise html2canvas may cut off the table
-        this.UtilService.hideIFrames();
-
-        // scroll to the component so html2canvas doesn't cut off the table
-        this.$location.hash(this.componentId);
-        this.$anchorScroll();
-
         // get the table element
         tableElement = tableElement[0];
 
-        try {
-          // convert the table element to a canvas element
-          (0, _html2canvas2.default)(tableElement).then(function (canvas) {
+        // convert the table element to a canvas element
+        (0, _html2canvas2.default)(tableElement).then(function (canvas) {
+          // get the canvas as a base64 string
+          var img_b64 = canvas.toDataURL('image/png');
 
-            // get the canvas as a base64 string
-            var img_b64 = canvas.toDataURL('image/png');
+          // get the image object
+          var imageObject = _this3.UtilService.getImageObjectFromBase64String(img_b64);
 
-            // get the image object
-            var imageObject = _this3.UtilService.getImageObjectFromBase64String(img_b64);
-
-            // create a notebook item with the image populated into it
-            _this3.NotebookService.addNewItem($event, imageObject);
-
-            // we are done capturing the table so we will show the iframes again
-            _this3.UtilService.showIFrames();
-
-            /*
-             * scroll to the component in case the view has shifted after
-             * showing the iframe
-             */
-            _this3.$location.hash(_this3.componentId);
-            _this3.$anchorScroll();
-          }).catch(function () {
-
-            /*
-             * an error occurred while trying to capture the table so we
-             * will show the iframes again
-             */
-            _this3.UtilService.showIFrames();
-
-            /*
-             * scroll to the component in case the view has shifted after
-             * showing the iframe
-             */
-            _this3.$location.hash(_this3.componentId);
-            _this3.$anchorScroll();
-          });
-        } catch (e) {
-
-          /*
-           * an error occurred while trying to capture the table so we
-           * will show the iframes again
-           */
-          this.UtilService.showIFrames();
-
-          /*
-           * scroll to the component in case the view has shifted after
-           * showing the iframe
-           */
-          this.$location.hash(this.componentId);
-          this.$anchorScroll();
-        }
+          // create a notebook item with the image populated into it
+          _this3.NotebookService.addNewItem($event, imageObject);
+        });
       }
     }
 

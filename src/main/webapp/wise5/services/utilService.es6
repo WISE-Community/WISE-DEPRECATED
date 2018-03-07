@@ -133,36 +133,6 @@ class UtilService {
   }
 
   /**
-   * Hide all the iframes. This is used before a student snips something
-   * to put into their notebook. Iframes shift the position of elements
-   * below it which causes issues when html2canvas tries to capture
-   * certain elements.
-   */
-  hideIFrames() {
-    const iframes = angular.element('iframe');
-    for (let iframe of iframes) {
-      if (iframe != null) {
-        iframe.style.display = 'none';
-      }
-    }
-  }
-
-  /**
-   * Show all the iframes. This is used after the student snips something
-   * to put into their notebook. Iframes shift the position of elements
-   * below it which causes issues when html2canvas tries to capture
-   * certain elements.
-   */
-  showIFrames() {
-    const iframes = angular.element('iframe');
-    for (let iframe of iframes) {
-      if (iframe != null) {
-        iframe.style.display = '';
-      }
-    }
-  }
-
-  /**
    * Check if the asset is an image
    * @param fileName the file name of the asset
    * @return whether the asset is an image or not

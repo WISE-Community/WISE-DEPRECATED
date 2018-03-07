@@ -1108,7 +1108,7 @@ class GraphService extends NodeService {
 
   /**
    * The component state has been rendered in a <component></component> element
-   * and now we want take a snapshot of the work.
+   * and now we want to take a snapshot of the work.
    * @param componentState The component state that has been rendered.
    * @return A promise that will return an image object.
    */
