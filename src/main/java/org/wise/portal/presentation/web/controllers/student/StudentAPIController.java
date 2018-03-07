@@ -96,21 +96,6 @@ public class StudentAPIController {
       Workgroup workgroup = studentRunInfo.getWorkgroup();
       JSONArray workgroupMembers = new JSONArray();
       StringBuilder workgroupNames = new StringBuilder();
-      for (User member : workgroup.getMembers()) {
-        MutableUserDetails userDetails = (MutableUserDetails) member.getUserDetails();
-        JSONObject memberJSON = new JSONObject();
-        memberJSON.put("id", userDetails.getId());
-        String firstname = userDetails.getFirstname();
-        memberJSON.put("firstname", firstname);
-        String lastname = userDetails.getLastname();
-        memberJSON.put("lastname", lastname);
-        memberJSON.put("username", userDetails.getUsername());
-        workgroupMembers.put(memberJSON);
-        if (workgroupNames.length() > 0) {
-          workgroupNames.append(", ");
-        }
-        workgroupNames.append(firstname + " " + lastname);
-      }
 
       runJSON.put("accessCode", run.getRuncode());
       runJSON.put("id", run.getId());
@@ -122,9 +107,32 @@ public class StudentAPIController {
       runJSON.put("endTime", run.getEndtime());
       runJSON.put("teacherFirstname", run.getOwner().getUserDetails().getFirstname());
       runJSON.put("teacherLastname", run.getOwner().getUserDetails().getLastname());
-      runJSON.put("workgroupId", studentRunInfo.getWorkgroup().getId());
-      runJSON.put("workgroupNames", workgroupNames.toString());
-      runJSON.put("workgroupMembers", workgroupMembers);
+
+      /*
+       * The workgroup can be null if the student registered for a run but
+       * hasn't launched the project yet.
+       */
+      if (workgroup != null) {
+        for (User member : workgroup.getMembers()) {
+          MutableUserDetails userDetails = (MutableUserDetails) member.getUserDetails();
+          JSONObject memberJSON = new JSONObject();
+          memberJSON.put("id", userDetails.getId());
+          String firstname = userDetails.getFirstname();
+          memberJSON.put("firstname", firstname);
+          String lastname = userDetails.getLastname();
+          memberJSON.put("lastname", lastname);
+          memberJSON.put("username", userDetails.getUsername());
+          workgroupMembers.put(memberJSON);
+          if (workgroupNames.length() > 0) {
+            workgroupNames.append(", ");
+          }
+          workgroupNames.append(firstname + " " + lastname);
+        }
+        runJSON.put("workgroupId", studentRunInfo.getWorkgroup().getId());
+        runJSON.put("workgroupNames", workgroupNames.toString());
+        runJSON.put("workgroupMembers", workgroupMembers);
+      }
+
       runListJSONArray.put(runJSON);
     }
     return runListJSONArray.toString();
