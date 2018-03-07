@@ -1106,7 +1106,10 @@ var DrawController = function () {
         // clear the drawing
         this.drawingTool.clear();
 
-        if (this.latestConnectedComponentState && this.latestConnectedComponentParams) {
+        if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+          // we will import work from another component
+          this.handleConnectedComponents();
+        } else if (this.latestConnectedComponentState && this.latestConnectedComponentParams) {
           // reload the student data from the connected component
           this.setDrawData(latestConnectedComponentState, latestConnectedComponentParams);
         } else if (this.componentContent.importPreviousWorkNodeId != null && this.componentContent.importPreviousWorkNodeId != '' && this.componentContent.importPreviousWorkComponentId != null && this.componentContent.importPreviousWorkComponentId != '') {
