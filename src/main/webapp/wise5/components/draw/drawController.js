@@ -165,6 +165,8 @@ var DrawController = function () {
       type: 'Graph'
     }, {
       type: 'Label'
+    }, {
+      type: 'Table'
     }];
 
     // get the current node and node id
@@ -2753,6 +2755,8 @@ var DrawController = function () {
           } else if (componentState.componentType == 'Embedded') {
             this.setComponentStateAsBackgroundImage(componentState);
           } else if (componentState.componentType == 'Label') {
+            this.setComponentStateAsBackgroundImage(componentState);
+          } else if (componentState.componentType == 'Table') {
             this.setComponentStateAsBackgroundImage(componentState);
           }
         }

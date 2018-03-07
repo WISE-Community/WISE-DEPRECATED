@@ -129,13 +129,7 @@ class TableController {
       }
     ];
 
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     // get the component content from the scope
     this.componentContent = this.$scope.componentContent;
@@ -168,13 +162,12 @@ class TableController {
 
       // get the component id
       this.componentId = this.componentContent.id;
+      this.tableId = 'table_' + this.nodeId + '_' + this.componentId;
 
       if (this.mode === 'student') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
         this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-        this.tableId = 'table_' + this.nodeId + '_' + this.componentId;
 
         // get the latest annotations
         this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
@@ -670,6 +663,8 @@ class TableController {
         }
       }
     });
+
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
   /**

@@ -165,6 +165,9 @@ class DrawController {
       },
       {
         type: 'Label'
+      },
+      {
+        type: 'Table'
       }
     ];
 
@@ -2580,6 +2583,8 @@ class DrawController {
         } else if (componentState.componentType == 'Embedded') {
           this.setComponentStateAsBackgroundImage(componentState);
         } else if (componentState.componentType == 'Label') {
+          this.setComponentStateAsBackgroundImage(componentState);
+        } else if (componentState.componentType == 'Table') {
           this.setComponentStateAsBackgroundImage(componentState);
         }
       }

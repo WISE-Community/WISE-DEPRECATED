@@ -887,7 +887,7 @@ class UtilService {
         <component node-id="{{nodeId}}"
                    component-id="{{componentId}}"
                    component-state="{{componentState}}"
-                   mode="showPreviousWork"></component>
+                   mode="student"></component>
       `,
       locals: {
         nodeId: componentState.nodeId,
