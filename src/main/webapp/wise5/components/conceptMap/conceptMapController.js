@@ -222,10 +222,10 @@ var ConceptMapController = function () {
       this.setBackgroundImage(this.componentContent.background, this.componentContent.stretchBackground);
 
       // set the id of the svg and other display elements
-      this.svgId = 'svg_' + this.nodeId + '_' + this.componentId;
-      this.conceptMapContainerId = 'conceptMapContainer_' + this.nodeId + '_' + this.componentId;
-      this.selectNodeBarId = 'selectNodeBar_' + this.nodeId + '_' + this.componentId;
-      this.feedbackContainerId = 'feedbackContainer_' + this.nodeId + '_' + this.componentId;
+      this.svgId = 'svg_' + this.$scope.nodeId + '_' + this.componentId;
+      this.conceptMapContainerId = 'conceptMapContainer_' + this.$scope.nodeId + '_' + this.componentId;
+      this.selectNodeBarId = 'selectNodeBar_' + this.$scope.nodeId + '_' + this.componentId;
+      this.feedbackContainerId = 'feedbackContainer_' + this.$scope.nodeId + '_' + this.componentId;
 
       if (this.componentContent.width != null) {
         this.width = this.componentContent.width;
@@ -805,6 +805,8 @@ var ConceptMapController = function () {
         // register this component with the parent node
         this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
       }
+
+      this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.$scope.nodeId, componentId: this.componentId });
     }
 
     /**
@@ -5101,14 +5103,6 @@ var ConceptMapController = function () {
       var svgElement = angular.element('#svg_' + this.nodeId + '_' + this.componentId);
 
       if (svgElement != null && svgElement.length > 0) {
-
-        // hide all the iframes otherwise html2canvas may cut off the table
-        this.UtilService.hideIFrames();
-
-        // scroll to the component so html2canvas doesn't cut off the table
-        this.$location.hash(this.componentId);
-        this.$anchorScroll();
-
         // get the svg element
         svgElement = svgElement[0];
 
@@ -5179,16 +5173,6 @@ var ConceptMapController = function () {
 
             // create a notebook item with the image populated into it
             _this8.NotebookService.addNewItem($event, imageObject);
-
-            // we are done capturing the table so we will show the iframes again
-            _this8.UtilService.showIFrames();
-
-            /*
-             * scroll to the component in case the view has shifted after
-             * showing the iframe
-             */
-            _this8.$location.hash(_this8.componentId);
-            _this8.$anchorScroll();
           };
 
           // set the src of the image so that the image gets loaded

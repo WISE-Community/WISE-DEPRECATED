@@ -152,6 +152,9 @@ class DrawController {
     // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [
       {
+        type: 'ConceptMap'
+      },
+      {
         type: 'Draw'
       },
       {
@@ -2565,7 +2568,9 @@ class DrawController {
             }
           }
         } else if (componentState.componentType == 'Graph') {
-          this.handleGraphConnectedComponent(componentState);
+          this.setComponentStateAsBackgroundImage(componentState);
+        } else if (componentState.componentType == 'ConceptMap') {
+          this.setComponentStateAsBackgroundImage(componentState);
         }
       }
 
@@ -2591,10 +2596,10 @@ class DrawController {
   }
 
   /**
-   * Retrieve the work from a graph component.
-   * @param componentState A graph component state.
+   * Create an image from a component state and set the image as the background.
+   * @param componentState A component state.
    */
-  handleGraphConnectedComponent(componentState) {
+  setComponentStateAsBackgroundImage(componentState) {
     this.UtilService.generateImageFromComponentState(componentState).then((image) => {
       this.drawingTool.setBackgroundImage(image.url);
     });
