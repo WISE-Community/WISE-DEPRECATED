@@ -261,18 +261,13 @@ class GraphController {
 
     // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [
-      {
-        type: 'Animation'
-      },
-      {
-        type: 'Embedded'
-      },
-      {
-        type: 'Graph'
-      },
-      {
-        type: 'Table'
-      }
+      { type: 'Animation' },
+      { type: 'ConceptMap' },
+      { type: 'Draw' },
+      { type: 'Embedded' },
+      { type: 'Graph' },
+      { type: 'Label' },
+      { type: 'Table' }
     ];
 
     // get the current node and node id
@@ -2457,6 +2452,7 @@ class GraphController {
        * This will actually reset all the series and not just the active
        * one.
        */
+      this.newTrial();
       this.handleConnectedComponents();
     } else {
       // get the index of the active series
@@ -6216,20 +6212,27 @@ class GraphController {
             }
           } else if (type == 'showWork' || type == 'importWork' || type == null) {
             // get the latest component state from the component
-            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+            let componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+            if (componentState != null) {
+              if (componentState.componentType == 'ConceptMap' ||
+                componentState.componentType == 'Draw' ||
+                componentState.componentType == 'Label') {
+                promises.push(this.setComponentStateAsBackgroundImage(componentState));
+              } else {
+                // get the trials from the component state
+                promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
 
-            // get the trials from the component state
-            promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
+                if (type == 'showWork') {
+                  // we are showing work so we will not allow the student to edit it
+                  this.isDisabled = true;
+                }
 
-            if (type == 'showWork') {
-              // we are showing work so we will not allow the student to edit it
-              this.isDisabled = true;
-            }
-
-            if (componentState != null &&
-                componentState.studentData != null &&
-                componentState.studentData.backgroundImage != null) {
-              connectedComponentBackgroundImage = componentState.studentData.backgroundImage;
+                if (componentState != null &&
+                  componentState.studentData != null &&
+                  componentState.studentData.backgroundImage != null) {
+                  connectedComponentBackgroundImage = componentState.studentData.backgroundImage;
+                }
+              }
             }
           }
         }
@@ -6246,34 +6249,35 @@ class GraphController {
          */
 
         // this will hold all the trials
-        var mergedTrials = [];
+        let mergedTrials = [];
 
         /*
          * Loop through all the promise results. There will be a
          * promise result for each component we are importing from.
-         * Each promiseResult is an array of trials.
+         * Each promiseResult is an array of trials or an image url.
          */
-        for (var p = 0; p < promiseResults.length; p++) {
+        for (let promiseResult of promiseResults) {
+          if (promiseResult instanceof Array) {
+            let trials = promiseResult;
+            // loop through all the trials from the component
+            for (let t = 0; t < trials.length; t++) {
+              let trial = trials[t];
 
-          // get the array of trials for one component
-          var trials = promiseResults[p];
-
-          // loop through all the trials from the component
-          for (var t = 0; t < trials.length; t++) {
-            var trial = trials[t];
-
-            // add the trial to our array of merged trials
-            mergedTrials.push(trial);
+              // add the trial to our array of merged trials
+              mergedTrials.push(trial);
+            }
+          } else if (typeof(promiseResult) === "string") {
+            connectedComponentBackgroundImage = promiseResult;
           }
         }
 
         // create a new student data with all the trials
-        var studentData = {};
+        let studentData = {};
         studentData.trials = mergedTrials;
         studentData.version = 2;
 
         // create a new component state
-        var newComponentState = this.NodeService.createNewComponentState();
+        let newComponentState = this.NodeService.createNewComponentState();
         newComponentState.studentData = studentData;
 
         if (this.componentContent.backgroundImage != null &&
@@ -6294,6 +6298,18 @@ class GraphController {
         this.studentDataChanged();
       });
     }
+  }
+
+  /**
+   * Create an image from a component state and set the image as the background.
+   * @param componentState A component state.
+   * @return A promise that returns the url of the image that is generated from
+   * the component state.
+   */
+  setComponentStateAsBackgroundImage(componentState) {
+    return this.UtilService.generateImageFromComponentState(componentState).then((image) => {
+      return image.url;
+    });
   }
 
   /**
