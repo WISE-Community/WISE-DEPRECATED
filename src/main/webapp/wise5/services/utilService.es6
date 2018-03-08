@@ -879,8 +879,9 @@ class UtilService {
     this.$mdDialog.show({
       template: `
         <div style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.2); z-index: 2;"></div>
-        <div align="center" style="position: absolute; top: 200px; left: 200px; z-index: 1000;">
-          <span>Importing Work...</span>
+        <div align="center" style="position: absolute; top: 100px; left: 200px; z-index: 1000; padding: 20px; background-color: yellow;">
+          <span>{{ "importingWork" | translate }}...</span>
+          <br/>
           <br/>
           <md-progress-circular md-mode="indeterminate"></md-progress-circular>
         </div>

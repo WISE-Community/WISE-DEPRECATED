@@ -1103,7 +1103,7 @@ var UtilService = function () {
 
       var deferred = this.$q.defer();
       this.$mdDialog.show({
-        template: '\n        <div style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.2); z-index: 2;"></div>\n        <div align="center" style="position: absolute; top: 200px; left: 200px; z-index: 1000;">\n          <span>Importing Work...</span>\n          <br/>\n          <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n        </div>\n        <component node-id="{{nodeId}}"\n                   component-id="{{componentId}}"\n                   component-state="{{componentState}}"\n                   mode="student"></component>\n      ',
+        template: '\n        <div style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.2); z-index: 2;"></div>\n        <div align="center" style="position: absolute; top: 100px; left: 200px; z-index: 1000; padding: 20px; background-color: yellow;">\n          <span>{{ "importingWork" | translate }}...</span>\n          <br/>\n          <br/>\n          <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n        </div>\n        <component node-id="{{nodeId}}"\n                   component-id="{{componentId}}"\n                   component-state="{{componentState}}"\n                   mode="student"></component>\n      ',
         locals: {
           nodeId: componentState.nodeId,
           componentId: componentState.componentId,
