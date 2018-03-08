@@ -75,6 +75,45 @@ public class NotebookController {
     }
   }
 
+  @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}/{groupName}")
+  protected void getNotebookItemsInGroup(
+      @PathVariable Integer runId,
+      @PathVariable String groupName,
+      @RequestParam(value = "periodId", required = false) Integer periodId,
+      @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
+      HttpServletResponse response) throws IOException {
+    User signedInUser = ControllerUtil.getSignedInUser();
+    try {
+      Run run = runService.retrieveById(new Long(runId));
+      if (signedInUser.isStudent()) {
+        Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));
+        if ((!run.isStudentAssociatedToThisRun(signedInUser) || !workgroup.getMembers().contains(signedInUser))
+          ) {
+          // user is student and is not in this run or not in the specified workgroup, so deny access
+          return;
+        }
+      }
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+      return;
+    }
+
+    if (workgroupId != null) {
+      Integer id = null;
+      String nodeId = null;
+      String componentId = null;
+      List<NotebookItem> notebookItemList = vleService.getNotebookItems(
+        id, runId, periodId, workgroupId, nodeId, componentId);
+      JSONArray notebookItems = new JSONArray();
+      for (NotebookItem notebookItem : notebookItemList) {
+        if (notebookItem.isInGroup(groupName)) {
+          notebookItems.put(notebookItem.toJSON());
+        }
+      }
+      response.getWriter().write(notebookItems.toString());
+    }
+  }
+
   @RequestMapping(method = RequestMethod.POST, value = "/student/notebook/{runId}")
   protected void postNotebookItem(
     @PathVariable Integer runId,
