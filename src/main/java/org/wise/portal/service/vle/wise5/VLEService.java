@@ -159,6 +159,14 @@ public interface VLEService {
     String nodeId, String componentId);
 
   /**
+   * Returns a list of notebook items that belong in a specified group.
+   * @param runId id of run
+   * @param groupName name of group
+   * @return list of notebook items that belong in the group
+   */
+  List<NotebookItem> getNotebookItemsByGroup(Integer runId, String groupName);
+
+  /**
    * Saves NotebookItem in the data store
    */
   NotebookItem saveNotebookItem(
@@ -175,7 +183,7 @@ public interface VLEService {
    * @param clientSaveTime
    * @return
    */
-  public NotebookItem copyNotebookItem(
+  NotebookItem copyNotebookItem(
     Integer workgroupId, Integer parentNotebookItemId, String clientSaveTime);
 
   /**

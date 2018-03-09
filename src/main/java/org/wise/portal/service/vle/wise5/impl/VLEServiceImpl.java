@@ -847,6 +847,10 @@ public class VLEServiceImpl implements VLEService {
       nodeId, componentId);
   }
 
+  public List<NotebookItem> getNotebookItemsByGroup(Integer runId, String groupName) {
+    return notebookItemDao.getNotebookItemByGroup(runId, groupName);
+  }
+
   @Override
   public NotebookItem saveNotebookItem(Integer id, Integer runId, Integer periodId,
       Integer workgroupId, String nodeId, String componentId, Integer studentWorkId,

@@ -61,6 +61,17 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
     return sessionCriteria.list();
   }
 
+  public List<NotebookItem> getNotebookItemByGroup(Integer runId, String groupName) {
+    String queryString = "select n.* from notebookItems n " +
+        "inner join (select * from notebookItems where runId = :runId and groups like :groupName) n2 " +
+        "on n.workgroupId = n2.workgroupId and n.localNotebookItemId = n2.localNotebookItemId";
+    Session session = getHibernateTemplate().getSessionFactory().getCurrentSession();
+    SQLQuery query = session.createSQLQuery(queryString).addEntity("n", NotebookItem.class);
+    query.setParameter("runId", runId);
+    query.setParameter("groupName", "%\"" + groupName + "\"%");
+    return (List<NotebookItem>) query.list();
+  }
+
   public List<Object[]> getNotebookItemExport(Integer runId) {
     String queryString =
       "SELECT n.id, n.localNotebookItemId, n.nodeId, n.componentId, 'step number', 'step title', 'component part number', " +

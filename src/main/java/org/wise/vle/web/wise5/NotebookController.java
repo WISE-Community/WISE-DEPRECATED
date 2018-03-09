@@ -131,13 +131,10 @@ public class NotebookController {
     Integer id = null;
     String nodeId = null;
     String componentId = null;
-    List<NotebookItem> notebookItemList = vleService.getNotebookItems(
-      id, runId, periodId, null, nodeId, componentId);
+    List<NotebookItem> notebookItemsByGroup = vleService.getNotebookItemsByGroup(runId, groupName);
     JSONArray notebookItems = new JSONArray();
-    for (NotebookItem notebookItem : notebookItemList) {
-      if (notebookItem.isInGroup(groupName)) {
-        notebookItems.put(notebookItem.toJSON());
-      }
+    for (NotebookItem notebookItem : notebookItemsByGroup) {
+      notebookItems.put(notebookItem.toJSON());
     }
     response.getWriter().write(notebookItems.toString());
   }
