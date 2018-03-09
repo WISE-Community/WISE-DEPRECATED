@@ -63,8 +63,10 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
 
   public List<NotebookItem> getNotebookItemByGroup(Integer runId, String groupName) {
     String queryString = "select n.* from notebookItems n " +
-        "inner join (select * from notebookItems where runId = :runId and groups like :groupName) n2 " +
-        "on n.workgroupId = n2.workgroupId and n.localNotebookItemId = n2.localNotebookItemId";
+        "inner join " +
+        "(select max(id) as maxId, workgroupId, localNotebookItemId from notebookItems " +
+        "where runId = :runId group by workgroupId, localNotebookItemId) n2 " +
+        "on n.id = n2.maxId and n.groups like :groupName";
     Session session = getHibernateTemplate().getSessionFactory().getCurrentSession();
     SQLQuery query = session.createSQLQuery(queryString).addEntity("n", NotebookItem.class);
     query.setParameter("runId", runId);
