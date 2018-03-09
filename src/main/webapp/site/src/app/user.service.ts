@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 import { User } from './user';
@@ -10,15 +10,18 @@ import { User } from './user';
 export class UserService {
 
   private userUrl = 'api/user/user';
+  private user: Observable<User>;
 
   constructor(private http: HttpClient) { }
 
   getUser(): Observable<User> {
-    return this.http.get<User>(this.userUrl)
-      .pipe(
-        tap(user => this.log(`fetched user`)),
-        catchError(this.handleError('getUser', new User()))
-      );
+    return this.user
+      ? this.user
+      : this.http.get<User>(this.userUrl)
+        .pipe(
+          tap(user => this.log(`fetched user`)),
+          catchError(this.handleError('getUser', new User()))
+        );
   }
 
   /**
