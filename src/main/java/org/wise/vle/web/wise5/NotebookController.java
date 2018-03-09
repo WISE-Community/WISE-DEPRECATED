@@ -22,8 +22,9 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Controller for handling GET and POST of WISE5 Notebooks and Notebook Items
+ * Controller for handling GET and POST of WISE Notebooks and Notebook Items
  * @author Hiroki Terashima
+ * @author Geoffrey Kwan
  */
 @Controller
 public class NotebookController {
@@ -54,6 +55,45 @@ public class NotebookController {
     JSONArray notebookItems =
         getNotebookItems(runId, id, periodId, workgroupId, nodeId, componentId, response);
     response.getWriter().write(notebookItems.toString());
+  }
+
+  @RequestMapping(method = RequestMethod.POST, value = "/student/notebook/{runId}")
+  protected void saveNotebookItem(
+      @PathVariable Integer runId,
+      @RequestParam(value = "periodId", required = true) Integer periodId,
+      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+      @RequestParam(value = "notebookItemId", required = false) Integer notebookItemId,
+      @RequestParam(value = "nodeId", required = false) String nodeId,
+      @RequestParam(value = "componentId", required = false) String componentId,
+      @RequestParam(value = "studentWorkId", required = false) Integer studentWorkId,
+      @RequestParam(value = "studentAssetId", required = false) Integer studentAssetId,
+      @RequestParam(value = "localNotebookItemId", required = false) String localNotebookItemId,
+      @RequestParam(value = "type", required = false) String type,
+      @RequestParam(value = "title", required = false) String title,
+      @RequestParam(value = "content", required = false) String content,
+      @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
+      @RequestParam(value = "clientDeleteTime", required = false) String clientDeleteTime,
+      HttpServletResponse response) throws IOException, ObjectNotFoundException {
+    if (!isUserInRunAndWorkgroup(runId, workgroupId)) {
+      return;
+    }
+    NotebookItem notebookItem = vleService.saveNotebookItem(
+      notebookItemId,
+      runId,
+      periodId,
+      workgroupId,
+      nodeId,
+      componentId,
+      studentWorkId,
+      studentAssetId,
+      localNotebookItemId,
+      type,
+      title,
+      content,
+      clientSaveTime,
+      clientDeleteTime
+    );
+    response.getWriter().write(notebookItem.toJSON().toString());
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}/{workgroupId}")
@@ -102,14 +142,29 @@ public class NotebookController {
     response.getWriter().write(notebookItems.toString());
   }
 
+  @RequestMapping(method = RequestMethod.POST, value = "/student/notebook/{runId}/parent/{parentNotebookItemId}")
+  protected void copyNotebookItem(
+      @PathVariable Integer runId,
+      @PathVariable Integer parentNotebookItemId,
+      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+      @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
+      HttpServletResponse response) throws IOException, ObjectNotFoundException {
+    if (!isUserInRunAndWorkgroup(runId, workgroupId)) {
+      return;
+    }
+    NotebookItem notebookItem =
+      vleService.copyNotebookItem(workgroupId, parentNotebookItemId, clientSaveTime);
+    response.getWriter().write(notebookItem.toJSON().toString());
+  }
+
   private JSONArray getNotebookItems(
-    Integer runId,
-    Integer id,
-    Integer periodId,
-    Integer workgroupId,
-    String nodeId,
-    String componentId,
-    HttpServletResponse response) throws IOException {
+      Integer runId,
+      Integer id,
+      Integer periodId,
+      Integer workgroupId,
+      String nodeId,
+      String componentId,
+      HttpServletResponse response) throws IOException {
     List<NotebookItem> notebookItemList = vleService.getNotebookItems(
       id, runId, periodId, workgroupId, nodeId, componentId);
     JSONArray notebookItems = new JSONArray();
@@ -141,9 +196,8 @@ public class NotebookController {
     return workgroupService.isUserInWorkgroupForRun(user, run, workgroup);
   }
 
-  private boolean isUserInRunAndWorkgroup(
-    Integer runId,
-    Integer workgroupId) throws ObjectNotFoundException {
+  private boolean isUserInRunAndWorkgroup(Integer runId, Integer workgroupId)
+      throws ObjectNotFoundException {
     User signedInUser = ControllerUtil.getSignedInUser();
     Run run = runService.retrieveById(new Long(runId));
     Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));
@@ -152,58 +206,5 @@ public class NotebookController {
       return true;
     }
     return false;
-  }
-
-  @RequestMapping(method = RequestMethod.POST, value = "/student/notebook/{runId}")
-  protected void saveNotebookItem(
-      @PathVariable Integer runId,
-      @RequestParam(value = "periodId", required = true) Integer periodId,
-      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-      @RequestParam(value = "notebookItemId", required = false) Integer notebookItemId,
-      @RequestParam(value = "nodeId", required = false) String nodeId,
-      @RequestParam(value = "componentId", required = false) String componentId,
-      @RequestParam(value = "studentWorkId", required = false) Integer studentWorkId,
-      @RequestParam(value = "studentAssetId", required = false) Integer studentAssetId,
-      @RequestParam(value = "localNotebookItemId", required = false) String localNotebookItemId,
-      @RequestParam(value = "type", required = false) String type,
-      @RequestParam(value = "title", required = false) String title,
-      @RequestParam(value = "content", required = false) String content,
-      @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
-      @RequestParam(value = "clientDeleteTime", required = false) String clientDeleteTime,
-      HttpServletResponse response) throws IOException, ObjectNotFoundException {
-    if (!isUserInRunAndWorkgroup(runId, workgroupId)) {
-      return;
-    }
-    NotebookItem notebookItem = vleService.saveNotebookItem(
-      notebookItemId,
-      runId,
-      periodId,
-      workgroupId,
-      nodeId,
-      componentId,
-      studentWorkId,
-      studentAssetId,
-      localNotebookItemId,
-      type,
-      title,
-      content,
-      clientSaveTime,
-      clientDeleteTime
-    );
-    response.getWriter().write(notebookItem.toJSON().toString());
-  }
-
-  @RequestMapping(method = RequestMethod.POST, value = "/student/notebook/{runId}/parent/{parentNotebookItemId}")
-  protected void copyNotebookItem(
-      @PathVariable Integer runId,
-      @PathVariable Integer parentNotebookItemId,
-      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-      @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
-      HttpServletResponse response) throws IOException, ObjectNotFoundException {
-    if (!isUserInRunAndWorkgroup(runId, workgroupId)) {
-      return;
-    }
-    NotebookItem notebookItem = vleService.copyNotebookItem(workgroupId, parentNotebookItemId, clientSaveTime);
-    response.getWriter().write(notebookItem.toJSON().toString());
   }
 }
