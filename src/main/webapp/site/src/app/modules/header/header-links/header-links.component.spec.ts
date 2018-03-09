@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HeaderLinksComponent } from './header-links.component';
 import {HeaderSigninComponent} from "../header-signin/header-signin.component";
 import { RouterTestingModule } from '@angular/router/testing';
-import {User} from "../../user";
+import {User} from "../../../domain/user";
 
 describe('HeaderLinksComponent', () => {
   let component: HeaderLinksComponent;

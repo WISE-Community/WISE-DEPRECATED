@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { User } from '../../user';
-
+import { User } from "../../../domain/user";
 @Component({
   selector: 'app-header-links',
   templateUrl: './header-links.component.html',

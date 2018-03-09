@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { APP_BASE_HREF } from '@angular/common';
-import { SearchBarComponent } from "../shared/search-bar/search-bar.component";
-import { SelectMenuComponent } from "../shared/select-menu/select-menu.component";
+import { SearchBarComponent } from "../modules/shared/search-bar/search-bar.component";
+import { SelectMenuComponent } from "../modules//shared/select-menu/select-menu.component";
 import { StudentComponent } from './student.component';
 import { StudentEditProfileComponent } from './student-edit-profile/student-edit-profile.component';
 import { StudentHomeComponent } from './student-home/student-home.component';

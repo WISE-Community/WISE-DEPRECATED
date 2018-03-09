@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-import { User } from './user';
+import { User } from '../domain/user';
 
 @Injectable()
 export class UserService {

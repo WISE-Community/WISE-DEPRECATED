@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppRoutingModule } from "../app-routing.module";
+import { AppRoutingModule } from "../../app-routing.module";
 
 import { MatDividerModule, MatMenuModule, MatIconModule, MatToolbarModule } from "@angular/material";
 import { HeaderComponent } from './header.component';
@@ -7,7 +7,7 @@ import { HeaderAccountMenuComponent } from "./header-account-menu/header-account
 import { HeaderLinksComponent } from "./header-links/header-links.component";
 import { HeaderSigninComponent } from "./header-signin/header-signin.component";
 import { APP_BASE_HREF } from "@angular/common";
-import { UserService } from "../user.service";
+import { UserService } from "../../services/user.service";
 import { HttpClient, HttpHandler } from "@angular/common/http";
 
 describe('HeaderComponent', () => {

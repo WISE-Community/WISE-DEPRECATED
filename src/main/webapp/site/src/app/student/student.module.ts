@@ -13,7 +13,7 @@ const materialModules = [
   MatIconModule
 ];
 
-import { SharedModule } from "../shared/shared.module";
+import { SharedModule } from "../modules/shared/shared.module";
 import { StudentRoutingModule } from './student-routing.module';
 
 import { StudentComponent } from './student.component';

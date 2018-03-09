@@ -1,10 +1,10 @@
 import { TestBed, async } from '@angular/core/testing';
 import { APP_BASE_HREF } from '@angular/common';
 import { AppComponent } from './app.component';
-import { HeaderModule } from "./header/header.module";
-import { FooterModule } from "./footer/footer.module";
+import { HeaderModule } from "./modules/header/header.module";
+import { FooterModule } from "./modules/footer/footer.module";
 import { AppRoutingModule } from "./app-routing.module";
-import { UserService } from "./user.service";
+import { UserService } from "./services/user.service";
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
