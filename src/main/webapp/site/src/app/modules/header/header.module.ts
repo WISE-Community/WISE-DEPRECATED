@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { AppRoutingModule } from "../app-routing.module";
+import { AppRoutingModule } from "../../app-routing.module";
 import { MatButtonModule, MatDividerModule, MatIconModule, MatMenuModule, MatToolbarModule } from '@angular/material';
 
 import { HeaderComponent } from "./header.component";

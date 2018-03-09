@@ -2,9 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HeaderAccountMenuComponent } from './header-account-menu.component';
 import { MatMenuModule, MatIconModule, MatDividerModule } from "@angular/material";
-import {StudentRun} from "../../student/student-run";
-import {StudentRunListItemComponent} from "../../student/student-run-list-item/student-run-list-item.component";
-import {User} from "../../user";
+import {User} from "../../../domain/user";
 
 describe('HeaderAccountMenuComponent', () => {
   let component: HeaderAccountMenuComponent;

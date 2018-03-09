@@ -1,4 +1,4 @@
-import { Run } from '../run';
+import { Run } from '../domain/run';
 
 export class StudentRun extends Run {
   periodName: string;

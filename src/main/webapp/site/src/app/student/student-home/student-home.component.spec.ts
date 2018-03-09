@@ -6,8 +6,8 @@ import { StudentService } from '../student.service';
 import { StudentHomeComponent } from './student-home.component';
 import { StudentRunListComponent } from '../student-run-list/student-run-list.component';
 import { StudentRunListItemComponent } from '../student-run-list-item/student-run-list-item.component';
-import { SelectMenuComponent } from "../../shared/select-menu/select-menu.component";
-import { SearchBarComponent } from "../../shared/search-bar/search-bar.component";
+import { SelectMenuComponent } from "../../modules/shared/select-menu/select-menu.component";
+import { SearchBarComponent } from "../../modules/shared/search-bar/search-bar.component";
 
 import { MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule } from "@angular/material";
 import { RouterTestingModule } from '@angular/router/testing';
