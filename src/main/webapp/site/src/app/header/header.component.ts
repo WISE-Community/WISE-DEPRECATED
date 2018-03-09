@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '../user';
+import { UserService } from "../user.service";
 
 @Component({
   selector: 'app-header',
@@ -9,12 +10,12 @@ import { User } from '../user';
 })
 export class HeaderComponent implements OnInit {
 
-  user: User;
+  user: User = new User();
 
   location: string = ''; // current location
   url: string = '';
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private userService: UserService) {
     this.router = router;
     this.router.events.subscribe((event) => {
       this.url = this.router.url;
@@ -29,14 +30,13 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    // dummy user for testing
-    this.user = {
-      id: 1234,
-      userName: 'DemoUser0101',
-      firstName: 'Demo',
-      lastName: 'User',
-      role: 'student'
-    }
+    this.getUser();
   }
 
+  getUser() {
+    this.userService.getUser()
+      .subscribe(user => {
+        this.user = user;
+      });
+  }
 }

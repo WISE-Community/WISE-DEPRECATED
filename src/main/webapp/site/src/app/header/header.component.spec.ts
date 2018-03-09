@@ -6,7 +6,9 @@ import { HeaderComponent } from './header.component';
 import { HeaderAccountMenuComponent } from "./header-account-menu/header-account-menu.component";
 import { HeaderLinksComponent } from "./header-links/header-links.component";
 import { HeaderSigninComponent } from "./header-signin/header-signin.component";
-import {APP_BASE_HREF} from "@angular/common";
+import { APP_BASE_HREF } from "@angular/common";
+import { UserService } from "../user.service";
+import { HttpClient, HttpHandler } from "@angular/common/http";
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -28,7 +30,10 @@ describe('HeaderComponent', () => {
         HeaderSigninComponent
       ],
       providers: [
-        { provide: APP_BASE_HREF, useValue : '/' }
+        { provide: APP_BASE_HREF, useValue : '/' },
+        HttpClient,
+        HttpHandler,
+        UserService
       ]
     })
     .compileComponents();

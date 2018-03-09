@@ -31,12 +31,13 @@
   margin-top: 1.5%;
 
   @media (min-width: breakpoint('sm.min')) {
-    //padding-left: 16px;
     width: 36%;
   }
 
   img {
     vertical-align: middle;
+    max-width: 100%;
+    height: auto;
   }
 }
 
