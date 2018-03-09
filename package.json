@@ -76,7 +76,7 @@
     "browser-sync": "./node_modules/browser-sync/bin/browser-sync.js start --config bs-config.js",
     "postinstall": "node ./node_modules/jspm/jspm.js install -y",
     "watch-all-wise5": "node node_modules/concurrently/src/main.js \"node ./node_modules/gulp/bin/gulp.js\" \"npm run test-watch\"",
-    "watch-all-site": "node node_modules/concurrently/src/main.js \"ng build --watch --extract-css=true\" \"ng test --config src/main/webapp/site/karma.conf.js --color --browsers PhantomJS\"",
+    "watch-all-site": "node node_modules/concurrently/src/main.js \"ng build --watch --extract-css=true\" \"ng test --config src/main/webapp/site/karma.conf.js --color --browsers Chrome\"",
     "watch-sass": "npm rebuild node-sass && node ./node_modules/gulp/bin/gulp.js",
     "update-i18n": "node ./node_modules/gulp/bin/gulp.js update-i18n",
     "compile-sass": "node ./node_modules/gulp/bin/gulp.js compile-sass",
