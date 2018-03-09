@@ -169,6 +169,16 @@ public interface VLEService {
     String clientSaveTime, String clientDeleteTime);
 
   /**
+   * Copies NotebookItem in the data store
+   * @param workgroupId
+   * @param parentNotebookItemId
+   * @param clientSaveTime
+   * @return
+   */
+  public NotebookItem copyNotebookItem(
+    Integer workgroupId, Integer parentNotebookItemId, String clientSaveTime);
+
+  /**
    * @param notificationId id of the notification
    * @return the Notification with the specified id
    * @throws ObjectNotFoundException

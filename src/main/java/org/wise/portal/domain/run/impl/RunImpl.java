@@ -23,16 +23,6 @@
  */
 package org.wise.portal.domain.run.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.persistence.*;
-
 import org.hibernate.annotations.SortNatural;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +38,9 @@ import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
+
+import javax.persistence.*;
+import java.util.*;
 
 /**
  * WISE "run" domain object A WISE run is an run with more information,
@@ -352,6 +345,19 @@ public class RunImpl implements Run {
       }
     }
     return null;
+  }
+
+  /**
+   * @param teacherUser A User object.
+   * @return Whether the user is an owner or shared owner of the run.
+   */
+  public boolean isTeacherAssociatedToThisRun(User teacherUser) {
+    Set<User> sharedOwners = getSharedowners();
+    User owner = getOwner();
+    if (owner.equals(teacherUser) || sharedOwners.contains(teacherUser)) {
+      return true;
+    }
+    return false;
   }
 
   /**

@@ -947,6 +947,21 @@ public class VLEServiceImpl implements VLEService {
     return notebookItem;
   }
 
+  public NotebookItem copyNotebookItem(
+      Integer workgroupId, Integer parentNotebookItemId, String clientSaveTime) {
+    try {
+      NotebookItem notebookItem = (NotebookItem) notebookItemDao.getById(parentNotebookItemId);
+      Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));
+      NotebookItem copiedNotebookItem = notebookItem.copy(workgroup, clientSaveTime);
+      notebookItemDao.save(copiedNotebookItem);
+      return copiedNotebookItem;
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+
   @Override
   public Notification getNotificationById(Integer notificationId) throws ObjectNotFoundException {
     return (Notification) notificationDao.getById(notificationId);
