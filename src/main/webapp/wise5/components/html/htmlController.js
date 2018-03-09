@@ -56,17 +56,11 @@ var HTMLController = function () {
     // the summernote prompt html
     this.summernotePromptHTML = '';
 
-    this.mode = $scope.mode;
+    this.mode = this.$scope.mode;
 
     // perform setup of this component
 
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = $scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     // get the component content from the scope
     this.componentContent = this.$scope.componentContent;
@@ -80,7 +74,7 @@ var HTMLController = function () {
      */
     this.originalComponentContent = this.$scope.originalComponentContent;
 
-    this.mode = $scope.mode;
+    this.mode = this.$scope.mode;
 
     if (this.componentContent != null) {
 
@@ -358,6 +352,8 @@ var HTMLController = function () {
         }
       }
     });
+
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
   /**

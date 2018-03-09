@@ -238,13 +238,7 @@ var GraphController = function () {
     // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [{ type: 'Animation' }, { type: 'ConceptMap' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Table' }];
 
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     // get the component content from the scope
     this.componentContent = this.$scope.componentContent;
@@ -497,7 +491,7 @@ var GraphController = function () {
 
       // setup the graph
       this.setupGraph().then(function () {
-        _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.$scope.nodeId, componentId: _this.componentId });
+        _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
       });
 
       if (this.$scope.$parent.nodeController != null) {

@@ -208,8 +208,6 @@ class EmbeddedController {
       if (this.$scope.$parent.nodeController != null) {
         this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
       }
-
-      this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.$scope.nodeId, componentId: this.componentId });
     }
 
     /**
@@ -511,6 +509,8 @@ class EmbeddedController {
         this.sendMessageToApplication(message);
       }
     });
+
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
   iframeLoaded(contentLocation) {
