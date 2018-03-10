@@ -156,4 +156,12 @@ public interface UserService {
    * @return a User object or null if there is no user with the given reset password key
    */
   User retrieveByResetPasswordKey(String resetPasswordKey);
+
+  /**
+   * Returns true iff the password (non-hashed) is correct for the user
+   * @param user WISE user
+   * @param password password to check, un-hashed
+   * @return true iff the password is correct.
+   */
+  boolean isPasswordCorrect(User user, String password);
 }
