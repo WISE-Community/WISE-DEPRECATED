@@ -2567,7 +2567,11 @@ class DrawController {
             componentState.componentType == 'Embedded' ||
             componentState.componentType == 'Label' ||
             componentState.componentType == 'Table') {
-          this.setComponentStateAsBackgroundImage(componentState);
+          let connectedComponent =
+            this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
+          if (connectedComponent.importWorkAsBackground === true) {
+            this.setComponentStateAsBackgroundImage(componentState);
+          }
         }
       }
 
@@ -2658,6 +2662,7 @@ class DrawController {
            */
           connectedComponent.componentId = allowedComponent.id;
           connectedComponent.type = 'importWork';
+          this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
         }
       }
     }
@@ -2719,6 +2724,7 @@ class DrawController {
     if (connectedComponent != null) {
       connectedComponent.componentId = null;
       connectedComponent.type = null;
+      delete connectedComponent.importWorkAsBackground;
       this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
       // the authoring component content has changed so we will save the project
@@ -2736,9 +2742,28 @@ class DrawController {
 
       // default the type to import work
       connectedComponent.type = 'importWork';
+      this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
 
       // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
+    }
+  }
+
+  /**
+   * If the component type is a certain type, we will set the importWorkAsBackground
+   * field to true.
+   * @param connectedComponent The connected component object.
+   */
+  authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
+    let componentType = this.authoringGetConnectedComponentType(connectedComponent);
+    if (componentType == 'ConceptMap' ||
+        componentType == 'Embedded' ||
+        componentType == 'Graph' ||
+        componentType == 'Label' ||
+        componentType == 'Table') {
+      connectedComponent.importWorkAsBackground = true;
+    } else {
+      delete connectedComponent.importWorkAsBackground;
     }
   }
 
@@ -2818,6 +2843,18 @@ class DrawController {
    */
   authoringJSONChanged() {
     this.jsonStringChanged = true;
+  }
+
+  /**
+   * The "Import Work As Background" checkbox was clicked.
+   * @param connectedComponent The connected component associated with the
+   * checkbox.
+   */
+  authoringImportWorkAsBackgroundClicked(connectedComponent) {
+    if (!connectedComponent.importWorkAsBackground) {
+      delete connectedComponent.importWorkAsBackground;
+    }
+    this.authoringViewComponentChanged();
   }
 }
 

@@ -3457,7 +3457,10 @@ var LabelController = function () {
                 }
               }
             } else if (componentState.componentType == 'ConceptMap' || componentState.componentType == 'Draw' || componentState.componentType == 'Embedded' || componentState.componentType == 'Graph' || componentState.componentType == 'Table') {
-              this.setComponentStateAsBackgroundImage(componentState);
+              var _connectedComponent = this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
+              if (_connectedComponent.importWorkAsBackground === true) {
+                this.setComponentStateAsBackgroundImage(componentState);
+              }
             }
           }
         }
@@ -3612,6 +3615,7 @@ var LabelController = function () {
              */
             connectedComponent.componentId = allowedComponent.id;
             connectedComponent.type = 'importWork';
+            this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
           }
         }
       }
@@ -3682,6 +3686,7 @@ var LabelController = function () {
       if (connectedComponent != null) {
         connectedComponent.componentId = null;
         connectedComponent.type = null;
+        delete connectedComponent.importWorkAsBackground;
         this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
         // the authoring component content has changed so we will save the project
@@ -3702,9 +3707,27 @@ var LabelController = function () {
 
         // default the type to import work
         connectedComponent.type = 'importWork';
+        this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+      }
+    }
+
+    /**
+     * If the component type is a certain type, we will set the importWorkAsBackground
+     * field to true.
+     * @param connectedComponent The connected component object.
+     */
+
+  }, {
+    key: 'authoringSetImportWorkAsBackgroundIfApplicable',
+    value: function authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
+      var componentType = this.authoringGetConnectedComponentType(connectedComponent);
+      if (componentType == 'ConceptMap' || componentType == 'Draw' || componentType == 'Embedded' || componentType == 'Graph' || componentType == 'Table') {
+        connectedComponent.importWorkAsBackground = true;
+      } else {
+        delete connectedComponent.importWorkAsBackground;
       }
     }
 
@@ -3911,6 +3934,7 @@ var LabelController = function () {
         delete connectedComponent.charactersPerLine;
         delete connectedComponent.spaceInbetweenLines;
         delete connectedComponent.fontSize;
+        delete connectedComponent.importWorkAsBackground;
       }
 
       this.authoringViewComponentChanged();

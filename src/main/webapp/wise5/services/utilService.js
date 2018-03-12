@@ -1152,6 +1152,49 @@ var UtilService = function () {
       });
       return deferred.promise;
     }
+
+    /**
+     * Get the connected component associated with the component state.
+     * @param componentContent The component content.
+     * @param componentState The component state.
+     * @return A connected component object or null.
+     */
+
+  }, {
+    key: 'getConnectedComponentByComponentState',
+    value: function getConnectedComponentByComponentState(componentContent, componentState) {
+      var nodeId = componentState.nodeId;
+      var componentId = componentState.componentId;
+      var connectedComponents = componentContent.connectedComponents;
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
+
+      try {
+        for (var _iterator6 = connectedComponents[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var connectedComponent = _step6.value;
+
+          if (connectedComponent.nodeId == nodeId && connectedComponent.componentId == componentId) {
+            return connectedComponent;
+          }
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
+          }
+        }
+      }
+
+      return null;
+    }
   }]);
 
   return UtilService;

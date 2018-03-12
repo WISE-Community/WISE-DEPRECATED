@@ -6274,6 +6274,7 @@ var GraphController = function () {
              */
             connectedComponent.componentId = allowedComponent.id;
             connectedComponent.type = 'importWork';
+            this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
           }
         }
       }
@@ -6468,6 +6469,7 @@ var GraphController = function () {
       if (connectedComponent != null) {
         connectedComponent.componentId = null;
         connectedComponent.type = null;
+        delete connectedComponent.importWorkAsBackground;
         this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
         // the authoring component content has changed so we will save the project
@@ -6524,6 +6526,7 @@ var GraphController = function () {
 
         // default the type to import work
         connectedComponent.type = 'importWork';
+        this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
@@ -6688,7 +6691,10 @@ var GraphController = function () {
               var _componentState2 = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
               if (_componentState2 != null) {
                 if (_componentState2.componentType == 'ConceptMap' || _componentState2.componentType == 'Draw' || _componentState2.componentType == 'Label') {
-                  promises.push(this.setComponentStateAsBackgroundImage(_componentState2));
+                  var _connectedComponent = this.UtilService.getConnectedComponentByComponentState(this.componentContent, _componentState2);
+                  if (_connectedComponent.importWorkAsBackground === true) {
+                    promises.push(this.setComponentStateAsBackgroundImage(_componentState2));
+                  }
                 } else {
                   // get the trials from the component state
                   promises.push(this.getTrialsFromComponentState(nodeId, componentId, _componentState2));
@@ -7125,6 +7131,23 @@ var GraphController = function () {
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+      }
+    }
+
+    /**
+     * If the component type is a certain type, we will set the importWorkAsBackground
+     * field to true.
+     * @param connectedComponent The connected component object.
+     */
+
+  }, {
+    key: 'authoringSetImportWorkAsBackgroundIfApplicable',
+    value: function authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
+      var componentType = this.authoringGetConnectedComponentType(connectedComponent);
+      if (componentType == 'ConceptMap' || componentType == 'Draw' || componentType == 'Label') {
+        connectedComponent.importWorkAsBackground = true;
+      } else {
+        delete connectedComponent.importWorkAsBackground;
       }
     }
 
@@ -7798,6 +7821,21 @@ var GraphController = function () {
         }
       }
       return selectedTrialIds;
+    }
+
+    /**
+     * The "Import Work As Background" checkbox was clicked.
+     * @param connectedComponent The connected component associated with the
+     * checkbox.
+     */
+
+  }, {
+    key: 'authoringImportWorkAsBackgroundClicked',
+    value: function authoringImportWorkAsBackgroundClicked(connectedComponent) {
+      if (!connectedComponent.importWorkAsBackground) {
+        delete connectedComponent.importWorkAsBackground;
+      }
+      this.authoringViewComponentChanged();
     }
   }]);
 

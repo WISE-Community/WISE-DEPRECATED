@@ -933,6 +933,24 @@ class UtilService {
     });
     return deferred.promise;
   }
+
+  /**
+   * Get the connected component associated with the component state.
+   * @param componentContent The component content.
+   * @param componentState The component state.
+   * @return A connected component object or null.
+   */
+  getConnectedComponentByComponentState(componentContent, componentState) {
+    let nodeId = componentState.nodeId;
+    let componentId = componentState.componentId;
+    let connectedComponents = componentContent.connectedComponents;
+    for (let connectedComponent of connectedComponents) {
+      if (connectedComponent.nodeId == nodeId && connectedComponent.componentId == componentId) {
+        return connectedComponent;
+      }
+    }
+    return null;
+  }
 }
 
 // Get the last element of the array

@@ -3208,7 +3208,11 @@ class LabelController {
               componentState.componentType == 'Embedded' ||
               componentState.componentType == 'Graph' ||
               componentState.componentType == 'Table') {
-            this.setComponentStateAsBackgroundImage(componentState);
+            let connectedComponent =
+              this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
+            if (connectedComponent.importWorkAsBackground === true) {
+              this.setComponentStateAsBackgroundImage(componentState);
+            }
           }
         }
       }
@@ -3308,6 +3312,7 @@ class LabelController {
            */
           connectedComponent.componentId = allowedComponent.id;
           connectedComponent.type = 'importWork';
+          this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
         }
       }
     }
@@ -3369,6 +3374,7 @@ class LabelController {
     if (connectedComponent != null) {
       connectedComponent.componentId = null;
       connectedComponent.type = null;
+      delete connectedComponent.importWorkAsBackground;
       this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
       // the authoring component content has changed so we will save the project
@@ -3386,9 +3392,28 @@ class LabelController {
 
       // default the type to import work
       connectedComponent.type = 'importWork';
+      this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
 
       // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
+    }
+  }
+
+  /**
+   * If the component type is a certain type, we will set the importWorkAsBackground
+   * field to true.
+   * @param connectedComponent The connected component object.
+   */
+  authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
+    let componentType = this.authoringGetConnectedComponentType(connectedComponent);
+    if (componentType == 'ConceptMap' ||
+        componentType == 'Draw' ||
+        componentType == 'Embedded' ||
+        componentType == 'Graph' ||
+        componentType == 'Table') {
+      connectedComponent.importWorkAsBackground = true;
+    } else {
+      delete connectedComponent.importWorkAsBackground;
     }
   }
 
@@ -3534,6 +3559,7 @@ class LabelController {
       delete connectedComponent.charactersPerLine;
       delete connectedComponent.spaceInbetweenLines;
       delete connectedComponent.fontSize;
+      delete connectedComponent.importWorkAsBackground;
     }
 
     this.authoringViewComponentChanged();

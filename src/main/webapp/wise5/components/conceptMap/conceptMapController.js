@@ -5468,7 +5468,10 @@ var ConceptMapController = function () {
               }
             }
           } else if (componentState.componentType == 'Draw' || componentState.componentType == 'Embedded' || componentState.componentType == 'Graph' || componentState.componentType == 'Label' || componentState.componentType == 'Table') {
-            this.setComponentStateAsBackgroundImage(componentState);
+            var connectedComponent = this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
+            if (connectedComponent.importWorkAsBackground === true) {
+              this.setComponentStateAsBackgroundImage(componentState);
+            }
           }
         }
 
@@ -5601,6 +5604,7 @@ var ConceptMapController = function () {
              */
             connectedComponent.componentId = allowedComponent.id;
             connectedComponent.type = 'importWork';
+            this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
           }
         }
       }
@@ -5671,6 +5675,7 @@ var ConceptMapController = function () {
       if (connectedComponent != null) {
         connectedComponent.componentId = null;
         connectedComponent.type = null;
+        delete connectedComponent.importWorkAsBackground;
         this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
         // the authoring component content has changed so we will save the project
@@ -5691,9 +5696,27 @@ var ConceptMapController = function () {
 
         // default the type to import work
         connectedComponent.type = 'importWork';
+        this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+      }
+    }
+
+    /**
+     * If the component type is a certain type, we will set the importWorkAsBackground
+     * field to true.
+     * @param connectedComponent The connected component object.
+     */
+
+  }, {
+    key: 'authoringSetImportWorkAsBackgroundIfApplicable',
+    value: function authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
+      var componentType = this.authoringGetConnectedComponentType(connectedComponent);
+      if (componentType == 'Draw' || componentType == 'Embedded' || componentType == 'Graph' || componentType == 'Label' || componentType == 'Table') {
+        connectedComponent.importWorkAsBackground = true;
+      } else {
+        delete connectedComponent.importWorkAsBackground;
       }
     }
 
@@ -5807,6 +5830,21 @@ var ConceptMapController = function () {
     key: 'authoringJSONChanged',
     value: function authoringJSONChanged() {
       this.jsonStringChanged = true;
+    }
+
+    /**
+     * The "Import Work As Background" checkbox was clicked.
+     * @param connectedComponent The connected component associated with the
+     * checkbox.
+     */
+
+  }, {
+    key: 'authoringImportWorkAsBackgroundClicked',
+    value: function authoringImportWorkAsBackgroundClicked(connectedComponent) {
+      if (!connectedComponent.importWorkAsBackground) {
+        delete connectedComponent.importWorkAsBackground;
+      }
+      this.authoringViewComponentChanged();
     }
   }]);
 
