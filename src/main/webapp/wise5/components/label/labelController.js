@@ -2228,7 +2228,7 @@ var LabelController = function () {
           canvas.renderAll();
 
           if (this.enableCircles) {
-            circle.on('selected', function () {
+            circle.on('mousedown', function () {
               /*
                * the circle was clicked so we will make the associated
                * label selected
@@ -2237,7 +2237,7 @@ var LabelController = function () {
             });
           }
 
-          text.on('selected', function () {
+          text.on('mousedown', function () {
             /*
              * the text was clicked so we will make the associated
              * label selected
