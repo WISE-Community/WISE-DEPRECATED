@@ -1,6 +1,7 @@
 package org.wise.portal.presentation.web.filters;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,7 +37,7 @@ public class WISESwitchUserFilter extends SwitchUserFilter {
           userDetailsService.loadUserByUsername(request.getParameter("username"));
       for (GrantedAuthority authority : userDetails.getAuthorities()) {
         if (authority.getAuthority().equals("ROLE_ADMINISTRATOR")) {
-          return null;
+          throw new InsufficientAuthenticationException("Insufficient permissions");
         }
       }
     }
