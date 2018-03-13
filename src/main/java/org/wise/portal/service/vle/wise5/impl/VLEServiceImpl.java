@@ -858,7 +858,7 @@ public class VLEServiceImpl implements VLEService {
       String clientSaveTime, String clientDeleteTime) {
     NotebookItem notebookItem;
     if (id != null) {
-      // if the id is passed in, the client is requesting an update, so fetch the StudentWork from data store
+      // if the id is passed in, the client is requesting an update, so fetch the NotebookItem from data store
       try {
         notebookItem = (NotebookItem) notebookItemDao.getById(id);
       } catch (ObjectNotFoundException e) {
@@ -866,7 +866,7 @@ public class VLEServiceImpl implements VLEService {
         return null;
       }
     } else {
-      // the id was not passed in, so we're creating a new StudentWork from scratch
+      // the id was not passed in, so we're creating a new NotebookItem from scratch
       notebookItem = new NotebookItem();
     }
     if (runId != null) {
@@ -952,7 +952,7 @@ public class VLEServiceImpl implements VLEService {
   }
 
   public NotebookItem addNotebookItemToGroup(
-    Integer notebookItemId, String group, String clientSaveTime) {
+      Integer notebookItemId, String group, String clientSaveTime) {
     try {
       NotebookItem notebookItem = (NotebookItem) notebookItemDao.getById(notebookItemId);
       NotebookItem copiedNotebookItem = notebookItem.copy();
@@ -968,6 +968,37 @@ public class VLEServiceImpl implements VLEService {
           groupsJSONArray = new JSONArray(groups);
         }
         groupsJSONArray.put(group);
+        copiedNotebookItem.setGroups(groupsJSONArray.toString());
+        copiedNotebookItem.setClientSaveTime(new Timestamp(new Long(clientSaveTime)));
+        notebookItemDao.save(copiedNotebookItem);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+      return copiedNotebookItem;
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public NotebookItem removeNotebookItemFromGroup(
+      Integer notebookItemId, String group, String clientSaveTime) {
+    try {
+      NotebookItem notebookItem = (NotebookItem) notebookItemDao.getById(notebookItemId);
+      if (!notebookItem.isInGroup(group)) {
+        return notebookItem;
+      }
+      NotebookItem copiedNotebookItem = notebookItem.copy();
+      String groups = copiedNotebookItem.getGroups();
+      try {
+        JSONArray groupsJSONArray = new JSONArray(groups);
+        for (int g = 0; g < groupsJSONArray.length(); g++) {
+          String groupName = groupsJSONArray.getString(g);
+          if (group.equals(groupName)) {
+            groupsJSONArray.remove(g);
+            g--;
+          }
+        }
         copiedNotebookItem.setGroups(groupsJSONArray.toString());
         copiedNotebookItem.setClientSaveTime(new Timestamp(new Long(clientSaveTime)));
         notebookItemDao.save(copiedNotebookItem);

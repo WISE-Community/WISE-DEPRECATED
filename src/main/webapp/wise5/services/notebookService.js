@@ -534,6 +534,8 @@ var NotebookService = function () {
   }, {
     key: "addNotebookItemToGroup",
     value: function addNotebookItemToGroup(notebookItemId, group) {
+      var _this3 = this;
+
       if (this.ConfigService.isPreview()) {} else {
         var config = {
           method: "POST",
@@ -551,29 +553,38 @@ var NotebookService = function () {
         config.data = $.param(params);
 
         return this.$http(config).then(function (result) {
-          console.log(result);
-          /*
-          let notebookItem = result.data;
-          if (notebookItem != null) {
-            if (notebookItem.type === "note" || notebookItem.type === "report") {
-              notebookItem.content = angular.fromJson(notebookItem.content);
-            }
-            // add/update notebook
-            let workgroupId = notebookItem.workgroupId;
-            if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
-              // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
-              this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
-            } else {
-              // otherwise, we'll create a new notebook field and add the item to the array
-              this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
-            }
-             this.groupNotebookItems();
-            this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId]});
-          }
-          return result.data;
-          */
+          var notebookItem = result.data;
+          return _this3.handleNewNotebookItem(notebookItem);
         });
       }
+    }
+  }, {
+    key: "removeNotebookItemFromGroup",
+    value: function removeNotebookItemFromGroup(notebookItemId, group) {
+      var _this4 = this;
+
+      if (this.ConfigService.isPreview()) {} else {
+        var config = {
+          method: "DELETE",
+          url: this.ConfigService.getStudentNotebookURL() + '/group/' + group + '?workgroupId=' + this.ConfigService.getWorkgroupId() + '&notebookItemId=' + notebookItemId + '&clientSaveTime=' + Date.parse(new Date())
+        };
+        return this.$http(config).then(function (result) {
+          var notebookItem = result.data;
+          return _this4.handleNewNotebookItem(notebookItem);
+        });
+      }
+    }
+  }, {
+    key: "handleNewNotebookItem",
+    value: function handleNewNotebookItem(notebookItem) {
+      if (notebookItem.type === "note" || notebookItem.type === "report") {
+        notebookItem.content = angular.fromJson(notebookItem.content);
+      }
+      var workgroupId = notebookItem.workgroupId;
+      this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+      this.groupNotebookItems();
+      this.$rootScope.$broadcast('notebookUpdated', { notebook: this.notebooksByWorkgroup[workgroupId] });
+      return notebookItem;
     }
   }, {
     key: "saveNotebookToggleEvent",

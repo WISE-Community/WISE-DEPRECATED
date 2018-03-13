@@ -81,6 +81,12 @@ class NotebookController {
           this.shareNote(itemId, ev);
         });
 
+        this.$scope.$on('unshareNote', (event, args) => {
+            let itemId = args.itemId;
+            let ev = args.ev;
+            this.showUnshareNoteConfirmDialog(itemId, ev);
+        });
+
         this.logOutListener = $scope.$on('logOut', (event, args) => {
             this.logOutListener();
             this.$rootScope.$broadcast('componentDoneUnloading');
@@ -168,6 +174,17 @@ class NotebookController {
       this.$mdDialog.show(confirm).then(() => {
         this.NotebookService.addNotebookItemToGroup(itemId, 'public');
       });
+    }
+
+    showUnshareNoteConfirmDialog(itemId, ev) {
+        let confirm = this.$mdDialog.confirm()
+            .title('unshareNoteConfirmMessage')
+            .ariaLabel('unshare note confirmation')
+            .ok(this.$translate('unshare'))
+            .cancel(this.$translate('cancel'))
+        this.$mdDialog.show(confirm).then(() => {
+            this.NotebookService.removeNotebookItemFromGroup(itemId, 'public');
+        });
     }
 
     notebookItemSelected($event, notebookItem) {

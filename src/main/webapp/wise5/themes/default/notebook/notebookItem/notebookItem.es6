@@ -42,6 +42,10 @@ class NotebookItemController {
         });
     }
 
+    isItemInGroup(group) {
+      return this.item.groups != null && this.item.groups.includes(group);
+    }
+
     getItemNodeId() {
         if (this.item == null) {
             return null;
@@ -97,9 +101,13 @@ class NotebookItemController {
     }
 
     doShare(ev) {
-      ev.stopPropagation();  // don't follow-through on the doSelect callback after this
-      console.log('doShare');
+      ev.stopPropagation();  // don't follow-through on the doShare callback after this
       this.$rootScope.$broadcast('shareNote', {itemId: this.item.id, ev: ev});
+    }
+
+    doUnshare(ev) {
+      ev.stopPropagation();  // don't follow-through on the doUnshare callback after this
+      this.$rootScope.$broadcast('unshareNote', {itemId: this.item.id, ev: ev});
     }
 }
 
@@ -157,11 +165,18 @@ const NotebookItem = {
                 <span class="notebook-item__content__location"><md-icon> place </md-icon><span class="md-body-1">{{$ctrl.getItemNodePosition()}}</span></span>
                 <span flex></span>
                 <md-button class="md-icon-button"
-                           ng-if="$ctrl.item.serverDeleteTime == null && !$ctrl.isChooseMode"
+                           ng-if="$ctrl.item.serverDeleteTime == null && !$ctrl.isChooseMode && !$ctrl.isItemInGroup('public')"
                            aria-label="Share notebook item"
                            ng-click="$ctrl.doShare($event)">
-                    <md-icon> file_upload </md-icon>
+                    <md-icon> cloud_upload </md-icon>
                     <md-tooltip md-direction="top">{{ 'SHARE' | translate }}</md-tooltip>
+                </md-button>
+                <md-button class="md-icon-button"
+                           ng-if="$ctrl.item.serverDeleteTime == null && !$ctrl.isChooseMode && $ctrl.isItemInGroup('public')"
+                           aria-label="Unshare notebook item"
+                           ng-click="$ctrl.doUnshare($event)">
+                    <md-icon> cloud_off </md-icon>
+                    <md-tooltip md-direction="top">{{ 'UNSHARE' | translate }}</md-tooltip>
                 </md-button>
                 <md-button class="md-icon-button"
                            ng-if="$ctrl.item.serverDeleteTime == null && !$ctrl.isChooseMode"

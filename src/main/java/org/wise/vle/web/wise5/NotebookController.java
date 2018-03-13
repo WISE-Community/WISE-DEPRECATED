@@ -103,8 +103,7 @@ public class NotebookController {
       @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
       @RequestParam(value = "notebookItemId", required = true) Integer notebookItemId,
       @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
-      HttpServletResponse response
-      ) throws IOException, ObjectNotFoundException {
+      HttpServletResponse response) throws IOException, ObjectNotFoundException {
     if (!isUserInRunAndWorkgroup(runId, workgroupId)) {
       return;
     }
@@ -113,8 +112,19 @@ public class NotebookController {
   }
 
   @RequestMapping(method = RequestMethod.DELETE, value = "/student/notebook/{runId}/group/{group}")
-  protected void deleteNotebookItemFromGroup() {
-
+  protected void removeNotebookItemFromGroup(
+      @PathVariable Integer runId,
+      @PathVariable String group,
+      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+      @RequestParam(value = "notebookItemId", required = true) Integer notebookItemId,
+      @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
+      HttpServletResponse response) throws ObjectNotFoundException, IOException {
+    if (!isUserInRunAndWorkgroup(runId, workgroupId)) {
+      return;
+    }
+    NotebookItem notebookItem = vleService.removeNotebookItemFromGroup(
+        notebookItemId, group, clientSaveTime);
+    response.getWriter().write(notebookItem.toJSON().toString());
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}/{workgroupId}")

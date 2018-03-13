@@ -406,30 +406,36 @@ class NotebookService {
       config.data = $.param(params);
 
       return this.$http(config).then((result) => {
-        console.log(result);
-        /*
         let notebookItem = result.data;
-        if (notebookItem != null) {
-          if (notebookItem.type === "note" || notebookItem.type === "report") {
-            notebookItem.content = angular.fromJson(notebookItem.content);
-          }
-          // add/update notebook
-          let workgroupId = notebookItem.workgroupId;
-          if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
-            // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
-            this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
-          } else {
-            // otherwise, we'll create a new notebook field and add the item to the array
-            this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
-          }
-
-          this.groupNotebookItems();
-          this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId]});
-        }
-        return result.data;
-        */
+        return this.handleNewNotebookItem(notebookItem);
       });
     }
+  }
+
+  removeNotebookItemFromGroup(notebookItemId, group) {
+    if (this.ConfigService.isPreview()) {
+
+    } else {
+      let config = {
+        method: "DELETE",
+        url: this.ConfigService.getStudentNotebookURL() + '/group/' + group + '?workgroupId=' + this.ConfigService.getWorkgroupId() + '&notebookItemId=' + notebookItemId + '&clientSaveTime=' + Date.parse(new Date())
+      };
+      return this.$http(config).then((result) => {
+        let notebookItem = result.data;
+        return this.handleNewNotebookItem(notebookItem);
+      });
+    }
+  }
+
+  handleNewNotebookItem(notebookItem) {
+    if (notebookItem.type === "note" || notebookItem.type === "report") {
+      notebookItem.content = angular.fromJson(notebookItem.content);
+    }
+    let workgroupId = notebookItem.workgroupId;
+    this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+    this.groupNotebookItems();
+    this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId]});
+    return notebookItem;
   }
 
   saveNotebookToggleEvent(isOpen, currentNode) {

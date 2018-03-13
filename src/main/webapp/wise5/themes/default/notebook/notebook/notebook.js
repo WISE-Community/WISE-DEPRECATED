@@ -89,6 +89,12 @@ var NotebookController = function () {
             _this.shareNote(itemId, ev);
         });
 
+        this.$scope.$on('unshareNote', function (event, args) {
+            var itemId = args.itemId;
+            var ev = args.ev;
+            _this.showUnshareNoteConfirmDialog(itemId, ev);
+        });
+
         this.logOutListener = $scope.$on('logOut', function (event, args) {
             _this.logOutListener();
             _this.$rootScope.$broadcast('componentDoneUnloading');
@@ -173,6 +179,16 @@ var NotebookController = function () {
             var confirm = this.$mdDialog.confirm().title('shareNoteConfirmMessage').ariaLabel('share note confirmation').ok(this.$translate('share')).cancel(this.$translate('cancel'));
             this.$mdDialog.show(confirm).then(function () {
                 _this3.NotebookService.addNotebookItemToGroup(itemId, 'public');
+            });
+        }
+    }, {
+        key: 'showUnshareNoteConfirmDialog',
+        value: function showUnshareNoteConfirmDialog(itemId, ev) {
+            var _this4 = this;
+
+            var confirm = this.$mdDialog.confirm().title('unshareNoteConfirmMessage').ariaLabel('unshare note confirmation').ok(this.$translate('unshare')).cancel(this.$translate('cancel'));
+            this.$mdDialog.show(confirm).then(function () {
+                _this4.NotebookService.removeNotebookItemFromGroup(itemId, 'public');
             });
         }
     }, {

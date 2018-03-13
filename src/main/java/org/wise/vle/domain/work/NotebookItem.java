@@ -379,6 +379,7 @@ public class NotebookItem extends PersistableDomain {
     notebookItem.setTitle(getTitle());
     notebookItem.setContent(getContent());
     notebookItem.setClientSaveTime(getClientSaveTime());
+    notebookItem.setGroups(getGroups());
     Calendar now = Calendar.getInstance();
     Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
     notebookItem.setServerSaveTime(serverSaveTimestamp);

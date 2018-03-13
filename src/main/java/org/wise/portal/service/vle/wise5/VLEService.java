@@ -184,7 +184,17 @@ public interface VLEService {
    * @return
    */
   NotebookItem addNotebookItemToGroup(
-    Integer notebookItemId, String group, String clientSaveTime);
+      Integer notebookItemId, String group, String clientSaveTime);
+
+  /**
+   * Remove a NotebookItem from the specified group
+   * @param notebookItemId
+   * @param group
+   * @param clientSaveTime
+   * @return
+   */
+  NotebookItem removeNotebookItemFromGroup(
+      Integer notebookItemId, String group, String clientSaveTime);
 
   /**
    * Copies NotebookItem in the data store
