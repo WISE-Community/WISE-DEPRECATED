@@ -96,6 +96,27 @@ public class NotebookController {
     response.getWriter().write(notebookItem.toJSON().toString());
   }
 
+  @RequestMapping(method = RequestMethod.POST, value = "/student/notebook/{runId}/group/{group}")
+  protected void addNotebookItemToGroup(
+      @PathVariable Integer runId,
+      @PathVariable String group,
+      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+      @RequestParam(value = "notebookItemId", required = true) Integer notebookItemId,
+      @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
+      HttpServletResponse response
+      ) throws IOException, ObjectNotFoundException {
+    if (!isUserInRunAndWorkgroup(runId, workgroupId)) {
+      return;
+    }
+    NotebookItem notebookItem = vleService.addNotebookItemToGroup(notebookItemId, group, clientSaveTime);
+    response.getWriter().write(notebookItem.toJSON().toString());
+  }
+
+  @RequestMapping(method = RequestMethod.DELETE, value = "/student/notebook/{runId}/group/{group}")
+  protected void deleteNotebookItemFromGroup() {
+
+  }
+
   @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}/{workgroupId}")
   protected void getNotebookItemsForStudent(
       @PathVariable Integer runId,
@@ -118,10 +139,10 @@ public class NotebookController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}/group/{groupName}")
+  @RequestMapping(method = RequestMethod.GET, value = "/student/notebook/{runId}/group/{group}")
   protected void getNotebookItemsInGroup(
       @PathVariable Integer runId,
-      @PathVariable String groupName,
+      @PathVariable String group,
       @RequestParam(value = "periodId", required = false) Integer periodId,
       HttpServletResponse response) throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
@@ -131,7 +152,7 @@ public class NotebookController {
     Integer id = null;
     String nodeId = null;
     String componentId = null;
-    List<NotebookItem> notebookItemsByGroup = vleService.getNotebookItemsByGroup(runId, groupName);
+    List<NotebookItem> notebookItemsByGroup = vleService.getNotebookItemsByGroup(runId, group);
     JSONArray notebookItems = new JSONArray();
     for (NotebookItem notebookItem : notebookItemsByGroup) {
       notebookItems.put(notebookItem.toJSON());

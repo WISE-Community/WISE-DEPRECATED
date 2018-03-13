@@ -74,12 +74,19 @@ var NotebookController = function () {
             _this.deleteNote(itemId, ev, doDelete);
         });
 
-        // show delete note confirm dialog on 'reviveNote' event
+        // show revive note confirm dialog on 'reviveNote' event
         this.$scope.$on('reviveNote', function (event, args) {
             var itemId = args.itemId;
             var ev = args.ev;
             var doDelete = false;
             _this.deleteNote(itemId, ev, doDelete);
+        });
+
+        // show share note confirm dialog on 'shareNote' event
+        this.$scope.$on('shareNote', function (event, args) {
+            var itemId = args.itemId;
+            var ev = args.ev;
+            _this.shareNote(itemId, ev);
         });
 
         this.logOutListener = $scope.$on('logOut', function (event, args) {
@@ -156,6 +163,16 @@ var NotebookController = function () {
                 _this2.NotebookService.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.content.clientSaveTime, clientDeleteTime);
             }, function () {
                 // they chose not to delete. Do nothing, the dialog will close.
+            });
+        }
+    }, {
+        key: 'shareNote',
+        value: function shareNote(itemId, ev) {
+            var _this3 = this;
+
+            var confirm = this.$mdDialog.confirm().title('shareNoteConfirmMessage').ariaLabel('share note confirmation').ok(this.$translate('share')).cancel(this.$translate('cancel'));
+            this.$mdDialog.show(confirm).then(function () {
+                _this3.NotebookService.addNotebookItemToGroup(itemId, 'public');
             });
         }
     }, {

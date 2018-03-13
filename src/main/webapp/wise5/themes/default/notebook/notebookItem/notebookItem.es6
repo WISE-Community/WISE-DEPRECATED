@@ -26,7 +26,7 @@ class NotebookItemController {
         //this.mode = this.ConfigService.getMode();
 
         this.item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId, this.workgroupId);
-        this.item.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
+        //this.item.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
 
         // set the type in the controller
         this.type = this.item ? this.item.type : null;
@@ -95,6 +95,12 @@ class NotebookItemController {
             this.onSelect({$ev: ev, $itemId: this.item.localNotebookItemId});
         }
     }
+
+    doShare(ev) {
+      ev.stopPropagation();  // don't follow-through on the doSelect callback after this
+      console.log('doShare');
+      this.$rootScope.$broadcast('shareNote', {itemId: this.item.id, ev: ev});
+    }
 }
 
 NotebookItemController.$inject = [
@@ -150,6 +156,13 @@ const NotebookItem = {
                              style="background-color: {{$ctrl.label.color}}">
                 <span class="notebook-item__content__location"><md-icon> place </md-icon><span class="md-body-1">{{$ctrl.getItemNodePosition()}}</span></span>
                 <span flex></span>
+                <md-button class="md-icon-button"
+                           ng-if="$ctrl.item.serverDeleteTime == null && !$ctrl.isChooseMode"
+                           aria-label="Share notebook item"
+                           ng-click="$ctrl.doShare($event)">
+                    <md-icon> file_upload </md-icon>
+                    <md-tooltip md-direction="top">{{ 'SHARE' | translate }}</md-tooltip>
+                </md-button>
                 <md-button class="md-icon-button"
                            ng-if="$ctrl.item.serverDeleteTime == null && !$ctrl.isChooseMode"
                            aria-label="Delete notebook item"

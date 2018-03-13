@@ -364,6 +364,27 @@ public class NotebookItem extends PersistableDomain {
     return false;
   }
 
+  public NotebookItem copy() {
+    NotebookItem notebookItem = new NotebookItem();
+    notebookItem.setRun(getRun());
+    notebookItem.setPeriod(getPeriod());
+    notebookItem.setWorkgroup(getWorkgroup());
+    notebookItem.setNodeId(getNodeId());
+    notebookItem.setComponentId(getComponentId());
+    notebookItem.setStudentWork(getStudentWork());
+    notebookItem.setStudentAsset(getStudentAsset());
+    notebookItem.setLocalNotebookItemId(getLocalNotebookItemId());
+    notebookItem.setParentNotebookItemId(getParentNotebookItemId());
+    notebookItem.setType(getType());
+    notebookItem.setTitle(getTitle());
+    notebookItem.setContent(getContent());
+    notebookItem.setClientSaveTime(getClientSaveTime());
+    Calendar now = Calendar.getInstance();
+    Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
+    notebookItem.setServerSaveTime(serverSaveTimestamp);
+    return notebookItem;
+  }
+
   public NotebookItem copy(Workgroup workgroup, String clientSaveTime) {
     NotebookItem notebookItem = new NotebookItem();
     notebookItem.setRun(getRun());

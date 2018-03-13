@@ -532,6 +532,50 @@ var NotebookService = function () {
       }
     }
   }, {
+    key: "addNotebookItemToGroup",
+    value: function addNotebookItemToGroup(notebookItemId, group) {
+      if (this.ConfigService.isPreview()) {} else {
+        var config = {
+          method: "POST",
+          url: this.ConfigService.getStudentNotebookURL() + '/group/' + group,
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        };
+        var params = {
+          workgroupId: this.ConfigService.getWorkgroupId(),
+          notebookItemId: notebookItemId,
+          clientSaveTime: Date.parse(new Date())
+        };
+        if (params.clientSaveTime == null) {
+          params.clientSaveTime = Date.parse(new Date());
+        }
+        config.data = $.param(params);
+
+        return this.$http(config).then(function (result) {
+          console.log(result);
+          /*
+          let notebookItem = result.data;
+          if (notebookItem != null) {
+            if (notebookItem.type === "note" || notebookItem.type === "report") {
+              notebookItem.content = angular.fromJson(notebookItem.content);
+            }
+            // add/update notebook
+            let workgroupId = notebookItem.workgroupId;
+            if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+              // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
+              this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+            } else {
+              // otherwise, we'll create a new notebook field and add the item to the array
+              this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+            }
+             this.groupNotebookItems();
+            this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId]});
+          }
+          return result.data;
+          */
+        });
+      }
+    }
+  }, {
     key: "saveNotebookToggleEvent",
     value: function saveNotebookToggleEvent(isOpen, currentNode) {
       var nodeId = null,

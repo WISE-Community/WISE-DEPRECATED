@@ -66,12 +66,19 @@ class NotebookController {
             this.deleteNote(itemId, ev, doDelete);
         });
 
-        // show delete note confirm dialog on 'reviveNote' event
+        // show revive note confirm dialog on 'reviveNote' event
         this.$scope.$on('reviveNote', (event, args) => {
             let itemId = args.itemId;
             let ev = args.ev;
             let doDelete = false;
             this.deleteNote(itemId, ev, doDelete);
+        });
+
+        // show share note confirm dialog on 'shareNote' event
+        this.$scope.$on('shareNote', (event, args) => {
+          let itemId = args.itemId;
+          let ev = args.ev;
+          this.shareNote(itemId, ev);
         });
 
         this.logOutListener = $scope.$on('logOut', (event, args) => {
@@ -150,6 +157,17 @@ class NotebookController {
         }, () => {
             // they chose not to delete. Do nothing, the dialog will close.
         });
+    }
+
+    shareNote(itemId, ev) {
+      let confirm = this.$mdDialog.confirm()
+        .title('shareNoteConfirmMessage')
+        .ariaLabel('share note confirmation')
+        .ok(this.$translate('share'))
+        .cancel(this.$translate('cancel'))
+      this.$mdDialog.show(confirm).then(() => {
+        this.NotebookService.addNotebookItemToGroup(itemId, 'public');
+      });
     }
 
     notebookItemSelected($event, notebookItem) {

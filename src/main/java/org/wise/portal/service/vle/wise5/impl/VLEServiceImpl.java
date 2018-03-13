@@ -951,6 +951,36 @@ public class VLEServiceImpl implements VLEService {
     return notebookItem;
   }
 
+  public NotebookItem addNotebookItemToGroup(
+    Integer notebookItemId, String group, String clientSaveTime) {
+    try {
+      NotebookItem notebookItem = (NotebookItem) notebookItemDao.getById(notebookItemId);
+      NotebookItem copiedNotebookItem = notebookItem.copy();
+      if (copiedNotebookItem.isInGroup(group)) {
+        return copiedNotebookItem;
+      }
+      String groups = copiedNotebookItem.getGroups();
+      try {
+        JSONArray groupsJSONArray;
+        if (groups == null) {
+          groupsJSONArray = new JSONArray();
+        } else {
+          groupsJSONArray = new JSONArray(groups);
+        }
+        groupsJSONArray.put(group);
+        copiedNotebookItem.setGroups(groupsJSONArray.toString());
+        copiedNotebookItem.setClientSaveTime(new Timestamp(new Long(clientSaveTime)));
+        notebookItemDao.save(copiedNotebookItem);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+      return copiedNotebookItem;
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
   public NotebookItem copyNotebookItem(
       Integer workgroupId, Integer parentNotebookItemId, String clientSaveTime) {
     try {

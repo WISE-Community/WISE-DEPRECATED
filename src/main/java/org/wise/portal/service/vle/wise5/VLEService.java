@@ -177,6 +177,16 @@ public interface VLEService {
     String clientSaveTime, String clientDeleteTime);
 
   /**
+   * Add a group to a NotebookItem
+   * @param notebookItemId
+   * @param group
+   * @param clientSaveTime
+   * @return
+   */
+  NotebookItem addNotebookItemToGroup(
+    Integer notebookItemId, String group, String clientSaveTime);
+
+  /**
    * Copies NotebookItem in the data store
    * @param workgroupId
    * @param parentNotebookItemId
