@@ -1084,6 +1084,7 @@ var LabelController = function () {
     value: function newLabelButtonClicked() {
       this.createLabelMode = true;
       this.isCancelButtonVisible = true;
+      this.editLabelMode = false;
     }
   }, {
     key: 'cancelButtonClicked',

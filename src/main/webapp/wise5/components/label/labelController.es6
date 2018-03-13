@@ -1078,6 +1078,7 @@ class LabelController {
   newLabelButtonClicked() {
     this.createLabelMode = true;
     this.isCancelButtonVisible = true;
+    this.editLabelMode = false;
   };
 
   /**
