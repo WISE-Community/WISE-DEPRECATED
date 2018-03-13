@@ -248,14 +248,16 @@
             <input type='number'
                 style='width: 120'
                 ng-model='tableController.authoringComponentContent.numColumns'
-                ng-change='tableController.authoringViewTableSizeConfirmChange("columns", {{tableController.authoringComponentContent.numColumns}})'/>
+                ng-model-options='{ debounce: 500 }'
+                ng-change='tableController.authoringViewTableNumColumnsChanged({{tableController.authoringComponentContent.numColumns}})'/>
           </md-input-container>
           <md-input-container>
             <label>{{ 'table.rows' | translate }}</label>
             <input type='number'
                 style='width: 120'
+                ng-model-options='{ debounce: 500 }'
                 ng-model='tableController.authoringComponentContent.numRows'
-                ng-change='tableController.authoringViewTableSizeConfirmChange("rows", {{tableController.authoringComponentContent.numRows}})'/>
+                ng-change='tableController.authoringViewTableNumRowsChanged({{tableController.authoringComponentContent.numRows}})'/>
           </md-input-container>
           <md-input-container>
             <label>{{ 'table.globalCellSize' | translate }}</label>
