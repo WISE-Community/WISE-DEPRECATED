@@ -23,7 +23,6 @@
  */
 package org.wise.vle.domain.work;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -380,27 +379,6 @@ public class NotebookItem extends PersistableDomain {
     notebookItem.setContent(getContent());
     notebookItem.setClientSaveTime(getClientSaveTime());
     notebookItem.setGroups(getGroups());
-    Calendar now = Calendar.getInstance();
-    Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
-    notebookItem.setServerSaveTime(serverSaveTimestamp);
-    return notebookItem;
-  }
-
-  public NotebookItem copy(Workgroup workgroup, String clientSaveTime) {
-    NotebookItem notebookItem = new NotebookItem();
-    notebookItem.setRun(getRun());
-    notebookItem.setPeriod(getPeriod());
-    notebookItem.setWorkgroup(workgroup);
-    notebookItem.setNodeId(getNodeId());
-    notebookItem.setComponentId(getComponentId());
-    notebookItem.setStudentWork(getStudentWork());
-    notebookItem.setStudentAsset(getStudentAsset());
-    notebookItem.setLocalNotebookItemId(RandomStringUtils.randomAlphanumeric(10).toLowerCase());
-    notebookItem.setParentNotebookItemId(getId());
-    notebookItem.setType(getType());
-    notebookItem.setTitle(getTitle());
-    notebookItem.setContent(getContent());
-    notebookItem.setClientSaveTime(new Timestamp(new Long(clientSaveTime)));
     Calendar now = Calendar.getInstance();
     Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
     notebookItem.setServerSaveTime(serverSaveTimestamp);

@@ -23,6 +23,7 @@
  */
 package org.wise.portal.service.vle.wise5.impl;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1017,7 +1018,12 @@ public class VLEServiceImpl implements VLEService {
     try {
       NotebookItem notebookItem = (NotebookItem) notebookItemDao.getById(parentNotebookItemId);
       Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));
-      NotebookItem copiedNotebookItem = notebookItem.copy(workgroup, clientSaveTime);
+      NotebookItem copiedNotebookItem = notebookItem.copy();
+      copiedNotebookItem.setWorkgroup(workgroup);
+      copiedNotebookItem.setClientSaveTime(new Timestamp(new Long(clientSaveTime)));
+      copiedNotebookItem.setLocalNotebookItemId(RandomStringUtils.randomAlphanumeric(10).toLowerCase());
+      copiedNotebookItem.setGroups(null);
+      copiedNotebookItem.setParentNotebookItemId(notebookItem.getId());
       notebookItemDao.save(copiedNotebookItem);
       return copiedNotebookItem;
     } catch (ObjectNotFoundException e) {
