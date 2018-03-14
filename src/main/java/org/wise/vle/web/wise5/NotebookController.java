@@ -16,6 +16,7 @@ import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.work.NotebookItem;
+import org.wise.vle.domain.work.NotebookItemAlreadyInGroupException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -107,8 +108,12 @@ public class NotebookController {
     if (!isUserInRunAndWorkgroup(runId, workgroupId)) {
       return;
     }
-    NotebookItem notebookItem = vleService.addNotebookItemToGroup(notebookItemId, group, clientSaveTime);
-    response.getWriter().write(notebookItem.toJSON().toString());
+    try {
+      NotebookItem notebookItem = vleService.addNotebookItemToGroup(notebookItemId, group, clientSaveTime);
+      response.getWriter().write(notebookItem.toJSON().toString());
+    } catch (NotebookItemAlreadyInGroupException e) {
+      response.sendError(406, e.getMessage());
+    }
   }
 
   @RequestMapping(method = RequestMethod.DELETE, value = "/student/notebook/{runId}/group/{group}")

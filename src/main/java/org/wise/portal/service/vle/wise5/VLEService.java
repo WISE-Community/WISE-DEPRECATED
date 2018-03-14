@@ -29,10 +29,7 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
-import org.wise.vle.domain.work.Event;
-import org.wise.vle.domain.work.NotebookItem;
-import org.wise.vle.domain.work.StudentAsset;
-import org.wise.vle.domain.work.StudentWork;
+import org.wise.vle.domain.work.*;
 
 import java.util.List;
 
@@ -184,7 +181,7 @@ public interface VLEService {
    * @return
    */
   NotebookItem addNotebookItemToGroup(
-      Integer notebookItemId, String group, String clientSaveTime);
+      Integer notebookItemId, String group, String clientSaveTime) throws NotebookItemAlreadyInGroupException;
 
   /**
    * Remove a NotebookItem from the specified group

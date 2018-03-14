@@ -34,10 +34,10 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.achievement.AchievementDao;
 import org.wise.portal.dao.annotation.wise5.AnnotationDao;
 import org.wise.portal.dao.notification.NotificationDao;
+import org.wise.portal.dao.work.EventDao;
 import org.wise.portal.dao.work.NotebookItemDao;
 import org.wise.portal.dao.work.StudentAssetDao;
 import org.wise.portal.dao.work.StudentWorkDao;
-import org.wise.portal.dao.work.EventDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.Workgroup;
@@ -50,10 +50,7 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
-import org.wise.vle.domain.work.Event;
-import org.wise.vle.domain.work.NotebookItem;
-import org.wise.vle.domain.work.StudentAsset;
-import org.wise.vle.domain.work.StudentWork;
+import org.wise.vle.domain.work.*;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -953,12 +950,12 @@ public class VLEServiceImpl implements VLEService {
   }
 
   public NotebookItem addNotebookItemToGroup(
-      Integer notebookItemId, String group, String clientSaveTime) {
+      Integer notebookItemId, String group, String clientSaveTime) throws NotebookItemAlreadyInGroupException {
     try {
       NotebookItem notebookItem = (NotebookItem) notebookItemDao.getById(notebookItemId);
       NotebookItem copiedNotebookItem = notebookItem.copy();
       if (copiedNotebookItem.isInGroup(group)) {
-        return copiedNotebookItem;
+        throw new NotebookItemAlreadyInGroupException(notebookItem, group);
       }
       String groups = copiedNotebookItem.getGroups();
       try {
