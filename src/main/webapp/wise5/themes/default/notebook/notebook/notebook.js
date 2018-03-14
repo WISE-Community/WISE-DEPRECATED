@@ -166,7 +166,7 @@ var NotebookController = function () {
                 if (doDelete) {
                     clientDeleteTime = Date.parse(new Date()); // set delete timestamp
                 }
-                _this2.NotebookService.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.content.clientSaveTime, clientDeleteTime);
+                _this2.NotebookService.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
             }, function () {
                 // they chose not to delete. Do nothing, the dialog will close.
             });

@@ -444,12 +444,77 @@ var NotebookService = function () {
       return notebookByWorkgroup;
     }
   }, {
+    key: "retrievePublicNotebookItems",
+    value: function retrievePublicNotebookItems() {
+      var group = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var periodId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+      if (this.ConfigService.isPreview()) {
+        // // we are previewing the project, initialize dummy student data
+        // const workgroupId = this.ConfigService.getWorkgroupId();
+        // this.notebooksByWorkgroup = {};
+        // this.notebooksByWorkgroup[workgroupId] = {};
+        // this.notebooksByWorkgroup[workgroupId].allItems = [];
+        // this.notebooksByWorkgroup[workgroupId].items = [];
+        // this.notebooksByWorkgroup[workgroupId].deletedItems = [];
+        // this.groupNotebookItems();
+        // // if we're in preview, don't make any request to the server but pretend we did
+        // const deferred = this.$q.defer();
+        // deferred.resolve(this.notebooksByWorkgroup[workgroupId]);
+        // return deferred.promise;
+      } else {
+
+        var config = {
+          method: 'GET',
+          url: this.ConfigService.getStudentNotebookURL() + ("/group/" + group),
+          params: {}
+        };
+        if (periodId != null) {
+          config.params.periodId = periodId;
+        }
+        return this.$http(config).then(function (response) {
+          console.log(response);
+          // this.notebooksByWorkgroup = {};
+          // const allNotebookItems = response.data;
+          // for (let notebookItem of allNotebookItems) {
+          //   try {
+          //     if (notebookItem.studentAssetId != null) {
+          //       // if this notebook item is a StudentAsset item, add the association here
+          //       notebookItem.studentAsset = this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
+          //     } else if (notebookItem.studentWorkId != null) {
+          //       // if this notebook item is a StudentWork item, add the association here
+          //       notebookItem.studentWork = this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
+          //     } else if (notebookItem.type === "note" || notebookItem.type === "report") {
+          //       notebookItem.content = angular.fromJson(notebookItem.content);
+          //     }
+          //     const workgroupId = notebookItem.workgroupId;
+          //     if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+          //       // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
+          //       this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+          //     } else {
+          //       // otherwise, we'll create a new notebook field and add the item to the array
+          //       this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+          //     }
+          //   } catch (e) {
+          //     // keep going, ignore this error
+          //   }
+          // }
+          // this.groupNotebookItems(); // group notebook items based on item.localNotebookItemId
+          // this.calculateTotalUsage();
+          //
+          // return this.notebooksByWorkgroup;
+        });
+      }
+    }
+  }, {
     key: "saveNotebookItem",
     value: function saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content) {
+      var groups = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : [];
+
       var _this2 = this;
 
-      var clientSaveTime = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
-      var clientDeleteTime = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : null;
+      var clientSaveTime = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : null;
+      var clientDeleteTime = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : null;
 
       if (this.ConfigService.isPreview()) {
         return this.$q(function (resolve, reject) {
@@ -461,6 +526,7 @@ var NotebookService = function () {
             title: title,
             type: type,
             workgroupId: _this2.ConfigService.getWorkgroupId(),
+            groups: angular.toJson(groups),
             clientSaveTime: clientSaveTime,
             clientDeleteTime: clientDeleteTime
           };
@@ -481,7 +547,6 @@ var NotebookService = function () {
           }
 
           _this2.groupNotebookItems();
-          _this2.groupNotebookItems();
           _this2.$rootScope.$broadcast('notebookUpdated', { notebook: _this2.notebooksByWorkgroup[workgroupId] });
           resolve();
         });
@@ -500,6 +565,7 @@ var NotebookService = function () {
           type: type,
           title: title,
           content: angular.toJson(content),
+          groups: angular.toJson(groups),
           clientSaveTime: Date.parse(new Date()),
           clientDeleteTime: clientDeleteTime
         };

@@ -224,7 +224,7 @@ class NotebookItemReportController {
         this.reportItem.id = null;  // set the id to null so it can be inserted as initial version, as opposed to updated. this is true for both new and just-loaded reports.
 
         this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId,
-            this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.content.clientSaveTime)
+            this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.groups, this.reportItem.content.clientSaveTime)
             .then((result) => {
                 if (result) {
                     this.dirty = false;

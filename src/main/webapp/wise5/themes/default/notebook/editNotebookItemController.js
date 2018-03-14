@@ -205,7 +205,7 @@ var EditNotebookItemController = function () {
 
             // make sure all the assets are created before saving the notebook item.
             this.$q.all(uploadAssetPromises).then(function () {
-                _this2.NotebookService.saveNotebookItem(_this2.item.id, _this2.item.nodeId, _this2.item.localNotebookItemId, _this2.item.type, _this2.item.title, _this2.item.content, _this2.item.content.clientSaveTime).then(function () {
+                _this2.NotebookService.saveNotebookItem(_this2.item.id, _this2.item.nodeId, _this2.item.localNotebookItemId, _this2.item.type, _this2.item.title, _this2.item.content, _this2.item.groups, _this2.item.content.clientSaveTime).then(function () {
                     _this2.$mdDialog.hide();
                 });
             });

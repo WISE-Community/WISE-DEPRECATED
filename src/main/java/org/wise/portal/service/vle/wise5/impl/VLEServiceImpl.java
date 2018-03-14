@@ -853,6 +853,7 @@ public class VLEServiceImpl implements VLEService {
   public NotebookItem saveNotebookItem(Integer id, Integer runId, Integer periodId,
       Integer workgroupId, String nodeId, String componentId, Integer studentWorkId,
       Integer studentAssetId, String localNotebookItemId, String type, String title, String content,
+      String groups,
       String clientSaveTime, String clientDeleteTime) {
     NotebookItem notebookItem;
     if (id != null) {
@@ -920,6 +921,11 @@ public class VLEServiceImpl implements VLEService {
     }
     if (content != null) {
       notebookItem.setContent(content);
+    }
+    if (groups != null && !"[]".equals(groups)) {
+      notebookItem.setGroups(groups);
+    } else if ("[]".equals(groups)) {
+      notebookItem.setGroups(null);
     }
     if (clientSaveTime != null && !clientSaveTime.isEmpty()) {
       Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));
@@ -997,7 +1003,11 @@ public class VLEServiceImpl implements VLEService {
             g--;
           }
         }
-        copiedNotebookItem.setGroups(groupsJSONArray.toString());
+        if (groupsJSONArray.length() == 0) {
+          copiedNotebookItem.setGroups(null);
+        } else {
+          copiedNotebookItem.setGroups(groupsJSONArray.toString());
+        }
         copiedNotebookItem.setClientSaveTime(new Timestamp(new Long(clientSaveTime)));
         notebookItemDao.save(copiedNotebookItem);
       } catch (JSONException e) {

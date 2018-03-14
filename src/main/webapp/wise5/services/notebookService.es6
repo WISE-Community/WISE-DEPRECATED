@@ -304,7 +304,69 @@ class NotebookService {
     return notebookByWorkgroup;
   }
 
-  saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content, clientSaveTime = null, clientDeleteTime = null) {
+  retrievePublicNotebookItems(group = null, periodId = null) {
+    if (this.ConfigService.isPreview()) {
+      // // we are previewing the project, initialize dummy student data
+      // const workgroupId = this.ConfigService.getWorkgroupId();
+      // this.notebooksByWorkgroup = {};
+      // this.notebooksByWorkgroup[workgroupId] = {};
+      // this.notebooksByWorkgroup[workgroupId].allItems = [];
+      // this.notebooksByWorkgroup[workgroupId].items = [];
+      // this.notebooksByWorkgroup[workgroupId].deletedItems = [];
+      // this.groupNotebookItems();
+      // // if we're in preview, don't make any request to the server but pretend we did
+      // const deferred = this.$q.defer();
+      // deferred.resolve(this.notebooksByWorkgroup[workgroupId]);
+      // return deferred.promise;
+    } else {
+
+      const config = {
+        method : 'GET',
+        url : this.ConfigService.getStudentNotebookURL() + `/group/${group}`,
+        params : {
+
+        }
+      };
+      if (periodId != null) {
+        config.params.periodId = periodId;
+      }
+      return this.$http(config).then((response) => {
+        console.log(response);
+        // this.notebooksByWorkgroup = {};
+        // const allNotebookItems = response.data;
+        // for (let notebookItem of allNotebookItems) {
+        //   try {
+        //     if (notebookItem.studentAssetId != null) {
+        //       // if this notebook item is a StudentAsset item, add the association here
+        //       notebookItem.studentAsset = this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
+        //     } else if (notebookItem.studentWorkId != null) {
+        //       // if this notebook item is a StudentWork item, add the association here
+        //       notebookItem.studentWork = this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
+        //     } else if (notebookItem.type === "note" || notebookItem.type === "report") {
+        //       notebookItem.content = angular.fromJson(notebookItem.content);
+        //     }
+        //     const workgroupId = notebookItem.workgroupId;
+        //     if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+        //       // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
+        //       this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+        //     } else {
+        //       // otherwise, we'll create a new notebook field and add the item to the array
+        //       this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+        //     }
+        //   } catch (e) {
+        //     // keep going, ignore this error
+        //   }
+        // }
+        // this.groupNotebookItems(); // group notebook items based on item.localNotebookItemId
+        // this.calculateTotalUsage();
+        //
+        // return this.notebooksByWorkgroup;
+      });
+    }
+  }
+
+  saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content, groups = [],
+      clientSaveTime = null, clientDeleteTime = null) {
     if (this.ConfigService.isPreview()) {
       return this.$q((resolve, reject) => {
         let notebookItem = {
@@ -315,6 +377,7 @@ class NotebookService {
           title: title,
           type: type,
           workgroupId: this.ConfigService.getWorkgroupId(),
+          groups: angular.toJson(groups),
           clientSaveTime: clientSaveTime,
           clientDeleteTime: clientDeleteTime
         };
@@ -335,7 +398,6 @@ class NotebookService {
         }
 
         this.groupNotebookItems();
-        this.groupNotebookItems();
         this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId]});
         resolve();
       });
@@ -354,6 +416,7 @@ class NotebookService {
         type: type,
         title: title,
         content: angular.toJson(content),
+        groups: angular.toJson(groups),
         clientSaveTime: Date.parse(new Date()),
         clientDeleteTime: clientDeleteTime
       };

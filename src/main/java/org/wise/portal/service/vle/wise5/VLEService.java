@@ -171,6 +171,7 @@ public interface VLEService {
     String nodeId, String componentId,
     Integer studentWorkId, Integer studentAssetId,
     String localNotebookItemId, String type, String title, String content,
+    String groups,
     String clientSaveTime, String clientDeleteTime);
 
   /**

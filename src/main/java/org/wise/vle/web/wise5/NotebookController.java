@@ -72,6 +72,7 @@ public class NotebookController {
       @RequestParam(value = "type", required = false) String type,
       @RequestParam(value = "title", required = false) String title,
       @RequestParam(value = "content", required = false) String content,
+      @RequestParam(value = "groups", required = false) String groups,
       @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
       @RequestParam(value = "clientDeleteTime", required = false) String clientDeleteTime,
       HttpServletResponse response) throws IOException, ObjectNotFoundException {
@@ -91,6 +92,7 @@ public class NotebookController {
       type,
       title,
       content,
+      groups,
       clientSaveTime,
       clientDeleteTime
     );

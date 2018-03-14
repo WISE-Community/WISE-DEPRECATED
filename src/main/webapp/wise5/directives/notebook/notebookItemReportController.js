@@ -241,7 +241,7 @@ var NotebookItemReportController = function () {
             this.reportItem.content.clientSaveTime = Date.parse(new Date()); // set save timestamp
             this.reportItem.id = null; // set the id to null so it can be inserted as initial version, as opposed to updated. this is true for both new and just-loaded reports.
 
-            this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId, this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.content.clientSaveTime).then(function (result) {
+            this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId, this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.groups, this.reportItem.content.clientSaveTime).then(function (result) {
                 if (result) {
                     _this3.dirty = false;
                     _this3.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
