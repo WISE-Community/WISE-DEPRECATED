@@ -418,7 +418,12 @@ class NotebookService {
     } else {
       let config = {
         method: "DELETE",
-        url: this.ConfigService.getStudentNotebookURL() + '/group/' + group + '?workgroupId=' + this.ConfigService.getWorkgroupId() + '&notebookItemId=' + notebookItemId + '&clientSaveTime=' + Date.parse(new Date())
+        url: this.ConfigService.getStudentNotebookURL() + '/group/' + group,
+        params : {
+          workgroupId: this.ConfigService.getWorkgroupId(),
+          notebookItemId: notebookItemId,
+          clientSaveTime: Date.parse(new Date())
+        }
       };
       return this.$http(config).then((result) => {
         let notebookItem = result.data;

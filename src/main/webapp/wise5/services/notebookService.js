@@ -566,7 +566,12 @@ var NotebookService = function () {
       if (this.ConfigService.isPreview()) {} else {
         var config = {
           method: "DELETE",
-          url: this.ConfigService.getStudentNotebookURL() + '/group/' + group + '?workgroupId=' + this.ConfigService.getWorkgroupId() + '&notebookItemId=' + notebookItemId + '&clientSaveTime=' + Date.parse(new Date())
+          url: this.ConfigService.getStudentNotebookURL() + '/group/' + group,
+          params: {
+            workgroupId: this.ConfigService.getWorkgroupId(),
+            notebookItemId: notebookItemId,
+            clientSaveTime: Date.parse(new Date())
+          }
         };
         return this.$http(config).then(function (result) {
           var notebookItem = result.data;
