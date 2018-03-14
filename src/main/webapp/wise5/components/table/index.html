@@ -238,6 +238,7 @@
               ng-model='tableController.authoringComponentContent.prompt'
               ng-change='tableController.authoringViewComponentChanged()'
               ng-model-options='{ debounce: 1000 }'
+              aria-label='Prompt'
               placeholder='{{ "enterPromptHere" | translate }}'>
         </textarea>
         </md-input-container>
@@ -335,6 +336,7 @@
                 <input ng-model='cell.text'
                     ng-model-options='{ debounce: 1000 }'
                     ng-change='tableController.authoringViewComponentChanged()'
+                    aria-label='Text'
                     size='20'/>
               </md-input-container>
               <br/>
@@ -469,6 +471,7 @@
                   <input type='text'
                       ng-model='cell.text'
                       ng-change='tableController.studentDataChanged()'
+                      aria-label='Text'
                       size='{{cell.size || tableController.componentContent.globalCellSize}}'/>
                 </md-input-container>
               </td>
