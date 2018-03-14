@@ -28,8 +28,12 @@ var NotebookItemController = function () {
         this.$translate = this.$filter('translate');
         //this.mode = this.ConfigService.getMode();
 
-        this.item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId, this.workgroupId);
-        //this.item.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
+        if (this.group != null) {
+            this.item = this.NotebookService.getPublicNotebookItem(this.group, this.itemId, this.workgroupId);
+        } else {
+            this.item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId, this.workgroupId);
+            //this.item.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
+        }
 
         // set the type in the controller
         this.type = this.item ? this.item.type : null;
@@ -127,6 +131,31 @@ var NotebookItemController = function () {
             ev.stopPropagation(); // don't follow-through on the doUnshare callback after this
             this.$rootScope.$broadcast('unshareNote', { itemId: this.item.id, ev: ev });
         }
+    }, {
+        key: 'canShareNotebookItem',
+        value: function canShareNotebookItem() {
+            return this.isMyNotebookItem() && this.item.serverDeleteTime == null && !this.isChooseMode && !this.isItemInGroup('public');
+        }
+    }, {
+        key: 'canUnshareNotebookItem',
+        value: function canUnshareNotebookItem() {
+            return this.isMyNotebookItem() && this.item.serverDeleteTime == null && !this.isChooseMode && this.isItemInGroup('public');
+        }
+    }, {
+        key: 'canDeleteNotebookItem',
+        value: function canDeleteNotebookItem() {
+            return this.isMyNotebookItem() && this.item.serverDeleteTime == null && !this.isChooseMode;
+        }
+    }, {
+        key: 'canReviveNotebookItem',
+        value: function canReviveNotebookItem() {
+            return this.item.serverDeleteTime != null && !this.isChooseMode;
+        }
+    }, {
+        key: 'isMyNotebookItem',
+        value: function isMyNotebookItem() {
+            return this.item.workgroupId === this.ConfigService.getWorkgroupId();
+        }
     }]);
 
     return NotebookItemController;
@@ -137,6 +166,7 @@ NotebookItemController.$inject = ["$injector", "$rootScope", "$scope", "$filter"
 var NotebookItem = {
     bindings: {
         itemId: '<',
+        group: '@',
         isChooseMode: '<',
         config: '<',
         componentController: '<',
@@ -145,7 +175,7 @@ var NotebookItem = {
         onRevive: '&',
         onSelect: '&'
     },
-    template: '<md-card class="notebook-item"\n                  ng-mouseenter="focus=true;"\n                  ng-mouseleave="focus=false;"\n                  ng-class="{\'md-whiteframe-5dp\': focus}"\n                  ng-click="$ctrl.doSelect($event)">\n            <md-card-content aria-label="View"\n                             class="notebook-item__content notebook-item__edit"\n                             ng-class="{\'notebook-item__content--text-only\': !$ctrl.item.content.attachments.length}"\n                             md-ink-ripple\n                             flex\n                             layout="column"\n                             layout-align="center center">\n                <div ng-repeat="attachment in $ctrl.item.content.attachments"\n                     ng-if="$first"\n                     class="notebook-item__content__attachment"\n                     style="background: url(\'{{attachment.iconURL}}\')"></div>\n                <div ng-if="$ctrl.item.content.text"\n                     class="notebook-item__content__text notebook-item__edit md-body-1"\n                     style="color: {{$ctrl.label.color}}">\n                    {{$ctrl.item.content.text}}\n                </div>\n            </md-card-content>\n            <md-card-actions class="notebook-item__actions"\n                             layout="row"\n                             layout-align="start center"\n                             style="background-color: {{$ctrl.label.color}}">\n                <span class="notebook-item__content__location"><md-icon> place </md-icon><span class="md-body-1">{{$ctrl.getItemNodePosition()}}</span></span>\n                <span flex></span>\n                <md-button class="md-icon-button"\n                           ng-if="$ctrl.item.serverDeleteTime == null && !$ctrl.isChooseMode && !$ctrl.isItemInGroup(\'public\')"\n                           aria-label="Share notebook item"\n                           ng-click="$ctrl.doShare($event)">\n                    <md-icon> cloud_upload </md-icon>\n                    <md-tooltip md-direction="top">{{ \'SHARE\' | translate }}</md-tooltip>\n                </md-button>\n                <md-button class="md-icon-button"\n                           ng-if="$ctrl.item.serverDeleteTime == null && !$ctrl.isChooseMode && $ctrl.isItemInGroup(\'public\')"\n                           aria-label="Unshare notebook item"\n                           ng-click="$ctrl.doUnshare($event)">\n                    <md-icon> cloud_off </md-icon>\n                    <md-tooltip md-direction="top">{{ \'UNSHARE\' | translate }}</md-tooltip>\n                </md-button>\n                <md-button class="md-icon-button"\n                           ng-if="$ctrl.item.serverDeleteTime == null && !$ctrl.isChooseMode"\n                           aria-label="Delete notebook item"\n                           ng-click="$ctrl.doDelete($event)">\n                    <md-icon> delete </md-icon>\n                    <md-tooltip md-direction="top">{{ \'DELETE\' | translate }}</md-tooltip>\n                </md-button>\n                <md-button class="md-icon-button"\n                           ng-if="$ctrl.item.serverDeleteTime != null && !$ctrl.isChooseMode"\n                           aria-label="Revive notebook item"\n                           ng-click="$ctrl.doRevive($event)">\n                    <md-icon> undo </md-icon>\n                    <md-tooltip md-direction="top">{{ \'reviveNote\' | translate }}</md-tooltip>\n                </md-button>\n            </md-card-actions>\n        </md-card>',
+    template: '<md-card class="notebook-item"\n                  ng-mouseenter="focus=true;"\n                  ng-mouseleave="focus=false;"\n                  ng-class="{\'md-whiteframe-5dp\': focus}"\n                  ng-click="$ctrl.doSelect($event)">\n            <md-card-content aria-label="View"\n                             class="notebook-item__content notebook-item__edit"\n                             ng-class="{\'notebook-item__content--text-only\': !$ctrl.item.content.attachments.length}"\n                             md-ink-ripple\n                             flex\n                             layout="column"\n                             layout-align="center center">\n                <div ng-repeat="attachment in $ctrl.item.content.attachments"\n                     ng-if="$first"\n                     class="notebook-item__content__attachment"\n                     style="background: url(\'{{attachment.iconURL}}\')"></div>\n                <div ng-if="$ctrl.item.content.text"\n                     class="notebook-item__content__text notebook-item__edit md-body-1"\n                     style="color: {{$ctrl.label.color}}">\n                    {{$ctrl.item.content.text}}\n                </div>\n            </md-card-content>\n            <md-card-actions class="notebook-item__actions"\n                             layout="row"\n                             layout-align="start center"\n                             style="background-color: {{$ctrl.label.color}}">\n                <span class="notebook-item__content__location"><md-icon> place </md-icon><span class="md-body-1">{{$ctrl.getItemNodePosition()}}</span></span>\n                <span flex></span>\n                <md-button class="md-icon-button"\n                           ng-if="$ctrl.canShareNotebookItem()"\n                           aria-label="Share notebook item"\n                           ng-click="$ctrl.doShare($event)">\n                    <md-icon> cloud_upload </md-icon>\n                    <md-tooltip md-direction="top">{{ \'SHARE\' | translate }}</md-tooltip>\n                </md-button>\n                <md-button class="md-icon-button"\n                           ng-if="$ctrl.canUnshareNotebookItem()"\n                           aria-label="Unshare notebook item"\n                           ng-click="$ctrl.doUnshare($event)">\n                    <md-icon> cloud_off </md-icon>\n                    <md-tooltip md-direction="top">{{ \'UNSHARE\' | translate }}</md-tooltip>\n                </md-button>\n                <md-button class="md-icon-button"\n                           ng-if="$ctrl.canDeleteNotebookItem()"\n                           aria-label="Delete notebook item"\n                           ng-click="$ctrl.doDelete($event)">\n                    <md-icon> delete </md-icon>\n                    <md-tooltip md-direction="top">{{ \'DELETE\' | translate }}</md-tooltip>\n                </md-button>\n                <md-button class="md-icon-button"\n                           ng-if="$ctrl.canReviveNotebookItem()"\n                           aria-label="Revive notebook item"\n                           ng-click="$ctrl.doRevive($event)">\n                    <md-icon> undo </md-icon>\n                    <md-tooltip md-direction="top">{{ \'reviveNote\' | translate }}</md-tooltip>\n                </md-button>\n            </md-card-actions>\n        </md-card>',
     controller: NotebookItemController
 };
 

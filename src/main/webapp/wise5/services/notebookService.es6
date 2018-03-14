@@ -75,6 +75,7 @@ class NotebookService {
         this.config = angular.merge(this.config, this.notebookConfig);
       }
     }
+    this.publicNotebookItems = {};
   }
 
   editItem(ev, itemId) {
@@ -289,6 +290,17 @@ class NotebookService {
     }
   }
 
+  getPublicNotebookItem(group, localNotebookItemId, workgroupId) {
+    const publicNotebookItemsInGroup = this.publicNotebookItems[group];
+    for (let publicNotebookItemInGroup of publicNotebookItemsInGroup) {
+      if (publicNotebookItemInGroup.localNotebookItemId === localNotebookItemId &&
+          publicNotebookItemInGroup.workgroupId === workgroupId) {
+        return publicNotebookItemInGroup;
+      }
+    }
+    return null;
+  }
+
   getNotebookByWorkgroup(workgroupId = null) {
     if (workgroupId == null) {
       workgroupId = this.ConfigService.getWorkgroupId();
@@ -315,23 +327,28 @@ class NotebookService {
       // this.notebooksByWorkgroup[workgroupId].deletedItems = [];
       // this.groupNotebookItems();
       // // if we're in preview, don't make any request to the server but pretend we did
-      // const deferred = this.$q.defer();
-      // deferred.resolve(this.notebooksByWorkgroup[workgroupId]);
-      // return deferred.promise;
+      const deferred = this.$q.defer();
+      deferred.resolve({});
+      return deferred.promise;
     } else {
-
       const config = {
         method : 'GET',
         url : this.ConfigService.getStudentNotebookURL() + `/group/${group}`,
         params : {
-
         }
       };
       if (periodId != null) {
         config.params.periodId = periodId;
       }
       return this.$http(config).then((response) => {
-        console.log(response);
+        const publicNotebookItemsForGroup = response.data;
+        for (let publicNotebookItemForGroup of publicNotebookItemsForGroup) {
+          publicNotebookItemForGroup.content =
+              angular.fromJson(publicNotebookItemForGroup.content);
+        }
+        this.publicNotebookItems[group] = publicNotebookItemsForGroup;
+        return this.publicNotebookItems;
+
         // this.notebooksByWorkgroup = {};
         // const allNotebookItems = response.data;
         // for (let notebookItem of allNotebookItems) {

@@ -88,6 +88,7 @@ var NotebookService = function () {
         this.config = angular.merge(this.config, this.notebookConfig);
       }
     }
+    this.publicNotebookItems = {};
   }
 
   _createClass(NotebookService, [{
@@ -426,6 +427,39 @@ var NotebookService = function () {
       }
     }
   }, {
+    key: "getPublicNotebookItem",
+    value: function getPublicNotebookItem(group, localNotebookItemId, workgroupId) {
+      var publicNotebookItemsInGroup = this.publicNotebookItems[group];
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
+
+      try {
+        for (var _iterator5 = publicNotebookItemsInGroup[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var publicNotebookItemInGroup = _step5.value;
+
+          if (publicNotebookItemInGroup.localNotebookItemId === localNotebookItemId && publicNotebookItemInGroup.workgroupId === workgroupId) {
+            return publicNotebookItemInGroup;
+          }
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
+          }
+        }
+      }
+
+      return null;
+    }
+  }, {
     key: "getNotebookByWorkgroup",
     value: function getNotebookByWorkgroup() {
       var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
@@ -446,6 +480,8 @@ var NotebookService = function () {
   }, {
     key: "retrievePublicNotebookItems",
     value: function retrievePublicNotebookItems() {
+      var _this2 = this;
+
       var group = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       var periodId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
@@ -459,11 +495,10 @@ var NotebookService = function () {
         // this.notebooksByWorkgroup[workgroupId].deletedItems = [];
         // this.groupNotebookItems();
         // // if we're in preview, don't make any request to the server but pretend we did
-        // const deferred = this.$q.defer();
-        // deferred.resolve(this.notebooksByWorkgroup[workgroupId]);
-        // return deferred.promise;
+        var deferred = this.$q.defer();
+        deferred.resolve({});
+        return deferred.promise;
       } else {
-
         var config = {
           method: 'GET',
           url: this.ConfigService.getStudentNotebookURL() + ("/group/" + group),
@@ -473,7 +508,35 @@ var NotebookService = function () {
           config.params.periodId = periodId;
         }
         return this.$http(config).then(function (response) {
-          console.log(response);
+          var publicNotebookItemsForGroup = response.data;
+          var _iteratorNormalCompletion6 = true;
+          var _didIteratorError6 = false;
+          var _iteratorError6 = undefined;
+
+          try {
+            for (var _iterator6 = publicNotebookItemsForGroup[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+              var publicNotebookItemForGroup = _step6.value;
+
+              publicNotebookItemForGroup.content = angular.fromJson(publicNotebookItemForGroup.content);
+            }
+          } catch (err) {
+            _didIteratorError6 = true;
+            _iteratorError6 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                _iterator6.return();
+              }
+            } finally {
+              if (_didIteratorError6) {
+                throw _iteratorError6;
+              }
+            }
+          }
+
+          _this2.publicNotebookItems[group] = publicNotebookItemsForGroup;
+          return _this2.publicNotebookItems;
+
           // this.notebooksByWorkgroup = {};
           // const allNotebookItems = response.data;
           // for (let notebookItem of allNotebookItems) {
@@ -511,7 +574,7 @@ var NotebookService = function () {
     value: function saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content) {
       var groups = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : [];
 
-      var _this2 = this;
+      var _this3 = this;
 
       var clientSaveTime = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : null;
       var clientDeleteTime = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : null;
@@ -525,7 +588,7 @@ var NotebookService = function () {
             notebookItemId: notebookItemId,
             title: title,
             type: type,
-            workgroupId: _this2.ConfigService.getWorkgroupId(),
+            workgroupId: _this3.ConfigService.getWorkgroupId(),
             groups: angular.toJson(groups),
             clientSaveTime: clientSaveTime,
             clientDeleteTime: clientDeleteTime
@@ -538,16 +601,16 @@ var NotebookService = function () {
           }
           // add/update notebook
           var workgroupId = notebookItem.workgroupId;
-          if (_this2.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+          if (_this3.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
             // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
-            _this2.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+            _this3.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
           } else {
             // otherwise, we'll create a new notebook field and add the item to the array
-            _this2.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+            _this3.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
           }
 
-          _this2.groupNotebookItems();
-          _this2.$rootScope.$broadcast('notebookUpdated', { notebook: _this2.notebooksByWorkgroup[workgroupId] });
+          _this3.groupNotebookItems();
+          _this3.$rootScope.$broadcast('notebookUpdated', { notebook: _this3.notebooksByWorkgroup[workgroupId] });
           resolve();
         });
       } else {
@@ -582,16 +645,16 @@ var NotebookService = function () {
             }
             // add/update notebook
             var workgroupId = notebookItem.workgroupId;
-            if (_this2.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+            if (_this3.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
               // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
-              _this2.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+              _this3.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
             } else {
               // otherwise, we'll create a new notebook field and add the item to the array
-              _this2.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+              _this3.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
             }
 
-            _this2.groupNotebookItems();
-            _this2.$rootScope.$broadcast('notebookUpdated', { notebook: _this2.notebooksByWorkgroup[workgroupId] });
+            _this3.groupNotebookItems();
+            _this3.$rootScope.$broadcast('notebookUpdated', { notebook: _this3.notebooksByWorkgroup[workgroupId] });
           }
           return result.data;
         });
@@ -600,7 +663,7 @@ var NotebookService = function () {
   }, {
     key: "addNotebookItemToGroup",
     value: function addNotebookItemToGroup(notebookItemId, group) {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.ConfigService.isPreview()) {} else {
         var config = {
@@ -620,14 +683,14 @@ var NotebookService = function () {
 
         return this.$http(config).then(function (result) {
           var notebookItem = result.data;
-          return _this3.handleNewNotebookItem(notebookItem);
+          return _this4.handleNewNotebookItem(notebookItem);
         });
       }
     }
   }, {
     key: "removeNotebookItemFromGroup",
     value: function removeNotebookItemFromGroup(notebookItemId, group) {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this.ConfigService.isPreview()) {} else {
         var config = {
@@ -641,7 +704,7 @@ var NotebookService = function () {
         };
         return this.$http(config).then(function (result) {
           var notebookItem = result.data;
-          return _this4.handleNewNotebookItem(notebookItem);
+          return _this5.handleNewNotebookItem(notebookItem);
         });
       }
     }

@@ -102,6 +102,9 @@ var NotebookController = function () {
 
         // get the notebook for this workgroup
         this.notebook = this.NotebookService.getNotebookByWorkgroup(this.workgroupId);
+
+        this.publicNotebookItems = this.NotebookService.publicNotebookItemspublicNotebookItems;
+
         // assume only 1 report for now
         this.reportId = this.config.itemTypes.report.notes[0].reportId;
     }
@@ -220,6 +223,8 @@ var NotebookController = function () {
     }, {
         key: 'open',
         value: function open(value, event) {
+            var _this5 = this;
+
             if (value === 'report') {
                 // toggle the report view
                 this.reportVisible = !this.reportVisible;
@@ -228,7 +233,9 @@ var NotebookController = function () {
                 if (this.notesVisible) {
                     this.closeNotes(event);
                 } else {
-                    this.notesVisible = true;
+                    this.NotebookService.retrievePublicNotebookItems("public").then(function () {
+                        _this5.notesVisible = true;
+                    });
                 }
             } else if (value === 'new') {
                 // open the new note dialog

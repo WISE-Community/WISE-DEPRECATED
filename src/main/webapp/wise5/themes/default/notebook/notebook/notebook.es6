@@ -94,6 +94,9 @@ class NotebookController {
 
         // get the notebook for this workgroup
         this.notebook = this.NotebookService.getNotebookByWorkgroup(this.workgroupId);
+
+        this.publicNotebookItems = this.NotebookService.publicNotebookItemspublicNotebookItems;
+
         // assume only 1 report for now
         this.reportId = this.config.itemTypes.report.notes[0].reportId;
     }
@@ -219,7 +222,9 @@ class NotebookController {
             if (this.notesVisible) {
                 this.closeNotes(event);
             } else {
-                this.notesVisible = true;
+                this.NotebookService.retrievePublicNotebookItems("public").then(() => {
+                    this.notesVisible = true;
+                });
             }
         } else if (value === 'new') {
             // open the new note dialog

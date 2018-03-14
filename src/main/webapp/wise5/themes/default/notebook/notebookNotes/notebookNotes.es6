@@ -2,10 +2,14 @@
 
 class NotebookNotesController {
     constructor($filter,
-                $rootScope) {
+                $rootScope,
+                NotebookService) {
 
         this.$translate = $filter('translate');
         this.$rootScope = $rootScope;
+        this.NotebookService = NotebookService;
+
+        this.publicNotebookItems = this.NotebookService.publicNotebookItems;
 
         this.$onInit = () => {
             this.color = this.config.itemTypes.note.label.color;
@@ -65,7 +69,8 @@ class NotebookNotesController {
 
 NotebookNotesController.$inject = [
     '$filter',
-    '$rootScope'
+    '$rootScope',
+    'NotebookService'
 ];
 
 const NotebookNotes = {
@@ -73,6 +78,7 @@ const NotebookNotes = {
         config: '<',
         insertMode: '<',
         notebook: '<',
+        publicNotebookItems: '<',
         notesVisible: '<',
         workgroupId: '<',
         onClose: '&',
@@ -122,6 +128,20 @@ const NotebookNotes = {
                                  flex="100"
                                  flex-gt-xs="50">
                     </notebook-item>
+                    <notebook-item ng-repeat="note in $ctrl.publicNotebookItems.public"
+                                 config="$ctrl.config"
+                                 group="public"
+                                 item-id="note.localNotebookItemId"
+                                 is-edit-allowed="false"
+                                 is-choose-mode="$ctrl.insertMode"
+                                 workgroup-id="note.workgroupId"
+                                 on-select="$ctrl.select($ev, $itemId)"
+                                 on-delete="$ctrl.deleteItem($ev, $itemId)"
+                                 style="display: flex;"
+                                 flex="100"
+                                 flex-gt-xs="50">
+                    </notebook-item>
+
                     <!-- TODO: show deleted items somewhere
                         <notebook-item ng-repeat="(localNotebookItemId, notes) in $ctrl.notebook.deletedItems"
                                        ng-if="notes.last().type === 'note'"
