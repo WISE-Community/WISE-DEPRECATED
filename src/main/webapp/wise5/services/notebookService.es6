@@ -466,6 +466,27 @@ class NotebookService {
     }
   };
 
+  copyNotebookItem(notebookItemId) {
+    if (this.ConfigService.isPreview()) {
+
+    } else {
+      let config = {
+        method: "POST",
+        url: this.ConfigService.getStudentNotebookURL() + '/parent/' + notebookItemId,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      };
+      let params = {
+        workgroupId: this.ConfigService.getWorkgroupId(),
+        clientSaveTime: Date.parse(new Date())
+      };
+      config.data = $.param(params);
+      return this.$http(config).then((result) => {
+        let notebookItem = result.data;
+        return this.handleNewNotebookItem(notebookItem);
+      });
+    }
+  }
+
   addNotebookItemToGroup(notebookItemId, group) {
     if (this.ConfigService.isPreview()) {
 
@@ -480,11 +501,7 @@ class NotebookService {
         notebookItemId: notebookItemId,
         clientSaveTime: Date.parse(new Date())
       };
-      if (params.clientSaveTime == null) {
-        params.clientSaveTime = Date.parse(new Date());
-      }
       config.data = $.param(params);
-
       return this.$http(config).then((result) => {
         let notebookItem = result.data;
         return this.handleNewNotebookItem(notebookItem);

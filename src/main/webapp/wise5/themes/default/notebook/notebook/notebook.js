@@ -82,6 +82,12 @@ var NotebookController = function () {
             _this.deleteNote(itemId, ev, doDelete);
         });
 
+        this.$scope.$on('copyNote', function (event, args) {
+            var itemId = args.itemId;
+            var ev = args.ev;
+            _this.showCopyNoteConfirmDialog(itemId, ev);
+        });
+
         // show share note confirm dialog on 'shareNote' event
         this.$scope.$on('shareNote', function (event, args) {
             var itemId = args.itemId;
@@ -175,23 +181,33 @@ var NotebookController = function () {
             });
         }
     }, {
+        key: 'showCopyNoteConfirmDialog',
+        value: function showCopyNoteConfirmDialog(itemId, ev) {
+            var _this3 = this;
+
+            var confirm = this.$mdDialog.confirm().title('copyNoteConfirmMessage').ariaLabel('copy note confirmation').ok(this.$translate('copy')).cancel(this.$translate('cancel'));
+            this.$mdDialog.show(confirm).then(function () {
+                _this3.NotebookService.copyNotebookItem(itemId);
+            });
+        }
+    }, {
         key: 'shareNote',
         value: function shareNote(itemId, ev) {
-            var _this3 = this;
+            var _this4 = this;
 
             var confirm = this.$mdDialog.confirm().title('shareNoteConfirmMessage').ariaLabel('share note confirmation').ok(this.$translate('share')).cancel(this.$translate('cancel'));
             this.$mdDialog.show(confirm).then(function () {
-                _this3.NotebookService.addNotebookItemToGroup(itemId, 'public');
+                _this4.NotebookService.addNotebookItemToGroup(itemId, 'public');
             });
         }
     }, {
         key: 'showUnshareNoteConfirmDialog',
         value: function showUnshareNoteConfirmDialog(itemId, ev) {
-            var _this4 = this;
+            var _this5 = this;
 
             var confirm = this.$mdDialog.confirm().title('unshareNoteConfirmMessage').ariaLabel('unshare note confirmation').ok(this.$translate('unshare')).cancel(this.$translate('cancel'));
             this.$mdDialog.show(confirm).then(function () {
-                _this4.NotebookService.removeNotebookItemFromGroup(itemId, 'public');
+                _this5.NotebookService.removeNotebookItemFromGroup(itemId, 'public');
             });
         }
     }, {
@@ -223,7 +239,7 @@ var NotebookController = function () {
     }, {
         key: 'open',
         value: function open(value, event) {
-            var _this5 = this;
+            var _this6 = this;
 
             if (value === 'report') {
                 // toggle the report view
@@ -234,7 +250,7 @@ var NotebookController = function () {
                     this.closeNotes(event);
                 } else {
                     this.NotebookService.retrievePublicNotebookItems("public").then(function () {
-                        _this5.notesVisible = true;
+                        _this6.notesVisible = true;
                     });
                 }
             } else if (value === 'new') {

@@ -661,9 +661,31 @@ var NotebookService = function () {
       }
     }
   }, {
+    key: "copyNotebookItem",
+    value: function copyNotebookItem(notebookItemId) {
+      var _this4 = this;
+
+      if (this.ConfigService.isPreview()) {} else {
+        var config = {
+          method: "POST",
+          url: this.ConfigService.getStudentNotebookURL() + '/parent/' + notebookItemId,
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        };
+        var params = {
+          workgroupId: this.ConfigService.getWorkgroupId(),
+          clientSaveTime: Date.parse(new Date())
+        };
+        config.data = $.param(params);
+        return this.$http(config).then(function (result) {
+          var notebookItem = result.data;
+          return _this4.handleNewNotebookItem(notebookItem);
+        });
+      }
+    }
+  }, {
     key: "addNotebookItemToGroup",
     value: function addNotebookItemToGroup(notebookItemId, group) {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this.ConfigService.isPreview()) {} else {
         var config = {
@@ -676,21 +698,17 @@ var NotebookService = function () {
           notebookItemId: notebookItemId,
           clientSaveTime: Date.parse(new Date())
         };
-        if (params.clientSaveTime == null) {
-          params.clientSaveTime = Date.parse(new Date());
-        }
         config.data = $.param(params);
-
         return this.$http(config).then(function (result) {
           var notebookItem = result.data;
-          return _this4.handleNewNotebookItem(notebookItem);
+          return _this5.handleNewNotebookItem(notebookItem);
         });
       }
     }
   }, {
     key: "removeNotebookItemFromGroup",
     value: function removeNotebookItemFromGroup(notebookItemId, group) {
-      var _this5 = this;
+      var _this6 = this;
 
       if (this.ConfigService.isPreview()) {} else {
         var config = {
@@ -704,7 +722,7 @@ var NotebookService = function () {
         };
         return this.$http(config).then(function (result) {
           var notebookItem = result.data;
-          return _this5.handleNewNotebookItem(notebookItem);
+          return _this6.handleNewNotebookItem(notebookItem);
         });
       }
     }

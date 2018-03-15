@@ -74,6 +74,12 @@ class NotebookController {
             this.deleteNote(itemId, ev, doDelete);
         });
 
+        this.$scope.$on('copyNote', (event, args) => {
+          let itemId = args.itemId;
+          let ev = args.ev;
+          this.showCopyNoteConfirmDialog(itemId, ev);
+        });
+
         // show share note confirm dialog on 'shareNote' event
         this.$scope.$on('shareNote', (event, args) => {
           let itemId = args.itemId;
@@ -168,12 +174,23 @@ class NotebookController {
         });
     }
 
+    showCopyNoteConfirmDialog(itemId, ev) {
+      let confirm = this.$mdDialog.confirm()
+        .title('copyNoteConfirmMessage')
+        .ariaLabel('copy note confirmation')
+        .ok(this.$translate('copy'))
+        .cancel(this.$translate('cancel'));
+      this.$mdDialog.show(confirm).then(() => {
+        this.NotebookService.copyNotebookItem(itemId);
+      });
+    }
+
     shareNote(itemId, ev) {
       let confirm = this.$mdDialog.confirm()
         .title('shareNoteConfirmMessage')
         .ariaLabel('share note confirmation')
         .ok(this.$translate('share'))
-        .cancel(this.$translate('cancel'))
+        .cancel(this.$translate('cancel'));
       this.$mdDialog.show(confirm).then(() => {
         this.NotebookService.addNotebookItemToGroup(itemId, 'public');
       });
@@ -184,7 +201,7 @@ class NotebookController {
             .title('unshareNoteConfirmMessage')
             .ariaLabel('unshare note confirmation')
             .ok(this.$translate('unshare'))
-            .cancel(this.$translate('cancel'))
+            .cancel(this.$translate('cancel'));
         this.$mdDialog.show(confirm).then(() => {
             this.NotebookService.removeNotebookItemFromGroup(itemId, 'public');
         });

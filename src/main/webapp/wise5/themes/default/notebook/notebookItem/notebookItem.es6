@@ -35,8 +35,12 @@ class NotebookItemController {
         // set the type in the controller
         this.type = this.item ? this.item.type : null;
 
-        //this.notebookConfig = this.NotebookService.getNotebookConfig();
         this.label = this.config.itemTypes[this.type].label;
+        if (this.group == 'public') {
+          this.color = 'orange';
+        } else {
+          this.color = this.label.color;
+        }
 
         this.$rootScope.$on('notebookUpdated', (event, args) => {
             let notebook = args.notebook;
@@ -104,6 +108,11 @@ class NotebookItemController {
         }
     }
 
+    doCopy(ev) {
+      ev.stopPropagation();
+      this.$rootScope.$broadcast('copyNote', {itemId: this.item.id, ev: ev});
+    }
+
     doShare(ev) {
       ev.stopPropagation();  // don't follow-through on the doShare callback after this
       this.$rootScope.$broadcast('shareNote', {itemId: this.item.id, ev: ev});
@@ -112,6 +121,11 @@ class NotebookItemController {
     doUnshare(ev) {
       ev.stopPropagation();  // don't follow-through on the doUnshare callback after this
       this.$rootScope.$broadcast('unshareNote', {itemId: this.item.id, ev: ev});
+    }
+
+    canCopyNotebookItem() {
+      return !this.isMyNotebookItem() &&
+          !this.isChooseMode;
     }
 
     canShareNotebookItem() {
@@ -195,7 +209,7 @@ const NotebookItem = {
             <md-card-actions class="notebook-item__actions"
                              layout="row"
                              layout-align="start center"
-                             style="background-color: {{$ctrl.label.color}}">
+                             style="background-color: {{$ctrl.color}}">
                 <span class="notebook-item__content__location"><md-icon> place </md-icon><span class="md-body-1">{{$ctrl.getItemNodePosition()}}</span></span>
                 <span flex></span>
                 <md-button class="md-icon-button"
@@ -211,6 +225,13 @@ const NotebookItem = {
                            ng-click="$ctrl.doUnshare($event)">
                     <md-icon> cloud_off </md-icon>
                     <md-tooltip md-direction="top">{{ 'UNSHARE' | translate }}</md-tooltip>
+                </md-button>
+                <md-button class="md-icon-button"
+                           ng-if="$ctrl.canCopyNotebookItem()"
+                           aria-label="Copy notebook item"
+                           ng-click="$ctrl.doCopy($event)">
+                    <md-icon> cloud_download </md-icon>
+                    <md-tooltip md-direction="top">{{ 'COPY' | translate }}</md-tooltip>
                 </md-button>
                 <md-button class="md-icon-button"
                            ng-if="$ctrl.canDeleteNotebookItem()"
