@@ -1120,15 +1120,30 @@ var UtilService = function () {
         };
       }
       DialogController.$inject = ['$scope', '$mdDialog', 'nodeId', 'componentId', 'componentState'];
-      this.$rootScope.$on('doneRenderingComponent', function (event, args) {
+      // wait for the component in the dialog to finish rendering
+      var doneRenderingComponentListener = this.$rootScope.$on('doneRenderingComponent', function (event, args) {
         if (componentState.nodeId == args.nodeId && componentState.componentId == args.componentId) {
           _this2.$timeout(function () {
             _this2.generateImageFromComponentStateHelper(componentState).then(function (image) {
+              /*
+               * Destroy the listener otherwise this block of code will be called every time
+               * doneRenderingComponent is fired in the future.
+               */
+              doneRenderingComponentListener();
+              _this2.$timeout.cancel(destroyDoneRenderingComponentListenerTimeout);
               deferred.resolve(image);
             });
           }, 1000);
         }
       });
+      /*
+       * Set a timeout to destroy the listener in case there is an error creating the image and
+       * we don't get to destroying it above.
+       */
+      var destroyDoneRenderingComponentListenerTimeout = this.$timeout(function () {
+        // destroy the listener
+        doneRenderingComponentListener();
+      }, 10000);
       return deferred.promise;
     }
 
@@ -1147,8 +1162,8 @@ var UtilService = function () {
       var deferred = this.$q.defer();
       var componentService = this.$injector.get(componentState.componentType + 'Service');
       componentService.generateImageFromRenderedComponentState(componentState).then(function (image) {
-        _this3.$mdDialog.hide();
         deferred.resolve(image);
+        _this3.$mdDialog.hide();
       });
       return deferred.promise;
     }
