@@ -120,7 +120,7 @@ var NotebookItemController = function () {
         key: 'doSelect',
         value: function doSelect(ev) {
             if (this.onSelect) {
-                this.onSelect({ $ev: ev, $itemId: this.item.localNotebookItemId });
+                this.onSelect({ $ev: ev, $itemId: this.item.id });
             }
         }
     }, {

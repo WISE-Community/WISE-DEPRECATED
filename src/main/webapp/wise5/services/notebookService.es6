@@ -301,6 +301,18 @@ class NotebookService {
     return null;
   }
 
+  getPublicNotebookItemById(id) {
+    for (let group in this.publicNotebookItems) {
+      let itemsInGroup = this.publicNotebookItems[group];
+      for (let itemInGroup of itemsInGroup) {
+        if (id == itemInGroup.id) {
+          return itemInGroup;
+        }
+      }
+    }
+    return null;
+  }
+
   getNotebookByWorkgroup(workgroupId = null) {
     if (workgroupId == null) {
       workgroupId = this.ConfigService.getWorkgroupId();

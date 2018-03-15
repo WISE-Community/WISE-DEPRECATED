@@ -460,6 +460,40 @@ var NotebookService = function () {
       return null;
     }
   }, {
+    key: "getPublicNotebookItemById",
+    value: function getPublicNotebookItemById(id) {
+      for (var group in this.publicNotebookItems) {
+        var itemsInGroup = this.publicNotebookItems[group];
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
+
+        try {
+          for (var _iterator6 = itemsInGroup[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var itemInGroup = _step6.value;
+
+            if (id == itemInGroup.id) {
+              return itemInGroup;
+            }
+          }
+        } catch (err) {
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
+            }
+          } finally {
+            if (_didIteratorError6) {
+              throw _iteratorError6;
+            }
+          }
+        }
+      }
+      return null;
+    }
+  }, {
     key: "getNotebookByWorkgroup",
     value: function getNotebookByWorkgroup() {
       var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
@@ -509,27 +543,27 @@ var NotebookService = function () {
         }
         return this.$http(config).then(function (response) {
           var publicNotebookItemsForGroup = response.data;
-          var _iteratorNormalCompletion6 = true;
-          var _didIteratorError6 = false;
-          var _iteratorError6 = undefined;
+          var _iteratorNormalCompletion7 = true;
+          var _didIteratorError7 = false;
+          var _iteratorError7 = undefined;
 
           try {
-            for (var _iterator6 = publicNotebookItemsForGroup[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-              var publicNotebookItemForGroup = _step6.value;
+            for (var _iterator7 = publicNotebookItemsForGroup[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+              var publicNotebookItemForGroup = _step7.value;
 
               publicNotebookItemForGroup.content = angular.fromJson(publicNotebookItemForGroup.content);
             }
           } catch (err) {
-            _didIteratorError6 = true;
-            _iteratorError6 = err;
+            _didIteratorError7 = true;
+            _iteratorError7 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                _iterator6.return();
+              if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                _iterator7.return();
               }
             } finally {
-              if (_didIteratorError6) {
-                throw _iteratorError6;
+              if (_didIteratorError7) {
+                throw _iteratorError7;
               }
             }
           }

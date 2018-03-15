@@ -265,9 +265,13 @@ class NotebookController {
         }
     }
 
-    insert(value, $event) {
-        // user is inserting new content into the report
-        this.insertContent = angular.copy(this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(value, this.workgroupId));
+    insert(notebookItemId, $event) {
+      let notebookItem = this.NotebookService.getNotebookItemByNotebookItemId(notebookItemId, this.workgroupId);
+      if (notebookItem == null) {
+        notebookItem = this.NotebookService.getPublicNotebookItemById(notebookItemId);
+      }
+      // user is inserting new content into the report
+      this.insertContent = angular.copy(notebookItem);
     }
 }
 

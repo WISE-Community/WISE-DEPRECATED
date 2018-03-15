@@ -120,7 +120,10 @@ class NotebookReportController {
                 reportElement.summernote('restoreRange');
 
                 // create a jQuery DOM element to insert into the Summernote report editor
-                let $item = $('<p>');
+                let $item = $(`<p notebook-item-id="${item.id}" workgroup-id="${item.workgroupId}">`);
+                if (item.groups != null && item.groups.length > 0) {
+                  $item.attr('group', item.groups);
+                }
                 let hasAttachments = false;
 
                 if (item.content) {
