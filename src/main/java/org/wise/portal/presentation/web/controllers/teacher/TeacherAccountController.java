@@ -52,6 +52,7 @@ import org.wise.portal.presentation.validators.TeacherAccountFormValidator;
 import org.wise.portal.presentation.web.TeacherAccountForm;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
+import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.user.UserService;
 
@@ -109,14 +110,17 @@ public class TeacherAccountController {
       return "errors/accessdenied";
     } else {
       User signedInUser = ControllerUtil.getSignedInUser();
-      TeacherUserDetails teacherUserDetails = (TeacherUserDetails) signedInUser.getUserDetails();
-      TeacherAccountForm teacherAccountForm = new TeacherAccountForm(teacherUserDetails);
-      modelMap.addAttribute("teacherAccountForm", teacherAccountForm);
-      ChangePasswordParameters params = new ChangePasswordParameters();
-      params.setUser(signedInUser);
-      modelMap.addAttribute("changePasswordParameters", params);
-      populateModelMap(modelMap);
-      return "teacher/account";
+      if (signedInUser.isTeacher()) {
+        TeacherUserDetails teacherUserDetails = (TeacherUserDetails) signedInUser.getUserDetails();
+        TeacherAccountForm teacherAccountForm = new TeacherAccountForm(teacherUserDetails);
+        modelMap.addAttribute("teacherAccountForm", teacherAccountForm);
+        ChangePasswordParameters params = new ChangePasswordParameters();
+        params.setUser(signedInUser);
+        modelMap.addAttribute("changePasswordParameters", params);
+        populateModelMap(modelMap);
+        return "teacher/account";
+      }
+      return "errors/accessdenied";
     }
   }
 
