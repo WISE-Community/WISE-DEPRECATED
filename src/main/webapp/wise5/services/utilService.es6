@@ -654,6 +654,29 @@ class UtilService {
   }
 
   /**
+   * @param componentContent The component content.
+   * @return Whether there are any connected components with a field we always
+   * want to read or write.
+   */
+  hasConnectedComponentAlwaysField(componentContent) {
+    if (componentContent != null) {
+      const connectedComponents = componentContent.connectedComponents;
+      if (connectedComponents != null && connectedComponents.length > 0) {
+        for (let connectedComponent of connectedComponents) {
+          if (connectedComponent.fields != null) {
+            for (let field of connectedComponent.fields) {
+              if (field.when == "always") {
+                return true;
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
    * Whether this component shows work from a connected component
    * @param componentContent the component content
    * @return whether this component shows work from a connected component
