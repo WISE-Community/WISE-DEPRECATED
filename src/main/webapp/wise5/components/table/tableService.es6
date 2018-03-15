@@ -353,16 +353,16 @@ class TableService extends NodeService {
    */
   generateImageFromRenderedComponentState(componentState) {
     let deferred = this.$q.defer();
-    var tableElement = angular.element('#table_' + componentState.nodeId + '_' + componentState.componentId);
+    let tableElement = angular.element('#table_' + componentState.nodeId + '_' + componentState.componentId);
     if (tableElement != null && tableElement.length > 0) {
       tableElement = tableElement[0];
       // convert the table element to a canvas element
       html2canvas(tableElement).then((canvas) => {
         // get the canvas as a base64 string
-        var img_b64 = canvas.toDataURL('image/png');
+        let img_b64 = canvas.toDataURL('image/png');
 
         // get the image object
-        var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+        let imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
         // add the image to the student assets
         this.StudentAssetService.uploadAsset(imageObject).then((asset) => {

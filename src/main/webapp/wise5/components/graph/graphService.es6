@@ -1115,7 +1115,7 @@ class GraphService extends NodeService {
   generateImageFromRenderedComponentState(componentState) {
     let deferred = this.$q.defer();
     let componentId = componentState.componentId;
-    var highchartsDiv = angular.element('#chart_' + componentId).find('.highcharts-container');
+    let highchartsDiv = angular.element('#chart_' + componentId).find('.highcharts-container');
     if (highchartsDiv != null && highchartsDiv.length > 0) {
       highchartsDiv = highchartsDiv[0];
 
@@ -1123,10 +1123,10 @@ class GraphService extends NodeService {
       html2canvas(highchartsDiv).then((canvas) => {
 
         // get the canvas as a base64 string
-        var img_b64 = canvas.toDataURL('image/png');
+        let img_b64 = canvas.toDataURL('image/png');
 
         // get the image object
-        var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+        let imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
         // add the image to the student assets
         this.StudentAssetService.uploadAsset(imageObject).then((asset) => {

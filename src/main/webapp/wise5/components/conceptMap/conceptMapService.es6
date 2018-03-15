@@ -1479,15 +1479,15 @@ class ConceptMapService extends NodeService {
     let deferred = this.$q.defer();
 
     // get the svg element. this will obtain an array.
-    var svgElement = angular.element('#svg_' + componentState.nodeId + '_' + componentState.componentId);
+    let svgElement = angular.element('#svg_' + componentState.nodeId + '_' + componentState.componentId);
 
     if (svgElement != null && svgElement.length > 0) {
       // get the svg element
       svgElement = svgElement[0];
 
       // get the svg element as a string
-      var serializer = new XMLSerializer();
-      var svgString = serializer.serializeToString(svgElement);
+      let serializer = new XMLSerializer();
+      let svgString = serializer.serializeToString(svgElement);
 
       // find all the images in the svg and replace them with Base64 images
       this.getHrefToBase64ImageReplacements(svgString).then((images) => {
@@ -1496,19 +1496,19 @@ class ConceptMapService extends NodeService {
          * Loop through all the image objects. Each object contains
          * an image href and a Base64 image.
          */
-        for (var i = 0; i < images.length; i++) {
+        for (let i = 0; i < images.length; i++) {
 
           // get an image object
-          var imagePair = images[i];
+          let imagePair = images[i];
 
           // get the image href e.g. /wise/curriculum/25/assets/Sun.png
-          var imageHref = imagePair.imageHref;
+          let imageHref = imagePair.imageHref;
 
           // get the Base64 image
-          var base64Image = imagePair.base64Image;
+          let base64Image = imagePair.base64Image;
 
           // create a regex to match the image href
-          var imageRegEx = new RegExp(imageHref, 'g');
+          let imageRegEx = new RegExp(imageHref, 'g');
 
           /*
            * replace all the instances of the image href with the
@@ -1518,20 +1518,20 @@ class ConceptMapService extends NodeService {
         }
 
         // create a canvas to draw the image on
-        var myCanvas = document.createElement('canvas');
-        var ctx = myCanvas.getContext('2d');
+        let myCanvas = document.createElement('canvas');
+        let ctx = myCanvas.getContext('2d');
 
         // create an svg blob
-        var svg = new Blob([svgString], {type:'image/svg+xml;charset=utf-8'});
-        var domURL = self.URL || self.webkitURL || self;
-        var url = domURL.createObjectURL(svg);
-        var image = new Image();
+        let svg = new Blob([svgString], {type:'image/svg+xml;charset=utf-8'});
+        let domURL = self.URL || self.webkitURL || self;
+        let url = domURL.createObjectURL(svg);
+        let image = new Image();
 
         // the function that is called after the image is fully loaded
         image.onload = (event) => {
 
           // get the image that was loaded
-          var image = event.target;
+          let image = event.target;
 
           // set the dimensions of the canvas
           myCanvas.width = image.width;
@@ -1539,10 +1539,10 @@ class ConceptMapService extends NodeService {
           ctx.drawImage(image, 0, 0);
 
           // get the canvas as a Base64 string
-          var base64Image = myCanvas.toDataURL('image/png');
+          let base64Image = myCanvas.toDataURL('image/png');
 
           // get the image object
-          var imageObject = this.UtilService.getImageObjectFromBase64String(base64Image, false);
+          let imageObject = this.UtilService.getImageObjectFromBase64String(base64Image, false);
 
           // add the image to the student assets
           this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
