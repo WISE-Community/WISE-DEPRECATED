@@ -6887,6 +6887,9 @@ var GraphController = function () {
         if (mergedComponentState.studentData.version == null) {
           mergedComponentState.studentData.version = this.studentDataVersion;
         }
+        if (newComponentState.studentData.backgroundImage != null) {
+          mergedComponentState.studentData.backgroundImage = newComponentState.studentData.backgroundImage;
+        }
 
         if (mergedComponentState != null) {
           this.setStudentWork(mergedComponentState);
