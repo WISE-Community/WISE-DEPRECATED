@@ -1,12 +1,17 @@
 import NodeService from '../../services/nodeService';
+import html2canvas from 'html2canvas';
 
 class TableService extends NodeService {
 
   constructor($filter,
+      $q,
+      StudentAssetService,
       StudentDataService,
       UtilService) {
     super();
     this.$filter = $filter;
+    this.$q = $q;
+    this.StudentAssetService = StudentAssetService;
     this.StudentDataService = StudentDataService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
@@ -339,10 +344,40 @@ class TableService extends NodeService {
 
     return cellValue;
   }
+
+  /**
+   * The component state has been rendered in a <component></component> element
+   * and now we want to take a snapshot of the work.
+   * @param componentState The component state that has been rendered.
+   * @return A promise that will return an image object.
+   */
+  generateImageFromRenderedComponentState(componentState) {
+    let deferred = this.$q.defer();
+    let tableElement = angular.element('#table_' + componentState.nodeId + '_' + componentState.componentId);
+    if (tableElement != null && tableElement.length > 0) {
+      tableElement = tableElement[0];
+      // convert the table element to a canvas element
+      html2canvas(tableElement).then((canvas) => {
+        // get the canvas as a base64 string
+        let img_b64 = canvas.toDataURL('image/png');
+
+        // get the image object
+        let imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+
+        // add the image to the student assets
+        this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
+          deferred.resolve(asset);
+        });
+      });
+    }
+    return deferred.promise;
+  }
 }
 
 TableService.$inject = [
   '$filter',
+  '$q',
+  'StudentAssetService',
   'StudentDataService',
   'UtilService'
 ];

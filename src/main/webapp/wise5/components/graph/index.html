@@ -188,6 +188,12 @@
                   </md-option>
                 </md-select>
               </md-input-container>
+              <span flex></span>
+              <md-button class='topButton md-raised md-primary'
+                         ng-click='graphController.authoringDeleteConnectedComponent($index)'>
+                <md-icon>delete</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
+              </md-button>
             </div>
             <div ng-if='graphController.authoringGetConnectedComponentType(connectedComponent) == "Table"' flex>
               <md-checkbox ng-model='connectedComponent.skipFirstRow'
@@ -247,13 +253,15 @@
                 </md-button>
               </div>
             </div>
-            <div layout='row'>
-              <span flex></span>
-              <md-button class='topButton md-raised md-primary'
-                     ng-click='graphController.authoringDeleteConnectedComponent($index)'>
-                <md-icon>delete</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
-              </md-button>
+            <div ng-if='graphController.authoringGetConnectedComponentType(connectedComponent) == "ConceptMap" || graphController.authoringGetConnectedComponentType(connectedComponent) == "Draw" || graphController.authoringGetConnectedComponentType(connectedComponent) == "Label"' flex>
+              <md-input-container style='margin-right: 20;'>
+                <md-checkbox class='md-primary'
+                             ng-model='connectedComponent.importWorkAsBackground'
+                             ng-change='graphController.authoringImportWorkAsBackgroundClicked(connectedComponent)'
+                             ng-disabled='true'>
+                  {{ 'importWorkAsBackground' | translate }}
+                </md-checkbox>
+              </md-input-container>
             </div>
           </div>
         </div>
