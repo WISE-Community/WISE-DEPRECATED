@@ -72,8 +72,6 @@ class HTMLController {
      */
     this.originalComponentContent = this.$scope.originalComponentContent;
 
-    this.mode = this.$scope.mode;
-
     if (this.componentContent != null) {
 
       // get the component id
