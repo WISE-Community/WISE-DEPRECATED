@@ -431,10 +431,8 @@ var GraphController = function () {
         }.bind(this), true);
       }
 
-      var componentState = null;
-
       // get the component state from the scope
-      componentState = this.$scope.componentState;
+      var componentState = this.$scope.componentState;
 
       // set whether studentAttachment is enabled
       this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
