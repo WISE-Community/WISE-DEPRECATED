@@ -148,7 +148,7 @@
             <md-checkbox class='md-primary'
                 ng-model='connectedComponent.importWorkAsBackground'
                 ng-change='labelController.authoringImportWorkAsBackgroundClicked(connectedComponent)'>
-              {{ 'label.importWorkAsBackground' | translate }}
+              {{ 'importWorkAsBackground' | translate }}
             </md-checkbox>
           </md-input-container>
           <div ng-if='connectedComponent.importWorkAsBackground'
@@ -172,6 +172,16 @@
                    ng-change='labelController.authoringViewComponentChanged()'/>
             </md-input-container>
           </div>
+        </div>
+        <div ng-if='labelController.authoringGetConnectedComponentType(connectedComponent) == "ConceptMap" || labelController.authoringGetConnectedComponentType(connectedComponent) == "Draw" || labelController.authoringGetConnectedComponentType(connectedComponent) == "Embedded" || labelController.authoringGetConnectedComponentType(connectedComponent) == "Graph" || labelController.authoringGetConnectedComponentType(connectedComponent) == "Table"' flex>
+          <md-input-container style='margin-right: 20;'>
+            <md-checkbox class='md-primary'
+                         ng-model='connectedComponent.importWorkAsBackground'
+                         ng-change='labelController.authoringImportWorkAsBackgroundClicked(connectedComponent)'
+                         ng-disabled='true'>
+              {{ 'importWorkAsBackground' | translate }}
+            </md-checkbox>
+          </md-input-container>
         </div>
       </div>
     </div>

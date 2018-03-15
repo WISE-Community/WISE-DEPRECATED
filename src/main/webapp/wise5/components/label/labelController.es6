@@ -191,21 +191,16 @@ class LabelController {
 
     // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [
-      {
-        type: 'Label'
-      },
-      {
-        type: 'OpenResponse'
-      }
+      { type: 'ConceptMap' },
+      { type: 'Draw' },
+      { type: 'Embedded' },
+      { type: 'Graph' },
+      { type: 'Label' },
+      { type: 'OpenResponse' },
+      { type: 'Table' }
     ];
 
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     // get the component content from the scope
     this.componentContent = this.$scope.componentContent;
@@ -743,6 +738,8 @@ class LabelController {
         }
       }
     });
+
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
   setupCanvas() {
@@ -1592,6 +1589,8 @@ class LabelController {
     // set the width and height of the canvas
     canvas.setWidth(this.canvasWidth);
     canvas.setHeight(this.canvasHeight);
+    document.getElementById(this.canvasId).width = this.canvasWidth;
+    document.getElementById(this.canvasId).height = this.canvasHeight;
 
     // set the height on the parent div so that a vertical scrollbar doesn't show up
     $('#canvasParent_' + this.canvasId).css('height', this.canvasHeight + 2);
@@ -3205,6 +3204,16 @@ class LabelController {
                 });
               }
             }
+          } else if (componentState.componentType == 'ConceptMap' ||
+              componentState.componentType == 'Draw' ||
+              componentState.componentType == 'Embedded' ||
+              componentState.componentType == 'Graph' ||
+              componentState.componentType == 'Table') {
+            let connectedComponent =
+              this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
+            if (connectedComponent.importWorkAsBackground === true) {
+              this.setComponentStateAsBackgroundImage(componentState);
+            }
           }
         }
       }
@@ -3236,6 +3245,16 @@ class LabelController {
       }
     }
     return null;
+  }
+
+  /**
+   * Create an image from a component state and set the image as the background.
+   * @param componentState A component state.
+   */
+  setComponentStateAsBackgroundImage(componentState) {
+    this.UtilService.generateImageFromComponentState(componentState).then((image) => {
+      this.setBackgroundImage(image.url);
+    });
   }
 
   /**
@@ -3294,6 +3313,7 @@ class LabelController {
            */
           connectedComponent.componentId = allowedComponent.id;
           connectedComponent.type = 'importWork';
+          this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
         }
       }
     }
@@ -3355,6 +3375,7 @@ class LabelController {
     if (connectedComponent != null) {
       connectedComponent.componentId = null;
       connectedComponent.type = null;
+      delete connectedComponent.importWorkAsBackground;
       this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
       // the authoring component content has changed so we will save the project
@@ -3372,9 +3393,28 @@ class LabelController {
 
       // default the type to import work
       connectedComponent.type = 'importWork';
+      this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
 
       // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
+    }
+  }
+
+  /**
+   * If the component type is a certain type, we will set the importWorkAsBackground
+   * field to true.
+   * @param connectedComponent The connected component object.
+   */
+  authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
+    let componentType = this.authoringGetConnectedComponentType(connectedComponent);
+    if (componentType == 'ConceptMap' ||
+        componentType == 'Draw' ||
+        componentType == 'Embedded' ||
+        componentType == 'Graph' ||
+        componentType == 'Table') {
+      connectedComponent.importWorkAsBackground = true;
+    } else {
+      delete connectedComponent.importWorkAsBackground;
     }
   }
 
@@ -3520,6 +3560,7 @@ class LabelController {
       delete connectedComponent.charactersPerLine;
       delete connectedComponent.spaceInbetweenLines;
       delete connectedComponent.fontSize;
+      delete connectedComponent.importWorkAsBackground;
     }
 
     this.authoringViewComponentChanged();

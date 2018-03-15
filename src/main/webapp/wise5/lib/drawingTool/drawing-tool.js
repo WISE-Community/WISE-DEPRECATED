@@ -870,6 +870,8 @@ DrawingTool.prototype._setDimensions = function (width, height) {
       .css('width',   width)
       .css('height',  height);
     canvEl.getContext('2d').scale(pixelRatio, pixelRatio);
+    canvEl.width = width;
+    canvEl.height = height;
   }
 };
 

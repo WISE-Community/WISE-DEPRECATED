@@ -10,6 +10,10 @@ var _nodeService = require('../../services/nodeService');
 
 var _nodeService2 = _interopRequireDefault(_nodeService);
 
+var _html2canvas = require('html2canvas');
+
+var _html2canvas2 = _interopRequireDefault(_html2canvas);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21,12 +25,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var EmbeddedService = function (_NodeService) {
   _inherits(EmbeddedService, _NodeService);
 
-  function EmbeddedService($filter, UtilService) {
+  function EmbeddedService($filter, $q, StudentAssetService, UtilService) {
     _classCallCheck(this, EmbeddedService);
 
     var _this = _possibleConstructorReturn(this, (EmbeddedService.__proto__ || Object.getPrototypeOf(EmbeddedService)).call(this));
 
     _this.$filter = $filter;
+    _this.$q = $q;
+    _this.StudentAssetService = StudentAssetService;
     _this.UtilService = UtilService;
     _this.$translate = _this.$filter('translate');
     return _this;
@@ -233,12 +239,44 @@ var EmbeddedService = function (_NodeService) {
       }
       return false;
     }
+
+    /**
+     * The component state has been rendered in a <component></component> element
+     * and now we want to take a snapshot of the work.
+     * @param componentState The component state that has been rendered.
+     * @return A promise that will return an image object.
+     */
+
+  }, {
+    key: 'generateImageFromRenderedComponentState',
+    value: function generateImageFromRenderedComponentState(componentState) {
+      var _this2 = this;
+
+      var deferred = this.$q.defer();
+      var iframe = $('#componentApp_' + componentState.componentId);
+      if (iframe != null && iframe.length > 0) {
+        var modelElement = iframe.contents().find('html');
+        if (modelElement != null && modelElement.length > 0) {
+          modelElement = modelElement[0];
+          // convert the model element to a canvas element
+          (0, _html2canvas2.default)(modelElement).then(function (canvas) {
+            var img_b64 = canvas.toDataURL('image/png');
+            var imageObject = _this2.UtilService.getImageObjectFromBase64String(img_b64);
+            // add the image to the student assets
+            _this2.StudentAssetService.uploadAsset(imageObject).then(function (asset) {
+              deferred.resolve(asset);
+            });
+          });
+        }
+      }
+      return deferred.promise;
+    }
   }]);
 
   return EmbeddedService;
 }(_nodeService2.default);
 
-EmbeddedService.$inject = ['$filter', 'UtilService'];
+EmbeddedService.$inject = ['$filter', '$q', 'StudentAssetService', 'UtilService'];
 
 exports.default = EmbeddedService;
 //# sourceMappingURL=embeddedService.js.map

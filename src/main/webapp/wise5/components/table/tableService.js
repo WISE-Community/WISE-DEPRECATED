@@ -10,6 +10,10 @@ var _nodeService = require('../../services/nodeService');
 
 var _nodeService2 = _interopRequireDefault(_nodeService);
 
+var _html2canvas = require('html2canvas');
+
+var _html2canvas2 = _interopRequireDefault(_html2canvas);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21,12 +25,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var TableService = function (_NodeService) {
   _inherits(TableService, _NodeService);
 
-  function TableService($filter, StudentDataService, UtilService) {
+  function TableService($filter, $q, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, TableService);
 
     var _this = _possibleConstructorReturn(this, (TableService.__proto__ || Object.getPrototypeOf(TableService)).call(this));
 
     _this.$filter = $filter;
+    _this.$q = $q;
+    _this.StudentAssetService = StudentAssetService;
     _this.StudentDataService = StudentDataService;
     _this.UtilService = UtilService;
     _this.$translate = _this.$filter('translate');
@@ -378,12 +384,45 @@ var TableService = function (_NodeService) {
 
       return cellValue;
     }
+
+    /**
+     * The component state has been rendered in a <component></component> element
+     * and now we want to take a snapshot of the work.
+     * @param componentState The component state that has been rendered.
+     * @return A promise that will return an image object.
+     */
+
+  }, {
+    key: 'generateImageFromRenderedComponentState',
+    value: function generateImageFromRenderedComponentState(componentState) {
+      var _this2 = this;
+
+      var deferred = this.$q.defer();
+      var tableElement = angular.element('#table_' + componentState.nodeId + '_' + componentState.componentId);
+      if (tableElement != null && tableElement.length > 0) {
+        tableElement = tableElement[0];
+        // convert the table element to a canvas element
+        (0, _html2canvas2.default)(tableElement).then(function (canvas) {
+          // get the canvas as a base64 string
+          var img_b64 = canvas.toDataURL('image/png');
+
+          // get the image object
+          var imageObject = _this2.UtilService.getImageObjectFromBase64String(img_b64);
+
+          // add the image to the student assets
+          _this2.StudentAssetService.uploadAsset(imageObject).then(function (asset) {
+            deferred.resolve(asset);
+          });
+        });
+      }
+      return deferred.promise;
+    }
   }]);
 
   return TableService;
 }(_nodeService2.default);
 
-TableService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
+TableService.$inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = TableService;
 //# sourceMappingURL=tableService.js.map

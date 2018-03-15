@@ -9,11 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var UtilService = function () {
-  function UtilService($filter, $injector, $rootScope, $timeout) {
+  function UtilService($filter, $injector, $mdDialog, $q, $rootScope, $timeout) {
     _classCallCheck(this, UtilService);
 
     this.$filter = $filter;
     this.$injector = $injector;
+    this.$mdDialog = $mdDialog;
+    this.$q = $q;
     this.$rootScope = $rootScope;
     this.$timeout = $timeout;
     this.componentTypeToLabel = {};
@@ -146,84 +148,6 @@ var UtilService = function () {
         imageObject = this.getImageObjectFromBase64String(dataURL);
       }
       return imageObject;
-    }
-
-    /**
-     * Hide all the iframes. This is used before a student snips something
-     * to put into their notebook. Iframes shift the position of elements
-     * below it which causes issues when html2canvas tries to capture
-     * certain elements.
-     */
-
-  }, {
-    key: 'hideIFrames',
-    value: function hideIFrames() {
-      var iframes = angular.element('iframe');
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = iframes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var iframe = _step.value;
-
-          if (iframe != null) {
-            iframe.style.display = 'none';
-          }
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-    }
-
-    /**
-     * Show all the iframes. This is used after the student snips something
-     * to put into their notebook. Iframes shift the position of elements
-     * below it which causes issues when html2canvas tries to capture
-     * certain elements.
-     */
-
-  }, {
-    key: 'showIFrames',
-    value: function showIFrames() {
-      var iframes = angular.element('iframe');
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
-
-      try {
-        for (var _iterator2 = iframes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var iframe = _step2.value;
-
-          if (iframe != null) {
-            iframe.style.display = '';
-          }
-        }
-      } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
-      }
     }
 
     /**
@@ -817,13 +741,13 @@ var UtilService = function () {
       if (componentContent != null) {
         var connectedComponents = componentContent.connectedComponents;
         if (connectedComponents != null) {
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
 
           try {
-            for (var _iterator3 = connectedComponents[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-              var connectedComponent = _step3.value;
+            for (var _iterator = connectedComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var connectedComponent = _step.value;
 
               if (connectedComponent != null) {
                 if (connectedComponent.type == 'showWork') {
@@ -832,16 +756,16 @@ var UtilService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
+            _didIteratorError = true;
+            _iteratorError = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
+              if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
               }
             } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
+              if (_didIteratorError) {
+                throw _iteratorError;
               }
             }
           }
@@ -862,13 +786,13 @@ var UtilService = function () {
       if (componentContent != null) {
         var connectedComponents = componentContent.connectedComponents;
         if (connectedComponents != null) {
-          var _iteratorNormalCompletion4 = true;
-          var _didIteratorError4 = false;
-          var _iteratorError4 = undefined;
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
 
           try {
-            for (var _iterator4 = connectedComponents[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-              var connectedComponent = _step4.value;
+            for (var _iterator2 = connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var connectedComponent = _step2.value;
 
               if (connectedComponent != null) {
                 if (connectedComponent.type == 'importWork') {
@@ -877,16 +801,16 @@ var UtilService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError4 = true;
-            _iteratorError4 = err;
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                _iterator4.return();
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
               }
             } finally {
-              if (_didIteratorError4) {
-                throw _iteratorError4;
+              if (_didIteratorError2) {
+                throw _iteratorError2;
               }
             }
           }
@@ -906,29 +830,29 @@ var UtilService = function () {
     key: 'arrayHasNonNullElement',
     value: function arrayHasNonNullElement(arrayToCheck) {
       if (arrayToCheck != null) {
-        var _iteratorNormalCompletion5 = true;
-        var _didIteratorError5 = false;
-        var _iteratorError5 = undefined;
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
 
         try {
-          for (var _iterator5 = arrayToCheck[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-            var element = _step5.value;
+          for (var _iterator3 = arrayToCheck[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var element = _step3.value;
 
             if (element != null) {
               return true;
             }
           }
         } catch (err) {
-          _didIteratorError5 = true;
-          _iteratorError5 = err;
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion5 && _iterator5.return) {
-              _iterator5.return();
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
             }
           } finally {
-            if (_didIteratorError5) {
-              throw _iteratorError5;
+            if (_didIteratorError3) {
+              throw _iteratorError3;
             }
           }
         }
@@ -1012,29 +936,29 @@ var UtilService = function () {
   }, {
     key: 'hasNodeEnteredEvent',
     value: function hasNodeEnteredEvent(events) {
-      var _iteratorNormalCompletion6 = true;
-      var _didIteratorError6 = false;
-      var _iteratorError6 = undefined;
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
 
       try {
-        for (var _iterator6 = events[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-          var event = _step6.value;
+        for (var _iterator4 = events[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var event = _step4.value;
 
           if (event.event == 'nodeEntered') {
             return true;
           }
         }
       } catch (err) {
-        _didIteratorError6 = true;
-        _iteratorError6 = err;
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion6 && _iterator6.return) {
-            _iterator6.return();
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
           }
         } finally {
-          if (_didIteratorError6) {
-            throw _iteratorError6;
+          if (_didIteratorError4) {
+            throw _iteratorError4;
           }
         }
       }
@@ -1091,13 +1015,13 @@ var UtilService = function () {
       if (componentContent.connectedComponents != null) {
         var connectedComponents = componentContent.connectedComponents;
         // loop through all the connected components
-        var _iteratorNormalCompletion7 = true;
-        var _didIteratorError7 = false;
-        var _iteratorError7 = undefined;
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
 
         try {
-          for (var _iterator7 = connectedComponents[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-            var connectedComponent = _step7.value;
+          for (var _iterator5 = connectedComponents[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var connectedComponent = _step5.value;
 
             if (connectedComponent.type == connectedComponentType) {
               // the connected component is the type we're looking for
@@ -1105,16 +1029,16 @@ var UtilService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError7 = true;
-          _iteratorError7 = err;
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-              _iterator7.return();
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
             }
           } finally {
-            if (_didIteratorError7) {
-              throw _iteratorError7;
+            if (_didIteratorError5) {
+              throw _iteratorError5;
             }
           }
         }
@@ -1165,6 +1089,127 @@ var UtilService = function () {
         }, 2000);
       }, duration);
     }
+
+    /**
+     * Render the component state and then generate an image from it.
+     * @param componentState The component state to render.
+     * @return A promise that will return an image.
+     */
+
+  }, {
+    key: 'generateImageFromComponentState',
+    value: function generateImageFromComponentState(componentState) {
+      var _this2 = this;
+
+      var deferred = this.$q.defer();
+      this.$mdDialog.show({
+        template: '\n        <div style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.2); z-index: 2;"></div>\n        <div align="center" style="position: absolute; top: 100px; left: 200px; z-index: 1000; padding: 20px; background-color: yellow;">\n          <span>{{ "importingWork" | translate }}...</span>\n          <br/>\n          <br/>\n          <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n        </div>\n        <component node-id="{{nodeId}}"\n                   component-id="{{componentId}}"\n                   component-state="{{componentState}}"\n                   mode="student"></component>\n      ',
+        locals: {
+          nodeId: componentState.nodeId,
+          componentId: componentState.componentId,
+          componentState: componentState
+        },
+        controller: DialogController
+      });
+      function DialogController($scope, $mdDialog, nodeId, componentId, componentState) {
+        $scope.nodeId = nodeId;
+        $scope.componentId = componentId;
+        $scope.componentState = componentState;
+        $scope.closeDialog = function () {
+          $mdDialog.hide();
+        };
+      }
+      DialogController.$inject = ['$scope', '$mdDialog', 'nodeId', 'componentId', 'componentState'];
+      // wait for the component in the dialog to finish rendering
+      var doneRenderingComponentListener = this.$rootScope.$on('doneRenderingComponent', function (event, args) {
+        if (componentState.nodeId == args.nodeId && componentState.componentId == args.componentId) {
+          _this2.$timeout(function () {
+            _this2.generateImageFromComponentStateHelper(componentState).then(function (image) {
+              /*
+               * Destroy the listener otherwise this block of code will be called every time
+               * doneRenderingComponent is fired in the future.
+               */
+              doneRenderingComponentListener();
+              _this2.$timeout.cancel(destroyDoneRenderingComponentListenerTimeout);
+              deferred.resolve(image);
+            });
+          }, 1000);
+        }
+      });
+      /*
+       * Set a timeout to destroy the listener in case there is an error creating the image and
+       * we don't get to destroying it above.
+       */
+      var destroyDoneRenderingComponentListenerTimeout = this.$timeout(function () {
+        // destroy the listener
+        doneRenderingComponentListener();
+      }, 10000);
+      return deferred.promise;
+    }
+
+    /**
+     * The component state has been rendered in the DOM and now we want to create an image
+     * from it.
+     * @param componentState The component state that has been rendered.
+     * @return A promise that will return an image.
+     */
+
+  }, {
+    key: 'generateImageFromComponentStateHelper',
+    value: function generateImageFromComponentStateHelper(componentState) {
+      var _this3 = this;
+
+      var deferred = this.$q.defer();
+      var componentService = this.$injector.get(componentState.componentType + 'Service');
+      componentService.generateImageFromRenderedComponentState(componentState).then(function (image) {
+        deferred.resolve(image);
+        _this3.$mdDialog.hide();
+      });
+      return deferred.promise;
+    }
+
+    /**
+     * Get the connected component associated with the component state.
+     * @param componentContent The component content.
+     * @param componentState The component state.
+     * @return A connected component object or null.
+     */
+
+  }, {
+    key: 'getConnectedComponentByComponentState',
+    value: function getConnectedComponentByComponentState(componentContent, componentState) {
+      var nodeId = componentState.nodeId;
+      var componentId = componentState.componentId;
+      var connectedComponents = componentContent.connectedComponents;
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
+
+      try {
+        for (var _iterator6 = connectedComponents[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var connectedComponent = _step6.value;
+
+          if (connectedComponent.nodeId == nodeId && connectedComponent.componentId == componentId) {
+            return connectedComponent;
+          }
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
+          }
+        }
+      }
+
+      return null;
+    }
   }]);
 
   return UtilService;
@@ -1179,7 +1224,7 @@ if (!Array.prototype.last) {
   };
 }
 
-UtilService.$inject = ['$filter', '$injector', '$rootScope', '$timeout'];
+UtilService.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$timeout'];
 
 exports.default = UtilService;
 //# sourceMappingURL=utilService.js.map
