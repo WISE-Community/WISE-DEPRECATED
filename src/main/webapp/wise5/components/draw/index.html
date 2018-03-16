@@ -517,7 +517,7 @@
             {{ 'RESET' | translate }}
         </md-button>
         <md-button class='md-accent md-primary'
-            ng-click='drawController.snipDrawing($event)'
+            ng-click='drawController.snipButtonClicked($event)'
             ng-if='drawController.showSnipDrawingButton()'>
           <md-icon>content_cut</md-icon>
           {{ 'ADD_TO_NOTEBOOK' | translate:{label:drawController.notebookConfig.label} }}

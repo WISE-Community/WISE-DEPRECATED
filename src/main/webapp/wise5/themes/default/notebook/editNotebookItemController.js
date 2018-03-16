@@ -72,6 +72,10 @@ var EditNotebookItemController = function () {
         } else {
             this.setShowUpload();
         }
+
+        if (this.studentWorkIds != null) {
+            this.item.content.studentWorkIds = this.studentWorkIds;
+        }
     }
 
     _createClass(EditNotebookItemController, [{

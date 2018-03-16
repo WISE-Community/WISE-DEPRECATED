@@ -99,7 +99,9 @@ var NotebookService = function () {
   }, {
     key: "addNewItem",
     value: function addNewItem(ev, file) {
-      this.$rootScope.$broadcast('addNewNote', { ev: ev, file: file });
+      var studentWorkIds = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+      this.$rootScope.$broadcast('addNewNote', { ev: ev, file: file, studentWorkIds: studentWorkIds });
     }
   }, {
     key: "deleteItem",

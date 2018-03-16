@@ -1789,8 +1789,7 @@ class DrawController {
    * Snip the drawing by converting it to an image
    * @param $event the click event
    */
-  snipDrawing($event) {
-
+  snipDrawing($event, studentWorkId) {
     // get the canvas element
     var canvas = angular.element('#drawingtool_' + this.nodeId + '_' + this.componentId + ' canvas');
 
@@ -1806,7 +1805,28 @@ class DrawController {
       var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
       // create a notebook item with the image populated into it
-      this.NotebookService.addNewItem($event, imageObject);
+      this.NotebookService.addNewItem($event, imageObject, [ studentWorkId ]);
+    }
+  }
+
+  snipButtonClicked($event) {
+    if (this.isDirty) {
+      const deregisterListener = this.$scope.$on('studentWorkSavedToServer',
+        (event, args) => {
+          let componentState = args.studentWork;
+          if (componentState &&
+            this.nodeId === componentState.nodeId &&
+            this.componentId === componentState.componentId) {
+            this.snipDrawing($event, componentState.id);
+            deregisterListener();
+          }
+        }
+      );
+      this.saveButtonClicked(); // trigger a save
+    } else {
+      const studentWork =
+          this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId)
+      this.snipDrawing($event, studentWork.id);
     }
   }
 

@@ -75,6 +75,10 @@ class EditNotebookItemController {
         } else {
             this.setShowUpload();
         }
+
+        if (this.studentWorkIds != null) {
+            this.item.content.studentWorkIds = this.studentWorkIds;
+        }
     }
 
     attachStudentAssetToNote(files) {

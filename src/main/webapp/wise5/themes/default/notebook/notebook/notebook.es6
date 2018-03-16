@@ -48,14 +48,16 @@ class NotebookController {
         this.$scope.$on('editNote', (event, args) => {
             let itemId = args.itemId;
             let ev = args.ev;
-            this.editNote(itemId, true, null, ev);
+            const studentWorkIds = null;
+            this.editNote(itemId, true, null, studentWorkIds, ev);
         });
 
         // show edit note dialog on 'addNewNote' event
         this.$scope.$on('addNewNote', (event, args) => {
             let ev = args.ev;
             let file = args.file;
-            this.editNote(null, true, file, ev);
+            const studentWorkIds = args.studentWorkIds;
+            this.editNote(null, true, file, studentWorkIds, ev);
         });
 
         // show delete note confirm dialog on 'deleteNote' event
@@ -118,7 +120,7 @@ class NotebookController {
          */
     }
 
-    editNote(itemId, isEditMode, file, ev) {
+    editNote(itemId, isEditMode, file, studentWorkIds, ev) {
         let notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
 
         // Display a dialog where students can view/add/edit a notebook item
@@ -132,7 +134,8 @@ class NotebookController {
             locals: {
                 itemId: itemId,
                 isEditMode: isEditMode,
-                file: file
+                file: file,
+                studentWorkIds: studentWorkIds
             }
         });
     }
