@@ -1077,6 +1077,7 @@ var LabelController = function () {
       this.createLabelMode = true;
       this.isCancelButtonVisible = true;
       this.editLabelMode = false;
+      this.selectedLabel = null;
     }
   }, {
     key: 'cancelButtonClicked',

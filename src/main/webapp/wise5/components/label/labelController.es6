@@ -1076,6 +1076,7 @@ class LabelController {
     this.createLabelMode = true;
     this.isCancelButtonVisible = true;
     this.editLabelMode = false;
+    this.selectedLabel = null;
   };
 
   /**
