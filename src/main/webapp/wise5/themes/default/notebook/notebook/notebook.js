@@ -286,9 +286,13 @@ var NotebookController = function () {
     }, {
         key: 'setInsertMode',
         value: function setInsertMode(value, requester) {
+            var _this7 = this;
+
             this.insertMode = value;
             if (value) {
-                this.notesVisible = true;
+                this.NotebookService.retrievePublicNotebookItems("public").then(function () {
+                    _this7.notesVisible = true;
+                });
             }
             this.requester = requester;
         }

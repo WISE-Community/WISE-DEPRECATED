@@ -275,7 +275,9 @@ class NotebookController {
     setInsertMode(value, requester) {
         this.insertMode = value;
         if (value) {
+          this.NotebookService.retrievePublicNotebookItems("public").then(() => {
             this.notesVisible = true;
+          });
         }
         this.requester = requester;
     }
