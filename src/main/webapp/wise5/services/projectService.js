@@ -4364,6 +4364,7 @@ var ProjectService = function () {
         this.setIdToNode(node.id, node);
         this.setIdToElement(node.id, node);
       } else {
+        this.setIdToNode(node.id, node);
         if (this.isInactive(nodeId)) {
           // we are creating an inactive node
           this.addInactiveNodeInsertInside(node, nodeId);
@@ -4373,7 +4374,6 @@ var ProjectService = function () {
           this.insertNodeInsideInTransitions(node.id, nodeId);
           this.insertNodeInsideInGroups(node.id, nodeId);
         }
-        this.setIdToNode(node.id, node);
       }
     }
 

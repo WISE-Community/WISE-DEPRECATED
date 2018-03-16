@@ -238,6 +238,7 @@
               ng-model='tableController.authoringComponentContent.prompt'
               ng-change='tableController.authoringViewComponentChanged()'
               ng-model-options='{ debounce: 1000 }'
+              aria-label='Prompt'
               placeholder='{{ "enterPromptHere" | translate }}'>
         </textarea>
         </md-input-container>
@@ -248,14 +249,16 @@
             <input type='number'
                 style='width: 120'
                 ng-model='tableController.authoringComponentContent.numColumns'
-                ng-change='tableController.authoringViewTableSizeConfirmChange("columns", {{tableController.authoringComponentContent.numColumns}})'/>
+                ng-model-options='{ debounce: 500 }'
+                ng-change='tableController.authoringViewTableNumColumnsChanged({{tableController.authoringComponentContent.numColumns}})'/>
           </md-input-container>
           <md-input-container>
             <label>{{ 'table.rows' | translate }}</label>
             <input type='number'
                 style='width: 120'
+                ng-model-options='{ debounce: 500 }'
                 ng-model='tableController.authoringComponentContent.numRows'
-                ng-change='tableController.authoringViewTableSizeConfirmChange("rows", {{tableController.authoringComponentContent.numRows}})'/>
+                ng-change='tableController.authoringViewTableNumRowsChanged({{tableController.authoringComponentContent.numRows}})'/>
           </md-input-container>
           <md-input-container>
             <label>{{ 'table.globalCellSize' | translate }}</label>
@@ -333,6 +336,7 @@
                 <input ng-model='cell.text'
                     ng-model-options='{ debounce: 1000 }'
                     ng-change='tableController.authoringViewComponentChanged()'
+                    aria-label='Text'
                     size='20'/>
               </md-input-container>
               <br/>
@@ -467,6 +471,7 @@
                   <input type='text'
                       ng-model='cell.text'
                       ng-change='tableController.studentDataChanged()'
+                      aria-label='Text'
                       size='{{cell.size || tableController.componentContent.globalCellSize}}'/>
                 </md-input-container>
               </td>

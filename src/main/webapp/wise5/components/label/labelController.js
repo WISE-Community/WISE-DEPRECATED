@@ -1076,6 +1076,8 @@ var LabelController = function () {
     value: function newLabelButtonClicked() {
       this.createLabelMode = true;
       this.isCancelButtonVisible = true;
+      this.editLabelMode = false;
+      this.selectedLabel = null;
     }
   }, {
     key: 'cancelButtonClicked',
@@ -2221,7 +2223,7 @@ var LabelController = function () {
           canvas.renderAll();
 
           if (this.enableCircles) {
-            circle.on('selected', function () {
+            circle.on('mousedown', function () {
               /*
                * the circle was clicked so we will make the associated
                * label selected
@@ -2230,7 +2232,7 @@ var LabelController = function () {
             });
           }
 
-          text.on('selected', function () {
+          text.on('mousedown', function () {
             /*
              * the text was clicked so we will make the associated
              * label selected
