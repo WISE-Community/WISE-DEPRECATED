@@ -39,9 +39,20 @@ class NotebookController {
         this.notesVisible = false;
         this.insertMode = false;
         this.insertContent = null;
+        this.requester = null;
 
         this.$scope.$on('notebookUpdated', (event, args) => {
             this.notebook = angular.copy(args.notebook);
+        });
+
+        this.$scope.$on('openNotebook', (event, args) => {
+          this.requester = args.requester;
+          this.open('note', event);
+          this.setInsertMode(args.insertMode);
+        });
+
+        this.$scope.$on('closeNotebook', (event, args) => {
+          this.closeNotes(event);
         });
 
         // show edit note dialog on 'editNote' event
@@ -261,11 +272,12 @@ class NotebookController {
         this.reportVisible = false;
     }*/
 
-    setInsertMode(value) {
+    setInsertMode(value, requester) {
         this.insertMode = value;
         if (value) {
             this.notesVisible = true;
         }
+        this.requester = requester;
     }
 
     insert(notebookItemId, $event) {
@@ -273,8 +285,11 @@ class NotebookController {
       if (notebookItem == null) {
         notebookItem = this.NotebookService.getPublicNotebookItemById(notebookItemId);
       }
-      // user is inserting new content into the report
-      this.insertContent = angular.copy(notebookItem);
+      if (this.requester == 'report') {
+        this.insertContent = angular.copy(notebookItem);
+      } else {
+        this.$rootScope.$broadcast('notebookItemChosen', { requester: this.requester, notebookItem: notebookItem });
+      }
     }
 }
 
@@ -308,7 +323,7 @@ const Notebook = {
                              visible="$ctrl.reportVisible"
                              workgroup-id="$ctrl.workgroupId"
                              on-collapse="$ctrl.insertMode=false"
-                             on-set-insert-mode="$ctrl.setInsertMode(value)"></notebook-report>
+                             on-set-insert-mode="$ctrl.setInsertMode(value, requester)"></notebook-report>
         </div>
         <notebook-notes ng-if="$ctrl.config.enabled"
                         notebook="$ctrl.notebook"
@@ -318,7 +333,7 @@ const Notebook = {
                         workgroup-id="$ctrl.workgroupId"
                         on-close="$ctrl.closeNotes()"
                         on-insert="$ctrl.insert(value, event)"
-                        on-set-insert-mode="$ctrl.setInsertMode(value)"></notebook-notes>`,
+                        on-set-insert-mode="$ctrl.setInsertMode(value, requester)"></notebook-notes>`,
     controller: NotebookController
 };
 

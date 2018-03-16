@@ -214,7 +214,7 @@ var NotebookReportController = function () {
     }, {
         key: 'addNotebookItemContent',
         value: function addNotebookItemContent($event) {
-            this.onSetInsertMode({ value: true });
+            this.onSetInsertMode({ value: true, requester: 'report' });
         }
     }, {
         key: 'changed',

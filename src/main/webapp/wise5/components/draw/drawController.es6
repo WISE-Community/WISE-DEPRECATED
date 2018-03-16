@@ -608,6 +608,14 @@ class DrawController {
       }
     });
 
+    this.$scope.$on('notebookItemChosen', (event, args) => {
+      if (args.requester == this.nodeId + '-' + this.componentId) {
+        const notebookItem = args.notebookItem;
+        const studentWorkId = notebookItem.content.studentWorkIds[0];
+        this.importWorkByStudentWorkId(studentWorkId);
+      }
+    });
+
   }  // end of constructor
 
   /**
@@ -2821,6 +2829,24 @@ class DrawController {
    */
   authoringJSONChanged() {
     this.jsonStringChanged = true;
+  }
+
+  showCopyPublicNotebookItemButton() {
+    return true;
+  }
+
+  copyPublicNotebookItemButtonClicked(event) {
+    this.$rootScope.$broadcast('openNotebook',
+        { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId });
+  }
+
+  importWorkByStudentWorkId(studentWorkId) {
+    this.StudentDataService.getStudentWorkById(studentWorkId).then((componentState) => {
+      if (componentState != null) {
+        this.setStudentWork(componentState);
+        this.$rootScope.$broadcast('closeNotebook');
+      }
+    });
   }
 }
 
