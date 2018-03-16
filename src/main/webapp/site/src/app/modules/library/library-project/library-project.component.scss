@@ -1,0 +1,34 @@
+@import
+  '~style/abstracts/functions',
+  '~style/abstracts/variables';
+
+.library-project {
+  margin: 8px;
+
+  .mat-card-image {
+    position: relative;
+    padding-top: 75%;
+    border-bottom: 1px solid #eeeeee;
+  }
+
+  .mat-card-content {
+    font-weight: 500;
+    margin: -4px -12px -12px;
+
+    @media (max-width: breakpoint('sm.min') - 1) {
+      margin: -4px -4px -12px;
+      font-size: 13px;
+    }
+  }
+}
+
+.library-project__thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-size: cover;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}

@@ -1,0 +1,21 @@
+<ng-container id="libraryGroups" *ngFor="let group of filteredLibraryGroups">
+  <mat-accordion multi="true" *ngIf="arrangement === group.id">
+    <ng-container *ngFor="let child of group.children; let i = index">
+      <mat-expansion-panel class="library-group" *ngIf="child.type === 'group'" [expanded]="initialGroup === i"
+                           (opened)="expandedGroups[child.id] = true" (closed)="expandedGroups[child.id] = false">
+        <mat-expansion-panel-header>
+          {{ child.notes }}&nbsp;<span class="mat-caption secondary-text">({{ child.children.length }} projects)</span>
+          <app-library-group-thumbs [group]="child" [ngClass]="{ 'hide': expandedGroups[child.id] }"></app-library-group-thumbs>
+        </mat-expansion-panel-header>
+        <div fxLayout="row" fxLayoutWrap>
+          <div *ngFor="let project of child.children" fxFlex="50" fxFlex.gt-xs="33" fxFlex.gt-sm="25">
+            <app-library-project [project]="project"></app-library-project>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </ng-container>
+  </mat-accordion>
+</ng-container>
+
+
+
