@@ -54,9 +54,8 @@ var NotebookController = function () {
         });
 
         this.$scope.$on('openNotebook', function (event, args) {
-            _this.requester = args.requester;
             _this.open('note', event);
-            _this.setInsertMode(args.insertMode);
+            _this.setInsertMode(args.insertMode, args.requester);
         });
 
         this.$scope.$on('closeNotebook', function (event, args) {

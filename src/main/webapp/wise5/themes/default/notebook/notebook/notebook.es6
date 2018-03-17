@@ -46,9 +46,8 @@ class NotebookController {
         });
 
         this.$scope.$on('openNotebook', (event, args) => {
-          this.requester = args.requester;
           this.open('note', event);
-          this.setInsertMode(args.insertMode);
+          this.setInsertMode(args.insertMode, args.requester);
         });
 
         this.$scope.$on('closeNotebook', (event, args) => {
@@ -146,7 +145,7 @@ class NotebookController {
                 itemId: itemId,
                 isEditMode: isEditMode,
                 file: file,
-                studentWorkIds: studentWorkIds
+                 studentWorkIds: studentWorkIds
             }
         });
     }
