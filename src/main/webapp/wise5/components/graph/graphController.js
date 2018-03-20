@@ -431,10 +431,8 @@ var GraphController = function () {
         }.bind(this), true);
       }
 
-      var componentState = null;
-
       // get the component state from the scope
-      componentState = this.$scope.componentState;
+      var componentState = this.$scope.componentState;
 
       // set whether studentAttachment is enabled
       this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
@@ -443,15 +441,21 @@ var GraphController = function () {
         if (!this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
           this.newTrial();
         }
-        if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // this component has connected components
+        if (this.UtilService.hasConnectedComponentAlwaysField(this.componentContent)) {
+          /*
+           * This component has a connected component that we always want to look at for
+           * merging student data.
+           */
           this.handleConnectedComponents();
         } else if (this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          // this does not have connected components but does have previous work
+          // this student has previous work so we will load it
           this.setStudentWork(componentState);
-        } else {
-          // this does not have connected components and does not have previous work
-          //this.newTrial();
+        } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+          /*
+           * This student doesn't have any previous work but this component has connected components
+           * so we will get the work from the connected component.
+           */
+          this.handleConnectedComponents();
         }
       } else {
         // populate the student work into this component
@@ -6914,7 +6918,7 @@ var GraphController = function () {
     key: 'mergeComponentState',
     value: function mergeComponentState(baseComponentState, newComponentState, mergeFields, firstTime) {
       if (mergeFields == null) {
-        if (newComponentState.componentType == 'Graph') {
+        if (newComponentState.componentType == 'Graph' && firstTime) {
           // there are no merge fields specified so we will get all of the fields
           baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(newComponentState.studentData);
         }
@@ -6931,7 +6935,7 @@ var GraphController = function () {
             var name = mergeField.name;
             var when = mergeField.when;
             var action = mergeField.action;
-            if (when == 'firstTime' && firstTime == true) {
+            if (when == 'firstTime' && firstTime) {
               if (action == 'write') {
                 baseComponentState.studentData[name] = newComponentState.studentData[name];
               } else if (action == 'read') {

@@ -730,17 +730,17 @@ var UtilService = function () {
     }
 
     /**
-     * Whether this component shows work from a connected component
-     * @param componentContent the component content
-     * @return whether this component shows work from a connected component
+     * @param componentContent The component content.
+     * @return Whether there are any connected components with a field we always
+     * want to read or write.
      */
 
   }, {
-    key: 'hasShowWorkConnectedComponent',
-    value: function hasShowWorkConnectedComponent(componentContent) {
+    key: 'hasConnectedComponentAlwaysField',
+    value: function hasConnectedComponentAlwaysField(componentContent) {
       if (componentContent != null) {
         var connectedComponents = componentContent.connectedComponents;
-        if (connectedComponents != null) {
+        if (connectedComponents != null && connectedComponents.length > 0) {
           var _iteratorNormalCompletion = true;
           var _didIteratorError = false;
           var _iteratorError = undefined;
@@ -749,9 +749,32 @@ var UtilService = function () {
             for (var _iterator = connectedComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
               var connectedComponent = _step.value;
 
-              if (connectedComponent != null) {
-                if (connectedComponent.type == 'showWork') {
-                  return true;
+              if (connectedComponent.fields != null) {
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
+
+                try {
+                  for (var _iterator2 = connectedComponent.fields[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var field = _step2.value;
+
+                    if (field.when == "always") {
+                      return true;
+                    }
+                  }
+                } catch (err) {
+                  _didIteratorError2 = true;
+                  _iteratorError2 = err;
+                } finally {
+                  try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                      _iterator2.return();
+                    }
+                  } finally {
+                    if (_didIteratorError2) {
+                      throw _iteratorError2;
+                    }
+                  }
                 }
               }
             }
@@ -775,6 +798,51 @@ var UtilService = function () {
     }
 
     /**
+     * Whether this component shows work from a connected component
+     * @param componentContent the component content
+     * @return whether this component shows work from a connected component
+     */
+
+  }, {
+    key: 'hasShowWorkConnectedComponent',
+    value: function hasShowWorkConnectedComponent(componentContent) {
+      if (componentContent != null) {
+        var connectedComponents = componentContent.connectedComponents;
+        if (connectedComponents != null) {
+          var _iteratorNormalCompletion3 = true;
+          var _didIteratorError3 = false;
+          var _iteratorError3 = undefined;
+
+          try {
+            for (var _iterator3 = connectedComponents[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+              var connectedComponent = _step3.value;
+
+              if (connectedComponent != null) {
+                if (connectedComponent.type == 'showWork') {
+                  return true;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError3 = true;
+            _iteratorError3 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
+              }
+            } finally {
+              if (_didIteratorError3) {
+                throw _iteratorError3;
+              }
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    /**
      * Whether this component imports work from a connected component
      * @param componentContent the component content
      * @return whether this component imports work from a connected component
@@ -786,13 +854,13 @@ var UtilService = function () {
       if (componentContent != null) {
         var connectedComponents = componentContent.connectedComponents;
         if (connectedComponents != null) {
-          var _iteratorNormalCompletion2 = true;
-          var _didIteratorError2 = false;
-          var _iteratorError2 = undefined;
+          var _iteratorNormalCompletion4 = true;
+          var _didIteratorError4 = false;
+          var _iteratorError4 = undefined;
 
           try {
-            for (var _iterator2 = connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              var connectedComponent = _step2.value;
+            for (var _iterator4 = connectedComponents[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+              var connectedComponent = _step4.value;
 
               if (connectedComponent != null) {
                 if (connectedComponent.type == 'importWork') {
@@ -801,16 +869,16 @@ var UtilService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
+            _didIteratorError4 = true;
+            _iteratorError4 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
+              if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                _iterator4.return();
               }
             } finally {
-              if (_didIteratorError2) {
-                throw _iteratorError2;
+              if (_didIteratorError4) {
+                throw _iteratorError4;
               }
             }
           }
@@ -830,29 +898,29 @@ var UtilService = function () {
     key: 'arrayHasNonNullElement',
     value: function arrayHasNonNullElement(arrayToCheck) {
       if (arrayToCheck != null) {
-        var _iteratorNormalCompletion3 = true;
-        var _didIteratorError3 = false;
-        var _iteratorError3 = undefined;
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
 
         try {
-          for (var _iterator3 = arrayToCheck[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var element = _step3.value;
+          for (var _iterator5 = arrayToCheck[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var element = _step5.value;
 
             if (element != null) {
               return true;
             }
           }
         } catch (err) {
-          _didIteratorError3 = true;
-          _iteratorError3 = err;
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-              _iterator3.return();
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
             }
           } finally {
-            if (_didIteratorError3) {
-              throw _iteratorError3;
+            if (_didIteratorError5) {
+              throw _iteratorError5;
             }
           }
         }
@@ -936,29 +1004,29 @@ var UtilService = function () {
   }, {
     key: 'hasNodeEnteredEvent',
     value: function hasNodeEnteredEvent(events) {
-      var _iteratorNormalCompletion4 = true;
-      var _didIteratorError4 = false;
-      var _iteratorError4 = undefined;
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
 
       try {
-        for (var _iterator4 = events[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-          var event = _step4.value;
+        for (var _iterator6 = events[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var event = _step6.value;
 
           if (event.event == 'nodeEntered') {
             return true;
           }
         }
       } catch (err) {
-        _didIteratorError4 = true;
-        _iteratorError4 = err;
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion4 && _iterator4.return) {
-            _iterator4.return();
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
           }
         } finally {
-          if (_didIteratorError4) {
-            throw _iteratorError4;
+          if (_didIteratorError6) {
+            throw _iteratorError6;
           }
         }
       }
@@ -1015,13 +1083,13 @@ var UtilService = function () {
       if (componentContent.connectedComponents != null) {
         var connectedComponents = componentContent.connectedComponents;
         // loop through all the connected components
-        var _iteratorNormalCompletion5 = true;
-        var _didIteratorError5 = false;
-        var _iteratorError5 = undefined;
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
 
         try {
-          for (var _iterator5 = connectedComponents[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-            var connectedComponent = _step5.value;
+          for (var _iterator7 = connectedComponents[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var connectedComponent = _step7.value;
 
             if (connectedComponent.type == connectedComponentType) {
               // the connected component is the type we're looking for
@@ -1029,16 +1097,16 @@ var UtilService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError5 = true;
-          _iteratorError5 = err;
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion5 && _iterator5.return) {
-              _iterator5.return();
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
             }
           } finally {
-            if (_didIteratorError5) {
-              throw _iteratorError5;
+            if (_didIteratorError7) {
+              throw _iteratorError7;
             }
           }
         }
@@ -1181,29 +1249,29 @@ var UtilService = function () {
       var nodeId = componentState.nodeId;
       var componentId = componentState.componentId;
       var connectedComponents = componentContent.connectedComponents;
-      var _iteratorNormalCompletion6 = true;
-      var _didIteratorError6 = false;
-      var _iteratorError6 = undefined;
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
 
       try {
-        for (var _iterator6 = connectedComponents[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-          var connectedComponent = _step6.value;
+        for (var _iterator8 = connectedComponents[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var connectedComponent = _step8.value;
 
           if (connectedComponent.nodeId == nodeId && connectedComponent.componentId == componentId) {
             return connectedComponent;
           }
         }
       } catch (err) {
-        _didIteratorError6 = true;
-        _iteratorError6 = err;
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion6 && _iterator6.return) {
-            _iterator6.return();
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
           }
         } finally {
-          if (_didIteratorError6) {
-            throw _iteratorError6;
+          if (_didIteratorError8) {
+            throw _iteratorError8;
           }
         }
       }
