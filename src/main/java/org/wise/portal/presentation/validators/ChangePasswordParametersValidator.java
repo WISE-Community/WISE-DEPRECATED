@@ -101,15 +101,13 @@ public class ChangePasswordParametersValidator implements Validator {
       userToCheckPasswordFor = params.getUser();
     }
 
-    if (!userToCheckPasswordFor.isAdmin()) {
-      String currentPassword = params.getPasswd0();
-      if (currentPassword != null) {
-        if (!userService.isPasswordCorrect(userToCheckPasswordFor, currentPassword)) {
-          errors.rejectValue("passwd0", "presentation.validators.ChangePasswordParametersValidator.errorIncorrectCurrentPassword");
-        }
-      } else {
-        errors.rejectValue("passwd0", "presentation.validators.ChangePasswordParametersValidator.errorCurrentPasswordMissing");
+    String currentPassword = params.getPasswd0();
+    if (currentPassword != null) {
+      if (!userService.isPasswordCorrect(userToCheckPasswordFor, currentPassword)) {
+        errors.rejectValue("passwd0", "presentation.validators.ChangePasswordParametersValidator.errorIncorrectCurrentPassword");
       }
+    } else {
+      errors.rejectValue("passwd0", "presentation.validators.ChangePasswordParametersValidator.errorCurrentPasswordMissing");
     }
   }
 

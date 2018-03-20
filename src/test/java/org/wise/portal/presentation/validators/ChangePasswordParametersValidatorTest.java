@@ -73,16 +73,14 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
   private UserServiceImpl userService;
 
   @Before
-  public void setUp() throws ObjectNotFoundException {
+  public void setUp() {
     params = new ChangePasswordParameters();
     Long teacherId = new Long(1);
-    EasyMock.expect(teacherUser.isAdmin()).andReturn(false);
     params.setTeacherUser(teacherUser);
     params.setPasswd0(LEGAL_PASSWORD1);
     params.setPasswd1(LEGAL_PASSWORD2);
-    params.setPasswd2(LEGAL_PASSWORD2);  // set up is correct (both passwords match)
+    params.setPasswd2(LEGAL_PASSWORD2);
     errors = new BeanPropertyBindingResult(params, "");
-    EasyMock.replay(teacherUser);
     EasyMock.expect(userService.isPasswordCorrect(teacherUser, LEGAL_PASSWORD1)).andReturn(true);
     EasyMock.replay(userService);
   }
@@ -90,31 +88,19 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
   @After
   public void tearDown() {
     EasyMock.verify(userService);
-    EasyMock.verify(teacherUser);
     validator = null;
     params = null;
     errors = null;
   }
 
   @Test
-  public void validate_allCorrectFieldsTeacherIsNotAdmin_OK() {
+  public void validate_allCorrectFieldsTeacher_OK() {
     validator.validate(params, errors);
     assertTrue(!errors.hasErrors());
   }
 
   @Test
-  public void validate_allCorrectFieldsTeacherIsAdmin_OK() {
-    EasyMock.reset(teacherUser);
-    EasyMock.expect(teacherUser.isAdmin()).andReturn(true);
-    EasyMock.replay(teacherUser);
-    EasyMock.reset(userService);
-    EasyMock.replay(userService);
-    validator.validate(params, errors);
-    assertTrue(!errors.hasErrors());
-  }
-
-  @Test
-  public void validate_emptyPassword0_error() throws ObjectNotFoundException {
+  public void validate_emptyPassword0_error() {
     params.setPasswd0(null);
     EasyMock.reset(userService);
     EasyMock.replay(userService);
@@ -125,7 +111,7 @@ public class ChangePasswordParametersValidatorTest extends TestCase {
   }
 
   @Test
-  public void validate_incorrectPassword0_error() throws ObjectNotFoundException {
+  public void validate_incorrectPassword0_error() {
     EasyMock.reset(userService);
     EasyMock.expect(userService.isPasswordCorrect(teacherUser, LEGAL_PASSWORD1)).andReturn(false);
     EasyMock.replay(userService);
