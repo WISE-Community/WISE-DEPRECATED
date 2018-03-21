@@ -3,8 +3,11 @@
     <ng-container *ngFor="let child of group.children; let i = index">
       <mat-expansion-panel class="library-group" *ngIf="child.type === 'group'" [expanded]="initialGroup === i"
                            (opened)="expandedGroups[child.id] = true" (closed)="expandedGroups[child.id] = false">
-        <mat-expansion-panel-header>
-          {{ child.notes }}&nbsp;<span class="mat-caption secondary-text">({{ child.children.length }} projects)</span>
+        <mat-expansion-panel-header class="mat-expansion-panel-header--lg">
+          <div fxLayout="column">
+            <div>{{ child.notes }}</div>
+            <div class="mat-caption secondary-text">{{ child.children.length }} project(s)</div>
+          </div>
           <app-library-group-thumbs [group]="child" [ngClass]="{ 'hide': expandedGroups[child.id] }"></app-library-group-thumbs>
         </mat-expansion-panel-header>
         <div fxLayout="row" fxLayoutWrap>

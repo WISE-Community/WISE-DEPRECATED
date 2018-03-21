@@ -1,0 +1,30 @@
+.mat-expansion-panel {
+  border-radius: 3px;
+
+  &.mat-expanded {
+    .mat-expansion-panel-header {
+      &:hover, &:focus {
+        border-radius: 3px;
+      }
+    }
+  }
+}
+
+.mat-accordion {
+  .mat-expansion-panel {
+    &:not(.mat-expanded) {
+      margin-bottom: 4px;
+    }
+  }
+}
+
+.mat-expansion-panel-body {
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.mat-expansion-panel-header--lg {
+  height: 64px !important;
+}
+
+

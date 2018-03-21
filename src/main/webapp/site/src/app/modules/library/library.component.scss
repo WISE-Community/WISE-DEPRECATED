@@ -10,12 +10,9 @@
     font-weight: 500;
   }
 
-  //.mat-expansion-panel-header {
-  //  background-color: #ffffff;
-  //}
-
   .mat-expansion-panel-body {
-    //  padding-top: 16px;
+    padding-top: 16px;
+    background-color: #eeeeee;
 
     @media (max-width: breakpoint('sm.min') - 1) {
       padding: 0 16px 16px;
