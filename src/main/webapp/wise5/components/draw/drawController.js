@@ -1907,7 +1907,8 @@ var DrawController = function () {
         var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
         // create a notebook item with the image populated into it
-        this.NotebookService.addNewItem($event, imageObject, [studentWorkId]);
+        var noteText = null;
+        this.NotebookService.addNewItem($event, imageObject, noteText, [studentWorkId]);
       }
     }
   }, {

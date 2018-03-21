@@ -59,7 +59,10 @@ class NotebookController {
             let itemId = args.itemId;
             let ev = args.ev;
             const studentWorkIds = null;
-            this.editNote(itemId, true, null, studentWorkIds, ev);
+            const noteText = null;
+            const isEditTextEnabled = true;
+            const isFileUploadEnabled = true;
+            this.editNote(itemId, true, null, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
         });
 
         // show edit note dialog on 'addNewNote' event
@@ -67,7 +70,10 @@ class NotebookController {
             let ev = args.ev;
             let file = args.file;
             const studentWorkIds = args.studentWorkIds;
-            this.editNote(null, true, file, studentWorkIds, ev);
+            const noteText = args.text;
+            const isEditTextEnabled = args.isEditTextEnabled;
+            const isFileUploadEnabled = args.isFileUploadEnabled;
+            this.editNote(null, true, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
         });
 
         // show delete note confirm dialog on 'deleteNote' event
@@ -130,7 +136,7 @@ class NotebookController {
          */
     }
 
-    editNote(itemId, isEditMode, file, studentWorkIds, ev) {
+    editNote(itemId, isEditMode, file, text, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev) {
         let notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
 
         // Display a dialog where students can view/add/edit a notebook item
@@ -145,7 +151,10 @@ class NotebookController {
                 itemId: itemId,
                 isEditMode: isEditMode,
                 file: file,
-                 studentWorkIds: studentWorkIds
+                text: text,
+                studentWorkIds: studentWorkIds,
+                isEditTextEnabled: isEditTextEnabled,
+                isFileUploadEnabled: isFileUploadEnabled
             }
         });
     }

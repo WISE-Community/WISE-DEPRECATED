@@ -67,7 +67,10 @@ var NotebookController = function () {
             var itemId = args.itemId;
             var ev = args.ev;
             var studentWorkIds = null;
-            _this.editNote(itemId, true, null, studentWorkIds, ev);
+            var noteText = null;
+            var isEditTextEnabled = true;
+            var isFileUploadEnabled = true;
+            _this.editNote(itemId, true, null, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
         });
 
         // show edit note dialog on 'addNewNote' event
@@ -75,7 +78,10 @@ var NotebookController = function () {
             var ev = args.ev;
             var file = args.file;
             var studentWorkIds = args.studentWorkIds;
-            _this.editNote(null, true, file, studentWorkIds, ev);
+            var noteText = args.text;
+            var isEditTextEnabled = args.isEditTextEnabled;
+            var isFileUploadEnabled = args.isFileUploadEnabled;
+            _this.editNote(null, true, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
         });
 
         // show delete note confirm dialog on 'deleteNote' event
@@ -141,7 +147,7 @@ var NotebookController = function () {
         }
     }, {
         key: 'editNote',
-        value: function editNote(itemId, isEditMode, file, studentWorkIds, ev) {
+        value: function editNote(itemId, isEditMode, file, text, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev) {
             var notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
 
             // Display a dialog where students can view/add/edit a notebook item
@@ -156,7 +162,10 @@ var NotebookController = function () {
                     itemId: itemId,
                     isEditMode: isEditMode,
                     file: file,
-                    studentWorkIds: studentWorkIds
+                    text: text,
+                    studentWorkIds: studentWorkIds,
+                    isEditTextEnabled: isEditTextEnabled,
+                    isFileUploadEnabled: isFileUploadEnabled
                 }
             });
         }

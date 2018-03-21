@@ -82,8 +82,10 @@ class NotebookService {
     this.$rootScope.$broadcast('editNote', {itemId: itemId, ev: ev});
   };
 
-  addNewItem(ev, file, studentWorkIds = null) {
-    this.$rootScope.$broadcast('addNewNote', {ev: ev, file: file, studentWorkIds: studentWorkIds});
+  addNewItem(ev, file, text = null, studentWorkIds = null, isTextEditable = true, isFileUploadEnabled = true) {
+    this.$rootScope.$broadcast('addNewNote',
+        {ev: ev, file: file, text: text, studentWorkIds: studentWorkIds,
+            isTextEditable: isTextEditable, isFileUploadEnabled: isFileUploadEnabled});
   };
 
   deleteItem(itemToDelete) {

@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var OpenResponseController = function () {
-  function OpenResponseController($filter, $injector, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, CRaterService, NodeService, NotificationService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+  function OpenResponseController($filter, $injector, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, CRaterService, NodeService, NotebookService, NotificationService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     var _this = this;
 
     _classCallCheck(this, OpenResponseController);
@@ -24,6 +24,7 @@ var OpenResponseController = function () {
     this.ConfigService = ConfigService;
     this.CRaterService = CRaterService;
     this.NodeService = NodeService;
+    this.NotebookService = NotebookService;
     this.NotificationService = NotificationService;
     this.OpenResponseService = OpenResponseService;
     this.ProjectService = ProjectService;
@@ -119,6 +120,9 @@ var OpenResponseController = function () {
     // whether the CRater item id is valid
     this.cRaterItemIdIsValid = null;
 
+    // whether the snip button is shown or not
+    this.isSnipButtonVisible = true;
+
     //var scope = this;
     var themePath = this.ProjectService.getThemePath();
 
@@ -205,17 +209,20 @@ var OpenResponseController = function () {
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isDisabled = true;
+        this.isSnipButtonVisible = false;
       } else if (this.mode === 'onlyShowWork') {
         this.onlyShowWork = true;
         this.isPromptVisible = false;
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isDisabled = true;
+        this.isSnipButtonVisible = false;
       } else if (this.mode === 'showPreviousWork') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isDisabled = true;
+        this.isSnipButtonVisible = false;
       } else if (this.mode === 'authoring') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
@@ -1711,13 +1718,45 @@ var OpenResponseController = function () {
       this.saveMessage.time = time;
     }
   }, {
-    key: 'isCRaterEnabled',
+    key: 'showSnipButton',
+    value: function showSnipButton() {
+      return this.NotebookService.isNotebookEnabled() && this.isSnipButtonVisible;
+    }
+  }, {
+    key: 'snipButtonClicked',
+    value: function snipButtonClicked($event) {
+      var _this5 = this;
 
+      if (this.isDirty) {
+        var deregisterListener = this.$scope.$on('studentWorkSavedToServer', function (event, args) {
+          var componentState = args.studentWork;
+          if (componentState && _this5.nodeId === componentState.nodeId && _this5.componentId === componentState.componentId) {
+            var imageObject = null;
+            var noteText = componentState.studentData.response;
+            var isEditTextEnabled = false;
+            var isFileUploadEnabled = false;
+            _this5.NotebookService.addNewItem($event, imageObject, noteText, [componentState.id], isEditTextEnabled, isFileUploadEnabled);
+            deregisterListener();
+          }
+        });
+        this.saveButtonClicked(); // trigger a save
+      } else {
+        var studentWork = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+        var imageObject = null;
+        var noteText = studentWork.studentData.response;
+        var isEditTextEnabled = false;
+        var isFileUploadEnabled = false;
+        this.NotebookService.addNewItem($event, imageObject, noteText, [studentWork.id], isEditTextEnabled, isFileUploadEnabled);
+      }
+    }
 
     /**
      * Check if CRater is enabled for this component
      * @returns whether CRater is enabled for this component
      */
+
+  }, {
+    key: 'isCRaterEnabled',
     value: function isCRaterEnabled() {
       var result = false;
 
@@ -3142,7 +3181,7 @@ var OpenResponseController = function () {
   }, {
     key: 'verifyCRaterItemId',
     value: function verifyCRaterItemId(itemId) {
-      var _this5 = this;
+      var _this6 = this;
 
       // clear the Valid/Invalid text
       this.cRaterItemIdIsValid = null;
@@ -3152,10 +3191,10 @@ var OpenResponseController = function () {
 
       this.CRaterService.verifyCRaterItemId(itemId).then(function (isValid) {
         // turn off the "Verifying..." text
-        _this5.isVerifyingCRaterItemId = false;
+        _this6.isVerifyingCRaterItemId = false;
 
         // set the Valid/Invalid text
-        _this5.cRaterItemIdIsValid = isValid;
+        _this6.cRaterItemIdIsValid = isValid;
       });
     }
   }]);
@@ -3165,7 +3204,7 @@ var OpenResponseController = function () {
 
 ;
 
-OpenResponseController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'CRaterService', 'NodeService', 'NotificationService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+OpenResponseController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'CRaterService', 'NodeService', 'NotebookService', 'NotificationService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = OpenResponseController;
 //# sourceMappingURL=openResponseController.js.map

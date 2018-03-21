@@ -73,6 +73,14 @@ var EditNotebookItemController = function () {
             this.setShowUpload();
         }
 
+        if (this.text != null) {
+            this.item.content.text = this.text;
+            this.saveEnabled = true;
+        }
+        if (!this.isFileUploadEnabled) {
+            this.showUpload = false;
+        }
+
         if (this.studentWorkIds != null) {
             this.item.content.studentWorkIds = this.studentWorkIds;
         }

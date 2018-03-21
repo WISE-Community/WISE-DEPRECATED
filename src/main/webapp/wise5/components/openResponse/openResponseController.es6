@@ -12,6 +12,7 @@ class OpenResponseController {
       ConfigService,
       CRaterService,
       NodeService,
+      NotebookService,
       NotificationService,
       OpenResponseService,
       ProjectService,
@@ -29,6 +30,7 @@ class OpenResponseController {
     this.ConfigService = ConfigService;
     this.CRaterService = CRaterService;
     this.NodeService = NodeService;
+    this.NotebookService = NotebookService;
     this.NotificationService = NotificationService;
     this.OpenResponseService = OpenResponseService;
     this.ProjectService = ProjectService;
@@ -124,6 +126,9 @@ class OpenResponseController {
     // whether the CRater item id is valid
     this.cRaterItemIdIsValid = null;
 
+    // whether the snip button is shown or not
+    this.isSnipButtonVisible = true;
+
     //var scope = this;
     let themePath = this.ProjectService.getThemePath();
 
@@ -215,17 +220,20 @@ class OpenResponseController {
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isDisabled = true;
+        this.isSnipButtonVisible = false;
       } else if (this.mode === 'onlyShowWork') {
         this.onlyShowWork = true;
         this.isPromptVisible = false;
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isDisabled = true;
+        this.isSnipButtonVisible = false;
       } else if (this.mode === 'showPreviousWork') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isDisabled = true;
+        this.isSnipButtonVisible = false;
       } else if (this.mode === 'authoring') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
@@ -1634,6 +1642,39 @@ class OpenResponseController {
     this.saveMessage.time = time;
   };
 
+  showSnipButton() {
+    return this.NotebookService.isNotebookEnabled() && this.isSnipButtonVisible;
+  }
+
+  snipButtonClicked($event) {
+    if (this.isDirty) {
+      const deregisterListener = this.$scope.$on('studentWorkSavedToServer',
+        (event, args) => {
+          let componentState = args.studentWork;
+          if (componentState &&
+              this.nodeId === componentState.nodeId &&
+              this.componentId === componentState.componentId) {
+            const imageObject = null;
+            const noteText = componentState.studentData.response;
+            const isEditTextEnabled = false;
+            const isFileUploadEnabled = false;
+            this.NotebookService.addNewItem($event, imageObject, noteText, [ componentState.id ], isEditTextEnabled, isFileUploadEnabled);
+            deregisterListener();
+          }
+        }
+      );
+      this.saveButtonClicked(); // trigger a save
+    } else {
+      const studentWork =
+        this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+      const imageObject = null;
+      const noteText = studentWork.studentData.response;
+      const isEditTextEnabled = false;
+      const isFileUploadEnabled = false;
+      this.NotebookService.addNewItem($event, imageObject, noteText, [ studentWork.id ], isEditTextEnabled, isFileUploadEnabled);
+    }
+  }
+
   /**
    * Check if CRater is enabled for this component
    * @returns whether CRater is enabled for this component
@@ -2928,6 +2969,7 @@ OpenResponseController.$inject = [
   'ConfigService',
   'CRaterService',
   'NodeService',
+  'NotebookService',
   'NotificationService',
   'OpenResponseService',
   'ProjectService',
