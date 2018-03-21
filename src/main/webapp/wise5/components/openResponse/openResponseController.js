@@ -583,6 +583,14 @@ var OpenResponseController = function () {
       }
     });
 
+    this.$scope.$on('notebookItemChosen', function (event, args) {
+      if (args.requester == _this.nodeId + '-' + _this.componentId) {
+        var notebookItem = args.notebookItem;
+        var studentWorkId = notebookItem.content.studentWorkIds[0];
+        _this.importWorkByStudentWorkId(studentWorkId);
+      }
+    });
+
     // load script for this component, if any
     var script = this.componentContent.script;
     if (script != null) {
@@ -878,6 +886,10 @@ var OpenResponseController = function () {
 
       // set the submit counter
       studentData.submitCounter = this.submitCounter;
+
+      if (this.parentStudentWorkIds != null) {
+        studentData.parentStudentWorkIds = this.parentStudentWorkIds;
+      }
 
       // set the flag for whether the student submitted this work
       componentState.isSubmit = this.isSubmit;
@@ -1748,6 +1760,34 @@ var OpenResponseController = function () {
         var isFileUploadEnabled = false;
         this.NotebookService.addNewItem($event, imageObject, noteText, [studentWork.id], isEditTextEnabled, isFileUploadEnabled);
       }
+    }
+  }, {
+    key: 'showCopyPublicNotebookItemButton',
+    value: function showCopyPublicNotebookItemButton() {
+      return true;
+    }
+  }, {
+    key: 'copyPublicNotebookItemButtonClicked',
+    value: function copyPublicNotebookItemButtonClicked(event) {
+      this.$rootScope.$broadcast('openNotebook', { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId });
+    }
+  }, {
+    key: 'importWorkByStudentWorkId',
+    value: function importWorkByStudentWorkId(studentWorkId) {
+      var _this6 = this;
+
+      this.StudentDataService.getStudentWorkById(studentWorkId).then(function (componentState) {
+        if (componentState != null) {
+          _this6.setStudentWork(componentState);
+          _this6.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+          _this6.$rootScope.$broadcast('closeNotebook');
+        }
+      });
+    }
+  }, {
+    key: 'setParentStudentWorkIdToCurrentStudentWork',
+    value: function setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
+      this.parentStudentWorkIds = [studentWorkId];
     }
 
     /**
@@ -3181,7 +3221,7 @@ var OpenResponseController = function () {
   }, {
     key: 'verifyCRaterItemId',
     value: function verifyCRaterItemId(itemId) {
-      var _this6 = this;
+      var _this7 = this;
 
       // clear the Valid/Invalid text
       this.cRaterItemIdIsValid = null;
@@ -3191,10 +3231,10 @@ var OpenResponseController = function () {
 
       this.CRaterService.verifyCRaterItemId(itemId).then(function (isValid) {
         // turn off the "Verifying..." text
-        _this6.isVerifyingCRaterItemId = false;
+        _this7.isVerifyingCRaterItemId = false;
 
         // set the Valid/Invalid text
-        _this6.cRaterItemIdIsValid = isValid;
+        _this7.cRaterItemIdIsValid = isValid;
       });
     }
   }]);

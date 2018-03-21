@@ -609,6 +609,14 @@ class OpenResponseController {
       }
     });
 
+    this.$scope.$on('notebookItemChosen', (event, args) => {
+      if (args.requester == this.nodeId + '-' + this.componentId) {
+        const notebookItem = args.notebookItem;
+        const studentWorkId = notebookItem.content.studentWorkIds[0];
+        this.importWorkByStudentWorkId(studentWorkId);
+      }
+    });
+
     // load script for this component, if any
     let script = this.componentContent.script;
     if (script != null) {
@@ -873,6 +881,10 @@ class OpenResponseController {
 
     // set the submit counter
     studentData.submitCounter = this.submitCounter;
+
+    if (this.parentStudentWorkIds != null) {
+      studentData.parentStudentWorkIds = this.parentStudentWorkIds;
+    }
 
     // set the flag for whether the student submitted this work
     componentState.isSubmit = this.isSubmit;
@@ -1673,6 +1685,29 @@ class OpenResponseController {
       const isFileUploadEnabled = false;
       this.NotebookService.addNewItem($event, imageObject, noteText, [ studentWork.id ], isEditTextEnabled, isFileUploadEnabled);
     }
+  }
+
+  showCopyPublicNotebookItemButton() {
+    return true;
+  }
+
+  copyPublicNotebookItemButtonClicked(event) {
+    this.$rootScope.$broadcast('openNotebook',
+      { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId });
+  }
+
+  importWorkByStudentWorkId(studentWorkId) {
+    this.StudentDataService.getStudentWorkById(studentWorkId).then((componentState) => {
+      if (componentState != null) {
+        this.setStudentWork(componentState);
+        this.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+        this.$rootScope.$broadcast('closeNotebook');
+      }
+    });
+  }
+
+  setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
+    this.parentStudentWorkIds = [studentWorkId];
   }
 
   /**
