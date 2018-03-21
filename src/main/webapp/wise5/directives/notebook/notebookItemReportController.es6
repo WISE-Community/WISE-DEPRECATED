@@ -105,12 +105,6 @@ class NotebookItemReportController {
             }
         });
 
-        this.$scope.$on('toggleNotebook', () => {
-            if (this.dirty) {
-                this.saveNotebookReportItem();
-            }
-        });
-
         // start the auto save interval
         if (this.mode != "classroomMonitor") {
             this.startAutoSaveInterval();

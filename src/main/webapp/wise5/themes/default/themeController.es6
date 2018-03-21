@@ -242,53 +242,6 @@ class ThemeController {
             StudentAssetDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
         });
 
-        // toggle notebook opened or closed on 'toggleNotebook' event
-        /*this.$scope.$on('toggleNotebook', (event, args) => {
-            let ev = args.ev;
-            let open = args.open;
-            this.toggleNotebook(ev, open);
-        });
-
-        // toggle notebook nav opened or closed on 'toggleNotebookNav' event
-        this.$scope.$on('toggleNotebookNav', () => {
-            this.toggleNotebookNav();
-        });
-
-        // update notebook filter on 'setNotebookFilter' event
-        this.$scope.$on('setNotebookFilter', (event, args) => {
-            this.notebookFilter = args.filter;
-        });*/
-
-        // show edit note dialog on 'editNote' event
-        /*this.$scope.$on('editNote', (event, args) => {
-            let itemId = args.itemId;
-            let ev = args.ev;
-            this.editNote(itemId, true, null, ev);
-        });*/
-
-        // show edit note dialog on 'addNewNote' event
-        /*this.$scope.$on('addNewNote', (event, args) => {
-            let ev = args.ev;
-            let file = args.file;
-            this.editNote(null, true, file, ev);
-        });*/
-
-        // show delete note confirm dialog on 'deleteNote' event
-        /*this.$scope.$on('deleteNote', (event, args) => {
-            let itemId = args.itemId;
-            let ev = args.ev;
-            let doDelete = true;
-            this.deleteNote(itemId, ev, doDelete);
-        });*/
-
-        // show delete note confirm dialog on 'reviveNote' event
-        /*this.$scope.$on('reviveNote', (event, args) => {
-            let itemId = args.itemId;
-            let ev = args.ev;
-            let doDelete = false;
-            this.deleteNote(itemId, ev, doDelete);
-        });*/
-
         // a group node has turned on or off planning mode
         this.$scope.$on('togglePlanningMode', (event, args) => {
             this.planningMode = args.planningMode;
@@ -444,84 +397,6 @@ class ThemeController {
     getAvatarColorForWorkgroupId(workgroupId) {
         return this.ConfigService.getAvatarColorForWorkgroupId(workgroupId);
     }
-
-    /**
-    * Open or close the notebook and save notebook open/close events
-    */
-    /*toggleNotebook(ev, open) {
-        //this.notebookOpen = !this.notebookOpen;
-        if (this.layoutState === 'notebook' && !open) {
-            this.setLayoutState();
-            this.NotebookService.saveNotebookToggleEvent(false, this.currentNode);
-        } else {
-            this.layoutState = 'notebook';
-            this.setLayoutState('notebook');
-            this.NotebookService.saveNotebookToggleEvent(true, this.currentNode);
-        }
-    }*/
-
-    /**
-     * Open or close the notebook nav menu
-     */
-    /*toggleNotebookNav() {
-        this.notebookNavOpen = !this.notebookNavOpen;
-    }*/
-
-    /**
-     * Delete the note specified by the itemId.
-     */
-    /*deleteNote(itemId, ev, doDelete = true) {
-        let confirm = null;
-
-        if (doDelete) {
-            confirm = this.$mdDialog.confirm()
-                .title(this.$translate('deleteNoteConfirmMessage'))
-                .ariaLabel('delete note confirmation')
-                .targetEvent(ev)
-                .ok(this.$translate('delete'))
-                .cancel(this.$translate('cancel'));
-        } else {
-            confirm = this.$mdDialog.confirm()
-                .title(this.$translate('reviveNoteConfirmMessage'))
-                .ariaLabel('revive note confirmation')
-                .targetEvent(ev)
-                .ok(this.$translate('revive'))
-                .cancel(this.$translate('cancel'));
-        }
-
-        this.$mdDialog.show(confirm).then(() => {
-            let noteCopy = angular.copy(this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId));
-            noteCopy.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
-            noteCopy.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
-            let clientDeleteTime = null;  // if delete timestamp is null, then we are in effect un-deleting this note item
-            if (doDelete) {
-                clientDeleteTime = Date.parse(new Date());  // set delete timestamp
-            }
-            this.NotebookService.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId,
-                noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.content.clientSaveTime, clientDeleteTime);
-        }, () => {
-            // they chose not to delete. Do nothing, the dialog will close.
-        });
-    }
-
-    editNote(itemId, isEditMode, file, ev) {
-        let notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
-
-        // Display a dialog where students can view/add/edit a notebook item
-        this.$mdDialog.show({
-            parent: angular.element(document.body),
-            targetEvent: ev,
-            templateUrl: notebookItemTemplate,
-            controller: EditNotebookItemController,
-            controllerAs: 'editNotebookItemController',
-            bindToController: true,
-            locals: {
-                itemId: itemId,
-                isEditMode: isEditMode,
-                file: file
-            }
-        });
-    }*/
 
     /**
      * The user has moved the mouse so we will notify the Session Service
