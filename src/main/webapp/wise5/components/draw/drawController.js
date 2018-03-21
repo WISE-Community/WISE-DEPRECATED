@@ -1139,6 +1139,8 @@ var DrawController = function () {
           // set the background
           this.drawingTool.setBackgroundImage(this.componentContent.background);
         }
+
+        this.parentStudentWorkIds = null;
       }
     }
   }, {
@@ -1215,6 +1217,10 @@ var DrawController = function () {
 
       // set the submit counter
       studentData.submitCounter = this.submitCounter;
+
+      if (this.parentStudentWorkIds != null) {
+        studentData.parentStudentWorkIds = this.parentStudentWorkIds;
+      }
 
       // set the flag for whether the student submitted this work
       componentState.isSubmit = this.isSubmit;
@@ -3068,9 +3074,15 @@ var DrawController = function () {
       this.StudentDataService.getStudentWorkById(studentWorkId).then(function (componentState) {
         if (componentState != null) {
           _this6.setStudentWork(componentState);
+          _this6.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
           _this6.$rootScope.$broadcast('closeNotebook');
         }
       });
+    }
+  }, {
+    key: 'setParentStudentWorkIdToCurrentStudentWork',
+    value: function setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
+      this.parentStudentWorkIds = [studentWorkId];
     }
   }]);
 

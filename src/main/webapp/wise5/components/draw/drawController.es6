@@ -1133,6 +1133,8 @@ class DrawController {
         // set the background
         this.drawingTool.setBackgroundImage(this.componentContent.background);
       }
+
+      this.parentStudentWorkIds = null;
     }
   }
 
@@ -1200,6 +1202,10 @@ class DrawController {
 
     // set the submit counter
     studentData.submitCounter = this.submitCounter;
+
+    if (this.parentStudentWorkIds != null) {
+      studentData.parentStudentWorkIds = this.parentStudentWorkIds;
+    }
 
     // set the flag for whether the student submitted this work
     componentState.isSubmit = this.isSubmit;
@@ -2844,9 +2850,14 @@ class DrawController {
     this.StudentDataService.getStudentWorkById(studentWorkId).then((componentState) => {
       if (componentState != null) {
         this.setStudentWork(componentState);
+        this.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
         this.$rootScope.$broadcast('closeNotebook');
       }
     });
+  }
+
+  setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
+    this.parentStudentWorkIds = [studentWorkId];
   }
 }
 
