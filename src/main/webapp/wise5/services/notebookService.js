@@ -575,6 +575,7 @@ var NotebookService = function () {
           }
 
           _this2.publicNotebookItems[group] = publicNotebookItemsForGroup;
+          _this2.$rootScope.$broadcast("publicNotebookItemsRetrieved", { publicNotebookItems: _this2.publicNotebookItems });
           return _this2.publicNotebookItems;
         });
       }

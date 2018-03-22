@@ -297,7 +297,7 @@ var NotebookController = function () {
   return NotebookController;
 }();
 
-NotebookController.$inject = ['$mdDialog', '$scope', '$rootScope', 'ConfigService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+NotebookController.$inject = ['$filter', '$mdDialog', '$scope', '$rootScope', 'ConfigService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 var Notebook = {
   bindings: {},

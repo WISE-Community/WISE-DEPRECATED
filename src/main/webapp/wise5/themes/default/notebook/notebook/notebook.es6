@@ -282,6 +282,7 @@ class NotebookController {
 }
 
 NotebookController.$inject = [
+  '$filter',
   '$mdDialog',
   '$scope',
   '$rootScope',

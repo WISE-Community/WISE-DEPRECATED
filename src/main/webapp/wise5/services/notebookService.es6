@@ -361,6 +361,7 @@ class NotebookService {
               angular.fromJson(publicNotebookItemForGroup.content);
         }
         this.publicNotebookItems[group] = publicNotebookItemsForGroup;
+        this.$rootScope.$broadcast("publicNotebookItemsRetrieved", {publicNotebookItems: this.publicNotebookItems});
         return this.publicNotebookItems;
       });
     }

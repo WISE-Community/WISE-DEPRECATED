@@ -3,13 +3,32 @@
 class NotebookNotesController {
     constructor($filter,
                 $rootScope,
+                $scope,
                 NotebookService) {
 
         this.$translate = $filter('translate');
         this.$rootScope = $rootScope;
         this.NotebookService = NotebookService;
+        this.groups = [];
+        this.selectedTabIndex = 0;
+        this.$scope = $scope;
 
         this.publicNotebookItems = this.NotebookService.publicNotebookItems;
+
+        const personalGroup = {
+            title: "Personal",
+            name: "private",
+            isEditAllowed: true,
+            items: []
+        }
+
+        for (const [personalItemKey, personalItemValue] of Object.entries(this.notebook.items)) {
+            if (personalItemValue.last().type === 'note') {
+                personalGroup.items.push(personalItemValue.last());
+            }
+        };
+
+        this.groups.push(personalGroup);
 
         this.$onInit = () => {
             this.color = this.config.itemTypes.note.label.color;
@@ -21,6 +40,27 @@ class NotebookNotesController {
                 this.hasNotes = Object.keys(this.notebook.items).length ? true : false;
             }
         }
+
+        this.$rootScope.$on('publicNotebookItemsRetrieved', (event, args) => {
+            let publicGroupFound = false;
+            for (let group of this.groups) {
+                if (group.name == "public") {
+                    group.items = this.publicNotebookItems["public"];
+                    publicGroupFound = true;
+                }
+            }
+            if (!publicGroupFound) {
+                const publicGroup = {
+                    title: "Public",
+                    name: "public",
+                    isEditAllowed: false,
+                    items: this.publicNotebookItems["public"]
+                };
+                this.groups.push(publicGroup);
+            }
+            this.selectedTabIndex = 0;
+        });
+
     }
 
     getTitle() {
@@ -70,6 +110,7 @@ class NotebookNotesController {
 NotebookNotesController.$inject = [
     '$filter',
     '$rootScope',
+    '$scope',
     'NotebookService'
 ];
 
@@ -113,8 +154,27 @@ const NotebookNotes = {
                 </div>
             </md-toolbar>
             <md-content>
-                <div class="notebook-items" ng-class="{'notebook-items--insert': $ctrl.insertMode}" layout="row" layout-wrap>
+            <md-tabs md-selected="$ctrl.selectedTabIndex" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>
+              <md-tab ng-repeat="group in $ctrl.groups"
+                      ng-disabled="group.disabled"
+                      label="{{group.title}}">
+                <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
+                    <div class="notebook-items" ng-class="{'notebook-items--insert': $ctrl.insertMode}" layout="row" layout-wrap>
                     <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{$ctrl.config.itemTypes.note.label.plural}}"></div>
+                    <notebook-item ng-repeat="note in group.items"
+                                 config="$ctrl.config"
+                                 group="{{group.name}}"
+                                 item-id="note.localNotebookItemId"
+                                 is-edit-allowed="group.isEditAllowed"
+                                 is-choose-mode="$ctrl.insertMode"
+                                 workgroup-id="note.workgroupId"
+                                 on-select="$ctrl.select($ev, $itemId)"
+                                 on-delete="$ctrl.deleteItem($ev, $itemId)"
+                                 style="display: flex;"
+                                 flex="100"
+                                 flex-gt-xs="50">
+                    </notebook-item>
+                    <!--
                     <notebook-item ng-repeat="(localNotebookItemId, notes) in $ctrl.notebook.items"
                                  ng-if="notes.last().type === 'note'"
                                  config="$ctrl.config"
@@ -141,6 +201,7 @@ const NotebookNotes = {
                                  flex="100"
                                  flex-gt-xs="50">
                     </notebook-item>
+                    -->
 
                     <!-- TODO: show deleted items somewhere
                         <notebook-item ng-repeat="(localNotebookItemId, notes) in $ctrl.notebook.deletedItems"
@@ -158,6 +219,10 @@ const NotebookNotes = {
                         </notebook-item>
                     -->
                 </div> <!-- TODO: add questions when supported -->
+                </div>
+              </md-tab>
+            </md-tabs>
+
             </md-content>
         </md-sidenav>`,
     controller: NotebookNotesController

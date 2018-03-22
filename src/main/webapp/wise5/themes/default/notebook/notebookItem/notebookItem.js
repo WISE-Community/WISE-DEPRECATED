@@ -28,7 +28,7 @@ var NotebookItemController = function () {
         this.$translate = this.$filter('translate');
         //this.mode = this.ConfigService.getMode();
 
-        if (this.group != null) {
+        if (this.group != null && this.group != 'private') {
             this.item = this.NotebookService.getPublicNotebookItem(this.group, this.itemId, this.workgroupId);
         } else {
             this.item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId, this.workgroupId);
