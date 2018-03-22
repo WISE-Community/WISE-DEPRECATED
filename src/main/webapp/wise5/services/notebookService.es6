@@ -82,10 +82,10 @@ class NotebookService {
     this.$rootScope.$broadcast('editNote', {itemId: itemId, ev: ev});
   };
 
-  addNewItem(ev, file, text = null, studentWorkIds = null, isTextEditable = true, isFileUploadEnabled = true) {
+  addNewItem(ev, file, text = null, studentWorkIds = null, isEditTextEnabled = true, isFileUploadEnabled = true) {
     this.$rootScope.$broadcast('addNewNote',
         {ev: ev, file: file, text: text, studentWorkIds: studentWorkIds,
-            isTextEditable: isTextEditable, isFileUploadEnabled: isFileUploadEnabled});
+          isEditTextEnabled: isEditTextEnabled, isFileUploadEnabled: isFileUploadEnabled});
   };
 
   deleteItem(itemToDelete) {
@@ -113,7 +113,7 @@ class NotebookService {
     }
   }
 
-  // returns student's report item if they've done work, or the template if they haven't.
+  // returns student's report item if they've done work, or the template if they haven't
   getLatestNotebookReportItemByReportId(reportId, workgroupId = null) {
     return this.getLatestNotebookItemByLocalNotebookItemId(reportId, workgroupId);
   }
