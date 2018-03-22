@@ -576,36 +576,6 @@ var NotebookService = function () {
 
           _this2.publicNotebookItems[group] = publicNotebookItemsForGroup;
           return _this2.publicNotebookItems;
-
-          // this.notebooksByWorkgroup = {};
-          // const allNotebookItems = response.data;
-          // for (let notebookItem of allNotebookItems) {
-          //   try {
-          //     if (notebookItem.studentAssetId != null) {
-          //       // if this notebook item is a StudentAsset item, add the association here
-          //       notebookItem.studentAsset = this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
-          //     } else if (notebookItem.studentWorkId != null) {
-          //       // if this notebook item is a StudentWork item, add the association here
-          //       notebookItem.studentWork = this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
-          //     } else if (notebookItem.type === "note" || notebookItem.type === "report") {
-          //       notebookItem.content = angular.fromJson(notebookItem.content);
-          //     }
-          //     const workgroupId = notebookItem.workgroupId;
-          //     if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
-          //       // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
-          //       this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
-          //     } else {
-          //       // otherwise, we'll create a new notebook field and add the item to the array
-          //       this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
-          //     }
-          //   } catch (e) {
-          //     // keep going, ignore this error
-          //   }
-          // }
-          // this.groupNotebookItems(); // group notebook items based on item.localNotebookItemId
-          // this.calculateTotalUsage();
-          //
-          // return this.notebooksByWorkgroup;
         });
       }
     }
