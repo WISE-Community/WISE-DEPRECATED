@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007 Regents of the University of California (Regents). Created
+ * Copyright (c) 2007-2018 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU Lesser General Public License, v2.
@@ -27,13 +27,11 @@ import org.junit.runners.Suite;
 
 /**
  * @author Hiroki Terashima
- * @version $Id$
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	org.wise.portal.presentation.validators.student.AddProjectParametersValidatorTest.class,
-	org.wise.portal.presentation.validators.student.TeamSignInFormValidatorTest.class
+  AddProjectParametersValidatorTest.class,
+  TeamSignInFormValidatorTest.class
 })
-
 public class AllTests {
 }

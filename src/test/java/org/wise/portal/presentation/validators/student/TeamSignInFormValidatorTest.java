@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007 Regents of the University of California (Regents). Created
+ * Copyright (c) 2007-2018 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU Lesser General Public License, v2.
@@ -56,34 +56,34 @@ import java.util.List;
 @RunWith(EasyMockRunner.class)
 public class TeamSignInFormValidatorTest extends TestCase {
 
-	private static final String USERNAME1 = "HirokiT619";
+  private static final String USERNAME1 = "HirokiT619";
 
-	private static final String USERNAME2 = "FrodoH11";
+  private static final String USERNAME2 = "FrodoH11";
 
-	private static final String USERNAME3 = "SebastianS619";
+  private static final String USERNAME3 = "SebastianS619";
 
-	private static final String PASSWORD2 = "pass2";
+  private static final String PASSWORD2 = "pass2";
 
-	private static final String PASSWORD3 = "pass3";
+  private static final String PASSWORD3 = "pass3";
 
-	private static final Long RUNID = 1L;
+  private static final Long RUNID = 1L;
 
-	private static final String EMPTY = "";
+  private static final String EMPTY = "";
 
   private TeamSignInForm form;
 
-	private Run run;
+  private Run run;
 
-	private User user1;
+  private User user1;
 
-	private User user2;
+  private User user2;
 
-	private User user3;
+  private User user3;
 
-	@TestSubject
-	private TeamSignInFormValidator validator = new TeamSignInFormValidator();
+  @TestSubject
+  private TeamSignInFormValidator validator = new TeamSignInFormValidator();
 
-	private Errors errors;
+  private Errors errors;
 
   @Mock
   private UserServiceImpl userService;
@@ -96,7 +96,7 @@ public class TeamSignInFormValidatorTest extends TestCase {
 
   @Before
   public void setUp() {
-	  run = new RunImpl();
+    run = new RunImpl();
     user1 = new UserImpl();
     user2 = new UserImpl();
     user2.setUserDetails(new PersistentUserDetails());
@@ -104,14 +104,14 @@ public class TeamSignInFormValidatorTest extends TestCase {
     user3.setUserDetails(new PersistentUserDetails());
 
     form = new TeamSignInForm();
-		form.setUsername1(USERNAME1);
-		form.setRunId(RUNID);
-		errors = new BeanPropertyBindingResult(form, "");
-	}
+    form.setUsername1(USERNAME1);
+    form.setRunId(RUNID);
+    errors = new BeanPropertyBindingResult(form, "");
+  }
 
-	@Test
-	public void validate_OneMemberOnly_OK() {
-		EasyMock.expect(userService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
+  @Test
+  public void validate_OneMemberOnly_OK() {
+    EasyMock.expect(userService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
     EasyMock.replay(userService);
     try {
       EasyMock.expect(runService.retrieveById(RUNID)).andReturn(run);
@@ -119,14 +119,14 @@ public class TeamSignInFormValidatorTest extends TestCase {
       e.printStackTrace();
     }
     EasyMock.replay(runService);
-		validator.validate(form, errors);
-		assertTrue(!errors.hasErrors());
+    validator.validate(form, errors);
+    assertTrue(!errors.hasErrors());
     EasyMock.verify(userService);
     EasyMock.verify(runService);
-	}
+  }
 
   @Test
-  public void validate_oneMemberOnlyEmptyUsername_error() {
+  public void validate_OneMemberOnlyEmptyUsername_error() {
     form.setUsername1(EMPTY);
     validator.validate(form, errors);
     assertTrue(errors.hasErrors());
@@ -135,41 +135,41 @@ public class TeamSignInFormValidatorTest extends TestCase {
   }
 
   @Test
-	public void validate_OneMemberOnlyNullUser_error() {
-		EasyMock.expect(userService.retrieveUserByUsername(USERNAME1)).andReturn(null);
-		EasyMock.replay(userService);
-		validator.validate(form, errors);
-		assertTrue(errors.hasErrors());
-		assertEquals(1, errors.getErrorCount());
-		assertNotNull(errors.getFieldValue("username1"));
+  public void validate_OneMemberOnlyNullUser_error() {
+    EasyMock.expect(userService.retrieveUserByUsername(USERNAME1)).andReturn(null);
+    EasyMock.replay(userService);
+    validator.validate(form, errors);
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getErrorCount());
+    assertNotNull(errors.getFieldValue("username1"));
     EasyMock.verify(userService);
   }
 
   @Test
-	public void validate_UserOneUserTwo_OK() throws ObjectNotFoundException {
-		EasyMock.expect(userService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
+  public void validate_UserOneUserTwo_OK() throws ObjectNotFoundException {
+    EasyMock.expect(userService.retrieveUserByUsername(USERNAME1)).andReturn(user1);
     EasyMock.expect(runService.retrieveById(RUNID)).andReturn(run);
     EasyMock.replay(runService);
     List<Workgroup> workgroups = new ArrayList<Workgroup>();
     Workgroup workgroup = new WorkgroupImpl();
     workgroups.add(workgroup);
-		EasyMock.expect(workgroupService.getWorkgroupListByRunAndUser(run, user1))
+    EasyMock.expect(workgroupService.getWorkgroupListByRunAndUser(run, user1))
         .andReturn(workgroups);
-		EasyMock.expect(userService.retrieveUserByUsername(USERNAME2)).andReturn(user2);
+    EasyMock.expect(userService.retrieveUserByUsername(USERNAME2)).andReturn(user2);
     EasyMock.expect(workgroupService.isUserInWorkgroupForRun(user2, run, workgroup))
-      .andReturn(true);
+        .andReturn(true);
     EasyMock.expect(userService.isPasswordCorrect(user2, PASSWORD2)).andReturn(true);
     EasyMock.replay(workgroupService);
     EasyMock.replay(userService);
 
-		form.setUsername2(USERNAME2);
-		form.setPassword2(PASSWORD2);
-		validator.validate(form, errors);
+    form.setUsername2(USERNAME2);
+    form.setPassword2(PASSWORD2);
+    validator.validate(form, errors);
 
-		assertTrue(!errors.hasErrors());
-		EasyMock.verify(userService);
+    assertTrue(!errors.hasErrors());
+    EasyMock.verify(userService);
     EasyMock.verify(runService);
-	}
+  }
 
   @Test
   public void validate_UserTwoBadUsername_Error() throws ObjectNotFoundException {
@@ -180,7 +180,7 @@ public class TeamSignInFormValidatorTest extends TestCase {
     Workgroup workgroup = new WorkgroupImpl();
     workgroups.add(workgroup);
     EasyMock.expect(workgroupService.getWorkgroupListByRunAndUser(run, user1))
-      .andReturn(workgroups);
+        .andReturn(workgroups);
     EasyMock.expect(userService.retrieveUserByUsername(USERNAME2)).andReturn(null);
     EasyMock.replay(workgroupService);
     EasyMock.replay(userService);
@@ -203,10 +203,10 @@ public class TeamSignInFormValidatorTest extends TestCase {
     Workgroup workgroup = new WorkgroupImpl();
     workgroups.add(workgroup);
     EasyMock.expect(workgroupService.getWorkgroupListByRunAndUser(run, user1))
-      .andReturn(workgroups);
+        .andReturn(workgroups);
     EasyMock.expect(userService.retrieveUserByUsername(USERNAME2)).andReturn(user2);
     EasyMock.expect(workgroupService.isUserInWorkgroupForRun(user2, run, workgroup))
-      .andReturn(true);
+        .andReturn(true);
     EasyMock.expect(userService.isPasswordCorrect(user2, PASSWORD3)).andReturn(false);
     EasyMock.replay(workgroupService);
     EasyMock.replay(userService);
@@ -229,10 +229,10 @@ public class TeamSignInFormValidatorTest extends TestCase {
     Workgroup workgroup = new WorkgroupImpl();
     workgroups.add(workgroup);
     EasyMock.expect(workgroupService.getWorkgroupListByRunAndUser(run, user1))
-      .andReturn(workgroups);
+        .andReturn(workgroups);
     EasyMock.expect(userService.retrieveUserByUsername(USERNAME3)).andReturn(user3);
     EasyMock.expect(workgroupService.isUserInWorkgroupForRun(user3, run, workgroup))
-      .andReturn(true);
+        .andReturn(true);
     EasyMock.expect(userService.isPasswordCorrect(user3, PASSWORD3)).andReturn(true);
     EasyMock.replay(workgroupService);
     EasyMock.replay(userService);
@@ -246,11 +246,10 @@ public class TeamSignInFormValidatorTest extends TestCase {
     EasyMock.verify(runService);
   }
 
-	@After
-	public void tearDown() {
-		form = null;
-		validator = null;
-		errors = null;
-	}
-
+  @After
+  public void tearDown() {
+    form = null;
+    validator = null;
+    errors = null;
+  }
 }
