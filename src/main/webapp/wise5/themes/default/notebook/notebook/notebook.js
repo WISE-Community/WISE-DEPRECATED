@@ -29,9 +29,7 @@ var NotebookController = function () {
     this.ProjectService = ProjectService;
     this.StudentAssetService = StudentAssetService;
     this.StudentDataService = StudentDataService;
-
     this.$translate = this.$filter('translate');
-
     this.themePath = this.ProjectService.getThemePath();
     this.itemId = null;
     this.item = null;
@@ -134,8 +132,6 @@ var NotebookController = function () {
     key: 'showEditNoteConfirmDialog',
     value: function showEditNoteConfirmDialog(itemId, isEditMode, file, text, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev) {
       var notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
-
-      // Display a dialog where students can view/add/edit a notebook item
       this.$mdDialog.show({
         parent: angular.element(document.body),
         targetEvent: ev,
@@ -162,7 +158,6 @@ var NotebookController = function () {
       var doDelete = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
       var confirm = null;
-
       if (doDelete) {
         confirm = this.$mdDialog.confirm().title(this.$translate('deleteNoteConfirmMessage')).ariaLabel('delete note confirmation').targetEvent(ev).ok(this.$translate('delete')).cancel(this.$translate('cancel'));
       } else {
@@ -172,10 +167,10 @@ var NotebookController = function () {
       this.$mdDialog.show(confirm).then(function () {
         var noteCopy = angular.copy(_this2.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId));
         noteCopy.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
-        noteCopy.content.clientSaveTime = Date.parse(new Date()); // set save timestamp
+        noteCopy.content.clientSaveTime = Date.parse(new Date());
         var clientDeleteTime = null; // if delete timestamp is null, then we are in effect un-deleting this note item
         if (doDelete) {
-          clientDeleteTime = Date.parse(new Date()); // set delete timestamp
+          clientDeleteTime = Date.parse(new Date());
         }
         _this2.NotebookService.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
       }, function () {
@@ -244,10 +239,8 @@ var NotebookController = function () {
       var _this6 = this;
 
       if (value === 'report') {
-        // toggle the report view
         this.reportVisible = !this.reportVisible;
       } else if (value === 'note') {
-        // toggle the notes view
         if (this.notesVisible) {
           this.closeNotes(event);
         } else {
@@ -256,7 +249,6 @@ var NotebookController = function () {
           });
         }
       } else if (value === 'new') {
-        // open the new note dialog
         this.NotebookService.addNewItem(event);
       }
     }

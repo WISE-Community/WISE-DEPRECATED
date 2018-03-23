@@ -1,114 +1,102 @@
 'use strict';
 
 class NotebookController {
+  constructor($injector,
+              $rootScope,
+              $scope,
+              $filter,
+              ConfigService,
+              NotebookService,
+              ProjectService,
+              StudentAssetService,
+              StudentDataService) {
+    this.$injector = $injector;
+    this.$rootScope = $rootScope;
+    this.$scope = $scope;
+    this.$filter = $filter;
+    this.ConfigService = ConfigService;
+    this.mode = this.ConfigService.getMode();
+    this.NotebookService = NotebookService;
+    this.ProjectService = ProjectService;
+    this.StudentAssetService = StudentAssetService;
+    this.StudentDataService = StudentDataService;
+    this.$translate = this.$filter('translate');
+    this.notebook = null;
+    this.itemId = null;
+    this.item = null;
+    this.notebookConfig = this.NotebookService.config;
 
-    constructor($injector,
-                $rootScope,
-                $scope,
-                $filter,
-                ConfigService,
-                NotebookService,
-                ProjectService,
-                StudentAssetService,
-                StudentDataService) {
-        this.$injector = $injector;
-        this.$rootScope = $rootScope;
-        this.$scope = $scope;
-        this.$filter = $filter;
-        this.ConfigService = ConfigService;
-        this.mode = this.ConfigService.getMode();
-        this.NotebookService = NotebookService;
-        this.ProjectService = ProjectService;
-        this.StudentAssetService = StudentAssetService;
-        this.StudentDataService = StudentDataService;
+    $scope.$on('notebookUpdated', (event, args) => {
+      this.notebook = args.notebook;
+    });
 
-        this.$translate = this.$filter('translate');
+    this.logOutListener = $scope.$on('logOut', (event, args) => {
+      this.logOutListener();
+      this.$rootScope.$broadcast('componentDoneUnloading');
+    });
 
-        this.notebook = null;
-        this.itemId = null;
-        this.item = null;
-        this.notebookConfig = this.NotebookService.config;
+    // by this time, the notebook and student assets have been retrieved.
+    this.notebook = this.NotebookService.getNotebookByWorkgroup(this.workgroupId);
+  }
 
-        $scope.$on('notebookUpdated', (event, args) => {
-            this.notebook = args.notebook;
-        });
+  getTemplateUrl() {
+    return this.templateUrl;
+  }
 
-        this.logOutListener = $scope.$on('logOut', (event, args) => {
-            this.logOutListener();
-            this.$rootScope.$broadcast('componentDoneUnloading');
-        });
+  deleteStudentAsset(studentAsset) {
+    alert(this.$translate('deleteStudentAssetFromNotebookNotImplementedYet'));
+  }
 
-        // by this time, the notebook and student assets have been retrieved.
-        this.notebook = this.NotebookService.getNotebookByWorkgroup(this.workgroupId);
+  deleteItem(ev, itemId) {
+    this.$rootScope.$broadcast('deleteNote', {itemId: itemId, ev: ev});
+  }
+
+  editItem(ev, itemId) {
+    this.$rootScope.$broadcast('editNote', {itemId: itemId, ev: ev});
+  }
+
+  reviveItem(ev, itemId) {
+    this.$rootScope.$broadcast('reviveNote', {itemId: itemId, ev: ev});
+  }
+
+  notebookItemSelected($event, notebookItem) {
+    this.selectedNotebookItem = notebookItem;
+  }
+
+  attachNotebookItemToComponent($event, notebookItem) {
+    this.componentController.attachNotebookItemToComponent(notebookItem);
+    this.selectedNotebookItem = null;  // reset selected notebook item
+    // TODO: add some kind of unobtrusive confirmation to let student know that the notebook item has been added to current component
+    $event.stopPropagation();  // prevents parent notebook list item from getting the onclick event so this item won't be re-selected.
+  }
+
+  getNotebook() {
+    return this.notebook;
+  }
+
+  getNotes() {
+    let notes = [];
+    let notebookItems = this.getNotebook().items;
+    for (let notebookItemKey in notebookItems) {
+      let notebookItem = notebookItems[notebookItemKey];
+      if (notebookItem.last().type === 'note') {
+        notes.push(notebookItem);
+      }
     }
-
-    getTemplateUrl() {
-        return this.templateUrl;
-    }
-
-    deleteStudentAsset(studentAsset) {
-        alert(this.$translate('deleteStudentAssetFromNotebookNotImplementedYet'));
-        /*
-         StudentAssetService.deleteAsset(studentAsset).then(angular.bind(this, function(deletedStudentAsset) {
-         // remove studentAsset
-         this.studentAssets.splice(this.studentAssets.indexOf(deletedStudentAsset), 1);
-         this.calculateTotalUsage();
-         }));
-         */
-    }
-
-    deleteItem(ev, itemId) {
-        this.$rootScope.$broadcast('deleteNote', {itemId: itemId, ev: ev});
-    }
-
-    editItem(ev, itemId) {
-        //this.NotebookService.editItem(ev, itemId);
-        this.$rootScope.$broadcast('editNote', {itemId: itemId, ev: ev});
-    }
-
-    reviveItem(ev, itemId) {
-        this.$rootScope.$broadcast('reviveNote', {itemId: itemId, ev: ev});
-    }
-
-    notebookItemSelected($event, notebookItem) {
-        this.selectedNotebookItem = notebookItem;
-    }
-
-    attachNotebookItemToComponent($event, notebookItem) {
-        this.componentController.attachNotebookItemToComponent(notebookItem);
-        this.selectedNotebookItem = null;  // reset selected notebook item
-        // TODO: add some kind of unobtrusive confirmation to let student know that the notebook item has been added to current component
-        $event.stopPropagation();  // prevents parent notebook list item from getting the onclick event so this item won't be re-selected.
-    }
-
-    getNotebook() {
-        return this.notebook;
-    }
-
-    getNotes() {
-        let notes = [];
-        let notebookItems = this.getNotebook().items;
-        for (let notebookItemKey in notebookItems) {
-            let notebookItem = notebookItems[notebookItemKey];
-            if (notebookItem.last().type === 'note') {
-                notes.push(notebookItem);
-            }
-        }
-        return notes;
-    }
-
+    return notes;
+  }
 }
 
 NotebookController.$inject = [
-    "$injector",
-    "$rootScope",
-    "$scope",
-    "$filter",
-    "ConfigService",
-    "NotebookService",
-    "ProjectService",
-    "StudentAssetService",
-    "StudentDataService"
+  "$injector",
+  "$rootScope",
+  "$scope",
+  "$filter",
+  "ConfigService",
+  "NotebookService",
+  "ProjectService",
+  "StudentAssetService",
+  "StudentDataService"
 ];
 
 export default NotebookController;

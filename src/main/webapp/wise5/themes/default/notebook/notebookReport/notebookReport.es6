@@ -1,314 +1,272 @@
 "use strict";
 
 class NotebookReportController {
-    constructor($filter,
-                $mdSidenav,
-                $scope,
-                $timeout,
-                AnnotationService,
-                ConfigService,
-                NotebookService,
-                ProjectService) {
-        this.$filter = $filter;
-        this.$mdSidenav = $mdSidenav;
-        this.$scope = $scope;
-        this.$timeout = $timeout;
-        this.AnnotationService = AnnotationService;
-        this.ConfigService = ConfigService;
-        this.NotebookService = NotebookService;
-        this.ProjectService = ProjectService;
+  constructor($filter,
+              $mdSidenav,
+              $scope,
+              $timeout,
+              AnnotationService,
+              ConfigService,
+              NotebookService,
+              ProjectService) {
+    this.$filter = $filter;
+    this.$mdSidenav = $mdSidenav;
+    this.$scope = $scope;
+    this.$timeout = $timeout;
+    this.AnnotationService = AnnotationService;
+    this.ConfigService = ConfigService;
+    this.NotebookService = NotebookService;
+    this.ProjectService = ProjectService;
+    this.$translate = this.$filter('translate');
+    this.full = false;
+    this.collapsed = true;
+    this.dirty = false;
+    this.autoSaveInterval = 30000;  // the auto save interval in milliseconds
+    this.saveMessage = {
+      text: '',
+      time: ''
+    };
 
-        this.$translate = this.$filter('translate');
+    // assume only one report for now
+    this.reportId = this.config.itemTypes.report.notes[0].reportId;
+    this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(this.reportId, this.workgroupId);
+    if (this.reportItem) {
+      let serverSaveTime = this.reportItem.serverSaveTime;
+      let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+      this.setSaveMessage(this.$translate('saved'), clientSaveTime);
+    } else {
+      // Student doesn't have work for this report yet, so we'll use the template.
+      this.reportItem = this.NotebookService.getTemplateReportItemByReportId(this.reportId);
+      if (this.reportItem == null) {
+        // if there is no template, don't allow student to work on the report.
+        return;
+      }
+    }
+    this.maxScore = 0;
+    let localNotebookItemId = null;  // unique id that is local to this student, that identifies a note and its revisions. e.g. "finalReport", "xyzabc"
+    if (this.reportItem.content != null && this.reportItem.content.reportId != null) {
+      localNotebookItemId = this.reportItem.localNotebookItemId;
+      let reportNoteContent = this.NotebookService.getReportNoteContentByReportId(this.reportItem.content.reportId);
+      if (reportNoteContent != null && reportNoteContent.maxScore != null) {
+        this.maxScore = reportNoteContent.maxScore;
+      }
+    }
 
-        this.full = false;
-        this.collapsed = true;
+    this.reportItem.id = null; // set the id to null so it can be inserted as initial version, as opposed to updated. this is true for both new and just-loaded reports.
+    this.reportItemContent = this.ProjectService.injectAssetPaths(this.reportItem.content.content);
+    this.latestAnnotations = this.AnnotationService.getLatestNotebookItemAnnotations(this.workgroupId, this.reportId);
+    this.startAutoSaveInterval();
 
-        this.dirty = false;
-        this.autoSaveInterval = 30000;  // the auto save interval in milliseconds
-
-        this.saveMessage = {
-            text: '',
-            time: ''
-        };
-
-        // assume only one report for now
-        this.reportId = this.config.itemTypes.report.notes[0].reportId;
-        this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(this.reportId, this.workgroupId);
-        if (this.reportItem) {
-            let serverSaveTime = this.reportItem.serverSaveTime;
-            let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-            this.setSaveMessage(this.$translate('saved'), clientSaveTime);
-        } else {
-            // Student doesn't have work for this report yet, so we'll use the template.
-            this.reportItem = this.NotebookService.getTemplateReportItemByReportId(this.reportId);
-            if (this.reportItem == null) {
-                // if there is no template, don't allow student to work on the report.
-                return;
-            }
+    this.summernoteOptions = {
+      toolbar: [
+        ['edit', ['undo', 'redo']],
+        ['style', ['bold', 'italic', 'underline'/*, 'superscript', 'subscript', 'strikethrough', 'clear'*/]],
+        //['style', ['style']],
+        //['fontface', ['fontname']],
+        //['textsize', ['fontsize']],
+        //['fontclr', ['color']],
+        ['para', ['ul', 'ol', 'paragraph'/*, 'lineheight'*/]],
+        //['height', ['height']],
+        //['table', ['table']],
+        //['insert', ['link','picture','video','hr']],
+        //['view', ['fullscreen', 'codeview']],
+        //['help', ['help']]
+        ['customButton', ['customButton']],
+        ['print', ['print']]
+      ],
+      popover: {
+        image: [
+          ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+          //['float', ['floatLeft', 'floatRight', 'floatNone']],
+          ['remove', ['removeMedia']]
+        ]
+      },
+      customButton: {
+        // TODO: i18n
+        buttonText: 'Insert ' + this.config.itemTypes.note.label.singular + ' +',
+        tooltip: 'Insert from ' + this.config.label,
+        buttonClass: 'accent-1 notebook-item--report__add-note',
+        action: ($event) => {
+          this.addNotebookItemContent($event);
         }
-        // get the max score
-        this.maxScore = 0;
-        let localNotebookItemId = null;  // unique id that is local to this student, that identifies a note and its revisions. e.g. "finalReport", "xyzabc"
-        if (this.reportItem.content != null && this.reportItem.content.reportId != null) {
-            localNotebookItemId = this.reportItem.localNotebookItemId;
-            let reportNoteContent = this.NotebookService.getReportNoteContentByReportId(this.reportItem.content.reportId);
-            if (reportNoteContent != null && reportNoteContent.maxScore != null) {
-                this.maxScore = reportNoteContent.maxScore;
-            }
+      },
+      disableDragAndDrop: true,
+      toolbarContainer: '#' + this.reportId + '-toolbar',
+      callbacks: {
+        onBlur: function () {
+          $(this).summernote('saveRange');
         }
-        // set the id to null so it can be inserted as initial version, as opposed to updated. this is true for both new and just-loaded reports.
-        this.reportItem.id = null;
-        // replace relative asset paths with absolute asset paths
-        this.reportItemContent = this.ProjectService.injectAssetPaths(this.reportItem.content.content);
-        // get the latest annotations
+      }
+    };
+
+    this.$onChanges = (changes) => {
+      if (changes.insertContent && !changes.insertContent.isFirstChange() && changes.insertContent.currentValue) {
+        let item = angular.copy(changes.insertContent.currentValue);
+        let reportElement = $('#' + this.reportId);
+        reportElement.summernote('focus');
+        reportElement.summernote('restoreRange');
+        let $item = $(`<p notebook-item-id="${item.id}" workgroup-id="${item.workgroupId}">`);
+        if (item.groups != null && item.groups.length > 0) {
+          $item.attr('group', item.groups);
+        }
+        let hasAttachments = false;
+        if (item.content) {
+          if (item.content.attachments) {
+            if (item.content.attachments.length) {
+              hasAttachments = true;
+              // item includes attachments, so center align element
+              $item.css('text-align', 'center');
+            }
+            for (let a = 0; a < item.content.attachments.length; a++) {
+              // add each attachment to the element
+              let notebookItemAttachment = item.content.attachments[a];
+              let iconURL = notebookItemAttachment.iconURL;
+              let $img = $('<img src="' + iconURL + '" alt="notebook image" style="width: 75%; max-width: 100%; height: auto; border: 1px solid #aaaaaa; padding: 8px; margin-bottom: 4px;" />');
+              $img.addClass('notebook-item--report__note-img');
+              $item.append($img);
+            }
+          }
+          if (item.content.text) {
+            if (hasAttachments) {
+              // item has attachments, so treat text content as a caption: center it and make it bold
+              let $caption = $('<div><b>' + item.content.text + '</b></div>').css({'text-align': 'center'});
+              $item.append($caption);
+              reportElement.summernote('insertNode', $item[0]);
+            } else {
+              reportElement.summernote('insertText', item.content.text);
+            }
+          } else {
+            reportElement.summernote('insertNode', $item[0]);
+          }
+        }
+      }
+    }
+
+    /**
+     * Captures the annotation received event, checks whether the given
+     * annotation id matches this report id, updates UI accordingly
+     */
+    this.$scope.$on('notebookItemAnnotationReceived', (event, args) => {
+      let annotation = args.annotation;
+      if (annotation.localNotebookItemId === this.reportId) {
+        this.hasNewAnnotation = true;
         this.latestAnnotations = this.AnnotationService.getLatestNotebookItemAnnotations(this.workgroupId, this.reportId);
+      }
+    });
 
-        // start auto-saving
-        this.startAutoSaveInterval();
+    /**
+     * Captures the show report annotations event, opens report (if collapsed)
+     * and scrolls to the report annotations display
+     */
+    this.$scope.$on('showReportAnnotations', (args) => {
+      if (this.collapsed) {
+        this.collapse();
+      }
 
-        // summernote editor options
-        this.summernoteOptions = {
-            toolbar: [
-                ['edit', ['undo', 'redo']],
-                ['style', ['bold', 'italic', 'underline'/*, 'superscript', 'subscript', 'strikethrough', 'clear'*/]],
-                //['style', ['style']],
-                //['fontface', ['fontname']],
-                //['textsize', ['fontsize']],
-                //['fontclr', ['color']],
-                ['para', ['ul', 'ol', 'paragraph'/*, 'lineheight'*/]],
-                //['height', ['height']],
-                //['table', ['table']],
-                //['insert', ['link','picture','video','hr']],
-                //['view', ['fullscreen', 'codeview']],
-                //['help', ['help']]
-                ['customButton', ['customButton']],
-                ['print', ['print']]
-            ],
-            popover: {
-                image: [
-                    ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
-                    //['float', ['floatLeft', 'floatRight', 'floatNone']],
-                    ['remove', ['removeMedia']]
-                ]
-            },
-            customButton: {
-                // TODO: i18n
-                buttonText: 'Insert ' + this.config.itemTypes.note.label.singular + ' +',
-                tooltip: 'Insert from ' + this.config.label,
-                buttonClass: 'accent-1 notebook-item--report__add-note',
-                action: ($event) => {
-                    this.addNotebookItemContent($event);
-                }
-            },
-            disableDragAndDrop: true,
-            toolbarContainer: '#' + this.reportId + '-toolbar',
-            callbacks: {
-                onBlur: function () {
-                    $(this).summernote('saveRange');
-                }
-            }
-        };
+      // scroll to report annotations (bottom)
+      let $notebookReportContent = $('.notebook-report__content');
+      $timeout(() => {
+        $notebookReportContent.animate({
+          scrollTop: $notebookReportContent.prop('scrollHeight')
+        }, 500);
+      }, 500);
+    });
+  }
 
-        this.$onChanges = (changes) => {
-            if (changes.insertContent && !changes.insertContent.isFirstChange() && changes.insertContent.currentValue) {
-                // a notebook item is being inserted into the report
-                let item = angular.copy(changes.insertContent.currentValue);
+  collapse() {
+    this.collapsed = !this.collapsed;
 
-                // prepare summernote editor instance
-                let reportElement = $('#' + this.reportId);
-                reportElement.summernote('focus');
-                reportElement.summernote('restoreRange');
+    if (this.collapsed) {
+      this.onCollapse();
+    }
+  }
 
-                // create a jQuery DOM element to insert into the Summernote report editor
-                let $item = $(`<p notebook-item-id="${item.id}" workgroup-id="${item.workgroupId}">`);
-                if (item.groups != null && item.groups.length > 0) {
-                  $item.attr('group', item.groups);
-                }
-                let hasAttachments = false;
+  fullscreen() {
+    if (this.collapsed) {
+      this.full = true;
+      this.collapsed = false;
+    } else {
+      this.full = !this.full;
+    }
+  }
 
-                if (item.content) {
-                    if (item.content.attachments) {
-                        if (item.content.attachments.length) {
-                            hasAttachments = true;
-                            // item includes attachments, so center align element
-                            $item.css('text-align', 'center');
-                        }
-                        for (let a = 0; a < item.content.attachments.length; a++) {
-                            // add each attachment to the element
-                            let notebookItemAttachment = item.content.attachments[a];
-                            let iconURL = notebookItemAttachment.iconURL;
-                            let $img = $('<img src="' + iconURL + '" alt="notebook image" style="width: 75%; max-width: 100%; height: auto; border: 1px solid #aaaaaa; padding: 8px; margin-bottom: 4px;" />');
-                            $img.addClass('notebook-item--report__note-img');
-                            $item.append($img);
-                        }
-                    }
-                    if (item.content.text) {
-                        // item contains text, so add to element
-                        if (hasAttachments) {
-                            // item has attachments, so treat text content as a caption: center it and make it bold
-                            let $caption = $('<div><b>' + item.content.text + '</b></div>').css({'text-align': 'center'});
-                            $item.append($caption);
-                            reportElement.summernote('insertNode', $item[0]);
-                        } else {
-                            // note only contains text, so insert plain text
-                            reportElement.summernote('insertText', item.content.text);
-                        }
-                    } else {
-                        reportElement.summernote('insertNode', $item[0]);
-                    }
-                }
+  addNotebookItemContent($event) {
+    this.onSetInsertMode({value: true, requester: 'report'});
+  }
 
-            }
+  changed(value) {
+    this.dirty = true;
+
+    /*
+     * remove the absolute asset paths
+     * e.g.
+     * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
+     * will be changed to
+     * <img src='sun.png'/>
+     */
+    this.reportItem.content.content = this.ConfigService.removeAbsoluteAssetPaths(value);
+  }
+
+  startAutoSaveInterval() {
+    this.stopAutoSaveInterval();
+    this.autoSaveIntervalId = setInterval(() => {
+      if (this.dirty) {
+        this.saveNotebookReportItem();
+      }
+    }, this.autoSaveInterval);
+  }
+
+  stopAutoSaveInterval() {
+    clearInterval(this.autoSaveIntervalId);
+  }
+
+  saveNotebookReportItem() {
+    this.reportItem.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
+    this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId,
+      this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.groups, this.reportItem.content.clientSaveTime)
+      .then((result) => {
+        if (result) {
+          this.dirty = false;
+          this.hasNewAnnotation = false;
+          this.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
+          let serverSaveTime = result.serverSaveTime;
+          let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+          this.setSaveMessage(this.$translate('saved'), clientSaveTime);
         }
+      });
+  }
 
-        /**
-         * Captures the annotation received event, checks whether the given
-         * annotation id matches this report id, updates UI accordingly
-         */
-        this.$scope.$on('notebookItemAnnotationReceived', (event, args) => {
-            let annotation = args.annotation;
-            if (annotation.localNotebookItemId === this.reportId) {
-                // there is a new annotation for this report
-                this.hasNewAnnotation = true;
-                this.latestAnnotations = this.AnnotationService.getLatestNotebookItemAnnotations(this.workgroupId, this.reportId);
-            }
-        });
-
-        /**
-         * Captures the show report annotations event, opens report (if collapsed)
-         * and scrolls to the report annotations display
-         */
-        this.$scope.$on('showReportAnnotations', (args) => {
-            if (this.collapsed) {
-                // open the report
-                this.collapse();
-            }
-
-            // scroll to report annotations (bottom)
-            let $notebookReportContent = $('.notebook-report__content');
-            $timeout(() => {
-                $notebookReportContent.animate({
-                    scrollTop: $notebookReportContent.prop('scrollHeight')
-                }, 500);
-            }, 500);
-        });
-    }
-
-    collapse() {
-        this.collapsed = !this.collapsed;
-
-        if (this.collapsed) {
-            this.onCollapse();
-        }
-    }
-
-    fullscreen() {
-        if (this.collapsed) {
-            this.full = true;
-            this.collapsed = false;
-        } else {
-            this.full = !this.full;
-        }
-    }
-
-    addNotebookItemContent($event) {
-        this.onSetInsertMode({value: true, requester: 'report'});
-    }
-
-    changed(value) {
-        // report content had changed
-        this.dirty = true;
-
-        /*
-         * remove the absolute asset paths
-         * e.g.
-         * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
-         * will be changed to
-         * <img src='sun.png'/>
-         */
-        this.reportItem.content.content = this.ConfigService.removeAbsoluteAssetPaths(value);
-    }
-
-    /**
-     * Start the auto save interval for this report
-     */
-    startAutoSaveInterval() {
-        this.stopAutoSaveInterval();  // stop any existing interval
-        this.autoSaveIntervalId = setInterval(() => {
-            // check if the student work is dirty
-            if (this.dirty) {
-                // the student work is dirty so we will save.
-                // obtain the component states from the children and save them to the server
-                this.saveNotebookReportItem();
-            }
-        }, this.autoSaveInterval);
-    }
-
-    /**
-     * Stop the auto save interval for this report
-     */
-    stopAutoSaveInterval() {
-        clearInterval(this.autoSaveIntervalId);
-    }
-
-    /**
-     * Save the notebook report item to server
-     */
-    saveNotebookReportItem() {
-        // save new report notebook item
-        this.reportItem.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
-        this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId,
-            this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.groups, this.reportItem.content.clientSaveTime)
-            .then((result) => {
-                if (result) {
-                    this.dirty = false;
-                    this.hasNewAnnotation = false;
-                    this.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
-                    let serverSaveTime = result.serverSaveTime;
-                    let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-                    // set save message
-                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
-                }
-            });
-    }
-
-    /**
-     * Set the message next to the save button
-     * @param message the message to display
-     * @param time the time to display
-     */
-    setSaveMessage(message, time) {
-        this.saveMessage.text = message;
-        this.saveMessage.time = time;
-    }
+  setSaveMessage(message, time) {
+    this.saveMessage.text = message;
+    this.saveMessage.time = time;
+  }
 }
 
 NotebookReportController.$inject = [
-    '$filter',
-    '$mdSidenav',
-    '$scope',
-    '$timeout',
-    'AnnotationService',
-    'ConfigService',
-    'NotebookService',
-    'ProjectService'
+  '$filter',
+  '$mdSidenav',
+  '$scope',
+  '$timeout',
+  'AnnotationService',
+  'ConfigService',
+  'NotebookService',
+  'ProjectService'
 ];
 
 const NotebookReport = {
-    bindings: {
-        config: '<',
-        insertContent: '<',
-        insertMode: '<',
-        reportId: '<',
-        visible: '<',
-        workgroupId: '<',
-        onCollapse: '&',
-        onSetInsertMode: '&'
-        //onClose: '&'
-    },
-    template:
-        `<div ng-if="($ctrl.visible && $ctrl.full && !$ctrl.collapsed) || $ctrl.insertMode" class="notebook-report-backdrop"></div>
+  bindings: {
+    config: '<',
+    insertContent: '<',
+    insertMode: '<',
+    reportId: '<',
+    visible: '<',
+    workgroupId: '<',
+    onCollapse: '&',
+    onSetInsertMode: '&'
+    //onClose: '&'
+  },
+  template:
+    `<div ng-if="($ctrl.visible && $ctrl.full && !$ctrl.collapsed) || $ctrl.insertMode" class="notebook-report-backdrop"></div>
         <div ng-if="$ctrl.visible" class="notebook-report-container"
               ng-class="{'notebook-report-container__collapsed': $ctrl.collapsed, 'notebook-report-container__full': $ctrl.full && !$ctrl.collapsed}">
             <md-card class="notebook-report md-whiteframe-3dp l-constrained">
@@ -365,7 +323,7 @@ const NotebookReport = {
                 </md-card-actions>
             </md-card>
         </div>`,
-    controller: NotebookReportController
+  controller: NotebookReportController
 };
 
 export default NotebookReport;

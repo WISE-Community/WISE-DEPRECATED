@@ -1,190 +1,177 @@
 "use strict";
 
 class NotebookItemController {
-    constructor($injector,
-                $rootScope,
-                $scope,
-                $filter,
-                ConfigService,
-                NotebookService,
-                ProjectService,
-                StudentAssetService,
-                StudentDataService,
-                UtilService) {
-        this.$injector = $injector;
-        this.$rootScope = $rootScope;
-        this.$scope = $scope;
-        this.$filter = $filter;
-        this.ConfigService = ConfigService;
-        this.NotebookService = NotebookService;
-        this.ProjectService = ProjectService;
-        this.StudentAssetService = StudentAssetService;
-        this.StudentDataService = StudentDataService;
-        this.UtilService = UtilService;
+  constructor($injector,
+              $rootScope,
+              $scope,
+              $filter,
+              ConfigService,
+              NotebookService,
+              ProjectService,
+              StudentAssetService,
+              StudentDataService,
+              UtilService) {
+    this.$injector = $injector;
+    this.$rootScope = $rootScope;
+    this.$scope = $scope;
+    this.$filter = $filter;
+    this.ConfigService = ConfigService;
+    this.NotebookService = NotebookService;
+    this.ProjectService = ProjectService;
+    this.StudentAssetService = StudentAssetService;
+    this.StudentDataService = StudentDataService;
+    this.UtilService = UtilService;
+    this.$translate = this.$filter('translate');
 
-        this.$translate = this.$filter('translate');
-        //this.mode = this.ConfigService.getMode();
-
-        if (this.group != null && this.group != 'private') {
-          this.item = this.NotebookService.getPublicNotebookItem(this.group, this.itemId, this.workgroupId);
-        } else {
-          this.item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId, this.workgroupId);
-          //this.item.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
-        }
-
-        // set the type in the controller
-        this.type = this.item ? this.item.type : null;
-
-        this.label = this.config.itemTypes[this.type].label;
-        if (this.group == 'public') {
-          this.color = 'orange';
-        } else {
-          this.color = this.label.color;
-        }
-
-        this.$rootScope.$on('notebookUpdated', (event, args) => {
-            let notebook = args.notebook;
-            if (notebook.items[this.itemId]) {
-                this.item = notebook.items[this.itemId].last();
-            }
-        });
+    if (this.group != null && this.group != 'private') {
+      this.item = this.NotebookService.getPublicNotebookItem(this.group, this.itemId, this.workgroupId);
+    } else {
+      this.item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId, this.workgroupId);
     }
 
-    isItemInGroup(group) {
-      return this.item.groups != null && this.item.groups.includes(group);
+    this.type = this.item ? this.item.type : null;
+    this.label = this.config.itemTypes[this.type].label;
+    if (this.group == 'public') {
+      this.color = 'orange';
+    } else {
+      this.color = this.label.color;
     }
 
-    getItemNodeId() {
-        if (this.item == null) {
-            return null;
-        } else {
-            return this.item.nodeId;
-        }
-    }
+    this.$rootScope.$on('notebookUpdated', (event, args) => {
+      let notebook = args.notebook;
+      if (notebook.items[this.itemId]) {
+        this.item = notebook.items[this.itemId].last();
+      }
+    });
+  }
 
-    /**
-     * Returns this NotebookItem's position link
-     */
-    getItemNodeLink() {
-        if (this.item == null) {
-            return "";
-        } else {
-            return this.ProjectService.getNodePositionAndTitleByNodeId(this.item.nodeId);
-        }
-    }
+  isItemInGroup(group) {
+    return this.item.groups != null && this.item.groups.includes(group);
+  }
 
-    /**
-     * Returns this NotebookItem's position
-     */
-    getItemNodePosition() {
-        if (this.item == null) {
-            return "";
-        } else {
-            return this.ProjectService.getNodePositionById(this.item.nodeId);
-        }
+  getItemNodeId() {
+    if (this.item == null) {
+      return null;
+    } else {
+      return this.item.nodeId;
     }
+  }
 
-    getTemplateUrl() {
-        return this.ProjectService.getThemePath() + '/notebook/notebookItem.html';
+  getItemNodeLink() {
+    if (this.item == null) {
+      return "";
+    } else {
+      return this.ProjectService.getNodePositionAndTitleByNodeId(this.item.nodeId);
     }
+  }
 
-    doDelete(ev) {
-        if (this.onDelete) {
-            ev.stopPropagation();  // don't follow-through on the doSelect callback after this
-            this.onDelete({$ev: ev, $itemId: this.item.localNotebookItemId});
-        }
+  getItemNodePosition() {
+    if (this.item == null) {
+      return "";
+    } else {
+      return this.ProjectService.getNodePositionById(this.item.nodeId);
     }
+  }
 
-    doRevive(ev) {
-        if (this.onRevive) {
-            ev.stopPropagation();  // don't follow-through on the doRevive callback after this
-            this.onRevive({$ev: ev, $itemId: this.item.localNotebookItemId});
-        }
-    }
+  getTemplateUrl() {
+    return this.ProjectService.getThemePath() + '/notebook/notebookItem.html';
+  }
 
-    doSelect(ev) {
-        if (this.onSelect) {
-          this.onSelect({$ev: ev, $itemId: this.item.id});
-        }
-    }
-
-    doCopy(ev) {
+  doDelete(ev) {
+    if (this.onDelete) {
       ev.stopPropagation();
-      this.$rootScope.$broadcast('copyNote', {itemId: this.item.id, ev: ev});
+      this.onDelete({$ev: ev, $itemId: this.item.localNotebookItemId});
     }
+  }
 
-    doShare(ev) {
-      ev.stopPropagation();  // don't follow-through on the doShare callback after this
-      this.$rootScope.$broadcast('shareNote', {itemId: this.item.id, ev: ev});
+  doRevive(ev) {
+    if (this.onRevive) {
+      ev.stopPropagation();
+      this.onRevive({$ev: ev, $itemId: this.item.localNotebookItemId});
     }
+  }
 
-    doUnshare(ev) {
-      ev.stopPropagation();  // don't follow-through on the doUnshare callback after this
-      this.$rootScope.$broadcast('unshareNote', {itemId: this.item.id, ev: ev});
+  doSelect(ev) {
+    if (this.onSelect) {
+      this.onSelect({$ev: ev, $itemId: this.item.id});
     }
+  }
 
-    canCopyNotebookItem() {
-      return !this.isMyNotebookItem() &&
-          !this.isChooseMode;
-    }
+  doCopy(ev) {
+    ev.stopPropagation();
+    this.$rootScope.$broadcast('copyNote', {itemId: this.item.id, ev: ev});
+  }
 
-    canShareNotebookItem() {
-      return this.isMyNotebookItem() &&
-          this.item.serverDeleteTime == null &&
-          !this.isChooseMode &&
-          !this.isItemInGroup('public');
-    }
+  doShare(ev) {
+    ev.stopPropagation();
+    this.$rootScope.$broadcast('shareNote', {itemId: this.item.id, ev: ev});
+  }
 
-    canUnshareNotebookItem() {
-      return this.isMyNotebookItem() &&
-          this.item.serverDeleteTime == null &&
-          !this.isChooseMode &&
-          this.isItemInGroup('public');
-    }
+  doUnshare(ev) {
+    ev.stopPropagation();
+    this.$rootScope.$broadcast('unshareNote', {itemId: this.item.id, ev: ev});
+  }
 
-    canDeleteNotebookItem() {
-      return this.isMyNotebookItem() &&
-          this.item.serverDeleteTime == null &&
-          !this.isChooseMode;
-    }
+  canCopyNotebookItem() {
+    return !this.isMyNotebookItem() && !this.isChooseMode;
+  }
 
-    canReviveNotebookItem() {
-      return this.item.serverDeleteTime != null &&
-          !this.isChooseMode;
-    }
+  canShareNotebookItem() {
+    return this.isMyNotebookItem() &&
+        this.item.serverDeleteTime == null &&
+        !this.isChooseMode &&
+        !this.isItemInGroup('public');
+  }
 
-    isMyNotebookItem() {
-      return this.item.workgroupId === this.ConfigService.getWorkgroupId();
-    }
+  canUnshareNotebookItem() {
+    return this.isMyNotebookItem() &&
+        this.item.serverDeleteTime == null &&
+        !this.isChooseMode &&
+        this.isItemInGroup('public');
+  }
+
+  canDeleteNotebookItem() {
+    return this.isMyNotebookItem() &&
+        this.item.serverDeleteTime == null &&
+        !this.isChooseMode;
+  }
+
+  canReviveNotebookItem() {
+    return this.item.serverDeleteTime != null && !this.isChooseMode;
+  }
+
+  isMyNotebookItem() {
+    return this.item.workgroupId === this.ConfigService.getWorkgroupId();
+  }
 }
 
 NotebookItemController.$inject = [
-    "$injector",
-    "$rootScope",
-    "$scope",
-    "$filter",
-    "ConfigService",
-    "NotebookService",
-    "ProjectService",
-    "StudentAssetService",
-    "StudentDataService",
-    "UtilService"
+  "$injector",
+  "$rootScope",
+  "$scope",
+  "$filter",
+  "ConfigService",
+  "NotebookService",
+  "ProjectService",
+  "StudentAssetService",
+  "StudentDataService",
+  "UtilService"
 ];
 
 const NotebookItem = {
-    bindings: {
-        itemId: '<',
-        group: '@',
-        isChooseMode: '<',
-        config: '<',
-        componentController: '<',
-        workgroupId: '<',
-        onDelete: '&',
-        onRevive: '&',
-        onSelect: '&'
-    },
-    template:
-        `<md-card class="notebook-item"
+  bindings: {
+    itemId: '<',
+    group: '@',
+    isChooseMode: '<',
+    config: '<',
+    componentController: '<',
+    workgroupId: '<',
+    onDelete: '&',
+    onRevive: '&',
+    onSelect: '&'
+  },
+  template:
+    `<md-card class="notebook-item"
                   ng-mouseenter="focus=true;"
                   ng-mouseleave="focus=false;"
                   ng-class="{'md-whiteframe-5dp': focus}"
@@ -249,7 +236,7 @@ const NotebookItem = {
                 </md-button>
             </md-card-actions>
         </md-card>`,
-    controller: NotebookItemController
+  controller: NotebookItemController
 };
 
 export default NotebookItem;

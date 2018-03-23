@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _helpIcon = require('./themeComponents/helpIcon/helpIcon');
@@ -27,30 +27,30 @@ var _nodeStatusIconController2 = _interopRequireDefault(_nodeStatusIconControlle
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var NavItem = {
-    bindings: {
-        nodeId: '<',
-        showPosition: '<',
-        type: '<'
-    },
-    template: '<ng-include src="navitemCtrl.getTemplateUrl()"></ng-include>',
-    controller: 'NavItemController as navitemCtrl'
+  bindings: {
+    nodeId: '<',
+    showPosition: '<',
+    type: '<'
+  },
+  template: '<ng-include src="navitemCtrl.getTemplateUrl()"></ng-include>',
+  controller: 'NavItemController as navitemCtrl'
 };
 
 var NodeStatusIcon = {
-    bindings: {
-        nodeId: '<',
-        customClass: '<'
-    },
-    template: '<ng-include src="nodeStatusIconCtrl.getTemplateUrl()"></ng-include>',
-    controller: 'NodeStatusIconCtrl as nodeStatusIconCtrl'
+  bindings: {
+    nodeId: '<',
+    customClass: '<'
+  },
+  template: '<ng-include src="nodeStatusIconCtrl.getTemplateUrl()"></ng-include>',
+  controller: 'NodeStatusIconCtrl as nodeStatusIconCtrl'
 };
 
 var StepTools = {
-    bindings: {
-        showPosition: '<'
-    },
-    template: '<ng-include src="stepToolsCtrl.getTemplateUrl()"></ng-include>',
-    controller: 'StepToolsCtrl as stepToolsCtrl'
+  bindings: {
+    showPosition: '<'
+  },
+  template: '<ng-include src="stepToolsCtrl.getTemplateUrl()"></ng-include>',
+  controller: 'StepToolsCtrl as stepToolsCtrl'
 };
 
 var ThemeComponents = angular.module('theme.components', []);
