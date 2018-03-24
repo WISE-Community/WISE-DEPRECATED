@@ -23,6 +23,7 @@ var NotebookNotesController = function () {
     this.selectedTabIndex = 0;
     this.$scope = $scope;
     this.publicNotebookItems = this.NotebookService.publicNotebookItems;
+    this.groupNameToGroup = {};
 
     var personalGroup = {
       title: "Personal",
@@ -30,6 +31,7 @@ var NotebookNotesController = function () {
       isEditAllowed: true,
       items: []
     };
+    this.groupNameToGroup['private'] = personalGroup;
 
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
@@ -113,12 +115,59 @@ var NotebookNotesController = function () {
           items: _this.publicNotebookItems["public"]
         };
         _this.groups.push(publicGroup);
+        _this.groupNameToGroup['public'] = publicGroup;
       }
       _this.selectedTabIndex = 0;
+    });
+
+    this.$rootScope.$on('notebookUpdated', function (event, args) {
+      var notebookItem = args.notebookItem;
+      console.log(notebookItem);
+      if (notebookItem.groups == null || notebookItem.groups.length == 0) {
+        _this.updateNotebookNote(_this.groupNameToGroup['private'], notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
+        if (_this.groupNameToGroup['public'] != null) {
+          _this.removeNotebookNote(_this.groupNameToGroup['public'], notebookItem.localNotebookItemId, notebookItem.workgroupId);
+        }
+      }
+
+      if (notebookItem.groups != null && notebookItem.groups.includes('public')) {
+        _this.updateNotebookNote(_this.groupNameToGroup['private'], notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
+        if (_this.groupNameToGroup['public'] != null) {
+          _this.updateNotebookNote(_this.groupNameToGroup['public'], notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
+        }
+      }
     });
   }
 
   _createClass(NotebookNotesController, [{
+    key: "updateNotebookNote",
+    value: function updateNotebookNote(group, localNotebookItemId, workgroupId, notebookItem) {
+      var added = false;
+      var items = group.items;
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        if (item.localNotebookItemId == localNotebookItemId && item.workgroupId == workgroupId) {
+          items[i] = notebookItem;
+          added = true;
+        }
+      }
+      if (!added) {
+        items.push(notebookItem);
+      }
+    }
+  }, {
+    key: "removeNotebookNote",
+    value: function removeNotebookNote(group, localNotebookItemId, workgroupId) {
+      var items = group.items;
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        if (item.localNotebookItemId == localNotebookItemId && item.workgroupId == workgroupId) {
+          items.splice(i, 1);
+          i--;
+        }
+      }
+    }
+  }, {
     key: "getTitle",
     value: function getTitle() {
       var title = '';

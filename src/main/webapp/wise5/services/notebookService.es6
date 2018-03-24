@@ -400,7 +400,7 @@ class NotebookService {
         }
 
         this.groupNotebookItems();
-        this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId]});
+        this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem});
         resolve();
       });
     } else {
@@ -444,7 +444,8 @@ class NotebookService {
           }
 
           this.groupNotebookItems();
-          this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId]});
+          this.$rootScope.$broadcast('notebookUpdated',
+              {notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem});
         }
         return result.data;
       });
@@ -521,7 +522,7 @@ class NotebookService {
     let workgroupId = notebookItem.workgroupId;
     this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
     this.groupNotebookItems();
-    this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId]});
+    this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem});
     return notebookItem;
   }
 

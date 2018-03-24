@@ -12,13 +12,15 @@ class NotebookNotesController {
     this.selectedTabIndex = 0;
     this.$scope = $scope;
     this.publicNotebookItems = this.NotebookService.publicNotebookItems;
+    this.groupNameToGroup = {};
 
     const personalGroup = {
       title: "Personal",
       name: "private",
       isEditAllowed: true,
       items: []
-    }
+    };
+    this.groupNameToGroup['private'] = personalGroup;
 
     for (const [personalItemKey, personalItemValue] of Object.entries(this.notebook.items)) {
       if (personalItemValue.last().type === 'note') {
@@ -55,9 +57,58 @@ class NotebookNotesController {
           items: this.publicNotebookItems["public"]
         };
         this.groups.push(publicGroup);
+        this.groupNameToGroup['public'] = publicGroup;
       }
       this.selectedTabIndex = 0;
     });
+
+    this.$rootScope.$on('notebookUpdated', (event, args) => {
+      let notebookItem = args.notebookItem;
+      console.log(notebookItem);
+      if (notebookItem.groups == null || notebookItem.groups.length == 0) {
+        this.updateNotebookNote(this.groupNameToGroup['private'],
+          notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
+        if (this.groupNameToGroup['public'] != null) {
+          this.removeNotebookNote(this.groupNameToGroup['public'],
+            notebookItem.localNotebookItemId, notebookItem.workgroupId);
+        }
+      }
+
+      if (notebookItem.groups != null && notebookItem.groups.includes('public')) {
+        this.updateNotebookNote(this.groupNameToGroup['private'],
+          notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
+        if (this.groupNameToGroup['public'] != null) {
+          this.updateNotebookNote(this.groupNameToGroup['public'],
+            notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
+        }
+      }
+    });
+  }
+
+  updateNotebookNote(group, localNotebookItemId, workgroupId, notebookItem) {
+    let added = false;
+    let items = group.items;
+    for (let i = 0; i < items.length; i++) {
+      let item = items[i];
+      if (item.localNotebookItemId == localNotebookItemId && item.workgroupId == workgroupId) {
+        items[i] = notebookItem;
+        added = true;
+      }
+    }
+    if (!added) {
+      items.push(notebookItem);
+    }
+  }
+
+  removeNotebookNote(group, localNotebookItemId, workgroupId) {
+    let items = group.items;
+    for (let i = 0; i < items.length; i++) {
+      let item = items[i];
+      if (item.localNotebookItemId == localNotebookItemId && item.workgroupId == workgroupId) {
+        items.splice(i, 1);
+        i--;
+      }
+    }
   }
 
   getTitle() {

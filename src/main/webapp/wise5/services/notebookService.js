@@ -621,7 +621,7 @@ var NotebookService = function () {
           }
 
           _this3.groupNotebookItems();
-          _this3.$rootScope.$broadcast('notebookUpdated', { notebook: _this3.notebooksByWorkgroup[workgroupId] });
+          _this3.$rootScope.$broadcast('notebookUpdated', { notebook: _this3.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem });
           resolve();
         });
       } else {
@@ -665,7 +665,7 @@ var NotebookService = function () {
             }
 
             _this3.groupNotebookItems();
-            _this3.$rootScope.$broadcast('notebookUpdated', { notebook: _this3.notebooksByWorkgroup[workgroupId] });
+            _this3.$rootScope.$broadcast('notebookUpdated', { notebook: _this3.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem });
           }
           return result.data;
         });
@@ -746,7 +746,7 @@ var NotebookService = function () {
       var workgroupId = notebookItem.workgroupId;
       this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
       this.groupNotebookItems();
-      this.$rootScope.$broadcast('notebookUpdated', { notebook: this.notebooksByWorkgroup[workgroupId] });
+      this.$rootScope.$broadcast('notebookUpdated', { notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem });
       return notebookItem;
     }
   }, {
