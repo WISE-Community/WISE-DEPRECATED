@@ -109,14 +109,15 @@ public class TeacherAccountController {
       return "errors/accessdenied";
     } else {
       User signedInUser = ControllerUtil.getSignedInUser();
-      TeacherUserDetails teacherUserDetails = (TeacherUserDetails) signedInUser.getUserDetails();
-      TeacherAccountForm teacherAccountForm = new TeacherAccountForm(teacherUserDetails);
-      modelMap.addAttribute("teacherAccountForm", teacherAccountForm);
-      ChangePasswordParameters params = new ChangePasswordParameters();
-      params.setUser(signedInUser);
-      modelMap.addAttribute("changePasswordParameters", params);
-      populateModelMap(modelMap);
-      return "teacher/account";
+      if (signedInUser.isTeacher()) {
+        TeacherUserDetails teacherUserDetails = (TeacherUserDetails) signedInUser.getUserDetails();
+        TeacherAccountForm teacherAccountForm = new TeacherAccountForm(teacherUserDetails);
+        modelMap.addAttribute("teacherAccountForm", teacherAccountForm);
+        setChangePasswordParametersInModelMap(modelMap, signedInUser);
+        populateModelMap(modelMap);
+        return "teacher/account";
+      }
+      return "errors/accessdenied";
     }
   }
 
@@ -136,6 +137,12 @@ public class TeacherAccountController {
       e.printStackTrace();
     }
     return modelMap;
+  }
+
+  private void setChangePasswordParametersInModelMap(ModelMap modelMap, User user) {
+    ChangePasswordParameters params = new ChangePasswordParameters();
+    params.setUser(user);
+    modelMap.addAttribute("changePasswordParameters", params);
   }
 
   /**
@@ -203,6 +210,7 @@ public class TeacherAccountController {
     updateUserLocaleInSession(user, request);
     userService.updateUser(user);
     request.getSession().setAttribute(User.CURRENT_USER_SESSION_KEY, user);
+    setChangePasswordParametersInModelMap(modelMap, user);
     modelMap.put("accountInfoSavedMessage", "Changes saved!");
     populateModelMap(modelMap);
     return "teacher/account";
@@ -231,6 +239,7 @@ public class TeacherAccountController {
       User user = userService.retrieveById(params.getUser().getId());
       userService.updateUserPassword(user, params.getPasswd1());
       request.getSession().setAttribute(User.CURRENT_USER_SESSION_KEY, user);
+      setChangePasswordParametersInModelMap(modelMap, user);
       modelMap.put("passwordSavedMessage", "Password changes saved!");
       populateModelMap(modelMap);
       return "teacher/account";
