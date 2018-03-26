@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Repository
 public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
-    implements NotebookItemDao<NotebookItem> {
+      implements NotebookItemDao<NotebookItem> {
 
   @Override
   protected String getFindAllQuery() {
@@ -34,31 +34,17 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
 
   @Override
   public List<NotebookItem> getNotebookItemListByParams(
-    Integer id, Run run, Group period, Workgroup workgroup,
-    String nodeId, String componentId) {
-
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    Criteria sessionCriteria = session.createCriteria(NotebookItem.class);
-    if (id != null) {
-      sessionCriteria.add(Restrictions.eq("id", id));
-    }
-    if (run != null) {
-      sessionCriteria.add(Restrictions.eq("run", run));
-    }
-    if (period != null) {
-      sessionCriteria.add(Restrictions.eq("period", period));
-    }
-    if (workgroup != null) {
-      sessionCriteria.add(Restrictions.eq("workgroup", workgroup));
-    }
-    if (nodeId != null) {
-      sessionCriteria.add(Restrictions.eq("nodeId", nodeId));
-    }
-    if (componentId != null) {
-      sessionCriteria.add(Restrictions.eq("componentId", componentId));
-    }
-
-    return sessionCriteria.list();
+      Integer id, Run run, Group period, Workgroup workgroup, String nodeId, String componentId) {
+    String queryString = "select n.* from notebookItems n " +
+        "inner join " +
+        "(select max(id) as maxId, workgroupId, localNotebookItemId from notebookItems " +
+        "where runId = :runId and workgroupId = :workgroupId group by workgroupId, localNotebookItemId) n2 " +
+        "on n.id = n2.maxId and n.groups is null";
+    Session session = getHibernateTemplate().getSessionFactory().getCurrentSession();
+    SQLQuery query = session.createSQLQuery(queryString).addEntity("n", NotebookItem.class);
+    query.setParameter("runId", run.getId());
+    query.setParameter("workgroupId", workgroup.getId());
+    return (List<NotebookItem>) query.list();
   }
 
   public List<NotebookItem> getNotebookItemByGroup(Integer runId, String groupName) {

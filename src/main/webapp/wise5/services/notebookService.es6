@@ -433,24 +433,37 @@ class NotebookService {
           if (notebookItem.type === "note" || notebookItem.type === "report") {
             notebookItem.content = angular.fromJson(notebookItem.content);
           }
-          // add/update notebook
           let workgroupId = notebookItem.workgroupId;
-          if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
-            // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
-            this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
-          } else {
-            // otherwise, we'll create a new notebook field and add the item to the array
-            this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+          if (this.isNotebookItemPrivate(notebookItem)) {
+            this.updatePrivateNotebookItem(notebookItem, workgroupId);
           }
-
-          this.groupNotebookItems();
           this.$rootScope.$broadcast('notebookUpdated',
-              {notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem});
+              {notebook: this.notebooksByWorkgroup[workgroupId],
+               notebookItem: notebookItem});
         }
         return result.data;
       });
     }
   };
+
+  updatePrivateNotebookItem(notebookItem, workgroupId) {
+    if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+      // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
+      this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+    } else {
+      // otherwise, we'll create a new notebook field and add the item to the array
+      this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+    }
+    this.groupNotebookItems();
+  }
+
+  isNotebookItemPublic(notebookItem) {
+    return !this.isNotebookItemPrivate(notebookItem);
+  }
+
+  isNotebookItemPrivate(notebookItem) {
+    return notebookItem.groups == null;
+  }
 
   copyNotebookItem(notebookItemId) {
     if (this.ConfigService.isPreview()) {

@@ -36,6 +36,9 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="end center">
+        <md-checkbox class="primary" aria-label="Share" ng-click="editNotebookItemController.toggleMakeNotePublic()">
+            {{ 'SHARE_WITH_CLASS' | translate }}
+        </md-checkbox>
         <md-button class="primary" aria-label="Cancel" ng-click="editNotebookItemController.cancel()">
             {{ 'CANCEL' | translate }}
         </md-button>

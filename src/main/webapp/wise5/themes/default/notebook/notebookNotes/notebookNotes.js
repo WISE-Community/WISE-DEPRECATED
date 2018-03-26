@@ -32,6 +32,11 @@ var NotebookNotesController = function () {
       items: []
     };
     this.groupNameToGroup['private'] = personalGroup;
+    this.groupNameToGroup['public'] = {
+      title: "Public",
+      name: "public",
+      items: []
+    };
 
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
@@ -122,24 +127,28 @@ var NotebookNotesController = function () {
 
     this.$rootScope.$on('notebookUpdated', function (event, args) {
       var notebookItem = args.notebookItem;
-      console.log(notebookItem);
       if (notebookItem.groups == null || notebookItem.groups.length == 0) {
-        _this.updateNotebookNote(_this.groupNameToGroup['private'], notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
-        if (_this.groupNameToGroup['public'] != null) {
-          _this.removeNotebookNote(_this.groupNameToGroup['public'], notebookItem.localNotebookItemId, notebookItem.workgroupId);
-        }
+        _this.updatePrivateNotebookNote(notebookItem);
       }
-
       if (notebookItem.groups != null && notebookItem.groups.includes('public')) {
-        _this.updateNotebookNote(_this.groupNameToGroup['private'], notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
-        if (_this.groupNameToGroup['public'] != null) {
-          _this.updateNotebookNote(_this.groupNameToGroup['public'], notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
-        }
+        _this.updatePublicNotebookNote(notebookItem);
       }
     });
   }
 
   _createClass(NotebookNotesController, [{
+    key: "updatePrivateNotebookNote",
+    value: function updatePrivateNotebookNote(notebookItem) {
+      this.updateNotebookNote(this.groupNameToGroup['private'], notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
+      this.removeNotebookNote(this.groupNameToGroup['public'], notebookItem.localNotebookItemId, notebookItem.workgroupId);
+    }
+  }, {
+    key: "updatePublicNotebookNote",
+    value: function updatePublicNotebookNote(notebookItem) {
+      this.updateNotebookNote(this.groupNameToGroup['public'], notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
+      this.removeNotebookNote(this.groupNameToGroup['private'], notebookItem.localNotebookItemId, notebookItem.workgroupId);
+    }
+  }, {
     key: "updateNotebookNote",
     value: function updateNotebookNote(group, localNotebookItemId, workgroupId, notebookItem) {
       var added = false;

@@ -84,6 +84,16 @@ var EditNotebookItemController = function () {
   }
 
   _createClass(EditNotebookItemController, [{
+    key: 'toggleMakeNotePublic',
+    value: function toggleMakeNotePublic() {
+      if (this.item.groups == null) {
+        this.item.groups = [];
+      }
+      if (!this.item.groups.includes("public")) {
+        this.item.groups.push("public");
+      }
+    }
+  }, {
     key: 'attachStudentAssetToNote',
     value: function attachStudentAssetToNote(files) {
       var _this = this;
