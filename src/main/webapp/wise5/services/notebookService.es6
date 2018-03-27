@@ -88,17 +88,23 @@ class NotebookService {
           isEditTextEnabled: isEditTextEnabled, isFileUploadEnabled: isFileUploadEnabled});
   };
 
-  deleteItem(itemToDelete) {
-    const items = this.getNotebookByWorkgroup().items;
-    const deletedItems = this.getNotebookByWorkgroup().deletedItems;
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      if (item === itemToDelete) {
-        items.splice(i, 1);
-        deletedItems.push(itemToDelete);
-      }
-    }
-  };
+  deleteItem(itemId) {
+    const noteCopy = angular.copy(this.getLatestNotebookItemByLocalNotebookItemId(itemId));
+    noteCopy.id = null; // set to null so we're creating a new notebook item
+    noteCopy.content.clientSaveTime = Date.parse(new Date());
+    let clientDeleteTime = Date.parse(new Date());
+    return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type,
+        noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
+  }
+
+  reviveItem(itemId) {
+    const noteCopy = angular.copy(this.getLatestNotebookItemByLocalNotebookItemId(itemId));
+    noteCopy.id = null; // set to null so we're creating a new notebook item
+    noteCopy.content.clientSaveTime = Date.parse(new Date());
+    let clientDeleteTime = null; // if delete timestamp is null, then we are in effect un-deleting this note item
+    return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type,
+        noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
+  }
 
   // looks up notebook item by local notebook item id, including deleted notes
   getLatestNotebookItemByLocalNotebookItemId(itemId, workgroupId = null) {

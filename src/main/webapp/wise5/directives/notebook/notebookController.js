@@ -54,19 +54,9 @@ var NotebookController = function () {
       alert(this.$translate('deleteStudentAssetFromNotebookNotImplementedYet'));
     }
   }, {
-    key: 'deleteItem',
-    value: function deleteItem(ev, itemId) {
-      this.$rootScope.$broadcast('deleteNote', { itemId: itemId, ev: ev });
-    }
-  }, {
     key: 'editItem',
     value: function editItem(ev, itemId) {
       this.$rootScope.$broadcast('editNote', { itemId: itemId, ev: ev });
-    }
-  }, {
-    key: 'reviveItem',
-    value: function reviveItem(ev, itemId) {
-      this.$rootScope.$broadcast('reviveNote', { itemId: itemId, ev: ev });
     }
   }, {
     key: 'notebookItemSelected',

@@ -109,22 +109,27 @@ var NotebookService = function () {
     }
   }, {
     key: "deleteItem",
-    value: function deleteItem(itemToDelete) {
-      var items = this.getNotebookByWorkgroup().items;
-      var deletedItems = this.getNotebookByWorkgroup().deletedItems;
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        if (item === itemToDelete) {
-          items.splice(i, 1);
-          deletedItems.push(itemToDelete);
-        }
-      }
+    value: function deleteItem(itemId) {
+      var noteCopy = angular.copy(this.getLatestNotebookItemByLocalNotebookItemId(itemId));
+      noteCopy.id = null; // set to null so we're creating a new notebook item
+      noteCopy.content.clientSaveTime = Date.parse(new Date());
+      var clientDeleteTime = Date.parse(new Date());
+      return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
     }
   }, {
-    key: "getLatestNotebookItemByLocalNotebookItemId",
-
+    key: "reviveItem",
+    value: function reviveItem(itemId) {
+      var noteCopy = angular.copy(this.getLatestNotebookItemByLocalNotebookItemId(itemId));
+      noteCopy.id = null; // set to null so we're creating a new notebook item
+      noteCopy.content.clientSaveTime = Date.parse(new Date());
+      var clientDeleteTime = null; // if delete timestamp is null, then we are in effect un-deleting this note item
+      return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
+    }
 
     // looks up notebook item by local notebook item id, including deleted notes
+
+  }, {
+    key: "getLatestNotebookItemByLocalNotebookItemId",
     value: function getLatestNotebookItemByLocalNotebookItemId(itemId) {
       var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 

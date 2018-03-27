@@ -79,36 +79,10 @@ var NotebookController = function () {
       _this.showEditNoteDialog(null, true, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
     });
 
-    this.$scope.$on('deleteNote', function (event, args) {
-      var itemId = args.itemId;
-      var ev = args.ev;
-      var doDelete = true;
-      _this.showDeleteReviveNoteConfirmDialog(itemId, ev, doDelete);
-    });
-
-    this.$scope.$on('reviveNote', function (event, args) {
-      var itemId = args.itemId;
-      var ev = args.ev;
-      var doDelete = false;
-      _this.showDeleteReviveNoteConfirmDialog(itemId, ev, doDelete);
-    });
-
     this.$scope.$on('copyNote', function (event, args) {
       var itemId = args.itemId;
       var ev = args.ev;
       _this.showCopyNoteConfirmDialog(itemId, ev);
-    });
-
-    this.$scope.$on('shareNote', function (event, args) {
-      var itemId = args.itemId;
-      var ev = args.ev;
-      _this.showShareNoteConfirmationDialog(itemId, ev);
-    });
-
-    this.$scope.$on('unshareNote', function (event, args) {
-      var itemId = args.itemId;
-      var ev = args.ev;
-      _this.showUnshareNoteConfirmDialog(itemId, ev);
     });
 
     this.logOutListener = $scope.$on('logOut', function (event, args) {
@@ -151,63 +125,6 @@ var NotebookController = function () {
       });
     }
   }, {
-    key: 'showDeleteReviveNoteConfirmDialog',
-    value: function showDeleteReviveNoteConfirmDialog(itemId, ev) {
-      var _this2 = this;
-
-      var doDelete = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-
-      var confirm = null;
-      if (doDelete) {
-        confirm = this.$mdDialog.confirm().title(this.$translate('deleteNoteConfirmMessage')).ariaLabel('delete note confirmation').targetEvent(ev).ok(this.$translate('delete')).cancel(this.$translate('cancel'));
-      } else {
-        confirm = this.$mdDialog.confirm().title(this.$translate('reviveNoteConfirmMessage')).ariaLabel('revive note confirmation').targetEvent(ev).ok(this.$translate('revive')).cancel(this.$translate('cancel'));
-      }
-
-      this.$mdDialog.show(confirm).then(function () {
-        var noteCopy = angular.copy(_this2.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId));
-        noteCopy.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
-        noteCopy.content.clientSaveTime = Date.parse(new Date());
-        var clientDeleteTime = null; // if delete timestamp is null, then we are in effect un-deleting this note item
-        if (doDelete) {
-          clientDeleteTime = Date.parse(new Date());
-        }
-        _this2.NotebookService.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
-      }, function () {
-        // they chose not to delete. Do nothing, the dialog will close.
-      });
-    }
-  }, {
-    key: 'showCopyNoteConfirmDialog',
-    value: function showCopyNoteConfirmDialog(itemId, ev) {
-      var _this3 = this;
-
-      var confirm = this.$mdDialog.confirm().title('copyNoteConfirmMessage').ariaLabel('copy note confirmation').ok(this.$translate('copy')).cancel(this.$translate('cancel'));
-      this.$mdDialog.show(confirm).then(function () {
-        _this3.NotebookService.copyNotebookItem(itemId);
-      });
-    }
-  }, {
-    key: 'showShareNoteConfirmationDialog',
-    value: function showShareNoteConfirmationDialog(itemId, ev) {
-      var _this4 = this;
-
-      var confirm = this.$mdDialog.confirm().title('shareNoteConfirmMessage').ariaLabel('share note confirmation').ok(this.$translate('share')).cancel(this.$translate('cancel'));
-      this.$mdDialog.show(confirm).then(function () {
-        _this4.NotebookService.addNotebookItemToGroup(itemId, 'public');
-      });
-    }
-  }, {
-    key: 'showUnshareNoteConfirmDialog',
-    value: function showUnshareNoteConfirmDialog(itemId, ev) {
-      var _this5 = this;
-
-      var confirm = this.$mdDialog.confirm().title('unshareNoteConfirmMessage').ariaLabel('unshare note confirmation').ok(this.$translate('unshare')).cancel(this.$translate('cancel'));
-      this.$mdDialog.show(confirm).then(function () {
-        _this5.NotebookService.removeNotebookItemFromGroup(itemId, 'public');
-      });
-    }
-  }, {
     key: 'notebookItemSelected',
     value: function notebookItemSelected($event, notebookItem) {
       this.selectedNotebookItem = notebookItem;
@@ -236,7 +153,7 @@ var NotebookController = function () {
   }, {
     key: 'open',
     value: function open(value, event) {
-      var _this6 = this;
+      var _this2 = this;
 
       if (value === 'report') {
         this.reportVisible = !this.reportVisible;
@@ -245,7 +162,7 @@ var NotebookController = function () {
           this.closeNotes(event);
         } else {
           this.NotebookService.retrievePublicNotebookItems("public").then(function () {
-            _this6.notesVisible = true;
+            _this2.notesVisible = true;
           });
         }
       } else if (value === 'new') {
@@ -261,12 +178,12 @@ var NotebookController = function () {
   }, {
     key: 'setInsertMode',
     value: function setInsertMode(value, requester) {
-      var _this7 = this;
+      var _this3 = this;
 
       this.insertMode = value;
       if (value) {
         this.NotebookService.retrievePublicNotebookItems("public").then(function () {
-          _this7.notesVisible = true;
+          _this3.notesVisible = true;
         });
       }
       this.requester = requester;

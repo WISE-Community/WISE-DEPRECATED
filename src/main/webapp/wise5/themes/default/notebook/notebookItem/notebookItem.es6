@@ -2,6 +2,7 @@
 
 class NotebookItemController {
   constructor($injector,
+              $mdDialog,
               $rootScope,
               $scope,
               $filter,
@@ -12,6 +13,7 @@ class NotebookItemController {
               StudentDataService,
               UtilService) {
     this.$injector = $injector;
+    this.$mdDialog = $mdDialog;
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.$filter = $filter;
@@ -78,17 +80,33 @@ class NotebookItemController {
   }
 
   doDelete(ev) {
-    if (this.onDelete) {
-      ev.stopPropagation();
-      this.onDelete({$ev: ev, $itemId: this.item.localNotebookItemId});
-    }
+    ev.stopPropagation();
+    let confirm = this.$mdDialog.confirm()
+      .title(this.$translate('deleteNoteConfirmMessage'))
+      .ariaLabel('delete note confirmation')
+      .targetEvent(ev)
+      .ok(this.$translate('delete'))
+      .cancel(this.$translate('cancel'));
+    this.$mdDialog.show(confirm).then(() => {
+      this.NotebookService.deleteItem(this.item.localNotebookItemId);
+    }, () => {
+      // they chose not to delete. Do nothing, the dialog will close.
+    });
   }
 
   doRevive(ev) {
-    if (this.onRevive) {
-      ev.stopPropagation();
-      this.onRevive({$ev: ev, $itemId: this.item.localNotebookItemId});
-    }
+    ev.stopPropagation();
+    let confirm = this.$mdDialog.confirm()
+      .title(this.$translate('reviveNoteConfirmMessage'))
+      .ariaLabel('revive note confirmation')
+      .targetEvent(ev)
+      .ok(this.$translate('revive'))
+      .cancel(this.$translate('cancel'));
+    this.$mdDialog.show(confirm).then(() => {
+      this.NotebookService.reviveItem(this.item.localNotebookItemId);
+    }, () => {
+      // they chose not to delete. Do nothing, the dialog will close.
+    });
   }
 
   doSelect(ev) {
@@ -99,17 +117,38 @@ class NotebookItemController {
 
   doCopy(ev) {
     ev.stopPropagation();
-    this.$rootScope.$broadcast('copyNote', {itemId: this.item.id, ev: ev});
+    const confirm = this.$mdDialog.confirm()
+      .title('copyNoteConfirmMessage')
+      .ariaLabel('copy note confirmation')
+      .ok(this.$translate('copy'))
+      .cancel(this.$translate('cancel'));
+    this.$mdDialog.show(confirm).then(() => {
+      this.NotebookService.copyNotebookItem(this.item.id);
+    });
   }
 
   doShare(ev) {
     ev.stopPropagation();
-    this.$rootScope.$broadcast('shareNote', {itemId: this.item.id, ev: ev});
+    const confirm = this.$mdDialog.confirm()
+      .title('shareNoteConfirmMessage')
+      .ariaLabel('share note confirmation')
+      .ok(this.$translate('share'))
+      .cancel(this.$translate('cancel'));
+    this.$mdDialog.show(confirm).then(() => {
+      this.NotebookService.addNotebookItemToGroup(this.item.id, 'public');
+    });
   }
 
   doUnshare(ev) {
     ev.stopPropagation();
-    this.$rootScope.$broadcast('unshareNote', {itemId: this.item.id, ev: ev});
+    const confirm = this.$mdDialog.confirm()
+      .title('unshareNoteConfirmMessage')
+      .ariaLabel('unshare note confirmation')
+      .ok(this.$translate('unshare'))
+      .cancel(this.$translate('cancel'));
+    this.$mdDialog.show(confirm).then(() => {
+      this.NotebookService.removeNotebookItemFromGroup(this.item.id, 'public');
+    });
   }
 
   canCopyNotebookItem() {
@@ -147,6 +186,7 @@ class NotebookItemController {
 
 NotebookItemController.$inject = [
   "$injector",
+  "$mdDialog",
   "$rootScope",
   "$scope",
   "$filter",
@@ -166,8 +206,6 @@ const NotebookItem = {
     config: '<',
     componentController: '<',
     workgroupId: '<',
-    onDelete: '&',
-    onRevive: '&',
     onSelect: '&'
   },
   template:

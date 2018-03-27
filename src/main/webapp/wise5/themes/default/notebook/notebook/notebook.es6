@@ -71,36 +71,10 @@ class NotebookController {
       this.showEditNoteDialog(null, true, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
     });
 
-    this.$scope.$on('deleteNote', (event, args) => {
-      const itemId = args.itemId;
-      const ev = args.ev;
-      const doDelete = true;
-      this.showDeleteReviveNoteConfirmDialog(itemId, ev, doDelete);
-    });
-
-    this.$scope.$on('reviveNote', (event, args) => {
-      const itemId = args.itemId;
-      const ev = args.ev;
-      const doDelete = false;
-      this.showDeleteReviveNoteConfirmDialog(itemId, ev, doDelete);
-    });
-
     this.$scope.$on('copyNote', (event, args) => {
       const itemId = args.itemId;
       const ev = args.ev;
       this.showCopyNoteConfirmDialog(itemId, ev);
-    });
-
-    this.$scope.$on('shareNote', (event, args) => {
-      const itemId = args.itemId;
-      const ev = args.ev;
-      this.showShareNoteConfirmationDialog(itemId, ev);
-    });
-
-    this.$scope.$on('unshareNote', (event, args) => {
-      const itemId = args.itemId;
-      const ev = args.ev;
-      this.showUnshareNoteConfirmDialog(itemId, ev);
     });
 
     this.logOutListener = $scope.$on('logOut', (event, args) => {
@@ -137,72 +111,6 @@ class NotebookController {
         isEditTextEnabled: isEditTextEnabled,
         isFileUploadEnabled: isFileUploadEnabled
       }
-    });
-  }
-
-  showDeleteReviveNoteConfirmDialog(itemId, ev, doDelete = true) {
-    let confirm = null;
-    if (doDelete) {
-      confirm = this.$mdDialog.confirm()
-          .title(this.$translate('deleteNoteConfirmMessage'))
-          .ariaLabel('delete note confirmation')
-          .targetEvent(ev)
-          .ok(this.$translate('delete'))
-          .cancel(this.$translate('cancel'));
-    } else {
-      confirm = this.$mdDialog.confirm()
-          .title(this.$translate('reviveNoteConfirmMessage'))
-          .ariaLabel('revive note confirmation')
-          .targetEvent(ev)
-          .ok(this.$translate('revive'))
-          .cancel(this.$translate('cancel'));
-    }
-
-    this.$mdDialog.show(confirm).then(() => {
-      const noteCopy = angular.copy(this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId));
-      noteCopy.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
-      noteCopy.content.clientSaveTime = Date.parse(new Date());
-      let clientDeleteTime = null;  // if delete timestamp is null, then we are in effect un-deleting this note item
-      if (doDelete) {
-        clientDeleteTime = Date.parse(new Date());
-      }
-      this.NotebookService.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId,
-          noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
-    }, () => {
-      // they chose not to delete. Do nothing, the dialog will close.
-    });
-  }
-
-  showCopyNoteConfirmDialog(itemId, ev) {
-    const confirm = this.$mdDialog.confirm()
-        .title('copyNoteConfirmMessage')
-        .ariaLabel('copy note confirmation')
-        .ok(this.$translate('copy'))
-        .cancel(this.$translate('cancel'));
-    this.$mdDialog.show(confirm).then(() => {
-      this.NotebookService.copyNotebookItem(itemId);
-    });
-  }
-
-  showShareNoteConfirmationDialog(itemId, ev) {
-    const confirm = this.$mdDialog.confirm()
-        .title('shareNoteConfirmMessage')
-        .ariaLabel('share note confirmation')
-        .ok(this.$translate('share'))
-        .cancel(this.$translate('cancel'));
-    this.$mdDialog.show(confirm).then(() => {
-      this.NotebookService.addNotebookItemToGroup(itemId, 'public');
-    });
-  }
-
-  showUnshareNoteConfirmDialog(itemId, ev) {
-    const confirm = this.$mdDialog.confirm()
-        .title('unshareNoteConfirmMessage')
-        .ariaLabel('unshare note confirmation')
-        .ok(this.$translate('unshare'))
-        .cancel(this.$translate('cancel'));
-    this.$mdDialog.show(confirm).then(() => {
-      this.NotebookService.removeNotebookItemFromGroup(itemId, 'public');
     });
   }
 

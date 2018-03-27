@@ -128,14 +128,6 @@ class NotebookNotesController {
     return title;
   }
 
-  deleteItem($ev, $itemId, doDelete = true) {
-    this.$rootScope.$broadcast('deleteNote', {itemId: $itemId, ev: $ev});
-  }
-
-  reviveItem(ev, itemId) {
-    this.$rootScope.$broadcast('reviveNote', {itemId: $itemId, ev: $ev});
-  }
-
   editItem($ev, $itemId) {
     this.$rootScope.$broadcast('editNote', {itemId: $itemId, ev: $ev});
   }
@@ -216,7 +208,6 @@ const NotebookNotes = {
                     is-choose-mode="$ctrl.insertMode"
                     workgroup-id="note.workgroupId"
                     on-select="$ctrl.select($ev, $itemId)"
-                    on-delete="$ctrl.deleteItem($ev, $itemId)"
                     style="display: flex;"
                     flex="100"
                     flex-gt-xs="50">

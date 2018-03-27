@@ -47,16 +47,8 @@ class NotebookController {
     alert(this.$translate('deleteStudentAssetFromNotebookNotImplementedYet'));
   }
 
-  deleteItem(ev, itemId) {
-    this.$rootScope.$broadcast('deleteNote', {itemId: itemId, ev: ev});
-  }
-
   editItem(ev, itemId) {
     this.$rootScope.$broadcast('editNote', {itemId: itemId, ev: ev});
-  }
-
-  reviveItem(ev, itemId) {
-    this.$rootScope.$broadcast('reviveNote', {itemId: itemId, ev: ev});
   }
 
   notebookItemSelected($event, notebookItem) {
