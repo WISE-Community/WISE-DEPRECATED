@@ -397,8 +397,8 @@ var NotebookService = function () {
      */
 
   }, {
-    key: "getNotebookItemByNotebookItemId",
-    value: function getNotebookItemByNotebookItemId(notebookItemId) {
+    key: "getPrivateNotebookItemById",
+    value: function getPrivateNotebookItemById(notebookItemId) {
       var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
       var notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
@@ -431,6 +431,17 @@ var NotebookService = function () {
           }
         }
       }
+    }
+  }, {
+    key: "getNotebookItemById",
+    value: function getNotebookItemById(notebookItemId) {
+      var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+      var notebookItem = this.getPrivateNotebookItemById(notebookItemId, workgroupId);
+      if (notebookItem == null) {
+        notebookItem = this.getPublicNotebookItemById(notebookItemId);
+      }
+      return notebookItem;
     }
   }, {
     key: "getPublicNotebookItem",

@@ -44,8 +44,12 @@ class EditNotebookItemController {
         }
       };
     } else {
-      this.item = angular.copy(this.NotebookService.getNotebookItemByNotebookItemId(this.itemId));
+      this.item = angular.copy(this.NotebookService.getNotebookItemById(this.itemId));
       this.item.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
+      if (this.NotebookService.isNotebookItemPublic(this.item) &&
+          this.item.workgroupId != this.ConfigService.getWorkgroupId()) {
+        this.isEditMode = false;
+      }
     }
 
     this.notebookConfig = this.NotebookService.getNotebookConfig();
@@ -155,6 +159,10 @@ class EditNotebookItemController {
   }
 
   cancel() {
+    this.$mdDialog.hide();
+  }
+
+  close() {
     this.$mdDialog.hide();
   }
 

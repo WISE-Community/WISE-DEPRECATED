@@ -280,7 +280,7 @@ class NotebookService {
   /**
    * Returns the notebook item with the specified notebook item id.
    */
-  getNotebookItemByNotebookItemId(notebookItemId, workgroupId = null) {
+  getPrivateNotebookItemById(notebookItemId, workgroupId = null) {
     const notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
     if (notebookByWorkgroup != null) {
       const allNotebookItems = notebookByWorkgroup.allItems;
@@ -290,6 +290,14 @@ class NotebookService {
         }
       }
     }
+  }
+
+  getNotebookItemById(notebookItemId, workgroupId = null) {
+    let notebookItem = this.getPrivateNotebookItemById(notebookItemId, workgroupId);
+    if (notebookItem == null) {
+      notebookItem = this.getPublicNotebookItemById(notebookItemId);
+    }
+    return notebookItem;
   }
 
   getPublicNotebookItem(group, localNotebookItemId, workgroupId) {

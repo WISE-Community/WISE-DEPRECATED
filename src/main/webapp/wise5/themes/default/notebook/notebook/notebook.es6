@@ -58,7 +58,7 @@ class NotebookController {
       const noteText = null;
       const isEditTextEnabled = true;
       const isFileUploadEnabled = true;
-      this.showEditNoteConfirmDialog(itemId, true, null, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
+      this.showEditNoteDialog(itemId, true, null, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
     });
 
     this.$scope.$on('addNewNote', (event, args) => {
@@ -68,7 +68,7 @@ class NotebookController {
       const noteText = args.text;
       const isEditTextEnabled = args.isEditTextEnabled;
       const isFileUploadEnabled = args.isFileUploadEnabled;
-      this.showEditNoteConfirmDialog(null, true, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
+      this.showEditNoteDialog(null, true, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
     });
 
     this.$scope.$on('deleteNote', (event, args) => {
@@ -119,7 +119,7 @@ class NotebookController {
     alert(this.$translate('deleteStudentAssetFromNotebookNotImplementedYet'));
   }
 
-  showEditNoteConfirmDialog(itemId, isEditMode, file, text, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev) {
+  showEditNoteDialog(itemId, isEditMode, file, text, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev) {
     const notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
     this.$mdDialog.show({
       parent: angular.element(document.body),
@@ -261,10 +261,7 @@ class NotebookController {
   }
 
   insert(notebookItemId, $event) {
-    let notebookItem = this.NotebookService.getNotebookItemByNotebookItemId(notebookItemId, this.workgroupId);
-    if (notebookItem == null) {
-      notebookItem = this.NotebookService.getPublicNotebookItemById(notebookItemId);
-    }
+    let notebookItem = this.NotebookService.getNotebookItemById(notebookItemId, this.workgroupId);
     if (this.requester == 'report') {
       this.insertContent = angular.copy(notebookItem);
     } else {

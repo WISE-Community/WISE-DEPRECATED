@@ -12,30 +12,37 @@
                             ng-model="editNotebookItemController.item.content.text"
                             ng-model-options='{ debounce: 100 }'
                             ng-change="editNotebookItemController.update()"
-                            ng-disabled="!editNotebookItemController.isEditTextEnabled"
+                            ng-disabled="!editNotebookItemController.isEditMode || !editNotebookItemController.isEditTextEnabled"
                             md-select-on-focus></textarea>
             </md-input-container>
             <div class="notebook-item__attachment" ng-repeat="attachment in editNotebookItemController.item.content.attachments">
                 <img ng-src="{{attachment.iconURL}}" class="notebook-item__attachment__content" />
-                <md-button class="md-whiteframe-1dp notebook-item__attachment__delete md-icon-button md-raised" ng-click='editNotebookItemController.removeAttachment(attachment)' title="{{ 'removeFile' | translate }}">
+                <md-button class="md-whiteframe-1dp notebook-item__attachment__delete md-icon-button md-raised"
+                           ng-click='editNotebookItemController.removeAttachment(attachment)'
+                           ng-disabled="!editNotebookItemController.isEditMode"
+                           title="{{ 'removeFile' | translate }}">
                     <md-icon class="text-secondary">delete</md-icon>
                 </md-button>
             </div>
-            <div ng-if="editNotebookItemController.showUpload"
-                 ngf-drop ngf-select ngf-change="editNotebookItemController.attachStudentAssetToNote($files)"
+            <div ng-if="editNotebookItemController.isEditMode && editNotebookItemController.showUpload"
+                 ngf-drop
+                 ngf-select
+                 ngf-change="editNotebookItemController.attachStudentAssetToNote($files)"
                  class="notebook-item__upload"
                  drag-over-class="dragover" allow-dir="false"
                  accept="image/*,application/pdf,text/csv">
                 <md-icon>image</md-icon> <span translate="dropAssetMessage"></span>
             </div>
             <div class="notebook-item__info md-caption">
-                <md-icon> place </md-icon> <wiselink type="link" node-id="{{editNotebookItemController.getItemNodeId()}}"
-                                                     link-text="{{editNotebookItemController.getItemNodeLink()}}"
-                                                     link-class="md-caption"></wiselink>
+                <md-icon> place </md-icon>
+                <wiselink type="link"
+                          node-id="{{editNotebookItemController.getItemNodeId()}}"
+                          link-text="{{editNotebookItemController.getItemNodeLink()}}"
+                          link-class="md-caption"></wiselink>
             </div>
         </div>
     </md-dialog-content>
-    <md-dialog-actions layout="row" layout-align="end center">
+    <md-dialog-actions layout="row" layout-align="end center" ng-if="editNotebookItemController.isEditMode">
         <md-checkbox class="primary" aria-label="Share" ng-click="editNotebookItemController.toggleMakeNotePublic()">
             {{ 'SHARE_WITH_CLASS' | translate }}
         </md-checkbox>
@@ -44,6 +51,11 @@
         </md-button>
         <md-button class="primary" aria-label="Save" ng-click="editNotebookItemController.save()" ng-disabled="!editNotebookItemController.saveEnabled">
             {{ 'SAVE' | translate }}
+        </md-button>
+    </md-dialog-actions>
+    <md-dialog-actions layout="row" layout-align="end center" ng-if="!editNotebookItemController.isEditMode">
+        <md-button class="primary" aria-label="Close" ng-click="editNotebookItemController.close()">
+            {{ 'CLOSE' | translate }}
         </md-button>
     </md-dialog-actions>
 </md-dialog>
