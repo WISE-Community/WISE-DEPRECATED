@@ -849,8 +849,8 @@ var NodeService = function () {
       return promise;
     }
   }, {
-    key: "hasTransitionLogic",
-    value: function hasTransitionLogic() {
+    key: "currentNodeHasTransitionLogic",
+    value: function currentNodeHasTransitionLogic() {
       var currentNode = this.StudentDataService.getCurrentNode();
       if (currentNode != null) {
         var transitionLogic = currentNode.transitionLogic;

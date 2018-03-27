@@ -704,7 +704,7 @@ class NodeService {
     return promise;
   };
 
-  hasTransitionLogic() {
+  currentNodeHasTransitionLogic() {
     const currentNode = this.StudentDataService.getCurrentNode();
     if (currentNode != null) {
       const transitionLogic = currentNode.transitionLogic;
