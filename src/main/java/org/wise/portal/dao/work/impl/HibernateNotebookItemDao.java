@@ -1,9 +1,7 @@
 package org.wise.portal.dao.work.impl;
 
-import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.work.NotebookItemDao;
@@ -35,15 +33,18 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
   @Override
   public List<NotebookItem> getNotebookItemListByParams(
       Integer id, Run run, Group period, Workgroup workgroup, String nodeId, String componentId) {
-    String queryString = "select n.* from notebookItems n " +
-        "inner join " +
-        "(select max(id) as maxId, workgroupId, localNotebookItemId from notebookItems " +
-        "where runId = :runId and workgroupId = :workgroupId group by workgroupId, localNotebookItemId) n2 " +
-        "on n.id = n2.maxId and n.groups is null";
+    String queryString = "select n.* from notebookItems n inner join " +
+        "(select max(id) as maxId, workgroupId, localNotebookItemId from notebookItems where runId = :runId";
+    if (workgroup != null) {
+      queryString += " and workgroupId = :workgroupId";
+    }
+    queryString += " group by workgroupId, localNotebookItemId) n2 on n.id = n2.maxId and n.groups is null";
     Session session = getHibernateTemplate().getSessionFactory().getCurrentSession();
     SQLQuery query = session.createSQLQuery(queryString).addEntity("n", NotebookItem.class);
     query.setParameter("runId", run.getId());
-    query.setParameter("workgroupId", workgroup.getId());
+    if (workgroup != null) {
+      query.setParameter("workgroupId", workgroup.getId());
+    }
     return (List<NotebookItem>) query.list();
   }
 
