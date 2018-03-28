@@ -725,11 +725,9 @@ class UtilService {
    * False if the array has all null elements.
    */
   arrayHasNonNullElement(arrayToCheck) {
-    if (arrayToCheck != null) {
-      for (let element of arrayToCheck) {
-        if (element != null) {
-          return true;
-        }
+    for (let element of arrayToCheck) {
+      if (element != null) {
+        return true;
       }
     }
     return false;

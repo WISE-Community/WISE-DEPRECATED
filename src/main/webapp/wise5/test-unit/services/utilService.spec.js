@@ -75,5 +75,22 @@ describe('UtilService', function () {
       expect(copiedObj).toEqual(obj);
     });
   });
+
+  describe('arrayHasNonNullElement()', function () {
+    it('should return true if it has at least one non null element', function () {
+      var arrayToCheck = [null, {}, null];
+      expect(UtilService.arrayHasNonNullElement(arrayToCheck)).toEqual(true);
+    });
+
+    it('should return false if it has all null elements', function () {
+      var arrayToCheck = [null, null, null];
+      expect(UtilService.arrayHasNonNullElement(arrayToCheck)).toEqual(false);
+    });
+
+    it('should return true if it has all non null elements', function () {
+      var arrayToCheck = [{}, {}, {}];
+      expect(UtilService.arrayHasNonNullElement(arrayToCheck)).toEqual(true);
+    });
+  });
 });
 //# sourceMappingURL=utilService.spec.js.map
