@@ -53,22 +53,26 @@ class NotebookController {
 
     this.$scope.$on('editNote', (event, args) => {
       const itemId = args.itemId;
-      const ev = args.ev;
-      const studentWorkIds = null;
+      const isEditMode = true;
+      const file = null;
       const noteText = null;
       const isEditTextEnabled = true;
       const isFileUploadEnabled = true;
-      this.showEditNoteDialog(itemId, true, null, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
+      const studentWorkIds = null;
+      const ev = args.ev;
+      this.showEditNoteDialog(itemId, isEditMode, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
     });
 
-    this.$scope.$on('addNewNote', (event, args) => {
-      const ev = args.ev;
+    this.$scope.$on('addNote', (event, args) => {
+      const itemId = null;
+      const isEditMode = true;
       const file = args.file;
-      const studentWorkIds = args.studentWorkIds;
       const noteText = args.text;
       const isEditTextEnabled = args.isEditTextEnabled;
       const isFileUploadEnabled = args.isFileUploadEnabled;
-      this.showEditNoteDialog(null, true, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
+      const studentWorkIds = args.studentWorkIds;
+      const ev = args.ev;
+      this.showEditNoteDialog(itemId, isEditMode, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
     });
 
     this.$scope.$on('copyNote', (event, args) => {
@@ -149,7 +153,7 @@ class NotebookController {
         });
       }
     } else if (value === 'new') {
-      this.NotebookService.addNewItem(event);
+      this.NotebookService.addNote(event);
     }
   }
 

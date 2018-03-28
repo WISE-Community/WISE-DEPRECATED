@@ -5576,7 +5576,7 @@ var GraphController = function () {
           var imageObject = _this10.UtilService.getImageObjectFromBase64String(img_b64);
 
           // create a notebook item with the image populated into it
-          _this10.NotebookService.addNewItem($event, imageObject);
+          _this10.NotebookService.addNote($event, imageObject);
         });
       }
     }
@@ -6600,9 +6600,10 @@ var GraphController = function () {
         width: 2,
         value: x,
         zIndex: 5
+      };
 
-        // set the plot line into the plot lines array
-      };this.plotLines = [plotLine];
+      // set the plot line into the plot lines array
+      this.plotLines = [plotLine];
 
       /*
        * Call $apply() so that the red plot line position gets updated. If we

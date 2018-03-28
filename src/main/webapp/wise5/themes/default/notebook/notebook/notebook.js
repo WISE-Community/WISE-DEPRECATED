@@ -61,22 +61,26 @@ var NotebookController = function () {
 
     this.$scope.$on('editNote', function (event, args) {
       var itemId = args.itemId;
-      var ev = args.ev;
-      var studentWorkIds = null;
+      var isEditMode = true;
+      var file = null;
       var noteText = null;
       var isEditTextEnabled = true;
       var isFileUploadEnabled = true;
-      _this.showEditNoteDialog(itemId, true, null, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
+      var studentWorkIds = null;
+      var ev = args.ev;
+      _this.showEditNoteDialog(itemId, isEditMode, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
     });
 
-    this.$scope.$on('addNewNote', function (event, args) {
-      var ev = args.ev;
+    this.$scope.$on('addNote', function (event, args) {
+      var itemId = null;
+      var isEditMode = true;
       var file = args.file;
-      var studentWorkIds = args.studentWorkIds;
       var noteText = args.text;
       var isEditTextEnabled = args.isEditTextEnabled;
       var isFileUploadEnabled = args.isFileUploadEnabled;
-      _this.showEditNoteDialog(null, true, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
+      var studentWorkIds = args.studentWorkIds;
+      var ev = args.ev;
+      _this.showEditNoteDialog(itemId, isEditMode, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
     });
 
     this.$scope.$on('copyNote', function (event, args) {
@@ -166,7 +170,7 @@ var NotebookController = function () {
           });
         }
       } else if (value === 'new') {
-        this.NotebookService.addNewItem(event);
+        this.NotebookService.addNote(event);
       }
     }
   }, {

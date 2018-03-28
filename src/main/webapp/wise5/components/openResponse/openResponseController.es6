@@ -1670,7 +1670,7 @@ class OpenResponseController {
             const noteText = componentState.studentData.response;
             const isEditTextEnabled = false;
             const isFileUploadEnabled = false;
-            this.NotebookService.addNewItem($event, imageObject, noteText, [ componentState.id ], isEditTextEnabled, isFileUploadEnabled);
+            this.NotebookService.addNote($event, imageObject, noteText, [ componentState.id ], isEditTextEnabled, isFileUploadEnabled);
             deregisterListener();
           }
         }
@@ -1683,7 +1683,7 @@ class OpenResponseController {
       const noteText = studentWork.studentData.response;
       const isEditTextEnabled = false;
       const isFileUploadEnabled = false;
-      this.NotebookService.addNewItem($event, imageObject, noteText, [ studentWork.id ], isEditTextEnabled, isFileUploadEnabled);
+      this.NotebookService.addNote($event, imageObject, noteText, [ studentWork.id ], isEditTextEnabled, isFileUploadEnabled);
     }
   }
 

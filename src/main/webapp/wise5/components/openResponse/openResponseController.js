@@ -1747,7 +1747,7 @@ var OpenResponseController = function () {
             var noteText = componentState.studentData.response;
             var isEditTextEnabled = false;
             var isFileUploadEnabled = false;
-            _this5.NotebookService.addNewItem($event, imageObject, noteText, [componentState.id], isEditTextEnabled, isFileUploadEnabled);
+            _this5.NotebookService.addNote($event, imageObject, noteText, [componentState.id], isEditTextEnabled, isFileUploadEnabled);
             deregisterListener();
           }
         });
@@ -1758,7 +1758,7 @@ var OpenResponseController = function () {
         var noteText = studentWork.studentData.response;
         var isEditTextEnabled = false;
         var isFileUploadEnabled = false;
-        this.NotebookService.addNewItem($event, imageObject, noteText, [studentWork.id], isEditTextEnabled, isFileUploadEnabled);
+        this.NotebookService.addNote($event, imageObject, noteText, [studentWork.id], isEditTextEnabled, isFileUploadEnabled);
       }
     }
   }, {

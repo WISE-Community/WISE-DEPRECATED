@@ -2286,7 +2286,7 @@ var TableController = function () {
             var imageObject = _this3.UtilService.getImageObjectFromBase64String(img_b64);
 
             // create a notebook item with the image populated into it
-            _this3.NotebookService.addNewItem($event, imageObject);
+            _this3.NotebookService.addNote($event, imageObject);
 
             // we are done capturing the table so we will show the iframes again
             _this3.UtilService.showIFrames();

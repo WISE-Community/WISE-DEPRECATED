@@ -4837,7 +4837,7 @@ class ConceptMapController {
           var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image, false);
 
           // create a notebook item with the image populated into it
-          this.NotebookService.addNewItem($event, imageObject);
+          this.NotebookService.addNote($event, imageObject);
 
           // we are done capturing the table so we will show the iframes again
           this.UtilService.showIFrames();

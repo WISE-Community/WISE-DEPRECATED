@@ -1820,7 +1820,7 @@ class DrawController {
 
       // create a notebook item with the image populated into it
       const noteText = null;
-      this.NotebookService.addNewItem($event, imageObject, noteText, [ studentWorkId ]);
+      this.NotebookService.addNote($event, imageObject, noteText, [ studentWorkId ]);
     }
   }
 

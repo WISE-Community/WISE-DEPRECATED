@@ -97,14 +97,14 @@ var NotebookService = function () {
       this.$rootScope.$broadcast('editNote', { itemId: itemId, ev: ev });
     }
   }, {
-    key: "addNewItem",
-    value: function addNewItem(ev, file) {
+    key: "addNote",
+    value: function addNote(ev, file) {
       var text = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
       var studentWorkIds = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
       var isEditTextEnabled = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : true;
       var isFileUploadEnabled = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : true;
 
-      this.$rootScope.$broadcast('addNewNote', { ev: ev, file: file, text: text, studentWorkIds: studentWorkIds,
+      this.$rootScope.$broadcast('addNote', { ev: ev, file: file, text: text, studentWorkIds: studentWorkIds,
         isEditTextEnabled: isEditTextEnabled, isFileUploadEnabled: isFileUploadEnabled });
     }
   }, {

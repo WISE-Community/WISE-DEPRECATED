@@ -1908,7 +1908,7 @@ var DrawController = function () {
 
         // create a notebook item with the image populated into it
         var noteText = null;
-        this.NotebookService.addNewItem($event, imageObject, noteText, [studentWorkId]);
+        this.NotebookService.addNote($event, imageObject, noteText, [studentWorkId]);
       }
     }
   }, {
