@@ -23,9 +23,16 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Controller for single-page site app built with Angular
@@ -36,9 +43,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping("/site")
 public class SiteController {
 
-  @RequestMapping(value = {"", "/student", "/student/**", "/news", "/about", "/features"},
+  @RequestMapping(value = {"", "/student", "/student/**", "/login", "/news", "/about", "/features"},
       method = RequestMethod.GET)
   protected String showSite() {
     return "forward:/site/index.html";
+  }
+
+  @ResponseBody
+  @RequestMapping(value = "/user", method = RequestMethod.GET)
+  protected String user(HttpServletRequest request) {
+    User signedInUser = ControllerUtil.getSignedInUser();
+    if (signedInUser != null) {
+      String username = ControllerUtil.getSignedInUser().getUserDetails().getUsername();
+      JSONObject user = new JSONObject();
+      try {
+        user.put("username", username);
+        return user.toString();
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+    return null;
   }
 }

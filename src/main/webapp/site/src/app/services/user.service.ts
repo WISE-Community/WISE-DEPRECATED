@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
@@ -11,6 +11,7 @@ export class UserService {
 
   private userUrl = 'api/user/user';
   private user: Observable<User>;
+  private authenticated = false;
 
   constructor(private http: HttpClient) { }
 
@@ -42,6 +43,24 @@ export class UserService {
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
+  }
+
+  authenticate(credentials, callback) {
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    };
+    let formData = "username=" + credentials.username + "&password=" + credentials.password;
+    this.http.post('/wise/j_acegi_security_check',
+        formData,
+        { headers: headers }).subscribe(response => {
+      if (response['name']) {
+        this.authenticated = true;
+      } else {
+        this.authenticated = false;
+      }
+      return callback && callback();
+    });
+
   }
 
   private log(message: string) {
