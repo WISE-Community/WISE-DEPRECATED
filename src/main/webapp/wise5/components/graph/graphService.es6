@@ -1,11 +1,16 @@
 import NodeService from '../../services/nodeService';
+import html2canvas from 'html2canvas';
 
 class GraphService extends NodeService {
   constructor($filter,
+      $q,
+      StudentAssetService,
       StudentDataService,
       UtilService) {
     super();
     this.$filter = $filter;
+    this.$q = $q;
+    this.StudentAssetService = StudentAssetService;
     this.StudentDataService = StudentDataService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
@@ -732,6 +737,13 @@ class GraphService extends NodeService {
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     let result = false;
 
+    if (!this.canEdit(component) && this.UtilService.hasNodeEnteredEvent(nodeEvents)) {
+      /*
+       * the student can't perform any work on this component and has visited
+       * this step so we will mark it as completed
+       */
+      return true;
+    }
     if (componentStates && componentStates.length) {
       let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
@@ -769,6 +781,24 @@ class GraphService extends NodeService {
 
     return result;
   };
+
+  /**
+   * Determine if the student can perform any work on this component.
+   * @param component The component content.
+   * @return Whether the student can perform any work on this component.
+   */
+  canEdit(component) {
+    let series = component.series;
+    for (let singleSeries of series) {
+      if (singleSeries.canEdit) {
+        return true;
+      }
+    }
+    if (this.UtilService.hasImportWorkConnectedComponent(component)) {
+      return true;
+    }
+    return false;
+  }
 
   /**
    * Check if student data contains any series data
@@ -1077,35 +1107,41 @@ class GraphService extends NodeService {
   }
 
   /**
-   * Determine whether the component has been authored to show classmate work
-   * @param componentContent the component content
-   * @return whether to show classmate work in this component
+   * The component state has been rendered in a <component></component> element
+   * and now we want to take a snapshot of the work.
+   * @param componentState The component state that has been rendered.
+   * @return A promise that will return an image object.
    */
-  showClassmateWork(componentContent) {
+  generateImageFromRenderedComponentState(componentState) {
+    let deferred = this.$q.defer();
+    let componentId = componentState.componentId;
+    let highchartsDiv = angular.element('#chart_' + componentId).find('.highcharts-container');
+    if (highchartsDiv != null && highchartsDiv.length > 0) {
+      highchartsDiv = highchartsDiv[0];
 
-    if (componentContent != null && componentContent.connectedComponents != null) {
+      // convert the div element to a canvas element
+      html2canvas(highchartsDiv).then((canvas) => {
 
-      let connectedComponents = componentContent.connectedComponents;
+        // get the canvas as a base64 string
+        let img_b64 = canvas.toDataURL('image/png');
 
-      // loop through all the connected components that we are importing from
-      for (let c = 0; c < connectedComponents.length; c++) {
-        let connectedComponent = connectedComponents[c];
+        // get the image object
+        let imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
-        if (connectedComponent != null) {
-          if (connectedComponent.type == 'showClassmateWork') {
-            // the connected component is importing work from classmates
-            return true;
-          }
-        }
-      }
+        // add the image to the student assets
+        this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
+          deferred.resolve(asset);
+        });
+      });
     }
-
-    return false;
+    return deferred.promise;
   }
 }
 
 GraphService.$inject = [
   '$filter',
+  '$q',
+  'StudentAssetService',
   'StudentDataService',
   'UtilService'
 ];

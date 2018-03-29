@@ -38,16 +38,11 @@ class DataExportController {
         ];
 
         this.setDefaultExportSettings();
-
-        // get the project
-        // create the mapping of node id to order for the import project
-        this.ProjectService.retrieveProject().then((projectJSON) => {
-            this.project = projectJSON;
-            // calculate the node order of the import project
-            let nodeOrderOfProject = this.ProjectService.getNodeOrderOfProject(this.project);
-            this.projectIdToOrder = nodeOrderOfProject.idToOrder;
-            this.projectItems = nodeOrderOfProject.nodes;
-        });
+        this.project = this.ProjectService.project;
+        // create the mapping of node id to order
+        let nodeOrderOfProject = this.ProjectService.getNodeOrderOfProject(this.project);
+        this.projectIdToOrder = nodeOrderOfProject.idToOrder;
+        this.projectItems = nodeOrderOfProject.nodes;
 
         // save event when data export view is displayed
         let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
@@ -1699,9 +1694,7 @@ class DataExportController {
      * Create a csv export file with one workgroup per row
      */
     exportOneWorkgroupPerRow() {
-
-        // get the steps that were selected
-        var selectedNodes = this.getSelectedNodesToExport();
+        var selectedNodes = null;
 
         /*
          * holds the mappings from nodeid or nodeid-componentid to a boolean
@@ -1713,6 +1706,9 @@ class DataExportController {
         var selectedNodesMap = null;
 
         if (this.exportStepSelectionType === "exportSelectSteps") {
+            // get the steps that were selected
+            selectedNodes = this.getSelectedNodesToExport();
+
             if (selectedNodes == null || selectedNodes.length == 0) {
                 /*
                  * the user did not select any steps to export so we will not
@@ -2659,6 +2655,12 @@ class DataExportController {
         // settings for raw data export
         this.includeAnnotations = false;
         this.includeEvents = false;
+
+        /*
+         * remove checked fields that may have been accidentally saved by the
+         * authoring tool or grading tool
+         */
+        this.ProjectService.cleanupBeforeSave();
     }
 
     /**
@@ -2673,9 +2675,7 @@ class DataExportController {
      * Export the raw data
      */
     exportRawData() {
-
-        // get the steps that were selected
-        var selectedNodes = this.getSelectedNodesToExport();
+        var selectedNodes = null;
 
         /*
          * holds the mappings from nodeid or nodeid-componentid to a boolean
@@ -2687,6 +2687,9 @@ class DataExportController {
         var selectedNodesMap = null;
 
         if (this.exportStepSelectionType === "exportSelectSteps") {
+            // get the steps that were selected
+            var selectedNodes = this.getSelectedNodesToExport();
+
             if (selectedNodes == null || selectedNodes.length == 0) {
                 /*
                  * the user did not select any steps to export so we will not

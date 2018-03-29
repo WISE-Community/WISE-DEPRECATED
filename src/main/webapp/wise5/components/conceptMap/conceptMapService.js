@@ -21,12 +21,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var ConceptMapService = function (_NodeService) {
   _inherits(ConceptMapService, _NodeService);
 
-  function ConceptMapService($filter, $q, $timeout, ConfigService, StudentAssetService, StudentDataService, UtilService) {
+  function ConceptMapService($anchorScroll, $filter, $location, $q, $timeout, ConfigService, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, ConceptMapService);
 
     var _this = _possibleConstructorReturn(this, (ConceptMapService.__proto__ || Object.getPrototypeOf(ConceptMapService)).call(this));
 
+    _this.$anchorScroll = $anchorScroll;
     _this.$filter = $filter;
+    _this.$location = $location;
     _this.$q = $q;
     _this.$timeout = $timeout;
     _this.ConfigService = ConfigService;
@@ -1586,6 +1588,102 @@ var ConceptMapService = function (_NodeService) {
 
       return false;
     }
+
+    /**
+     * The component state has been rendered in a <component></component> element
+     * and now we want to take a snapshot of the work.
+     * @param componentState The component state that has been rendered.
+     * @return A promise that will return an image object.
+     */
+
+  }, {
+    key: 'generateImageFromRenderedComponentState',
+    value: function generateImageFromRenderedComponentState(componentState) {
+      var _this3 = this;
+
+      var deferred = this.$q.defer();
+
+      // get the svg element. this will obtain an array.
+      var svgElement = angular.element('#svg_' + componentState.nodeId + '_' + componentState.componentId);
+
+      if (svgElement != null && svgElement.length > 0) {
+        // get the svg element
+        svgElement = svgElement[0];
+
+        // get the svg element as a string
+        var serializer = new XMLSerializer();
+        var svgString = serializer.serializeToString(svgElement);
+
+        // find all the images in the svg and replace them with Base64 images
+        this.getHrefToBase64ImageReplacements(svgString).then(function (images) {
+
+          /*
+           * Loop through all the image objects. Each object contains
+           * an image href and a Base64 image.
+           */
+          for (var i = 0; i < images.length; i++) {
+
+            // get an image object
+            var imagePair = images[i];
+
+            // get the image href e.g. /wise/curriculum/25/assets/Sun.png
+            var imageHref = imagePair.imageHref;
+
+            // get the Base64 image
+            var base64Image = imagePair.base64Image;
+
+            // create a regex to match the image href
+            var imageRegEx = new RegExp(imageHref, 'g');
+
+            /*
+             * replace all the instances of the image href with the
+             * Base64 image
+             */
+            svgString = svgString.replace(imageRegEx, base64Image);
+          }
+
+          // create a canvas to draw the image on
+          var myCanvas = document.createElement('canvas');
+          var ctx = myCanvas.getContext('2d');
+
+          // create an svg blob
+          var svg = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+          var domURL = self.URL || self.webkitURL || self;
+          var url = domURL.createObjectURL(svg);
+          var image = new Image();
+
+          // the function that is called after the image is fully loaded
+          image.onload = function (event) {
+
+            // get the image that was loaded
+            var image = event.target;
+
+            // set the dimensions of the canvas
+            myCanvas.width = image.width;
+            myCanvas.height = image.height;
+            ctx.drawImage(image, 0, 0);
+
+            // get the canvas as a Base64 string
+            var base64Image = myCanvas.toDataURL('image/png');
+
+            // get the image object
+            var imageObject = _this3.UtilService.getImageObjectFromBase64String(base64Image, false);
+
+            // add the image to the student assets
+            _this3.StudentAssetService.uploadAsset(imageObject).then(function (asset) {
+              deferred.resolve(asset);
+            });
+          };
+
+          // set the src of the image so that the image gets loaded
+          image.src = url;
+        });
+      }
+      return deferred.promise;
+    }
+
+    // end of ConceptMapService class
+
   }]);
 
   return ConceptMapService;
@@ -2858,6 +2956,9 @@ var ConceptMapNode = function () {
 
       return width;
     }
+
+    // end of ConceptMapNode class
+
   }]);
 
   return ConceptMapNode;
@@ -3703,7 +3804,7 @@ var ConceptMapLink = function () {
   }, {
     key: 'createDeleteButtonGroup',
     value: function createDeleteButtonGroup() {
-      var _this3 = this;
+      var _this4 = this;
 
       // create a group to contain the elements of the delete button
       this.deleteButtonGroup = this.draw.group();
@@ -3781,12 +3882,12 @@ var ConceptMapLink = function () {
 
       // set the listener for when the mouse is over the group
       this.deleteButtonGroup.mouseover(function (event) {
-        _this3.deleteButtonGroupMouseOver(event);
+        _this4.deleteButtonGroupMouseOver(event);
       });
 
       // set the listener for when the mouse moves out of the group
       this.deleteButtonGroup.mouseout(function (event) {
-        _this3.deleteButtonGroupMouseOut(event);
+        _this4.deleteButtonGroupMouseOut(event);
       });
 
       // add the delete button group to the link group
@@ -4169,12 +4270,15 @@ var ConceptMapLink = function () {
 
       return width;
     }
+
+    // end of ConceptMapLink class
+
   }]);
 
   return ConceptMapLink;
 }();
 
-ConceptMapService.$inject = ['$filter', '$q', '$timeout', 'ConfigService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+ConceptMapService.$inject = ['$anchorScroll', '$filter', '$location', '$q', '$timeout', 'ConfigService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = ConceptMapService;
 //# sourceMappingURL=conceptMapService.js.map

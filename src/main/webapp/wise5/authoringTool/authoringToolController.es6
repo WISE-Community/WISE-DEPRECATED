@@ -39,57 +39,73 @@ class AuthoringToolController {
     // ui-views and their corresponding names, labels, and icons
     this.views = {
       'root.project': {
-          id: 'projectHomeButton',
-          name: this.$translate('projectHome'),
-          label: this.$translate('projectHome'),
-          icon: 'home',
-          type: 'primary',
-          showToolbar: true,
-          active: true
+        id: 'projectHomeButton',
+        name: this.$translate('projectHome'),
+        label: this.$translate('projectHome'),
+        icon: 'home',
+        type: 'primary',
+        showToolbar: true,
+        active: true
       },
       'root.project.notebook': {
-          id: 'notebookButton',
-          name: this.$translate('notebookSettings'),
-          label: this.$translate('notebookSettings'),
-          icon: 'book',
-          type: 'primary',
-          showToolbar: true,
-          active: true
+        id: 'notebookButton',
+        name: this.$translate('notebookSettings'),
+        label: this.$translate('notebookSettings'),
+        icon: 'book',
+        type: 'primary',
+        showToolbar: true,
+        active: true
       },
       'root.project.asset': {
-          id: 'assetButton',
-          name: this.$translate('fileManager'),
-          label: this.$translate('fileManager'),
-          icon: 'attach_file',
-          type: 'primary',
-          showToolbar: true,
-          active: true
+        id: 'assetButton',
+        name: this.$translate('fileManager'),
+        label: this.$translate('fileManager'),
+        icon: 'attach_file',
+        type: 'primary',
+        showToolbar: true,
+        active: true
       },
       'root.project.info': {
-          id: 'infoButton',
-          name: this.$translate('PROJECT_INFO'),
-          label: this.$translate('PROJECT_INFO'),
-          icon: 'info',
-          type: 'primary',
-          showToolbar: true,
-          active: true
+        id: 'infoButton',
+        name: this.$translate('PROJECT_INFO'),
+        label: this.$translate('PROJECT_INFO'),
+        icon: 'info',
+        type: 'primary',
+        showToolbar: true,
+        active: true
       },
       'root.main': {
-          id: 'projectListButton',
-          name: this.$translate('projectsList'),
-          label: this.$translate('projectsList'),
-          icon: 'reorder',
-          type: 'primary',
-          showToolbar: false,
-          active: true
+        id: 'projectListButton',
+        name: this.$translate('projectsList'),
+        label: this.$translate('projectsList'),
+        icon: 'reorder',
+        type: 'primary',
+        showToolbar: false,
+        active: true
       },
       'root.project.node': {
-          name: '',
-          label: '',
-          icon: '',
-          type: 'secondary',
-          showToolbar: true,
-          active: false
+        name: '',
+        label: '',
+        icon: '',
+        type: 'secondary',
+        showToolbar: true,
+        active: false
+      },
+      'root.project.nodeConstraints': {
+        name: '',
+        label: '',
+        icon: '',
+        type: 'secondary',
+        showToolbar: true,
+        active: false
+      },
+      'root.project.nodeEditPaths': {
+        name: '',
+        label: '',
+        icon: '',
+        type: 'secondary',
+        showToolbar: true,
+        active: false
       },
     };
 
@@ -234,7 +250,9 @@ class AuthoringToolController {
 
     // set current view and whether to show the toolbars and step tools
     this.showStepTools = this.$state.$current.name === 'root.project' ||
-        this.$state.$current.name === 'root.project.node';
+        this.$state.$current.name === 'root.project.node' ||
+        this.$state.$current.name === 'root.project.nodeConstraints' ||
+      this.$state.$current.name === 'root.project.nodeEditPaths';
     const view = this.views[this.$state.$current.name];
     if (view) {
       this.currentViewName = view.name;

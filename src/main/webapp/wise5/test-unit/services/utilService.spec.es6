@@ -65,4 +65,21 @@ describe('UtilService', () => {
       expect(copiedObj).toEqual(obj);
     });
   });
+
+  describe('arrayHasNonNullElement()', () => {
+    it('should return true if it has at least one non null element', () => {
+      const arrayToCheck = [null, {}, null];
+      expect(UtilService.arrayHasNonNullElement(arrayToCheck)).toEqual(true);
+    });
+
+    it('should return false if it has all null elements', () => {
+      const arrayToCheck = [null, null, null];
+      expect(UtilService.arrayHasNonNullElement(arrayToCheck)).toEqual(false);
+    });
+
+    it('should return true if it has all non null elements', () => {
+      const arrayToCheck = [{}, {}, {}];
+      expect(UtilService.arrayHasNonNullElement(arrayToCheck)).toEqual(true);
+    });
+  });
 });

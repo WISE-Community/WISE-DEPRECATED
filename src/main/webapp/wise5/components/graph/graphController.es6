@@ -261,27 +261,16 @@ class GraphController {
 
     // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [
-      {
-        type: 'Animation'
-      },
-      {
-        type: 'Embedded'
-      },
-      {
-        type: 'Graph'
-      },
-      {
-        type: 'Table'
-      }
+      { type: 'Animation' },
+      { type: 'ConceptMap' },
+      { type: 'Draw' },
+      { type: 'Embedded' },
+      { type: 'Graph' },
+      { type: 'Label' },
+      { type: 'Table' }
     ];
 
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     // get the component content from the scope
     this.componentContent = this.$scope.componentContent;
@@ -485,10 +474,8 @@ class GraphController {
         }.bind(this), true);
       }
 
-      var componentState = null;
-
       // get the component state from the scope
-      componentState = this.$scope.componentState;
+      let componentState = this.$scope.componentState;
 
       // set whether studentAttachment is enabled
       this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
@@ -497,15 +484,21 @@ class GraphController {
         if (!this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
           this.newTrial();
         }
-        if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // this component has connected components
+        if (this.UtilService.hasConnectedComponentAlwaysField(this.componentContent)) {
+          /*
+           * This component has a connected component that we always want to look at for
+           * merging student data.
+           */
           this.handleConnectedComponents();
         } else if (this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          // this does not have connected components but does have previous work
+          // this student has previous work so we will load it
           this.setStudentWork(componentState);
-        } else {
-          // this does not have connected components and does not have previous work
-          //this.newTrial();
+        } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+          /*
+           * This student doesn't have any previous work but this component has connected components
+           * so we will get the work from the connected component.
+           */
+          this.handleConnectedComponents();
         }
       } else {
         // populate the student work into this component
@@ -544,7 +537,9 @@ class GraphController {
       this.calculateDisabled();
 
       // setup the graph
-      this.setupGraph();
+      this.setupGraph().then(() => {
+        this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+      });
 
       if (this.$scope.$parent.nodeController != null) {
         // register this component with the parent node
@@ -1432,18 +1427,9 @@ class GraphController {
           regressionSettings.numberOfPoints = 100;
         }
 
-        if (this.isDisabled) {
-          // disable dragging
-          tempSeries.draggableX = false;
-          tempSeries.draggableY = false;
-          tempSeries.allowPointSelect = false;
-          //tempSeries.enableMouseTracking = false;
-          tempSeries.stickyTracking = false;
-          tempSeries.shared = false;
-          tempSeries.allowPointSelect = false;
-        } else if (tempSeries.canEdit && this.isActiveSeries(tempSeries)) {
+        if (tempSeries.canEdit && this.isActiveSeries(tempSeries)) {
+          // the series is the active one so we will allow the student to interact with it
           // set the fields to allow points to be draggable
-
           if (this.graphType === 'line' || this.graphType === 'scatter') {
             // students can drag points horizontally on line and scatter plots
             tempSeries.draggableX = true;
@@ -1452,23 +1438,26 @@ class GraphController {
             tempSeries.draggableX = false;
           }
           tempSeries.draggableY = true;
-          tempSeries.allowPointSelect = true;
           tempSeries.cursor = 'move';
-          tempSeries.enableMouseTracking = true;
           tempSeries.stickyTracking = false;
           tempSeries.shared = false;
           tempSeries.allowPointSelect = true;
-
+          tempSeries.enableMouseTracking = true;
           this.showUndoButton = true;
         } else {
-          // make the series uneditable
+          // the series is not active so we will not allow the student to interact with it
           tempSeries.draggableX = false;
           tempSeries.draggableY = false;
-          tempSeries.allowPointSelect = false;
-          tempSeries.enableMouseTracking = false;
           tempSeries.stickyTracking = false;
           tempSeries.shared = false;
           tempSeries.allowPointSelect = false;
+          tempSeries.enableMouseTracking = false;
+        }
+
+        // a series can be customized to allow mousing over points even when not the active series
+        if (tempSeries.allowPointMouseOver === true) {
+          tempSeries.allowPointSelect = true;
+          tempSeries.enableMouseTracking = true;
         }
 
         if (this.isMousePlotLineOn()) {
@@ -1529,6 +1518,7 @@ class GraphController {
         tooltip: {
           formatter: function(){
             if (this.series != null) {
+              var text = '';
 
               var xText = '';
               var yText = '';
@@ -1555,7 +1545,7 @@ class GraphController {
                 thisGraphController.xAxis.type === '' ||
                 thisGraphController.xAxis.type === 'limits') {
 
-                var text = '';
+
                 var seriesName = this.series.name;
 
                 // get the x and y values
@@ -1606,8 +1596,6 @@ class GraphController {
                   // add the y text
                   text += yText;
                 }
-
-                return text;
               } else if (thisGraphController.xAxis.type === 'categories') {
 
                 var text = '';
@@ -1637,9 +1625,14 @@ class GraphController {
 
                 // add the x and y text
                 text += xText + ' ' + yText;
-
-                return text;
               }
+
+              if (this.point.tooltip != null && this.point.tooltip != '') {
+                // this point has a custom tooltip so we will display it
+                text += '<br/>' + this.point.tooltip;
+              }
+
+              return text;
             }
           }
         },
@@ -2457,6 +2450,7 @@ class GraphController {
        * This will actually reset all the series and not just the active
        * one.
        */
+      this.newTrial();
       this.handleConnectedComponents();
     } else {
       // get the index of the active series
@@ -4862,6 +4856,7 @@ class GraphController {
                   var seriesName = singleSeries.name;
                   var seriesData = singleSeries.data;
                   var seriesColor = singleSeries.color;
+                  var allowPointMouseOver = singleSeries.allowPointMouseOver;
                   var marker = singleSeries.marker;
                   var dashStyle = singleSeries.dashStyle;
 
@@ -4879,6 +4874,10 @@ class GraphController {
 
                   if (dashStyle != null) {
                     newSeries.dashStyle = dashStyle;
+                  }
+
+                  if (allowPointMouseOver != null) {
+                    newSeries.allowPointMouseOver = allowPointMouseOver;
                   }
 
                   // add the series to the trial
@@ -5833,6 +5832,7 @@ class GraphController {
            */
           connectedComponent.componentId = allowedComponent.id;
           connectedComponent.type = 'importWork';
+          this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
         }
       }
     }
@@ -6003,6 +6003,7 @@ class GraphController {
     if (connectedComponent != null) {
       connectedComponent.componentId = null;
       connectedComponent.type = null;
+      delete connectedComponent.importWorkAsBackground;
       this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
       // the authoring component content has changed so we will save the project
@@ -6056,6 +6057,7 @@ class GraphController {
 
       // default the type to import work
       connectedComponent.type = 'importWork';
+      this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
 
       // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
@@ -6211,20 +6213,31 @@ class GraphController {
             }
           } else if (type == 'showWork' || type == 'importWork' || type == null) {
             // get the latest component state from the component
-            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+            let componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+            if (componentState != null) {
+              if (componentState.componentType == 'ConceptMap' ||
+                  componentState.componentType == 'Draw' ||
+                  componentState.componentType == 'Label') {
+                let connectedComponent =
+                  this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
+                if (connectedComponent.importWorkAsBackground === true) {
+                  promises.push(this.setComponentStateAsBackgroundImage(componentState));
+                }
+              } else {
+                // get the trials from the component state
+                promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
 
-            // get the trials from the component state
-            promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
+                if (type == 'showWork') {
+                  // we are showing work so we will not allow the student to edit it
+                  this.isDisabled = true;
+                }
 
-            if (type == 'showWork') {
-              // we are showing work so we will not allow the student to edit it
-              this.isDisabled = true;
-            }
-
-            if (componentState != null &&
-                componentState.studentData != null &&
-                componentState.studentData.backgroundImage != null) {
-              connectedComponentBackgroundImage = componentState.studentData.backgroundImage;
+                if (componentState != null &&
+                  componentState.studentData != null &&
+                  componentState.studentData.backgroundImage != null) {
+                  connectedComponentBackgroundImage = componentState.studentData.backgroundImage;
+                }
+              }
             }
           }
         }
@@ -6241,34 +6254,35 @@ class GraphController {
          */
 
         // this will hold all the trials
-        var mergedTrials = [];
+        let mergedTrials = [];
 
         /*
          * Loop through all the promise results. There will be a
          * promise result for each component we are importing from.
-         * Each promiseResult is an array of trials.
+         * Each promiseResult is an array of trials or an image url.
          */
-        for (var p = 0; p < promiseResults.length; p++) {
+        for (let promiseResult of promiseResults) {
+          if (promiseResult instanceof Array) {
+            let trials = promiseResult;
+            // loop through all the trials from the component
+            for (let t = 0; t < trials.length; t++) {
+              let trial = trials[t];
 
-          // get the array of trials for one component
-          var trials = promiseResults[p];
-
-          // loop through all the trials from the component
-          for (var t = 0; t < trials.length; t++) {
-            var trial = trials[t];
-
-            // add the trial to our array of merged trials
-            mergedTrials.push(trial);
+              // add the trial to our array of merged trials
+              mergedTrials.push(trial);
+            }
+          } else if (typeof(promiseResult) === "string") {
+            connectedComponentBackgroundImage = promiseResult;
           }
         }
 
         // create a new student data with all the trials
-        var studentData = {};
+        let studentData = {};
         studentData.trials = mergedTrials;
         studentData.version = 2;
 
         // create a new component state
-        var newComponentState = this.NodeService.createNewComponentState();
+        let newComponentState = this.NodeService.createNewComponentState();
         newComponentState.studentData = studentData;
 
         if (this.componentContent.backgroundImage != null &&
@@ -6289,6 +6303,18 @@ class GraphController {
         this.studentDataChanged();
       });
     }
+  }
+
+  /**
+   * Create an image from a component state and set the image as the background.
+   * @param componentState A component state.
+   * @return A promise that returns the url of the image that is generated from
+   * the component state.
+   */
+  setComponentStateAsBackgroundImage(componentState) {
+    return this.UtilService.generateImageFromComponentState(componentState).then((image) => {
+      return image.url;
+    });
   }
 
   /**
@@ -6343,6 +6369,9 @@ class GraphController {
       if (mergedComponentState.studentData.version == null) {
         mergedComponentState.studentData.version = this.studentDataVersion;
       }
+      if (newComponentState.studentData.backgroundImage != null) {
+        mergedComponentState.studentData.backgroundImage = newComponentState.studentData.backgroundImage;
+      }
 
       if (mergedComponentState != null) {
         this.setStudentWork(mergedComponentState);
@@ -6364,7 +6393,7 @@ class GraphController {
    */
   mergeComponentState(baseComponentState, newComponentState, mergeFields, firstTime) {
     if (mergeFields == null) {
-      if (newComponentState.componentType == 'Graph') {
+      if (newComponentState.componentType == 'Graph' && firstTime) {
         // there are no merge fields specified so we will get all of the fields
         baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(newComponentState.studentData);
       }
@@ -6374,7 +6403,7 @@ class GraphController {
         let name = mergeField.name;
         let when = mergeField.when;
         let action = mergeField.action;
-        if (when == 'firstTime' && firstTime == true) {
+        if (when == 'firstTime' && firstTime) {
           if (action == 'write') {
             baseComponentState.studentData[name] = newComponentState.studentData[name];
           } else if (action == 'read') {
@@ -6491,6 +6520,22 @@ class GraphController {
 
       // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
+    }
+  }
+
+  /**
+   * If the component type is a certain type, we will set the importWorkAsBackground
+   * field to true.
+   * @param connectedComponent The connected component object.
+   */
+  authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
+    let componentType = this.authoringGetConnectedComponentType(connectedComponent);
+    if (componentType == 'ConceptMap' ||
+        componentType == 'Draw' ||
+        componentType == 'Label') {
+      connectedComponent.importWorkAsBackground = true;
+    } else {
+      delete connectedComponent.importWorkAsBackground;
     }
   }
 
@@ -6961,6 +7006,18 @@ class GraphController {
       }
     }
     return selectedTrialIds;
+  }
+
+  /**
+   * The "Import Work As Background" checkbox was clicked.
+   * @param connectedComponent The connected component associated with the
+   * checkbox.
+   */
+  authoringImportWorkAsBackgroundClicked(connectedComponent) {
+    if (!connectedComponent.importWorkAsBackground) {
+      delete connectedComponent.importWorkAsBackground;
+    }
+    this.authoringViewComponentChanged();
   }
 }
 

@@ -120,7 +120,7 @@
            class='topButton md-raised md-primary'
            ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("createBranch")'
            ng-disabled='nodeAuthoringController.insertComponentMode'>
-      <md-icon>call_split</md-icon>
+      <md-icon style='transform: rotate(180deg);'>call_split</md-icon>
       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'createBranch' | translate }}</md-tooltip>
     </md-button>
     <md-button class='topButton md-raised md-primary'
@@ -413,173 +413,245 @@
     </div>
     <div ng-if='nodeAuthoringController.showConstraints'
        class='bodyDiv'
-       style='width:700px'>
-      {{ 'constraints' | translate }}
-      <br/>
-      <div ng-repeat='constraint in nodeAuthoringController.node.constraints' style='border: 1px solid black'>
-        {{ 'constraint' | translate }}: {{constraint.id}}
-        <button ng-click='nodeAuthoringController.deleteConstraint($index)'>{{ 'deleteConstraint' | translate }}</button>
+       style='width: 700px;'>
+      <div>
+        <label class='node__label--vertical-alignment'>{{ 'addConstraint' | translate }}</label>
+        <md-button class='topButton md-raised md-primary'
+                   ng-click='nodeAuthoringController.addConstraintAndScrollToBottom()'>
+          <md-icon>add</md-icon>
+          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'addConstraint' | translate }}</md-tooltip>
+        </md-button>
+      </div>
+      <div id={{constraint.id}}
+           ng-repeat='constraint in nodeAuthoringController.node.constraints track by $index'
+           style="border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 10px 20px 10px 20px;">
+        <b>{{ 'constraint' | translate }} {{ $index + 1 }}</b>
+        <md-button class='topButton md-raised md-primary'
+                   ng-click='nodeAuthoringController.deleteConstraint($index)'>
+          <md-icon>delete</md-icon>
+          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'deleteConstraint' | translate }}</md-tooltip>
+        </md-button>
         <br/>
-        {{ 'action' | translate }}: <md-select ng-model='constraint.action'
-                   ng-change='nodeAuthoringController.authoringViewNodeChanged()'
-                   class="node-select md-subhead">
-          <md-option ng-repeat='action in nodeAuthoringController.constraintActions'
-                 ng-value='action.value'>
-            <span layout="row" layout-align="start center">
-              <span class="node-select__text">{{action.text}}</span>
-            </span>
-          </md-option>
-        </md-select>
-        {{ 'removalConditional' | translate }}
-        <md-select ng-model='constraint.removalConditional'
-               ng-change='nodeAuthoringController.authoringViewNodeChanged()'
-               class="node-select md-subhead">
-          <md-option ng-repeat='availableRemovalConditional in nodeAuthoringController.removalConditionals'
-                 ng-value='availableRemovalConditional.value'>
-            <span layout="row" layout-align="start center">
-               <span class="node-select__text">{{availableRemovalConditional.text}}</span>
-            </span>
-          </md-option>
-        </md-select>
-        <div ng-repeat='criteria in constraint.removalCriteria' style='border: 1px solid red'>
-          {{ 'removalCriteriaName' | translate }}:
-          <md-select ng-model='criteria.name'
-                 ng-change='nodeAuthoringController.removalCriteriaNameChanged(criteria)'
-                 class="node-select md-subhead">
-            <md-option ng-repeat='availableRemovalCriteria in nodeAuthoringController.removalCriteria'
-                   ng-value='availableRemovalCriteria.value'>
-              <span layout="row" layout-align="start center">
-                 <span class="node-select__text">{{availableRemovalCriteria.text}}</span>
-              </span>
-            </md-option>
-          </md-select>
-          <div ng-repeat='param in nodeAuthoringController.getRemovalCriteriaParamsByName(criteria.name)'>
-            {{param.text}}:
-            <div ng-if='param.value == "nodeId"'>
-              <md-select id="nodeIdSelectMenu"
-                     md-theme="default"
-                     class="node-select md-subhead"
-                     ng-model="criteria.params.nodeId"
-                     ng-change='nodeAuthoringController.authoringViewNodeChanged()'
-                     aria-label="TransitionCriteriaNode"
-                     style="margin-left:30px; width:600px">
-                <md-option value="''">({{ 'pleaseChooseAStep' | translate }})</md-option>
-                <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
-                       value="{{ item.$key }}"
-                       ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
+        <div layout="row">
+          <md-input-container>
+            <label>{{ 'action' | translate }}</label>
+            <md-select ng-model='constraint.action'
+                       ng-change='nodeAuthoringController.authoringViewNodeChanged()'
+                       class="node-select md-subhead"
+                       style="width: 300px;">
+              <md-option ng-repeat='action in nodeAuthoringController.constraintActions track by $index'
+                         ng-value='action.value'>
+                <span layout="row" layout-align="start center">
+                  <span class="node-select__text" ng-style="$index == 0 && { 'color': 'red' }">{{action.text}}</span>
+                </span>
+              </md-option>
+            </md-select>
+          </md-input-container>
+          <div style="width: 100px;"></div>
+          <md-input-container>
+            <label>{{ 'removalConditional' | translate }}</label>
+            <md-select ng-model='constraint.removalConditional'
+                       ng-change='nodeAuthoringController.authoringViewNodeChanged()'
+                       class="node-select md-subhead"
+                       style="width: 140px;">
+              <md-option ng-repeat='availableRemovalConditional in nodeAuthoringController.removalConditionals'
+                         ng-value='availableRemovalConditional.value'>
+                <span layout="row" layout-align="start center">
+                   <span class="node-select__text">{{availableRemovalConditional.text}}</span>
+                </span>
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+        <div ng-repeat='criteria in constraint.removalCriteria'
+             style="border: 2px solid #dddddd; border-radius: 5px; margin-top: 10px; margin-left: 50px; margin-bottom: 10px; padding: 10px 20px 10px 20px;">
+          <b>{{ 'removalCriteria' | translate }}</b>
+          <md-button class='topButton md-raised md-primary'
+                     ng-click='nodeAuthoringController.deleteRemovalCriteria(constraint, $index)'>
+            <md-icon>delete</md-icon>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'deleteRemovalCriteria' | translate }}</md-tooltip>
+          </md-button>
+          <br/>
+          <md-input-container>
+            <label>{{ 'removalCriteriaName' | translate }}</label>
+            <md-select ng-model='criteria.name'
+                       ng-change='nodeAuthoringController.removalCriteriaNameChanged(criteria)'
+                       class="node-select md-subhead"
+                       style="width: 400px;">
+              <md-option ng-repeat='availableRemovalCriteria in nodeAuthoringController.removalCriteria track by $index'
+                         ng-value='availableRemovalCriteria.value'>
+                <span layout="row" layout-align="start center">
+                   <span class="node-select__text" ng-style="$index == 0 && { 'color': 'red' }">{{availableRemovalCriteria.text}}</span>
+                </span>
+              </md-option>
+            </md-select>
+          </md-input-container>
+          <md-input-container ng-repeat='param in nodeAuthoringController.getRemovalCriteriaParamsByName(criteria.name)'>
+            <label>{{param.text}}</label>
+            <md-select id="nodeIdSelectMenu"
+                       ng-if='param.value == "nodeId"'
+                       md-theme="default"
+                       class="node-select md-subhead"
+                       ng-model="criteria.params.nodeId"
+                       ng-change='nodeAuthoringController.authoringViewConstraintRemovalCriteriaNodeIdChanged(criteria)'
+                       aria-label="TransitionCriteriaNode"
+                       style="width: 400px;">
+              <md-option ng-value="''">
+                <span layout="row" layout-align="start center">
+                  <span class="node-select__text" style="color: red">{{ 'pleaseChooseAStep' | translate }}</span>
+                </span>
+              </md-option>
+              <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
+                         ng-if="item.$key != 'group0'"
+                         ng-value="item.$key"
+                         ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
                 <span layout="row" layout-align="start center">
                   <span class="node-select__text">{{ projectController.getNodePositionById(item.$key) + ': '}}{{ projectController.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
                   <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
                 </span>
-                </md-option>
-              </md-select>
-            </div>
-            <div ng-if='param.value == "componentId"'>
-              <md-select id="componentIdSelectMenu"
-                     md-theme="default"
-                     class="node-select md-subhead"
-                     ng-model="criteria.params.componentId"
-                     ng-change='nodeAuthoringController.authoringViewNodeChanged()'
-                     aria-label="TransitionCriteriaComponent"
-                     style="margin-left:30px; width:600px">
-                <md-option ng-value="''">({{ 'pleaseChooseAComponent' | translate }})</md-option>
-                <md-option ng-repeat="component in projectController.getComponentsByNodeId(criteria.params.nodeId)"
-                       value="{{ component.id }}">
+              </md-option>
+            </md-select>
+            <md-select id="componentIdSelectMenu"
+                       ng-if='param.value == "componentId"'
+                       md-theme="default"
+                       class="node-select md-subhead"
+                       ng-model="criteria.params.componentId"
+                       ng-change='nodeAuthoringController.authoringViewConstraintRemovalCriteriaComponentIdChanged(criteria)'
+                       aria-label="TransitionCriteriaComponent"
+                       style="width: 400px;">
+              <md-option ng-value="''">
                 <span layout="row" layout-align="start center">
-                  <span class="node-select__text">{{ 'ID' | translate }}: {{component.id}} | {{ 'type' | translate }}: {{component.type}} | {{ 'prompt' | translate }}: {{component.prompt}}</span>
+                  <span class="node-select__text" style="color: red">{{ 'pleaseChooseAComponent' | translate }}</span>
                 </span>
-                </md-option>
-              </md-select>
-            </div>
-            <div ng-if='param.value == "fromNodeId"'>
-              <md-select id="fromNodeIdSelectMenu"
-                     md-theme="default"
-                     class="node-select md-subhead"
-                     ng-model="criteria.params.fromNodeId"
-                     ng-change='nodeAuthoringController.authoringViewNodeChanged()'
-                     aria-label="TransitionCriteriaNode"
-                     style="margin-left:30px; width:600px">
-                <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
-                       value="{{ item.$key }}"
-                       ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
+              </md-option>
+              <md-option ng-repeat="component in projectController.getComponentsByNodeId(criteria.params.nodeId) track by $index"
+                         ng-value="component.id">
                 <span layout="row" layout-align="start center">
-                  <span class="node-select__text">{{ projectController.getNodePositionById(item.$key) + ': '}}{{ projectController.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
-                  <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
+                  <span class="node-select__text">{{$index + 1}}. {{component.type}} ({{ 'prompt' | translate }}: {{component.prompt}})</span>
                 </span>
-                </md-option>
-              </md-select>
-            </div>
-            <div ng-if='param.value == "toNodeId"'>
-              <md-select id="toNodeIdSelectMenu"
-                     md-theme="default"
-                     class="node-select md-subhead"
-                     ng-model="criteria.params.toNodeId"
-                     ng-change='nodeAuthoringController.authoringViewNodeChanged()'
-                     aria-label="TransitionCriteriaNode"
-                     style="margin-left:30px; width:600px">
-                <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
-                       value="{{ item.$key }}"
-                       ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
+              </md-option>
+            </md-select>
+            <md-select id="fromNodeIdSelectMenu"
+                       ng-if='param.value == "fromNodeId"'
+                       md-theme="default"
+                       class="node-select md-subhead"
+                       ng-model="criteria.params.fromNodeId"
+                       ng-change='nodeAuthoringController.authoringViewNodeChanged()'
+                       aria-label="TransitionCriteriaNode"
+                       style="width: 400px;">
+              <md-option ng-value="''">
+                <span layout="row" layout-align="start center">
+                  <span class="node-select__text" style="color: red">{{ 'pleaseSelectAFromStep' | translate }}</span>
+                </span>
+              </md-option>
+              <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
+                         ng-value="item.$key"
+                         ng-if="item.$key != 'group0'"
+                         ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
                 <span layout="row" layout-align="start center">
                   <span class="node-select__text">{{ projectController.getNodePositionById(item.$key) + ': '}}{{ projectController.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
                   <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
                 </span>
-                </md-option>
-              </md-select>
-            </div>
-            <div ng-if='param.value == "scores"'>
-              <input type='text'
+              </md-option>
+            </md-select>
+            <md-select id="toNodeIdSelectMenu"
+                       ng-if='param.value == "toNodeId"'
+                       md-theme="default"
+                       class="node-select md-subhead"
+                       ng-model="criteria.params.toNodeId"
+                       ng-change='nodeAuthoringController.authoringViewNodeChanged()'
+                       aria-label="TransitionCriteriaNode"
+                       style="width: 400px;">
+              <md-option ng-value="''">
+                <span layout="row" layout-align="start center">
+                  <span class="node-select__text" style="color: red">{{ 'pleaseSelectAToStep' | translate }}</span>
+                </span>
+              </md-option>
+              <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
+                         ng-if="item.$key != 'group0'"
+                         ng-value="item.$key"
+                         ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
+                <span layout="row" layout-align="start center">
+                  <span class="node-select__text">{{ projectController.getNodePositionById(item.$key) + ': '}}{{ projectController.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
+                  <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
+                </span>
+              </md-option>
+            </md-select>
+            <input type='text'
+                   ng-if='param.value == "scores"'
                    ng-model='criteria.params.scores'
                    ng-model-options='{ debounce: 1000 }'
                    ng-change='nodeAuthoringController.authoringViewNodeChanged()'
                    ng-list=','/>
-            </div>
-            <div ng-if='param.value == "requiredSubmitCount"'>
-              <input type='number'
+            <div ng-if='param.value == "scores" && criteria.params.scores == ""'><span style="color: red">{{ 'pleaseEnterAScore' | translate }}</span></div>
+            <input type='number'
+                   ng-if='param.value == "requiredSubmitCount"'
                    ng-model='criteria.params.requiredSubmitCount'
                    ng-model-options='{ debounce: 1000 }'
+                   style="width: 400px;"
                    ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
-            </div>
-            <div ng-if='param.value == "choiceIds" && "radio" == nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)'>
-              <md-select id="radioChoiceIdsSelectMenu"
-                     md-theme="default"
-                     class="node-select md-subhead"
-                     ng-model="criteria.params.choiceIds"
-                     ng-change='nodeAuthoringController.authoringViewNodeChanged()'
-                     aria-label="TransitionCriteriaNode"
-                     style="margin-left:30px; width:600px">
-                <md-optgroup>
-                  <md-option ng-value="choice.id" ng-repeat="choice in nodeAuthoringController.getChoicesByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)">{{choice.text}}</md-option>
-                </md-optgroup>
-              </md-select>
-            </div>
-            <div ng-if='param.value == "choiceIds" && "checkbox" == nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)'>
-              <md-select id="checkboxChoiceIdsSelectMenu"
-                     md-theme="default"
-                     class="node-select md-subhead"
-                     ng-model="criteria.params.choiceIds"
-                     ng-change='nodeAuthoringController.authoringViewNodeChanged()'
-                     aria-label="TransitionCriteriaNode"
-                     style="margin-left:30px; width:600px"
-                     multiple={{nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)}}>
-                <md-optgroup>
-                  <md-option ng-value="choice.id" ng-repeat="choice in nodeAuthoringController.getChoicesByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)">{{choice.text}}</md-option>
-                </md-optgroup>
-              </md-select>
-            </div>
-            <div ng-if='param.value == "requiredNumberOfWords"'>
-              <input type='number'
+            <div ng-if='param.value == "requiredSubmitCount" && (criteria.params.requiredSubmitCount == null || criteria.params.requiredSubmitCount == "")'><span style="color: red">{{ 'pleaseEnterTheRequiredNumberOfSubmits' | translate }}</span></div>
+            <md-select id="radioChoiceIdsSelectMenu"
+                       ng-if='param.value == "choiceIds" && "radio" == nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)'
+                       md-theme="default"
+                       class="node-select md-subhead"
+                       ng-model="criteria.params.choiceIds"
+                       ng-change='nodeAuthoringController.authoringViewNodeChanged()'
+                       aria-label="TransitionCriteriaNode"
+                       style="width: 400px;">
+              <md-option ng-value="''">
+                <span layout="row" layout-align="start center">
+                  <span class="node-select__text" style="color: red">{{ 'pleaseSelectAChoice' | translate }}</span>
+                </span>
+              </md-option>
+              <md-optgroup>
+                <md-option ng-value="choice.id" ng-repeat="choice in nodeAuthoringController.getChoicesByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)">
+                  <span layout="row" layout-align="start center">
+                    <span class="node-select__text">{{choice.text}}</span>
+                  </span>
+                </md-option>
+              </md-optgroup>
+            </md-select>
+            <md-select id="checkboxChoiceIdsSelectMenu"
+                       ng-if='param.value == "choiceIds" && "checkbox" == nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)'
+                       md-theme="default"
+                       class="node-select md-subhead"
+                       ng-model="criteria.params.choiceIds"
+                       ng-change='nodeAuthoringController.authoringViewNodeChanged()'
+                       aria-label="TransitionCriteriaNode"
+                       style="width: 400px;"
+                       multiple={{nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)}}>
+              <md-optgroup>
+                <md-option ng-value="choice.id" ng-repeat="choice in nodeAuthoringController.getChoicesByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)">{{choice.text}}</md-option>
+              </md-optgroup>
+            </md-select>
+            <div ng-if='param.value == "choiceIds" && "checkbox" == nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId) && criteria.params.choiceIds == ""' style='margin-left: 10px;'><span style="color: red">{{ 'pleaseSelectAChoice' | translate }}</span></div>
+            <input type='number'
+                   ng-if='param.value == "requiredNumberOfWords"'
                    ng-model='criteria.params.requiredNumberOfWords'
                    ng-model-options='{ debounce: 1000 }'
+                   style="width: 400px;"
                    ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
-            </div>
-          </div>
-          <button ng-click='nodeAuthoringController.deleteRemovalCriteria(constraint, $index)' translate='deleteRemovalCriteria'></button>
+            <div ng-if='param.value == "requiredNumberOfWords" && (criteria.params.requiredNumberOfWords == null || criteria.params.requiredNumberOfWords == "")'><span style="color: red">{{ 'pleaseEnterTheRequiredNumberOfWords' | translate }}</span></div>
+          </md-input-container>
         </div>
-        <br/>
-        <button ng-click='nodeAuthoringController.addRemovalCriteria(constraint)' translate='addRemovalCriteria'></button>
+        <div style="margin-left: 50px;">
+          <label class='node__label--vertical-alignment'>{{ 'addRemovalCriteria' | translate }}</label>
+          <md-button class='topButton md-raised md-primary'
+                     ng-click='nodeAuthoringController.addRemovalCriteria(constraint)'>
+            <md-icon>add</md-icon>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'addRemovalCriteria' | translate }}</md-tooltip>
+          </md-button>
+        </div>
       </div>
-      <button ng-click='nodeAuthoringController.addConstraint()' translate='addConstraint'></button>
+      <div ng-if="nodeAuthoringController.node.constraints.length > 0">
+        <label class='node__label--vertical-alignment'>{{ 'addConstraint' | translate }}</label>
+        <md-button class='topButton md-raised md-primary'
+                   ng-click='nodeAuthoringController.addConstraintAndScrollToBottom()'>
+          <md-icon>add</md-icon>
+          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'addConstraint' | translate }}</md-tooltip>
+        </md-button>
+      </div>
     </div>
     <div ng-if='nodeAuthoringController.showCreateBranch'
        class='bodyDiv'>

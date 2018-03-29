@@ -10,6 +10,10 @@ var _html2canvas = require('html2canvas');
 
 var _html2canvas2 = _interopRequireDefault(_html2canvas);
 
+var _fabric = require('fabric');
+
+var _fabric2 = _interopRequireDefault(_fabric);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -120,12 +124,6 @@ var LabelController = function () {
     // whether the student can create new labels
     this.canCreateLabels = true;
 
-    // whether the student can edit labels
-    this.canEditLabels = true;
-
-    // whether the student can delete labels
-    this.canDeleteLabels = true;
-
     // whether the student is in the mode to create a new label
     this.createLabelMode = false;
 
@@ -156,6 +154,27 @@ var LabelController = function () {
     // whether to show the reset button
     this.isResetButtonVisible = true;
 
+    this.enableCircles = true;
+
+    // modify Fabric so that Text elements can utilize padding
+    fabric.Text.prototype.set({
+      _getNonTransformedDimensions: function _getNonTransformedDimensions() {
+        // Object dimensions
+        return new fabric.Point(this.width, this.height).scalarAdd(this.padding);
+      },
+      _calculateCurrentDimensions: function _calculateCurrentDimensions() {
+        // Controls dimensions
+        return fabric.util.transformPoint(this._getTransformedDimensions(), this.getViewportTransform(), true);
+      }
+    });
+
+    /*
+     * Student data version 1 is where the text x and y positioning is relative
+     * to the circle.
+     * Student data version 2 is where the text x and y positioning is absolute.
+     */
+    this.studentDataVersion = 2;
+
     /*
      * This will hold canvas label objects. A canvas label object contains a
      * circle object, line object, and text object.
@@ -172,19 +191,9 @@ var LabelController = function () {
     }];
 
     // the component types we are allowed to connect to
-    this.allowedConnectedComponentTypes = [{
-      type: 'Label'
-    }, {
-      type: 'OpenResponse'
-    }];
+    this.allowedConnectedComponentTypes = [{ type: 'ConceptMap' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'OpenResponse' }, { type: 'Table' }];
 
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     // get the component content from the scope
     this.componentContent = this.$scope.componentContent;
@@ -219,14 +228,6 @@ var LabelController = function () {
         this.canCreateLabels = this.componentContent.canCreateLabels;
       }
 
-      if (this.componentContent.canEditLabels != null) {
-        this.canEditLabels = this.componentContent.canEditLabels;
-      }
-
-      if (this.componentContent.canDeleteLabels != null) {
-        this.canDeleteLabels = this.componentContent.canDeleteLabels;
-      }
-
       if (this.componentContent.width != null) {
         this.canvasWidth = this.componentContent.width;
       }
@@ -235,15 +236,29 @@ var LabelController = function () {
         this.canvasHeight = this.componentContent.height;
       }
 
+      if (this.componentContent.enableCircles != null) {
+        this.enableCircles = this.componentContent.enableCircles;
+      }
+
       if (this.mode === 'student') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
         this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
+        if (this.onlyHasShowWorkConnectedComponents()) {
+          this.isDisabled = true;
+        }
+
         if (this.canCreateLabels) {
           this.isNewLabelButtonVisible = true;
         } else {
           this.isNewLabelButtonVisible = false;
+        }
+
+        if (this.isDisabled) {
+          this.isNewLabelButtonVisible = false;
+          this.canCreateLabels = false;
+          this.isResetButtonVisible = false;
         }
 
         // get the latest annotations
@@ -253,8 +268,6 @@ var LabelController = function () {
         this.isSubmitButtonVisible = false;
         this.isNewLabelButtonVisible = false;
         this.isSnipImageButtonVisible = false;
-        this.canEditLabels = false;
-        this.canDeleteLabels = false;
         this.isDisabled = true;
 
         if (componentState != null) {
@@ -273,16 +286,12 @@ var LabelController = function () {
         this.isSubmitButtonVisible = false;
         this.isNewLabelButtonVisible = false;
         this.isSnipImageButtonVisible = false;
-        this.canEditLabels = false;
-        this.canDeleteLabels = false;
         this.isDisabled = true;
       } else if (this.mode === 'showPreviousWork') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isNewLabelButtonVisible = false;
-        this.canEditLabels = false;
-        this.canDeleteLabels = false;
         this.isDisabled = true;
       } else if (this.mode === 'authoring') {
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
@@ -316,6 +325,15 @@ var LabelController = function () {
           }
         };
 
+        if (this.componentContent.enableCircles == null) {
+          /*
+           * If this component was created before enableCircles was implemented,
+           * we will default it to true in the authoring so that the
+           * "Enable Dots" checkbox is checked.
+           */
+          this.authoringComponentContent.enableCircles = true;
+        }
+
         this.updateAdvancedAuthoringView();
 
         $scope.$watch(function () {
@@ -332,6 +350,7 @@ var LabelController = function () {
           this.submitCounter = 0;
           this.isSaveButtonVisible = this.componentContent.showSaveButton;
           this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+          this.enableCircles = this.componentContent.enableCircles;
 
           if (this.canvas != null) {
 
@@ -698,6 +717,8 @@ var LabelController = function () {
         }
       }
     });
+
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
   _createClass(LabelController, [{
@@ -710,7 +731,7 @@ var LabelController = function () {
       // get the component state from the scope
       var componentState = this.$scope.componentState;
 
-      if (this.canDeleteLabels && !this.disabled) {
+      if (!this.disabled) {
         // create the key down listener to listen for the delete key
         this.createKeydownListener();
       }
@@ -736,6 +757,9 @@ var LabelController = function () {
             // populate the canvas with the starter labels
             this.addLabelsToCanvas(this.componentContent.labels);
           }
+        } else if (this.LabelService.componentStateIsSameAsStarter(componentState, this.componentContent)) {
+          // the student labels are the same as the starter labels
+          this.setStudentWork(componentState);
         } else if (componentState == null) {
           /*
            * only import work if the student does not already have
@@ -827,6 +851,12 @@ var LabelController = function () {
 
         if (studentData != null) {
 
+          if (studentData.version == null) {
+            this.setStudentDataVersion(1);
+          } else {
+            this.setStudentDataVersion(studentData.version);
+          }
+
           // get the labels from the student data
           var labels = studentData.labels;
 
@@ -905,9 +935,11 @@ var LabelController = function () {
             var textY = label.textY;
             var text = label.text;
             var color = label.color;
+            var canEdit = label.canEdit;
+            var canDelete = label.canDelete;
 
             // create the label
-            var label = this.createLabel(pointX, pointY, textX, textY, text, color);
+            var label = this.createLabel(pointX, pointY, textX, textY, text, color, canEdit, canDelete);
 
             // add the label to the canvas
             this.addLabelToCanvas(this.canvas, label);
@@ -1044,6 +1076,8 @@ var LabelController = function () {
     value: function newLabelButtonClicked() {
       this.createLabelMode = true;
       this.isCancelButtonVisible = true;
+      this.editLabelMode = false;
+      this.selectedLabel = null;
     }
   }, {
     key: 'cancelButtonClicked',
@@ -1129,7 +1163,7 @@ var LabelController = function () {
        * get all the circle objects from the canvas which each correspond to
        * a label point
        */
-      var objects = this.canvas.getObjects('circle');
+      var objects = this.canvas.getObjects('i-text');
 
       if (objects != null) {
 
@@ -1145,7 +1179,7 @@ var LabelController = function () {
           if (object != null) {
 
             // get the simple JSON object that represents the label
-            var labelJSONObject = this.getLabelJSONObjectFromCircle(object);
+            var labelJSONObject = this.getLabelJSONObjectFromText(object);
 
             if (labelJSONObject != null) {
               // add the object to our array of labels
@@ -1182,16 +1216,25 @@ var LabelController = function () {
       var pointX = circle.get('left');
       var pointY = circle.get('top');
 
-      /*
-       * get the offset of the end of the line
-       * (this is where the text object is also located)
-       */
-      var xDiff = lineObject.x2 - lineObject.x1;
-      var yDiff = lineObject.y2 - lineObject.y1;
-
       // get the position of the text object
-      var textX = xDiff;
-      var textY = yDiff;
+      var textX = null;
+      var textY = null;
+      if (this.isStudentDataVersion(1)) {
+        /*
+         * get the offset of the end of the line (this is where the text object is
+         * also located)
+         */
+        var xDiff = lineObject.x2 - lineObject.x1;
+        var yDiff = lineObject.y2 - lineObject.y1;
+
+        // the text x and y position is relative to the circle
+        textX = xDiff;
+        textY = yDiff;
+      } else {
+        // the text x and y position is absolute
+        textX = textObject.left;
+        textY = textObject.top;
+      }
 
       // get the text and background color of the text
       var text = label.textString;
@@ -1208,6 +1251,74 @@ var LabelController = function () {
       return labelJSONObject;
     }
   }, {
+    key: 'getLabelJSONObjectFromText',
+
+
+    /**
+     * Get the simple JSON object that represents the label
+     * @param text a Fabric text object
+     * @returns a simple JSON object that represents the label
+     */
+    value: function getLabelJSONObjectFromText(text) {
+      var labelJSONObject = {};
+
+      // get the label object that contains the circle, line, and text objects
+      var label = this.getLabelFromText(text);
+      var circleObject = label.circle;
+      var lineObject = label.line;
+      var textObject = label.text;
+
+      // get the position of the circle
+      var pointX = circleObject.get('left');
+      var pointY = circleObject.get('top');
+
+      // get the position of the text object
+      var textX = null;
+      var textY = null;
+      if (this.isStudentDataVersion(1)) {
+        /*
+         * get the offset of the end of the line (this is where the text object is
+         * also located)
+         */
+        var xDiff = lineObject.x2 - lineObject.x1;
+        var yDiff = lineObject.y2 - lineObject.y1;
+
+        // the text x and y position is relative to the circle
+        textX = xDiff;
+        textY = yDiff;
+      } else {
+        // the text x and y position is absolute
+        textX = textObject.left;
+        textY = textObject.top;
+      }
+
+      // get the text and background color of the text
+      var textString = label.textString;
+      var color = textObject.backgroundColor;
+
+      // set all the values into the object
+      labelJSONObject.pointX = parseInt(pointX);
+      labelJSONObject.pointY = parseInt(pointY);
+      labelJSONObject.textX = parseInt(textX);
+      labelJSONObject.textY = parseInt(textY);
+      labelJSONObject.text = textString;
+      labelJSONObject.color = color;
+
+      var canEdit = label.canEdit;
+      if (canEdit == null) {
+        canEdit = false;
+      }
+      labelJSONObject.canEdit = canEdit;
+
+      var canDelete = label.canDelete;
+      if (canDelete == null) {
+        canDelete = false;
+      }
+      labelJSONObject.canDelete = canDelete;
+
+      return labelJSONObject;
+    }
+  }, {
     key: 'createComponentState',
 
 
@@ -1218,18 +1329,16 @@ var LabelController = function () {
      * @return a promise that will return a component state
      */
     value: function createComponentState(action) {
-
       var deferred = this.$q.defer();
 
       // create a new component state
       var componentState = this.NodeService.createNewComponentState();
 
-      // set the labels into the student data
       var studentData = {};
+      studentData.version = this.getStudentDataVersion();
       studentData.labels = this.getLabelData();
 
       var backgroundImage = this.getBackgroundImage();
-
       if (backgroundImage != null) {
         studentData.backgroundImage = backgroundImage;
       }
@@ -1537,6 +1646,8 @@ var LabelController = function () {
       // set the width and height of the canvas
       canvas.setWidth(this.canvasWidth);
       canvas.setHeight(this.canvasHeight);
+      document.getElementById(this.canvasId).width = this.canvasWidth;
+      document.getElementById(this.canvasId).height = this.canvasHeight;
 
       // set the height on the parent div so that a vertical scrollbar doesn't show up
       $('#canvasParent_' + this.canvasId).css('height', this.canvasHeight + 2);
@@ -1579,11 +1690,30 @@ var LabelController = function () {
              * set the location of the text object to be down to the right
              * of the position the student clicked on
              */
-            var textX = 100;
-            var textY = 100;
+            var textX = null;
+            var textY = null;
+            if (this.enableCircles) {
+              // place the text to the bottom right of the circle
+              if (this.isStudentDataVersion(1)) {
+                // text is relatively positioned
+                textX = 100;
+                textY = 100;
+              } else {
+                // text is absolutely positioned
+                textX = x + 100;
+                textY = y + 100;
+              }
+            } else {
+              // circles are not enabled so we are only using the text
+              textX = x;
+              textY = y;
+            }
+
+            var canEdit = true;
+            var canDelete = true;
 
             // create a new label
-            var newLabel = this.createLabel(x, y, textX, textY, this.$translate('label.aNewLabel'), 'blue');
+            var newLabel = this.createLabel(x, y, textX, textY, this.$translate('label.aNewLabel'), 'blue', canEdit, canDelete);
 
             // add the label to the canvas
             this.addLabelToCanvas(this.canvas, newLabel);
@@ -1650,8 +1780,13 @@ var LabelController = function () {
               xDiff = line.x2 - line.x1;
               yDiff = line.y2 - line.y1;
 
-              // set the new position of the two endpoints of the line
-              line.set({ x1: left, y1: top, x2: left + xDiff, y2: top + yDiff });
+              if (this.isStudentDataVersion(1)) {
+                // set the new position of the two endpoints of the line
+                line.set({ x1: left, y1: top, x2: left + xDiff, y2: top + yDiff });
+              } else {
+                // set the new position of the circle endpoint of the line
+                line.set({ x1: left, y1: top });
+              }
 
               // remove and add the line to refresh the element in the canvas
               canvas.remove(line);
@@ -1665,35 +1800,51 @@ var LabelController = function () {
             var text = target.text;
 
             if (text != null) {
-              // set the new position of the text element
-              text.set({ left: left + xDiff, top: top + yDiff });
+              if (this.isStudentDataVersion(1)) {
+                /*
+                 * In the old student data version the text position is relative
+                 * to the circle so we need to move the text along with the circle.
+                 */
 
-              // remove and add the line to refresh the element in the canvas
-              canvas.remove(text);
-              canvas.add(text);
+                // set the new position of the text element
+                text.set({ left: left + xDiff, top: top + yDiff });
 
-              // set the z index so it will be above line elements and below circle elements
-              canvas.moveTo(text, this.textZIndex);
+                // remove and add the line to refresh the element in the canvas
+                canvas.remove(text);
+                canvas.add(text);
+
+                // set the z index so it will be above line elements and below circle elements
+                canvas.moveTo(text, this.textZIndex);
+              }
             }
           } else if (type === 'i-text') {
-            /*
-             * the student is moving the text of the label so we need to update
-             * the endpoint of the line. the endpoint of the line should be in
-             * the same position as the text element.
-             */
+            if (this.enableCircles) {
+              /*
+               * the student is moving the text of the label so we need to update
+               * the endpoint of the line. the endpoint of the line should be in
+               * the same position as the text element.
+               */
+              var line = target.line;
+              if (line != null) {
+                // set the new position of the text element
+                line.set({ x2: left, y2: top });
 
-            var line = target.line;
+                // remove and add the line to refresh the element in the canvas
+                canvas.remove(line);
+                canvas.add(line);
 
-            if (line != null) {
-              // set the new position of the text element
-              line.set({ x2: left, y2: top });
-
-              // remove and add the line to refresh the element in the canvas
-              canvas.remove(line);
-              canvas.add(line);
-
-              // set the z index so it will be below the circle and text elements
-              canvas.moveTo(line, this.lineZIndex);
+                // set the z index so it will be below the circle and text elements
+                canvas.moveTo(line, this.lineZIndex);
+              }
+            } else {
+              /*
+               * Circles are not enabled so we are only showing the text. We will
+               * set the circle position to be the same as the text position.
+               */
+              var circle = target.circle;
+              var _line = target.line;
+              circle.set({ left: left, top: top });
+              _line.set({ x1: left, y1: top, x2: left, y2: top });
             }
           }
 
@@ -1708,11 +1859,8 @@ var LabelController = function () {
       // listen for the text changed event
       canvas.on('text:changed', angular.bind(this, function (options) {
         var target = options.target;
-
         if (target != null) {
-
           var type = target.get('type');
-
           if (type === 'i-text') {
             // notify others that the student data has changed
             this.studentDataChanged();
@@ -1731,7 +1879,6 @@ var LabelController = function () {
      * @param backgroundImagePath the url path to an image
      */
     value: function setBackgroundImage(backgroundImagePath) {
-
       if (backgroundImagePath != null) {
         this.backgroundImage = backgroundImagePath;
         this.canvas.setBackgroundImage(backgroundImagePath, this.canvas.renderAll.bind(this.canvas));
@@ -1770,27 +1917,7 @@ var LabelController = function () {
 
       // get the key code of the key that was pressed
       var keyCode = e.keyCode;
-
-      // 8 is backspace and 46 is delete
-      if (keyCode === 8 || keyCode === 46) {
-
-        // get the active object
-        var activeObject = this.canvas.getActiveObject();
-
-        if (activeObject != null) {
-
-          // make sure the active object is a circle which represents the label
-          if (activeObject.get('type') === 'circle') {
-            var label = this.getLabelFromCircle(activeObject);
-
-            // remove the label from the canvas
-            this.removeLabelFromCanvas(this.canvas, label);
-
-            // notify others that the student data has changed
-            this.studentDataChanged();
-          }
-        }
-      } else if (keyCode === 13) {
+      if (keyCode === 13) {
         // the enter key was pressed
         if (this.selectedLabel != null) {
           /*
@@ -1843,6 +1970,45 @@ var LabelController = function () {
     }
 
     /**
+     * Get the label object given the canvas text object.
+     * @param text A canvas text object.
+     * @return A label object.
+     */
+
+  }, {
+    key: 'getLabelFromText',
+    value: function getLabelFromText(text) {
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = this.labels[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var label = _step2.value;
+
+          if (text == label.text) {
+            return label;
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      return null;
+    }
+
+    /**
      * Create a label object. The label object is represented by a circle
      * element (the point), a line element, and a text element. The circle
      * element will contain a reference to the line and text elements. The
@@ -1853,21 +2019,40 @@ var LabelController = function () {
      * @param textY the y position of the text relative to the point (circle)
      * @param textString the text of the label
      * @param color the background color of the label
+     * @param canEdit whether the student can edit the label
+     * @param canDelete whether the student can delete the label
      * @returns an object containing a circle, line, and text
      */
 
   }, {
     key: 'createLabel',
-    value: function createLabel(pointX, pointY, textX, textY, textString, color) {
+    value: function createLabel(pointX, pointY, textX, textY, textString, color, canEdit, canDelete) {
       var label = {};
 
       // get the position of the point
       var x1 = pointX;
       var y1 = pointY;
+      var x2 = null;
+      var y2 = null;
 
-      // get the absolute position of the text
-      var x2 = pointX + textX;
-      var y2 = pointY + textY;
+      if (this.isStudentDataVersion(1)) {
+        // get the absolute position of the text
+        x2 = pointX + textX;
+        y2 = pointY + textY;
+      } else {
+        x2 = textX;
+        y2 = textY;
+      }
+
+      /*
+       * Make sure all the positions are within the bounds of the canvas. If there
+       * are any positions that are outside the bounds, we will change the
+       * position to be within the bounds.
+       */
+      x1 = this.makeSureXIsWithinXMinMaxLimits(x1);
+      y1 = this.makeSureYIsWithinYMinMaxLimits(y1);
+      x2 = this.makeSureXIsWithinXMinMaxLimits(x2);
+      y2 = this.makeSureYIsWithinYMinMaxLimits(y2);
 
       if (color == null) {
         // the default background color for text elements will be blue
@@ -1926,15 +2111,17 @@ var LabelController = function () {
         borderColor: 'red',
         selectable: true,
         cursorWidth: 0,
-        editable: false
+        editable: false,
+        padding: 16
       });
 
       // give the circle a reference to the line and text elements
       circle.line = line;
       circle.text = text;
 
-      // give the text element a reference to the line element
+      // give the text element a reference to the line and circle elements
       text.line = line;
+      text.circle = circle;
 
       // add the circle, line, and text elements to the label object
       label.circle = circle;
@@ -1942,11 +2129,60 @@ var LabelController = function () {
       label.text = text;
       label.textString = textString;
 
+      if (canEdit == null) {
+        canEdit = true;
+      }
+      label.canEdit = canEdit;
+
+      if (canDelete == null) {
+        canDelete = true;
+      }
+      label.canDelete = canDelete;
+
       return label;
     }
   }, {
-    key: 'addLabelToCanvas',
+    key: 'makeSureXIsWithinXMinMaxLimits',
 
+
+    /**
+     * Make sure the x coordinate is within the bounds of the canvas.
+     * @param x The x coordinate.
+     * @return The x coordinate that may have been modified to be within the
+     * bounds.
+     */
+    value: function makeSureXIsWithinXMinMaxLimits(x) {
+      // make sure the x is not to the left of the left edge
+      if (x < 0) {
+        x = 0;
+      }
+      // make sure the x is not to the right of the right edge
+      if (x > this.canvasWidth) {
+        x = this.canvasWidth;
+      }
+      return x;
+    }
+
+    /**
+     * Make sure the y coordinate is within the bounds of the canvas.
+     * @param y The y coordinate.
+     * @return The y coordinate that may have been modified to be within the
+     * bounds.
+     */
+
+  }, {
+    key: 'makeSureYIsWithinYMinMaxLimits',
+    value: function makeSureYIsWithinYMinMaxLimits(y) {
+      // make sure the y is not above the top edge
+      if (y < 0) {
+        y = 0;
+      }
+      // make sure the y is not below the bottom edge
+      if (y > this.canvasHeight) {
+        y = this.canvasHeight;
+      }
+      return y;
+    }
 
     /**
      * Add a label to canvas
@@ -1954,6 +2190,9 @@ var LabelController = function () {
      * @param label an object that contains a Fabric circle, Fabric line,
      * and Fabric itext elements
      */
+
+  }, {
+    key: 'addLabelToCanvas',
     value: function addLabelToCanvas(canvas, label) {
       var _this5 = this;
 
@@ -1966,26 +2205,34 @@ var LabelController = function () {
 
         if (circle != null && line != null && text != null) {
 
-          // add the elements to the canvas
-          canvas.add(circle, line, text);
+          if (this.enableCircles) {
+            // add the elements to the canvas
+            canvas.add(circle, line, text);
 
-          // set the z indexes for the elements
-          canvas.moveTo(line, this.lineZIndex);
-          canvas.moveTo(text, this.textZIndex);
-          canvas.moveTo(circle, this.circleZIndex);
+            // set the z indexes for the elements
+            canvas.moveTo(line, this.lineZIndex);
+            canvas.moveTo(text, this.textZIndex);
+            canvas.moveTo(circle, this.circleZIndex);
+          } else {
+            // add the text element to the canvas
+            canvas.add(text);
+            canvas.moveTo(text, this.textZIndex);
+          }
 
           // refresh the canvas
           canvas.renderAll();
 
-          circle.on('selected', function () {
-            /*
-             * the circle was clicked so we will make the associated
-             * label selected
-             */
-            _this5.selectLabel(label);
-          });
+          if (this.enableCircles) {
+            circle.on('mousedown', function () {
+              /*
+               * the circle was clicked so we will make the associated
+               * label selected
+               */
+              _this5.selectLabel(label);
+            });
+          }
 
-          text.on('selected', function () {
+          text.on('mousedown', function () {
             /*
              * the text was clicked so we will make the associated
              * label selected
@@ -2007,17 +2254,17 @@ var LabelController = function () {
      * @param label the label object
      */
     value: function selectLabel(label) {
-      if (this.canEditLabels) {
-        // create a reference to the selected label
-        this.selectedLabel = label;
+      // create a reference to the selected label
+      this.selectedLabel = label;
 
+      if (label.canEdit) {
         /*
          * remember the label text before the student changes it in case the
          * student wants to cancel any changes they make
          */
         this.selectedLabelText = label.text.text;
 
-        // turn on edit label mode
+        // show the label text input
         this.editLabelMode = true;
 
         /*
@@ -2025,16 +2272,38 @@ var LabelController = function () {
          * start typing.
          */
         this.$timeout(function () {
-          angular.element('#editLabelTextInput').focus();
-        });
+          /*
+           * Get the y position of the top of the edit label text input. If this
+           * value is negative, it means the element is above the currently
+           * viewable area and can not be seen. If the value is positive, it means
+           * the element is currently in the viewable area and can be seen.
+           */
+          var editLabelTextInputTop = $('#editLabelTextInput').offset().top;
 
-        /*
-         * force angular to refresh, otherwise angular will wait until the
-         * user generates another input (such as moving the mouse) before
-         * refreshing
-         */
-        this.$scope.$apply();
+          /*
+           * Check if the edit label text input is viewable. We want to make sure
+           * the input is in view. If the input is not in view and we give it
+           * focus, it will have the undesirable effect of scrolling the view up
+           * so that the input comes into view. We don't want it to scroll because
+           * it's jarring when the student is trying to select a label in the
+           * canvas.
+           */
+          if (editLabelTextInputTop > 100) {
+            // the input is in view so we will give it focus.
+            angular.element('#editLabelTextInput').focus();
+          }
+        });
+      } else {
+        // hide label text input
+        this.editLabelMode = false;
       }
+
+      /*
+       * force angular to refresh, otherwise angular will wait until the
+       * user generates another input (such as moving the mouse) before
+       * refreshing
+       */
+      this.$scope.$apply();
     }
 
     /**
@@ -2368,8 +2637,10 @@ var LabelController = function () {
       newLabel.color = 'blue';
       newLabel.pointX = 100;
       newLabel.pointY = 100;
-      newLabel.textX = 100;
-      newLabel.textY = -25;
+      newLabel.textX = 200;
+      newLabel.textY = 200;
+      newLabel.canEdit = false;
+      newLabel.canDelete = false;
 
       // add the label to the array of labels
       this.authoringComponentContent.labels.push(newLabel);
@@ -3148,12 +3419,16 @@ var LabelController = function () {
       if (componentStates != null) {
         var mergedLabels = [];
         var mergedBackgroundImage = null;
+        var studentDataVersion = 2;
         for (var c = 0; c < componentStates.length; c++) {
           var componentState = componentStates[c];
           if (componentState != null) {
             if (componentState.componentType == 'Label') {
               var studentData = componentState.studentData;
               if (studentData != null) {
+                if (studentData.version != null) {
+                  studentDataVersion = studentData.version;
+                }
                 var labels = studentData.labels;
                 var backgroundImage = studentData.backgroundImage;
                 if (labels != null && labels != '') {
@@ -3183,6 +3458,11 @@ var LabelController = function () {
                   });
                 }
               }
+            } else if (componentState.componentType == 'ConceptMap' || componentState.componentType == 'Draw' || componentState.componentType == 'Embedded' || componentState.componentType == 'Graph' || componentState.componentType == 'Table') {
+              var _connectedComponent = this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
+              if (_connectedComponent.importWorkAsBackground === true) {
+                this.setComponentStateAsBackgroundImage(componentState);
+              }
             }
           }
         }
@@ -3191,6 +3471,9 @@ var LabelController = function () {
           mergedComponentState.studentData = {};
           mergedComponentState.studentData.labels = mergedLabels;
           mergedComponentState.studentData.backgroundImage = mergedBackgroundImage;
+        }
+        if (studentDataVersion != null) {
+          mergedComponentState.studentData.version = studentDataVersion;
         }
       }
 
@@ -3207,34 +3490,49 @@ var LabelController = function () {
   }, {
     key: 'getConnectedComponentForComponentState',
     value: function getConnectedComponentForComponentState(componentState) {
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
 
       try {
-        for (var _iterator2 = this.componentContent.connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var connectedComponent = _step2.value;
+        for (var _iterator3 = this.componentContent.connectedComponents[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var connectedComponent = _step3.value;
 
           if (componentState.nodeId == connectedComponent.nodeId && componentState.componentId == connectedComponent.componentId) {
             return connectedComponent;
           }
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
           }
         } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
+          if (_didIteratorError3) {
+            throw _iteratorError3;
           }
         }
       }
 
       return null;
+    }
+
+    /**
+     * Create an image from a component state and set the image as the background.
+     * @param componentState A component state.
+     */
+
+  }, {
+    key: 'setComponentStateAsBackgroundImage',
+    value: function setComponentStateAsBackgroundImage(componentState) {
+      var _this7 = this;
+
+      this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
+        _this7.setBackgroundImage(image.url);
+      });
     }
 
     /**
@@ -3281,13 +3579,13 @@ var LabelController = function () {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+          var _iteratorNormalCompletion4 = true;
+          var _didIteratorError4 = false;
+          var _iteratorError4 = undefined;
 
           try {
-            for (var _iterator3 = components[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-              var component = _step3.value;
+            for (var _iterator4 = components[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+              var component = _step4.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -3298,16 +3596,16 @@ var LabelController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
+            _didIteratorError4 = true;
+            _iteratorError4 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
+              if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                _iterator4.return();
               }
             } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
+              if (_didIteratorError4) {
+                throw _iteratorError4;
               }
             }
           }
@@ -3319,6 +3617,7 @@ var LabelController = function () {
              */
             connectedComponent.componentId = allowedComponent.id;
             connectedComponent.type = 'importWork';
+            this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
           }
         }
       }
@@ -3389,6 +3688,7 @@ var LabelController = function () {
       if (connectedComponent != null) {
         connectedComponent.componentId = null;
         connectedComponent.type = null;
+        delete connectedComponent.importWorkAsBackground;
         this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
         // the authoring component content has changed so we will save the project
@@ -3409,9 +3709,27 @@ var LabelController = function () {
 
         // default the type to import work
         connectedComponent.type = 'importWork';
+        this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+      }
+    }
+
+    /**
+     * If the component type is a certain type, we will set the importWorkAsBackground
+     * field to true.
+     * @param connectedComponent The connected component object.
+     */
+
+  }, {
+    key: 'authoringSetImportWorkAsBackgroundIfApplicable',
+    value: function authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
+      var componentType = this.authoringGetConnectedComponentType(connectedComponent);
+      if (componentType == 'ConceptMap' || componentType == 'Draw' || componentType == 'Embedded' || componentType == 'Graph' || componentType == 'Table') {
+        connectedComponent.importWorkAsBackground = true;
+      } else {
+        delete connectedComponent.importWorkAsBackground;
       }
     }
 
@@ -3518,46 +3836,16 @@ var LabelController = function () {
 
       if (answer) {
         var tempLabels = [];
-        var _iteratorNormalCompletion4 = true;
-        var _didIteratorError4 = false;
-        var _iteratorError4 = undefined;
-
-        try {
-          for (var _iterator4 = this.labels[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var label = _step4.value;
-
-            tempLabels.push(label);
-          }
-        } catch (err) {
-          _didIteratorError4 = true;
-          _iteratorError4 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-              _iterator4.return();
-            }
-          } finally {
-            if (_didIteratorError4) {
-              throw _iteratorError4;
-            }
-          }
-        }
-
         var _iteratorNormalCompletion5 = true;
         var _didIteratorError5 = false;
         var _iteratorError5 = undefined;
 
         try {
-          for (var _iterator5 = tempLabels[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-            var tempLabel = _step5.value;
+          for (var _iterator5 = this.labels[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var label = _step5.value;
 
-            this.deleteLabel(tempLabel);
+            tempLabels.push(label);
           }
-
-          /*
-           * remove the reference to the selected label since it will no
-           * longer be selected
-           */
         } catch (err) {
           _didIteratorError5 = true;
           _iteratorError5 = err;
@@ -3569,6 +3857,36 @@ var LabelController = function () {
           } finally {
             if (_didIteratorError5) {
               throw _iteratorError5;
+            }
+          }
+        }
+
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
+
+        try {
+          for (var _iterator6 = tempLabels[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var tempLabel = _step6.value;
+
+            this.deleteLabel(tempLabel);
+          }
+
+          /*
+           * remove the reference to the selected label since it will no
+           * longer be selected
+           */
+        } catch (err) {
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
+            }
+          } finally {
+            if (_didIteratorError6) {
+              throw _iteratorError6;
             }
           }
         }
@@ -3618,9 +3936,91 @@ var LabelController = function () {
         delete connectedComponent.charactersPerLine;
         delete connectedComponent.spaceInbetweenLines;
         delete connectedComponent.fontSize;
+        delete connectedComponent.importWorkAsBackground;
       }
 
       this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Set the student data version for this controller.
+     * @param studentDataVersion The student data version.
+     */
+
+  }, {
+    key: 'setStudentDataVersion',
+    value: function setStudentDataVersion(studentDataVersion) {
+      this.studentDataVersion = studentDataVersion;
+    }
+
+    /**
+     * Get the student data version.
+     * @return The student data version.
+     */
+
+  }, {
+    key: 'getStudentDataVersion',
+    value: function getStudentDataVersion() {
+      return this.studentDataVersion;
+    }
+
+    /**
+     * Check if the student data version we are using matches the argument.
+     * @param studentDataVersion The studentDataVersion to compare.
+     * @return Whether the passed in studentDataVersion matches the
+     * studentDataVersion this controller is set to.
+     */
+
+  }, {
+    key: 'isStudentDataVersion',
+    value: function isStudentDataVersion(studentDataVersion) {
+      return this.getStudentDataVersion() == studentDataVersion;
+    }
+
+    /**
+     * Check if this component only has show work connected components.
+     * @return If this component has connected components and all of them are
+     * 'showWork', then return true. Otherwise return false.
+     */
+
+  }, {
+    key: 'onlyHasShowWorkConnectedComponents',
+    value: function onlyHasShowWorkConnectedComponents() {
+      var connectedComponents = this.componentContent.connectedComponents;
+      var showWorkConnectedComponentCount = 0;
+      if (connectedComponents != null) {
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
+
+        try {
+          for (var _iterator7 = connectedComponents[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var connectedComponent = _step7.value;
+
+            if (connectedComponent.type == 'showWork') {
+              showWorkConnectedComponentCount += 1;
+            }
+          }
+        } catch (err) {
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
+            }
+          } finally {
+            if (_didIteratorError7) {
+              throw _iteratorError7;
+            }
+          }
+        }
+
+        if (connectedComponents.length > 0 && connectedComponents.length == showWorkConnectedComponentCount) {
+          return true;
+        }
+      }
+      return false;
     }
   }]);
 

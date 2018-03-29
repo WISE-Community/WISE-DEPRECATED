@@ -265,6 +265,18 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
     controller: 'NodeAuthoringController',
     controllerAs: 'nodeAuthoringController',
     resolve: {}
+  }).state('root.project.nodeConstraints', {
+    url: '/node/constraints/:nodeId',
+    templateUrl: 'wise5/authoringTool/node/node.html',
+    controller: 'NodeAuthoringController',
+    controllerAs: 'nodeAuthoringController',
+    resolve: {}
+  }).state('root.project.nodeEditPaths', {
+    url: '/node/editpaths/:nodeId',
+    templateUrl: 'wise5/authoringTool/node/node.html',
+    controller: 'NodeAuthoringController',
+    controllerAs: 'nodeAuthoringController',
+    resolve: {}
   }).state('root.project.asset', {
     url: '/asset',
     templateUrl: 'wise5/authoringTool/asset/asset.html',

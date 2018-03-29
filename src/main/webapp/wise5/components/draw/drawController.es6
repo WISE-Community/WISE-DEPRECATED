@@ -1,5 +1,6 @@
 import drawingTool from 'lib/drawingTool/drawing-tool';
 import drawingToolVendor from 'lib/drawingTool/vendor.min';
+import html2canvas from 'html2canvas';
 
 class DrawController {
   constructor($filter,
@@ -150,18 +151,15 @@ class DrawController {
 
     // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [
-      {
-        type: 'Draw'
-      }
+      { type: 'ConceptMap' },
+      { type: 'Draw' },
+      { type: 'Embedded' },
+      { type: 'Graph' },
+      { type: 'Label' },
+      { type: 'Table' }
     ];
 
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     if (this.componentContent != null) {
 
@@ -281,7 +279,7 @@ class DrawController {
      * @return a component state containing the student data
      */
     this.$scope.getComponentState = function(isSubmit) {
-      var deferred = this.$q.defer();
+      let deferred = this.$q.defer();
       let getState = false;
       let action = 'change';
 
@@ -608,6 +606,7 @@ class DrawController {
       }
     });
 
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }  // end of constructor
 
   /**
@@ -1099,7 +1098,10 @@ class DrawController {
       // clear the drawing
       this.drawingTool.clear();
 
-      if (this.latestConnectedComponentState && this.latestConnectedComponentParams) {
+      if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+        // we will import work from another component
+        this.handleConnectedComponents();
+      } else if (this.latestConnectedComponentState && this.latestConnectedComponentParams) {
         // reload the student data from the connected component
         this.setDrawData(latestConnectedComponentState, latestConnectedComponentParams);
       } else if (this.componentContent.importPreviousWorkNodeId != null &&
@@ -2534,8 +2536,7 @@ class DrawController {
       // loop through all the component state
       for (let c = 0; c < componentStates.length; c++) {
         let componentState = componentStates[c];
-
-        if (componentState != null) {
+        if (componentState.componentType == 'Draw') {
           let studentData = componentState.studentData;
 
           if (studentData != null) {
@@ -2561,6 +2562,16 @@ class DrawController {
               }
             }
           }
+        } else if (componentState.componentType == 'Graph' ||
+            componentState.componentType == 'ConceptMap' ||
+            componentState.componentType == 'Embedded' ||
+            componentState.componentType == 'Label' ||
+            componentState.componentType == 'Table') {
+          let connectedComponent =
+            this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
+          if (connectedComponent.importWorkAsBackground === true) {
+            this.setComponentStateAsBackgroundImage(componentState);
+          }
         }
       }
 
@@ -2583,6 +2594,16 @@ class DrawController {
     }
 
     return mergedComponentState;
+  }
+
+  /**
+   * Create an image from a component state and set the image as the background.
+   * @param componentState A component state.
+   */
+  setComponentStateAsBackgroundImage(componentState) {
+    this.UtilService.generateImageFromComponentState(componentState).then((image) => {
+      this.drawingTool.setBackgroundImage(image.url);
+    });
   }
 
   /**
@@ -2641,6 +2662,7 @@ class DrawController {
            */
           connectedComponent.componentId = allowedComponent.id;
           connectedComponent.type = 'importWork';
+          this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
         }
       }
     }
@@ -2702,6 +2724,7 @@ class DrawController {
     if (connectedComponent != null) {
       connectedComponent.componentId = null;
       connectedComponent.type = null;
+      delete connectedComponent.importWorkAsBackground;
       this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
       // the authoring component content has changed so we will save the project
@@ -2719,9 +2742,28 @@ class DrawController {
 
       // default the type to import work
       connectedComponent.type = 'importWork';
+      this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
 
       // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
+    }
+  }
+
+  /**
+   * If the component type is a certain type, we will set the importWorkAsBackground
+   * field to true.
+   * @param connectedComponent The connected component object.
+   */
+  authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
+    let componentType = this.authoringGetConnectedComponentType(connectedComponent);
+    if (componentType == 'ConceptMap' ||
+        componentType == 'Embedded' ||
+        componentType == 'Graph' ||
+        componentType == 'Label' ||
+        componentType == 'Table') {
+      connectedComponent.importWorkAsBackground = true;
+    } else {
+      delete connectedComponent.importWorkAsBackground;
     }
   }
 
@@ -2801,6 +2843,18 @@ class DrawController {
    */
   authoringJSONChanged() {
     this.jsonStringChanged = true;
+  }
+
+  /**
+   * The "Import Work As Background" checkbox was clicked.
+   * @param connectedComponent The connected component associated with the
+   * checkbox.
+   */
+  authoringImportWorkAsBackgroundClicked(connectedComponent) {
+    if (!connectedComponent.importWorkAsBackground) {
+      delete connectedComponent.importWorkAsBackground;
+    }
+    this.authoringViewComponentChanged();
   }
 }
 

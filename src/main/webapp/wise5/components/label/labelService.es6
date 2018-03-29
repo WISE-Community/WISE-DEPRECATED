@@ -40,6 +40,7 @@ class LabelService extends NodeService {
     component.canCreateLabels = true;
     component.canEditLabels = true;
     component.canDeleteLabels = true;
+    component.enableCircles = true;
     component.width = 800;
     component.height = 600;
     component.pointSize = 5;
@@ -60,9 +61,14 @@ class LabelService extends NodeService {
     component.showSubmitButton = componentToCopy.showSubmitButton;
     component.backgroundImage = componentToCopy.backgroundImage;
     component.canCreateLabels = componentToCopy.canCreateLabels;
+    component.canEditLabels = componentToCopy.canEditLabels;
     component.canDeleteLabels = componentToCopy.canDeleteLabels;
+    component.enableCircles = componentToCopy.enableCircles;
     component.width = componentToCopy.width;
     component.height = componentToCopy.height;
+    component.pointSize = componentToCopy.pointSize;
+    component.fontSize = componentToCopy.fontSize;
+    component.labelWidth = componentToCopy.labelWidth;
     component.labels = [];
     // go through the original labels and create new id's
     if (componentToCopy.labels != null && componentToCopy.labels.length > 0) {
@@ -120,7 +126,13 @@ class LabelService extends NodeService {
    */
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     var result = false;
-
+    if (!this.canEdit(component) && this.UtilService.hasNodeEnteredEvent(nodeEvents)) {
+      /*
+       * the student can't perform any work on this component and has visited
+       * this step so we will mark it as completed
+       */
+      return true;
+    }
     if (componentStates && componentStates.length) {
       let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
@@ -155,6 +167,18 @@ class LabelService extends NodeService {
 
     return result;
   };
+
+  /**
+   * Determine if the student can perform any work on this component.
+   * @param component The component content.
+   * @return Whether the student can perform any work on this component.
+   */
+  canEdit(component) {
+    if (this.UtilService.hasShowWorkConnectedComponent(component)) {
+      return false;
+    }
+    return true;
+  }
 
   /**
    * Whether this component generates student work
@@ -235,13 +259,48 @@ class LabelService extends NodeService {
   }
 
   /**
+   * Check if the component state has the exact same labels as the starter
+   * labels.
+   * @param componentState the component state object
+   * @param componentContent the component content
+   * @return whether the component state has the exact same labels as the
+   * starter labels
+   */
+  componentStateIsSameAsStarter(componentState, componentContent) {
+    if (componentState != null) {
+      let studentData = componentState.studentData;
+
+      // get the labels from the student data
+      let labels = studentData.labels;
+      let starterLabels = componentContent.labels;
+      if (starterLabels == null || starterLabels.length == 0) {
+        // there are no starter labels
+        if (labels.length == 0) {
+          // the student work doesn't have any labels either
+          return true;
+        } else if (labels != null && labels.length > 0) {
+          // the student has labels
+          return false;
+        }
+      } else {
+        // there are starter labels so we will compare it with the student labels
+        if (this.labelArraysAreTheSame(labels, starterLabels)) {
+          // the student labels are the same as the starter labels
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * Check if the two arrays of labels contain the same values
    * @param labels1 an array of label objects
    * @param labels2 an array of label objects
    * @return whether the labels contain the same values
    */
   labelArraysAreTheSame(labels1, labels2) {
-
     if (labels1 == null && labels2 == null) {
       return true;
     } else if ((labels1 == null && labels2 != null) ||
@@ -271,11 +330,10 @@ class LabelService extends NodeService {
    * @return whether the labels contain the same values
    */
   labelsAreTheSame(label1, label2) {
-
     if (label1 == null && label2 == null) {
       return true;
     } else if ((label1 == null && label2 != null) ||
-           (label1 != null && label2 == null)) {
+        (label1 != null && label2 == null)) {
       return false;
     } else {
       if ((label1.text != label2.text) ||
@@ -291,7 +349,6 @@ class LabelService extends NodeService {
 
     return true;
   }
-
 
   /**
    * Create an image from the text string.
@@ -445,6 +502,32 @@ class LabelService extends NodeService {
     // set the src of the image so that the image gets loaded
     image.src = url;
 
+    return deferred.promise;
+  }
+
+  /**
+   * The component state has been rendered in a <component></component> element
+   * and now we want to take a snapshot of the work.
+   * @param componentState The component state that has been rendered.
+   * @return A promise that will return an image object.
+   */
+  generateImageFromRenderedComponentState(componentState) {
+    let deferred = this.$q.defer();
+    let canvas = angular.element('#canvas_' + componentState.nodeId + '_' + componentState.componentId);
+    if (canvas != null && canvas.length > 0) {
+      canvas = canvas[0];
+
+      // get the canvas as a base64 string
+      let img_b64 = canvas.toDataURL('image/png');
+
+      // get the image object
+      let imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+
+      // add the image to the student assets
+      this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
+        deferred.resolve(asset);
+      });
+    }
     return deferred.promise;
   }
 }
