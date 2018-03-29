@@ -54,7 +54,7 @@ public class SiteController {
   protected String user(HttpServletRequest request) {
     User signedInUser = ControllerUtil.getSignedInUser();
     if (signedInUser != null) {
-      String username = ControllerUtil.getSignedInUser().getUserDetails().getUsername();
+      String username = signedInUser.getUserDetails().getUsername();
       JSONObject user = new JSONObject();
       try {
         user.put("username", username);

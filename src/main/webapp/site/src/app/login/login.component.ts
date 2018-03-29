@@ -10,6 +10,9 @@ import { UserService } from '../services/user.service';
 })
 export class LoginComponent implements OnInit {
 
+  ngOnInit(): void {
+  }
+
   credentials = {username: '', password: ''};
 
   constructor(private userService: UserService, private http: HttpClient, private router: Router) {
