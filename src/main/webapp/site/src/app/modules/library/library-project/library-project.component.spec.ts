@@ -3,10 +3,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LibraryProjectComponent } from './library-project.component';
 import { LibraryProject } from "../libraryProject";
 
-import { MatCardModule, } from '@angular/material';
+import { MatCardModule, MatIconModule, MatDialogModule } from '@angular/material';
 
 const materialModules = [
-  MatCardModule
+  MatCardModule,
+  MatIconModule,
+  MatDialogModule
 ];
 
 describe('LibraryProjectComponent', () => {

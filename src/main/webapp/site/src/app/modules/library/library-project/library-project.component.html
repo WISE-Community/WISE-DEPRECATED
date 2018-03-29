@@ -1,10 +1,7 @@
-<mat-card class="library-project">
-  <div mat-card-image>
-    <div class="library-project__thumb" [style.background-image]="project.thumbStyle"></div>
-  </div>
-  <mat-card-content>
+<mat-card class="library-project button--card mat-elevation-z2" (click)="showDetails()" (keyup.enter)="showDetails()"
+  role="button" tabindex="0" aria-label="Show project details">
+  <div class="library-project__cover" [style.background-image]="project.thumbStyle"></div>
+  <div class="library-project__title">
     {{ project.metadata.title }}
-  </mat-card-content>
-  <!--<mat-card-actions>
-  </mat-card-actions>-->
+  </div>
 </mat-card>

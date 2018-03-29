@@ -1,0 +1,34 @@
+.mat-dialog-container {
+  max-width: 100%;
+
+  @media (max-width: breakpoint('sm.min') - 1) {
+    padding: 16px !important;
+
+    .mat-dialog-content {
+      margin: 0px -16px;
+      padding: 0 16px;
+    }
+  }
+}
+
+.mat-dialog-container--sm {
+  width: breakpoint('sm.min');
+}
+
+.mat-dialog-container--md {
+  width: breakpoint('md.min');
+}
+
+.mat-dialog-container--lg {
+  width: breakpoint('lg.min');
+}
+
+.mat-dialog-container--xl {
+  width: breakpoint('xl.min');
+}
+
+.cdk-overlay-pane {
+  @media (max-width: breakpoint('sm.min') - 1) {
+    max-width: 90vw;
+  }
+}

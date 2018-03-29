@@ -11,11 +11,17 @@
   }
 
   .mat-expansion-panel-body {
-    padding-top: 16px;
-    background-color: #eeeeee;
+    padding: 0 16px 16px;
+  }
 
-    @media (max-width: breakpoint('sm.min') - 1) {
-      padding: 0 16px 16px;
+  &:not(.mat-expanded) {
+    .mat-expansion-indicator {
+      padding-left: 16px;
     }
   }
+}
+
+.library-group__title {
+  white-space: nowrap;
+  margin-right: 8px;
 }

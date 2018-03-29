@@ -4,14 +4,14 @@
       <mat-expansion-panel class="library-group" *ngIf="child.type === 'group'" [expanded]="initialGroup === i"
                            (opened)="expandedGroups[child.id] = true" (closed)="expandedGroups[child.id] = false">
         <mat-expansion-panel-header class="mat-expansion-panel-header--lg">
-          <div fxLayout="column">
+          <div fxLayout="column" class="library-group__title">
             <div>{{ child.notes }}</div>
             <div class="mat-caption secondary-text">{{ child.children.length }} project(s)</div>
           </div>
           <app-library-group-thumbs [group]="child" [ngClass]="{ 'hide': expandedGroups[child.id] }"></app-library-group-thumbs>
         </mat-expansion-panel-header>
-        <div fxLayout="row" fxLayoutWrap>
-          <div *ngFor="let project of child.children" fxFlex="50" fxFlex.gt-xs="33" fxFlex.gt-sm="25">
+        <div fxLayout="row wrap">
+          <div *ngFor="let project of child.children" fxFlex="100" fxFlex.sm="50" fxFlex.md="33" fxFlex.lg="25" >
             <app-library-project [project]="project"></app-library-project>
           </div>
         </div>

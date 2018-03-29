@@ -8,7 +8,7 @@ import { LibraryModule } from "../modules/library/library.module";
 @NgModule({
   imports: [
     CommonModule,
-    FlexLayoutModule
+    FlexLayoutModule,
     HomeRoutingModule,
     LibraryModule
   ],

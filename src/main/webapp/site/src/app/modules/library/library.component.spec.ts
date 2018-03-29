@@ -3,15 +3,19 @@ import { HttpClient, HttpHandler } from "@angular/common/http";
 
 import { LibraryComponent } from './library.component';
 import { LibraryGroupThumbsComponent } from "./library-group-thumbs/library-group-thumbs.component";
-import { LibraryProjectComponent } from "./library-project/library-project.component";
+import { LibraryProjectComponent, LibraryProjectDetailsComponent } from "./library-project/library-project.component";
 import { LibraryService } from "../../services/library.service";
 
 import {
   MatCardModule,
+  MatDialogModule,
+  MatIconModule,
   MatExpansionModule } from '@angular/material';
 
 const materialModules = [
   MatCardModule,
+  MatDialogModule,
+  MatIconModule,
   MatExpansionModule
 ];
 
@@ -27,7 +31,8 @@ describe('LibraryComponent', () => {
       declarations: [
         LibraryComponent,
         LibraryGroupThumbsComponent,
-        LibraryProjectComponent
+        LibraryProjectComponent,
+        LibraryProjectDetailsComponent
       ],
       providers: [
         HttpClient,

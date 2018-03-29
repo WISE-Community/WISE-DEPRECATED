@@ -1,7 +1,18 @@
+@import '~@angular/material/theming';
+
 .mat-button, .mat-raised-button {
   text-transform: uppercase;
 
   &:hover, &:focus {
     text-decoration: none;
+  }
+}
+
+.button--card {
+  cursor: pointer;
+
+  &:hover, &:focus {
+    outline: none;
+    @include mat-elevation(8);
   }
 }

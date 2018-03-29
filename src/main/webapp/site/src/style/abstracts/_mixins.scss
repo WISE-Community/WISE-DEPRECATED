@@ -35,6 +35,15 @@
     background-color: map-get($colors, btn-bg);
   }
 
+  .mat-dialog-container {
+    border-radius: 3px;
+  }
+
+  .mat-dialog-actions {
+    padding: 12px 0 0;
+    margin-bottom: 0;
+  }
+
   // Set classes for each named color in the $colors map
   @each $key, $value in $colors {
       .#{$key} {

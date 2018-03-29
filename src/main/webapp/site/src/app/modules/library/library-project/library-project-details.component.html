@@ -1,0 +1,32 @@
+<div class="library-project-details" mat-dialog-content>
+  <div fxLayout="row">
+    <div class="mat-card-avatar" [style.background-image]="data.project.thumbStyle"></div>
+    <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
+      <div fxLayout="column">
+        <div class="mat-card-title">{{ data.project.metadata.title }}</div>
+        <div class="mat-card-subtitle">
+          <!--<div fxShow fxHide.gt-xs>
+            Last Updated: {{ data.project.lastUpdated }}
+          </div>-->
+          <div>
+            Project ID: {{ data.project.id }}<br />
+            Grade: <span *ngFor="let g of data.project.metadata.grades; let isLast=last">{{ g }}{{ isLast ? '' : ', ' }}</span>
+            &nbsp;&bull;&nbsp;
+            Duration: {{ data.project.metadata.totalTime }}
+          </div>
+        </div>
+      </div>
+      <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
+      <!--<div fxFlex.xs="100%" fxHide fxShow.gt-xs>
+        Last Updated: {{ data.project.lastUpdated }}
+      </div>-->
+    </div>
+  </div>
+  <div class="library-project-details__summary info-block">
+    <div [innerHTML]="data.project.metadata.summary"></div>
+  </div>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end none">
+  <button mat-button (click)="onClose()">Close</button>
+  <button mat-raised-button color="primary" (click)="preview()"><mat-icon>visibility</mat-icon> Preview</button>
+</div>

@@ -1,34 +1,97 @@
 @import
+  '~@angular/material/theming',
   '~style/abstracts/functions',
   '~style/abstracts/variables';
+
+// Create a config with the default typography levels.
+$config: mat-typography-config();
 
 .library-project {
   margin: 8px;
 
-  .mat-card-image {
-    position: relative;
-    padding-top: 75%;
-    border-bottom: 1px solid #eeeeee;
+  &.mat-card {
+    padding: 0;
   }
 
-  .mat-card-content {
-    font-weight: 500;
-    margin: -4px -12px -12px;
+  .mat-expansion-indicator {
+    margin-left: 8px;
+  }
+}
 
-    @media (max-width: breakpoint('sm.min') - 1) {
-      margin: -4px -4px -12px;
-      font-size: 13px;
+.library-project__cover {
+  position: relative;
+  padding-top: 75%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 2px;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.6);
+    border-radius: 2px;
+    transition: background-color 280ms cubic-bezier(.4,0,.2,1);
+  }
+}
+
+.library-project {
+  &:hover, &:focus {
+    .library-project__cover {
+      &:after {
+        background-color: rgba(0, 0, 0, 0.4);
+      }
     }
   }
 }
 
-.library-project__thumb {
+.library-project__title {
   position: absolute;
-  top: 0;
-  left: 0;
   bottom: 0;
+  left: 0;
   right: 0;
-  background-size: cover;
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 2px;
+  color: #ffffff;
+  font-size: mat-font-size($config, subheading-2);
+}
+
+.library-project-details {
+  .mat-card-avatar {
+    background-size: cover;
+    border-radius: 4px;
+    margin-right: 12px;
+
+    @media (min-width: breakpoint('sm.min')) {
+      height: 60px;
+      width: 60px;
+    }
+  }
+
+  .mat-card-title {
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: mat-font-size($config, subheading-1);
+  }
+
+  .mat-card-subtitle {
+    margin-bottom: 2px;
+  }
+}
+
+.library-project-details__summary {
+  margin: 16px 0 8px;
+  padding: 8px 12px;
+
+  p {
+    margin-bottom: 8px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
 }
