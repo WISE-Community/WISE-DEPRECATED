@@ -3,10 +3,12 @@
 class TopBarController {
   constructor(
       $rootScope,
+      $window,
       ConfigService,
       ProjectService,
       TeacherDataService) {
     this.$rootScope = $rootScope;
+    this.$window = $window;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
     this.TeacherDataService = TeacherDataService;
@@ -33,6 +35,13 @@ class TopBarController {
   }
 
   /**
+   * Open the Authoring Tool FAQ Google document in a new tab.
+   */
+  helpButtonClicked() {
+    this.$window.open('https://docs.google.com/document/d/1G8lVtiUlGXLRAyFOvkEdadHYhJhJLW4aor9dol2VzeU', '_blank');
+  }
+
+  /**
    * Navigate the teacher to the teacher home page
    */
   goHome() {
@@ -51,6 +60,7 @@ class TopBarController {
 
 TopBarController.$inject = [
     '$rootScope',
+    '$window',
     'ConfigService',
     'ProjectService',
     'TeacherDataService'
@@ -80,6 +90,8 @@ const TopBar = {
           </span>
         </h3>
         <span flex></span>
+        <md-button style="text-transform: none;"
+            ng-click="$ctrl.helpButtonClicked()">{{ 'HELP' | translate }}</md-button>
         <md-menu id='accountMenu' md-position-mode="target-right target" md-offset="8 26">
           <md-button aria-label="{{ 'USER_MENU' | translate }}" class="md-icon-button" ng-click="$mdMenu.open($event)">
             <md-icon md-menu-origin> account_box </md-icon>
