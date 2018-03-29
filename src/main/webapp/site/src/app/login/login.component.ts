@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.userService.authenticate(this.credentials, () => {
-      this.router.navigateByUrl('/');
+      this.router.navigateByUrl('/student');  // <- change me when teacher site is ready
     });
     return false;
   }

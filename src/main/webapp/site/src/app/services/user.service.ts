@@ -52,15 +52,15 @@ export class UserService {
     let formData = "username=" + credentials.username + "&password=" + credentials.password;
     this.http.post('/wise/j_acegi_security_check',
         formData,
-        { headers: headers }).subscribe(response => {
-      if (response['name']) {
-        this.authenticated = true;
-      } else {
-        this.authenticated = false;
-      }
-      return callback && callback();
-    });
-
+        { headers: headers, responseType: "text" })
+        .subscribe(response => {
+          if (response.includes("WISE Student")) {
+            this.authenticated = true;
+          } else {
+            this.authenticated = false;
+          }
+          return callback && callback();
+        });
   }
 
   private log(message: string) {
