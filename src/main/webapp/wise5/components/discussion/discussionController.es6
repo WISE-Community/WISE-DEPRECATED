@@ -159,9 +159,18 @@ class DiscussionController {
 
       if (this.mode === 'student') {
         if (this.ConfigService.isPreview()) {
-          // we are in preview mode, so get all posts
-          var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
+          let componentStates = null;
+          if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+            // assume there can only be one connected component
+            let connectedComponent = this.componentContent.connectedComponents[0];
+            if (this.authoringGetConnectedComponentType(connectedComponent) == 'Discussion') {
+              componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+                  connectedComponent.nodeId, connectedComponent.componentId);
+            }
+          } else {
+            componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+                this.nodeId, this.componentId);
+          }
           this.setClassResponses(componentStates);
         } else {
           // we are in regular student run mode

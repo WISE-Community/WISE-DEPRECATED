@@ -151,18 +151,25 @@ var DiscussionController = function () {
 
       if (this.mode === 'student') {
         if (this.ConfigService.isPreview()) {
-          // we are in preview mode, so get all posts
-          var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          this.setClassResponses(componentStates);
+          var _componentStates = null;
+          if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+            // assume there can only be one connected component
+            var connectedComponent = this.componentContent.connectedComponents[0];
+            if (this.authoringGetConnectedComponentType(connectedComponent) == 'Discussion') {
+              _componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
+            }
+          } else {
+            _componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+          }
+          this.setClassResponses(_componentStates);
         } else {
           // we are in regular student run mode
 
           if (this.UtilService.hasConnectedComponent(this.componentContent)) {
             // assume there can only be one connected component
-            var connectedComponent = this.componentContent.connectedComponents[0];
-            if (this.authoringGetConnectedComponentType(connectedComponent) == 'Discussion') {
-              this.getClassmateResponses(connectedComponent.nodeId, connectedComponent.componentId);
+            var _connectedComponent = this.componentContent.connectedComponents[0];
+            if (this.authoringGetConnectedComponentType(_connectedComponent) == 'Discussion') {
+              this.getClassmateResponses(_connectedComponent.nodeId, _connectedComponent.componentId);
             }
           } else {
             if (this.isClassmateResponsesGated()) {
