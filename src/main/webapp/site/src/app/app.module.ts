@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { ConfigService } from "./services/config.service";
 import { HeaderModule } from './modules/header/header.module';
 import { FooterModule } from './modules/footer/footer.module';
 import { StudentModule } from './student/student.module';
@@ -27,6 +28,7 @@ import { FormsModule } from '@angular/forms';
     HttpClientModule
   ],
   providers: [
+    ConfigService,
     StudentService,
     UserService
   ],

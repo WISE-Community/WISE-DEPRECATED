@@ -25,14 +25,13 @@ package org.wise.portal.presentation.web.controllers.student;
 
 import java.util.*;
 
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.project.Project;
@@ -136,6 +135,13 @@ public class StudentAPIController {
       runListJSONArray.put(runJSON);
     }
     return runListJSONArray.toString();
+  }
+
+  @RequestMapping(value = "/config", method = RequestMethod.GET)
+  protected String getConfig(ModelMap modelMap) throws JSONException {
+    JSONObject configJSON = new JSONObject();
+    configJSON.put("logOutURL", wiseProperties.get("wiseBaseURL") + "/logout");
+    return configJSON.toString();
   }
 
   private Date getLastLoginTime(String previousLoginTime, User user) {
