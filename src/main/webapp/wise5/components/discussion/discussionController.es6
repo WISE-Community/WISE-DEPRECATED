@@ -159,32 +159,49 @@ class DiscussionController {
 
       if (this.mode === 'student') {
         if (this.ConfigService.isPreview()) {
-          // we are in preview mode, so get all posts
-          var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
+          let componentStates = null;
+          if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+            // assume there can only be one connected component
+            let connectedComponent = this.componentContent.connectedComponents[0];
+            if (this.authoringGetConnectedComponentType(connectedComponent) == 'Discussion') {
+              componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+                  connectedComponent.nodeId, connectedComponent.componentId);
+            }
+          } else {
+            componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+                this.nodeId, this.componentId);
+          }
           this.setClassResponses(componentStates);
         } else {
           // we are in regular student run mode
 
-          if (this.isClassmateResponsesGated()) {
-            /*
-             * classmate responses are gated so we will not show them if the student
-             * has not submitted a response
-             */
-
-            // get the component state from the scope
-            var componentState = this.$scope.componentState;
-
-            if (componentState != null) {
-              /*
-               * the student has already submitted a response so we will
-               * display the classmate responses
-               */
-              this.getClassmateResponses();
+          if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+            // assume there can only be one connected component
+            let connectedComponent = this.componentContent.connectedComponents[0];
+            if (this.authoringGetConnectedComponentType(connectedComponent) == 'Discussion') {
+              this.getClassmateResponses(connectedComponent.nodeId, connectedComponent.componentId);
             }
           } else {
-            // classmate responses are not gated so we will show them
-            this.getClassmateResponses();
+            if (this.isClassmateResponsesGated()) {
+              /*
+               * classmate responses are gated so we will not show them if the student
+               * has not submitted a response
+               */
+
+              // get the component state from the scope
+              var componentState = this.$scope.componentState;
+
+              if (componentState != null) {
+                /*
+                 * the student has already submitted a response so we will
+                 * display the classmate responses
+                 */
+                this.getClassmateResponses();
+              }
+            } else {
+              // classmate responses are not gated so we will show them
+              this.getClassmateResponses();
+            }
           }
 
           // get the latest annotations
@@ -680,11 +697,9 @@ class DiscussionController {
   /**
    * Get the classmate responses
    */
-  getClassmateResponses() {
+  getClassmateResponses(nodeId = this.nodeId, componentId = this.componentId) {
     var runId = this.ConfigService.getRunId();
     var periodId = this.ConfigService.getPeriodId();
-    var nodeId = this.nodeId;
-    var componentId = this.componentId;
 
     // make the request for the classmate responses
     this.DiscussionService.getClassmateResponses(runId, periodId, nodeId, componentId).then((result) => {
@@ -930,6 +945,13 @@ class DiscussionController {
         if (isSubmitted) {
           // the student has submitted work for this component
           this.isDisabled = true;
+        }
+      }
+      if (this.UtilService.hasConnectedComponent(componentContent)) {
+        for (let connectedComponent of componentContent.connectedComponents) {
+          if (connectedComponent.type == 'showWork') {
+            this.isDisabled = true;
+          }
         }
       }
     }
@@ -2087,7 +2109,7 @@ class DiscussionController {
            * will use it
            */
           connectedComponent.componentId = allowedComponent.id;
-          connectedComponent.type = 'importWork';
+          connectedComponent.type = 'showWork';
         }
       }
     }
