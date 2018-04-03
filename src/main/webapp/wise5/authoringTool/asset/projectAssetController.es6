@@ -222,6 +222,12 @@ class ProjectAssetController {
           .then((totalUnusedFilesSize) => {
         this.setTotalUnusedFilesSize(totalUnusedFilesSize);
       });
+      if (this.nodeId != null && this.componentId != null && this.target != null) {
+        let assetItem = {};
+        assetItem.fileName = files[0].name;
+        assetItem.fileSize = files[0].size;
+        this.chooseAsset(assetItem);
+      }
     });
   }
 

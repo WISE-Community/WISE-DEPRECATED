@@ -248,6 +248,12 @@ var ProjectAssetController = function () {
         _this3.ProjectAssetService.calculateAssetUsage().then(function (totalUnusedFilesSize) {
           _this3.setTotalUnusedFilesSize(totalUnusedFilesSize);
         });
+        if (_this3.nodeId != null && _this3.componentId != null && _this3.target != null) {
+          var assetItem = {};
+          assetItem.fileName = files[0].name;
+          assetItem.fileSize = files[0].size;
+          _this3.chooseAsset(assetItem);
+        }
       });
     }
 
