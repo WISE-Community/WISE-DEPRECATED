@@ -10,7 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { StudentService } from './student/student.service';
 import { UserService } from './services/user.service';
 import { HttpClientModule } from '@angular/common/http';
-
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,6 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     HeaderModule,
     FooterModule,
+    FormsModule,
     StudentModule,
     HttpClientModule
   ],
