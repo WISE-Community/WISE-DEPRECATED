@@ -206,6 +206,11 @@ var ProjectInfoController = function () {
       this.metadata[metadataField.key] = this.getMetadataChoiceText(choice);
       this.ProjectService.saveProject();
     }
+  }, {
+    key: 'save',
+    value: function save() {
+      this.ProjectService.saveProject();
+    }
   }]);
 
   return ProjectInfoController;
