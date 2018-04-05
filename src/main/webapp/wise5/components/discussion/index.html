@@ -93,9 +93,6 @@
               <md-select ng-model='connectedComponent.type'
                   ng-change='discussionController.authoringConnectedComponentTypeChanged(connectedComponent)'
                   style='width: 200'>
-                <md-option value='importWork'>
-                  {{ 'importWork' | translate }}
-                </md-option>
                 <md-option value='showWork'>
                   {{ 'showWork' | translate }}
                 </md-option>
@@ -349,6 +346,7 @@
                   deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
                   undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
                   studentdatachanged='studentdatachanged()'
+                  isdisabled='discussionController.isDisabled'
                   class='post animate-repeat'>
               </class-response>
             </div>
@@ -363,6 +361,7 @@
                   deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
                   undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
                   studentdatachanged='studentdatachanged()'
+                  isdisabled='discussionController.isDisabled'
                   class='animate-repeat'
                   style='display: block;'>
               </class-response>
