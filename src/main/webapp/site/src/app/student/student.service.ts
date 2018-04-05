@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
+import { RunInfo } from './run-info';
 import { StudentRun } from './student-run';
 
 @Injectable()
 export class StudentService {
 
   private runsUrl = 'api/student/runs';
+  private runInfoUrl = 'api/student/run/info';
 
   constructor(private http: HttpClient) { }
 
@@ -19,6 +21,11 @@ export class StudentService {
             tap(runs => this.log(`fetched runs`)),
             catchError(this.handleError('getRuns', []))
           );
+  }
+
+  getRunInfo(runCode: string): Observable<RunInfo> {
+    let params = new HttpParams().set("runCode", runCode);
+    return this.http.get<RunInfo>(this.runInfoUrl, { params: params });
   }
 
   /**

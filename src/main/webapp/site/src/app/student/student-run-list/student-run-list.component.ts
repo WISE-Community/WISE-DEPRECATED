@@ -22,6 +22,7 @@ export class StudentRunListComponent implements OnInit {
   ];
   sortValue: string = 'startTimeDesc';
   loaded: boolean = false; // whether array of runs has been retrieved from server
+  isAddingRun: boolean = false;
 
   constructor(private studentService: StudentService) { }
 
@@ -108,5 +109,26 @@ export class StudentRunListComponent implements OnInit {
         break;
       }
     }
+  }
+
+  showAddRun() {
+    this.isAddingRun = true;
+  }
+
+  cancelAddRun() {
+    this.isAddingRun = false;
+  }
+
+  checkRunCode(event: KeyboardEvent) {
+    const runCode = (<HTMLInputElement>event.target).value;
+    if (this.isValidRunCode(runCode)) {
+      this.studentService.getRunInfo(runCode).subscribe(runInfo => {
+        console.log(runInfo);
+      });
+    }
+  }
+
+  isValidRunCode(runCode: string) {
+    return /^[a-zA-Z]*\d\d\d/.test(runCode);
   }
 }

@@ -2,7 +2,7 @@
   <div class="content-block__header" fxLayout="row" fxLayoutAlign="start center">
     <h2 class="accent-1">My Projects <span *ngIf="loaded">({{ runs.length }})</span></h2>
     <span fxFlex="1 1 auto"></span>
-    <button mat-raised-button (click)="addRun" aria-label="Add project" color="accent">
+    <button mat-raised-button (click)="showAddRun()" aria-label="Add project" color="accent">
       <mat-icon fxShow fxHide.gt-xs>add</mat-icon>
       <span fxHide fxShow.gt-xs>Add Project</span>
     </button>
@@ -19,7 +19,15 @@
   <div *ngIf="search && loaded" class="notice">
     <p>Projects found: {{ filteredRuns.length }}</p>
   </div>
-
+  <div *ngIf="isAddingRun">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Project Code" value="" (keyup)="checkRunCode($event)">
+    </mat-form-field>
+    <button mat-raised-button (click)="cancelAddRun()" aria-label="Cancel add project" color="accent">
+      <mat-icon fxShow fxHide.gt-xs>cancel</mat-icon>
+      <span fxHide fxShow.gt-xs>Cancel</span>
+    </button>
+  </div>
   <div class="notice" *ngIf="!runs.length && loaded">
     <p>Hey there! Looks like you don't have any projects yet.</p>
     <p>Ask your teacher for an <b>Access Code</b> and then tap the <b>Add Project</b> button to get started.</p>
