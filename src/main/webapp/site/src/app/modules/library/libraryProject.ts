@@ -2,7 +2,7 @@ export class LibraryProject {
   type: string;
   id: string;
   notes: string;
-  metadata: object;
+  metadata: any;
   projectThumb: string;
   thumbStyle: any;
 }

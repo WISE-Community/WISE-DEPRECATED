@@ -5,28 +5,43 @@
       <div fxLayout="column">
         <div class="mat-card-title">{{ data.project.metadata.title }}</div>
         <div class="mat-card-subtitle">
-          <!--<div fxShow fxHide.gt-xs>
-            Last Updated: {{ data.project.lastUpdated }}
-          </div>-->
           <div>
-            Project ID: {{ data.project.id }}<br />
-            Grade: <span *ngFor="let g of data.project.metadata.grades; let isLast=last">{{ g }}{{ isLast ? '' : ', ' }}</span>
+            Project ID: {{ data.project.id }}<!--&nbsp;&bull;&nbsp;Last Updated: {{ data.project.lastUpdated }}>--><br />
+            Grade level: <span *ngFor="let g of data.project.metadata.grades; let isLast=last">{{ g }}{{ isLast ? '' : ', ' }}</span>
             &nbsp;&bull;&nbsp;
             Duration: {{ data.project.metadata.totalTime }}
           </div>
         </div>
       </div>
       <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
-      <!--<div fxFlex.xs="100%" fxHide fxShow.gt-xs>
-        Last Updated: {{ data.project.lastUpdated }}
-      </div>-->
     </div>
   </div>
-  <div class="library-project-details__summary info-block">
-    <div [innerHTML]="data.project.metadata.summary"></div>
+  <div class="library-project-details__info info-block">
+    <div class="library-project-details__summary" [innerHTML]="data.project.metadata.summary"></div>
+    <p *ngIf="data.project.metadata.features"><span class="mat-body-2">Features:</span> {{ data.project.metadata.features }}</p>
+    <p *ngIf="data.ngss.disciplines.length">
+      <span class="mat-body-2">Discipline:</span>
+      <ng-container *ngFor="let discipline of data.ngss.disciplines; let isLast=last">
+        {{ discipline.name }}{{ isLast ? '' : ', ' }}
+      </ng-container>
+    </p>
+    <p *ngIf="data.ngss.pe.length">
+      <span class="mat-body-2">Performance Expectations:</span>
+      <ng-container *ngFor="let pe of data.ngss.pe">
+        <a href="{{ data.ngssWebUrl }}{{ pe.id }}" target="_blank">{{ pe.id }} {{ pe.name }}</a>
+        <ng-container *ngIf="pe.children.length">
+          (<ng-container *ngFor="let child of pe.children; let isLast=last"><a href="{{ data.ngssWebUrl }}{{ child.id }}"
+            target="_blank" matTooltip="{{ child.name }}"
+            [matTooltipPosition]="'above'">{{ child.id }}</a>{{ isLast ? '' : ', ' }}</ng-container>)
+        </ng-container>
+      </ng-container>
+    </p>
   </div>
 </div>
 <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end none">
   <button mat-button (click)="onClose()">Close</button>
-  <button mat-raised-button color="primary" (click)="preview()"><mat-icon>visibility</mat-icon> Preview</button>
+  <!-- TODO: how get preview url -->
+  <a mat-raised-button color="primary" href="/wise/previewproject.html?projectId={{ data.project.id }}" target="_blank">
+    <mat-icon>visibility</mat-icon> Preview
+  </a>
 </div>
