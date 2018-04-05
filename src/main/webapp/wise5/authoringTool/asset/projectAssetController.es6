@@ -196,7 +196,78 @@ class ProjectAssetController {
     this.$rootScope.$broadcast('assetSelected', params);
   }
 
+  /**
+   * Upload all the small files. If there are any large files, we will confirm with the author
+   * that they want to upload those files.
+   * @param files An array of file objects.
+   */
   uploadAssetItems(files) {
+    let performUploadOfAllFiles = true;
+    let largeAndSmallFiles = this.separateLargeAndSmallFiles(files);
+    let largeFiles = largeAndSmallFiles.largeFiles;
+    let smallFiles = largeAndSmallFiles.smallFiles;
+    if (largeFiles.length > 0) {
+      performUploadOfAllFiles = confirm(this.getLargeFileMessage(files, largeFiles));
+    }
+    if (performUploadOfAllFiles) {
+      this.uploadAssets(files);
+    } else if (smallFiles.length > 0) {
+      this.uploadAssets(smallFiles);
+    }
+  }
+
+  /**
+   * @param files An array of file objects.
+   * @returns {Object} An object that contains an array of large files and an array
+   * of small files.
+   */
+  separateLargeAndSmallFiles(files) {
+    let largeFiles = [];
+    let smallFiles = [];
+    for (let file of files) {
+      if (this.isFileLarge(file)) {
+        largeFiles.push(file);
+      } else {
+        smallFiles.push(file);
+      }
+    }
+    return { largeFiles: largeFiles, smallFiles: smallFiles };
+  }
+
+  /**
+   * @param file A file object.
+   * @returns {boolean} Whether the file is larger than 500 KB.
+   */
+  isFileLarge(file) {
+    return file.size > 500000;
+  }
+
+  /**
+   * Get the confirm message to display to the author because they are trying
+   * to upload at least one large file.
+   * @param files All the files they are trying to upload.
+   * @param largeFiles All the large files they are trying to upload.
+   * @returns {string} The message to show to the author.
+   */
+  getLargeFileMessage(files, largeFiles) {
+    let message = '';
+    if (files.length == 1 && largeFiles.length == 1) {
+      message = this.$translate('areYouSureYouWantToUploadThisLargeFile') + '\n';
+    } else if (largeFiles.length == 1) {
+      message = this.$translate('areYouSureYouWantToUploadThisLargeFileWhileUploadingMultipleFiles') + '\n';
+    } else if (largeFiles.length > 1) {
+      message = this.$translate('areYouSureYouWantToUploadTheseLargeFilesWhileUploadingMultipleFiles', { fileCount: largeFiles.length }) + '\n';
+    }
+    for (let largeFile of largeFiles) {
+      message += '\n' + largeFile.name + ' (' + Math.floor(largeFile.size / 1000) + ' KB)';
+    }
+    return message;
+  }
+
+  /**
+   * @param files An array of file objects.
+   */
+  uploadAssets(files) {
     this.ProjectAssetService.uploadAssets(files).then((uploadAssetsResults) => {
       if (uploadAssetsResults && uploadAssetsResults.length > 0) {
         let uploadedAssetsFilenames = [];
