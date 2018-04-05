@@ -11,7 +11,7 @@
           <app-library-group-thumbs [group]="child" [ngClass]="{ 'hide': expandedGroups[child.id] }"></app-library-group-thumbs>
         </mat-expansion-panel-header>
         <div fxLayout="row wrap">
-          <div *ngFor="let project of child.children" fxFlex="100" fxFlex.sm="50" fxFlex.md="33" fxFlex.lg="25" >
+          <div *ngFor="let project of child.children" fxFlex="100" fxFlex.sm="50" fxFlex.md="33" fxFlex.lg="25">
             <app-library-project [project]="project"></app-library-project>
           </div>
         </div>

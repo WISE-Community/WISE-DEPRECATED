@@ -4,19 +4,22 @@ import { HttpClient, HttpHandler } from "@angular/common/http";
 import { LibraryComponent } from './library.component';
 import { LibraryGroupThumbsComponent } from "./library-group-thumbs/library-group-thumbs.component";
 import { LibraryProjectComponent, LibraryProjectDetailsComponent } from "./library-project/library-project.component";
+import { LibraryProjectDisciplineIconComponent } from "./library-project-discipline-icon/library-project-discipline-icon.component";
 import { LibraryService } from "../../services/library.service";
 
 import {
   MatCardModule,
   MatDialogModule,
   MatIconModule,
-  MatExpansionModule } from '@angular/material';
+  MatExpansionModule,
+  MatTooltipModule} from '@angular/material';
 
 const materialModules = [
   MatCardModule,
   MatDialogModule,
   MatIconModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatTooltipModule
 ];
 
 describe('LibraryComponent', () => {
@@ -32,7 +35,8 @@ describe('LibraryComponent', () => {
         LibraryComponent,
         LibraryGroupThumbsComponent,
         LibraryProjectComponent,
-        LibraryProjectDetailsComponent
+        LibraryProjectDetailsComponent,
+        LibraryProjectDisciplineIconComponent
       ],
       providers: [
         HttpClient,

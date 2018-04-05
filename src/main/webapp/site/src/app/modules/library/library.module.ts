@@ -5,6 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { LibraryComponent } from './library.component';
 import { LibraryGroupThumbsComponent } from './library-group-thumbs/library-group-thumbs.component';
 import { LibraryProjectComponent, LibraryProjectDetailsComponent } from './library-project/library-project.component';
+import { LibraryProjectDisciplineIconComponent } from './library-project-discipline-icon/library-project-discipline-icon.component';
 import { LibraryService } from "../../services/library.service";
 
 import {
@@ -12,14 +13,16 @@ import {
   MatCardModule,
   MatDialogModule,
   MatIconModule,
-  MatExpansionModule } from '@angular/material';
+  MatExpansionModule,
+  MatTooltipModule} from '@angular/material';
 
 const materialModules = [
   MatButtonModule,
   MatCardModule,
   MatDialogModule,
   MatIconModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatTooltipModule
 ];
 
 @NgModule({
@@ -32,7 +35,8 @@ const materialModules = [
     LibraryComponent,
     LibraryGroupThumbsComponent,
     LibraryProjectComponent,
-    LibraryProjectDetailsComponent
+    LibraryProjectDetailsComponent,
+    LibraryProjectDisciplineIconComponent
   ],
   entryComponents: [ LibraryProjectDetailsComponent ],
   exports: [

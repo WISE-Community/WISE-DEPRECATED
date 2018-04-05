@@ -54,10 +54,17 @@ $config: mat-typography-config();
   left: 0;
   right: 0;
   font-weight: 500;
-  padding: 8px 12px;
+  padding: 10px 12px;
   border-radius: 2px;
   color: #ffffff;
   font-size: mat-font-size($config, subheading-2);
+}
+
+.library-project__discipline {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 12px 8px;
 }
 
 .library-project-details {
@@ -83,15 +90,15 @@ $config: mat-typography-config();
   }
 }
 
-.library-project-details__summary {
+.library-project-details__info {
   margin: 16px 0 8px;
   padding: 8px 12px;
 
   p {
-    margin-bottom: 8px;
-
-    &:last-of-type {
-      margin-bottom: 0;
-    }
+    margin: 4px 0;
   }
+}
+
+.library-project-details__summary {
+  margin: 4px 0;
 }
