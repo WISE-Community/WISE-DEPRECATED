@@ -7,18 +7,7 @@
         <div align="right" style='background-color: white; position: sticky; top: 0px; z-index: 2;'>
           <div style="color:red">{{projectController.currentAuthorsMessage}}</div>
           <div>
-            <span ng-if="authoringToolController.globalMessage.text"
-                class="component__actions__info md-caption global-message">
-                {{authoringToolController.globalMessage.text}}
-                <span class="component__actions__more">
-                  <md-tooltip md-direction="top">
-                    {{ authoringToolController.globalMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}
-                  </md-tooltip>
-                  <span am-time-ago="authoringToolController.globalMessage.time"></span>
-                </span>
-            </span>
-            <span ng-if="authoringToolController.globalMessage == null || authoringToolController.globalMessage.text == null || authoringToolController.globalMessage.text == ''"
-                class="component__actions__info md-caption global-message">&nbsp</span>
+            <span>&nbsp</span>
           </div>
         </div>
         <style>

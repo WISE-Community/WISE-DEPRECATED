@@ -29,10 +29,6 @@ var AuthoringToolController = function () {
     this.TeacherDataService = TeacherDataService;
 
     this.numberProject = true; // TODO: make dynamic or remove
-    this.globalMessage = {
-      text: '',
-      time: ''
-    };
     this.isMenuOpen = false;
 
     // ui-views and their corresponding names, labels, and icons
@@ -307,8 +303,11 @@ var AuthoringToolController = function () {
   }, {
     key: 'setGlobalMessage',
     value: function setGlobalMessage(message, time) {
-      this.globalMessage.text = message;
-      this.globalMessage.time = time;
+      var globalMessage = {
+        text: message,
+        time: time
+      };
+      this.$rootScope.$broadcast('setGlobalMessage', { globalMessage: globalMessage });
     }
   }, {
     key: 'saveEvent',

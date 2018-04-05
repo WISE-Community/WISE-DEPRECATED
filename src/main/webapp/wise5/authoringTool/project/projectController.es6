@@ -973,13 +973,18 @@ class ProjectController {
    * Recalculates step numbering
    */
   refreshProject() {
-    this.ProjectService.parseProject();
-    this.items = this.ProjectService.idToOrder;
-    this.inactiveGroupNodes = this.ProjectService.getInactiveGroupNodes();
-    this.inactiveStepNodes = this.ProjectService.getInactiveStepNodes();
-    this.inactiveNodes = this.ProjectService.getInactiveNodes();
-    this.idToNode = this.ProjectService.getIdToNode();
-    this.unselectAllItems();
+    /*
+     * Use a timeout before we refresh the project. We need
+     */
+    this.$timeout(() => {
+      this.ProjectService.parseProject();
+      this.items = this.ProjectService.idToOrder;
+      this.inactiveGroupNodes = this.ProjectService.getInactiveGroupNodes();
+      this.inactiveStepNodes = this.ProjectService.getInactiveStepNodes();
+      this.inactiveNodes = this.ProjectService.getInactiveNodes();
+      this.idToNode = this.ProjectService.getIdToNode();
+      this.unselectAllItems();
+    });
   }
 
   /**
