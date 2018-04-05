@@ -852,6 +852,8 @@
         <sec:intercept-url pattern="/project/currentAuthors/**" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
         <sec:intercept-url pattern="/project/commit/**" access="ROLE_TEACHER" />
         <sec:intercept-url pattern="/project/**" access="ROLE_ANONYMOUS,ROLE_USER" />
+        <sec:intercept-url pattern="/site/api/run/add/student" access="ROLE_STUDENT" />
+        <sec:intercept-url pattern="/site/user" access="ROLE_USER" />
         <sec:intercept-url pattern="/site/**" access="ROLE_ANONYMOUS,ROLE_USER" />
         <sec:intercept-url pattern="/vle/**" access="ROLE_ANONYMOUS,ROLE_USER" />
         <sec:intercept-url pattern="/wise5/**" access="ROLE_ANONYMOUS,ROLE_USER" />

@@ -1,7 +1,8 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
 
 import { HeaderModule } from './modules/header/header.module';
 import { HomeModule } from "./home/home.module";
@@ -10,8 +11,7 @@ import { StudentModule } from './student/student.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { StudentService } from './student/student.service';
-import { UserService } from "./services/user.service";
-
+import { UserService } from './services/user.service';
 
 @NgModule({
   declarations: [
@@ -24,6 +24,7 @@ import { UserService } from "./services/user.service";
     FooterModule,
     HeaderModule,
     HomeModule,
+    FormsModule,
     StudentModule,
     HttpClientModule
   ],
