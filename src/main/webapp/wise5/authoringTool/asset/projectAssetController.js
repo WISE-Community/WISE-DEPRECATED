@@ -198,21 +198,150 @@ var ProjectAssetController = function () {
       };
       this.$rootScope.$broadcast('assetSelected', params);
     }
+
+    /**
+     * Upload all the small files. If there are any large files, we will confirm with the author
+     * that they want to upload those files.
+     * @param files An array of file objects.
+     */
+
   }, {
     key: 'uploadAssetItems',
     value: function uploadAssetItems(files) {
+      var performUploadOfAllFiles = true;
+      var largeAndSmallFiles = this.separateLargeAndSmallFiles(files);
+      var largeFiles = largeAndSmallFiles.largeFiles;
+      var smallFiles = largeAndSmallFiles.smallFiles;
+      if (largeFiles.length > 0) {
+        performUploadOfAllFiles = confirm(this.getLargeFileMessage(files, largeFiles));
+      }
+      if (performUploadOfAllFiles) {
+        this.uploadAssets(files);
+      } else if (smallFiles.length > 0) {
+        this.uploadAssets(smallFiles);
+      }
+    }
+
+    /**
+     * @param files An array of file objects.
+     * @returns {Object} An object that contains an array of large files and an array
+     * of small files.
+     */
+
+  }, {
+    key: 'separateLargeAndSmallFiles',
+    value: function separateLargeAndSmallFiles(files) {
+      var largeFiles = [];
+      var smallFiles = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var file = _step.value;
+
+          if (this.isFileLarge(file)) {
+            largeFiles.push(file);
+          } else {
+            smallFiles.push(file);
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return { largeFiles: largeFiles, smallFiles: smallFiles };
+    }
+
+    /**
+     * @param file A file object.
+     * @returns {boolean} Whether the file is larger than 500 KB.
+     */
+
+  }, {
+    key: 'isFileLarge',
+    value: function isFileLarge(file) {
+      return file.size > 500000;
+    }
+
+    /**
+     * Get the confirm message to display to the author because they are trying
+     * to upload at least one large file.
+     * @param files All the files they are trying to upload.
+     * @param largeFiles All the large files they are trying to upload.
+     * @returns {string} The message to show to the author.
+     */
+
+  }, {
+    key: 'getLargeFileMessage',
+    value: function getLargeFileMessage(files, largeFiles) {
+      var message = '';
+      if (files.length == 1 && largeFiles.length == 1) {
+        message = this.$translate('areYouSureYouWantToUploadThisLargeFile') + '\n';
+      } else if (largeFiles.length == 1) {
+        message = this.$translate('areYouSureYouWantToUploadThisLargeFileWhileUploadingMultipleFiles') + '\n';
+      } else if (largeFiles.length > 1) {
+        message = this.$translate('areYouSureYouWantToUploadTheseLargeFilesWhileUploadingMultipleFiles', { fileCount: largeFiles.length }) + '\n';
+      }
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = largeFiles[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var largeFile = _step2.value;
+
+          message += '\n' + largeFile.name + ' (' + Math.floor(largeFile.size / 1000) + ' KB)';
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      return message;
+    }
+
+    /**
+     * @param files An array of file objects.
+     */
+
+  }, {
+    key: 'uploadAssets',
+    value: function uploadAssets(files) {
       var _this3 = this;
 
       this.ProjectAssetService.uploadAssets(files).then(function (uploadAssetsResults) {
         if (uploadAssetsResults && uploadAssetsResults.length > 0) {
           var uploadedAssetsFilenames = [];
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
+          var _iteratorNormalCompletion3 = true;
+          var _didIteratorError3 = false;
+          var _iteratorError3 = undefined;
 
           try {
-            for (var _iterator = uploadAssetsResults[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var uploadAssetsResult = _step.value;
+            for (var _iterator3 = uploadAssetsResults[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+              var uploadAssetsResult = _step3.value;
 
               if (typeof uploadAssetsResult.data === 'string') {
                 // there was an error uploading this file, so don't add
@@ -221,16 +350,16 @@ var ProjectAssetController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
+            _didIteratorError3 = true;
+            _iteratorError3 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
+              if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
               }
             } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
+              if (_didIteratorError3) {
+                throw _iteratorError3;
               }
             }
           }
