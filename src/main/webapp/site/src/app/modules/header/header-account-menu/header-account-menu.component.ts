@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { ConfigService } from "../../../services/config.service";
 import { User } from "../../../domain/user";
 
 @Component({
@@ -11,9 +12,15 @@ export class HeaderAccountMenuComponent implements OnInit {
   @Input()
   user: User;
 
-  constructor() { }
+  logOutURL: string;
 
-  ngOnInit() {
+  constructor(private configService: ConfigService) {
+    this.configService = configService;
   }
 
+  ngOnInit() {
+    this.configService.getConfig().subscribe(config => {
+      this.logOutURL = config.logOutURL;
+    });
+  }
 }

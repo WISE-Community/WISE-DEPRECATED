@@ -12,6 +12,7 @@ export class UserService {
   private userUrl = 'api/user/user';
   private user: Observable<User>;
   private authenticated = false;
+  private logInURL = '/wise/j_acegi_security_check';
 
   constructor(private http: HttpClient) { }
 
@@ -50,7 +51,7 @@ export class UserService {
       'Content-Type': 'application/x-www-form-urlencoded'
     };
     let formData = "username=" + credentials.username + "&password=" + credentials.password;
-    this.http.post('/wise/j_acegi_security_check',
+    this.http.post(this.logInURL,
         formData,
         { headers: headers, responseType: "text" })
         .subscribe(response => {
