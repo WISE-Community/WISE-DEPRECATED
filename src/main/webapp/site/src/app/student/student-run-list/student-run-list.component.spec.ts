@@ -67,11 +67,11 @@ describe('StudentRunListComponent', () => {
 
   it ('should detect valid project code', () => {
     const projectCode = 'Cat123';
-    expect(component.isValidRunCode(projectCode)).toEqual(true);
+    expect(component.isValidRunCodeSyntax(projectCode)).toEqual(true);
   })
 
   it ('should detect invalid project code', () => {
     const projectCode = 'Cat12';
-    expect(component.isValidRunCode(projectCode)).toEqual(false);
+    expect(component.isValidRunCodeSyntax(projectCode)).toEqual(false);
   })
 });

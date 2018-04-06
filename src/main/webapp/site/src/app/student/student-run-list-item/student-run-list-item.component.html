@@ -10,11 +10,11 @@
               <span *ngIf="run.endTime">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
             </div>
             <div>
-              Teacher: {{ run.teacherLastname }}
+              Teacher: {{ run.teacherDisplayName }}
               &nbsp;&bull;&nbsp;
               Period: {{ run.periodName }}
               &nbsp;&bull;&nbsp;
-              Code: {{ run.accessCode }}
+              Code: {{ run.runCode }}
             </div>
             <div>Team:
               <span *ngFor="let user of run.workgroupMembers; let isLast=last">

@@ -1,8 +1,9 @@
 export class RunInfo {
-  periodName: string;
-  teacherFirstname: string;
-  teacherLastname: string;
-  workgroupId: number;
-  workgroupMembers: any;
-  workgroupNames: string;
+  periods: string[];
+  runCode: string;
+  runId: number;
+  runTitle: string;
+  startTime: string;
+  teacherName: string;
+  error: string;
 }

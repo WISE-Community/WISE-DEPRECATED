@@ -23,6 +23,18 @@
     <mat-form-field class="example-full-width">
       <input matInput placeholder="Project Code" value="" (keyup)="checkRunCode($event)">
     </mat-form-field>
+    <mat-form-field>
+      <mat-select [disabled]="registerRunPeriods.length == 0" [(value)]="selectedPeriod" placeholder="Choose Period">
+        <mat-option *ngFor="let period of registerRunPeriods" value="{{ period }}">{{ period }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button (click)="addRun()"
+        [disabled]="registerRunRunCode == '' || selectedPeriod == ''"
+        aria-label="Submit add project"
+        color="accent">
+      <mat-icon fxShow fxHide.gt-xs>submit</mat-icon>
+      <span fxHide fxShow.gt-xs>Submit</span>
+    </button>
     <button mat-raised-button (click)="cancelAddRun()" aria-label="Cancel add project" color="accent">
       <mat-icon fxShow fxHide.gt-xs>cancel</mat-icon>
       <span fxHide fxShow.gt-xs>Cancel</span>

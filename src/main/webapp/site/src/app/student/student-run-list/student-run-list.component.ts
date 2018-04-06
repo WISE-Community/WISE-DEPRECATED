@@ -23,6 +23,9 @@ export class StudentRunListComponent implements OnInit {
   sortValue: string = 'startTimeDesc';
   loaded: boolean = false; // whether array of runs has been retrieved from server
   isAddingRun: boolean = false;
+  registerRunRunCode: string = '';
+  registerRunPeriods: string[] = [];
+  selectedPeriod: string = '';
 
   constructor(private studentService: StudentService) { }
 
@@ -115,20 +118,48 @@ export class StudentRunListComponent implements OnInit {
     this.isAddingRun = true;
   }
 
-  cancelAddRun() {
+  addRun() {
+    this.studentService.addRun(this.registerRunRunCode, this.selectedPeriod).subscribe((studentRun) => {
+      if (studentRun.error) {
+        alert(studentRun.error);
+      } else {
+        this.runs.unshift(studentRun);
+        this.endAddRun();
+      }
+    });
+  }
+
+  endAddRun() {
     this.isAddingRun = false;
+    this.clearPeriods();
+  }
+
+  cancelAddRun() {
+    this.endAddRun();
+  }
+
+  clearPeriods() {
+    this.selectedPeriod = '';
+    this.registerRunPeriods = [];
   }
 
   checkRunCode(event: KeyboardEvent) {
     const runCode = (<HTMLInputElement>event.target).value;
-    if (this.isValidRunCode(runCode)) {
+    this.registerRunRunCode = runCode;
+    if (this.isValidRunCodeSyntax(runCode)) {
       this.studentService.getRunInfo(runCode).subscribe(runInfo => {
-        console.log(runInfo);
+        if (runInfo.error) {
+          this.clearPeriods();
+        } else {
+          this.registerRunPeriods = runInfo.periods;
+        }
       });
+    } else {
+      this.clearPeriods();
     }
   }
 
-  isValidRunCode(runCode: string) {
+  isValidRunCodeSyntax(runCode: string) {
     return /^[a-zA-Z]*\d\d\d/.test(runCode);
   }
 }
