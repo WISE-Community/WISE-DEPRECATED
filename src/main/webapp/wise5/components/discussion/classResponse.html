@@ -117,7 +117,7 @@
     <div class='discussion-new-reply'
         flex
         layout='row'
-        ng-if='classResponseCtrl.mode === "student"'>
+        ng-if='classResponseCtrl.mode === "student" && !classResponseCtrl.isdisabled'>
       <md-input-container class='input-container discussion-new-reply__input-container md-block'
           md-no-float
           flex>
