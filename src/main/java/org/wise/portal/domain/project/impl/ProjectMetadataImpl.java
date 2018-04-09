@@ -65,6 +65,8 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
   @Column(name = "summary")
   private String summary;
 
+  private String features;
+
   @Column(name = "grade_range")
   private String gradeRange;
 
@@ -136,6 +138,14 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 
   public ProjectMetadataImpl(String metadataJSONString) throws JSONException {
     this.populateFromJSON(new JSONObject(metadataJSONString));
+  }
+
+  public String getFeatures() {
+    return features;
+  }
+
+  public void setFeatures(String features) {
+    this.features = features;
   }
 
   public String getGradeRange() {
@@ -437,6 +447,19 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
           summary = "";
         }
         setSummary(summary);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
+    //check that the features exists and is not null
+    if (metadataJSON.has("features") && !metadataJSON.isNull("features")) {
+      try {
+        String features = metadataJSON.getString("features");
+        if (features.equals("null")) {
+          features = "";
+        }
+        setFeatures(features);
       } catch (JSONException e) {
         e.printStackTrace();
       }
