@@ -603,25 +603,7 @@ var DataExportController = function () {
                     }
                 }
             }
-
-            // get the component type
-            var componentType = componentState.componentType;
-
-            if (componentType != null) {
-                // get the component type service
-                var componentService = this.$injector.get(componentType + 'Service');
-
-                if (componentService != null && componentService.getStudentDataString != null) {
-
-                    // get the student data string from the component state
-                    var studentDataString = componentService.getStudentDataString(componentState);
-
-                    if (studentDataString != null) {
-                        // set the response
-                        row[columnNameToNumber["Response"]] = studentDataString;
-                    }
-                }
-            }
+            row[columnNameToNumber["Response"]] = this.getStudentDataString(componentState);
 
             var revisionCounter = this.getRevisionCounter(componentRevisionCounter, componentState.nodeId, componentState.componentId);
 
@@ -664,6 +646,36 @@ var DataExportController = function () {
             }
 
             return row;
+        }
+
+        /**
+         * Get the plain text representation of the student work.
+         * @param componentState {object} A component state that contains the student work.
+         * @returns {string} A string that can be placed in a csv cell.
+         */
+
+    }, {
+        key: 'getStudentDataString',
+        value: function getStudentDataString(componentState) {
+            /*
+             * In Excel, if there is a cell with a long string and the cell to the
+             * right of it is empty, the long string will overlap onto cells to the
+             * right until the string ends or hits a cell that contains a value.
+             * To prevent this from occurring, we will default empty cell values to
+             * a string with a space in it. This way all values of cells are limited
+             * to displaying only in its own cell.
+             */
+            var studentDataString = " ";
+            var componentType = componentState.componentType;
+            var componentService = this.$injector.get(componentType + 'Service');
+            if (componentService != null && componentService.getStudentDataString != null) {
+                studentDataString = componentService.getStudentDataString(componentState);
+                studentDataString = this.UtilService.removeHTMLTags(studentDataString);
+                studentDataString = studentDataString.replace(/"/g, '""');
+            } else {
+                studentDataString = componentState.studentData;
+            }
+            return studentDataString;
         }
 
         /**
@@ -1859,31 +1871,6 @@ var DataExportController = function () {
                                             var componentState = _this5.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId);
 
                                             if (componentState != null) {
-
-                                                // get the component service for the given component type
-                                                var componentService = _this5.getComponentService(componentState.componentType);
-
-                                                var studentDataString = " ";
-
-                                                if (componentService != null && componentService.getStudentDataString != null) {
-                                                    // there is a getStudentDataString function for this component type
-
-                                                    // get the student data string
-                                                    studentDataString = componentService.getStudentDataString(componentState);
-
-                                                    // get the student data string with the html tags removed
-                                                    studentDataString = _this5.UtilService.removeHTMLTags(studentDataString);
-
-                                                    // replace " with ""
-                                                    studentDataString = studentDataString.replace(/"/g, '""');
-                                                } else {
-                                                    /*
-                                                     * there is a getStudentDataString function for this component type
-                                                     * so we will just show the JSON string
-                                                     */
-                                                    studentDataString = componentState.studentData;
-                                                }
-
                                                 if (_this5.includeStudentWorkIds) {
                                                     // we are exporting student work ids
                                                     workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = componentState.id;
@@ -1902,7 +1889,7 @@ var DataExportController = function () {
                                                 }
 
                                                 // set the student data string
-                                                workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = studentDataString;
+                                                workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = _this5.getStudentDataString(componentState);
 
                                                 if (_this5.includeScores || _this5.includeComments) {
                                                     // we are exporting scores or comments
