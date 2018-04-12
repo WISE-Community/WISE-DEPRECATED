@@ -32,12 +32,10 @@
         [disabled]="registerRunRunCode == '' || selectedPeriod == ''"
         aria-label="Submit add project"
         color="accent">
-      <mat-icon fxShow fxHide.gt-xs>submit</mat-icon>
-      <span fxHide fxShow.gt-xs>Submit</span>
+      Submit
     </button>
     <button mat-raised-button (click)="cancelAddRun()" aria-label="Cancel add project" color="accent">
-      <mat-icon fxShow fxHide.gt-xs>cancel</mat-icon>
-      <span fxHide fxShow.gt-xs>Cancel</span>
+      Cancel
     </button>
   </div>
   <div class="notice" *ngIf="!runs.length && loaded">
