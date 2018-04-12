@@ -293,7 +293,18 @@ class ProjectAssetController {
           .then((totalUnusedFilesSize) => {
         this.setTotalUnusedFilesSize(totalUnusedFilesSize);
       });
+      if (this.hasTarget()) {
+        const assetItem = {
+          fileName: files[0].name,
+          fileSize: files[0].size
+        };
+        this.chooseAsset(assetItem);
+      }
     });
+  }
+
+  hasTarget() {
+    return this.nodeId != null && this.componentId != null && this.target != null;
   }
 
   /**
