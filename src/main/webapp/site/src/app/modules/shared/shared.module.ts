@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule, MatIconModule, MatInputModule, MatFormFieldModule, MatSelectModule } from '@angular/material';
 
 const materialModules = [
@@ -18,7 +18,8 @@ import { SelectMenuComponent } from './select-menu/select-menu.component';
   imports: [
     CommonModule,
     FormsModule,
-    materialModules
+    materialModules,
+    ReactiveFormsModule
   ],
   exports: [
     materialModules,

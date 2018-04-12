@@ -11,7 +11,7 @@ import { SearchBarComponent } from "../../modules/shared/search-bar/search-bar.c
 
 import { MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule } from "@angular/material";
 import { RouterTestingModule } from '@angular/router/testing';
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MomentModule } from "angular2-moment";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
@@ -42,7 +42,18 @@ describe('StudentHomeComponent', () => {
         StudentRunListItemComponent
       ],
       providers: [ {provide: StudentService, useValue: studentServiceStub } ],
-      imports: [ BrowserAnimationsModule, FormsModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule, MomentModule, RouterTestingModule ]
+      imports: [
+        BrowserAnimationsModule,
+        FormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatSelectModule,
+        MomentModule,
+        ReactiveFormsModule,
+        RouterTestingModule
+      ]
     })
     .compileComponents();
   }));

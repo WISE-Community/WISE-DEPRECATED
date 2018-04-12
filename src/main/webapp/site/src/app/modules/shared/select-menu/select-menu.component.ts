@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-select-menu',
@@ -8,20 +9,31 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } fro
 })
 export class SelectMenuComponent implements OnInit {
 
-  @Input()
-  options: { value: string, viewValue: string }[] = []; // options for the select menu
-
-  @Input()
-  placeholderText: string = 'Select on option'; // placeholder text
-
-  @Input()
-  floatLabel: string = 'auto'; // when to show the floating label ('always', 'auto' or 'never')
+  thisSelect = new FormControl();
 
   @Input()
   disable: boolean = false; // whether select is disabled
 
   @Input()
-  value: string = ''; // selected value
+  floatLabel: string = 'auto'; // when to show the floating label ('always', 'auto' or 'never')
+
+  @Input()
+  multiple: boolean = false; // whether multiple selections are supported
+
+  @Input()
+  options: any[] = []; // options for the select menu
+
+  @Input()
+  placeholderText: string = 'Select on option'; // placeholder text
+
+  @Input()
+  value: any; // selected value
+
+  @Input()
+  valueProp: string = 'value'; // name of property in options to use as option value
+
+  @Input()
+  viewValueProp: string = 'viewValue'; // name of property in options to use as option display value
 
   @Output('update')
   change: EventEmitter<string> = new EventEmitter<string>(); // change event emitter
@@ -34,5 +46,4 @@ export class SelectMenuComponent implements OnInit {
   changed() {
     this.change.emit(this.value);
   }
-
 }
