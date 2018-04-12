@@ -271,6 +271,13 @@ public class StudentAPIController {
     return periodsJSONArray;
   }
 
+  @RequestMapping(value = "/config", method = RequestMethod.GET)
+  protected String getConfig(ModelMap modelMap) throws JSONException {
+    JSONObject configJSON = new JSONObject();
+    configJSON.put("logOutURL", wiseProperties.get("wiseBaseURL") + "/logout");
+    return configJSON.toString();
+  }
+
   private Date getLastLoginTime(String previousLoginTime, User user) {
     Date lastLoginTime = ((StudentUserDetails) user.getUserDetails()).getLastLoginTime();
     if (previousLoginTime != null) {
