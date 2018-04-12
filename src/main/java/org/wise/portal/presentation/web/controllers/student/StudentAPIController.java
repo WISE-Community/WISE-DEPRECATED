@@ -23,18 +23,26 @@
  */
 package org.wise.portal.presentation.web.controllers.student;
 
-import java.util.*;
-
+import org.hibernate.StaleObjectStateException;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate5.HibernateOptimisticLockingFailureException;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.PeriodNotFoundException;
+import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.user.User;
@@ -43,8 +51,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
 
-import org.json.JSONObject;
-import org.json.JSONArray;
+import java.util.*;
 
 /**
  * Controller for Student REST API
@@ -77,64 +84,191 @@ public class StudentAPIController {
     List<Run> runlist = runService.getRunList(user);
     JSONArray runListJSONArray = new JSONArray();
     for (Run run : runlist) {
-      JSONObject runJSON = new JSONObject();
-      Project project = run.getProject();
-      String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
-      String projectThumb = "";
-      String modulePath = project.getModulePath();
-      int lastIndexOfSlash = modulePath.lastIndexOf("/");
-      if (lastIndexOfSlash != -1) {
-        /*
-         * The project thumb url by default is the same (/assets/project_thumb.png)
-         * for all projects, but this could be overwritten in the future
-         * e.g. /253/assets/projectThumb.png
-         */
-        projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
-      }
-      StudentRunInfo studentRunInfo = studentService.getStudentRunInfo(user, run);
-      Workgroup workgroup = studentRunInfo.getWorkgroup();
-      JSONArray workgroupMembers = new JSONArray();
-      StringBuilder workgroupNames = new StringBuilder();
-
-      runJSON.put("accessCode", run.getRuncode());
-      runJSON.put("id", run.getId());
-      runJSON.put("periodName", run.getPeriodOfStudent(user).getName());
-      runJSON.put("projectId", project.getId());
-      runJSON.put("projectThumb", projectThumb);
-      runJSON.put("name", run.getName());
-      runJSON.put("startTime", run.getStarttime());
-      runJSON.put("endTime", run.getEndtime());
-      runJSON.put("teacherFirstname", run.getOwner().getUserDetails().getFirstname());
-      runJSON.put("teacherLastname", run.getOwner().getUserDetails().getLastname());
-
-      /*
-       * The workgroup can be null if the student registered for a run but
-       * hasn't launched the project yet.
-       */
-      if (workgroup != null) {
-        for (User member : workgroup.getMembers()) {
-          MutableUserDetails userDetails = (MutableUserDetails) member.getUserDetails();
-          JSONObject memberJSON = new JSONObject();
-          memberJSON.put("id", userDetails.getId());
-          String firstname = userDetails.getFirstname();
-          memberJSON.put("firstname", firstname);
-          String lastname = userDetails.getLastname();
-          memberJSON.put("lastname", lastname);
-          memberJSON.put("username", userDetails.getUsername());
-          workgroupMembers.put(memberJSON);
-          if (workgroupNames.length() > 0) {
-            workgroupNames.append(", ");
-          }
-          workgroupNames.append(firstname + " " + lastname);
-        }
-        runJSON.put("workgroupId", studentRunInfo.getWorkgroup().getId());
-        runJSON.put("workgroupNames", workgroupNames.toString());
-        runJSON.put("workgroupMembers", workgroupMembers);
-      }
-
-      runListJSONArray.put(runJSON);
+      runListJSONArray.put(getRunJSON(user, run));
     }
     return runListJSONArray.toString();
+  }
+
+  /**
+   * @param user The signed in User.
+   * @param run The run object.
+   * @return A JSON object that contains information about the run and workgroup
+   * information if applicable.
+   * @throws JSONException
+   */
+  private JSONObject getRunJSON(User user, Run run) throws JSONException {
+    JSONObject runJSON = new JSONObject();
+    Project project = run.getProject();
+    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    String projectThumb = "";
+    String modulePath = project.getModulePath();
+    int lastIndexOfSlash = modulePath.lastIndexOf("/");
+    if (lastIndexOfSlash != -1) {
+      /*
+       * The project thumb url by default is the same (/assets/project_thumb.png)
+       * for all projects, but this could be overwritten in the future
+       * e.g. /253/assets/projectThumb.png
+       */
+      projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
+    }
+    StudentRunInfo studentRunInfo = studentService.getStudentRunInfo(user, run);
+    Workgroup workgroup = studentRunInfo.getWorkgroup();
+    JSONArray workgroupMembers = new JSONArray();
+    StringBuilder workgroupNames = new StringBuilder();
+
+    runJSON.put("id", run.getId());
+    runJSON.put("name", run.getName());
+    runJSON.put("periodName", run.getPeriodOfStudent(user).getName());
+    runJSON.put("projectThumb", projectThumb);
+    runJSON.put("runCode", run.getRuncode());
+    runJSON.put("startTime", run.getStarttime());
+    runJSON.put("endTime", run.getEndtime());
+    runJSON.put("teacherFirstName", run.getOwner().getUserDetails().getFirstname());
+    runJSON.put("teacherLastName", run.getOwner().getUserDetails().getLastname());
+    runJSON.put("teacherDisplayName", ((TeacherUserDetails) run.getOwner().getUserDetails()).getDisplayname());
+
+    /*
+     * The workgroup can be null if the student registered for a run but
+     * hasn't launched the project yet.
+     */
+    if (workgroup != null) {
+      for (User member : workgroup.getMembers()) {
+        MutableUserDetails userDetails = (MutableUserDetails) member.getUserDetails();
+        JSONObject memberJSON = new JSONObject();
+        memberJSON.put("id", userDetails.getId());
+        String firstname = userDetails.getFirstname();
+        memberJSON.put("firstname", firstname);
+        String lastname = userDetails.getLastname();
+        memberJSON.put("lastname", lastname);
+        memberJSON.put("username", userDetails.getUsername());
+        workgroupMembers.put(memberJSON);
+        if (workgroupNames.length() > 0) {
+          workgroupNames.append(", ");
+        }
+        workgroupNames.append(firstname + " " + lastname);
+      }
+      runJSON.put("workgroupId", studentRunInfo.getWorkgroup().getId());
+      runJSON.put("workgroupNames", workgroupNames.toString());
+      runJSON.put("workgroupMembers", workgroupMembers);
+    }
+    return runJSON;
+  }
+
+  /**
+   * Get the run information to display to the student when they want to register for a run.
+   * @param runCode The run code string.
+   * @return A JSON object string containing information about the run such as the id, run code, title,
+   * teacher name, and periods.
+   */
+  @RequestMapping(value = "/run/info", method = RequestMethod.GET)
+  protected String getRunCodeInfo(@RequestParam("runCode") String runCode) throws JSONException {
+    JSONObject runRegisterInfo = new JSONObject();
+    try {
+      Run run = runService.retrieveRunByRuncode(runCode);
+      runRegisterInfo.put("id", run.getId());
+      runRegisterInfo.put("name", run.getName());
+      runRegisterInfo.put("runCode", run.getRuncode());
+      User owner = run.getOwner();
+      runRegisterInfo.put("teacherFirstName", owner.getUserDetails().getFirstname());
+      runRegisterInfo.put("teacherLastName", owner.getUserDetails().getLastname());
+      runRegisterInfo.put("startTime", run.getStarttime());
+      runRegisterInfo.put("endTime", run.getEndtime());
+      runRegisterInfo.put("periods", this.getPeriods(run));
+    } catch (ObjectNotFoundException e) {
+      runRegisterInfo.put("error", "runNotFound");
+    }
+    return runRegisterInfo.toString();
+  }
+
+  /**
+   * Add a student to a run.
+   * @param runCode The run code string.
+   * @param period The period string.
+   * @return If the student is successfully added to the run, we will return a JSON object string
+   * that contains the information about the run. If the student is not successfully added to the
+   * run, we will return a JSON object string containing an error field with an error string.
+   */
+  @RequestMapping(value = "/run/register", method = RequestMethod.POST)
+  protected String addStudentToRun(@RequestParam("runCode") String runCode,
+      @RequestParam("period") String period) {
+    JSONObject responseJSONObject = new JSONObject();
+    String error = "";
+    User user = ControllerUtil.getSignedInUser();
+    Projectcode projectCode = new Projectcode(runCode, period);
+    boolean addedStudent = false;
+    try {
+      int maxLoop = 100; // To ensure that the following while loop gets run at most this many times.
+      int currentLoopIndex = 0;
+      while (currentLoopIndex < maxLoop) {
+        try {
+          studentService.addStudentToRun(user, projectCode);
+          Run run = runService.retrieveRunByRuncode(runCode);
+          responseJSONObject = this.getRunJSON(user, run);
+          addedStudent = true;
+        } catch (HibernateOptimisticLockingFailureException holfe) {
+          /*
+           * Multiple students tried to create an account at the same time, resulting in this exception.
+           * We will try saving again.
+           */
+          currentLoopIndex++;
+          continue;
+        } catch (StaleObjectStateException sose) {
+          /*
+           * Multiple students tried to create an account at the same time, resulting in this exception.
+           * We will try saving again.
+           */
+          currentLoopIndex++;
+          continue;
+        } catch (JSONException je) {
+          je.printStackTrace();
+        }
+        /*
+         * If it reaches here, it means the hibernate optimistic locking exception was not thrown so we
+         * can exit the loop.
+         */
+        break;
+      }
+    } catch (ObjectNotFoundException e) {
+      error = "runCodeNotFound";
+    } catch (PeriodNotFoundException e) {
+      error = "periodNotFound";
+    } catch (StudentUserAlreadyAssociatedWithRunException se) {
+      error = "studentAlreadyAssociatedWithRun";
+    }
+
+    if (!error.equals("")) {
+      // there was an error and we were unable to add the student to the run
+      try {
+        responseJSONObject.put("error", error);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    } else if (!addedStudent) {
+      /*
+       * there were no errors but we were unable to add the student to the
+       * run for some reason so we will just return a generic error message
+       */
+      try {
+        responseJSONObject.put("error", "failedToAddStudentToRun");
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+    return responseJSONObject.toString();
+  }
+
+  /**
+   * Get the periods in a run.
+   * @param run The run object.
+   * @return A JSON array containing strings.
+   */
+  private JSONArray getPeriods(Run run) {
+    JSONArray periodsJSONArray = new JSONArray();
+    Set<Group> periods = run.getPeriods();
+    for (Group period : periods) {
+      periodsJSONArray.put(period.getName());
+    }
+    return periodsJSONArray;
   }
 
   @RequestMapping(value = "/config", method = RequestMethod.GET)

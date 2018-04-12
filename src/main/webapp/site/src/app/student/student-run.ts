@@ -7,4 +7,5 @@ export class StudentRun extends Run {
   workgroupId: number;
   workgroupMembers: any;
   workgroupNames: string;
+  error: string;
 }

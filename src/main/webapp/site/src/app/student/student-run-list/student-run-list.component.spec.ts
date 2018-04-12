@@ -64,4 +64,14 @@ describe('StudentRunListComponent', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('#studentRuns').textContent).toContain('Photosynthesis');
   })
+
+  it ('should detect valid project code', () => {
+    const projectCode = 'Cat123';
+    expect(component.isValidRunCodeSyntax(projectCode)).toEqual(true);
+  })
+
+  it ('should detect invalid project code', () => {
+    const projectCode = 'Cat12';
+    expect(component.isValidRunCodeSyntax(projectCode)).toEqual(false);
+  })
 });
