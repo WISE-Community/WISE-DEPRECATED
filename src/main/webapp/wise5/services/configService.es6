@@ -150,6 +150,10 @@ class ConfigService {
     return this.getConfigParam('mode');
   };
 
+  getContextPath() {
+    return this.getConfigParam('contextPath');
+  }
+
   /**
    * Returns the period id of the logged-in user.
    */

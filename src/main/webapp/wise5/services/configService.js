@@ -186,12 +186,17 @@ var ConfigService = function () {
       return this.getConfigParam('mode');
     }
   }, {
-    key: 'getPeriodId',
-
+    key: 'getContextPath',
+    value: function getContextPath() {
+      return this.getConfigParam('contextPath');
+    }
 
     /**
      * Returns the period id of the logged-in user.
      */
+
+  }, {
+    key: 'getPeriodId',
     value: function getPeriodId() {
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {

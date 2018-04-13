@@ -32,6 +32,7 @@ class TopBarController {
     this.userName = this.ConfigService.getMyUserName();
 
     this.themePath = this.ProjectService.getThemePath();
+    this.contextPath = this.ConfigService.getContextPath();
   }
 
   /**
@@ -78,7 +79,7 @@ const TopBar = {
     `<md-toolbar class="l-header">
       <div class="md-toolbar-tools">
         <span class="md-button logo-link">
-          <a href="/wise/teacher" target="_self">
+          <a href="{{$ctrl.contextPath}}/teacher" target="_self">
             <img ng-src="{{ $ctrl.logoPath }}" alt="{{ 'WISE_LOGO' | translate }}" class="logo" />
           </a>
         </span>

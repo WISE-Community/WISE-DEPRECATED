@@ -1170,13 +1170,22 @@ var ProjectController = function () {
   }, {
     key: 'refreshProject',
     value: function refreshProject() {
-      this.ProjectService.parseProject();
-      this.items = this.ProjectService.idToOrder;
-      this.inactiveGroupNodes = this.ProjectService.getInactiveGroupNodes();
-      this.inactiveStepNodes = this.ProjectService.getInactiveStepNodes();
-      this.inactiveNodes = this.ProjectService.getInactiveNodes();
-      this.idToNode = this.ProjectService.getIdToNode();
-      this.unselectAllItems();
+      var _this10 = this;
+
+      /*
+       * Use a timeout before we refresh the project in order to allow the
+       * spinning progress indicator to show up before the browser starts
+       * blocking/freezing.
+       */
+      this.$timeout(function () {
+        _this10.ProjectService.parseProject();
+        _this10.items = _this10.ProjectService.idToOrder;
+        _this10.inactiveGroupNodes = _this10.ProjectService.getInactiveGroupNodes();
+        _this10.inactiveStepNodes = _this10.ProjectService.getInactiveStepNodes();
+        _this10.inactiveNodes = _this10.ProjectService.getInactiveNodes();
+        _this10.idToNode = _this10.ProjectService.getIdToNode();
+        _this10.unselectAllItems();
+      });
     }
 
     /**
@@ -1198,7 +1207,7 @@ var ProjectController = function () {
   }, {
     key: 'importStepClicked',
     value: function importStepClicked() {
-      var _this10 = this;
+      var _this11 = this;
 
       this.toggleView('importStep');
 
@@ -1209,7 +1218,7 @@ var ProjectController = function () {
 
         if (this.libraryProjectsList == null) {
           this.ConfigService.getLibraryProjects().then(function (libraryProjectsList) {
-            _this10.libraryProjectsList = libraryProjectsList;
+            _this11.libraryProjectsList = libraryProjectsList;
           });
         }
       }
@@ -1247,7 +1256,7 @@ var ProjectController = function () {
   }, {
     key: 'showImportProject',
     value: function showImportProject(importProjectId) {
-      var _this11 = this;
+      var _this12 = this;
 
       this.importProjectId = importProjectId;
       if (this.importProjectId == null) {
@@ -1260,10 +1269,10 @@ var ProjectController = function () {
         this.importProject = null;
       } else {
         this.ProjectService.retrieveProjectById(this.importProjectId).then(function (projectJSON) {
-          _this11.importProject = projectJSON;
-          var nodeOrderOfProject = _this11.ProjectService.getNodeOrderOfProject(_this11.importProject);
-          _this11.importProjectIdToOrder = nodeOrderOfProject.idToOrder;
-          _this11.importProjectItems = nodeOrderOfProject.nodes;
+          _this12.importProject = projectJSON;
+          var nodeOrderOfProject = _this12.ProjectService.getNodeOrderOfProject(_this12.importProject);
+          _this12.importProjectIdToOrder = nodeOrderOfProject.idToOrder;
+          _this12.importProjectItems = nodeOrderOfProject.nodes;
         });
       }
     }
@@ -1657,7 +1666,7 @@ var ProjectController = function () {
   }, {
     key: 'temporarilyHighlightNewNodes',
     value: function temporarilyHighlightNewNodes(newNodes) {
-      var _this12 = this;
+      var _this13 = this;
 
       var doScrollToNewNodes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
@@ -1672,7 +1681,7 @@ var ProjectController = function () {
               var newNode = _step8.value;
 
               if (newNode != null) {
-                _this12.UtilService.temporarilyHighlightElement(newNode.id);
+                _this13.UtilService.temporarilyHighlightElement(newNode.id);
               }
             }
           } catch (err) {
