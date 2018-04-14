@@ -124,7 +124,10 @@
               <testExcludes>
                 <exclude>**/org/wise/portal/service/**/*.java</exclude>
                 <exclude>**/org/wise/portal/domain/**/*.java</exclude>
-                <exclude>**/org/wise/portal/presentation/web/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/admin/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/**/*.java</exclude>
               </testExcludes>
@@ -143,11 +146,14 @@
         <configuration>
           <forkMode>once</forkMode>
           <excludes>
-              <exclude>**/org/wise/portal/service/**/*.java</exclude>
-              <exclude>**/org/wise/portal/domain/**/*.java</exclude>
-              <exclude>**/org/wise/portal/presentation/web/**/*.java</exclude>
+            <exclude>**/org/wise/portal/service/**/*.java</exclude>
+            <exclude>**/org/wise/portal/domain/**/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/admin/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
-              <exclude>**/org/wise/portal/dao/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/**/*.java</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -478,6 +484,18 @@
       <version>3.5.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-easymock</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <properties>
@@ -485,6 +503,7 @@
     <org.springframework.version>4.3.9.RELEASE</org.springframework.version>
     <org.springframework.security.version>4.2.3.RELEASE</org.springframework.security.version>
     <org.hibernate.version>5.2.10.Final</org.hibernate.version>
+    <powermock.version>1.7.1</powermock.version>
     <startup.listeners>
     </startup.listeners>
   </properties>

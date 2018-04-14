@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007 Regents of the University of California (Regents). Created
+ * Copyright (c) 2007-2018 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU Lesser General Public License, v2.
@@ -23,130 +23,139 @@
 package org.wise.portal.presentation.web.controllers.student;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
+import junit.framework.TestCase;
 import org.easymock.EasyMock;
+import org.easymock.TestSubject;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.web.AbstractModelAndViewTests;
-import org.springframework.web.servlet.ModelAndView;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.ui.ModelMap;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.run.RunService;
+import org.wise.portal.service.run.impl.RunServiceImpl;
 import org.wise.portal.service.student.StudentService;
 
 /**
  * @author Hiroki Terashima
- * @version $Id$
  */
-public class StudentIndexControllerTest extends AbstractModelAndViewTests {
-	
-	private StudentIndexController studentIndexController;
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(ControllerUtil.class)
+public class StudentIndexControllerTest extends TestCase {
 
-    private MockHttpServletRequest request;
+  @TestSubject
+  private StudentIndexController studentIndexController = new StudentIndexController();
 
-    private MockHttpServletResponse response;
+  @Mock
+  private RunServiceImpl runService;
 
-    private RunService mockRunService;
-    
-    private StudentService mockStudentService;
-    
-    private List<Run> expectedRunList;
-    
-    private Run mockRun;
+  @Mock
+  private StudentService studentService;
 
-	private StudentRunInfo mockStudentRunInfo;
-	
-	private List<StudentRunInfo> 
-	   expected_current_studentruninfo_list, expected_ended_studentruninfo_list;
-    
-    private User user;
-    
-    protected void setUp() throws Exception {
-    	super.setUp();
-        this.request = new MockHttpServletRequest();
-        this.response = new MockHttpServletResponse();
-        HttpSession mockSession = new MockHttpSession();
-        this.user = new UserImpl();
-        mockSession.setAttribute(User.CURRENT_USER_SESSION_KEY, this.user);
-        this.request.setSession(mockSession);
+  private Long previousLoginTime = 1523479696000L;
 
-        this.mockRunService = EasyMock.createMock(RunService.class);
-        this.mockStudentService = EasyMock.createMock(StudentService.class);
-    	
-        mockRun = new RunImpl();
-        
-        this.expectedRunList = new LinkedList<Run>();
-        this.expectedRunList.add(mockRun);
-        
-        mockStudentRunInfo = new StudentRunInfo();
-        mockStudentRunInfo.setRun(mockRun);
-        mockStudentRunInfo.setStudentUser(user);
-        
-        this.expected_current_studentruninfo_list = new ArrayList<StudentRunInfo>();
-        this.expected_current_studentruninfo_list.add(mockStudentRunInfo);
+  private ModelMap modelMap = new ModelMap();
 
-        this.expected_ended_studentruninfo_list = new ArrayList<StudentRunInfo>();
+  private List<Run> expectedRunList;
 
-        this.studentIndexController = new StudentIndexController();
-        this.studentIndexController.setRunService(this.mockRunService);
-        this.studentIndexController.setStudentService(this.mockStudentService);
-    }
-    
-    protected void tearDown() throws Exception {
-    	super.tearDown();
-    	this.request = null;
-    	this.response = null;
-    	this.mockRunService = null;
-    }
-    
-    @Test public void testHandleRequestInternal_WithRun() throws Exception {
-    	User user = new UserImpl();
-    	EasyMock.expect(mockRunService.getRunList(user)).andReturn(
-    			expectedRunList);
-    	EasyMock.replay(mockRunService);
-    	
-    	EasyMock.expect(mockStudentService.getStudentRunInfo(user, mockRun)).
-    	    andReturn(mockStudentRunInfo);
-    	EasyMock.replay(mockStudentService);
-    	
-    	ModelAndView modelAndView = 
-    		studentIndexController.handleRequestInternal(request, response);
-    	assertModelAttributeValue(modelAndView, 
-    			StudentIndexController.CURRENT_STUDENTRUNINFO_LIST_KEY, 
-    			expected_current_studentruninfo_list);
-    	assertModelAttributeValue(modelAndView, 
-    			StudentIndexController.ENDED_STUDENTRUNINFO_LIST_KEY, 
-    			expected_ended_studentruninfo_list);
+  private Run mockRun;
 
-    	assertModelAttributeValue(modelAndView, 
-    			ControllerUtil.USER_KEY, user);
-    	EasyMock.verify(mockRunService);
-    }
-    
-    @Test public void testHandleRequestInternal_WithoutRun() throws Exception {
-    	List<Run> emptyRunList = Collections.emptyList();
-    	EasyMock.expect(mockRunService.getRunList(user)).
-    	       andReturn(emptyRunList);
-    	EasyMock.replay(mockRunService);
-    	
-    	ModelAndView modelAndView = 
-    		studentIndexController.handleRequestInternal(request, response);
-    	assertModelAttributeValue(modelAndView, 
-    			StudentIndexController.CURRENT_STUDENTRUNINFO_LIST_KEY, emptyRunList);
-    	assertModelAttributeValue(modelAndView, 
-    			ControllerUtil.USER_KEY, user);
-    	EasyMock.verify(mockRunService);
-    }
+  private StudentRunInfo mockStudentRunInfo;
 
+  private List<StudentRunInfo> expected_current_studentruninfo_list, expected_ended_studentruninfo_list;
+
+  private User loggedInUser = new UserImpl();
+
+  @Before
+  public void setUp() throws Exception {
+    mockRun = new RunImpl();
+
+    expectedRunList = new ArrayList<>();
+    expectedRunList.add(mockRun);
+
+    mockStudentRunInfo = new StudentRunInfo();
+    mockStudentRunInfo.setRun(mockRun);
+    mockStudentRunInfo.setStudentUser(loggedInUser);
+
+    expected_current_studentruninfo_list = new ArrayList<StudentRunInfo>();
+    expected_current_studentruninfo_list.add(mockStudentRunInfo);
+
+    expected_ended_studentruninfo_list = new ArrayList<StudentRunInfo>();
+
+    StudentUserDetails details = new StudentUserDetails();
+    Calendar cal = Calendar.getInstance();
+    Long previousLogin = new Long(previousLoginTime);
+    cal.setTimeInMillis(previousLogin);
+    details.setLastLoginTime(cal.getTime());
+    loggedInUser.setUserDetails(details);
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    runService = null;
+  }
+
+  @Test
+  public void handleGET_firstTimeLoggingIn_OK() {
+    loggedInUser.getUserDetails().setLastLoginTime(null);
+    PowerMock.mockStatic(ControllerUtil.class);
+    EasyMock.expect(ControllerUtil.getSignedInUser()).andReturn(loggedInUser);
+    PowerMock.replay(ControllerUtil.class);
+
+    EasyMock.expect(runService.getRunList(loggedInUser)).andReturn(expectedRunList);
+    EasyMock.replay(runService);
+
+    EasyMock.expect(studentService.getStudentRunInfo(loggedInUser, mockRun)).andReturn(mockStudentRunInfo);
+    EasyMock.replay(studentService);
+
+    String previousLoginTime = null;
+    Calendar cal = Calendar.getInstance();
+    Date dateBeforeCall = cal.getTime();
+    String view = studentIndexController.handleGET(modelMap, previousLoginTime);
+    assertEquals("student/index", view);
+    assertEquals(modelMap.get("user"), loggedInUser);
+    assertTrue(dateBeforeCall.equals((Date) modelMap.get("lastLoginTime")) || dateBeforeCall.before((Date) modelMap.get("lastLoginTime")));
+    assertEquals(expected_current_studentruninfo_list, modelMap.get("current_run_list"));
+    assertEquals(expected_ended_studentruninfo_list, modelMap.get("ended_run_list"));
+    PowerMock.verify(ControllerUtil.class);
+    EasyMock.verify(runService);
+  }
+
+  @Test
+  public void handleGET_withRun_OK() {
+    PowerMock.mockStatic(ControllerUtil.class);
+    EasyMock.expect(ControllerUtil.getSignedInUser()).andReturn(loggedInUser);
+    PowerMock.replay(ControllerUtil.class);
+
+    EasyMock.expect(runService.getRunList(loggedInUser)).andReturn(expectedRunList);
+    EasyMock.replay(runService);
+
+    EasyMock.expect(studentService.getStudentRunInfo(loggedInUser, mockRun)).andReturn(mockStudentRunInfo);
+    EasyMock.replay(studentService);
+
+    String view = studentIndexController.handleGET(modelMap, String.valueOf(previousLoginTime));
+    assertEquals("student/index", view);
+    assertEquals(modelMap.get("user"), loggedInUser);
+    Calendar cal = Calendar.getInstance();
+    Long previousLogin = new Long(previousLoginTime);
+    cal.setTimeInMillis(previousLogin);
+    assertEquals(cal.getTime(), modelMap.get("lastLoginTime"));
+    assertEquals(expected_current_studentruninfo_list, modelMap.get("current_run_list"));
+    assertEquals(expected_ended_studentruninfo_list, modelMap.get("ended_run_list"));
+    PowerMock.verify(ControllerUtil.class);
+    EasyMock.verify(runService);
+  }
 }
