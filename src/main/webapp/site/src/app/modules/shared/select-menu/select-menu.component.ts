@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -9,7 +9,7 @@ import { FormControl } from '@angular/forms';
 })
 export class SelectMenuComponent implements OnInit {
 
-  thisSelect = new FormControl();
+  selectMenu = new FormControl();
 
   @Input()
   disable: boolean = false; // whether select is disabled
@@ -41,6 +41,17 @@ export class SelectMenuComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.disable) {
+      let disable = changes.disable.currentValue;
+      if (disable) {
+        this.selectMenu.disable();
+      } else {
+        this.selectMenu.enable();
+      }
+    }
   }
 
   changed() {

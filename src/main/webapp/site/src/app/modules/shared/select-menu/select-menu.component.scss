@@ -3,23 +3,24 @@
 .select-menu {
   width: 100%;
 
-  .mat-form-field-flex {
-    display: flex;
-    width: auto;
-    padding: 0 8px;
-    border-radius: 2px;
-    line-height: 36px;
+  .mat-form-field-infix {
+    border: 0;
     margin-top: 1.4375em;
     @include mat-elevation(2);
+    padding: 0.75em 0.4375em;
+    border-radius: 2px;
   }
 
-  .mat-form-field-infix {
-    border-top: 0;
-    padding: 0;
+  &.mat-form-field-should-float {
+    .mat-form-field-label-wrapper {
+      top: -1.5875em;
+      padding-top: 1.5875em;
+    }
   }
 
-  .mat-form-field-placeholder-wrapper {
-    top: -1.8375em;
+  .mat-form-field-label {
+    top: 1.5875em;
+    left: .4375em;
   }
 
   .mat-form-field-underline {
