@@ -51,10 +51,10 @@ var ProjectService = function () {
     this.additionalProcessingFunctionsMap = {};
 
     // filtering options for navigation displays
-    this.filters = [{ 'name': 'all', 'label': 'All'
-      //{'name': 'todo', 'label': 'Todo'},
-      //{'name': 'completed', 'label': 'Completed'}
-    }];
+    this.filters = [{ 'name': 'all', 'label': 'All' }
+    //{'name': 'todo', 'label': 'Todo'},
+    //{'name': 'completed', 'label': 'Completed'}
+    ];
   }
 
   _createClass(ProjectService, [{
@@ -12918,6 +12918,36 @@ var ProjectService = function () {
         return true;
       }
       return false;
+    }
+  }, {
+    key: 'getSpaces',
+    value: function getSpaces() {
+      if (this.project.spaces != null) {
+        return this.project.spaces;
+      } else {
+        return [];
+      }
+    }
+  }, {
+    key: 'addSpace',
+    value: function addSpace(space) {
+      if (this.project.spaces == null) {
+        this.project.spaces = [];
+      }
+      this.project.spaces.push(space);
+      this.saveProject();
+    }
+  }, {
+    key: 'removeSpace',
+    value: function removeSpace(id) {
+      var spaces = this.getSpaces();
+      for (var s = 0; s < spaces.length; s++) {
+        if (spaces[s].id == id) {
+          spaces.splice(s, 1);
+          this.saveProject();
+          return;
+        }
+      }
     }
   }]);
 

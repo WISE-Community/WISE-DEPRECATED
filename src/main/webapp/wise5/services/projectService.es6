@@ -8616,6 +8616,33 @@ class ProjectService {
     }
     return false;
   }
+
+  getSpaces() {
+    if (this.project.spaces != null) {
+      return this.project.spaces;
+    } else {
+      return [];
+    }
+  }
+
+  addSpace(space) {
+    if (this.project.spaces == null) {
+      this.project.spaces = [];
+    }
+    this.project.spaces.push(space);
+    this.saveProject();
+  }
+
+  removeSpace(id) {
+    let spaces = this.getSpaces();
+    for (let s = 0; s < spaces.length; s++) {
+      if (spaces[s].id == id) {
+        spaces.splice(s, 1);
+        this.saveProject();
+        return;
+      }
+    }
+  }
 }
 
 ProjectService.$inject = [

@@ -2,7 +2,7 @@
 
 <h4>{{ 'notebookSettings' | translate }}</h4>
 
-<input id="enableNotebookCheckbox" type="checkbox" ng-model="authorNotebookController.project.notebook.enabled"/>{{ 'enableNotebook' | translate }}
+<input id="enableNotebookCheckbox" type="checkbox" ng-model="authorNotebookController.project.notebook.enabled"/>{{ 'enableNotebook' | translate }}<br/>
 
 <ul ng-show="authorNotebookController.project.notebook.enabled">
     <li>{{ 'notebookLabel' | translate }} <input ng-model="authorNotebookController.project.notebook.label" /></li>
@@ -43,3 +43,6 @@
         </ul>
     </ul>
 </ul>
+
+<input id="enablePublicNotebookCheckbox" type="checkbox" ng-model="authorNotebookController.isPublicNotebookEnabled" ng-click="authorNotebookController.togglePublicNotebook()"/>{{ 'enablePublicNotebook' | translate }}
+
