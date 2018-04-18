@@ -8629,8 +8629,20 @@ class ProjectService {
     if (this.project.spaces == null) {
       this.project.spaces = [];
     }
-    this.project.spaces.push(space);
-    this.saveProject();
+    if (!this.isSpaceExists(space.id)) {
+      this.project.spaces.push(space);
+      this.saveProject();
+    }
+  }
+
+  isSpaceExists(id) {
+    const spaces = this.getSpaces();
+    for (let space of spaces) {
+      if (space.id === id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   removeSpace(id) {

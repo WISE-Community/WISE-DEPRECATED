@@ -34,47 +34,12 @@ var SpaceService = function () {
       var isPublic = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
       var isShowInNotebook = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
 
-      if (!this.isSpaceExists(id)) {
-        this.ProjectService.addSpace(this.createSpace(id, name, isPublic, isShowInNotebook));
-      }
+      this.ProjectService.addSpace(this.createSpace(id, name, isPublic, isShowInNotebook));
     }
   }, {
     key: 'removeSpace',
     value: function removeSpace(id) {
       this.ProjectService.removeSpace(id);
-    }
-  }, {
-    key: 'isSpaceExists',
-    value: function isSpaceExists(id) {
-      var spaces = this.ProjectService.getSpaces();
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = spaces[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var space = _step.value;
-
-          if (space.id === id) {
-            return true;
-          }
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-
-      return false;
     }
   }]);
 

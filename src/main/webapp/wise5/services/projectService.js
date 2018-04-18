@@ -51,10 +51,10 @@ var ProjectService = function () {
     this.additionalProcessingFunctionsMap = {};
 
     // filtering options for navigation displays
-    this.filters = [{ 'name': 'all', 'label': 'All' }
-    //{'name': 'todo', 'label': 'Todo'},
-    //{'name': 'completed', 'label': 'Completed'}
-    ];
+    this.filters = [{ 'name': 'all', 'label': 'All'
+      //{'name': 'todo', 'label': 'Todo'},
+      //{'name': 'completed', 'label': 'Completed'}
+    }];
   }
 
   _createClass(ProjectService, [{
@@ -12934,8 +12934,43 @@ var ProjectService = function () {
       if (this.project.spaces == null) {
         this.project.spaces = [];
       }
-      this.project.spaces.push(space);
-      this.saveProject();
+      if (!this.isSpaceExists(space.id)) {
+        this.project.spaces.push(space);
+        this.saveProject();
+      }
+    }
+  }, {
+    key: 'isSpaceExists',
+    value: function isSpaceExists(id) {
+      var spaces = this.getSpaces();
+      var _iteratorNormalCompletion170 = true;
+      var _didIteratorError170 = false;
+      var _iteratorError170 = undefined;
+
+      try {
+        for (var _iterator170 = spaces[Symbol.iterator](), _step170; !(_iteratorNormalCompletion170 = (_step170 = _iterator170.next()).done); _iteratorNormalCompletion170 = true) {
+          var space = _step170.value;
+
+          if (space.id === id) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError170 = true;
+        _iteratorError170 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion170 && _iterator170.return) {
+            _iterator170.return();
+          }
+        } finally {
+          if (_didIteratorError170) {
+            throw _iteratorError170;
+          }
+        }
+      }
+
+      return false;
     }
   }, {
     key: 'removeSpace',

@@ -136,7 +136,7 @@ var AuthorNotebookController = function () {
       _this.$mdDialog.hide();
     });
 
-    this.isPublicNotebookEnabled = this.SpaceService.isSpaceExists("public");
+    this.isPublicNotebookEnabled = this.ProjectService.isSpaceExists("public");
   }
 
   /**

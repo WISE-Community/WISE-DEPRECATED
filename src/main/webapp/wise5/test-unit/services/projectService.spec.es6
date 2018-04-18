@@ -444,27 +444,50 @@ describe('ProjectService Unit Test', () => {
       expect(scootersProjectMaxScoreActual).toEqual(scootersProjectMaxScoreExpected);
     });
 
-    it('should add spaces', () => {
+    it('should not add space if it does exist', () => {
       ProjectService.setProject(scootersProjectJSON);
+      const spaces = ProjectService.getSpaces();
+      expect(spaces.length).toEqual(2);
+      const space = {
+        "id": "public",
+        "name": "Public",
+        "isPublic": true,
+        "isShareWithNotebook": true
+      };
+      ProjectService.addSpace(space);
+      expect(spaces.length).toEqual(2);
+      expect(spaces[0].id).toEqual("public");
+      expect(spaces[1].id).toEqual("ideasAboutGlobalClimateChange");
+    });
+
+    it('should add space if it doesn\'t exist', () => {
+      ProjectService.setProject(scootersProjectJSON);
+      const spaces = ProjectService.getSpaces();
+      expect(spaces.length).toEqual(2);
       const space = {
         "id": "newSpace",
         "name": "New Space to share your thoughts",
         "isPublic": true,
         "isShareWithNotebook": false
-      }
+      };
       ProjectService.addSpace(space);
-      const spaces = ProjectService.getSpaces();
       expect(spaces.length).toEqual(3);
       expect(spaces[0].id).toEqual("public");
       expect(spaces[1].id).toEqual("ideasAboutGlobalClimateChange");
       expect(spaces[2].id).toEqual("newSpace");
     });
 
-    it('should remove spaces', () => {
+    it('should not remove a space that does not exist', () => {
       ProjectService.setProject(demoProjectJSON);
       const spaces = ProjectService.getSpaces();
       expect(spaces.length).toEqual(1);
       ProjectService.removeSpace("public");
+      expect(spaces.length).toEqual(1);
+    });
+
+    it('should remove a space that does exist', () => {
+      ProjectService.setProject(demoProjectJSON);
+      const spaces = ProjectService.getSpaces();
       expect(spaces.length).toEqual(1);
       ProjectService.removeSpace("sharePictures");
       expect(spaces.length).toEqual(0);
