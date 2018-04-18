@@ -443,5 +443,31 @@ describe('ProjectService Unit Test', () => {
       const scootersProjectMaxScoreActual = ProjectService.getMaxScore();
       expect(scootersProjectMaxScoreActual).toEqual(scootersProjectMaxScoreExpected);
     });
+
+    it('should add spaces', () => {
+      ProjectService.setProject(scootersProjectJSON);
+      const space = {
+        "id": "newSpace",
+        "name": "New Space to share your thoughts",
+        "isPublic": true,
+        "isShareWithNotebook": false
+      }
+      ProjectService.addSpace(space);
+      const spaces = ProjectService.getSpaces();
+      expect(spaces.length).toEqual(3);
+      expect(spaces[0].id).toEqual("public");
+      expect(spaces[1].id).toEqual("ideasAboutGlobalClimateChange");
+      expect(spaces[2].id).toEqual("newSpace");
+    });
+
+    it('should remove spaces', () => {
+      ProjectService.setProject(demoProjectJSON);
+      const spaces = ProjectService.getSpaces();
+      expect(spaces.length).toEqual(1);
+      ProjectService.removeSpace("public");
+      expect(spaces.length).toEqual(1);
+      ProjectService.removeSpace("sharePictures");
+      expect(spaces.length).toEqual(0);
+    });
   });
 });
