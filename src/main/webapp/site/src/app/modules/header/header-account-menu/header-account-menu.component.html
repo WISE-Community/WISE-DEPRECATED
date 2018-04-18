@@ -1,5 +1,5 @@
 <button mat-icon-button [matMenuTriggerFor]="accountMenu">
-  <mat-icon aria-label="Account Menu" *ngIf="user.role === 'student' else teacher">account_circle</mat-icon>
+  <mat-icon aria-label="Account Menu" *ngIf="role === 'student' else teacher">account_circle</mat-icon>
   <ng-template #teacher>
     <mat-icon aria-label="Account Menu">account_box</mat-icon>
   </ng-template>
@@ -7,18 +7,18 @@
 <mat-menu #accountMenu="matMenu">
   <div class="header-account-menu">
     <div class="mat-subheading-1 user-info" fxLayout="row" fxLayoutAlign="left center">
-      <mat-icon aria-label="Account avatar" *ngIf="user.role === 'student' else teacherAvatar">account_circle</mat-icon>
+      <mat-icon aria-label="Account avatar" *ngIf="role === 'student' else teacherAvatar">account_circle</mat-icon>
       <ng-template #teacherAvatar>
         <mat-icon aria-label="Account avatar">account_box</mat-icon>
       </ng-template>
-      <span>{{ user.firstName }} {{ user.lastName }}</span>
+      <span>{{ firstName }} {{ lastName }}</span>
     </div>
     <mat-divider></mat-divider>
-    <a *ngIf="user.role === 'student'" mat-menu-item routerLink="/student">
+    <a *ngIf="role === 'student'" mat-menu-item routerLink="/student">
       <mat-icon>face</mat-icon>
       <span>My Account</span>
     </a>
-    <a *ngIf="user.role !== 'student'" mat-menu-item routerLink="/teacher">
+    <a *ngIf="role !== 'student'" mat-menu-item routerLink="/teacher">
       <mat-icon>face</mat-icon>
       <span>My Account</span>
     </a>

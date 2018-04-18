@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnChanges, OnInit, Input } from '@angular/core';
 import { User } from "../../../domain/user";
 @Component({
   selector: 'app-header-links',
@@ -13,9 +13,20 @@ export class HeaderLinksComponent implements OnInit {
   @Input()
   location: string; // the current location
 
+  role: string = "";
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  ngOnChanges(changes) {
+    if (changes.user) {
+      let user = changes.user.currentValue;
+      if (user) {
+        this.role = user.role;
+      }
+    }
   }
 
 }

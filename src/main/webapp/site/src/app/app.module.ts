@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ConfigService } from "./services/config.service";
@@ -12,6 +12,7 @@ import { StudentService } from './student/student.service';
 import { UserService } from './services/user.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { Config } from "./domain/config";
 
 @NgModule({
   declarations: [
@@ -30,7 +31,21 @@ import { FormsModule } from '@angular/forms';
   providers: [
     ConfigService,
     StudentService,
-    UserService
+    UserService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (configService: ConfigService, userService: UserService) =>
+        function() {
+          return userService.retrieveUser().subscribe((user) => {
+            configService.subscribeToGetUser();
+          });
+        },
+      deps: [
+        ConfigService,
+        UserService
+      ],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

@@ -5,6 +5,7 @@ import { MatMenuModule, MatIconModule, MatDividerModule } from "@angular/materia
 import { User } from "../../../domain/user";
 import { ConfigService } from "../../../services/config.service";
 import { HttpClient, HttpHandler } from "@angular/common/http";
+import { UserService } from "../../../services/user.service";
 
 describe('HeaderAccountMenuComponent', () => {
   let component: HeaderAccountMenuComponent;
@@ -14,7 +15,7 @@ describe('HeaderAccountMenuComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ HeaderAccountMenuComponent ],
       imports: [ MatDividerModule, MatMenuModule, MatIconModule ],
-      providers: [ ConfigService, HttpClient, HttpHandler ]
+      providers: [ ConfigService, HttpClient, HttpHandler, UserService ]
     })
     .compileComponents();
   }));

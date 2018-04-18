@@ -1,29 +1,34 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, finalize, tap, map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-
 import { User } from '../domain/user';
 
 @Injectable()
 export class UserService {
 
   private userUrl = 'api/user/user';
-  private user: Observable<User>;
+  private user: User = null;
+  private user$: BehaviorSubject<User> = new BehaviorSubject<User>(this.user);
   private authenticated = false;
   private logInURL = '/wise/j_acegi_security_check';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   getUser(): Observable<User> {
-    return this.user
-      ? this.user
-      : this.http.get<User>(this.userUrl)
-        .pipe(
-          tap(user => this.log(`fetched user`)),
-          catchError(this.handleError('getUser', new User()))
-        );
+    return this.user$;
+  }
+
+  retrieveUser(): Observable<User> {
+    return this.http.get<User>(this.userUrl)
+      .pipe(
+        tap((user) => {
+          this.user = user;
+          this.user$.next(this.user);
+        }),
+        catchError(this.handleError('getUser', new User())));
   }
 
   /**
@@ -60,7 +65,9 @@ export class UserService {
           } else {
             this.authenticated = false;
           }
-          return callback && callback();
+          this.retrieveUser().subscribe((user) => {
+            return callback && callback();
+          });
         });
   }
 
