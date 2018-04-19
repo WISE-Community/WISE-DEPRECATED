@@ -246,6 +246,11 @@ var EditNotebookItemController = function () {
     value: function setShowUpload() {
       this.showUpload = this.notebookConfig.itemTypes != null && this.notebookConfig.itemTypes.note != null && this.notebookConfig.itemTypes.note.enableStudentUploads && this.item.content.attachments && this.item.content.attachments.length < 1;
     }
+  }, {
+    key: 'canShareWithClass',
+    value: function canShareWithClass() {
+      return this.ProjectService.isSpaceExists("public");
+    }
   }]);
 
   return EditNotebookItemController;

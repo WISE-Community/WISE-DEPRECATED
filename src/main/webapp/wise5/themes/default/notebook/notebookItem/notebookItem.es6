@@ -152,18 +152,22 @@ class NotebookItemController {
   }
 
   canCopyNotebookItem() {
-    return !this.isMyNotebookItem() && !this.isChooseMode;
+    return this.ProjectService.isSpaceExists("public") &&
+        !this.isMyNotebookItem() &&
+        !this.isChooseMode;
   }
 
   canShareNotebookItem() {
-    return this.isMyNotebookItem() &&
+    return this.ProjectService.isSpaceExists("public") &&
+        this.isMyNotebookItem() &&
         this.item.serverDeleteTime == null &&
         !this.isChooseMode &&
         !this.isItemInGroup('public');
   }
 
   canUnshareNotebookItem() {
-    return this.isMyNotebookItem() &&
+    return this.ProjectService.isSpaceExists("public") &&
+        this.isMyNotebookItem() &&
         this.item.serverDeleteTime == null &&
         !this.isChooseMode &&
         this.isItemInGroup('public');

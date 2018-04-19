@@ -11,7 +11,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NotebookNotesController = function () {
-  function NotebookNotesController($filter, $rootScope, $scope, NotebookService) {
+  function NotebookNotesController($filter, $rootScope, $scope, NotebookService, ProjectService) {
     var _this = this;
 
     _classCallCheck(this, NotebookNotesController);
@@ -19,6 +19,7 @@ var NotebookNotesController = function () {
     this.$translate = $filter('translate');
     this.$rootScope = $rootScope;
     this.NotebookService = NotebookService;
+    this.ProjectService = ProjectService;
     this.groups = [];
     this.selectedTabIndex = 0;
     this.$scope = $scope;
@@ -32,11 +33,6 @@ var NotebookNotesController = function () {
       items: []
     };
     this.groupNameToGroup['private'] = personalGroup;
-    this.groupNameToGroup['public'] = {
-      title: "Public",
-      name: "public",
-      items: []
-    };
 
     var _iteratorNormalCompletion = true;
     var _didIteratorError = false;
@@ -71,6 +67,41 @@ var NotebookNotesController = function () {
 
     this.groups.push(personalGroup);
 
+    var spaces = this.ProjectService.getSpaces();
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+      for (var _iterator2 = spaces[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var space = _step2.value;
+
+        if (space.isShowInNotebook) {
+          var spaceGroup = {
+            title: space.name,
+            name: space.id,
+            isEditAllowed: true,
+            items: []
+          };
+          this.groupNameToGroup[space.id] = spaceGroup;
+          this.groups.push(spaceGroup);
+        }
+      }
+    } catch (err) {
+      _didIteratorError2 = true;
+      _iteratorError2 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+          _iterator2.return();
+        }
+      } finally {
+        if (_didIteratorError2) {
+          throw _iteratorError2;
+        }
+      }
+    }
+
     this.$onInit = function () {
       _this.color = _this.config.itemTypes.note.label.color;
     };
@@ -83,45 +114,33 @@ var NotebookNotesController = function () {
     };
 
     this.$rootScope.$on('publicNotebookItemsRetrieved', function (event, args) {
-      var publicGroupFound = false;
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
 
       try {
-        for (var _iterator2 = _this.groups[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var group = _step2.value;
+        for (var _iterator3 = _this.groups[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var group = _step3.value;
 
-          if (group.name == "public") {
-            group.items = _this.publicNotebookItems["public"];
-            publicGroupFound = true;
+          if (group.name != 'private') {
+            group.items = _this.publicNotebookItems[group.name];
           }
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
           }
         } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
+          if (_didIteratorError3) {
+            throw _iteratorError3;
           }
         }
       }
 
-      if (!publicGroupFound) {
-        var publicGroup = {
-          title: "Public",
-          name: "public",
-          isEditAllowed: false,
-          items: _this.publicNotebookItems["public"]
-        };
-        _this.groups.push(publicGroup);
-        _this.groupNameToGroup['public'] = publicGroup;
-      }
       _this.selectedTabIndex = 0;
     });
 
@@ -140,7 +159,9 @@ var NotebookNotesController = function () {
     key: "updatePrivateNotebookNote",
     value: function updatePrivateNotebookNote(notebookItem) {
       this.updateNotebookNote(this.groupNameToGroup['private'], notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
-      this.removeNotebookNote(this.groupNameToGroup['public'], notebookItem.localNotebookItemId, notebookItem.workgroupId);
+      if (this.groupNameToGroup['public'] != null) {
+        this.removeNotebookNote(this.groupNameToGroup['public'], notebookItem.localNotebookItemId, notebookItem.workgroupId);
+      }
     }
   }, {
     key: "updatePublicNotebookNote",
@@ -221,7 +242,7 @@ var NotebookNotesController = function () {
   return NotebookNotesController;
 }();
 
-NotebookNotesController.$inject = ['$filter', '$rootScope', '$scope', 'NotebookService'];
+NotebookNotesController.$inject = ['$filter', '$rootScope', '$scope', 'NotebookService', 'ProjectService'];
 
 var NotebookNotes = {
   bindings: {

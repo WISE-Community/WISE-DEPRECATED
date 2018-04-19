@@ -228,6 +228,10 @@ class EditNotebookItemController {
       this.item.content.attachments &&
       this.item.content.attachments.length < 1;
   }
+
+  canShareWithClass() {
+    return this.ProjectService.isSpaceExists("public");
+  }
 }
 
 EditNotebookItemController.$inject = [

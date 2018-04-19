@@ -1688,7 +1688,7 @@ class OpenResponseController {
   }
 
   showCopyPublicNotebookItemButton() {
-    return true;
+    return this.ProjectService.isSpaceExists("public");
   }
 
   copyPublicNotebookItemButtonClicked(event) {
