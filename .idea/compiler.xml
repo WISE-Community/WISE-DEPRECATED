@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <excludeFromCompile>
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/dao" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/domain" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/mail" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/presentation/web/controllers/admin" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/presentation/web/controllers/general/contactwise" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/presentation/web/controllers/teacher" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/presentation/web/controllers" includeSubdirectories="false" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/service/authentication" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/service/group" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/service/module" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/service/newsitem" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/service/premadecomment" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/service/project" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/service/run" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/service/student" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/service/workgroup" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/presentation/validators/teacher" includeSubdirectories="true" />
+    </excludeFromCompile>
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="wise" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="wise" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
