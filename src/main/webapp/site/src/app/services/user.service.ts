@@ -21,7 +21,8 @@ export class UserService {
   }
 
   retrieveUser(): Observable<User> {
-    return this.http.get<User>(this.userUrl)
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    return this.http.get<User>(this.userUrl, { headers: headers })
       .pipe(
         tap((user) => {
           this.user$.next(user);

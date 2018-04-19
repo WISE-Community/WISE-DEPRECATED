@@ -14,11 +14,12 @@ export class StudentService {
   constructor(private http: HttpClient) { }
 
   getRuns(): Observable<StudentRun[]> {
-      return this.http.get<StudentRun[]>(this.runsUrl)
-        .pipe(
-            tap(runs => this.log(`fetched runs`)),
-            catchError(this.handleError('getRuns', []))
-          );
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    return this.http.get<StudentRun[]>(this.runsUrl, { headers: headers })
+      .pipe(
+          tap(runs => this.log(`fetched runs`)),
+          catchError(this.handleError('getRuns', []))
+        );
   }
 
   /**

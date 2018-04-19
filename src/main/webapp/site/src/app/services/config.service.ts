@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
 import { Config } from "../domain/config";
@@ -35,7 +35,8 @@ export class ConfigService {
     } else if (user.role == 'teacher' || user.role == 'researcher' || user.role == 'admin') {
       configUrl = this.teacherConfigUrl;
     }
-    return this.http.get<Config>(configUrl)
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    return this.http.get<Config>(configUrl, { headers: headers })
       .pipe(
         tap(config => {
           this.config$.next(config);
