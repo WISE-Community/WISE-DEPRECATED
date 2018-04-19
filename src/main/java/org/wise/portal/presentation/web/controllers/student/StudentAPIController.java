@@ -274,7 +274,9 @@ public class StudentAPIController {
   @RequestMapping(value = "/config", method = RequestMethod.GET)
   protected String getConfig(ModelMap modelMap) throws JSONException {
     JSONObject configJSON = new JSONObject();
-    configJSON.put("logOutURL", wiseProperties.get("wiseBaseURL") + "/logout");
+    String wiseBaseURL = (String) wiseProperties.get("wiseBaseURL");
+    configJSON.put("wiseBaseURL", wiseBaseURL);
+    configJSON.put("logOutURL", wiseBaseURL + "/logout");
     return configJSON.toString();
   }
 
