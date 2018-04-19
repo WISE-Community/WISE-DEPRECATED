@@ -2,9 +2,30 @@
   '~style/abstracts/functions',
   '~style/abstracts/variables';
 
-.library-group {
+.library {
   text-align: left;
 
+  h2 {
+    font-weight: 400;
+    margin-left: 8px;
+    margin-bottom: 8px;
+
+    mat-icon {
+      margin-right: 4px;
+    }
+  }
+}
+
+.library-filter {
+  margin: 0 8px;
+}
+
+.library__groups {
+  margin-top: 16px;
+  display: block;
+}
+
+.library-group {
   .mat-content {
     align-items: center;
     font-weight: 500;

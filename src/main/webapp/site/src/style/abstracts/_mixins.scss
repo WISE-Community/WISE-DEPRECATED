@@ -25,10 +25,8 @@
     background-color: map-get($colors, notice-bg);
   }
 
-  .search-bar, .select-menu {
-    .mat-form-field-flex {
-      background-color: map-get($background, raised-button);
-    }
+  .search-bar .mat-form-field-flex, .select-menu .mat-form-field-infix {
+    background-color: map-get($background, raised-button);
   }
 
   .mat-button {

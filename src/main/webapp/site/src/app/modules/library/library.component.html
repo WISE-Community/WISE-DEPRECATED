@@ -1,24 +1,51 @@
-<ng-container id="libraryGroups" *ngFor="let group of filteredLibraryGroups">
-  <mat-accordion multi="true" *ngIf="arrangement === group.id">
-    <ng-container *ngFor="let child of group.children; let i = index">
-      <mat-expansion-panel class="library-group" *ngIf="child.type === 'group'" [expanded]="initialGroup === i"
-                           (opened)="expandedGroups[child.id] = true" (closed)="expandedGroups[child.id] = false">
-        <mat-expansion-panel-header class="mat-expansion-panel-header--lg">
-          <div fxLayout="column" class="library-group__title">
-            <div>{{ child.notes }}</div>
-            <div class="mat-caption secondary-text">{{ child.children.length }} project(s)</div>
+<div class="library">
+  <h2 class="accent-1" fxLayout="row" fxLayoutAlign=" center">
+    <mat-icon> filter_list </mat-icon>Browse By
+  </h2>
+  <div fxLayout="row wrap" fxLayout.xs="column">
+    <div class="library-filter" fxFlex fxFlex.xs="100%" >
+      <app-select-menu [options]="disciplineOptions" [placeholderText]="'Discipline'" [value]="disciplineValue"
+        (update)="filterUpdated($event)" [valueProp]="'id'" [viewValueProp]="'name'"
+        [multiple]="true"></app-select-menu>
+    </div>
+    <div class="library-filter" fxFlex fxFlex.xs="100%" >
+      <app-select-menu [options]="dciArrangementOptions" [placeholderText]="'DCI Arrangement'"
+        [value]="dciArrangementValue" (update)="filterUpdated($event)" [valueProp]="'id'" [viewValueProp]="'name'"
+        [multiple]="true"></app-select-menu>
+    </div>
+    <div class="library-filter" fxFlex fxFlex.xs="100%" >
+      <app-select-menu [options]="peOptions" [placeholderText]="'Performance Expectation'" [value]="peValue"
+        (update)="filterUpdated($event)" [valueProp]="'id'" [viewValueProp]="'name'"
+        [multiple]="true"></app-select-menu>
+    </div>
+    <div class="library-filter" fxFlex fxFlex.xs="100%" >
+      <app-search-bar [placeholderText]="'Search'"
+        (update)="searchUpdated($event)"></app-search-bar>
+    </div>
+  </div>
+  <div class="info-block notice">
+    Explore suggested curricula for the grade levels below or use the search and browse tools to find specific units that address your needs.
+  </div>
+  <h2 class="accent-1">Suggested Curriculum Sequences</h2>
+  <ng-container id="libraryGroups" *ngFor="let group of libraryGroups">
+    <mat-accordion class="library__groups" multi="true" *ngIf="arrangement === group.id">
+      <ng-container *ngFor="let child of group.children; let i = index">
+        <mat-expansion-panel class="library-group" *ngIf="child.type === 'group'" [expanded]="initialGroup === i"
+                             (opened)="expandedGroups[child.id] = true" (closed)="expandedGroups[child.id] = false">
+          <mat-expansion-panel-header class="mat-expansion-panel-header--lg">
+            <div fxLayout="column" class="library-group__title">
+              <div>{{ child.notes }}</div>
+              <div class="mat-caption secondary-text">{{ child.children.length }} project(s)</div>
+            </div>
+            <app-library-group-thumbs [group]="child" [ngClass]="{ 'hide': expandedGroups[child.id] }"></app-library-group-thumbs>
+          </mat-expansion-panel-header>
+          <div fxLayout="row wrap">
+            <div *ngFor="let project of child.children" fxFlex="100" fxFlex.sm="50" fxFlex.md="33.33" fxFlex.lg="25">
+              <app-library-project [project]="project"></app-library-project>
+            </div>
           </div>
-          <app-library-group-thumbs [group]="child" [ngClass]="{ 'hide': expandedGroups[child.id] }"></app-library-group-thumbs>
-        </mat-expansion-panel-header>
-        <div fxLayout="row wrap">
-          <div *ngFor="let project of child.children" fxFlex="100" fxFlex.sm="50" fxFlex.md="33" fxFlex.lg="25">
-            <app-library-project [project]="project"></app-library-project>
-          </div>
-        </div>
-      </mat-expansion-panel>
-    </ng-container>
-  </mat-accordion>
-</ng-container>
-
-
-
+        </mat-expansion-panel>
+      </ng-container>
+    </mat-accordion>
+  </ng-container>
+</div>
