@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Properties;
 
 /**
- * Controller for Student REST API
+ * Controller for Teacher REST API
  *
  * @author Jonathan Lim-Breitbart
  * @author Geoffrey Kwan

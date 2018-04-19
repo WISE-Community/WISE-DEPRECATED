@@ -9,8 +9,7 @@ import { User } from '../domain/user';
 export class UserService {
 
   private userUrl = 'api/user/user';
-  private user: User = null;
-  private user$: BehaviorSubject<User> = new BehaviorSubject<User>(this.user);
+  private user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   private authenticated = false;
   private logInURL = '/wise/j_acegi_security_check';
 
@@ -25,8 +24,7 @@ export class UserService {
     return this.http.get<User>(this.userUrl)
       .pipe(
         tap((user) => {
-          this.user = user;
-          this.user$.next(this.user);
+          this.user$.next(user);
         }),
         catchError(this.handleError('getUser', new User())));
   }

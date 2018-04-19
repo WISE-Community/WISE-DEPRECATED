@@ -13,15 +13,13 @@ export class ConfigService {
   private userConfigUrl = 'api/user/config';
   private studentConfigUrl = 'api/student/config';
   private teacherConfigUrl = 'api/teacher/config';
-  private config: Config = null;
-  private config$: BehaviorSubject<Config> = new BehaviorSubject<Config>(this.config);
+  private config$: BehaviorSubject<Config> = new BehaviorSubject<Config>(null);
 
   constructor(private http: HttpClient, private userService: UserService) {
   }
 
   subscribeToGetUser() {
     this.userService.getUser().subscribe((user) => {
-      this.config = null;
       this.retrieveConfig(user).subscribe();
     });
   }
@@ -40,8 +38,7 @@ export class ConfigService {
     return this.http.get<Config>(configUrl)
       .pipe(
         tap(config => {
-          this.config = config;
-          this.config$.next(this.config);
+          this.config$.next(config);
         }),
         catchError(this.handleError('getConfig', new Config()))
       );

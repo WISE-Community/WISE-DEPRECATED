@@ -16,7 +16,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import java.util.Properties;
 
 /**
- * Controller for Student REST API
+ * Controller for User REST API
  *
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
