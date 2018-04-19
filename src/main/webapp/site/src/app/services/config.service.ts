@@ -1,27 +1,46 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs/Observable";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { BehaviorSubject, Observable } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
 import { Config } from "../domain/config";
-import { of } from "rxjs/observable/of";
+import { of } from 'rxjs/observable/of';
+import { UserService } from "./user.service";
+import { User } from "../domain/user";
 
 @Injectable()
 export class ConfigService {
 
-  private configUrl = 'api/student/config';
-  private config: Observable<Config>;
+  private userConfigUrl = 'api/user/config';
+  private studentConfigUrl = 'api/student/config';
+  private teacherConfigUrl = 'api/teacher/config';
+  private config$: BehaviorSubject<Config> = new BehaviorSubject<Config>(null);
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private userService: UserService) {
+  }
+
+  subscribeToGetUser() {
+    this.userService.getUser().subscribe((user) => {
+      this.retrieveConfig(user);
+    });
   }
 
   getConfig(): Observable<Config> {
-    return this.config
-      ? this.config
-      : this.http.get<Config>(this.configUrl)
-        .pipe(
-          tap(config => this.log(`fetched config`)),
-          catchError(this.handleError('getConfig', new Config()))
-        );
+    return this.config$;
+  }
+
+  retrieveConfig(user: User) {
+    let configUrl = this.userConfigUrl;
+    if (user.role == 'student') {
+      configUrl = this.studentConfigUrl;
+    } else if (user.role == 'teacher' || user.role == 'researcher' || user.role == 'admin') {
+      configUrl = this.teacherConfigUrl;
+    }
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    this.http.get<Config>(configUrl, { headers: headers })
+      .pipe(catchError(this.handleError('getConfig', new Config())))
+      .subscribe(config => {
+        this.config$.next(config);
+      });
   }
 
   /**

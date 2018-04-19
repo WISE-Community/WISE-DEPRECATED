@@ -1,6 +1,8 @@
 package org.wise.portal.presentation.web.controllers.user;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,8 +13,10 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 
+import java.util.Properties;
+
 /**
- * Controller for Student REST API
+ * Controller for User REST API
  *
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
@@ -21,6 +25,9 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 @RestController
 @RequestMapping("/site/api/user")
 public class UserAPIController {
+
+  @Autowired
+  private Properties wiseProperties;
 
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   protected String handleGET(ModelMap modelMap,
@@ -67,5 +74,12 @@ public class UserAPIController {
       JSONObject userJSON = new JSONObject();
       return userJSON.toString();
     }
+  }
+
+  @RequestMapping(value = "/config", method = RequestMethod.GET)
+  protected String getConfig(ModelMap modelMap) throws JSONException {
+    JSONObject configJSON = new JSONObject();
+    configJSON.put("logOutURL", wiseProperties.get("wiseBaseURL") + "/logout");
+    return configJSON.toString();
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '../../domain/user';
 import { UserService } from "../../services/user.service";
+import { Observable } from "rxjs/Observable";
 
 @Component({
   selector: 'app-header',
@@ -10,9 +11,10 @@ import { UserService } from "../../services/user.service";
 })
 export class HeaderComponent implements OnInit {
 
-  user: User = new User();
+  user: User;
 
   location: string = ''; // current location
+  role: string = '';
   url: string = '';
 
   constructor(private router: Router, private userService: UserService) {
@@ -37,6 +39,9 @@ export class HeaderComponent implements OnInit {
     this.userService.getUser()
       .subscribe(user => {
         this.user = user;
+        if (user != null) {
+          this.role = user.role;
+        }
       });
   }
 }
