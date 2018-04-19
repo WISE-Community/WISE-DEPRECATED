@@ -20,7 +20,7 @@ export class ConfigService {
 
   subscribeToGetUser() {
     this.userService.getUser().subscribe((user) => {
-      this.retrieveConfig(user).subscribe();
+      this.retrieveConfig(user);
     });
   }
 
@@ -28,7 +28,7 @@ export class ConfigService {
     return this.config$;
   }
 
-  retrieveConfig(user: User): Observable<Config> {
+  retrieveConfig(user: User) {
     let configUrl = this.userConfigUrl;
     if (user.role == 'student') {
       configUrl = this.studentConfigUrl;
@@ -36,13 +36,11 @@ export class ConfigService {
       configUrl = this.teacherConfigUrl;
     }
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
-    return this.http.get<Config>(configUrl, { headers: headers })
-      .pipe(
-        tap(config => {
-          this.config$.next(config);
-        }),
-        catchError(this.handleError('getConfig', new Config()))
-      );
+    this.http.get<Config>(configUrl, { headers: headers })
+      .pipe(catchError(this.handleError('getConfig', new Config())))
+      .subscribe(config => {
+        this.config$.next(config);
+      });
   }
 
   /**
