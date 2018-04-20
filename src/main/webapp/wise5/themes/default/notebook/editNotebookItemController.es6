@@ -88,6 +88,10 @@ class EditNotebookItemController {
     }
   }
 
+  isSharedWithClass() {
+    return this.item.groups != null && this.item.groups.includes("public");
+  }
+
   toggleMakeNotePublic() {
     if (this.item.groups == null) {
       this.item.groups = [];
@@ -102,6 +106,7 @@ class EditNotebookItemController {
         }
       }
     }
+    this.update();
   }
 
   attachStudentAssetToNote(files) {
@@ -214,11 +219,9 @@ class EditNotebookItemController {
   }
 
   update() {
-    let saveEnabled = false;
-    if (this.item.content.text || !this.isRequireTextOnEveryNote() && this.item.content.attachments.length) {
-      saveEnabled = true;
-    }
-    this.saveEnabled = saveEnabled;
+    this.saveEnabled = this.item.content.text ||
+        (!this.isRequireTextOnEveryNote() &&
+        this.item.content.attachments.length);
     this.setShowUpload();
   }
 
