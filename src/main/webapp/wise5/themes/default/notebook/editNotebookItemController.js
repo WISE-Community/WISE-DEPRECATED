@@ -94,6 +94,13 @@ var EditNotebookItemController = function () {
       }
       if (!this.item.groups.includes("public")) {
         this.item.groups.push("public");
+      } else {
+        for (var i = 0; i < this.item.groups.length; i++) {
+          if (this.item.groups[i] === "public") {
+            this.item.groups.splice(i, 1);
+            break;
+          }
+        }
       }
     }
   }, {
