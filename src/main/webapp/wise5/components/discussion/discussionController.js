@@ -454,6 +454,11 @@ var DiscussionController = function () {
 
         // send the student post to web sockets so all the classmates receive it in real time
         var messageType = 'studentData';
+        var userNamesArray = _this2.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
+        componentState.userNames = userNamesArray.map(function (obj) {
+          return obj.name;
+        }).join(', ');
+
         _this2.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
 
         // next, send notifications to students who have posted a response in the same thread as this post
@@ -467,8 +472,8 @@ var DiscussionController = function () {
             var nodeId = componentState.nodeId;
             var componentId = componentState.componentId;
             // add the user names to the component state so we can display next to the response
-            var userNamesArray = _this2.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
-            var userNames = userNamesArray.map(function (obj) {
+            var _userNamesArray = _this2.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
+            var userNames = _userNamesArray.map(function (obj) {
               return obj.name;
             }).join(', ');
             var notificationMessage = _this2.$translate('discussion.repliedToADiscussionYouWereIn', { userNames: userNames });
@@ -1405,9 +1410,13 @@ var DiscussionController = function () {
 
             // add the user names to the component state so we can display next to the response
             var userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-            componentState.userNames = userNames.map(function (obj) {
-              return obj.name;
-            }).join(', ');
+            if (userNames.length > 0) {
+              componentState.userNames = userNames.map(function (obj) {
+                return obj.name;
+              }).join(', ');
+            } else if (componentState.userNames != null) {
+              componentState.userNames = componentState.userNames;
+            }
 
             // add a replies array to the component state that we will fill with component state replies later
             componentState.replies = [];
