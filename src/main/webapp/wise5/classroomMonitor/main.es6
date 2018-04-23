@@ -21,6 +21,7 @@ import AnnotationService from '../services/annotationService';
 import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
 import ClassroomMonitorComponents from './classroomMonitorComponents';
 import ClassroomMonitorController from './classroomMonitorController';
+import ClassroomMonitorProjectService from './classroomMonitorProjectService';
 import ConceptMapComponentModule from '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
@@ -104,7 +105,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
     .service(NodeService.name, NodeService)
     .service(NotebookService.name, NotebookService)
     .service(NotificationService.name, NotificationService)
-    .service(ProjectService.name, ProjectService)
+    .service(ProjectService.name, ClassroomMonitorProjectService)
     .service(SessionService.name, SessionService)
     .service(StudentAssetService.name, StudentAssetService)
     .service(StudentDataService.name, StudentDataService)

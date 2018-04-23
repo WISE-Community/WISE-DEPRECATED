@@ -38,7 +38,6 @@ describe('ProjectService Unit Test', function () {
     var projectIdDefault = 1;
     var projectBaseURL = "http://localhost:8080/curriculum/12345/";
     var projectURL = projectBaseURL + "project.json";
-    var registerNewProjectURL = "http://localhost:8080/wise/project/new";
     var saveProjectURL = "http://localhost:8080/wise/project/save/" + projectIdDefault;
     var commitMessageDefault = "Made simple changes";
     var defaultCommitHistory = [{ "id": "abc", "message": "first commit" }, { "id": "def", "message": "second commit" }];
@@ -56,8 +55,6 @@ describe('ProjectService Unit Test', function () {
           return projectBaseURL;
         } else if (param === "projectURL") {
           return projectURL;
-        } else if (param === "registerNewProjectURL") {
-          return registerNewProjectURL;
         } else if (param === "saveProjectURL") {
           return saveProjectURL;
         } else if (param === "wiseBaseURL") {
@@ -114,38 +111,6 @@ describe('ProjectService Unit Test', function () {
       var project = ProjectService.retrieveProject();
       expect(ConfigService.getConfigParam).toHaveBeenCalledWith("projectURL");
       expect(project).toBeNull();
-    });
-
-    // MARK: Register Project
-    xit('should register new project', function () {
-      createNormalSpy();
-      var newProjectIdExpected = projectIdDefault; // Id of new project created on the server
-      $httpBackend.when('POST', registerNewProjectURL).respond(newProjectIdExpected);
-      $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
-      $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
-      var newProjectIdActualPromise = ProjectService.registerNewProject(scootersProjectJSONString, commitMessageDefault);
-      $httpBackend.flush();
-      $httpBackend.expectPOST(registerNewProjectURL);
-    });
-
-    it('should not register new project when Config.registerNewProjectURL is undefined', function () {
-      spyOn(ConfigService, "getConfigParam").and.returnValue(null);
-      $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
-      $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
-      var newProjectIdActualPromise = ProjectService.registerNewProject(scootersProjectJSONString, commitMessageDefault);
-      expect(ConfigService.getConfigParam).toHaveBeenCalledWith("registerNewProjectURL");
-      expect(newProjectIdActualPromise).toBeNull();
-    });
-
-    it('should not register new project when projectJSON is invalid JSON', function () {
-      spyOn(ConfigService, "getConfigParam").and.returnValue(registerNewProjectURL);
-      try {
-        var newProjectIdActualPromise = ProjectService.registerNewProject(invalidProjectJSONString, commitMessageDefault);
-        expect(1).toEqual(2); // This line should not get called because the above line will throw an error
-      } catch (e) {
-        expect(ConfigService.getConfigParam).toHaveBeenCalledWith("registerNewProjectURL");
-        expect(e.message).toEqual("Invalid projectJSONString.");
-      }
     });
 
     // MARK: Save Project
