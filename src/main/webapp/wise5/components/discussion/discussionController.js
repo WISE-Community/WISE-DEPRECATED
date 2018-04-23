@@ -454,10 +454,7 @@ var DiscussionController = function () {
 
         // send the student post to web sockets so all the classmates receive it in real time
         var messageType = 'studentData';
-        var userNamesArray = _this2.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
-        componentState.userNames = userNamesArray.map(function (obj) {
-          return obj.name;
-        }).join(', ');
+        componentState.userNamesArray = _this2.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
 
         _this2.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
 
@@ -472,8 +469,8 @@ var DiscussionController = function () {
             var nodeId = componentState.nodeId;
             var componentId = componentState.componentId;
             // add the user names to the component state so we can display next to the response
-            var _userNamesArray = _this2.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
-            var userNames = _userNamesArray.map(function (obj) {
+            var userNamesArray = _this2.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
+            var userNames = userNamesArray.map(function (obj) {
               return obj.name;
             }).join(', ');
             var notificationMessage = _this2.$translate('discussion.repliedToADiscussionYouWereIn', { userNames: userNames });
@@ -1414,8 +1411,10 @@ var DiscussionController = function () {
               componentState.userNames = userNames.map(function (obj) {
                 return obj.name;
               }).join(', ');
-            } else if (componentState.userNames != null) {
-              componentState.userNames = componentState.userNames;
+            } else if (componentState.userNamesArray != null) {
+              componentState.userNames = componentState.userNamesArray.map(function (obj) {
+                return obj.name;
+              }).join(', ');
             }
 
             // add a replies array to the component state that we will fill with component state replies later

@@ -475,8 +475,7 @@ class DiscussionController {
 
         // send the student post to web sockets so all the classmates receive it in real time
         let messageType = 'studentData';
-        let userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
-        componentState.userNames = userNamesArray.map( (obj) => { return obj.name; }).join(', ');
+        componentState.userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
 
         this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
 
@@ -1331,8 +1330,9 @@ class DiscussionController {
           let userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
           if (userNames.length > 0) {
             componentState.userNames = userNames.map(function(obj) { return obj.name; }).join(', ');
-          } else if (componentState.userNames != null) {
-            componentState.userNames = componentState.userNames;
+          } else if (componentState.userNamesArray != null) {
+            componentState.userNames = componentState.userNamesArray
+                .map(function(obj) { return obj.name; }).join(', ');
           }
 
           // add a replies array to the component state that we will fill with component state replies later
