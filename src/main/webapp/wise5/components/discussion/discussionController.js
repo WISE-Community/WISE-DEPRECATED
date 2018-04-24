@@ -454,6 +454,8 @@ var DiscussionController = function () {
 
         // send the student post to web sockets so all the classmates receive it in real time
         var messageType = 'studentData';
+        componentState.userNamesArray = _this2.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
+
         _this2.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
 
         // next, send notifications to students who have posted a response in the same thread as this post
@@ -1405,9 +1407,15 @@ var DiscussionController = function () {
 
             // add the user names to the component state so we can display next to the response
             var userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-            componentState.userNames = userNames.map(function (obj) {
-              return obj.name;
-            }).join(', ');
+            if (userNames.length > 0) {
+              componentState.userNames = userNames.map(function (obj) {
+                return obj.name;
+              }).join(', ');
+            } else if (componentState.userNamesArray != null) {
+              componentState.userNames = componentState.userNamesArray.map(function (obj) {
+                return obj.name;
+              }).join(', ');
+            }
 
             // add a replies array to the component state that we will fill with component state replies later
             componentState.replies = [];
