@@ -127,7 +127,7 @@ var NotebookNotesController = function () {
 
     this.$rootScope.$on('notebookUpdated', function (event, args) {
       var notebookItem = args.notebookItem;
-      if (notebookItem.groups == null || notebookItem.groups.length == 0) {
+      if ((notebookItem.groups == null || notebookItem.groups.length == 0) && notebookItem.type === "note") {
         _this.updatePrivateNotebookNote(notebookItem);
       }
       if (notebookItem.groups != null && notebookItem.groups.includes('public')) {
