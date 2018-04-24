@@ -68,7 +68,8 @@ class NotebookNotesController {
 
     this.$rootScope.$on('notebookUpdated', (event, args) => {
       let notebookItem = args.notebookItem;
-      if (notebookItem.groups == null || notebookItem.groups.length == 0) {
+      if ((notebookItem.groups == null || notebookItem.groups.length == 0) &&
+          notebookItem.type === "note") {
         this.updatePrivateNotebookNote(notebookItem)
       }
       if (notebookItem.groups != null && notebookItem.groups.includes('public')) {
