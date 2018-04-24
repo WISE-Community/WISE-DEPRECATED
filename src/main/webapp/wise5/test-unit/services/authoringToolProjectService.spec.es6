@@ -84,5 +84,20 @@ describe('AuthoringToolProjectService Unit Test', () => {
         expect(e.message).toEqual("Invalid projectJSONString.")
       }
     });
+
+    it('should find used node id in active nodes', () => {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.isNodeIdUsed("node1")).toEqual(true);
+    });
+
+    it('should find used node id in inactive nodes', () => {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.isNodeIdUsed("node789")).toEqual(true);
+    });
+
+    it('should not find used node id in active or inactive nodes', () => {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.isNodeIdUsed("nodedoesnotexist")).toEqual(false);
+    });
   });
 });

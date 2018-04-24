@@ -6,6 +6,107 @@ class AuthoringToolProjectService extends ProjectService {
     super($filter, $http, $injector, $q, $rootScope, ConfigService, UtilService);
   }
 
+  /**
+   * Returns a project template for new projects
+   */
+  getNewProjectTemplate() {
+    return {
+      "nodes": [
+        {
+          "id": "group0",
+          "type": "group",
+          "title": "Master",
+          "startId": "group1",
+          "ids": [
+            "group1"
+          ]
+        },
+        {
+          "id": "group1",
+          "type": "group",
+          "title": this.$translate('FIRST_ACTIVITY'),
+          "startId": "",
+          "ids": [
+          ],
+          "icons": {
+            "default": {
+              "color": "#2196F3",
+              "type": "font",
+              "fontSet": "material-icons",
+              "fontName": "info"
+            }
+          }
+        }
+      ],
+      "constraints": [],
+      "startGroupId": "group0",
+      "startNodeId": "group0",
+      "navigationMode": "guided",
+      "layout": {
+        "template": "starmap|leftNav|rightNav"
+      },
+      "metadata": {
+        "title": ""
+      },
+      "notebook": {
+        "enabled": false,
+        "label": this.$translate('NOTEBOOK'),
+        "enableAddNew": true,
+        "itemTypes": {
+          "note": {
+            "type": "note",
+            "enabled": true,
+            "enableLink": true,
+            "enableAddNote": true,
+            "enableClipping": true,
+            "enableStudentUploads": true,
+            "requireTextOnEveryNote": false,
+            "label": {
+              "singular": this.$translate('NOTE_LOWERCASE'),
+              "plural": this.$translate('NOTES_LOWERCASE'),
+              "link": this.$translate('NOTES'),
+              "icon": "note",
+              "color": "#1565C0"
+            }
+          },
+          "question": {
+            "type": "question",
+            "enabled": false,
+            "enableLink": true,
+            "enableClipping": true,
+            "enableStudentUploads": true,
+            "label": {
+              "singular": this.$translate('QUESTION_LOWER_CASE'),
+              "plural": this.$translate('QUESTIONS_LOWER_CASE'),
+              "link": this.$translate('QUESTIONS'),
+              "icon": "live_help",
+              "color": "#F57C00"
+            }
+          },
+          "report": {
+            "enabled": false,
+            "label": {
+              "singular": this.$translate('REPORT_LOWERCASE'),
+              "plural": this.$translate('REPORTS_LOWERCASE'),
+              "link": this.$translate('REPORT'),
+              "icon": "assignment",
+              "color": "#AD1457"
+            },
+            "notes": [
+              {
+                "reportId": "finalReport",
+                "title": this.$translate('FINAL_REPORT'),
+                "description": this.$translate('REPORT_DESCRIPTION'),
+                "prompt": this.$translate('REPORT_PROMPT'),
+                "content": this.$translate('REPORT_CONTENT')
+              }
+            ]
+          }
+        }
+      },
+      "inactiveNodes": []
+    };
+  }
 
   /**
    * Notifies others that the specified project is being authored
@@ -477,6 +578,471 @@ class AuthoringToolProjectService extends ProjectService {
     }
     return newNodes;
   }
+
+  /**
+   * Check if a node is inactive. At the moment only step nodes can be
+   * inactive.
+   * @param nodeId the node id of the step
+   */
+  isInactive(nodeId) {
+    if (nodeId != null && this.project.inactiveNodes != null) {
+      for (let inactiveNode of this.project.inactiveNodes) {
+        if (inactiveNode != null) {
+          if (nodeId === inactiveNode.id) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Check if a node id is already being used in the project
+   * @param nodeId check if this node id is already being used in the project
+   * @return whether the node id is already being used in the project
+   */
+  isNodeIdUsed(nodeId) {
+    for (let node of this.project.nodes) {
+      if (node != null) {
+        if (nodeId === node.id) {
+          return true;
+        }
+      }
+    }
+
+    for (let node of this.project.inactiveNodes) {
+      if (node != null) {
+        if (nodeId === node.id) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Set a field in the transition logic of a node
+   */
+  setTransitionLogicField(nodeId, field, value) {
+    if (nodeId != null && field != null) {
+      const node = this.getNodeById(nodeId);
+      if (node != null) {
+        const transitionLogic = node.transitionLogic;
+        if (transitionLogic != null) {
+          transitionLogic[field] = value;
+        }
+      }
+    }
+  }
+
+  /**
+   * Set the transition to value of a node
+   * @param fromNodeId the from node
+   * @param toNodeId the to node
+   */
+  setTransition(fromNodeId, toNodeId) {
+    const node = this.getNodeById(fromNodeId);
+    if (node != null) {
+      const transitionLogic = node.transitionLogic;
+      if (transitionLogic != null) {
+        let transitions = transitionLogic.transitions;
+        if (transitions == null || transitions.length == 0) {
+          transitionLogic.transitions = [];
+          const transition = {};
+          transitionLogic.transitions.push(transition);
+          transitions = transitionLogic.transitions;
+        }
+
+        if (transitions != null && transitions.length > 0) {
+          // get the first transition. we will assume there is only one transition.
+          const transition = transitions[0];
+          if (transition != null) {
+            transition.to = toNodeId;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Get the node id that comes after a given node id
+   * @param nodeId get the node id that comes after this node id
+   * @param the node id that comes after the one that is passed in as a parameter
+   */
+  getNodeIdAfter(nodeId) {
+    let nodeIdAfter = null;
+
+    // get an array of ordered items. each item represents a node
+    const orderedItems = this.$filter('orderBy')(this.$filter('toArray')(this.idToOrder), 'order');
+
+    if (orderedItems != null) {
+      let foundNodeId = false;
+      for (let item of orderedItems) {
+        if (item != null) {
+          const tempNodeId = item.$key;
+
+          // check if we have found the node id that was passed in as a parameter
+          if (foundNodeId) {
+            /*
+             * we have previously found the node id that was passed in which means
+             * the current temp node id is the one that comes after it
+             */
+            nodeIdAfter = tempNodeId;
+            break;
+          } else {
+            if (nodeId == tempNodeId) {
+              // we have found the node id that was passed in as a parameter
+              foundNodeId = true;
+            }
+          }
+        }
+      }
+    }
+    return nodeIdAfter;
+  }
+
+  /**
+   * Add branch path taken constraints to the node
+   * @param targetNodeId the node to add the constraints to
+   * @param fromNodeId the from node id of the branch path taken constraint
+   * @param toNodeId the to node id of the branch path taken constraint
+   */
+  addBranchPathTakenConstraints(targetNodeId, fromNodeId, toNodeId) {
+    if (targetNodeId != null) {
+      const node = this.getNodeById(targetNodeId);
+
+      if (node != null) {
+        /*
+         * create the constraint that makes the node not visible until
+         * the given branch path is taken
+         */
+        const makeThisNodeNotVisibleConstraint = {};
+        makeThisNodeNotVisibleConstraint.id = this.getNextAvailableConstraintIdForNodeId(targetNodeId);
+        makeThisNodeNotVisibleConstraint.action = 'makeThisNodeNotVisible';
+        makeThisNodeNotVisibleConstraint.targetId = targetNodeId;
+        makeThisNodeNotVisibleConstraint.removalCriteria = [];
+        const notVisibleRemovalCriterion = {};
+        notVisibleRemovalCriterion.name = 'branchPathTaken';
+        notVisibleRemovalCriterion.params = {};
+        notVisibleRemovalCriterion.params.fromNodeId = fromNodeId;
+        notVisibleRemovalCriterion.params.toNodeId = toNodeId;
+        makeThisNodeNotVisibleConstraint.removalConditional = 'all';
+        makeThisNodeNotVisibleConstraint.removalCriteria.push(notVisibleRemovalCriterion);
+        node.constraints.push(makeThisNodeNotVisibleConstraint);
+
+        /*
+         * create the constraint that makes the node not visitable until
+         * the given branch path is taken
+         */
+        const makeThisNodeNotVisitableConstraint = {};
+        makeThisNodeNotVisitableConstraint.id = this.getNextAvailableConstraintIdForNodeId(targetNodeId);
+        makeThisNodeNotVisitableConstraint.action = 'makeThisNodeNotVisitable';
+        makeThisNodeNotVisitableConstraint.targetId = targetNodeId;
+        makeThisNodeNotVisitableConstraint.removalCriteria = [];
+        const notVisitableRemovalCriterion = {};
+        notVisitableRemovalCriterion.name = 'branchPathTaken';
+        notVisitableRemovalCriterion.params = {};
+        notVisitableRemovalCriterion.params.fromNodeId = fromNodeId;
+        notVisitableRemovalCriterion.params.toNodeId = toNodeId;
+        makeThisNodeNotVisitableConstraint.removalConditional = 'all';
+        makeThisNodeNotVisitableConstraint.removalCriteria.push(notVisitableRemovalCriterion);
+        node.constraints.push(makeThisNodeNotVisitableConstraint);
+      }
+    }
+  }
+
+  /**
+   * Set the project level rubric
+   */
+  setProjectRubric(html) {
+    this.project.rubric = html;
+  }
+
+  /**
+   * Get the number of branch paths. This is assuming the node is a branch point.
+   * @param nodeId The node id of the branch point node.
+   * @return The number of branch paths for this branch point.
+   */
+  getNumberOfBranchPaths(nodeId) {
+    let transitions = this.getTransitionsByFromNodeId(nodeId);
+    if (transitions != null) {
+      return transitions.length;
+    }
+    return 0;
+  }
+
+  /**
+   * If this step is a branch point, we will return the criteria that is used
+   * to determine which path the student gets assigned to.
+   * @param nodeId The node id of the branch point.
+   * @returns A human readable string containing the criteria of how students
+   * are assigned branch paths on this branch point.
+   */
+  getBranchCriteriaDescription(nodeId) {
+    let transitionLogic = this.getTransitionLogicByFromNodeId(nodeId);
+    let transitions = transitionLogic.transitions;
+
+    // Loop through the transitions to try to find a transition criteria
+    for (let transition of transitions) {
+      if (transition.criteria != null && transition.criteria.length > 0) {
+        for (let singleCriteria of transition.criteria) {
+          if (singleCriteria.name == 'choiceChosen') {
+            return 'multiple choice';
+          } else if (singleCriteria.name == 'score') {
+            return 'score';
+          }
+        }
+      }
+    }
+
+    /*
+     * None of the transitions had a specific criteria so the branching is just
+     * based on the howToChooseAmongAvailablePaths field.
+     */
+    if (transitionLogic.howToChooseAmongAvailablePaths == 'workgroupId') {
+      return 'workgroup ID';
+    } else if (transitionLogic.howToChooseAmongAvailablePaths == 'random') {
+      return 'random assignment';
+    }
+  }
+
+  /**
+   * Get the previous node
+   * @param nodeId get the node id that comes before this one
+   * @return the node id that comes before
+   */
+  getPreviousNodeId(nodeId) {
+    const flattenedNodeIds = this.getFlattenedProjectAsNodeIds();
+    if (flattenedNodeIds != null) {
+      const indexOfNodeId = flattenedNodeIds.indexOf(nodeId);
+      if (indexOfNodeId != -1) {
+        const indexOfPreviousNodeId = indexOfNodeId - 1;
+        return flattenedNodeIds[indexOfPreviousNodeId];
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Set the project script filename
+   * @param script the script filename
+   */
+  setProjectScriptFilename(scriptFilename) {
+    this.project.script = scriptFilename;
+  }
+
+  /**
+   * Get the project script filename
+   */
+  getProjectScriptFilename() {
+    if (this.project != null && this.project.script != null) {
+      return this.project.script;
+    }
+    return null;
+  }
+
+  /**
+   * Check if a node has rubrics.
+   * @param nodeId The node id of the node.
+   * @return Whether the node has rubrics authored on it.
+   */
+  nodeHasRubric(nodeId) {
+    let numberOfRubrics = this.getNumberOfRubricsByNodeId(nodeId);
+    if (numberOfRubrics > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Copy a component and insert it into the step
+   * @param nodeId we are copying a component in this node
+   * @param componentIds the components to copy
+   * @param insertAfterComponentId Which component to place the new components
+   * after. If this is null, we will put the new components at the beginning.
+   * @return an array of the new components
+   */
+  copyComponentAndInsert(nodeId, componentIds, insertAfterComponentId) {
+    const node = this.getNodeById(nodeId);
+    const newComponents = [];
+    const newComponentIds = [];
+    for (let componentId of componentIds) {
+      const newComponent =
+        this.copyComponent(nodeId, componentId, newComponentIds);
+      newComponents.push(newComponent);
+      newComponentIds.push(newComponent.id);
+    }
+
+    const components = node.components;
+    if (components != null) {
+      let insertPosition = 0;
+      if (insertAfterComponentId == null) {
+        // place the new components at the beginning
+        insertPosition = 0;
+      } else {
+        // place the new components after the specified component id
+        insertPosition = this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+      }
+
+      for (let newComponent of newComponents) {
+        components.splice(insertPosition, 0, newComponent);
+
+        /*
+         * increment the insert position for cases when we have multiple
+         * new components
+         */
+        insertPosition += 1;
+      }
+    }
+    return newComponents;
+  }
+
+  /**
+   * Copy a component
+   * @param nodeId the node id
+   * @param componentId the compnent id
+   * @param componentIdsToSkip component ids that we can't use for our new
+   * component
+   * @return a new component object
+   */
+  copyComponent(nodeId, componentId, componentIdsToSkip) {
+    const component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
+    const newComponent = this.UtilService.makeCopyOfJSONObject(component);
+    const newComponentId = this.getUnusedComponentId(componentIdsToSkip);
+    newComponent.id = newComponentId;
+    return newComponent;
+  }
+
+  /**
+   * Import components from a project. Also import asset files that are
+   * referenced in any of those components.
+   * @param components an array of component objects that we are importing
+   * @param importProjectId the id of the project we are importing from
+   * @param nodeId the node we are adding the components to
+   * @param insertAfterComponentId insert the components after this component
+   * id
+   * @return an array of the new components
+   */
+  importComponents(components, importProjectId, nodeId, insertAfterComponentId) {
+    let newComponents = [];
+    const newComponentIds = [];
+
+    /*
+     * loop through all the components and make sure their ids are not
+     * already used in the project
+     */
+    for (let component of components) {
+      if (component != null) {
+        const newComponent = this.UtilService.makeCopyOfJSONObject(component);
+        let newComponentId = newComponent.id;
+
+        if (this.isComponentIdUsed(newComponentId)) {
+          // component id is already used so we will find a new component id
+          newComponentId = this.getUnusedComponentId(newComponentIds);
+          newComponent.id = newComponentId;
+        }
+
+        newComponents.push(newComponent);
+        newComponentIds.push(newComponentId);
+      }
+    }
+
+    const importStepsURL = this.ConfigService.getConfigParam('importStepsURL');
+    const httpParams = {};
+    httpParams.method = 'POST';
+    httpParams.url = importStepsURL;
+    httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+
+    const toProjectId = this.ConfigService.getConfigParam('projectId');
+    const fromProjectId = importProjectId;
+
+    const params = {};
+    params.steps = angular.toJson(newComponents);
+    params.fromProjectId = fromProjectId;
+    params.toProjectId = toProjectId;
+    httpParams.data = $.param(params);
+
+    /*
+     * Make the request to import the components. This will copy the asset files
+     * and change file names if necessary. If an asset file with the same
+     * name exists in both projects we will check if their content is the
+     * same. If the content is the same we don't need to copy the file. If
+     * the content is different, we need to make a copy of the file with a
+     * new name and change all the references in the steps to use the new
+     * name.
+     */
+    return this.$http(httpParams).then((result) => {
+      newComponents = result.data;
+      const node = this.getNodeById(nodeId);
+      const currentComponents = node.components;
+      let insertPosition = 0;
+
+      if (insertAfterComponentId == null) {
+        // place the new components at the beginning
+        insertPosition = 0;
+      } else {
+        // place the new components after the specified component id
+        insertPosition = this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+      }
+
+      for (let newComponent of newComponents) {
+        // insert the new component
+        currentComponents.splice(insertPosition, 0, newComponent);
+
+        /*
+         * increment the insert position for cases when we have multiple
+         * new components
+         */
+        insertPosition += 1;
+      }
+      return newComponents;
+    });
+  }
+
+  /**
+   * Get the branch path letter
+   * @param nodeId get the branch path letter for this node if it is in a
+   * branch
+   * @return the branch path letter for the node if it is in a branch
+   */
+  getBranchPathLetter(nodeId) {
+    return this.nodeIdToBranchPathLetter[nodeId];
+  }
+
+  /**
+   * Set the node into the project by replacing the existing node with the
+   * given node id
+   * @param nodeId the node id of the node
+   * @param node the node object
+   */
+  setNode(nodeId, node) {
+    if (nodeId != null && node != null) {
+      for (let n = 0; n < this.project.nodes.length; n++) {
+        let tempNode = this.project.nodes[n];
+        if (tempNode != null && tempNode.id == nodeId) {
+          this.project.nodes[n] = node;
+        }
+      }
+
+      for (let i = 0; i < this.project.inactiveNodes.length; i++) {
+        let tempNode = this.project.inactiveNodes[i];
+        if (tempNode != null && tempNode.id == nodeId) {
+          this.project.inactiveNodes[i] = node;
+        }
+      }
+      this.idToNode[nodeId] = node;
+    }
+  }
+
+  /**
+   * Get the id to node mappings.
+   * @return An object the keys as node ids and the values as nodes.
+   */
+  getIdToNode() {
+    return this.idToNode;
+  }
+
 }
 
 AuthoringToolProjectService.$inject = [

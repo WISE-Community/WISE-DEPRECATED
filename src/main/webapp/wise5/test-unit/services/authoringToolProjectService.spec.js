@@ -97,6 +97,21 @@ describe('AuthoringToolProjectService Unit Test', function () {
         expect(e.message).toEqual("Invalid projectJSONString.");
       }
     });
+
+    it('should find used node id in active nodes', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.isNodeIdUsed("node1")).toEqual(true);
+    });
+
+    it('should find used node id in inactive nodes', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.isNodeIdUsed("node789")).toEqual(true);
+    });
+
+    it('should not find used node id in active or inactive nodes', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.isNodeIdUsed("nodedoesnotexist")).toEqual(false);
+    });
   });
 });
 //# sourceMappingURL=authoringToolProjectService.spec.js.map

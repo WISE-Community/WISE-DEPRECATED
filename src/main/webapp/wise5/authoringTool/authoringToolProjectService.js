@@ -28,12 +28,109 @@ var AuthoringToolProjectService = function (_ProjectService) {
   }
 
   /**
-   * Notifies others that the specified project is being authored
-   * @param projectId id of the project
+   * Returns a project template for new projects
    */
 
 
   _createClass(AuthoringToolProjectService, [{
+    key: 'getNewProjectTemplate',
+    value: function getNewProjectTemplate() {
+      return {
+        "nodes": [{
+          "id": "group0",
+          "type": "group",
+          "title": "Master",
+          "startId": "group1",
+          "ids": ["group1"]
+        }, {
+          "id": "group1",
+          "type": "group",
+          "title": this.$translate('FIRST_ACTIVITY'),
+          "startId": "",
+          "ids": [],
+          "icons": {
+            "default": {
+              "color": "#2196F3",
+              "type": "font",
+              "fontSet": "material-icons",
+              "fontName": "info"
+            }
+          }
+        }],
+        "constraints": [],
+        "startGroupId": "group0",
+        "startNodeId": "group0",
+        "navigationMode": "guided",
+        "layout": {
+          "template": "starmap|leftNav|rightNav"
+        },
+        "metadata": {
+          "title": ""
+        },
+        "notebook": {
+          "enabled": false,
+          "label": this.$translate('NOTEBOOK'),
+          "enableAddNew": true,
+          "itemTypes": {
+            "note": {
+              "type": "note",
+              "enabled": true,
+              "enableLink": true,
+              "enableAddNote": true,
+              "enableClipping": true,
+              "enableStudentUploads": true,
+              "requireTextOnEveryNote": false,
+              "label": {
+                "singular": this.$translate('NOTE_LOWERCASE'),
+                "plural": this.$translate('NOTES_LOWERCASE'),
+                "link": this.$translate('NOTES'),
+                "icon": "note",
+                "color": "#1565C0"
+              }
+            },
+            "question": {
+              "type": "question",
+              "enabled": false,
+              "enableLink": true,
+              "enableClipping": true,
+              "enableStudentUploads": true,
+              "label": {
+                "singular": this.$translate('QUESTION_LOWER_CASE'),
+                "plural": this.$translate('QUESTIONS_LOWER_CASE'),
+                "link": this.$translate('QUESTIONS'),
+                "icon": "live_help",
+                "color": "#F57C00"
+              }
+            },
+            "report": {
+              "enabled": false,
+              "label": {
+                "singular": this.$translate('REPORT_LOWERCASE'),
+                "plural": this.$translate('REPORTS_LOWERCASE'),
+                "link": this.$translate('REPORT'),
+                "icon": "assignment",
+                "color": "#AD1457"
+              },
+              "notes": [{
+                "reportId": "finalReport",
+                "title": this.$translate('FINAL_REPORT'),
+                "description": this.$translate('REPORT_DESCRIPTION'),
+                "prompt": this.$translate('REPORT_PROMPT'),
+                "content": this.$translate('REPORT_CONTENT')
+              }]
+            }
+          }
+        },
+        "inactiveNodes": []
+      };
+    }
+
+    /**
+     * Notifies others that the specified project is being authored
+     * @param projectId id of the project
+     */
+
+  }, {
     key: 'notifyAuthorProjectBegin',
     value: function notifyAuthorProjectBegin() {
       var projectId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
@@ -653,6 +750,741 @@ var AuthoringToolProjectService = function (_ProjectService) {
       }
 
       return newNodes;
+    }
+
+    /**
+     * Check if a node is inactive. At the moment only step nodes can be
+     * inactive.
+     * @param nodeId the node id of the step
+     */
+
+  }, {
+    key: 'isInactive',
+    value: function isInactive(nodeId) {
+      if (nodeId != null && this.project.inactiveNodes != null) {
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
+
+        try {
+          for (var _iterator6 = this.project.inactiveNodes[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var inactiveNode = _step6.value;
+
+            if (inactiveNode != null) {
+              if (nodeId === inactiveNode.id) {
+                return true;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
+            }
+          } finally {
+            if (_didIteratorError6) {
+              throw _iteratorError6;
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Check if a node id is already being used in the project
+     * @param nodeId check if this node id is already being used in the project
+     * @return whether the node id is already being used in the project
+     */
+
+  }, {
+    key: 'isNodeIdUsed',
+    value: function isNodeIdUsed(nodeId) {
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
+
+      try {
+        for (var _iterator7 = this.project.nodes[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var node = _step7.value;
+
+          if (node != null) {
+            if (nodeId === node.id) {
+              return true;
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion7 && _iterator7.return) {
+            _iterator7.return();
+          }
+        } finally {
+          if (_didIteratorError7) {
+            throw _iteratorError7;
+          }
+        }
+      }
+
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
+
+      try {
+        for (var _iterator8 = this.project.inactiveNodes[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var _node = _step8.value;
+
+          if (_node != null) {
+            if (nodeId === _node.id) {
+              return true;
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
+          }
+        } finally {
+          if (_didIteratorError8) {
+            throw _iteratorError8;
+          }
+        }
+      }
+
+      return false;
+    }
+
+    /**
+     * Set a field in the transition logic of a node
+     */
+
+  }, {
+    key: 'setTransitionLogicField',
+    value: function setTransitionLogicField(nodeId, field, value) {
+      if (nodeId != null && field != null) {
+        var node = this.getNodeById(nodeId);
+        if (node != null) {
+          var transitionLogic = node.transitionLogic;
+          if (transitionLogic != null) {
+            transitionLogic[field] = value;
+          }
+        }
+      }
+    }
+
+    /**
+     * Set the transition to value of a node
+     * @param fromNodeId the from node
+     * @param toNodeId the to node
+     */
+
+  }, {
+    key: 'setTransition',
+    value: function setTransition(fromNodeId, toNodeId) {
+      var node = this.getNodeById(fromNodeId);
+      if (node != null) {
+        var transitionLogic = node.transitionLogic;
+        if (transitionLogic != null) {
+          var transitions = transitionLogic.transitions;
+          if (transitions == null || transitions.length == 0) {
+            transitionLogic.transitions = [];
+            var transition = {};
+            transitionLogic.transitions.push(transition);
+            transitions = transitionLogic.transitions;
+          }
+
+          if (transitions != null && transitions.length > 0) {
+            // get the first transition. we will assume there is only one transition.
+            var _transition = transitions[0];
+            if (_transition != null) {
+              _transition.to = toNodeId;
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * Get the node id that comes after a given node id
+     * @param nodeId get the node id that comes after this node id
+     * @param the node id that comes after the one that is passed in as a parameter
+     */
+
+  }, {
+    key: 'getNodeIdAfter',
+    value: function getNodeIdAfter(nodeId) {
+      var nodeIdAfter = null;
+
+      // get an array of ordered items. each item represents a node
+      var orderedItems = this.$filter('orderBy')(this.$filter('toArray')(this.idToOrder), 'order');
+
+      if (orderedItems != null) {
+        var foundNodeId = false;
+        var _iteratorNormalCompletion9 = true;
+        var _didIteratorError9 = false;
+        var _iteratorError9 = undefined;
+
+        try {
+          for (var _iterator9 = orderedItems[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+            var item = _step9.value;
+
+            if (item != null) {
+              var tempNodeId = item.$key;
+
+              // check if we have found the node id that was passed in as a parameter
+              if (foundNodeId) {
+                /*
+                 * we have previously found the node id that was passed in which means
+                 * the current temp node id is the one that comes after it
+                 */
+                nodeIdAfter = tempNodeId;
+                break;
+              } else {
+                if (nodeId == tempNodeId) {
+                  // we have found the node id that was passed in as a parameter
+                  foundNodeId = true;
+                }
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError9 = true;
+          _iteratorError9 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion9 && _iterator9.return) {
+              _iterator9.return();
+            }
+          } finally {
+            if (_didIteratorError9) {
+              throw _iteratorError9;
+            }
+          }
+        }
+      }
+      return nodeIdAfter;
+    }
+
+    /**
+     * Add branch path taken constraints to the node
+     * @param targetNodeId the node to add the constraints to
+     * @param fromNodeId the from node id of the branch path taken constraint
+     * @param toNodeId the to node id of the branch path taken constraint
+     */
+
+  }, {
+    key: 'addBranchPathTakenConstraints',
+    value: function addBranchPathTakenConstraints(targetNodeId, fromNodeId, toNodeId) {
+      if (targetNodeId != null) {
+        var node = this.getNodeById(targetNodeId);
+
+        if (node != null) {
+          /*
+           * create the constraint that makes the node not visible until
+           * the given branch path is taken
+           */
+          var makeThisNodeNotVisibleConstraint = {};
+          makeThisNodeNotVisibleConstraint.id = this.getNextAvailableConstraintIdForNodeId(targetNodeId);
+          makeThisNodeNotVisibleConstraint.action = 'makeThisNodeNotVisible';
+          makeThisNodeNotVisibleConstraint.targetId = targetNodeId;
+          makeThisNodeNotVisibleConstraint.removalCriteria = [];
+          var notVisibleRemovalCriterion = {};
+          notVisibleRemovalCriterion.name = 'branchPathTaken';
+          notVisibleRemovalCriterion.params = {};
+          notVisibleRemovalCriterion.params.fromNodeId = fromNodeId;
+          notVisibleRemovalCriterion.params.toNodeId = toNodeId;
+          makeThisNodeNotVisibleConstraint.removalConditional = 'all';
+          makeThisNodeNotVisibleConstraint.removalCriteria.push(notVisibleRemovalCriterion);
+          node.constraints.push(makeThisNodeNotVisibleConstraint);
+
+          /*
+           * create the constraint that makes the node not visitable until
+           * the given branch path is taken
+           */
+          var makeThisNodeNotVisitableConstraint = {};
+          makeThisNodeNotVisitableConstraint.id = this.getNextAvailableConstraintIdForNodeId(targetNodeId);
+          makeThisNodeNotVisitableConstraint.action = 'makeThisNodeNotVisitable';
+          makeThisNodeNotVisitableConstraint.targetId = targetNodeId;
+          makeThisNodeNotVisitableConstraint.removalCriteria = [];
+          var notVisitableRemovalCriterion = {};
+          notVisitableRemovalCriterion.name = 'branchPathTaken';
+          notVisitableRemovalCriterion.params = {};
+          notVisitableRemovalCriterion.params.fromNodeId = fromNodeId;
+          notVisitableRemovalCriterion.params.toNodeId = toNodeId;
+          makeThisNodeNotVisitableConstraint.removalConditional = 'all';
+          makeThisNodeNotVisitableConstraint.removalCriteria.push(notVisitableRemovalCriterion);
+          node.constraints.push(makeThisNodeNotVisitableConstraint);
+        }
+      }
+    }
+
+    /**
+     * Set the project level rubric
+     */
+
+  }, {
+    key: 'setProjectRubric',
+    value: function setProjectRubric(html) {
+      this.project.rubric = html;
+    }
+
+    /**
+     * Get the number of branch paths. This is assuming the node is a branch point.
+     * @param nodeId The node id of the branch point node.
+     * @return The number of branch paths for this branch point.
+     */
+
+  }, {
+    key: 'getNumberOfBranchPaths',
+    value: function getNumberOfBranchPaths(nodeId) {
+      var transitions = this.getTransitionsByFromNodeId(nodeId);
+      if (transitions != null) {
+        return transitions.length;
+      }
+      return 0;
+    }
+
+    /**
+     * If this step is a branch point, we will return the criteria that is used
+     * to determine which path the student gets assigned to.
+     * @param nodeId The node id of the branch point.
+     * @returns A human readable string containing the criteria of how students
+     * are assigned branch paths on this branch point.
+     */
+
+  }, {
+    key: 'getBranchCriteriaDescription',
+    value: function getBranchCriteriaDescription(nodeId) {
+      var transitionLogic = this.getTransitionLogicByFromNodeId(nodeId);
+      var transitions = transitionLogic.transitions;
+
+      // Loop through the transitions to try to find a transition criteria
+      var _iteratorNormalCompletion10 = true;
+      var _didIteratorError10 = false;
+      var _iteratorError10 = undefined;
+
+      try {
+        for (var _iterator10 = transitions[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+          var transition = _step10.value;
+
+          if (transition.criteria != null && transition.criteria.length > 0) {
+            var _iteratorNormalCompletion11 = true;
+            var _didIteratorError11 = false;
+            var _iteratorError11 = undefined;
+
+            try {
+              for (var _iterator11 = transition.criteria[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+                var singleCriteria = _step11.value;
+
+                if (singleCriteria.name == 'choiceChosen') {
+                  return 'multiple choice';
+                } else if (singleCriteria.name == 'score') {
+                  return 'score';
+                }
+              }
+            } catch (err) {
+              _didIteratorError11 = true;
+              _iteratorError11 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                  _iterator11.return();
+                }
+              } finally {
+                if (_didIteratorError11) {
+                  throw _iteratorError11;
+                }
+              }
+            }
+          }
+        }
+
+        /*
+         * None of the transitions had a specific criteria so the branching is just
+         * based on the howToChooseAmongAvailablePaths field.
+         */
+      } catch (err) {
+        _didIteratorError10 = true;
+        _iteratorError10 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion10 && _iterator10.return) {
+            _iterator10.return();
+          }
+        } finally {
+          if (_didIteratorError10) {
+            throw _iteratorError10;
+          }
+        }
+      }
+
+      if (transitionLogic.howToChooseAmongAvailablePaths == 'workgroupId') {
+        return 'workgroup ID';
+      } else if (transitionLogic.howToChooseAmongAvailablePaths == 'random') {
+        return 'random assignment';
+      }
+    }
+
+    /**
+     * Get the previous node
+     * @param nodeId get the node id that comes before this one
+     * @return the node id that comes before
+     */
+
+  }, {
+    key: 'getPreviousNodeId',
+    value: function getPreviousNodeId(nodeId) {
+      var flattenedNodeIds = this.getFlattenedProjectAsNodeIds();
+      if (flattenedNodeIds != null) {
+        var indexOfNodeId = flattenedNodeIds.indexOf(nodeId);
+        if (indexOfNodeId != -1) {
+          var indexOfPreviousNodeId = indexOfNodeId - 1;
+          return flattenedNodeIds[indexOfPreviousNodeId];
+        }
+      }
+      return null;
+    }
+
+    /**
+     * Set the project script filename
+     * @param script the script filename
+     */
+
+  }, {
+    key: 'setProjectScriptFilename',
+    value: function setProjectScriptFilename(scriptFilename) {
+      this.project.script = scriptFilename;
+    }
+
+    /**
+     * Get the project script filename
+     */
+
+  }, {
+    key: 'getProjectScriptFilename',
+    value: function getProjectScriptFilename() {
+      if (this.project != null && this.project.script != null) {
+        return this.project.script;
+      }
+      return null;
+    }
+
+    /**
+     * Check if a node has rubrics.
+     * @param nodeId The node id of the node.
+     * @return Whether the node has rubrics authored on it.
+     */
+
+  }, {
+    key: 'nodeHasRubric',
+    value: function nodeHasRubric(nodeId) {
+      var numberOfRubrics = this.getNumberOfRubricsByNodeId(nodeId);
+      if (numberOfRubrics > 0) {
+        return true;
+      }
+      return false;
+    }
+
+    /**
+     * Copy a component and insert it into the step
+     * @param nodeId we are copying a component in this node
+     * @param componentIds the components to copy
+     * @param insertAfterComponentId Which component to place the new components
+     * after. If this is null, we will put the new components at the beginning.
+     * @return an array of the new components
+     */
+
+  }, {
+    key: 'copyComponentAndInsert',
+    value: function copyComponentAndInsert(nodeId, componentIds, insertAfterComponentId) {
+      var node = this.getNodeById(nodeId);
+      var newComponents = [];
+      var newComponentIds = [];
+      var _iteratorNormalCompletion12 = true;
+      var _didIteratorError12 = false;
+      var _iteratorError12 = undefined;
+
+      try {
+        for (var _iterator12 = componentIds[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+          var componentId = _step12.value;
+
+          var _newComponent = this.copyComponent(nodeId, componentId, newComponentIds);
+          newComponents.push(_newComponent);
+          newComponentIds.push(_newComponent.id);
+        }
+      } catch (err) {
+        _didIteratorError12 = true;
+        _iteratorError12 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion12 && _iterator12.return) {
+            _iterator12.return();
+          }
+        } finally {
+          if (_didIteratorError12) {
+            throw _iteratorError12;
+          }
+        }
+      }
+
+      var components = node.components;
+      if (components != null) {
+        var insertPosition = 0;
+        if (insertAfterComponentId == null) {
+          // place the new components at the beginning
+          insertPosition = 0;
+        } else {
+          // place the new components after the specified component id
+          insertPosition = this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+        }
+
+        var _iteratorNormalCompletion13 = true;
+        var _didIteratorError13 = false;
+        var _iteratorError13 = undefined;
+
+        try {
+          for (var _iterator13 = newComponents[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+            var newComponent = _step13.value;
+
+            components.splice(insertPosition, 0, newComponent);
+
+            /*
+             * increment the insert position for cases when we have multiple
+             * new components
+             */
+            insertPosition += 1;
+          }
+        } catch (err) {
+          _didIteratorError13 = true;
+          _iteratorError13 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion13 && _iterator13.return) {
+              _iterator13.return();
+            }
+          } finally {
+            if (_didIteratorError13) {
+              throw _iteratorError13;
+            }
+          }
+        }
+      }
+      return newComponents;
+    }
+
+    /**
+     * Copy a component
+     * @param nodeId the node id
+     * @param componentId the compnent id
+     * @param componentIdsToSkip component ids that we can't use for our new
+     * component
+     * @return a new component object
+     */
+
+  }, {
+    key: 'copyComponent',
+    value: function copyComponent(nodeId, componentId, componentIdsToSkip) {
+      var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
+      var newComponent = this.UtilService.makeCopyOfJSONObject(component);
+      var newComponentId = this.getUnusedComponentId(componentIdsToSkip);
+      newComponent.id = newComponentId;
+      return newComponent;
+    }
+
+    /**
+     * Import components from a project. Also import asset files that are
+     * referenced in any of those components.
+     * @param components an array of component objects that we are importing
+     * @param importProjectId the id of the project we are importing from
+     * @param nodeId the node we are adding the components to
+     * @param insertAfterComponentId insert the components after this component
+     * id
+     * @return an array of the new components
+     */
+
+  }, {
+    key: 'importComponents',
+    value: function importComponents(components, importProjectId, nodeId, insertAfterComponentId) {
+      var _this4 = this;
+
+      var newComponents = [];
+      var newComponentIds = [];
+
+      /*
+       * loop through all the components and make sure their ids are not
+       * already used in the project
+       */
+      var _iteratorNormalCompletion14 = true;
+      var _didIteratorError14 = false;
+      var _iteratorError14 = undefined;
+
+      try {
+        for (var _iterator14 = components[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+          var component = _step14.value;
+
+          if (component != null) {
+            var newComponent = this.UtilService.makeCopyOfJSONObject(component);
+            var newComponentId = newComponent.id;
+
+            if (this.isComponentIdUsed(newComponentId)) {
+              // component id is already used so we will find a new component id
+              newComponentId = this.getUnusedComponentId(newComponentIds);
+              newComponent.id = newComponentId;
+            }
+
+            newComponents.push(newComponent);
+            newComponentIds.push(newComponentId);
+          }
+        }
+      } catch (err) {
+        _didIteratorError14 = true;
+        _iteratorError14 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion14 && _iterator14.return) {
+            _iterator14.return();
+          }
+        } finally {
+          if (_didIteratorError14) {
+            throw _iteratorError14;
+          }
+        }
+      }
+
+      var importStepsURL = this.ConfigService.getConfigParam('importStepsURL');
+      var httpParams = {};
+      httpParams.method = 'POST';
+      httpParams.url = importStepsURL;
+      httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+
+      var toProjectId = this.ConfigService.getConfigParam('projectId');
+      var fromProjectId = importProjectId;
+
+      var params = {};
+      params.steps = angular.toJson(newComponents);
+      params.fromProjectId = fromProjectId;
+      params.toProjectId = toProjectId;
+      httpParams.data = $.param(params);
+
+      /*
+       * Make the request to import the components. This will copy the asset files
+       * and change file names if necessary. If an asset file with the same
+       * name exists in both projects we will check if their content is the
+       * same. If the content is the same we don't need to copy the file. If
+       * the content is different, we need to make a copy of the file with a
+       * new name and change all the references in the steps to use the new
+       * name.
+       */
+      return this.$http(httpParams).then(function (result) {
+        newComponents = result.data;
+        var node = _this4.getNodeById(nodeId);
+        var currentComponents = node.components;
+        var insertPosition = 0;
+
+        if (insertAfterComponentId == null) {
+          // place the new components at the beginning
+          insertPosition = 0;
+        } else {
+          // place the new components after the specified component id
+          insertPosition = _this4.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+        }
+
+        var _iteratorNormalCompletion15 = true;
+        var _didIteratorError15 = false;
+        var _iteratorError15 = undefined;
+
+        try {
+          for (var _iterator15 = newComponents[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+            var newComponent = _step15.value;
+
+            // insert the new component
+            currentComponents.splice(insertPosition, 0, newComponent);
+
+            /*
+             * increment the insert position for cases when we have multiple
+             * new components
+             */
+            insertPosition += 1;
+          }
+        } catch (err) {
+          _didIteratorError15 = true;
+          _iteratorError15 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion15 && _iterator15.return) {
+              _iterator15.return();
+            }
+          } finally {
+            if (_didIteratorError15) {
+              throw _iteratorError15;
+            }
+          }
+        }
+
+        return newComponents;
+      });
+    }
+
+    /**
+     * Get the branch path letter
+     * @param nodeId get the branch path letter for this node if it is in a
+     * branch
+     * @return the branch path letter for the node if it is in a branch
+     */
+
+  }, {
+    key: 'getBranchPathLetter',
+    value: function getBranchPathLetter(nodeId) {
+      return this.nodeIdToBranchPathLetter[nodeId];
+    }
+
+    /**
+     * Set the node into the project by replacing the existing node with the
+     * given node id
+     * @param nodeId the node id of the node
+     * @param node the node object
+     */
+
+  }, {
+    key: 'setNode',
+    value: function setNode(nodeId, node) {
+      if (nodeId != null && node != null) {
+        for (var n = 0; n < this.project.nodes.length; n++) {
+          var tempNode = this.project.nodes[n];
+          if (tempNode != null && tempNode.id == nodeId) {
+            this.project.nodes[n] = node;
+          }
+        }
+
+        for (var i = 0; i < this.project.inactiveNodes.length; i++) {
+          var _tempNode = this.project.inactiveNodes[i];
+          if (_tempNode != null && _tempNode.id == nodeId) {
+            this.project.inactiveNodes[i] = node;
+          }
+        }
+        this.idToNode[nodeId] = node;
+      }
+    }
+
+    /**
+     * Get the id to node mappings.
+     * @return An object the keys as node ids and the values as nodes.
+     */
+
+  }, {
+    key: 'getIdToNode',
+    value: function getIdToNode() {
+      return this.idToNode;
     }
   }]);
 
