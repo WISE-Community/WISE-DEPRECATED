@@ -52,6 +52,7 @@ import StudentWebSocketService from '../services/studentWebSocketService';
 import TableComponentModule from '../components/table/tableComponentModule';
 import UtilService from '../services/utilService';
 import VLEController from './vleController';
+import VLEProjectService from './vleProjectService';
 import ocLazyLoad from 'oclazyload';
 import moment from 'moment';
 import angularSummernote from 'lib/angular-summernote/dist/angular-summernote.min';
@@ -97,7 +98,7 @@ let vleModule = angular.module('vle', [
   .service(NodeService.name, NodeService)
   .service(NotebookService.name, NotebookService)
   .service(NotificationService.name, NotificationService)
-  .service(ProjectService.name, ProjectService)
+  .service(ProjectService.name, VLEProjectService)
   .service(SessionService.name, SessionService)
   .service(StudentAssetService.name, StudentAssetService)
   .service(StudentDataService.name, StudentDataService)
