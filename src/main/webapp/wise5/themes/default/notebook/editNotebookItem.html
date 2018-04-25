@@ -43,8 +43,12 @@
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="end center" ng-if="editNotebookItemController.isEditMode">
-        <md-checkbox class="primary" aria-label="Share" ng-click="editNotebookItemController.toggleMakeNotePublic()">
-            {{ 'SHARE_WITH_CLASS' | translate }}
+        <md-checkbox class="primary"
+            aria-label="Share"
+            ng-checked="editNotebookItemController.isSharedWithClass()"
+            ng-if="editNotebookItemController.canShareWithClass()"
+            ng-click="editNotebookItemController.toggleMakeNotePublic()">
+          {{ 'SHARE_WITH_CLASS' | translate }}
         </md-checkbox>
         <md-button class="primary" aria-label="Cancel" ng-click="editNotebookItemController.cancel()">
             {{ 'CANCEL' | translate }}

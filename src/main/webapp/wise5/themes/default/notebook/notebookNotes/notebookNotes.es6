@@ -4,10 +4,12 @@ class NotebookNotesController {
   constructor($filter,
               $rootScope,
               $scope,
-              NotebookService) {
+              NotebookService,
+              ProjectService) {
     this.$translate = $filter('translate');
     this.$rootScope = $rootScope;
     this.NotebookService = NotebookService;
+    this.ProjectService = ProjectService;
     this.groups = [];
     this.selectedTabIndex = 0;
     this.$scope = $scope;
@@ -21,11 +23,6 @@ class NotebookNotesController {
       items: []
     };
     this.groupNameToGroup['private'] = personalGroup;
-    this.groupNameToGroup['public'] = {
-      title: "Public",
-      name: "public",
-      items: []
-    };
 
     for (const [personalItemKey, personalItemValue] of Object.entries(this.notebook.items)) {
       if (personalItemValue.last().type === 'note') {
@@ -34,6 +31,20 @@ class NotebookNotesController {
     };
 
     this.groups.push(personalGroup);
+
+    const spaces = this.ProjectService.getSpaces();
+    for (let space of spaces) {
+      if (space.isShowInNotebook) {
+        const spaceGroup = {
+          title: space.name,
+          name: space.id,
+          isEditAllowed: true,
+          items: []
+        };
+        this.groupNameToGroup[space.id] = spaceGroup;
+        this.groups.push(spaceGroup);
+      }
+    }
 
     this.$onInit = () => {
       this.color = this.config.itemTypes.note.label.color;
@@ -47,22 +58,10 @@ class NotebookNotesController {
     }
 
     this.$rootScope.$on('publicNotebookItemsRetrieved', (event, args) => {
-      let publicGroupFound = false;
       for (let group of this.groups) {
-        if (group.name == "public") {
-          group.items = this.publicNotebookItems["public"];
-          publicGroupFound = true;
+        if (group.name != 'private') {
+          group.items = this.publicNotebookItems[group.name];
         }
-      }
-      if (!publicGroupFound) {
-        const publicGroup = {
-          title: "Public",
-          name: "public",
-          isEditAllowed: false,
-          items: this.publicNotebookItems["public"]
-        };
-        this.groups.push(publicGroup);
-        this.groupNameToGroup['public'] = publicGroup;
       }
       this.selectedTabIndex = 0;
     });
@@ -82,8 +81,10 @@ class NotebookNotesController {
   updatePrivateNotebookNote(notebookItem) {
     this.updateNotebookNote(this.groupNameToGroup['private'],
         notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
-    this.removeNotebookNote(this.groupNameToGroup['public'],
+    if (this.groupNameToGroup['public'] != null) {
+      this.removeNotebookNote(this.groupNameToGroup['public'],
         notebookItem.localNotebookItemId, notebookItem.workgroupId);
+    }
   }
 
   updatePublicNotebookNote(notebookItem) {
@@ -158,7 +159,8 @@ NotebookNotesController.$inject = [
   '$filter',
   '$rootScope',
   '$scope',
-  'NotebookService'
+  'NotebookService',
+  'ProjectService'
 ];
 
 const NotebookNotes = {

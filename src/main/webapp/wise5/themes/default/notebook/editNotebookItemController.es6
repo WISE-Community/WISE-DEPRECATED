@@ -88,13 +88,25 @@ class EditNotebookItemController {
     }
   }
 
+  isSharedWithClass() {
+    return this.item.groups != null && this.item.groups.includes("public");
+  }
+
   toggleMakeNotePublic() {
     if (this.item.groups == null) {
       this.item.groups = [];
     }
     if (!this.item.groups.includes("public")) {
       this.item.groups.push("public");
+    } else {
+      for (let i = 0; i < this.item.groups.length; i++) {
+        if (this.item.groups[i] === "public") {
+          this.item.groups.splice(i, 1);
+          break;
+        }
+      }
     }
+    this.update();
   }
 
   attachStudentAssetToNote(files) {
@@ -207,11 +219,9 @@ class EditNotebookItemController {
   }
 
   update() {
-    let saveEnabled = false;
-    if (this.item.content.text || !this.isRequireTextOnEveryNote() && this.item.content.attachments.length) {
-      saveEnabled = true;
-    }
-    this.saveEnabled = saveEnabled;
+    this.saveEnabled = this.item.content.text ||
+        (!this.isRequireTextOnEveryNote() &&
+        this.item.content.attachments.length);
     this.setShowUpload();
   }
 
@@ -227,6 +237,10 @@ class EditNotebookItemController {
       this.notebookConfig.itemTypes.note.enableStudentUploads &&
       this.item.content.attachments &&
       this.item.content.attachments.length < 1;
+  }
+
+  canShareWithClass() {
+    return this.ProjectService.isSpaceExists("public");
   }
 }
 

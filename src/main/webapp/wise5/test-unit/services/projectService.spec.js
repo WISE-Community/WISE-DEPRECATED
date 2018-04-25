@@ -452,6 +452,55 @@ describe('ProjectService Unit Test', function () {
       var scootersProjectMaxScoreActual = ProjectService.getMaxScore();
       expect(scootersProjectMaxScoreActual).toEqual(scootersProjectMaxScoreExpected);
     });
+
+    it('should not add space if it does exist', function () {
+      ProjectService.setProject(scootersProjectJSON);
+      var spaces = ProjectService.getSpaces();
+      expect(spaces.length).toEqual(2);
+      var space = {
+        "id": "public",
+        "name": "Public",
+        "isPublic": true,
+        "isShareWithNotebook": true
+      };
+      ProjectService.addSpace(space);
+      expect(spaces.length).toEqual(2);
+      expect(spaces[0].id).toEqual("public");
+      expect(spaces[1].id).toEqual("ideasAboutGlobalClimateChange");
+    });
+
+    it('should add space if it doesn\'t exist', function () {
+      ProjectService.setProject(scootersProjectJSON);
+      var spaces = ProjectService.getSpaces();
+      expect(spaces.length).toEqual(2);
+      var space = {
+        "id": "newSpace",
+        "name": "New Space to share your thoughts",
+        "isPublic": true,
+        "isShareWithNotebook": false
+      };
+      ProjectService.addSpace(space);
+      expect(spaces.length).toEqual(3);
+      expect(spaces[0].id).toEqual("public");
+      expect(spaces[1].id).toEqual("ideasAboutGlobalClimateChange");
+      expect(spaces[2].id).toEqual("newSpace");
+    });
+
+    it('should not remove a space that does not exist', function () {
+      ProjectService.setProject(demoProjectJSON);
+      var spaces = ProjectService.getSpaces();
+      expect(spaces.length).toEqual(1);
+      ProjectService.removeSpace("public");
+      expect(spaces.length).toEqual(1);
+    });
+
+    it('should remove a space that does exist', function () {
+      ProjectService.setProject(demoProjectJSON);
+      var spaces = ProjectService.getSpaces();
+      expect(spaces.length).toEqual(1);
+      ProjectService.removeSpace("sharePictures");
+      expect(spaces.length).toEqual(0);
+    });
   });
 });
 //# sourceMappingURL=projectService.spec.js.map

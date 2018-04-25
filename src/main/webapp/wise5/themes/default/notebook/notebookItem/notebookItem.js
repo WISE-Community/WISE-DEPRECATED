@@ -155,17 +155,17 @@ var NotebookItemController = function () {
   }, {
     key: 'canCopyNotebookItem',
     value: function canCopyNotebookItem() {
-      return !this.isMyNotebookItem() && !this.isChooseMode;
+      return this.ProjectService.isSpaceExists("public") && !this.isMyNotebookItem() && !this.isChooseMode;
     }
   }, {
     key: 'canShareNotebookItem',
     value: function canShareNotebookItem() {
-      return this.isMyNotebookItem() && this.item.serverDeleteTime == null && !this.isChooseMode && !this.isItemInGroup('public');
+      return this.ProjectService.isSpaceExists("public") && this.isMyNotebookItem() && this.item.serverDeleteTime == null && !this.isChooseMode && !this.isItemInGroup('public');
     }
   }, {
     key: 'canUnshareNotebookItem',
     value: function canUnshareNotebookItem() {
-      return this.isMyNotebookItem() && this.item.serverDeleteTime == null && !this.isChooseMode && this.isItemInGroup('public');
+      return this.ProjectService.isSpaceExists("public") && this.isMyNotebookItem() && this.item.serverDeleteTime == null && !this.isChooseMode && this.isItemInGroup('public');
     }
   }, {
     key: 'canDeleteNotebookItem',

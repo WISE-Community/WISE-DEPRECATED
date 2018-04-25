@@ -3060,7 +3060,7 @@ var DrawController = function () {
   }, {
     key: 'showCopyPublicNotebookItemButton',
     value: function showCopyPublicNotebookItemButton() {
-      return true;
+      return this.ProjectService.isSpaceExists("public");
     }
   }, {
     key: 'copyPublicNotebookItemButtonClicked',

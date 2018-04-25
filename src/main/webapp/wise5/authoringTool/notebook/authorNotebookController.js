@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthorNotebookController = function () {
-  function AuthorNotebookController($filter, $mdDialog, $state, $stateParams, $scope, ConfigService, ProjectService, UtilService) {
+  function AuthorNotebookController($filter, $mdDialog, $state, $stateParams, $scope, ConfigService, ProjectService, SpaceService, UtilService) {
     var _this = this;
 
     _classCallCheck(this, AuthorNotebookController);
@@ -21,6 +21,7 @@ var AuthorNotebookController = function () {
     this.$scope = $scope;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
+    this.SpaceService = SpaceService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
     this.projectId = this.$stateParams.projectId;
@@ -134,6 +135,8 @@ var AuthorNotebookController = function () {
       }
       _this.$mdDialog.hide();
     });
+
+    this.isPublicNotebookEnabled = this.ProjectService.isSpaceExists("public");
   }
 
   /**
@@ -222,12 +225,26 @@ var AuthorNotebookController = function () {
         note.content = summernoteHTML;
       }
     }
+  }, {
+    key: 'togglePublicNotebook',
+    value: function togglePublicNotebook() {
+      if (this.isPublicNotebookEnabled) {
+        this.SpaceService.addSpace("public", "Public");
+      } else {
+        this.SpaceService.removeSpace("public");
+      }
+    }
+  }, {
+    key: 'disablePublicSpace',
+    value: function disablePublicSpace() {
+      this.SpaceService.removeSpace("public");
+    }
   }]);
 
   return AuthorNotebookController;
 }();
 
-AuthorNotebookController.$inject = ['$filter', '$mdDialog', '$state', '$stateParams', '$scope', 'ConfigService', 'ProjectService', 'UtilService'];
+AuthorNotebookController.$inject = ['$filter', '$mdDialog', '$state', '$stateParams', '$scope', 'ConfigService', 'ProjectService', 'SpaceService', 'UtilService'];
 
 exports.default = AuthorNotebookController;
 //# sourceMappingURL=authorNotebookController.js.map
