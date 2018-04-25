@@ -6185,7 +6185,7 @@ class GraphController {
               mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
             } else {
               // the connected component does not have student work
-              mergedComponentState = this.mergeNullComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
+              mergedComponentState = this.mergeNullComponentState(mergedComponentState, fields, firstTime);
             }
           }
         }
@@ -6207,20 +6207,32 @@ class GraphController {
   }
 
   /**
-   * Merge the component state from the connected component with the component
+   * Merge the component state from the connected component into the component
    * state from this component.
    * @param baseComponentState The component state from this component.
-   * @param newComponentState The component state from the connected component.
-   * @param mergeFields The field to look at in the newComponentState.
+   * @param connectedComponentState The component state from the connected component.
+   * @param mergeFields (optional) An array of objects that specify which fields
+   * to look at in the connectedComponentState. Each object can contain 3 fields which
+   * are "name", "when", "action".
+   * - "name" is the name of the field in the connectedComponentState.studentData object
+   *   For example, if connectedComponentState is from a Graph component, we may author the value to be "trials"
+   * - "when" possible values
+   *     "firstTime" means we merge the "name" field only the first time we visit the component
+   *     "always" means we merge the "name" field every time we visit the component
+   * - "action" possible values
+   *     "read" means we look at the value of the "name" field and perform processing on it to generate
+   *       some value that we will set into the baseComponentState
+   *     "write" means we copy the value of the "name" field from connectedComponentState.studentData to
+   *       baseComponentState.studentData
    * @param firstTime Whether this is the first time this component is being
    * visited.
    * @return The merged component state.
    */
-  mergeComponentState(baseComponentState, newComponentState, mergeFields, firstTime) {
+  mergeComponentState(baseComponentState, connectedComponentState, mergeFields, firstTime) {
     if (mergeFields == null) {
-      if (newComponentState.componentType == 'Graph' && firstTime) {
+      if (connectedComponentState.componentType == 'Graph' && firstTime) {
         // there are no merge fields specified so we will get all of the fields
-        baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(newComponentState.studentData);
+        baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(connectedComponentState.studentData);
       }
     } else {
       // we will merge specific fields
@@ -6230,15 +6242,15 @@ class GraphController {
         let action = mergeField.action;
         if (when == 'firstTime' && firstTime) {
           if (action == 'write') {
-            baseComponentState.studentData[name] = newComponentState.studentData[name];
+            baseComponentState.studentData[name] = connectedComponentState.studentData[name];
           } else if (action == 'read') {
             // TODO
           }
         } else if (when == 'always') {
           if (action == 'write') {
-            baseComponentState.studentData[name] = newComponentState.studentData[name];
+            baseComponentState.studentData[name] = connectedComponentState.studentData[name];
           } else if (action == 'read') {
-            this.readConnectedComponentField(baseComponentState, newComponentState, name);
+            this.readConnectedComponentField(baseComponentState, connectedComponentState, name);
           }
         }
       }
@@ -6251,7 +6263,8 @@ class GraphController {
    * component but the connected component does not have any work. We will
    * instead use default values.
    * @param baseComponentState The component state from this component.
-   * @param mergeFields The field to look at in the newComponentState.
+   * @param mergeFields (optional) An array of objects that specify which fields
+   * to look at. (see comment for mergeComponentState() for more information).
    * @param firstTime Whether this is the first time this component is being
    * visited.
    * @return The merged component state.
@@ -6277,7 +6290,8 @@ class GraphController {
           if (action == 'write') {
             // TODO
           } else if (action == 'read') {
-            this.readConnectedComponentField(baseComponentState, newComponentState, name);
+            const connectedComponentState = null;
+            this.readConnectedComponentField(baseComponentState, connectedComponentState, name);
           }
         }
       }
@@ -6288,13 +6302,13 @@ class GraphController {
   /**
    * Read the field from the connected component's component state.
    * @param baseComponentState The component state from this component.
-   * @param newComponentState The component state from the connected component.
+   * @param connectedComponentState The component state from the connected component.
    * @param field The field to look at in the connected component's component
    * state.
    */
-  readConnectedComponentField(baseComponentState, newComponentState, field) {
+  readConnectedComponentField(baseComponentState, connectedComponentState, field) {
     if (field == 'selectedCells') {
-      if (newComponentState == null) {
+      if (connectedComponentState == null) {
         // we will default to hide all the trials
         for (let trial of baseComponentState.studentData.trials) {
           trial.show = false;
@@ -6304,7 +6318,7 @@ class GraphController {
          * loop through all the trials and show the ones that are in the
          * selected cells array.
          */
-        let studentData = newComponentState.studentData;
+        let studentData = connectedComponentState.studentData;
         let selectedCells = studentData[field];
         let selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
         for (let trial of baseComponentState.studentData.trials) {
