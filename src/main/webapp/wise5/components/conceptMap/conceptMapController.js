@@ -172,17 +172,9 @@ var ConceptMapController = function () {
     }];
 
     // the component types we are allowed to connect to
-    this.allowedConnectedComponentTypes = [{
-      type: 'ConceptMap'
-    }];
+    this.allowedConnectedComponentTypes = [{ type: 'ConceptMap' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Table' }];
 
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     // get the component content from the scope
     this.componentContent = this.$scope.componentContent;
@@ -222,10 +214,10 @@ var ConceptMapController = function () {
       this.setBackgroundImage(this.componentContent.background, this.componentContent.stretchBackground);
 
       // set the id of the svg and other display elements
-      this.svgId = 'svg_' + this.nodeId + '_' + this.componentId;
-      this.conceptMapContainerId = 'conceptMapContainer_' + this.nodeId + '_' + this.componentId;
-      this.selectNodeBarId = 'selectNodeBar_' + this.nodeId + '_' + this.componentId;
-      this.feedbackContainerId = 'feedbackContainer_' + this.nodeId + '_' + this.componentId;
+      this.svgId = 'svg_' + this.$scope.nodeId + '_' + this.componentId;
+      this.conceptMapContainerId = 'conceptMapContainer_' + this.$scope.nodeId + '_' + this.componentId;
+      this.selectNodeBarId = 'selectNodeBar_' + this.$scope.nodeId + '_' + this.componentId;
+      this.feedbackContainerId = 'feedbackContainer_' + this.$scope.nodeId + '_' + this.componentId;
 
       if (this.componentContent.width != null) {
         this.width = this.componentContent.width;
@@ -805,6 +797,8 @@ var ConceptMapController = function () {
         // register this component with the parent node
         this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
       }
+
+      this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
     }
 
     /**
@@ -5101,14 +5095,6 @@ var ConceptMapController = function () {
       var svgElement = angular.element('#svg_' + this.nodeId + '_' + this.componentId);
 
       if (svgElement != null && svgElement.length > 0) {
-
-        // hide all the iframes otherwise html2canvas may cut off the table
-        this.UtilService.hideIFrames();
-
-        // scroll to the component so html2canvas doesn't cut off the table
-        this.$location.hash(this.componentId);
-        this.$anchorScroll();
-
         // get the svg element
         svgElement = svgElement[0];
 
@@ -5179,16 +5165,6 @@ var ConceptMapController = function () {
 
             // create a notebook item with the image populated into it
             _this8.NotebookService.addNote($event, imageObject);
-
-            // we are done capturing the table so we will show the iframes again
-            _this8.UtilService.showIFrames();
-
-            /*
-             * scroll to the component in case the view has shifted after
-             * showing the iframe
-             */
-            _this8.$location.hash(_this8.componentId);
-            _this8.$anchorScroll();
           };
 
           // set the src of the image so that the image gets loaded
@@ -5467,7 +5443,7 @@ var ConceptMapController = function () {
         for (var c = 0; c < componentStates.length; c++) {
           var componentState = componentStates[c];
 
-          if (componentState != null) {
+          if (componentState.componentType == 'ConceptMap') {
             var studentData = componentState.studentData;
 
             if (studentData != null) {
@@ -5490,6 +5466,11 @@ var ConceptMapController = function () {
                   stretchBackground = conceptMapData.stretchBackground;
                 }
               }
+            }
+          } else if (componentState.componentType == 'Draw' || componentState.componentType == 'Embedded' || componentState.componentType == 'Graph' || componentState.componentType == 'Label' || componentState.componentType == 'Table') {
+            var connectedComponent = this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
+            if (connectedComponent.importWorkAsBackground === true) {
+              this.setComponentStateAsBackgroundImage(componentState);
             }
           }
         }
@@ -5524,6 +5505,21 @@ var ConceptMapController = function () {
       mergedComponentState = this.ProjectService.injectAssetPaths(mergedComponentState);
 
       return mergedComponentState;
+    }
+
+    /**
+     * Create an image from a component state and set the image as the background.
+     * @param componentState A component state.
+     */
+
+  }, {
+    key: 'setComponentStateAsBackgroundImage',
+    value: function setComponentStateAsBackgroundImage(componentState) {
+      var _this9 = this;
+
+      this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
+        _this9.setBackgroundImage(image.url);
+      });
     }
 
     /**
@@ -5608,6 +5604,7 @@ var ConceptMapController = function () {
              */
             connectedComponent.componentId = allowedComponent.id;
             connectedComponent.type = 'importWork';
+            this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
           }
         }
       }
@@ -5678,6 +5675,7 @@ var ConceptMapController = function () {
       if (connectedComponent != null) {
         connectedComponent.componentId = null;
         connectedComponent.type = null;
+        delete connectedComponent.importWorkAsBackground;
         this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
         // the authoring component content has changed so we will save the project
@@ -5698,9 +5696,27 @@ var ConceptMapController = function () {
 
         // default the type to import work
         connectedComponent.type = 'importWork';
+        this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+      }
+    }
+
+    /**
+     * If the component type is a certain type, we will set the importWorkAsBackground
+     * field to true.
+     * @param connectedComponent The connected component object.
+     */
+
+  }, {
+    key: 'authoringSetImportWorkAsBackgroundIfApplicable',
+    value: function authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
+      var componentType = this.authoringGetConnectedComponentType(connectedComponent);
+      if (componentType == 'Draw' || componentType == 'Embedded' || componentType == 'Graph' || componentType == 'Label' || componentType == 'Table') {
+        connectedComponent.importWorkAsBackground = true;
+      } else {
+        delete connectedComponent.importWorkAsBackground;
       }
     }
 
@@ -5814,6 +5830,21 @@ var ConceptMapController = function () {
     key: 'authoringJSONChanged',
     value: function authoringJSONChanged() {
       this.jsonStringChanged = true;
+    }
+
+    /**
+     * The "Import Work As Background" checkbox was clicked.
+     * @param connectedComponent The connected component associated with the
+     * checkbox.
+     */
+
+  }, {
+    key: 'authoringImportWorkAsBackgroundClicked',
+    value: function authoringImportWorkAsBackgroundClicked(connectedComponent) {
+      if (!connectedComponent.importWorkAsBackground) {
+        delete connectedComponent.importWorkAsBackground;
+      }
+      this.authoringViewComponentChanged();
     }
   }]);
 

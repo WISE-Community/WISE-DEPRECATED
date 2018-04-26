@@ -581,6 +581,35 @@ var LabelService = function (_NodeService) {
 
       return deferred.promise;
     }
+
+    /**
+     * The component state has been rendered in a <component></component> element
+     * and now we want to take a snapshot of the work.
+     * @param componentState The component state that has been rendered.
+     * @return A promise that will return an image object.
+     */
+
+  }, {
+    key: 'generateImageFromRenderedComponentState',
+    value: function generateImageFromRenderedComponentState(componentState) {
+      var deferred = this.$q.defer();
+      var canvas = angular.element('#canvas_' + componentState.nodeId + '_' + componentState.componentId);
+      if (canvas != null && canvas.length > 0) {
+        canvas = canvas[0];
+
+        // get the canvas as a base64 string
+        var img_b64 = canvas.toDataURL('image/png');
+
+        // get the image object
+        var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+
+        // add the image to the student assets
+        this.StudentAssetService.uploadAsset(imageObject).then(function (asset) {
+          deferred.resolve(asset);
+        });
+      }
+      return deferred.promise;
+    }
   }]);
 
   return LabelService;

@@ -191,19 +191,9 @@ var LabelController = function () {
     }];
 
     // the component types we are allowed to connect to
-    this.allowedConnectedComponentTypes = [{
-      type: 'Label'
-    }, {
-      type: 'OpenResponse'
-    }];
+    this.allowedConnectedComponentTypes = [{ type: 'ConceptMap' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'OpenResponse' }, { type: 'Table' }];
 
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     // get the component content from the scope
     this.componentContent = this.$scope.componentContent;
@@ -727,6 +717,8 @@ var LabelController = function () {
         }
       }
     });
+
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
   _createClass(LabelController, [{
@@ -1084,6 +1076,8 @@ var LabelController = function () {
     value: function newLabelButtonClicked() {
       this.createLabelMode = true;
       this.isCancelButtonVisible = true;
+      this.editLabelMode = false;
+      this.selectedLabel = null;
     }
   }, {
     key: 'cancelButtonClicked',
@@ -1652,6 +1646,8 @@ var LabelController = function () {
       // set the width and height of the canvas
       canvas.setWidth(this.canvasWidth);
       canvas.setHeight(this.canvasHeight);
+      document.getElementById(this.canvasId).width = this.canvasWidth;
+      document.getElementById(this.canvasId).height = this.canvasHeight;
 
       // set the height on the parent div so that a vertical scrollbar doesn't show up
       $('#canvasParent_' + this.canvasId).css('height', this.canvasHeight + 2);
@@ -2227,7 +2223,7 @@ var LabelController = function () {
           canvas.renderAll();
 
           if (this.enableCircles) {
-            circle.on('selected', function () {
+            circle.on('mousedown', function () {
               /*
                * the circle was clicked so we will make the associated
                * label selected
@@ -2236,7 +2232,7 @@ var LabelController = function () {
             });
           }
 
-          text.on('selected', function () {
+          text.on('mousedown', function () {
             /*
              * the text was clicked so we will make the associated
              * label selected
@@ -3462,6 +3458,11 @@ var LabelController = function () {
                   });
                 }
               }
+            } else if (componentState.componentType == 'ConceptMap' || componentState.componentType == 'Draw' || componentState.componentType == 'Embedded' || componentState.componentType == 'Graph' || componentState.componentType == 'Table') {
+              var _connectedComponent = this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
+              if (_connectedComponent.importWorkAsBackground === true) {
+                this.setComponentStateAsBackgroundImage(componentState);
+              }
             }
           }
         }
@@ -3517,6 +3518,21 @@ var LabelController = function () {
       }
 
       return null;
+    }
+
+    /**
+     * Create an image from a component state and set the image as the background.
+     * @param componentState A component state.
+     */
+
+  }, {
+    key: 'setComponentStateAsBackgroundImage',
+    value: function setComponentStateAsBackgroundImage(componentState) {
+      var _this7 = this;
+
+      this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
+        _this7.setBackgroundImage(image.url);
+      });
     }
 
     /**
@@ -3601,6 +3617,7 @@ var LabelController = function () {
              */
             connectedComponent.componentId = allowedComponent.id;
             connectedComponent.type = 'importWork';
+            this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
           }
         }
       }
@@ -3671,6 +3688,7 @@ var LabelController = function () {
       if (connectedComponent != null) {
         connectedComponent.componentId = null;
         connectedComponent.type = null;
+        delete connectedComponent.importWorkAsBackground;
         this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
         // the authoring component content has changed so we will save the project
@@ -3691,9 +3709,27 @@ var LabelController = function () {
 
         // default the type to import work
         connectedComponent.type = 'importWork';
+        this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+      }
+    }
+
+    /**
+     * If the component type is a certain type, we will set the importWorkAsBackground
+     * field to true.
+     * @param connectedComponent The connected component object.
+     */
+
+  }, {
+    key: 'authoringSetImportWorkAsBackgroundIfApplicable',
+    value: function authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
+      var componentType = this.authoringGetConnectedComponentType(connectedComponent);
+      if (componentType == 'ConceptMap' || componentType == 'Draw' || componentType == 'Embedded' || componentType == 'Graph' || componentType == 'Table') {
+        connectedComponent.importWorkAsBackground = true;
+      } else {
+        delete connectedComponent.importWorkAsBackground;
       }
     }
 
@@ -3900,6 +3936,7 @@ var LabelController = function () {
         delete connectedComponent.charactersPerLine;
         delete connectedComponent.spaceInbetweenLines;
         delete connectedComponent.fontSize;
+        delete connectedComponent.importWorkAsBackground;
       }
 
       this.authoringViewComponentChanged();

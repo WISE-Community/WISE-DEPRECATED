@@ -4,10 +4,14 @@ class UtilService {
   constructor(
       $filter,
       $injector,
+      $mdDialog,
+      $q,
       $rootScope,
       $timeout) {
     this.$filter = $filter;
     this.$injector = $injector;
+    this.$mdDialog = $mdDialog;
+    this.$q = $q;
     this.$rootScope = $rootScope;
     this.$timeout = $timeout;
     this.componentTypeToLabel = {};
@@ -126,36 +130,6 @@ class UtilService {
       imageObject = this.getImageObjectFromBase64String(dataURL);
     }
     return imageObject;
-  }
-
-  /**
-   * Hide all the iframes. This is used before a student snips something
-   * to put into their notebook. Iframes shift the position of elements
-   * below it which causes issues when html2canvas tries to capture
-   * certain elements.
-   */
-  hideIFrames() {
-    const iframes = angular.element('iframe');
-    for (let iframe of iframes) {
-      if (iframe != null) {
-        iframe.style.display = 'none';
-      }
-    }
-  }
-
-  /**
-   * Show all the iframes. This is used after the student snips something
-   * to put into their notebook. Iframes shift the position of elements
-   * below it which causes issues when html2canvas tries to capture
-   * certain elements.
-   */
-  showIFrames() {
-    const iframes = angular.element('iframe');
-    for (let iframe of iframes) {
-      if (iframe != null) {
-        iframe.style.display = '';
-      }
-    }
   }
 
   /**
@@ -680,6 +654,29 @@ class UtilService {
   }
 
   /**
+   * @param componentContent The component content.
+   * @return Whether there are any connected components with a field we always
+   * want to read or write.
+   */
+  hasConnectedComponentAlwaysField(componentContent) {
+    if (componentContent != null) {
+      const connectedComponents = componentContent.connectedComponents;
+      if (connectedComponents != null && connectedComponents.length > 0) {
+        for (let connectedComponent of connectedComponents) {
+          if (connectedComponent.fields != null) {
+            for (let field of connectedComponent.fields) {
+              if (field.when == "always") {
+                return true;
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
    * Whether this component shows work from a connected component
    * @param componentContent the component content
    * @return whether this component shows work from a connected component
@@ -728,11 +725,9 @@ class UtilService {
    * False if the array has all null elements.
    */
   arrayHasNonNullElement(arrayToCheck) {
-    if (arrayToCheck != null) {
-      for (let element of arrayToCheck) {
-        if (element != null) {
-          return true;
-        }
+    for (let element of arrayToCheck) {
+      if (element != null) {
+        return true;
       }
     }
     return false;
@@ -894,6 +889,104 @@ class UtilService {
       }, 2000);
     }, duration);
   }
+
+  /**
+   * Render the component state and then generate an image from it.
+   * @param componentState The component state to render.
+   * @return A promise that will return an image.
+   */
+  generateImageFromComponentState(componentState) {
+    let deferred = this.$q.defer();
+    this.$mdDialog.show({
+      template: `
+        <div style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.2); z-index: 2;"></div>
+        <div align="center" style="position: absolute; top: 100px; left: 200px; z-index: 1000; padding: 20px; background-color: yellow;">
+          <span>{{ "importingWork" | translate }}...</span>
+          <br/>
+          <br/>
+          <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+        <component node-id="{{nodeId}}"
+                   component-id="{{componentId}}"
+                   component-state="{{componentState}}"
+                   mode="student"></component>
+      `,
+      locals: {
+        nodeId: componentState.nodeId,
+        componentId: componentState.componentId,
+        componentState: componentState
+      },
+      controller: DialogController
+    });
+    function DialogController($scope, $mdDialog, nodeId, componentId, componentState) {
+      $scope.nodeId = nodeId;
+      $scope.componentId = componentId;
+      $scope.componentState = componentState;
+      $scope.closeDialog = function() {
+        $mdDialog.hide();
+      }
+    }
+    DialogController.$inject = ['$scope', '$mdDialog', 'nodeId', 'componentId', 'componentState'];
+    // wait for the component in the dialog to finish rendering
+    let doneRenderingComponentListener = this.$rootScope.$on('doneRenderingComponent', (event, args) => {
+      if (componentState.nodeId == args.nodeId && componentState.componentId == args.componentId) {
+        this.$timeout(() => {
+          this.generateImageFromComponentStateHelper(componentState).then((image) => {
+            /*
+             * Destroy the listener otherwise this block of code will be called every time
+             * doneRenderingComponent is fired in the future.
+             */
+            doneRenderingComponentListener();
+            this.$timeout.cancel(destroyDoneRenderingComponentListenerTimeout);
+            deferred.resolve(image);
+          });
+        }, 1000);
+      }
+    });
+    /*
+     * Set a timeout to destroy the listener in case there is an error creating the image and
+     * we don't get to destroying it above.
+     */
+    let destroyDoneRenderingComponentListenerTimeout = this.$timeout(() => {
+      // destroy the listener
+      doneRenderingComponentListener();
+    }, 10000);
+    return deferred.promise;
+  }
+
+  /**
+   * The component state has been rendered in the DOM and now we want to create an image
+   * from it.
+   * @param componentState The component state that has been rendered.
+   * @return A promise that will return an image.
+   */
+  generateImageFromComponentStateHelper(componentState) {
+    let deferred = this.$q.defer();
+    let componentService = this.$injector.get(componentState.componentType + 'Service');
+    componentService.generateImageFromRenderedComponentState(componentState).then((image) => {
+      deferred.resolve(image);
+      this.$mdDialog.hide();
+    });
+    return deferred.promise;
+  }
+
+  /**
+   * Get the connected component associated with the component state.
+   * @param componentContent The component content.
+   * @param componentState The component state.
+   * @return A connected component object or null.
+   */
+  getConnectedComponentByComponentState(componentContent, componentState) {
+    let nodeId = componentState.nodeId;
+    let componentId = componentState.componentId;
+    let connectedComponents = componentContent.connectedComponents;
+    for (let connectedComponent of connectedComponents) {
+      if (connectedComponent.nodeId == nodeId && connectedComponent.componentId == componentId) {
+        return connectedComponent;
+      }
+    }
+    return null;
+  }
 }
 
 // Get the last element of the array
@@ -906,6 +999,8 @@ if (!Array.prototype.last) {
 UtilService.$inject = [
   '$filter',
   '$injector',
+  '$mdDialog',
+  '$q',
   '$rootScope',
   '$timeout'
 ];

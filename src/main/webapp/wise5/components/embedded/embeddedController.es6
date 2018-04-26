@@ -102,12 +102,7 @@ class EmbeddedController {
       { type: 'Table' }
     ];
 
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     this.componentContent = this.$scope.componentContent;
     this.authoringComponentContent = this.$scope.authoringComponentContent;
@@ -514,6 +509,8 @@ class EmbeddedController {
         this.sendMessageToApplication(message);
       }
     });
+
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
   iframeLoaded(contentLocation) {

@@ -148,7 +148,7 @@
             <md-checkbox class='md-primary'
                 ng-model='connectedComponent.importWorkAsBackground'
                 ng-change='labelController.authoringImportWorkAsBackgroundClicked(connectedComponent)'>
-              {{ 'label.importWorkAsBackground' | translate }}
+              {{ 'importWorkAsBackground' | translate }}
             </md-checkbox>
           </md-input-container>
           <div ng-if='connectedComponent.importWorkAsBackground'
@@ -172,6 +172,16 @@
                    ng-change='labelController.authoringViewComponentChanged()'/>
             </md-input-container>
           </div>
+        </div>
+        <div ng-if='labelController.authoringGetConnectedComponentType(connectedComponent) == "ConceptMap" || labelController.authoringGetConnectedComponentType(connectedComponent) == "Draw" || labelController.authoringGetConnectedComponentType(connectedComponent) == "Embedded" || labelController.authoringGetConnectedComponentType(connectedComponent) == "Graph" || labelController.authoringGetConnectedComponentType(connectedComponent) == "Table"' flex>
+          <md-input-container style='margin-right: 20;'>
+            <md-checkbox class='md-primary'
+                         ng-model='connectedComponent.importWorkAsBackground'
+                         ng-change='labelController.authoringImportWorkAsBackgroundClicked(connectedComponent)'
+                         ng-disabled='true'>
+              {{ 'importWorkAsBackground' | translate }}
+            </md-checkbox>
+          </md-input-container>
         </div>
       </div>
     </div>
@@ -517,7 +527,7 @@
           <md-button class='studentButton md-raised md-primary'
               ng-click='labelController.newLabelButtonClicked()'
               ng-disabled='labelController.isDisabled'
-              ng-if='labelController.showNewLabelButton() && !labelController.createLabelMode && !labelController.editLabelMode'>
+              ng-if='labelController.showNewLabelButton() && !labelController.createLabelMode'>
             <md-icon>add</md-icon>
             <md-tooltip md-direction='top'
                 class='projectButtonTooltip'>

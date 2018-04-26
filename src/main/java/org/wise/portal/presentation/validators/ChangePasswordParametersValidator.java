@@ -25,13 +25,10 @@ package org.wise.portal.presentation.validators;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.dao.SystemWideSaltSource;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.BatchStudentChangePasswordParameters;
 import org.wise.portal.domain.authentication.impl.ChangePasswordParameters;
 import org.wise.portal.domain.user.User;
@@ -47,9 +44,6 @@ import org.wise.portal.service.user.UserService;
 public class ChangePasswordParametersValidator implements Validator {
 
   protected static final int MAX_PASSWORD_LENGTH = 20;
-
-  @Autowired
-  private SystemWideSaltSource systemSaltSource;
 
   @Autowired
   private UserService userService;
@@ -107,27 +101,13 @@ public class ChangePasswordParametersValidator implements Validator {
       userToCheckPasswordFor = params.getUser();
     }
 
-    try {
-      userToCheckPasswordFor = userService.retrieveById(userToCheckPasswordFor.getId());
-    } catch (ObjectNotFoundException e) {
-      errors.rejectValue("passwd0", "presentation.validators.ChangePasswordParametersValidator.errorIncorrectCurrentPassword");
-    } catch (Exception e) {
-      System.out.println("error");
-    }
-    if (!userToCheckPasswordFor.isAdmin()) {
-      Md5PasswordEncoder encoder = new Md5PasswordEncoder();
-      String currentPassword = params.getPasswd0();
-      if (currentPassword != null) {
-        String hasedCurrentPassword = encoder.encodePassword(currentPassword, systemSaltSource.getSystemWideSalt());
-        String hashedActualCurrentPassword = userToCheckPasswordFor.getUserDetails().getPassword();
-        if (hasedCurrentPassword != null && hashedActualCurrentPassword != null &&
-            hasedCurrentPassword.equals(hashedActualCurrentPassword)) {
-        } else {
-          errors.rejectValue("passwd0", "presentation.validators.ChangePasswordParametersValidator.errorIncorrectCurrentPassword");
-        }
-      } else {
-        errors.rejectValue("passwd0", "presentation.validators.ChangePasswordParametersValidator.errorCurrentPasswordMissing");
+    String currentPassword = params.getPasswd0();
+    if (currentPassword != null) {
+      if (!userService.isPasswordCorrect(userToCheckPasswordFor, currentPassword)) {
+        errors.rejectValue("passwd0", "presentation.validators.ChangePasswordParametersValidator.errorIncorrectCurrentPassword");
       }
+    } else {
+      errors.rejectValue("passwd0", "presentation.validators.ChangePasswordParametersValidator.errorCurrentPasswordMissing");
     }
   }
 

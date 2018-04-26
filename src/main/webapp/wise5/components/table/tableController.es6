@@ -129,13 +129,7 @@ class TableController {
       }
     ];
 
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     // get the component content from the scope
     this.componentContent = this.$scope.componentContent;
@@ -168,13 +162,12 @@ class TableController {
 
       // get the component id
       this.componentId = this.componentContent.id;
+      this.tableId = 'table_' + this.nodeId + '_' + this.componentId;
 
       if (this.mode === 'student') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
         this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-        this.tableId = 'table_' + this.nodeId + '_' + this.componentId;
 
         // get the latest annotations
         this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
@@ -670,6 +663,8 @@ class TableController {
         }
       }
     });
+
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
   /**
@@ -1589,13 +1584,21 @@ class TableController {
   };
 
   /**
-   * Confirm whether user really want to change row/column size. Only confirm if they're decreasing the size.
+   * The author has changed the number of rows.
+   * @param oldValue The previous number of rows.
    */
-  authoringViewTableSizeConfirmChange(rowOrColumn, oldValue) {
-    if (rowOrColumn === 'rows') {
-      if (this.authoringComponentContent.numRows < oldValue) {
-        // author wants to decrease number of rows, so confirm
-        var answer = confirm(this.$translate('table.areYouSureYouWantToDecreaseTheNumberOfRows'));
+  authoringViewTableNumRowsChanged(oldValue) {
+    if (this.authoringComponentContent.numRows < oldValue) {
+      // the author is reducing the number of rows
+      if (this.areRowsAfterEmpty(this.authoringComponentContent.numRows)) {
+        // the rows that we will delete are empty so we will remove the rows
+        this.authoringViewTableSizeChanged();
+      } else {
+        /*
+         * the rows that we will delete are not empty so we will confirm that
+         * they want to delete the rows
+         */
+        let answer = confirm(this.$translate('table.areYouSureYouWantToDecreaseTheNumberOfRows'));
         if (answer) {
           // author confirms yes, proceed with change
           this.authoringViewTableSizeChanged();
@@ -1603,14 +1606,62 @@ class TableController {
           // author says no, so revert
           this.authoringComponentContent.numRows = oldValue;
         }
-      } else {
-        // author wants to increase number of rows, so let them.
-        this.authoringViewTableSizeChanged();
       }
-    } else if (rowOrColumn === 'columns') {
-      if (this.authoringComponentContent.numColumns < oldValue) {
-        // author wants to decrease number of columns, so confirm
-        var answer = confirm(this.$translate('table.areYouSureYouWantToDecreaseTheNumberOfColumns'));
+    } else {
+      // the author is increasing the number of rows
+      this.authoringViewTableSizeChanged();
+    }
+  }
+
+  /**
+   * Determine if the rows after the given index are empty.
+   * @param rowIndex The index of the row to start checking at. This value is zero indexed.
+   * @return {boolean} True if the row at the given index and all the rows after are empty.
+   * False if the row at the given index or any row after the row index is not empty.
+   */
+  areRowsAfterEmpty(rowIndex) {
+    let oldNumRows = this.authoringGetNumRowsInTableData();
+    for (let r = rowIndex; r < oldNumRows; r++) {
+      if (!this.isRowEmpty(r)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Determine if a row has cells that are all empty string.
+   * @param rowIndex The row index. This value is zero indexed.
+   * @returns {boolean} True if the text in all the cells in the row are empty string.
+   * False if the text in any cell in the row is not empty string.
+   */
+  isRowEmpty(rowIndex) {
+    let tableData = this.authoringComponentContent.tableData;
+    let row = tableData[rowIndex];
+    for (let cell of row) {
+      if (cell.text != null && cell.text != "") {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * The author has changed the number of columns.
+   * @param oldValue The previous number of columns.
+   */
+  authoringViewTableNumColumnsChanged(oldValue) {
+    if (this.authoringComponentContent.numColumns < oldValue) {
+      // the author is reducing the number of columns
+      if (this.areColumnsAfterEmpty(this.authoringComponentContent.numColumns)) {
+        // the columns that we will delete are empty so we will remove the columns
+        this.authoringViewTableSizeChanged();
+      } else {
+        /*
+         * the columns that we will delete are not empty so we will confirm that
+         * they want to delete the columns
+         */
+        let answer = confirm(this.$translate('table.areYouSureYouWantToDecreaseTheNumberOfColumns'));
         if (answer) {
           // author confirms yes, proceed with change
           this.authoringViewTableSizeChanged();
@@ -1618,11 +1669,45 @@ class TableController {
           // author says no, so revert
           this.authoringComponentContent.numColumns = oldValue;
         }
-      } else {
-        // author wants to increase number of columns, so let them.
-        this.authoringViewTableSizeChanged();
+      }
+    } else {
+      // the author is increasing the number of columns
+      this.authoringViewTableSizeChanged();
+    }
+  }
+
+  /**
+   * Determine if the columns after the given index are empty.
+   * @param columnIndex The index of the column to start checking at. This value is zero indexed.
+   * @return {boolean} True if the column at the given index and all the columns after are empty.
+   * False if the column at the given index or any column after the column index is not empty.
+   */
+  areColumnsAfterEmpty(columnIndex) {
+    let oldNumColumns = this.authoringGetNumColumnsInTableData();
+    for (let c = columnIndex; c < oldNumColumns; c++) {
+      if (!this.isColumnEmpty(c)) {
+        return false;
       }
     }
+    return true;
+  }
+
+  /**
+   * Determine if a column has cells that are all empty string.
+   * @param columnIndex The column index. This value is zero indexed.
+   * @returns {boolean} True if the text in all the cells in the column are empty string.
+   * False if the text in any cell in the column is not empty string.
+   */
+  isColumnEmpty(columnIndex) {
+    let tableData = this.authoringComponentContent.tableData;
+    for (let row of tableData) {
+      // loop through all the rows and check the cell in the column
+      let cell = row[columnIndex];
+      if (cell.text != null && cell.text != "") {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
@@ -1940,6 +2025,36 @@ class TableController {
   }
 
   /**
+   * Get the number of rows in the table data. This is slightly different from
+   * just getting the numRows field in the component content. Usually the
+   * number of rows will be the same. In some cases it can be different
+   * such as during authoring immediately after the author changes the number
+   * of rows using the number of rows input.
+   * @return {number} The number of rows in the table data.
+   */
+  authoringGetNumRowsInTableData() {
+    let tableData = this.authoringComponentContent.tableData;
+    return tableData.length;
+  }
+
+  /**
+   * Get the number of columns in the table data. This is slightly different from
+   * just getting the numColumns field in the component content. Usually the
+   * number of columns will be the same. In some cases it can be different
+   * such as during authoring immediately after the author changes the number
+   * of columns using the number of columns input.
+   * @return {number} The number of columns in the table data.
+   */
+  authoringGetNumColumnsInTableData() {
+    let tableData = this.authoringComponentContent.tableData;
+    if (tableData.length > 0) {
+      // get the number of cells in the first row
+      return tableData[0].length;
+    }
+    return 0;
+  }
+
+  /**
    * Check if the table is empty. The table is empty if all the
    * cells are empty string.
    * @returns whether the table is empty
@@ -2021,75 +2136,24 @@ class TableController {
    * @param $event the click event
    */
   snipTable($event) {
-
     // get the table element. this will obtain an array.
     var tableElement = angular.element('#table_' + this.nodeId + '_' + this.componentId);
 
     if (tableElement != null && tableElement.length > 0) {
-
-      // hide all the iframes otherwise html2canvas may cut off the table
-      this.UtilService.hideIFrames();
-
-      // scroll to the component so html2canvas doesn't cut off the table
-      this.$location.hash(this.componentId);
-      this.$anchorScroll();
-
       // get the table element
       tableElement = tableElement[0];
 
-      try {
-        // convert the table element to a canvas element
-        html2canvas(tableElement).then((canvas) => {
+      // convert the table element to a canvas element
+      html2canvas(tableElement).then((canvas) => {
+        // get the canvas as a base64 string
+        var img_b64 = canvas.toDataURL('image/png');
 
-          // get the canvas as a base64 string
-          var img_b64 = canvas.toDataURL('image/png');
+        // get the image object
+        var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
-          // get the image object
-          var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
-
-          // create a notebook item with the image populated into it
-          this.NotebookService.addNote($event, imageObject);
-
-          // we are done capturing the table so we will show the iframes again
-          this.UtilService.showIFrames();
-
-          /*
-           * scroll to the component in case the view has shifted after
-           * showing the iframe
-           */
-          this.$location.hash(this.componentId);
-          this.$anchorScroll();
-        }).catch(() => {
-
-          /*
-           * an error occurred while trying to capture the table so we
-           * will show the iframes again
-           */
-          this.UtilService.showIFrames();
-
-          /*
-           * scroll to the component in case the view has shifted after
-           * showing the iframe
-           */
-          this.$location.hash(this.componentId);
-          this.$anchorScroll();
-        });
-      } catch(e) {
-
-        /*
-         * an error occurred while trying to capture the table so we
-         * will show the iframes again
-         */
-        this.UtilService.showIFrames();
-
-        /*
-         * scroll to the component in case the view has shifted after
-         * showing the iframe
-         */
-        this.$location.hash(this.componentId);
-        this.$anchorScroll();
-      }
-
+        // create a notebook item with the image populated into it
+        this.NotebookService.addNote($event, imageObject);
+      });
     }
   }
 

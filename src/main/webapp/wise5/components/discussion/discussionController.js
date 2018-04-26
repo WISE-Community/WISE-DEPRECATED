@@ -120,13 +120,7 @@ var DiscussionController = function () {
       type: 'Discussion'
     }];
 
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
+    this.nodeId = this.$scope.nodeId;
 
     // get the component content from the scope
     this.componentContent = this.$scope.componentContent;
@@ -157,32 +151,47 @@ var DiscussionController = function () {
 
       if (this.mode === 'student') {
         if (this.ConfigService.isPreview()) {
-          // we are in preview mode, so get all posts
-          var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          this.setClassResponses(componentStates);
+          var _componentStates = null;
+          if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+            // assume there can only be one connected component
+            var connectedComponent = this.componentContent.connectedComponents[0];
+            if (this.authoringGetConnectedComponentType(connectedComponent) == 'Discussion') {
+              _componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
+            }
+          } else {
+            _componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+          }
+          this.setClassResponses(_componentStates);
         } else {
           // we are in regular student run mode
 
-          if (this.isClassmateResponsesGated()) {
-            /*
-             * classmate responses are gated so we will not show them if the student
-             * has not submitted a response
-             */
-
-            // get the component state from the scope
-            var componentState = this.$scope.componentState;
-
-            if (componentState != null) {
-              /*
-               * the student has already submitted a response so we will
-               * display the classmate responses
-               */
-              this.getClassmateResponses();
+          if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+            // assume there can only be one connected component
+            var _connectedComponent = this.componentContent.connectedComponents[0];
+            if (this.authoringGetConnectedComponentType(_connectedComponent) == 'Discussion') {
+              this.getClassmateResponses(_connectedComponent.nodeId, _connectedComponent.componentId);
             }
           } else {
-            // classmate responses are not gated so we will show them
-            this.getClassmateResponses();
+            if (this.isClassmateResponsesGated()) {
+              /*
+               * classmate responses are gated so we will not show them if the student
+               * has not submitted a response
+               */
+
+              // get the component state from the scope
+              var componentState = this.$scope.componentState;
+
+              if (componentState != null) {
+                /*
+                 * the student has already submitted a response so we will
+                 * display the classmate responses
+                 */
+                this.getClassmateResponses();
+              }
+            } else {
+              // classmate responses are not gated so we will show them
+              this.getClassmateResponses();
+            }
           }
 
           // get the latest annotations
@@ -445,6 +454,8 @@ var DiscussionController = function () {
 
         // send the student post to web sockets so all the classmates receive it in real time
         var messageType = 'studentData';
+        componentState.userNamesArray = _this2.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
+
         _this2.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
 
         // next, send notifications to students who have posted a response in the same thread as this post
@@ -662,6 +673,8 @@ var DiscussionController = function () {
         }
       }
     });
+
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
   /**
@@ -674,10 +687,11 @@ var DiscussionController = function () {
     value: function getClassmateResponses() {
       var _this3 = this;
 
+      var nodeId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.nodeId;
+      var componentId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.componentId;
+
       var runId = this.ConfigService.getRunId();
       var periodId = this.ConfigService.getPeriodId();
-      var nodeId = this.nodeId;
-      var componentId = this.componentId;
 
       // make the request for the classmate responses
       this.DiscussionService.getClassmateResponses(runId, periodId, nodeId, componentId).then(function (result) {
@@ -950,6 +964,34 @@ var DiscussionController = function () {
           if (isSubmitted) {
             // the student has submitted work for this component
             this.isDisabled = true;
+          }
+        }
+        if (this.UtilService.hasConnectedComponent(componentContent)) {
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
+
+          try {
+            for (var _iterator = componentContent.connectedComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var connectedComponent = _step.value;
+
+              if (connectedComponent.type == 'showWork') {
+                this.isDisabled = true;
+              }
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
           }
         }
       }
@@ -1365,9 +1407,15 @@ var DiscussionController = function () {
 
             // add the user names to the component state so we can display next to the response
             var userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-            componentState.userNames = userNames.map(function (obj) {
-              return obj.name;
-            }).join(', ');
+            if (userNames.length > 0) {
+              componentState.userNames = userNames.map(function (obj) {
+                return obj.name;
+              }).join(', ');
+            } else if (componentState.userNamesArray != null) {
+              componentState.userNames = componentState.userNamesArray.map(function (obj) {
+                return obj.name;
+              }).join(', ');
+            }
 
             // add a replies array to the component state that we will fill with component state replies later
             componentState.replies = [];
@@ -2215,13 +2263,13 @@ var DiscussionController = function () {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
 
           try {
-            for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var component = _step.value;
+            for (var _iterator2 = components[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var component = _step2.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -2232,16 +2280,16 @@ var DiscussionController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
               }
             } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
+              if (_didIteratorError2) {
+                throw _iteratorError2;
               }
             }
           }
@@ -2252,7 +2300,7 @@ var DiscussionController = function () {
              * will use it
              */
             connectedComponent.componentId = allowedComponent.id;
-            connectedComponent.type = 'importWork';
+            connectedComponent.type = 'showWork';
           }
         }
       }

@@ -71,7 +71,7 @@ var NodeController = function () {
       this.startAutoSaveInterval();
       this.registerExitListener();
 
-      if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('enterNode')) {
+      if (this.NodeService.currentNodeHasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('enterNode')) {
         this.NodeService.evaluateTransitionLogic();
       }
 
@@ -123,10 +123,6 @@ var NodeController = function () {
 
         if (_nodeId != null && _componentId2 != null) {
           if (_this.nodeId == _nodeId && _this.nodeContainsComponent(_componentId2)) {
-            /*
-             * obtain the component states from the children and save them
-             * to the server
-             */
             var isAutoSave = false;
             _this.createAndSaveComponentData(isAutoSave, _componentId2);
           }
@@ -145,10 +141,6 @@ var NodeController = function () {
 
         if (_nodeId2 != null && _componentId3 != null) {
           if (_this.nodeId == _nodeId2 && _this.nodeContainsComponent(_componentId3)) {
-            /*
-             * obtain the component states from the children and save them
-             * to the server
-             */
             var isAutoSave = false;
             var isSubmit = true;
             _this.createAndSaveComponentData(isAutoSave, _componentId3, isSubmit);
@@ -255,7 +247,6 @@ var NodeController = function () {
        * this node
        */
       if (nodeToExit.id === _this.nodeId) {
-        var saveTriggeredBy = 'exitNode';
         _this.stopAutoSaveInterval();
 
         /*
@@ -263,10 +254,7 @@ var NodeController = function () {
          * everything it needs to do before exiting
          */
         _this.nodeUnloaded(_this.nodeId);
-
-        // check if this node has transition logic that should be run when the student exits the node
-        if (_this.NodeService.hasTransitionLogic() && _this.NodeService.evaluateTransitionLogicOn('exitNode')) {
-          // this node has transition logic
+        if (_this.NodeService.currentNodeHasTransitionLogic() && _this.NodeService.evaluateTransitionLogicOn('exitNode')) {
           _this.NodeService.evaluateTransitionLogic();
         }
       }
@@ -586,13 +574,7 @@ var NodeController = function () {
      */
     value: function saveButtonClicked() {
       this.$rootScope.$broadcast('nodeSaveClicked', { nodeId: this.nodeId });
-
       var isAutoSave = false;
-
-      /*
-       * obtain the component states from the children and save them
-       * to the server
-       */
       this.createAndSaveComponentData(isAutoSave);
     }
   }, {
@@ -608,11 +590,6 @@ var NodeController = function () {
 
       var isAutoSave = false;
       var isSubmit = true;
-
-      /*
-       * obtain the component states from the children and save them
-       * to the server
-       */
       this.createAndSaveComponentData(isAutoSave, null, isSubmit);
     }
   }, {
@@ -866,11 +843,6 @@ var NodeController = function () {
       this.autoSaveIntervalId = setInterval(function () {
         if (_this2.dirtyComponentIds.length) {
           var isAutoSave = true;
-
-          /*
-           * obtain the component states from the children and save them
-           * to the server
-           */
           _this2.createAndSaveComponentData(isAutoSave);
         }
       }, this.autoSaveInterval);
@@ -895,19 +867,18 @@ var NodeController = function () {
      * @param isAutoSave whether the component states were auto saved
      * @param componentId (optional) the component id of the component
      * that triggered the save
-     * @param isSubmit (optional) whether this is a sumission or not
+     * @param isSubmit (optional) whether this is a submit or not
      * @returns a promise that will save all the component states for the step
-     * that need saving
+     * that needs saving
      */
     value: function createAndSaveComponentData(isAutoSave, componentId, isSubmit) {
       var _this3 = this;
 
       return this.createComponentStates(isAutoSave, componentId, isSubmit).then(function (componentStates) {
         var componentAnnotations = [];
-        var componentEvents = null;
-        var nodeStates = null;
-
-        if (componentStates != null && _this3.UtilService.arrayHasNonNullElement(componentStates) || componentAnnotations != null && componentAnnotations.length || componentEvents != null && componentEvents.length) {
+        var componentEvents = [];
+        var nodeStates = [];
+        if (_this3.UtilService.arrayHasNonNullElement(componentStates)) {
           var _iteratorNormalCompletion7 = true;
           var _didIteratorError7 = false;
           var _iteratorError7 = undefined;
@@ -919,10 +890,6 @@ var NodeController = function () {
               if (componentState != null) {
                 var annotations = componentState.annotations;
                 if (annotations != null) {
-                  /*
-                   * add the annotations to our array of annotations that will
-                   * be saved to the server
-                   */
                   componentAnnotations = componentAnnotations.concat(annotations);
                 }
                 delete componentState.annotations;
@@ -945,59 +912,53 @@ var NodeController = function () {
 
           return _this3.StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations).then(function (savedStudentDataResponse) {
             if (savedStudentDataResponse) {
-              // check if this node has transition logic that should be run when the student data changes
-              if (_this3.NodeService.hasTransitionLogic() && _this3.NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
-                // this node has transition logic
-                _this3.NodeService.evaluateTransitionLogic();
-              }
+              if (_this3.NodeService.currentNodeHasTransitionLogic()) {
+                if (_this3.NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
+                  _this3.NodeService.evaluateTransitionLogic();
+                }
+                if (_this3.NodeService.evaluateTransitionLogicOn('scoreChanged')) {
+                  if (componentAnnotations != null && componentAnnotations.length > 0) {
+                    var evaluateTransitionLogic = false;
+                    var _iteratorNormalCompletion8 = true;
+                    var _didIteratorError8 = false;
+                    var _iteratorError8 = undefined;
 
-              // check if this node has transition logic that should be run when the student score changes
-              if (_this3.NodeService.hasTransitionLogic() && _this3.NodeService.evaluateTransitionLogicOn('scoreChanged')) {
-                if (componentAnnotations != null && componentAnnotations.length > 0) {
-                  var evaluateTransitionLogic = false;
-                  var _iteratorNormalCompletion8 = true;
-                  var _didIteratorError8 = false;
-                  var _iteratorError8 = undefined;
+                    try {
+                      for (var _iterator8 = componentAnnotations[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                        var componentAnnotation = _step8.value;
 
-                  try {
-                    for (var _iterator8 = componentAnnotations[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                      var componentAnnotation = _step8.value;
-
-                      if (componentAnnotation != null) {
-                        if (componentAnnotation.type === 'autoScore') {
-                          evaluateTransitionLogic = true;
+                        if (componentAnnotation != null) {
+                          if (componentAnnotation.type === 'autoScore') {
+                            evaluateTransitionLogic = true;
+                          }
+                        }
+                      }
+                    } catch (err) {
+                      _didIteratorError8 = true;
+                      _iteratorError8 = err;
+                    } finally {
+                      try {
+                        if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                          _iterator8.return();
+                        }
+                      } finally {
+                        if (_didIteratorError8) {
+                          throw _iteratorError8;
                         }
                       }
                     }
-                  } catch (err) {
-                    _didIteratorError8 = true;
-                    _iteratorError8 = err;
-                  } finally {
-                    try {
-                      if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                        _iterator8.return();
-                      }
-                    } finally {
-                      if (_didIteratorError8) {
-                        throw _iteratorError8;
-                      }
-                    }
-                  }
 
-                  if (evaluateTransitionLogic) {
-                    // the student score has changed so we will evaluate the transition logic
-                    _this3.NodeService.evaluateTransitionLogic();
+                    if (evaluateTransitionLogic) {
+                      _this3.NodeService.evaluateTransitionLogic();
+                    }
                   }
                 }
               }
-
               var studentWorkList = savedStudentDataResponse.studentWorkList;
               if (!componentId && studentWorkList && studentWorkList.length) {
-                // this was a step save or submission and student work was saved, so set save message
                 var latestStudentWork = studentWorkList[studentWorkList.length - 1];
                 var serverSaveTime = latestStudentWork.serverSaveTime;
                 var clientSaveTime = _this3.ConfigService.convertToClientTimestamp(serverSaveTime);
-
                 if (isAutoSave) {
                   _this3.setSaveMessage(_this3.$translate('AUTO_SAVED'), clientSaveTime);
                 } else if (isSubmit) {
@@ -1009,7 +970,6 @@ var NodeController = function () {
                 _this3.setSaveMessage('', null);
               }
             }
-
             return savedStudentDataResponse;
           });
         }

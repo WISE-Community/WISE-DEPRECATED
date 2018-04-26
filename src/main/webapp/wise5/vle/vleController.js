@@ -51,12 +51,13 @@ var VLEController = function () {
     this.constraintsDisabled = false;
 
     var userType = this.ConfigService.getConfigParam('userType');
+    var contextPath = this.ConfigService.getConfigParam('contextPath');
     if (userType == 'student') {
-      this.homePath = '/wise/student';
+      this.homePath = contextPath + '/student';
     } else if (userType == 'teacher') {
-      this.homePath = '/wise/teacher';
+      this.homePath = contextPath + '/teacher';
     } else {
-      this.homePath = '/wise';
+      this.homePath = contextPath;
     }
 
     if (this.ConfigService.getConfigParam('constraints') == false) {

@@ -228,6 +228,16 @@
                 </md-tooltip>
               </md-button>
             </md-input-container>
+            <div ng-if='conceptMapController.authoringGetConnectedComponentType(connectedComponent) == "Draw" || conceptMapController.authoringGetConnectedComponentType(connectedComponent) == "Embedded" || conceptMapController.authoringGetConnectedComponentType(connectedComponent) == "Graph" || conceptMapController.authoringGetConnectedComponentType(connectedComponent) == "Label" || conceptMapController.authoringGetConnectedComponentType(connectedComponent) == "Table"' flex>
+              <md-input-container style='margin-right: 20;'>
+                <md-checkbox class='md-primary'
+                             ng-model='connectedComponent.importWorkAsBackground'
+                             ng-change='conceptMapController.authoringImportWorkAsBackgroundClicked(connectedComponent)'
+                             ng-disabled='true'>
+                  {{ 'importWorkAsBackground' | translate }}
+                </md-checkbox>
+              </md-input-container>
+            </div>
           </div>
         </div>
       </div>

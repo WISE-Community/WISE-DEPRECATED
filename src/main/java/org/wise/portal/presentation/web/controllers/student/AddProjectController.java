@@ -44,7 +44,6 @@ import org.wise.portal.service.student.StudentService;
 
 /**
  * Controller for students to register for a project run
- *
  * @author Hiroki Terashima
  */
 @Controller
@@ -58,22 +57,17 @@ public class AddProjectController {
   private AddProjectParametersValidator addprojectparametersValidator;
 
   /**
-   * On submission of the Add a Project form, the logged-in user is added to
-   * the project run.
+   * On submission of the Add a Project form, the logged-in user is added to the project run.
    */
   @RequestMapping(method = RequestMethod.POST)
   protected synchronized ModelAndView onSubmit(
-    @ModelAttribute("addProjectParameters") AddProjectParameters params,
-    BindingResult result)
-    throws Exception {
-
+      @ModelAttribute("addProjectParameters") AddProjectParameters params,
+      BindingResult result) {
     addprojectparametersValidator.validate(params, result);
     if (result.hasErrors()) {
       return null;
     }
-
     User user = ControllerUtil.getSignedInUser();
-
     ModelAndView modelAndView = new ModelAndView();
     Projectcode projectcode = new Projectcode(params.getProjectcode());
     try {
@@ -92,7 +86,6 @@ public class AddProjectController {
           currentLoopIndex++;
           continue;
         }
-        // if it reaches here, it means that hibernate optimisitic locking exception was not thrown, so we can exit the loop.
         break;
       }
     } catch (ObjectNotFoundException e) {

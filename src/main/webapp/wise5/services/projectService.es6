@@ -2924,6 +2924,7 @@ class ProjectService {
       this.setIdToNode(node.id, node);
       this.setIdToElement(node.id, node);
     } else {
+      this.setIdToNode(node.id, node);
       if (this.isInactive(nodeId)) {
         // we are creating an inactive node
         this.addInactiveNodeInsertInside(node, nodeId);
@@ -2933,7 +2934,6 @@ class ProjectService {
         this.insertNodeInsideInTransitions(node.id, nodeId);
         this.insertNodeInsideInGroups(node.id, nodeId);
       }
-      this.setIdToNode(node.id, node);
     }
   }
 
@@ -3965,24 +3965,17 @@ class ProjectService {
 
         // get the transitions from the step we are removing
         const transitions = this.getTransitionsByFromNodeId(nodeId);
-
+        const parentGroupId = this.getParentGroupId(nodeId);
         if (transitions == null || transitions.length == 0) {
-          /*
-           * the step doesn't have any transitions so we will use the
-           * its parent group as the start node id
-           */
-          const parentGroupId = this.getParentGroupId(nodeId);
           this.setStartNodeId(parentGroupId);
         } else {
-          // the step has transitions
-
           if (transitions[0] != null && transitions[0].to != null) {
-            /*
-             * get the first transition and set it as the project
-             * start node id
-             */
-            const transitionToNodeId = transitions[0].to;
-            this.setStartNodeId(transitionToNodeId);
+            let toNodeId = transitions[0].to;
+            if (this.isNodeInGroup(toNodeId, parentGroupId)) {
+              this.setStartNodeId(toNodeId);
+            } else {
+              this.setStartNodeId(this.getParentGroupId(nodeId));
+            }
           }
         }
       }

@@ -1,9 +1,16 @@
 import NodeService from '../../services/nodeService';
+import html2canvas from 'html2canvas';
 
 class EmbeddedService extends NodeService {
-  constructor($filter, UtilService) {
+  constructor(
+      $filter,
+      $q,
+      StudentAssetService,
+      UtilService) {
     super();
     this.$filter = $filter;
+    this.$q = $q;
+    this.StudentAssetService = StudentAssetService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
   }
@@ -142,10 +149,39 @@ class EmbeddedService extends NodeService {
     }
     return false;
   }
+
+  /**
+   * The component state has been rendered in a <component></component> element
+   * and now we want to take a snapshot of the work.
+   * @param componentState The component state that has been rendered.
+   * @return A promise that will return an image object.
+   */
+  generateImageFromRenderedComponentState(componentState) {
+    let deferred = this.$q.defer();
+    let iframe = $('#componentApp_' + componentState.componentId);
+    if (iframe != null && iframe.length > 0) {
+      let modelElement = iframe.contents().find('html');
+      if (modelElement != null && modelElement.length > 0) {
+        modelElement = modelElement[0];
+        // convert the model element to a canvas element
+        html2canvas(modelElement).then((canvas) => {
+          let img_b64 = canvas.toDataURL('image/png');
+          let imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+          // add the image to the student assets
+          this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
+            deferred.resolve(asset);
+          });
+        });
+      }
+    }
+    return deferred.promise;
+  }
 }
 
 EmbeddedService.$inject = [
   '$filter',
+  '$q',
+  'StudentAssetService',
   'UtilService'
 ];
 

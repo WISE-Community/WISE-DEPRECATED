@@ -51,10 +51,10 @@ var ProjectService = function () {
     this.additionalProcessingFunctionsMap = {};
 
     // filtering options for navigation displays
-    this.filters = [{ 'name': 'all', 'label': 'All'
-      //{'name': 'todo', 'label': 'Todo'},
-      //{'name': 'completed', 'label': 'Completed'}
-    }];
+    this.filters = [{ 'name': 'all', 'label': 'All' }
+    //{'name': 'todo', 'label': 'Todo'},
+    //{'name': 'completed', 'label': 'Completed'}
+    ];
   }
 
   _createClass(ProjectService, [{
@@ -4364,6 +4364,7 @@ var ProjectService = function () {
         this.setIdToNode(node.id, node);
         this.setIdToElement(node.id, node);
       } else {
+        this.setIdToNode(node.id, node);
         if (this.isInactive(nodeId)) {
           // we are creating an inactive node
           this.addInactiveNodeInsertInside(node, nodeId);
@@ -4373,7 +4374,6 @@ var ProjectService = function () {
           this.insertNodeInsideInTransitions(node.id, nodeId);
           this.insertNodeInsideInGroups(node.id, nodeId);
         }
-        this.setIdToNode(node.id, node);
       }
     }
 
@@ -5948,24 +5948,17 @@ var ProjectService = function () {
 
           // get the transitions from the step we are removing
           var _transitions3 = this.getTransitionsByFromNodeId(nodeId);
-
+          var parentGroupId = this.getParentGroupId(nodeId);
           if (_transitions3 == null || _transitions3.length == 0) {
-            /*
-             * the step doesn't have any transitions so we will use the
-             * its parent group as the start node id
-             */
-            var parentGroupId = this.getParentGroupId(nodeId);
             this.setStartNodeId(parentGroupId);
           } else {
-            // the step has transitions
-
             if (_transitions3[0] != null && _transitions3[0].to != null) {
-              /*
-               * get the first transition and set it as the project
-               * start node id
-               */
-              var transitionToNodeId = _transitions3[0].to;
-              this.setStartNodeId(transitionToNodeId);
+              var _toNodeId3 = _transitions3[0].to;
+              if (this.isNodeInGroup(_toNodeId3, parentGroupId)) {
+                this.setStartNodeId(_toNodeId3);
+              } else {
+                this.setStartNodeId(this.getParentGroupId(nodeId));
+              }
             }
           }
         }
@@ -8004,12 +7997,12 @@ var ProjectService = function () {
                   for (var _t = 0; _t < _transitions4.length; _t++) {
                     var _transition2 = _transitions4[_t];
                     if (_transition2 != null) {
-                      var _toNodeId3 = _transition2.to;
-                      if (_toNodeId3 === newToGroupId) {
+                      var _toNodeId4 = _transition2.to;
+                      if (_toNodeId4 === newToGroupId) {
                         // the transition is to the group so we will remove it
                         _transitions4.splice(_t, 1);
                         _t--;
-                      } else if (this.isNodeInGroup(_toNodeId3, newToGroupId)) {
+                      } else if (this.isNodeInGroup(_toNodeId4, newToGroupId)) {
                         // the transition is to a node in the group so we will remove it
                         _transitions4.splice(_t, 1);
                         _t--;
@@ -8214,17 +8207,17 @@ var ProjectService = function () {
                       if (oldToGroup != null) {
                         var oldToGroupStartId = oldToGroup.startId;
                         var _transition3 = {};
-                        var _toNodeId4 = '';
+                        var _toNodeId5 = '';
                         if (oldToGroupStartId == null) {
                           // there is no start node id so we will just point to the group
-                          _toNodeId4 = oldToGroup;
+                          _toNodeId5 = oldToGroup;
                         } else {
                           // there is a start node id so we will point to it
-                          _toNodeId4 = oldToGroupStartId;
+                          _toNodeId5 = oldToGroupStartId;
                         }
 
                         // create the transition from the child to the old group
-                        this.addToTransition(_child3, _toNodeId4);
+                        this.addToTransition(_child3, _toNodeId5);
                       }
                     }
                   } catch (err) {
@@ -8320,13 +8313,13 @@ var ProjectService = function () {
                 var _transitionAfter2 = _step108.value;
 
                 if (_transitionAfter2 != null) {
-                  var _toNodeId6 = _transitionAfter2.to;
+                  var _toNodeId7 = _transitionAfter2.to;
 
                   /*
                    * remove the transitions to the group we are moving and make
                    * new transitions from the from group to the new to group
                    */
-                  this.updateTransitionsForExtractingGroup(previousGroupNode.id, node.id, _toNodeId6);
+                  this.updateTransitionsForExtractingGroup(previousGroupNode.id, node.id, _toNodeId7);
                   extracted = true;
                 }
               }
@@ -8421,7 +8414,7 @@ var ProjectService = function () {
             var _transitionAfter = _step107.value;
 
             if (_transitionAfter != null) {
-              var _toNodeId5 = _transitionAfter.to;
+              var _toNodeId6 = _transitionAfter.to;
 
               /*
                * create the transitions that traverse from the from group
@@ -8429,7 +8422,7 @@ var ProjectService = function () {
                * that traverse from the group we are moving to the old
                * to group.
                */
-              this.updateTransitionsForInsertingGroup(nodeId, [_toNodeId5], node.id);
+              this.updateTransitionsForInsertingGroup(nodeId, [_toNodeId6], node.id);
               inserted = true;
             }
           }
@@ -9723,10 +9716,10 @@ var ProjectService = function () {
                           var _transitionFromChild = _step125.value;
 
                           if (_transitionFromChild != null) {
-                            var _toNodeId7 = _transitionFromChild.to;
+                            var _toNodeId8 = _transitionFromChild.to;
 
                             // get the parent group id of the toNodeId
-                            var _toNodeIdParentGroupId = this.getParentGroupId(_toNodeId7);
+                            var _toNodeIdParentGroupId = this.getParentGroupId(_toNodeId8);
 
                             if (groupIdWeAreMoving === _toNodeIdParentGroupId) {
                               // the transition is to a child in the group we are moving
