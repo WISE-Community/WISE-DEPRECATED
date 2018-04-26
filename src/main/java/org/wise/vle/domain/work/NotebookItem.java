@@ -23,6 +23,7 @@
  */
 package org.wise.vle.domain.work;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.portal.domain.group.Group;
@@ -35,6 +36,7 @@ import org.wise.vle.domain.PersistableDomain;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Calendar;
 
 /**
  * Domain object representing assets uploaded by the student like images and video (used in WISE5)
@@ -78,6 +80,12 @@ public class NotebookItem extends PersistableDomain {
 
   @Column(name = "localNotebookItemId", length = 30, nullable = true)
   private String localNotebookItemId;  // ex: [ "1", "letterToACongressperson", "z5hc4jeu12" ]
+
+  @Column(name = "parentNotebookItemId")
+  private Integer parentNotebookItemId;
+
+  @Column(name = "groups")
+  private String groups;
 
   @Column(name = "type", length = 30, nullable = true)
   private String type;  // ex: [ "note", "bookmark", "question" ]
@@ -232,6 +240,22 @@ public class NotebookItem extends PersistableDomain {
     this.clientSaveTime = clientSaveTime;
   }
 
+  public Integer getParentNotebookItemId() {
+    return parentNotebookItemId;
+  }
+
+  public void setParentNotebookItemId(Integer parentNotebookItemId) {
+    this.parentNotebookItemId = parentNotebookItemId;
+  }
+
+  public String getGroups() {
+    return groups;
+  }
+
+  public void setGroups(String groups) {
+    this.groups = groups;
+  }
+
   /**
    * Get the JSON representation of the NotebookItem
    * @return a JSONObject with the values from the NotebookItem
@@ -241,77 +265,123 @@ public class NotebookItem extends PersistableDomain {
 
     try {
 
-      if (this.id != null) {
-        notebookItemJSONObject.put("id", this.id);
+      if (id != null) {
+        notebookItemJSONObject.put("id", id);
       }
 
-      if (this.run != null) {
-        Long runId = this.run.getId();
+      if (run != null) {
+        Long runId = run.getId();
         notebookItemJSONObject.put("runId", runId);
       }
 
-      if (this.period != null) {
-        Long periodId = this.period.getId();
+      if (period != null) {
+        Long periodId = period.getId();
         notebookItemJSONObject.put("periodId", periodId);
       }
 
-      if (this.workgroup != null) {
-        Long workgroupId = this.workgroup.getId();
+      if (workgroup != null) {
+        Long workgroupId = workgroup.getId();
         notebookItemJSONObject.put("workgroupId", workgroupId);
       }
 
-      if (this.nodeId != null) {
-        notebookItemJSONObject.put("nodeId", this.nodeId);
+      if (nodeId != null) {
+        notebookItemJSONObject.put("nodeId", nodeId);
       }
 
-      if (this.componentId != null) {
-        notebookItemJSONObject.put("componentId", this.componentId);
+      if (componentId != null) {
+        notebookItemJSONObject.put("componentId", componentId);
       }
 
-      if (this.studentWork != null) {
-        notebookItemJSONObject.put("studentWorkId", this.studentWork.getId());
+      if (studentWork != null) {
+        notebookItemJSONObject.put("studentWorkId", studentWork.getId());
       }
 
-      if (this.studentAsset != null) {
-        notebookItemJSONObject.put("studentAssetId", this.studentAsset.getId());
+      if (studentAsset != null) {
+        notebookItemJSONObject.put("studentAssetId", studentAsset.getId());
       }
 
-      if (this.localNotebookItemId != null) {
-        notebookItemJSONObject.put("localNotebookItemId", this.localNotebookItemId);
+      if (localNotebookItemId != null) {
+        notebookItemJSONObject.put("localNotebookItemId", localNotebookItemId);
       }
 
-      if (this.type != null) {
-        notebookItemJSONObject.put("type", this.type);
+      if (type != null) {
+        notebookItemJSONObject.put("type", type);
       }
 
-      if (this.title != null) {
-        notebookItemJSONObject.put("title", this.title);
+      if (title != null) {
+        notebookItemJSONObject.put("title", title);
       }
 
-      if (this.content != null) {
-        notebookItemJSONObject.put("content", this.content);
+      if (content != null) {
+        notebookItemJSONObject.put("content", content);
       }
 
-      if (this.clientSaveTime != null) {
+      if (clientSaveTime != null) {
         notebookItemJSONObject.put("clientSaveTime", clientSaveTime.getTime());
       }
 
-      if (this.serverSaveTime != null) {
+      if (serverSaveTime != null) {
         notebookItemJSONObject.put("serverSaveTime", serverSaveTime.getTime());
       }
 
-      if (this.clientDeleteTime != null) {
+      if (clientDeleteTime != null) {
         notebookItemJSONObject.put("clientDeleteTime", clientDeleteTime.getTime());
       }
 
-      if (this.serverDeleteTime != null) {
+      if (serverDeleteTime != null) {
         notebookItemJSONObject.put("serverDeleteTime", serverDeleteTime.getTime());
       }
 
+      if (groups != null) {
+        notebookItemJSONObject.put("groups", new JSONArray(groups));
+      }
+
+      if (parentNotebookItemId != null) {
+        notebookItemJSONObject.put("parentNotebookItemId", parentNotebookItemId);
+      }
     } catch (JSONException e) {
       e.printStackTrace();
     }
 
     return notebookItemJSONObject;
+  }
+
+  public boolean isInGroup(String groupName) {
+    if (groups != null) {
+      try {
+        JSONArray groupsArray = new JSONArray(groups);
+        for (int i = 0; i < groupsArray.length(); i++) {
+          String group = (String) groupsArray.get(i);
+          if (group.equals(groupName)) {
+            return true;
+          }
+        }
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+    return false;
+  }
+
+  public NotebookItem copy() {
+    NotebookItem notebookItem = new NotebookItem();
+    notebookItem.setRun(getRun());
+    notebookItem.setPeriod(getPeriod());
+    notebookItem.setWorkgroup(getWorkgroup());
+    notebookItem.setNodeId(getNodeId());
+    notebookItem.setComponentId(getComponentId());
+    notebookItem.setStudentWork(getStudentWork());
+    notebookItem.setStudentAsset(getStudentAsset());
+    notebookItem.setLocalNotebookItemId(getLocalNotebookItemId());
+    notebookItem.setParentNotebookItemId(getParentNotebookItemId());
+    notebookItem.setType(getType());
+    notebookItem.setTitle(getTitle());
+    notebookItem.setContent(getContent());
+    notebookItem.setClientSaveTime(getClientSaveTime());
+    notebookItem.setGroups(getGroups());
+    Calendar now = Calendar.getInstance();
+    Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
+    notebookItem.setServerSaveTime(serverSaveTimestamp);
+    return notebookItem;
   }
 }

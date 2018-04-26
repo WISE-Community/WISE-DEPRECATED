@@ -588,6 +588,14 @@ var DrawController = function () {
       }
     });
 
+    this.$scope.$on('notebookItemChosen', function (event, args) {
+      if (args.requester == _this.nodeId + '-' + _this.componentId) {
+        var notebookItem = args.notebookItem;
+        var studentWorkId = notebookItem.content.studentWorkIds[0];
+        _this.importWorkByStudentWorkId(studentWorkId);
+      }
+    });
+
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   } // end of constructor
 
@@ -1132,6 +1140,8 @@ var DrawController = function () {
           // set the background
           this.drawingTool.setBackgroundImage(this.componentContent.background);
         }
+
+        this.parentStudentWorkIds = null;
       }
     }
   }, {
@@ -1208,6 +1218,10 @@ var DrawController = function () {
 
       // set the submit counter
       studentData.submitCounter = this.submitCounter;
+
+      if (this.parentStudentWorkIds != null) {
+        studentData.parentStudentWorkIds = this.parentStudentWorkIds;
+      }
 
       // set the flag for whether the student submitted this work
       componentState.isSubmit = this.isSubmit;
@@ -1741,8 +1755,7 @@ var DrawController = function () {
 
   }, {
     key: 'snipDrawing',
-    value: function snipDrawing($event) {
-
+    value: function snipDrawing($event, studentWorkId) {
       // get the canvas element
       var canvas = angular.element('#drawingtool_' + this.nodeId + '_' + this.componentId + ' canvas');
 
@@ -1758,7 +1771,27 @@ var DrawController = function () {
         var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
         // create a notebook item with the image populated into it
-        this.NotebookService.addNewItem($event, imageObject);
+        var noteText = null;
+        this.NotebookService.addNote($event, imageObject, noteText, [studentWorkId]);
+      }
+    }
+  }, {
+    key: 'snipButtonClicked',
+    value: function snipButtonClicked($event) {
+      var _this5 = this;
+
+      if (this.isDirty) {
+        var deregisterListener = this.$scope.$on('studentWorkSavedToServer', function (event, args) {
+          var componentState = args.studentWork;
+          if (componentState && _this5.nodeId === componentState.nodeId && _this5.componentId === componentState.componentId) {
+            _this5.snipDrawing($event, componentState.id);
+            deregisterListener();
+          }
+        });
+        this.saveButtonClicked(); // trigger a save
+      } else {
+        var studentWork = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+        this.snipDrawing($event, studentWork.id);
       }
     }
 
@@ -2578,10 +2611,10 @@ var DrawController = function () {
   }, {
     key: 'setComponentStateAsBackgroundImage',
     value: function setComponentStateAsBackgroundImage(componentState) {
-      var _this5 = this;
+      var _this6 = this;
 
       this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
-        _this5.drawingTool.setBackgroundImage(image.url);
+        _this6.drawingTool.setBackgroundImage(image.url);
       });
     }
 
@@ -2871,6 +2904,34 @@ var DrawController = function () {
     key: 'authoringJSONChanged',
     value: function authoringJSONChanged() {
       this.jsonStringChanged = true;
+    }
+  }, {
+    key: 'showCopyPublicNotebookItemButton',
+    value: function showCopyPublicNotebookItemButton() {
+      return this.ProjectService.isSpaceExists("public");
+    }
+  }, {
+    key: 'copyPublicNotebookItemButtonClicked',
+    value: function copyPublicNotebookItemButtonClicked(event) {
+      this.$rootScope.$broadcast('openNotebook', { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
+    }
+  }, {
+    key: 'importWorkByStudentWorkId',
+    value: function importWorkByStudentWorkId(studentWorkId) {
+      var _this7 = this;
+
+      this.StudentDataService.getStudentWorkById(studentWorkId).then(function (componentState) {
+        if (componentState != null) {
+          _this7.setStudentWork(componentState);
+          _this7.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+          _this7.$rootScope.$broadcast('closeNotebook');
+        }
+      });
+    }
+  }, {
+    key: 'setParentStudentWorkIdToCurrentStudentWork',
+    value: function setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
+      this.parentStudentWorkIds = [studentWorkId];
     }
 
     /**

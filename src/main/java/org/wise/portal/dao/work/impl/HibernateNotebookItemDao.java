@@ -1,9 +1,7 @@
 package org.wise.portal.dao.work.impl;
 
-import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.work.NotebookItemDao;
@@ -20,7 +18,7 @@ import java.util.List;
  */
 @Repository
 public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
-    implements NotebookItemDao<NotebookItem> {
+      implements NotebookItemDao<NotebookItem> {
 
   @Override
   protected String getFindAllQuery() {
@@ -34,31 +32,33 @@ public class HibernateNotebookItemDao extends AbstractHibernateDao<NotebookItem>
 
   @Override
   public List<NotebookItem> getNotebookItemListByParams(
-    Integer id, Run run, Group period, Workgroup workgroup,
-    String nodeId, String componentId) {
-
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    Criteria sessionCriteria = session.createCriteria(NotebookItem.class);
-    if (id != null) {
-      sessionCriteria.add(Restrictions.eq("id", id));
-    }
-    if (run != null) {
-      sessionCriteria.add(Restrictions.eq("run", run));
-    }
-    if (period != null) {
-      sessionCriteria.add(Restrictions.eq("period", period));
-    }
+      Integer id, Run run, Group period, Workgroup workgroup, String nodeId, String componentId) {
+    String queryString = "select n.* from notebookItems n inner join " +
+        "(select max(id) as maxId, workgroupId, localNotebookItemId from notebookItems where runId = :runId";
     if (workgroup != null) {
-      sessionCriteria.add(Restrictions.eq("workgroup", workgroup));
+      queryString += " and workgroupId = :workgroupId";
     }
-    if (nodeId != null) {
-      sessionCriteria.add(Restrictions.eq("nodeId", nodeId));
+    queryString += " group by workgroupId, localNotebookItemId) n2 on n.id = n2.maxId and n.groups is null";
+    Session session = getHibernateTemplate().getSessionFactory().getCurrentSession();
+    SQLQuery query = session.createSQLQuery(queryString).addEntity("n", NotebookItem.class);
+    query.setParameter("runId", run.getId());
+    if (workgroup != null) {
+      query.setParameter("workgroupId", workgroup.getId());
     }
-    if (componentId != null) {
-      sessionCriteria.add(Restrictions.eq("componentId", componentId));
-    }
+    return (List<NotebookItem>) query.list();
+  }
 
-    return sessionCriteria.list();
+  public List<NotebookItem> getNotebookItemByGroup(Integer runId, String groupName) {
+    String queryString = "select n.* from notebookItems n " +
+        "inner join " +
+        "(select max(id) as maxId, workgroupId, localNotebookItemId from notebookItems " +
+        "where runId = :runId group by workgroupId, localNotebookItemId) n2 " +
+        "on n.id = n2.maxId and n.groups like :groupName";
+    Session session = getHibernateTemplate().getSessionFactory().getCurrentSession();
+    SQLQuery query = session.createSQLQuery(queryString).addEntity("n", NotebookItem.class);
+    query.setParameter("runId", runId);
+    query.setParameter("groupName", "%\"" + groupName + "\"%");
+    return (List<NotebookItem>) query.list();
   }
 
   public List<Object[]> getNotebookItemExport(Integer runId) {

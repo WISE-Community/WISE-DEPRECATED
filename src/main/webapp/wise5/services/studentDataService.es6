@@ -2456,6 +2456,32 @@ class StudentDataService {
   }
 
   /**
+   * Get a student work from any student.
+   * @param id The student work id.
+   */
+  getStudentWorkById(id) {
+    const studentDataURL = this.ConfigService.getConfigParam('studentDataURL');
+    const httpParams = {};
+    httpParams.method = 'GET';
+    httpParams.url = studentDataURL;
+    const params = {};
+    params.runId = this.ConfigService.getRunId();
+    params.id = id;
+    params.getStudentWork = true;
+    params.getEvents = false;
+    params.getAnnotations = false;
+    params.onlyGetLatest = true;
+    httpParams.params = params;
+    return this.$http(httpParams).then((result) => {
+      const resultData = result.data;
+      if (resultData != null && resultData.studentWorkList.length > 0) {
+        return resultData.studentWorkList[0];
+      }
+      return null;
+    });
+  }
+
+  /**
    * Get the max possible score for the project
    * @returns the sum of the max scores for all the nodes in the project visible
    * to the current workgroup or null if none of the visible components has max scores.

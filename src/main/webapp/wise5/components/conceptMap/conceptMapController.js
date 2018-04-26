@@ -4972,7 +4972,7 @@ var ConceptMapController = function () {
             var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image, false);
 
             // create a notebook item with the image populated into it
-            _this8.NotebookService.addNewItem($event, imageObject);
+            _this8.NotebookService.addNote($event, imageObject);
           };
 
           // set the src of the image so that the image gets loaded

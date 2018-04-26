@@ -10645,6 +10645,98 @@ var ProjectService = function () {
     value: function getIsNodeAffectedByConstraintResult(nodeId, constraintId) {
       return this.isNodeAffectedByConstraintResult[nodeId + '-' + constraintId];
     }
+
+    /**
+     * Get the id to node mappings.
+     * @return An object the keys as node ids and the values as nodes.
+     */
+
+  }, {
+    key: 'getIdToNode',
+    value: function getIdToNode() {
+      return this.idToNode;
+    }
+
+    /**
+     * Check if a node has rubrics.
+     * @param nodeId The node id of the node.
+     * @return Whether the node has rubrics authored on it.
+     */
+
+  }, {
+    key: 'nodeHasRubric',
+    value: function nodeHasRubric(nodeId) {
+      var numberOfRubrics = this.getNumberOfRubricsByNodeId(nodeId);
+      if (numberOfRubrics > 0) {
+        return true;
+      }
+      return false;
+    }
+  }, {
+    key: 'getSpaces',
+    value: function getSpaces() {
+      if (this.project.spaces != null) {
+        return this.project.spaces;
+      } else {
+        return [];
+      }
+    }
+  }, {
+    key: 'addSpace',
+    value: function addSpace(space) {
+      if (this.project.spaces == null) {
+        this.project.spaces = [];
+      }
+      if (!this.isSpaceExists(space.id)) {
+        this.project.spaces.push(space);
+        this.saveProject();
+      }
+    }
+  }, {
+    key: 'isSpaceExists',
+    value: function isSpaceExists(id) {
+      var spaces = this.getSpaces();
+      var _iteratorNormalCompletion144 = true;
+      var _didIteratorError144 = false;
+      var _iteratorError144 = undefined;
+
+      try {
+        for (var _iterator144 = spaces[Symbol.iterator](), _step144; !(_iteratorNormalCompletion144 = (_step144 = _iterator144.next()).done); _iteratorNormalCompletion144 = true) {
+          var space = _step144.value;
+
+          if (space.id === id) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError144 = true;
+        _iteratorError144 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion144 && _iterator144.return) {
+            _iterator144.return();
+          }
+        } finally {
+          if (_didIteratorError144) {
+            throw _iteratorError144;
+          }
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: 'removeSpace',
+    value: function removeSpace(id) {
+      var spaces = this.getSpaces();
+      for (var s = 0; s < spaces.length; s++) {
+        if (spaces[s].id == id) {
+          spaces.splice(s, 1);
+          this.saveProject();
+          return;
+        }
+      }
+    }
   }]);
 
   return ProjectService;

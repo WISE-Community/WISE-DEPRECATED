@@ -12,6 +12,7 @@ class OpenResponseController {
       ConfigService,
       CRaterService,
       NodeService,
+      NotebookService,
       NotificationService,
       OpenResponseService,
       ProjectService,
@@ -29,6 +30,7 @@ class OpenResponseController {
     this.ConfigService = ConfigService;
     this.CRaterService = CRaterService;
     this.NodeService = NodeService;
+    this.NotebookService = NotebookService;
     this.NotificationService = NotificationService;
     this.OpenResponseService = OpenResponseService;
     this.ProjectService = ProjectService;
@@ -124,6 +126,9 @@ class OpenResponseController {
     // whether the CRater item id is valid
     this.cRaterItemIdIsValid = null;
 
+    // whether the snip button is shown or not
+    this.isSnipButtonVisible = true;
+
     //var scope = this;
     let themePath = this.ProjectService.getThemePath();
 
@@ -209,17 +214,20 @@ class OpenResponseController {
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isDisabled = true;
+        this.isSnipButtonVisible = false;
       } else if (this.mode === 'onlyShowWork') {
         this.onlyShowWork = true;
         this.isPromptVisible = false;
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isDisabled = true;
+        this.isSnipButtonVisible = false;
       } else if (this.mode === 'showPreviousWork') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isDisabled = true;
+        this.isSnipButtonVisible = false;
       } else if (this.mode === 'authoring') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
@@ -595,6 +603,14 @@ class OpenResponseController {
       }
     });
 
+    this.$scope.$on('notebookItemChosen', (event, args) => {
+      if (args.requester == this.nodeId + '-' + this.componentId) {
+        const notebookItem = args.notebookItem;
+        const studentWorkId = notebookItem.content.studentWorkIds[0];
+        this.importWorkByStudentWorkId(studentWorkId);
+      }
+    });
+
     // load script for this component, if any
     let script = this.componentContent.script;
     if (script != null) {
@@ -861,6 +877,10 @@ class OpenResponseController {
 
     // set the submit counter
     studentData.submitCounter = this.submitCounter;
+
+    if (this.parentStudentWorkIds != null) {
+      studentData.parentStudentWorkIds = this.parentStudentWorkIds;
+    }
 
     // set the flag for whether the student submitted this work
     componentState.isSubmit = this.isSubmit;
@@ -1500,6 +1520,62 @@ class OpenResponseController {
     this.saveMessage.text = message;
     this.saveMessage.time = time;
   };
+
+  showSnipButton() {
+    return this.NotebookService.isNotebookEnabled() && this.isSnipButtonVisible;
+  }
+
+  snipButtonClicked($event) {
+    if (this.isDirty) {
+      const deregisterListener = this.$scope.$on('studentWorkSavedToServer',
+        (event, args) => {
+          let componentState = args.studentWork;
+          if (componentState &&
+              this.nodeId === componentState.nodeId &&
+              this.componentId === componentState.componentId) {
+            const imageObject = null;
+            const noteText = componentState.studentData.response;
+            const isEditTextEnabled = false;
+            const isFileUploadEnabled = false;
+            this.NotebookService.addNote($event, imageObject, noteText, [ componentState.id ], isEditTextEnabled, isFileUploadEnabled);
+            deregisterListener();
+          }
+        }
+      );
+      this.saveButtonClicked(); // trigger a save
+    } else {
+      const studentWork =
+        this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+      const imageObject = null;
+      const noteText = studentWork.studentData.response;
+      const isEditTextEnabled = false;
+      const isFileUploadEnabled = false;
+      this.NotebookService.addNote($event, imageObject, noteText, [ studentWork.id ], isEditTextEnabled, isFileUploadEnabled);
+    }
+  }
+
+  showCopyPublicNotebookItemButton() {
+    return this.ProjectService.isSpaceExists("public");
+  }
+
+  copyPublicNotebookItemButtonClicked(event) {
+    this.$rootScope.$broadcast('openNotebook',
+      { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
+  }
+
+  importWorkByStudentWorkId(studentWorkId) {
+    this.StudentDataService.getStudentWorkById(studentWorkId).then((componentState) => {
+      if (componentState != null) {
+        this.setStudentWork(componentState);
+        this.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+        this.$rootScope.$broadcast('closeNotebook');
+      }
+    });
+  }
+
+  setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
+    this.parentStudentWorkIds = [studentWorkId];
+  }
 
   /**
    * Check if CRater is enabled for this component
@@ -2748,6 +2824,7 @@ OpenResponseController.$inject = [
   'ConfigService',
   'CRaterService',
   'NodeService',
+  'NotebookService',
   'NotificationService',
   'OpenResponseService',
   'ProjectService',

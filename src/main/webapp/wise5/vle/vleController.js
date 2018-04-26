@@ -363,7 +363,7 @@ var VLEController = function () {
           $mdDialog.hide();
         };
         $scope.chooseSnippet = function (snippableItem) {
-          $scope.NotebookService.addNewItem($event, snippableItem);
+          $scope.NotebookService.addNote($event, snippableItem);
           $mdDialog.hide();
         };
       }

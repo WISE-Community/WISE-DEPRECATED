@@ -42,7 +42,7 @@ var ComponentController = function ComponentController($injector, $scope, $compi
             if (imageObject != null) {
 
                 // create a notebook item with the image populated into it
-                _this.NotebookService.addNewItem($eventArgs, imageObject);
+                _this.NotebookService.addNote($eventArgs, imageObject);
             }
         }
     });

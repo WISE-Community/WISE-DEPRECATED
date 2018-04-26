@@ -32,7 +32,7 @@ class ComponentController {
                 if (imageObject != null) {
 
                     // create a notebook item with the image populated into it
-                    this.NotebookService.addNewItem($eventArgs, imageObject);
+                    this.NotebookService.addNote($eventArgs, imageObject);
                 }
             }
         });

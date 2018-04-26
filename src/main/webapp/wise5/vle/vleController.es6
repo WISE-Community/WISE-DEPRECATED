@@ -276,7 +276,7 @@ class VLEController {
         $mdDialog.hide();
       };
       $scope.chooseSnippet = (snippableItem) => {
-        $scope.NotebookService.addNewItem($event, snippableItem);
+        $scope.NotebookService.addNote($event, snippableItem);
         $mdDialog.hide();
       };
     }

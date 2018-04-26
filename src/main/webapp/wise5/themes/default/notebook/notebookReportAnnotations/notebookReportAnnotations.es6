@@ -1,140 +1,118 @@
 'use strict';
 
 class NotebookReportAnnotationsController {
-    constructor($scope,
-                $filter,
-                ConfigService,
-                ProjectService,
-                StudentDataService) {
+  constructor($scope,
+              $filter,
+              ConfigService,
+              ProjectService,
+              StudentDataService) {
 
-        this.$scope = $scope;
-        this.$filter = $filter;
-        this.ConfigService = ConfigService;
-        this.ProjectService = ProjectService;
-        this.StudentDataService = StudentDataService;
+    this.$scope = $scope;
+    this.$filter = $filter;
+    this.ConfigService = ConfigService;
+    this.ProjectService = ProjectService;
+    this.StudentDataService = StudentDataService;
+    this.$translate = this.$filter('translate');
+    this.maxScoreDisplay = (parseInt(this.maxScore) > 0) ? '/' + this.maxScore : '';
+    this.latestAnnotationTime = null;
+    this.isNew = false;
+    this.label = '';
+    this.icon = 'person';
+    this.showScore = true;
+    this.showComment = true;
 
-        this.$translate = this.$filter('translate');
-
-        this.maxScoreDisplay = (parseInt(this.maxScore) > 0) ? '/' + this.maxScore : '';
-
-        // the latest annotation time
-        this.latestAnnotationTime = null;
-
-        // whether the annotation is new or not
-        this.isNew = false;
-
-        // the annotation label
-        this.label = '';
-
-        // the avatar icon (default to person/teacher)
-        this.icon = 'person';
-
-        this.showScore = true;
-        this.showComment = true;
-
-        this.$onChanges = (changes) => {
-            if (changes.annotations) {
-                this.annotations = angular.copy(changes.annotations.currentValue);
-                this.processAnnotations();
-            }
-        }
+    this.$onChanges = (changes) => {
+      if (changes.annotations) {
+        this.annotations = angular.copy(changes.annotations.currentValue);
+        this.processAnnotations();
+      }
     }
+  }
 
-    /**
-     * Get the most recent annotation (from the current score and comment annotations)
-     * @return Object (latest annotation)
-     */
-    getLatestAnnotation() {
-        let latest = null;
+  /**
+   * Get the most recent annotation (from the current score and comment annotations)
+   * @return Object (latest annotation)
+   */
+  getLatestAnnotation() {
+    let latest = null;
+    if (this.annotations.comment || this.annotations.score) {
+      let commentSaveTime = this.annotations.comment ? this.annotations.comment.serverSaveTime : 0;
+      let scoreSaveTime = this.annotations.score ? this.annotations.score.serverSaveTime : 0;
+      if (commentSaveTime >= scoreSaveTime) {
+        latest = this.annotations.comment;
+      } else if (scoreSaveTime > commentSaveTime) {
+        latest = this.annotations.score;
+      }
+    }
+    return latest;
+  };
 
-        if (this.annotations.comment || this.annotations.score) {
-            let commentSaveTime = this.annotations.comment ? this.annotations.comment.serverSaveTime : 0;
-            let scoreSaveTime = this.annotations.score ? this.annotations.score.serverSaveTime : 0;
+  /**
+   * Calculate the save time of the latest annotation
+   * @return Number (latest annotation post time)
+   */
+  getLatestAnnotationTime() {
+    let latest = this.getLatestAnnotation();
+    let time = null;
+    if (latest) {
+      let serverSaveTime = latest.serverSaveTime;
+      time = this.ConfigService.convertToClientTimestamp(serverSaveTime)
+    }
+    return time;
+  };
 
-            if (commentSaveTime >= scoreSaveTime) {
-                latest = this.annotations.comment;
-            } else if (scoreSaveTime > commentSaveTime) {
-                latest = this.annotations.score;
-            }
-        }
+  /**
+   * Set the label based on whether this is an automated or teacher annotation
+   **/
+  setLabelAndIcon() {
+    let latest = this.getLatestAnnotation();
+    if (latest) {
+      if (latest.type === 'autoComment' || latest.type === 'autoScore') {
+        this.label = this.$translate('automatedFeedbackLabel');
+        this.icon = 'keyboard';
+      } else {
+        this.label = this.$translate('teacherFeedbackLabel');
+        this.icon = "person";
+      }
+    }
+  };
 
-        return latest;
-    };
+  processAnnotations() {
+    if (this.annotations.comment || this.annotations.score) {
+      this.nodeId = this.annotations.comment ? this.annotations.comment.nodeId : this.annotations.score.nodeId;
+      this.componentId = this.annotations.comment ? this.annotations.comment.componentId : this.annotations.score.nodeId;
 
-    /**
-     * Calculate the save time of the latest annotation
-     * @return Number (latest annotation post time)
-     */
-    getLatestAnnotationTime() {
-        let latest = this.getLatestAnnotation();
-        let time = null;
+      if (!this.ProjectService.displayAnnotation(this.annotations.score)) {
+        this.showScore = false;
+      }
 
-        if (latest) {
-            let serverSaveTime = latest.serverSaveTime;
-            time = this.ConfigService.convertToClientTimestamp(serverSaveTime)
-        }
+      if (!this.ProjectService.displayAnnotation(this.annotations.comment)) {
+        this.showComment = false;
+      }
 
-        return time;
-    };
-
-    /**
-     * Set the label based on whether this is an automated or teacher annotation
-     **/
-    setLabelAndIcon() {
-        let latest = this.getLatestAnnotation();
-
-        if (latest) {
-            if (latest.type === 'autoComment' || latest.type === 'autoScore') {
-                this.label = this.$translate('automatedFeedbackLabel');
-                this.icon = 'keyboard';
-            } else {
-                this.label = this.$translate('teacherFeedbackLabel');
-                this.icon = "person";
-            }
-        }
-    };
-
-    processAnnotations() {
-        if (this.annotations.comment || this.annotations.score) {
-            this.nodeId = this.annotations.comment ? this.annotations.comment.nodeId : this.annotations.score.nodeId;
-            this.componentId = this.annotations.comment ? this.annotations.comment.componentId : this.annotations.score.nodeId;
-
-            if (!this.ProjectService.displayAnnotation(this.annotations.score)) {
-                // we do not want to show the score
-                this.showScore = false;
-            }
-
-            if (!this.ProjectService.displayAnnotation(this.annotations.comment)) {
-                // we do not want to show the comment
-                this.showComment = false;
-            }
-
-            // set the annotation label and icon
-            this.setLabelAndIcon();
-
-            this.latestAnnotationTime = this.getLatestAnnotationTime();
-
-            this.show = (this.showScore && this.annotations.score) || (this.showComment && this.annotations.comment);
-        }
-    };
+      this.setLabelAndIcon();
+      this.latestAnnotationTime = this.getLatestAnnotationTime();
+      this.show = (this.showScore && this.annotations.score) || (this.showComment && this.annotations.comment);
+    }
+  };
 }
 
 NotebookReportAnnotationsController.$inject = [
-    '$scope',
-    '$filter',
-    'ConfigService',
-    'ProjectService',
-    'StudentDataService'
+  '$scope',
+  '$filter',
+  'ConfigService',
+  'ProjectService',
+  'StudentDataService'
 ];
 
 const NotebookReportAnnotations = {
-    bindings: {
-        annotations: '<',
-        hasNew: '<',
-        maxScore: '<'
-    },
-    template:
-        `<div class="md-padding gray-lightest-bg annotations-container--student--report" ng-if="$ctrl.show">
+  bindings: {
+    annotations: '<',
+    hasNew: '<',
+    maxScore: '<'
+  },
+  template:
+    `<div class="md-padding gray-lightest-bg annotations-container--student--report" ng-if="$ctrl.show">
             <md-card class="annotations annotations--report">
                 <md-card-title class="annotations__header">
                     <div class="annotations__avatar avatar--icon avatar--square md-36 avatar md-whiteframe-1dp">
@@ -163,7 +141,7 @@ const NotebookReportAnnotations = {
                 </md-card-content>
             </md-card>
         </div>`,
-    controller: NotebookReportAnnotationsController
+  controller: NotebookReportAnnotationsController
 };
 
 export default NotebookReportAnnotations;

@@ -52,6 +52,7 @@ import ProjectHistoryController from './history/projectHistoryController';
 import ProjectInfoController from './info/projectInfoController';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
+import SpaceService from '../services/spaceService';
 import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
@@ -108,6 +109,7 @@ let authoringModule = angular.module('authoring', [
     .service(ProjectService.name, AuthoringToolProjectService)
     .service(ProjectAssetService.name, ProjectAssetService)
     .service(SessionService.name, SessionService)
+    .service(SpaceService.name, SpaceService)
     .service(StudentAssetService.name, StudentAssetService)
     .service(StudentDataService.name, StudentDataService)
     .service(StudentStatusService.name, StudentStatusService)

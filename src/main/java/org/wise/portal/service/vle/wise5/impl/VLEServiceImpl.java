@@ -23,6 +23,7 @@
  */
 package org.wise.portal.service.vle.wise5.impl;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,10 +34,10 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.achievement.AchievementDao;
 import org.wise.portal.dao.annotation.wise5.AnnotationDao;
 import org.wise.portal.dao.notification.NotificationDao;
+import org.wise.portal.dao.work.EventDao;
 import org.wise.portal.dao.work.NotebookItemDao;
 import org.wise.portal.dao.work.StudentAssetDao;
 import org.wise.portal.dao.work.StudentWorkDao;
-import org.wise.portal.dao.work.EventDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.Workgroup;
@@ -49,10 +50,7 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
-import org.wise.vle.domain.work.Event;
-import org.wise.vle.domain.work.NotebookItem;
-import org.wise.vle.domain.work.StudentAsset;
-import org.wise.vle.domain.work.StudentWork;
+import org.wise.vle.domain.work.*;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -847,14 +845,19 @@ public class VLEServiceImpl implements VLEService {
       nodeId, componentId);
   }
 
+  public List<NotebookItem> getNotebookItemsByGroup(Integer runId, String groupName) {
+    return notebookItemDao.getNotebookItemByGroup(runId, groupName);
+  }
+
   @Override
   public NotebookItem saveNotebookItem(Integer id, Integer runId, Integer periodId,
       Integer workgroupId, String nodeId, String componentId, Integer studentWorkId,
       Integer studentAssetId, String localNotebookItemId, String type, String title, String content,
+      String groups,
       String clientSaveTime, String clientDeleteTime) {
     NotebookItem notebookItem;
     if (id != null) {
-      // if the id is passed in, the client is requesting an update, so fetch the StudentWork from data store
+      // if the id is passed in, the client is requesting an update, so fetch the NotebookItem from data store
       try {
         notebookItem = (NotebookItem) notebookItemDao.getById(id);
       } catch (ObjectNotFoundException e) {
@@ -862,7 +865,7 @@ public class VLEServiceImpl implements VLEService {
         return null;
       }
     } else {
-      // the id was not passed in, so we're creating a new StudentWork from scratch
+      // the id was not passed in, so we're creating a new NotebookItem from scratch
       notebookItem = new NotebookItem();
     }
     if (runId != null) {
@@ -919,6 +922,11 @@ public class VLEServiceImpl implements VLEService {
     if (content != null) {
       notebookItem.setContent(content);
     }
+    if (groups != null && !"[]".equals(groups)) {
+      notebookItem.setGroups(groups);
+    } else if ("[]".equals(groups)) {
+      notebookItem.setGroups(null);
+    }
     if (clientSaveTime != null && !clientSaveTime.isEmpty()) {
       Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));
       notebookItem.setClientSaveTime(clientSaveTimestamp);
@@ -946,6 +954,91 @@ public class VLEServiceImpl implements VLEService {
     notebookItemDao.save(notebookItem);
     return notebookItem;
   }
+
+  public NotebookItem addNotebookItemToGroup(
+      Integer notebookItemId, String group, String clientSaveTime) throws NotebookItemAlreadyInGroupException {
+    try {
+      NotebookItem notebookItem = (NotebookItem) notebookItemDao.getById(notebookItemId);
+      NotebookItem copiedNotebookItem = notebookItem.copy();
+      if (copiedNotebookItem.isInGroup(group)) {
+        throw new NotebookItemAlreadyInGroupException(notebookItem, group);
+      }
+      String groups = copiedNotebookItem.getGroups();
+      try {
+        JSONArray groupsJSONArray;
+        if (groups == null) {
+          groupsJSONArray = new JSONArray();
+        } else {
+          groupsJSONArray = new JSONArray(groups);
+        }
+        groupsJSONArray.put(group);
+        copiedNotebookItem.setGroups(groupsJSONArray.toString());
+        copiedNotebookItem.setClientSaveTime(new Timestamp(new Long(clientSaveTime)));
+        notebookItemDao.save(copiedNotebookItem);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+      return copiedNotebookItem;
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public NotebookItem removeNotebookItemFromGroup(
+      Integer notebookItemId, String group, String clientSaveTime) {
+    try {
+      NotebookItem notebookItem = (NotebookItem) notebookItemDao.getById(notebookItemId);
+      if (!notebookItem.isInGroup(group)) {
+        return notebookItem;
+      }
+      NotebookItem copiedNotebookItem = notebookItem.copy();
+      String groups = copiedNotebookItem.getGroups();
+      try {
+        JSONArray groupsJSONArray = new JSONArray(groups);
+        for (int g = 0; g < groupsJSONArray.length(); g++) {
+          String groupName = groupsJSONArray.getString(g);
+          if (group.equals(groupName)) {
+            groupsJSONArray.remove(g);
+            g--;
+          }
+        }
+        if (groupsJSONArray.length() == 0) {
+          copiedNotebookItem.setGroups(null);
+        } else {
+          copiedNotebookItem.setGroups(groupsJSONArray.toString());
+        }
+        copiedNotebookItem.setClientSaveTime(new Timestamp(new Long(clientSaveTime)));
+        notebookItemDao.save(copiedNotebookItem);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+      return copiedNotebookItem;
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public NotebookItem copyNotebookItem(
+      Integer workgroupId, Integer parentNotebookItemId, String clientSaveTime) {
+    try {
+      NotebookItem notebookItem = (NotebookItem) notebookItemDao.getById(parentNotebookItemId);
+      Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));
+      NotebookItem copiedNotebookItem = notebookItem.copy();
+      copiedNotebookItem.setWorkgroup(workgroup);
+      copiedNotebookItem.setClientSaveTime(new Timestamp(new Long(clientSaveTime)));
+      copiedNotebookItem.setLocalNotebookItemId(RandomStringUtils.randomAlphanumeric(10).toLowerCase());
+      copiedNotebookItem.setGroups(null);
+      copiedNotebookItem.setParentNotebookItemId(notebookItem.getId());
+      notebookItemDao.save(copiedNotebookItem);
+      return copiedNotebookItem;
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
 
   @Override
   public Notification getNotificationById(Integer notificationId) throws ObjectNotFoundException {

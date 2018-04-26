@@ -729,7 +729,7 @@ class EmbeddedController {
         html2canvas(modelElement).then((canvas) => {
           var img_b64 = canvas.toDataURL('image/png');
           var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
-          this.NotebookService.addNewItem($event, imageObject);
+          this.NotebookService.addNote($event, imageObject);
         });
       }
     }

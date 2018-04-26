@@ -606,6 +606,14 @@ class DrawController {
       }
     });
 
+    this.$scope.$on('notebookItemChosen', (event, args) => {
+      if (args.requester == this.nodeId + '-' + this.componentId) {
+        const notebookItem = args.notebookItem;
+        const studentWorkId = notebookItem.content.studentWorkIds[0];
+        this.importWorkByStudentWorkId(studentWorkId);
+      }
+    });
+
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }  // end of constructor
 
@@ -1127,6 +1135,8 @@ class DrawController {
         // set the background
         this.drawingTool.setBackgroundImage(this.componentContent.background);
       }
+
+      this.parentStudentWorkIds = null;
     }
   }
 
@@ -1194,6 +1204,10 @@ class DrawController {
 
     // set the submit counter
     studentData.submitCounter = this.submitCounter;
+
+    if (this.parentStudentWorkIds != null) {
+      studentData.parentStudentWorkIds = this.parentStudentWorkIds;
+    }
 
     // set the flag for whether the student submitted this work
     componentState.isSubmit = this.isSubmit;
@@ -1662,8 +1676,7 @@ class DrawController {
    * Snip the drawing by converting it to an image
    * @param $event the click event
    */
-  snipDrawing($event) {
-
+  snipDrawing($event, studentWorkId) {
     // get the canvas element
     var canvas = angular.element('#drawingtool_' + this.nodeId + '_' + this.componentId + ' canvas');
 
@@ -1679,7 +1692,29 @@ class DrawController {
       var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
       // create a notebook item with the image populated into it
-      this.NotebookService.addNewItem($event, imageObject);
+      const noteText = null;
+      this.NotebookService.addNote($event, imageObject, noteText, [ studentWorkId ]);
+    }
+  }
+
+  snipButtonClicked($event) {
+    if (this.isDirty) {
+      const deregisterListener = this.$scope.$on('studentWorkSavedToServer',
+        (event, args) => {
+          let componentState = args.studentWork;
+          if (componentState &&
+            this.nodeId === componentState.nodeId &&
+            this.componentId === componentState.componentId) {
+            this.snipDrawing($event, componentState.id);
+            deregisterListener();
+          }
+        }
+      );
+      this.saveButtonClicked(); // trigger a save
+    } else {
+      const studentWork =
+          this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId)
+      this.snipDrawing($event, studentWork.id);
     }
   }
 
@@ -2667,6 +2702,29 @@ class DrawController {
    */
   authoringJSONChanged() {
     this.jsonStringChanged = true;
+  }
+
+  showCopyPublicNotebookItemButton() {
+    return this.ProjectService.isSpaceExists("public");
+  }
+
+  copyPublicNotebookItemButtonClicked(event) {
+    this.$rootScope.$broadcast('openNotebook',
+        { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
+  }
+
+  importWorkByStudentWorkId(studentWorkId) {
+    this.StudentDataService.getStudentWorkById(studentWorkId).then((componentState) => {
+      if (componentState != null) {
+        this.setStudentWork(componentState);
+        this.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+        this.$rootScope.$broadcast('closeNotebook');
+      }
+    });
+  }
+
+  setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
+    this.parentStudentWorkIds = [studentWorkId];
   }
 
   /**

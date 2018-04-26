@@ -741,7 +741,7 @@ var EmbeddedController = function () {
           (0, _html2canvas2.default)(modelElement).then(function (canvas) {
             var img_b64 = canvas.toDataURL('image/png');
             var imageObject = _this3.UtilService.getImageObjectFromBase64String(img_b64);
-            _this3.NotebookService.addNewItem($event, imageObject);
+            _this3.NotebookService.addNote($event, imageObject);
           });
         }
       }
