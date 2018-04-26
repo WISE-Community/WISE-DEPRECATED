@@ -3065,7 +3065,7 @@ var DrawController = function () {
   }, {
     key: 'copyPublicNotebookItemButtonClicked',
     value: function copyPublicNotebookItemButtonClicked(event) {
-      this.$rootScope.$broadcast('openNotebook', { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId });
+      this.$rootScope.$broadcast('openNotebook', { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
     }
   }, {
     key: 'importWorkByStudentWorkId',

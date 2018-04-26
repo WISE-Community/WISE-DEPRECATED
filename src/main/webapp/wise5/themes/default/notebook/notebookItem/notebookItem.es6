@@ -115,48 +115,6 @@ class NotebookItemController {
     }
   }
 
-  doCopy(ev) {
-    ev.stopPropagation();
-    const confirm = this.$mdDialog.confirm()
-      .title('copyNoteConfirmMessage')
-      .ariaLabel('copy note confirmation')
-      .ok(this.$translate('copy'))
-      .cancel(this.$translate('cancel'));
-    this.$mdDialog.show(confirm).then(() => {
-      this.NotebookService.copyNotebookItem(this.item.id);
-    });
-  }
-
-  doShare(ev) {
-    ev.stopPropagation();
-    const confirm = this.$mdDialog.confirm()
-      .title('shareNoteConfirmMessage')
-      .ariaLabel('share note confirmation')
-      .ok(this.$translate('share'))
-      .cancel(this.$translate('cancel'));
-    this.$mdDialog.show(confirm).then(() => {
-      this.NotebookService.addNotebookItemToGroup(this.item.id, 'public');
-    });
-  }
-
-  doUnshare(ev) {
-    ev.stopPropagation();
-    const confirm = this.$mdDialog.confirm()
-      .title('unshareNoteConfirmMessage')
-      .ariaLabel('unshare note confirmation')
-      .ok(this.$translate('unshare'))
-      .cancel(this.$translate('cancel'));
-    this.$mdDialog.show(confirm).then(() => {
-      this.NotebookService.removeNotebookItemFromGroup(this.item.id, 'public');
-    });
-  }
-
-  canCopyNotebookItem() {
-    return this.ProjectService.isSpaceExists("public") &&
-        !this.isMyNotebookItem() &&
-        !this.isChooseMode;
-  }
-
   canShareNotebookItem() {
     return this.ProjectService.isSpaceExists("public") &&
         this.isMyNotebookItem() &&
@@ -241,27 +199,6 @@ const NotebookItem = {
                              style="background-color: {{$ctrl.color}}">
                 <span class="notebook-item__content__location"><md-icon> place </md-icon><span class="md-body-1">{{$ctrl.getItemNodePosition()}}</span></span>
                 <span flex></span>
-                <md-button class="md-icon-button"
-                           ng-if="$ctrl.canShareNotebookItem()"
-                           aria-label="Share notebook item"
-                           ng-click="$ctrl.doShare($event)">
-                    <md-icon> cloud_upload </md-icon>
-                    <md-tooltip md-direction="top">{{ 'SHARE' | translate }}</md-tooltip>
-                </md-button>
-                <md-button class="md-icon-button"
-                           ng-if="$ctrl.canUnshareNotebookItem()"
-                           aria-label="Unshare notebook item"
-                           ng-click="$ctrl.doUnshare($event)">
-                    <md-icon> cloud_off </md-icon>
-                    <md-tooltip md-direction="top">{{ 'UNSHARE' | translate }}</md-tooltip>
-                </md-button>
-                <md-button class="md-icon-button"
-                           ng-if="$ctrl.canCopyNotebookItem()"
-                           aria-label="Copy notebook item"
-                           ng-click="$ctrl.doCopy($event)">
-                    <md-icon> cloud_download </md-icon>
-                    <md-tooltip md-direction="top">{{ 'COPY' | translate }}</md-tooltip>
-                </md-button>
                 <md-button class="md-icon-button"
                            ng-if="$ctrl.canDeleteNotebookItem()"
                            aria-label="Delete notebook item"

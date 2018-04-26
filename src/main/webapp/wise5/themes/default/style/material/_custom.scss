@@ -189,6 +189,12 @@ md-input-container {
     }
 }
 
+md-checkbox {
+  md-dialog-actions & {
+    margin-bottom: 0;
+  }
+}
+
 .md-button {
     padding: 0 8px;
 

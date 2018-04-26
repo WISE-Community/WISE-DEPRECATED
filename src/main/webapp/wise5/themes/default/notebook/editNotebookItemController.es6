@@ -109,6 +109,12 @@ class EditNotebookItemController {
     this.update();
   }
 
+  copyPublicNotebookItem(ev) {
+    ev.stopPropagation();
+    this.NotebookService.copyNotebookItem(this.itemId);
+    this.$mdDialog.hide();
+  }
+
   attachStudentAssetToNote(files) {
     if (files != null) {
       for (let f = 0; f < files.length; f++) {
@@ -241,6 +247,15 @@ class EditNotebookItemController {
 
   canShareWithClass() {
     return this.ProjectService.isSpaceExists("public");
+  }
+
+  canCopyPublicNotebookItem() {
+    return this.ProjectService.isSpaceExists("public") &&
+      !this.isMyNotebookItem();
+  }
+
+  isMyNotebookItem() {
+    return this.item.workgroupId === this.ConfigService.getWorkgroupId();
   }
 }
 

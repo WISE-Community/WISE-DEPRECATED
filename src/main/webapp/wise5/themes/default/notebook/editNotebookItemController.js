@@ -110,6 +110,13 @@ var EditNotebookItemController = function () {
       this.update();
     }
   }, {
+    key: 'copyPublicNotebookItem',
+    value: function copyPublicNotebookItem(ev) {
+      ev.stopPropagation();
+      this.NotebookService.copyNotebookItem(this.itemId);
+      this.$mdDialog.hide();
+    }
+  }, {
     key: 'attachStudentAssetToNote',
     value: function attachStudentAssetToNote(files) {
       var _this = this;
@@ -259,6 +266,16 @@ var EditNotebookItemController = function () {
     key: 'canShareWithClass',
     value: function canShareWithClass() {
       return this.ProjectService.isSpaceExists("public");
+    }
+  }, {
+    key: 'canCopyPublicNotebookItem',
+    value: function canCopyPublicNotebookItem() {
+      return this.ProjectService.isSpaceExists("public") && !this.isMyNotebookItem();
+    }
+  }, {
+    key: 'isMyNotebookItem',
+    value: function isMyNotebookItem() {
+      return this.item.workgroupId === this.ConfigService.getWorkgroupId();
     }
   }]);
 

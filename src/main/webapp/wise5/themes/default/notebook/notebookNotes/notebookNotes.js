@@ -113,6 +113,10 @@ var NotebookNotesController = function () {
       }
     };
 
+    this.$scope.$on('openNotebook', function (event, args) {
+      _this.selectedTabIndex = args.visibleSpace === "public" ? 1 : 0;
+    });
+
     this.$rootScope.$on('publicNotebookItemsRetrieved', function (event, args) {
       var _iteratorNormalCompletion3 = true;
       var _didIteratorError3 = false;
@@ -140,8 +144,6 @@ var NotebookNotesController = function () {
           }
         }
       }
-
-      _this.selectedTabIndex = 0;
     });
 
     this.$rootScope.$on('notebookUpdated', function (event, args) {

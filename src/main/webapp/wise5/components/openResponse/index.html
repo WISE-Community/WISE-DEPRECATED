@@ -486,14 +486,14 @@
           <md-button class='md-accent md-primary'
                      ng-click='openResponseController.snipButtonClicked($event)'
                      ng-if='openResponseController.showSnipButton()'>
-            <md-icon>content_cut</md-icon>
+            <md-icon>note_add</md-icon>
             {{ 'ADD_TO_NOTEBOOK' | translate:{label:openResponseController.notebookConfig.label} }}
           </md-button>
           <md-button class='md-accent md-primary'
                      ng-click='openResponseController.copyPublicNotebookItemButtonClicked($event)'
                      ng-if='openResponseController.showCopyPublicNotebookItemButton()'>
-            <md-icon>content_cut</md-icon>
-            {{ 'COPY_FROM_PUBLIC_NOTEBOOK' | translate:{label:openResponseController.notebookConfig.label} }}
+            <md-icon>file_download</md-icon>
+            {{ 'importClassmateWork' | translate:{label:openResponseController.notebookConfig.label} }}
           </md-button>
           <div class='input-wrapper' ng-class='{"input-wrapper--richtext": openResponseController.isRichTextEnabled}'>
             <textarea ng-if='openResponseController.isRichTextEnabled && !openResponseController.isDisabled'

@@ -57,13 +57,16 @@ class NotebookNotesController {
       }
     }
 
+    this.$scope.$on('openNotebook', (event, args) => {
+      this.selectedTabIndex = args.visibleSpace === "public" ? 1 : 0;
+    });
+
     this.$rootScope.$on('publicNotebookItemsRetrieved', (event, args) => {
       for (let group of this.groups) {
         if (group.name != 'private') {
           group.items = this.publicNotebookItems[group.name];
         }
       }
-      this.selectedTabIndex = 0;
     });
 
     this.$rootScope.$on('notebookUpdated', (event, args) => {

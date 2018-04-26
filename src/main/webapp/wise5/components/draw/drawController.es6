@@ -2844,7 +2844,7 @@ class DrawController {
 
   copyPublicNotebookItemButtonClicked(event) {
     this.$rootScope.$broadcast('openNotebook',
-        { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId });
+        { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
   }
 
   importWorkByStudentWorkId(studentWorkId) {
