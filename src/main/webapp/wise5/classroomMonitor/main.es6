@@ -49,6 +49,7 @@ import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import OpenResponseComponentModule from '../components/openResponse/openResponseComponentModule';
 import OutsideURLComponentModule from '../components/outsideURL/outsideURLComponentModule';
+import PlanningService from '../services/planningService';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
 import StudentAssetService from '../services/studentAssetService';
@@ -105,6 +106,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
     .service(NodeService.name, NodeService)
     .service(NotebookService.name, NotebookService)
     .service(NotificationService.name, NotificationService)
+    .service(PlanningService.name, PlanningService)
     .service(ProjectService.name, ClassroomMonitorProjectService)
     .service(SessionService.name, SessionService)
     .service(StudentAssetService.name, StudentAssetService)

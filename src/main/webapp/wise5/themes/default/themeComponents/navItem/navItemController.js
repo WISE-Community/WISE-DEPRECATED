@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NavItemController = function () {
-    function NavItemController($filter, $rootScope, $scope, $element, dragulaService, NodeService, ProjectService, StudentDataService, $mdDialog) {
+    function NavItemController($filter, $rootScope, $scope, $element, dragulaService, NodeService, PlanningService, ProjectService, StudentDataService, $mdDialog) {
         var _this = this;
 
         _classCallCheck(this, NavItemController);
@@ -20,6 +20,7 @@ var NavItemController = function () {
         this.$element = $element;
         this.dragulaService = dragulaService;
         this.NodeService = NodeService;
+        this.PlanningService = PlanningService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.$mdDialog = $mdDialog;
@@ -39,14 +40,14 @@ var NavItemController = function () {
         this.isCurrentNode = this.currentNode.id === this.nodeId;
 
         // whether this node is a planning node
-        this.isPlanning = this.ProjectService.isPlanning(this.nodeId);
+        this.isPlanning = this.PlanningService.isPlanning(this.nodeId);
 
         // the array of nodes used for drag/drop planning sorting
         this.availablePlanningNodes = [];
 
         // whether the node is a planning node instance
         this.node = this.ProjectService.getNodeById(this.nodeId);
-        this.isPlanningInstance = this.ProjectService.isPlanningInstance(this.nodeId);
+        this.isPlanningInstance = this.PlanningService.isPlanningInstance(this.nodeId);
 
         this.parentGroupId = null;
 
@@ -61,7 +62,7 @@ var NavItemController = function () {
 
         if (parentGroup != null) {
             this.parentGroupId = parentGroup.id;
-            this.isParentGroupPlanning = this.ProjectService.isPlanning(this.parentGroupId);
+            this.isParentGroupPlanning = this.PlanningService.isPlanning(this.parentGroupId);
         }
 
         if (this.isPlanning) {
@@ -69,7 +70,7 @@ var NavItemController = function () {
              * planning is enabled so we will get the available planning
              * nodes that can be used in this group
              */
-            this.availablePlanningNodes = this.ProjectService.getAvailablePlanningNodes(this.nodeId);
+            this.availablePlanningNodes = this.PlanningService.getAvailablePlanningNodes(this.nodeId);
         }
 
         if (this.isParentGroupPlanning) {
@@ -83,7 +84,7 @@ var NavItemController = function () {
              * planning is enabled so we will get the available planning
              * nodes that can be used in this group
              */
-            this.availablePlanningNodes = this.ProjectService.getAvailablePlanningNodes(this.parentGroupId);
+            this.availablePlanningNodes = this.PlanningService.getAvailablePlanningNodes(this.parentGroupId);
 
             this.$scope.$watch(function () {
                 // watch the position of this node
@@ -186,7 +187,7 @@ var NavItemController = function () {
                 }
 
                 var nodeId = el.getAttribute('data-nodeid');
-                return _this.ProjectService.isPlanningInstance(nodeId);
+                return _this.PlanningService.isPlanningInstance(nodeId);
             }
         });
 
@@ -360,10 +361,10 @@ var NavItemController = function () {
         value: function addPlanningNodeInstanceInside(nodeIdToInsertInside, templateNodeId) {
             // create the planning node instance
             var nextAvailablePlanningNodeId = this.StudentDataService.getNextAvailablePlanningNodeId();
-            var planningNodeInstance = this.ProjectService.createPlanningNodeInstance(nodeIdToInsertInside, templateNodeId, nextAvailablePlanningNodeId);
+            var planningNodeInstance = this.PlanningService.createPlanningNodeInstance(templateNodeId, nextAvailablePlanningNodeId);
 
             // add the planning node instance inside
-            this.ProjectService.addPlanningNodeInstanceInside(nodeIdToInsertInside, planningNodeInstance);
+            this.PlanningService.addPlanningNodeInstanceInside(nodeIdToInsertInside, planningNodeInstance);
 
             /*
              * update the node statuses so that a node status is created for
@@ -448,10 +449,10 @@ var NavItemController = function () {
 
                 // create the planning node instance
                 var nextAvailablePlanningNodeId = this.StudentDataService.getNextAvailablePlanningNodeId();
-                var planningNodeInstance = this.ProjectService.createPlanningNodeInstance(parentGroupId, templateNodeId, nextAvailablePlanningNodeId);
+                var planningNodeInstance = this.PlanningService.createPlanningNodeInstance(templateNodeId, nextAvailablePlanningNodeId);
 
                 // insert planning node instance after
-                this.ProjectService.addPlanningNodeInstanceAfter(nodeIdToInsertAfter, planningNodeInstance);
+                this.PlanningService.addPlanningNodeInstanceAfter(nodeIdToInsertAfter, planningNodeInstance);
 
                 /*
                  * update the node statuses so that a node status is created for
@@ -548,47 +549,6 @@ var NavItemController = function () {
          */
 
     }, {
-        key: 'movePlanningNode0',
-        value: function movePlanningNode0(otherNodeId) {
-
-            /*
-             * check that this node is not the same as the other node.
-             * if they are the same we don't need to do anything.
-             */
-            if (this.nodeId != otherNodeId) {
-                if (this.ProjectService.isGroupNode(otherNodeId)) {
-                    // insert this node inside the group node
-                    this.ProjectService.movePlanningNodeInstanceInside(this.nodeId, otherNodeId);
-                } else {
-                    // insert this node after the other node
-                    this.ProjectService.movePlanningNodeInstanceAfter(this.nodeId, otherNodeId);
-                }
-
-                // Save move planning node event
-                var componentId = null;
-                var componentType = null;
-                var category = "Planning";
-                var eventName = "planningNodeMoved";
-                var eventData = {
-                    nodeIdMoved: this.nodeId,
-                    nodeIdMovedInsideOrAfter: otherNodeId
-                };
-                var eventNodeId = this.nodeId;
-                this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
-            }
-
-            // perform any necessary updating
-            this.planningNodeChanged();
-        }
-
-        /**
-         * Move the planning node. If the other node is a group node, we will
-         * insert this node as the first node in the group. If the other node is
-         * a step node, we will insert this node after the other node.
-         * @param otherNodeId the other node we will move this node inside or after
-         */
-
-    }, {
         key: 'movePlanningNode',
         value: function movePlanningNode(nodeIdToMove, nodeIdToMoveAfter) {
 
@@ -598,11 +558,9 @@ var NavItemController = function () {
              */
             if (nodeIdToMove != nodeIdToMoveAfter) {
                 if (this.ProjectService.isGroupNode(nodeIdToMoveAfter)) {
-                    // insert this node inside the group node
-                    this.ProjectService.movePlanningNodeInstanceInside(nodeIdToMove, nodeIdToMoveAfter);
+                    this.PlanningService.movePlanningNodeInstanceInside(nodeIdToMove, nodeIdToMoveAfter);
                 } else {
-                    // insert this node after the other node
-                    this.ProjectService.movePlanningNodeInstanceAfter(nodeIdToMove, nodeIdToMoveAfter);
+                    this.PlanningService.movePlanningNodeInstanceAfter(nodeIdToMove, nodeIdToMoveAfter);
                 }
             }
 
@@ -721,7 +679,7 @@ var NavItemController = function () {
     return NavItemController;
 }();
 
-NavItemController.$inject = ['$filter', '$rootScope', '$scope', '$element', 'dragulaService', 'NodeService', 'ProjectService', 'StudentDataService', '$mdDialog'];
+NavItemController.$inject = ['$filter', '$rootScope', '$scope', '$element', 'dragulaService', 'NodeService', 'PlanningService', 'ProjectService', 'StudentDataService', '$mdDialog'];
 
 exports.default = NavItemController;
 //# sourceMappingURL=navItemController.js.map

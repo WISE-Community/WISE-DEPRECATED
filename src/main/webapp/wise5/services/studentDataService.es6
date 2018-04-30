@@ -7,6 +7,7 @@ class StudentDataService {
       $rootScope,
       AnnotationService,
       ConfigService,
+      PlanningService,
       ProjectService,
       UtilService) {
     this.$filter = $filter;
@@ -16,6 +17,7 @@ class StudentDataService {
     this.$rootScope = $rootScope;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
+    this.PlanningService = PlanningService;
     this.ProjectService = ProjectService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
@@ -251,7 +253,7 @@ class StudentDataService {
 
   updateNodeStatuses() {
     let nodes = this.ProjectService.getNodes();
-    let planningNodes = this.ProjectService.getPlanningNodes();
+    let planningNodes = this.PlanningService.getPlanningNodes();
     const groups = this.ProjectService.getGroups();
 
     if (nodes != null) {
@@ -2171,7 +2173,7 @@ class StudentDataService {
       for (let nodeState of nodeStates) {
         if (nodeState != null) {
           let nodeStateNodeId = nodeState.nodeId;
-          if (this.ProjectService.isPlanning(nodeStateNodeId) && nodeState.studentData != null) {
+          if (this.PlanningService.isPlanning(nodeStateNodeId) && nodeState.studentData != null) {
             let nodes = nodeState.studentData.nodes;
             for (let node of nodes) {
               let nodeId = node.id;
@@ -2518,6 +2520,7 @@ StudentDataService.$inject = [
   '$rootScope',
   'AnnotationService',
   'ConfigService',
+  'PlanningService',
   'ProjectService',
   'UtilService'
 ];
