@@ -114,14 +114,6 @@ class ProjectService {
     return null;
   };
 
-  getPlanningNodes() {
-    const project = this.project;
-    if (project != null) {
-      return project.planningNodes;
-    }
-    return null;
-  };
-
   getChildNodeIdsById(nodeId) {
     const node = this.getNodeById(nodeId);
     if (node.ids) {
@@ -337,7 +329,7 @@ class ProjectService {
       }
 
       this.rootNode = this.getRootNode(nodes[0].id);
-      this.setNodeOrder(this.rootNode, this.nodeCount);
+      this.calculateNodeOrderOfProject();
 
       let n = nodes.length;
       const branches = this.getBranches();
@@ -383,25 +375,22 @@ class ProjectService {
     this.$rootScope.$broadcast('projectChanged');
   };
 
-  setNodeOrder(node) {
+  calculateNodeOrderOfProject() {
+    this.calculateNodeOrder(this.rootNode);
+  }
+
+  /**
+   * Recursively calculates the node order.
+   * @param node
+   */
+  calculateNodeOrder(node) {
     this.idToOrder[node.id] = {'order': this.nodeCount};
     this.nodeCount++;
     if (this.isGroupNode(node.id)) {
-      let childIds = node.ids;
+      const childIds = node.ids;
       for (let childId of childIds) {
-        let child = this.getNodeById(childId);
-        this.setNodeOrder(child);
-      }
-
-      if (this.ConfigService.getMode() === 'classroomMonitor') {
-        // we're viewing the classroom monitor, so include planning nodes in the project structure
-        let planningIds = node.availablePlanningNodes;
-        if (planningIds) {
-          for (let planningId of planningIds) {
-            let child = this.getNodeById(planningId.nodeId);
-            this.setNodeOrder(child);
-          }
-        }
+        const child = this.getNodeById(childId);
+        this.calculateNodeOrder(child);
       }
     }
   };
@@ -4475,206 +4464,6 @@ class ProjectService {
         }
       }
     }
-  }
-
-  /**
-   * Check if a node is a planning node
-   * @param nodeId the node id
-   * @returns whether the node is a planning node
-   */
-  isPlanning(nodeId) {
-    if (nodeId != null) {
-      const node = this.getNodeById(nodeId);
-      if (node != null) {
-        if (node.planning) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Check if a node is a planning node instance
-   * @param nodeId the node id
-   * @returns whether the node is a planning node instance
-   */
-  isPlanningInstance(nodeId) {
-    if (nodeId != null) {
-      const node = this.getNodeById(nodeId);
-      if (node.planningNodeTemplateId) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Get the available planning node ids for a node
-   * @param nodeId the node we want available planning nodes for
-   * @returns an array of available planning node ids
-   */
-  getAvailablePlanningNodeIds(nodeId) {
-    if (nodeId != null) {
-      const node = this.getNodeById(nodeId);
-      if (node != null && node.availablePlanningNodeIds != null) {
-        return node.availablePlanningNodeIds;
-      }
-    }
-    return [];
-  }
-
-  /**
-   * Get the available planning nodes for a given group
-   * @param nodeId the node id of the group
-   * @returns an array of planning node templates
-   */
-  getAvailablePlanningNodes(nodeId) {
-    const availablePlanningNodesSoFar = [];
-    if (nodeId != null) {
-      const node = this.getNodeById(nodeId);
-      if (node != null && node.availablePlanningNodes != null) {
-        let availablePlanningNodes = node.availablePlanningNodes;
-        for (let availablePlanningNode of availablePlanningNodes) {
-          if (availablePlanningNode != null) {
-            const availablePlanningNodeActual =
-                this.getNodeById(availablePlanningNode.nodeId);
-            if (availablePlanningNodeActual != null) {
-              if (availablePlanningNode.max != null) {
-                availablePlanningNodeActual.max = availablePlanningNode.max;
-              }
-              availablePlanningNodesSoFar.push(availablePlanningNodeActual);
-            }
-          }
-        }
-      }
-    }
-    return availablePlanningNodesSoFar;
-  }
-
-  /**
-   * Create a planning node instance and add it to the project
-   * @param groupId the group id to add the planning node instance to
-   * @param nodeId the node id of the planning node template
-   */
-  createPlanningNodeInstance(groupId, nodeId, nextAvailablePlanningNodeId) {
-    let planningNodeInstance = null;
-    if (nodeId != null && nextAvailablePlanningNodeId != null) {
-      // create a planning node instance by copying the planning node template
-      planningNodeInstance = this.copyNode(nodeId);
-
-      // set the template id to point back to the planning template node
-      planningNodeInstance.planningNodeTemplateId = nodeId;
-
-      // set the planning node instance node id
-      planningNodeInstance.id = nextAvailablePlanningNodeId;
-    }
-    return planningNodeInstance;
-  }
-
-  /**
-   * Add a planning node instance inside a group node
-   * @param nodeIdToInsertInside the group id to insert into
-   * @param planningNodeInstance the planning node instance to add
-   */
-  addPlanningNodeInstanceInside(nodeIdToInsertInside, planningNodeInstance) {
-    const planningNodeInstanceNodeId = planningNodeInstance.id;
-
-    // add an entry in our mapping data structures of node id to object
-    this.setIdToNode(planningNodeInstanceNodeId, planningNodeInstance);
-    this.setIdToElement(planningNodeInstanceNodeId, planningNodeInstance);
-
-    // add the node to the nodes array in the project
-    this.addNode(planningNodeInstance);
-
-    // update the transitions
-    this.insertNodeInsideInTransitions(planningNodeInstanceNodeId, nodeIdToInsertInside);
-
-    // update the child ids of the group
-    this.insertNodeInsideInGroups(planningNodeInstanceNodeId, nodeIdToInsertInside);
-
-    // recalculate all the position values in the group
-    this.recalculatePositionsInGroup(nodeIdToInsertInside);
-
-    /*
-     * set the order of the planning node instance so that it shows up
-     * in the select step drop down in the correct order
-     */
-    this.setNodeOrder(this.rootNode, 0);
-  }
-
-  /**
-   * Add a planning node instance after a node
-   * @param nodeIdToInsertAfter the node to insert after
-   * @param planningNodeInstance the planning node instance to add
-   */
-  addPlanningNodeInstanceAfter(nodeIdToInsertAfter, planningNodeInstance) {
-    const planningNodeInstanceNodeId = planningNodeInstance.id;
-
-    // add an entry in our mapping data structures of node id to object
-    this.setIdToNode(planningNodeInstanceNodeId, planningNodeInstance);
-    this.setIdToElement(planningNodeInstanceNodeId, planningNodeInstance);
-
-    // add the node to the nodes array in the project
-    this.addNode(planningNodeInstance);
-
-    // update the transitions
-    this.insertNodeAfterInTransitions(planningNodeInstance, nodeIdToInsertAfter);
-
-    // update the child ids of the group
-    this.insertNodeAfterInGroups(planningNodeInstanceNodeId, nodeIdToInsertAfter);
-
-    const parentGroup = this.getParentGroup(nodeIdToInsertAfter);
-
-    if (parentGroup != null) {
-      const parentGroupId = parentGroup.id;
-
-      // recalculate all the position values in the group
-      this.recalculatePositionsInGroup(parentGroupId);
-    }
-
-    /*
-     * set the order of the planning node instance so that it shows up
-     * in the select step drop down in the correct order
-     */
-    this.setNodeOrder(this.rootNode, 0);
-  }
-
-  /**
-   * Move a planning node instance inside a group
-   * @param nodeIdToMove the node to move
-   * @param nodeIdToInsertInside the group to move the node into
-   */
-  movePlanningNodeInstanceInside(nodeIdToMove, nodeIdToInsertInside) {
-    this.moveNodesInside([nodeIdToMove], nodeIdToInsertInside);
-    this.recalculatePositionsInGroup(nodeIdToInsertInside);
-
-    /*
-     * set the order of the planning node instance so that it shows up
-     * in the select step drop down in the correct order
-     */
-    this.setNodeOrder(this.rootNode, 0);
-  }
-
-  /**
-   * Move a planning node instance after a node
-   * @param nodeIdToMove the node to move
-   * @param nodeIdToInsertAfter the other node to move the node after
-   */
-  movePlanningNodeInstanceAfter(nodeIdToMove, nodeIdToInsertAfter) {
-    this.moveNodesAfter([nodeIdToMove], nodeIdToInsertAfter);
-    const parentGroup = this.getParentGroup(nodeIdToInsertAfter);
-
-    if (parentGroup != null) {
-      const parentGroupId = parentGroup.id;
-      this.recalculatePositionsInGroup(parentGroupId);
-    }
-
-    /*
-     * set the order of the planning node instance so that it shows up
-     * in the select step drop down in the correct order
-     */
-    this.setNodeOrder(this.rootNode, 0);
   }
 
   /**

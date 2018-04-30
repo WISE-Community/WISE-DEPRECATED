@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentDataService = function () {
-  function StudentDataService($filter, $http, $injector, $q, $rootScope, AnnotationService, ConfigService, ProjectService, UtilService) {
+  function StudentDataService($filter, $http, $injector, $q, $rootScope, AnnotationService, ConfigService, PlanningService, ProjectService, UtilService) {
     var _this = this;
 
     _classCallCheck(this, StudentDataService);
@@ -21,6 +21,7 @@ var StudentDataService = function () {
     this.$rootScope = $rootScope;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
+    this.PlanningService = PlanningService;
     this.ProjectService = ProjectService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
@@ -378,7 +379,7 @@ var StudentDataService = function () {
     key: 'updateNodeStatuses',
     value: function updateNodeStatuses() {
       var nodes = this.ProjectService.getNodes();
-      var planningNodes = this.ProjectService.getPlanningNodes();
+      var planningNodes = this.PlanningService.getPlanningNodes();
       var groups = this.ProjectService.getGroups();
 
       if (nodes != null) {
@@ -3157,7 +3158,7 @@ var StudentDataService = function () {
 
             if (nodeState != null) {
               var nodeStateNodeId = nodeState.nodeId;
-              if (this.ProjectService.isPlanning(nodeStateNodeId) && nodeState.studentData != null) {
+              if (this.PlanningService.isPlanning(nodeStateNodeId) && nodeState.studentData != null) {
                 var nodes = nodeState.studentData.nodes;
                 var _iteratorNormalCompletion41 = true;
                 var _didIteratorError41 = false;
@@ -3658,7 +3659,7 @@ var StudentDataService = function () {
   return StudentDataService;
 }();
 
-StudentDataService.$inject = ['$filter', '$http', '$injector', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'ProjectService', 'UtilService'];
+StudentDataService.$inject = ['$filter', '$http', '$injector', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'PlanningService', 'ProjectService', 'UtilService'];
 
 exports.default = StudentDataService;
 //# sourceMappingURL=studentDataService.js.map
