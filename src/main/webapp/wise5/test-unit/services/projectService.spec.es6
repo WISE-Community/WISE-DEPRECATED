@@ -25,7 +25,6 @@ describe('ProjectService Unit Test', () => {
     const projectIdDefault = 1;
     const projectBaseURL = "http://localhost:8080/curriculum/12345/";
     const projectURL = projectBaseURL + "project.json";
-    const registerNewProjectURL = "http://localhost:8080/wise/project/new";
     const saveProjectURL = "http://localhost:8080/wise/project/save/" + projectIdDefault;
     const commitMessageDefault = "Made simple changes";
     const defaultCommitHistory = [{"id":"abc","message":"first commit"}, {"id":"def", "message":"second commit"}];
@@ -43,8 +42,6 @@ describe('ProjectService Unit Test', () => {
           return projectBaseURL;
         } else if (param === "projectURL") {
           return projectURL;
-        } else if (param === "registerNewProjectURL") {
-          return registerNewProjectURL;
         } else if (param === "saveProjectURL") {
           return saveProjectURL;
         } else if (param === "wiseBaseURL") {
@@ -103,38 +100,6 @@ describe('ProjectService Unit Test', () => {
       expect(project).toBeNull();
     });
 
-    // MARK: Register Project
-    xit('should register new project', () => {
-      createNormalSpy();
-      const newProjectIdExpected = projectIdDefault; // Id of new project created on the server
-      $httpBackend.when('POST', registerNewProjectURL).respond(newProjectIdExpected);
-      $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
-      $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
-      const newProjectIdActualPromise = ProjectService.registerNewProject(scootersProjectJSONString, commitMessageDefault);
-      $httpBackend.flush();
-      $httpBackend.expectPOST(registerNewProjectURL);
-    });
-
-    it('should not register new project when Config.registerNewProjectURL is undefined', () => {
-      spyOn(ConfigService, "getConfigParam").and.returnValue(null);
-      $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
-      $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
-      const newProjectIdActualPromise = ProjectService.registerNewProject(scootersProjectJSONString, commitMessageDefault);
-      expect(ConfigService.getConfigParam).toHaveBeenCalledWith("registerNewProjectURL");
-      expect(newProjectIdActualPromise).toBeNull();
-    });
-
-    it('should not register new project when projectJSON is invalid JSON', () => {
-      spyOn(ConfigService, "getConfigParam").and.returnValue(registerNewProjectURL);
-      try {
-        const newProjectIdActualPromise = ProjectService.registerNewProject(invalidProjectJSONString, commitMessageDefault);
-        expect(1).toEqual(2);   // This line should not get called because the above line will throw an error
-      } catch (e) {
-        expect(ConfigService.getConfigParam).toHaveBeenCalledWith("registerNewProjectURL");
-        expect(e.message).toEqual("Invalid projectJSONString.")
-      }
-    });
-
     // MARK: Save Project
     xit('should save project', () => {
       spyOn(ConfigService, "getProjectId").and.returnValue(projectIdDefault);
@@ -189,22 +154,6 @@ describe('ProjectService Unit Test', () => {
       expect(ConfigService.getConfigParam).toHaveBeenCalledWith("wiseBaseURL");
       expect(actualThemePath).toEqual(expectedThemePath);
     });
-
-    it('should find used node id in active nodes', () => {
-      ProjectService.setProject(demoProjectJSON);
-      expect(ProjectService.isNodeIdUsed("node1")).toEqual(true);
-    });
-
-    it('should find used node id in inactive nodes', () => {
-      ProjectService.setProject(demoProjectJSON);
-      expect(ProjectService.isNodeIdUsed("node789")).toEqual(true);
-    });
-
-    it('should not find used node id in active or inactive nodes', () => {
-      ProjectService.setProject(demoProjectJSON);
-      expect(ProjectService.isNodeIdUsed("nodedoesnotexist")).toEqual(false);
-    });
-
     // TODO: add test for ProjectService.getFlattenedProjectAsNodeIds()
     // TODO: add test for ProjectService.getAllPaths()
     // TODO: add test for ProjectService.consolidatePaths()
@@ -442,6 +391,55 @@ describe('ProjectService Unit Test', () => {
       const scootersProjectMaxScoreExpected = 18;
       const scootersProjectMaxScoreActual = ProjectService.getMaxScore();
       expect(scootersProjectMaxScoreActual).toEqual(scootersProjectMaxScoreExpected);
+    });
+
+    it('should not add space if it does exist', () => {
+      ProjectService.setProject(scootersProjectJSON);
+      const spaces = ProjectService.getSpaces();
+      expect(spaces.length).toEqual(2);
+      const space = {
+        "id": "public",
+        "name": "Public",
+        "isPublic": true,
+        "isShareWithNotebook": true
+      };
+      ProjectService.addSpace(space);
+      expect(spaces.length).toEqual(2);
+      expect(spaces[0].id).toEqual("public");
+      expect(spaces[1].id).toEqual("ideasAboutGlobalClimateChange");
+    });
+
+    it('should add space if it doesn\'t exist', () => {
+      ProjectService.setProject(scootersProjectJSON);
+      const spaces = ProjectService.getSpaces();
+      expect(spaces.length).toEqual(2);
+      const space = {
+        "id": "newSpace",
+        "name": "New Space to share your thoughts",
+        "isPublic": true,
+        "isShareWithNotebook": false
+      };
+      ProjectService.addSpace(space);
+      expect(spaces.length).toEqual(3);
+      expect(spaces[0].id).toEqual("public");
+      expect(spaces[1].id).toEqual("ideasAboutGlobalClimateChange");
+      expect(spaces[2].id).toEqual("newSpace");
+    });
+
+    it('should not remove a space that does not exist', () => {
+      ProjectService.setProject(demoProjectJSON);
+      const spaces = ProjectService.getSpaces();
+      expect(spaces.length).toEqual(1);
+      ProjectService.removeSpace("public");
+      expect(spaces.length).toEqual(1);
+    });
+
+    it('should remove a space that does exist', () => {
+      ProjectService.setProject(demoProjectJSON);
+      const spaces = ProjectService.getSpaces();
+      expect(spaces.length).toEqual(1);
+      ProjectService.removeSpace("sharePictures");
+      expect(spaces.length).toEqual(0);
     });
   });
 });

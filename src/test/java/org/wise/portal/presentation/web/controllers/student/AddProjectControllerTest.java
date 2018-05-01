@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007 Regents of the University of California (Regents). Created
+ * Copyright (c) 2007-2018 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU Lesser General Public License, v2.
@@ -32,12 +32,23 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
+import junit.framework.TestCase;
+import org.easymock.EasyMock;
+import org.easymock.TestSubject;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.api.easymock.annotation.Mock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.PeriodNotFoundException;
@@ -50,143 +61,164 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
+import org.wise.portal.presentation.validators.student.AddProjectParametersValidator;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.student.StudentService;
 
 /**
  * @author Hiroki Terashima
- * @version $Id$
  */
-public class AddProjectControllerTest extends AbstractModelAndViewTests {
-	
-	private static final String RUNCODE = "fly8978";
-		
-	private static final String PERIODNAME = "3";
-	
-	private static final String LEGAL_PROJECTCODE = RUNCODE + "-" + PERIODNAME;
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(ControllerUtil.class)
+public class AddProjectControllerTest extends TestCase {
 
-	private final String RUNCODE_NOT_IN_DB = "abc1234";
-	
-	private final String PERIODNAME_NOT_IN_DB = "thisperioddoesnotexist";
+  private static final String RUNCODE = "fly8978";
 
-	private static final String SUCCESS = "SUCCESS VIEW";
+  private static final String PERIODNAME = "3";
 
-	private static final String FORM = "FORM VIEW";
+  private static final String LEGAL_PROJECTCODE = RUNCODE + "-" + PERIODNAME;
 
-	private AddProjectController addProjectController;
-	
-	private AddProjectParameters addProjectParameters;
-	
-	private StudentService mockStudentService;
-	
-	private ApplicationContext mockApplicationContext;
-	
-	private MockHttpServletRequest request;
+  private final String RUNCODE_NOT_IN_DB = "abc1234";
 
-	private MockHttpServletResponse response;
-	
-	private HttpSession mockSession;
-	
-	private BindException errors;
-	
-	private Run run;
-	
-	private Group group;
-	
-	private User user;
-	
-	/**
-	 * @throws Exception 
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@SuppressWarnings("unchecked")
-	protected void setUp() throws Exception {
-		super.setUp();
-		mockApplicationContext = createMock(ApplicationContext.class);
-		request = new MockHttpServletRequest();
-		response = new MockHttpServletResponse();
-		addProjectParameters = new AddProjectParameters();
-		addProjectParameters.setProjectcode(LEGAL_PROJECTCODE);
-		errors = new BindException(addProjectParameters, "");
+  private final String PERIODNAME_NOT_IN_DB = "thisperioddoesnotexist";
 
-		mockSession = new MockHttpSession();
-		this.user = new UserImpl();
-		mockSession.setAttribute(User.CURRENT_USER_SESSION_KEY, this.user);
-		this.request.setSession(mockSession);
-		
-		run = new RunImpl();
-		group = new PersistentGroup();
-		group.setName(PERIODNAME);
-		Set<Group> periods = new HashSet<Group>();
-		periods.add(group);
-		run.setPeriods(periods);
-		
-		this.mockStudentService = createMock(StudentService.class);
-		addProjectController = new AddProjectController();
-	}
-	
-	public void testOnSubmit_success() throws Exception {
-		// test submission of form with correct projectcode info.
-		// should get ModelAndView back containing success view
-		mockStudentService.addStudentToRun(user, new Projectcode(LEGAL_PROJECTCODE));
-		expectLastCall();
-		replay(mockStudentService);
-		
-		ModelAndView modelAndView = addProjectController.onSubmit(addProjectParameters, errors, request, response);
-		assertEquals(SUCCESS, modelAndView.getViewName());
-		assertTrue(!errors.hasErrors());
-		verify(mockStudentService);
-	}
+  @TestSubject
+  private AddProjectController addProjectController = new AddProjectController();
 
-	public void testOnSubmit_failure_bad_runcode() throws Exception {
-		// test submission of form with projectcode that has a runcode
-		// that does not exist in datastore.
-		// should get ModelAndView back containing form view
-		addProjectParameters.setProjectcode(RUNCODE_NOT_IN_DB + "-" + PERIODNAME);
-		mockStudentService.addStudentToRun(user, new Projectcode(RUNCODE_NOT_IN_DB, PERIODNAME));
-		expectLastCall().andThrow(new ObjectNotFoundException(RUNCODE_NOT_IN_DB, Run.class));
-		replay(mockStudentService);
+  private AddProjectParameters addProjectParameters;
 
-		ModelAndView modelAndView = addProjectController.onSubmit(addProjectParameters, errors,request, response);
-		assertEquals(FORM, modelAndView.getViewName());
-		assertTrue(errors.hasErrors());
-		assertEquals(1, errors.getFieldErrorCount());
+  @Mock
+  private AddProjectParametersValidator addprojectparametersValidator;
 
-		assertNotNull(errors.getFieldError("projectcode"));
-		verify(mockStudentService);
-	}
-	
-	public void testOnSubmit_failure_bad_periodname() throws Exception {
-		// test submission of form with projectcode that has a periodname
-		// that does not exist in datastore.
-		// should get ModelAndView back containing form view
-		addProjectParameters.setProjectcode(RUNCODE + "-" + PERIODNAME_NOT_IN_DB);
-		mockStudentService.addStudentToRun(user, new Projectcode(RUNCODE, PERIODNAME_NOT_IN_DB));
-		expectLastCall().andThrow(new PeriodNotFoundException(PERIODNAME_NOT_IN_DB + " was not found"));
-		replay(mockStudentService);
+  @Mock
+  private StudentService studentService;
 
-		ModelAndView modelAndView = addProjectController.onSubmit(addProjectParameters, errors, request, response);
-		assertEquals(FORM, modelAndView.getViewName());
-		assertTrue(errors.hasErrors());
-		assertEquals(1, errors.getFieldErrorCount());
-		assertNotNull(errors.getFieldError("projectcode"));
-		verify(mockStudentService);		
-	}
-	
-	public void testOnSubmit_failure_student_already_associated_with_run() throws Exception {
-		// test submission of form with correct projectcode info
-		// but the student is already associated with the run.
-		// should get ModelAndView back containing success view
-		mockStudentService.addStudentToRun(user, new Projectcode(LEGAL_PROJECTCODE));
-		expectLastCall().andThrow(new StudentUserAlreadyAssociatedWithRunException(
-				"student user is already associated with this run."));
-		replay(mockStudentService);
-		
-		ModelAndView modelAndView = addProjectController.onSubmit(addProjectParameters, errors, request, response);
-		assertEquals(FORM, modelAndView.getViewName());
-		assertTrue(errors.hasErrors());
-		assertEquals(1, errors.getFieldErrorCount());
-		assertNotNull(errors.getFieldError("projectcode"));
-		verify(mockStudentService);		
-	}
+  private ApplicationContext mockApplicationContext;
 
+  private MockHttpServletRequest request;
+
+  private MockHttpServletResponse response;
+
+  private HttpSession mockSession;
+
+  private BindException errors;
+
+  private BindingResult result;
+
+  private Run run;
+
+  private Group group;
+
+  private User user;
+
+  @Before
+  public void setUp() throws Exception {
+    mockApplicationContext = createMock(ApplicationContext.class);
+    request = new MockHttpServletRequest();
+    response = new MockHttpServletResponse();
+    addProjectParameters = new AddProjectParameters();
+    addProjectParameters.setProjectcode(LEGAL_PROJECTCODE);
+    errors = new BindException(addProjectParameters, "");
+
+    mockSession = new MockHttpSession();
+    user = new UserImpl();
+    mockSession.setAttribute(User.CURRENT_USER_SESSION_KEY, this.user);
+    request.setSession(mockSession);
+
+    PowerMock.mockStatic(ControllerUtil.class);
+    EasyMock.expect(ControllerUtil.getSignedInUser()).andReturn(user);
+    PowerMock.replay(ControllerUtil.class);
+
+    run = new RunImpl();
+    group = new PersistentGroup();
+    group.setName(PERIODNAME);
+    Set<Group> periods = new HashSet<Group>();
+    periods.add(group);
+    run.setPeriods(periods);
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    PowerMock.verify(ControllerUtil.class);
+    studentService = null;
+    addprojectparametersValidator = null;
+    addProjectController = null;
+  }
+
+  @Test
+  public void onSubmit_correctProjectCode_OK() throws Exception {
+    addprojectparametersValidator.validate(addProjectParameters, errors);
+    expectLastCall();
+    replay(addprojectparametersValidator);
+    studentService.addStudentToRun(user, new Projectcode(LEGAL_PROJECTCODE));
+    expectLastCall();
+    replay(studentService);
+
+    ModelAndView modelAndView = addProjectController.onSubmit(addProjectParameters, errors);
+    assertEquals("student/addprojectsuccess", modelAndView.getViewName());
+    assertTrue(!errors.hasErrors());
+    verify(addprojectparametersValidator);
+    verify(studentService);
+  }
+
+  @Test
+  public void onSubmit_badRuncode_Error() throws Exception {
+    addprojectparametersValidator.validate(addProjectParameters, errors);
+    expectLastCall();
+    replay(addprojectparametersValidator);
+
+    addProjectParameters.setProjectcode(RUNCODE_NOT_IN_DB + "-" + PERIODNAME);
+    studentService.addStudentToRun(user, new Projectcode(RUNCODE_NOT_IN_DB, PERIODNAME));
+    expectLastCall().andThrow(new ObjectNotFoundException(RUNCODE_NOT_IN_DB, Run.class));
+    replay(studentService);
+
+    ModelAndView modelAndView = addProjectController.onSubmit(addProjectParameters, errors);
+    assertEquals(null, modelAndView.getViewName());
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getFieldErrorCount());
+
+    assertNotNull(errors.getFieldError("projectcode"));
+    verify(addprojectparametersValidator);
+    verify(studentService);
+  }
+
+  @Test
+  public void onSubmit_badPeriodname_Error() throws Exception {
+    addprojectparametersValidator.validate(addProjectParameters, errors);
+    expectLastCall();
+    replay(addprojectparametersValidator);
+
+    addProjectParameters.setProjectcode(RUNCODE + "-" + PERIODNAME_NOT_IN_DB);
+    studentService.addStudentToRun(user, new Projectcode(RUNCODE, PERIODNAME_NOT_IN_DB));
+    expectLastCall().andThrow(new PeriodNotFoundException(PERIODNAME_NOT_IN_DB + " was not found"));
+    replay(studentService);
+
+    ModelAndView modelAndView = addProjectController.onSubmit(addProjectParameters, errors);
+    assertEquals(null, modelAndView.getViewName());
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getFieldErrorCount());
+    assertNotNull(errors.getFieldError("projectcode"));
+    verify(addprojectparametersValidator);
+    verify(studentService);
+  }
+
+  @Test
+  public void onSubmit_studentAlreadyAssociatedWithRun_Error() throws Exception {
+    addprojectparametersValidator.validate(addProjectParameters, errors);
+    expectLastCall();
+    replay(addprojectparametersValidator);
+
+    studentService.addStudentToRun(user, new Projectcode(LEGAL_PROJECTCODE));
+    expectLastCall().andThrow(new StudentUserAlreadyAssociatedWithRunException(
+        "student user is already associated with this run."));
+    replay(studentService);
+
+    ModelAndView modelAndView = addProjectController.onSubmit(addProjectParameters, errors);
+    assertEquals(null, modelAndView.getViewName());
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getFieldErrorCount());
+    assertNotNull(errors.getFieldError("projectcode"));
+    verify(addprojectparametersValidator);
+    verify(studentService);
+  }
 }

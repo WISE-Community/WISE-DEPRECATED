@@ -483,6 +483,18 @@
             <compile id='prompt' data='openResponseController.getPrompt()'></compile>
             <possible-score max-score='openResponseController.componentContent.maxScore'></possible-score>
           </label>
+          <md-button class='md-accent md-primary'
+                     ng-click='openResponseController.snipButtonClicked($event)'
+                     ng-if='openResponseController.showSnipButton()'>
+            <md-icon>note_add</md-icon>
+            {{ 'ADD_TO_NOTEBOOK' | translate:{label:openResponseController.notebookConfig.label} }}
+          </md-button>
+          <md-button class='md-accent md-primary'
+                     ng-click='openResponseController.copyPublicNotebookItemButtonClicked($event)'
+                     ng-if='openResponseController.showCopyPublicNotebookItemButton()'>
+            <md-icon>file_download</md-icon>
+            {{ 'importClassmateWork' | translate:{label:openResponseController.notebookConfig.label} }}
+          </md-button>
           <div class='input-wrapper' ng-class='{"input-wrapper--richtext": openResponseController.isRichTextEnabled}'>
             <textarea ng-if='openResponseController.isRichTextEnabled && !openResponseController.isDisabled'
                   ui-tinymce='openResponseController.tinymceOptions'

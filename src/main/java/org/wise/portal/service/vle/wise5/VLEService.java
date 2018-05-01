@@ -29,10 +29,7 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
-import org.wise.vle.domain.work.Event;
-import org.wise.vle.domain.work.NotebookItem;
-import org.wise.vle.domain.work.StudentAsset;
-import org.wise.vle.domain.work.StudentWork;
+import org.wise.vle.domain.work.*;
 
 import java.util.List;
 
@@ -159,6 +156,14 @@ public interface VLEService {
     String nodeId, String componentId);
 
   /**
+   * Returns a list of notebook items that belong in a specified group.
+   * @param runId id of run
+   * @param groupName name of group
+   * @return list of notebook items that belong in the group
+   */
+  List<NotebookItem> getNotebookItemsByGroup(Integer runId, String groupName);
+
+  /**
    * Saves NotebookItem in the data store
    */
   NotebookItem saveNotebookItem(
@@ -166,7 +171,38 @@ public interface VLEService {
     String nodeId, String componentId,
     Integer studentWorkId, Integer studentAssetId,
     String localNotebookItemId, String type, String title, String content,
+    String groups,
     String clientSaveTime, String clientDeleteTime);
+
+  /**
+   * Add a group to a NotebookItem
+   * @param notebookItemId
+   * @param group
+   * @param clientSaveTime
+   * @return
+   */
+  NotebookItem addNotebookItemToGroup(
+      Integer notebookItemId, String group, String clientSaveTime) throws NotebookItemAlreadyInGroupException;
+
+  /**
+   * Remove a NotebookItem from the specified group
+   * @param notebookItemId
+   * @param group
+   * @param clientSaveTime
+   * @return
+   */
+  NotebookItem removeNotebookItemFromGroup(
+      Integer notebookItemId, String group, String clientSaveTime);
+
+  /**
+   * Copies NotebookItem in the data store
+   * @param workgroupId
+   * @param parentNotebookItemId
+   * @param clientSaveTime
+   * @return
+   */
+  NotebookItem copyNotebookItem(
+    Integer workgroupId, Integer parentNotebookItemId, String clientSaveTime);
 
   /**
    * @param notificationId id of the notification

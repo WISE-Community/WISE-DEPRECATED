@@ -606,6 +606,14 @@ class DrawController {
       }
     });
 
+    this.$scope.$on('notebookItemChosen', (event, args) => {
+      if (args.requester == this.nodeId + '-' + this.componentId) {
+        const notebookItem = args.notebookItem;
+        const studentWorkId = notebookItem.content.studentWorkIds[0];
+        this.importWorkByStudentWorkId(studentWorkId);
+      }
+    });
+
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }  // end of constructor
 
@@ -1127,6 +1135,8 @@ class DrawController {
         // set the background
         this.drawingTool.setBackgroundImage(this.componentContent.background);
       }
+
+      this.parentStudentWorkIds = null;
     }
   }
 
@@ -1194,6 +1204,10 @@ class DrawController {
 
     // set the submit counter
     studentData.submitCounter = this.submitCounter;
+
+    if (this.parentStudentWorkIds != null) {
+      studentData.parentStudentWorkIds = this.parentStudentWorkIds;
+    }
 
     // set the flag for whether the student submitted this work
     componentState.isSubmit = this.isSubmit;
@@ -1522,135 +1536,6 @@ class DrawController {
   };
 
   /**
-   * The show previous work checkbox was clicked
-   */
-  authoringShowPreviousWorkClicked() {
-
-    if (!this.authoringComponentContent.showPreviousWork) {
-      /*
-       * show previous work has been turned off so we will clear the
-       * show previous work node id, show previous work component id, and
-       * show previous work prompt values
-       */
-      this.authoringComponentContent.showPreviousWorkNodeId = null;
-      this.authoringComponentContent.showPreviousWorkComponentId = null;
-      this.authoringComponentContent.showPreviousWorkPrompt = null;
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * The show previous work node id has changed
-   */
-  authoringShowPreviousWorkNodeIdChanged() {
-
-    if (this.authoringComponentContent.showPreviousWorkNodeId == null ||
-      this.authoringComponentContent.showPreviousWorkNodeId == '') {
-
-      /*
-       * the show previous work node id is null so we will also set the
-       * show previous component id to null
-       */
-      this.authoringComponentContent.showPreviousWorkComponentId = '';
-    }
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * The show previous work component id has changed
-   */
-  authoringShowPreviousWorkComponentIdChanged() {
-
-    // get the show previous work node id
-    var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-
-    // get the show previous work prompt boolean value
-    var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-
-    // get the old show previous work component id
-    var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-
-    // get the new show previous work component id
-    var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-
-    // get the new show previous work component
-    var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-
-    if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
-      // the new show previous work component is empty
-
-      // save the component
-      this.authoringViewComponentChanged();
-    } else if (newShowPreviousWorkComponent != null) {
-
-      // get the current component type
-      var currentComponentType = this.componentContent.type;
-
-      // get the new component type
-      var newComponentType = newShowPreviousWorkComponent.type;
-
-      // check if the component types are different
-      if (newComponentType != currentComponentType) {
-        /*
-         * the component types are different so we will need to change
-         * the whole component
-         */
-
-        // make sure the author really wants to change the component type
-        var answer = confirm(this.$translate('ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE'));
-
-        if (answer) {
-          // the author wants to change the component type
-
-          /*
-           * get the component service so we can make a new instance
-           * of the component
-           */
-          var componentService = this.$injector.get(newComponentType + 'Service');
-
-          if (componentService != null) {
-
-            // create a new component
-            var newComponent = componentService.createComponent();
-
-            // set move over the values we need to keep
-            newComponent.id = this.authoringComponentContent.id;
-            newComponent.showPreviousWork = true;
-            newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
-            newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
-            newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-
-            /*
-             * update the authoring component content JSON string to
-             * change the component
-             */
-            this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-
-            // update the component in the project and save the project
-            this.advancedAuthoringViewComponentChanged();
-          }
-        } else {
-          /*
-           * the author does not want to change the component type so
-           * we will rollback the showPreviousWorkComponentId value
-           */
-          this.authoringComponentContent.showPreviousWorkComponentId = oldShowPreviousWorkComponentId;
-        }
-      } else {
-        /*
-         * the component types are the same so we do not need to change
-         * the component type and can just save
-         */
-        this.authoringViewComponentChanged();
-      }
-    }
-  }
-
-  /**
    * Get all the step node ids in the project
    * @returns all the step node ids
    */
@@ -1791,8 +1676,7 @@ class DrawController {
    * Snip the drawing by converting it to an image
    * @param $event the click event
    */
-  snipDrawing($event) {
-
+  snipDrawing($event, studentWorkId) {
     // get the canvas element
     var canvas = angular.element('#drawingtool_' + this.nodeId + '_' + this.componentId + ' canvas');
 
@@ -1808,7 +1692,29 @@ class DrawController {
       var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
       // create a notebook item with the image populated into it
-      this.NotebookService.addNewItem($event, imageObject);
+      const noteText = null;
+      this.NotebookService.addNote($event, imageObject, noteText, [ studentWorkId ]);
+    }
+  }
+
+  snipButtonClicked($event) {
+    if (this.isDirty) {
+      const deregisterListener = this.$scope.$on('studentWorkSavedToServer',
+        (event, args) => {
+          let componentState = args.studentWork;
+          if (componentState &&
+            this.nodeId === componentState.nodeId &&
+            this.componentId === componentState.componentId) {
+            this.snipDrawing($event, componentState.id);
+            deregisterListener();
+          }
+        }
+      );
+      this.saveButtonClicked(); // trigger a save
+    } else {
+      const studentWork =
+          this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId)
+      this.snipDrawing($event, studentWork.id);
     }
   }
 
@@ -1841,53 +1747,6 @@ class DrawController {
     }
 
     return result;
-  }
-
-  /**
-   * The import previous work checkbox was clicked
-   */
-  authoringImportPreviousWorkClicked() {
-
-    if (!this.authoringComponentContent.importPreviousWork) {
-      /*
-       * import previous work has been turned off so we will clear the
-       * import previous work node id, and import previous work
-       * component id
-       */
-      this.authoringComponentContent.importPreviousWorkNodeId = null;
-      this.authoringComponentContent.importPreviousWorkComponentId = null;
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * The import previous work node id has changed
-   */
-  authoringImportPreviousWorkNodeIdChanged() {
-
-    if (this.authoringComponentContent.importPreviousWorkNodeId == null ||
-      this.authoringComponentContent.importPreviousWorkNodeId == '') {
-
-      /*
-       * the import previous work node id is null so we will also set the
-       * import previous component id to null
-       */
-      this.authoringComponentContent.importPreviousWorkComponentId = '';
-    }
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * The import previous work component id has changed
-   */
-  authoringImportPreviousWorkComponentIdChanged() {
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
   }
 
   /**
@@ -2843,6 +2702,29 @@ class DrawController {
    */
   authoringJSONChanged() {
     this.jsonStringChanged = true;
+  }
+
+  showCopyPublicNotebookItemButton() {
+    return this.ProjectService.isSpaceExists("public");
+  }
+
+  copyPublicNotebookItemButtonClicked(event) {
+    this.$rootScope.$broadcast('openNotebook',
+        { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
+  }
+
+  importWorkByStudentWorkId(studentWorkId) {
+    this.StudentDataService.getStudentWorkById(studentWorkId).then((componentState) => {
+      if (componentState != null) {
+        this.setStudentWork(componentState);
+        this.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+        this.$rootScope.$broadcast('closeNotebook');
+      }
+    });
+  }
+
+  setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
+    this.parentStudentWorkIds = [studentWorkId];
   }
 
   /**

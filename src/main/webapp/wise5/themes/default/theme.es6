@@ -6,7 +6,7 @@ import NotebookComponents from './notebook/notebookComponents';
 
 import './js/webfonts';
 
-let themeModule = angular.module('theme', ['theme.components', 'theme.notebook'])
+const themeModule = angular.module('theme', ['theme.components', 'theme.notebook'])
     .controller(ThemeController.name, ThemeController);
 
 export default themeModule;

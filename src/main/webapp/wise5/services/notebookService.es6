@@ -75,27 +75,36 @@ class NotebookService {
         this.config = angular.merge(this.config, this.notebookConfig);
       }
     }
+    this.publicNotebookItems = {};
   }
 
   editItem(ev, itemId) {
     this.$rootScope.$broadcast('editNote', {itemId: itemId, ev: ev});
   };
 
-  addNewItem(ev, file) {
-    this.$rootScope.$broadcast('addNewNote', {ev: ev, file: file});
+  addNote(ev, file, text = null, studentWorkIds = null, isEditTextEnabled = true, isFileUploadEnabled = true) {
+    this.$rootScope.$broadcast('addNote',
+        {ev: ev, file: file, text: text, studentWorkIds: studentWorkIds,
+          isEditTextEnabled: isEditTextEnabled, isFileUploadEnabled: isFileUploadEnabled});
   };
 
-  deleteItem(itemToDelete) {
-    const items = this.getNotebookByWorkgroup().items;
-    const deletedItems = this.getNotebookByWorkgroup().deletedItems;
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      if (item === itemToDelete) {
-        items.splice(i, 1);
-        deletedItems.push(itemToDelete);
-      }
-    }
-  };
+  deleteItem(itemId) {
+    const noteCopy = angular.copy(this.getLatestNotebookItemByLocalNotebookItemId(itemId));
+    noteCopy.id = null; // set to null so we're creating a new notebook item
+    noteCopy.content.clientSaveTime = Date.parse(new Date());
+    let clientDeleteTime = Date.parse(new Date());
+    return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type,
+        noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
+  }
+
+  reviveItem(itemId) {
+    const noteCopy = angular.copy(this.getLatestNotebookItemByLocalNotebookItemId(itemId));
+    noteCopy.id = null; // set to null so we're creating a new notebook item
+    noteCopy.content.clientSaveTime = Date.parse(new Date());
+    let clientDeleteTime = null; // if delete timestamp is null, then we are in effect un-deleting this note item
+    return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type,
+        noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
+  }
 
   // looks up notebook item by local notebook item id, including deleted notes
   getLatestNotebookItemByLocalNotebookItemId(itemId, workgroupId = null) {
@@ -110,7 +119,7 @@ class NotebookService {
     }
   }
 
-  // returns student's report item if they've done work, or the template if they haven't.
+  // returns student's report item if they've done work, or the template if they haven't
   getLatestNotebookReportItemByReportId(reportId, workgroupId = null) {
     return this.getLatestNotebookItemByLocalNotebookItemId(reportId, workgroupId);
   }
@@ -277,7 +286,7 @@ class NotebookService {
   /**
    * Returns the notebook item with the specified notebook item id.
    */
-  getNotebookItemByNotebookItemId(notebookItemId, workgroupId = null) {
+  getPrivateNotebookItemById(notebookItemId, workgroupId = null) {
     const notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
     if (notebookByWorkgroup != null) {
       const allNotebookItems = notebookByWorkgroup.allItems;
@@ -287,6 +296,37 @@ class NotebookService {
         }
       }
     }
+  }
+
+  getNotebookItemById(notebookItemId, workgroupId = null) {
+    let notebookItem = this.getPrivateNotebookItemById(notebookItemId, workgroupId);
+    if (notebookItem == null) {
+      notebookItem = this.getPublicNotebookItemById(notebookItemId);
+    }
+    return notebookItem;
+  }
+
+  getPublicNotebookItem(group, localNotebookItemId, workgroupId) {
+    const publicNotebookItemsInGroup = this.publicNotebookItems[group];
+    for (let publicNotebookItemInGroup of publicNotebookItemsInGroup) {
+      if (publicNotebookItemInGroup.localNotebookItemId === localNotebookItemId &&
+          publicNotebookItemInGroup.workgroupId === workgroupId) {
+        return publicNotebookItemInGroup;
+      }
+    }
+    return null;
+  }
+
+  getPublicNotebookItemById(id) {
+    for (let group in this.publicNotebookItems) {
+      let itemsInGroup = this.publicNotebookItems[group];
+      for (let itemInGroup of itemsInGroup) {
+        if (id == itemInGroup.id) {
+          return itemInGroup;
+        }
+      }
+    }
+    return null;
   }
 
   getNotebookByWorkgroup(workgroupId = null) {
@@ -304,7 +344,45 @@ class NotebookService {
     return notebookByWorkgroup;
   }
 
-  saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content, clientSaveTime = null, clientDeleteTime = null) {
+  retrievePublicNotebookItems(group = null, periodId = null) {
+    if (this.ConfigService.isPreview()) {
+      // // we are previewing the project, initialize dummy student data
+      // const workgroupId = this.ConfigService.getWorkgroupId();
+      // this.notebooksByWorkgroup = {};
+      // this.notebooksByWorkgroup[workgroupId] = {};
+      // this.notebooksByWorkgroup[workgroupId].allItems = [];
+      // this.notebooksByWorkgroup[workgroupId].items = [];
+      // this.notebooksByWorkgroup[workgroupId].deletedItems = [];
+      // this.groupNotebookItems();
+      // // if we're in preview, don't make any request to the server but pretend we did
+      const deferred = this.$q.defer();
+      deferred.resolve({});
+      return deferred.promise;
+    } else {
+      const config = {
+        method : 'GET',
+        url : this.ConfigService.getStudentNotebookURL() + `/group/${group}`,
+        params : {
+        }
+      };
+      if (periodId != null) {
+        config.params.periodId = periodId;
+      }
+      return this.$http(config).then((response) => {
+        const publicNotebookItemsForGroup = response.data;
+        for (let publicNotebookItemForGroup of publicNotebookItemsForGroup) {
+          publicNotebookItemForGroup.content =
+              angular.fromJson(publicNotebookItemForGroup.content);
+        }
+        this.publicNotebookItems[group] = publicNotebookItemsForGroup;
+        this.$rootScope.$broadcast("publicNotebookItemsRetrieved", {publicNotebookItems: this.publicNotebookItems});
+        return this.publicNotebookItems;
+      });
+    }
+  }
+
+  saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content, groups = [],
+      clientSaveTime = null, clientDeleteTime = null) {
     if (this.ConfigService.isPreview()) {
       return this.$q((resolve, reject) => {
         let notebookItem = {
@@ -315,6 +393,7 @@ class NotebookService {
           title: title,
           type: type,
           workgroupId: this.ConfigService.getWorkgroupId(),
+          groups: angular.toJson(groups),
           clientSaveTime: clientSaveTime,
           clientDeleteTime: clientDeleteTime
         };
@@ -335,8 +414,7 @@ class NotebookService {
         }
 
         this.groupNotebookItems();
-        this.groupNotebookItems();
-        this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId]});
+        this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem});
         resolve();
       });
     } else {
@@ -354,6 +432,7 @@ class NotebookService {
         type: type,
         title: title,
         content: angular.toJson(content),
+        groups: angular.toJson(groups),
         clientSaveTime: Date.parse(new Date()),
         clientDeleteTime: clientDeleteTime
       };
@@ -368,23 +447,111 @@ class NotebookService {
           if (notebookItem.type === "note" || notebookItem.type === "report") {
             notebookItem.content = angular.fromJson(notebookItem.content);
           }
-          // add/update notebook
           let workgroupId = notebookItem.workgroupId;
-          if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
-            // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
-            this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
-          } else {
-            // otherwise, we'll create a new notebook field and add the item to the array
-            this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+          if (this.isNotebookItemPrivate(notebookItem)) {
+            this.updatePrivateNotebookItem(notebookItem, workgroupId);
           }
-
-          this.groupNotebookItems();
-          this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId]});
+          this.$rootScope.$broadcast('notebookUpdated',
+              {notebook: this.notebooksByWorkgroup[workgroupId],
+               notebookItem: notebookItem});
         }
         return result.data;
       });
     }
   };
+
+  updatePrivateNotebookItem(notebookItem, workgroupId) {
+    if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+      // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
+      this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+    } else {
+      // otherwise, we'll create a new notebook field and add the item to the array
+      this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+    }
+    this.groupNotebookItems();
+  }
+
+  isNotebookItemPublic(notebookItem) {
+    return !this.isNotebookItemPrivate(notebookItem);
+  }
+
+  isNotebookItemPrivate(notebookItem) {
+    return notebookItem.groups == null;
+  }
+
+  copyNotebookItem(notebookItemId) {
+    if (this.ConfigService.isPreview()) {
+
+    } else {
+      let config = {
+        method: "POST",
+        url: this.ConfigService.getStudentNotebookURL() + '/parent/' + notebookItemId,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      };
+      let params = {
+        workgroupId: this.ConfigService.getWorkgroupId(),
+        clientSaveTime: Date.parse(new Date())
+      };
+      config.data = $.param(params);
+      return this.$http(config).then((result) => {
+        let notebookItem = result.data;
+        return this.handleNewNotebookItem(notebookItem);
+      });
+    }
+  }
+
+  addNotebookItemToGroup(notebookItemId, group) {
+    if (this.ConfigService.isPreview()) {
+
+    } else {
+      let config = {
+        method: "POST",
+        url: this.ConfigService.getStudentNotebookURL() + '/group/' + group,
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+      };
+      let params = {
+        workgroupId: this.ConfigService.getWorkgroupId(),
+        notebookItemId: notebookItemId,
+        clientSaveTime: Date.parse(new Date())
+      };
+      config.data = $.param(params);
+      return this.$http(config).then((result) => {
+        let notebookItem = result.data;
+        return this.handleNewNotebookItem(notebookItem);
+      });
+    }
+  }
+
+  removeNotebookItemFromGroup(notebookItemId, group) {
+    if (this.ConfigService.isPreview()) {
+
+    } else {
+      let config = {
+        method: "DELETE",
+        url: this.ConfigService.getStudentNotebookURL() + '/group/' + group,
+        params : {
+          workgroupId: this.ConfigService.getWorkgroupId(),
+          notebookItemId: notebookItemId,
+          clientSaveTime: Date.parse(new Date())
+        }
+      };
+      return this.$http(config).then((result) => {
+        let notebookItem = result.data;
+        return this.handleNewNotebookItem(notebookItem);
+      });
+    }
+  }
+
+  handleNewNotebookItem(notebookItem) {
+    if (notebookItem.type === "note" || notebookItem.type === "report") {
+      notebookItem.content = angular.fromJson(notebookItem.content);
+    }
+    let workgroupId = notebookItem.workgroupId;
+    this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+    this.groupNotebookItems();
+    this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem});
+    return notebookItem;
+  }
 
   saveNotebookToggleEvent(isOpen, currentNode) {
     let nodeId = null, componentId = null, componentType = null, category = "Notebook";

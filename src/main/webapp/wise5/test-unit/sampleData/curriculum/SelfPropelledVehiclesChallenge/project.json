@@ -3020,6 +3020,20 @@
       "title": "Improvements"
     }
   ],
+  "spaces": [
+    {
+      "id": "public",
+      "name": "Public",
+      "isPublic": true,
+      "isShowInNotebook": true
+    },
+    {
+      "id": "ideasAboutGlobalClimateChange",
+      "name": "Your ideas about Global Climate Change",
+      "isPublic": true,
+      "isShowInNotebook": false
+    }
+  ],
   "constraints": [],
   "startGroupId": "group0",
   "startNodeId": "node1",

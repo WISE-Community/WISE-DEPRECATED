@@ -4074,149 +4074,13 @@ var GraphController = function () {
       this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     }
   }, {
-    key: 'authoringShowPreviousWorkClicked',
+    key: 'getStepNodeIds',
 
-
-    /**
-     * The show previous work checkbox was clicked
-     */
-    value: function authoringShowPreviousWorkClicked() {
-
-      if (!this.authoringComponentContent.showPreviousWork) {
-        /*
-         * show previous work has been turned off so we will clear the
-         * show previous work node id, show previous work component id, and
-         * show previous work prompt values
-         */
-        this.authoringComponentContent.showPreviousWorkNodeId = null;
-        this.authoringComponentContent.showPreviousWorkComponentId = null;
-        this.authoringComponentContent.showPreviousWorkPrompt = null;
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The show previous work node id has changed
-     */
-
-  }, {
-    key: 'authoringShowPreviousWorkNodeIdChanged',
-    value: function authoringShowPreviousWorkNodeIdChanged() {
-
-      if (this.authoringComponentContent.showPreviousWorkNodeId == null || this.authoringComponentContent.showPreviousWorkNodeId == '') {
-
-        /*
-         * the show previous work node id is null so we will also set the
-         * show previous component id to null
-         */
-        this.authoringComponentContent.showPreviousWorkComponentId = '';
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The show previous work component id has changed
-     */
-
-  }, {
-    key: 'authoringShowPreviousWorkComponentIdChanged',
-    value: function authoringShowPreviousWorkComponentIdChanged() {
-
-      // get the show previous work node id
-      var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-
-      // get the show previous work prompt boolean value
-      var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-
-      // get the old show previous work component id
-      var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-
-      // get the new show previous work component id
-      var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-
-      // get the new show previous work component
-      var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-
-      if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
-        // the new show previous work component is empty
-
-        // save the component
-        this.authoringViewComponentChanged();
-      } else if (newShowPreviousWorkComponent != null) {
-
-        // get the current component type
-        var currentComponentType = this.componentContent.type;
-
-        // get the new component type
-        var newComponentType = newShowPreviousWorkComponent.type;
-
-        // check if the component types are different
-        if (newComponentType != currentComponentType) {
-          /*
-           * the component types are different so we will need to change
-           * the whole component
-           */
-
-          // make sure the author really wants to change the component type
-          var answer = confirm(this.$translate('ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE'));
-          if (answer) {
-            // the author wants to change the component type
-
-            /*
-             * get the component service so we can make a new instance
-             * of the component
-             */
-            var componentService = this.$injector.get(newComponentType + 'Service');
-
-            if (componentService != null) {
-
-              // create a new component
-              var newComponent = componentService.createComponent();
-
-              // set move over the values we need to keep
-              newComponent.id = this.authoringComponentContent.id;
-              newComponent.showPreviousWork = true;
-              newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
-              newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
-              newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-
-              /*
-               * update the authoring component content JSON string to
-               * change the component
-               */
-              this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-
-              // update the component in the project and save the project
-              this.advancedAuthoringViewComponentChanged();
-            }
-          } else {
-            /*
-             * the author does not want to change the component type so
-             * we will rollback the showPreviousWorkComponentId value
-             */
-            this.authoringComponentContent.showPreviousWorkComponentId = oldShowPreviousWorkComponentId;
-          }
-        } else {
-          /*
-           * the component types are the same so we do not need to change
-           * the component type and can just save
-           */
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
 
     /**
      * Get all the step node ids in the project
      * @returns all the step node ids
      */
-
-  }, {
-    key: 'getStepNodeIds',
     value: function getStepNodeIds() {
       var stepNodeIds = this.ProjectService.getNodeIds();
 
@@ -5569,7 +5433,7 @@ var GraphController = function () {
           var imageObject = _this10.UtilService.getImageObjectFromBase64String(img_b64);
 
           // create a notebook item with the image populated into it
-          _this10.NotebookService.addNewItem($event, imageObject);
+          _this10.NotebookService.addNote($event, imageObject);
         });
       }
     }
@@ -5659,61 +5523,6 @@ var GraphController = function () {
       }
 
       return result;
-    }
-
-    /**
-     * The import previous work checkbox was clicked
-     */
-
-  }, {
-    key: 'authoringImportPreviousWorkClicked',
-    value: function authoringImportPreviousWorkClicked() {
-
-      if (!this.authoringComponentContent.importPreviousWork) {
-        /*
-         * import previous work has been turned off so we will clear the
-         * import previous work node id, and import previous work
-         * component id
-         */
-        this.authoringComponentContent.importPreviousWorkNodeId = null;
-        this.authoringComponentContent.importPreviousWorkComponentId = null;
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The import previous work node id has changed
-     */
-
-  }, {
-    key: 'authoringImportPreviousWorkNodeIdChanged',
-    value: function authoringImportPreviousWorkNodeIdChanged() {
-
-      if (this.authoringComponentContent.importPreviousWorkNodeId == null || this.authoringComponentContent.importPreviousWorkNodeId == '') {
-
-        /*
-         * the import previous work node id is null so we will also set the
-         * import previous component id to null
-         */
-        this.authoringComponentContent.importPreviousWorkComponentId = '';
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The import previous work component id has changed
-     */
-
-  }, {
-    key: 'authoringImportPreviousWorkComponentIdChanged',
-    value: function authoringImportPreviousWorkComponentIdChanged() {
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
     }
 
     /**
@@ -6596,9 +6405,10 @@ var GraphController = function () {
         width: 2,
         value: x,
         zIndex: 5
+      };
 
-        // set the plot line into the plot lines array
-      };this.plotLines = [plotLine];
+      // set the plot line into the plot lines array
+      this.plotLines = [plotLine];
 
       /*
        * Call $apply() so that the red plot line position gets updated. If we
@@ -6868,7 +6678,7 @@ var GraphController = function () {
                   mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
                 } else {
                   // the connected component does not have student work
-                  mergedComponentState = this.mergeNullComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
+                  mergedComponentState = this.mergeNullComponentState(mergedComponentState, fields, firstTime);
                 }
               }
             }
@@ -6904,11 +6714,23 @@ var GraphController = function () {
     }
 
     /**
-     * Merge the component state from the connected component with the component
+     * Merge the component state from the connected component into the component
      * state from this component.
      * @param baseComponentState The component state from this component.
-     * @param newComponentState The component state from the connected component.
-     * @param mergeFields The field to look at in the newComponentState.
+     * @param connectedComponentState The component state from the connected component.
+     * @param mergeFields (optional) An array of objects that specify which fields
+     * to look at in the connectedComponentState. Each object can contain 3 fields which
+     * are "name", "when", "action".
+     * - "name" is the name of the field in the connectedComponentState.studentData object
+     *   For example, if connectedComponentState is from a Graph component, we may author the value to be "trials"
+     * - "when" possible values
+     *     "firstTime" means we merge the "name" field only the first time we visit the component
+     *     "always" means we merge the "name" field every time we visit the component
+     * - "action" possible values
+     *     "read" means we look at the value of the "name" field and perform processing on it to generate
+     *       some value that we will set into the baseComponentState
+     *     "write" means we copy the value of the "name" field from connectedComponentState.studentData to
+     *       baseComponentState.studentData
      * @param firstTime Whether this is the first time this component is being
      * visited.
      * @return The merged component state.
@@ -6916,11 +6738,11 @@ var GraphController = function () {
 
   }, {
     key: 'mergeComponentState',
-    value: function mergeComponentState(baseComponentState, newComponentState, mergeFields, firstTime) {
+    value: function mergeComponentState(baseComponentState, connectedComponentState, mergeFields, firstTime) {
       if (mergeFields == null) {
-        if (newComponentState.componentType == 'Graph' && firstTime) {
+        if (connectedComponentState.componentType == 'Graph' && firstTime) {
           // there are no merge fields specified so we will get all of the fields
-          baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(newComponentState.studentData);
+          baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(connectedComponentState.studentData);
         }
       } else {
         // we will merge specific fields
@@ -6937,15 +6759,15 @@ var GraphController = function () {
             var action = mergeField.action;
             if (when == 'firstTime' && firstTime) {
               if (action == 'write') {
-                baseComponentState.studentData[name] = newComponentState.studentData[name];
+                baseComponentState.studentData[name] = connectedComponentState.studentData[name];
               } else if (action == 'read') {
                 // TODO
               }
             } else if (when == 'always') {
               if (action == 'write') {
-                baseComponentState.studentData[name] = newComponentState.studentData[name];
+                baseComponentState.studentData[name] = connectedComponentState.studentData[name];
               } else if (action == 'read') {
-                this.readConnectedComponentField(baseComponentState, newComponentState, name);
+                this.readConnectedComponentField(baseComponentState, connectedComponentState, name);
               }
             }
           }
@@ -6972,7 +6794,8 @@ var GraphController = function () {
      * component but the connected component does not have any work. We will
      * instead use default values.
      * @param baseComponentState The component state from this component.
-     * @param mergeFields The field to look at in the newComponentState.
+     * @param mergeFields (optional) An array of objects that specify which fields
+     * to look at. (see comment for mergeComponentState() for more information).
      * @param firstTime Whether this is the first time this component is being
      * visited.
      * @return The merged component state.
@@ -7008,7 +6831,8 @@ var GraphController = function () {
               if (action == 'write') {
                 // TODO
               } else if (action == 'read') {
-                this.readConnectedComponentField(baseComponentState, newComponentState, name);
+                var connectedComponentState = null;
+                this.readConnectedComponentField(baseComponentState, connectedComponentState, name);
               }
             }
           }
@@ -7033,16 +6857,16 @@ var GraphController = function () {
     /**
      * Read the field from the connected component's component state.
      * @param baseComponentState The component state from this component.
-     * @param newComponentState The component state from the connected component.
+     * @param connectedComponentState The component state from the connected component.
      * @param field The field to look at in the connected component's component
      * state.
      */
 
   }, {
     key: 'readConnectedComponentField',
-    value: function readConnectedComponentField(baseComponentState, newComponentState, field) {
+    value: function readConnectedComponentField(baseComponentState, connectedComponentState, field) {
       if (field == 'selectedCells') {
-        if (newComponentState == null) {
+        if (connectedComponentState == null) {
           // we will default to hide all the trials
           var _iteratorNormalCompletion11 = true;
           var _didIteratorError11 = false;
@@ -7073,7 +6897,7 @@ var GraphController = function () {
            * loop through all the trials and show the ones that are in the
            * selected cells array.
            */
-          var studentData = newComponentState.studentData;
+          var studentData = connectedComponentState.studentData;
           var selectedCells = studentData[field];
           var selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
           var _iteratorNormalCompletion12 = true;

@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var OpenResponseController = function () {
-  function OpenResponseController($filter, $injector, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, CRaterService, NodeService, NotificationService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+  function OpenResponseController($filter, $injector, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, CRaterService, NodeService, NotebookService, NotificationService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     var _this = this;
 
     _classCallCheck(this, OpenResponseController);
@@ -24,6 +24,7 @@ var OpenResponseController = function () {
     this.ConfigService = ConfigService;
     this.CRaterService = CRaterService;
     this.NodeService = NodeService;
+    this.NotebookService = NotebookService;
     this.NotificationService = NotificationService;
     this.OpenResponseService = OpenResponseService;
     this.ProjectService = ProjectService;
@@ -119,6 +120,9 @@ var OpenResponseController = function () {
     // whether the CRater item id is valid
     this.cRaterItemIdIsValid = null;
 
+    // whether the snip button is shown or not
+    this.isSnipButtonVisible = true;
+
     //var scope = this;
     var themePath = this.ProjectService.getThemePath();
 
@@ -199,17 +203,20 @@ var OpenResponseController = function () {
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isDisabled = true;
+        this.isSnipButtonVisible = false;
       } else if (this.mode === 'onlyShowWork') {
         this.onlyShowWork = true;
         this.isPromptVisible = false;
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isDisabled = true;
+        this.isSnipButtonVisible = false;
       } else if (this.mode === 'showPreviousWork') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = false;
         this.isSubmitButtonVisible = false;
         this.isDisabled = true;
+        this.isSnipButtonVisible = false;
       } else if (this.mode === 'authoring') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
@@ -570,6 +577,14 @@ var OpenResponseController = function () {
       }
     });
 
+    this.$scope.$on('notebookItemChosen', function (event, args) {
+      if (args.requester == _this.nodeId + '-' + _this.componentId) {
+        var notebookItem = args.notebookItem;
+        var studentWorkId = notebookItem.content.studentWorkIds[0];
+        _this.importWorkByStudentWorkId(studentWorkId);
+      }
+    });
+
     // load script for this component, if any
     var script = this.componentContent.script;
     if (script != null) {
@@ -867,6 +882,10 @@ var OpenResponseController = function () {
 
       // set the submit counter
       studentData.submitCounter = this.submitCounter;
+
+      if (this.parentStudentWorkIds != null) {
+        studentData.parentStudentWorkIds = this.parentStudentWorkIds;
+      }
 
       // set the flag for whether the student submitted this work
       componentState.isSubmit = this.isSubmit;
@@ -1492,150 +1511,13 @@ var OpenResponseController = function () {
       }
     }
   }, {
-    key: 'authoringShowPreviousWorkClicked',
+    key: 'getStepNodeIds',
 
-
-    /**
-     * The show previous work checkbox was clicked
-     */
-    value: function authoringShowPreviousWorkClicked() {
-
-      if (!this.authoringComponentContent.showPreviousWork) {
-        /*
-         * show previous work has been turned off so we will clear the
-         * show previous work node id, show previous work component id, and
-         * show previous work prompt values
-         */
-        this.authoringComponentContent.showPreviousWorkNodeId = null;
-        this.authoringComponentContent.showPreviousWorkComponentId = null;
-        this.authoringComponentContent.showPreviousWorkPrompt = null;
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The show previous work node id has changed
-     */
-
-  }, {
-    key: 'authoringShowPreviousWorkNodeIdChanged',
-    value: function authoringShowPreviousWorkNodeIdChanged() {
-
-      if (this.authoringComponentContent.showPreviousWorkNodeId == null || this.authoringComponentContent.showPreviousWorkNodeId == '') {
-
-        /*
-         * the show previous work node id is null so we will also set the
-         * show previous component id to null
-         */
-        this.authoringComponentContent.showPreviousWorkComponentId = '';
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The show previous work component id has changed
-     */
-
-  }, {
-    key: 'authoringShowPreviousWorkComponentIdChanged',
-    value: function authoringShowPreviousWorkComponentIdChanged() {
-
-      // get the show previous work node id
-      var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-
-      // get the show previous work prompt boolean value
-      var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-
-      // get the old show previous work component id
-      var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-
-      // get the new show previous work component id
-      var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-
-      // get the new show previous work component
-      var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-
-      if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
-        // the new show previous work component is empty
-
-        // save the component
-        this.authoringViewComponentChanged();
-      } else if (newShowPreviousWorkComponent != null) {
-
-        // get the current component type
-        var currentComponentType = this.componentContent.type;
-
-        // get the new component type
-        var newComponentType = newShowPreviousWorkComponent.type;
-
-        // check if the component types are different
-        if (newComponentType != currentComponentType) {
-          /*
-           * the component types are different so we will need to change
-           * the whole component
-           */
-
-          // make sure the author really wants to change the component type
-          var answer = confirm(this.$translate('ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE'));
-
-          if (answer) {
-            // the author wants to change the component type
-
-            /*
-             * get the component service so we can make a new instance
-             * of the component
-             */
-            var componentService = this.$injector.get(newComponentType + 'Service');
-
-            if (componentService != null) {
-
-              // create a new component
-              var newComponent = componentService.createComponent();
-
-              // set move over the values we need to keep
-              newComponent.id = this.authoringComponentContent.id;
-              newComponent.showPreviousWork = true;
-              newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
-              newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
-              newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-
-              /*
-               * update the authoring component content JSON string to
-               * change the component
-               */
-              this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-
-              // update the component in the project and save the project
-              this.advancedAuthoringViewComponentChanged();
-            }
-          } else {
-            /*
-             * the author does not want to change the component type so
-             * we will rollback the showPreviousWorkComponentId value
-             */
-            this.authoringComponentContent.showPreviousWorkComponentId = oldShowPreviousWorkComponentId;
-          }
-        } else {
-          /*
-           * the component types are the same so we do not need to change
-           * the component type and can just save
-           */
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
 
     /**
      * Get all the step node ids in the project
      * @returns all the step node ids
      */
-
-  }, {
-    key: 'getStepNodeIds',
     value: function getStepNodeIds() {
       var stepNodeIds = this.ProjectService.getNodeIds();
 
@@ -1707,13 +1589,73 @@ var OpenResponseController = function () {
       this.saveMessage.time = time;
     }
   }, {
-    key: 'isCRaterEnabled',
+    key: 'showSnipButton',
+    value: function showSnipButton() {
+      return this.NotebookService.isNotebookEnabled() && this.isSnipButtonVisible;
+    }
+  }, {
+    key: 'snipButtonClicked',
+    value: function snipButtonClicked($event) {
+      var _this5 = this;
 
+      if (this.isDirty) {
+        var deregisterListener = this.$scope.$on('studentWorkSavedToServer', function (event, args) {
+          var componentState = args.studentWork;
+          if (componentState && _this5.nodeId === componentState.nodeId && _this5.componentId === componentState.componentId) {
+            var imageObject = null;
+            var noteText = componentState.studentData.response;
+            var isEditTextEnabled = false;
+            var isFileUploadEnabled = false;
+            _this5.NotebookService.addNote($event, imageObject, noteText, [componentState.id], isEditTextEnabled, isFileUploadEnabled);
+            deregisterListener();
+          }
+        });
+        this.saveButtonClicked(); // trigger a save
+      } else {
+        var studentWork = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+        var imageObject = null;
+        var noteText = studentWork.studentData.response;
+        var isEditTextEnabled = false;
+        var isFileUploadEnabled = false;
+        this.NotebookService.addNote($event, imageObject, noteText, [studentWork.id], isEditTextEnabled, isFileUploadEnabled);
+      }
+    }
+  }, {
+    key: 'showCopyPublicNotebookItemButton',
+    value: function showCopyPublicNotebookItemButton() {
+      return this.ProjectService.isSpaceExists("public");
+    }
+  }, {
+    key: 'copyPublicNotebookItemButtonClicked',
+    value: function copyPublicNotebookItemButtonClicked(event) {
+      this.$rootScope.$broadcast('openNotebook', { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
+    }
+  }, {
+    key: 'importWorkByStudentWorkId',
+    value: function importWorkByStudentWorkId(studentWorkId) {
+      var _this6 = this;
+
+      this.StudentDataService.getStudentWorkById(studentWorkId).then(function (componentState) {
+        if (componentState != null) {
+          _this6.setStudentWork(componentState);
+          _this6.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+          _this6.$rootScope.$broadcast('closeNotebook');
+        }
+      });
+    }
+  }, {
+    key: 'setParentStudentWorkIdToCurrentStudentWork',
+    value: function setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
+      this.parentStudentWorkIds = [studentWorkId];
+    }
 
     /**
      * Check if CRater is enabled for this component
      * @returns whether CRater is enabled for this component
      */
+
+  }, {
+    key: 'isCRaterEnabled',
     value: function isCRaterEnabled() {
       var result = false;
 
@@ -2341,67 +2283,12 @@ var OpenResponseController = function () {
       return this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
     }
   }, {
-    key: 'authoringImportPreviousWorkClicked',
+    key: 'summernoteRubricHTMLChanged',
 
-
-    /**
-     * The import previous work checkbox was clicked
-     */
-    value: function authoringImportPreviousWorkClicked() {
-
-      if (!this.authoringComponentContent.importPreviousWork) {
-        /*
-         * import previous work has been turned off so we will clear the
-         * import previous work node id, and import previous work
-         * component id
-         */
-        this.authoringComponentContent.importPreviousWorkNodeId = null;
-        this.authoringComponentContent.importPreviousWorkComponentId = null;
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The import previous work node id has changed
-     */
-
-  }, {
-    key: 'authoringImportPreviousWorkNodeIdChanged',
-    value: function authoringImportPreviousWorkNodeIdChanged() {
-
-      if (this.authoringComponentContent.importPreviousWorkNodeId == null || this.authoringComponentContent.importPreviousWorkNodeId == '') {
-
-        /*
-         * the import previous work node id is null so we will also set the
-         * import previous component id to null
-         */
-        this.authoringComponentContent.importPreviousWorkComponentId = '';
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The import previous work component id has changed
-     */
-
-  }, {
-    key: 'authoringImportPreviousWorkComponentIdChanged',
-    value: function authoringImportPreviousWorkComponentIdChanged() {
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
 
     /**
      * The author has changed the rubric
      */
-
-  }, {
-    key: 'summernoteRubricHTMLChanged',
     value: function summernoteRubricHTMLChanged() {
 
       // get the summernote rubric html
@@ -3138,7 +3025,7 @@ var OpenResponseController = function () {
   }, {
     key: 'verifyCRaterItemId',
     value: function verifyCRaterItemId(itemId) {
-      var _this5 = this;
+      var _this7 = this;
 
       // clear the Valid/Invalid text
       this.cRaterItemIdIsValid = null;
@@ -3148,10 +3035,10 @@ var OpenResponseController = function () {
 
       this.CRaterService.verifyCRaterItemId(itemId).then(function (isValid) {
         // turn off the "Verifying..." text
-        _this5.isVerifyingCRaterItemId = false;
+        _this7.isVerifyingCRaterItemId = false;
 
         // set the Valid/Invalid text
-        _this5.cRaterItemIdIsValid = isValid;
+        _this7.cRaterItemIdIsValid = isValid;
       });
     }
   }]);
@@ -3161,7 +3048,7 @@ var OpenResponseController = function () {
 
 ;
 
-OpenResponseController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'CRaterService', 'NodeService', 'NotificationService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+OpenResponseController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'CRaterService', 'NodeService', 'NotebookService', 'NotificationService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = OpenResponseController;
 //# sourceMappingURL=openResponseController.js.map

@@ -741,7 +741,7 @@ var EmbeddedController = function () {
           (0, _html2canvas2.default)(modelElement).then(function (canvas) {
             var img_b64 = canvas.toDataURL('image/png');
             var imageObject = _this3.UtilService.getImageObjectFromBase64String(img_b64);
-            _this3.NotebookService.addNewItem($event, imageObject);
+            _this3.NotebookService.addNote($event, imageObject);
           });
         }
       }
@@ -793,92 +793,6 @@ var EmbeddedController = function () {
     key: 'getComponentsByNodeId',
     value: function getComponentsByNodeId(nodeId) {
       return this.ProjectService.getComponentsByNodeId(nodeId);
-    }
-  }, {
-    key: 'authoringShowPreviousWorkClicked',
-    value: function authoringShowPreviousWorkClicked() {
-      if (!this.authoringComponentContent.showPreviousWork) {
-        /*
-         * show previous work has been turned off so we will clear the
-         * show previous work node id, show previous work component id, and
-         * show previous work prompt values
-         */
-        this.authoringComponentContent.showPreviousWorkNodeId = null;
-        this.authoringComponentContent.showPreviousWorkComponentId = null;
-        this.authoringComponentContent.showPreviousWorkPrompt = null;
-
-        this.authoringViewComponentChanged();
-      }
-    }
-  }, {
-    key: 'authoringShowPreviousWorkNodeIdChanged',
-    value: function authoringShowPreviousWorkNodeIdChanged() {
-      if (this.authoringComponentContent.showPreviousWorkNodeId == null || this.authoringComponentContent.showPreviousWorkNodeId == '') {
-        /*
-         * the show previous work node id is null so we will also set the
-         * show previous component id to null
-         */
-        this.authoringComponentContent.showPreviousWorkComponentId = '';
-      }
-      this.authoringViewComponentChanged();
-    }
-  }, {
-    key: 'authoringShowPreviousWorkComponentIdChanged',
-    value: function authoringShowPreviousWorkComponentIdChanged() {
-      var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-      var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-      var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-      var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-      var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-
-      if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
-        // save the component
-        this.authoringViewComponentChanged();
-      } else if (newShowPreviousWorkComponent != null) {
-        var currentComponentType = this.componentContent.type;
-        var newComponentType = newShowPreviousWorkComponent.type;
-        if (newComponentType != currentComponentType) {
-          /*
-           * the component types are different so we will need to change
-           * the whole component
-           */
-
-          if (confirm(this.$translate('ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE'))) {
-            /*
-             * get the component service so we can make a new instance
-             * of the component
-             */
-            var componentService = this.$injector.get(newComponentType + 'Service');
-            if (componentService != null) {
-              var newComponent = componentService.createComponent();
-              newComponent.id = this.authoringComponentContent.id;
-              newComponent.showPreviousWork = true;
-              newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
-              newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
-              newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-
-              /*
-               * update the authoring component content JSON string to
-               * change the component
-               */
-              this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-              this.advancedAuthoringViewComponentChanged();
-            }
-          } else {
-            /*
-             * the author does not want to change the component type so
-             * we will rollback the showPreviousWorkComponentId value
-             */
-            this.authoringComponentContent.showPreviousWorkComponentId = oldShowPreviousWorkComponentId;
-          }
-        } else {
-          /*
-           * the component types are the same so we do not need to change
-           * the component type and can just save
-           */
-          this.authoringViewComponentChanged();
-        }
-      }
     }
   }, {
     key: 'componentHasWork',
@@ -1039,39 +953,6 @@ var EmbeddedController = function () {
         studentWork.allStudentWorkFromOtherComponents = allStudentWorkFromOtherComponents;
       }
       return studentWork;
-    }
-  }, {
-    key: 'authoringImportPreviousWorkClicked',
-    value: function authoringImportPreviousWorkClicked() {
-      if (!this.authoringComponentContent.importPreviousWork) {
-        /*
-         * import previous work has been turned off so we will clear the
-         * import previous work node id, and import previous work
-         * component id
-         */
-        this.authoringComponentContent.importPreviousWorkNodeId = null;
-        this.authoringComponentContent.importPreviousWorkComponentId = null;
-
-        this.authoringViewComponentChanged();
-      }
-    }
-  }, {
-    key: 'authoringImportPreviousWorkNodeIdChanged',
-    value: function authoringImportPreviousWorkNodeIdChanged() {
-      if (this.authoringComponentContent.importPreviousWorkNodeId == null || this.authoringComponentContent.importPreviousWorkNodeId == '') {
-        /*
-         * the import previous work node id is null so we will also set the
-         * import previous component id to null
-         */
-        this.authoringComponentContent.importPreviousWorkComponentId = '';
-      }
-
-      this.authoringViewComponentChanged();
-    }
-  }, {
-    key: 'authoringImportPreviousWorkComponentIdChanged',
-    value: function authoringImportPreviousWorkComponentIdChanged() {
-      this.authoringViewComponentChanged();
     }
   }, {
     key: 'summernoteRubricHTMLChanged',

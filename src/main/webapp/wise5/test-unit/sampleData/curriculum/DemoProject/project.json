@@ -1688,6 +1688,14 @@
       ]
     }
   ],
+  "spaces": [
+    {
+      "id": "sharePictures",
+      "name": "Public",
+      "isPublic": true,
+      "isShowInNotebook": false
+    }
+  ],
   "constraints": [],
   "startGroupId": "group0",
   "startNodeId": "node1",
