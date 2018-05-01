@@ -1097,53 +1097,38 @@ class ProjectService {
    * @returns whether the node is affected by the constraint
    */
   isNodeAffectedByConstraint(node, constraint) {
-    let result = false;
-    if (node != null && constraint != null) {
-      // check if we have previously calculated the result before
-      const rememberedResult = this.getIsNodeAffectedByConstraintResult(node.id, constraint.id, result);
-      if (rememberedResult != null) {
-        // we have calculated the result before
+    const cachedResult =
+        this.getCachedIsNodeAffectedByConstraintResult(node.id, constraint.id);
+    if (cachedResult != null) {
+      return cachedResult;
+    } else {
+      let result = false;
+      const nodeId = node.id;
+      const targetId = constraint.targetId;
+      const action = constraint.action;
 
-        // use the remembered result
-        result = rememberedResult;
+      if (action === 'makeAllNodesAfterThisNotVisible' &&
+          this.isNodeIdAfter(targetId, node.id)) {
+        result = true;
+      } else if (action === 'makeAllNodesAfterThisNotVisitable' &&
+          this.isNodeIdAfter(targetId, node.id)) {
+        result = true;
       } else {
-        // we have not calculated the result before
-        const nodeId = node.id;
-        const targetId = constraint.targetId;
-        const action = constraint.action;
-
-        if (action === 'makeAllNodesAfterThisNotVisible') {
-          if (this.isNodeIdAfter(targetId, node.id)) {
+        const targetNode = this.getNodeById(targetId);
+        if (targetNode != null) {
+          const nodeType = targetNode.type;
+          if (nodeType === 'node' && nodeId === targetId) {
             result = true;
-          }
-        } else if (action === 'makeAllNodesAfterThisNotVisitable') {
-          if (this.isNodeIdAfter(targetId, node.id)) {
+          } else if (nodeType === 'group' &&
+              (nodeId === targetId || this.isNodeDescendentOfGroup(node, targetNode))) {
             result = true;
-          }
-        } else {
-          const targetNode = this.getNodeById(targetId);
-          if (targetNode != null) {
-            const nodeType = targetNode.type;
-            if (nodeType === 'node') {
-              if (nodeId === targetId) {
-                result = true;
-              }
-            } else if (nodeType === 'group') {
-              if (nodeId === targetId) {
-                result = true;
-              }
-              if (this.isNodeDescendentOfGroup(node, targetNode)) {
-                result = true;
-              }
-            }
           }
         }
-
-        // remember the result so we can look it up in the future
-        this.setIsNodeAffectedByConstraintResult(node.id, constraint.id, result);
       }
+
+      this.cacheIsNodeAffectedByConstraintResult(node.id, constraint.id, result);
+      return result;
     }
-    return result;
   };
 
   /**
@@ -1370,37 +1355,6 @@ class ProjectService {
     }
     return false;
   }
-
-  /**
-   * Get the transitions that traverse from the fromNodeId and to the toNodeId
-   * @param fromNodeId the from node id
-   * @param toNodeId the to node id
-   * @returns an array of transitions that traverse from the fromNodeId and
-   * to the toNodeId
-   */
-  getTransitionsByFromAndToNodeId(fromNodeId, toNodeId) {
-    const transitionsResults = [];
-    if (fromNodeId != null && toNodeId != null) {
-      const node = this.getNodeById(fromNodeId);
-      if (node != null) {
-        const transitionLogic = node.transitionLogic;
-        if (transitionLogic != null) {
-          const transitions = transitionLogic.transitions;
-          if (transitions != null) {
-            for (let transition of transitions) {
-              if (transition != null) {
-                const to = transition.to;
-                if (toNodeId === to) {
-                  transitionsResults.push(transition);
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    return transitionsResults;
-  };
 
   /**
    * Retrieves the project JSON from Config.projectURL and returns it.
@@ -4103,58 +4057,6 @@ class ProjectService {
   }
 
   /**
-   * Turn on the save button in all the components in the step
-   * @param nodeId the node id
-   */
-  turnOnSaveButtonInComponents(nodeId) {
-    const node = this.getNodeById(nodeId);
-    if (node != null) {
-      const components = node.components;
-      if (components != null) {
-        for (let component of components) {
-          if (component != null) {
-            const componentType = component.type;
-            if (componentType != null) {
-              const service = this.$injector.get(componentType + 'Service');
-              if (service != null) {
-                if (service.componentUsesSaveButton()) {
-                  component.showSaveButton = true;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * Turn off the submit button in all the components in the step
-   * @param nodeId the node id
-   */
-  turnOffSaveButtonInComponents(nodeId) {
-    const node = this.getNodeById(nodeId);
-    if (node != null) {
-      const components = node.components;
-      if (components != null) {
-        for (let component of components) {
-          if (component != null) {
-            const componentType = component.type;
-            if (componentType != null) {
-              const service = this.$injector.get(componentType + 'Service');
-              if (service != null) {
-                if (service.componentUsesSaveButton()) {
-                  component.showSaveButton = false;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  /**
    * Add the component to the node
    * @param node the node
    * @param component the component
@@ -4321,31 +4223,21 @@ class ProjectService {
 
   /**
    * Get the max score for the node
-   * @param nodeId the node id
-   * @returns the max score for the node
+   * @param nodeId the node id which can be a step or an activity
+   * @returns the max score for the node which can be null or a number
+   * if null, author/teacher has not set a max score for the node
    */
   getMaxScoreForNode(nodeId) {
     let maxScore = null;
-    const node = this.getNodeById(nodeId);
-    if (node != null) {
-      const components = node.components;
-      if (components != null) {
-        for (let component of components) {
-          if (component != null) {
-            const componentMaxScore = component.maxScore;
-
-            // check if the component has a max score
-            if (componentMaxScore != null) {
-              // make sure the max score is a valid number
-              if (!isNaN(componentMaxScore)) {
-                if (maxScore == null) {
-                  maxScore = componentMaxScore;
-                } else {
-                  // accumulate the max score
-                  maxScore += componentMaxScore;
-                }
-              }
-            }
+    if (!this.isGroupNode(nodeId)) {
+      const node = this.getNodeById(nodeId);
+      for (let component of node.components) {
+        const componentMaxScore = component.maxScore;
+        if (typeof componentMaxScore == 'number') {
+          if (maxScore == null) {
+            maxScore = componentMaxScore;
+          } else {
+            maxScore += componentMaxScore;
           }
         }
       }
@@ -5147,51 +5039,6 @@ class ProjectService {
   }
 
   /**
-   * Remove the node from the active nodes
-   * @param nodeId the node to remove
-   * @returns the node that we have removed
-   */
-  removeNodeFromActiveNodes(nodeId) {
-    let node = null;
-    if (nodeId != null) {
-      const activeNodes = this.project.nodes;
-      if (activeNodes != null) {
-        for (let a = 0; a < activeNodes.length; a++) {
-          const activeNode = activeNodes[a];
-          if (activeNode != null) {
-            if (nodeId === activeNode.id) {
-              node = activeNode;
-
-              // remove the node from the array
-              activeNodes.splice(a, 1);
-
-              if (activeNode.type == 'group') {
-                this.removeChildNodesFromActiveNodes(activeNode);
-              }
-              break;
-            }
-          }
-        }
-      }
-    }
-    return node;
-  }
-
-  /**
-   * Move the child nodes of a group from the active nodes and put them into
-   * the inactive nodes.
-   * @param node The group node.
-   */
-  removeChildNodesFromActiveNodes(node) {
-    if (node != null) {
-      let childIds = node.ids;
-      for (let childId of childIds) {
-        this.removeNodeFromActiveNodes(childId);
-      }
-    }
-  }
-
-  /**
    * Remove the node from the inactive nodes array
    * @param nodeId the node to remove
    * @returns the node that was removed
@@ -5413,188 +5260,6 @@ class ProjectService {
             let childNode = this.removeNodeFromInactiveNodes(childId);
             this.addNode(childNode);
           }
-        }
-      }
-    }
-  }
-
-  /**
-   * Move the node to the inactive nodes array
-   * @param node the node to move
-   * @param nodeIdToInsertAfter place the node after this
-   */
-  moveToInactive(node, nodeIdToInsertAfter) {
-    if (node != null) {
-      if (this.isActive(node.id)) {
-        // the node is active so we will move it to the inactive array
-
-        this.removeNodeFromActiveNodes(node.id);
-
-        // add the node to the inactive array
-        this.addInactiveNode(node, nodeIdToInsertAfter);
-      }
-    }
-  }
-
-  /**
-   * Move the node from active to inside an inactive group
-   * @param node the node to move
-   * @param nodeIdToInsertInside place the node inside this
-   */
-  moveFromActiveToInactiveInsertInside(node, nodeIdToInsertInside) {
-    this.removeNodeFromActiveNodes(node.id);
-
-    // add the node to the inactive array
-    this.addInactiveNodeInsertInside(node, nodeIdToInsertInside);
-  }
-
-  /**
-   * Move the node from inactive to inside an inactive group
-   * @param node the node to move
-   * @param nodeIdToInsertInside place the node inside this
-   */
-  moveFromInactiveToInactiveInsertInside(node, nodeIdToInsertInside) {
-    this.removeNodeFromInactiveNodes(node.id);
-
-    if (this.isGroupNode(node.id)) {
-      /*
-       * remove the group's child nodes from our data structures so that we can
-       * add them back in later
-       */
-      let childIds = node.ids;
-      for (let childId of childIds) {
-        let childNode = this.getNodeById(childId);
-        let inactiveNodesIndex = this.project.inactiveNodes.indexOf(childNode);
-        if (inactiveNodesIndex != -1) {
-          this.project.inactiveNodes.splice(inactiveNodesIndex, 1);
-        }
-        let inactiveStepNodesIndex = this.inactiveStepNodes.indexOf(childNode);
-        if (inactiveStepNodesIndex != -1) {
-          this.inactiveStepNodes.splice(inactiveStepNodesIndex, 1);
-        }
-      }
-    }
-
-    // add the node to the inactive array
-    this.addInactiveNodeInsertInside(node, nodeIdToInsertInside);
-  }
-
-  /**
-   * Add the node to the inactive nodes array
-   * @param node the node to move
-   * @param nodeIdToInsertAfter place the node after this
-   */
-  addInactiveNode(node, nodeIdToInsertAfter) {
-    if (node != null) {
-      const inactiveNodes = this.project.inactiveNodes;
-
-      if (inactiveNodes != null) {
-        // clear the transitions from this node
-        if (node.transitionLogic != null) {
-          node.transitionLogic.transitions = [];
-        }
-
-        if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveNodes' || nodeIdToInsertAfter === 'inactiveSteps' || nodeIdToInsertAfter === 'inactiveGroups') {
-          // put the node at the beginning of the inactive steps
-          inactiveNodes.splice(0, 0, node);
-        } else {
-          // put the node after one of the inactive nodes
-
-          let added = false;
-          for (let i = 0; i < inactiveNodes.length; i++) {
-            const inactiveNode = inactiveNodes[i];
-            if (inactiveNode != null) {
-              if (nodeIdToInsertAfter === inactiveNode.id) {
-                let parentGroup = this.getParentGroup(nodeIdToInsertAfter);
-                if (parentGroup != null) {
-                  this.insertNodeAfterInGroups(node.id, nodeIdToInsertAfter);
-                  this.insertNodeAfterInTransitions(node, nodeIdToInsertAfter);
-                }
-                // we have found the position to place the node
-                inactiveNodes.splice(i + 1, 0, node);
-                added = true;
-              }
-            }
-          }
-
-          if (!added) {
-            /*
-             * we haven't added the node yet so we will just add it
-             * to the end of the array
-             */
-            inactiveNodes.push(node);
-          }
-        }
-
-        if (node.type == 'group') {
-          this.inactiveGroupNodes.push(node.id);
-          this.addGroupChildNodesToInactive(node);
-        } else {
-          this.inactiveStepNodes.push(node.id);
-        }
-      }
-    }
-  }
-
-  /**
-   * Add the node to the inactive nodes array
-   * @param node the node to move
-   * @param nodeIdToInsertInside place the node inside this group
-   */
-  addInactiveNodeInsertInside(node, nodeIdToInsertInside) {
-    if (node != null) {
-      const inactiveNodes = this.project.inactiveNodes;
-      const inactiveGroups = this.getInactiveGroupNodes();
-
-      if (inactiveNodes != null) {
-        // clear the transitions from this node
-        if (node.transitionLogic != null) {
-          node.transitionLogic.transitions = [];
-        }
-
-        if (nodeIdToInsertInside == null || nodeIdToInsertInside === 'inactiveNodes' || nodeIdToInsertInside === 'inactiveSteps' || nodeIdToInsertInside === 'inactiveGroups') {
-          // put the node at the beginning of the inactive steps
-          inactiveNodes.splice(0, 0, node);
-        } else {
-          // put the node after one of the inactive nodes
-
-          let added = false;
-          for (let inactiveGroup of inactiveGroups) {
-            if (nodeIdToInsertInside == inactiveGroup.id) {
-              // we have found the group we want to insert into
-              this.insertNodeInsideInTransitions(node.id, nodeIdToInsertInside);
-              this.insertNodeInsideInGroups(node.id, nodeIdToInsertInside);
-
-              /*
-               * Loop through the inactive nodes array which contains all
-               * inactive groups and inactive nodes in a flattened array.
-               * Find the inactive group and place the node right after it
-               * for the sake of keeping things organized.
-               */
-              for (let i = 0; i < inactiveNodes.length; i++) {
-                let inactiveNode = inactiveNodes[i];
-                if (nodeIdToInsertInside == inactiveNode.id) {
-                  inactiveNodes.splice(i + 1, 0, node);
-                  added = true;
-                }
-              }
-            }
-          }
-
-          if (!added) {
-            /*
-             * we haven't added the node yet so we will just add it
-             * to the end of the array
-             */
-            inactiveNodes.push(node);
-          }
-        }
-
-        if (node.type == 'group') {
-          this.inactiveGroupNodes.push(node.id);
-          this.addGroupChildNodesToInactive(node);
-        } else {
-          this.inactiveStepNodes.push(node.id);
         }
       }
     }
@@ -6819,7 +6484,7 @@ class ProjectService {
    * @param constraintId the constraint id
    * @param whether the node is affected by the constraint
    */
-  setIsNodeAffectedByConstraintResult(nodeId, constraintId, result) {
+  cacheIsNodeAffectedByConstraintResult(nodeId, constraintId, result) {
     this.isNodeAffectedByConstraintResult[nodeId + '-' + constraintId] = result;
   }
 
@@ -6831,7 +6496,7 @@ class ProjectService {
    * @return Return the result if we have calculated the result before. If we
    * have not calculated the result before, we will return null.
    */
-  getIsNodeAffectedByConstraintResult(nodeId, constraintId) {
+  getCachedIsNodeAffectedByConstraintResult(nodeId, constraintId) {
     return this.isNodeAffectedByConstraintResult[nodeId + '-' + constraintId];
   }
 

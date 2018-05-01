@@ -366,7 +366,7 @@ var NodeAuthoringController = function () {
         _this.node.showSubmitButton = false;
 
         // turn on the save buttons for all components in this step
-        _this.ProjectService.turnOnSaveButtonInComponents(_this.node.id);
+        _this.ProjectService.turnOnSaveButtonForAllComponents(_this.node);
       } else {
         /*
          * a component is hiding their submit button so we may need
@@ -380,7 +380,7 @@ var NodeAuthoringController = function () {
            */
 
           // turn on the save buttons for all components in this step
-          _this.ProjectService.turnOnSaveButtonInComponents(_this.node.id);
+          _this.ProjectService.turnOnSaveButtonForAllComponents(_this.node);
         } else {
           /*
            * no components in this step show their submit button so we
@@ -390,7 +390,7 @@ var NodeAuthoringController = function () {
           _this.node.showSubmitButton = false;
 
           // turn off the save buttons for all the components
-          _this.ProjectService.turnOffSaveButtonInComponents(_this.node.id);
+          _this.ProjectService.turnOffSaveButtonForAllComponents(_this.node);
         }
       }
 

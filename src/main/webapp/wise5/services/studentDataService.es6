@@ -427,64 +427,6 @@ class StudentDataService {
   };
 
   /**
-   * Evaluate the guided navigation constraint
-   * @param node the node
-   * @param constraintForNode the constraint object
-   * @returns whether the node can be visited or not
-   */
-  evaluateGuidedNavigationConstraint(node, constraintForNode) {
-    let result = false;
-    if (node != null) {
-      const nodeId = node.id;
-
-      if (this.isNodeVisited(nodeId)) {
-        // the node has been visited before so it should be clickable
-        result = true;
-      } else {
-        // get all the nodes that have been visited
-        const visitedNodes = this.getVisitedNodesHistory();
-
-        let transitionsToNodeId = [];
-
-        for (let visitedNodeId of visitedNodes) {
-          // get the transitions from the visited node to the node status node
-          const transitions = this.ProjectService.getTransitionsByFromAndToNodeId(visitedNodeId, nodeId);
-
-          // TODO: check if the transition can be used by the student
-
-          // concat the node ids
-          transitionsToNodeId = transitionsToNodeId.concat(transitions);
-        }
-
-        if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
-          // there is a transition between the current node and the node status node
-
-          /*
-           * there are transitions from the current node to the node status node so
-           * the node status node is clickable
-           */
-          result = true;
-        } else {
-          /*
-           * there is no transition between the visited nodes and the node status node
-           * so we will set the node to be not clickable
-           */
-          result = false;
-        }
-
-        if (this.ProjectService.isStartNode(node)) {
-          /*
-           * the node is the start node of the project or a start node of a group
-           * so we will make it clickable
-           */
-          result = true;
-        }
-      }
-    }
-    return result;
-  };
-
-  /**
    * Evaluate the node constraint
    * @param node the node
    * @param constraintForNode the constraint object

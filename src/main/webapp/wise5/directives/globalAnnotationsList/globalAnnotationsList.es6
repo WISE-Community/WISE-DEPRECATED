@@ -56,8 +56,6 @@ class GlobalAnnotationsListController {
 
             let nodeId = latestGlobalAnnotationGroup.nodeId;
             this.nodeTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-
-            let maxScore = this.ProjectService.getMaxScoreForNode(nodeId);
         }
     }
 
