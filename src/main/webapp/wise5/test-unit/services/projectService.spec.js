@@ -16,25 +16,25 @@ describe('ProjectService Unit Test', function () {
 
   beforeEach(_angular2.default.mock.module(_main2.default.name));
 
+  var demoProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
+  var scootersProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project'];
+
   var ConfigService = void 0,
       ProjectService = void 0,
       $rootScope = void 0,
-      $httpBackend = void 0;
+      $httpBackend = void 0,
+      demoProjectJSON = void 0,
+      scootersProjectJSON = void 0;
   beforeEach(inject(function (_ConfigService_, _ProjectService_, _$rootScope_, _$httpBackend_) {
     ConfigService = _ConfigService_;
     ProjectService = _ProjectService_;
     $rootScope = _$rootScope_;
     $httpBackend = _$httpBackend_;
+    demoProjectJSON = JSON.parse(JSON.stringify(demoProjectJSONOriginal));
+    scootersProjectJSON = JSON.parse(JSON.stringify(scootersProjectJSONOriginal));
   }));
 
   describe('ProjectService', function () {
-    // Load sample projects
-    var demoProjectJSON = window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
-    var demoProjectJSONString = JSON.stringify(demoProjectJSON);
-    var scootersProjectJSON = window.mocks['test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project'];
-    var scootersProjectJSONString = JSON.stringify(scootersProjectJSON);
-    var invalidProjectJSONString = "{'a':1";
-
     var projectIdDefault = 1;
     var projectBaseURL = "http://localhost:8080/curriculum/12345/";
     var projectURL = projectBaseURL + "project.json";
@@ -42,10 +42,8 @@ describe('ProjectService Unit Test', function () {
     var commitMessageDefault = "Made simple changes";
     var defaultCommitHistory = [{ "id": "abc", "message": "first commit" }, { "id": "def", "message": "second commit" }];
     var wiseBaseURL = "/wise";
-
-    // i18n
-    var i18nURL_common_en = "wise5/i18n/common/i18n_en.json";
-    var i18nURL_vle_en = "wise5/i18n/vle/i18n_en.json";
+    var i18nURL_common_en = "wise5/i18n/i18n_en.json";
+    var i18nURL_vle_en = "wise5/vle/i18n/i18n_en.json";
     var sampleI18N_common_en = window.mocks['test-unit/sampleData/i18n/common/i18n_en'];
     var sampleI18N_vle_en = window.mocks['test-unit/sampleData/i18n/vle/i18n_en'];
 
@@ -118,14 +116,18 @@ describe('ProjectService Unit Test', function () {
       spyOn(ConfigService, "getProjectId").and.returnValue(projectIdDefault);
       spyOn(ConfigService, "getConfigParam").and.returnValue(saveProjectURL);
       ProjectService.setProject(scootersProjectJSON);
+      $httpBackend.when('GET', /^wise5\/components\/.*/).respond(200, '');
+      //$httpBackend.when('GET', 'wise5/components/animation/i18n/i18n_en.json').respond(200, '');
+      //$httpBackend.when('GET', 'wise5/components/audioOscillator/i18n/i18n_en.json').respond(200, '');
       $httpBackend.when('POST', saveProjectURL).respond({ data: defaultCommitHistory });
       $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
       $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
       var newProjectIdActualPromise = ProjectService.saveProject(commitMessageDefault);
       expect(ConfigService.getConfigParam).toHaveBeenCalledWith("saveProjectURL");
       expect(ConfigService.getProjectId).toHaveBeenCalled();
-      $httpBackend.flush();
       $httpBackend.expectPOST(saveProjectURL);
+      $httpBackend.flush();
+      $httpBackend.verifyNoOutstandingExpectation(false); // <-- no unnecessary $digest
     });
 
     it('should not save project when Config.saveProjectURL is undefined', function () {

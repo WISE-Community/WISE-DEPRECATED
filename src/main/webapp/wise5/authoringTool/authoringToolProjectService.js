@@ -242,32 +242,29 @@ var AuthoringToolProjectService = function (_ProjectService) {
      * Returns null if Config.registerNewProjectURL is undefined.
      * Throws an error if projectJSONString is invalid JSON string
      */
-    value: function registerNewProject(projectJSONString, commitMessage) {
+    value: function registerNewProject(projectJSONString) {
+      var commitMessage = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
+
       var registerNewProjectURL = this.ConfigService.getConfigParam('registerNewProjectURL');
       if (registerNewProjectURL == null) {
         return null;
       }
 
       try {
-        // Try parsing the JSON string and throw an error if there's an issue parsing it.
         JSON.parse(projectJSONString);
       } catch (e) {
         throw new Error("Invalid projectJSONString.");
       }
 
-      if (!commitMessage) {
-        commitMessage = "";
-      }
-
-      var httpParams = {};
-      httpParams.method = 'POST';
-      httpParams.url = registerNewProjectURL;
-      httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-
-      var params = {};
-      params.commitMessage = commitMessage;
-      params.projectJSONString = projectJSONString;
-      httpParams.data = $.param(params);
+      var httpParams = {
+        method: 'POST',
+        url: registerNewProjectURL,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({
+          commitMessage: commitMessage,
+          projectJSONString: projectJSONString
+        })
+      };
 
       return this.$http(httpParams).then(function (result) {
         var projectId = result.data;

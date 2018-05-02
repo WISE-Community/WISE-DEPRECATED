@@ -205,32 +205,27 @@ class AuthoringToolProjectService extends ProjectService {
    * Returns null if Config.registerNewProjectURL is undefined.
    * Throws an error if projectJSONString is invalid JSON string
    */
-  registerNewProject(projectJSONString, commitMessage) {
+  registerNewProject(projectJSONString, commitMessage = "") {
     const registerNewProjectURL = this.ConfigService.getConfigParam('registerNewProjectURL');
     if (registerNewProjectURL == null) {
       return null;
     }
 
     try {
-      // Try parsing the JSON string and throw an error if there's an issue parsing it.
       JSON.parse(projectJSONString);
     } catch (e) {
       throw new Error("Invalid projectJSONString.");
     }
 
-    if (!commitMessage) {
-      commitMessage = "";
-    }
-
-    const httpParams = {};
-    httpParams.method = 'POST';
-    httpParams.url = registerNewProjectURL;
-    httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-
-    const params = {};
-    params.commitMessage = commitMessage;
-    params.projectJSONString = projectJSONString;
-    httpParams.data = $.param(params);
+    const httpParams = {
+      method: 'POST',
+      url: registerNewProjectURL,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({
+        commitMessage: commitMessage,
+        projectJSONString: projectJSONString
+      })
+    };
 
     return this.$http(httpParams).then((result) => {
       const projectId = result.data;
