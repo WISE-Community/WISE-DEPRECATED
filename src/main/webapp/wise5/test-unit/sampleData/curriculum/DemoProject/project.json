@@ -8,7 +8,18 @@
       "ids": [
         "group1",
         "group2"
-      ]
+      ],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "group1"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      }
     },
     {
       "id": "group1",
@@ -35,7 +46,18 @@
         "node17",
         "node18",
         "node19"
-      ]
+      ],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "group2"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      }
     },
     {
       "id": "node1",

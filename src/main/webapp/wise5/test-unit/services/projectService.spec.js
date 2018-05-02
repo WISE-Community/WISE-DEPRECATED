@@ -452,6 +452,22 @@ describe('ProjectService Unit Test', function () {
       ProjectService.removeSpace("sharePictures");
       expect(spaces.length).toEqual(0);
     });
+
+    it('should check order between step and step/group', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.isNodeIdAfter('node1', 'node2')).toEqual(true);
+      expect(ProjectService.isNodeIdAfter('node2', 'node1')).toEqual(false);
+      expect(ProjectService.isNodeIdAfter('node1', 'group2')).toEqual(true);
+      expect(ProjectService.isNodeIdAfter('node20', 'group1')).toEqual(false);
+    });
+
+    it('should check order between group and step/group', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.isNodeIdAfter('group1', 'group2')).toEqual(true);
+      expect(ProjectService.isNodeIdAfter('group2', 'group1')).toEqual(false);
+      expect(ProjectService.isNodeIdAfter('group1', 'node20')).toEqual(true);
+      expect(ProjectService.isNodeIdAfter('group2', 'node1')).toEqual(false);
+    });
   });
 });
 //# sourceMappingURL=projectService.spec.js.map

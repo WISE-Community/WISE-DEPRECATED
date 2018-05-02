@@ -1132,84 +1132,45 @@ class ProjectService {
   };
 
   /**
-   * Check if a node id comes after another node id in the project
-   * @param nodeIdBefore the node id before
-   * @param nodeIdAfter the node id after
+   * Check if a node id comes after another node id in the project.
+   * @param nodeId1 The node id of a step or group.
+   * @param nodeId2 The node id of a step or group.
+   * @returns {boolean} True iff nodeId2 comes after nodeId1.
    */
-  isNodeIdAfter(nodeIdBefore, nodeIdAfter) {
-    let result = false;
-    if (nodeIdBefore != null && nodeIdAfter != null) {
-      if (this.isApplicationNode(nodeIdBefore)) {
-        // the node id before is a step
-
-        // get all the paths from the beforeNodeId to the end of the project
-        const pathsToEnd = this.getAllPaths([], nodeIdBefore, true);
-
-        if (pathsToEnd != null) {
-          for (let pathToEnd of pathsToEnd) {
-            if (pathToEnd != null) {
-              /*
-               * remove the first node id and its parent id because
-               * we will check the remaining node ids in the array
-               * for the nodeIdAfter
-               */
-
-              // get the index of the node id before
-              const index = pathToEnd.indexOf(nodeIdBefore);
-
-              if (index != -1) {
-                // remove the node id before
-                pathToEnd.splice(index, 1);
-              }
-
-              // get the parent group of the node id before
-              const parentGroup = this.getParentGroup(nodeIdBefore);
-
-              if (parentGroup != null) {
-                // remove the parent group of the node id before
-                const parentGroupId = parentGroup.id;
-                const parentGroupIndex = pathToEnd.indexOf(parentGroupId);
-                if (parentGroupIndex != -1) {
-                  pathToEnd.splice(parentGroupIndex, 1);
-                }
-              }
-
-              if (pathToEnd.indexOf(nodeIdAfter) != -1) {
-                // we have found the nodeIdAfter in the path to the end of the project
-                result = true;
-              }
-            }
-          }
+  isNodeIdAfter(nodeId1, nodeId2) {
+    if (this.isApplicationNode(nodeId1)) {
+      const pathsFromNodeId1ToEnd = this.getAllPaths([], nodeId1, true);
+      for (let pathToEnd of pathsFromNodeId1ToEnd) {
+        if (pathToEnd.indexOf(nodeId2) != -1) {
+          return true;
         }
-      } else {
-        // the node id before is an activity
+      }
+    } else {
+      return this.isNodeAfterGroup(nodeId1, nodeId2);
+    }
+    return false;
+  }
 
-        const group = this.getNodeById(nodeIdBefore);
-        if (group != null) {
-          const transitions = this.getTransitionsByFromNodeId(nodeIdBefore);
-          if (transitions != null) {
-            for (let transition of transitions) {
-              if (transition != null) {
-                const toNodeId = transition.to;
-
-                // get the paths between to toNodeId and the end of the project
-                const pathsToEnd = this.getAllPaths([], toNodeId, true);
-
-                for (let pathToEnd of pathsToEnd) {
-                  if (pathToEnd != null) {
-                    if (pathToEnd.indexOf(nodeIdAfter) != -1) {
-                      // we have found the nodeIdAfter in the path to the end of the project
-                      result = true;
-                    }
-                  }
-                }
-              }
-            }
+  /**
+   * @param groupId
+   * @param nodeId The node id of a step or group.
+   * @returns {boolean} True iff nodeId comes after groupId.
+   */
+  isNodeAfterGroup(groupId, nodeId) {
+    const transitions = this.getTransitionsByFromNodeId(groupId);
+    try {
+      for (let transition of transitions) {
+        const pathFromGroupToEnd = this.getAllPaths([], transition.to, true);
+        for (let pathToEnd of pathFromGroupToEnd) {
+          if (pathToEnd.indexOf(nodeId) != -1) {
+            return true;
           }
         }
       }
+    } catch(e) {
+
     }
-    return result;
+    return false;
   }
 
   /**

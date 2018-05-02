@@ -51,10 +51,10 @@ var ProjectService = function () {
     this.additionalProcessingFunctionsMap = {};
 
     // filtering options for navigation displays
-    this.filters = [{ 'name': 'all', 'label': 'All' }
-    //{'name': 'todo', 'label': 'Todo'},
-    //{'name': 'completed', 'label': 'Completed'}
-    ];
+    this.filters = [{ 'name': 'all', 'label': 'All'
+      //{'name': 'todo', 'label': 'Todo'},
+      //{'name': 'completed', 'label': 'Completed'}
+    }];
   }
 
   _createClass(ProjectService, [{
@@ -1588,147 +1588,109 @@ var ProjectService = function () {
 
 
     /**
-     * Check if a node id comes after another node id in the project
-     * @param nodeIdBefore the node id before
-     * @param nodeIdAfter the node id after
+     * Check if a node id comes after another node id in the project.
+     * @param nodeId1 The node id of a step or group.
+     * @param nodeId2 The node id of a step or group.
+     * @returns {boolean} True iff nodeId2 comes after nodeId1.
      */
-    value: function isNodeIdAfter(nodeIdBefore, nodeIdAfter) {
-      var result = false;
-      if (nodeIdBefore != null && nodeIdAfter != null) {
-        if (this.isApplicationNode(nodeIdBefore)) {
-          // the node id before is a step
+    value: function isNodeIdAfter(nodeId1, nodeId2) {
+      if (this.isApplicationNode(nodeId1)) {
+        var pathsFromNodeId1ToEnd = this.getAllPaths([], nodeId1, true);
+        var _iteratorNormalCompletion16 = true;
+        var _didIteratorError16 = false;
+        var _iteratorError16 = undefined;
 
-          // get all the paths from the beforeNodeId to the end of the project
-          var pathsToEnd = this.getAllPaths([], nodeIdBefore, true);
+        try {
+          for (var _iterator16 = pathsFromNodeId1ToEnd[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+            var pathToEnd = _step16.value;
 
-          if (pathsToEnd != null) {
-            var _iteratorNormalCompletion16 = true;
-            var _didIteratorError16 = false;
-            var _iteratorError16 = undefined;
-
-            try {
-              for (var _iterator16 = pathsToEnd[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
-                var pathToEnd = _step16.value;
-
-                if (pathToEnd != null) {
-                  /*
-                   * remove the first node id and its parent id because
-                   * we will check the remaining node ids in the array
-                   * for the nodeIdAfter
-                   */
-
-                  // get the index of the node id before
-                  var index = pathToEnd.indexOf(nodeIdBefore);
-
-                  if (index != -1) {
-                    // remove the node id before
-                    pathToEnd.splice(index, 1);
-                  }
-
-                  // get the parent group of the node id before
-                  var parentGroup = this.getParentGroup(nodeIdBefore);
-
-                  if (parentGroup != null) {
-                    // remove the parent group of the node id before
-                    var parentGroupId = parentGroup.id;
-                    var parentGroupIndex = pathToEnd.indexOf(parentGroupId);
-                    if (parentGroupIndex != -1) {
-                      pathToEnd.splice(parentGroupIndex, 1);
-                    }
-                  }
-
-                  if (pathToEnd.indexOf(nodeIdAfter) != -1) {
-                    // we have found the nodeIdAfter in the path to the end of the project
-                    result = true;
-                  }
-                }
-              }
-            } catch (err) {
-              _didIteratorError16 = true;
-              _iteratorError16 = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion16 && _iterator16.return) {
-                  _iterator16.return();
-                }
-              } finally {
-                if (_didIteratorError16) {
-                  throw _iteratorError16;
-                }
-              }
+            if (pathToEnd.indexOf(nodeId2) != -1) {
+              return true;
             }
           }
-        } else {
-          // the node id before is an activity
-
-          var group = this.getNodeById(nodeIdBefore);
-          if (group != null) {
-            var transitions = this.getTransitionsByFromNodeId(nodeIdBefore);
-            if (transitions != null) {
-              var _iteratorNormalCompletion17 = true;
-              var _didIteratorError17 = false;
-              var _iteratorError17 = undefined;
-
-              try {
-                for (var _iterator17 = transitions[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-                  var transition = _step17.value;
-
-                  if (transition != null) {
-                    var toNodeId = transition.to;
-
-                    // get the paths between to toNodeId and the end of the project
-                    var _pathsToEnd = this.getAllPaths([], toNodeId, true);
-
-                    var _iteratorNormalCompletion18 = true;
-                    var _didIteratorError18 = false;
-                    var _iteratorError18 = undefined;
-
-                    try {
-                      for (var _iterator18 = _pathsToEnd[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
-                        var _pathToEnd = _step18.value;
-
-                        if (_pathToEnd != null) {
-                          if (_pathToEnd.indexOf(nodeIdAfter) != -1) {
-                            // we have found the nodeIdAfter in the path to the end of the project
-                            result = true;
-                          }
-                        }
-                      }
-                    } catch (err) {
-                      _didIteratorError18 = true;
-                      _iteratorError18 = err;
-                    } finally {
-                      try {
-                        if (!_iteratorNormalCompletion18 && _iterator18.return) {
-                          _iterator18.return();
-                        }
-                      } finally {
-                        if (_didIteratorError18) {
-                          throw _iteratorError18;
-                        }
-                      }
-                    }
-                  }
-                }
-              } catch (err) {
-                _didIteratorError17 = true;
-                _iteratorError17 = err;
-              } finally {
-                try {
-                  if (!_iteratorNormalCompletion17 && _iterator17.return) {
-                    _iterator17.return();
-                  }
-                } finally {
-                  if (_didIteratorError17) {
-                    throw _iteratorError17;
-                  }
-                }
-              }
+        } catch (err) {
+          _didIteratorError16 = true;
+          _iteratorError16 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion16 && _iterator16.return) {
+              _iterator16.return();
+            }
+          } finally {
+            if (_didIteratorError16) {
+              throw _iteratorError16;
             }
           }
         }
+      } else {
+        return this.isNodeAfterGroup(nodeId1, nodeId2);
       }
-      return result;
+      return false;
+    }
+
+    /**
+     * @param groupId
+     * @param nodeId The node id of a step or group.
+     * @returns {boolean} True iff nodeId comes after groupId.
+     */
+
+  }, {
+    key: 'isNodeAfterGroup',
+    value: function isNodeAfterGroup(groupId, nodeId) {
+      var transitions = this.getTransitionsByFromNodeId(groupId);
+      try {
+        var _iteratorNormalCompletion17 = true;
+        var _didIteratorError17 = false;
+        var _iteratorError17 = undefined;
+
+        try {
+          for (var _iterator17 = transitions[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+            var transition = _step17.value;
+
+            var pathFromGroupToEnd = this.getAllPaths([], transition.to, true);
+            var _iteratorNormalCompletion18 = true;
+            var _didIteratorError18 = false;
+            var _iteratorError18 = undefined;
+
+            try {
+              for (var _iterator18 = pathFromGroupToEnd[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+                var pathToEnd = _step18.value;
+
+                if (pathToEnd.indexOf(nodeId) != -1) {
+                  return true;
+                }
+              }
+            } catch (err) {
+              _didIteratorError18 = true;
+              _iteratorError18 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion18 && _iterator18.return) {
+                  _iterator18.return();
+                }
+              } finally {
+                if (_didIteratorError18) {
+                  throw _iteratorError18;
+                }
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError17 = true;
+          _iteratorError17 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion17 && _iterator17.return) {
+              _iterator17.return();
+            }
+          } finally {
+            if (_didIteratorError17) {
+              throw _iteratorError17;
+            }
+          }
+        }
+      } catch (e) {}
+      return false;
     }
 
     /**
