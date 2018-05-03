@@ -120,11 +120,10 @@ class AuthoringToolProjectService extends ProjectService {
         return;
       }
     }
-    let notifyProjectBeginURL = this.ConfigService
-      .getConfigParam('notifyProjectBeginURL') + projectId;
-    let httpParams = {
+
+    const httpParams = {
       method: "POST",
-      url: notifyProjectBeginURL
+      url: this.ConfigService.getConfigParam('notifyProjectBeginURL') + projectId
     };
 
     return this.$http(httpParams).then((result) => {
@@ -134,7 +133,7 @@ class AuthoringToolProjectService extends ProjectService {
   }
 
   /**
-   * Notifies others that the specified project is being authored
+   * Notifies others that the specified project is no longer being authored
    * @param projectId id of the project
    */
   notifyAuthorProjectEnd(projectId = null) {
@@ -146,11 +145,10 @@ class AuthoringToolProjectService extends ProjectService {
           resolve();
         }
       }
-      let notifyProjectEndURL = this.ConfigService.getConfigParam('notifyProjectEndURL') + projectId;
-      let httpParams = {};
-      httpParams.method = 'POST';
-      httpParams.url = notifyProjectEndURL;
-
+      const httpParams = {
+        method: 'POST',
+        url: this.ConfigService.getConfigParam('notifyProjectEndURL') + projectId
+      };
       this.$http(httpParams).then(() => {
         resolve();
       })
@@ -176,8 +174,8 @@ class AuthoringToolProjectService extends ProjectService {
   };
 
   /**
-   * Copies the project with the specified id and returns a new project id if the project is
-   * successfully copied
+   * Copies the project with the specified id and returns
+   * a new project id if the project is successfully copied
    */
   copyProject(projectId) {
     const copyProjectURL = this.ConfigService.getConfigParam('copyProjectURL');
@@ -185,17 +183,15 @@ class AuthoringToolProjectService extends ProjectService {
       return null;
     }
 
-    const httpParams = {};
-    httpParams.method = 'POST';
-    httpParams.url = copyProjectURL + "/" + projectId;
-    httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-
-    const params = {};
-    httpParams.data = $.param(params);
+    const httpParams = {
+      method: 'POST',
+      url: copyProjectURL + "/" + projectId,
+      headers:  {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({})
+    };
 
     return this.$http(httpParams).then((result) => {
-      const projectId = result.data;
-      return projectId;
+      return result.data;  // project Id
     });
   };
 
@@ -275,14 +271,13 @@ class AuthoringToolProjectService extends ProjectService {
    * @returns the group object
    */
   createGroup(title) {
-    const newGroupId = this.getNextAvailableGroupId();
-    const newGroup = {};
-    newGroup.id = newGroupId;
-    newGroup.type = 'group';
-    newGroup.title = title;
-    newGroup.startId = '';
-    newGroup.ids = [];
-    return newGroup;
+    return {
+      id: this.getNextAvailableGroupId(),
+      type: 'group',
+      title: title,
+      startId: '',
+      ids: []
+    }
   };
 
   /**
@@ -291,18 +286,18 @@ class AuthoringToolProjectService extends ProjectService {
    * @returns the node object
    */
   createNode(title) {
-    const newNodeId = this.getNextAvailableNodeId();
-    const newNode = {};
-    newNode.id = newNodeId;
-    newNode.title = title;
-    newNode.type = 'node';
-    newNode.constraints = [];
-    newNode.transitionLogic = {};
-    newNode.transitionLogic.transitions = [];
-    newNode.showSaveButton = false;
-    newNode.showSubmitButton = false;
-    newNode.components = [];
-    return newNode;
+    return {
+      id: this.getNextAvailableNodeId(),
+      title: title,
+      type: 'node',
+      constraints: [],
+      transitionLogic: {
+        transitions: []
+      },
+      showSaveButton: false,
+      showSubmitButton: false,
+      components: []
+    }
   };
 
   /**
@@ -346,18 +341,16 @@ class AuthoringToolProjectService extends ProjectService {
    * the new step after it.
    */
   copyNodes(selectedNodes, fromProjectId, toProjectId, nodeIdToInsertInsideOrAfter) {
-    const importStepsURL = this.ConfigService.getConfigParam('importStepsURL');
-
-    const httpParams = {};
-    httpParams.method = 'POST';
-    httpParams.url = importStepsURL;
-    httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-
-    const params = {};
-    params.steps = angular.toJson(selectedNodes);
-    params.fromProjectId = fromProjectId;
-    params.toProjectId = toProjectId;
-    httpParams.data = $.param(params);
+    const httpParams = {
+      method: 'POST',
+      url: this.ConfigService.getConfigParam('importStepsURL'),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({
+        steps: angular.toJson(selectedNodes),
+        fromProjectId: fromProjectId,
+        toProjectId: toProjectId
+      })
+    };
 
     /*
      * Make the request to import the steps. This will copy the asset files
@@ -708,36 +701,38 @@ class AuthoringToolProjectService extends ProjectService {
          * create the constraint that makes the node not visible until
          * the given branch path is taken
          */
-        const makeThisNodeNotVisibleConstraint = {};
-        makeThisNodeNotVisibleConstraint.id = this.getNextAvailableConstraintIdForNodeId(targetNodeId);
-        makeThisNodeNotVisibleConstraint.action = 'makeThisNodeNotVisible';
-        makeThisNodeNotVisibleConstraint.targetId = targetNodeId;
-        makeThisNodeNotVisibleConstraint.removalCriteria = [];
-        const notVisibleRemovalCriterion = {};
-        notVisibleRemovalCriterion.name = 'branchPathTaken';
-        notVisibleRemovalCriterion.params = {};
-        notVisibleRemovalCriterion.params.fromNodeId = fromNodeId;
-        notVisibleRemovalCriterion.params.toNodeId = toNodeId;
-        makeThisNodeNotVisibleConstraint.removalConditional = 'all';
-        makeThisNodeNotVisibleConstraint.removalCriteria.push(notVisibleRemovalCriterion);
+        const makeThisNodeNotVisibleConstraint = {
+          id: this.getNextAvailableConstraintIdForNodeId(targetNodeId),
+          action: 'makeThisNodeNotVisible',
+          targetId: targetNodeId,
+          removalConditional: 'all',
+          removalCriteria: [{
+            name: 'branchPathTaken',
+            params: {
+              fromNodeId: fromNodeId,
+              toNodeId: toNodeId
+            }
+          }]
+        };
         node.constraints.push(makeThisNodeNotVisibleConstraint);
 
         /*
          * create the constraint that makes the node not visitable until
          * the given branch path is taken
          */
-        const makeThisNodeNotVisitableConstraint = {};
-        makeThisNodeNotVisitableConstraint.id = this.getNextAvailableConstraintIdForNodeId(targetNodeId);
-        makeThisNodeNotVisitableConstraint.action = 'makeThisNodeNotVisitable';
-        makeThisNodeNotVisitableConstraint.targetId = targetNodeId;
-        makeThisNodeNotVisitableConstraint.removalCriteria = [];
-        const notVisitableRemovalCriterion = {};
-        notVisitableRemovalCriterion.name = 'branchPathTaken';
-        notVisitableRemovalCriterion.params = {};
-        notVisitableRemovalCriterion.params.fromNodeId = fromNodeId;
-        notVisitableRemovalCriterion.params.toNodeId = toNodeId;
-        makeThisNodeNotVisitableConstraint.removalConditional = 'all';
-        makeThisNodeNotVisitableConstraint.removalCriteria.push(notVisitableRemovalCriterion);
+        const makeThisNodeNotVisitableConstraint = {
+          id: this.getNextAvailableConstraintIdForNodeId(targetNodeId),
+          action: 'makeThisNodeNotVisitable',
+          targetId: targetNodeId,
+          removalConditional: all,
+          removalCriteria: [{
+            name: 'branchPathTaken',
+            params: {
+              fromNodeId: fromNodeId,
+              toNodeId: toNodeId
+            }
+          }]
+        };
         node.constraints.push(makeThisNodeNotVisitableConstraint);
       }
     }
@@ -939,20 +934,16 @@ class AuthoringToolProjectService extends ProjectService {
       }
     }
 
-    const importStepsURL = this.ConfigService.getConfigParam('importStepsURL');
-    const httpParams = {};
-    httpParams.method = 'POST';
-    httpParams.url = importStepsURL;
-    httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-
-    const toProjectId = this.ConfigService.getConfigParam('projectId');
-    const fromProjectId = importProjectId;
-
-    const params = {};
-    params.steps = angular.toJson(newComponents);
-    params.fromProjectId = fromProjectId;
-    params.toProjectId = toProjectId;
-    httpParams.data = $.param(params);
+    const httpParams = {
+      method: 'POST',
+      url: this.ConfigService.getConfigParam('importStepsURL'),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({
+        steps: angular.toJson(newComponents),
+        fromProjectId: importProjectId,
+        toProjectId:  this.ConfigService.getConfigParam('projectId'),
+      })
+    };
 
     /*
      * Make the request to import the components. This will copy the asset files

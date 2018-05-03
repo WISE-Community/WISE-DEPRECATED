@@ -142,10 +142,10 @@ var AuthoringToolProjectService = function (_ProjectService) {
           return;
         }
       }
-      var notifyProjectBeginURL = this.ConfigService.getConfigParam('notifyProjectBeginURL') + projectId;
+
       var httpParams = {
         method: "POST",
-        url: notifyProjectBeginURL
+        url: this.ConfigService.getConfigParam('notifyProjectBeginURL') + projectId
       };
 
       return this.$http(httpParams).then(function (result) {
@@ -155,7 +155,7 @@ var AuthoringToolProjectService = function (_ProjectService) {
     }
 
     /**
-     * Notifies others that the specified project is being authored
+     * Notifies others that the specified project is no longer being authored
      * @param projectId id of the project
      */
 
@@ -174,11 +174,10 @@ var AuthoringToolProjectService = function (_ProjectService) {
             resolve();
           }
         }
-        var notifyProjectEndURL = _this2.ConfigService.getConfigParam('notifyProjectEndURL') + projectId;
-        var httpParams = {};
-        httpParams.method = 'POST';
-        httpParams.url = notifyProjectEndURL;
-
+        var httpParams = {
+          method: 'POST',
+          url: _this2.ConfigService.getConfigParam('notifyProjectEndURL') + projectId
+        };
         _this2.$http(httpParams).then(function () {
           resolve();
         });
@@ -210,8 +209,8 @@ var AuthoringToolProjectService = function (_ProjectService) {
 
 
     /**
-     * Copies the project with the specified id and returns a new project id if the project is
-     * successfully copied
+     * Copies the project with the specified id and returns
+     * a new project id if the project is successfully copied
      */
     value: function copyProject(projectId) {
       var copyProjectURL = this.ConfigService.getConfigParam('copyProjectURL');
@@ -219,17 +218,15 @@ var AuthoringToolProjectService = function (_ProjectService) {
         return null;
       }
 
-      var httpParams = {};
-      httpParams.method = 'POST';
-      httpParams.url = copyProjectURL + "/" + projectId;
-      httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-
-      var params = {};
-      httpParams.data = $.param(params);
+      var httpParams = {
+        method: 'POST',
+        url: copyProjectURL + "/" + projectId,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({})
+      };
 
       return this.$http(httpParams).then(function (result) {
-        var projectId = result.data;
-        return projectId;
+        return result.data; // project Id
       });
     }
   }, {
@@ -323,14 +320,13 @@ var AuthoringToolProjectService = function (_ProjectService) {
      * @returns the group object
      */
     value: function createGroup(title) {
-      var newGroupId = this.getNextAvailableGroupId();
-      var newGroup = {};
-      newGroup.id = newGroupId;
-      newGroup.type = 'group';
-      newGroup.title = title;
-      newGroup.startId = '';
-      newGroup.ids = [];
-      return newGroup;
+      return {
+        id: this.getNextAvailableGroupId(),
+        type: 'group',
+        title: title,
+        startId: '',
+        ids: []
+      };
     }
   }, {
     key: 'createNode',
@@ -342,18 +338,18 @@ var AuthoringToolProjectService = function (_ProjectService) {
      * @returns the node object
      */
     value: function createNode(title) {
-      var newNodeId = this.getNextAvailableNodeId();
-      var newNode = {};
-      newNode.id = newNodeId;
-      newNode.title = title;
-      newNode.type = 'node';
-      newNode.constraints = [];
-      newNode.transitionLogic = {};
-      newNode.transitionLogic.transitions = [];
-      newNode.showSaveButton = false;
-      newNode.showSubmitButton = false;
-      newNode.components = [];
-      return newNode;
+      return {
+        id: this.getNextAvailableNodeId(),
+        title: title,
+        type: 'node',
+        constraints: [],
+        transitionLogic: {
+          transitions: []
+        },
+        showSaveButton: false,
+        showSubmitButton: false,
+        components: []
+      };
     }
   }, {
     key: 'copyNodesInside',
@@ -405,18 +401,16 @@ var AuthoringToolProjectService = function (_ProjectService) {
     value: function copyNodes(selectedNodes, fromProjectId, toProjectId, nodeIdToInsertInsideOrAfter) {
       var _this3 = this;
 
-      var importStepsURL = this.ConfigService.getConfigParam('importStepsURL');
-
-      var httpParams = {};
-      httpParams.method = 'POST';
-      httpParams.url = importStepsURL;
-      httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-
-      var params = {};
-      params.steps = angular.toJson(selectedNodes);
-      params.fromProjectId = fromProjectId;
-      params.toProjectId = toProjectId;
-      httpParams.data = $.param(params);
+      var httpParams = {
+        method: 'POST',
+        url: this.ConfigService.getConfigParam('importStepsURL'),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({
+          steps: angular.toJson(selectedNodes),
+          fromProjectId: fromProjectId,
+          toProjectId: toProjectId
+        })
+      };
 
       /*
        * Make the request to import the steps. This will copy the asset files
@@ -986,36 +980,38 @@ var AuthoringToolProjectService = function (_ProjectService) {
            * create the constraint that makes the node not visible until
            * the given branch path is taken
            */
-          var makeThisNodeNotVisibleConstraint = {};
-          makeThisNodeNotVisibleConstraint.id = this.getNextAvailableConstraintIdForNodeId(targetNodeId);
-          makeThisNodeNotVisibleConstraint.action = 'makeThisNodeNotVisible';
-          makeThisNodeNotVisibleConstraint.targetId = targetNodeId;
-          makeThisNodeNotVisibleConstraint.removalCriteria = [];
-          var notVisibleRemovalCriterion = {};
-          notVisibleRemovalCriterion.name = 'branchPathTaken';
-          notVisibleRemovalCriterion.params = {};
-          notVisibleRemovalCriterion.params.fromNodeId = fromNodeId;
-          notVisibleRemovalCriterion.params.toNodeId = toNodeId;
-          makeThisNodeNotVisibleConstraint.removalConditional = 'all';
-          makeThisNodeNotVisibleConstraint.removalCriteria.push(notVisibleRemovalCriterion);
+          var makeThisNodeNotVisibleConstraint = {
+            id: this.getNextAvailableConstraintIdForNodeId(targetNodeId),
+            action: 'makeThisNodeNotVisible',
+            targetId: targetNodeId,
+            removalConditional: 'all',
+            removalCriteria: [{
+              name: 'branchPathTaken',
+              params: {
+                fromNodeId: fromNodeId,
+                toNodeId: toNodeId
+              }
+            }]
+          };
           node.constraints.push(makeThisNodeNotVisibleConstraint);
 
           /*
            * create the constraint that makes the node not visitable until
            * the given branch path is taken
            */
-          var makeThisNodeNotVisitableConstraint = {};
-          makeThisNodeNotVisitableConstraint.id = this.getNextAvailableConstraintIdForNodeId(targetNodeId);
-          makeThisNodeNotVisitableConstraint.action = 'makeThisNodeNotVisitable';
-          makeThisNodeNotVisitableConstraint.targetId = targetNodeId;
-          makeThisNodeNotVisitableConstraint.removalCriteria = [];
-          var notVisitableRemovalCriterion = {};
-          notVisitableRemovalCriterion.name = 'branchPathTaken';
-          notVisitableRemovalCriterion.params = {};
-          notVisitableRemovalCriterion.params.fromNodeId = fromNodeId;
-          notVisitableRemovalCriterion.params.toNodeId = toNodeId;
-          makeThisNodeNotVisitableConstraint.removalConditional = 'all';
-          makeThisNodeNotVisitableConstraint.removalCriteria.push(notVisitableRemovalCriterion);
+          var makeThisNodeNotVisitableConstraint = {
+            id: this.getNextAvailableConstraintIdForNodeId(targetNodeId),
+            action: 'makeThisNodeNotVisitable',
+            targetId: targetNodeId,
+            removalConditional: all,
+            removalCriteria: [{
+              name: 'branchPathTaken',
+              params: {
+                fromNodeId: fromNodeId,
+                toNodeId: toNodeId
+              }
+            }]
+          };
           node.constraints.push(makeThisNodeNotVisitableConstraint);
         }
       }
@@ -1354,20 +1350,16 @@ var AuthoringToolProjectService = function (_ProjectService) {
         }
       }
 
-      var importStepsURL = this.ConfigService.getConfigParam('importStepsURL');
-      var httpParams = {};
-      httpParams.method = 'POST';
-      httpParams.url = importStepsURL;
-      httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-
-      var toProjectId = this.ConfigService.getConfigParam('projectId');
-      var fromProjectId = importProjectId;
-
-      var params = {};
-      params.steps = angular.toJson(newComponents);
-      params.fromProjectId = fromProjectId;
-      params.toProjectId = toProjectId;
-      httpParams.data = $.param(params);
+      var httpParams = {
+        method: 'POST',
+        url: this.ConfigService.getConfigParam('importStepsURL'),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({
+          steps: angular.toJson(newComponents),
+          fromProjectId: importProjectId,
+          toProjectId: this.ConfigService.getConfigParam('projectId')
+        })
+      };
 
       /*
        * Make the request to import the components. This will copy the asset files
