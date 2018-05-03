@@ -63,6 +63,7 @@ describe('WISE5 Student VLE Preview', () => {
 
   it('should display the group view and allow user to collapse/expand group navitems', () => {
     const vle = new VLEPage();
+    vle.toggleConstraints();
     vle.closeNode();
     common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/group1');
 
