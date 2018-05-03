@@ -1197,16 +1197,11 @@ class ProjectService {
    * @returns an array of transitions
    */
   getTransitionsByFromNodeId(fromNodeId) {
-    if (fromNodeId != null) {
-      // get the transition logic
-      const transitionLogic = this.getTransitionLogicByFromNodeId(fromNodeId);
-
-      if (transitionLogic != null) {
-        // get the transitions
-        return transitionLogic.transitions;
-      }
+    const transitionLogic = this.getTransitionLogicByFromNodeId(fromNodeId);
+    if (transitionLogic != null) {
+      return transitionLogic.transitions;
     }
-    return null;
+    return [];
   }
 
   /**
@@ -3739,73 +3734,46 @@ class ProjectService {
   };
 
   /**
-   * Remove the node id from a group
+   * Remove the node id from all groups
    * @param nodeId the node id to remove
    */
   removeNodeIdFromGroups(nodeId) {
-    const groups = this.getGroupNodes();
-    for (let group of groups) {
+    for (let group of this.getGroupNodes()) {
       this.removeNodeIdFromGroup(group, nodeId);
     }
-    const inactiveGroups = this.getInactiveGroupNodes();
-    for (let inactiveGroup of inactiveGroups) {
+    for (let inactiveGroup of this.getInactiveGroupNodes()) {
       this.removeNodeIdFromGroup(inactiveGroup, nodeId);
     }
   }
 
   /**
-   * Remove a node id from a group.
+   * Remove a node from a group.
+   * If the node is a start node of the group, update the group's start node to
+   * the next node in the group after removing.
    * @param group The group to remove from.
    * @param nodeId The node id to remove.
    */
   removeNodeIdFromGroup(group, nodeId) {
-    const startId = group.startId;
     const ids = group.ids;
     for (let i = 0; i < ids.length; i++) {
       const id = ids[i];
-      if (nodeId === id) {
+      if (id === nodeId) {
         ids.splice(i, 1);
-
-        if (nodeId === startId) {
-          /*
-           * the node id is also the start id so we will get the
-           * next node id and set it as the new start id
-           */
-
-          let hasSetNewStartId = false;
-
-          const node = this.getNodeById(id);
-
-          if (node != null) {
-            const transitionLogic = node.transitionLogic;
-            if (transitionLogic != null) {
-              const transitions = transitionLogic.transitions;
-              if (transitions != null && transitions.length > 0) {
-                // get the first transition
-                // TODO handle the case when the node we are removing is a branch point
-                const transition = transitions[0];
-
-                if (transition != null) {
-                  const to = transition.to;
-
-                  if (to != null) {
-                    group.startId = to;
-                    hasSetNewStartId = true;
-                  }
-                }
-              }
-            }
-          }
-
-          if (!hasSetNewStartId) {
-            /*
-             * the node we are removing did not have a transition
-             * so there will be no start id
-             */
-            group.startId = '';
-          }
+        if (id === group.startId) {
+          this.shiftGroupStartNodeByOne(group);
         }
       }
+    }
+  }
+
+  // TODO handle the case when the start node of the group is a branch point
+  shiftGroupStartNodeByOne(group) {
+    const transitionsFromStartNode =
+        this.getTransitionsByFromNodeId(group.startId);
+    if (transitionsFromStartNode.length > 0) {
+      group.startId = transitionsFromStartNode[0].to;
+    } else {
+      group.startId = '';
     }
   }
 
@@ -5105,71 +5073,25 @@ class ProjectService {
   }
 
   /**
-   * Check if the node is active
-   * @param nodeId the node to check
-   * @param componentId (optional) the component to check
-   * @returns whether the node or component is active
+   * Check if the target is active
+   * @param target the node id or inactiveNodes/inactiveGroups to check
+   * @returns whether the target is active
    */
-  isActive(nodeId, componentId) {
-    if (nodeId != null) {
-      if (nodeId === 'inactiveNodes') {
-        // this occurs when the author puts a step into the inactive nodes
-        return false;
-      } else if (nodeId === 'inactiveGroups') {
-        // this occurs when the author puts a group into the inactive groups
-        return false;
-      } else if (this.isGroupNode(nodeId)) {
-        return this.isGroupActive(nodeId);
-      } else {
-        // the node is a step node
-
-        const activeNodes = this.project.nodes;
-        if (activeNodes != null) {
-          for (let activeNode of activeNodes) {
-            if (activeNode != null) {
-              const activeNodeId = activeNode.id;
-              if (nodeId == activeNodeId) {
-                // we have found the node id we are looking for
-
-                if (componentId != null) {
-                  // we need to find the node id and component id
-
-                  const activeComponents = activeNode.components;
-
-                  if (activeComponents != null) {
-                    for (let activeComponent of activeComponents) {
-                      if (activeComponent != null) {
-                        const activeComponentId = activeComponent.id;
-                        if (componentId == activeComponentId) {
-                          /*
-                           * we have found the component id we are
-                           * looking for so we are done
-                           */
-                          return true;
-                        }
-                      }
-                    }
-                  }
-                } else {
-                  //we only need to find the node id so we are done
-                  return true;
-                }
-              }
-            }
-          }
-        }
-      }
+  isActive(target) {
+    if (target === 'inactiveNodes' || target === 'inactiveGroups') {
+      return false;
+    } else {
+      return this.isNodeActive(target);
     }
-    return false;
   }
 
   /**
-   * Check if a group is active.
-   * @param nodeId the node id of the group
+   * Check if a node is active.
+   * @param nodeId the id of the node
    */
-  isGroupActive(nodeId) {
+  isNodeActive(nodeId) {
     for (let activeNode of this.project.nodes) {
-      if (nodeId == activeNode.id) {
+      if (activeNode.id == nodeId) {
         return true;
       }
     }
@@ -5220,41 +5142,20 @@ class ProjectService {
   }
 
   /**
-   * Remove transitions that go out of the group
+   * Remove transition from nodes in the specified group that go out of the group
    * @param nodeId the group id
    */
-  removeTransitionsOutOfGroup(nodeId) {
-    if (nodeId != null) {
-      const group = this.getNodeById(nodeId);
-      if (group != null) {
-        const childIds = group.ids;
-        if (childIds != null) {
-          for (let childId of childIds) {
-            if (childId != null) {
-              const transitions = this.getTransitionsByFromNodeId(childId);
-              if (transitions != null) {
-                for (let t = 0; t < transitions.length; t++) {
-                  const transition = transitions[t];
-                  if (transition != null) {
-                    const toNodeId = transition.to;
-                    if (toNodeId != null) {
-                      const toNodeIdParentGroupId = this.getParentGroupId(toNodeId);
-                      if (nodeId != toNodeIdParentGroupId) {
-                        /*
-                         * the parent group is different which means it is a
-                         * transition that goes out of the group
-                         */
-
-                        // remove the transition
-                        transitions.splice(t, 1);
-                        t--;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+  removeTransitionsOutOfGroup(groupId) {
+    const group = this.getNodeById(groupId);
+    for (let childId of group.ids) {
+      const transitions = this.getTransitionsByFromNodeId(childId);
+      for (let t = 0; t < transitions.length; t++) {
+        const transition = transitions[t];
+        const parentGroupId = this.getParentGroupId(transition.to);
+        if (parentGroupId != groupId) {
+          // this is a transition that goes out of the specified group
+          transitions.splice(t, 1);
+          t--; // so it won't skip the next element
         }
       }
     }
@@ -5660,26 +5561,15 @@ class ProjectService {
    * given from node id and to node id
    */
   hasBranchPathTakenConstraint(node, fromNodeId, toNodeId) {
-    if (node != null) {
-      const constraints = node.constraints;
-      if (constraints != null) {
-        for (let constraint of constraints) {
-          if (constraint != null) {
-            const removalCriteria = constraint.removalCriteria;
-            if (removalCriteria != null) {
-              for (let removalCriterion of removalCriteria) {
-                if (removalCriterion != null) {
-                  const name = removalCriterion.name;
-                  if (name == 'branchPathTaken') {
-                    const params = removalCriterion.params;
-                    if (params != null) {
-                      if (fromNodeId == params.fromNodeId && toNodeId == params.toNodeId) {
-                        return true;
-                      }
-                    }
-                  }
-                }
-              }
+    const constraints = node.constraints;
+    if (constraints != null) {
+      for (let constraint of constraints) {
+        for (let removalCriterion of constraint.removalCriteria) {
+          if (removalCriterion.name == 'branchPathTaken') {
+            const params = removalCriterion.params;
+            if (params.fromNodeId == fromNodeId &&
+                params.toNodeId == toNodeId) {
+              return true;
             }
           }
         }
@@ -5728,49 +5618,6 @@ class ProjectService {
       }
     }
     return branchPathTakenConstraints;
-  }
-
-  /**
-   * Update the branch path taken constraint
-   * @param node update the branch path taken constraints in this node
-   * @param currentFromNodeId the current from node id
-   * @param currentToNodeId the current to node id
-   * @param newFromNodeId the new from node id
-   * @param newToNodeId the new to node id
-   */
-  updateBranchPathTakenConstraint(node, currentFromNodeId, currentToNodeId,
-      newFromNodeId, newToNodeId) {
-    if (node != null) {
-      const constraints = node.constraints;
-      if (constraints != null) {
-        for (let constraint of constraints) {
-          if (constraint != null) {
-            const removalCriteria = constraint.removalCriteria;
-            if (removalCriteria != null) {
-              for (let removalCriterion of removalCriteria) {
-                if (removalCriterion != null) {
-                  if (removalCriterion.name === 'branchPathTaken') {
-                    const params = removalCriterion.params;
-                    if (params != null) {
-                      if (params.fromNodeId === currentFromNodeId &&
-                        params.toNodeId === currentToNodeId) {
-                        /*
-                         * we have found a branchPathTaken removal criterion
-                         * with the fromNodeId and toNodeId that we are
-                         * looking for so we will now update the values
-                         */
-                        params.fromNodeId = newFromNodeId;
-                        params.toNodeId = newToNodeId;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
   }
 
   /**

@@ -390,7 +390,6 @@ describe('ProjectService Unit Test', function () {
     // TODO: add test for ProjectService.moveComponentDown()
     // TODO: add test for ProjectService.deconsteComponent()
 
-    // test ProjectService.getMaxScore()
     it('should return the max score of the project', function () {
       // Demo Project doesn't have any max scores, so we expect getMaxScore to return null
       ProjectService.setProject(demoProjectJSON);
@@ -467,6 +466,37 @@ describe('ProjectService Unit Test', function () {
       expect(ProjectService.isNodeIdAfter('group2', 'group1')).toEqual(false);
       expect(ProjectService.isNodeIdAfter('group1', 'node20')).toEqual(true);
       expect(ProjectService.isNodeIdAfter('group2', 'node1')).toEqual(false);
+    });
+
+    it('should remove transitions going out of group in child nodes of group', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.getTransitionsByFromNodeId('node18').length).toEqual(1);
+      expect(ProjectService.getTransitionsByFromNodeId('node19').length).toEqual(1);
+      ProjectService.removeTransitionsOutOfGroup('group1');
+      expect(ProjectService.getTransitionsByFromNodeId('node18').length).toEqual(1);
+      expect(ProjectService.getTransitionsByFromNodeId('node19').length).toEqual(0);
+    });
+
+    it('should remove node from group', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.getChildNodeIdsById('group1').length).toEqual(19);
+      ProjectService.removeNodeIdFromGroup(ProjectService.getNodeById('group1'), 'node3');
+      expect(ProjectService.getChildNodeIdsById('group1').length).toEqual(18);
+      expect(ProjectService.getGroupStartId('group1')).toEqual('node1');
+      ProjectService.removeNodeIdFromGroup(ProjectService.getNodeById('group1'), 'node4');
+      expect(ProjectService.getChildNodeIdsById('group1').length).toEqual(17);
+      expect(ProjectService.getGroupStartId('group1')).toEqual('node1');
+    });
+
+    it('should remove start node from group', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.getChildNodeIdsById('group1').length).toEqual(19);
+      ProjectService.removeNodeIdFromGroup(ProjectService.getNodeById('group1'), 'node1');
+      expect(ProjectService.getChildNodeIdsById('group1').length).toEqual(18);
+      expect(ProjectService.getGroupStartId('group1')).toEqual('node2');
+      ProjectService.removeNodeIdFromGroup(ProjectService.getNodeById('group1'), 'node2');
+      expect(ProjectService.getChildNodeIdsById('group1').length).toEqual(17);
+      expect(ProjectService.getGroupStartId('group1')).toEqual('node3');
     });
   });
 });

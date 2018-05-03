@@ -724,7 +724,7 @@ class AuthoringToolProjectService extends ProjectService {
           id: this.getNextAvailableConstraintIdForNodeId(targetNodeId),
           action: 'makeThisNodeNotVisitable',
           targetId: targetNodeId,
-          removalConditional: all,
+          removalConditional: 'all',
           removalCriteria: [{
             name: 'branchPathTaken',
             params: {
@@ -1234,6 +1234,30 @@ class AuthoringToolProjectService extends ProjectService {
   moveInactiveNodeToInactiveSection(node, nodeIdToInsertAfter) {
     this.removeNodeFromInactiveNodes(node.id);
     this.addInactiveNodeInsertAfter(node, nodeIdToInsertAfter);
+  }
+
+  /**
+   * Update a node's branchPathTaken constraint's fromNodeId and toNodeId
+   * @param node update the branch path taken constraints in this node
+   * @param currentFromNodeId the current from node id
+   * @param currentToNodeId the current to node id
+   * @param newFromNodeId the new from node id
+   * @param newToNodeId the new to node id
+   */
+  updateBranchPathTakenConstraint(node, currentFromNodeId, currentToNodeId,
+      newFromNodeId, newToNodeId) {
+    for (let constraint of node.constraints) {
+      for (let removalCriterion of constraint.removalCriteria) {
+        if (removalCriterion.name === 'branchPathTaken') {
+          const params = removalCriterion.params;
+          if (params.fromNodeId === currentFromNodeId &&
+              params.toNodeId === currentToNodeId) {
+            params.fromNodeId = newFromNodeId;
+            params.toNodeId = newToNodeId;
+          }
+        }
+      }
+    }
   }
 }
 
