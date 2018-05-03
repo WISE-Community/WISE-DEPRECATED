@@ -2717,7 +2717,7 @@ class ProjectService {
       const transitionObject = {};
       transitionObject.to = newNodeId;
       previousNode.transitionLogic.transitions.push(transitionObject);
-      this.removeBranchPathTakenNodeConstraints(node.id);
+      this.removeBranchPathTakenNodeConstraintsIfAny(node.id);
       const branchPathTakenConstraints = this.getBranchPathTakenConstraintsByNodeId(nodeId);
 
       /*
@@ -2773,12 +2773,7 @@ class ProjectService {
         nodeToInsert.transitionLogic != null &&
         nodeToInsert.transitionLogic.transitions != null) {
       nodeToInsert.transitionLogic.transitions = [];
-
-      /*
-       * remove the branch path taken constraints from the node we are
-       * inserting
-       */
-      this.removeBranchPathTakenNodeConstraints(nodeIdToInsert);
+      this.removeBranchPathTakenNodeConstraintsIfAny(nodeIdToInsert);
     }
 
     const group = this.getNodeById(nodeIdToInsertInside);
@@ -2805,10 +2800,8 @@ class ProjectService {
         const previousGroups = this.getGroupNodesByToNodeId(nodeIdToInsertInside);
         for (let previousGroup of previousGroups) {
           if (previousGroup != null) {
-            // get the nodes that do not have a transition in the previous group
-            const lastNodesInGroup = this.getLastNodesInGroup(previousGroup.id);
-
-            for (let node of lastNodesInGroup) {
+            const childNodesWithoutTransitions = this.getChildNodesWithoutTransitions(previousGroup.id);
+            for (let node of childNodesWithoutTransitions) {
               // add a transition from the node to the node we are inserting
               this.addToTransition(node, nodeIdToInsert);
             }
@@ -2963,32 +2956,17 @@ class ProjectService {
   }
 
   /**
-   * Get the nodes in a group that do not have transitions
-   * @param groupId the group id
-   * @returns the nodes in the group that do not have transitions
+   * @param group The group object.
+   * @returns {Array} The nodes in the group that do not have transitions.
    */
-  getLastNodesInGroup(groupId) {
+  getChildNodesWithoutTransitions(group) {
     const lastNodes = [];
-    if (groupId != null) {
-      const group = this.getNodeById(groupId);
-      if (group != null) {
-        const childIds = group.ids;
-        if (childIds != null) {
-          for (let childId of childIds) {
-            if (childId != null) {
-              const child = this.getNodeById(childId);
-              if (child != null) {
-                const transitionLogic = child.transitionLogic;
-                if (transitionLogic != null) {
-                  const transitions = transitionLogic.transitions;
-                  if (transitions == null || transitions.length == 0) {
-                    lastNodes.push(child);
-                  }
-                }
-              }
-            }
-          }
-        }
+    for (let childId of group.ids) {
+      const child = this.getNodeById(childId);
+      const transitionLogic = child.transitionLogic;
+      const transitions = transitionLogic.transitions;
+      if (transitions.length == 0) {
+        lastNodes.push(child);
       }
     }
     return lastNodes;
@@ -3259,7 +3237,7 @@ class ProjectService {
            * this is not the first node we are moving so we will insert
            * it after the node we previously inserted
            */
-          this.moveInactiveNode(tempNode, nodeId);
+          this.moveInactiveNodeToInactiveSection(tempNode, nodeId);
         }
       }
 
@@ -3311,7 +3289,7 @@ class ProjectService {
 
         this.removeNodeIdFromTransitions(tempNodeId);
         this.removeNodeIdFromGroups(tempNodeId);
-        this.moveInactiveNode(node, nodeId);
+        this.moveInactiveNodeToInactiveSection(node, nodeId);
       }
 
       // remember the node id so we can put the next node (if any) after this one
@@ -5242,64 +5220,6 @@ class ProjectService {
   }
 
   /**
-   * Move an inactive node within the inactive nodes array
-   * @param node the node to move
-   * @param nodeIdToInsertAfter place the node after this
-   */
-  moveInactiveNode(node, nodeIdToInsertAfter) {
-    if (node != null) {
-      const inactiveNodes = this.project.inactiveNodes;
-      if (inactiveNodes != null) {
-        // remove the node from inactive nodes
-
-        for (let i = 0; i < inactiveNodes.length; i++) {
-          const inactiveNode = inactiveNodes[i];
-          if (inactiveNode != null) {
-            if (node.id === inactiveNode.id) {
-              // we have found the node we want to remove
-              inactiveNodes.splice(i, 1);
-            }
-          }
-        }
-
-        // add the node back into the inactive nodes
-
-        if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveSteps' || nodeIdToInsertAfter === 'inactiveNodes') {
-          // put the node at the beginning of the inactive nodes
-          inactiveNodes.splice(0, 0, node);
-        } else {
-          // put the node after one of the inactive nodes
-
-          let added = false;
-          for (let i = 0; i < inactiveNodes.length; i++) {
-            const inactiveNode = inactiveNodes[i];
-            if (inactiveNode != null) {
-              if (nodeIdToInsertAfter === inactiveNode.id) {
-                // we have found the position to place the node
-                let parentGroup = this.getParentGroup(nodeIdToInsertAfter);
-                if (parentGroup != null) {
-                  this.insertNodeAfterInGroups(node.id, nodeIdToInsertAfter);
-                  this.insertNodeAfterInTransitions(node, nodeIdToInsertAfter);
-                }
-                inactiveNodes.splice(i + 1, 0, node);
-                added = true;
-              }
-            }
-          }
-
-          if (!added) {
-            /*
-             * we haven't added the node yet so we will just add it
-             * to the end of the array
-             */
-            inactiveNodes.push(node);
-          }
-        }
-      }
-    }
-  }
-
-  /**
    * Remove transitions that go out of the group
    * @param nodeId the group id
    */
@@ -5769,31 +5689,20 @@ class ProjectService {
   }
 
   /**
-   * Remove the branch path taken constraints from a node
-   * @param nodeId remove the constraints from this node
+   * Remove all branch path taken constraints from a node.
+   * @param nodeId Remove the constraints from this node.
    */
-  removeBranchPathTakenNodeConstraints(nodeId) {
+  removeBranchPathTakenNodeConstraintsIfAny(nodeId) {
     const node = this.getNodeById(nodeId);
-    if (node != null) {
-      const constraints = node.constraints;
-      if (constraints != null) {
-        for (let c = 0; c < constraints.length; c++) {
-          const constraint = constraints[c];
-          if (constraint != null) {
-            const removalCriteria = constraint.removalCriteria;
-
-            if (removalCriteria != null) {
-              for (let removalCriterion of removalCriteria) {
-                if (removalCriterion != null) {
-                  if (removalCriterion.name == 'branchPathTaken') {
-                    const params = removalCriterion.params;
-                    constraints.splice(c, 1);
-                    // move the counter back one because we just removed a constraint
-                    c--;
-                  }
-                }
-              }
-            }
+    const constraints = node.constraints;
+    if (constraints != null) {
+      for (let c = 0; c < constraints.length; c++) {
+        const constraint = constraints[c];
+        const removalCriteria = constraint.removalCriteria;
+        for (let removalCriterion of removalCriteria) {
+          if (removalCriterion.name == 'branchPathTaken') {
+            constraints.splice(c, 1);
+            c--; // update the counter so we don't skip over the next element
           }
         }
       }
@@ -5801,35 +5710,19 @@ class ProjectService {
   }
 
   /**
-   * Get the branch path taken constraints from a node
-   * @param nodeId get the branch path taken constraints from this node
-   * @return an array of branch path taken constraints from the node
+   * @param nodeId Get the branch path taken constraints from this node.
+   * @return {Array} An array of branch path taken constraints from the node.
    */
   getBranchPathTakenConstraintsByNodeId(nodeId) {
     const branchPathTakenConstraints = [];
-    if (nodeId != null) {
-      const node = this.getNodeById(nodeId);
-      if (node != null) {
-        const constraints = node.constraints;
-        if (constraints != null) {
-          for (let constraint of constraints) {
-            if (constraint != null) {
-              const removalCriteria = constraint.removalCriteria;
-              if (removalCriteria != null) {
-                for (let removalCriterion of removalCriteria) {
-                  if (removalCriterion != null) {
-                    if (removalCriterion.name == 'branchPathTaken') {
-                      /*
-                       * we have found a branch path taken constraint so
-                       * we will add the constraint to the array
-                       */
-                      branchPathTakenConstraints.push(constraint);
-                      break;
-                    }
-                  }
-                }
-              }
-            }
+    const node = this.getNodeById(nodeId);
+    const constraints = node.constraints;
+    if (constraints != null) {
+      for (let constraint of constraints) {
+        for (let removalCriterion of constraint.removalCriteria) {
+          if (removalCriterion.name == 'branchPathTaken') {
+            branchPathTakenConstraints.push(constraint);
+            break;
           }
         }
       }

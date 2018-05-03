@@ -4141,7 +4141,7 @@ var ProjectService = function () {
         var transitionObject = {};
         transitionObject.to = newNodeId;
         previousNode.transitionLogic.transitions.push(transitionObject);
-        this.removeBranchPathTakenNodeConstraints(node.id);
+        this.removeBranchPathTakenNodeConstraintsIfAny(node.id);
         var branchPathTakenConstraints = this.getBranchPathTakenConstraintsByNodeId(nodeId);
 
         /*
@@ -4221,12 +4221,7 @@ var ProjectService = function () {
 
       if (nodeToInsert != null && nodeToInsert.transitionLogic != null && nodeToInsert.transitionLogic.transitions != null) {
         nodeToInsert.transitionLogic.transitions = [];
-
-        /*
-         * remove the branch path taken constraints from the node we are
-         * inserting
-         */
-        this.removeBranchPathTakenNodeConstraints(nodeIdToInsert);
+        this.removeBranchPathTakenNodeConstraintsIfAny(nodeIdToInsert);
       }
 
       var group = this.getNodeById(nodeIdToInsertInside);
@@ -4260,15 +4255,13 @@ var ProjectService = function () {
               var previousGroup = _step56.value;
 
               if (previousGroup != null) {
-                // get the nodes that do not have a transition in the previous group
-                var lastNodesInGroup = this.getLastNodesInGroup(previousGroup.id);
-
+                var childNodesWithoutTransitions = this.getChildNodesWithoutTransitions(previousGroup.id);
                 var _iteratorNormalCompletion57 = true;
                 var _didIteratorError57 = false;
                 var _iteratorError57 = undefined;
 
                 try {
-                  for (var _iterator57 = lastNodesInGroup[Symbol.iterator](), _step57; !(_iteratorNormalCompletion57 = (_step57 = _iterator57.next()).done); _iteratorNormalCompletion57 = true) {
+                  for (var _iterator57 = childNodesWithoutTransitions[Symbol.iterator](), _step57; !(_iteratorNormalCompletion57 = (_step57 = _iterator57.next()).done); _iteratorNormalCompletion57 = true) {
                     var node = _step57.value;
 
                     // add a transition from the node to the node we are inserting
@@ -4543,58 +4536,44 @@ var ProjectService = function () {
     }
 
     /**
-     * Get the nodes in a group that do not have transitions
-     * @param groupId the group id
-     * @returns the nodes in the group that do not have transitions
+     * @param group The group object.
+     * @returns {Array} The nodes in the group that do not have transitions.
      */
 
   }, {
-    key: 'getLastNodesInGroup',
-    value: function getLastNodesInGroup(groupId) {
+    key: 'getChildNodesWithoutTransitions',
+    value: function getChildNodesWithoutTransitions(group) {
       var lastNodes = [];
-      if (groupId != null) {
-        var group = this.getNodeById(groupId);
-        if (group != null) {
-          var childIds = group.ids;
-          if (childIds != null) {
-            var _iteratorNormalCompletion62 = true;
-            var _didIteratorError62 = false;
-            var _iteratorError62 = undefined;
+      var _iteratorNormalCompletion62 = true;
+      var _didIteratorError62 = false;
+      var _iteratorError62 = undefined;
 
-            try {
-              for (var _iterator62 = childIds[Symbol.iterator](), _step62; !(_iteratorNormalCompletion62 = (_step62 = _iterator62.next()).done); _iteratorNormalCompletion62 = true) {
-                var childId = _step62.value;
+      try {
+        for (var _iterator62 = group.ids[Symbol.iterator](), _step62; !(_iteratorNormalCompletion62 = (_step62 = _iterator62.next()).done); _iteratorNormalCompletion62 = true) {
+          var childId = _step62.value;
 
-                if (childId != null) {
-                  var child = this.getNodeById(childId);
-                  if (child != null) {
-                    var transitionLogic = child.transitionLogic;
-                    if (transitionLogic != null) {
-                      var transitions = transitionLogic.transitions;
-                      if (transitions == null || transitions.length == 0) {
-                        lastNodes.push(child);
-                      }
-                    }
-                  }
-                }
-              }
-            } catch (err) {
-              _didIteratorError62 = true;
-              _iteratorError62 = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion62 && _iterator62.return) {
-                  _iterator62.return();
-                }
-              } finally {
-                if (_didIteratorError62) {
-                  throw _iteratorError62;
-                }
-              }
-            }
+          var child = this.getNodeById(childId);
+          var transitionLogic = child.transitionLogic;
+          var transitions = transitionLogic.transitions;
+          if (transitions.length == 0) {
+            lastNodes.push(child);
+          }
+        }
+      } catch (err) {
+        _didIteratorError62 = true;
+        _iteratorError62 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion62 && _iterator62.return) {
+            _iterator62.return();
+          }
+        } finally {
+          if (_didIteratorError62) {
+            throw _iteratorError62;
           }
         }
       }
+
       return lastNodes;
     }
 
@@ -5051,7 +5030,7 @@ var ProjectService = function () {
              * this is not the first node we are moving so we will insert
              * it after the node we previously inserted
              */
-            this.moveInactiveNode(tempNode, nodeId);
+            this.moveInactiveNodeToInactiveSection(tempNode, nodeId);
           }
         }
 
@@ -5113,7 +5092,7 @@ var ProjectService = function () {
 
             this.removeNodeIdFromTransitions(tempNodeId);
             this.removeNodeIdFromGroups(tempNodeId);
-            this.moveInactiveNode(node, nodeId);
+            this.moveInactiveNodeToInactiveSection(node, nodeId);
           }
 
           // remember the node id so we can put the next node (if any) after this one
@@ -7948,67 +7927,6 @@ var ProjectService = function () {
     }
 
     /**
-     * Move an inactive node within the inactive nodes array
-     * @param node the node to move
-     * @param nodeIdToInsertAfter place the node after this
-     */
-
-  }, {
-    key: 'moveInactiveNode',
-    value: function moveInactiveNode(node, nodeIdToInsertAfter) {
-      if (node != null) {
-        var inactiveNodes = this.project.inactiveNodes;
-        if (inactiveNodes != null) {
-          // remove the node from inactive nodes
-
-          for (var i = 0; i < inactiveNodes.length; i++) {
-            var inactiveNode = inactiveNodes[i];
-            if (inactiveNode != null) {
-              if (node.id === inactiveNode.id) {
-                // we have found the node we want to remove
-                inactiveNodes.splice(i, 1);
-              }
-            }
-          }
-
-          // add the node back into the inactive nodes
-
-          if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveSteps' || nodeIdToInsertAfter === 'inactiveNodes') {
-            // put the node at the beginning of the inactive nodes
-            inactiveNodes.splice(0, 0, node);
-          } else {
-            // put the node after one of the inactive nodes
-
-            var added = false;
-            for (var _i = 0; _i < inactiveNodes.length; _i++) {
-              var _inactiveNode = inactiveNodes[_i];
-              if (_inactiveNode != null) {
-                if (nodeIdToInsertAfter === _inactiveNode.id) {
-                  // we have found the position to place the node
-                  var parentGroup = this.getParentGroup(nodeIdToInsertAfter);
-                  if (parentGroup != null) {
-                    this.insertNodeAfterInGroups(node.id, nodeIdToInsertAfter);
-                    this.insertNodeAfterInTransitions(node, nodeIdToInsertAfter);
-                  }
-                  inactiveNodes.splice(_i + 1, 0, node);
-                  added = true;
-                }
-              }
-            }
-
-            if (!added) {
-              /*
-               * we haven't added the node yet so we will just add it
-               * to the end of the array
-               */
-              inactiveNodes.push(node);
-            }
-          }
-        }
-      }
-    }
-
-    /**
      * Remove transitions that go out of the group
      * @param nodeId the group id
      */
@@ -8786,54 +8704,43 @@ var ProjectService = function () {
     }
 
     /**
-     * Remove the branch path taken constraints from a node
-     * @param nodeId remove the constraints from this node
+     * Remove all branch path taken constraints from a node.
+     * @param nodeId Remove the constraints from this node.
      */
 
   }, {
-    key: 'removeBranchPathTakenNodeConstraints',
-    value: function removeBranchPathTakenNodeConstraints(nodeId) {
+    key: 'removeBranchPathTakenNodeConstraintsIfAny',
+    value: function removeBranchPathTakenNodeConstraintsIfAny(nodeId) {
       var node = this.getNodeById(nodeId);
-      if (node != null) {
-        var constraints = node.constraints;
-        if (constraints != null) {
-          for (var c = 0; c < constraints.length; c++) {
-            var constraint = constraints[c];
-            if (constraint != null) {
-              var removalCriteria = constraint.removalCriteria;
+      var constraints = node.constraints;
+      if (constraints != null) {
+        for (var c = 0; c < constraints.length; c++) {
+          var constraint = constraints[c];
+          var removalCriteria = constraint.removalCriteria;
+          var _iteratorNormalCompletion121 = true;
+          var _didIteratorError121 = false;
+          var _iteratorError121 = undefined;
 
-              if (removalCriteria != null) {
-                var _iteratorNormalCompletion121 = true;
-                var _didIteratorError121 = false;
-                var _iteratorError121 = undefined;
+          try {
+            for (var _iterator121 = removalCriteria[Symbol.iterator](), _step121; !(_iteratorNormalCompletion121 = (_step121 = _iterator121.next()).done); _iteratorNormalCompletion121 = true) {
+              var removalCriterion = _step121.value;
 
-                try {
-                  for (var _iterator121 = removalCriteria[Symbol.iterator](), _step121; !(_iteratorNormalCompletion121 = (_step121 = _iterator121.next()).done); _iteratorNormalCompletion121 = true) {
-                    var removalCriterion = _step121.value;
-
-                    if (removalCriterion != null) {
-                      if (removalCriterion.name == 'branchPathTaken') {
-                        var params = removalCriterion.params;
-                        constraints.splice(c, 1);
-                        // move the counter back one because we just removed a constraint
-                        c--;
-                      }
-                    }
-                  }
-                } catch (err) {
-                  _didIteratorError121 = true;
-                  _iteratorError121 = err;
-                } finally {
-                  try {
-                    if (!_iteratorNormalCompletion121 && _iterator121.return) {
-                      _iterator121.return();
-                    }
-                  } finally {
-                    if (_didIteratorError121) {
-                      throw _iteratorError121;
-                    }
-                  }
-                }
+              if (removalCriterion.name == 'branchPathTaken') {
+                constraints.splice(c, 1);
+                c--; // update the counter so we don't skip over the next element
+              }
+            }
+          } catch (err) {
+            _didIteratorError121 = true;
+            _iteratorError121 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion121 && _iterator121.return) {
+                _iterator121.return();
+              }
+            } finally {
+              if (_didIteratorError121) {
+                throw _iteratorError121;
               }
             }
           }
@@ -8842,80 +8749,63 @@ var ProjectService = function () {
     }
 
     /**
-     * Get the branch path taken constraints from a node
-     * @param nodeId get the branch path taken constraints from this node
-     * @return an array of branch path taken constraints from the node
+     * @param nodeId Get the branch path taken constraints from this node.
+     * @return {Array} An array of branch path taken constraints from the node.
      */
 
   }, {
     key: 'getBranchPathTakenConstraintsByNodeId',
     value: function getBranchPathTakenConstraintsByNodeId(nodeId) {
       var branchPathTakenConstraints = [];
-      if (nodeId != null) {
-        var node = this.getNodeById(nodeId);
-        if (node != null) {
-          var constraints = node.constraints;
-          if (constraints != null) {
-            var _iteratorNormalCompletion122 = true;
-            var _didIteratorError122 = false;
-            var _iteratorError122 = undefined;
+      var node = this.getNodeById(nodeId);
+      var constraints = node.constraints;
+      if (constraints != null) {
+        var _iteratorNormalCompletion122 = true;
+        var _didIteratorError122 = false;
+        var _iteratorError122 = undefined;
+
+        try {
+          for (var _iterator122 = constraints[Symbol.iterator](), _step122; !(_iteratorNormalCompletion122 = (_step122 = _iterator122.next()).done); _iteratorNormalCompletion122 = true) {
+            var constraint = _step122.value;
+            var _iteratorNormalCompletion123 = true;
+            var _didIteratorError123 = false;
+            var _iteratorError123 = undefined;
 
             try {
-              for (var _iterator122 = constraints[Symbol.iterator](), _step122; !(_iteratorNormalCompletion122 = (_step122 = _iterator122.next()).done); _iteratorNormalCompletion122 = true) {
-                var constraint = _step122.value;
+              for (var _iterator123 = constraint.removalCriteria[Symbol.iterator](), _step123; !(_iteratorNormalCompletion123 = (_step123 = _iterator123.next()).done); _iteratorNormalCompletion123 = true) {
+                var removalCriterion = _step123.value;
 
-                if (constraint != null) {
-                  var removalCriteria = constraint.removalCriteria;
-                  if (removalCriteria != null) {
-                    var _iteratorNormalCompletion123 = true;
-                    var _didIteratorError123 = false;
-                    var _iteratorError123 = undefined;
-
-                    try {
-                      for (var _iterator123 = removalCriteria[Symbol.iterator](), _step123; !(_iteratorNormalCompletion123 = (_step123 = _iterator123.next()).done); _iteratorNormalCompletion123 = true) {
-                        var removalCriterion = _step123.value;
-
-                        if (removalCriterion != null) {
-                          if (removalCriterion.name == 'branchPathTaken') {
-                            /*
-                             * we have found a branch path taken constraint so
-                             * we will add the constraint to the array
-                             */
-                            branchPathTakenConstraints.push(constraint);
-                            break;
-                          }
-                        }
-                      }
-                    } catch (err) {
-                      _didIteratorError123 = true;
-                      _iteratorError123 = err;
-                    } finally {
-                      try {
-                        if (!_iteratorNormalCompletion123 && _iterator123.return) {
-                          _iterator123.return();
-                        }
-                      } finally {
-                        if (_didIteratorError123) {
-                          throw _iteratorError123;
-                        }
-                      }
-                    }
-                  }
+                if (removalCriterion.name == 'branchPathTaken') {
+                  branchPathTakenConstraints.push(constraint);
+                  break;
                 }
               }
             } catch (err) {
-              _didIteratorError122 = true;
-              _iteratorError122 = err;
+              _didIteratorError123 = true;
+              _iteratorError123 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion122 && _iterator122.return) {
-                  _iterator122.return();
+                if (!_iteratorNormalCompletion123 && _iterator123.return) {
+                  _iterator123.return();
                 }
               } finally {
-                if (_didIteratorError122) {
-                  throw _iteratorError122;
+                if (_didIteratorError123) {
+                  throw _iteratorError123;
                 }
               }
+            }
+          }
+        } catch (err) {
+          _didIteratorError122 = true;
+          _iteratorError122 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion122 && _iterator122.return) {
+              _iterator122.return();
+            }
+          } finally {
+            if (_didIteratorError122) {
+              throw _iteratorError122;
             }
           }
         }

@@ -2162,9 +2162,7 @@ class NodeAuthoringController {
     let node = this.ProjectService.getNodeById(nodeId);
 
     if (node != null) {
-
-      // remove all branch path taken constraints from the node
-      this.ProjectService.removeBranchPathTakenNodeConstraints(nodeId);
+      this.ProjectService.removeBranchPathTakenNodeConstraintsIfAny(nodeId);
 
       if (item.checked) {
         // the item was checked so we will add the branch path taken constraints to it
@@ -2193,9 +2191,7 @@ class NodeAuthoringController {
      */
     for (let item of checkedItemsInBranchPath) {
       let itemNodeId = item.$key;
-
-      // remove all branch path taken constraints from the node
-      this.ProjectService.removeBranchPathTakenNodeConstraints(itemNodeId);
+      this.ProjectService.removeBranchPathTakenNodeConstraintsIfAny(itemNodeId);
 
       /*
        * the branch path taken constraints will be from this node to
@@ -2420,9 +2416,7 @@ class NodeAuthoringController {
           if (checkedItem != null) {
             // get the node id of the checked item
             let nodeId = checkedItem.$key;
-
-            // remove the branchPathTaken constraints from the step
-            this.ProjectService.removeBranchPathTakenNodeConstraints(nodeId);
+            this.ProjectService.removeBranchPathTakenNodeConstraintsIfAny(nodeId);
 
             /*
              * update the transition of the step to point to the next step

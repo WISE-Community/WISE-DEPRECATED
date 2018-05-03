@@ -467,7 +467,7 @@ class AuthoringToolProjectService extends ProjectService {
    */
   createNodeInside(node, nodeId) {
     if (nodeId == 'inactiveNodes' || nodeId == 'inactiveGroups') {
-      this.addInactiveNode(node);
+      this.addInactiveNodeInsertAfter(node);
       this.setIdToNode(node.id, node);
       this.setIdToElement(node.id, node);
     } else {
@@ -493,7 +493,7 @@ class AuthoringToolProjectService extends ProjectService {
     if (this.isInactive(nodeId)) {
       // we are adding the node after a node that is inactive
 
-      this.addInactiveNode(node, nodeId);
+      this.addInactiveNodeInsertAfter(node, nodeId);
       this.setIdToNode(node.id, node);
       this.setIdToElement(node.id, node);
     } else {
@@ -1092,7 +1092,7 @@ class AuthoringToolProjectService extends ProjectService {
   moveToInactive(node, nodeIdToInsertAfter) {
     if (this.isActive(node.id)) {
       this.removeNodeFromActiveNodes(node.id);
-      this.addInactiveNode(node, nodeIdToInsertAfter);
+      this.addInactiveNodeInsertAfter(node, nodeIdToInsertAfter);
     }
   }
 
@@ -1101,13 +1101,13 @@ class AuthoringToolProjectService extends ProjectService {
    * @param node the node to move
    * @param nodeIdToInsertAfter place the node after this
    */
-  addInactiveNode(node, nodeIdToInsertAfter) {
+  addInactiveNodeInsertAfter(node, nodeIdToInsertAfter) {
     this.clearTransitionsFromNode(node);
 
-    if (this.isNodeIdToInsertAfterNotSpecified(nodeIdToInsertAfter)) {
-      this.insertNodeAtBeginingOfInactiveNodes(node);
+    if (this.isNodeIdToInsertTargetNotSpecified(nodeIdToInsertAfter)) {
+      this.insertNodeAtBeginningOfInactiveNodes(node);
     } else {
-      this.insertNodeAfterSpecifiedNode(node, nodeIdToInsertAfter);
+      this.insertNodeAfterInactiveNode(node, nodeIdToInsertAfter);
     }
 
     if (node.type == 'group') {
@@ -1124,12 +1124,11 @@ class AuthoringToolProjectService extends ProjectService {
     }
   }
 
-  insertNodeAtBeginingOfInactiveNodes(node) {
-    const inactiveNodes = this.getInactiveNodes();
-    inactiveNodes.splice(0, 0, node);
+  insertNodeAtBeginningOfInactiveNodes(node) {
+    this.project.inactiveNodes.splice(0, 0, node);
   }
 
-  insertNodeAfterSpecifiedNode(node, nodeIdToInsertAfter) {
+  insertNodeAfterInactiveNode(node, nodeIdToInsertAfter) {
     const inactiveNodes = this.getInactiveNodes();
     for (let i = 0; i < inactiveNodes.length; i++) {
       if (inactiveNodes[i].id === nodeIdToInsertAfter) {
@@ -1143,11 +1142,11 @@ class AuthoringToolProjectService extends ProjectService {
     }
   }
 
-  isNodeIdToInsertAfterNotSpecified(nodeIdToInsertAfter) {
-    return nodeIdToInsertAfter == null ||
-        nodeIdToInsertAfter === 'inactiveNodes' ||
-        nodeIdToInsertAfter === 'inactiveSteps' ||
-        nodeIdToInsertAfter === 'inactiveGroups';
+  isNodeIdToInsertTargetNotSpecified(nodeIdToInsertTarget) {
+    return nodeIdToInsertTarget == null ||
+        nodeIdToInsertTarget === 'inactiveNodes' ||
+        nodeIdToInsertTarget === 'inactiveSteps' ||
+        nodeIdToInsertTarget === 'inactiveGroups';
   }
 
   /**
@@ -1192,67 +1191,49 @@ class AuthoringToolProjectService extends ProjectService {
   }
 
   /**
-   * Add the node to the inactive nodes array
+   * Add the node to the inactive nodes array.
    * @param node the node to move
-   * @param nodeIdToInsertInside place the node inside this group
+   * @param nodeIdToInsertAfter place the node after this
    */
   addInactiveNodeInsertInside(node, nodeIdToInsertInside) {
-    if (node != null) {
-      const inactiveNodes = this.project.inactiveNodes;
-      const inactiveGroups = this.getInactiveGroupNodes();
+    this.clearTransitionsFromNode(node);
+    if (this.isNodeIdToInsertTargetNotSpecified(nodeIdToInsertInside)) {
+      this.insertNodeAtBeginningOfInactiveNodes(node);
+    } else {
+      this.insertNodeInsideInactiveNode(node, nodeIdToInsertInside);
+    }
+    if (node.type == 'group') {
+      this.inactiveGroupNodes.push(node.id);
+      this.addGroupChildNodesToInactive(node);
+    } else {
+      this.inactiveStepNodes.push(node.id);
+    }
+  }
 
-      if (inactiveNodes != null) {
-        // clear the transitions from this node
-        if (node.transitionLogic != null) {
-          node.transitionLogic.transitions = [];
-        }
-
-        if (nodeIdToInsertInside == null || nodeIdToInsertInside === 'inactiveNodes' || nodeIdToInsertInside === 'inactiveSteps' || nodeIdToInsertInside === 'inactiveGroups') {
-          // put the node at the beginning of the inactive steps
-          inactiveNodes.splice(0, 0, node);
-        } else {
-          // put the node after one of the inactive nodes
-
-          let added = false;
-          for (let inactiveGroup of inactiveGroups) {
-            if (nodeIdToInsertInside == inactiveGroup.id) {
-              // we have found the group we want to insert into
-              this.insertNodeInsideInTransitions(node.id, nodeIdToInsertInside);
-              this.insertNodeInsideInGroups(node.id, nodeIdToInsertInside);
-
-              /*
-               * Loop through the inactive nodes array which contains all
-               * inactive groups and inactive nodes in a flattened array.
-               * Find the inactive group and place the node right after it
-               * for the sake of keeping things organized.
-               */
-              for (let i = 0; i < inactiveNodes.length; i++) {
-                let inactiveNode = inactiveNodes[i];
-                if (nodeIdToInsertInside == inactiveNode.id) {
-                  inactiveNodes.splice(i + 1, 0, node);
-                  added = true;
-                }
-              }
-            }
+  insertNodeInsideInactiveNode(node, nodeIdToInsertInside) {
+    const inactiveNodes = this.getInactiveNodes();
+    const inactiveGroupNodes = this.getInactiveGroupNodes();
+    for (let inactiveGroup of inactiveGroupNodes) {
+      if (nodeIdToInsertInside == inactiveGroup.id) {
+        this.insertNodeInsideInTransitions(node.id, nodeIdToInsertInside);
+        this.insertNodeInsideInGroups(node.id, nodeIdToInsertInside);
+        for (let i = 0; i < inactiveNodes.length; i++) {
+          if (inactiveNodes[i].id == nodeIdToInsertInside) {
+            inactiveNodes.splice(i + 1, 0, node);
           }
-
-          if (!added) {
-            /*
-             * we haven't added the node yet so we will just add it
-             * to the end of the array
-             */
-            inactiveNodes.push(node);
-          }
-        }
-
-        if (node.type == 'group') {
-          this.inactiveGroupNodes.push(node.id);
-          this.addGroupChildNodesToInactive(node);
-        } else {
-          this.inactiveStepNodes.push(node.id);
         }
       }
     }
+  }
+
+  /**
+    * Move an inactive node within the inactive nodes array.
+    * @param node The node to move.
+    * @param nodeIdToInsertAfter Place the node after this.
+    */
+  moveInactiveNodeToInactiveSection(node, nodeIdToInsertAfter) {
+    this.removeNodeFromInactiveNodes(node.id);
+    this.addInactiveNodeInsertAfter(node, nodeIdToInsertAfter);
   }
 }
 
