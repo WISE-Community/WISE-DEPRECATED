@@ -195,19 +195,13 @@ describe('ProjectService Unit Test', () => {
     // TODO: add test for ProjectService.insertNodeInsideInTransitions()
 
     // MARK: Tests for Node and Group Id functions
-    // test ProjectService.getStartNodeId()
     it('should return the start node of the project', () => {
       ProjectService.setProject(demoProjectJSON);
       const expectedStartNodeId = "node1";  // Demo project's start node id
       const actualStartNodeId = ProjectService.getStartNodeId();
       expect(actualStartNodeId).toEqual(expectedStartNodeId);
-
-      ProjectService.setProject(null);  // Set a null project
-      const nullProjectStartNodeId = ProjectService.getStartNodeId();
-      expect(nullProjectStartNodeId).toBeNull();
     });
 
-    // test ProjectService.getNodeById()
     it('should return the node by nodeId', () => {
       ProjectService.setProject(scootersProjectJSON);
       const node1 = ProjectService.getNodeById("node1");
@@ -224,7 +218,6 @@ describe('ProjectService Unit Test', () => {
       expect(nodeNE).toBeNull();
     });
 
-    // test ProjectService.getNodeTitleByNodeId()
     it('should return the node title by nodeId', () => {
       ProjectService.setProject(scootersProjectJSON);
       const node1Title = ProjectService.getNodeTitleByNodeId("node1");
@@ -242,7 +235,6 @@ describe('ProjectService Unit Test', () => {
     // TODO: add test for ProjectService.getNodePositionAndTitleByNodeId()
     // TODO: add test for ProjectService.getNodeIconByNodeId()
 
-    // test ProjectService.getNextAvailableNodeId()
     it('should return the next available node id', () => {
       createNormalSpy();
       ProjectService.setProject(scootersProjectJSON);
@@ -251,7 +243,6 @@ describe('ProjectService Unit Test', () => {
       expect(nextNodeIdActual).toEqual(nextNodeIdExpected);
     });
 
-    // test ProjectService.getNextAvailableGroupId()
     it('should return the next available group id', () => {
       createNormalSpy();
       ProjectService.setProject(scootersProjectJSON);
@@ -260,7 +251,6 @@ describe('ProjectService Unit Test', () => {
       expect(nextGroupIdActual).toEqual(nextGroupIdExpected);
     });
 
-    // test ProjectService.getGroupIds()
     it('should return the group ids in the project', () => {
       createNormalSpy();
       ProjectService.setProject(scootersProjectJSON);
@@ -269,7 +259,6 @@ describe('ProjectService Unit Test', () => {
       expect(groupIdsActual).toEqual(groupIdsExpected);
     });
 
-    // test ProjectService.getNodeIds()
     it('should return the node ids in the project', () => {
       createNormalSpy();
       ProjectService.setProject(scootersProjectJSON);
@@ -282,7 +271,6 @@ describe('ProjectService Unit Test', () => {
       expect(nodeIdsActual).toEqual(nodeIdsExpected);
     });
 
-    // test ProjectService.getComponentByNodeIdAndComponentId()
     it('should get the component by node id and comonent id', () => {
       ProjectService.setProject(scootersProjectJSON);
       // nodeId is null
@@ -312,7 +300,6 @@ describe('ProjectService Unit Test', () => {
       expect(componentExists2.url).toEqual("NewtonScooters-potential-kinetic.html");
     });
 
-    // test ProjectService.getComponentPositionByNodeIdAndComponentId()
     it('should get the component position by node id and comonent id', () => {
       ProjectService.setProject(scootersProjectJSON);
       // nodeId is null
@@ -339,7 +326,6 @@ describe('ProjectService Unit Test', () => {
       expect(componentExists2).toEqual(1);
     });
 
-    // test ProjectService.getComponentsByNodeId()
     it('should get the components by node id', () => {
       ProjectService.setProject(scootersProjectJSON);
       // nodeId is null
@@ -486,6 +472,22 @@ describe('ProjectService Unit Test', () => {
       ProjectService.removeNodeIdFromGroup(ProjectService.getNodeById('group1'), 'node2');
       expect(ProjectService.getChildNodeIdsById('group1').length).toEqual(17);
       expect(ProjectService.getGroupStartId('group1')).toEqual('node3');
-    })
+    });
+
+    it('should identify branch start point', () => {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.isBranchStartPoint("group1")).toBeFalsy();
+      expect(ProjectService.isBranchStartPoint("node29")).toBeFalsy();
+      expect(ProjectService.isBranchStartPoint("node32")).toBeFalsy();
+      expect(ProjectService.isBranchStartPoint("node30")).toBeTruthy();
+    });
+
+    it('should identify branch merge point', () => {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.isBranchMergePoint("group1")).toBeFalsy();
+      expect(ProjectService.isBranchMergePoint("node30")).toBeFalsy();
+      expect(ProjectService.isBranchMergePoint("node32")).toBeFalsy();
+      expect(ProjectService.isBranchMergePoint("node34")).toBeTruthy();
+    });
   });
 });

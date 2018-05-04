@@ -974,7 +974,6 @@ var AuthoringToolProjectService = function (_ProjectService) {
     value: function addBranchPathTakenConstraints(targetNodeId, fromNodeId, toNodeId) {
       if (targetNodeId != null) {
         var node = this.getNodeById(targetNodeId);
-
         if (node != null) {
           /*
            * create the constraint that makes the node not visible until

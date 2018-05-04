@@ -695,7 +695,6 @@ class AuthoringToolProjectService extends ProjectService {
   addBranchPathTakenConstraints(targetNodeId, fromNodeId, toNodeId) {
     if (targetNodeId != null) {
       const node = this.getNodeById(targetNodeId);
-
       if (node != null) {
         /*
          * create the constraint that makes the node not visible until
