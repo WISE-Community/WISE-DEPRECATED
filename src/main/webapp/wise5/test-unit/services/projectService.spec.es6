@@ -429,18 +429,18 @@ describe('ProjectService Unit Test', () => {
 
     it('should check order between step and step/group', () => {
       ProjectService.setProject(demoProjectJSON);
-      expect(ProjectService.isNodeIdAfter('node1', 'node2')).toEqual(true);
-      expect(ProjectService.isNodeIdAfter('node2', 'node1')).toEqual(false);
-      expect(ProjectService.isNodeIdAfter('node1', 'group2')).toEqual(true);
-      expect(ProjectService.isNodeIdAfter('node20', 'group1')).toEqual(false);
+      expect(ProjectService.isNodeIdAfter('node1', 'node2')).toBeTruthy();
+      expect(ProjectService.isNodeIdAfter('node2', 'node1')).toBeFalsy();
+      expect(ProjectService.isNodeIdAfter('node1', 'group2')).toBeTruthy();
+      expect(ProjectService.isNodeIdAfter('node20', 'group1')).toBeFalsy();
     });
 
     it('should check order between group and step/group', () => {
       ProjectService.setProject(demoProjectJSON);
-      expect(ProjectService.isNodeIdAfter('group1', 'group2')).toEqual(true);
-      expect(ProjectService.isNodeIdAfter('group2', 'group1')).toEqual(false);
-      expect(ProjectService.isNodeIdAfter('group1', 'node20')).toEqual(true);
-      expect(ProjectService.isNodeIdAfter('group2', 'node1')).toEqual(false);
+      expect(ProjectService.isNodeIdAfter('group1', 'group2')).toBeTruthy();
+      expect(ProjectService.isNodeIdAfter('group2', 'group1')).toBeFalsy();
+      expect(ProjectService.isNodeIdAfter('group1', 'node20')).toBeTruthy();
+      expect(ProjectService.isNodeIdAfter('group2', 'node1')).toBeFalsy();
     });
 
     it('should remove transitions going out of group in child nodes of group', () => {
@@ -488,6 +488,57 @@ describe('ProjectService Unit Test', () => {
       expect(ProjectService.isBranchMergePoint("node30")).toBeFalsy();
       expect(ProjectService.isBranchMergePoint("node32")).toBeFalsy();
       expect(ProjectService.isBranchMergePoint("node34")).toBeTruthy();
+    });
+
+    it('should get path when nodeId is found', () => {
+      const paths = [
+        ['node1', 'node2', 'node3', 'node4', 'node5']
+      ];
+      const subPath = ProjectService.consumePathsUntilNodeId(paths, 'node3');
+      const expectedPath = ['node1', 'node2'];
+      expect(JSON.stringify(subPath)).toEqual(JSON.stringify(expectedPath));
+
+      const paths2 = [
+        ['node1', 'node2', 'node3', 'node4', 'node5'],
+        ['node1', 'node2', 'node4', 'node3', 'node5']
+      ];
+      const subPath2 = ProjectService.consumePathsUntilNodeId(paths2, 'node3');
+      const expectedPath2 = ['node1', 'node2', 'node4'];
+      expect(JSON.stringify(subPath2)).toEqual(JSON.stringify(expectedPath2));
+    });
+
+    it('should get path when nodeId is found as first', () => {
+      const paths = [
+        ['node1', 'node2', 'node3', 'node4', 'node5']
+      ];
+      const subPath = ProjectService.consumePathsUntilNodeId(paths, 'node1');
+      const expectedPath = [];
+      expect(JSON.stringify(subPath)).toEqual(JSON.stringify(expectedPath));
+
+      const paths2 = [
+        ['node1', 'node2', 'node3', 'node4', 'node5'],
+        ['node1', 'node2', 'node4', 'node3', 'node5']
+      ];
+      const subPath2 = ProjectService.consumePathsUntilNodeId(paths2, 'node1');
+      const expectedPath2 = [];
+      expect(JSON.stringify(subPath2)).toEqual(JSON.stringify(expectedPath2));
+    });
+
+    it('should get path when nodeId is not found', () => {
+      const paths = [
+        ['node1', 'node2', 'node3', 'node4', 'node5']
+      ];
+      const subPath = ProjectService.consumePathsUntilNodeId(paths, 'node6');
+      const expectedPath = [];
+      expect(JSON.stringify(subPath)).toEqual(JSON.stringify(expectedPath));
+
+      const paths2 = [
+        ['node1', 'node2', 'node3', 'node4', 'node5'],
+        ['node1', 'node2', 'node4', 'node3', 'node5']
+      ];
+      const subPath2 = ProjectService.consumePathsUntilNodeId(paths2, 'node6');
+      const expectedPath2 = [];
+      expect(JSON.stringify(subPath2)).toEqual(JSON.stringify(expectedPath2));
     });
   });
 });

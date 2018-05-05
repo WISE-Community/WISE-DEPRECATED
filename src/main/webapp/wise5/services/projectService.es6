@@ -1701,115 +1701,19 @@ class ProjectService {
    * @return an array of node ids that we have consumed
    */
   consumePathsUntilNodeId(paths, nodeId) {
-    let consumedNodeIds = [];
-
-    if (paths != null && nodeId != null) {
-      for (let p = 0; p < paths.length; p++) {
-        const path = paths[p];
-
-        // check if the path contains the node id to stop consuming at
-        if (path != null && path.indexOf(nodeId) != -1) {
-          /*
-           * the path does contain the node id to stop consuming at
-           * so we will consume the node ids in this path until
-           * we get to the given node id to stop consuming at
-           */
-
-          for (let x = 0; x < path.length; x++) {
-            const tempNodeId = path[x];
-
-            if (nodeId === tempNodeId) {
-              /*
-               * the node id is the same as the one we need to
-               * stop consuming at so we will stop looking
-               * at this path
-               */
-              break;
-            } else {
-              /*
-               * the node id is not the one that we need to stop consuming at
-               * so we will consume it
-               */
-
-              // get all the paths that contain the node id
-              const pathsThatContainNodeId = this.getPathsThatContainNodeId(tempNodeId, paths);
-
-              if (pathsThatContainNodeId.length === 1) {
-                // there is only one path with this node id
-
-                // remove the node id from the path
-                this.removeNodeIdFromPath(tempNodeId, paths, p);
-
-                // move the counter back one since we have just removed a node id
-                x--;
-
-                // add the node id to the consumed node ids array
-                consumedNodeIds.push(tempNodeId);
-              } else {
-                // there are multiple paths with this node id
-
-                // tempNodeId must come before nodeId
-
-                const pathsToConsume = [];
-
-                for (let pathThatContainsNodeId of pathsThatContainNodeId) {
-                  // get the index of the node id we want to remove
-                  const tempNodeIdIndex = pathThatContainsNodeId.indexOf(tempNodeId);
-
-                  // get the index of the node id we want to stop consuming at
-                  const nodeIdIndex = pathThatContainsNodeId.indexOf(nodeId);
-
-                  /*
-                   * check if the node id we want to remove comes before
-                   * the node id we want to stop consuming at. we need to
-                   * do this to prevent an infinite loop. an example of
-                   * when this can happen is if there are two paths
-                   *
-                   * path1 = 1, 2, 3, 4, 5
-                   * path2 = 1, 2, 4, 3, 5
-                   *
-                   * as we consume path1 we will need to consume 3. in order to
-                   * consume 3, we must consume consume up to 3 in path2.
-                   * in order to consume up to 3 in path2 we must consume 4.
-                   * in order to consume 4, we must consume everything before
-                   * 4 in path1. everything before 4 in path1 is 1, 2, 3.
-                   * this means we need to consume 3 which brings us back up
-                   * to the top of this paragraph creating an infinite loop.
-                   *
-                   * this check below will prevent infinite loops by only
-                   * adding paths that have the tempNodeId come before the
-                   * nodeId to stop consuming at.
-                   */
-                  if (tempNodeIdIndex < nodeIdIndex) {
-                    pathsToConsume.push(pathThatContainsNodeId);
-                  }
-                }
-
-                /*
-                 * take the paths that contain the given node id and consume
-                 * the paths until the given node id
-                 */
-                const tempConsumedNodeIds = this.consumePathsUntilNodeId(pathsToConsume, tempNodeId);
-
-                // remove the node id from the paths that contain it
-                this.removeNodeIdFromPaths(tempNodeId, pathsThatContainNodeId);
-
-                // add the temp consumed node ids to our consumed node ids array
-                consumedNodeIds = consumedNodeIds.concat(tempConsumedNodeIds);
-
-                // move the counter back one since we have just removed a node id
-                x--;
-
-                // add the node id to the consumed node ids array
-                consumedNodeIds.push(tempNodeId);
-              }
-            }
+    let consumedNodes = [];
+    for (let path of paths) {
+      if (path.includes(nodeId)) {
+        let subPath = path.slice(0, path.indexOf(nodeId));
+        for (let nodeIdInPath of subPath) {
+          if (!consumedNodes.includes(nodeIdInPath)) {
+            consumedNodes.push(nodeIdInPath);
           }
         }
       }
     }
-    return consumedNodeIds;
-  };
+    return consumedNodes;
+  }
 
   /**
    * Get the path at the given index and get the first node id in
