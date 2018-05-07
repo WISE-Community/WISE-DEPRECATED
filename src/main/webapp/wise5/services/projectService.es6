@@ -1255,7 +1255,7 @@ class ProjectService {
       method: 'POST',
       url: saveProjectURL,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      data: $param({
+      data: $.param({
         projectId: projectId,
         commitMessage: commitMessage,
         projectJSONString: angular.toJson(this.project, 4)
