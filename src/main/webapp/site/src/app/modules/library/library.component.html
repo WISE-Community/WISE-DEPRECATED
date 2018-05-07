@@ -1,32 +1,34 @@
 <div class="library">
-  <h2 class="accent-1" fxLayout="row" fxLayoutAlign=" center">
-    <mat-icon> filter_list </mat-icon>Browse By
-  </h2>
-  <div fxLayout="row wrap" fxLayout.xs="column">
-    <div class="library-filter" fxFlex fxFlex.xs="100%" >
-      <app-select-menu [options]="disciplineOptions" [placeholderText]="'Discipline'" [value]="disciplineValue"
-        (update)="filterUpdated($event)" [valueProp]="'id'" [viewValueProp]="'name'"
-        [multiple]="true"></app-select-menu>
+  <div class="content-block dark-theme primary-bg library__header">
+    <h2 fxLayout="row" fxLayoutAlign="start center">
+      <mat-icon> filter_list </mat-icon>Browse
+    </h2>
+    <div fxLayout="row wrap" fxLayout.xs="column">
+      <div class="library-filter" fxFlex fxFlex.xs="100%" >
+        <app-select-menu [options]="disciplineOptions" [placeholderText]="'Discipline'" [value]="disciplineValue"
+                         (update)="filterUpdated($event)" [valueProp]="'id'" [viewValueProp]="'name'"
+                         [multiple]="true"></app-select-menu>
+      </div>
+      <div class="library-filter" fxFlex fxFlex.xs="100%" >
+        <app-select-menu [options]="dciArrangementOptions" [placeholderText]="'DCI Arrangement'"
+                         [value]="dciArrangementValue" (update)="filterUpdated($event)" [valueProp]="'id'" [viewValueProp]="'name'"
+                         [multiple]="true"></app-select-menu>
+      </div>
+      <div class="library-filter" fxFlex fxFlex.xs="100%" >
+        <app-select-menu [options]="peOptions" [placeholderText]="'Performance Expectation'" [value]="peValue"
+                         (update)="filterUpdated($event)" [valueProp]="'id'" [viewValueProp]="'name'"
+                         [multiple]="true"></app-select-menu>
+      </div>
+      <div class="library-filter" fxFlex fxFlex.xs="100%" >
+        <app-search-bar [placeholderText]="'Keyword search'"
+                        (update)="searchUpdated($event)"></app-search-bar>
+      </div>
     </div>
-    <div class="library-filter" fxFlex fxFlex.xs="100%" >
-      <app-select-menu [options]="dciArrangementOptions" [placeholderText]="'DCI Arrangement'"
-        [value]="dciArrangementValue" (update)="filterUpdated($event)" [valueProp]="'id'" [viewValueProp]="'name'"
-        [multiple]="true"></app-select-menu>
-    </div>
-    <div class="library-filter" fxFlex fxFlex.xs="100%" >
-      <app-select-menu [options]="peOptions" [placeholderText]="'Performance Expectation'" [value]="peValue"
-        (update)="filterUpdated($event)" [valueProp]="'id'" [viewValueProp]="'name'"
-        [multiple]="true"></app-select-menu>
-    </div>
-    <div class="library-filter" fxFlex fxFlex.xs="100%" >
-      <app-search-bar [placeholderText]="'Search'"
-        (update)="searchUpdated($event)"></app-search-bar>
+    <div class="info-block center">
+      Explore suggested curricula for the grade levels below or use the search and browse tools to find specific units that address your needs.
     </div>
   </div>
-  <div class="info-block notice">
-    Explore suggested curricula for the grade levels below or use the search and browse tools to find specific units that address your needs.
-  </div>
-  <h2 class="accent-1">Suggested Curriculum Sequences</h2>
+  <h2 class="accent-1 heading">Suggested Curriculum Sequences</h2>
   <ng-container id="libraryGroups" *ngFor="let group of libraryGroups">
     <mat-accordion class="library__groups" multi="true" *ngIf="arrangement === group.id">
       <ng-container *ngFor="let child of group.children; let i = index">

@@ -17,16 +17,36 @@
     color: map-get($colors, primary);
   }
 
-  .content-block {
-    background-color: map-get($colors, content-block-bg);
+  .content-block, .info-block {
+    background-color: map-get($background, background);
   }
 
   .notice {
     background-color: map-get($colors, notice-bg);
   }
 
-  .search-bar .mat-form-field-flex, .select-menu .mat-form-field-infix {
-    background-color: map-get($background, raised-button);
+  .search-bar {
+    .mat-form-field-flex {
+      background-color: map-get($colors, control-bg);
+    }
+
+    &.mat-focused {
+      .mat-form-field-flex {
+        background-color: map-get($colors, control-bg-active);
+      }
+    }
+  }
+
+  .select-menu {
+    .mat-form-field-infix {
+      background-color: map-get($colors, control-bg);
+    }
+
+    &.mat-focused {
+      .mat-form-field-infix {
+        background-color: map-get($colors, control-bg-active);
+      }
+    }
   }
 
   .mat-button {

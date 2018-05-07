@@ -7,17 +7,25 @@
 
   h2 {
     font-weight: 400;
-    margin-left: 8px;
     margin-bottom: 8px;
 
     mat-icon {
-      margin-right: 4px;
+      margin-right: 8px;
     }
   }
 }
 
+.library__header {
+  color: #ffffff;
+  margin-bottom: 32px;
+
+  .info-block {
+    background-color: transparent;
+  }
+}
+
 .library-filter {
-  margin: 0 8px;
+  margin: 0 4px;
 }
 
 .library__groups {

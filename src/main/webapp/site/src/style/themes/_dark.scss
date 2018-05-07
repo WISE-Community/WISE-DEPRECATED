@@ -125,6 +125,8 @@ $background: map-get($dark-theme, background);
 $dark-colors: (
   'accent': mat-color($accent),
   'btn-bg': rgba(white, 0.02),
+  'control-bg': rgba(white, 0.12),
+  'control-bg-active': rgba(white, 0.24),
   'disabled-text': mat-color($foreground, disabled-text),
   'info': #ef6c00,
   'notice-bg': rgba(black, 0.87),

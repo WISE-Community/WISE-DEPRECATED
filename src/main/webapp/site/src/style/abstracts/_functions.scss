@@ -1,12 +1,3 @@
-// Get colors from $colors map
-//@function color($colors, $key) {
-  //@if map-has-key($colors, $key) {
-    //@return map-get($colors, $key);
-  //}
-  //@warn "Unknown `#{$key}` in $colors.";
-  //@return null;
-//}
-
 // create a custom Angular Material theme
 @function create-custom-theme($primary, $accent, $warn, $foreground, $background, $isDark: false) {
   @return (

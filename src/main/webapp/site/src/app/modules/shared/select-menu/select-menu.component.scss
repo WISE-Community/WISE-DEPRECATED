@@ -6,24 +6,33 @@
   .mat-form-field-infix {
     border: 0;
     margin-top: 1.4375em;
-    @include mat-elevation(2);
-    padding: 0.75em 0.4375em;
+    padding: 0.875em 0.656em;
     border-radius: 2px;
+  }
+
+  .mat-form-field-label {
+    top: 1.725em;
+    left: .656em;
   }
 
   &.mat-form-field-should-float {
     .mat-form-field-label-wrapper {
-      top: -1.5875em;
-      padding-top: 1.5875em;
+      top: -1.4375em;
+      padding-top: 1.4375em;
+    }
+
+    .mat-form-field-label {
+      top: 1.4375em;
     }
   }
 
-  .mat-form-field-label {
-    top: 1.5875em;
-    left: .4375em;
-  }
-
   .mat-form-field-underline {
-    display: none;
+    height: 0;
+
+    .mat-form-field-ripple {
+      top: -2px;
+      border-bottom-left-radius: 2px;
+      border-bottom-right-radius: 2px;
+    }
   }
 }

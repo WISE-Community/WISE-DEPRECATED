@@ -6,12 +6,12 @@
   .mat-form-field-flex {
     display: flex;
     width: auto;
-    padding: 0 .4375em;
+    padding: 0 .656em;
     border-radius: 2px;
-    line-height: 36px;
+    line-height: 2.875em;
     margin-top: 1.4375em;
     //@include mat-elevation(1);
-    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.4);
+    //box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.4);
   }
 
   .mat-form-field-infix {
@@ -20,12 +20,11 @@
   }
 
   input.mat-input-element {
-    //margin-top: 0;
-    line-height: 36px;
+    line-height: 2.875em;
   }
 
   .mat-form-field-label {
-    top: 0.84375em;
+    top: 0.875em;
 
     &.mat-form-field-empty {
       top: 1.4375em;
@@ -34,7 +33,7 @@
 
   &.mat-focused {
     .mat-form-field-label.mat-form-field-empty {
-      top: 0.84375em;
+      top: 0.875em;
     }
   }
 
@@ -50,6 +49,12 @@
   }
 
   .mat-form-field-underline {
-    display: none;
+    height: 0;
+
+    .mat-form-field-ripple {
+      top: -2px;
+      border-bottom-left-radius: 2px;
+      border-bottom-right-radius: 2px;
+    }
   }
 }
