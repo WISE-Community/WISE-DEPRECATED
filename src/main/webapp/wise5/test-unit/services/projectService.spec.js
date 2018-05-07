@@ -536,6 +536,29 @@ describe('ProjectService Unit Test', function () {
       var expectedPath2 = [];
       expect(JSON.stringify(subPath2)).toEqual(JSON.stringify(expectedPath2));
     });
+
+    it('should be able to insert a step node after another step node', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('node1'), 'node2')).toBeTruthy();
+      ProjectService.insertNodeAfterInTransitions(ProjectService.getNodeById('node1'), 'node2');
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('node1'), 'node2')).toBeFalsy();
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('node2'), 'node1')).toBeTruthy();
+    });
+
+    it('should be able to insert an activity node after another activity node', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('group1'), 'group2')).toBeTruthy();
+      ProjectService.insertNodeAfterInTransitions(ProjectService.getNodeById('group1'), 'group2');
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('group1'), 'group2')).toBeFalsy();
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('group2'), 'group1')).toBeTruthy();
+    });
+
+    it('should not be able to insert a node after another node when they are different types', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(function () {
+        ProjectService.insertNodeAfterInTransitions(ProjectService.getNodeById('node1'), 'group2');
+      }).toThrow('Error: insertNodeAfterInTransitions() nodes are not the same type');
+    });
   });
 });
 //# sourceMappingURL=projectService.spec.js.map

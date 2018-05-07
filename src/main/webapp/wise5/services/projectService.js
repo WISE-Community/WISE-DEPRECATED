@@ -1336,6 +1336,20 @@ var ProjectService = function () {
     }
 
     /**
+     * @param node A node object.
+     * @param constraint A constraint object.
+     */
+
+  }, {
+    key: 'addConstraintToNode',
+    value: function addConstraintToNode(node, constraint) {
+      if (node.constraints == null) {
+        node.constraints = [];
+      }
+      node.constraints.push(constraint);
+    }
+
+    /**
      * Check if a node has constraints.
      * @param nodeId The node id of the node.
      * @return true iff the node has constraints authored on it.
@@ -1545,10 +1559,12 @@ var ProjectService = function () {
     key: 'getTransitionLogicByFromNodeId',
     value: function getTransitionLogicByFromNodeId(fromNodeId) {
       var node = this.getNodeById(fromNodeId);
-      if (node != null) {
-        return node.transitionLogic;
+      if (node.transitionLogic == null) {
+        node.transitionLogic = {
+          transitions: []
+        };
       }
-      return null;
+      return node.transitionLogic;
     }
   }, {
     key: 'getTransitionsByFromNodeId',
@@ -1557,14 +1573,11 @@ var ProjectService = function () {
     /**
      * Get the transitions for a node
      * @param fromNodeId the node to get transitions from
-     * @returns an array of transitions
+     * @returns {Array} an array of transitions
      */
     value: function getTransitionsByFromNodeId(fromNodeId) {
       var transitionLogic = this.getTransitionLogicByFromNodeId(fromNodeId);
-      if (transitionLogic != null) {
-        return transitionLogic.transitions;
-      }
-      return [];
+      return transitionLogic.transitions;
     }
 
     /**
@@ -1648,6 +1661,7 @@ var ProjectService = function () {
      * @returns Whether the node has a transition to the given nodeId.
      */
     value: function nodeHasTransitionToNodeId(node, toNodeId) {
+      // TODO Refactor
       var transitionLogic = node.transitionLogic;
       if (transitionLogic != null) {
         var transitions = transitionLogic.transitions;
@@ -3741,162 +3755,138 @@ var ProjectService = function () {
     }
 
     /**
-     * Update the transitions to handle inserting a node after another node
-     * @param node the node to insert
-     * @param nodeId the node id to insert after
+     * Update the transitions to handle inserting a node after another node.
+     * The two nodes must either both be steps or both be activities.
+     * @param nodeToInsert the node to insert
+     * @param nodeIdToInsertAfter the node id to insert after
      */
 
   }, {
     key: 'insertNodeAfterInTransitions',
-    value: function insertNodeAfterInTransitions(node, nodeId) {
-      var previousNode = this.getNodeById(nodeId);
+    value: function insertNodeAfterInTransitions(nodeToInsert, nodeIdToInsertAfter) {
+      var nodeToInsertAfter = this.getNodeById(nodeIdToInsertAfter);
+      if (nodeToInsert.type != nodeToInsertAfter.type) {
+        throw 'Error: insertNodeAfterInTransitions() nodes are not the same type';
+      }
+      if (nodeToInsertAfter.transitionLogic == null) {
+        nodeToInsertAfter.transitionLogic = {
+          transitions: []
+        };
+      }
+      if (nodeToInsert.transitionLogic == null) {
+        nodeToInsert.transitionLogic = {
+          transitions: []
+        };
+      }
+      if (this.isGroupNode(nodeToInsert.id)) {
+        this.updateChildrenTransitionsInAndOutOfGroup(nodeToInsert, nodeIdToInsertAfter);
+      }
+      this.copyTransitions(nodeToInsertAfter, nodeToInsert);
+      if (nodeToInsert.transitionLogic.transitions.length == 0) {
+        this.copyParentTransitions(nodeIdToInsertAfter, nodeToInsert);
+      }
+      var transitionObject = {
+        to: nodeToInsert.id
+      };
+      nodeToInsertAfter.transitionLogic.transitions = [transitionObject];
+      this.updateBranchPathTakenConstraints(nodeToInsert, nodeIdToInsertAfter);
+    }
 
-      if (previousNode != null) {
-        if (previousNode.transitionLogic == null) {
-          previousNode.transitionLogic = {};
-          previousNode.transitionLogic.transitions = [];
-        }
+    /*
+     * Copy the transitions from nodeId's parent and add to node's transitions.
+     * @param nodeId Copy the transition of this nodeId's parent.
+     * @param node The node to add transitions to.
+     */
 
-        if (node.transitionLogic == null) {
-          node.transitionLogic = {};
-        }
+  }, {
+    key: 'copyParentTransitions',
+    value: function copyParentTransitions(nodeId, node) {
+      var parentGroupId = this.getParentGroupId(nodeId);
+      if (parentGroupId != 'group0') {
+        var parentTransitions = this.getTransitionsByFromNodeId(parentGroupId);
+        var _iteratorNormalCompletion54 = true;
+        var _didIteratorError54 = false;
+        var _iteratorError54 = undefined;
 
-        if (node.transitionLogic.transitions == null) {
-          node.transitionLogic.transitions = [];
-        }
+        try {
+          for (var _iterator54 = parentTransitions[Symbol.iterator](), _step54; !(_iteratorNormalCompletion54 = (_step54 = _iterator54.next()).done); _iteratorNormalCompletion54 = true) {
+            var parentTransition = _step54.value;
 
-        if (this.isGroupNode(node.id)) {
-          /*
-           * the node we are inserting is a group so we will update
-           * the transitions of its children so that they transition
-           * to the correct node
-           */
-          this.updateChildrenTransitionsForMovingGroup(node, nodeId);
-        }
-
-        var previousNodeTransitionLogic = previousNode.transitionLogic;
-
-        if (previousNodeTransitionLogic != null) {
-          var transitions = previousNodeTransitionLogic.transitions;
-
-          if (transitions != null) {
-            var transitionsJSONString = angular.toJson(transitions);
-            var transitionsCopy = angular.fromJson(transitionsJSONString);
-
-            // set the transitions from the before node into the inserted node
-            node.transitionLogic.transitions = transitionsCopy;
-          }
-        }
-
-        if (node.transitionLogic.transitions.length == 0) {
-          /*
-           * The node does not have any transitions so we will look for
-           * a transition on the parent group. If the parent has a
-           * transition we will use it for the node.
-           */
-
-          var parentGroupId = this.getParentGroupId(nodeId);
-
-          if (parentGroupId != null && parentGroupId != '' && parentGroupId != 'group0') {
-            var parentTransitions = this.getTransitionsByFromNodeId(parentGroupId);
-
-            if (parentTransitions != null) {
-              var _iteratorNormalCompletion54 = true;
-              var _didIteratorError54 = false;
-              var _iteratorError54 = undefined;
-
-              try {
-                for (var _iterator54 = parentTransitions[Symbol.iterator](), _step54; !(_iteratorNormalCompletion54 = (_step54 = _iterator54.next()).done); _iteratorNormalCompletion54 = true) {
-                  var parentTransition = _step54.value;
-
-                  var newTransition = {};
-                  if (parentTransition != null) {
-                    var toNodeId = parentTransition.to;
-                    if (this.isGroupNode(toNodeId)) {
-                      var startId = this.getGroupStartId(toNodeId);
-                      if (startId == null || startId == '') {
-                        // there is no start id so we will just use the group id
-                        newTransition.to = toNodeId;
-                      } else {
-                        // there is a start id so we will use it as the to node
-                        newTransition.to = startId;
-                      }
-                    } else {
-                      newTransition.to = toNodeId;
-                    }
-                  }
-                  node.transitionLogic.transitions.push(newTransition);
-                }
-              } catch (err) {
-                _didIteratorError54 = true;
-                _iteratorError54 = err;
-              } finally {
-                try {
-                  if (!_iteratorNormalCompletion54 && _iterator54.return) {
-                    _iterator54.return();
-                  }
-                } finally {
-                  if (_didIteratorError54) {
-                    throw _iteratorError54;
-                  }
-                }
+            var newTransition = {};
+            var toNodeId = parentTransition.to;
+            if (this.isGroupNode(toNodeId)) {
+              var startId = this.getGroupStartId(toNodeId);
+              if (startId == null || startId == '') {
+                newTransition.to = toNodeId;
+              } else {
+                newTransition.to = startId;
               }
             }
+            node.transitionLogic.transitions.push(newTransition);
           }
-        }
-
-        var newNodeId = node.id;
-
-        // TODO handle branching case
-
-        previousNode.transitionLogic.transitions = [];
-
-        var transitionObject = {};
-        transitionObject.to = newNodeId;
-        previousNode.transitionLogic.transitions.push(transitionObject);
-        this.removeBranchPathTakenNodeConstraintsIfAny(node.id);
-        var branchPathTakenConstraints = this.getBranchPathTakenConstraintsByNodeId(nodeId);
-
-        /*
-         * if the previous node was in a branch path, we will also put the
-         * inserted node into the branch path
-         */
-        if (branchPathTakenConstraints != null && branchPathTakenConstraints.length > 0) {
-          if (node.constraints == null) {
-            node.constraints = [];
-          }
-
-          var _iteratorNormalCompletion55 = true;
-          var _didIteratorError55 = false;
-          var _iteratorError55 = undefined;
-
+        } catch (err) {
+          _didIteratorError54 = true;
+          _iteratorError54 = err;
+        } finally {
           try {
-            for (var _iterator55 = branchPathTakenConstraints[Symbol.iterator](), _step55; !(_iteratorNormalCompletion55 = (_step55 = _iterator55.next()).done); _iteratorNormalCompletion55 = true) {
-              var branchPathTakenConstraint = _step55.value;
-
-              if (branchPathTakenConstraint != null) {
-                // create a new constraint with the same branch path taken parameters
-                var newConstraint = {};
-                newConstraint.id = this.getNextAvailableConstraintIdForNodeId(node.id);
-                newConstraint.action = branchPathTakenConstraint.action;
-                newConstraint.targetId = node.id;
-                newConstraint.removalCriteria = this.UtilService.makeCopyOfJSONObject(branchPathTakenConstraint.removalCriteria);
-                node.constraints.push(newConstraint);
-              }
+            if (!_iteratorNormalCompletion54 && _iterator54.return) {
+              _iterator54.return();
             }
-          } catch (err) {
-            _didIteratorError55 = true;
-            _iteratorError55 = err;
           } finally {
-            try {
-              if (!_iteratorNormalCompletion55 && _iterator55.return) {
-                _iterator55.return();
-              }
-            } finally {
-              if (_didIteratorError55) {
-                throw _iteratorError55;
-              }
+            if (_didIteratorError54) {
+              throw _iteratorError54;
             }
+          }
+        }
+      }
+    }
+  }, {
+    key: 'copyTransitions',
+    value: function copyTransitions(previousNode, node) {
+      var transitionsJSONString = angular.toJson(previousNode.transitionLogic.transitions);
+      var transitionsCopy = angular.fromJson(transitionsJSONString);
+      node.transitionLogic.transitions = transitionsCopy;
+    }
+
+    /**
+     * If the previous node was in a branch path, we will also put the
+     * inserted node into the branch path.
+     * @param node The node that is in the branch path.
+     * @param nodeId The node we are adding to the branch path.
+     */
+
+  }, {
+    key: 'updateBranchPathTakenConstraints',
+    value: function updateBranchPathTakenConstraints(node, nodeId) {
+      this.removeBranchPathTakenNodeConstraintsIfAny(node.id);
+      var branchPathTakenConstraints = this.getBranchPathTakenConstraintsByNodeId(nodeId);
+      var _iteratorNormalCompletion55 = true;
+      var _didIteratorError55 = false;
+      var _iteratorError55 = undefined;
+
+      try {
+        for (var _iterator55 = branchPathTakenConstraints[Symbol.iterator](), _step55; !(_iteratorNormalCompletion55 = (_step55 = _iterator55.next()).done); _iteratorNormalCompletion55 = true) {
+          var branchPathTakenConstraint = _step55.value;
+
+          var newConstraint = {
+            id: this.getNextAvailableConstraintIdForNodeId(node.id),
+            action: branchPathTakenConstraint.action,
+            targetId: node.id,
+            removalCriteria: this.UtilService.makeCopyOfJSONObject(branchPathTakenConstraint.removalCriteria)
+          };
+          this.addConstraintToNode(newConstraint);
+        }
+      } catch (err) {
+        _didIteratorError55 = true;
+        _iteratorError55 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion55 && _iterator55.return) {
+            _iterator55.return();
+          }
+        } finally {
+          if (_didIteratorError55) {
+            throw _iteratorError55;
           }
         }
       }
@@ -3944,7 +3934,7 @@ var ProjectService = function () {
          * the transitions of its children so that they transition
          * to the correct node
          */
-        this.updateChildrenTransitionsForMovingGroup(nodeToInsert, null);
+        this.updateChildrenTransitionsInAndOutOfGroup(nodeToInsert, null);
       }
 
       /*
@@ -5856,6 +5846,7 @@ var ProjectService = function () {
   }, {
     key: 'deleteComponent',
     value: function deleteComponent(nodeId, componentId) {
+      // TODO refactor and move to authoringToolProjectService
       if (nodeId != null && componentId != null) {
         var node = this.getNodeById(nodeId);
         if (node != null) {
@@ -6884,8 +6875,8 @@ var ProjectService = function () {
      */
 
   }, {
-    key: 'updateChildrenTransitionsForMovingGroup',
-    value: function updateChildrenTransitionsForMovingGroup(node, nodeId) {
+    key: 'updateChildrenTransitionsInAndOutOfGroup',
+    value: function updateChildrenTransitionsInAndOutOfGroup(node, nodeId) {
       var transitionsBefore = null;
 
       // get the group nodes that point to the group we are moving

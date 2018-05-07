@@ -925,6 +925,17 @@ class ProjectService {
   }
 
   /**
+   * @param node A node object.
+   * @param constraint A constraint object.
+   */
+  addConstraintToNode(node, constraint) {
+    if (node.constraints == null) {
+      node.constraints = [];
+    }
+    node.constraints.push(constraint);
+  }
+
+  /**
    * Check if a node has constraints.
    * @param nodeId The node id of the node.
    * @return true iff the node has constraints authored on it.
@@ -1056,23 +1067,22 @@ class ProjectService {
    */
   getTransitionLogicByFromNodeId(fromNodeId) {
     const node = this.getNodeById(fromNodeId);
-    if (node != null) {
-      return node.transitionLogic;
+    if (node.transitionLogic == null) {
+      node.transitionLogic = {
+        transitions: []
+      }
     }
-    return null;
+    return node.transitionLogic;
   };
 
   /**
    * Get the transitions for a node
    * @param fromNodeId the node to get transitions from
-   * @returns an array of transitions
+   * @returns {Array} an array of transitions
    */
   getTransitionsByFromNodeId(fromNodeId) {
     const transitionLogic = this.getTransitionLogicByFromNodeId(fromNodeId);
-    if (transitionLogic != null) {
-      return transitionLogic.transitions;
-    }
-    return [];
+    return transitionLogic.transitions;
   }
 
   /**
@@ -1107,6 +1117,7 @@ class ProjectService {
    * @returns Whether the node has a transition to the given nodeId.
    */
   nodeHasTransitionToNodeId(node, toNodeId) {
+    // TODO Refactor
     const transitionLogic = node.transitionLogic;
     if (transitionLogic != null) {
       const transitions = transitionLogic.transitions;
@@ -2355,122 +2366,88 @@ class ProjectService {
   }
 
   /**
-   * Update the transitions to handle inserting a node after another node
-   * @param node the node to insert
-   * @param nodeId the node id to insert after
+   * Update the transitions to handle inserting a node after another node.
+   * The two nodes must either both be steps or both be activities.
+   * @param nodeToInsert the node to insert
+   * @param nodeIdToInsertAfter the node id to insert after
    */
-  insertNodeAfterInTransitions(node, nodeId) {
-    const previousNode = this.getNodeById(nodeId);
+  insertNodeAfterInTransitions(nodeToInsert, nodeIdToInsertAfter) {
+    const nodeToInsertAfter = this.getNodeById(nodeIdToInsertAfter);
+    if (nodeToInsert.type != nodeToInsertAfter.type) {
+      throw 'Error: insertNodeAfterInTransitions() nodes are not the same type';
+    }
+    if (nodeToInsertAfter.transitionLogic == null) {
+      nodeToInsertAfter.transitionLogic = {
+        transitions: []
+      };
+    }
+    if (nodeToInsert.transitionLogic == null) {
+      nodeToInsert.transitionLogic = {
+        transitions: []
+      };
+    }
+    if (this.isGroupNode(nodeToInsert.id)) {
+      this.updateChildrenTransitionsInAndOutOfGroup(nodeToInsert, nodeIdToInsertAfter);
+    }
+    this.copyTransitions(nodeToInsertAfter, nodeToInsert);
+    if (nodeToInsert.transitionLogic.transitions.length == 0) {
+      this.copyParentTransitions(nodeIdToInsertAfter, nodeToInsert);
+    }
+    const transitionObject = {
+      to: nodeToInsert.id
+    };
+    nodeToInsertAfter.transitionLogic.transitions = [transitionObject];
+    this.updateBranchPathTakenConstraints(nodeToInsert, nodeIdToInsertAfter);
+  }
 
-    if (previousNode != null) {
-      if (previousNode.transitionLogic == null) {
-        previousNode.transitionLogic = {};
-        previousNode.transitionLogic.transitions = [];
-      }
-
-      if (node.transitionLogic == null) {
-        node.transitionLogic = {};
-      }
-
-      if (node.transitionLogic.transitions == null) {
-        node.transitionLogic.transitions = [];
-      }
-
-      if (this.isGroupNode(node.id)) {
-        /*
-         * the node we are inserting is a group so we will update
-         * the transitions of its children so that they transition
-         * to the correct node
-         */
-        this.updateChildrenTransitionsForMovingGroup(node, nodeId);
-      }
-
-      const previousNodeTransitionLogic = previousNode.transitionLogic;
-
-      if (previousNodeTransitionLogic != null) {
-        const transitions = previousNodeTransitionLogic.transitions;
-
-        if (transitions != null) {
-          const transitionsJSONString = angular.toJson(transitions);
-          const transitionsCopy = angular.fromJson(transitionsJSONString);
-
-          // set the transitions from the before node into the inserted node
-          node.transitionLogic.transitions = transitionsCopy;
-        }
-      }
-
-      if (node.transitionLogic.transitions.length == 0) {
-        /*
-         * The node does not have any transitions so we will look for
-         * a transition on the parent group. If the parent has a
-         * transition we will use it for the node.
-         */
-
-        const parentGroupId = this.getParentGroupId(nodeId);
-
-        if (parentGroupId != null &&
-            parentGroupId != '' &&
-            parentGroupId != 'group0') {
-          const parentTransitions = this.getTransitionsByFromNodeId(parentGroupId);
-
-          if (parentTransitions != null) {
-            for (let parentTransition of parentTransitions) {
-              const newTransition = {};
-              if (parentTransition != null) {
-                const toNodeId = parentTransition.to;
-                if (this.isGroupNode(toNodeId)) {
-                  const startId = this.getGroupStartId(toNodeId);
-                  if (startId == null || startId == '') {
-                    // there is no start id so we will just use the group id
-                    newTransition.to = toNodeId;
-                  } else {
-                    // there is a start id so we will use it as the to node
-                    newTransition.to = startId;
-                  }
-                } else {
-                  newTransition.to = toNodeId;
-                }
-              }
-              node.transitionLogic.transitions.push(newTransition);
-            }
+  /*
+   * Copy the transitions from nodeId's parent and add to node's transitions.
+   * @param nodeId Copy the transition of this nodeId's parent.
+   * @param node The node to add transitions to.
+   */
+  copyParentTransitions(nodeId, node) {
+    const parentGroupId = this.getParentGroupId(nodeId);
+    if (parentGroupId != 'group0') {
+      const parentTransitions = this.getTransitionsByFromNodeId(parentGroupId);
+      for (let parentTransition of parentTransitions) {
+        const newTransition = {};
+        const toNodeId = parentTransition.to;
+        if (this.isGroupNode(toNodeId)) {
+          const startId = this.getGroupStartId(toNodeId);
+          if (startId == null || startId == '') {
+            newTransition.to = toNodeId;
+          } else {
+            newTransition.to = startId;
           }
         }
+        node.transitionLogic.transitions.push(newTransition);
       }
+    }
+  }
 
-      const newNodeId = node.id;
+  copyTransitions(previousNode, node) {
+    const transitionsJSONString = angular.toJson(previousNode.transitionLogic.transitions);
+    const transitionsCopy = angular.fromJson(transitionsJSONString);
+    node.transitionLogic.transitions = transitionsCopy;
+  }
 
-      // TODO handle branching case
-
-      previousNode.transitionLogic.transitions = [];
-
-      const transitionObject = {};
-      transitionObject.to = newNodeId;
-      previousNode.transitionLogic.transitions.push(transitionObject);
-      this.removeBranchPathTakenNodeConstraintsIfAny(node.id);
-      const branchPathTakenConstraints = this.getBranchPathTakenConstraintsByNodeId(nodeId);
-
-      /*
-       * if the previous node was in a branch path, we will also put the
-       * inserted node into the branch path
-       */
-      if (branchPathTakenConstraints != null &&
-          branchPathTakenConstraints.length > 0) {
-        if (node.constraints == null) {
-          node.constraints = [];
-        }
-
-        for (let branchPathTakenConstraint of branchPathTakenConstraints) {
-          if (branchPathTakenConstraint != null) {
-            // create a new constraint with the same branch path taken parameters
-            const newConstraint = {};
-            newConstraint.id = this.getNextAvailableConstraintIdForNodeId(node.id);
-            newConstraint.action = branchPathTakenConstraint.action;
-            newConstraint.targetId = node.id;
-            newConstraint.removalCriteria = this.UtilService.makeCopyOfJSONObject(branchPathTakenConstraint.removalCriteria);
-            node.constraints.push(newConstraint);
-          }
-        }
-      }
+  /**
+   * If the previous node was in a branch path, we will also put the
+   * inserted node into the branch path.
+   * @param node The node that is in the branch path.
+   * @param nodeId The node we are adding to the branch path.
+   */
+  updateBranchPathTakenConstraints(node, nodeId) {
+    this.removeBranchPathTakenNodeConstraintsIfAny(node.id);
+    const branchPathTakenConstraints = this.getBranchPathTakenConstraintsByNodeId(nodeId);
+    for (let branchPathTakenConstraint of branchPathTakenConstraints) {
+      const newConstraint = {
+        id: this.getNextAvailableConstraintIdForNodeId(node.id),
+        action: branchPathTakenConstraint.action,
+        targetId: node.id,
+        removalCriteria: this.UtilService.makeCopyOfJSONObject(branchPathTakenConstraint.removalCriteria)
+      };
+      this.addConstraintToNode(newConstraint);
     }
   }
 
@@ -2512,7 +2489,7 @@ class ProjectService {
        * the transitions of its children so that they transition
        * to the correct node
        */
-      this.updateChildrenTransitionsForMovingGroup(nodeToInsert, null);
+      this.updateChildrenTransitionsInAndOutOfGroup(nodeToInsert, null);
     }
 
     /*
@@ -3735,6 +3712,7 @@ class ProjectService {
    * @param componentId the component id
    */
   deleteComponent(nodeId, componentId) {
+    // TODO refactor and move to authoringToolProjectService
     if (nodeId != null && componentId != null) {
       const node = this.getNodeById(nodeId);
       if (node != null) {
@@ -4432,7 +4410,7 @@ class ProjectService {
    * @param node the group we are moving
    * @param nodeId we will put the group after this node id
    */
-  updateChildrenTransitionsForMovingGroup(node, nodeId) {
+  updateChildrenTransitionsInAndOutOfGroup(node, nodeId) {
     let transitionsBefore = null;
 
     // get the group nodes that point to the group we are moving
