@@ -478,7 +478,7 @@ class AuthoringToolProjectService extends ProjectService {
       } else {
         // we are creating an active node
         this.addNode(node);
-        this.insertNodeInsideInTransitions(node.id, nodeId);
+        this.insertNodeInsideOnlyUpdateTransitions(node.id, nodeId);
         this.insertNodeInsideInGroups(node.id, nodeId);
       }
     }
@@ -1214,7 +1214,7 @@ class AuthoringToolProjectService extends ProjectService {
     const inactiveGroupNodes = this.getInactiveGroupNodes();
     for (let inactiveGroup of inactiveGroupNodes) {
       if (nodeIdToInsertInside == inactiveGroup.id) {
-        this.insertNodeInsideInTransitions(node.id, nodeIdToInsertInside);
+        this.insertNodeInsideOnlyUpdateTransitions(node.id, nodeIdToInsertInside);
         this.insertNodeInsideInGroups(node.id, nodeIdToInsertInside);
         for (let i = 0; i < inactiveNodes.length; i++) {
           if (inactiveNodes[i].id == nodeIdToInsertInside) {

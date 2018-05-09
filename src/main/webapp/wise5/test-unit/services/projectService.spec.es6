@@ -192,7 +192,7 @@ describe('ProjectService Unit Test', () => {
     // TODO: add test for ProjectService.insertNodeAfterInTransitions()
 
     // TODO: add test for ProjectService.insertNodeInsideInGroups()
-    // TODO: add test for ProjectService.insertNodeInsideInTransitions()
+    // TODO: add test for ProjectService.insertNodeInsideOnlyUpdateTransitions()
 
     // MARK: Tests for Node and Group Id functions
     it('should return the start node of the project', () => {
@@ -562,6 +562,43 @@ describe('ProjectService Unit Test', () => {
       expect(() => {
         ProjectService.insertNodeAfterInTransitions(ProjectService.getNodeById('node1'), 'group2');
       }).toThrow('Error: insertNodeAfterInTransitions() nodes are not the same type');
+    });
+
+    it('should be able to insert a step node inside an group node', () => {
+      ProjectService.setProject(demoProjectJSON);
+      const node1 = ProjectService.getNodeById('node1');
+      const node19 = ProjectService.getNodeById('node19');
+      expect(ProjectService.nodeHasTransitionToNodeId(node1, 'node2')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(node1, 'node20')).toBeFalsy();
+      expect(ProjectService.nodeHasTransitionToNodeId(node19, 'node20')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(node19, 'node1')).toBeFalsy();
+      ProjectService.insertNodeInsideOnlyUpdateTransitions('node1', 'group2');
+      expect(ProjectService.nodeHasTransitionToNodeId(node1, 'node20')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(node1, 'node2')).toBeFalsy();
+      expect(ProjectService.nodeHasTransitionToNodeId(node19, 'node1')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(node19, 'node20')).toBeFalsy();
+    });
+
+    it('should be able to insert a group node inside a group node', () => {
+      ProjectService.setProject(demoProjectJSON);
+      const group1 = ProjectService.getNodeById('group1');
+      const group2 = ProjectService.getNodeById('group2');
+      expect(ProjectService.nodeHasTransitionToNodeId(group1, 'group2')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(group2, 'group1')).toBeFalsy();
+      ProjectService.insertNodeInsideOnlyUpdateTransitions('group2', 'group0');
+      expect(ProjectService.nodeHasTransitionToNodeId(group2, 'group1')).toBeTruthy();
+      /*
+       * the transition from group1 to group2 still remains because it is usually
+       * removed by calling removeNodeIdFromTransitions() but we don't call it here
+       */
+      expect(ProjectService.nodeHasTransitionToNodeId(group1, 'group2')).toBeTruthy();
+    });
+
+    it('should not be able to insert a step node inside a step node', () => {
+      ProjectService.setProject(demoProjectJSON);
+      expect(() => {
+        ProjectService.insertNodeInsideOnlyUpdateTransitions('node1', 'node2');
+      }).toThrow('Error: insertNodeInsideOnlyUpdateTransitions() second parameter must be a group');
     });
   });
 });
