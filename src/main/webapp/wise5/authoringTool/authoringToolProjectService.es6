@@ -276,6 +276,10 @@ class AuthoringToolProjectService extends ProjectService {
       type: 'group',
       title: title,
       startId: '',
+      constraints: [],
+      transitionLogic: {
+        transitions: []
+      },
       ids: []
     }
   };

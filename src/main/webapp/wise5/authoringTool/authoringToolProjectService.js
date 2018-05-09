@@ -325,6 +325,10 @@ var AuthoringToolProjectService = function (_ProjectService) {
         type: 'group',
         title: title,
         startId: '',
+        constraints: [],
+        transitionLogic: {
+          transitions: []
+        },
         ids: []
       };
     }
