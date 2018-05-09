@@ -18,7 +18,6 @@ export class LibraryComponent implements OnInit {
   searchValue: string = '';
   arrangement: string = 'californiaIntegrated';
   expandedGroups: object = {};
-  initialGroup: number = 0;
   projects: LibraryProject[] = [];
   dciArrangementOptions: Standard[] = [];
   dciArrangementValue = [];
@@ -39,16 +38,10 @@ export class LibraryComponent implements OnInit {
         this.libraryGroups = libraryGroups;
         this.filterUpdated();
 
-        // randomly select group to expand on load
-        this.initialGroup = Math.floor(Math.random() * (this.libraryGroups.length));
-
         // populate the flat list of library projects
         for (let group of this.libraryGroups) {
           this.getProjects(group);
         }
-
-        // remove project duplicates
-        this.projects = this.removeDuplicates(this.projects, 'id');
 
         // populate the filter options
         this.getFilterOptions();
@@ -57,6 +50,7 @@ export class LibraryComponent implements OnInit {
 
   getProjects(item): void {
     if (item.type === 'project') {
+      item.visible = true;
       this.projects.push(item);
     } else if (item.type === 'group') {
       let children = item.children;
@@ -114,28 +108,86 @@ export class LibraryComponent implements OnInit {
   }
 
   filterUpdated(): void {
-    // TODO: add filtering
+    for (let project of this.projects) {
+      let visible = true;
+      let searchMatch = true;
+
+      // check for
+      if (this.searchValue) {
+        searchMatch = this.isSearchMatch(project, this.searchValue);
+      }
+
+      if (searchMatch) {
+        // project matches the search text, so check for filter matches
+      } else {
+        visible = false;
+      }
+
+      project.visible = visible;
+    }
   }
 
-  // TODO: extract to util function
-  removeDuplicates(array, prop) {
+  /**
+   * Remove duplicates from an object array by property
+   * @param array Array to process
+   * @param prop Property to check for duplicate
+   * TODO: extract to util function
+   */
+  removeDuplicates(array: any[], prop: string): any[] {
     return array.filter((obj, pos, arr) => {
       return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos;
     });
   }
 
-  sortOptions(array, prop) {
+  /**
+   * Sort an object array alphabetically A-Z by property
+   * @param array Array to sort
+   * @param prop Property to sort on
+   * TODO: extract to util function
+   */
+  sortOptions(array: any[], prop: string): void {
     array.sort( (a: Standard, b: Standard) => {
-      const valA = a[prop].toLocaleLowerCase(); // ignore upper and lowercase
-      const valB = b[prop].toLocaleLowerCase(); // ignore upper and lowercase
+      const valA = a[prop].toLocaleLowerCase(); // ignore case
+      const valB = b[prop].toLocaleLowerCase(); // ignore case
       if (valA < valB) {
         return -1;
       }
       if (valA > valB) {
         return 1;
       }
-      // names must be equal
       return 0;
     });
+  }
+
+  /**
+   * Check and return whether project metadata contains given search string
+   * @param project LibraryProject to check
+   * @param filterValue String to match
+   * @return boolean
+   */
+  isSearchMatch(project: LibraryProject, filterValue: string): boolean {
+    let metadata = project.metadata;
+    return Object.keys(metadata).some(prop => {
+      // only check for match in specific metadata fields
+      if (prop != 'title' && prop != 'summary' && prop != 'keywords' && prop != 'features') {
+        return false;
+      } else {
+        let value = metadata[prop];
+        if (typeof value === 'undefined' || value === null) {
+          return false;
+        } else {
+          return value.toString().toLocaleLowerCase().indexOf(filterValue) !== -1;
+        }
+      }
+    });
+  }
+
+  /**
+   * Count and return number of projects in a LibraryProject array that are visible
+   * @param set Array of LibraryProjects to count
+   * @return Number
+   */
+  countVisibleProjects(set: LibraryProject[]): number {
+    return set.filter((project) => 'project' && project.visible).length;
   }
 }

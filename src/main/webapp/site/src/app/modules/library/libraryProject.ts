@@ -5,4 +5,5 @@ export class LibraryProject {
   metadata: any;
   projectThumb: string;
   thumbStyle: any;
+  visible: boolean = true;
 }

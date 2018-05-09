@@ -32,19 +32,21 @@
   <ng-container id="libraryGroups" *ngFor="let group of libraryGroups">
     <mat-accordion class="library__groups" multi="true" *ngIf="arrangement === group.id">
       <ng-container *ngFor="let child of group.children; let i = index">
-        <mat-expansion-panel class="library-group" *ngIf="child.type === 'group'" [expanded]="initialGroup === i"
-                             (opened)="expandedGroups[child.id] = true" (closed)="expandedGroups[child.id] = false">
+        <mat-expansion-panel class="library-group" *ngIf="child.type === 'group'"
+          (opened)="expandedGroups[child.id] = true" (closed)="expandedGroups[child.id] = false">
           <mat-expansion-panel-header class="mat-expansion-panel-header--lg">
             <div fxLayout="column" class="library-group__title">
               <div>{{ child.notes }}</div>
-              <div class="mat-caption secondary-text">{{ child.children.length }} project(s)</div>
+              <div class="mat-caption secondary-text">{{ countVisibleProjects(child.children) }} project(s)</div>
             </div>
             <app-library-group-thumbs [group]="child" [ngClass]="{ 'hide': expandedGroups[child.id] }"></app-library-group-thumbs>
           </mat-expansion-panel-header>
           <div fxLayout="row wrap">
-            <div *ngFor="let project of child.children" fxFlex="100" fxFlex.sm="50" fxFlex.md="33.33" fxFlex.lg="25">
-              <app-library-project [project]="project"></app-library-project>
-            </div>
+            <ng-container *ngFor="let project of child.children">
+              <div *ngIf="project.visible" fxFlex="100" fxFlex.sm="50" fxFlex.md="33.33" fxFlex.lg="25">
+                <app-library-project [project]="project" ></app-library-project>
+              </div>
+            </ng-container>
           </div>
         </mat-expansion-panel>
       </ng-container>
