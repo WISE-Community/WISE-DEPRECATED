@@ -1133,7 +1133,7 @@ class ProjectService {
    * @param toNodeId
    * @returns all the node ids that have a transition to the given node id
    */
-  getNodeIdsByToNodeId(toNodeId) {
+  getNodesWithTransitionToNodeId(toNodeId) {
     const nodeIds = [];
     const nodes = this.getNodesByToNodeId(toNodeId);
     for (let node of nodes) {
@@ -2423,6 +2423,30 @@ class ProjectService {
   }
 
   /**
+   * Update a node's branchPathTaken constraint's fromNodeId and toNodeId
+   * @param node update the branch path taken constraints in this node
+   * @param currentFromNodeId the current from node id
+   * @param currentToNodeId the current to node id
+   * @param newFromNodeId the new from node id
+   * @param newToNodeId the new to node id
+   */
+  updateBranchPathTakenConstraint(node, currentFromNodeId, currentToNodeId,
+      newFromNodeId, newToNodeId) {
+    for (let constraint of node.constraints) {
+      for (let removalCriterion of constraint.removalCriteria) {
+        if (removalCriterion.name === 'branchPathTaken') {
+          const params = removalCriterion.params;
+          if (params.fromNodeId === currentFromNodeId &&
+            params.toNodeId === currentToNodeId) {
+            params.fromNodeId = newFromNodeId;
+            params.toNodeId = newToNodeId;
+          }
+        }
+      }
+    }
+  }
+
+  /**
    * Insert a node into a group
    * @param nodeIdToInsert the node id to insert
    * @param nodeIdToInsertInside the node id of the group we will insert into
@@ -2923,169 +2947,128 @@ class ProjectService {
   }
 
   /**
-   * Delete a node
-   * @param nodeId the node id
+   * Delete a node from the project and update transitions.
+   *
+   * If we are deleting the project start node id, we will need
+   * to change it to the next logical node id that will be used
+   * as the project start.
+   *
+   * @param nodeId the node id to delete from the project. It can be a step
+   * or an activity.
    */
   deleteNode(nodeId) {
-    /*
-     * flag for whether we are deleting the project start node id.
-     * if we are deleting the project start node id, we will need
-     * to change it to the next logical node id that will be used
-     * as the project start.
-     */
-    let removingProjectStartNodeId = false;
+    const parentGroup = this.getParentGroup(nodeId);
+    if (parentGroup.startId === nodeId) {
+      this.setGroupStartIdToNextChildId(parentGroup)
+    }
+
+    if (this.isProjectStartNodeIdOrContainsProjectStartNodeId(nodeId)) {
+      this.updateProjectStartNodeIdToNextLogicalNode(nodeId);
+    }
 
     if (this.isGroupNode(nodeId)) {
-      // the node is a group node so we will also remove all of its children
-      const group = this.getNodeById(nodeId);
-
-      // TODO check if the child is in another group, if so do not remove
-
-      if (group != null) {
-        const ids = group.ids;
-        for (let i = 0; i < ids.length; i++) {
-          const id = ids[i];
-          this.removeNodeIdFromTransitions(id);
-          this.removeNodeIdFromGroups(id);
-          this.removeNodeIdFromNodes(id);
-
-          if (this.project.startNodeId == id) {
-            removingProjectStartNodeId = true;
-          }
-
-          /*
-           * move the counter back because we have removed a child
-           * from the parent group's array of child ids so all of
-           * the child ids were shifted back one and the next child
-           * we want will be at i--
-           */
-          i--;
-        }
-      }
-    }
-
-    const parentGroup = this.getParentGroup(nodeId);
-
-    // check if we need to update the start id of the parent group
-    if (parentGroup != null) {
-
-      /*
-       * the node is the start node of the parent group so we need
-       * to update the start id of the parent group to point to
-       * the next node
-       */
-      if (nodeId === parentGroup.startId) {
-        let hasSetNewStartId = false;
-
-        const node = this.getNodeById(nodeId);
-        if (node != null) {
-          const transitionLogic = node.transitionLogic;
-          if (transitionLogic != null) {
-            const transitions = transitionLogic.transitions;
-            if (transitions != null && transitions.length > 0) {
-              const transition = transitions[0];
-              if (transition != null) {
-                const toNodeId = transition.to;
-                if (toNodeId != null) {
-                  if (this.isNodeInGroup(toNodeId, parentGroup.id)) {
-                    parentGroup.startId = toNodeId;
-                    hasSetNewStartId = true;
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        if (!hasSetNewStartId) {
-          parentGroup.startId = '';
-        }
-      }
-    }
-
-    if (nodeId === this.getStartNodeId()) {
-      removingProjectStartNodeId = true;
-    }
-
-    if (removingProjectStartNodeId) {
-      /*
-       * we are removing the project start node id so we need to update
-       * the startNodeId to something else
-       */
-
-      if (this.isGroupNode(nodeId)) {
-        /*
-         * we are removing a group so we need to set the startNodeId to
-         * the first node of the next group or if the next group doesn't
-         * have any nodes, we will just use the next group
-         */
-
-        // get the transitions of the group we are removing
-        const transitions = this.getTransitionsByFromNodeId(nodeId);
-
-        if (transitions == null || transitions.length == 0) {
-          /*
-           * the group doesn't have any transitions so we will set
-           * the startNodeId to 'group0'
-           */
-          this.setStartNodeId('group0');
-        } else {
-          // the group has transitions
-
-          let nextNodeId = null;
-
-          if (transitions[0] != null && transitions[0].to != null) {
-            nextNodeId = transitions[0].to;
-          }
-
-          if (nextNodeId != null) {
-            if (this.isGroupNode(nextNodeId)) {
-              const nextGroupNode = this.getNodeById(nextNodeId);
-              if (nextGroupNode != null) {
-                const nextGroupStartId = nextGroupNode.startId;
-                if (nextGroupStartId == null) {
-                  this.setStartNodeId(nextNodeId);
-                } else {
-                  this.setStartNodeId(nextGroupStartId);
-                }
-              }
-            } else {
-              this.setStartNodeId(nextNodeId);
-            }
-          }
-        }
-      } else {
-        /*
-         * we are removing a step node so we will set the startNodeId to
-         * the next node in the transitions, or if there are no
-         * transitions, we will use the parent group
-         */
-
-        // get the transitions from the step we are removing
-        const transitions = this.getTransitionsByFromNodeId(nodeId);
-        const parentGroupId = this.getParentGroupId(nodeId);
-        if (transitions == null || transitions.length == 0) {
-          this.setStartNodeId(parentGroupId);
-        } else {
-          if (transitions[0] != null && transitions[0].to != null) {
-            let toNodeId = transitions[0].to;
-            if (this.isNodeInGroup(toNodeId, parentGroupId)) {
-              this.setStartNodeId(toNodeId);
-            } else {
-              this.setStartNodeId(this.getParentGroupId(nodeId));
-            }
-          }
-        }
-      }
+      this.removeChildNodes(nodeId);
     }
 
     this.removeNodeIdFromTransitions(nodeId);
     this.removeNodeIdFromGroups(nodeId);
     this.removeNodeIdFromNodes(nodeId);
+    this.recalculatePositionsInGroup(parentGroup.id);
+  }
 
-    if (parentGroup != null) {
-      this.recalculatePositionsInGroup(parentGroup.id);
+  updateProjectStartNodeIdToNextLogicalNode(nodeId) {
+    if (this.isGroupNode(nodeId)) {
+      this.updateProjectStartNodeIdToNextLogicalNodeForRemovingGroup(nodeId);
+    } else {
+      this.updateProjectStartNodeIdToNextLogicalNodeForRemovingStep(nodeId);
     }
+  }
+
+  /**
+   * Set the startNodeId of the specified group to the first node of the next group.
+   * If the next group doesn't have any nodes, startNodeId should point
+   * to the next group.
+   */
+  updateProjectStartNodeIdToNextLogicalNodeForRemovingGroup(nodeId) {
+    const transitions = this.getTransitionsByFromNodeId(nodeId);
+    if (transitions.length == 0) {
+      this.setStartNodeId('group0');
+    } else {
+      let nextNodeId = transitions[0].to;
+      if (this.isGroupNode(nextNodeId)) {
+        const nextGroupStartId = this.getGroupStartId(nextNodeId);
+        if (nextGroupStartId == null) {
+          this.setStartNodeId(nextNodeId);
+        } else {
+          this.setStartNodeId(nextGroupStartId);
+        }
+      } else {
+        this.setStartNodeId(nextNodeId);
+      }
+    }
+  }
+
+  /**
+   * Set the startNodeId to the next node in the transitions.
+   * If there are no transitions, set it to the parent group of the node.
+   */
+  updateProjectStartNodeIdToNextLogicalNodeForRemovingStep(nodeId) {
+    const transitions = this.getTransitionsByFromNodeId(nodeId);
+    const parentGroupId = this.getParentGroupId(nodeId);
+    if (transitions.length == 0) {
+      this.setStartNodeId(parentGroupId);
+    } else {
+      let nextNodeId = transitions[0].to;
+      if (this.isNodeInGroup(nextNodeId, parentGroupId)) {
+        this.setStartNodeId(nextNodeId);
+      } else {
+        this.setStartNodeId(this.getParentGroupId(nodeId));
+      }
+    }
+  }
+
+  setGroupStartIdToNextChildId(group) {
+    let hasSetNewStartId = false;
+    const transitions = this.getTransitionsByFromNodeId(group.startId);
+    if (transitions.length > 0) {
+      const transition = transitions[0];
+      const toNodeId = transition.to;
+      if (this.isNodeInGroup(toNodeId, group.id)) {
+        group.startId = toNodeId;
+        hasSetNewStartId = true;
+      }
+    }
+
+    if (!hasSetNewStartId) {
+      group.startId = '';
+    }
+  }
+
+  removeChildNodes(groupId) {
+    const group = this.getNodeById(groupId);
+    for (let i = 0; i < group.ids.length; i++) {
+      const childId = group.ids[i];
+      this.removeNodeIdFromTransitions(childId);
+      this.removeNodeIdFromGroups(childId);
+      this.removeNodeIdFromNodes(childId);
+      i--; // so it won't skip the next element
+    }
+  }
+
+  isProjectStartNodeIdOrContainsProjectStartNodeId(nodeId) {
+    return this.getStartNodeId() === nodeId ||
+      (this.isGroupNode(nodeId) && this.containsStartNodeId(nodeId));
+  }
+
+  containsStartNodeId(groupId) {
+    const group = this.getNodeById(groupId);
+    const projectStartNodeId = this.getStartNodeId();
+    for (let childId of group.ids) {
+      if (childId === projectStartNodeId) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -3391,6 +3374,8 @@ class ProjectService {
         }
       }
     }
+
+    this.idToNode[nodeId] = null;
   }
 
   /**

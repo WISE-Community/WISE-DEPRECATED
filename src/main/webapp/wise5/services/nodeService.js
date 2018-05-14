@@ -507,7 +507,7 @@ var NodeService = function () {
           }
         } else {
           // get all the nodes that transition to the current node
-          var nodeIdsByToNodeId = this.ProjectService.getNodeIdsByToNodeId(currentNodeId);
+          var nodeIdsByToNodeId = this.ProjectService.getNodesWithTransitionToNodeId(currentNodeId);
           if (nodeIdsByToNodeId == null) {} else if (nodeIdsByToNodeId.length === 1) {
             // there is only one node that transitions to the current node
             prevNodeId = nodeIdsByToNodeId[0];

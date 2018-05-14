@@ -51,10 +51,10 @@ var ProjectService = function () {
     this.additionalProcessingFunctionsMap = {};
 
     // filtering options for navigation displays
-    this.filters = [{ 'name': 'all', 'label': 'All'
-      //{'name': 'todo', 'label': 'Todo'},
-      //{'name': 'completed', 'label': 'Completed'}
-    }];
+    this.filters = [{ 'name': 'all', 'label': 'All' }
+    //{'name': 'todo', 'label': 'Todo'},
+    //{'name': 'completed', 'label': 'Completed'}
+    ];
   }
 
   _createClass(ProjectService, [{
@@ -1700,8 +1700,8 @@ var ProjectService = function () {
      */
 
   }, {
-    key: 'getNodeIdsByToNodeId',
-    value: function getNodeIdsByToNodeId(toNodeId) {
+    key: 'getNodesWithTransitionToNodeId',
+    value: function getNodesWithTransitionToNodeId(toNodeId) {
       var nodeIds = [];
       var nodes = this.getNodesByToNodeId(toNodeId);
       var _iteratorNormalCompletion21 = true;
@@ -3840,6 +3840,72 @@ var ProjectService = function () {
     }
 
     /**
+     * Update a node's branchPathTaken constraint's fromNodeId and toNodeId
+     * @param node update the branch path taken constraints in this node
+     * @param currentFromNodeId the current from node id
+     * @param currentToNodeId the current to node id
+     * @param newFromNodeId the new from node id
+     * @param newToNodeId the new to node id
+     */
+
+  }, {
+    key: 'updateBranchPathTakenConstraint',
+    value: function updateBranchPathTakenConstraint(node, currentFromNodeId, currentToNodeId, newFromNodeId, newToNodeId) {
+      var _iteratorNormalCompletion55 = true;
+      var _didIteratorError55 = false;
+      var _iteratorError55 = undefined;
+
+      try {
+        for (var _iterator55 = node.constraints[Symbol.iterator](), _step55; !(_iteratorNormalCompletion55 = (_step55 = _iterator55.next()).done); _iteratorNormalCompletion55 = true) {
+          var constraint = _step55.value;
+          var _iteratorNormalCompletion56 = true;
+          var _didIteratorError56 = false;
+          var _iteratorError56 = undefined;
+
+          try {
+            for (var _iterator56 = constraint.removalCriteria[Symbol.iterator](), _step56; !(_iteratorNormalCompletion56 = (_step56 = _iterator56.next()).done); _iteratorNormalCompletion56 = true) {
+              var removalCriterion = _step56.value;
+
+              if (removalCriterion.name === 'branchPathTaken') {
+                var params = removalCriterion.params;
+                if (params.fromNodeId === currentFromNodeId && params.toNodeId === currentToNodeId) {
+                  params.fromNodeId = newFromNodeId;
+                  params.toNodeId = newToNodeId;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError56 = true;
+            _iteratorError56 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion56 && _iterator56.return) {
+                _iterator56.return();
+              }
+            } finally {
+              if (_didIteratorError56) {
+                throw _iteratorError56;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError55 = true;
+        _iteratorError55 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion55 && _iterator55.return) {
+            _iterator55.return();
+          }
+        } finally {
+          if (_didIteratorError55) {
+            throw _iteratorError55;
+          }
+        }
+      }
+    }
+
+    /**
      * Insert a node into a group
      * @param nodeIdToInsert the node id to insert
      * @param nodeIdToInsertInside the node id of the group we will insert into
@@ -3904,13 +3970,13 @@ var ProjectService = function () {
     key: 'inheritParentTransitions',
     value: function inheritParentTransitions(nodeIdToInsertInside, nodeToInsert) {
       var parentTransitions = this.getTransitionsByFromNodeId(nodeIdToInsertInside);
-      var _iteratorNormalCompletion55 = true;
-      var _didIteratorError55 = false;
-      var _iteratorError55 = undefined;
+      var _iteratorNormalCompletion57 = true;
+      var _didIteratorError57 = false;
+      var _iteratorError57 = undefined;
 
       try {
-        for (var _iterator55 = parentTransitions[Symbol.iterator](), _step55; !(_iteratorNormalCompletion55 = (_step55 = _iterator55.next()).done); _iteratorNormalCompletion55 = true) {
-          var parentTransition = _step55.value;
+        for (var _iterator57 = parentTransitions[Symbol.iterator](), _step57; !(_iteratorNormalCompletion57 = (_step57 = _iterator57.next()).done); _iteratorNormalCompletion57 = true) {
+          var parentTransition = _step57.value;
 
           var toNodeId = parentTransition.to;
           if (this.isGroupNode(toNodeId)) {
@@ -3926,16 +3992,16 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError55 = true;
-        _iteratorError55 = err;
+        _didIteratorError57 = true;
+        _iteratorError57 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion55 && _iterator55.return) {
-            _iterator55.return();
+          if (!_iteratorNormalCompletion57 && _iterator57.return) {
+            _iterator57.return();
           }
         } finally {
-          if (_didIteratorError55) {
-            throw _iteratorError55;
+          if (_didIteratorError57) {
+            throw _iteratorError57;
           }
         }
       }
@@ -3970,29 +4036,29 @@ var ProjectService = function () {
     key: 'updateStepTransitionsToGroup',
     value: function updateStepTransitionsToGroup(nodeIdToInsertInside, nodeIdToInsert) {
       var nodesThatTransitionToGroup = this.getNodesByToNodeId(nodeIdToInsertInside);
-      var _iteratorNormalCompletion56 = true;
-      var _didIteratorError56 = false;
-      var _iteratorError56 = undefined;
+      var _iteratorNormalCompletion58 = true;
+      var _didIteratorError58 = false;
+      var _iteratorError58 = undefined;
 
       try {
-        for (var _iterator56 = nodesThatTransitionToGroup[Symbol.iterator](), _step56; !(_iteratorNormalCompletion56 = (_step56 = _iterator56.next()).done); _iteratorNormalCompletion56 = true) {
-          var nodeThatTransitionsToGroup = _step56.value;
+        for (var _iterator58 = nodesThatTransitionToGroup[Symbol.iterator](), _step58; !(_iteratorNormalCompletion58 = (_step58 = _iterator58.next()).done); _iteratorNormalCompletion58 = true) {
+          var nodeThatTransitionsToGroup = _step58.value;
 
           if (!this.isGroupNode(nodeThatTransitionsToGroup.id)) {
             this.updateToTransition(nodeThatTransitionsToGroup, nodeIdToInsertInside, nodeIdToInsert);
           }
         }
       } catch (err) {
-        _didIteratorError56 = true;
-        _iteratorError56 = err;
+        _didIteratorError58 = true;
+        _iteratorError58 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion56 && _iterator56.return) {
-            _iterator56.return();
+          if (!_iteratorNormalCompletion58 && _iterator58.return) {
+            _iterator58.return();
           }
         } finally {
-          if (_didIteratorError56) {
-            throw _iteratorError56;
+          if (_didIteratorError58) {
+            throw _iteratorError58;
           }
         }
       }
@@ -4001,27 +4067,27 @@ var ProjectService = function () {
     key: 'updateTransitionsToStartId',
     value: function updateTransitionsToStartId(startId, nodeIdToInsert) {
       var nodesThatTransitionToStartId = this.getNodesByToNodeId(startId);
-      var _iteratorNormalCompletion57 = true;
-      var _didIteratorError57 = false;
-      var _iteratorError57 = undefined;
+      var _iteratorNormalCompletion59 = true;
+      var _didIteratorError59 = false;
+      var _iteratorError59 = undefined;
 
       try {
-        for (var _iterator57 = nodesThatTransitionToStartId[Symbol.iterator](), _step57; !(_iteratorNormalCompletion57 = (_step57 = _iterator57.next()).done); _iteratorNormalCompletion57 = true) {
-          var nodeThatTransitionToStartId = _step57.value;
+        for (var _iterator59 = nodesThatTransitionToStartId[Symbol.iterator](), _step59; !(_iteratorNormalCompletion59 = (_step59 = _iterator59.next()).done); _iteratorNormalCompletion59 = true) {
+          var nodeThatTransitionToStartId = _step59.value;
 
           this.updateToTransition(nodeThatTransitionToStartId, startId, nodeIdToInsert);
         }
       } catch (err) {
-        _didIteratorError57 = true;
-        _iteratorError57 = err;
+        _didIteratorError59 = true;
+        _iteratorError59 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion57 && _iterator57.return) {
-            _iterator57.return();
+          if (!_iteratorNormalCompletion59 && _iterator59.return) {
+            _iterator59.return();
           }
         } finally {
-          if (_didIteratorError57) {
-            throw _iteratorError57;
+          if (_didIteratorError59) {
+            throw _iteratorError59;
           }
         }
       }
@@ -4074,13 +4140,13 @@ var ProjectService = function () {
         }
 
         var transitions = node.transitionLogic.transitions;
-        var _iteratorNormalCompletion58 = true;
-        var _didIteratorError58 = false;
-        var _iteratorError58 = undefined;
+        var _iteratorNormalCompletion60 = true;
+        var _didIteratorError60 = false;
+        var _iteratorError60 = undefined;
 
         try {
-          for (var _iterator58 = transitions[Symbol.iterator](), _step58; !(_iteratorNormalCompletion58 = (_step58 = _iterator58.next()).done); _iteratorNormalCompletion58 = true) {
-            var transition = _step58.value;
+          for (var _iterator60 = transitions[Symbol.iterator](), _step60; !(_iteratorNormalCompletion60 = (_step60 = _iterator60.next()).done); _iteratorNormalCompletion60 = true) {
+            var transition = _step60.value;
 
             if (transition != null) {
               var toNodeId = transition.to;
@@ -4090,16 +4156,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError58 = true;
-          _iteratorError58 = err;
+          _didIteratorError60 = true;
+          _iteratorError60 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion58 && _iterator58.return) {
-              _iterator58.return();
+            if (!_iteratorNormalCompletion60 && _iterator60.return) {
+              _iterator60.return();
             }
           } finally {
-            if (_didIteratorError58) {
-              throw _iteratorError58;
+            if (_didIteratorError60) {
+              throw _iteratorError60;
             }
           }
         }
@@ -4115,13 +4181,13 @@ var ProjectService = function () {
     key: 'getChildNodesWithoutTransitions',
     value: function getChildNodesWithoutTransitions(group) {
       var lastNodes = [];
-      var _iteratorNormalCompletion59 = true;
-      var _didIteratorError59 = false;
-      var _iteratorError59 = undefined;
+      var _iteratorNormalCompletion61 = true;
+      var _didIteratorError61 = false;
+      var _iteratorError61 = undefined;
 
       try {
-        for (var _iterator59 = group.ids[Symbol.iterator](), _step59; !(_iteratorNormalCompletion59 = (_step59 = _iterator59.next()).done); _iteratorNormalCompletion59 = true) {
-          var childId = _step59.value;
+        for (var _iterator61 = group.ids[Symbol.iterator](), _step61; !(_iteratorNormalCompletion61 = (_step61 = _iterator61.next()).done); _iteratorNormalCompletion61 = true) {
+          var childId = _step61.value;
 
           var child = this.getNodeById(childId);
           var transitionLogic = child.transitionLogic;
@@ -4131,16 +4197,16 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError59 = true;
-        _iteratorError59 = err;
+        _didIteratorError61 = true;
+        _iteratorError61 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion59 && _iterator59.return) {
-            _iterator59.return();
+          if (!_iteratorNormalCompletion61 && _iterator61.return) {
+            _iterator61.return();
           }
         } finally {
-          if (_didIteratorError59) {
-            throw _iteratorError59;
+          if (_didIteratorError61) {
+            throw _iteratorError61;
           }
         }
       }
@@ -4158,13 +4224,13 @@ var ProjectService = function () {
     value: function getNextAvailableGroupId() {
       var groupIds = this.getGroupIds();
       var largestGroupIdNumber = null;
-      var _iteratorNormalCompletion60 = true;
-      var _didIteratorError60 = false;
-      var _iteratorError60 = undefined;
+      var _iteratorNormalCompletion62 = true;
+      var _didIteratorError62 = false;
+      var _iteratorError62 = undefined;
 
       try {
-        for (var _iterator60 = groupIds[Symbol.iterator](), _step60; !(_iteratorNormalCompletion60 = (_step60 = _iterator60.next()).done); _iteratorNormalCompletion60 = true) {
-          var groupId = _step60.value;
+        for (var _iterator62 = groupIds[Symbol.iterator](), _step62; !(_iteratorNormalCompletion62 = (_step62 = _iterator62.next()).done); _iteratorNormalCompletion62 = true) {
+          var groupId = _step62.value;
 
           // get the number from the group id e.g. the number of 'group2' would be 2
           var groupIdNumber = groupId.replace('group', '');
@@ -4182,16 +4248,16 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError60 = true;
-        _iteratorError60 = err;
+        _didIteratorError62 = true;
+        _iteratorError62 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion60 && _iterator60.return) {
-            _iterator60.return();
+          if (!_iteratorNormalCompletion62 && _iterator62.return) {
+            _iterator62.return();
           }
         } finally {
-          if (_didIteratorError60) {
-            throw _iteratorError60;
+          if (_didIteratorError62) {
+            throw _iteratorError62;
           }
         }
       }
@@ -4210,13 +4276,13 @@ var ProjectService = function () {
     value: function getGroupIds() {
       var groupIds = [];
       var groupNodes = this.groupNodes;
-      var _iteratorNormalCompletion61 = true;
-      var _didIteratorError61 = false;
-      var _iteratorError61 = undefined;
+      var _iteratorNormalCompletion63 = true;
+      var _didIteratorError63 = false;
+      var _iteratorError63 = undefined;
 
       try {
-        for (var _iterator61 = groupNodes[Symbol.iterator](), _step61; !(_iteratorNormalCompletion61 = (_step61 = _iterator61.next()).done); _iteratorNormalCompletion61 = true) {
-          var group = _step61.value;
+        for (var _iterator63 = groupNodes[Symbol.iterator](), _step63; !(_iteratorNormalCompletion63 = (_step63 = _iterator63.next()).done); _iteratorNormalCompletion63 = true) {
+          var group = _step63.value;
 
           if (group != null) {
             var groupId = group.id;
@@ -4226,28 +4292,28 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError61 = true;
-        _iteratorError61 = err;
+        _didIteratorError63 = true;
+        _iteratorError63 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion61 && _iterator61.return) {
-            _iterator61.return();
+          if (!_iteratorNormalCompletion63 && _iterator63.return) {
+            _iterator63.return();
           }
         } finally {
-          if (_didIteratorError61) {
-            throw _iteratorError61;
+          if (_didIteratorError63) {
+            throw _iteratorError63;
           }
         }
       }
 
       var inactiveGroupNodes = this.getInactiveGroupNodes();
-      var _iteratorNormalCompletion62 = true;
-      var _didIteratorError62 = false;
-      var _iteratorError62 = undefined;
+      var _iteratorNormalCompletion64 = true;
+      var _didIteratorError64 = false;
+      var _iteratorError64 = undefined;
 
       try {
-        for (var _iterator62 = inactiveGroupNodes[Symbol.iterator](), _step62; !(_iteratorNormalCompletion62 = (_step62 = _iterator62.next()).done); _iteratorNormalCompletion62 = true) {
-          var inactiveGroup = _step62.value;
+        for (var _iterator64 = inactiveGroupNodes[Symbol.iterator](), _step64; !(_iteratorNormalCompletion64 = (_step64 = _iterator64.next()).done); _iteratorNormalCompletion64 = true) {
+          var inactiveGroup = _step64.value;
 
           if (inactiveGroup != null) {
             var inactiveGroupId = inactiveGroup.id;
@@ -4257,16 +4323,16 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError62 = true;
-        _iteratorError62 = err;
+        _didIteratorError64 = true;
+        _iteratorError64 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion62 && _iterator62.return) {
-            _iterator62.return();
+          if (!_iteratorNormalCompletion64 && _iterator64.return) {
+            _iterator64.return();
           }
         } finally {
-          if (_didIteratorError62) {
-            throw _iteratorError62;
+          if (_didIteratorError64) {
+            throw _iteratorError64;
           }
         }
       }
@@ -4295,13 +4361,13 @@ var ProjectService = function () {
       var nodeIds = this.getNodeIds();
       var largestNodeIdNumber = null;
 
-      var _iteratorNormalCompletion63 = true;
-      var _didIteratorError63 = false;
-      var _iteratorError63 = undefined;
+      var _iteratorNormalCompletion65 = true;
+      var _didIteratorError65 = false;
+      var _iteratorError65 = undefined;
 
       try {
-        for (var _iterator63 = nodeIds[Symbol.iterator](), _step63; !(_iteratorNormalCompletion63 = (_step63 = _iterator63.next()).done); _iteratorNormalCompletion63 = true) {
-          var nodeId = _step63.value;
+        for (var _iterator65 = nodeIds[Symbol.iterator](), _step65; !(_iteratorNormalCompletion65 = (_step65 = _iterator65.next()).done); _iteratorNormalCompletion65 = true) {
+          var nodeId = _step65.value;
 
           // get the number from the node id e.g. the number of 'node2' would be 2
           var _nodeIdNumber = nodeId.replace('node', '');
@@ -4319,28 +4385,28 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError63 = true;
-        _iteratorError63 = err;
+        _didIteratorError65 = true;
+        _iteratorError65 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion63 && _iterator63.return) {
-            _iterator63.return();
+          if (!_iteratorNormalCompletion65 && _iterator65.return) {
+            _iterator65.return();
           }
         } finally {
-          if (_didIteratorError63) {
-            throw _iteratorError63;
+          if (_didIteratorError65) {
+            throw _iteratorError65;
           }
         }
       }
 
       var inactiveNodeIds = this.getInactiveNodeIds();
-      var _iteratorNormalCompletion64 = true;
-      var _didIteratorError64 = false;
-      var _iteratorError64 = undefined;
+      var _iteratorNormalCompletion66 = true;
+      var _didIteratorError66 = false;
+      var _iteratorError66 = undefined;
 
       try {
-        for (var _iterator64 = inactiveNodeIds[Symbol.iterator](), _step64; !(_iteratorNormalCompletion64 = (_step64 = _iterator64.next()).done); _iteratorNormalCompletion64 = true) {
-          var inactiveNodeId = _step64.value;
+        for (var _iterator66 = inactiveNodeIds[Symbol.iterator](), _step66; !(_iteratorNormalCompletion66 = (_step66 = _iterator66.next()).done); _iteratorNormalCompletion66 = true) {
+          var inactiveNodeId = _step66.value;
 
           // get the number from the node id e.g. the number of 'node2' would be 2
           var _nodeIdNumber2 = inactiveNodeId.replace('node', '');
@@ -4357,28 +4423,28 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError64 = true;
-        _iteratorError64 = err;
+        _didIteratorError66 = true;
+        _iteratorError66 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion64 && _iterator64.return) {
-            _iterator64.return();
+          if (!_iteratorNormalCompletion66 && _iterator66.return) {
+            _iterator66.return();
           }
         } finally {
-          if (_didIteratorError64) {
-            throw _iteratorError64;
+          if (_didIteratorError66) {
+            throw _iteratorError66;
           }
         }
       }
 
       if (nodeIdsToSkip != null) {
-        var _iteratorNormalCompletion65 = true;
-        var _didIteratorError65 = false;
-        var _iteratorError65 = undefined;
+        var _iteratorNormalCompletion67 = true;
+        var _didIteratorError67 = false;
+        var _iteratorError67 = undefined;
 
         try {
-          for (var _iterator65 = nodeIdsToSkip[Symbol.iterator](), _step65; !(_iteratorNormalCompletion65 = (_step65 = _iterator65.next()).done); _iteratorNormalCompletion65 = true) {
-            var nodeIdToSkip = _step65.value;
+          for (var _iterator67 = nodeIdsToSkip[Symbol.iterator](), _step67; !(_iteratorNormalCompletion67 = (_step67 = _iterator67.next()).done); _iteratorNormalCompletion67 = true) {
+            var nodeIdToSkip = _step67.value;
 
             // get the number from the node id e.g. the number of 'node2' would be 2
             var nodeIdNumber = nodeIdToSkip.replace('node', '');
@@ -4395,16 +4461,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError65 = true;
-          _iteratorError65 = err;
+          _didIteratorError67 = true;
+          _iteratorError67 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion65 && _iterator65.return) {
-              _iterator65.return();
+            if (!_iteratorNormalCompletion67 && _iterator67.return) {
+              _iterator67.return();
             }
           } finally {
-            if (_didIteratorError65) {
-              throw _iteratorError65;
+            if (_didIteratorError67) {
+              throw _iteratorError67;
             }
           }
         }
@@ -4421,13 +4487,13 @@ var ProjectService = function () {
     key: 'getNodeIds',
     value: function getNodeIds() {
       var nodeIds = [];
-      var _iteratorNormalCompletion66 = true;
-      var _didIteratorError66 = false;
-      var _iteratorError66 = undefined;
+      var _iteratorNormalCompletion68 = true;
+      var _didIteratorError68 = false;
+      var _iteratorError68 = undefined;
 
       try {
-        for (var _iterator66 = this.applicationNodes[Symbol.iterator](), _step66; !(_iteratorNormalCompletion66 = (_step66 = _iterator66.next()).done); _iteratorNormalCompletion66 = true) {
-          var node = _step66.value;
+        for (var _iterator68 = this.applicationNodes[Symbol.iterator](), _step68; !(_iteratorNormalCompletion68 = (_step68 = _iterator68.next()).done); _iteratorNormalCompletion68 = true) {
+          var node = _step68.value;
 
           var nodeId = node.id;
           if (nodeId != null) {
@@ -4435,16 +4501,16 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError66 = true;
-        _iteratorError66 = err;
+        _didIteratorError68 = true;
+        _iteratorError68 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion66 && _iterator66.return) {
-            _iterator66.return();
+          if (!_iteratorNormalCompletion68 && _iterator68.return) {
+            _iterator68.return();
           }
         } finally {
-          if (_didIteratorError66) {
-            throw _iteratorError66;
+          if (_didIteratorError68) {
+            throw _iteratorError68;
           }
         }
       }
@@ -4463,13 +4529,13 @@ var ProjectService = function () {
       var nodeIds = [];
       var inactiveNodes = this.project.inactiveNodes;
       if (inactiveNodes != null) {
-        var _iteratorNormalCompletion67 = true;
-        var _didIteratorError67 = false;
-        var _iteratorError67 = undefined;
+        var _iteratorNormalCompletion69 = true;
+        var _didIteratorError69 = false;
+        var _iteratorError69 = undefined;
 
         try {
-          for (var _iterator67 = inactiveNodes[Symbol.iterator](), _step67; !(_iteratorNormalCompletion67 = (_step67 = _iterator67.next()).done); _iteratorNormalCompletion67 = true) {
-            var inactiveNode = _step67.value;
+          for (var _iterator69 = inactiveNodes[Symbol.iterator](), _step69; !(_iteratorNormalCompletion69 = (_step69 = _iterator69.next()).done); _iteratorNormalCompletion69 = true) {
+            var inactiveNode = _step69.value;
 
             if (inactiveNode != null) {
               var nodeId = inactiveNode.id;
@@ -4479,16 +4545,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError67 = true;
-          _iteratorError67 = err;
+          _didIteratorError69 = true;
+          _iteratorError69 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion67 && _iterator67.return) {
-              _iterator67.return();
+            if (!_iteratorNormalCompletion69 && _iterator69.return) {
+              _iterator69.return();
             }
           } finally {
-            if (_didIteratorError67) {
-              throw _iteratorError67;
+            if (_didIteratorError69) {
+              throw _iteratorError69;
             }
           }
         }
@@ -4608,13 +4674,13 @@ var ProjectService = function () {
     value: function moveNodesAfter(nodeIds, nodeId) {
       var movedNodes = [];
 
-      var _iteratorNormalCompletion68 = true;
-      var _didIteratorError68 = false;
-      var _iteratorError68 = undefined;
+      var _iteratorNormalCompletion70 = true;
+      var _didIteratorError70 = false;
+      var _iteratorError70 = undefined;
 
       try {
-        for (var _iterator68 = nodeIds[Symbol.iterator](), _step68; !(_iteratorNormalCompletion68 = (_step68 = _iterator68.next()).done); _iteratorNormalCompletion68 = true) {
-          var tempNodeId = _step68.value;
+        for (var _iterator70 = nodeIds[Symbol.iterator](), _step70; !(_iteratorNormalCompletion70 = (_step70 = _iterator70.next()).done); _iteratorNormalCompletion70 = true) {
+          var tempNodeId = _step70.value;
 
           var node = this.getNodeById(tempNodeId);
           movedNodes.push(node);
@@ -4645,16 +4711,16 @@ var ProjectService = function () {
           nodeId = node.id;
         }
       } catch (err) {
-        _didIteratorError68 = true;
-        _iteratorError68 = err;
+        _didIteratorError70 = true;
+        _iteratorError70 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion68 && _iterator68.return) {
-            _iterator68.return();
+          if (!_iteratorNormalCompletion70 && _iterator70.return) {
+            _iterator70.return();
           }
         } finally {
-          if (_didIteratorError68) {
-            throw _iteratorError68;
+          if (_didIteratorError70) {
+            throw _iteratorError70;
           }
         }
       }
@@ -4678,29 +4744,29 @@ var ProjectService = function () {
       nodeCopy.constraints = []; // clear constraints
 
       var newComponentIds = [];
-      var _iteratorNormalCompletion69 = true;
-      var _didIteratorError69 = false;
-      var _iteratorError69 = undefined;
+      var _iteratorNormalCompletion71 = true;
+      var _didIteratorError71 = false;
+      var _iteratorError71 = undefined;
 
       try {
-        for (var _iterator69 = nodeCopy.components[Symbol.iterator](), _step69; !(_iteratorNormalCompletion69 = (_step69 = _iterator69.next()).done); _iteratorNormalCompletion69 = true) {
-          var component = _step69.value;
+        for (var _iterator71 = nodeCopy.components[Symbol.iterator](), _step71; !(_iteratorNormalCompletion71 = (_step71 = _iterator71.next()).done); _iteratorNormalCompletion71 = true) {
+          var component = _step71.value;
 
           var newComponentId = this.getUnusedComponentId(newComponentIds);
           newComponentIds.push(newComponentId);
           component.id = newComponentId;
         }
       } catch (err) {
-        _didIteratorError69 = true;
-        _iteratorError69 = err;
+        _didIteratorError71 = true;
+        _iteratorError71 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion69 && _iterator69.return) {
-            _iterator69.return();
+          if (!_iteratorNormalCompletion71 && _iterator71.return) {
+            _iterator71.return();
           }
         } finally {
-          if (_didIteratorError69) {
-            throw _iteratorError69;
+          if (_didIteratorError71) {
+            throw _iteratorError71;
           }
         }
       }
@@ -4709,172 +4775,163 @@ var ProjectService = function () {
     }
 
     /**
-     * Delete a node
-     * @param nodeId the node id
+     * Delete a node from the project and update transitions.
+     *
+     * If we are deleting the project start node id, we will need
+     * to change it to the next logical node id that will be used
+     * as the project start.
+     *
+     * @param nodeId the node id to delete from the project. It can be a step
+     * or an activity.
      */
 
   }, {
     key: 'deleteNode',
     value: function deleteNode(nodeId) {
-      /*
-       * flag for whether we are deleting the project start node id.
-       * if we are deleting the project start node id, we will need
-       * to change it to the next logical node id that will be used
-       * as the project start.
-       */
-      var removingProjectStartNodeId = false;
+      var parentGroup = this.getParentGroup(nodeId);
+      if (parentGroup.startId === nodeId) {
+        this.setGroupStartIdToNextChildId(parentGroup);
+      }
+
+      if (this.isProjectStartNodeIdOrContainsProjectStartNodeId(nodeId)) {
+        this.updateProjectStartNodeIdToNextLogicalNode(nodeId);
+      }
 
       if (this.isGroupNode(nodeId)) {
-        // the node is a group node so we will also remove all of its children
-        var group = this.getNodeById(nodeId);
-
-        // TODO check if the child is in another group, if so do not remove
-
-        if (group != null) {
-          var ids = group.ids;
-          for (var i = 0; i < ids.length; i++) {
-            var id = ids[i];
-            this.removeNodeIdFromTransitions(id);
-            this.removeNodeIdFromGroups(id);
-            this.removeNodeIdFromNodes(id);
-
-            if (this.project.startNodeId == id) {
-              removingProjectStartNodeId = true;
-            }
-
-            /*
-             * move the counter back because we have removed a child
-             * from the parent group's array of child ids so all of
-             * the child ids were shifted back one and the next child
-             * we want will be at i--
-             */
-            i--;
-          }
-        }
-      }
-
-      var parentGroup = this.getParentGroup(nodeId);
-
-      // check if we need to update the start id of the parent group
-      if (parentGroup != null) {
-
-        /*
-         * the node is the start node of the parent group so we need
-         * to update the start id of the parent group to point to
-         * the next node
-         */
-        if (nodeId === parentGroup.startId) {
-          var hasSetNewStartId = false;
-
-          var node = this.getNodeById(nodeId);
-          if (node != null) {
-            var transitionLogic = node.transitionLogic;
-            if (transitionLogic != null) {
-              var transitions = transitionLogic.transitions;
-              if (transitions != null && transitions.length > 0) {
-                var transition = transitions[0];
-                if (transition != null) {
-                  var toNodeId = transition.to;
-                  if (toNodeId != null) {
-                    if (this.isNodeInGroup(toNodeId, parentGroup.id)) {
-                      parentGroup.startId = toNodeId;
-                      hasSetNewStartId = true;
-                    }
-                  }
-                }
-              }
-            }
-          }
-
-          if (!hasSetNewStartId) {
-            parentGroup.startId = '';
-          }
-        }
-      }
-
-      if (nodeId === this.getStartNodeId()) {
-        removingProjectStartNodeId = true;
-      }
-
-      if (removingProjectStartNodeId) {
-        /*
-         * we are removing the project start node id so we need to update
-         * the startNodeId to something else
-         */
-
-        if (this.isGroupNode(nodeId)) {
-          /*
-           * we are removing a group so we need to set the startNodeId to
-           * the first node of the next group or if the next group doesn't
-           * have any nodes, we will just use the next group
-           */
-
-          // get the transitions of the group we are removing
-          var _transitions2 = this.getTransitionsByFromNodeId(nodeId);
-
-          if (_transitions2 == null || _transitions2.length == 0) {
-            /*
-             * the group doesn't have any transitions so we will set
-             * the startNodeId to 'group0'
-             */
-            this.setStartNodeId('group0');
-          } else {
-            // the group has transitions
-
-            var nextNodeId = null;
-
-            if (_transitions2[0] != null && _transitions2[0].to != null) {
-              nextNodeId = _transitions2[0].to;
-            }
-
-            if (nextNodeId != null) {
-              if (this.isGroupNode(nextNodeId)) {
-                var nextGroupNode = this.getNodeById(nextNodeId);
-                if (nextGroupNode != null) {
-                  var nextGroupStartId = nextGroupNode.startId;
-                  if (nextGroupStartId == null) {
-                    this.setStartNodeId(nextNodeId);
-                  } else {
-                    this.setStartNodeId(nextGroupStartId);
-                  }
-                }
-              } else {
-                this.setStartNodeId(nextNodeId);
-              }
-            }
-          }
-        } else {
-          /*
-           * we are removing a step node so we will set the startNodeId to
-           * the next node in the transitions, or if there are no
-           * transitions, we will use the parent group
-           */
-
-          // get the transitions from the step we are removing
-          var _transitions3 = this.getTransitionsByFromNodeId(nodeId);
-          var parentGroupId = this.getParentGroupId(nodeId);
-          if (_transitions3 == null || _transitions3.length == 0) {
-            this.setStartNodeId(parentGroupId);
-          } else {
-            if (_transitions3[0] != null && _transitions3[0].to != null) {
-              var _toNodeId3 = _transitions3[0].to;
-              if (this.isNodeInGroup(_toNodeId3, parentGroupId)) {
-                this.setStartNodeId(_toNodeId3);
-              } else {
-                this.setStartNodeId(this.getParentGroupId(nodeId));
-              }
-            }
-          }
-        }
+        this.removeChildNodes(nodeId);
       }
 
       this.removeNodeIdFromTransitions(nodeId);
       this.removeNodeIdFromGroups(nodeId);
       this.removeNodeIdFromNodes(nodeId);
-
-      if (parentGroup != null) {
-        this.recalculatePositionsInGroup(parentGroup.id);
+      this.recalculatePositionsInGroup(parentGroup.id);
+    }
+  }, {
+    key: 'updateProjectStartNodeIdToNextLogicalNode',
+    value: function updateProjectStartNodeIdToNextLogicalNode(nodeId) {
+      if (this.isGroupNode(nodeId)) {
+        this.updateProjectStartNodeIdToNextLogicalNodeForRemovingGroup(nodeId);
+      } else {
+        this.updateProjectStartNodeIdToNextLogicalNodeForRemovingStep(nodeId);
       }
+    }
+
+    /**
+     * Set the startNodeId of the specified group to the first node of the next group.
+     * If the next group doesn't have any nodes, startNodeId should point
+     * to the next group.
+     */
+
+  }, {
+    key: 'updateProjectStartNodeIdToNextLogicalNodeForRemovingGroup',
+    value: function updateProjectStartNodeIdToNextLogicalNodeForRemovingGroup(nodeId) {
+      var transitions = this.getTransitionsByFromNodeId(nodeId);
+      if (transitions.length == 0) {
+        this.setStartNodeId('group0');
+      } else {
+        var nextNodeId = transitions[0].to;
+        if (this.isGroupNode(nextNodeId)) {
+          var nextGroupStartId = this.getGroupStartId(nextNodeId);
+          if (nextGroupStartId == null) {
+            this.setStartNodeId(nextNodeId);
+          } else {
+            this.setStartNodeId(nextGroupStartId);
+          }
+        } else {
+          this.setStartNodeId(nextNodeId);
+        }
+      }
+    }
+
+    /**
+     * Set the startNodeId to the next node in the transitions.
+     * If there are no transitions, set it to the parent group of the node.
+     */
+
+  }, {
+    key: 'updateProjectStartNodeIdToNextLogicalNodeForRemovingStep',
+    value: function updateProjectStartNodeIdToNextLogicalNodeForRemovingStep(nodeId) {
+      var transitions = this.getTransitionsByFromNodeId(nodeId);
+      var parentGroupId = this.getParentGroupId(nodeId);
+      if (transitions.length == 0) {
+        this.setStartNodeId(parentGroupId);
+      } else {
+        var nextNodeId = transitions[0].to;
+        if (this.isNodeInGroup(nextNodeId, parentGroupId)) {
+          this.setStartNodeId(nextNodeId);
+        } else {
+          this.setStartNodeId(this.getParentGroupId(nodeId));
+        }
+      }
+    }
+  }, {
+    key: 'setGroupStartIdToNextChildId',
+    value: function setGroupStartIdToNextChildId(group) {
+      var hasSetNewStartId = false;
+      var transitions = this.getTransitionsByFromNodeId(group.startId);
+      if (transitions.length > 0) {
+        var transition = transitions[0];
+        var toNodeId = transition.to;
+        if (this.isNodeInGroup(toNodeId, group.id)) {
+          group.startId = toNodeId;
+          hasSetNewStartId = true;
+        }
+      }
+
+      if (!hasSetNewStartId) {
+        group.startId = '';
+      }
+    }
+  }, {
+    key: 'removeChildNodes',
+    value: function removeChildNodes(groupId) {
+      var group = this.getNodeById(groupId);
+      for (var i = 0; i < group.ids.length; i++) {
+        var childId = group.ids[i];
+        this.removeNodeIdFromTransitions(childId);
+        this.removeNodeIdFromGroups(childId);
+        this.removeNodeIdFromNodes(childId);
+        i--; // so it won't skip the next element
+      }
+    }
+  }, {
+    key: 'isProjectStartNodeIdOrContainsProjectStartNodeId',
+    value: function isProjectStartNodeIdOrContainsProjectStartNodeId(nodeId) {
+      return this.getStartNodeId() === nodeId || this.isGroupNode(nodeId) && this.containsStartNodeId(nodeId);
+    }
+  }, {
+    key: 'containsStartNodeId',
+    value: function containsStartNodeId(groupId) {
+      var group = this.getNodeById(groupId);
+      var projectStartNodeId = this.getStartNodeId();
+      var _iteratorNormalCompletion72 = true;
+      var _didIteratorError72 = false;
+      var _iteratorError72 = undefined;
+
+      try {
+        for (var _iterator72 = group.ids[Symbol.iterator](), _step72; !(_iteratorNormalCompletion72 = (_step72 = _iterator72.next()).done); _iteratorNormalCompletion72 = true) {
+          var childId = _step72.value;
+
+          if (childId === projectStartNodeId) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError72 = true;
+        _iteratorError72 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion72 && _iterator72.return) {
+            _iterator72.return();
+          }
+        } finally {
+          if (_didIteratorError72) {
+            throw _iteratorError72;
+          }
+        }
+      }
+
+      return false;
     }
 
     /**
@@ -4906,13 +4963,13 @@ var ProjectService = function () {
             // the node we are removing is the start node
 
             if (nodeToRemoveTransitions != null && nodeToRemoveTransitions.length > 0) {
-              var _iteratorNormalCompletion70 = true;
-              var _didIteratorError70 = false;
-              var _iteratorError70 = undefined;
+              var _iteratorNormalCompletion73 = true;
+              var _didIteratorError73 = false;
+              var _iteratorError73 = undefined;
 
               try {
-                for (var _iterator70 = nodeToRemoveTransitions[Symbol.iterator](), _step70; !(_iteratorNormalCompletion70 = (_step70 = _iterator70.next()).done); _iteratorNormalCompletion70 = true) {
-                  var nodeToRemoveTransition = _step70.value;
+                for (var _iterator73 = nodeToRemoveTransitions[Symbol.iterator](), _step73; !(_iteratorNormalCompletion73 = (_step73 = _iterator73.next()).done); _iteratorNormalCompletion73 = true) {
+                  var nodeToRemoveTransition = _step73.value;
 
                   if (nodeToRemoveTransition != null) {
                     var toNodeId = nodeToRemoveTransition.to;
@@ -4931,16 +4988,16 @@ var ProjectService = function () {
                   }
                 }
               } catch (err) {
-                _didIteratorError70 = true;
-                _iteratorError70 = err;
+                _didIteratorError73 = true;
+                _iteratorError73 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion70 && _iterator70.return) {
-                    _iterator70.return();
+                  if (!_iteratorNormalCompletion73 && _iterator73.return) {
+                    _iterator73.return();
                   }
                 } finally {
-                  if (_didIteratorError70) {
-                    throw _iteratorError70;
+                  if (_didIteratorError73) {
+                    throw _iteratorError73;
                   }
                 }
               }
@@ -5004,22 +5061,22 @@ var ProjectService = function () {
                   var nodeIdsInBranch = this.getNodeIdsInBranch(node.id, nodeId);
 
                   if (nodeIdsInBranch != null) {
-                    var _iteratorNormalCompletion71 = true;
-                    var _didIteratorError71 = false;
-                    var _iteratorError71 = undefined;
+                    var _iteratorNormalCompletion74 = true;
+                    var _didIteratorError74 = false;
+                    var _iteratorError74 = undefined;
 
                     try {
-                      for (var _iterator71 = nodeIdsInBranch[Symbol.iterator](), _step71; !(_iteratorNormalCompletion71 = (_step71 = _iterator71.next()).done); _iteratorNormalCompletion71 = true) {
-                        var nodeIdInBranch = _step71.value;
+                      for (var _iterator74 = nodeIdsInBranch[Symbol.iterator](), _step74; !(_iteratorNormalCompletion74 = (_step74 = _iterator74.next()).done); _iteratorNormalCompletion74 = true) {
+                        var nodeIdInBranch = _step74.value;
 
                         var nodeInBranch = this.getNodeById(nodeIdInBranch);
-                        var _iteratorNormalCompletion72 = true;
-                        var _didIteratorError72 = false;
-                        var _iteratorError72 = undefined;
+                        var _iteratorNormalCompletion75 = true;
+                        var _didIteratorError75 = false;
+                        var _iteratorError75 = undefined;
 
                         try {
-                          for (var _iterator72 = transitionsCopy[Symbol.iterator](), _step72; !(_iteratorNormalCompletion72 = (_step72 = _iterator72.next()).done); _iteratorNormalCompletion72 = true) {
-                            var transitionCopy = _step72.value;
+                          for (var _iterator75 = transitionsCopy[Symbol.iterator](), _step75; !(_iteratorNormalCompletion75 = (_step75 = _iterator75.next()).done); _iteratorNormalCompletion75 = true) {
+                            var transitionCopy = _step75.value;
 
                             if (transitionCopy != null) {
                               var currentFromNodeId = node.id;
@@ -5035,31 +5092,31 @@ var ProjectService = function () {
                             }
                           }
                         } catch (err) {
-                          _didIteratorError72 = true;
-                          _iteratorError72 = err;
+                          _didIteratorError75 = true;
+                          _iteratorError75 = err;
                         } finally {
                           try {
-                            if (!_iteratorNormalCompletion72 && _iterator72.return) {
-                              _iterator72.return();
+                            if (!_iteratorNormalCompletion75 && _iterator75.return) {
+                              _iterator75.return();
                             }
                           } finally {
-                            if (_didIteratorError72) {
-                              throw _iteratorError72;
+                            if (_didIteratorError75) {
+                              throw _iteratorError75;
                             }
                           }
                         }
                       }
                     } catch (err) {
-                      _didIteratorError71 = true;
-                      _iteratorError71 = err;
+                      _didIteratorError74 = true;
+                      _iteratorError74 = err;
                     } finally {
                       try {
-                        if (!_iteratorNormalCompletion71 && _iterator71.return) {
-                          _iterator71.return();
+                        if (!_iteratorNormalCompletion74 && _iterator74.return) {
+                          _iterator74.return();
                         }
                       } finally {
-                        if (_didIteratorError71) {
-                          throw _iteratorError71;
+                        if (_didIteratorError74) {
+                          throw _iteratorError74;
                         }
                       }
                     }
@@ -5071,13 +5128,13 @@ var ProjectService = function () {
                    */
                   var branches = this.getBranchesByBranchStartPointNodeId(nodeId);
 
-                  var _iteratorNormalCompletion73 = true;
-                  var _didIteratorError73 = false;
-                  var _iteratorError73 = undefined;
+                  var _iteratorNormalCompletion76 = true;
+                  var _didIteratorError76 = false;
+                  var _iteratorError76 = undefined;
 
                   try {
-                    for (var _iterator73 = branches[Symbol.iterator](), _step73; !(_iteratorNormalCompletion73 = (_step73 = _iterator73.next()).done); _iteratorNormalCompletion73 = true) {
-                      var branch = _step73.value;
+                    for (var _iterator76 = branches[Symbol.iterator](), _step76; !(_iteratorNormalCompletion76 = (_step76 = _iterator76.next()).done); _iteratorNormalCompletion76 = true) {
+                      var branch = _step76.value;
 
                       if (branch != null) {
                         /*
@@ -5087,57 +5144,57 @@ var ProjectService = function () {
                         var branchPaths = branch.branchPaths;
 
                         if (branchPaths != null) {
-                          var _iteratorNormalCompletion74 = true;
-                          var _didIteratorError74 = false;
-                          var _iteratorError74 = undefined;
+                          var _iteratorNormalCompletion77 = true;
+                          var _didIteratorError77 = false;
+                          var _iteratorError77 = undefined;
 
                           try {
-                            for (var _iterator74 = branchPaths[Symbol.iterator](), _step74; !(_iteratorNormalCompletion74 = (_step74 = _iterator74.next()).done); _iteratorNormalCompletion74 = true) {
-                              var branchPath = _step74.value;
+                            for (var _iterator77 = branchPaths[Symbol.iterator](), _step77; !(_iteratorNormalCompletion77 = (_step77 = _iterator77.next()).done); _iteratorNormalCompletion77 = true) {
+                              var branchPath = _step77.value;
 
                               if (branchPath != null) {
                                 var _currentFromNodeId = nodeId;
                                 var _currentToNodeId = branchPath[0];
                                 var _newFromNodeId = node.id;
                                 var _newToNodeId = branchPath[0];
-                                var _iteratorNormalCompletion75 = true;
-                                var _didIteratorError75 = false;
-                                var _iteratorError75 = undefined;
+                                var _iteratorNormalCompletion78 = true;
+                                var _didIteratorError78 = false;
+                                var _iteratorError78 = undefined;
 
                                 try {
-                                  for (var _iterator75 = branchPath[Symbol.iterator](), _step75; !(_iteratorNormalCompletion75 = (_step75 = _iterator75.next()).done); _iteratorNormalCompletion75 = true) {
-                                    var branchPathNodeId = _step75.value;
+                                  for (var _iterator78 = branchPath[Symbol.iterator](), _step78; !(_iteratorNormalCompletion78 = (_step78 = _iterator78.next()).done); _iteratorNormalCompletion78 = true) {
+                                    var branchPathNodeId = _step78.value;
 
                                     var branchPathNode = this.getNodeById(branchPathNodeId);
                                     this.updateBranchPathTakenConstraint(branchPathNode, _currentFromNodeId, _currentToNodeId, _newFromNodeId, _newToNodeId);
                                   }
                                 } catch (err) {
-                                  _didIteratorError75 = true;
-                                  _iteratorError75 = err;
+                                  _didIteratorError78 = true;
+                                  _iteratorError78 = err;
                                 } finally {
                                   try {
-                                    if (!_iteratorNormalCompletion75 && _iterator75.return) {
-                                      _iterator75.return();
+                                    if (!_iteratorNormalCompletion78 && _iterator78.return) {
+                                      _iterator78.return();
                                     }
                                   } finally {
-                                    if (_didIteratorError75) {
-                                      throw _iteratorError75;
+                                    if (_didIteratorError78) {
+                                      throw _iteratorError78;
                                     }
                                   }
                                 }
                               }
                             }
                           } catch (err) {
-                            _didIteratorError74 = true;
-                            _iteratorError74 = err;
+                            _didIteratorError77 = true;
+                            _iteratorError77 = err;
                           } finally {
                             try {
-                              if (!_iteratorNormalCompletion74 && _iterator74.return) {
-                                _iterator74.return();
+                              if (!_iteratorNormalCompletion77 && _iterator77.return) {
+                                _iterator77.return();
                               }
                             } finally {
-                              if (_didIteratorError74) {
-                                throw _iteratorError74;
+                              if (_didIteratorError77) {
+                                throw _iteratorError77;
                               }
                             }
                           }
@@ -5145,16 +5202,16 @@ var ProjectService = function () {
                       }
                     }
                   } catch (err) {
-                    _didIteratorError73 = true;
-                    _iteratorError73 = err;
+                    _didIteratorError76 = true;
+                    _iteratorError76 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion73 && _iterator73.return) {
-                        _iterator73.return();
+                      if (!_iteratorNormalCompletion76 && _iterator76.return) {
+                        _iterator76.return();
                       }
                     } finally {
-                      if (_didIteratorError73) {
-                        throw _iteratorError73;
+                      if (_didIteratorError76) {
+                        throw _iteratorError76;
                       }
                     }
                   }
@@ -5192,29 +5249,29 @@ var ProjectService = function () {
                    *     }
                    * ]
                    */
-                  var _iteratorNormalCompletion76 = true;
-                  var _didIteratorError76 = false;
-                  var _iteratorError76 = undefined;
+                  var _iteratorNormalCompletion79 = true;
+                  var _didIteratorError79 = false;
+                  var _iteratorError79 = undefined;
 
                   try {
-                    for (var _iterator76 = transitionsCopy[Symbol.iterator](), _step76; !(_iteratorNormalCompletion76 = (_step76 = _iterator76.next()).done); _iteratorNormalCompletion76 = true) {
-                      var _transitionCopy = _step76.value;
+                    for (var _iterator79 = transitionsCopy[Symbol.iterator](), _step79; !(_iteratorNormalCompletion79 = (_step79 = _iterator79.next()).done); _iteratorNormalCompletion79 = true) {
+                      var _transitionCopy = _step79.value;
 
                       // insert a transition from the node we are removing
                       transitions.splice(insertIndex, 0, _transitionCopy);
                       insertIndex++;
                     }
                   } catch (err) {
-                    _didIteratorError76 = true;
-                    _iteratorError76 = err;
+                    _didIteratorError79 = true;
+                    _iteratorError79 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion76 && _iterator76.return) {
-                        _iterator76.return();
+                      if (!_iteratorNormalCompletion79 && _iterator79.return) {
+                        _iterator79.return();
                       }
                     } finally {
-                      if (_didIteratorError76) {
-                        throw _iteratorError76;
+                      if (_didIteratorError79) {
+                        throw _iteratorError79;
                       }
                     }
                   }
@@ -5268,52 +5325,52 @@ var ProjectService = function () {
      * @param nodeId the node id to remove
      */
     value: function removeNodeIdFromGroups(nodeId) {
-      var _iteratorNormalCompletion77 = true;
-      var _didIteratorError77 = false;
-      var _iteratorError77 = undefined;
+      var _iteratorNormalCompletion80 = true;
+      var _didIteratorError80 = false;
+      var _iteratorError80 = undefined;
 
       try {
-        for (var _iterator77 = this.getGroupNodes()[Symbol.iterator](), _step77; !(_iteratorNormalCompletion77 = (_step77 = _iterator77.next()).done); _iteratorNormalCompletion77 = true) {
-          var group = _step77.value;
+        for (var _iterator80 = this.getGroupNodes()[Symbol.iterator](), _step80; !(_iteratorNormalCompletion80 = (_step80 = _iterator80.next()).done); _iteratorNormalCompletion80 = true) {
+          var group = _step80.value;
 
           this.removeNodeIdFromGroup(group, nodeId);
         }
       } catch (err) {
-        _didIteratorError77 = true;
-        _iteratorError77 = err;
+        _didIteratorError80 = true;
+        _iteratorError80 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion77 && _iterator77.return) {
-            _iterator77.return();
+          if (!_iteratorNormalCompletion80 && _iterator80.return) {
+            _iterator80.return();
           }
         } finally {
-          if (_didIteratorError77) {
-            throw _iteratorError77;
+          if (_didIteratorError80) {
+            throw _iteratorError80;
           }
         }
       }
 
-      var _iteratorNormalCompletion78 = true;
-      var _didIteratorError78 = false;
-      var _iteratorError78 = undefined;
+      var _iteratorNormalCompletion81 = true;
+      var _didIteratorError81 = false;
+      var _iteratorError81 = undefined;
 
       try {
-        for (var _iterator78 = this.getInactiveGroupNodes()[Symbol.iterator](), _step78; !(_iteratorNormalCompletion78 = (_step78 = _iterator78.next()).done); _iteratorNormalCompletion78 = true) {
-          var inactiveGroup = _step78.value;
+        for (var _iterator81 = this.getInactiveGroupNodes()[Symbol.iterator](), _step81; !(_iteratorNormalCompletion81 = (_step81 = _iterator81.next()).done); _iteratorNormalCompletion81 = true) {
+          var inactiveGroup = _step81.value;
 
           this.removeNodeIdFromGroup(inactiveGroup, nodeId);
         }
       } catch (err) {
-        _didIteratorError78 = true;
-        _iteratorError78 = err;
+        _didIteratorError81 = true;
+        _iteratorError81 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion78 && _iterator78.return) {
-            _iterator78.return();
+          if (!_iteratorNormalCompletion81 && _iterator81.return) {
+            _iterator81.return();
           }
         } finally {
-          if (_didIteratorError78) {
-            throw _iteratorError78;
+          if (_didIteratorError81) {
+            throw _iteratorError81;
           }
         }
       }
@@ -5384,6 +5441,8 @@ var ProjectService = function () {
           }
         }
       }
+
+      this.idToNode[nodeId] = null;
     }
 
     /**
@@ -5472,13 +5531,13 @@ var ProjectService = function () {
     key: 'doesAnyComponentHaveWork',
     value: function doesAnyComponentHaveWork(nodeId) {
       var node = this.getNodeById(nodeId);
-      var _iteratorNormalCompletion79 = true;
-      var _didIteratorError79 = false;
-      var _iteratorError79 = undefined;
+      var _iteratorNormalCompletion82 = true;
+      var _didIteratorError82 = false;
+      var _iteratorError82 = undefined;
 
       try {
-        for (var _iterator79 = node.components[Symbol.iterator](), _step79; !(_iteratorNormalCompletion79 = (_step79 = _iterator79.next()).done); _iteratorNormalCompletion79 = true) {
-          var component = _step79.value;
+        for (var _iterator82 = node.components[Symbol.iterator](), _step82; !(_iteratorNormalCompletion82 = (_step82 = _iterator82.next()).done); _iteratorNormalCompletion82 = true) {
+          var component = _step82.value;
 
           var service = this.$injector.get(component.type + 'Service');
           if (service != null && service.componentHasWork()) {
@@ -5486,16 +5545,16 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError79 = true;
-        _iteratorError79 = err;
+        _didIteratorError82 = true;
+        _iteratorError82 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion79 && _iterator79.return) {
-            _iterator79.return();
+          if (!_iteratorNormalCompletion82 && _iterator82.return) {
+            _iterator82.return();
           }
         } finally {
-          if (_didIteratorError79) {
-            throw _iteratorError79;
+          if (_didIteratorError82) {
+            throw _iteratorError82;
           }
         }
       }
@@ -5516,13 +5575,13 @@ var ProjectService = function () {
       if (node != null) {
         var components = node.components;
         if (components != null) {
-          var _iteratorNormalCompletion80 = true;
-          var _didIteratorError80 = false;
-          var _iteratorError80 = undefined;
+          var _iteratorNormalCompletion83 = true;
+          var _didIteratorError83 = false;
+          var _iteratorError83 = undefined;
 
           try {
-            for (var _iterator80 = components[Symbol.iterator](), _step80; !(_iteratorNormalCompletion80 = (_step80 = _iterator80.next()).done); _iteratorNormalCompletion80 = true) {
-              var component = _step80.value;
+            for (var _iterator83 = components[Symbol.iterator](), _step83; !(_iteratorNormalCompletion83 = (_step83 = _iterator83.next()).done); _iteratorNormalCompletion83 = true) {
+              var component = _step83.value;
 
               if (component != null) {
                 if (component.showSaveButton == true) {
@@ -5531,16 +5590,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError80 = true;
-            _iteratorError80 = err;
+            _didIteratorError83 = true;
+            _iteratorError83 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion80 && _iterator80.return) {
-                _iterator80.return();
+              if (!_iteratorNormalCompletion83 && _iterator83.return) {
+                _iterator83.return();
               }
             } finally {
-              if (_didIteratorError80) {
-                throw _iteratorError80;
+              if (_didIteratorError83) {
+                throw _iteratorError83;
               }
             }
           }
@@ -5562,13 +5621,13 @@ var ProjectService = function () {
       if (node != null) {
         var components = node.components;
         if (components != null) {
-          var _iteratorNormalCompletion81 = true;
-          var _didIteratorError81 = false;
-          var _iteratorError81 = undefined;
+          var _iteratorNormalCompletion84 = true;
+          var _didIteratorError84 = false;
+          var _iteratorError84 = undefined;
 
           try {
-            for (var _iterator81 = components[Symbol.iterator](), _step81; !(_iteratorNormalCompletion81 = (_step81 = _iterator81.next()).done); _iteratorNormalCompletion81 = true) {
-              var component = _step81.value;
+            for (var _iterator84 = components[Symbol.iterator](), _step84; !(_iteratorNormalCompletion84 = (_step84 = _iterator84.next()).done); _iteratorNormalCompletion84 = true) {
+              var component = _step84.value;
 
               if (component != null) {
                 if (component.showSubmitButton == true) {
@@ -5577,16 +5636,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError81 = true;
-            _iteratorError81 = err;
+            _didIteratorError84 = true;
+            _iteratorError84 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion81 && _iterator81.return) {
-                _iterator81.return();
+              if (!_iteratorNormalCompletion84 && _iterator84.return) {
+                _iterator84.return();
               }
             } finally {
-              if (_didIteratorError81) {
-                throw _iteratorError81;
+              if (_didIteratorError84) {
+                throw _iteratorError84;
               }
             }
           }
@@ -5752,13 +5811,13 @@ var ProjectService = function () {
 
       if (allPaths != null && allPaths.length > 0) {
         var firstPath = allPaths[0];
-        var _iteratorNormalCompletion82 = true;
-        var _didIteratorError82 = false;
-        var _iteratorError82 = undefined;
+        var _iteratorNormalCompletion85 = true;
+        var _didIteratorError85 = false;
+        var _iteratorError85 = undefined;
 
         try {
-          for (var _iterator82 = firstPath[Symbol.iterator](), _step82; !(_iteratorNormalCompletion82 = (_step82 = _iterator82.next()).done); _iteratorNormalCompletion82 = true) {
-            var nodeId = _step82.value;
+          for (var _iterator85 = firstPath[Symbol.iterator](), _step85; !(_iteratorNormalCompletion85 = (_step85 = _iterator85.next()).done); _iteratorNormalCompletion85 = true) {
+            var nodeId = _step85.value;
 
             var nodeMaxScore = this.getMaxScoreForNode(nodeId);
             if (nodeMaxScore != null) {
@@ -5770,16 +5829,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError82 = true;
-          _iteratorError82 = err;
+          _didIteratorError85 = true;
+          _iteratorError85 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion82 && _iterator82.return) {
-              _iterator82.return();
+            if (!_iteratorNormalCompletion85 && _iterator85.return) {
+              _iterator85.return();
             }
           } finally {
-            if (_didIteratorError82) {
-              throw _iteratorError82;
+            if (_didIteratorError85) {
+              throw _iteratorError85;
             }
           }
         }
@@ -5800,13 +5859,13 @@ var ProjectService = function () {
       var maxScore = null;
       if (!this.isGroupNode(nodeId)) {
         var node = this.getNodeById(nodeId);
-        var _iteratorNormalCompletion83 = true;
-        var _didIteratorError83 = false;
-        var _iteratorError83 = undefined;
+        var _iteratorNormalCompletion86 = true;
+        var _didIteratorError86 = false;
+        var _iteratorError86 = undefined;
 
         try {
-          for (var _iterator83 = node.components[Symbol.iterator](), _step83; !(_iteratorNormalCompletion83 = (_step83 = _iterator83.next()).done); _iteratorNormalCompletion83 = true) {
-            var component = _step83.value;
+          for (var _iterator86 = node.components[Symbol.iterator](), _step86; !(_iteratorNormalCompletion86 = (_step86 = _iterator86.next()).done); _iteratorNormalCompletion86 = true) {
+            var component = _step86.value;
 
             var componentMaxScore = component.maxScore;
             if (typeof componentMaxScore == 'number') {
@@ -5818,16 +5877,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError83 = true;
-          _iteratorError83 = err;
+          _didIteratorError86 = true;
+          _iteratorError86 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion83 && _iterator83.return) {
-              _iterator83.return();
+            if (!_iteratorNormalCompletion86 && _iterator86.return) {
+              _iterator86.return();
             }
           } finally {
-            if (_didIteratorError83) {
-              throw _iteratorError83;
+            if (_didIteratorError86) {
+              throw _iteratorError86;
             }
           }
         }
@@ -5967,28 +6026,28 @@ var ProjectService = function () {
     value: function recalculatePositionsInGroup(groupId) {
       if (groupId != null) {
         var childIds = this.getChildNodeIdsById(groupId);
-        var _iteratorNormalCompletion84 = true;
-        var _didIteratorError84 = false;
-        var _iteratorError84 = undefined;
+        var _iteratorNormalCompletion87 = true;
+        var _didIteratorError87 = false;
+        var _iteratorError87 = undefined;
 
         try {
-          for (var _iterator84 = childIds[Symbol.iterator](), _step84; !(_iteratorNormalCompletion84 = (_step84 = _iterator84.next()).done); _iteratorNormalCompletion84 = true) {
-            var childId = _step84.value;
+          for (var _iterator87 = childIds[Symbol.iterator](), _step87; !(_iteratorNormalCompletion87 = (_step87 = _iterator87.next()).done); _iteratorNormalCompletion87 = true) {
+            var childId = _step87.value;
 
             var pos = this.getPositionById(childId);
             this.setIdToPosition(childId, pos);
           }
         } catch (err) {
-          _didIteratorError84 = true;
-          _iteratorError84 = err;
+          _didIteratorError87 = true;
+          _iteratorError87 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion84 && _iterator84.return) {
-              _iterator84.return();
+            if (!_iteratorNormalCompletion87 && _iterator87.return) {
+              _iterator87.return();
             }
           } finally {
-            if (_didIteratorError84) {
-              throw _iteratorError84;
+            if (_didIteratorError87) {
+              throw _iteratorError87;
             }
           }
         }
@@ -6018,13 +6077,13 @@ var ProjectService = function () {
 
         if (removalCriteria != null) {
           var criteriaMessages = '';
-          var _iteratorNormalCompletion85 = true;
-          var _didIteratorError85 = false;
-          var _iteratorError85 = undefined;
+          var _iteratorNormalCompletion88 = true;
+          var _didIteratorError88 = false;
+          var _iteratorError88 = undefined;
 
           try {
-            for (var _iterator85 = removalCriteria[Symbol.iterator](), _step85; !(_iteratorNormalCompletion85 = (_step85 = _iterator85.next()).done); _iteratorNormalCompletion85 = true) {
-              var tempRemovalCriteria = _step85.value;
+            for (var _iterator88 = removalCriteria[Symbol.iterator](), _step88; !(_iteratorNormalCompletion88 = (_step88 = _iterator88.next()).done); _iteratorNormalCompletion88 = true) {
+              var tempRemovalCriteria = _step88.value;
 
               if (tempRemovalCriteria != null) {
                 // get the message that describes the criteria that needs to be satisfied
@@ -6040,16 +6099,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError85 = true;
-            _iteratorError85 = err;
+            _didIteratorError88 = true;
+            _iteratorError88 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion85 && _iterator85.return) {
-                _iterator85.return();
+              if (!_iteratorNormalCompletion88 && _iterator88.return) {
+                _iterator88.return();
               }
             } finally {
-              if (_didIteratorError85) {
-                throw _iteratorError85;
+              if (_didIteratorError88) {
+                throw _iteratorError88;
               }
             }
           }
@@ -6074,13 +6133,13 @@ var ProjectService = function () {
       var message = '';
       var action = constraint.action;
       var actionMessage = this.getActionMessage(action);
-      var _iteratorNormalCompletion86 = true;
-      var _didIteratorError86 = false;
-      var _iteratorError86 = undefined;
+      var _iteratorNormalCompletion89 = true;
+      var _didIteratorError89 = false;
+      var _iteratorError89 = undefined;
 
       try {
-        for (var _iterator86 = constraint.removalCriteria[Symbol.iterator](), _step86; !(_iteratorNormalCompletion86 = (_step86 = _iterator86.next()).done); _iteratorNormalCompletion86 = true) {
-          var singleRemovalCriteria = _step86.value;
+        for (var _iterator89 = constraint.removalCriteria[Symbol.iterator](), _step89; !(_iteratorNormalCompletion89 = (_step89 = _iterator89.next()).done); _iteratorNormalCompletion89 = true) {
+          var singleRemovalCriteria = _step89.value;
 
           if (message != '') {
             // this constraint has multiple removal criteria
@@ -6093,16 +6152,16 @@ var ProjectService = function () {
           message += this.getCriteriaMessage(singleRemovalCriteria);
         }
       } catch (err) {
-        _didIteratorError86 = true;
-        _iteratorError86 = err;
+        _didIteratorError89 = true;
+        _iteratorError89 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion86 && _iterator86.return) {
-            _iterator86.return();
+          if (!_iteratorNormalCompletion89 && _iterator89.return) {
+            _iterator89.return();
           }
         } finally {
-          if (_didIteratorError86) {
-            throw _iteratorError86;
+          if (_didIteratorError89) {
+            throw _iteratorError89;
           }
         }
       }
@@ -6279,29 +6338,29 @@ var ProjectService = function () {
     value: function getChoiceTextByNodeIdAndComponentId(nodeId, componentId, choiceIds) {
       var choices = this.getChoicesByNodeIdAndComponentId(nodeId, componentId);
       var choicesText = [];
-      var _iteratorNormalCompletion87 = true;
-      var _didIteratorError87 = false;
-      var _iteratorError87 = undefined;
+      var _iteratorNormalCompletion90 = true;
+      var _didIteratorError90 = false;
+      var _iteratorError90 = undefined;
 
       try {
-        for (var _iterator87 = choices[Symbol.iterator](), _step87; !(_iteratorNormalCompletion87 = (_step87 = _iterator87.next()).done); _iteratorNormalCompletion87 = true) {
-          var choice = _step87.value;
+        for (var _iterator90 = choices[Symbol.iterator](), _step90; !(_iteratorNormalCompletion90 = (_step90 = _iterator90.next()).done); _iteratorNormalCompletion90 = true) {
+          var choice = _step90.value;
 
           if (choiceIds.indexOf(choice.id) != -1) {
             choicesText.push(choice.text);
           }
         }
       } catch (err) {
-        _didIteratorError87 = true;
-        _iteratorError87 = err;
+        _didIteratorError90 = true;
+        _iteratorError90 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion87 && _iterator87.return) {
-            _iterator87.return();
+          if (!_iteratorNormalCompletion90 && _iterator90.return) {
+            _iterator90.return();
           }
         } finally {
-          if (_didIteratorError87) {
-            throw _iteratorError87;
+          if (_didIteratorError90) {
+            throw _iteratorError90;
           }
         }
       }
@@ -6378,13 +6437,13 @@ var ProjectService = function () {
 
           // update the children of the from group to point to the new to group
           if (childIds != null) {
-            var _iteratorNormalCompletion88 = true;
-            var _didIteratorError88 = false;
-            var _iteratorError88 = undefined;
+            var _iteratorNormalCompletion91 = true;
+            var _didIteratorError91 = false;
+            var _iteratorError91 = undefined;
 
             try {
-              for (var _iterator88 = childIds[Symbol.iterator](), _step88; !(_iteratorNormalCompletion88 = (_step88 = _iterator88.next()).done); _iteratorNormalCompletion88 = true) {
-                var childId = _step88.value;
+              for (var _iterator91 = childIds[Symbol.iterator](), _step91; !(_iteratorNormalCompletion91 = (_step91 = _iterator91.next()).done); _iteratorNormalCompletion91 = true) {
+                var childId = _step91.value;
 
                 var child = this.getNodeById(childId);
                 var transitions = this.getTransitionsByFromNodeId(childId);
@@ -6423,16 +6482,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError88 = true;
-              _iteratorError88 = err;
+              _didIteratorError91 = true;
+              _iteratorError91 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion88 && _iterator88.return) {
-                  _iterator88.return();
+                if (!_iteratorNormalCompletion91 && _iterator91.return) {
+                  _iterator91.return();
                 }
               } finally {
-                if (_didIteratorError88) {
-                  throw _iteratorError88;
+                if (_didIteratorError91) {
+                  throw _iteratorError91;
                 }
               }
             }
@@ -6450,28 +6509,28 @@ var ProjectService = function () {
 
           // remove the transitions from the old to group that point to the new to group
           if (_childIds != null) {
-            var _iteratorNormalCompletion89 = true;
-            var _didIteratorError89 = false;
-            var _iteratorError89 = undefined;
+            var _iteratorNormalCompletion92 = true;
+            var _didIteratorError92 = false;
+            var _iteratorError92 = undefined;
 
             try {
-              for (var _iterator89 = _childIds[Symbol.iterator](), _step89; !(_iteratorNormalCompletion89 = (_step89 = _iterator89.next()).done); _iteratorNormalCompletion89 = true) {
-                var _childId = _step89.value;
+              for (var _iterator92 = _childIds[Symbol.iterator](), _step92; !(_iteratorNormalCompletion92 = (_step92 = _iterator92.next()).done); _iteratorNormalCompletion92 = true) {
+                var _childId = _step92.value;
 
                 var _child = this.getNodeById(_childId);
-                var _transitions4 = this.getTransitionsByFromNodeId(_childId);
-                if (_transitions4 != null) {
-                  for (var _t = 0; _t < _transitions4.length; _t++) {
-                    var _transition2 = _transitions4[_t];
+                var _transitions2 = this.getTransitionsByFromNodeId(_childId);
+                if (_transitions2 != null) {
+                  for (var _t = 0; _t < _transitions2.length; _t++) {
+                    var _transition2 = _transitions2[_t];
                     if (_transition2 != null) {
-                      var _toNodeId4 = _transition2.to;
-                      if (_toNodeId4 === newToGroupId) {
+                      var _toNodeId3 = _transition2.to;
+                      if (_toNodeId3 === newToGroupId) {
                         // the transition is to the group so we will remove it
-                        _transitions4.splice(_t, 1);
+                        _transitions2.splice(_t, 1);
                         _t--;
-                      } else if (this.isNodeInGroup(_toNodeId4, newToGroupId)) {
+                      } else if (this.isNodeInGroup(_toNodeId3, newToGroupId)) {
                         // the transition is to a node in the group so we will remove it
-                        _transitions4.splice(_t, 1);
+                        _transitions2.splice(_t, 1);
                         _t--;
                       }
                     }
@@ -6479,16 +6538,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError89 = true;
-              _iteratorError89 = err;
+              _didIteratorError92 = true;
+              _iteratorError92 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion89 && _iterator89.return) {
-                  _iterator89.return();
+                if (!_iteratorNormalCompletion92 && _iterator92.return) {
+                  _iterator92.return();
                 }
               } finally {
-                if (_didIteratorError89) {
-                  throw _iteratorError89;
+                if (_didIteratorError92) {
+                  throw _iteratorError92;
                 }
               }
             }
@@ -6530,13 +6589,13 @@ var ProjectService = function () {
         var childIds = fromGroup.ids;
         var newToGroupStartId = newToGroup.startId;
         if (childIds != null) {
-          var _iteratorNormalCompletion90 = true;
-          var _didIteratorError90 = false;
-          var _iteratorError90 = undefined;
+          var _iteratorNormalCompletion93 = true;
+          var _didIteratorError93 = false;
+          var _iteratorError93 = undefined;
 
           try {
-            for (var _iterator90 = childIds[Symbol.iterator](), _step90; !(_iteratorNormalCompletion90 = (_step90 = _iterator90.next()).done); _iteratorNormalCompletion90 = true) {
-              var childId = _step90.value;
+            for (var _iterator93 = childIds[Symbol.iterator](), _step93; !(_iteratorNormalCompletion93 = (_step93 = _iterator93.next()).done); _iteratorNormalCompletion93 = true) {
+              var childId = _step93.value;
 
               var child = this.getNodeById(childId);
 
@@ -6554,24 +6613,24 @@ var ProjectService = function () {
                   this.addToTransition(child, newToGroupStartId);
                 }
               } else if (transitions != null) {
-                var _iteratorNormalCompletion91 = true;
-                var _didIteratorError91 = false;
-                var _iteratorError91 = undefined;
+                var _iteratorNormalCompletion94 = true;
+                var _didIteratorError94 = false;
+                var _iteratorError94 = undefined;
 
                 try {
-                  for (var _iterator91 = transitions[Symbol.iterator](), _step91; !(_iteratorNormalCompletion91 = (_step91 = _iterator91.next()).done); _iteratorNormalCompletion91 = true) {
-                    var transition = _step91.value;
+                  for (var _iterator94 = transitions[Symbol.iterator](), _step94; !(_iteratorNormalCompletion94 = (_step94 = _iterator94.next()).done); _iteratorNormalCompletion94 = true) {
+                    var transition = _step94.value;
 
                     if (transition != null) {
                       var toNodeId = transition.to;
                       if (oldToGroupIds != null) {
-                        var _iteratorNormalCompletion92 = true;
-                        var _didIteratorError92 = false;
-                        var _iteratorError92 = undefined;
+                        var _iteratorNormalCompletion95 = true;
+                        var _didIteratorError95 = false;
+                        var _iteratorError95 = undefined;
 
                         try {
-                          for (var _iterator92 = oldToGroupIds[Symbol.iterator](), _step92; !(_iteratorNormalCompletion92 = (_step92 = _iterator92.next()).done); _iteratorNormalCompletion92 = true) {
-                            var oldToGroupId = _step92.value;
+                          for (var _iterator95 = oldToGroupIds[Symbol.iterator](), _step95; !(_iteratorNormalCompletion95 = (_step95 = _iterator95.next()).done); _iteratorNormalCompletion95 = true) {
+                            var oldToGroupId = _step95.value;
 
                             if (toNodeId === oldToGroupId) {
                               /*
@@ -6592,16 +6651,16 @@ var ProjectService = function () {
                             }
                           }
                         } catch (err) {
-                          _didIteratorError92 = true;
-                          _iteratorError92 = err;
+                          _didIteratorError95 = true;
+                          _iteratorError95 = err;
                         } finally {
                           try {
-                            if (!_iteratorNormalCompletion92 && _iterator92.return) {
-                              _iterator92.return();
+                            if (!_iteratorNormalCompletion95 && _iterator95.return) {
+                              _iterator95.return();
                             }
                           } finally {
-                            if (_didIteratorError92) {
-                              throw _iteratorError92;
+                            if (_didIteratorError95) {
+                              throw _iteratorError95;
                             }
                           }
                         }
@@ -6609,96 +6668,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError91 = true;
-                  _iteratorError91 = err;
+                  _didIteratorError94 = true;
+                  _iteratorError94 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion91 && _iterator91.return) {
-                      _iterator91.return();
+                    if (!_iteratorNormalCompletion94 && _iterator94.return) {
+                      _iterator94.return();
                     }
                   } finally {
-                    if (_didIteratorError91) {
-                      throw _iteratorError91;
-                    }
-                  }
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError90 = true;
-            _iteratorError90 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion90 && _iterator90.return) {
-                _iterator90.return();
-              }
-            } finally {
-              if (_didIteratorError90) {
-                throw _iteratorError90;
-              }
-            }
-          }
-        }
-      }
-
-      /*
-       * make the steps that do not have a transition now point to the old
-       * group
-       * newToGroup -> oldToGroup
-       */
-      if (newToGroup != null) {
-        var _childIds2 = newToGroup.ids;
-        if (_childIds2 != null) {
-          var _iteratorNormalCompletion93 = true;
-          var _didIteratorError93 = false;
-          var _iteratorError93 = undefined;
-
-          try {
-            for (var _iterator93 = _childIds2[Symbol.iterator](), _step93; !(_iteratorNormalCompletion93 = (_step93 = _iterator93.next()).done); _iteratorNormalCompletion93 = true) {
-              var _childId2 = _step93.value;
-
-              var _child2 = this.getNodeById(_childId2);
-              var _transitions5 = this.getTransitionsByFromNodeId(_childId2);
-
-              if (_transitions5 == null || _transitions5.length == 0) {
-                if (oldToGroupIds != null) {
-                  var _iteratorNormalCompletion94 = true;
-                  var _didIteratorError94 = false;
-                  var _iteratorError94 = undefined;
-
-                  try {
-                    for (var _iterator94 = oldToGroupIds[Symbol.iterator](), _step94; !(_iteratorNormalCompletion94 = (_step94 = _iterator94.next()).done); _iteratorNormalCompletion94 = true) {
-                      var _oldToGroupId = _step94.value;
-
-                      var oldToGroup = this.getNodeById(_oldToGroupId);
-                      if (oldToGroup != null) {
-                        var oldToGroupStartId = oldToGroup.startId;
-                        var _transition3 = {};
-                        var _toNodeId5 = '';
-                        if (oldToGroupStartId == null) {
-                          // there is no start node id so we will just point to the group
-                          _toNodeId5 = oldToGroup;
-                        } else {
-                          // there is a start node id so we will point to it
-                          _toNodeId5 = oldToGroupStartId;
-                        }
-
-                        // create the transition from the child to the old group
-                        this.addToTransition(_child2, _toNodeId5);
-                      }
-                    }
-                  } catch (err) {
-                    _didIteratorError94 = true;
-                    _iteratorError94 = err;
-                  } finally {
-                    try {
-                      if (!_iteratorNormalCompletion94 && _iterator94.return) {
-                        _iterator94.return();
-                      }
-                    } finally {
-                      if (_didIteratorError94) {
-                        throw _iteratorError94;
-                      }
+                    if (_didIteratorError94) {
+                      throw _iteratorError94;
                     }
                   }
                 }
@@ -6715,6 +6694,86 @@ var ProjectService = function () {
             } finally {
               if (_didIteratorError93) {
                 throw _iteratorError93;
+              }
+            }
+          }
+        }
+      }
+
+      /*
+       * make the steps that do not have a transition now point to the old
+       * group
+       * newToGroup -> oldToGroup
+       */
+      if (newToGroup != null) {
+        var _childIds2 = newToGroup.ids;
+        if (_childIds2 != null) {
+          var _iteratorNormalCompletion96 = true;
+          var _didIteratorError96 = false;
+          var _iteratorError96 = undefined;
+
+          try {
+            for (var _iterator96 = _childIds2[Symbol.iterator](), _step96; !(_iteratorNormalCompletion96 = (_step96 = _iterator96.next()).done); _iteratorNormalCompletion96 = true) {
+              var _childId2 = _step96.value;
+
+              var _child2 = this.getNodeById(_childId2);
+              var _transitions3 = this.getTransitionsByFromNodeId(_childId2);
+
+              if (_transitions3 == null || _transitions3.length == 0) {
+                if (oldToGroupIds != null) {
+                  var _iteratorNormalCompletion97 = true;
+                  var _didIteratorError97 = false;
+                  var _iteratorError97 = undefined;
+
+                  try {
+                    for (var _iterator97 = oldToGroupIds[Symbol.iterator](), _step97; !(_iteratorNormalCompletion97 = (_step97 = _iterator97.next()).done); _iteratorNormalCompletion97 = true) {
+                      var _oldToGroupId = _step97.value;
+
+                      var oldToGroup = this.getNodeById(_oldToGroupId);
+                      if (oldToGroup != null) {
+                        var oldToGroupStartId = oldToGroup.startId;
+                        var _transition3 = {};
+                        var _toNodeId4 = '';
+                        if (oldToGroupStartId == null) {
+                          // there is no start node id so we will just point to the group
+                          _toNodeId4 = oldToGroup;
+                        } else {
+                          // there is a start node id so we will point to it
+                          _toNodeId4 = oldToGroupStartId;
+                        }
+
+                        // create the transition from the child to the old group
+                        this.addToTransition(_child2, _toNodeId4);
+                      }
+                    }
+                  } catch (err) {
+                    _didIteratorError97 = true;
+                    _iteratorError97 = err;
+                  } finally {
+                    try {
+                      if (!_iteratorNormalCompletion97 && _iterator97.return) {
+                        _iterator97.return();
+                      }
+                    } finally {
+                      if (_didIteratorError97) {
+                        throw _iteratorError97;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError96 = true;
+            _iteratorError96 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion96 && _iterator96.return) {
+                _iterator96.return();
+              }
+            } finally {
+              if (_didIteratorError96) {
+                throw _iteratorError96;
               }
             }
           }
@@ -6752,13 +6811,13 @@ var ProjectService = function () {
        * group we are moving.
        */
 
-      var _iteratorNormalCompletion95 = true;
-      var _didIteratorError95 = false;
-      var _iteratorError95 = undefined;
+      var _iteratorNormalCompletion98 = true;
+      var _didIteratorError98 = false;
+      var _iteratorError98 = undefined;
 
       try {
-        for (var _iterator95 = previousGroupNodes[Symbol.iterator](), _step95; !(_iteratorNormalCompletion95 = (_step95 = _iterator95.next()).done); _iteratorNormalCompletion95 = true) {
-          var previousGroupNode = _step95.value;
+        for (var _iterator98 = previousGroupNodes[Symbol.iterator](), _step98; !(_iteratorNormalCompletion98 = (_step98 = _iterator98.next()).done); _iteratorNormalCompletion98 = true) {
+          var previousGroupNode = _step98.value;
 
           if (transitionsAfter == null || transitionsAfter.length == 0) {
             // the group we are moving does not have any transitions
@@ -6773,52 +6832,52 @@ var ProjectService = function () {
             // the group we are moving has transitions
 
             // make the previous group point to the new to group
-            var _iteratorNormalCompletion98 = true;
-            var _didIteratorError98 = false;
-            var _iteratorError98 = undefined;
+            var _iteratorNormalCompletion101 = true;
+            var _didIteratorError101 = false;
+            var _iteratorError101 = undefined;
 
             try {
-              for (var _iterator98 = transitionsAfter[Symbol.iterator](), _step98; !(_iteratorNormalCompletion98 = (_step98 = _iterator98.next()).done); _iteratorNormalCompletion98 = true) {
-                var _transitionAfter2 = _step98.value;
+              for (var _iterator101 = transitionsAfter[Symbol.iterator](), _step101; !(_iteratorNormalCompletion101 = (_step101 = _iterator101.next()).done); _iteratorNormalCompletion101 = true) {
+                var _transitionAfter2 = _step101.value;
 
                 if (_transitionAfter2 != null) {
-                  var _toNodeId7 = _transitionAfter2.to;
+                  var _toNodeId6 = _transitionAfter2.to;
 
                   /*
                    * remove the transitions to the group we are moving and make
                    * new transitions from the from group to the new to group
                    */
-                  this.updateTransitionsForExtractingGroup(previousGroupNode.id, node.id, _toNodeId7);
+                  this.updateTransitionsForExtractingGroup(previousGroupNode.id, node.id, _toNodeId6);
                   extracted = true;
                 }
               }
             } catch (err) {
-              _didIteratorError98 = true;
-              _iteratorError98 = err;
+              _didIteratorError101 = true;
+              _iteratorError101 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion98 && _iterator98.return) {
-                  _iterator98.return();
+                if (!_iteratorNormalCompletion101 && _iterator101.return) {
+                  _iterator101.return();
                 }
               } finally {
-                if (_didIteratorError98) {
-                  throw _iteratorError98;
+                if (_didIteratorError101) {
+                  throw _iteratorError101;
                 }
               }
             }
           }
         }
       } catch (err) {
-        _didIteratorError95 = true;
-        _iteratorError95 = err;
+        _didIteratorError98 = true;
+        _iteratorError98 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion95 && _iterator95.return) {
-            _iterator95.return();
+          if (!_iteratorNormalCompletion98 && _iterator98.return) {
+            _iterator98.return();
           }
         } finally {
-          if (_didIteratorError95) {
-            throw _iteratorError95;
+          if (_didIteratorError98) {
+            throw _iteratorError98;
           }
         }
       }
@@ -6831,13 +6890,13 @@ var ProjectService = function () {
 
         if (transitionsAfter != null) {
           // remove the transitions from the group we are moving
-          var _iteratorNormalCompletion96 = true;
-          var _didIteratorError96 = false;
-          var _iteratorError96 = undefined;
+          var _iteratorNormalCompletion99 = true;
+          var _didIteratorError99 = false;
+          var _iteratorError99 = undefined;
 
           try {
-            for (var _iterator96 = transitionsAfter[Symbol.iterator](), _step96; !(_iteratorNormalCompletion96 = (_step96 = _iterator96.next()).done); _iteratorNormalCompletion96 = true) {
-              var transitionAfter = _step96.value;
+            for (var _iterator99 = transitionsAfter[Symbol.iterator](), _step99; !(_iteratorNormalCompletion99 = (_step99 = _iterator99.next()).done); _iteratorNormalCompletion99 = true) {
+              var transitionAfter = _step99.value;
 
               if (transitionAfter != null) {
                 var toNodeId = transitionAfter.to;
@@ -6848,16 +6907,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError96 = true;
-            _iteratorError96 = err;
+            _didIteratorError99 = true;
+            _iteratorError99 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion96 && _iterator96.return) {
-                _iterator96.return();
+              if (!_iteratorNormalCompletion99 && _iterator99.return) {
+                _iterator99.return();
               }
             } finally {
-              if (_didIteratorError96) {
-                throw _iteratorError96;
+              if (_didIteratorError99) {
+                throw _iteratorError99;
               }
             }
           }
@@ -6874,16 +6933,16 @@ var ProjectService = function () {
         // get the transitions from the previous group to the next group
         var _transitionsAfter = this.getTransitionsByFromNodeId(nodeId);
 
-        var _iteratorNormalCompletion97 = true;
-        var _didIteratorError97 = false;
-        var _iteratorError97 = undefined;
+        var _iteratorNormalCompletion100 = true;
+        var _didIteratorError100 = false;
+        var _iteratorError100 = undefined;
 
         try {
-          for (var _iterator97 = _transitionsAfter[Symbol.iterator](), _step97; !(_iteratorNormalCompletion97 = (_step97 = _iterator97.next()).done); _iteratorNormalCompletion97 = true) {
-            var _transitionAfter = _step97.value;
+          for (var _iterator100 = _transitionsAfter[Symbol.iterator](), _step100; !(_iteratorNormalCompletion100 = (_step100 = _iterator100.next()).done); _iteratorNormalCompletion100 = true) {
+            var _transitionAfter = _step100.value;
 
             if (_transitionAfter != null) {
-              var _toNodeId6 = _transitionAfter.to;
+              var _toNodeId5 = _transitionAfter.to;
 
               /*
                * create the transitions that traverse from the from group
@@ -6891,21 +6950,21 @@ var ProjectService = function () {
                * that traverse from the group we are moving to the old
                * to group.
                */
-              this.updateTransitionsForInsertingGroup(nodeId, [_toNodeId6], node.id);
+              this.updateTransitionsForInsertingGroup(nodeId, [_toNodeId5], node.id);
               inserted = true;
             }
           }
         } catch (err) {
-          _didIteratorError97 = true;
-          _iteratorError97 = err;
+          _didIteratorError100 = true;
+          _iteratorError100 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion97 && _iterator97.return) {
-              _iterator97.return();
+            if (!_iteratorNormalCompletion100 && _iterator100.return) {
+              _iterator100.return();
             }
           } finally {
-            if (_didIteratorError97) {
-              throw _iteratorError97;
+            if (_didIteratorError100) {
+              throw _iteratorError100;
             }
           }
         }
@@ -7093,13 +7152,13 @@ var ProjectService = function () {
     key: 'loadInactiveNodes',
     value: function loadInactiveNodes(nodes) {
       if (nodes != null) {
-        var _iteratorNormalCompletion99 = true;
-        var _didIteratorError99 = false;
-        var _iteratorError99 = undefined;
+        var _iteratorNormalCompletion102 = true;
+        var _didIteratorError102 = false;
+        var _iteratorError102 = undefined;
 
         try {
-          for (var _iterator99 = nodes[Symbol.iterator](), _step99; !(_iteratorNormalCompletion99 = (_step99 = _iterator99.next()).done); _iteratorNormalCompletion99 = true) {
-            var node = _step99.value;
+          for (var _iterator102 = nodes[Symbol.iterator](), _step102; !(_iteratorNormalCompletion102 = (_step102 = _iterator102.next()).done); _iteratorNormalCompletion102 = true) {
+            var node = _step102.value;
 
             if (node != null) {
               var nodeId = node.id;
@@ -7113,16 +7172,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError99 = true;
-          _iteratorError99 = err;
+          _didIteratorError102 = true;
+          _iteratorError102 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion99 && _iterator99.return) {
-              _iterator99.return();
+            if (!_iteratorNormalCompletion102 && _iterator102.return) {
+              _iterator102.return();
             }
           } finally {
-            if (_didIteratorError99) {
-              throw _iteratorError99;
+            if (_didIteratorError102) {
+              throw _iteratorError102;
             }
           }
         }
@@ -7153,29 +7212,29 @@ var ProjectService = function () {
   }, {
     key: 'isNodeActive',
     value: function isNodeActive(nodeId) {
-      var _iteratorNormalCompletion100 = true;
-      var _didIteratorError100 = false;
-      var _iteratorError100 = undefined;
+      var _iteratorNormalCompletion103 = true;
+      var _didIteratorError103 = false;
+      var _iteratorError103 = undefined;
 
       try {
-        for (var _iterator100 = this.project.nodes[Symbol.iterator](), _step100; !(_iteratorNormalCompletion100 = (_step100 = _iterator100.next()).done); _iteratorNormalCompletion100 = true) {
-          var activeNode = _step100.value;
+        for (var _iterator103 = this.project.nodes[Symbol.iterator](), _step103; !(_iteratorNormalCompletion103 = (_step103 = _iterator103.next()).done); _iteratorNormalCompletion103 = true) {
+          var activeNode = _step103.value;
 
           if (activeNode.id == nodeId) {
             return true;
           }
         }
       } catch (err) {
-        _didIteratorError100 = true;
-        _iteratorError100 = err;
+        _didIteratorError103 = true;
+        _iteratorError103 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion100 && _iterator100.return) {
-            _iterator100.return();
+          if (!_iteratorNormalCompletion103 && _iterator103.return) {
+            _iterator103.return();
           }
         } finally {
-          if (_didIteratorError100) {
-            throw _iteratorError100;
+          if (_didIteratorError103) {
+            throw _iteratorError103;
           }
         }
       }
@@ -7195,28 +7254,28 @@ var ProjectService = function () {
         this.removeNodeFromInactiveNodes(node.id);
         this.addNode(node);
         if (this.isGroupNode(node.id)) {
-          var _iteratorNormalCompletion101 = true;
-          var _didIteratorError101 = false;
-          var _iteratorError101 = undefined;
+          var _iteratorNormalCompletion104 = true;
+          var _didIteratorError104 = false;
+          var _iteratorError104 = undefined;
 
           try {
-            for (var _iterator101 = node.ids[Symbol.iterator](), _step101; !(_iteratorNormalCompletion101 = (_step101 = _iterator101.next()).done); _iteratorNormalCompletion101 = true) {
-              var childId = _step101.value;
+            for (var _iterator104 = node.ids[Symbol.iterator](), _step104; !(_iteratorNormalCompletion104 = (_step104 = _iterator104.next()).done); _iteratorNormalCompletion104 = true) {
+              var childId = _step104.value;
 
               var childNode = this.removeNodeFromInactiveNodes(childId);
               this.addNode(childNode);
             }
           } catch (err) {
-            _didIteratorError101 = true;
-            _iteratorError101 = err;
+            _didIteratorError104 = true;
+            _iteratorError104 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion101 && _iterator101.return) {
-                _iterator101.return();
+              if (!_iteratorNormalCompletion104 && _iterator104.return) {
+                _iterator104.return();
               }
             } finally {
-              if (_didIteratorError101) {
-                throw _iteratorError101;
+              if (_didIteratorError104) {
+                throw _iteratorError104;
               }
             }
           }
@@ -7232,29 +7291,29 @@ var ProjectService = function () {
   }, {
     key: 'addGroupChildNodesToInactive',
     value: function addGroupChildNodesToInactive(node) {
-      var _iteratorNormalCompletion102 = true;
-      var _didIteratorError102 = false;
-      var _iteratorError102 = undefined;
+      var _iteratorNormalCompletion105 = true;
+      var _didIteratorError105 = false;
+      var _iteratorError105 = undefined;
 
       try {
-        for (var _iterator102 = node.ids[Symbol.iterator](), _step102; !(_iteratorNormalCompletion102 = (_step102 = _iterator102.next()).done); _iteratorNormalCompletion102 = true) {
-          var childId = _step102.value;
+        for (var _iterator105 = node.ids[Symbol.iterator](), _step105; !(_iteratorNormalCompletion105 = (_step105 = _iterator105.next()).done); _iteratorNormalCompletion105 = true) {
+          var childId = _step105.value;
 
           var childNode = this.getNodeById(childId);
           this.project.inactiveNodes.push(childNode);
           this.inactiveStepNodes.push(childNode);
         }
       } catch (err) {
-        _didIteratorError102 = true;
-        _iteratorError102 = err;
+        _didIteratorError105 = true;
+        _iteratorError105 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion102 && _iterator102.return) {
-            _iterator102.return();
+          if (!_iteratorNormalCompletion105 && _iterator105.return) {
+            _iterator105.return();
           }
         } finally {
-          if (_didIteratorError102) {
-            throw _iteratorError102;
+          if (_didIteratorError105) {
+            throw _iteratorError105;
           }
         }
       }
@@ -7269,13 +7328,13 @@ var ProjectService = function () {
     key: 'removeTransitionsOutOfGroup',
     value: function removeTransitionsOutOfGroup(groupId) {
       var group = this.getNodeById(groupId);
-      var _iteratorNormalCompletion103 = true;
-      var _didIteratorError103 = false;
-      var _iteratorError103 = undefined;
+      var _iteratorNormalCompletion106 = true;
+      var _didIteratorError106 = false;
+      var _iteratorError106 = undefined;
 
       try {
-        for (var _iterator103 = group.ids[Symbol.iterator](), _step103; !(_iteratorNormalCompletion103 = (_step103 = _iterator103.next()).done); _iteratorNormalCompletion103 = true) {
-          var childId = _step103.value;
+        for (var _iterator106 = group.ids[Symbol.iterator](), _step106; !(_iteratorNormalCompletion106 = (_step106 = _iterator106.next()).done); _iteratorNormalCompletion106 = true) {
+          var childId = _step106.value;
 
           var transitions = this.getTransitionsByFromNodeId(childId);
           for (var t = 0; t < transitions.length; t++) {
@@ -7289,16 +7348,16 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError103 = true;
-        _iteratorError103 = err;
+        _didIteratorError106 = true;
+        _iteratorError106 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion103 && _iterator103.return) {
-            _iterator103.return();
+          if (!_iteratorNormalCompletion106 && _iterator106.return) {
+            _iterator106.return();
           }
         } finally {
-          if (_didIteratorError103) {
-            throw _iteratorError103;
+          if (_didIteratorError106) {
+            throw _iteratorError106;
           }
         }
       }
@@ -7355,13 +7414,13 @@ var ProjectService = function () {
             var childIds = groupThatTransitionsToGroupWeAreMoving.ids;
 
             if (childIds != null) {
-              var _iteratorNormalCompletion104 = true;
-              var _didIteratorError104 = false;
-              var _iteratorError104 = undefined;
+              var _iteratorNormalCompletion107 = true;
+              var _didIteratorError107 = false;
+              var _iteratorError107 = undefined;
 
               try {
-                for (var _iterator104 = childIds[Symbol.iterator](), _step104; !(_iteratorNormalCompletion104 = (_step104 = _iterator104.next()).done); _iteratorNormalCompletion104 = true) {
-                  var childId = _step104.value;
+                for (var _iterator107 = childIds[Symbol.iterator](), _step107; !(_iteratorNormalCompletion107 = (_step107 = _iterator107.next()).done); _iteratorNormalCompletion107 = true) {
+                  var childId = _step107.value;
 
                   var transitionsFromChild = this.getTransitionsByFromNodeId(childId);
                   if (transitionsFromChild != null) {
@@ -7386,16 +7445,16 @@ var ProjectService = function () {
                   }
                 }
               } catch (err) {
-                _didIteratorError104 = true;
-                _iteratorError104 = err;
+                _didIteratorError107 = true;
+                _iteratorError107 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion104 && _iterator104.return) {
-                    _iterator104.return();
+                  if (!_iteratorNormalCompletion107 && _iterator107.return) {
+                    _iterator107.return();
                   }
                 } finally {
-                  if (_didIteratorError104) {
-                    throw _iteratorError104;
+                  if (_didIteratorError107) {
+                    throw _iteratorError107;
                   }
                 }
               }
@@ -7413,29 +7472,29 @@ var ProjectService = function () {
               var _childIds3 = groupThatTransitionsToGroupWeAreMoving.ids;
 
               if (_childIds3 != null) {
-                var _iteratorNormalCompletion105 = true;
-                var _didIteratorError105 = false;
-                var _iteratorError105 = undefined;
+                var _iteratorNormalCompletion108 = true;
+                var _didIteratorError108 = false;
+                var _iteratorError108 = undefined;
 
                 try {
-                  for (var _iterator105 = _childIds3[Symbol.iterator](), _step105; !(_iteratorNormalCompletion105 = (_step105 = _iterator105.next()).done); _iteratorNormalCompletion105 = true) {
-                    var _childId3 = _step105.value;
+                  for (var _iterator108 = _childIds3[Symbol.iterator](), _step108; !(_iteratorNormalCompletion108 = (_step108 = _iterator108.next()).done); _iteratorNormalCompletion108 = true) {
+                    var _childId3 = _step108.value;
 
                     var _transitionsFromChild = this.getTransitionsByFromNodeId(_childId3);
                     if (_transitionsFromChild != null) {
-                      var _iteratorNormalCompletion106 = true;
-                      var _didIteratorError106 = false;
-                      var _iteratorError106 = undefined;
+                      var _iteratorNormalCompletion109 = true;
+                      var _didIteratorError109 = false;
+                      var _iteratorError109 = undefined;
 
                       try {
-                        for (var _iterator106 = _transitionsFromChild[Symbol.iterator](), _step106; !(_iteratorNormalCompletion106 = (_step106 = _iterator106.next()).done); _iteratorNormalCompletion106 = true) {
-                          var _transitionFromChild = _step106.value;
+                        for (var _iterator109 = _transitionsFromChild[Symbol.iterator](), _step109; !(_iteratorNormalCompletion109 = (_step109 = _iterator109.next()).done); _iteratorNormalCompletion109 = true) {
+                          var _transitionFromChild = _step109.value;
 
                           if (_transitionFromChild != null) {
-                            var _toNodeId8 = _transitionFromChild.to;
+                            var _toNodeId7 = _transitionFromChild.to;
 
                             // get the parent group id of the toNodeId
-                            var _toNodeIdParentGroupId = this.getParentGroupId(_toNodeId8);
+                            var _toNodeIdParentGroupId = this.getParentGroupId(_toNodeId7);
 
                             if (groupIdWeAreMoving === _toNodeIdParentGroupId) {
                               // the transition is to a child in the group we are moving
@@ -7451,32 +7510,32 @@ var ProjectService = function () {
                           }
                         }
                       } catch (err) {
-                        _didIteratorError106 = true;
-                        _iteratorError106 = err;
+                        _didIteratorError109 = true;
+                        _iteratorError109 = err;
                       } finally {
                         try {
-                          if (!_iteratorNormalCompletion106 && _iterator106.return) {
-                            _iterator106.return();
+                          if (!_iteratorNormalCompletion109 && _iterator109.return) {
+                            _iterator109.return();
                           }
                         } finally {
-                          if (_didIteratorError106) {
-                            throw _iteratorError106;
+                          if (_didIteratorError109) {
+                            throw _iteratorError109;
                           }
                         }
                       }
                     }
                   }
                 } catch (err) {
-                  _didIteratorError105 = true;
-                  _iteratorError105 = err;
+                  _didIteratorError108 = true;
+                  _iteratorError108 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion105 && _iterator105.return) {
-                      _iterator105.return();
+                    if (!_iteratorNormalCompletion108 && _iterator108.return) {
+                      _iterator108.return();
                     }
                   } finally {
-                    if (_didIteratorError105) {
-                      throw _iteratorError105;
+                    if (_didIteratorError108) {
+                      throw _iteratorError108;
                     }
                   }
                 }
@@ -7501,13 +7560,13 @@ var ProjectService = function () {
         if (nodeContent != null) {
           var components = nodeContent.components;
           if (components != null) {
-            var _iteratorNormalCompletion107 = true;
-            var _didIteratorError107 = false;
-            var _iteratorError107 = undefined;
+            var _iteratorNormalCompletion110 = true;
+            var _didIteratorError110 = false;
+            var _iteratorError110 = undefined;
 
             try {
-              for (var _iterator107 = components[Symbol.iterator](), _step107; !(_iteratorNormalCompletion107 = (_step107 = _iterator107.next()).done); _iteratorNormalCompletion107 = true) {
-                var component = _step107.value;
+              for (var _iterator110 = components[Symbol.iterator](), _step110; !(_iteratorNormalCompletion110 = (_step110 = _iterator110.next()).done); _iteratorNormalCompletion110 = true) {
+                var component = _step110.value;
 
                 if (component != null) {
                   var componentHasWork = this.componentHasWork(component);
@@ -7517,16 +7576,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError107 = true;
-              _iteratorError107 = err;
+              _didIteratorError110 = true;
+              _iteratorError110 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion107 && _iterator107.return) {
-                  _iterator107.return();
+                if (!_iteratorNormalCompletion110 && _iterator110.return) {
+                  _iterator110.return();
                 }
               } finally {
-                if (_didIteratorError107) {
-                  throw _iteratorError107;
+                if (_didIteratorError110) {
+                  throw _iteratorError110;
                 }
               }
             }
@@ -7655,24 +7714,24 @@ var ProjectService = function () {
   }, {
     key: 'isComponentIdUsed',
     value: function isComponentIdUsed(componentId) {
-      var _iteratorNormalCompletion108 = true;
-      var _didIteratorError108 = false;
-      var _iteratorError108 = undefined;
+      var _iteratorNormalCompletion111 = true;
+      var _didIteratorError111 = false;
+      var _iteratorError111 = undefined;
 
       try {
-        for (var _iterator108 = this.project.nodes[Symbol.iterator](), _step108; !(_iteratorNormalCompletion108 = (_step108 = _iterator108.next()).done); _iteratorNormalCompletion108 = true) {
-          var node = _step108.value;
+        for (var _iterator111 = this.project.nodes[Symbol.iterator](), _step111; !(_iteratorNormalCompletion111 = (_step111 = _iterator111.next()).done); _iteratorNormalCompletion111 = true) {
+          var node = _step111.value;
 
           if (node != null) {
             var components = node.components;
             if (components != null) {
-              var _iteratorNormalCompletion110 = true;
-              var _didIteratorError110 = false;
-              var _iteratorError110 = undefined;
+              var _iteratorNormalCompletion113 = true;
+              var _didIteratorError113 = false;
+              var _iteratorError113 = undefined;
 
               try {
-                for (var _iterator110 = components[Symbol.iterator](), _step110; !(_iteratorNormalCompletion110 = (_step110 = _iterator110.next()).done); _iteratorNormalCompletion110 = true) {
-                  var component = _step110.value;
+                for (var _iterator113 = components[Symbol.iterator](), _step113; !(_iteratorNormalCompletion113 = (_step113 = _iterator113.next()).done); _iteratorNormalCompletion113 = true) {
+                  var component = _step113.value;
 
                   if (component != null) {
                     if (componentId === component.id) {
@@ -7681,16 +7740,16 @@ var ProjectService = function () {
                   }
                 }
               } catch (err) {
-                _didIteratorError110 = true;
-                _iteratorError110 = err;
+                _didIteratorError113 = true;
+                _iteratorError113 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion110 && _iterator110.return) {
-                    _iterator110.return();
+                  if (!_iteratorNormalCompletion113 && _iterator113.return) {
+                    _iterator113.return();
                   }
                 } finally {
-                  if (_didIteratorError110) {
-                    throw _iteratorError110;
+                  if (_didIteratorError113) {
+                    throw _iteratorError113;
                   }
                 }
               }
@@ -7698,38 +7757,38 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError108 = true;
-        _iteratorError108 = err;
+        _didIteratorError111 = true;
+        _iteratorError111 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion108 && _iterator108.return) {
-            _iterator108.return();
+          if (!_iteratorNormalCompletion111 && _iterator111.return) {
+            _iterator111.return();
           }
         } finally {
-          if (_didIteratorError108) {
-            throw _iteratorError108;
+          if (_didIteratorError111) {
+            throw _iteratorError111;
           }
         }
       }
 
-      var _iteratorNormalCompletion109 = true;
-      var _didIteratorError109 = false;
-      var _iteratorError109 = undefined;
+      var _iteratorNormalCompletion112 = true;
+      var _didIteratorError112 = false;
+      var _iteratorError112 = undefined;
 
       try {
-        for (var _iterator109 = this.project.inactiveNodes[Symbol.iterator](), _step109; !(_iteratorNormalCompletion109 = (_step109 = _iterator109.next()).done); _iteratorNormalCompletion109 = true) {
-          var _node = _step109.value;
+        for (var _iterator112 = this.project.inactiveNodes[Symbol.iterator](), _step112; !(_iteratorNormalCompletion112 = (_step112 = _iterator112.next()).done); _iteratorNormalCompletion112 = true) {
+          var _node = _step112.value;
 
           if (_node != null) {
             var _components = _node.components;
             if (_components != null) {
-              var _iteratorNormalCompletion111 = true;
-              var _didIteratorError111 = false;
-              var _iteratorError111 = undefined;
+              var _iteratorNormalCompletion114 = true;
+              var _didIteratorError114 = false;
+              var _iteratorError114 = undefined;
 
               try {
-                for (var _iterator111 = _components[Symbol.iterator](), _step111; !(_iteratorNormalCompletion111 = (_step111 = _iterator111.next()).done); _iteratorNormalCompletion111 = true) {
-                  var _component = _step111.value;
+                for (var _iterator114 = _components[Symbol.iterator](), _step114; !(_iteratorNormalCompletion114 = (_step114 = _iterator114.next()).done); _iteratorNormalCompletion114 = true) {
+                  var _component = _step114.value;
 
                   if (_component != null) {
                     if (componentId === _component.id) {
@@ -7738,16 +7797,16 @@ var ProjectService = function () {
                   }
                 }
               } catch (err) {
-                _didIteratorError111 = true;
-                _iteratorError111 = err;
+                _didIteratorError114 = true;
+                _iteratorError114 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion111 && _iterator111.return) {
-                    _iterator111.return();
+                  if (!_iteratorNormalCompletion114 && _iterator114.return) {
+                    _iterator114.return();
                   }
                 } finally {
-                  if (_didIteratorError111) {
-                    throw _iteratorError111;
+                  if (_didIteratorError114) {
+                    throw _iteratorError114;
                   }
                 }
               }
@@ -7755,16 +7814,16 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError109 = true;
-        _iteratorError109 = err;
+        _didIteratorError112 = true;
+        _iteratorError112 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion109 && _iterator109.return) {
-            _iterator109.return();
+          if (!_iteratorNormalCompletion112 && _iterator112.return) {
+            _iterator112.return();
           }
         } finally {
-          if (_didIteratorError109) {
-            throw _iteratorError109;
+          if (_didIteratorError112) {
+            throw _iteratorError112;
           }
         }
       }
@@ -7789,13 +7848,13 @@ var ProjectService = function () {
         if (node != null) {
           var constraints = node.constraints;
           if (constraints != null) {
-            var _iteratorNormalCompletion112 = true;
-            var _didIteratorError112 = false;
-            var _iteratorError112 = undefined;
+            var _iteratorNormalCompletion115 = true;
+            var _didIteratorError115 = false;
+            var _iteratorError115 = undefined;
 
             try {
-              for (var _iterator112 = constraints[Symbol.iterator](), _step112; !(_iteratorNormalCompletion112 = (_step112 = _iterator112.next()).done); _iteratorNormalCompletion112 = true) {
-                var constraint = _step112.value;
+              for (var _iterator115 = constraints[Symbol.iterator](), _step115; !(_iteratorNormalCompletion115 = (_step115 = _iterator115.next()).done); _iteratorNormalCompletion115 = true) {
+                var constraint = _step115.value;
 
                 if (constraint != null) {
                   var constraintId = constraint.id;
@@ -7803,16 +7862,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError112 = true;
-              _iteratorError112 = err;
+              _didIteratorError115 = true;
+              _iteratorError115 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion112 && _iterator112.return) {
-                  _iterator112.return();
+                if (!_iteratorNormalCompletion115 && _iterator115.return) {
+                  _iterator115.return();
                 }
               } finally {
-                if (_didIteratorError112) {
-                  throw _iteratorError112;
+                if (_didIteratorError115) {
+                  throw _iteratorError115;
                 }
               }
             }
@@ -7849,13 +7908,13 @@ var ProjectService = function () {
       var nodeIdsInBranch = [];
       var nodes = this.getNodes();
       if (nodes != null) {
-        var _iteratorNormalCompletion113 = true;
-        var _didIteratorError113 = false;
-        var _iteratorError113 = undefined;
+        var _iteratorNormalCompletion116 = true;
+        var _didIteratorError116 = false;
+        var _iteratorError116 = undefined;
 
         try {
-          for (var _iterator113 = nodes[Symbol.iterator](), _step113; !(_iteratorNormalCompletion113 = (_step113 = _iterator113.next()).done); _iteratorNormalCompletion113 = true) {
-            var node = _step113.value;
+          for (var _iterator116 = nodes[Symbol.iterator](), _step116; !(_iteratorNormalCompletion116 = (_step116 = _iterator116.next()).done); _iteratorNormalCompletion116 = true) {
+            var node = _step116.value;
 
             if (node != null) {
               if (this.hasBranchPathTakenConstraint(node, fromNodeId, toNodeId)) {
@@ -7864,16 +7923,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError113 = true;
-          _iteratorError113 = err;
+          _didIteratorError116 = true;
+          _iteratorError116 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion113 && _iterator113.return) {
-              _iterator113.return();
+            if (!_iteratorNormalCompletion116 && _iterator116.return) {
+              _iterator116.return();
             }
           } finally {
-            if (_didIteratorError113) {
-              throw _iteratorError113;
+            if (_didIteratorError116) {
+              throw _iteratorError116;
             }
           }
         }
@@ -7934,118 +7993,6 @@ var ProjectService = function () {
     value: function hasBranchPathTakenConstraint(node, fromNodeId, toNodeId) {
       var constraints = node.constraints;
       if (constraints != null) {
-        var _iteratorNormalCompletion114 = true;
-        var _didIteratorError114 = false;
-        var _iteratorError114 = undefined;
-
-        try {
-          for (var _iterator114 = constraints[Symbol.iterator](), _step114; !(_iteratorNormalCompletion114 = (_step114 = _iterator114.next()).done); _iteratorNormalCompletion114 = true) {
-            var constraint = _step114.value;
-            var _iteratorNormalCompletion115 = true;
-            var _didIteratorError115 = false;
-            var _iteratorError115 = undefined;
-
-            try {
-              for (var _iterator115 = constraint.removalCriteria[Symbol.iterator](), _step115; !(_iteratorNormalCompletion115 = (_step115 = _iterator115.next()).done); _iteratorNormalCompletion115 = true) {
-                var removalCriterion = _step115.value;
-
-                if (removalCriterion.name == 'branchPathTaken') {
-                  var params = removalCriterion.params;
-                  if (params.fromNodeId == fromNodeId && params.toNodeId == toNodeId) {
-                    return true;
-                  }
-                }
-              }
-            } catch (err) {
-              _didIteratorError115 = true;
-              _iteratorError115 = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion115 && _iterator115.return) {
-                  _iterator115.return();
-                }
-              } finally {
-                if (_didIteratorError115) {
-                  throw _iteratorError115;
-                }
-              }
-            }
-          }
-        } catch (err) {
-          _didIteratorError114 = true;
-          _iteratorError114 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion114 && _iterator114.return) {
-              _iterator114.return();
-            }
-          } finally {
-            if (_didIteratorError114) {
-              throw _iteratorError114;
-            }
-          }
-        }
-      }
-      return false;
-    }
-
-    /**
-     * Remove all branch path taken constraints from a node.
-     * @param nodeId Remove the constraints from this node.
-     */
-
-  }, {
-    key: 'removeBranchPathTakenNodeConstraintsIfAny',
-    value: function removeBranchPathTakenNodeConstraintsIfAny(nodeId) {
-      var node = this.getNodeById(nodeId);
-      var constraints = node.constraints;
-      if (constraints != null) {
-        for (var c = 0; c < constraints.length; c++) {
-          var constraint = constraints[c];
-          var removalCriteria = constraint.removalCriteria;
-          var _iteratorNormalCompletion116 = true;
-          var _didIteratorError116 = false;
-          var _iteratorError116 = undefined;
-
-          try {
-            for (var _iterator116 = removalCriteria[Symbol.iterator](), _step116; !(_iteratorNormalCompletion116 = (_step116 = _iterator116.next()).done); _iteratorNormalCompletion116 = true) {
-              var removalCriterion = _step116.value;
-
-              if (removalCriterion.name == 'branchPathTaken') {
-                constraints.splice(c, 1);
-                c--; // update the counter so we don't skip over the next element
-              }
-            }
-          } catch (err) {
-            _didIteratorError116 = true;
-            _iteratorError116 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion116 && _iterator116.return) {
-                _iterator116.return();
-              }
-            } finally {
-              if (_didIteratorError116) {
-                throw _iteratorError116;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    /**
-     * @param nodeId Get the branch path taken constraints from this node.
-     * @return {Array} An array of branch path taken constraints from the node.
-     */
-
-  }, {
-    key: 'getBranchPathTakenConstraintsByNodeId',
-    value: function getBranchPathTakenConstraintsByNodeId(nodeId) {
-      var branchPathTakenConstraints = [];
-      var node = this.getNodeById(nodeId);
-      var constraints = node.constraints;
-      if (constraints != null) {
         var _iteratorNormalCompletion117 = true;
         var _didIteratorError117 = false;
         var _iteratorError117 = undefined;
@@ -8062,8 +8009,10 @@ var ProjectService = function () {
                 var removalCriterion = _step118.value;
 
                 if (removalCriterion.name == 'branchPathTaken') {
-                  branchPathTakenConstraints.push(constraint);
-                  break;
+                  var params = removalCriterion.params;
+                  if (params.fromNodeId == fromNodeId && params.toNodeId == toNodeId) {
+                    return true;
+                  }
                 }
               }
             } catch (err) {
@@ -8092,6 +8041,116 @@ var ProjectService = function () {
           } finally {
             if (_didIteratorError117) {
               throw _iteratorError117;
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Remove all branch path taken constraints from a node.
+     * @param nodeId Remove the constraints from this node.
+     */
+
+  }, {
+    key: 'removeBranchPathTakenNodeConstraintsIfAny',
+    value: function removeBranchPathTakenNodeConstraintsIfAny(nodeId) {
+      var node = this.getNodeById(nodeId);
+      var constraints = node.constraints;
+      if (constraints != null) {
+        for (var c = 0; c < constraints.length; c++) {
+          var constraint = constraints[c];
+          var removalCriteria = constraint.removalCriteria;
+          var _iteratorNormalCompletion119 = true;
+          var _didIteratorError119 = false;
+          var _iteratorError119 = undefined;
+
+          try {
+            for (var _iterator119 = removalCriteria[Symbol.iterator](), _step119; !(_iteratorNormalCompletion119 = (_step119 = _iterator119.next()).done); _iteratorNormalCompletion119 = true) {
+              var removalCriterion = _step119.value;
+
+              if (removalCriterion.name == 'branchPathTaken') {
+                constraints.splice(c, 1);
+                c--; // update the counter so we don't skip over the next element
+              }
+            }
+          } catch (err) {
+            _didIteratorError119 = true;
+            _iteratorError119 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion119 && _iterator119.return) {
+                _iterator119.return();
+              }
+            } finally {
+              if (_didIteratorError119) {
+                throw _iteratorError119;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * @param nodeId Get the branch path taken constraints from this node.
+     * @return {Array} An array of branch path taken constraints from the node.
+     */
+
+  }, {
+    key: 'getBranchPathTakenConstraintsByNodeId',
+    value: function getBranchPathTakenConstraintsByNodeId(nodeId) {
+      var branchPathTakenConstraints = [];
+      var node = this.getNodeById(nodeId);
+      var constraints = node.constraints;
+      if (constraints != null) {
+        var _iteratorNormalCompletion120 = true;
+        var _didIteratorError120 = false;
+        var _iteratorError120 = undefined;
+
+        try {
+          for (var _iterator120 = constraints[Symbol.iterator](), _step120; !(_iteratorNormalCompletion120 = (_step120 = _iterator120.next()).done); _iteratorNormalCompletion120 = true) {
+            var constraint = _step120.value;
+            var _iteratorNormalCompletion121 = true;
+            var _didIteratorError121 = false;
+            var _iteratorError121 = undefined;
+
+            try {
+              for (var _iterator121 = constraint.removalCriteria[Symbol.iterator](), _step121; !(_iteratorNormalCompletion121 = (_step121 = _iterator121.next()).done); _iteratorNormalCompletion121 = true) {
+                var removalCriterion = _step121.value;
+
+                if (removalCriterion.name == 'branchPathTaken') {
+                  branchPathTakenConstraints.push(constraint);
+                  break;
+                }
+              }
+            } catch (err) {
+              _didIteratorError121 = true;
+              _iteratorError121 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion121 && _iterator121.return) {
+                  _iterator121.return();
+                }
+              } finally {
+                if (_didIteratorError121) {
+                  throw _iteratorError121;
+                }
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError120 = true;
+          _iteratorError120 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion120 && _iterator120.return) {
+              _iterator120.return();
+            }
+          } finally {
+            if (_didIteratorError120) {
+              throw _iteratorError120;
             }
           }
         }
@@ -8135,13 +8194,13 @@ var ProjectService = function () {
     value: function isFirstNodeInBranchPath(nodeId) {
       var nodes = this.getNodes();
       if (nodes != null) {
-        var _iteratorNormalCompletion119 = true;
-        var _didIteratorError119 = false;
-        var _iteratorError119 = undefined;
+        var _iteratorNormalCompletion122 = true;
+        var _didIteratorError122 = false;
+        var _iteratorError122 = undefined;
 
         try {
-          for (var _iterator119 = nodes[Symbol.iterator](), _step119; !(_iteratorNormalCompletion119 = (_step119 = _iterator119.next()).done); _iteratorNormalCompletion119 = true) {
-            var node = _step119.value;
+          for (var _iterator122 = nodes[Symbol.iterator](), _step122; !(_iteratorNormalCompletion122 = (_step122 = _iterator122.next()).done); _iteratorNormalCompletion122 = true) {
+            var node = _step122.value;
 
             if (node != null && node.transitionLogic != null && node.transitionLogic.transitions != null) {
               var transitions = node.transitionLogic.transitions;
@@ -8151,13 +8210,13 @@ var ProjectService = function () {
                  * there is more than one transition from this node
                  * which means it is a branch point
                  */
-                var _iteratorNormalCompletion120 = true;
-                var _didIteratorError120 = false;
-                var _iteratorError120 = undefined;
+                var _iteratorNormalCompletion123 = true;
+                var _didIteratorError123 = false;
+                var _iteratorError123 = undefined;
 
                 try {
-                  for (var _iterator120 = transitions[Symbol.iterator](), _step120; !(_iteratorNormalCompletion120 = (_step120 = _iterator120.next()).done); _iteratorNormalCompletion120 = true) {
-                    var transition = _step120.value;
+                  for (var _iterator123 = transitions[Symbol.iterator](), _step123; !(_iteratorNormalCompletion123 = (_step123 = _iterator123.next()).done); _iteratorNormalCompletion123 = true) {
+                    var transition = _step123.value;
 
                     if (transition != null) {
                       var transitionTo = transition.to;
@@ -8167,16 +8226,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError120 = true;
-                  _iteratorError120 = err;
+                  _didIteratorError123 = true;
+                  _iteratorError123 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion120 && _iterator120.return) {
-                      _iterator120.return();
+                    if (!_iteratorNormalCompletion123 && _iterator123.return) {
+                      _iterator123.return();
                     }
                   } finally {
-                    if (_didIteratorError120) {
-                      throw _iteratorError120;
+                    if (_didIteratorError123) {
+                      throw _iteratorError123;
                     }
                   }
                 }
@@ -8184,16 +8243,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError119 = true;
-          _iteratorError119 = err;
+          _didIteratorError122 = true;
+          _iteratorError122 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion119 && _iterator119.return) {
-              _iterator119.return();
+            if (!_iteratorNormalCompletion122 && _iterator122.return) {
+              _iterator122.return();
             }
           } finally {
-            if (_didIteratorError119) {
-              throw _iteratorError119;
+            if (_didIteratorError122) {
+              throw _iteratorError122;
             }
           }
         }
@@ -8244,29 +8303,29 @@ var ProjectService = function () {
     value: function isBranchStartPoint(nodeId) {
       var branches = this.getBranches();
       if (branches != null) {
-        var _iteratorNormalCompletion121 = true;
-        var _didIteratorError121 = false;
-        var _iteratorError121 = undefined;
+        var _iteratorNormalCompletion124 = true;
+        var _didIteratorError124 = false;
+        var _iteratorError124 = undefined;
 
         try {
-          for (var _iterator121 = branches[Symbol.iterator](), _step121; !(_iteratorNormalCompletion121 = (_step121 = _iterator121.next()).done); _iteratorNormalCompletion121 = true) {
-            var branch = _step121.value;
+          for (var _iterator124 = branches[Symbol.iterator](), _step124; !(_iteratorNormalCompletion124 = (_step124 = _iterator124.next()).done); _iteratorNormalCompletion124 = true) {
+            var branch = _step124.value;
 
             if (branch.branchStartPoint == nodeId) {
               return true;
             }
           }
         } catch (err) {
-          _didIteratorError121 = true;
-          _iteratorError121 = err;
+          _didIteratorError124 = true;
+          _iteratorError124 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion121 && _iterator121.return) {
-              _iterator121.return();
+            if (!_iteratorNormalCompletion124 && _iterator124.return) {
+              _iterator124.return();
             }
           } finally {
-            if (_didIteratorError121) {
-              throw _iteratorError121;
+            if (_didIteratorError124) {
+              throw _iteratorError124;
             }
           }
         }
@@ -8285,29 +8344,29 @@ var ProjectService = function () {
     value: function isBranchMergePoint(nodeId) {
       var branches = this.getBranches();
       if (branches != null) {
-        var _iteratorNormalCompletion122 = true;
-        var _didIteratorError122 = false;
-        var _iteratorError122 = undefined;
+        var _iteratorNormalCompletion125 = true;
+        var _didIteratorError125 = false;
+        var _iteratorError125 = undefined;
 
         try {
-          for (var _iterator122 = branches[Symbol.iterator](), _step122; !(_iteratorNormalCompletion122 = (_step122 = _iterator122.next()).done); _iteratorNormalCompletion122 = true) {
-            var branch = _step122.value;
+          for (var _iterator125 = branches[Symbol.iterator](), _step125; !(_iteratorNormalCompletion125 = (_step125 = _iterator125.next()).done); _iteratorNormalCompletion125 = true) {
+            var branch = _step125.value;
 
             if (branch.branchEndPoint == nodeId) {
               return true;
             }
           }
         } catch (err) {
-          _didIteratorError122 = true;
-          _iteratorError122 = err;
+          _didIteratorError125 = true;
+          _iteratorError125 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion122 && _iterator122.return) {
-              _iterator122.return();
+            if (!_iteratorNormalCompletion125 && _iterator125.return) {
+              _iterator125.return();
             }
           } finally {
-            if (_didIteratorError122) {
-              throw _iteratorError122;
+            if (_didIteratorError125) {
+              throw _iteratorError125;
             }
           }
         }
@@ -8328,13 +8387,13 @@ var ProjectService = function () {
       var allBranches = this.getBranches();
 
       if (allBranches != null) {
-        var _iteratorNormalCompletion123 = true;
-        var _didIteratorError123 = false;
-        var _iteratorError123 = undefined;
+        var _iteratorNormalCompletion126 = true;
+        var _didIteratorError126 = false;
+        var _iteratorError126 = undefined;
 
         try {
-          for (var _iterator123 = allBranches[Symbol.iterator](), _step123; !(_iteratorNormalCompletion123 = (_step123 = _iterator123.next()).done); _iteratorNormalCompletion123 = true) {
-            var branch = _step123.value;
+          for (var _iterator126 = allBranches[Symbol.iterator](), _step126; !(_iteratorNormalCompletion126 = (_step126 = _iterator126.next()).done); _iteratorNormalCompletion126 = true) {
+            var branch = _step126.value;
 
             if (branch != null) {
               if (nodeId == branch.branchStartPoint) {
@@ -8347,16 +8406,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError123 = true;
-          _iteratorError123 = err;
+          _didIteratorError126 = true;
+          _iteratorError126 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion123 && _iterator123.return) {
-              _iterator123.return();
+            if (!_iteratorNormalCompletion126 && _iterator126.return) {
+              _iterator126.return();
             }
           } finally {
-            if (_didIteratorError123) {
-              throw _iteratorError123;
+            if (_didIteratorError126) {
+              throw _iteratorError126;
             }
           }
         }
@@ -8549,13 +8608,13 @@ var ProjectService = function () {
                  * would have gone inside the other block of code where
                  * this.isBranchStartPoint() is true.
                  */
-                var _iteratorNormalCompletion124 = true;
-                var _didIteratorError124 = false;
-                var _iteratorError124 = undefined;
+                var _iteratorNormalCompletion127 = true;
+                var _didIteratorError127 = false;
+                var _iteratorError127 = undefined;
 
                 try {
-                  for (var _iterator124 = transitions[Symbol.iterator](), _step124; !(_iteratorNormalCompletion124 = (_step124 = _iterator124.next()).done); _iteratorNormalCompletion124 = true) {
-                    var transition = _step124.value;
+                  for (var _iterator127 = transitions[Symbol.iterator](), _step127; !(_iteratorNormalCompletion127 = (_step127 = _iterator127.next()).done); _iteratorNormalCompletion127 = true) {
+                    var transition = _step127.value;
 
                     if (transition != null) {
                       if (this.isBranchMergePoint(transition.to)) {} else {
@@ -8564,16 +8623,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError124 = true;
-                  _iteratorError124 = err;
+                  _didIteratorError127 = true;
+                  _iteratorError127 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion124 && _iterator124.return) {
-                      _iterator124.return();
+                    if (!_iteratorNormalCompletion127 && _iterator127.return) {
+                      _iterator127.return();
                     }
                   } finally {
-                    if (_didIteratorError124) {
-                      throw _iteratorError124;
+                    if (_didIteratorError127) {
+                      throw _iteratorError127;
                     }
                   }
                 }
@@ -8581,29 +8640,29 @@ var ProjectService = function () {
                 // if there are no transitions, check if the parent group has a transition
 
                 if (parentGroup != null && parentGroup.transitionLogic != null && parentGroup.transitionLogic.transitions != null && parentGroup.transitionLogic.transitions.length > 0) {
-                  var _iteratorNormalCompletion125 = true;
-                  var _didIteratorError125 = false;
-                  var _iteratorError125 = undefined;
+                  var _iteratorNormalCompletion128 = true;
+                  var _didIteratorError128 = false;
+                  var _iteratorError128 = undefined;
 
                   try {
-                    for (var _iterator125 = parentGroup.transitionLogic.transitions[Symbol.iterator](), _step125; !(_iteratorNormalCompletion125 = (_step125 = _iterator125.next()).done); _iteratorNormalCompletion125 = true) {
-                      var _transition4 = _step125.value;
+                    for (var _iterator128 = parentGroup.transitionLogic.transitions[Symbol.iterator](), _step128; !(_iteratorNormalCompletion128 = (_step128 = _iterator128.next()).done); _iteratorNormalCompletion128 = true) {
+                      var _transition4 = _step128.value;
 
                       if (_transition4 != null) {
                         this.calculateNodeNumbersHelper(_transition4.to, currentActivityNumber, currentStepNumber, branchLetterCode);
                       }
                     }
                   } catch (err) {
-                    _didIteratorError125 = true;
-                    _iteratorError125 = err;
+                    _didIteratorError128 = true;
+                    _iteratorError128 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion125 && _iterator125.return) {
-                        _iterator125.return();
+                      if (!_iteratorNormalCompletion128 && _iterator128.return) {
+                        _iterator128.return();
                       }
                     } finally {
-                      if (_didIteratorError125) {
-                        throw _iteratorError125;
+                      if (_didIteratorError128) {
+                        throw _iteratorError128;
                       }
                     }
                   }
@@ -8660,13 +8719,13 @@ var ProjectService = function () {
                */
 
               if (_node2 != null && _node2.transitionLogic != null && _node2.transitionLogic.transitions != null && _node2.transitionLogic.transitions.length > 0) {
-                var _iteratorNormalCompletion126 = true;
-                var _didIteratorError126 = false;
-                var _iteratorError126 = undefined;
+                var _iteratorNormalCompletion129 = true;
+                var _didIteratorError129 = false;
+                var _iteratorError129 = undefined;
 
                 try {
-                  for (var _iterator126 = _node2.transitionLogic.transitions[Symbol.iterator](), _step126; !(_iteratorNormalCompletion126 = (_step126 = _iterator126.next()).done); _iteratorNormalCompletion126 = true) {
-                    var _transition5 = _step126.value;
+                  for (var _iterator129 = _node2.transitionLogic.transitions[Symbol.iterator](), _step129; !(_iteratorNormalCompletion129 = (_step129 = _iterator129.next()).done); _iteratorNormalCompletion129 = true) {
+                    var _transition5 = _step129.value;
 
                     if (_transition5 != null) {
                       /*
@@ -8677,16 +8736,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError126 = true;
-                  _iteratorError126 = err;
+                  _didIteratorError129 = true;
+                  _iteratorError129 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion126 && _iterator126.return) {
-                      _iterator126.return();
+                    if (!_iteratorNormalCompletion129 && _iterator129.return) {
+                      _iterator129.return();
                     }
                   } finally {
-                    if (_didIteratorError126) {
-                      throw _iteratorError126;
+                    if (_didIteratorError129) {
+                      throw _iteratorError129;
                     }
                   }
                 }
@@ -8775,29 +8834,29 @@ var ProjectService = function () {
         if (achievements != null) {
           var achievementItems = achievements.items;
           if (achievementItems != null) {
-            var _iteratorNormalCompletion127 = true;
-            var _didIteratorError127 = false;
-            var _iteratorError127 = undefined;
+            var _iteratorNormalCompletion130 = true;
+            var _didIteratorError130 = false;
+            var _iteratorError130 = undefined;
 
             try {
-              for (var _iterator127 = achievementItems[Symbol.iterator](), _step127; !(_iteratorNormalCompletion127 = (_step127 = _iterator127.next()).done); _iteratorNormalCompletion127 = true) {
-                var achievement = _step127.value;
+              for (var _iterator130 = achievementItems[Symbol.iterator](), _step130; !(_iteratorNormalCompletion130 = (_step130 = _iterator130.next()).done); _iteratorNormalCompletion130 = true) {
+                var achievement = _step130.value;
 
                 if (achievement != null && achievement.id == achievementId) {
                   return achievement;
                 }
               }
             } catch (err) {
-              _didIteratorError127 = true;
-              _iteratorError127 = err;
+              _didIteratorError130 = true;
+              _iteratorError130 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion127 && _iterator127.return) {
-                  _iterator127.return();
+                if (!_iteratorNormalCompletion130 && _iterator130.return) {
+                  _iterator130.return();
                 }
               } finally {
-                if (_didIteratorError127) {
-                  throw _iteratorError127;
+                if (_didIteratorError130) {
+                  throw _iteratorError130;
                 }
               }
             }
@@ -8826,13 +8885,13 @@ var ProjectService = function () {
 
         var components = nodeContent.components;
         if (components && components.length) {
-          var _iteratorNormalCompletion128 = true;
-          var _didIteratorError128 = false;
-          var _iteratorError128 = undefined;
+          var _iteratorNormalCompletion131 = true;
+          var _didIteratorError131 = false;
+          var _iteratorError131 = undefined;
 
           try {
-            for (var _iterator128 = components[Symbol.iterator](), _step128; !(_iteratorNormalCompletion128 = (_step128 = _iterator128.next()).done); _iteratorNormalCompletion128 = true) {
-              var component = _step128.value;
+            for (var _iterator131 = components[Symbol.iterator](), _step131; !(_iteratorNormalCompletion131 = (_step131 = _iterator131.next()).done); _iteratorNormalCompletion131 = true) {
+              var component = _step131.value;
 
               if (component) {
                 var componentRubric = component.rubric;
@@ -8842,16 +8901,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError128 = true;
-            _iteratorError128 = err;
+            _didIteratorError131 = true;
+            _iteratorError131 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion128 && _iterator128.return) {
-                _iterator128.return();
+              if (!_iteratorNormalCompletion131 && _iterator131.return) {
+                _iterator131.return();
               }
             } finally {
-              if (_didIteratorError128) {
-                throw _iteratorError128;
+              if (_didIteratorError131) {
+                throw _iteratorError131;
               }
             }
           }
@@ -8938,29 +8997,29 @@ var ProjectService = function () {
     key: 'isSpaceExists',
     value: function isSpaceExists(id) {
       var spaces = this.getSpaces();
-      var _iteratorNormalCompletion129 = true;
-      var _didIteratorError129 = false;
-      var _iteratorError129 = undefined;
+      var _iteratorNormalCompletion132 = true;
+      var _didIteratorError132 = false;
+      var _iteratorError132 = undefined;
 
       try {
-        for (var _iterator129 = spaces[Symbol.iterator](), _step129; !(_iteratorNormalCompletion129 = (_step129 = _iterator129.next()).done); _iteratorNormalCompletion129 = true) {
-          var space = _step129.value;
+        for (var _iterator132 = spaces[Symbol.iterator](), _step132; !(_iteratorNormalCompletion132 = (_step132 = _iterator132.next()).done); _iteratorNormalCompletion132 = true) {
+          var space = _step132.value;
 
           if (space.id === id) {
             return true;
           }
         }
       } catch (err) {
-        _didIteratorError129 = true;
-        _iteratorError129 = err;
+        _didIteratorError132 = true;
+        _iteratorError132 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion129 && _iterator129.return) {
-            _iterator129.return();
+          if (!_iteratorNormalCompletion132 && _iterator132.return) {
+            _iterator132.return();
           }
         } finally {
-          if (_didIteratorError129) {
-            throw _iteratorError129;
+          if (_didIteratorError132) {
+            throw _iteratorError132;
           }
         }
       }

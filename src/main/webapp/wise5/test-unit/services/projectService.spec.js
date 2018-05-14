@@ -596,6 +596,64 @@ describe('ProjectService Unit Test', function () {
         ProjectService.insertNodeInsideOnlyUpdateTransitions('node1', 'node2');
       }).toThrow('Error: insertNodeInsideOnlyUpdateTransitions() second parameter must be a group');
     });
+
+    it('should delete a step from the project', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.getNodes().length).toEqual(37);
+      expect(ProjectService.getNodeById("node5") != null).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node4"), 'node5')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node5"), 'node6')).toBeTruthy();
+      expect(ProjectService.getNodesWithTransitionToNodeId('node6').length).toEqual(1);
+      ProjectService.deleteNode("node5");
+      expect(ProjectService.getNodes().length).toEqual(36);
+      expect(ProjectService.getNodeById("node5")).toBeNull();
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node4"), 'node6')).toBeTruthy();
+      expect(ProjectService.getNodesWithTransitionToNodeId('node6').length).toEqual(1);
+    });
+
+    it('should delete a step that is the start id of the project', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.getStartNodeId()).toEqual("node1");
+      expect(ProjectService.getNodesWithTransitionToNodeId('node2').length).toEqual(1);
+      ProjectService.deleteNode("node1");
+      expect(ProjectService.getStartNodeId()).toEqual("node2");
+      expect(ProjectService.getNodesWithTransitionToNodeId('node2').length).toEqual(0);
+    });
+
+    it('should delete a step that is the start id of an activity that is not the first activity', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.getGroupStartId("group2")).toEqual("node20");
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node19"), 'node20')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node20"), 'node21')).toBeTruthy();
+      ProjectService.deleteNode("node20");
+      expect(ProjectService.getGroupStartId("group2")).toEqual("node21");
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node19"), 'node21')).toBeTruthy();
+    });
+
+    it('should delete the first activity from the project', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.getGroupStartId("group0")).toEqual("group1");
+      expect(ProjectService.getStartNodeId()).toEqual("node1");
+      expect(ProjectService.getNodes().length).toEqual(37);
+      expect(ProjectService.getNodesWithTransitionToNodeId('node20').length).toEqual(1);
+      ProjectService.deleteNode("group1");
+      expect(ProjectService.getNodeById("group1")).toBeNull();
+      expect(ProjectService.getGroupStartId("group0")).toEqual("group2");
+      expect(ProjectService.getStartNodeId()).toEqual("node20");
+      expect(ProjectService.getNodes().length).toEqual(17);
+      expect(ProjectService.getNodesWithTransitionToNodeId('node20').length).toEqual(0);
+    });
+
+    it('should delete an activity that is not the first from the project', function () {
+      ProjectService.setProject(demoProjectJSON);
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("group1"), 'group2')).toBeTruthy();
+      expect(ProjectService.getTransitionsByFromNodeId("group1").length).toEqual(1);
+      expect(ProjectService.getNodes().length).toEqual(37);
+      ProjectService.deleteNode("group2");
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("group1"), 'group2')).toBeFalsy();
+      expect(ProjectService.getTransitionsByFromNodeId("group1").length).toEqual(0);
+      expect(ProjectService.getNodes().length).toEqual(21);
+    });
   });
 });
 //# sourceMappingURL=projectService.spec.js.map
