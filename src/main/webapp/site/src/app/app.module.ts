@@ -14,6 +14,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Config } from "./domain/config";
 
+export function initialize(configService: ConfigService, userService: UserService) {
+  return () => {
+    return userService.retrieveUserPromise().then((user) => {
+      configService.subscribeToGetUser();
+    });
+  }
+}
+
 @NgModule({
   declarations: [
     AppComponent
@@ -34,12 +42,7 @@ import { Config } from "./domain/config";
     UserService,
     {
       provide: APP_INITIALIZER,
-      useFactory: (configService: ConfigService, userService: UserService) =>
-        function() {
-          return userService.retrieveUser().subscribe((user) => {
-            configService.subscribeToGetUser();
-          });
-        },
+      useFactory: initialize,
       deps: [
         ConfigService,
         UserService

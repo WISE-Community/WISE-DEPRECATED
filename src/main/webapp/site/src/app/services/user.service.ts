@@ -10,14 +10,24 @@ export class UserService {
 
   private userUrl = 'api/user/user';
   private user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-  private authenticated = false;
   private logInURL = '/wise/j_acegi_security_check';
+  isAuthenticated = false;
+  redirectUrl: string; // redirect here after logging in
 
   constructor(private http: HttpClient) {
   }
 
-  getUser(): Observable<User> {
+  getUser(): BehaviorSubject<User> {
     return this.user$;
+  }
+
+  isStudent(): boolean {
+    return this.isAuthenticated &&
+        this.user$.getValue().role === 'student';
+  }
+
+  retrieveUserPromise(): Promise<User> {
+    return this.retrieveUser().toPromise();
   }
 
   retrieveUser(): Observable<User> {
@@ -25,6 +35,9 @@ export class UserService {
     return this.http.get<User>(this.userUrl, { headers: headers })
       .pipe(
         tap((user) => {
+          if (user != null && user.id != null) {
+            this.isAuthenticated = true;
+          }
           this.user$.next(user);
         }),
         catchError(this.handleError('getUser', new User())));
@@ -60,9 +73,9 @@ export class UserService {
         { headers: headers, responseType: "text" })
         .subscribe(response => {
           if (response.includes("WISE Student")) {
-            this.authenticated = true;
+            this.isAuthenticated = true;
           } else {
-            this.authenticated = false;
+            this.isAuthenticated = false;
           }
           this.retrieveUser().subscribe((user) => {
             return callback && callback();
