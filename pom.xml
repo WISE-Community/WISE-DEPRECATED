@@ -124,7 +124,6 @@
               <testExcludes>
                 <exclude>**/org/wise/portal/service/**/*.java</exclude>
                 <exclude>**/org/wise/portal/domain/**/*.java</exclude>
-                <exclude>**/org/wise/portal/presentation/web/controllers/admin/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
@@ -148,7 +147,6 @@
           <excludes>
             <exclude>**/org/wise/portal/service/**/*.java</exclude>
             <exclude>**/org/wise/portal/domain/**/*.java</exclude>
-            <exclude>**/org/wise/portal/presentation/web/controllers/admin/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>

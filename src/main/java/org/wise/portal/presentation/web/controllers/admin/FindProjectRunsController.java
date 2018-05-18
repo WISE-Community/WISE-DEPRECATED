@@ -31,8 +31,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
@@ -43,14 +45,12 @@ import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.user.UserService;
 
 /**
- * Controller to find project runs for admin users
+ * Controller for admins to find project runs
  * @author Patrick Lawler
  */
 @Controller
 @RequestMapping("/admin/run/manageprojectruns.html")
 public class FindProjectRunsController {
-
-  private final static String VIEW = "admin/run/manageprojectruns";
 
   @Autowired
   private RunService runService;
@@ -64,41 +64,29 @@ public class FindProjectRunsController {
   @Autowired
   private Properties wiseProperties;
 
-  @RequestMapping(method=RequestMethod.GET)
-  protected ModelAndView handleGET(
-    HttpServletRequest request) {
-
-    ModelAndView modelAndView = new ModelAndView();
+  @RequestMapping(method = RequestMethod.GET)
+  protected String findRun(
+      @RequestParam(value = "runLookupType", required = true) String runLookupType,
+      @RequestParam(value = "runLookupValue", required = true) String runLookupValue,
+      ModelMap modelMap) {
     List<Run> runList = new ArrayList<Run>();
-
-    // check if runLookupType was passed in, can be ["runId","projectId","teacherUsername"]
-    String runLookupType = request.getParameter("runLookupType");
-    String runLookupValue = request.getParameter("runLookupValue");
-
-    if (runLookupType != null && runLookupValue != null) {
-      if ("runId".equals(runLookupType)) {
-        runList = this.getRunListByRunId(Long.parseLong(runLookupValue));
-      } else if ("projectId".equals(runLookupType)) {
-        runList = this.getRunListByProjectId(Long.parseLong(runLookupValue));
-      } else if ("teacherUsername".equals(runLookupType)) {
-        runList = this.getRunListByUsername(runLookupValue);
-      } else if ("runTitle".equals(runLookupType)) {
-        runList = this.getRunListByRunTitle(runLookupValue);
-      }
+    if ("runId".equals(runLookupType)) {
+      runList = this.getRunListByRunId(Long.parseLong(runLookupValue));
+    } else if ("projectId".equals(runLookupType)) {
+      runList = this.getRunListByProjectId(Long.parseLong(runLookupValue));
+    } else if ("teacherUsername".equals(runLookupType)) {
+      runList = this.getRunListByUsername(runLookupValue);
+    } else if ("runTitle".equals(runLookupType)) {
+      runList = this.getRunListByRunTitle(runLookupValue);
     }
-
-    modelAndView = new ModelAndView(VIEW);
-    modelAndView.addObject("runList", runList);
-
-    String isRealTimeEnabledStr = wiseProperties.getProperty("isRealTimeEnabled", "false");
-    modelAndView.addObject("isRealTimeEnabled", Boolean.valueOf(isRealTimeEnabledStr));
-
-    return modelAndView;
+    modelMap.put("runList", runList);
+    return "admin/run/manageprojectruns";
   }
 
   /**
    * Returns a <code>List<Run></code> list of any runs that are
-   * associated with the given <code>Long</code> project id.
+   * associated with the given <code>Long</code> project id, including runs that were made
+   * using copies of the project
    *
    * @param projectId
    * @return List<Run> - list of runs associated with the projectId
@@ -147,17 +135,14 @@ public class FindProjectRunsController {
    */
   private List<Run> getRunListByRunId(Long runId) {
     List<Run> runList = new ArrayList<Run>();
-
     try {
       Run run = this.runService.retrieveById(runId);
-
       if (run != null) {
         runList.add(run);
       }
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();
     }
-
     return runList;
   }
 

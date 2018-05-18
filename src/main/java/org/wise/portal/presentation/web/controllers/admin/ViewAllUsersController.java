@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2018 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -61,8 +60,6 @@ public class ViewAllUsersController{
   @Autowired
   private DailyAdminJob adminJob;
 
-  protected static final String VIEW_NAME = "admin/account/manageusers";
-
   protected static final String TEACHERS = "teachers";
 
   protected static final String STUDENTS = "students";
@@ -81,26 +78,19 @@ public class ViewAllUsersController{
 
   private static final String LOGGED_IN_TEACHER_USERNAMES = "loggedInTeacherUsernames";
 
-  /**
-   * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest,
-   *      javax.servlet.http.HttpServletResponse)
-   */
   @RequestMapping(method = RequestMethod.GET)
   @SuppressWarnings("unchecked")
-  protected String handleRequestInternal(
-    HttpServletRequest servletRequest,
-    ModelMap modelMap) throws Exception {
-
-    String onlyShowLoggedInUser = servletRequest.getParameter("onlyShowLoggedInUser");
-    String onlyShowUsersWhoLoggedIn = servletRequest.getParameter("onlyShowUsersWhoLoggedIn");
+  protected String showUsers(HttpServletRequest request, ModelMap modelMap) throws Exception {
+    String onlyShowLoggedInUser = request.getParameter("onlyShowLoggedInUser");
+    String onlyShowUsersWhoLoggedIn = request.getParameter("onlyShowUsersWhoLoggedIn");
     if (onlyShowLoggedInUser != null && onlyShowLoggedInUser.equals("true")) {
       // get logged in users from servlet context
       HashMap<String, User> allLoggedInUsers =
-        (HashMap<String, User>) servletRequest.getSession()
+        (HashMap<String, User>) request.getSession()
           .getServletContext().getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
 
       HashMap<String, Long> studentsToRunIds =
-        (HashMap<String, Long>) servletRequest.getSession()
+        (HashMap<String, Long>) request.getSession()
           .getServletContext().getAttribute("studentsToRunIds");
 
       ArrayList<Object> loggedInStudent = new ArrayList<Object>();
@@ -166,20 +156,18 @@ public class ViewAllUsersController{
       modelMap.put("teachersWhoLoggedInSince", teachersWhoLoggedInSince);
     } else {
       // result depends on passed-in userType parameter
-      String userType = servletRequest.getParameter(USER_TYPE);
+      String userType = request.getParameter(USER_TYPE);
       if (userType == null) {
         List<String> allUsernames = this.userService.retrieveAllUsernames();
         modelMap.put(USERNAMES, allUsernames);
       } else if (userType.equals(STUDENT)) {
-
         List<String> usernames = this.userDetailsService.retrieveAllUsernames(StudentUserDetails.class.getName());
         modelMap.put(STUDENTS, usernames);
       } else if (userType.equals(TEACHER)) {
         List<String> usernames = this.userDetailsService.retrieveAllUsernames(TeacherUserDetails.class.getName());
-
         modelMap.put(TEACHERS, usernames);
       }
     }
-    return VIEW_NAME;
+    return "admin/account/manageusers";
   }
 }
