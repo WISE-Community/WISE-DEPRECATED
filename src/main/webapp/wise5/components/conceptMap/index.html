@@ -632,7 +632,7 @@
               <div ng-if='conceptMapController.displayLinkTypeChooserModalOverlay'
                   ng-style='conceptMapController.linkTypeChooserModalOverlayStyle'>
               </div>
-              <draggable container-width='conceptMapController.modalWidth'
+              <div container-width='conceptMapController.modalWidth'
                   container-height='conceptMapController.modalHeight'
                   ng-if='conceptMapController.displayLinkTypeChooser'
                   class='ng-modal'
@@ -657,18 +657,8 @@
                 </md-radio-group>
                 <div style='display: flex'>
                   <div style='margin-right: auto;'><md-button class='md-primary md-button md-raised' ng-click='conceptMapController.cancelLinkTypeChooser()'>{{ 'CANCEL' | translate }}</md-button></div>
-                  <div style='display: flex; margin-right: 16px;'>
-                    <md-tooltip md-direction='left'
-                        style='z-index: 10001;'>
-                      {{ 'conceptMap.dragMe' | translate }}
-                    </md-tooltip>
-                    <md-icon style='transform: rotate(45deg)'
-                        ng-click='conceptMapController.dragIconClicked()'>
-                      zoom_out_map
-                    </md-icon>
-                  </div>
                 </div>
-              </draggable>
+              </div>
             </div>
             <div id='{{conceptMapController.feedbackContainerId}}'></div>
             <md-button class='input--textarea__action input--textarea__action--revision md-icon-button'
