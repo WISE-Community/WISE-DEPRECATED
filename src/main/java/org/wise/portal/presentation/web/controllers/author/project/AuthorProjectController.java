@@ -23,22 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers.author.project;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,6 +60,15 @@ import org.wise.portal.service.project.ProjectService;
 import org.wise.vle.utils.FileManager;
 import org.wise.vle.web.AssetManager;
 import org.wise.vle.web.SecurityUtils;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Controller for users with author privileges to author WISE4 projects
@@ -812,10 +805,10 @@ public class AuthorProjectController {
    */
   private ModelAndView handleLaunchAuthoring(HttpServletRequest request) {
     User author = ControllerUtil.getSignedInUser();
-    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+    String contextPath = request.getContextPath();
 
-    String vleUrl = wiseBaseURL + "/vle/author.html";
-    String portalAuthorUrl = wiseBaseURL + "/author/authorproject.html";
+    String vleUrl = contextPath + "/vle/author.html";
+    String portalAuthorUrl = contextPath + "/author/authorproject.html";
     String command = request.getParameter("param1");
 
     String projectIdStr = request.getParameter(PROJECT_ID_PARAM_NAME);
@@ -1469,32 +1462,29 @@ public class AuthorProjectController {
     //get the username
     String username = user.getUserDetails().getUsername();
 
-    //get the wise base url
-    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-
     //get the context path e.g. /wise
     String contextPath = request.getContextPath();
 
     //get the url to get and post metadata
-    String projectMetadataURL = wiseBaseURL + "/metadata.html";
+    String projectMetadataURL = contextPath + "/metadata.html";
 
     //get the url to make CRater requests
-    String cRaterRequestURL = wiseBaseURL + "/cRater";
+    String cRaterRequestURL = contextPath + "/cRater";
 
     //get the curriculum_base_www variable from the wise.properties file
     String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");
 
     //get the url to preview project
-    String previewProjectUrl = wiseBaseURL + "/previewproject.html";
+    String previewProjectUrl = contextPath + "/previewproject.html";
 
     //get the url to make CRater requests
-    String deleteProjectUrl = wiseBaseURL + "/teacher/projects/deleteproject.html";
+    String deleteProjectUrl = contextPath + "/teacher/projects/deleteproject.html";
 
     //get the url to make analyze project requests
-    String analyzeProjectUrl = wiseBaseURL + "/teacher/projects/analyzeproject.html";
+    String analyzeProjectUrl = contextPath + "/teacher/projects/analyzeproject.html";
 
     //the get/post url for premade comments
-    String premadeCommentsURL = wiseBaseURL + "/teacher/grading/premadeComments.html";
+    String premadeCommentsURL = contextPath + "/teacher/grading/premadeComments.html";
 
     //create a JSONObject to contain the config params
     JSONObject config = new JSONObject();
@@ -1504,7 +1494,7 @@ public class AuthorProjectController {
       config.put("username", username);
       config.put("projectMetadataURL", projectMetadataURL);
       config.put("curriculumBaseUrl", curriculumBaseUrl);
-      config.put("indexURL", wiseBaseURL + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
+      config.put("indexURL", contextPath + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
       int maxInactiveInterval = request.getSession().getMaxInactiveInterval() * 1000;
       config.put("sessionTimeoutInterval", maxInactiveInterval);      // add sessiontimeout interval, in milleseconds
       int sessionTimeoutCheckInterval = maxInactiveInterval / 20;         // check 20 times during the session.
@@ -1519,7 +1509,7 @@ public class AuthorProjectController {
       config.put("deleteProjectUrl", deleteProjectUrl);
       config.put("analyzeProjectUrl", analyzeProjectUrl);
       config.put("premadeCommentsURL", premadeCommentsURL);
-      config.put("wiseBaseURL", wiseBaseURL);
+      config.put("wiseBaseURL", contextPath);
       config.put("contextPath", contextPath);
 
       // if projectId provided, this is a request for preview

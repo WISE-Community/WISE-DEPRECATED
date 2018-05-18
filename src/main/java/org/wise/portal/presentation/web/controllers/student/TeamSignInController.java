@@ -23,17 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers.student;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.hibernate.StaleObjectStateException;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,11 +46,15 @@ import org.wise.portal.presentation.web.TeamSignInForm;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.group.GroupService;
-import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 /**
  * Controller for handling team sign-ins before students start the project. The first user
@@ -333,7 +326,7 @@ public class TeamSignInController {
     }
 
     StartProjectController.notifyServletSession(request, run);
-    ModelAndView modelAndView = projectService.launchProject(workgroup);
+    ModelAndView modelAndView = projectService.launchProject(workgroup, request.getContextPath());
 
     // clear the command object from the session
     status.setComplete();
