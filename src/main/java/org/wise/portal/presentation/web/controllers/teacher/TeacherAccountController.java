@@ -23,13 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher;
 
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.Properties;
-
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -54,6 +47,12 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.user.UserService;
+
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.Properties;
 
 /**
  * Controller for creating and updating WISE teacher accounts
@@ -171,7 +170,7 @@ public class TeacherAccountController {
       userDetails.setDisplayname(userDetails.getFirstname() + " " + userDetails.getLastname());
       userDetails.setEmailValid(true);
       User createdUser = this.userService.createUser(userDetails);
-      NewAccountEmailService newAccountEmailService = new NewAccountEmailService(createdUser, request.getLocale());
+      NewAccountEmailService newAccountEmailService = new NewAccountEmailService(createdUser, request.getLocale(), request);
       Thread thread = new Thread(newAccountEmailService);
       thread.start();
       modelMap.addAttribute("username", userDetails.getUsername());
@@ -310,10 +309,12 @@ public class TeacherAccountController {
   class NewAccountEmailService implements Runnable {
     private User newUser;
     private Locale locale;
+    private HttpServletRequest request;
 
-    public NewAccountEmailService(User newUser, Locale locale) {
+    public NewAccountEmailService(User newUser, Locale locale, HttpServletRequest request) {
       this.newUser = newUser;
       this.locale = locale;
+      this.request = request;
     }
 
     public void run() {
@@ -322,14 +323,14 @@ public class TeacherAccountController {
       if (!sendEmailEnabled) {
         return;
       } else {
-        this.sendEmail();
+        this.sendEmail(this.request);
       }
     }
 
     /**
      * Sends a welcome email to the new user with WISE resources.
      */
-    private void sendEmail() {
+    private void sendEmail(HttpServletRequest request) {
       TeacherUserDetails newUserDetails = (TeacherUserDetails) newUser.getUserDetails();
       String userUsername = newUserDetails.getUsername();
       String userEmailAddress[] = {newUserDetails.getEmailAddress()};
@@ -337,8 +338,8 @@ public class TeacherAccountController {
           wiseProperties.getProperty("uber_admin").split(","));
       String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, Locale.US);
       String subject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, defaultSubject, this.locale);
-      String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-      String gettingStartedUrl = wiseBaseURL + "/pages/gettingstarted.html";
+      String portalString = ControllerUtil.getPortalUrlString(request);
+      String gettingStartedUrl = portalString + "/pages/gettingstarted.html";
       String defaultBody = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, Locale.US);
       String message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {userUsername,gettingStartedUrl}, defaultBody, this.locale);
 

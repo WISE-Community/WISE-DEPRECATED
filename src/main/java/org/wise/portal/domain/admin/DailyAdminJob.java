@@ -147,7 +147,6 @@ public class DailyAdminJob {
         try {
           JSONObject wiseStatisticsJSONObject = new JSONObject();
           wiseStatisticsJSONObject.put("wiseName", wiseProperties.getProperty("wise.name"));
-          wiseStatisticsJSONObject.put("wiseBaseURL", wiseProperties.getProperty("wiseBaseURL"));
 
           PortalStatistics latestPortalStatistics = portalStatisticsService.getLatestPortalStatistics();
           wiseStatisticsJSONObject.put("portal", latestPortalStatistics.getJSONObject());
@@ -680,7 +679,6 @@ public class DailyAdminJob {
 
       List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
       urlParameters.add(new BasicNameValuePair("name", wiseProperties.getProperty("wise.name")));
-      urlParameters.add(new BasicNameValuePair("wiseBaseURL", wiseProperties.getProperty("wiseBaseURL")));
       urlParameters.add(new BasicNameValuePair("stats", wiseStatisticsString));
 
       try {

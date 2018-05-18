@@ -136,14 +136,13 @@ public class InformationController {
     throws ObjectNotFoundException, IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
     String mode = request.getParameter("mode");
-
-    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+    String contextPath = request.getContextPath();
     JSONObject config = new JSONObject();
     String projectIdString = request.getParameter("projectId");
     // if projectId provided, this is a request for preview
     if (projectIdString != null) {
       Project project = projectService.getById(Long.parseLong(projectIdString));
-      addPreviewConfigParametersWISE4(request, signedInUser, mode, wiseBaseURL, config, project);
+      addPreviewConfigParametersWISE4(request, signedInUser, mode, contextPath, config, project);
       printConfigToResponse(response, config);
       return;
     }
@@ -155,7 +154,7 @@ public class InformationController {
       if (workgroup == null && signedInUser == null && !signedInUser.isAdmin()) {
         return;
       }
-      addRunConfigParametersWISE4(request, signedInUser, mode, wiseBaseURL, config, runId, run, workgroup);
+      addRunConfigParametersWISE4(request, signedInUser, mode, contextPath, config, runId, run, workgroup);
       printConfigToResponse(response, config);
       return;
     }
@@ -219,18 +218,19 @@ public class InformationController {
     getRunConfigParameters(request, config, run);
 
     User signedInUser = ControllerUtil.getSignedInUser();
-    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+    String contextPath = request.getContextPath();
+
     if (hasRunReadAccess(signedInUser, run)) {
       config.put("runCode", run.getRuncode());
-      config.put("teacherDataURL", wiseBaseURL + "/teacher/data");
-      config.put("runDataExportURL", wiseBaseURL + "/teacher/export");
-      config.put("studentNotebookURL", wiseBaseURL + "/teacher/notebook/" + runId);
+      config.put("teacherDataURL", contextPath + "/teacher/data");
+      config.put("runDataExportURL", contextPath + "/teacher/export");
+      config.put("studentNotebookURL", contextPath + "/teacher/notebook/" + runId);
     }
 
     Project project = run.getProject();
     if (hasRunWriteAccess(signedInUser, run)) {
       String projectId = project.getId().toString();
-      String saveProjectURL = wiseBaseURL + "/project/save/" + projectId;
+      String saveProjectURL = contextPath + "/project/save/" + projectId;
       config.put("saveProjectURL", saveProjectURL);
     }
 
@@ -444,7 +444,7 @@ public class InformationController {
 
   private void addPreviewConfigParametersWISE4(
     HttpServletRequest request, User signedInUser, String mode,
-    String wiseBaseURL, JSONObject config, Project project) {
+    String contextPath, JSONObject config, Project project) {
     try {
       config.put("runId", "");
       config.put("runName", "");
@@ -462,11 +462,11 @@ public class InformationController {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-    addCommonConfigParametersWISE4(request, signedInUser, mode, wiseBaseURL, config, project);
+    addCommonConfigParametersWISE4(request, signedInUser, mode, contextPath, config, project);
   }
 
   private void addRunConfigParametersWISE4(HttpServletRequest request, User signedInUser,
-                                           String mode, String wiseBaseURL, JSONObject config, String runId, Run run, Workgroup workgroup) {
+                                           String mode, String contextPath, JSONObject config, String runId, Run run, Workgroup workgroup) {
     Long workgroupId = null;
     Long periodId = null;
     if (workgroup != null && workgroup.isStudentWorkgroup()) {
@@ -482,47 +482,46 @@ public class InformationController {
       config.put("runId", Long.parseLong(runId));
       config.put("runName", run.getName());
       config.put("isRunActive", !run.isEnded());
-      config.put("flagsURL", wiseBaseURL + "/annotation?type=flag&runId=" + runId);
-      config.put("inappropriateFlagsURL", wiseBaseURL + "/annotation?type=inappropriateFlag&runId=" + runId);
-      config.put("annotationsURL", wiseBaseURL + "/annotation?type=annotation&runId=" + runId);
-      config.put("studentDataURL", wiseBaseURL + "/studentData.html");
+      config.put("flagsURL", contextPath + "/annotation?type=flag&runId=" + runId);
+      config.put("inappropriateFlagsURL", contextPath + "/annotation?type=inappropriateFlag&runId=" + runId);
+      config.put("annotationsURL", contextPath + "/annotation?type=annotation&runId=" + runId);
+      config.put("studentDataURL", contextPath + "/studentData.html");
       config.put("gradingType", request.getParameter("gradingType"));
       config.put("getRevisions", request.getParameter("getRevisions"));
-      config.put("peerReviewURL", wiseBaseURL + "/peerReview.html?type=peerreview");
-      config.put("ideaBasketURL", getIdeaBasketURL(runId, wiseBaseURL, run, periodId, workgroupId));
-      config.put("portfolioURL", getPortfolioURL(runId, wiseBaseURL, periodId, workgroupId));
-      config.put("studentAssetManagerURL", wiseBaseURL + "/assetManager?type=studentAssetManager&runId=" + runId);
+      config.put("peerReviewURL", contextPath + "/peerReview.html?type=peerreview");
+      config.put("ideaBasketURL", getIdeaBasketURL(runId, contextPath, run, periodId, workgroupId));
+      config.put("portfolioURL", getPortfolioURL(runId, contextPath, periodId, workgroupId));
+      config.put("studentAssetManagerURL", contextPath + "/assetManager?type=studentAssetManager&runId=" + runId);
       config.put("runInfo", run.getInfo());
       config.put("isRealTimeEnabled", true);  // TODO: make this run-specific setting
-      config.put("webSocketURL", getWebSocketURL(request, wiseBaseURL));
-      config.put("studentStatusURL", wiseBaseURL + "/studentStatus");
-      config.put("runStatusURL", wiseBaseURL + "/runStatus");
+      config.put("webSocketURL", getWebSocketURL(request, contextPath));
+      config.put("studentStatusURL", contextPath + "/studentStatus");
+      config.put("runStatusURL", contextPath + "/runStatus");
       config.put("postLevel", run.getPostLevel());
-      config.put("userInfoURL", wiseBaseURL + "/userInfo?runId=" + runId);
+      config.put("userInfoURL", contextPath + "/userInfo?runId=" + runId);
 
       if ("grading".equals(mode)) {
-        config.put("premadeCommentsURL", wiseBaseURL + "/teacher/grading/premadeComments.html");
-        config.put("getXLSExportURL", wiseBaseURL + "/export?type=xlsexport&runId=" + runId);
-        config.put("getSpecialExportURL", wiseBaseURL + "/specialExport?type=specialExport&runId=" + runId);
-        config.put("getStudentListURL", wiseBaseURL + "/teacher/management/studentListExport?runId=" + runId);
+        config.put("premadeCommentsURL", contextPath + "/teacher/grading/premadeComments.html");
+        config.put("getXLSExportURL", contextPath + "/export?type=xlsexport&runId=" + runId);
+        config.put("getSpecialExportURL", contextPath + "/specialExport?type=specialExport&runId=" + runId);
+        config.put("getStudentListURL", contextPath + "/teacher/management/studentListExport?runId=" + runId);
       }
     } catch (JSONException e) {
       e.printStackTrace();
     }
     Project project = run.getProject();
-    addCommonConfigParametersWISE4(request, signedInUser, mode, wiseBaseURL, config, project);
+    addCommonConfigParametersWISE4(request, signedInUser, mode, contextPath, config, project);
   }
 
   private void addCommonConfigParametersWISE4(
     HttpServletRequest request, User signedInUser, String mode,
-    String wiseBaseURL, JSONObject config, Project project) {
+    String contextPath, JSONObject config, Project project) {
     assert project != null;
     try {
-      config.put("wiseBaseURL", wiseBaseURL);
-      String contextPath = request.getContextPath();
+      config.put("wiseBaseURL", contextPath);
       config.put("contextPath", contextPath);
       config.put("mode", mode);
-      config.put("projectMetadataURL", wiseBaseURL + "/metadata.html");
+      config.put("projectMetadataURL", contextPath + "/metadata.html");
       String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
       String rawProjectUrl = project.getModulePath();
       String projectURL = curriculumBaseWWW + rawProjectUrl;
@@ -532,9 +531,9 @@ public class InformationController {
       addProjectBaseURL(config, projectURL);
       config.put("studentUploadsBaseURL",  wiseProperties.getProperty("studentuploads_base_www"));
       config.put("theme", "WISE");
-      config.put("cRaterRequestURL", wiseBaseURL + "/cRater");
+      config.put("cRaterRequestURL", contextPath + "/cRater");
       config.put("mainHomePageURL", contextPath);
-      config.put("renewSessionURL", wiseBaseURL + "/session/renew");
+      config.put("renewSessionURL", contextPath + "/session/renew");
       config.put("sessionLogOutURL", contextPath + "/logout");
       addStep(request, config);
       setUserLocale(request, signedInUser, config);
@@ -555,8 +554,8 @@ public class InformationController {
     }
   }
 
-  private String getPortfolioURL(String runId, String wiseBaseURL, Long periodId, Long workgroupId) {
-    String portfolioURL = wiseBaseURL + "/portfolio?runId=" + runId;
+  private String getPortfolioURL(String runId, String contextPath, Long periodId, Long workgroupId) {
+    String portfolioURL = contextPath + "/portfolio?runId=" + runId;
     if (periodId != null) {
       portfolioURL += "&periodId=" + periodId;
     }
@@ -566,8 +565,8 @@ public class InformationController {
     return portfolioURL;
   }
 
-  private String getIdeaBasketURL(String runId, String wiseBaseURL, Run run, Long periodId, Long workgroupId) {
-    String ideaBasketURL = wiseBaseURL + "/ideaBasket?runId=" + runId + "&projectId=" + run.getProject().getId().toString();
+  private String getIdeaBasketURL(String runId, String contextPath, Run run, Long periodId, Long workgroupId) {
+    String ideaBasketURL = contextPath + "/ideaBasket?runId=" + runId + "&projectId=" + run.getProject().getId().toString();
     if (periodId != null) {
       ideaBasketURL += "&periodId=" + periodId;
     }
@@ -585,11 +584,11 @@ public class InformationController {
    * e.g.
    * ws://localhost:8080/wise
    */
-  private String getWebSocketURL(HttpServletRequest request, String wiseBaseURL) {
+  private String getWebSocketURL(HttpServletRequest request, String contextPath) {
     String webSocketBaseURL = wiseProperties.getProperty("webSocketBaseUrl");
     if (webSocketBaseURL == null) {
-      if (wiseBaseURL.contains("http")) {
-        webSocketBaseURL = wiseBaseURL.replace("http", "ws");
+      if (contextPath.contains("http")) {
+        webSocketBaseURL = contextPath.replace("http", "ws");
       } else {
         String portalContextPath = ControllerUtil.getPortalUrlString(request);
         webSocketBaseURL = portalContextPath.replace("http", "ws");
@@ -664,26 +663,26 @@ public class InformationController {
 
   private void getRunConfigParameters(HttpServletRequest request, JSONObject config, Run run)
     throws JSONException, ObjectNotFoundException {
-    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+    String contextPath = request.getContextPath();
     Long runId = run.getId();
-    String annotationsURL = wiseBaseURL + "/annotation?type=annotation&runId=" + runId;
-    String studentStatusURL = wiseBaseURL + "/studentStatus";
-    String runStatusURL = wiseBaseURL + "/runStatus";
+    String annotationsURL = contextPath + "/annotation?type=annotation&runId=" + runId;
+    String studentStatusURL = contextPath + "/studentStatus";
+    String runStatusURL = contextPath + "/runStatus";
 
     config.put("runName", run.getName());
     config.put("runId", runId);
     config.put("annotationsURL", annotationsURL);
     config.put("runInfo", run.getInfo());
     config.put("isRealTimeEnabled", run.isRealTimeEnabled());
-    config.put("webSocketURL", getWebSocketURL(request, wiseBaseURL));
+    config.put("webSocketURL", getWebSocketURL(request, contextPath));
     config.put("studentStatusURL", studentStatusURL);
     config.put("runStatusURL", runStatusURL);
     config.put("userInfo", getUserInfo(run));
-    config.put("studentDataURL", wiseBaseURL + "/student/data");  // the url to get/post student data
-    config.put("studentAssetsURL", wiseBaseURL + "/student/asset/" + runId);
-    config.put("studentNotebookURL", wiseBaseURL + "/student/notebook/" + runId);
-    config.put("achievementURL", wiseBaseURL + "/achievement/" + runId);
-    config.put("notificationURL", wiseBaseURL + "/notification/" + runId);
+    config.put("studentDataURL", contextPath + "/student/data");  // the url to get/post student data
+    config.put("studentAssetsURL", contextPath + "/student/asset/" + runId);
+    config.put("studentNotebookURL", contextPath + "/student/notebook/" + runId);
+    config.put("achievementURL", contextPath + "/achievement/" + runId);
+    config.put("notificationURL", contextPath + "/notification/" + runId);
     String openCPUURL = wiseProperties.getProperty("openCPUURL");
     if (openCPUURL != null) {
       config.put("openCPUURL", openCPUURL);
@@ -729,21 +728,19 @@ public class InformationController {
     String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
     String projectURL = curriculumBaseWWW + rawProjectUrl;
 
-    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-    config.put("wiseBaseURL", wiseBaseURL);
+    String contextPath = request.getContextPath();
+    config.put("wiseBaseURL", contextPath);
     config.put("projectId", project.getId());
     config.put("parentProjectId", project.getParentProjectId());
-    config.put("previewProjectURL", wiseBaseURL + "/project/" + project.getId());
+    config.put("previewProjectURL", contextPath + "/project/" + project.getId());
     config.put("theme", "WISE");
     config.put("projectURL", projectURL);
     addProjectBaseURL(config, projectURL);
     config.put("studentUploadsBaseURL", wiseProperties.getProperty("studentuploads_base_www"));
-    config.put("cRaterRequestURL", wiseBaseURL + "/cRater");
-
-    String contextPath = request.getContextPath();  //get the context path e.g. /wise
+    config.put("cRaterRequestURL", contextPath + "/cRater");
     config.put("contextPath", contextPath);
     config.put("mainHomePageURL", contextPath);
-    config.put("renewSessionURL", wiseBaseURL + "/session/renew");
+    config.put("renewSessionURL", contextPath + "/session/renew");
     config.put("sessionLogOutURL", contextPath + "/logout");
 
     User signedInUser = ControllerUtil.getSignedInUser();

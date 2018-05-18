@@ -23,12 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher.grading;
 
-import java.io.IOException;
-import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,13 +33,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * A Controller for Grading Student Work
@@ -70,7 +68,7 @@ public class GradeWorkController {
    * @throws Exception
    */
   @RequestMapping(value = "/classroomMonitor/{runId}")
-  protected ModelAndView launchClassroomMonitorWISE5(@PathVariable Integer runId) throws Exception {
+  protected ModelAndView launchClassroomMonitorWISE5(HttpServletRequest request, @PathVariable Integer runId) throws Exception {
     Run run = null;
     try {
       run = runService.retrieveById(new Long(runId));
@@ -87,8 +85,8 @@ public class GradeWorkController {
       this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
       this.runService.hasRunPermission(run, user, BasePermission.READ)) {
 
-      String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-      String getClassroomMonitorConfigUrl = wiseBaseURL + "/config/classroomMonitor/" + runId;
+      String contextPath = request.getContextPath();
+      String getClassroomMonitorConfigUrl = contextPath + "/config/classroomMonitor/" + runId;
 
       ModelAndView modelAndView = new ModelAndView("classroomMonitor");
       modelAndView.addObject("configURL", getClassroomMonitorConfigUrl);
@@ -137,14 +135,14 @@ public class GradeWorkController {
           this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
           this.runService.hasRunPermission(run, user, BasePermission.READ)) {
 
-          String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+          String contextPath = request.getContextPath();
 
-          String getGradeWorkUrl = wiseBaseURL + "/vle/gradework.html";
-          String getGradingConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
+          String getGradeWorkUrl = contextPath + "/vle/gradework.html";
+          String getGradingConfigUrl = contextPath + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
 
           // get the classroom monitor urls
-          String getClassroomMonitorUrl = wiseBaseURL + "/vle/classroomMonitor.html";
-          String getClassroomMonitorConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
+          String getClassroomMonitorUrl = contextPath + "/vle/classroomMonitor.html";
+          String getClassroomMonitorConfigUrl = contextPath + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
 
           // set the permission variable so that we can access it in the .jsp
           if (this.runService.hasRunPermission(run, user, BasePermission.WRITE)) {
