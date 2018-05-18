@@ -607,6 +607,7 @@ var DrawController = function () {
   _createClass(DrawController, [{
     key: 'initializeDrawingTool',
     value: function initializeDrawingTool() {
+      var _this2 = this;
 
       this.drawingTool = new DrawingTool('#' + this.drawingToolId, {
         stamps: this.componentContent.stamps || {},
@@ -745,8 +746,18 @@ var DrawController = function () {
         this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
       }
 
-      // listen for the drawing changed event
-      this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
+      /*
+       * Wait before we start listening for the drawing:changed event. We need to wait
+       * because the calls above to this.drawingTool.setBackgroundImage() will cause
+       * the drawing:changed event to be fired from the drawingTool, but when that happens,
+       * we don't want to call this.studentDataChanged() because it marks the student work
+       * as dirty. We only want to call this.studentDataChanged() when the drawing:changed
+       * event occurs in response to the student changing the drawing and this timeout
+       * will help make sure of that.
+       */
+      this.$timeout(angular.bind(this, function () {
+        _this2.drawingTool.on('drawing:changed', angular.bind(_this2, _this2.studentDataChanged));
+      }), 500);
 
       if (this.mode === 'student') {
         // listen for selected tool changed event
@@ -1160,7 +1171,7 @@ var DrawController = function () {
      * Called when the student changes their work
      */
     value: function studentDataChanged() {
-      var _this2 = this;
+      var _this3 = this;
 
       /*
        * set the dirty flag so we will know we need to save the
@@ -1188,7 +1199,7 @@ var DrawController = function () {
 
       // create a component state populated with the student data
       this.createComponentState(action).then(function (componentState) {
-        _this2.$scope.$emit('componentStudentDataChanged', { nodeId: _this2.nodeId, componentId: componentId, componentState: componentState });
+        _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: componentId, componentState: componentState });
       });
     }
   }, {
@@ -1343,7 +1354,7 @@ var DrawController = function () {
      * @param studentAsset
      */
     value: function attachStudentAsset(studentAsset) {
-      var _this3 = this;
+      var _this4 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -1355,7 +1366,7 @@ var DrawController = function () {
               //oImg.setTop((this.drawingTool.canvas.height / 2) - (oImg.height / 2));
               //oImg.center();
               oImg.studentAssetId = copiedAsset.id; // keep track of this asset id
-              _this3.drawingTool.canvas.add(oImg); // add copied asset image to canvas
+              _this4.drawingTool.canvas.add(oImg); // add copied asset image to canvas
             });
           }
         });
@@ -1412,7 +1423,7 @@ var DrawController = function () {
      * student already has work for this component
      */
     value: function importWork(overwrite) {
-      var _this4 = this;
+      var _this5 = this;
 
       // get the component content
       var componentContent = this.componentContent;
@@ -1483,10 +1494,10 @@ var DrawController = function () {
                     service.createImage(conceptMapData, componentContent.width, componentContent.height).then(function (image) {
 
                       // set the image as the background
-                      _this4.drawingTool.setBackgroundImage(image);
+                      _this5.drawingTool.setBackgroundImage(image);
 
                       // make the work dirty so that it gets saved
-                      _this4.studentDataChanged();
+                      _this5.studentDataChanged();
                     });
                   }
                 }
@@ -1778,13 +1789,13 @@ var DrawController = function () {
   }, {
     key: 'snipButtonClicked',
     value: function snipButtonClicked($event) {
-      var _this5 = this;
+      var _this6 = this;
 
       if (this.isDirty) {
         var deregisterListener = this.$scope.$on('studentWorkSavedToServer', function (event, args) {
           var componentState = args.studentWork;
-          if (componentState && _this5.nodeId === componentState.nodeId && _this5.componentId === componentState.componentId) {
-            _this5.snipDrawing($event, componentState.id);
+          if (componentState && _this6.nodeId === componentState.nodeId && _this6.componentId === componentState.componentId) {
+            _this6.snipDrawing($event, componentState.id);
             deregisterListener();
           }
         });
@@ -2611,10 +2622,10 @@ var DrawController = function () {
   }, {
     key: 'setComponentStateAsBackgroundImage',
     value: function setComponentStateAsBackgroundImage(componentState) {
-      var _this6 = this;
+      var _this7 = this;
 
       this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
-        _this6.drawingTool.setBackgroundImage(image.url);
+        _this7.drawingTool.setBackgroundImage(image.url);
       });
     }
 
@@ -2918,13 +2929,13 @@ var DrawController = function () {
   }, {
     key: 'importWorkByStudentWorkId',
     value: function importWorkByStudentWorkId(studentWorkId) {
-      var _this7 = this;
+      var _this8 = this;
 
       this.StudentDataService.getStudentWorkById(studentWorkId).then(function (componentState) {
         if (componentState != null) {
-          _this7.setStudentWork(componentState);
-          _this7.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
-          _this7.$rootScope.$broadcast('closeNotebook');
+          _this8.setStudentWork(componentState);
+          _this8.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+          _this8.$rootScope.$broadcast('closeNotebook');
         }
       });
     }
