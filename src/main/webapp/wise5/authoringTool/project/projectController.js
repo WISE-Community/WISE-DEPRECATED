@@ -1431,10 +1431,7 @@ var ProjectController = function () {
     }
 
     /**
-     * Save the project JSON to the server.
-     * @return {boolean}
-     * True if the JSON is valid.
-     * False if the JSON is invalid.
+     * Save the project JSON to the server if the JSON is valid.
      */
 
   }, {
@@ -1443,10 +1440,8 @@ var ProjectController = function () {
       try {
         this.saveProjectJSON(this.projectJSONString);
         this.UtilService.showJSONValidMessage();
-        return true;
       } catch (e) {
         this.UtilService.showJSONInvalidMessage();
-        return false;
       }
     }
 
