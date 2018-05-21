@@ -25,14 +25,14 @@
       </ng-container>
     </p>
     <p *ngIf="data.project.metadata.features"><span class="mat-body-2">Features:</span> {{ data.project.metadata.features }}</p>
-    <p *ngIf="data.ngss.pe.length">
+    <p *ngIf="data.ngss.dciArrangements.length">
       <span class="mat-body-2">Performance Expectations:</span>
-      <ng-container *ngFor="let pe of data.ngss.pe; let isLast=last">
-        <a href="{{ data.ngssWebUrl }}{{ pe.id }}" target="_blank">{{ pe.id }} {{ pe.name }}</a>
-        <ng-container *ngIf="pe.children.length">
-          (<ng-container *ngFor="let child of pe.children; let isLastChild=last"><a class="library-project-details__pe" href="{{ data.ngssWebUrl }}{{ child.id }}"
-            target="_blank" matTooltip="{{ child.name }}"
-            [matTooltipPosition]="'above'">{{ child.id }}</a>{{ isLastChild ? '' : ', ' }}</ng-container>)
+      <ng-container *ngFor="let dcia of data.ngss.dciArrangements; let isLast=last">
+        <a href="{{ data.ngssWebUrl }}{{ dcia.id }}" target="_blank">{{ dcia.id }} {{ dcia.name }}</a>
+        <ng-container *ngIf="dcia.children.length">
+          (<ng-container *ngFor="let pe of dcia.children; let isLastChild=last"><a class="library-project-details__pe" href="{{ data.ngssWebUrl }}{{ pe.id }}"
+            target="_blank" matTooltip="{{ pe.name }}"
+            [matTooltipPosition]="'above'">{{ pe.id }}</a>{{ isLastChild ? '' : ', ' }}</ng-container>)
         </ng-container>{{ isLast ? '' : ' / ' }}
       </ng-container>
     </p>

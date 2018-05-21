@@ -44,8 +44,8 @@ export class LibraryProjectComponent implements OnInit {
         if (ngss.dci) {
           this.ngss.dci = ngss.dci;
         }
-        if (ngss.pe) {
-          this.ngss.pe = ngss.pe;
+        if (ngss.dciArrangements) {
+          this.ngss.dciArrangements = ngss.dciArrangements;
         }
         if (ngss.ccc) {
           this.ngss.ccc = ngss.ccc;
