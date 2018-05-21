@@ -1398,20 +1398,20 @@ var ProjectController = function () {
         // we were showing the JSON view and the author now wants to hide it
         if (this.isJSONValid()) {
           this.toggleJSONAuthoringView();
-          this.hideValidJSONMessage();
+          this.hideJSONValidMessage();
         } else {
           var answer = confirm(this.$translate('projectJSONInvalidErrorMessage'));
           if (answer) {
             // the author wants to revert back to the last valid JSON
             this.toggleJSONAuthoringView();
-            this.hideValidJSONMessage();
+            this.hideJSONValidMessage();
           }
         }
       } else {
         // we were not showing the JSON view and now the author wants to show it
         this.toggleJSONAuthoringView();
         this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
-        this.showValidJSONMessage();
+        this.showJSONValidMessage();
       }
     }
   }, {
@@ -1430,18 +1430,18 @@ var ProjectController = function () {
       this.showJSONAuthoring = !this.showJSONAuthoring;
     }
   }, {
-    key: 'showValidJSONMessage',
-    value: function showValidJSONMessage() {
+    key: 'showJSONValidMessage',
+    value: function showJSONValidMessage() {
       this.setIsJSONValidMessage(true);
     }
   }, {
-    key: 'showInvalidJSONMessage',
-    value: function showInvalidJSONMessage() {
+    key: 'showJSONInvalidMessage',
+    value: function showJSONInvalidMessage() {
       this.setIsJSONValidMessage(false);
     }
   }, {
-    key: 'hideValidJSONMessage',
-    value: function hideValidJSONMessage() {
+    key: 'hideJSONValidMessage',
+    value: function hideJSONValidMessage() {
       this.setIsJSONValidMessage(null);
     }
 
@@ -1471,10 +1471,10 @@ var ProjectController = function () {
     value: function autoSaveProjectJSONString() {
       try {
         this.saveProjectJSON(this.projectJSONString);
-        this.showValidJSONMessage();
+        this.showJSONValidMessage();
         return true;
       } catch (e) {
-        this.showInvalidJSONMessage();
+        this.showJSONInvalidMessage();
         return false;
       }
     }
@@ -1658,7 +1658,7 @@ var ProjectController = function () {
         this.projectMode = !this.advancedMode;
       }
       if (!this.showJSONAuthoring) {
-        this.hideValidJSONMessage();
+        this.hideJSONValidMessage();
       }
     }
 

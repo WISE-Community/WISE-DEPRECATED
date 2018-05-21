@@ -1139,20 +1139,20 @@ class ProjectController {
       // we were showing the JSON view and the author now wants to hide it
       if (this.isJSONValid()) {
         this.toggleJSONAuthoringView();
-        this.hideValidJSONMessage();
+        this.hideJSONValidMessage();
       } else {
         let answer = confirm(this.$translate('projectJSONInvalidErrorMessage'));
         if (answer) {
           // the author wants to revert back to the last valid JSON
           this.toggleJSONAuthoringView();
-          this.hideValidJSONMessage();
+          this.hideJSONValidMessage();
         }
       }
     } else {
       // we were not showing the JSON view and now the author wants to show it
       this.toggleJSONAuthoringView();
       this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
-      this.showValidJSONMessage();
+      this.showJSONValidMessage();
     }
   }
 
@@ -1169,15 +1169,15 @@ class ProjectController {
     this.showJSONAuthoring = !this.showJSONAuthoring;
   }
 
-  showValidJSONMessage() {
+  showJSONValidMessage() {
     this.setIsJSONValidMessage(true);
   }
 
-  showInvalidJSONMessage() {
+  showJSONInvalidMessage() {
     this.setIsJSONValidMessage(false);
   }
 
-  hideValidJSONMessage() {
+  hideJSONValidMessage() {
     this.setIsJSONValidMessage(null);
   }
 
@@ -1201,10 +1201,10 @@ class ProjectController {
   autoSaveProjectJSONString() {
     try {
       this.saveProjectJSON(this.projectJSONString);
-      this.showValidJSONMessage();
+      this.showJSONValidMessage();
       return true;
     } catch(e) {
-      this.showInvalidJSONMessage();
+      this.showJSONInvalidMessage();
       return false;
     }
   }
@@ -1370,7 +1370,7 @@ class ProjectController {
       this.projectMode = !this.advancedMode;
     }
     if (!this.showJSONAuthoring) {
-      this.hideValidJSONMessage();
+      this.hideJSONValidMessage();
     }
   }
 
