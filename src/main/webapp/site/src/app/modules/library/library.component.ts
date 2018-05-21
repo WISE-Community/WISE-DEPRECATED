@@ -15,7 +15,8 @@ import { Standard } from "./standard";
 export class LibraryComponent implements OnInit {
   libraryGroups: LibraryGroup[] = [];
   expandedGroups: object = {};
-  implementationModel: string = 'californiaIntegrated';
+  implementationModelValue: string = 'californiaIntegrated'; // default NGSS implementation model to show
+  implementationModelOptions: LibraryGroup[] = [];
   projects: LibraryProject[] = [];
   searchValue: string = '';
   dciArrangementOptions: Standard[] = [];
@@ -41,6 +42,7 @@ export class LibraryComponent implements OnInit {
 
         // populate the flat list of library projects
         for (let group of this.libraryGroups) {
+          this.implementationModelOptions.push(group);
           this.getProjects(group, group.id);
         }
 
@@ -51,8 +53,8 @@ export class LibraryComponent implements OnInit {
 
   /**
    * Add given project or all child projects from a given group to the list of projects
-   * @param item: LibraryProject or LibraryGroup to add
-   * @param implementationModel: String name of implementation model projects belong to
+   * @param item
+   * @param {string} implementationModel
    */
   getProjects(item: any, implementationModel: string): void {
     if (item.type === 'project') {
@@ -114,7 +116,7 @@ export class LibraryComponent implements OnInit {
 
   /**
    * Given new search string, filter for visible projects
-   * @param value: string to search for
+   * @param {string} value
    */
   searchUpdated(value: string): void {
     this.searchValue = value.toLocaleLowerCase();
@@ -123,8 +125,8 @@ export class LibraryComponent implements OnInit {
 
   /**
    * Filter options or search string have changed, so update visible projects
-   * @param value: string array of filter options to look for (optional)
-   * @param context: string indicating type of filter that has changed
+   * @param {string[]} value
+   * @param {string} context
    */
   filterUpdated(value: string[] = [], context: string = ''): void {
     switch(context) {
@@ -162,7 +164,7 @@ export class LibraryComponent implements OnInit {
 
   /**
    * Check and return whether there are any active filters
-   * @return boolean
+   * @return {boolean}
    */
   hasFilters(): boolean {
     return this.dciArrangementValue.length > 0 || this.peValue.length > 0 || this.disciplineValue.length > 0;
@@ -170,9 +172,10 @@ export class LibraryComponent implements OnInit {
 
   /**
    * Remove duplicates from an object array by property
-   * @param array: Array to process
-   * @param prop: String indicating property to check for duplicate
    * TODO: extract to util function
+   * @param {any[]} array
+   * @param {string} prop
+   * @return {any[]}
    */
   removeDuplicates(array: any[], prop: string): any[] {
     return array.filter((obj, pos, arr) => {
@@ -182,9 +185,9 @@ export class LibraryComponent implements OnInit {
 
   /**
    * Sort an object array alphabetically A-Z by property
-   * @param array: array to sort
-   * @param prop: string indicating property to sort on
    * TODO: extract to util function
+   * @param {any[]} array
+   * @param {string} prop
    */
   sortOptions(array: any[], prop: string): void {
     array.sort( (a: Standard, b: Standard) => {
@@ -201,10 +204,10 @@ export class LibraryComponent implements OnInit {
   }
 
   /**
-   * Check and return whether project metadata contains given search string
-   * @param project: LibraryProject to check
-   * @param searchValue: string to match
-   * @return boolean
+   * Check and return whether project metadata contains given search value
+   * @param {LibraryProject} project
+   * @param {string} searchValue
+   * @return {boolean}
    */
   isSearchMatch(project: LibraryProject, searchValue: string): boolean {
     let metadata = project.metadata;
@@ -225,8 +228,8 @@ export class LibraryComponent implements OnInit {
 
   /**
    * Check and return whether project metadata matches any of the filter values
-   * @param project: LibraryProject to check
-   * @return boolean
+   * @param {LibraryProject} project
+   * @return {boolean}
    */
   isFilterMatch(project: LibraryProject): boolean {
     const standardsAddressed = project.metadata.standardsAddressed;
@@ -287,12 +290,20 @@ export class LibraryComponent implements OnInit {
 
   /**
    * Count and return number of visible projects in a LibraryProject array
-   * @param set: array of LibraryProjects to count
-   * @param implementationModel: String of implementation model name to restrict results to
-   * @return number
+   * @param {LibraryProject[]} set
+   * @param {string} implementationModel
+   * @return {number}
    */
   countVisibleProjects(set: LibraryProject[], implementationModel: string): number {
     return set.filter((project) => 'project' && project.visible &&
       project.implementationModel === implementationModel).length;
+  }
+
+  /**
+   * Selected implementation model has changed
+   * @param {string} value
+   */
+  implementationModelUpdated(value: string): void {
+    this.implementationModelValue = value;
   }
 }

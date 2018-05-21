@@ -29,22 +29,26 @@
     </div>
   </div>
   <div *ngIf="searchValue || hasFilters()" class="notice">
-    <p>Projects found: {{ countVisibleProjects(projects, implementationModel) }}.
+    <p>Projects found: {{ countVisibleProjects(projects, implementationModelValue) }}.
       <a href="#" (click)="!!reset()">Reset</a>
     </p>
   </div>
-  <h2 class="accent-1 heading">Suggested Curriculum Sequences</h2>
+  <div fxLayout="row">
+    <app-select-menu [options]="implementationModelOptions" [placeholderText]="'NGSS Implementation Model'"
+       [value]="implementationModelValue" (update)="implementationModelUpdated($event)" [valueProp]="'id'"
+       [viewValueProp]="'notes'"></app-select-menu>
+  </div>
   <ng-container id="libraryGroups" *ngFor="let group of libraryGroups">
-    <mat-accordion class="library__groups" multi="true" *ngIf="implementationModel === group.id">
+    <mat-accordion class="library__groups" multi="true" *ngIf="implementationModelValue === group.id">
       <ng-container *ngFor="let child of group.children; let i = index">
         <mat-expansion-panel class="library-group" *ngIf="child.type === 'group'"
           (opened)="expandedGroups[child.id] = true" (closed)="expandedGroups[child.id] = false"
-          [expanded]="expandedGroups[child.id] && countVisibleProjects(child.children, implementationModel) > 0"
-          [disabled]="countVisibleProjects(child.children, implementationModel) < 1">
+          [expanded]="expandedGroups[child.id] && countVisibleProjects(child.children, implementationModelValue) > 0"
+          [disabled]="countVisibleProjects(child.children, implementationModelValue) < 1">
           <mat-expansion-panel-header class="mat-expansion-panel-header--lg">
             <div fxLayout="column" class="library-group__title">
               <div>{{ child.notes }}</div>
-              <div class="mat-caption">{{ countVisibleProjects(child.children, implementationModel) }} project(s)</div>
+              <div class="mat-caption">{{ countVisibleProjects(child.children, implementationModelValue) }} project(s)</div>
             </div>
             <app-library-group-thumbs [group]="child"
               [ngClass]="{ 'hide': expandedGroups[child.id] }"></app-library-group-thumbs>
