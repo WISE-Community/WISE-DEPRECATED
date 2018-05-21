@@ -11,6 +11,9 @@ class ToolbarController {
       }
       this.globalMessage = params.globalMessage;
     });
+    this.$rootScope.$on('setIsJSONValid', (event, params) => {
+      this.isJSONValid = params.isJSONValid;
+    });
   }
 
   toggleMenu() {
@@ -39,6 +42,8 @@ const Toolbar = {
         <span class="toolbar__title" ng-if="!$ctrl.showStepTools">{{ $ctrl.viewName }}</span>
         <step-tools ng-if="$ctrl.showStepTools" show-position="$ctrl.numberProject"></step-tools>
         <div flex></div>
+        <span ng-if="$ctrl.isJSONValid === true" style="color: green; font-size: 14px">{{ 'jsonValid' | translate }}</span>
+        <span ng-if="$ctrl.isJSONValid === false" style="color: red; font-size: 14px">{{ 'jsonInvalid' | translate }}</span>
         <div style="width: 40px; height: 40px;">
           <md-progress-circular ng-if="$ctrl.isProgressIndicatorVisible"
               md-mode="indeterminate"

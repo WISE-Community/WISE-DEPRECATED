@@ -1135,17 +1135,86 @@ class ProjectController {
    * The show JSON button was clicked
    */
   showJSONClicked() {
-    this.showJSONAuthoring = !this.showJSONAuthoring;
     if (this.showJSONAuthoring) {
+      // we were showing the JSON view and the author now wants to hide it
+      if (this.isJSONValid()) {
+        this.toggleJSONAuthoringView();
+        this.hideValidJSONMessage();
+      } else {
+        let answer = confirm(this.$translate('projectJSONInvalidErrorMessage'));
+        if (answer) {
+          // the author wants to revert back to the last valid JSON
+          this.toggleJSONAuthoringView();
+          this.hideValidJSONMessage();
+        }
+      }
+    } else {
+      // we were not showing the JSON view and now the author wants to show it
+      this.toggleJSONAuthoringView();
       this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
+      this.showValidJSONMessage();
+    }
+  }
+
+  isJSONValid() {
+    try {
+      angular.fromJson(this.projectJSONString);
+      return true;
+    } catch(e) {
+      return false;
+    }
+  }
+
+  toggleJSONAuthoringView() {
+    this.showJSONAuthoring = !this.showJSONAuthoring;
+  }
+
+  showValidJSONMessage() {
+    this.setIsJSONValidMessage(true);
+  }
+
+  showInvalidJSONMessage() {
+    this.setIsJSONValidMessage(false);
+  }
+
+  hideValidJSONMessage() {
+    this.setIsJSONValidMessage(null);
+  }
+
+  /**
+   * Show the message in the toolbar that says "JSON Valid" or "JSON Invalid".
+   * @param isJSONValid
+   * true if we want to show "JSON Valid"
+   * false if we want to show "JSON Invalid"
+   * null if we don't want to show anything
+   */
+  setIsJSONValidMessage(isJSONValid) {
+    this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: isJSONValid });
+  }
+
+  /**
+   * Save the project JSON to the server.
+   * @return {boolean}
+   * True if the JSON is valid.
+   * False if the JSON is invalid.
+   */
+  autoSaveProjectJSONString() {
+    try {
+      this.saveProjectJSON(this.projectJSONString);
+      this.showValidJSONMessage();
+      return true;
+    } catch(e) {
+      this.showInvalidJSONMessage();
+      return false;
     }
   }
 
   /**
    * Save the project JSON string to the server
+   * @param projectJSONString
    */
-  saveProjectJSONString() {
-    let project = angular.fromJson(this.projectJSONString);
+  saveProjectJSON(projectJSONString) {
+    let project = angular.fromJson(projectJSONString);
     this.ProjectService.setProject(project);
     let scriptFilename = this.ProjectService.getProjectScriptFilename();
     if (scriptFilename != null) {
@@ -1299,6 +1368,9 @@ class ProjectController {
 
       // if the advanced view is shown, do not show the project view
       this.projectMode = !this.advancedMode;
+    }
+    if (!this.showJSONAuthoring) {
+      this.hideValidJSONMessage();
     }
   }
 
