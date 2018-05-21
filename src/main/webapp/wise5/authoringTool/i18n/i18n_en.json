@@ -226,7 +226,7 @@
     "projectCreatedOn": "Project created on ",
     "projectHome": "Project Home",
     "projectJSON": "Project JSON",
-    "projectJSONInvalidErrorMessage": "The project JSON is invalid. Invalid JSON will not be saved.\nClick \"OK\" to revert back to the last valid JSON.\nClick \"Cancel\" to keep the invalid JSON open so you can fix it.",
+    "jsonInvalidErrorMessage": "The JSON is invalid. Invalid JSON will not be saved.\nClick \"OK\" to revert back to the last valid JSON.\nClick \"Cancel\" to keep the invalid JSON open so you can fix it.",
     "projectsList": "Projects List",
     "projectStyles": "Project Styles",
     "projectStructure": "Project Structure",

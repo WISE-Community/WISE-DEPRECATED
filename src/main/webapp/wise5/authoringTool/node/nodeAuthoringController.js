@@ -667,14 +667,14 @@ var NodeAuthoringController = function () {
     value: function showSaveErrorAdvancedAuthoring() {
       alert(this.$translate('saveErrorAdvancedAuthoring'));
     }
-  }, {
-    key: 'cancel',
-
 
     /**
      * The author has clicked the cancel button which will revert all
      * the recent changes since they opened the node.
      */
+
+  }, {
+    key: 'cancel',
     value: function cancel() {
       // check if the user has made any changes
       if (!angular.equals(this.node, this.originalNodeCopy)) {
@@ -1514,8 +1514,6 @@ var NodeAuthoringController = function () {
         this.showComponents = true;
         this.showJSON = false;
       } else if (view == 'generalAdvanced') {
-        // save and parse the JSON if it has changed
-        this.saveAndParseJSON();
         // toggle the edit transitions view and hide all the other views
         this.showCreateComponent = false;
         this.showGeneralAdvanced = !this.showGeneralAdvanced;
@@ -1529,9 +1527,8 @@ var NodeAuthoringController = function () {
         this.showStepButtons = false;
         this.showComponents = false;
         this.showJSON = false;
+        this.UtilService.hideJSONValidMessage();
       } else if (view == 'editTransitions') {
-        // save and parse the JSON if it has changed
-        this.saveAndParseJSON();
         // toggle the edit transitions view and hide all the other views
         this.showCreateComponent = false;
         this.showGeneralAdvanced = false;
@@ -1545,9 +1542,8 @@ var NodeAuthoringController = function () {
         this.showStepButtons = false;
         this.showComponents = false;
         this.showJSON = false;
+        this.UtilService.hideJSONValidMessage();
       } else if (view == 'editConstraints') {
-        // save and parse the JSON if it has changed
-        this.saveAndParseJSON();
         // toggle the edit constraints view and hide all the other views
         this.showCreateComponent = false;
         this.showGeneralAdvanced = false;
@@ -1561,6 +1557,7 @@ var NodeAuthoringController = function () {
         this.showStepButtons = false;
         this.showComponents = false;
         this.showJSON = false;
+        this.UtilService.hideJSONValidMessage();
       } else if (view == 'editButtons') {
         // toggle the edit buttons view and hide all the other views
         this.showCreateComponent = false;
@@ -1589,8 +1586,6 @@ var NodeAuthoringController = function () {
         this.showComponents = false;
         this.showJSON = false;
       } else if (view == 'createBranch') {
-        // save and parse the JSON if it has changed
-        this.saveAndParseJSON();
         // toggle the edit buttons view and hide all the other views
         this.showCreateComponent = false;
         this.showGeneralAdvanced = false;
@@ -1604,6 +1599,7 @@ var NodeAuthoringController = function () {
         this.showStepButtons = false;
         this.showComponents = false;
         this.showJSON = false;
+        this.UtilService.hideJSONValidMessage();
       } else if (view == 'previousNode') {
         // hide all the other views
         this.showCreateComponent = false;
@@ -1703,8 +1699,6 @@ var NodeAuthoringController = function () {
         this.showComponents = true;
         this.showJSON = false;
       } else if (view == 'showJSON') {
-        // save and parse the JSON if it has changed
-        this.saveAndParseJSON();
         // toggle the import view and hide all the other views
         this.showCreateComponent = false;
         this.showGeneralAdvanced = false;
@@ -1717,8 +1711,22 @@ var NodeAuthoringController = function () {
         this.showImportView = false;
         this.showStepButtons = false;
         this.showComponents = false;
-        this.authoringNodeContentJSONString = angular.toJson(this.node, 4);
-        this.showJSON = !this.showJSON;
+        if (this.showJSON) {
+          // we were showing the JSON view and the author now wants to hide it
+          if (!this.isJSONValid()) {
+            var answer = confirm(this.$translate('jsonInvalidErrorMessage'));
+            if (answer) {
+              // the author wants to revert back to the last valid JSON
+              this.toggleJSONAuthoringView();
+              this.UtilService.hideJSONValidMessage();
+            }
+          }
+        } else {
+          // we were not showing the JSON view and now the author wants to show it
+          this.toggleJSONAuthoringView();
+          this.authoringNodeContentJSONString = angular.toJson(this.node, 4);
+          this.UtilService.showJSONValidMessage();
+        }
       } else {
         // hide all the views
         this.showCreateComponent = false;
@@ -1734,6 +1742,21 @@ var NodeAuthoringController = function () {
         this.showComponents = true;
         this.showJSON = false;
       }
+    }
+  }, {
+    key: 'isJSONValid',
+    value: function isJSONValid() {
+      try {
+        angular.fromJson(this.authoringNodeContentJSONString);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+  }, {
+    key: 'toggleJSONAuthoringView',
+    value: function toggleJSONAuthoringView() {
+      this.showJSON = !this.showJSON;
     }
 
     /**
@@ -3773,13 +3796,7 @@ var NodeAuthoringController = function () {
     key: 'backButtonClicked',
     value: function backButtonClicked() {
       if (this.showImportView || this.showRubric || this.showAdvanced) {
-        if (this.showJSON) {
-          /*
-           * we are showing the JSON so we will check if it has changed
-           * and then save and parse the JSON
-           */
-          this.saveAndParseJSON();
-        }
+        this.UtilService.hideJSONValidMessage();
 
         // we are in the import view so we will go back to the node view
         this.nodeAuthoringViewButtonClicked();
@@ -3940,46 +3957,40 @@ var NodeAuthoringController = function () {
     }
 
     /**
-     * Check if the JSON has changed and then save and parse the JSON
+     * Save the project JSON to the server if the JSON is valid.
      */
 
   }, {
-    key: 'saveAndParseJSON',
-    value: function saveAndParseJSON() {
+    key: 'autoSaveJSON',
+    value: function autoSaveJSON() {
       var _this9 = this;
 
-      if (this.showJSON) {
-        /*
-         * We are showing the JSON so we will now check to see if the
-         * JSON changed. If the JSON changed we will save the node with
-         * new JSON.
-         */
-        if (this.authoringNodeContentJSONString != angular.toJson(this.node, 4)) {
-          // the JSON has been changed so we will update the node
+      try {
+        // create the updated node object
+        var updatedNode = angular.fromJson(this.authoringNodeContentJSONString);
 
-          // create the updated node object
-          var updatedNode = angular.fromJson(this.authoringNodeContentJSONString);
+        // set the updated node into the project
+        this.ProjectService.setNode(this.nodeId, updatedNode);
 
-          // set the updated node into the project
-          this.ProjectService.setNode(this.nodeId, updatedNode);
+        // set the updated node into this controller
+        this.node = updatedNode;
 
-          // set the updated node into this controller
-          this.node = updatedNode;
+        // set the components into this controller
+        this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
 
-          // set the components into this controller
-          this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
+        // set the current node
+        this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
 
-          // set the current node
-          this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
+        // update the branch authoring fields into the controller
+        this.populateBranchAuthoring();
 
-          // update the branch authoring fields into the controller
-          this.populateBranchAuthoring();
-
-          // save the project
-          this.authoringViewNodeChanged().then(function () {
-            _this9.$rootScope.$broadcast('parseProject');
-          });
-        }
+        // save the project
+        this.authoringViewNodeChanged().then(function () {
+          _this9.$rootScope.$broadcast('parseProject');
+        });
+        this.UtilService.showJSONValidMessage();
+      } catch (e) {
+        this.UtilService.showJSONInvalidMessage();
       }
     }
 

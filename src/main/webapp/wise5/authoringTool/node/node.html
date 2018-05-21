@@ -795,7 +795,9 @@
       <h6 ng-if='!projectController.isGroupNode(nodeAuthoringController.nodeId)'>{{ 'editStepJSON' | translate }}</h6>
       <md-input-container style='width: 100%;'>
         <textarea ng-model='nodeAuthoringController.authoringNodeContentJSONString'
-              style='width: 90%; border: 1px solid black;'></textarea>
+            ng-change='nodeAuthoringController.autoSaveJSON()'
+            ng-model-options='{ debounce: 1000 }'
+            style='width: 90%; border: 1px solid black;'></textarea>
       </md-input-container>
     </div>
   </div>
