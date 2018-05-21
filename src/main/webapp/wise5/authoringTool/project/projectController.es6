@@ -1139,20 +1139,20 @@ class ProjectController {
       // we were showing the JSON view and the author now wants to hide it
       if (this.isJSONValid()) {
         this.toggleJSONAuthoringView();
-        this.hideJSONValidMessage();
+        this.UtilService.hideJSONValidMessage();
       } else {
-        let answer = confirm(this.$translate('projectJSONInvalidErrorMessage'));
+        let answer = confirm(this.$translate('jsonInvalidErrorMessage'));
         if (answer) {
           // the author wants to revert back to the last valid JSON
           this.toggleJSONAuthoringView();
-          this.hideJSONValidMessage();
+          this.UtilService.hideJSONValidMessage();
         }
       }
     } else {
       // we were not showing the JSON view and now the author wants to show it
       this.toggleJSONAuthoringView();
       this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
-      this.showJSONValidMessage();
+      this.UtilService.showJSONValidMessage();
     }
   }
 
@@ -1169,29 +1169,6 @@ class ProjectController {
     this.showJSONAuthoring = !this.showJSONAuthoring;
   }
 
-  showJSONValidMessage() {
-    this.setIsJSONValidMessage(true);
-  }
-
-  showJSONInvalidMessage() {
-    this.setIsJSONValidMessage(false);
-  }
-
-  hideJSONValidMessage() {
-    this.setIsJSONValidMessage(null);
-  }
-
-  /**
-   * Show the message in the toolbar that says "JSON Valid" or "JSON Invalid".
-   * @param isJSONValid
-   * true if we want to show "JSON Valid"
-   * false if we want to show "JSON Invalid"
-   * null if we don't want to show anything
-   */
-  setIsJSONValidMessage(isJSONValid) {
-    this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: isJSONValid });
-  }
-
   /**
    * Save the project JSON to the server.
    * @return {boolean}
@@ -1201,10 +1178,10 @@ class ProjectController {
   autoSaveProjectJSONString() {
     try {
       this.saveProjectJSON(this.projectJSONString);
-      this.showJSONValidMessage();
+      this.UtilService.showJSONValidMessage();
       return true;
     } catch(e) {
-      this.showJSONInvalidMessage();
+      this.UtilService.showJSONInvalidMessage();
       return false;
     }
   }
@@ -1370,7 +1347,7 @@ class ProjectController {
       this.projectMode = !this.advancedMode;
     }
     if (!this.showJSONAuthoring) {
-      this.hideJSONValidMessage();
+      this.UtilService.hideJSONValidMessage();
     }
   }
 
