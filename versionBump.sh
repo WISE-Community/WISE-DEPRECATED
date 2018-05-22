@@ -25,4 +25,16 @@ sed -i.bak "1,/\"version\": \".*\"/{s/\"version\": \".*\"/\"version\": \"${NEW_V
 # Note: this assumes that WISE version is the first <version>...</version> tag in pom.xml
 sed -i.bak "1,/<version>.*<\/version>/{s/<version>.*<\/version>/<version>${NEW_VERSION_NUMBER}<\/version>/;}" pom.xml && rm pom.xml.bak
 
+# Note: this assumes that WISE version is in the ?v=versionNumber in jsp
+sed -i.bak "1,/config\.js\?v\=.*\""/{s/config\.js\?v\=.*\"/config\.js\?v\=${NEW_VERSION_NUMBER}\""/;}" src/main/webapp/portal/author.jsp
+
+# Note: this assumes that WISE version is in the ?v=versionNumber in jsp
+sed -i.bak "1,/config\.js\?v\=.*\""/{s/config\.js\?v\=.*\"/config\.js\?v\=${NEW_VERSION_NUMBER}\""/;}" src/main/webapp/portal/classroomMonitor.jsp
+
+# Note: this assumes that WISE version is in the ?v=versionNumber in jsp
+sed -i.bak "1,/config\.js\?v\=.*\""/{s/config\.js\?v\=.*\"/config\.js\?v\=${NEW_VERSION_NUMBER}\""/;}" src/main/webapp/portal/student.jsp
+
+# Note: this assumes that WISE version is in the ?v=versionNumber in config.js
+sed -i.bak "1,/\'\?v\=.*\'"/{s/\'\?v\=.*\'/\'\?v\=${NEW_VERSION_NUMBER}\'"/;}" src/main/webapp/wise5/config.js
+
 echo "Bumped version number to ${NEW_VERSION_NUMBER}.\nYou might want to commit changes now:\ngit commit -a -m \"Bumped version number to ${NEW_VERSION_NUMBER}\""
