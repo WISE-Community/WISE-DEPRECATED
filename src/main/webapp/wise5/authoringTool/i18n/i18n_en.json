@@ -243,6 +243,7 @@
     "requireTextOnEveryNote": "Require students to write text on every note",
     "requiredNumberOfWords": "Required Number of Words",
     "requiredSubmitCount": "Required Submit Count",
+    "saveErrorAdvancedAuthoring": "Error saving advanced authoring, possibly due to malformed JSON content. Check that your JSON is valid. Your changes have not been saved.",
     "saving": "Saving...",
     "scoresParens": "Score(s)",
     "scriptFilename": "Script Filename",

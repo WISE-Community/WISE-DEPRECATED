@@ -178,7 +178,8 @@
           <md-input-container style='width: 100%;'>
             <textarea ng-model='discussionController.authoringComponentContentJSONString'
                 style='width: 90%; border: 1px solid black;'
-                ng-change='discussionController.authoringJSONChanged()'>
+                ng-change='discussionController.authoringJSONChanged()'
+                ng-model-options='{ debounce: 1000 }'>
             </textarea>
           </md-input-container>
         </div>

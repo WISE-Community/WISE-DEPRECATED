@@ -1513,6 +1513,7 @@ var NodeAuthoringController = function () {
         this.showStepButtons = true;
         this.showComponents = true;
         this.showJSON = false;
+        this.UtilService.hideJSONValidMessage();
       } else if (view == 'generalAdvanced') {
         // toggle the edit transitions view and hide all the other views
         this.showCreateComponent = false;
@@ -1571,6 +1572,7 @@ var NodeAuthoringController = function () {
         this.showImportView = false;
         this.showStepButtons = false;
         this.showJSON = false;
+        this.UtilService.hideJSONValidMessage();
       } else if (view == 'editRubric') {
         // toggle the edit buttons view and hide all the other views
         this.showCreateComponent = false;
@@ -1585,6 +1587,7 @@ var NodeAuthoringController = function () {
         this.showStepButtons = false;
         this.showComponents = false;
         this.showJSON = false;
+        this.UtilService.hideJSONValidMessage();
       } else if (view == 'createBranch') {
         // toggle the edit buttons view and hide all the other views
         this.showCreateComponent = false;
@@ -1612,6 +1615,7 @@ var NodeAuthoringController = function () {
         this.showAdvanced = false;
         this.showImportView = false;
         this.showJSON = false;
+        this.UtilService.hideJSONValidMessage();
         var prevNodeId = this.ProjectService.getPreviousNodeId(this.nodeId);
         if (prevNodeId != null) {
           // there is a previous node id so we will go to it
@@ -1633,6 +1637,7 @@ var NodeAuthoringController = function () {
         this.showAdvanced = false;
         this.showImportView = false;
         this.showJSON = false;
+        this.UtilService.hideJSONValidMessage();
         var nextNodeId = this.ProjectService.getNextNodeId(this.nodeId);
         if (nextNodeId != null) {
           // there is a next node id so we will go to it
@@ -1656,6 +1661,7 @@ var NodeAuthoringController = function () {
         this.showStepButtons = false;
         this.showComponents = false;
         this.showJSON = false;
+        this.UtilService.hideJSONValidMessage();
       } else if (view == 'copy') {
         // toggle the copy view and hide all the other views
         this.showCreateComponent = false;
@@ -1670,6 +1676,7 @@ var NodeAuthoringController = function () {
         this.showStepButtons = true;
         this.showComponents = true;
         this.showJSON = false;
+        this.UtilService.hideJSONValidMessage();
       } else if (view == 'move') {
         // toggle the move view and hide all the other views
         this.showCreateComponent = false;
@@ -1684,6 +1691,7 @@ var NodeAuthoringController = function () {
         this.showStepButtons = true;
         this.showComponents = true;
         this.showJSON = false;
+        this.UtilService.hideJSONValidMessage();
       } else if (view == 'import') {
         // toggle the import view and hide all the other views
         this.showCreateComponent = false;
@@ -1698,6 +1706,7 @@ var NodeAuthoringController = function () {
         this.showStepButtons = false;
         this.showComponents = true;
         this.showJSON = false;
+        this.UtilService.hideJSONValidMessage();
       } else if (view == 'showJSON') {
         // toggle the import view and hide all the other views
         this.showCreateComponent = false;
