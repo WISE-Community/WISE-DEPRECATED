@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2018 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -43,7 +44,8 @@ import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
 
 /**
- * Controller for displaying user information
+ * Controller for displaying user information to admin users
+ * and student information to their teachers
  * @author Sally Ahn
  */
 @Controller
@@ -61,34 +63,29 @@ public class UserInfoController {
   protected final static String USER_INFO_MAP = "userInfoMap";
 
   @RequestMapping(value = {"/student/account/info", "/teacher/account/info"})
-  protected ModelAndView handleGetUserAccountInfo(
-      @RequestParam("userName") String userName) throws Exception {
+  protected String getUserAccountInfo(
+      @RequestParam("userName") String userName,
+      ModelMap modelMap) throws Exception {
     User signedInUser = ControllerUtil.getSignedInUser();
-    User infoUser = this.userService.retrieveUserByUsername(userName);
+    User user = this.userService.retrieveUserByUsername(userName);
 
     if (signedInUser.isAdmin() ||
-      this.studentService.isStudentAssociatedWithTeacher(infoUser, signedInUser)) {
-      MutableUserDetails userDetails = (MutableUserDetails) infoUser.getUserDetails();
-      ModelAndView modelAndView = new ModelAndView();
-
+        this.studentService.isStudentAssociatedWithTeacher(user, signedInUser)) {
+      MutableUserDetails userDetails = (MutableUserDetails) user.getUserDetails();
       HashMap<String, Object> userInfoMap = userDetails.getInfo();
-      userInfoMap.put("ID", infoUser.getId());
-      modelAndView.addObject(USER_INFO_MAP, userInfoMap);
-
-      if (infoUser.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)) {
-        modelAndView.addObject("isStudent", true);
-        List<Run> runList = runService.getRunList(infoUser);
-        modelAndView.addObject("runList", runList);
-        modelAndView.setViewName("student/account/info");
+      userInfoMap.put("ID", user.getId());
+      modelMap.put(USER_INFO_MAP, userInfoMap);
+      if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)) {
+        modelMap.put("isStudent", true);
+        modelMap.put("runList", runService.getRunList(user));
+        return "student/account/info";
       } else {
-        modelAndView.addObject("isStudent", false);
-        List<Run> runListByOwner = runService.getRunListByOwner(infoUser);
-        modelAndView.addObject("runList", runListByOwner);
-        modelAndView.setViewName("teacher/account/info");
+        modelMap.put("isStudent", false);
+        modelMap.put("runList", runService.getRunListByOwner(user));
+        return "teacher/account/info";
       }
-      return modelAndView;
     } else {
-      return new ModelAndView("errors/accessdenied");
+      return "errors/accessdenied";
     }
   }
 }
