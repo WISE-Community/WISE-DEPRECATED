@@ -215,11 +215,15 @@ export class LibraryComponent implements OnInit {
   isSearchMatch(project: LibraryProject, searchValue: string): boolean {
     let metadata = project.metadata;
     return Object.keys(metadata).some(prop => {
-      // only check for match in specific metadata fields; TODO: include standards?
-      if (prop != 'title' && prop != 'summary' && prop != 'keywords' && prop != 'features') {
+      // only check for match in specific metadata fields
+      if (prop != 'title' && prop != 'summary' && prop != 'keywords' && prop != 'features' &&
+        prop != 'standardsAddressed') {
         return false;
       } else {
         let value = metadata[prop];
+        if (prop === 'standardsAddressed') {
+          value = JSON.stringify(value);
+        }
         if (typeof value === 'undefined' || value === null) {
           return false;
         } else {
