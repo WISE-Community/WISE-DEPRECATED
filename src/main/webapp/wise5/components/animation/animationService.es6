@@ -1,37 +1,17 @@
-import NodeService from '../../services/nodeService';
+import ComponentService from '../componentService';
 
-class AnimationService extends NodeService {
-  constructor($filter,
-      StudentDataService,
-      UtilService) {
-    super();
-    this.$filter = $filter;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-    this.$translate = this.$filter('translate');
+class AnimationService extends ComponentService {
+  constructor($filter, StudentDataService, UtilService) {
+    super($filter, StudentDataService, UtilService);
   }
 
-  /**
-   * Get the component type label
-   * example
-   * "Animation"
-   */
   getComponentTypeLabel() {
     return this.$translate('animation.componentTypeLabel');
   }
 
-  /**
-   * Create a Animation component object
-   * @returns a new Animation component object
-   */
   createComponent() {
-    var component = {};
-    component.id = this.UtilService.generateKey();
+    const component = super.createComponent();
     component.type = 'Animation';
-    component.prompt = '';
-    component.showSaveButton = false;
-    component.showSubmitButton = false;
-    component.isStudentAttachmentEnabled = false;
     component.widthInPixels = 600;
     component.widthInUnits = 60;
     component.heightInPixels = 200;
@@ -43,62 +23,6 @@ class AnimationService extends NodeService {
     return component;
   }
 
-  /**
-   * Copies a Animation component object
-   * @returns a copied Animation component object
-   */
-  copyComponent(componentToCopy) {
-    var component = this.createComponent();
-    component.prompt = componentToCopy.prompt;
-    component.showSaveButton = componentToCopy.showSaveButton;
-    component.showSubmitButton = componentToCopy.showSubmitButton;
-    component.starterSentence = componentToCopy.starterSentence;
-    component.isStudentAttachmentEnabled = componentToCopy.isStudentAttachmentEnabled;
-    return component;
-  }
-  /**
-   * Populate a component state with the data from another component state
-   * @param componentStateFromOtherComponent the component state to obtain the data from
-   * @return a new component state that contains the student data from the other
-   * component state
-   */
-  populateComponentState(componentStateFromOtherComponent) {
-    var componentState = null;
-
-    if (componentStateFromOtherComponent != null) {
-
-      // create an empty component state
-      componentState = this.StudentDataService.createComponentState();
-
-      // get the component type of the other component state
-      var otherComponentType = componentStateFromOtherComponent.componentType;
-
-      if (otherComponentType === 'Animation') {
-        // the other component is an Animation component
-
-        // get the student data from the other component state
-        var studentData = componentStateFromOtherComponent.studentData;
-
-        // create a copy of the student data
-        var studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
-
-        // set the student data into the new component state
-        componentState.studentData = studentDataCopy;
-      }
-    }
-
-    return componentState;
-  };
-
-  /**
-   * Check if the component was completed
-   * @param component the component object
-   * @param componentStates the component states for the specific component
-   * @param componentEvents the events for the specific component
-   * @param nodeEvents the events for the parent node of the component
-   * @param node parent node of the component
-   * @returns whether the component was completed
-   */
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     let result = false;
 
@@ -146,22 +70,6 @@ class AnimationService extends NodeService {
     return result;
   };
 
-  /**
-   * Whether this component generates student work
-   * @param component (optional) the component object. if the component object
-   * is not provided, we will use the default value of whether the
-   * component type usually has work.
-   * @return whether this component generates student work
-   */
-  componentHasWork(component) {
-    return true;
-  }
-
-  /**
-   * Get the human readable student data string
-   * @param componentState the component state
-   * @return a human readable student data string
-   */
   getStudentDataString(componentState) {
 
     var studentDataString = '';
@@ -178,42 +86,13 @@ class AnimationService extends NodeService {
     return studentDataString;
   }
 
-  /**
-   * Whether this component uses a save button
-   * @return whether this component uses a save button
-   */
-  componentUsesSaveButton() {
-    return true;
-  }
-
-  /**
-   * Whether this component uses a submit button
-   * @return whether this component uses a submit button
-   */
-  componentUsesSubmitButton() {
-    return true;
-  }
-
-  /**
-   * Check if the component state has student work. Sometimes a component
-   * state may be created if the student visits a component but doesn't
-   * actually perform any work. This is where we will check if the student
-   * actually performed any work.
-   * @param componentState the component state object
-   * @param componentContent the component content
-   * @return whether the component state has any work
-   */
   componentStateHasStudentWork(componentState, componentContent) {
-
     if (componentState != null) {
-
       let studentData = componentState.studentData;
-
       if (studentData != null) {
         return true;
       }
     }
-
     return false;
   }
 }

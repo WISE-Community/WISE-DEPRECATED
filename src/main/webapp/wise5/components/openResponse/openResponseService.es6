@@ -17,13 +17,6 @@ class OpenResponseService extends ComponentService {
     return component;
   }
 
-  copyComponent(componentToCopy) {
-    const component = super.copyComponent(componentToCopy);
-    component.starterSentence = componentToCopy.starterSentence;
-    component.isStudentAttachmentEnabled = componentToCopy.isStudentAttachmentEnabled;
-    return component;
-  }
-
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     let result = false;
 

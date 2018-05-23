@@ -31,18 +31,6 @@ class ComponentService {
   }
 
   /**
-   * Copies a component object
-   * @returns {object} a copied component object
-   */
-  copyComponent(componentToCopy) {
-    const component = this.createComponent();
-    component.prompt = componentToCopy.prompt;
-    component.showSaveButton = componentToCopy.showSaveButton;
-    component.showSubmitButton = componentToCopy.showSubmitButton;
-    return component;
-  }
-
-  /**
    * Populate a component state with the data from another component state
    * @param {object} componentStateFromOtherComponent the component state to obtain the data from
    * @return {object} a new component state that contains the student data from the other

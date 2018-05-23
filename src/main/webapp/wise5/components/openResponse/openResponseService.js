@@ -44,14 +44,6 @@ var OpenResponseService = function (_ComponentService) {
       return component;
     }
   }, {
-    key: 'copyComponent',
-    value: function copyComponent(componentToCopy) {
-      var component = _get(OpenResponseService.prototype.__proto__ || Object.getPrototypeOf(OpenResponseService.prototype), 'copyComponent', this).call(this, componentToCopy);
-      component.starterSentence = componentToCopy.starterSentence;
-      component.isStudentAttachmentEnabled = componentToCopy.isStudentAttachmentEnabled;
-      return component;
-    }
-  }, {
     key: 'isCompleted',
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
       var result = false;
