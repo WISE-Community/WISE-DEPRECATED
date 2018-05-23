@@ -2,7 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HeaderAccountMenuComponent } from './header-account-menu.component';
 import { MatMenuModule, MatIconModule, MatDividerModule } from "@angular/material";
-import {User} from "../../../domain/user";
+import { User } from "../../../domain/user";
+import { ConfigService } from "../../../services/config.service";
+import { HttpClient, HttpHandler } from "@angular/common/http";
+import { UserService } from "../../../services/user.service";
 
 describe('HeaderAccountMenuComponent', () => {
   let component: HeaderAccountMenuComponent;
@@ -11,7 +14,8 @@ describe('HeaderAccountMenuComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ HeaderAccountMenuComponent ],
-      imports: [ MatDividerModule, MatMenuModule, MatIconModule ]
+      imports: [ MatDividerModule, MatMenuModule, MatIconModule ],
+      providers: [ ConfigService, HttpClient, HttpHandler, UserService ]
     })
     .compileComponents();
   }));

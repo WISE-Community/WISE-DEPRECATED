@@ -1,28 +1,33 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, finalize, tap, map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-
 import { User } from '../domain/user';
 
 @Injectable()
 export class UserService {
 
   private userUrl = 'api/user/user';
-  private user: Observable<User>;
+  private user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   private authenticated = false;
+  private logInURL = '/wise/j_acegi_security_check';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+  }
 
   getUser(): Observable<User> {
-    return this.user
-      ? this.user
-      : this.http.get<User>(this.userUrl)
-        .pipe(
-          tap(user => this.log(`fetched user`)),
-          catchError(this.handleError('getUser', new User()))
-        );
+    return this.user$;
+  }
+
+  retrieveUser(): Observable<User> {
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    return this.http.get<User>(this.userUrl, { headers: headers })
+      .pipe(
+        tap((user) => {
+          this.user$.next(user);
+        }),
+        catchError(this.handleError('getUser', new User())));
   }
 
   /**
@@ -50,7 +55,7 @@ export class UserService {
       'Content-Type': 'application/x-www-form-urlencoded'
     };
     let formData = "username=" + credentials.username + "&password=" + credentials.password;
-    this.http.post('/wise/j_acegi_security_check',
+    this.http.post(this.logInURL,
         formData,
         { headers: headers, responseType: "text" })
         .subscribe(response => {
@@ -59,7 +64,9 @@ export class UserService {
           } else {
             this.authenticated = false;
           }
-          return callback && callback();
+          this.retrieveUser().subscribe((user) => {
+            return callback && callback();
+          });
         });
   }
 

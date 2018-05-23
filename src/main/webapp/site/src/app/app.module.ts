@@ -1,17 +1,5 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
-
-import { HeaderModule } from './modules/header/header.module';
-import { HomeModule } from "./home/home.module";
-import { FooterModule } from './modules/footer/footer.module';
-import { StudentModule } from './student/student.module';
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
-import { StudentService } from './student/student.service';
-import { UserService } from './services/user.service';
 
 @NgModule({
   declarations: [
@@ -29,8 +17,23 @@ import { UserService } from './services/user.service';
     HttpClientModule
   ],
   providers: [
+    ConfigService,
     StudentService,
-    UserService
+    UserService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (configService: ConfigService, userService: UserService) =>
+        function() {
+          return userService.retrieveUser().subscribe((user) => {
+            configService.subscribeToGetUser();
+          });
+        },
+      deps: [
+        ConfigService,
+        UserService
+      ],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

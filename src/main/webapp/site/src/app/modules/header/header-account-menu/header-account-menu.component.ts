@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnChanges, OnInit, Input } from '@angular/core';
+import { ConfigService } from "../../../services/config.service";
 import { User } from "../../../domain/user";
 
 @Component({
@@ -11,9 +12,31 @@ export class HeaderAccountMenuComponent implements OnInit {
   @Input()
   user: User;
 
-  constructor() { }
+  firstName: string = "";
+  lastName: string = "";
+  role: string = "";
+  logOutURL: string;
 
-  ngOnInit() {
+  constructor(private configService: ConfigService) {
+    this.configService = configService;
   }
 
+  ngOnInit() {
+    this.configService.getConfig().subscribe(config => {
+      if (config != null) {
+        this.logOutURL = config.logOutURL;
+      }
+    });
+  }
+
+  ngOnChanges(changes) {
+    if (changes.user) {
+      let user = changes.user.currentValue;
+      if (user) {
+        this.firstName = user.firstName;
+        this.lastName = user.lastName;
+        this.role = user.role;
+      }
+    }
+  }
 }
