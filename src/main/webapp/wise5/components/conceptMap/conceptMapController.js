@@ -712,18 +712,22 @@ var ConceptMapController = function () {
           }
         }
       } else {
-        /*
-         * inject the asset path so that the file name is changed to
-         * a relative path
-         * e.g.
-         * 'Sun.png'
-         * will be changed to
-         * '/wise/curriculum/108/assets/Sun.png'
-         */
-        componentState = this.ProjectService.injectAssetPaths(componentState);
+        if (componentState == null) {
+          this.populateStarterConceptMap();
+        } else {
+          /*
+           * inject the asset path so that the file name is changed to
+           * a relative path
+           * e.g.
+           * 'Sun.png'
+           * will be changed to
+           * '/wise/curriculum/108/assets/Sun.png'
+           */
+          componentState = this.ProjectService.injectAssetPaths(componentState);
 
-        // populate the student work into this component
-        this.setStudentWork(componentState);
+          // populate the student work into this component
+          this.setStudentWork(componentState);
+        }
       }
 
       // check if the student has used up all of their submits
@@ -4689,6 +4693,13 @@ var ConceptMapController = function () {
          * content
          */
         this.authoringViewComponentChanged();
+      }
+    }
+  }, {
+    key: 'populateStarterConceptMap',
+    value: function populateStarterConceptMap() {
+      if (this.componentContent.starterConceptMap != null) {
+        this.populateConceptMapData(this.componentContent.starterConceptMap);
       }
     }
 
