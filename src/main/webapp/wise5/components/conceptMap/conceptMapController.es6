@@ -2582,9 +2582,6 @@ class ConceptMapController {
       link.setOriginalId(originalId);
     }
 
-    // hide the link type chooser
-    this.hideLinkTypeChooser();
-
     // make the link not highlighted
     this.clearHighlightedElement();
 
