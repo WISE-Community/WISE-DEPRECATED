@@ -33,10 +33,15 @@
       <a href="#" (click)="!!reset()">Reset</a>
     </p>
   </div>
-  <div fxLayout="row">
-    <app-select-menu [options]="implementationModelOptions" [placeholderText]="'NGSS Implementation Model'"
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <app-select-menu [options]="implementationModelOptions" [placeholderText]="'CA NGSS Implementation Model'"
        [value]="implementationModelValue" (update)="implementationModelUpdated($event)" [valueProp]="'id'"
        [viewValueProp]="'notes'"></app-select-menu>
+    <button mat-button mat-icon-button color="primary" aria-label="Implementation model select explanation"
+      matTooltip="California has defined two NGSS course arrangements for grades 6-8. Select one to see WISE projects organized by grade level for that implementation model."
+      matTooltipPosition="after">
+      <mat-icon> info </mat-icon>
+    </button>
   </div>
   <ng-container id="libraryGroups" *ngFor="let group of libraryGroups">
     <mat-accordion class="library__groups" multi="true" *ngIf="implementationModelValue === group.id">

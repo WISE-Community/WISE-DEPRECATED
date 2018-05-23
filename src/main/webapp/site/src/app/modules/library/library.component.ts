@@ -15,7 +15,7 @@ import { Standard } from "./standard";
 export class LibraryComponent implements OnInit {
   libraryGroups: LibraryGroup[] = [];
   expandedGroups: object = {};
-  implementationModelValue: string = 'californiaIntegrated'; // default NGSS implementation model to show
+  implementationModelValue: string = '';
   implementationModelOptions: LibraryGroup[] = [];
   projects: LibraryProject[] = [];
   searchValue: string = '';
@@ -42,6 +42,9 @@ export class LibraryComponent implements OnInit {
 
         // populate the flat list of library projects
         for (let group of this.libraryGroups) {
+          if (!this.implementationModelValue) {
+            this.implementationModelValue = group.id;
+          }
           this.implementationModelOptions.push(group);
           this.getProjects(group, group.id);
         }

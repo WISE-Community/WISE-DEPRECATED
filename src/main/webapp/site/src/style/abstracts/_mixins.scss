@@ -50,7 +50,9 @@
   }
 
   .mat-button {
-    background-color: map-get($colors, btn-bg);
+    &:not(.mat-icon-button) {
+      background-color: map-get($colors, btn-bg);
+    }
   }
 
   .mat-dialog-container {
