@@ -1,5 +1,19 @@
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { ConfigService } from "./services/config.service";
+import { HeaderModule } from './modules/header/header.module';
+import { HomeModule } from "./home/home.module";
+import { FooterModule } from './modules/footer/footer.module';
+import { StudentModule } from './student/student.module';
+import { StudentService } from './student/student.service';
+import { UserService } from './services/user.service';
+
 
 @NgModule({
   declarations: [
@@ -8,13 +22,13 @@ import { BrowserModule } from '@angular/platform-browser';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FormsModule,
+    HttpClientModule,
     AppRoutingModule,
     FooterModule,
     HeaderModule,
     HomeModule,
-    FormsModule,
-    StudentModule,
-    HttpClientModule
+    StudentModule
   ],
   providers: [
     ConfigService,
