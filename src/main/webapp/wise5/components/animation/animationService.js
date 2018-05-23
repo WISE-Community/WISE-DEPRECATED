@@ -184,51 +184,8 @@ var AnimationService = function (_NodeService) {
       return result;
     }
   }, {
-    key: 'displayAnnotation',
+    key: 'componentHasWork',
 
-
-    /**
-     * Check if we need to display the annotation to the student
-     * @param componentContent the component content
-     * @param annotation the annotation
-     * @returns whether we need to display the annotation to the student
-     */
-    value: function displayAnnotation(componentContent, annotation) {
-
-      var result = true;
-
-      if (componentContent != null && annotation != null) {
-
-        if (annotation.type == 'score') {} else if (annotation.type == 'comment') {} else if (annotation.type == 'autoScore') {
-          // this is an auto graded score annotation
-
-          if (componentContent.cRater != null && !componentContent.cRater.showScore) {
-            // we do not want to show the CRater score
-            result = false;
-          } else if (componentContent.showAutoScore === false) {
-            // do not show the auto score to the student
-            result = false;
-          }
-        } else if (annotation.type == 'autoComment') {
-          // this is an auto graded comment annotation
-
-          if (componentContent.cRater != null && !componentContent.cRater.showFeedback) {
-            // we do not want to show the CRater comment
-            result = false;
-          } else if (componentContent.showAutoFeedback === false) {
-            // do not show the auto comment to the student
-            result = false;
-          }
-        }
-
-        if (annotation.displayToStudent === false) {
-          // do not display the annotation to the studentr
-          result = false;
-        }
-      }
-
-      return result;
-    }
 
     /**
      * Whether this component generates student work
@@ -237,9 +194,6 @@ var AnimationService = function (_NodeService) {
      * component type usually has work.
      * @return whether this component generates student work
      */
-
-  }, {
-    key: 'componentHasWork',
     value: function componentHasWork(component) {
       return true;
     }
