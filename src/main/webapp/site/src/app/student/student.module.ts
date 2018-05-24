@@ -21,6 +21,7 @@ import { StudentHomeComponent } from './student-home/student-home.component';
 import { StudentEditProfileComponent } from './student-edit-profile/student-edit-profile.component';
 import { StudentRunListComponent } from './student-run-list/student-run-list.component';
 import { StudentRunListItemComponent } from './student-run-list-item/student-run-list-item.component';
+import { AuthGuard } from "./auth.guard";
 
 @NgModule({
   imports: [
@@ -37,6 +38,9 @@ import { StudentRunListItemComponent } from './student-run-list-item/student-run
     StudentEditProfileComponent,
     StudentRunListComponent,
     StudentRunListItemComponent
+  ],
+  providers: [
+    AuthGuard
   ],
   exports: [
     StudentComponent,

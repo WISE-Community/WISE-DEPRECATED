@@ -4,11 +4,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { StudentComponent } from './student.component';
 import { StudentHomeComponent } from './student-home/student-home.component';
 import { StudentEditProfileComponent } from './student-edit-profile/student-edit-profile.component';
+import { AuthGuard } from "./auth.guard";
 
 const studentRoutes: Routes = [
   {
     path: 'student',
     component: StudentComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: '', component: StudentHomeComponent },
       { path: 'profile', redirectTo: '', pathMatch: 'full' },

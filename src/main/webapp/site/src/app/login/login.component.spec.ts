@@ -16,7 +16,7 @@ describe('LoginComponent', () => {
     let userServiceStub = {
       userUrl: 'api/user/user',
       user: { name: 'Test User1' },
-      authenticated: false,
+      isAuthenticated: false,
       getUser(): Observable<User> {
         let user : any[] = [{id:1,name:"Test User1"},{id:2,name:"Test User 2"}];
         return Observable.create( observer => {
