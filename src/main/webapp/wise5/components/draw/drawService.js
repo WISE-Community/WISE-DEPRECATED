@@ -6,9 +6,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nodeService = require('../../services/nodeService');
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _nodeService2 = _interopRequireDefault(_nodeService);
+var _componentService = require('../componentService');
+
+var _componentService2 = _interopRequireDefault(_componentService);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18,51 +20,29 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var DrawService = function (_NodeService) {
-  _inherits(DrawService, _NodeService);
+var DrawService = function (_ComponentService) {
+  _inherits(DrawService, _ComponentService);
 
   function DrawService($filter, $q, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, DrawService);
 
-    var _this = _possibleConstructorReturn(this, (DrawService.__proto__ || Object.getPrototypeOf(DrawService)).call(this));
+    var _this = _possibleConstructorReturn(this, (DrawService.__proto__ || Object.getPrototypeOf(DrawService)).call(this, $filter, StudentDataService, UtilService));
 
-    _this.$filter = $filter;
     _this.$q = $q;
     _this.StudentAssetService = StudentAssetService;
-    _this.StudentDataService = StudentDataService;
-    _this.UtilService = UtilService;
-
-    _this.$translate = _this.$filter('translate');
     return _this;
   }
-
-  /**
-   * Get the component type label
-   * example
-   * "Draw"
-   */
-
 
   _createClass(DrawService, [{
     key: 'getComponentTypeLabel',
     value: function getComponentTypeLabel() {
       return this.$translate('draw.componentTypeLabel');
     }
-
-    /**
-     * Create a Draw component object
-     * @returns a new Draw component object
-     */
-
   }, {
     key: 'createComponent',
     value: function createComponent() {
-      var component = {};
-      component.id = this.UtilService.generateKey();
+      var component = _get(DrawService.prototype.__proto__ || Object.getPrototypeOf(DrawService.prototype), 'createComponent', this).call(this);
       component.type = 'Draw';
-      component.prompt = '';
-      component.showSaveButton = false;
-      component.showSubmitButton = false;
       component.stamps = {};
       component.stamps.Stamps = [];
       component.tools = {};
@@ -83,23 +63,6 @@ var DrawService = function (_NodeService) {
       component.tools.delete = true;
       return component;
     }
-
-    /**
-     * Copies an existing Draw component object
-     * @returns a copied Draw component object
-     */
-
-  }, {
-    key: 'copyComponent',
-    value: function copyComponent(componentToCopy) {
-      var component = this.createComponent();
-      component.prompt = componentToCopy.prompt;
-      component.showSaveButton = componentToCopy.showSaveButton;
-      component.showSubmitButton = componentToCopy.showSubmitButton;
-      component.stamps = componentToCopy.stamps;
-      component.stamps.Stamps = componentToCopy.stamps.Stamps;
-      return component;
-    }
   }, {
     key: 'getStudentWorkJPEG',
     value: function getStudentWorkJPEG(componentState) {
@@ -116,55 +79,7 @@ var DrawService = function (_NodeService) {
       return null;
     }
   }, {
-    key: 'populateComponentState',
-
-
-    /**
-     * Populate a component state with the data from another component state
-     * @param componentStateFromOtherComponent the component state to obtain the data from
-     * @return a new component state that contains the student data from the other
-     * component state
-     */
-    value: function populateComponentState(componentStateFromOtherComponent) {
-      var componentState = null;
-
-      if (componentStateFromOtherComponent != null) {
-
-        // create an empty component state
-        componentState = this.StudentDataService.createComponentState();
-
-        // get the component type of the other component state
-        var otherComponentType = componentStateFromOtherComponent.componentType;
-
-        if (otherComponentType === 'Draw') {
-          // the other component is an Draw component
-
-          // get the student data from the other component state
-          var studentData = componentStateFromOtherComponent.studentData;
-
-          // create a copy of the student data
-          var studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
-
-          // set the student data into the new component state
-          componentState.studentData = studentDataCopy;
-        }
-      }
-
-      return componentState;
-    }
-  }, {
     key: 'isCompleted',
-
-
-    /**
-     * Check if the component was completed
-     * @param component the component object
-     * @param componentStates the component states for the specific component
-     * @param componentEvents the events for the specific component
-     * @param nodeEvents the events for the parent node of the component
-     * @param node parent node of the component
-     * @returns whether the component was completed
-     */
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
       var result = false;
 
@@ -253,53 +168,6 @@ var DrawService = function (_NodeService) {
 
       return componentState;
     }
-
-    /**
-     * Whether this component generates student work
-     * @param component (optional) the component object. if the component object
-     * is not provided, we will use the default value of whether the
-     * component type usually has work.
-     * @return whether this component generates student work
-     */
-
-  }, {
-    key: 'componentHasWork',
-    value: function componentHasWork(component) {
-      return true;
-    }
-
-    /**
-     * Whether this component uses a save button
-     * @return whether this component uses a save button
-     */
-
-  }, {
-    key: 'componentUsesSaveButton',
-    value: function componentUsesSaveButton() {
-      return true;
-    }
-
-    /**
-     * Whether this component uses a submit button
-     * @return whether this component uses a submit button
-     */
-
-  }, {
-    key: 'componentUsesSubmitButton',
-    value: function componentUsesSubmitButton() {
-      return true;
-    }
-
-    /**
-     * Check if the component state has student work. Sometimes a component
-     * state may be created if the student visits a component but doesn't
-     * actually perform any work. This is where we will check if the student
-     * actually performed any work.
-     * @param componentState the component state object
-     * @param componentContent the component content
-     * @return whether the component state has any work
-     */
-
   }, {
     key: 'componentStateHasStudentWork',
     value: function componentStateHasStudentWork(componentState, componentContent) {
@@ -388,7 +256,7 @@ var DrawService = function (_NodeService) {
   }]);
 
   return DrawService;
-}(_nodeService2.default);
+}(_componentService2.default);
 
 DrawService.$inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
