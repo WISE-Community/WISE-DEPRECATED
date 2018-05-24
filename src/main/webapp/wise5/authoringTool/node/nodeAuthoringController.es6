@@ -1567,12 +1567,14 @@ class NodeAuthoringController {
       if (this.showJSON) {
         // we were showing the JSON view and the author now wants to hide it
         if (!this.isJSONValid()) {
-          let answer = confirm(this.$translate('jsonInvalidErrorMessage'));
-          if (answer) {
+          if (confirm(this.$translate('jsonInvalidErrorMessage'))) {
             // the author wants to revert back to the last valid JSON
             this.toggleJSONAuthoringView();
             this.UtilService.hideJSONValidMessage();
           }
+        } else {
+          this.toggleJSONAuthoringView();
+          this.UtilService.hideJSONValidMessage();
         }
       } else {
         // we were not showing the JSON view and now the author wants to show it
