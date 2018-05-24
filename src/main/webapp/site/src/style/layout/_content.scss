@@ -6,9 +6,9 @@
   min-width: auto;
   position: relative;
 
-  @media (min-width: breakpoint('sm.min')) {
+  //@media (min-width: breakpoint('sm.min')) {
     padding: 0 16px;
-  }
+  //}
 
   @media (min-width: breakpoint('md.min')) {
     padding: 0 32px;

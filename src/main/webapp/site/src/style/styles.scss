@@ -20,15 +20,19 @@
 // 4. Layout-related sections
 @import
   'layout/content',
-  'layout/main';
+  'layout/main',
+  'layout/section';
 
 // 5. Components
 @import
   'components/buttons',
   'components/content-block',
+  'components/dialog',
+  'components/expansion-panel',
   'components/info-block',
   'components/menu',
-  'components/notice';
+  'components/notice',
+  'components/tooltip';
 
 // 6. Page-specific styles
 //@import

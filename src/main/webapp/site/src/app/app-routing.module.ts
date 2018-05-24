@@ -5,11 +5,13 @@ import { AboutComponent } from './about/about.component';
 import { FeaturesComponent } from './features/features.component';
 import { LoginComponent } from "./login/login.component";
 import { NewsComponent } from "./news/news.component";
-import { HomeComponent } from "./home/home.component";
+import { HomeModule } from "./home/home.module";
 import { FormsModule } from '@angular/forms';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  // https://github.com/angular/angular-cli/issues/9825
+  // { path: '', loadChildren: 'app/modules/home.module#HomeModule' },
+  { path: '', loadChildren: () => HomeModule },
   { path: 'about', component: AboutComponent },
   { path: 'features', component: FeaturesComponent },
   { path: 'login', component: LoginComponent },
@@ -28,7 +30,7 @@ export class XhrInterceptor implements HttpInterceptor {
 }
 
 @NgModule({
-  declarations: [ AboutComponent, FeaturesComponent, LoginComponent, HomeComponent, NewsComponent ],
+  declarations: [ AboutComponent, FeaturesComponent, LoginComponent, NewsComponent ],
   imports: [ RouterModule.forRoot(routes), FormsModule ],
   exports: [ RouterModule ],
   providers: [{ provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true }]

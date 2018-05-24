@@ -34,6 +34,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.portal.domain.project.ProjectMetadata;
@@ -64,8 +65,12 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
   @Column(name = "summary")
   private String summary;
 
+  private String features;
+
   @Column(name = "grade_range")
   private String gradeRange;
+
+  private String grades;
 
   @Column(name = "total_time")
   private String totalTime;
@@ -87,6 +92,8 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 
   @Column(name = "standards", length = 5120000, columnDefinition = "mediumtext")
   private String standards;
+
+  private String standardsAddressed;
 
   @Column(name = "keywords")
   private String keywords;
@@ -133,12 +140,28 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
     this.populateFromJSON(new JSONObject(metadataJSONString));
   }
 
+  public String getFeatures() {
+    return features;
+  }
+
+  public void setFeatures(String features) {
+    this.features = features;
+  }
+
   public String getGradeRange() {
     return gradeRange;
   }
 
   public void setGradeRange(String gradeRange) {
     this.gradeRange = gradeRange;
+  }
+
+  public String getGrades() {
+    return grades;
+  }
+
+  public void setGrades(String grades) {
+    this.grades = grades;
   }
 
   public String getTotalTime() {
@@ -247,6 +270,20 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
    */
   public void setStandards(String standards) {
     this.standards = standards;
+  }
+
+  /**
+   * @return the standardsAddressed
+   */
+  public String getStandardsAddressed() {
+    return standardsAddressed;
+  }
+
+  /**
+   * @param standardsAddressed the standardsAddressed to set
+   */
+  public void setStandardsAddressed(String standardsAddressed) {
+    this.standardsAddressed = standardsAddressed;
   }
 
   /**
@@ -415,6 +452,19 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
     }
 
+    //check that the features exists and is not null
+    if (metadataJSON.has("features") && !metadataJSON.isNull("features")) {
+      try {
+        String features = metadataJSON.getString("features");
+        if (features.equals("null")) {
+          features = "";
+        }
+        setFeatures(features);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
     //check that the grade range exists and is not null
     if (metadataJSON.has("gradeRange") && !metadataJSON.isNull("gradeRange")) {
       try {
@@ -423,6 +473,19 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
           gradeRange = "";
         }
         setGradeRange(gradeRange);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
+    //check that grades exists and is not null
+    if (metadataJSON.has("grades") && !metadataJSON.isNull("grades")) {
+      try {
+        JSONArray grades = metadataJSON.getJSONArray("grades");
+        if (grades.equals("null")) {
+          grades = new JSONArray();
+        }
+        setGrades(grades.toString());
       } catch (JSONException e) {
         e.printStackTrace();
       }
@@ -516,6 +579,19 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
           standards = "";
         }
         setStandards(standards);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+
+    //check that standardsAddressed exists and is not null
+    if (metadataJSON.has("standardsAddressed") && !metadataJSON.isNull("standardsAddressed")) {
+      try {
+        JSONObject standardsAddressed = metadataJSON.getJSONObject("standardsAddressed");
+        if (standardsAddressed.equals("null")) {
+          standardsAddressed = new JSONObject();
+        }
+        setStandardsAddressed(standardsAddressed.toString());
       } catch (JSONException e) {
         e.printStackTrace();
       }
@@ -669,6 +745,24 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 
     try {
       /*
+       * we will retrieve the grades JSON string and replace it with a JSON array
+       * so that the client does not need to parse the JSON string
+       */
+      String gradesString = metadata.getString("grades");
+
+      // check if the field is null or "null"
+      if (gradesString != null && gradesString != "null") {
+        // create the JSON object
+        JSONArray gradesJSON = new JSONArray(gradesString);
+
+        // override the existing grades string with this JSON array
+        metadata.put("grades", gradesJSON);
+      } else {
+        // override the existing grades string with this empty JSON array
+        metadata.put("grades", new JSONArray());
+      }
+
+      /*
        * we will retrieve the techReqs JSON string and replace it with a JSON Object
        * so that the client does not need to parse the JSON string
        */
@@ -685,6 +779,7 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
         // override the existing techReqs string with this empty JSON object
         metadata.put("techReqs", new JSONObject());
       }
+
       /*
        * we will retrieve the tools JSON string and replace it with a JSON Object
        * so that the client does not need to parse the JSON string
@@ -701,6 +796,24 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       } else {
         // override the existing techReqs string with this empty JSON object
         metadata.put("tools", new JSONObject());
+      }
+
+      /*
+       * we will retrieve the standardsAddressed JSON string and replace it with a JSON Object
+       * so that the client does not need to parse the JSON string
+       */
+      String standardsAddressedString = metadata.getString("standardsAddressed");
+
+      // check if the field is null or "null"
+      if (standardsAddressedString != null && standardsAddressedString != "null") {
+        // create the JSON object
+        JSONObject standardsAddressedJSON = new JSONObject(standardsAddressedString);
+
+        // override the existing standardsAddressed string with this JSON object
+        metadata.put("standardsAddressed", standardsAddressedJSON);
+      } else {
+        // override the existing standardsAddressed string with this empty JSON object
+        metadata.put("standardsAddressed", new JSONObject());
       }
 
     } catch (JSONException e) {

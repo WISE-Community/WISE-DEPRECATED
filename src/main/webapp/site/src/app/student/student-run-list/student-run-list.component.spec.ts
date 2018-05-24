@@ -9,7 +9,7 @@ import { StudentRunListItemComponent } from '../student-run-list-item/student-ru
 import { MatCardModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule } from "@angular/material";
 import { SelectMenuComponent } from "../../modules/shared/select-menu/select-menu.component";
 import { SearchBarComponent } from "../../modules/shared/search-bar/search-bar.component";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MomentModule } from "angular2-moment";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
@@ -20,7 +20,6 @@ describe('StudentRunListComponent', () => {
   beforeEach(async(() => {
     let studentServiceStub = {
         isLoggedIn: true,
-        user: { name: 'Test User'},
         getRuns(): Observable<StudentRun[]> {
           let runs : any[] = [{id:1,name:"Photosynthesis"},{id:2,name:"Plate Tectonics"}];
           return Observable.create( observer => {
@@ -43,7 +42,8 @@ describe('StudentRunListComponent', () => {
         MatIconModule,
         MatInputModule,
         MatSelectModule,
-        MomentModule
+        MomentModule,
+        ReactiveFormsModule
       ],
       providers: [ {provide: StudentService, useValue: studentServiceStub } ]
     })

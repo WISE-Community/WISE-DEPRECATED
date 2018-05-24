@@ -1,0 +1,72 @@
+<div class="library">
+  <div class="content-block dark-theme primary-bg library__header">
+    <h2 fxLayout="row" fxLayoutAlign="start center">
+      <mat-icon> filter_list </mat-icon>Browse
+    </h2>
+    <div fxLayout="row wrap" fxLayout.xs="column">
+      <div *ngIf="disciplineOptions.length > 0" class="library-filter" fxFlex fxFlex.xs="100%" >
+        <app-select-menu [options]="disciplineOptions" [placeholderText]="'Discipline'" [value]="disciplineValue"
+          (update)="filterUpdated($event, 'discipline')" [valueProp]="'id'" [viewValueProp]="'name'"
+          [multiple]="true"></app-select-menu>
+      </div>
+      <div *ngIf="dciArrangementOptions.length > 0" class="library-filter" fxFlex fxFlex.xs="100%" >
+        <app-select-menu [options]="dciArrangementOptions" [placeholderText]="'DCI Arrangement'"
+          [value]="dciArrangementValue" (update)="filterUpdated($event, 'dci')" [valueProp]="'id'" [viewValueProp]="'name'"
+          [multiple]="true"></app-select-menu>
+      </div>
+      <div *ngIf="peOptions.length > 0" class="library-filter" fxFlex fxFlex.xs="100%" >
+        <app-select-menu [options]="peOptions" [placeholderText]="'Performance Expectation'" [value]="peValue"
+          (update)="filterUpdated($event, 'pe')" [valueProp]="'id'" [viewValueProp]="'name'"
+          [multiple]="true"></app-select-menu>
+      </div>
+      <div class="library-filter" fxFlex fxFlex.xs="100%" >
+        <app-search-bar [placeholderText]="'Keyword search'" [value]="searchValue"
+          (update)="searchUpdated($event)"></app-search-bar>
+      </div>
+    </div>
+    <div class="info-block center">
+      Explore suggested curricula for the grade levels below or use the search and browse tools to find specific units that address your needs.
+    </div>
+  </div>
+  <div *ngIf="searchValue || hasFilters()" class="notice">
+    <p>Projects found: {{ countVisibleProjects(projects, implementationModelValue) }}.
+      <a href="#" (click)="!!reset()">Reset</a>
+    </p>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <app-select-menu [options]="implementationModelOptions" [placeholderText]="'CA NGSS Implementation Model'"
+       [value]="implementationModelValue" (update)="implementationModelUpdated($event)" [valueProp]="'id'"
+       [viewValueProp]="'name'"></app-select-menu>
+    <button mat-button mat-icon-button color="primary" aria-label="Implementation model select explanation"
+      matTooltip="California has defined two NGSS course arrangements for grades 6-8. Select one to see WISE projects organized by grade level for that implementation model."
+      matTooltipPosition="after">
+      <mat-icon> info </mat-icon>
+    </button>
+  </div>
+  <ng-container id="libraryGroups" *ngFor="let group of libraryGroups">
+    <mat-accordion class="library__groups" multi="true" *ngIf="implementationModelValue === group.id">
+      <ng-container *ngFor="let child of group.children; let i = index">
+        <mat-expansion-panel class="library-group" *ngIf="child.type === 'group'"
+          (opened)="expandedGroups[child.id] = true" (closed)="expandedGroups[child.id] = false"
+          [expanded]="expandedGroups[child.id] && countVisibleProjects(child.children, implementationModelValue) > 0"
+          [disabled]="countVisibleProjects(child.children, implementationModelValue) < 1">
+          <mat-expansion-panel-header class="mat-expansion-panel-header--lg">
+            <div fxLayout="column" class="library-group__title">
+              <div>{{ child.name }}</div>
+              <div class="mat-caption">{{ countVisibleProjects(child.children, implementationModelValue) }} project(s)</div>
+            </div>
+            <app-library-group-thumbs [group]="child"
+              [ngClass]="{ 'hide': expandedGroups[child.id] }"></app-library-group-thumbs>
+          </mat-expansion-panel-header>
+          <div fxLayout="row wrap">
+            <ng-container *ngFor="let project of child.children">
+              <div *ngIf="project.visible" fxFlex="100" fxFlex.sm="50" fxFlex.md="33.33" fxFlex.lg="25">
+                <app-library-project [project]="project" ></app-library-project>
+              </div>
+            </ng-container>
+          </div>
+        </mat-expansion-panel>
+      </ng-container>
+    </mat-accordion>
+  </ng-container>
+</div>

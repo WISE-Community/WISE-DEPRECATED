@@ -13,6 +13,8 @@ import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 
+import java.util.Properties;
+
 /**
  * Controller for Project REST API
  *
@@ -29,6 +31,13 @@ public class ProjectAPIController {
 
   @Autowired
   ProjectService projectService;
+
+  @Autowired
+  private Properties wiseProperties;
+
+  // path to project thumbnail image relative to project folder
+  // TODO: make this dynamic, part of project metadata?
+  private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 
   @RequestMapping(value = "/library", method = RequestMethod.GET)
   protected String getLibraryProjects(ModelMap modelMap) {
@@ -64,6 +73,19 @@ public class ProjectAPIController {
         Project project = projectService.getById(projectId);
         ProjectMetadata metadata = project.getMetadata();
         projectLibraryGroup.put("metadata", metadata.toJSONObject());
+        String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+        String projectThumb = "";
+        String modulePath = project.getModulePath();
+        int lastIndexOfSlash = modulePath.lastIndexOf("/");
+        if (lastIndexOfSlash != -1) {
+          /*
+           * The project thumb url by default is the same (/assets/project_thumb.png)
+           * for all projects, but this could be overwritten in the future
+           * e.g. /253/assets/projectThumb.png
+           */
+          projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
+        }
+        projectLibraryGroup.put("projectThumb", projectThumb);
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }

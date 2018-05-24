@@ -1,0 +1,56 @@
+@import
+  '~style/abstracts/functions',
+  '~style/abstracts/variables';
+
+.library {
+  text-align: left;
+
+  h2 {
+    font-weight: 400;
+    margin-bottom: 8px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.library__header {
+  color: #ffffff;
+  margin-bottom: 32px;
+
+  .info-block {
+    background-color: transparent;
+  }
+}
+
+.library-filter {
+  margin: 0 4px;
+}
+
+.library__groups {
+  margin-top: 16px;
+  display: block;
+}
+
+.library-group {
+  .mat-content {
+    align-items: center;
+    font-weight: 500;
+  }
+
+  .mat-expansion-panel-body {
+    padding: 0 16px 16px;
+  }
+
+  &:not(.mat-expanded) {
+    .mat-expansion-indicator {
+      padding-left: 16px;
+    }
+  }
+}
+
+.library-group__title {
+  white-space: nowrap;
+  margin-right: 8px;
+}

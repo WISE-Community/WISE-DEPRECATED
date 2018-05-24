@@ -1,0 +1,108 @@
+@import
+  '~@angular/material/theming',
+  '~style/abstracts/functions',
+  '~style/abstracts/variables';
+
+// Create a config with the default typography levels.
+$config: mat-typography-config();
+
+.library-project {
+  margin: 8px;
+
+  &.mat-card {
+    padding: 0;
+  }
+
+  .mat-expansion-indicator {
+    margin-left: 8px;
+  }
+}
+
+.library-project__cover {
+  position: relative;
+  padding-top: 75%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 2px;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.6);
+    border-radius: 2px;
+    transition: background-color 280ms cubic-bezier(.4,0,.2,1);
+  }
+}
+
+.library-project {
+  &:hover, &:focus {
+    .library-project__cover {
+      &:after {
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+    }
+  }
+}
+
+.library-project__title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-weight: 500;
+  padding: 10px 12px;
+  border-radius: 2px;
+  color: #ffffff;
+  font-size: mat-font-size($config, subheading-2);
+}
+
+.library-project__discipline {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 12px 8px;
+}
+
+.library-project-details {
+  .mat-card-avatar {
+    background-size: cover;
+    border-radius: 4px;
+    margin-right: 12px;
+
+    @media (min-width: breakpoint('sm.min')) {
+      height: 60px;
+      width: 60px;
+    }
+  }
+
+  .mat-card-title {
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: mat-font-size($config, subheading-1);
+  }
+
+  .mat-card-subtitle {
+    margin-bottom: 2px;
+  }
+}
+
+.library-project-details__info {
+  margin: 16px 0 8px;
+  padding: 8px 12px;
+
+  p {
+    margin: 4px 0;
+  }
+}
+
+.library-project-details__summary {
+  margin: 4px 0;
+}
+
+.library-project-details__pe {
+  display: inline-block;
+}

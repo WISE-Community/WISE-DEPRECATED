@@ -1,18 +1,19 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
-import { ConfigService } from "./services/config.service";
-import { HeaderModule } from './modules/header/header.module';
-import { FooterModule } from './modules/footer/footer.module';
-import { StudentModule } from './student/student.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { ConfigService } from "./services/config.service";
+import { HeaderModule } from './modules/header/header.module';
+import { HomeModule } from "./home/home.module";
+import { FooterModule } from './modules/footer/footer.module';
+import { StudentModule } from './student/student.module';
 import { StudentService } from './student/student.service';
 import { UserService } from './services/user.service';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { Config } from "./domain/config";
+
 
 export function initialize(configService: ConfigService, userService: UserService) {
   return () => {
@@ -29,12 +30,13 @@ export function initialize(configService: ConfigService, userService: UserServic
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
-    HeaderModule,
-    FooterModule,
     FormsModule,
-    StudentModule,
-    HttpClientModule
+    HttpClientModule,
+    AppRoutingModule,
+    FooterModule,
+    HeaderModule,
+    HomeModule,
+    StudentModule
   ],
   providers: [
     ConfigService,

@@ -17,22 +17,51 @@
     color: map-get($colors, primary);
   }
 
-  .content-block {
-    background-color: map-get($colors, content-block-bg);
+  .content-block, .info-block {
+    background-color: map-get($background, background);
   }
 
   .notice {
     background-color: map-get($colors, notice-bg);
   }
 
-  .search-bar, .select-menu {
+  .search-bar {
     .mat-form-field-flex {
-      background-color: map-get($background, raised-button);
+      background-color: map-get($colors, control-bg);
+    }
+
+    &.mat-focused {
+      .mat-form-field-flex {
+        background-color: map-get($colors, control-bg-active);
+      }
+    }
+  }
+
+  .select-menu {
+    .mat-form-field-infix {
+      background-color: map-get($colors, control-bg);
+    }
+
+    &.mat-focused {
+      .mat-form-field-infix {
+        background-color: map-get($colors, control-bg-active);
+      }
     }
   }
 
   .mat-button {
-    background-color: map-get($colors, btn-bg);
+    &:not(.mat-icon-button) {
+      background-color: map-get($colors, btn-bg);
+    }
+  }
+
+  .mat-dialog-container {
+    border-radius: 3px;
+  }
+
+  .mat-dialog-actions {
+    padding: 12px 0 0;
+    margin-bottom: 0;
   }
 
   // Set classes for each named color in the $colors map

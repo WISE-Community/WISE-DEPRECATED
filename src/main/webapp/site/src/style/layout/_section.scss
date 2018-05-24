@@ -1,0 +1,62 @@
+.section {
+  position: relative;
+}
+
+.section--fullwidth {
+  padding-left: 16px;
+  padding-right: 16px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+.section--slant {
+  padding-top: 80px;
+  padding-bottom: 80px;
+
+  &::before {
+    background: inherit;
+    top: 0;
+    content: '';
+    display: block;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    right: 0;
+    transform: skewY(1deg);
+    transform-origin: 100%;
+    z-index: -1;
+  }
+
+  &::after {
+    background: inherit;
+    bottom: 0;
+    content: '';
+    display: block;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    right: 0;
+    transform: skewY(-1deg);
+    transform-origin: 100%;
+    z-index: -1;
+  }
+}
+
+.section--slant--rtl {
+  padding-top: 64px;
+  padding-bottom: 64px;
+  text-align: right;
+
+  &::before {
+    transform-origin: 0%;
+    transform: skewY(-1deg);
+  }
+
+  &::after {
+    transform-origin: 0%;
+    transform: skewY(1deg);
+  }
+}

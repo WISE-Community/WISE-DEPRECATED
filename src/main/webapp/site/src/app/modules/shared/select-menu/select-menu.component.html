@@ -1,8 +1,14 @@
 <mat-form-field class="select-menu" [floatLabel]="floatLabel">
-  <mat-select [placeholder]="placeholderText" [(value)]="value" [(ngModel)]="value" [disabled]="disable"
-    (ngModelChange)="changed($event)">
-    <mat-option *ngFor="let option of options" [value]="option.value">
-      {{ option.viewValue }}
+  <mat-select [formControl]="selectMenu" [placeholder]="placeholderText" [(value)]="value" [(ngModel)]="value"
+    (ngModelChange)="changed($event)" [multiple]="multiple">
+    <mat-select-trigger *ngIf="multiple">
+     {{ selectMenu.value ? selectMenu.value[0] : '' }}
+      <span *ngIf="selectMenu.value?.length > 1">
+        (+{{ selectMenu.value.length - 1 }} more)
+      </span>
+    </mat-select-trigger>
+    <mat-option *ngFor="let option of options" [value]="option[valueProp]">
+      {{ option[viewValueProp] }}
     </mat-option>
   </mat-select>
 </mat-form-field>
