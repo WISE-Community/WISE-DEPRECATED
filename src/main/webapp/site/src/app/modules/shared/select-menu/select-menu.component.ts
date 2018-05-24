@@ -38,7 +38,8 @@ export class SelectMenuComponent implements OnInit {
   @Output('update')
   change: EventEmitter<string> = new EventEmitter<string>(); // change event emitter
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

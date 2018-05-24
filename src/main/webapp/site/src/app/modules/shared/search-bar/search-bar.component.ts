@@ -37,11 +37,14 @@ export class SearchBarComponent implements OnInit {
       .distinctUntilChanged(); // only emit event if search string has changed
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+  }
 
-  clear() {
-    this.value = '';
-    this.changed();
+  ngOnChanges(changes) {
+    if (changes.value) {
+      this.value = changes.value.currentValue;
+      this.changed();
+    }
   }
 
   changed() {
