@@ -1,6 +1,6 @@
 export class LibraryGroup {
   type: string;
   id: string;
-  notes: string;
+  name: string;
   children: {}[];
 }

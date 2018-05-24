@@ -22,7 +22,7 @@ describe('LibraryGroupThumbsComponent', () => {
     const group: LibraryGroup = new LibraryGroup();
     group.id = 'testingGroup';
     group.type = 'group';
-    group.notes = 'Testing Group';
+    group.name = 'Testing Group';
     group.children = [];
     component.group = group;
     fixture.detectChanges();
