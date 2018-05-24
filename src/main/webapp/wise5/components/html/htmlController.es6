@@ -1,4 +1,6 @@
-class HTMLController {
+import ComponentController from '../componentController';
+
+class HTMLController extends ComponentController {
   constructor($rootScope,
       $scope,
       $state,
@@ -6,26 +8,21 @@ class HTMLController {
       $sce,
       $filter,
       $mdDialog,
+      AnnotationService,
       ConfigService,
       NodeService,
+      NotebookService,
       ProjectService,
+      StudentAssetService,
       StudentDataService,
       UtilService) {
-
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
+    super($filter, $mdDialog, $rootScope, $scope,
+        AnnotationService, ConfigService, NodeService,
+        NotebookService, ProjectService, StudentAssetService,
+        StudentDataService, UtilService);
     this.$state = $state;
     this.$stateParams = $stateParams;
     this.$sce = $sce;
-    this.$filter = $filter;
-    this.$mdDialog = $mdDialog;
-    this.ConfigService = ConfigService;
-    this.NodeService = NodeService;
-    this.ProjectService = ProjectService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-
-    this.$translate = this.$filter('translate');
 
     // the node id of the current node
     this.nodeId = null;
@@ -555,9 +552,12 @@ HTMLController.$inject = [
   '$sce',
   '$filter',
   '$mdDialog',
+  'AnnotationService',
   'ConfigService',
   'NodeService',
+  'NotebookService',
   'ProjectService',
+  'StudentAssetService',
   'StudentDataService',
   'UtilService'
 ];
