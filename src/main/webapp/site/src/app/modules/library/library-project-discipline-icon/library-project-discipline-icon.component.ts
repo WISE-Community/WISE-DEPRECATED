@@ -13,7 +13,8 @@ export class LibraryProjectDisciplineIconComponent implements OnInit {
 
   disciplines: any[];
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
     let standards = this.project.metadata.standardsAddressed;

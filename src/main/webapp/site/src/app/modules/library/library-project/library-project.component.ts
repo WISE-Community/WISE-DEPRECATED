@@ -27,17 +27,22 @@ export class LibraryProjectComponent implements OnInit {
     this.setNGSS();
   }
 
-  getThumbStyle(projectThumb) {
+  /**
+   * Returns the background-image css value for project thumbnail
+   * @param {string} projectThumb
+   * @returns {SafeStyle}
+   */
+  getThumbStyle(projectThumb: string) {
     const DEFAULT_THUMB = 'assets/img/default-picture-sm.svg';
     const STYLE = `url(${projectThumb}), url(${DEFAULT_THUMB})`;
     return this.sanitizer.bypassSecurityTrustStyle(STYLE);
   }
 
   setNGSS(): void {
-    let standards = this.project.metadata.standardsAddressed;
+    const standards = this.project.metadata.standardsAddressed;
     if (standards) {
-      let ngss = standards.ngss;
-      if(ngss) {
+      const ngss = standards.ngss;
+      if (ngss) {
         if (ngss.disciplines) {
           this.ngss.disciplines = ngss.disciplines;
         }
@@ -58,9 +63,9 @@ export class LibraryProjectComponent implements OnInit {
   }
 
   showDetails(): void {
-    let project = this.project;
-    let ngss = this.ngss;
-    let ngssWebUrl = this.ngssWebUrl;
+    const project = this.project;
+    const ngss = this.ngss;
+    const ngssWebUrl = this.ngssWebUrl;
     this.dialog.open(LibraryProjectDetailsComponent, {
       ariaLabel: 'Project Details',
       data: { project: project, ngss: ngss, ngssWebUrl: ngssWebUrl },
@@ -77,7 +82,8 @@ export class LibraryProjectComponent implements OnInit {
 export class LibraryProjectDetailsComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
+      @Inject(MAT_DIALOG_DATA) public data: any) {
+  }
 
   ngOnInit() {
   }
@@ -85,5 +91,4 @@ export class LibraryProjectDetailsComponent implements OnInit {
   onClose(): void {
     this.dialogRef.close();
   }
-
 }

@@ -27,7 +27,12 @@ export class LibraryGroupThumbsComponent implements OnInit {
     }
   }
 
-  getThumbStyle(projectThumb) {
+  /**
+   * Returns the background-image css value for project thumbnail
+   * @param {string} projectThumb
+   * @returns {SafeStyle}
+   */
+  getThumbStyle(projectThumb: string) {
     const DEFAULT_THUMB = 'assets/img/default-picture.svg';
     const STYLE = `url(${projectThumb}), url(${DEFAULT_THUMB})`;
     return this.sanitizer.bypassSecurityTrustStyle(STYLE);

@@ -24,7 +24,7 @@ export class SelectMenuComponent implements OnInit {
   options: any[] = []; // options for the select menu
 
   @Input()
-  placeholderText: string = 'Select on option'; // placeholder text
+  placeholderText: string = 'Select an option'; // placeholder text
 
   @Input()
   value: any; // selected value

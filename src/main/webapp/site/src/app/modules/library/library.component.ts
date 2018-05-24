@@ -33,24 +33,21 @@ export class LibraryComponent implements OnInit {
   }
 
   /**
-   * Get library project groups from LibraryService and populate list of projects and filter options
+   * Get library project groups from LibraryService and populate list of
+   * projects and filter options
    */
   getLibraryGroups(): void {
     this.libraryService.getLibraryGroups()
       .subscribe(libraryGroups => {
         this.libraryGroups = libraryGroups;
-
-        // populate the flat list of library projects
         for (let group of this.libraryGroups) {
           if (!this.implementationModelValue) {
             this.implementationModelValue = group.id;
           }
           this.implementationModelOptions.push(group);
-          this.getProjects(group, group.id);
+          this.populateProjects(group, group.id);
         }
-
-        // populate the filter options
-        this.getFilterOptions();
+        this.populateFilterOptions();
       });
   }
 
@@ -59,7 +56,7 @@ export class LibraryComponent implements OnInit {
    * @param item
    * @param {string} implementationModel
    */
-  getProjects(item: any, implementationModel: string): void {
+  populateProjects(item: any, implementationModel: string): void {
     if (item.type === 'project') {
       item.visible = true;
       item.implementationModel = implementationModel;
@@ -67,7 +64,7 @@ export class LibraryComponent implements OnInit {
     } else if (item.type === 'group') {
       let children = item.children;
       for (let child of children) {
-        this.getProjects(child, implementationModel);
+        this.populateProjects(child, implementationModel);
       }
     }
   }
@@ -75,40 +72,54 @@ export class LibraryComponent implements OnInit {
   /**
    * Iterate through list of projects to populate metadata filter options
    */
-  getFilterOptions(): void {
+  populateFilterOptions(): void {
     for (let project of this.projects) {
-      let standardsAddressed = project.metadata.standardsAddressed;
+      const standardsAddressed = project.metadata.standardsAddressed;
       if (standardsAddressed && standardsAddressed.ngss) {
-        let ngss: NGSSStandards = standardsAddressed.ngss;
-        let dciArrangements = ngss.dciArrangements;
-        for (let e of dciArrangements) {
-          let dciArrangement: Standard = new Standard();
-          dciArrangement.id = e.id;
-          dciArrangement.name = `${e.id} ${e.name}`;
-          this.dciArrangementOptions.push(dciArrangement);
-          if (e.children) {
-            for (let p of e.children) {
-              let peStandard: Standard = new Standard();
-              peStandard.id = p.id;
-              peStandard.name = `${p.id}: ${p.name}`;
-              this.peOptions.push(peStandard);
+        const ngss: NGSSStandards = standardsAddressed.ngss;
+        const dciArrangements = ngss.dciArrangements;
+        for (let dciStandard of dciArrangements) {
+          this.dciArrangementOptions.push(this.createDCIStandard(dciStandard));
+          if (dciStandard.children) {
+            for (let peStandard of dciStandard.children) {
+              this.peOptions.push(this.createPEStandard(peStandard));
             }
           }
         }
 
-        let disciplines = ngss.disciplines;
+        const disciplines = ngss.disciplines;
         if (disciplines) {
-          for (let d of disciplines) {
-            let discipline: Standard = new Standard();
-            discipline.id = d.id;
-            discipline.name = d.name;
-            this.disciplineOptions.push(discipline);
+          for (let discipline of disciplines) {
+            this.disciplineOptions.push(this.createDisciplineStandard(discipline));
           }
         }
       }
     }
+    this.removeDuplicatesAndSortAlphabetically();
+  }
 
-    // remove duplicates and sort alphabetically
+  createDCIStandard(standardIn: any) {
+    const dciStandard: Standard = new Standard();
+    dciStandard.id = standardIn.id;
+    dciStandard.name = `${standardIn.id} ${standardIn.name}`;
+    return dciStandard;
+  }
+
+  createPEStandard(standardIn: any) {
+    const peStandard: Standard = new Standard();
+    peStandard.id = standardIn.id;
+    peStandard.name = `${standardIn.id}: ${standardIn.name}`;
+    return peStandard;
+  }
+
+  createDisciplineStandard(standardIn: any) {
+    const standard: Standard = new Standard();
+    standard.id = standardIn.id;
+    standard.name = standardIn.name;
+    return standard;
+  }
+
+  removeDuplicatesAndSortAlphabetically() {
     this.dciArrangementOptions = this.removeDuplicates(this.dciArrangementOptions, 'id');
     this.sortOptions(this.dciArrangementOptions, 'id');
     this.disciplineOptions = this.removeDuplicates(this.disciplineOptions, 'id');
@@ -213,11 +224,11 @@ export class LibraryComponent implements OnInit {
    * @return {boolean}
    */
   isSearchMatch(project: LibraryProject, searchValue: string): boolean {
-    let metadata = project.metadata;
+    const metadata = project.metadata;
     return Object.keys(metadata).some(prop => {
       // only check for match in specific metadata fields
-      if (prop != 'title' && prop != 'summary' && prop != 'keywords' && prop != 'features' &&
-        prop != 'standardsAddressed') {
+      if (prop != 'title' && prop != 'summary' && prop != 'keywords' &&
+          prop != 'features' &&  prop != 'standardsAddressed') {
         return false;
       } else {
         let value = metadata[prop];
@@ -242,8 +253,6 @@ export class LibraryComponent implements OnInit {
     const standardsAddressed = project.metadata.standardsAddressed;
     if (standardsAddressed.ngss) {
       const ngss = standardsAddressed.ngss;
-
-      // check for DCI Arrangement filter match
       if (this.dciArrangementValue.length) {
         const dciArrangements: Standard[] = ngss.dciArrangements ? ngss.dciArrangements : [];
         for (let val of dciArrangements) {
@@ -254,8 +263,6 @@ export class LibraryComponent implements OnInit {
           }
         }
       }
-
-      // check for Performance Expectation filter match
       if (this.peValue.length) {
         const dciArrangements: Standard[] = ngss.dciArrangements ? ngss.dciArrangements : [];
         for (let arrangement of dciArrangements) {
@@ -268,8 +275,6 @@ export class LibraryComponent implements OnInit {
           }
         }
       }
-
-      // check for Discipline filter match
       if (this.disciplineValue.length) {
         const disciplines: Standard[] = ngss.disciplines ? ngss.disciplines : [];
         for (let val of disciplines) {
@@ -281,8 +286,6 @@ export class LibraryComponent implements OnInit {
         }
       }
     }
-
-    // there are no matches
     return false;
   }
 
@@ -303,7 +306,7 @@ export class LibraryComponent implements OnInit {
    */
   countVisibleProjects(set: LibraryProject[], implementationModel: string): number {
     return set.filter((project) => 'project' && project.visible &&
-      project.implementationModel === implementationModel).length;
+        project.implementationModel === implementationModel).length;
   }
 
   /**

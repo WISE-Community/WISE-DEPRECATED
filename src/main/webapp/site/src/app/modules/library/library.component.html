@@ -4,17 +4,17 @@
       <mat-icon> filter_list </mat-icon>Browse
     </h2>
     <div fxLayout="row wrap" fxLayout.xs="column">
-      <div class="library-filter" fxFlex fxFlex.xs="100%" >
+      <div *ngIf="disciplineOptions.length > 0" class="library-filter" fxFlex fxFlex.xs="100%" >
         <app-select-menu [options]="disciplineOptions" [placeholderText]="'Discipline'" [value]="disciplineValue"
           (update)="filterUpdated($event, 'discipline')" [valueProp]="'id'" [viewValueProp]="'name'"
           [multiple]="true"></app-select-menu>
       </div>
-      <div class="library-filter" fxFlex fxFlex.xs="100%" >
+      <div *ngIf="dciArrangementOptions.length > 0" class="library-filter" fxFlex fxFlex.xs="100%" >
         <app-select-menu [options]="dciArrangementOptions" [placeholderText]="'DCI Arrangement'"
           [value]="dciArrangementValue" (update)="filterUpdated($event, 'dci')" [valueProp]="'id'" [viewValueProp]="'name'"
           [multiple]="true"></app-select-menu>
       </div>
-      <div class="library-filter" fxFlex fxFlex.xs="100%" >
+      <div *ngIf="peOptions.length > 0" class="library-filter" fxFlex fxFlex.xs="100%" >
         <app-select-menu [options]="peOptions" [placeholderText]="'Performance Expectation'" [value]="peValue"
           (update)="filterUpdated($event, 'pe')" [valueProp]="'id'" [viewValueProp]="'name'"
           [multiple]="true"></app-select-menu>
