@@ -394,8 +394,8 @@
               <md-input-container style='width: 100%;'>
                 <textarea ng-model='projectController.projectJSONString'
                       style='width: 90%; border: 1px solid black;'
-                      ng-change='projectController.saveProjectJSONString()'
-                      ng-model-options='{updateOn: "blur"}'></textarea>
+                      ng-change='projectController.autoSaveProjectJSONString()'
+                      ng-model-options='{ debounce: 1000 }'></textarea>
               </md-input-container>
             </div>
           </div>
