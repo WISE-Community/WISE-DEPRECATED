@@ -23,19 +23,14 @@ class EmbeddedController extends ComponentController {
       StudentDataService,
       UtilService) {
     super($filter, $mdDialog, $rootScope, $scope,
-      AnnotationService, ConfigService, NodeService,
-      NotebookService, ProjectService, StudentAssetService,
-      StudentDataService, UtilService);
+        AnnotationService, ConfigService, NodeService,
+        NotebookService, ProjectService, StudentAssetService,
+        StudentDataService, UtilService);
     this.$q = $q;
     this.$sce = $sce;
     this.$timeout = $timeout;
     this.$window = $window;
     this.EmbeddedService = EmbeddedService;
-    this.idToOrder = this.ProjectService.idToOrder;
-    this.nodeId = null;
-    this.componentId = null;
-    this.componentContent = null;
-    this.authoringComponentContent = null;
     this.componentType = null;
     this.url = null;
 
@@ -51,23 +46,12 @@ class EmbeddedController extends ComponentController {
     // the max height of the iframe
     this.maxHeight = null;
 
-    this.isDirty = false;
-    this.isSubmitDirty = false;
     this.isSnipModelButtonVisible = true;
     this.notebookConfig = this.NotebookService.getNotebookConfig();
-
-    this.saveMessage = {
-      text: '',
-      time: ''
-    };
 
     this.latestAnnotations = null;
     this.componentStateId = null;
     this.embeddedApplicationIFrameId = '';
-    this.isSaveButtonVisible = false;
-    this.isSubmitButtonVisible = false;
-    this.showAdvancedAuthoring = false;
-    this.showJSONAuthoring = false;
 
     this.connectedComponentUpdateOnOptions = [
       {
@@ -95,22 +79,11 @@ class EmbeddedController extends ComponentController {
       { type: 'Table' }
     ];
 
-    this.nodeId = this.$scope.nodeId;
-
-    this.componentContent = this.$scope.componentContent;
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
-
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
     this.originalComponentContent = this.$scope.originalComponentContent;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    this.mode = this.$scope.mode;
-
-    this.workgroupId = this.$scope.workgroupId;
-    this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
     if (this.componentContent != null) {
       this.componentId = this.componentContent.id;

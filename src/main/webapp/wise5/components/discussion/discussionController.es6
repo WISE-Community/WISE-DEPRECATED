@@ -28,20 +28,7 @@ class DiscussionController extends ComponentController {
     this.DiscussionService = DiscussionService;
     this.NotificationService = NotificationService;
     this.StudentWebSocketService = StudentWebSocketService;
-    this.idToOrder = this.ProjectService.idToOrder;
     this.$mdMedia = $mdMedia;
-
-    // the node id of the current node
-    this.nodeId = null;
-
-    // the component id
-    this.componentId = null;
-
-    // field that will hold the component content
-    this.componentContent = null;
-
-    // field that will hold the authoring component content
-    this.authoringComponentContent = null;
 
     // holds the text that the student has typed
     this.studentResponse = '';
@@ -51,24 +38,6 @@ class DiscussionController extends ComponentController {
 
     // holds student attachments like assets
     this.newAttachments = [];
-
-    // whether the step should be disabled
-    this.isDisabled = false;
-
-    // whether the student work is dirty and needs saving
-    this.isDirty = false;
-
-    // whether this part is showing previous work
-    this.isShowPreviousWork = false;
-
-    // whether the student work is for a submit
-    this.isSubmit = false;
-
-    // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
 
     // will hold the class responses
     this.classResponses = [];
@@ -85,22 +54,11 @@ class DiscussionController extends ComponentController {
     // whether rich text is enabled
     this.isRichTextEnabled = false;
 
-    // whether students can attach files to their work
-    this.isStudentAttachmentEnabled = false;
-
     // whether we have retrieved the classmate responses
     this.retrievedClassmateResponses = false;
 
     // the latest annotations
     this.latestAnnotations = null;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    this.mode = this.$scope.mode;
-
-    this.workgroupId = this.$scope.workgroupId;
-    this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
-
-    this.workgroupId = null;
 
     // the options for when to update this component from a connected component
     this.connectedComponentUpdateOnOptions = [
@@ -120,14 +78,6 @@ class DiscussionController extends ComponentController {
         type: 'Discussion'
       }
     ];
-
-    this.nodeId = this.$scope.nodeId;
-
-    // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
-
-    // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
 
     /*
      * get the original component content. this is used when showing

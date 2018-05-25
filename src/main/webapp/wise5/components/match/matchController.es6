@@ -20,42 +20,14 @@ class MatchController extends ComponentController {
       StudentDataService,
       UtilService) {
     super($filter, $mdDialog, $rootScope, $scope,
-      AnnotationService, ConfigService, NodeService,
-      NotebookService, ProjectService, StudentAssetService,
-      StudentDataService, UtilService);
+        AnnotationService, ConfigService, NodeService,
+        NotebookService, ProjectService, StudentAssetService,
+        StudentDataService, UtilService);
     this.$q = $q;
     this.dragulaService = dragulaService;
     this.MatchService = MatchService;
     this.$mdMedia = $mdMedia;
-    this.idToOrder = this.ProjectService.idToOrder;
     this.autoScroll = require('dom-autoscroller');
-
-    // the node id of the current node
-    this.nodeId = null;
-
-    // the component id
-    this.componentId = null;
-
-    // field that will hold the component content
-    this.componentContent = null;
-
-    // field that will hold the authoring component content
-    this.authoringComponentContent = null;
-
-    // whether the step should be disabled
-    this.isDisabled = false;
-
-    // whether the student work is dirty and needs saving
-    this.isDirty = false;
-
-    // whether the student work has changed since last submit
-    this.isSubmitDirty = false;
-
-    // whether this part is showing previous work
-    this.isShowPreviousWork = false;
-
-    // whether the student work is for a submit
-    this.isSubmit = false;
 
     // the choices
     this.choices = [];
@@ -81,23 +53,8 @@ class MatchController extends ComponentController {
     // css style for the buckets
     this.bucketStyle = '';
 
-    // message to show next to save/submit buttons
-    this.saveMessage = {
-      text: '',
-      time: ''
-    };
-
-    // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
-
     // the latest annotations
     this.latestAnnotations = null;
-
-    // counter to keep track of the number of submits
-    this.submitCounter = 0;
 
     // the id for the source bucket
     this.sourceBucketId = '0';
@@ -127,25 +84,11 @@ class MatchController extends ComponentController {
       }
     ];
 
-    this.nodeId = this.$scope.nodeId;
-
-    // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
-
-    // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
-
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
     this.originalComponentContent = this.$scope.originalComponentContent;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    this.mode = this.$scope.mode;
-
-    this.workgroupId = this.$scope.workgroupId;
-    this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
     if (this.componentContent != null) {
 

@@ -30,49 +30,17 @@ var HTMLController = function (_ComponentController) {
     _this.$stateParams = $stateParams;
     _this.$sce = $sce;
 
-    // the node id of the current node
-    _this.nodeId = null;
-
-    // the component id
-    _this.componentId = null;
-
-    // field that will hold the component content
-    _this.componentContent = null;
-
-    // field that will hold the authoring component content
-    _this.authoringComponentContent = null;
-
-    // whether this part is showing previous work
-    _this.isShowPreviousWork = false;
-
-    // flag for whether to show the advanced authoring
-    _this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    _this.showJSONAuthoring = false;
-
     // the summernote prompt element id
     _this.summernotePromptId = '';
 
     // the summernote prompt html
     _this.summernotePromptHTML = '';
 
-    _this.mode = _this.$scope.mode;
-
-    // perform setup of this component
-
-    _this.nodeId = _this.$scope.nodeId;
-
-    // get the component content from the scope
-    _this.componentContent = _this.$scope.componentContent;
-
-    // get the authoring component content
-    _this.authoringComponentContent = _this.$scope.authoringComponentContent;
-
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
+    // TODO: remove. no longer used
     _this.originalComponentContent = _this.$scope.originalComponentContent;
 
     if (_this.componentContent != null) {

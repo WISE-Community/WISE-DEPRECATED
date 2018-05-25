@@ -39,11 +39,6 @@ var EmbeddedController = function (_ComponentController) {
     _this.$timeout = $timeout;
     _this.$window = $window;
     _this.EmbeddedService = EmbeddedService;
-    _this.idToOrder = _this.ProjectService.idToOrder;
-    _this.nodeId = null;
-    _this.componentId = null;
-    _this.componentContent = null;
-    _this.authoringComponentContent = null;
     _this.componentType = null;
     _this.url = null;
 
@@ -59,23 +54,12 @@ var EmbeddedController = function (_ComponentController) {
     // the max height of the iframe
     _this.maxHeight = null;
 
-    _this.isDirty = false;
-    _this.isSubmitDirty = false;
     _this.isSnipModelButtonVisible = true;
     _this.notebookConfig = _this.NotebookService.getNotebookConfig();
-
-    _this.saveMessage = {
-      text: '',
-      time: ''
-    };
 
     _this.latestAnnotations = null;
     _this.componentStateId = null;
     _this.embeddedApplicationIFrameId = '';
-    _this.isSaveButtonVisible = false;
-    _this.isSubmitButtonVisible = false;
-    _this.showAdvancedAuthoring = false;
-    _this.showJSONAuthoring = false;
 
     _this.connectedComponentUpdateOnOptions = [{
       value: 'change',
@@ -87,22 +71,11 @@ var EmbeddedController = function (_ComponentController) {
 
     _this.allowedConnectedComponentTypes = [{ type: 'Animation' }, { type: 'AudioOscillator' }, { type: 'ConceptMap' }, { type: 'Discussion' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Match' }, { type: 'MultipleChoice' }, { type: 'OpenResponse' }, { type: 'Table' }];
 
-    _this.nodeId = _this.$scope.nodeId;
-
-    _this.componentContent = _this.$scope.componentContent;
-    _this.authoringComponentContent = _this.$scope.authoringComponentContent;
-
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
     _this.originalComponentContent = _this.$scope.originalComponentContent;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    _this.mode = _this.$scope.mode;
-
-    _this.workgroupId = _this.$scope.workgroupId;
-    _this.teacherWorkgroupId = _this.$scope.teacherWorkgroupId;
 
     if (_this.componentContent != null) {
       _this.componentId = _this.componentContent.id;

@@ -30,24 +30,6 @@ var OutsideURLController = function (_ComponentController) {
     _this.$sce = $sce;
     _this.OutsideURLService = OutsideURLService;
 
-    // the node id of the current node
-    _this.nodeId = null;
-
-    // the component id
-    _this.componentId = null;
-
-    // field that will hold the component content
-    _this.componentContent = null;
-
-    // field that will hold the authoring component content
-    _this.authoringComponentContent = null;
-
-    // flag for whether to show the advanced authoring
-    _this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    _this.showJSONAuthoring = false;
-
     // the url to the web page to display
     _this.url = null;
 
@@ -57,21 +39,11 @@ var OutsideURLController = function (_ComponentController) {
     // the max height of the iframe
     _this.maxHeight = null;
 
-    _this.nodeId = _this.$scope.nodeId;
-
-    // get the component content from the scope
-    _this.componentContent = _this.$scope.componentContent;
-
-    // get the authoring component content
-    _this.authoringComponentContent = _this.$scope.authoringComponentContent;
-
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
     _this.originalComponentContent = _this.$scope.originalComponentContent;
-
-    _this.mode = _this.$scope.mode;
 
     if (_this.componentContent != null) {
 

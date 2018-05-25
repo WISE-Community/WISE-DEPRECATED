@@ -36,19 +36,6 @@ var ConceptMapController = function (_ComponentController) {
     _this.$timeout = $timeout;
     _this.ConceptMapService = ConceptMapService;
     _this.CRaterService = CRaterService;
-    _this.idToOrder = _this.ProjectService.idToOrder;
-
-    // the node id of the current node
-    _this.nodeId = null;
-
-    // the component id
-    _this.componentId = null;
-
-    // field that will hold the component content
-    _this.componentContent = null;
-
-    // field that will hold the authoring component content
-    _this.authoringComponentContent = null;
 
     // holds the text that the student has typed
     _this.studentResponse = '';
@@ -56,53 +43,8 @@ var ConceptMapController = function (_ComponentController) {
     // holds student attachments like assets
     _this.attachments = [];
 
-    // whether the step should be disabled
-    _this.isDisabled = false;
-
-    // whether the student work is dirty and needs saving
-    _this.isDirty = false;
-
-    // whether the student work has changed since last submit
-    _this.isSubmitDirty = false;
-
-    // message to show next to save/submit buttons
-    _this.saveMessage = {
-      text: '',
-      time: ''
-    };
-
-    // whether this component is showing previous work
-    _this.isShowPreviousWork = false;
-
-    // whether the student work is for a submit
-    _this.isSubmit = false;
-
     // whether rich text editing is enabled
     _this.isRichTextEnabled = false;
-
-    // whether students can attach files to their work
-    _this.isStudentAttachmentEnabled = false;
-
-    // whether the prompt is shown or not
-    _this.isPromptVisible = true;
-
-    // whether the save button is shown or not
-    _this.isSaveButtonVisible = false;
-
-    // whether the submit button is shown or not
-    _this.isSubmitButtonVisible = false;
-
-    // whether the submit button is disabled
-    _this.isSubmitButtonDisabled = false;
-
-    // whether the snip table button is shown or not
-    _this.isSnipButtonVisible = true;
-
-    // flag for whether to show the advanced authoring
-    _this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    _this.showJSONAuthoring = false;
 
     // the latest annotations
     _this.latestAnnotations = null;
@@ -171,25 +113,11 @@ var ConceptMapController = function (_ComponentController) {
     // the component types we are allowed to connect to
     _this.allowedConnectedComponentTypes = [{ type: 'ConceptMap' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Table' }];
 
-    _this.nodeId = _this.$scope.nodeId;
-
-    // get the component content from the scope
-    _this.componentContent = _this.$scope.componentContent;
-
-    // get the authoring component content
-    _this.authoringComponentContent = _this.$scope.authoringComponentContent;
-
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
     _this.originalComponentContent = _this.$scope.originalComponentContent;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    _this.mode = _this.$scope.mode;
-
-    _this.workgroupId = _this.$scope.workgroupId;
-    _this.teacherWorkgroupId = _this.$scope.teacherWorkgroupId;
 
     // the options for authoring the should or should not value in rules
     _this.shouldOptions = [{
@@ -200,9 +128,6 @@ var ConceptMapController = function (_ComponentController) {
 
     // the auto feedback string
     _this.autoFeedbackString = '';
-
-    // counter to keep track of the number of submits
-    _this.submitCounter = 0;
 
     if (_this.componentContent != null) {
 

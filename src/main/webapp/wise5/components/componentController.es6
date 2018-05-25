@@ -25,6 +25,45 @@ class ComponentController {
     this.StudentDataService = StudentDataService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
+
+    this.nodeId = this.$scope.nodeId;
+    this.componentId = null;
+    this.idToOrder = this.ProjectService.idToOrder;
+    this.mode = this.$scope.mode;
+    this.componentContent = this.$scope.componentContent;
+    this.authoringComponentContent = this.$scope.authoringComponentContent;
+    this.isShowPreviousWork = false;
+    this.showAdvancedAuthoring = false;
+    this.showJSONAuthoring = false;
+    this.isDisabled = false;
+    this.isDirty = false;
+
+    // whether the student work has changed since last submit
+    this.isSubmitDirty = false;
+
+    // whether the student work is for a submit
+    this.isSubmit = false;
+
+    this.saveMessage = {
+      text: '',
+      time: ''
+    };
+
+    // whether students can attach files to their work
+    this.isStudentAttachmentEnabled = false;
+
+    this.isPromptVisible = true;
+    this.isSaveButtonVisible = false;
+    this.isSubmitButtonVisible = false;
+    this.isSubmitButtonDisabled = false;
+    this.submitCounter = 0;
+
+    this.isSnipButtonVisible = true;
+
+    this.workgroupId = this.$scope.workgroupId;
+    this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
+
+
   }
 }
 

@@ -36,35 +36,6 @@ var GraphController = function (_ComponentController) {
     _this.$timeout = $timeout;
     _this.GraphService = GraphService;
 
-    _this.idToOrder = _this.ProjectService.idToOrder;
-
-    // the node id of the current node
-    _this.nodeId = null;
-
-    // the component id
-    _this.componentId = null;
-
-    // field that will hold the component content
-    _this.componentContent = null;
-
-    // field that will hold the authoring component content
-    _this.authoringComponentContent = null;
-
-    // whether the component should be disabled
-    _this.isDisabled = false;
-
-    // whether the student work is dirty and needs saving
-    _this.isDirty = false;
-
-    // whether the student work has changed since last submit
-    _this.isSubmitDirty = false;
-
-    // message to show next to save/submit buttons
-    _this.saveMessage = {
-      text: '',
-      time: ''
-    };
-
     // the graph type
     _this.graphType = null;
 
@@ -77,38 +48,8 @@ var GraphController = function (_ComponentController) {
     // series marker options
     _this.seriesMarkers = ['circle', 'square', 'diamond', 'triangle', 'triangle-down', 'circle'];
 
-    // whether this part is showing previous work
-    _this.isShowPreviousWork = false;
-
-    // whether the student work is for a submit
-    _this.isSubmit = false;
-
-    // whether students can attach files to their work
-    _this.isStudentAttachmentEnabled = false;
-
     // will hold the active series
     _this.activeSeries = null;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    _this.mode = null;
-
-    // whether the prompt is shown or not
-    _this.isPromptVisible = true;
-
-    // whether the save button is shown or not
-    _this.isSaveButtonVisible = false;
-
-    // whether the submit button is shown or not
-    _this.isSubmitButtonVisible = false;
-
-    // counter to keep track of the number of submits
-    _this.submitCounter = 0;
-
-    // flag for whether to show the advanced authoring
-    _this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    _this.showJSONAuthoring = false;
 
     // the latest annotations
     _this.latestAnnotations = null;
@@ -233,25 +174,11 @@ var GraphController = function (_ComponentController) {
     // the component types we are allowed to connect to
     _this.allowedConnectedComponentTypes = [{ type: 'Animation' }, { type: 'ConceptMap' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Table' }];
 
-    _this.nodeId = _this.$scope.nodeId;
-
-    // get the component content from the scope
-    _this.componentContent = _this.$scope.componentContent;
-
-    // get the authoring component content
-    _this.authoringComponentContent = _this.$scope.authoringComponentContent;
-
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
     _this.originalComponentContent = _this.$scope.originalComponentContent;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    _this.mode = _this.$scope.mode;
-
-    _this.workgroupId = _this.$scope.workgroupId;
-    _this.teacherWorkgroupId = _this.$scope.teacherWorkgroupId;
 
     _this.trials = [];
     _this.activeTrial = null;
@@ -6401,9 +6328,10 @@ var GraphController = function (_ComponentController) {
         width: 2,
         value: x,
         zIndex: 5
+      };
 
-        // set the plot line into the plot lines array
-      };this.plotLines = [plotLine];
+      // set the plot line into the plot lines array
+      this.plotLines = [plotLine];
 
       /*
        * Call $apply() so that the red plot line position gets updated. If we

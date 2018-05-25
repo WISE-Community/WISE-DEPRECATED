@@ -28,73 +28,18 @@ var MultipleChoiceController = function (_ComponentController) {
 
     _this.$q = $q;
     _this.MultipleChoiceService = MultipleChoiceService;
-    _this.idToOrder = _this.ProjectService.idToOrder;
-
-    // the node id of the current node
-    _this.nodeId = null;
-
-    // the component id
-    _this.componentId = null;
-
-    // field that will hold the component content
-    _this.componentContent = null;
-
-    // field that will hold the authoring component content
-    _this.authoringComponentContent = null;
-
-    // whether the component should be disabled
-    _this.isDisabled = false;
-
-    // whether the student work is dirty and needs saving
-    _this.isDirty = false;
-
-    // whether the student work has changed since last submit
-    _this.isSubmitDirty = false;
-
-    // message to show next to save/submit buttons
-    _this.saveMessage = {
-      text: '',
-      time: ''
-    };
-
-    // flag for whether to show the advanced authoring
-    _this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    _this.showJSONAuthoring = false;
 
     // holds the ids of the choices the student has chosen
     _this.studentChoices = [];
 
-    // whether this part is showing previous work
-    _this.isShowPreviousWork = false;
-
     // holds whether the student answered correctly if there is a correct answer
     _this.isCorrect = null;
-
-    // whether the latest work was submitted or not
-    _this.isSubmit = null;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    _this.mode = null;
-
-    // whether the prompt is shown or not
-    _this.isPromptVisible = true;
-
-    // whether the save button is shown or not
-    _this.isSaveButtonVisible = false;
-
-    // whether the submit button is shown or not
-    _this.isSubmitButtonVisible = false;
 
     // whether to show the feedback or not
     _this.showFeedback = true;
 
     // the latest annotations
     _this.latestAnnotations = null;
-
-    // counter to keep track of the number of submits
-    _this.submitCounter = 0;
 
     // whether this component has been authored with a correct answer
     _this.hasCorrectAnswer = false;
@@ -116,25 +61,11 @@ var MultipleChoiceController = function (_ComponentController) {
       type: 'MultipleChoice'
     }];
 
-    _this.nodeId = _this.$scope.nodeId;
-
-    // get the component content from the scope
-    _this.componentContent = _this.$scope.componentContent;
-
-    // get the authoring component content
-    _this.authoringComponentContent = _this.$scope.authoringComponentContent;
-
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
     _this.originalComponentContent = _this.$scope.originalComponentContent;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    _this.mode = _this.$scope.mode;
-
-    _this.workgroupId = _this.$scope.workgroupId;
-    _this.teacherWorkgroupId = _this.$scope.teacherWorkgroupId;
 
     if (_this.componentContent != null) {
 

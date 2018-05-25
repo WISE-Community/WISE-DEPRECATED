@@ -26,49 +26,17 @@ class HTMLController extends ComponentController {
     this.$stateParams = $stateParams;
     this.$sce = $sce;
 
-    // the node id of the current node
-    this.nodeId = null;
-
-    // the component id
-    this.componentId = null;
-
-    // field that will hold the component content
-    this.componentContent = null;
-
-    // field that will hold the authoring component content
-    this.authoringComponentContent = null;
-
-    // whether this part is showing previous work
-    this.isShowPreviousWork = false;
-
-    // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
-
     // the summernote prompt element id
     this.summernotePromptId = '';
 
     // the summernote prompt html
     this.summernotePromptHTML = '';
 
-    this.mode = this.$scope.mode;
-
-    // perform setup of this component
-
-    this.nodeId = this.$scope.nodeId;
-
-    // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
-
-    // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
-
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
+    // TODO: remove. no longer used
     this.originalComponentContent = this.$scope.originalComponentContent;
 
     if (this.componentContent != null) {
