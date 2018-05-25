@@ -771,16 +771,6 @@ var EmbeddedController = function (_ComponentController) {
       return true;
     }
   }, {
-    key: 'isLockAfterSubmit',
-    value: function isLockAfterSubmit() {
-      if (this.componentContent != null) {
-        if (this.componentContent.lockAfterSubmit) {
-          return true;
-        }
-      }
-      return false;
-    }
-  }, {
     key: 'submit',
     value: function submit(submitTriggeredBy) {
       this.isSubmit = true;

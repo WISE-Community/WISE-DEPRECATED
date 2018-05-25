@@ -145,8 +145,7 @@ class DiscussionController extends ComponentController {
         this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
       }
 
-      // check if we need to lock this component
-      this.calculateDisabled();
+      this.disableComponentIfNecessary();
     } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
 
       /*
@@ -678,12 +677,6 @@ class DiscussionController extends ComponentController {
     this.$scope.submitbuttonclicked();
   };
 
-  disableComponentIfNecessary() {
-    if (this.isLockAfterSubmit()) {
-      this.isDisabled = true;
-    }
-  };
-
   /**
    * Called when the student changes their work
    */
@@ -840,40 +833,12 @@ class DiscussionController extends ComponentController {
     this.componentStateIdReplyingTo = null;
   };
 
-  /**
-   * Check if we need to lock the component
-   */
-  calculateDisabled() {
-
-    var nodeId = this.nodeId;
-
-    // get the component content
-    var componentContent = this.componentContent;
-
-    if (componentContent != null) {
-
-      // check if the parent has set this component to disabled
-      if (componentContent.isDisabled) {
-        this.isDisabled = true;
-      } else if (componentContent.lockAfterSubmit) {
-        // we need to lock the step after the student has submitted
-
-        // get the component states for this component
-        var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-        // check if any of the component states were submitted
-        var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-        if (isSubmitted) {
-          // the student has submitted work for this component
+  disableComponentIfNecessary() {
+    super.disableComponentIfNecessary();
+    if (this.UtilService.hasConnectedComponent(componentContent)) {
+      for (let connectedComponent of componentContent.connectedComponents) {
+        if (connectedComponent.type == 'showWork') {
           this.isDisabled = true;
-        }
-      }
-      if (this.UtilService.hasConnectedComponent(componentContent)) {
-        for (let connectedComponent of componentContent.connectedComponents) {
-          if (connectedComponent.type == 'showWork') {
-            this.isDisabled = true;
-          }
         }
       }
     }
@@ -913,25 +878,6 @@ class DiscussionController extends ComponentController {
     }
 
     return show;
-  };
-
-  /**
-   * Check whether we need to lock the component after the student
-   * submits an answer.
-   * @return whether to lock the component after the student submits
-   */
-  isLockAfterSubmit() {
-    var result = false;
-
-    if (this.componentContent != null) {
-
-      // check the lockAfterSubmit field in the component content
-      if (this.componentContent.lockAfterSubmit) {
-        result = true;
-      }
-    }
-
-    return result;
   };
 
   /**

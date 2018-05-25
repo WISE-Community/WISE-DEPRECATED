@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 var _componentController = require('../componentController');
 
 var _componentController2 = _interopRequireDefault(_componentController);
@@ -139,8 +141,7 @@ var DiscussionController = function (_ComponentController) {
         _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
       }
 
-      // check if we need to lock this component
-      _this.calculateDisabled();
+      _this.disableComponentIfNecessary();
     } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
 
       /*
@@ -679,13 +680,6 @@ var DiscussionController = function (_ComponentController) {
       this.$scope.submitbuttonclicked();
     }
   }, {
-    key: 'disableComponentIfNecessary',
-    value: function disableComponentIfNecessary() {
-      if (this.isLockAfterSubmit()) {
-        this.isDisabled = true;
-      }
-    }
-  }, {
     key: 'studentDataChanged',
 
 
@@ -856,63 +850,33 @@ var DiscussionController = function (_ComponentController) {
       this.componentStateIdReplyingTo = null;
     }
   }, {
-    key: 'calculateDisabled',
+    key: 'disableComponentIfNecessary',
+    value: function disableComponentIfNecessary() {
+      _get(DiscussionController.prototype.__proto__ || Object.getPrototypeOf(DiscussionController.prototype), 'disableComponentIfNecessary', this).call(this);
+      if (this.UtilService.hasConnectedComponent(componentContent)) {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
+        try {
+          for (var _iterator = componentContent.connectedComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var connectedComponent = _step.value;
 
-    /**
-     * Check if we need to lock the component
-     */
-    value: function calculateDisabled() {
-
-      var nodeId = this.nodeId;
-
-      // get the component content
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // check if the parent has set this component to disabled
-        if (componentContent.isDisabled) {
-          this.isDisabled = true;
-        } else if (componentContent.lockAfterSubmit) {
-          // we need to lock the step after the student has submitted
-
-          // get the component states for this component
-          var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          // check if any of the component states were submitted
-          var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-          if (isSubmitted) {
-            // the student has submitted work for this component
-            this.isDisabled = true;
-          }
-        }
-        if (this.UtilService.hasConnectedComponent(componentContent)) {
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
-
-          try {
-            for (var _iterator = componentContent.connectedComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var connectedComponent = _step.value;
-
-              if (connectedComponent.type == 'showWork') {
-                this.isDisabled = true;
-              }
+            if (connectedComponent.type == 'showWork') {
+              this.isDisabled = true;
             }
-          } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
           } finally {
-            try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-              }
-            } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
-              }
+            if (_didIteratorError) {
+              throw _iteratorError;
             }
           }
         }
@@ -959,28 +923,6 @@ var DiscussionController = function (_ComponentController) {
       }
 
       return show;
-    }
-  }, {
-    key: 'isLockAfterSubmit',
-
-
-    /**
-     * Check whether we need to lock the component after the student
-     * submits an answer.
-     * @return whether to lock the component after the student submits
-     */
-    value: function isLockAfterSubmit() {
-      var result = false;
-
-      if (this.componentContent != null) {
-
-        // check the lockAfterSubmit field in the component content
-        if (this.componentContent.lockAfterSubmit) {
-          result = true;
-        }
-      }
-
-      return result;
     }
   }, {
     key: 'isClassmateResponsesGated',

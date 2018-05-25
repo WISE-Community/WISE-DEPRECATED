@@ -407,8 +407,7 @@ var GraphController = function (_ComponentController) {
       _this.showTrialSelect = false;
     }
 
-    // check if we need to lock this component
-    _this.calculateDisabled();
+    _this.disableComponentIfNecessary();
 
     // setup the graph
     _this.setupGraph().then(function () {
@@ -2722,14 +2721,6 @@ var GraphController = function (_ComponentController) {
       //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     }
   }, {
-    key: 'lockIfNecessary',
-    value: function lockIfNecessary() {
-      // check if we need to lock the component after the student submits
-      if (this.isLockAfterSubmit()) {
-        this.isDisabled = true;
-      }
-    }
-  }, {
     key: 'studentDataChanged',
 
 
@@ -2972,47 +2963,12 @@ var GraphController = function (_ComponentController) {
     }
 
     /**
-     * Check if we need to lock the component
-     */
-
-  }, {
-    key: 'calculateDisabled',
-    value: function calculateDisabled() {
-
-      var nodeId = this.nodeId;
-
-      // get the component content
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // check if the parent has set this component to disabled
-        if (componentContent.isDisabled) {
-          this.isDisabled = true;
-        } else if (componentContent.lockAfterSubmit) {
-          // we need to lock the step after the student has submitted
-
-          // get the component states for this component
-          var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          // check if any of the component states were submitted
-          var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-          if (isSubmitted) {
-            // the student has submitted work for this component
-            this.isDisabled = true;
-          }
-        }
-      }
-    }
-  }, {
-    key: 'showPrompt',
-
-
-    /**
      * Check whether we need to show the prompt
      * @return whether to show the prompt
      */
+
+  }, {
+    key: 'showPrompt',
     value: function showPrompt() {
       var show = false;
 
@@ -3058,33 +3014,12 @@ var GraphController = function (_ComponentController) {
     }
 
     /**
-     * Check whether we need to lock the component after the student
-     * submits an answer.
-     */
-
-  }, {
-    key: 'isLockAfterSubmit',
-    value: function isLockAfterSubmit() {
-      var result = false;
-
-      if (this.componentContent != null) {
-
-        // check the lockAfterSubmit field in the component content
-        if (this.componentContent.lockAfterSubmit) {
-          result = true;
-        }
-      }
-
-      return result;
-    }
-  }, {
-    key: 'getPrompt',
-
-
-    /**
      * Get the prompt to show to the student
      * @return a string containing the prompt
      */
+
+  }, {
+    key: 'getPrompt',
     value: function getPrompt() {
       var prompt = null;
 

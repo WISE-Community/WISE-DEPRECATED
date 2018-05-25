@@ -211,8 +211,7 @@ var MultipleChoiceController = function (_ComponentController) {
       _this.isSubmitButtonDisabled = true;
     }
 
-    // check if we need to lock this component
-    _this.calculateDisabled();
+    _this.disableComponentIfNecessary();
 
     if (_this.$scope.$parent.nodeController != null) {
       // register this component with the parent node
@@ -961,14 +960,6 @@ var MultipleChoiceController = function (_ComponentController) {
       return correctChoices;
     }
   }, {
-    key: 'lockIfNecessary',
-    value: function lockIfNecessary() {
-      // check if we need to lock the component after the student submits
-      if (this.isLockAfterSubmit()) {
-        this.isDisabled = true;
-      }
-    }
-  }, {
     key: 'studentDataChanged',
 
 
@@ -1125,47 +1116,12 @@ var MultipleChoiceController = function (_ComponentController) {
     }
 
     /**
-     * Check if we need to lock the component
-     */
-
-  }, {
-    key: 'calculateDisabled',
-    value: function calculateDisabled() {
-
-      var nodeId = this.nodeId;
-
-      // get the component content
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // check if the parent has set this component to disabled
-        if (componentContent.isDisabled) {
-          this.isDisabled = true;
-        } else if (componentContent.lockAfterSubmit) {
-          // we need to lock the step after the student has submitted
-
-          // get the component states for this component
-          var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          // check if any of the component states were submitted
-          var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-          if (isSubmitted) {
-            // the student has submitted work for this component
-            this.isDisabled = true;
-          }
-        }
-      }
-    }
-  }, {
-    key: 'getStudentChoiceObjects',
-
-
-    /**
      * Get the choices the student has chosen as objects. The objects
      * will contain the choice id and the choice text.
      */
+
+  }, {
+    key: 'getStudentChoiceObjects',
     value: function getStudentChoiceObjects() {
       var studentChoiceObjects = [];
 
@@ -1448,27 +1404,6 @@ var MultipleChoiceController = function (_ComponentController) {
       }
 
       return choices;
-    }
-  }, {
-    key: 'isLockAfterSubmit',
-
-
-    /**
-     * Check whether we need to lock the component after the student
-     * submits an answer.
-     */
-    value: function isLockAfterSubmit() {
-      var result = false;
-
-      if (this.componentContent != null) {
-
-        // check the lockAfterSubmit field in the component content
-        if (this.componentContent.lockAfterSubmit) {
-          result = true;
-        }
-      }
-
-      return result;
     }
   }, {
     key: 'getPrompt',

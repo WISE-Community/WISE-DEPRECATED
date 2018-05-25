@@ -70,11 +70,11 @@ class ComponentController {
     // tell the parent node to save
     this.$scope.$emit('componentSaveTriggered',
         {nodeId: this.nodeId, componentId: this.componentId});
-  };
+  }
 
   submitButtonClicked() {
     this.submit('componentSubmitButton');
-  };
+  }
 
   submit(submitTriggeredBy) {
 
@@ -83,6 +83,26 @@ class ComponentController {
   incrementSubmitCounter() {
     this.submitCounter++;
   }
+
+  disableComponentIfNecessary() {
+    if (this.isLockAfterSubmit()) {
+      const componentStates = this.StudentDataService
+          .getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+      if (this.NodeService.isWorkSubmitted(componentStates)) {
+        this.isDisabled = true;
+      }
+    }
+  }
+
+  lockIfNecessary() {
+    if (this.isLockAfterSubmit()) {
+      this.isDisabled = true;
+    }
+  }
+
+  isLockAfterSubmit() {
+    return this.componentContent.lockAfterSubmit;
+  };
 }
 
 ComponentController.$inject = [];

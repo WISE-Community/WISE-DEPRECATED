@@ -85,6 +85,28 @@ var ComponentController = function () {
     value: function incrementSubmitCounter() {
       this.submitCounter++;
     }
+  }, {
+    key: 'disableComponentIfNecessary',
+    value: function disableComponentIfNecessary() {
+      if (this.isLockAfterSubmit()) {
+        var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+        if (this.NodeService.isWorkSubmitted(componentStates)) {
+          this.isDisabled = true;
+        }
+      }
+    }
+  }, {
+    key: 'lockIfNecessary',
+    value: function lockIfNecessary() {
+      if (this.isLockAfterSubmit()) {
+        this.isDisabled = true;
+      }
+    }
+  }, {
+    key: 'isLockAfterSubmit',
+    value: function isLockAfterSubmit() {
+      return this.componentContent.lockAfterSubmit;
+    }
   }]);
 
   return ComponentController;

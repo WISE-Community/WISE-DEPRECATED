@@ -446,8 +446,7 @@ class GraphController extends ComponentController {
       this.showTrialSelect = false;
     }
 
-    // check if we need to lock this component
-    this.calculateDisabled();
+    this.disableComponentIfNecessary();
 
     // setup the graph
     this.setupGraph().then(() => {
@@ -2628,13 +2627,6 @@ class GraphController extends ComponentController {
     //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
   };
 
-  lockIfNecessary() {
-    // check if we need to lock the component after the student submits
-    if (this.isLockAfterSubmit()) {
-      this.isDisabled = true;
-    }
-  };
-
   /**
    * Called when the student changes their work
    */
@@ -2868,38 +2860,6 @@ class GraphController extends ComponentController {
   }
 
   /**
-   * Check if we need to lock the component
-   */
-  calculateDisabled() {
-
-    var nodeId = this.nodeId;
-
-    // get the component content
-    var componentContent = this.componentContent;
-
-    if (componentContent != null) {
-
-      // check if the parent has set this component to disabled
-      if (componentContent.isDisabled) {
-        this.isDisabled = true;
-      } else if (componentContent.lockAfterSubmit) {
-        // we need to lock the step after the student has submitted
-
-        // get the component states for this component
-        var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-        // check if any of the component states were submitted
-        var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-        if (isSubmitted) {
-          // the student has submitted work for this component
-          this.isDisabled = true;
-        }
-      }
-    }
-  };
-
-  /**
    * Check whether we need to show the prompt
    * @return whether to show the prompt
    */
@@ -2940,24 +2900,6 @@ class GraphController extends ComponentController {
 
     return show;
   }
-
-  /**
-   * Check whether we need to lock the component after the student
-   * submits an answer.
-   */
-  isLockAfterSubmit() {
-    var result = false;
-
-    if (this.componentContent != null) {
-
-      // check the lockAfterSubmit field in the component content
-      if (this.componentContent.lockAfterSubmit) {
-        result = true;
-      }
-    }
-
-    return result;
-  };
 
   /**
    * Get the prompt to show to the student

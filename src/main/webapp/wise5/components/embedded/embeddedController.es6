@@ -746,15 +746,6 @@ class EmbeddedController extends ComponentController {
     return true;
   }
 
-  isLockAfterSubmit() {
-    if (this.componentContent != null) {
-      if (this.componentContent.lockAfterSubmit) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   submit(submitTriggeredBy) {
     this.isSubmit = true;
     this.$scope.$emit('componentSubmitTriggered',

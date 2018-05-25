@@ -263,8 +263,7 @@ class MatchController extends ComponentController {
       this.isSubmitButtonDisabled = true;
     }
 
-    // check if we need to lock this component
-    this.calculateDisabled();
+    this.disableComponentIfNecessary();
 
     if (this.$scope.$parent.nodeController != null) {
       // register this component with the parent node
@@ -916,19 +915,6 @@ class MatchController extends ComponentController {
   };
 
   /**
-  * Called when either the component or node is submitted
-  */
-  lockIfNecessary() {
-    // check if we need to lock the component after the student submits
-    if (this.isLockAfterSubmit()) {
-      this.isDisabled = true;
-    }
-
-    // check if the student answered correctly
-    //this.processLatestSubmit();
-  }
-
-  /**
    * A submit was triggered by the component submit button or node submit button
    * @param submitTriggeredBy what triggered the submit
    * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
@@ -1423,56 +1409,6 @@ class MatchController extends ComponentController {
      */
     deferred.resolve(componentState);
   }
-
-  /**
-   * Check if we need to lock the component
-   */
-  calculateDisabled() {
-
-    var nodeId = this.nodeId;
-
-    // get the component content
-    var componentContent = this.componentContent;
-
-    if (componentContent != null) {
-
-      // check if the parent has set this component to disabled
-      if (componentContent.isDisabled) {
-        this.isDisabled = true;
-      } else if (componentContent.lockAfterSubmit) {
-        // we need to lock the step after the student has submitted
-
-        // get the component states for this component
-        var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-        // check if any of the component states were submitted
-        var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-        if (isSubmitted) {
-          // the student has submitted work for this component
-          this.isDisabled = true;
-        }
-      }
-    }
-  };
-
-  /**
-   * Check whether we need to lock the component after the student
-   * submits an answer.
-   */
-  isLockAfterSubmit() {
-    var result = false;
-
-    if (this.componentContent != null) {
-
-      // check the lockAfterSubmit field in the component content
-      if (this.componentContent.lockAfterSubmit) {
-        result = true;
-      }
-    }
-
-    return result;
-  };
 
   /**
    * Get the prompt to show to the student

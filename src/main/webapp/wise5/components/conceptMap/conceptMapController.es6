@@ -732,9 +732,7 @@ class ConceptMapController extends ComponentController {
     // make the nodes draggable
     this.enableNodeDragging();
 
-    // check if we need to lock this component
-    this.calculateDisabled();
-
+    this.disableComponentIfNecessary();
 
     if (this.$scope.$parent.nodeController != null) {
       // register this component with the parent node
@@ -1129,13 +1127,6 @@ class ConceptMapController extends ComponentController {
     }
   };
 
-  lockIfNecessary() {
-    // check if we need to lock the component after the student submits
-    if (this.isLockAfterSubmit()) {
-      this.isDisabled = true;
-    }
-  };
-
   /**
    * Called when the student changes their work
    */
@@ -1422,54 +1413,6 @@ class ConceptMapController extends ComponentController {
 
     return annotation;
   }
-
-  /**
-   * Check if we need to lock the component
-   */
-  calculateDisabled() {
-
-    // get the component content
-    var componentContent = this.componentContent;
-
-    if (componentContent != null) {
-
-      // check if the parent has set this component to disabled
-      if (componentContent.isDisabled) {
-        this.isDisabled = true;
-      } else if (componentContent.lockAfterSubmit) {
-        // we need to lock the component after the student has submitted
-
-        // get the component states for this component
-        var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-        // check if any of the component states were submitted
-        var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-        if (isSubmitted) {
-          // the student has submitted work for this component
-          this.isDisabled = true;
-        }
-      }
-    }
-  };
-
-  /**
-   * Check whether we need to lock the component after the student
-   * submits an answer.
-   */
-  isLockAfterSubmit() {
-    var result = false;
-
-    if (this.componentContent != null) {
-
-      // check the lockAfterSubmit field in the component content
-      if (this.componentContent.lockAfterSubmit) {
-        result = true;
-      }
-    }
-
-    return result;
-  };
 
   removeAttachment(attachment) {
     if (this.attachments.indexOf(attachment) != -1) {

@@ -671,8 +671,7 @@ class DrawController extends ComponentController {
       this.isSubmitButtonDisabled = true;
     }
 
-    // check if we need to lock this component
-    this.calculateDisabled();
+    this.disableComponentIfNecessary();
 
     // register this component with the parent node
     if (this.$scope.$parent && this.$scope.$parent.nodeController != null) {
@@ -1040,13 +1039,6 @@ class DrawController extends ComponentController {
     }
   }
 
-  lockIfNecessary() {
-    // check if we need to lock the component after the student submits
-    if (this.isLockAfterSubmit()) {
-      this.isDisabled = true;
-    }
-  };
-
   /**
    * Called when the student changes their work
    */
@@ -1156,61 +1148,6 @@ class DrawController extends ComponentController {
      */
     deferred.resolve(componentState);
   }
-
-  /**
-   * Check if we need to lock the component
-   */
-  calculateDisabled() {
-
-    var nodeId = this.nodeId;
-
-    // get the component content
-    var componentContent = this.componentContent;
-
-    if (componentContent != null) {
-
-      // check if the parent has set this component to disabled
-      if (componentContent.isDisabled) {
-        this.isDisabled = true;
-      } else if (componentContent.lockAfterSubmit) {
-        // we need to lock the step after the student has submitted
-
-        // get the component states for this component
-        var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-        // check if any of the component states were submitted
-        var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-        if (isSubmitted) {
-          // the student has submitted work for this component
-          this.isDisabled = true;
-        }
-      }
-    }
-
-    if (this.mode === 'showStudentWorkOnly') {
-      // distable saving if we're in showStudentWorkOnly mode
-      this.isDisabled = true;
-    }
-  };
-
-  /**
-   * Check whether we need to lock the component after the student
-   * submits an answer.
-   */
-  isLockAfterSubmit() {
-    var result = false;
-
-    if (this.componentContent != null) {
-
-      // check the lockAfterSubmit field in the component content
-      if (this.componentContent.lockAfterSubmit) {
-        result = true;
-      }
-    }
-
-    return result;
-  };
 
   /**
    * Add student asset images as objects in the drawing canvas
