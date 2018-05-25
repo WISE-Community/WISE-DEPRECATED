@@ -64,6 +64,10 @@ class ComponentController {
     this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
   }
 
+  getPrompt() {
+    return this.componentContent.prompt;
+  };
+
   saveButtonClicked() {
     this.isSubmit = false;
 

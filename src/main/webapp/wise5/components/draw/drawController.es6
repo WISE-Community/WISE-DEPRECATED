@@ -1172,29 +1172,6 @@ class DrawController extends ComponentController {
   };
 
   /**
-   * Get the prompt to show to the student
-   */
-  getPrompt() {
-    var prompt = null;
-
-    if (this.originalComponentContent != null) {
-      // this is a show previous work component
-
-      if (this.originalComponentContent.showPreviousWorkPrompt) {
-        // show the prompt from the previous work component
-        prompt = this.componentContent.prompt;
-      } else {
-        // show the prompt from the original component
-        prompt = this.originalComponentContent.prompt;
-      }
-    } else if (this.componentContent != null) {
-      prompt = this.componentContent.prompt;
-    }
-
-    return prompt;
-  };
-
-  /**
    * Get the draw data
    * @return the draw data from the drawing tool as a JSON string
    */

@@ -65,6 +65,11 @@ var ComponentController = function () {
   }
 
   _createClass(ComponentController, [{
+    key: 'getPrompt',
+    value: function getPrompt() {
+      return this.componentContent.prompt;
+    }
+  }, {
     key: 'saveButtonClicked',
     value: function saveButtonClicked() {
       this.isSubmit = false;
