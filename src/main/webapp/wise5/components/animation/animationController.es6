@@ -1644,9 +1644,6 @@ class AnimationController extends ComponentController {
     // clear out the save message
     this.setSaveMessage('', null);
 
-    // get this part id
-    var componentId = this.getComponentId();
-
     /*
      * the student work in this component has changed so we will tell
      * the parent node that the student data will need to be saved.
@@ -1657,7 +1654,7 @@ class AnimationController extends ComponentController {
 
     // create a component state populated with the student data
     this.createComponentState(action).then((componentState) => {
-      this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
+      this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
     });
   };
 
@@ -2127,14 +2124,6 @@ class AnimationController extends ComponentController {
         }
       }
     }
-  };
-
-  /**
-   * Get the component id
-   * @return the component id
-   */
-  getComponentId() {
-    return this.componentContent.id;
   };
 
   /**

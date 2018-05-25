@@ -1314,14 +1314,6 @@ class LabelController extends ComponentController {
   };
 
   /**
-   * Get the component id
-   * @return the component id
-   */
-  getComponentId() {
-    return this.componentContent.id;
-  };
-
-  /**
    * Initialize the canvas
    * @returns the canvas object
    */

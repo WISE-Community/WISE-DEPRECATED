@@ -1498,24 +1498,13 @@ var MultipleChoiceController = function (_ComponentController) {
     }
 
     /**
-     * Get the component id
-     * @return the component id
-     */
-
-  }, {
-    key: 'getComponentId',
-    value: function getComponentId() {
-      return this.componentContent.id;
-    }
-  }, {
-    key: 'componentHasFeedback',
-
-
-    /**
      * Check if this component has been authored to have feedback or has a
      * correct choice
      * @return whether this component has feedback or has a correct choice
      */
+
+  }, {
+    key: 'componentHasFeedback',
     value: function componentHasFeedback() {
 
       // get the choices

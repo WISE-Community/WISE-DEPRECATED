@@ -1703,9 +1703,6 @@ var AnimationController = function (_ComponentController) {
       // clear out the save message
       this.setSaveMessage('', null);
 
-      // get this part id
-      var componentId = this.getComponentId();
-
       /*
        * the student work in this component has changed so we will tell
        * the parent node that the student data will need to be saved.
@@ -1716,7 +1713,7 @@ var AnimationController = function (_ComponentController) {
 
       // create a component state populated with the student data
       this.createComponentState(action).then(function (componentState) {
-        _this4.$scope.$emit('componentStudentDataChanged', { nodeId: _this4.nodeId, componentId: componentId, componentState: componentState });
+        _this4.$scope.$emit('componentStudentDataChanged', { nodeId: _this4.nodeId, componentId: _this4.componentId, componentState: componentState });
       });
     }
   }, {
@@ -2216,17 +2213,6 @@ var AnimationController = function (_ComponentController) {
           }
         }
       }
-    }
-  }, {
-    key: 'getComponentId',
-
-
-    /**
-     * Get the component id
-     * @return the component id
-     */
-    value: function getComponentId() {
-      return this.componentContent.id;
     }
   }, {
     key: 'authoringViewComponentChanged',

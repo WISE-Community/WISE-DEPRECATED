@@ -1572,22 +1572,11 @@ var MatchController = function (_ComponentController) {
     }
 
     /**
-     * Get the component id
-     * @return the component id
-     */
-
-  }, {
-    key: 'getComponentId',
-    value: function getComponentId() {
-      return this.componentContent.id;
-    }
-  }, {
-    key: 'authoringViewComponentChanged',
-
-
-    /**
      * The component has changed in the regular authoring view so we will save the project
      */
+
+  }, {
+    key: 'authoringViewComponentChanged',
     value: function authoringViewComponentChanged() {
 
       // update the JSON string in the advanced authoring view textarea

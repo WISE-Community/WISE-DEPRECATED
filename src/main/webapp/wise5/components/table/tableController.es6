@@ -1296,14 +1296,6 @@ class TableController extends ComponentController {
   }
 
   /**
-   * Get the component id
-   * @return the component id
-   */
-  getComponentId() {
-    return this.componentContent.id;
-  };
-
-  /**
    * The component has changed in the regular authoring view so we will save the project
    */
   authoringViewComponentChanged() {

@@ -2618,9 +2618,6 @@ class GraphController extends ComponentController {
     // re-draw the graph
     this.setupGraph(useTimeoutSetupGraph);
 
-    // get this component id
-    var componentId = this.getComponentId();
-
     /*
      * the student work in this component has changed so we will tell
      * the parent node that the student data will need to be saved.
@@ -2670,7 +2667,7 @@ class GraphController extends ComponentController {
        * this componentStudentDataChanged event
        */
       this.$timeout(() => {
-        this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
+        this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
       }, 100);
     });
   };
@@ -3587,15 +3584,6 @@ class GraphController extends ComponentController {
       }
     }
   };
-
-  /**
-   * Get the component id
-   * @return the component id
-   */
-  getComponentId() {
-    return this.componentContent.id;
-  };
-
 
   /**
    * The component has changed in the regular authoring view so we will save the project

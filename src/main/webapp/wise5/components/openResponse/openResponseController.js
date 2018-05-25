@@ -1192,17 +1192,6 @@ var OpenResponseController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'getComponentId',
-
-
-    /**
-     * Get the component id
-     * @return the component id
-     */
-    value: function getComponentId() {
-      return this.componentContent.id;
-    }
-  }, {
     key: 'authoringViewComponentChanged',
 
 

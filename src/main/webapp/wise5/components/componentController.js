@@ -130,9 +130,6 @@ var ComponentController = function () {
       // clear out the save message
       this.setSaveMessage('', null);
 
-      // get this part id
-      var componentId = this.getComponentId();
-
       /*
        * the student work in this component has changed so we will tell
        * the parent node that the student data will need to be saved.
@@ -143,7 +140,7 @@ var ComponentController = function () {
 
       // create a component state populated with the student data
       this.createComponentState(action).then(function (componentState) {
-        _this.$scope.$emit('componentStudentDataChanged', { nodeId: _this.nodeId, componentId: componentId, componentState: componentState });
+        _this.$scope.$emit('componentStudentDataChanged', { nodeId: _this.nodeId, componentId: _this.componentId, componentState: componentState });
       });
     }
   }]);

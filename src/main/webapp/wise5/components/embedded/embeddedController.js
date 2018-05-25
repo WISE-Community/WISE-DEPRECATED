@@ -588,17 +588,6 @@ var EmbeddedController = function (_ComponentController) {
       this.saveMessage.time = time;
     }
   }, {
-    key: 'getComponentId',
-
-
-    /**
-     * Get the component id
-     * @return the component id
-     */
-    value: function getComponentId() {
-      return this.componentContent.id;
-    }
-  }, {
     key: 'authoringViewComponentChanged',
 
 

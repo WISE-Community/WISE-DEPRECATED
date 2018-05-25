@@ -1429,14 +1429,6 @@ class MultipleChoiceController extends ComponentController {
   }
 
   /**
-   * Get the component id
-   * @return the component id
-   */
-  getComponentId() {
-    return this.componentContent.id;
-  };
-
-  /**
    * Check if this component has been authored to have feedback or has a
    * correct choice
    * @return whether this component has feedback or has a correct choice

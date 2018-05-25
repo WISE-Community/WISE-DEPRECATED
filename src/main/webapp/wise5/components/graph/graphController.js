@@ -2717,9 +2717,6 @@ var GraphController = function (_ComponentController) {
       // re-draw the graph
       this.setupGraph(useTimeoutSetupGraph);
 
-      // get this component id
-      var componentId = this.getComponentId();
-
       /*
        * the student work in this component has changed so we will tell
        * the parent node that the student data will need to be saved.
@@ -2769,7 +2766,7 @@ var GraphController = function (_ComponentController) {
          * this componentStudentDataChanged event
          */
         _this5.$timeout(function () {
-          _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: componentId, componentState: componentState });
+          _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });
         }, 100);
       });
     }
@@ -3752,17 +3749,6 @@ var GraphController = function (_ComponentController) {
           this.studentDataChanged();
         }
       }
-    }
-  }, {
-    key: 'getComponentId',
-
-
-    /**
-     * Get the component id
-     * @return the component id
-     */
-    value: function getComponentId() {
-      return this.componentContent.id;
     }
   }, {
     key: 'authoringViewComponentChanged',
