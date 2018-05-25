@@ -874,31 +874,6 @@ class LabelController extends ComponentController {
   };
 
   /**
-   * Called when the student clicks the save button
-   */
-  saveButtonClicked() {
-    this.isSubmit = false;
-
-    // tell the parent node that this component wants to save
-    this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-  };
-
-  /**
-   * Called when the student clicks the submit button
-   */
-  submitButtonClicked() {
-
-    // trigger the submit
-    var submitTriggeredBy = 'componentSubmitButton';
-    this.submit(submitTriggeredBy);
-
-    //this.isSubmit = true;
-
-    // tell the parent node that this component wants to submit
-    //this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-  };
-
-  /**
    * A submit was triggered by the component submit button or node submit button
    * @param submitTriggeredBy what triggered the submit
    * e.g. 'componentSubmitButton' or 'nodeSubmitButton'

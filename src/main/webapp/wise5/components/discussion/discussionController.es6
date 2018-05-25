@@ -407,7 +407,7 @@ class DiscussionController extends ComponentController {
           this.addClassResponse(componentState);
         }
 
-        this.submit();
+        this.disableComponentIfNecessary();
 
         // send the student post to web sockets so all the classmates receive it in real time
         let messageType = 'studentData';
@@ -670,32 +670,16 @@ class DiscussionController extends ComponentController {
   };
 
   /**
-   * Called when the student clicks the save button
-   */
-  saveButtonClicked() {
-
-    // tell the parent node that this component wants to save
-    this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-  };
-
-  /**
    * Called when the student clicks the submit button
    */
   submitButtonClicked() {
     this.isSubmit = true;
-
-    // check if we need to lock the component after the student submits
-    if (this.isLockAfterSubmit()) {
-      this.isDisabled = true;
-    }
-
-    // handle the submit button click
+    this.disableComponentIfNecessary();
     this.$scope.submitbuttonclicked();
   };
 
-  submit() {
+  disableComponentIfNecessary() {
     if (this.isLockAfterSubmit()) {
-      // disable the component if it was authored to lock after submit
       this.isDisabled = true;
     }
   };

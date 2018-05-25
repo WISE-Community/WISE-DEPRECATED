@@ -935,28 +935,6 @@ var MatchController = function (_ComponentController) {
       return copyOfBuckets;
     }
   }, {
-    key: 'saveButtonClicked',
-
-
-    /**
-     * Called when the student clicks the save button
-     */
-    value: function saveButtonClicked() {
-      this.isSubmit = false;
-
-      if (this.mode === 'authoring') {
-        /*
-         * we are in authoring mode so we will set isDirty to false here
-         * because the 'componentSaveTriggered' event won't work in
-         * authoring mode
-         */
-        this.isDirty = false;
-      }
-
-      // tell the parent node that this component wants to save
-      this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-    }
-  }, {
     key: 'lockIfNecessary',
 
 
@@ -974,25 +952,13 @@ var MatchController = function (_ComponentController) {
     }
 
     /**
-     * Called when the student clicks the submit button
-     */
-
-  }, {
-    key: 'submitButtonClicked',
-    value: function submitButtonClicked() {
-      // trigger the submit
-      var submitTriggeredBy = 'componentSubmitButton';
-      this.submit(submitTriggeredBy);
-    }
-  }, {
-    key: 'submit',
-
-
-    /**
      * A submit was triggered by the component submit button or node submit button
      * @param submitTriggeredBy what triggered the submit
      * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
      */
+
+  }, {
+    key: 'submit',
     value: function submit(submitTriggeredBy) {
 
       if (this.isSubmitDirty) {

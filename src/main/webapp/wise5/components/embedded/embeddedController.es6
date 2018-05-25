@@ -755,14 +755,10 @@ class EmbeddedController extends ComponentController {
     return false;
   }
 
-  saveButtonClicked() {
-    this.isSubmit = false;
-    this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-  };
-
-  submitButtonClicked() {
+  submit(submitTriggeredBy) {
     this.isSubmit = true;
-    this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+    this.$scope.$emit('componentSubmitTriggered',
+        {nodeId: this.nodeId, componentId: this.componentId});
   };
 
   getLatestStudentWork() {

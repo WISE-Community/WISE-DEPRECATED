@@ -63,6 +63,22 @@ class ComponentController {
     this.workgroupId = this.$scope.workgroupId;
     this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
   }
+
+  saveButtonClicked() {
+    this.isSubmit = false;
+
+    // tell the parent node to save
+    this.$scope.$emit('componentSaveTriggered',
+        {nodeId: this.nodeId, componentId: this.componentId});
+  };
+
+  submitButtonClicked() {
+    this.submit('componentSubmitButton');
+  };
+
+  submit(submitTriggeredBy) {
+
+  }
 }
 
 ComponentController.$inject = [];

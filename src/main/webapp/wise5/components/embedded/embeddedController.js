@@ -781,14 +781,8 @@ var EmbeddedController = function (_ComponentController) {
       return false;
     }
   }, {
-    key: 'saveButtonClicked',
-    value: function saveButtonClicked() {
-      this.isSubmit = false;
-      this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-    }
-  }, {
-    key: 'submitButtonClicked',
-    value: function submitButtonClicked() {
+    key: 'submit',
+    value: function submit(submitTriggeredBy) {
       this.isSubmit = true;
       this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
     }

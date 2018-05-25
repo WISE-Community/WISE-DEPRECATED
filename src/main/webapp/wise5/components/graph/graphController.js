@@ -2620,30 +2620,6 @@ var GraphController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'saveButtonClicked',
-
-
-    /**
-     * Called when the student clicks the save button
-     */
-    value: function saveButtonClicked() {
-      // trigger the submit
-      var submitTriggeredBy = 'componentSubmitButton';
-      this.submit(submitTriggeredBy);
-    }
-  }, {
-    key: 'submitButtonClicked',
-
-
-    /**
-     * Called when the student clicks the submit button
-     */
-    value: function submitButtonClicked() {
-      // trigger the submit
-      var submitTriggeredBy = 'componentSubmitButton';
-      this.submit(submitTriggeredBy);
-    }
-  }, {
     key: 'submit',
 
 
@@ -6322,10 +6298,9 @@ var GraphController = function (_ComponentController) {
         width: 2,
         value: x,
         zIndex: 5
-      };
 
-      // set the plot line into the plot lines array
-      this.plotLines = [plotLine];
+        // set the plot line into the plot lines array
+      };this.plotLines = [plotLine];
 
       /*
        * Call $apply() so that the red plot line position gets updated. If we
