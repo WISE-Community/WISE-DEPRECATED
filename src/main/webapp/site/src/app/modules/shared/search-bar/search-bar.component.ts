@@ -47,6 +47,11 @@ export class SearchBarComponent implements OnInit {
     }
   }
 
+  clear() {
+    this.value = '';
+    this.changed();
+  }
+
   changed() {
     this.searchUpdate.next(this.value);
   }
