@@ -677,18 +677,12 @@ class DiscussionController extends ComponentController {
     this.$scope.submitbuttonclicked();
   };
 
-  /**
-   * Called when the student changes their work
-   */
   studentDataChanged() {
     /*
      * set the dirty flag so we will know we need to save the
      * student work later
      */
     this.isDirty = true;
-
-    // get this part id
-    var componentId = this.getComponentId();
 
     // get this part id
     var componentId = this.getComponentId();
@@ -1720,8 +1714,6 @@ class DiscussionController extends ComponentController {
 
       // set the student work into the component
       this.setStudentWork(mergedComponentState);
-
-      // make the work dirty so that it gets saved
       this.studentDataChanged();
     }
   }

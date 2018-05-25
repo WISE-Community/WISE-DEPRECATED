@@ -681,11 +681,6 @@ var DiscussionController = function (_ComponentController) {
     }
   }, {
     key: 'studentDataChanged',
-
-
-    /**
-     * Called when the student changes their work
-     */
     value: function studentDataChanged() {
       var _this4 = this;
 
@@ -694,9 +689,6 @@ var DiscussionController = function (_ComponentController) {
        * student work later
        */
       this.isDirty = true;
-
-      // get this part id
-      var componentId = this.getComponentId();
 
       // get this part id
       var componentId = this.getComponentId();
@@ -1862,8 +1854,6 @@ var DiscussionController = function (_ComponentController) {
 
         // set the student work into the component
         this.setStudentWork(mergedComponentState);
-
-        // make the work dirty so that it gets saved
         this.studentDataChanged();
       }
     }

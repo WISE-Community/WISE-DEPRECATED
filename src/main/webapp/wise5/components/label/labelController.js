@@ -977,45 +977,6 @@ var LabelController = function (_ComponentController) {
       this.isCancelButtonVisible = false;
     }
   }, {
-    key: 'studentDataChanged',
-
-
-    /**
-     * Called when the student changes their work
-     */
-    value: function studentDataChanged() {
-      var _this3 = this;
-
-      /*
-       * set the dirty flags so we will know we need to save or submit the
-       * student work later
-       */
-      this.isDirty = true;
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
-
-      this.isSubmitDirty = true;
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-
-      // clear out the save message
-      this.setSaveMessage('', null);
-
-      // get this part id
-      var componentId = this.getComponentId();
-
-      /*
-       * the student work in this component has changed so we will tell
-       * the parent node that the student data will need to be saved.
-       * this will also notify connected parts that this component's student
-       * data has changed.
-       */
-      var action = 'change';
-
-      // create a component state populated with the student data
-      this.createComponentState(action).then(function (componentState) {
-        _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: componentId, componentState: componentState });
-      });
-    }
-  }, {
     key: 'getLabelData',
 
 
@@ -1296,7 +1257,7 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'attachStudentAsset',
     value: function attachStudentAsset(studentAsset) {
-      var _this4 = this;
+      var _this3 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -1306,8 +1267,8 @@ var LabelController = function (_ComponentController) {
               iconURL: copiedAsset.iconURL
             };
 
-            _this4.attachments.push(attachment);
-            _this4.studentDataChanged();
+            _this3.attachments.push(attachment);
+            _this3.studentDataChanged();
           }
         });
       }
@@ -1376,8 +1337,6 @@ var LabelController = function (_ComponentController) {
 
               // populate the component state into this component
               this.setStudentWork(populatedComponentState);
-
-              // make the work dirty so that it gets saved
               this.studentDataChanged();
             }
           }
@@ -1510,8 +1469,6 @@ var LabelController = function (_ComponentController) {
              * the text
              */
             this.selectLabel(newLabel);
-
-            // notify others that the student data has changed
             this.studentDataChanged();
           }
         }
@@ -1637,8 +1594,6 @@ var LabelController = function (_ComponentController) {
 
           // refresh the canvas
           canvas.renderAll();
-
-          // notify others that the student data has changed
           this.studentDataChanged();
         }
       }));
@@ -1649,7 +1604,6 @@ var LabelController = function (_ComponentController) {
         if (target != null) {
           var type = target.get('type');
           if (type === 'i-text') {
-            // notify others that the student data has changed
             this.studentDataChanged();
           }
         }
@@ -1981,7 +1935,7 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'addLabelToCanvas',
     value: function addLabelToCanvas(canvas, label) {
-      var _this5 = this;
+      var _this4 = this;
 
       if (canvas != null && label != null) {
 
@@ -2015,7 +1969,7 @@ var LabelController = function (_ComponentController) {
                * the circle was clicked so we will make the associated
                * label selected
                */
-              _this5.selectLabel(label);
+              _this4.selectLabel(label);
             });
           }
 
@@ -2024,7 +1978,7 @@ var LabelController = function (_ComponentController) {
              * the text was clicked so we will make the associated
              * label selected
              */
-            _this5.selectLabel(label);
+            _this4.selectLabel(label);
           });
 
           this.labels.push(label);
@@ -2115,8 +2069,6 @@ var LabelController = function (_ComponentController) {
 
       // set the wrapped text into the text object
       textObject.setText(wrappedText);
-
-      // notify the controller that the student data has changed
       this.studentDataChanged();
 
       // refresh the canvas
@@ -2494,8 +2446,6 @@ var LabelController = function (_ComponentController) {
 
         // make the canvas object no longer the active object
         this.canvas.discardActiveObject();
-
-        // notify others that the student data has changed
         this.studentDataChanged();
 
         // refresh the canvas
@@ -2534,8 +2484,6 @@ var LabelController = function (_ComponentController) {
 
           // make the canvas object no longer the active object
           this.canvas.discardActiveObject();
-
-          // notify others that the student data has changed
           this.studentDataChanged();
         }
       }
@@ -2992,8 +2940,6 @@ var LabelController = function (_ComponentController) {
            */
           this.setBackgroundImage(this.componentContent.backgroundImage);
         }
-
-        // make the work dirty so that it gets saved
         this.studentDataChanged();
       }
     }
@@ -3007,7 +2953,7 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'createMergedComponentState',
     value: function createMergedComponentState(componentStates) {
-      var _this6 = this;
+      var _this5 = this;
 
       var mergedComponentState = this.NodeService.createNewComponentState();
 
@@ -3046,10 +2992,10 @@ var LabelController = function (_ComponentController) {
                   // create an image from the concept map data
                   this.LabelService.createImageFromText(response, null, null, charactersPerLine, null, spaceInbetweenLines, fontSize).then(function (image) {
                     // set the image as the background
-                    _this6.setBackgroundImage(image);
+                    _this5.setBackgroundImage(image);
 
                     // make the work dirty so that it gets saved
-                    _this6.studentDataChanged();
+                    _this5.studentDataChanged();
                   });
                 }
               }
@@ -3123,10 +3069,10 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'setComponentStateAsBackgroundImage',
     value: function setComponentStateAsBackgroundImage(componentState) {
-      var _this7 = this;
+      var _this6 = this;
 
       this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
-        _this7.setBackgroundImage(image.url);
+        _this6.setBackgroundImage(image.url);
       });
     }
 
@@ -3506,8 +3452,6 @@ var LabelController = function (_ComponentController) {
           // we will import work from another component
           this.handleConnectedComponents();
         }
-
-        // notify others that the student data has changed
         this.studentDataChanged();
       }
     }

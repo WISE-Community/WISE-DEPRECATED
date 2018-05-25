@@ -112,6 +112,40 @@ var ComponentController = function () {
     value: function isLockAfterSubmit() {
       return this.componentContent.lockAfterSubmit;
     }
+  }, {
+    key: 'studentDataChanged',
+    value: function studentDataChanged() {
+      var _this = this;
+
+      /*
+       * set the dirty flags so we will know we need to save or submit the
+       * student work later
+       */
+      this.isDirty = true;
+      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
+
+      this.isSubmitDirty = true;
+      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
+
+      // clear out the save message
+      this.setSaveMessage('', null);
+
+      // get this part id
+      var componentId = this.getComponentId();
+
+      /*
+       * the student work in this component has changed so we will tell
+       * the parent node that the student data will need to be saved.
+       * this will also notify connected parts that this component's student
+       * data has changed.
+       */
+      var action = 'change';
+
+      // create a component state populated with the student data
+      this.createComponentState(action).then(function (componentState) {
+        _this.$scope.$emit('componentStudentDataChanged', { nodeId: _this.nodeId, componentId: componentId, componentState: componentState });
+      });
+    }
   }]);
 
   return ComponentController;

@@ -671,50 +671,11 @@ var OpenResponseController = function (_ComponentController) {
     }
 
     /**
-     * Called when the student changes their work
-     */
-
-  }, {
-    key: 'studentDataChanged',
-    value: function studentDataChanged() {
-      var _this2 = this;
-
-      /*
-       * set the dirty flags so we will know we need to save or submit the
-       * student work later
-       */
-      this.isDirty = true;
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
-
-      this.isSubmitDirty = true;
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-
-      // clear out the save message
-      this.setSaveMessage('', null);
-
-      // get this part id
-      var componentId = this.getComponentId();
-
-      /*
-       * the student work in this component has changed so we will tell
-       * the parent node that the student data will need to be saved.
-       * this will also notify connected parts that this component's student
-       * data has changed.
-       */
-      var action = 'change';
-
-      // create a component state populated with the student data
-      this.createComponentState(action).then(function (componentState) {
-        _this2.$scope.$emit('componentStudentDataChanged', { nodeId: _this2.nodeId, componentId: componentId, componentState: componentState });
-      });
-    }
-  }, {
-    key: 'getStudentResponse',
-
-
-    /**
      * Get the student response
      */
+
+  }, {
+    key: 'getStudentResponse',
     value: function getStudentResponse() {
       return this.studentResponse;
     }
@@ -795,7 +756,7 @@ var OpenResponseController = function (_ComponentController) {
      * e.g. 'submit', 'save', 'change'
      */
     value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
-      var _this3 = this;
+      var _this2 = this;
 
       var performCRaterScoring = false;
 
@@ -858,17 +819,17 @@ var OpenResponseController = function (_ComponentController) {
                 // create the auto score annotation
                 var autoScoreAnnotationData = {};
                 autoScoreAnnotationData.value = score;
-                autoScoreAnnotationData.maxAutoScore = _this3.ProjectService.getMaxScoreForComponent(_this3.nodeId, _this3.componentId);
+                autoScoreAnnotationData.maxAutoScore = _this2.ProjectService.getMaxScoreForComponent(_this2.nodeId, _this2.componentId);
                 autoScoreAnnotationData.concepts = concepts;
                 autoScoreAnnotationData.autoGrader = 'cRater';
 
-                var autoScoreAnnotation = _this3.createAutoScoreAnnotation(autoScoreAnnotationData);
+                var autoScoreAnnotation = _this2.createAutoScoreAnnotation(autoScoreAnnotationData);
 
                 var annotationGroupForScore = null;
 
-                if (_this3.$scope.$parent.nodeController != null) {
+                if (_this2.$scope.$parent.nodeController != null) {
                   // get the previous score and comment annotations
-                  var latestAnnotations = _this3.$scope.$parent.nodeController.getLatestComponentAnnotations(_this3.componentId);
+                  var latestAnnotations = _this2.$scope.$parent.nodeController.getLatestComponentAnnotations(_this2.componentId);
 
                   if (latestAnnotations != null && latestAnnotations.score != null && latestAnnotations.score.data != null) {
 
@@ -876,18 +837,18 @@ var OpenResponseController = function (_ComponentController) {
                     previousScore = latestAnnotations.score.data.value;
                   }
 
-                  if (_this3.componentContent.enableGlobalAnnotations && _this3.componentContent.globalAnnotationSettings != null) {
+                  if (_this2.componentContent.enableGlobalAnnotations && _this2.componentContent.globalAnnotationSettings != null) {
 
                     var globalAnnotationMaxCount = 0;
-                    if (_this3.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
-                      globalAnnotationMaxCount = _this3.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
+                    if (_this2.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
+                      globalAnnotationMaxCount = _this2.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
                     }
                     // get the annotation properties for the score that the student got.
-                    annotationGroupForScore = _this3.ProjectService.getGlobalAnnotationGroupByScore(_this3.componentContent, previousScore, score);
+                    annotationGroupForScore = _this2.ProjectService.getGlobalAnnotationGroupByScore(_this2.componentContent, previousScore, score);
 
                     // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
                     if (annotationGroupForScore != null) {
-                      var globalAnnotationGroupsByNodeIdAndComponentId = _this3.AnnotationService.getAllGlobalAnnotationGroups(_this3.nodeId, _this3.componentId);
+                      var globalAnnotationGroupsByNodeIdAndComponentId = _this2.AnnotationService.getAllGlobalAnnotationGroups(_this2.nodeId, _this2.componentId);
                       annotationGroupForScore.annotationGroupCreatedTime = autoScoreAnnotation.clientSaveTime; // save annotation creation time
 
                       if (globalAnnotationGroupsByNodeIdAndComponentId.length >= globalAnnotationMaxCount) {
@@ -916,33 +877,33 @@ var OpenResponseController = function (_ComponentController) {
 
                 componentState.annotations.push(autoScoreAnnotation);
 
-                if (_this3.mode === 'authoring') {
-                  if (_this3.latestAnnotations == null) {
-                    _this3.latestAnnotations = {};
+                if (_this2.mode === 'authoring') {
+                  if (_this2.latestAnnotations == null) {
+                    _this2.latestAnnotations = {};
                   }
 
                   /*
                    * we are in the authoring view so we will set the
                    * latest score annotation manually
                    */
-                  _this3.latestAnnotations.score = autoScoreAnnotation;
+                  _this2.latestAnnotations.score = autoScoreAnnotation;
                 }
 
                 var autoComment = null;
 
                 // get the submit counter
-                var submitCounter = _this3.submitCounter;
+                var submitCounter = _this2.submitCounter;
 
-                if (_this3.componentContent.cRater.enableMultipleAttemptScoringRules && submitCounter > 1) {
+                if (_this2.componentContent.cRater.enableMultipleAttemptScoringRules && submitCounter > 1) {
                   /*
                    * this step has multiple attempt scoring rules and this is
                    * a subsequent submit
                    */
                   // get the feedback based upon the previous score and current score
-                  autoComment = _this3.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(_this3.componentContent, previousScore, score);
+                  autoComment = _this2.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(_this2.componentContent, previousScore, score);
                 } else {
                   // get the feedback text
-                  autoComment = _this3.CRaterService.getCRaterFeedbackTextByScore(_this3.componentContent, score);
+                  autoComment = _this2.CRaterService.getCRaterFeedbackTextByScore(_this2.componentContent, score);
                 }
 
                 if (autoComment != null) {
@@ -952,9 +913,9 @@ var OpenResponseController = function (_ComponentController) {
                   autoCommentAnnotationData.concepts = concepts;
                   autoCommentAnnotationData.autoGrader = 'cRater';
 
-                  var autoCommentAnnotation = _this3.createAutoCommentAnnotation(autoCommentAnnotationData);
+                  var autoCommentAnnotation = _this2.createAutoCommentAnnotation(autoCommentAnnotationData);
 
-                  if (_this3.componentContent.enableGlobalAnnotations) {
+                  if (_this2.componentContent.enableGlobalAnnotations) {
                     if (annotationGroupForScore != null) {
                       // copy over the annotation properties into the autoCommentAnnotation's data
                       angular.merge(autoCommentAnnotation.data, annotationGroupForScore);
@@ -962,33 +923,33 @@ var OpenResponseController = function (_ComponentController) {
                   }
                   componentState.annotations.push(autoCommentAnnotation);
 
-                  if (_this3.mode === 'authoring') {
-                    if (_this3.latestAnnotations == null) {
-                      _this3.latestAnnotations = {};
+                  if (_this2.mode === 'authoring') {
+                    if (_this2.latestAnnotations == null) {
+                      _this2.latestAnnotations = {};
                     }
 
                     /*
                      * we are in the authoring view so we will set the
                      * latest comment annotation manually
                      */
-                    _this3.latestAnnotations.comment = autoCommentAnnotation;
+                    _this2.latestAnnotations.comment = autoCommentAnnotation;
                   }
                 }
-                if (_this3.componentContent.enableNotifications) {
+                if (_this2.componentContent.enableNotifications) {
                   // get the notification properties for the score that the student got.
-                  var notificationForScore = _this3.ProjectService.getNotificationByScore(_this3.componentContent, previousScore, score);
+                  var notificationForScore = _this2.ProjectService.getNotificationByScore(_this2.componentContent, previousScore, score);
 
                   if (notificationForScore != null) {
                     notificationForScore.score = score;
-                    notificationForScore.nodeId = _this3.nodeId;
-                    notificationForScore.componentId = _this3.componentId;
-                    _this3.NotificationService.sendNotificationForScore(notificationForScore);
+                    notificationForScore.nodeId = _this2.nodeId;
+                    notificationForScore.componentId = _this2.componentId;
+                    _this2.NotificationService.sendNotificationForScore(notificationForScore);
                   }
                 }
 
                 // display global annotations dialog if needed
-                if (_this3.componentContent.enableGlobalAnnotations && annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.isPopup) {
-                  _this3.$scope.$emit('displayGlobalAnnotations');
+                if (_this2.componentContent.enableGlobalAnnotations && annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.isPopup) {
+                  _this2.$scope.$emit('displayGlobalAnnotations');
                 }
               }
             }
@@ -998,7 +959,7 @@ var OpenResponseController = function (_ComponentController) {
            * hide the dialog that tells the student to wait since
            * the work has been scored.
            */
-          _this3.$mdDialog.hide();
+          _this2.$mdDialog.hide();
 
           // resolve the promise now that we are done performing additional processing
           deferred.resolve(componentState);
@@ -1096,7 +1057,7 @@ var OpenResponseController = function (_ComponentController) {
   }, {
     key: 'attachStudentAsset',
     value: function attachStudentAsset(studentAsset) {
-      var _this4 = this;
+      var _this3 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -1106,8 +1067,8 @@ var OpenResponseController = function (_ComponentController) {
               iconURL: copiedAsset.iconURL
             };
 
-            _this4.attachments.push(attachment);
-            _this4.studentDataChanged();
+            _this3.attachments.push(attachment);
+            _this3.studentDataChanged();
           }
         });
       }
@@ -1224,8 +1185,6 @@ var OpenResponseController = function (_ComponentController) {
 
               // populate the component state into this component
               this.setStudentWork(populatedComponentState);
-
-              // make the work dirty so that it gets saved
               this.studentDataChanged();
             }
           }
@@ -1379,17 +1338,17 @@ var OpenResponseController = function (_ComponentController) {
   }, {
     key: 'snipButtonClicked',
     value: function snipButtonClicked($event) {
-      var _this5 = this;
+      var _this4 = this;
 
       if (this.isDirty) {
         var deregisterListener = this.$scope.$on('studentWorkSavedToServer', function (event, args) {
           var componentState = args.studentWork;
-          if (componentState && _this5.nodeId === componentState.nodeId && _this5.componentId === componentState.componentId) {
+          if (componentState && _this4.nodeId === componentState.nodeId && _this4.componentId === componentState.componentId) {
             var imageObject = null;
             var noteText = componentState.studentData.response;
             var isEditTextEnabled = false;
             var isFileUploadEnabled = false;
-            _this5.NotebookService.addNote($event, imageObject, noteText, [componentState.id], isEditTextEnabled, isFileUploadEnabled);
+            _this4.NotebookService.addNote($event, imageObject, noteText, [componentState.id], isEditTextEnabled, isFileUploadEnabled);
             deregisterListener();
           }
         });
@@ -1416,13 +1375,13 @@ var OpenResponseController = function (_ComponentController) {
   }, {
     key: 'importWorkByStudentWorkId',
     value: function importWorkByStudentWorkId(studentWorkId) {
-      var _this6 = this;
+      var _this5 = this;
 
       this.StudentDataService.getStudentWorkById(studentWorkId).then(function (componentState) {
         if (componentState != null) {
-          _this6.setStudentWork(componentState);
-          _this6.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
-          _this6.$rootScope.$broadcast('closeNotebook');
+          _this5.setStudentWork(componentState);
+          _this5.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+          _this5.$rootScope.$broadcast('closeNotebook');
         }
       });
     }
@@ -2343,8 +2302,6 @@ var OpenResponseController = function (_ComponentController) {
 
         // set the student work into the component
         this.setStudentWork(mergedComponentState);
-
-        // make the work dirty so that it gets saved
         this.studentDataChanged();
       }
     }
@@ -2808,7 +2765,7 @@ var OpenResponseController = function (_ComponentController) {
   }, {
     key: 'verifyCRaterItemId',
     value: function verifyCRaterItemId(itemId) {
-      var _this7 = this;
+      var _this6 = this;
 
       // clear the Valid/Invalid text
       this.cRaterItemIdIsValid = null;
@@ -2818,10 +2775,10 @@ var OpenResponseController = function (_ComponentController) {
 
       this.CRaterService.verifyCRaterItemId(itemId).then(function (isValid) {
         // turn off the "Verifying..." text
-        _this7.isVerifyingCRaterItemId = false;
+        _this6.isVerifyingCRaterItemId = false;
 
         // set the Valid/Invalid text
-        _this7.cRaterItemIdIsValid = isValid;
+        _this6.cRaterItemIdIsValid = isValid;
       });
     }
   }]);

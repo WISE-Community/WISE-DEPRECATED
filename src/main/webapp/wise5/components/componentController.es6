@@ -66,7 +66,7 @@ class ComponentController {
 
   getPrompt() {
     return this.componentContent.prompt;
-  };
+  }
 
   saveButtonClicked() {
     this.isSubmit = false;
@@ -106,7 +106,38 @@ class ComponentController {
 
   isLockAfterSubmit() {
     return this.componentContent.lockAfterSubmit;
-  };
+  }
+
+  studentDataChanged() {
+    /*
+     * set the dirty flags so we will know we need to save or submit the
+     * student work later
+     */
+    this.isDirty = true;
+    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: true});
+
+    this.isSubmitDirty = true;
+    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
+
+    // clear out the save message
+    this.setSaveMessage('', null);
+
+    // get this part id
+    var componentId = this.getComponentId();
+
+    /*
+     * the student work in this component has changed so we will tell
+     * the parent node that the student data will need to be saved.
+     * this will also notify connected parts that this component's student
+     * data has changed.
+     */
+    var action = 'change';
+
+    // create a component state populated with the student data
+    this.createComponentState(action).then((componentState) => {
+      this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
+    });
+  }
 }
 
 ComponentController.$inject = [];

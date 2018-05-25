@@ -512,11 +512,6 @@ var GraphController = function (_ComponentController) {
             componentState = this.UtilService.makeCopyOfJSONObject(componentState);
             var _studentData = componentState.studentData;
             this.processConnectedComponentStudentData(_studentData, connectedComponentParams);
-
-            /*
-             * notify the controller that the student data has
-             * changed so that it will perform any necessary saving
-             */
             this.studentDataChanged();
           }
         } else if (componentType == 'Animation') {
@@ -723,11 +718,6 @@ var GraphController = function (_ComponentController) {
 
             // remember the file name
             this.scope.graphController.setUploadedFileName(this.fileName);
-
-            /*
-             * notify the controller that the student data has
-             * changed so that it will perform any necessary saving
-             */
             this.scope.graphController.studentDataChanged();
           };
 
@@ -1614,8 +1604,6 @@ var GraphController = function (_ComponentController) {
                        * undo stack
                        */
                       thisGraphController.addNextComponentStateToUndoStack = true;
-
-                      // notify the controller that the student data has changed
                       thisGraphController.studentDataChanged();
                     } else {
                       if (thisGraphController.isMousePlotLineOn()) {
@@ -1756,8 +1744,6 @@ var GraphController = function (_ComponentController) {
                              * undo stack
                              */
                             thisGraphController.addNextComponentStateToUndoStack = true;
-
-                            // tell the controller the student data has changed
                             thisGraphController.studentDataChanged();
                           }
                         }
@@ -2060,11 +2046,6 @@ var GraphController = function (_ComponentController) {
 
                             // remove the element at the given index
                             data.splice(index, 1);
-
-                            /*
-                             * notify the controller that the student data has changed
-                             * so that the graph will be redrawn
-                             */
                             thisGraphController.studentDataChanged();
                           }
                         }
@@ -2366,11 +2347,6 @@ var GraphController = function (_ComponentController) {
        * studentDataChanged() to the undo stack
        */
       this.addNextComponentStateToUndoStack = true;
-
-      /*
-       * notify the controller that the student data has changed
-       * so that the graph will be redrawn
-       */
       this.studentDataChanged();
     }
   }, {
@@ -2487,11 +2463,6 @@ var GraphController = function (_ComponentController) {
              * studentDataChanged() to the undo stack
              */
             this.addNextComponentStateToUndoStack = true;
-
-            /*
-             * notify the controller that the student data has changed
-             * so that the graph will be redrawn
-             */
             this.studentDataChanged();
           }
         }
@@ -3177,8 +3148,6 @@ var GraphController = function (_ComponentController) {
 
               // populate the component state into this component
               this.setStudentWork(populatedComponentState);
-
-              // make the work dirty so that it gets saved
               this.studentDataChanged();
             }
           }
@@ -3290,8 +3259,6 @@ var GraphController = function (_ComponentController) {
 
             // populate the component state into this component
             _this6.setStudentWork(newComponentState);
-
-            // make the work dirty so that it gets saved
             _this6.studentDataChanged();
           });
         }
@@ -3496,7 +3463,6 @@ var GraphController = function (_ComponentController) {
                * studentDataChanged() to the undo stack
                */
               _this8.addNextComponentStateToUndoStack = true;
-
               _this8.studentDataChanged();
             });
           }
@@ -3783,7 +3749,6 @@ var GraphController = function (_ComponentController) {
            * studentDataChanged() to the undo stack
            */
           this.addNextComponentStateToUndoStack = true;
-
           this.studentDataChanged();
         }
       }
@@ -4113,11 +4078,6 @@ var GraphController = function (_ComponentController) {
        * studentDataChanged() to the undo stack
        */
       this.addNextComponentStateToUndoStack = true;
-
-      /*
-       * notify the controller that the student data has
-       * changed so that it will perform any necessary saving
-       */
       this.studentDataChanged();
     }
 
@@ -4346,11 +4306,6 @@ var GraphController = function (_ComponentController) {
        * studentDataChanged() to the undo stack
        */
       this.addNextComponentStateToUndoStack = true;
-
-      /*
-       * notify the controller that the student data has
-       * changed so that it will perform any necessary saving
-       */
       this.studentDataChanged();
 
       // update the selected trial text
@@ -4398,11 +4353,6 @@ var GraphController = function (_ComponentController) {
          * studentDataChanged() to the undo stack
          */
         this.addNextComponentStateToUndoStack = true;
-
-        /*
-         * notify the controller that the student data has
-         * changed so that it will perform any necessary saving
-         */
         this.studentDataChanged();
       }
     }
@@ -4487,11 +4437,6 @@ var GraphController = function (_ComponentController) {
       if (!this.UtilService.arraysContainSameValues(this.previousTrialIdsToShow, trialIdsToShow)) {
         // update the trialIdsToShow
         this.trialIdsToShow = trialIdsToShow;
-
-        /*
-         * notify the controller that the student data has
-         * changed so that it will perform any necessary saving
-         */
         this.studentDataChanged();
       }
 
@@ -6391,8 +6336,6 @@ var GraphController = function (_ComponentController) {
 
           // populate the component state into this component
           _this12.setStudentWork(newComponentState);
-
-          // make the work dirty so that it gets saved
           _this12.studentDataChanged();
         });
       }

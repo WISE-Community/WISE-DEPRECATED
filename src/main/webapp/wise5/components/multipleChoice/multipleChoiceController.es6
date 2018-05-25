@@ -626,7 +626,6 @@ class MultipleChoiceController extends ComponentController {
    * @param choiceId the choice id of the radio button the student clicked
    */
   radioChoiceSelected(choiceId) {
-    // notify this node that the student choice has changed
     this.studentDataChanged();
 
     if (choiceId != null) {
@@ -673,8 +672,6 @@ class MultipleChoiceController extends ComponentController {
           studentChoices.splice(index, 1);
         }
       }
-
-      // notify this node that the student choice has changed
       this.studentDataChanged();
 
       // log this event
@@ -928,41 +925,10 @@ class MultipleChoiceController extends ComponentController {
     return correctChoices;
   };
 
-  /**
-   * Called when the student changes their work
-   */
   studentDataChanged() {
-    /*
-     * set the dirty flag so we will know we need to save the
-     * student work later
-     */
-     this.isDirty = true;
-     this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: true});
-
-     this.isSubmitDirty = true;
-     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-
-     // clear out the save message
-     this.setSaveMessage('', null);
-
-    // get this component id
-    var componentId = this.getComponentId();
-
     this.isCorrect = null;
     this.isLatestComponentStateSubmit = false;
-
-    /*
-     * the student work in this component has changed so we will tell
-     * the parent node that the student data will need to be saved.
-     * this will also notify connected parts that this component's student
-     * data has changed.
-     */
-    var action = 'change';
-
-    // create a component state populated with the student data
-    this.createComponentState(action).then((componentState) => {
-      this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
-    });
+    super.studentDataChanged();
   };
 
   /**
@@ -1407,8 +1373,6 @@ class MultipleChoiceController extends ComponentController {
 
             // populate the component state into this component
             this.setStudentWork(populatedComponentState);
-
-            // make the work dirty so that it gets saved
             this.studentDataChanged();
           }
         }

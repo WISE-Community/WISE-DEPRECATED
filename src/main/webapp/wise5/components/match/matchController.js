@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 var _componentController = require('../componentController');
 
 var _componentController2 = _interopRequireDefault(_componentController);
@@ -1299,45 +1301,10 @@ var MatchController = function (_ComponentController) {
     }
   }, {
     key: 'studentDataChanged',
-
-
-    /**
-     * Called when the student changes their work
-     */
     value: function studentDataChanged() {
-      var _this2 = this;
-
-      /*
-       * set the dirty flag so we will know we need to save the
-       * student work later
-       */
-      this.isDirty = true;
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
-
-      this.isSubmitDirty = true;
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-
-      // clear out the save message
-      this.setSaveMessage('', null);
-
-      // get this part id
-      var componentId = this.getComponentId();
-
       this.isCorrect = null;
       this.isLatestComponentStateSubmit = false;
-
-      /*
-       * the student work in this component has changed so we will tell
-       * the parent node that the student data will need to be saved.
-       * this will also notify connected parts that this component's student
-       * data has changed.
-       */
-      var action = 'change';
-
-      // create a component state populated with the student data
-      this.createComponentState(action).then(function (componentState) {
-        _this2.$scope.$emit('componentStudentDataChanged', { nodeId: _this2.nodeId, componentId: componentId, componentState: componentState });
-      });
+      _get(MatchController.prototype.__proto__ || Object.getPrototypeOf(MatchController.prototype), 'studentDataChanged', this).call(this);
     }
   }, {
     key: 'createComponentState',
@@ -1523,8 +1490,6 @@ var MatchController = function (_ComponentController) {
 
               // populate the component state into this component
               this.setStudentWork(populatedComponentState);
-
-              // make the work dirty so that it gets saved
               this.studentDataChanged();
             }
           }
@@ -3117,8 +3082,6 @@ var MatchController = function (_ComponentController) {
 
         // set the student work into the component
         this.setStudentWork(mergedComponentState);
-
-        // make the work dirty so that it gets saved
         this.studentDataChanged();
       }
     }

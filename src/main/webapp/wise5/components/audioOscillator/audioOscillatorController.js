@@ -738,51 +738,12 @@ var AudioOscillatorController = function (_ComponentController) {
     }
 
     /**
-     * Called when the student changes their work
-     */
-
-  }, {
-    key: 'studentDataChanged',
-    value: function studentDataChanged() {
-      var _this3 = this;
-
-      /*
-       * set the dirty flags so we will know we need to save or submit the
-       * student work later
-       */
-      this.isDirty = true;
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
-
-      this.isSubmitDirty = true;
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-
-      // clear out the save message
-      this.setSaveMessage('', null);
-
-      // get this part id
-      var componentId = this.getComponentId();
-
-      /*
-       * the student work in this component has changed so we will tell
-       * the parent node that the student data will need to be saved.
-       * this will also notify connected parts that this component's student
-       * data has changed.
-       */
-      var action = 'change';
-
-      // create a component state populated with the student data
-      this.createComponentState(action).then(function (componentState) {
-        _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: componentId, componentState: componentState });
-      });
-    }
-  }, {
-    key: 'setFrequenciesPlayed',
-
-
-    /**
      * Set the frequencies played array
      * @param frequenciesPlayed an array of numbers
      */
+
+  }, {
+    key: 'setFrequenciesPlayed',
     value: function setFrequenciesPlayed(frequenciesPlayed) {
       this.frequenciesPlayed = frequenciesPlayed;
     }
@@ -890,7 +851,6 @@ var AudioOscillatorController = function (_ComponentController) {
       if (this.attachments.indexOf(attachment) != -1) {
         this.attachments.splice(this.attachments.indexOf(attachment), 1);
         this.studentDataChanged();
-        // YOU ARE NOW FREEEEEEEEE!
       }
     }
   }, {
@@ -902,7 +862,7 @@ var AudioOscillatorController = function (_ComponentController) {
      * @param studentAsset
      */
     value: function attachStudentAsset(studentAsset) {
-      var _this4 = this;
+      var _this3 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -912,8 +872,8 @@ var AudioOscillatorController = function (_ComponentController) {
               iconURL: copiedAsset.iconURL
             };
 
-            _this4.attachments.push(attachment);
-            _this4.studentDataChanged();
+            _this3.attachments.push(attachment);
+            _this3.studentDataChanged();
           }
         });
       }
@@ -1000,8 +960,6 @@ var AudioOscillatorController = function (_ComponentController) {
        * has played
        */
       this.addFrequencyPlayed(this.frequency);
-
-      // set the student data to dirty
       this.studentDataChanged();
     }
 
@@ -1054,7 +1012,7 @@ var AudioOscillatorController = function (_ComponentController) {
   }, {
     key: 'drawOscilloscope',
     value: function drawOscilloscope() {
-      var _this5 = this;
+      var _this4 = this;
 
       // get the analyser to obtain the oscillator data
       var analyser = this.analyser;
@@ -1164,7 +1122,7 @@ var AudioOscillatorController = function (_ComponentController) {
          * draw was good we will stop drawing.
          */
         requestAnimationFrame(function () {
-          _this5.drawOscilloscope();
+          _this4.drawOscilloscope();
         });
       }
     }
@@ -1403,8 +1361,6 @@ var AudioOscillatorController = function (_ComponentController) {
 
               // populate the component state into this component
               this.setStudentWork(populatedComponentState);
-
-              // make the work dirty so that it gets saved
               this.studentDataChanged();
             }
           }
@@ -1921,8 +1877,6 @@ var AudioOscillatorController = function (_ComponentController) {
 
         // set the student work into the component
         this.setStudentWork(mergedComponentState);
-
-        // make the work dirty so that it gets saved
         this.studentDataChanged();
       }
     }

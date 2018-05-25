@@ -1042,53 +1042,14 @@ var DrawController = function (_ComponentController) {
     }
 
     /**
-     * Called when the student changes their work
-     */
-
-  }, {
-    key: 'studentDataChanged',
-    value: function studentDataChanged() {
-      var _this3 = this;
-
-      /*
-       * set the dirty flag so we will know we need to save the
-       * student work later
-       */
-      this.isDirty = true;
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
-
-      this.isSubmitDirty = true;
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-
-      // clear out the save message
-      this.setSaveMessage('', null);
-
-      // get this part id
-      var componentId = this.getComponentId();
-
-      /*
-       * the student work in this component has changed so we will tell
-       * the parent node that the student data will need to be saved.
-       * this will also notify connected parts that this component's student
-       * data has changed.
-       */
-      var action = 'change';
-
-      // create a component state populated with the student data
-      this.createComponentState(action).then(function (componentState) {
-        _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: componentId, componentState: componentState });
-      });
-    }
-  }, {
-    key: 'createComponentState',
-
-
-    /**
      * Create a new component state populated with the student data
      * @param action the action that is triggering creating of this component state
      * e.g. 'submit', 'save', 'change'
      * @return a promise that will return a component state
      */
+
+  }, {
+    key: 'createComponentState',
     value: function createComponentState(action) {
 
       var deferred = this.$q.defer();
@@ -1170,7 +1131,7 @@ var DrawController = function (_ComponentController) {
   }, {
     key: 'attachStudentAsset',
     value: function attachStudentAsset(studentAsset) {
-      var _this4 = this;
+      var _this3 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -1182,7 +1143,7 @@ var DrawController = function (_ComponentController) {
               //oImg.setTop((this.drawingTool.canvas.height / 2) - (oImg.height / 2));
               //oImg.center();
               oImg.studentAssetId = copiedAsset.id; // keep track of this asset id
-              _this4.drawingTool.canvas.add(oImg); // add copied asset image to canvas
+              _this3.drawingTool.canvas.add(oImg); // add copied asset image to canvas
             });
           }
         });
@@ -1213,7 +1174,7 @@ var DrawController = function (_ComponentController) {
      * student already has work for this component
      */
     value: function importWork(overwrite) {
-      var _this5 = this;
+      var _this4 = this;
 
       // get the component content
       var componentContent = this.componentContent;
@@ -1284,10 +1245,8 @@ var DrawController = function (_ComponentController) {
                     service.createImage(conceptMapData, componentContent.width, componentContent.height).then(function (image) {
 
                       // set the image as the background
-                      _this5.drawingTool.setBackgroundImage(image);
-
-                      // make the work dirty so that it gets saved
-                      _this5.studentDataChanged();
+                      _this4.drawingTool.setBackgroundImage(image);
+                      _this4.studentDataChanged();
                     });
                   }
                 }
@@ -1304,8 +1263,6 @@ var DrawController = function (_ComponentController) {
                 if (this.componentContent.background != null && this.componentContent.background != '') {
                   // set the background
                   this.drawingTool.setBackgroundImage(this.componentContent.background);
-
-                  // make the work dirty so that it gets saved
                   this.studentDataChanged();
                 }
               }
@@ -1579,13 +1536,13 @@ var DrawController = function (_ComponentController) {
   }, {
     key: 'snipButtonClicked',
     value: function snipButtonClicked($event) {
-      var _this6 = this;
+      var _this5 = this;
 
       if (this.isDirty) {
         var deregisterListener = this.$scope.$on('studentWorkSavedToServer', function (event, args) {
           var componentState = args.studentWork;
-          if (componentState && _this6.nodeId === componentState.nodeId && _this6.componentId === componentState.componentId) {
-            _this6.snipDrawing($event, componentState.id);
+          if (componentState && _this5.nodeId === componentState.nodeId && _this5.componentId === componentState.componentId) {
+            _this5.snipDrawing($event, componentState.id);
             deregisterListener();
           }
         });
@@ -2323,8 +2280,6 @@ var DrawController = function (_ComponentController) {
            */
           this.drawingTool.setBackgroundImage(this.componentContent.background);
         }
-
-        // make the work dirty so that it gets saved
         this.studentDataChanged();
       }
     }
@@ -2412,10 +2367,10 @@ var DrawController = function (_ComponentController) {
   }, {
     key: 'setComponentStateAsBackgroundImage',
     value: function setComponentStateAsBackgroundImage(componentState) {
-      var _this7 = this;
+      var _this6 = this;
 
       this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
-        _this7.drawingTool.setBackgroundImage(image.url);
+        _this6.drawingTool.setBackgroundImage(image.url);
       });
     }
 
@@ -2719,13 +2674,13 @@ var DrawController = function (_ComponentController) {
   }, {
     key: 'importWorkByStudentWorkId',
     value: function importWorkByStudentWorkId(studentWorkId) {
-      var _this8 = this;
+      var _this7 = this;
 
       this.StudentDataService.getStudentWorkById(studentWorkId).then(function (componentState) {
         if (componentState != null) {
-          _this8.setStudentWork(componentState);
-          _this8.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
-          _this8.$rootScope.$broadcast('closeNotebook');
+          _this7.setStudentWork(componentState);
+          _this7.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+          _this7.$rootScope.$broadcast('closeNotebook');
         }
       });
     }

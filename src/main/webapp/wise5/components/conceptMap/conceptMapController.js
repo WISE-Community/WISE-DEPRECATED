@@ -1110,45 +1110,6 @@ var ConceptMapController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'studentDataChanged',
-
-
-    /**
-     * Called when the student changes their work
-     */
-    value: function studentDataChanged() {
-      var _this3 = this;
-
-      /*
-       * set the dirty flags so we will know we need to save or submit the
-       * student work later
-       */
-      this.isDirty = true;
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
-
-      this.isSubmitDirty = true;
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-
-      // clear out the save message
-      this.setSaveMessage('', null);
-
-      // get this part id
-      var componentId = this.getComponentId();
-
-      /*
-       * the student work in this component has changed so we will tell
-       * the parent node that the student data will need to be saved.
-       * this will also notify connected parts that this component's student
-       * data has changed.
-       */
-      var action = 'change';
-
-      // create a component state populated with the student data
-      this.createComponentState(action).then(function (componentState) {
-        _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: componentId, componentState: componentState });
-      });
-    }
-  }, {
     key: 'getStudentResponse',
 
 
@@ -1425,7 +1386,6 @@ var ConceptMapController = function (_ComponentController) {
       if (this.attachments.indexOf(attachment) != -1) {
         this.attachments.splice(this.attachments.indexOf(attachment), 1);
         this.studentDataChanged();
-        // YOU ARE NOW FREEEEEEEEE!
       }
     }
   }, {
@@ -1437,7 +1397,7 @@ var ConceptMapController = function (_ComponentController) {
      * @param studentAsset
      */
     value: function attachStudentAsset(studentAsset) {
-      var _this4 = this;
+      var _this3 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -1447,8 +1407,8 @@ var ConceptMapController = function (_ComponentController) {
               iconURL: copiedAsset.iconURL
             };
 
-            _this4.attachments.push(attachment);
-            _this4.studentDataChanged();
+            _this3.attachments.push(attachment);
+            _this3.studentDataChanged();
           }
         });
       }
@@ -1571,8 +1531,6 @@ var ConceptMapController = function (_ComponentController) {
 
               // populate the component state into this component
               this.setStudentWork(populatedComponentState);
-
-              // make the work dirty so that it gets saved
               this.studentDataChanged();
             }
           }
@@ -2500,8 +2458,6 @@ var ConceptMapController = function (_ComponentController) {
 
       // make the link not highlighted
       this.clearHighlightedElement();
-
-      // handle the student data changing
       this.studentDataChanged();
     }
 
@@ -2575,7 +2531,7 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'setupSVG',
     value: function setupSVG() {
-      var _this5 = this;
+      var _this4 = this;
 
       // get the svg element in the svg.js world
       this.draw = SVG(this.svgId);
@@ -2590,17 +2546,17 @@ var ConceptMapController = function (_ComponentController) {
 
       // set the mouse down listener
       this.draw.mousedown(function (event) {
-        _this5.svgMouseDown(event);
+        _this4.svgMouseDown(event);
       });
 
       // set the mouse up listener
       this.draw.mouseup(function (event) {
-        _this5.svgMouseUp(event);
+        _this4.svgMouseUp(event);
       });
 
       // set the mouse move listener
       this.draw.mousemove(function (event) {
-        _this5.svgMouseMove(event);
+        _this4.svgMouseMove(event);
       });
 
       // get the svg element in the angular world
@@ -2644,7 +2600,7 @@ var ConceptMapController = function (_ComponentController) {
            * the user has dropped a new node onto the svg to create a
            * new instance of a node
            */
-          _this5.newNodeDropped(event);
+          _this4.newNodeDropped(event);
         });
 
         this.addedDropListener = true;
@@ -3228,8 +3184,6 @@ var ConceptMapController = function (_ComponentController) {
 
         // make the node highlighted
         this.setHighlightedElement(conceptMapNode);
-
-        // handle the student data changing
         this.studentDataChanged();
       }
 
@@ -3347,52 +3301,52 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'setNodeMouseEvents',
     value: function setNodeMouseEvents(conceptMapNode) {
-      var _this6 = this;
+      var _this5 = this;
 
       // set the node mouse over event
       conceptMapNode.setNodeMouseOver(function (event) {
-        _this6.nodeMouseOver(event);
+        _this5.nodeMouseOver(event);
       });
 
       // set the node mouse out event
       conceptMapNode.setNodeMouseOut(function (event) {
-        _this6.nodeMouseOut(event);
+        _this5.nodeMouseOut(event);
       });
 
       // set the connector mouse down event
       conceptMapNode.setConnectorMouseDown(function (event) {
-        _this6.disableNodeDragging();
-        _this6.connectorMouseDown(event);
+        _this5.disableNodeDragging();
+        _this5.connectorMouseDown(event);
       });
 
       // set the node mouse down event
       conceptMapNode.setNodeMouseDown(function (event) {
-        _this6.nodeMouseDown(event);
+        _this5.nodeMouseDown(event);
       });
 
       // set the node mouse up event
       conceptMapNode.setNodeMouseUp(function (event) {
-        _this6.nodeMouseUp(event);
+        _this5.nodeMouseUp(event);
       });
 
       // set the delete button mouse down event
       conceptMapNode.setDeleteButtonMouseDown(function (event) {
-        _this6.nodeDeleteButtonMouseDown(event);
+        _this5.nodeDeleteButtonMouseDown(event);
       });
 
       // set the delete button mouse over event
       conceptMapNode.setDeleteButtonMouseOver(function (event) {
-        _this6.nodeDeleteButtonMouseOver(event);
+        _this5.nodeDeleteButtonMouseOver(event);
       });
 
       // set the delete button mouse out event
       conceptMapNode.setDeleteButtonMouseOut(function (event) {
-        _this6.nodeDeleteButtonMouseOut(event);
+        _this5.nodeDeleteButtonMouseOut(event);
       });
 
       // set node drag move event
       conceptMapNode.setDragMove(function (event) {
-        _this6.nodeDragMove(event);
+        _this5.nodeDragMove(event);
       });
     }
 
@@ -4158,31 +4112,31 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'setLinkMouseEvents',
     value: function setLinkMouseEvents(link) {
-      var _this7 = this;
+      var _this6 = this;
 
       // set the link mouse down listener
       link.setLinkMouseDown(function (event) {
-        _this7.linkMouseDown(event);
+        _this6.linkMouseDown(event);
       });
 
       // set the link text mouse down listener
       link.setLinkTextMouseDown(function (event) {
-        _this7.linkTextMouseDown(event);
+        _this6.linkTextMouseDown(event);
       });
 
       // set the link mouse over listener
       link.setLinkMouseOver(function (event) {
-        _this7.linkMouseOver(event);
+        _this6.linkMouseOver(event);
       });
 
       // set the link mouse out listener
       link.setLinkMouseOut(function (event) {
-        _this7.linkMouseOut(event);
+        _this6.linkMouseOut(event);
       });
 
       // set the delete button clicked event for the link
       link.setDeleteButtonClicked(function (event) {
-        _this7.linkDeleteButtonClicked(event, link);
+        _this6.linkDeleteButtonClicked(event, link);
       });
     }
 
@@ -4688,7 +4642,7 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'snip',
     value: function snip($event) {
-      var _this8 = this;
+      var _this7 = this;
 
       // get the svg element. this will obtain an array.
       var svgElement = angular.element('#svg_' + this.nodeId + '_' + this.componentId);
@@ -4743,7 +4697,7 @@ var ConceptMapController = function (_ComponentController) {
            * set the UtilService in a local variable so we can access it
            * in the onload callback function
            */
-          var thisUtilService = _this8.UtilService;
+          var thisUtilService = _this7.UtilService;
 
           // the function that is called after the image is fully loaded
           image.onload = function (event) {
@@ -4763,7 +4717,7 @@ var ConceptMapController = function (_ComponentController) {
             var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image, false);
 
             // create a notebook item with the image populated into it
-            _this8.NotebookService.addNote($event, imageObject);
+            _this7.NotebookService.addNote($event, imageObject);
           };
 
           // set the src of the image so that the image gets loaded
@@ -5114,10 +5068,10 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'setComponentStateAsBackgroundImage',
     value: function setComponentStateAsBackgroundImage(componentState) {
-      var _this9 = this;
+      var _this8 = this;
 
       this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
-        _this9.setBackgroundImage(image.url);
+        _this8.setBackgroundImage(image.url);
       });
     }
 

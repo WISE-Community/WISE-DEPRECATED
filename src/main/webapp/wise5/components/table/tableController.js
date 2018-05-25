@@ -628,8 +628,6 @@ var TableController = function (_ComponentController) {
       } else {
         // get the original table from the step content
         this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
-
-        // the table has changed so we will perform additional processing
         this.studentDataChanged();
       }
     }
@@ -788,53 +786,14 @@ var TableController = function (_ComponentController) {
     }
 
     /**
-     * Called when the student changes their work
-     */
-
-  }, {
-    key: 'studentDataChanged',
-    value: function studentDataChanged() {
-      var _this2 = this;
-
-      /*
-       * set the dirty flag so we will know we need to save the
-       * student work later
-       */
-      this.isDirty = true;
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
-
-      this.isSubmitDirty = true;
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-
-      // clear out the save message
-      this.setSaveMessage('', null);
-
-      // get this part id
-      var componentId = this.getComponentId();
-
-      /*
-       * the student work in this component has changed so we will tell
-       * the parent node that the student data will need to be saved.
-       * this will also notify connected parts that this component's student
-       * data has changed.
-       */
-      var action = 'change';
-
-      // create a component state populated with the student data
-      this.createComponentState(action).then(function (componentState) {
-        _this2.$scope.$emit('componentStudentDataChanged', { nodeId: _this2.nodeId, componentId: componentId, componentState: componentState });
-      });
-    }
-  }, {
-    key: 'createComponentState',
-
-
-    /**
      * Create a new component state populated with the student data
      * @param action the action that is triggering creating of this component state
      * e.g. 'submit', 'save', 'change'
      * @return a promise that will return a component state
      */
+
+  }, {
+    key: 'createComponentState',
     value: function createComponentState(action) {
 
       var deferred = this.$q.defer();
@@ -970,8 +929,6 @@ var TableController = function (_ComponentController) {
 
             // set the merged component state into this component
             this.setStudentWork(mergedComponentState);
-
-            // make the work dirty so that it gets saved
             this.studentDataChanged();
           }
         }
@@ -2233,7 +2190,7 @@ var TableController = function (_ComponentController) {
   }, {
     key: 'snipTable',
     value: function snipTable($event) {
-      var _this3 = this;
+      var _this2 = this;
 
       // get the table element. this will obtain an array.
       var tableElement = angular.element('#table_' + this.nodeId + '_' + this.componentId);
@@ -2248,10 +2205,10 @@ var TableController = function (_ComponentController) {
           var img_b64 = canvas.toDataURL('image/png');
 
           // get the image object
-          var imageObject = _this3.UtilService.getImageObjectFromBase64String(img_b64);
+          var imageObject = _this2.UtilService.getImageObjectFromBase64String(img_b64);
 
           // create a notebook item with the image populated into it
-          _this3.NotebookService.addNote($event, imageObject);
+          _this2.NotebookService.addNote($event, imageObject);
         });
       }
     }
@@ -2720,8 +2677,6 @@ var TableController = function (_ComponentController) {
          * connected components and merge the tables.
          */
         this.setStudentWork(mergedComponentState);
-
-        // make the work dirty so that it gets saved
         this.studentDataChanged();
       }
     }

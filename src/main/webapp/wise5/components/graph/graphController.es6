@@ -551,11 +551,6 @@ class GraphController extends ComponentController {
             componentState = this.UtilService.makeCopyOfJSONObject(componentState);
             let studentData = componentState.studentData;
             this.processConnectedComponentStudentData(studentData, connectedComponentParams);
-
-            /*
-             * notify the controller that the student data has
-             * changed so that it will perform any necessary saving
-             */
             this.studentDataChanged();
           }
         } else if (componentType == 'Animation') {
@@ -766,11 +761,6 @@ class GraphController extends ComponentController {
 
             // remember the file name
             this.scope.graphController.setUploadedFileName(this.fileName);
-
-            /*
-             * notify the controller that the student data has
-             * changed so that it will perform any necessary saving
-             */
             this.scope.graphController.studentDataChanged();
           }
 
@@ -1627,8 +1617,6 @@ class GraphController extends ComponentController {
                      * undo stack
                      */
                     thisGraphController.addNextComponentStateToUndoStack = true;
-
-                    // notify the controller that the student data has changed
                     thisGraphController.studentDataChanged();
                   } else {
                     if (thisGraphController.isMousePlotLineOn()) {
@@ -1749,8 +1737,6 @@ class GraphController extends ComponentController {
                            * undo stack
                            */
                           thisGraphController.addNextComponentStateToUndoStack = true;
-
-                          // tell the controller the student data has changed
                           thisGraphController.studentDataChanged();
                         }
                       }
@@ -2040,11 +2026,6 @@ class GraphController extends ComponentController {
 
                           // remove the element at the given index
                           data.splice(index, 1);
-
-                          /*
-                           * notify the controller that the student data has changed
-                           * so that the graph will be redrawn
-                           */
                           thisGraphController.studentDataChanged();
                         }
                       }
@@ -2292,11 +2273,6 @@ class GraphController extends ComponentController {
      * studentDataChanged() to the undo stack
      */
     this.addNextComponentStateToUndoStack = true;
-
-    /*
-     * notify the controller that the student data has changed
-     * so that the graph will be redrawn
-     */
     this.studentDataChanged();
   };
 
@@ -2404,11 +2380,6 @@ class GraphController extends ComponentController {
            * studentDataChanged() to the undo stack
            */
           this.addNextComponentStateToUndoStack = true;
-
-          /*
-           * notify the controller that the student data has changed
-           * so that the graph will be redrawn
-           */
           this.studentDataChanged();
         }
       }
@@ -3031,8 +3002,6 @@ class GraphController extends ComponentController {
 
             // populate the component state into this component
             this.setStudentWork(populatedComponentState);
-
-            // make the work dirty so that it gets saved
             this.studentDataChanged();
           }
         }
@@ -3144,8 +3113,6 @@ class GraphController extends ComponentController {
 
           // populate the component state into this component
           this.setStudentWork(newComponentState);
-
-          // make the work dirty so that it gets saved
           this.studentDataChanged();
         });
       }
@@ -3338,7 +3305,6 @@ class GraphController extends ComponentController {
              * studentDataChanged() to the undo stack
              */
             this.addNextComponentStateToUndoStack = true;
-
             this.studentDataChanged();
           });
         }
@@ -3617,7 +3583,6 @@ class GraphController extends ComponentController {
          * studentDataChanged() to the undo stack
          */
         this.addNextComponentStateToUndoStack = true;
-
         this.studentDataChanged();
       }
     }
@@ -3897,11 +3862,6 @@ class GraphController extends ComponentController {
      * studentDataChanged() to the undo stack
      */
     this.addNextComponentStateToUndoStack = true;
-
-    /*
-     * notify the controller that the student data has
-     * changed so that it will perform any necessary saving
-     */
     this.studentDataChanged();
   }
 
@@ -4124,11 +4084,6 @@ class GraphController extends ComponentController {
      * studentDataChanged() to the undo stack
      */
     this.addNextComponentStateToUndoStack = true;
-
-    /*
-     * notify the controller that the student data has
-     * changed so that it will perform any necessary saving
-     */
     this.studentDataChanged();
 
     // update the selected trial text
@@ -4173,11 +4128,6 @@ class GraphController extends ComponentController {
        * studentDataChanged() to the undo stack
        */
       this.addNextComponentStateToUndoStack = true;
-
-      /*
-       * notify the controller that the student data has
-       * changed so that it will perform any necessary saving
-       */
       this.studentDataChanged();
     }
   }
@@ -4259,11 +4209,6 @@ class GraphController extends ComponentController {
     if (!this.UtilService.arraysContainSameValues(this.previousTrialIdsToShow, trialIdsToShow)) {
       // update the trialIdsToShow
       this.trialIdsToShow = trialIdsToShow;
-
-      /*
-       * notify the controller that the student data has
-       * changed so that it will perform any necessary saving
-       */
       this.studentDataChanged();
     }
 
@@ -5926,8 +5871,6 @@ class GraphController extends ComponentController {
 
         // populate the component state into this component
         this.setStudentWork(newComponentState);
-
-        // make the work dirty so that it gets saved
         this.studentDataChanged();
       });
     }

@@ -496,41 +496,6 @@ var EmbeddedController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'studentDataChanged',
-
-
-    /**
-     * Called when the student changes their work
-     */
-    value: function studentDataChanged() {
-      var _this2 = this;
-
-      /*
-       * set the dirty flags so we will know we need to save or submit the
-       * student work later
-       */
-      this.isDirty = true;
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
-
-      this.isSubmitDirty = true;
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-
-      this.setSaveMessage('', null);
-      var componentId = this.getComponentId();
-
-      /*
-       * the student work in this component has changed so we will tell
-       * the parent node that the student data will need to be saved.
-       * this will also notify connected parts that this component's student
-       * data has changed.
-       */
-      var action = 'change';
-
-      this.createComponentState(action).then(function (componentState) {
-        _this2.$scope.$emit('componentStudentDataChanged', { nodeId: _this2.nodeId, componentId: componentId, componentState: componentState });
-      });
-    }
-  }, {
     key: 'createComponentState',
 
 
@@ -697,7 +662,7 @@ var EmbeddedController = function (_ComponentController) {
      * @param $event the click event
      */
     value: function snipModel($event) {
-      var _this3 = this;
+      var _this2 = this;
 
       var iframe = $('#' + this.embeddedApplicationIFrameId);
       if (iframe != null && iframe.length > 0) {
@@ -708,8 +673,8 @@ var EmbeddedController = function (_ComponentController) {
           // convert the model element to a canvas element
           (0, _html2canvas2.default)(modelElement).then(function (canvas) {
             var img_b64 = canvas.toDataURL('image/png');
-            var imageObject = _this3.UtilService.getImageObjectFromBase64String(img_b64);
-            _this3.NotebookService.addNote($event, imageObject);
+            var imageObject = _this2.UtilService.getImageObjectFromBase64String(img_b64);
+            _this2.NotebookService.addNote($event, imageObject);
           });
         }
       }

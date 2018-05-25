@@ -975,40 +975,6 @@ class LabelController extends ComponentController {
   };
 
   /**
-   * Called when the student changes their work
-   */
-  studentDataChanged() {
-    /*
-     * set the dirty flags so we will know we need to save or submit the
-     * student work later
-     */
-    this.isDirty = true;
-    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: true});
-
-    this.isSubmitDirty = true;
-    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-
-    // clear out the save message
-    this.setSaveMessage('', null);
-
-    // get this part id
-    var componentId = this.getComponentId();
-
-    /*
-     * the student work in this component has changed so we will tell
-     * the parent node that the student data will need to be saved.
-     * this will also notify connected parts that this component's student
-     * data has changed.
-     */
-    var action = 'change';
-
-    // create a component state populated with the student data
-    this.createComponentState(action).then((componentState) => {
-      this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
-    });
-  };
-
-  /**
    * Get the label data from the canvas.
    * @returns An array of simple JSON objects that contain the label data.
    */
@@ -1340,8 +1306,6 @@ class LabelController extends ComponentController {
 
             // populate the component state into this component
             this.setStudentWork(populatedComponentState);
-
-            // make the work dirty so that it gets saved
             this.studentDataChanged();
           }
         }
@@ -1469,8 +1433,6 @@ class LabelController extends ComponentController {
            * the text
            */
           this.selectLabel(newLabel);
-
-          // notify others that the student data has changed
           this.studentDataChanged();
         }
       }
@@ -1596,8 +1558,6 @@ class LabelController extends ComponentController {
 
         // refresh the canvas
         canvas.renderAll();
-
-        // notify others that the student data has changed
         this.studentDataChanged();
       }
     }));
@@ -1608,7 +1568,6 @@ class LabelController extends ComponentController {
       if (target != null) {
         var type = target.get('type');
         if (type === 'i-text') {
-          // notify others that the student data has changed
           this.studentDataChanged();
         }
       }
@@ -1996,8 +1955,6 @@ class LabelController extends ComponentController {
 
     // set the wrapped text into the text object
     textObject.setText(wrappedText);
-
-    // notify the controller that the student data has changed
     this.studentDataChanged();
 
     // refresh the canvas
@@ -2323,8 +2280,6 @@ class LabelController extends ComponentController {
 
       // make the canvas object no longer the active object
       this.canvas.discardActiveObject();
-
-      // notify others that the student data has changed
       this.studentDataChanged();
 
       // refresh the canvas
@@ -2360,8 +2315,6 @@ class LabelController extends ComponentController {
 
         // make the canvas object no longer the active object
         this.canvas.discardActiveObject();
-
-        // notify others that the student data has changed
         this.studentDataChanged();
       }
     }
@@ -2772,8 +2725,6 @@ class LabelController extends ComponentController {
          */
         this.setBackgroundImage(this.componentContent.backgroundImage);
       }
-
-      // make the work dirty so that it gets saved
       this.studentDataChanged();
     }
   }
@@ -3164,8 +3115,6 @@ class LabelController extends ComponentController {
         // we will import work from another component
         this.handleConnectedComponents();
       }
-
-      // notify others that the student data has changed
       this.studentDataChanged();
     }
   }
