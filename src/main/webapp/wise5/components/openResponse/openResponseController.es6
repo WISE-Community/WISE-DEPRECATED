@@ -580,13 +580,11 @@ class OpenResponseController extends ComponentController {
         // latest state is a submission, so set isSubmitDirty to false and notify node
         this.isSubmitDirty = false;
         this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        // set save message
         this.setSaveMessage(this.$translate('LAST_SUBMITTED'), clientSaveTime);
       } else {
         // latest state is not a submission, so set isSubmitDirty to true and notify node
         this.isSubmitDirty = true;
         this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-        // set save message
         this.setSaveMessage(this.$translate('LAST_SAVED'), clientSaveTime);
       }
     }
@@ -1259,16 +1257,6 @@ class OpenResponseController extends ComponentController {
    */
   updateAdvancedAuthoringView() {
     this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-  };
-
-  /**
-   * Set the message next to the save button
-   * @param message the message to display
-   * @param time the time to display
-   */
-  setSaveMessage(message, time) {
-    this.saveMessage.text = message;
-    this.saveMessage.time = time;
   };
 
   showSnipButton() {

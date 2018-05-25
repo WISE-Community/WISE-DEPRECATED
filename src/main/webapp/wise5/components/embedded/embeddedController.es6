@@ -585,16 +585,6 @@ class EmbeddedController extends ComponentController {
   };
 
   /**
-   * Set the message next to the save button
-   * @param message the message to display
-   * @param time the time to display
-   */
-  setSaveMessage(message, time) {
-    this.saveMessage.text = message;
-    this.saveMessage.time = time;
-  };
-
-  /**
    * The component has changed in the regular authoring view so we will save the project
    */
   authoringViewComponentChanged() {

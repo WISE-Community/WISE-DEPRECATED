@@ -118,8 +118,6 @@ class ComponentController {
 
     this.isSubmitDirty = true;
     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-
-    // clear out the save message
     this.setSaveMessage('', null);
 
     /*
@@ -134,6 +132,16 @@ class ComponentController {
     this.createComponentState(action).then((componentState) => {
       this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
     });
+  }
+
+  /**
+   * Set the message next to the save button
+   * @param message the message to display
+   * @param time the time to display
+   */
+  setSaveMessage(message, time) {
+    this.saveMessage.text = message;
+    this.saveMessage.time = time;
   }
 }
 

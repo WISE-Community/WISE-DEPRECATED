@@ -575,19 +575,6 @@ var EmbeddedController = function (_ComponentController) {
       window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.postMessage(message, '*');
     }
   }, {
-    key: 'setSaveMessage',
-
-
-    /**
-     * Set the message next to the save button
-     * @param message the message to display
-     * @param time the time to display
-     */
-    value: function setSaveMessage(message, time) {
-      this.saveMessage.text = message;
-      this.saveMessage.time = time;
-    }
-  }, {
     key: 'authoringViewComponentChanged',
 
 
