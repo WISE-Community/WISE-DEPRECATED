@@ -138,185 +138,179 @@ var LabelController = function (_ComponentController) {
      */
     _this.originalComponentContent = _this.$scope.originalComponentContent;
 
-    if (_this.componentContent != null) {
+    _this.canvasId = 'canvas_' + _this.nodeId + '_' + _this.componentId;
 
-      // get the component id
-      _this.componentId = _this.componentContent.id;
+    // get the component state from the scope
+    var componentState = _this.$scope.componentState;
 
-      _this.canvasId = 'canvas_' + _this.nodeId + '_' + _this.componentId;
-
-      // get the component state from the scope
-      var componentState = _this.$scope.componentState;
-
-      if (_this.componentContent.canCreateLabels != null) {
-        _this.canCreateLabels = _this.componentContent.canCreateLabels;
-      }
-
-      if (_this.componentContent.width != null) {
-        _this.canvasWidth = _this.componentContent.width;
-      }
-
-      if (_this.componentContent.height != null) {
-        _this.canvasHeight = _this.componentContent.height;
-      }
-
-      if (_this.componentContent.enableCircles != null) {
-        _this.enableCircles = _this.componentContent.enableCircles;
-      }
-
-      if (_this.mode === 'student') {
-        _this.isPromptVisible = true;
-        _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
-        _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-
-        if (_this.onlyHasShowWorkConnectedComponents()) {
-          _this.isDisabled = true;
-        }
-
-        if (_this.canCreateLabels) {
-          _this.isNewLabelButtonVisible = true;
-        } else {
-          _this.isNewLabelButtonVisible = false;
-        }
-
-        if (_this.isDisabled) {
-          _this.isNewLabelButtonVisible = false;
-          _this.canCreateLabels = false;
-          _this.isResetButtonVisible = false;
-        }
-
-        // get the latest annotations
-        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-      } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isNewLabelButtonVisible = false;
-        _this.isSnipImageButtonVisible = false;
-        _this.isDisabled = true;
-
-        if (componentState != null) {
-          // create a unique id for the application label element using this component state
-          _this.canvasId = 'labelCanvas_' + componentState.id;
-          if (_this.mode === 'gradingRevision') {
-            _this.canvasId = 'labelCanvas_gradingRevision_' + componentState.id;
-          }
-        }
-
-        // get the latest annotations
-        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-      } else if (_this.mode === 'onlyShowWork') {
-        _this.isPromptVisible = false;
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isNewLabelButtonVisible = false;
-        _this.isSnipImageButtonVisible = false;
-        _this.isDisabled = true;
-      } else if (_this.mode === 'showPreviousWork') {
-        _this.isPromptVisible = true;
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isNewLabelButtonVisible = false;
-        _this.isDisabled = true;
-      } else if (_this.mode === 'authoring') {
-        _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
-        _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-
-        // generate the summernote rubric element id
-        _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
-
-        // set the component rubric into the summernote rubric
-        _this.summernoteRubricHTML = _this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = _this.$translate('INSERT_ASSET');
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        _this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        if (_this.componentContent.enableCircles == null) {
-          /*
-           * If this component was created before enableCircles was implemented,
-           * we will default it to true in the authoring so that the
-           * "Enable Dots" checkbox is checked.
-           */
-          _this.authoringComponentContent.enableCircles = true;
-        }
-
-        _this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return this.authoringComponentContent;
-        }.bind(_this), function (newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
-          // the canvas width
-          this.canvasWidth = 800;
-
-          // the canvas height
-          this.canvasHeight = 600;
-
-          this.submitCounter = 0;
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-          this.enableCircles = this.componentContent.enableCircles;
-
-          if (this.canvas != null) {
-
-            // clear the parent to remove the canvas
-            $('#canvasParent_' + this.canvasId).empty();
-
-            // create a new canvas
-            var canvas = $('<canvas/>');
-            canvas.attr('id', this.canvasId);
-            canvas.css('border', '1px solid black');
-
-            // add the new canvas
-            $('#canvasParent_' + this.canvasId).append(canvas);
-
-            /*
-             * clear the background so that setupCanvas() can
-             * reapply the background
-             */
-            this.backgroundImage = null;
-
-            // setup the new canvas
-            this.setupCanvas();
-          }
-
-          if (this.componentContent.canCreateLabels != null) {
-            this.canCreateLabels = this.componentContent.canCreateLabels;
-          }
-
-          if (this.canCreateLabels) {
-            this.isNewLabelButtonVisible = true;
-          } else {
-            this.isNewLabelButtonVisible = false;
-          }
-        }.bind(_this), true);
-      }
-
-      _this.$timeout(angular.bind(_this, function () {
-        // wait for angular to completely render the html before we initialize the canvas
-
-        this.setupCanvas();
-      }));
+    if (_this.componentContent.canCreateLabels != null) {
+      _this.canCreateLabels = _this.componentContent.canCreateLabels;
     }
+
+    if (_this.componentContent.width != null) {
+      _this.canvasWidth = _this.componentContent.width;
+    }
+
+    if (_this.componentContent.height != null) {
+      _this.canvasHeight = _this.componentContent.height;
+    }
+
+    if (_this.componentContent.enableCircles != null) {
+      _this.enableCircles = _this.componentContent.enableCircles;
+    }
+
+    if (_this.mode === 'student') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+
+      if (_this.onlyHasShowWorkConnectedComponents()) {
+        _this.isDisabled = true;
+      }
+
+      if (_this.canCreateLabels) {
+        _this.isNewLabelButtonVisible = true;
+      } else {
+        _this.isNewLabelButtonVisible = false;
+      }
+
+      if (_this.isDisabled) {
+        _this.isNewLabelButtonVisible = false;
+        _this.canCreateLabels = false;
+        _this.isResetButtonVisible = false;
+      }
+
+      // get the latest annotations
+      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+    } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isNewLabelButtonVisible = false;
+      _this.isSnipImageButtonVisible = false;
+      _this.isDisabled = true;
+
+      if (componentState != null) {
+        // create a unique id for the application label element using this component state
+        _this.canvasId = 'labelCanvas_' + componentState.id;
+        if (_this.mode === 'gradingRevision') {
+          _this.canvasId = 'labelCanvas_gradingRevision_' + componentState.id;
+        }
+      }
+
+      // get the latest annotations
+      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+    } else if (_this.mode === 'onlyShowWork') {
+      _this.isPromptVisible = false;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isNewLabelButtonVisible = false;
+      _this.isSnipImageButtonVisible = false;
+      _this.isDisabled = true;
+    } else if (_this.mode === 'showPreviousWork') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isNewLabelButtonVisible = false;
+      _this.isDisabled = true;
+    } else if (_this.mode === 'authoring') {
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+
+      // generate the summernote rubric element id
+      _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+
+      // set the component rubric into the summernote rubric
+      _this.summernoteRubricHTML = _this.componentContent.rubric;
+
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = _this.$translate('INSERT_ASSET');
+
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
+
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      _this.summernoteRubricOptions = {
+        toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
+        }
+      };
+
+      if (_this.componentContent.enableCircles == null) {
+        /*
+         * If this component was created before enableCircles was implemented,
+         * we will default it to true in the authoring so that the
+         * "Enable Dots" checkbox is checked.
+         */
+        _this.authoringComponentContent.enableCircles = true;
+      }
+
+      _this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function () {
+        return this.authoringComponentContent;
+      }.bind(_this), function (newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
+        // the canvas width
+        this.canvasWidth = 800;
+
+        // the canvas height
+        this.canvasHeight = 600;
+
+        this.submitCounter = 0;
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+        this.enableCircles = this.componentContent.enableCircles;
+
+        if (this.canvas != null) {
+
+          // clear the parent to remove the canvas
+          $('#canvasParent_' + this.canvasId).empty();
+
+          // create a new canvas
+          var canvas = $('<canvas/>');
+          canvas.attr('id', this.canvasId);
+          canvas.css('border', '1px solid black');
+
+          // add the new canvas
+          $('#canvasParent_' + this.canvasId).append(canvas);
+
+          /*
+           * clear the background so that setupCanvas() can
+           * reapply the background
+           */
+          this.backgroundImage = null;
+
+          // setup the new canvas
+          this.setupCanvas();
+        }
+
+        if (this.componentContent.canCreateLabels != null) {
+          this.canCreateLabels = this.componentContent.canCreateLabels;
+        }
+
+        if (this.canCreateLabels) {
+          this.isNewLabelButtonVisible = true;
+        } else {
+          this.isNewLabelButtonVisible = false;
+        }
+      }.bind(_this), true);
+    }
+
+    _this.$timeout(angular.bind(_this, function () {
+      // wait for angular to completely render the html before we initialize the canvas
+
+      this.setupCanvas();
+    }));
 
     /**
      * Returns true iff there is student work that hasn't been saved yet

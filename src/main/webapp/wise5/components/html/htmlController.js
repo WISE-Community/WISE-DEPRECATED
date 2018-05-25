@@ -43,93 +43,87 @@ var HTMLController = function (_ComponentController) {
     // TODO: remove. no longer used
     _this.originalComponentContent = _this.$scope.originalComponentContent;
 
-    if (_this.componentContent != null) {
+    if (_this.mode === 'authoring') {
+      var thisController = _this;
 
-      // get the component id
-      _this.componentId = _this.componentContent.id;
+      // the tooltip text for the the WISE Link authoring button
+      var insertWISELinkString = _this.$translate('INSERT_WISE_LINK');
 
-      if (_this.mode === 'authoring') {
-        var thisController = _this;
+      /*
+       * create the custom button for inserting a WISE Link into
+       * summernote
+       */
+      var InsertWISELinkButton = _this.UtilService.createInsertWISELinkButton(_this, null, _this.nodeId, _this.componentId, 'prompt', insertWISELinkString);
 
-        // the tooltip text for the the WISE Link authoring button
-        var insertWISELinkString = _this.$translate('INSERT_WISE_LINK');
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = _this.$translate('INSERT_ASSET');
 
-        /*
-         * create the custom button for inserting a WISE Link into
-         * summernote
-         */
-        var InsertWISELinkButton = _this.UtilService.createInsertWISELinkButton(_this, null, _this.nodeId, _this.componentId, 'prompt', insertWISELinkString);
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'prompt', insertAssetString);
 
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = _this.$translate('INSERT_ASSET');
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'prompt', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        _this.summernotePromptOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['customButton', ['insertWISELinkButton', 'insertAssetButton']], ['view', ['fullscreen', 'help']], ['view', ['codeview']]],
-          minHeight: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertWISELinkButton: InsertWISELinkButton,
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        // get the id of the summernote prompt element
-        _this.summernotePromptId = 'summernotePrompt_' + _this.nodeId + '_' + _this.componentId;
-
-        // replace all <wiselink> elements with <a> or <button> elements
-        _this.summernotePromptHTML = _this.UtilService.replaceWISELinks(_this.componentContent.html);
-
-        // generate the summernote rubric element id
-        _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
-
-        // set the component rubric into the summernote rubric
-        _this.summernoteRubricHTML = _this.componentContent.rubric;
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButtonRubric = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        _this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButtonRubric
-          }
-        };
-
-        _this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return this.authoringComponentContent;
-        }.bind(_this), function (newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-        }.bind(_this), true);
-      } else if (_this.mode === 'grading') {} else if (_this.mode === 'student') {
-        if (_this.componentContent != null) {
-          _this.html = _this.componentContent.html;
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      _this.summernotePromptOptions = {
+        toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['customButton', ['insertWISELinkButton', 'insertAssetButton']], ['view', ['fullscreen', 'help']], ['view', ['codeview']]],
+        minHeight: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertWISELinkButton: InsertWISELinkButton,
+          insertAssetButton: InsertAssetButton
         }
+      };
 
-        if ($scope.$parent.registerComponentController != null) {
-          // register this component with the parent node
-          $scope.$parent.registerComponentController($scope, _this.componentContent);
+      // get the id of the summernote prompt element
+      _this.summernotePromptId = 'summernotePrompt_' + _this.nodeId + '_' + _this.componentId;
+
+      // replace all <wiselink> elements with <a> or <button> elements
+      _this.summernotePromptHTML = _this.UtilService.replaceWISELinks(_this.componentContent.html);
+
+      // generate the summernote rubric element id
+      _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+
+      // set the component rubric into the summernote rubric
+      _this.summernoteRubricHTML = _this.componentContent.rubric;
+
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButtonRubric = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
+
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      _this.summernoteRubricOptions = {
+        toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButtonRubric
         }
+      };
+
+      _this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function () {
+        return this.authoringComponentContent;
+      }.bind(_this), function (newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+      }.bind(_this), true);
+    } else if (_this.mode === 'grading') {} else if (_this.mode === 'student') {
+      if (_this.componentContent != null) {
+        _this.html = _this.componentContent.html;
+      }
+
+      if ($scope.$parent.registerComponentController != null) {
+        // register this component with the parent node
+        $scope.$parent.registerComponentController($scope, _this.componentContent);
       }
     }
 

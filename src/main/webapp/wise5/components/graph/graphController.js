@@ -212,218 +212,212 @@ var GraphController = function (_ComponentController) {
 
     _this.mouseOverPoints = [];
 
-    if (_this.componentContent != null) {
+    // set the chart id
+    _this.chartId = 'chart_' + _this.componentId;
 
-      // get the component id
-      _this.componentId = _this.componentContent.id;
+    // get the graph type
+    _this.graphType = _this.componentContent.graphType;
 
-      // set the chart id
-      _this.chartId = 'chart_' + _this.componentId;
+    if (_this.graphType == null) {
+      // there is no graph type so we will default to line plot
+      _this.graphType = 'line';
+    }
 
-      // get the graph type
-      _this.graphType = _this.componentContent.graphType;
+    if (_this.componentContent.canCreateNewTrials) {
+      _this.canCreateNewTrials = _this.componentContent.canCreateNewTrials;
+    }
 
-      if (_this.graphType == null) {
-        // there is no graph type so we will default to line plot
-        _this.graphType = 'line';
-      }
+    if (_this.componentContent.canDeleteTrials) {
+      _this.canDeleteTrials = _this.componentContent.canDeleteTrials;
+    }
 
-      if (_this.componentContent.canCreateNewTrials) {
-        _this.canCreateNewTrials = _this.componentContent.canCreateNewTrials;
-      }
+    if (_this.componentContent.hideAllTrialsOnNewTrial === false) {
+      _this.hideAllTrialsOnNewTrial = false;
+    }
 
-      if (_this.componentContent.canDeleteTrials) {
-        _this.canDeleteTrials = _this.componentContent.canDeleteTrials;
-      }
+    if (_this.mode === 'student') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+      _this.isResetSeriesButtonVisible = true;
+      _this.isSelectSeriesVisible = true;
 
-      if (_this.componentContent.hideAllTrialsOnNewTrial === false) {
-        _this.hideAllTrialsOnNewTrial = false;
-      }
-
-      if (_this.mode === 'student') {
-        _this.isPromptVisible = true;
-        _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
-        _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-        _this.isResetSeriesButtonVisible = true;
-        _this.isSelectSeriesVisible = true;
-
-        // get the latest annotations
-        // TODO: watch for new annotations and update accordingly
-        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-        _this.backgroundImage = _this.componentContent.backgroundImage;
-      } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        //this.isResetGraphButtonVisible = false;
-        _this.isResetSeriesButtonVisible = false;
-        _this.isSelectSeriesVisible = false;
-        _this.isDisabled = true;
-        _this.isSnipDrawingButtonVisible = false;
-
-        // get the component state from the scope
-        var _componentState = _this.$scope.componentState;
-
-        if (_componentState != null) {
-          // create a unique id for the chart element using this component state
-          _this.chartId = 'chart_' + _componentState.id;
-          if (_this.mode === 'gradingRevision') {
-            _this.chartId = 'chart_gradingRevision_' + _componentState.id;
-          }
-        }
-
-        if (_this.mode === 'grading') {
-          // get the latest annotations
-          _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-        }
-      } else if (_this.mode === 'onlyShowWork') {
-        _this.isPromptVisible = true;
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isResetGraphButtonVisible = false;
-        _this.isResetSeriesButtonVisible = false;
-        _this.isSelectSeriesVisible = false;
-        _this.isDisabled = true;
-        _this.isSnipDrawingButtonVisible = false;
-        _this.backgroundImage = _this.componentContent.backgroundImage;
-      } else if (_this.mode === 'showPreviousWork') {
-        _this.isPromptVisible = true;
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isDisabled = true;
-        _this.backgroundImage = _this.componentContent.backgroundImage;
-      } else if (_this.mode === 'authoring') {
-        _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
-        _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-        _this.isResetSeriesButtonVisible = true;
-        _this.isSelectSeriesVisible = true;
-
-        // generate the summernote rubric element id
-        _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
-
-        // set the component rubric into the summernote rubric
-        _this.summernoteRubricHTML = _this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = _this.$translate('INSERT_ASSET');
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        _this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        _this.backgroundImage = _this.componentContent.backgroundImage;
-        _this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return this.authoringComponentContent;
-        }.bind(_this), function (newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-          this.series = null;
-          this.xAxis = null;
-          this.yAxis = null;
-          this.submitCounter = 0;
-          this.backgroundImage = this.componentContent.backgroundImage;
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-          this.graphType = this.componentContent.graphType;
-          this.isResetSeriesButtonVisible = true;
-          this.isSelectSeriesVisible = true;
-          this.legendEnabled = !this.componentContent.hideLegend;
-          this.showTrialSelect = !this.componentContent.hideTrialSelect;
-          this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
-          this.setDefaultActiveSeries();
-          this.trials = [];
-          this.newTrial();
-          this.clearPlotLines();
-          this.setupGraph();
-        }.bind(_this), true);
-      }
+      // get the latest annotations
+      // TODO: watch for new annotations and update accordingly
+      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+      _this.backgroundImage = _this.componentContent.backgroundImage;
+    } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      //this.isResetGraphButtonVisible = false;
+      _this.isResetSeriesButtonVisible = false;
+      _this.isSelectSeriesVisible = false;
+      _this.isDisabled = true;
+      _this.isSnipDrawingButtonVisible = false;
 
       // get the component state from the scope
-      var componentState = _this.$scope.componentState;
+      var _componentState = _this.$scope.componentState;
 
-      // set whether studentAttachment is enabled
-      _this.isStudentAttachmentEnabled = _this.componentContent.isStudentAttachmentEnabled;
+      if (_componentState != null) {
+        // create a unique id for the chart element using this component state
+        _this.chartId = 'chart_' + _componentState.id;
+        if (_this.mode === 'gradingRevision') {
+          _this.chartId = 'chart_gradingRevision_' + _componentState.id;
+        }
+      }
 
-      if (_this.mode == 'student') {
-        if (!_this.GraphService.componentStateHasStudentWork(componentState, _this.componentContent)) {
-          _this.newTrial();
+      if (_this.mode === 'grading') {
+        // get the latest annotations
+        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+      }
+    } else if (_this.mode === 'onlyShowWork') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isResetGraphButtonVisible = false;
+      _this.isResetSeriesButtonVisible = false;
+      _this.isSelectSeriesVisible = false;
+      _this.isDisabled = true;
+      _this.isSnipDrawingButtonVisible = false;
+      _this.backgroundImage = _this.componentContent.backgroundImage;
+    } else if (_this.mode === 'showPreviousWork') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isDisabled = true;
+      _this.backgroundImage = _this.componentContent.backgroundImage;
+    } else if (_this.mode === 'authoring') {
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+      _this.isResetSeriesButtonVisible = true;
+      _this.isSelectSeriesVisible = true;
+
+      // generate the summernote rubric element id
+      _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+
+      // set the component rubric into the summernote rubric
+      _this.summernoteRubricHTML = _this.componentContent.rubric;
+
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = _this.$translate('INSERT_ASSET');
+
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
+
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      _this.summernoteRubricOptions = {
+        toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
         }
-        if (_this.UtilService.hasConnectedComponentAlwaysField(_this.componentContent)) {
-          /*
-           * This component has a connected component that we always want to look at for
-           * merging student data.
-           */
-          _this.handleConnectedComponents();
-        } else if (_this.GraphService.componentStateHasStudentWork(componentState, _this.componentContent)) {
-          // this student has previous work so we will load it
-          _this.setStudentWork(componentState);
-        } else if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
-          /*
-           * This student doesn't have any previous work but this component has connected components
-           * so we will get the work from the connected component.
-           */
-          _this.handleConnectedComponents();
-        }
-      } else {
-        // populate the student work into this component
+      };
+
+      _this.backgroundImage = _this.componentContent.backgroundImage;
+      _this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function () {
+        return this.authoringComponentContent;
+      }.bind(_this), function (newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+        this.series = null;
+        this.xAxis = null;
+        this.yAxis = null;
+        this.submitCounter = 0;
+        this.backgroundImage = this.componentContent.backgroundImage;
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+        this.graphType = this.componentContent.graphType;
+        this.isResetSeriesButtonVisible = true;
+        this.isSelectSeriesVisible = true;
+        this.legendEnabled = !this.componentContent.hideLegend;
+        this.showTrialSelect = !this.componentContent.hideTrialSelect;
+        this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
+        this.setDefaultActiveSeries();
+        this.trials = [];
+        this.newTrial();
+        this.clearPlotLines();
+        this.setupGraph();
+      }.bind(_this), true);
+    }
+
+    // get the component state from the scope
+    var componentState = _this.$scope.componentState;
+
+    // set whether studentAttachment is enabled
+    _this.isStudentAttachmentEnabled = _this.componentContent.isStudentAttachmentEnabled;
+
+    if (_this.mode == 'student') {
+      if (!_this.GraphService.componentStateHasStudentWork(componentState, _this.componentContent)) {
+        _this.newTrial();
+      }
+      if (_this.UtilService.hasConnectedComponentAlwaysField(_this.componentContent)) {
+        /*
+         * This component has a connected component that we always want to look at for
+         * merging student data.
+         */
+        _this.handleConnectedComponents();
+      } else if (_this.GraphService.componentStateHasStudentWork(componentState, _this.componentContent)) {
+        // this student has previous work so we will load it
         _this.setStudentWork(componentState);
-      }
-
-      if (componentState != null) {
-        // there is an initial component state so we will remember it
-        _this.initialComponentState = componentState;
-
+      } else if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
         /*
-         * remember this component state as the previous component
-         * state for undo purposes
+         * This student doesn't have any previous work but this component has connected components
+         * so we will get the work from the connected component.
          */
-        _this.previousComponentState = componentState;
+        _this.handleConnectedComponents();
       }
+    } else {
+      // populate the student work into this component
+      _this.setStudentWork(componentState);
+    }
 
-      // check if the student has used up all of their submits
-      if (_this.componentContent.maxSubmitCount != null && _this.submitCounter >= _this.componentContent.maxSubmitCount) {
-        /*
-         * the student has used up all of their chances to submit so we
-         * will disable the submit button
-         */
-        _this.isSubmitButtonDisabled = true;
-      }
+    if (componentState != null) {
+      // there is an initial component state so we will remember it
+      _this.initialComponentState = componentState;
 
-      if (_this.componentContent.hideLegend) {
-        _this.legendEnabled = false;
-      }
+      /*
+       * remember this component state as the previous component
+       * state for undo purposes
+       */
+      _this.previousComponentState = componentState;
+    }
 
-      if (_this.componentContent.hideTrialSelect) {
-        _this.showTrialSelect = false;
-      }
+    // check if the student has used up all of their submits
+    if (_this.componentContent.maxSubmitCount != null && _this.submitCounter >= _this.componentContent.maxSubmitCount) {
+      /*
+       * the student has used up all of their chances to submit so we
+       * will disable the submit button
+       */
+      _this.isSubmitButtonDisabled = true;
+    }
 
-      // check if we need to lock this component
-      _this.calculateDisabled();
+    if (_this.componentContent.hideLegend) {
+      _this.legendEnabled = false;
+    }
 
-      // setup the graph
-      _this.setupGraph().then(function () {
-        _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
-      });
+    if (_this.componentContent.hideTrialSelect) {
+      _this.showTrialSelect = false;
+    }
 
-      if (_this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
-      }
+    // check if we need to lock this component
+    _this.calculateDisabled();
+
+    // setup the graph
+    _this.setupGraph().then(function () {
+      _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
+    });
+
+    if (_this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
     }
 
     /**

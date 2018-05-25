@@ -144,167 +144,161 @@ class AnimationController extends ComponentController {
     // get the component state from the scope
     var componentState = this.$scope.componentState;
 
-    if (this.componentContent != null) {
+    // get the svg id
+    this.svgId = 'svg_' + this.nodeId + '_' + this.componentId;
 
-      // get the component id
-      this.componentId = this.componentContent.id;
+    // initialize all the coordinates
+    this.initializeCoordinates();
+
+    if (this.mode === 'student') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
+      // get the latest annotations
+      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+    } else if (this.mode === 'grading') {
 
       // get the svg id
-      this.svgId = 'svg_' + this.nodeId + '_' + this.componentId;
-
-      // initialize all the coordinates
-      this.initializeCoordinates();
-
-      if (this.mode === 'student') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-        // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      } else if (this.mode === 'grading') {
-
-        // get the svg id
-        if (componentState != null) {
-          this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + componentState.id;
-        } else {
-
-          this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
-        }
-
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'onlyShowWork') {
-        this.onlyShowWork = true;
-        this.isPromptVisible = false;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'showPreviousWork') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'authoring') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-        // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-
-        // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        this.summernoteRubricOptions = {
-          toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']],
-            ['customButton', ['insertAssetButton']]
-          ],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function() {
-          return this.authoringComponentContent;
-        }.bind(this), function(newValue, oldValue) {
-          // inject the asset paths into the new component content
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
-          /*
-           * reset the values so that the preview is refreshed with
-           * the new content
-           */
-          this.submitCounter = 0;
-          this.studentResponse = '';
-          this.latestAnnotations = null;
-          this.isDirty = false;
-          this.isSubmitDirty = false;
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-          if (this.componentContent.starterSentence != null) {
-            /*
-             * the student has not done any work and there is a starter sentence
-             * so we will populate the textarea with the starter sentence
-             */
-            this.studentResponse = this.componentContent.starterSentence;
-          }
-
-          // remove all the old objects
-          this.removeAllObjects();
-
-          // initialize all the coordinates
-          this.initializeCoordinates();
-
-          // re-render the svg div
-          this.setup();
-        }.bind(this), true);
-      }
-
-      if (this.mode == 'student') {
-        if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-          // we will show work from another component
-          this.handleConnectedComponents();
-        }  else if (this.AnimationService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          /*
-           * the student has work so we will populate the work into this
-           * component
-           */
-          this.setStudentWork(componentState);
-        } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // we will import work from another component
-          this.handleConnectedComponents();
-        }
+      if (componentState != null) {
+        this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + componentState.id;
       } else {
-        // populate the student work into this component
-        this.setStudentWork(componentState);
+
+        this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
       }
 
-      // check if the student has used up all of their submits
-      if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    } else if (this.mode === 'onlyShowWork') {
+      this.onlyShowWork = true;
+      this.isPromptVisible = false;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    } else if (this.mode === 'showPreviousWork') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    } else if (this.mode === 'authoring') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
+      // generate the summernote rubric element id
+      this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+
+      // set the component rubric into the summernote rubric
+      this.summernoteRubricHTML = this.componentContent.rubric;
+
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = this.$translate('INSERT_ASSET');
+
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      this.summernoteRubricOptions = {
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['fontname', ['fontname']],
+          ['fontsize', ['fontsize']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'video']],
+          ['view', ['fullscreen', 'codeview', 'help']],
+          ['customButton', ['insertAssetButton']]
+        ],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
+        }
+      };
+
+      this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function() {
+        return this.authoringComponentContent;
+      }.bind(this), function(newValue, oldValue) {
+        // inject the asset paths into the new component content
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
         /*
-         * the student has used up all of their chances to submit so we
-         * will disable the submit button
+         * reset the values so that the preview is refreshed with
+         * the new content
          */
-        this.isSubmitButtonDisabled = true;
-      }
+        this.submitCounter = 0;
+        this.studentResponse = '';
+        this.latestAnnotations = null;
+        this.isDirty = false;
+        this.isSubmitDirty = false;
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
-      // check if we need to lock this component
-      this.calculateDisabled();
+        if (this.componentContent.starterSentence != null) {
+          /*
+           * the student has not done any work and there is a starter sentence
+           * so we will populate the textarea with the starter sentence
+           */
+          this.studentResponse = this.componentContent.starterSentence;
+        }
 
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+        // remove all the old objects
+        this.removeAllObjects();
+
+        // initialize all the coordinates
+        this.initializeCoordinates();
+
+        // re-render the svg div
+        this.setup();
+      }.bind(this), true);
+    }
+
+    if (this.mode == 'student') {
+      if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
+        // we will show work from another component
+        this.handleConnectedComponents();
+      }  else if (this.AnimationService.componentStateHasStudentWork(componentState, this.componentContent)) {
+        /*
+         * the student has work so we will populate the work into this
+         * component
+         */
+        this.setStudentWork(componentState);
+      } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+        // we will import work from another component
+        this.handleConnectedComponents();
       }
+    } else {
+      // populate the student work into this component
+      this.setStudentWork(componentState);
+    }
+
+    // check if the student has used up all of their submits
+    if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+      /*
+       * the student has used up all of their chances to submit so we
+       * will disable the submit button
+       */
+      this.isSubmitButtonDisabled = true;
+    }
+
+    // check if we need to lock this component
+    this.calculateDisabled();
+
+    if (this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
     }
 
     /*

@@ -129,178 +129,173 @@ var ConceptMapController = function (_ComponentController) {
     // the auto feedback string
     _this.autoFeedbackString = '';
 
-    if (_this.componentContent != null) {
+    _this.setBackgroundImage(_this.componentContent.background, _this.componentContent.stretchBackground);
 
-      // get the component id
-      _this.componentId = _this.componentContent.id;
-      _this.setBackgroundImage(_this.componentContent.background, _this.componentContent.stretchBackground);
+    // set the id of the svg and other display elements
+    _this.svgId = 'svg_' + _this.$scope.nodeId + '_' + _this.componentId;
+    _this.conceptMapContainerId = 'conceptMapContainer_' + _this.$scope.nodeId + '_' + _this.componentId;
+    _this.selectNodeBarId = 'selectNodeBar_' + _this.$scope.nodeId + '_' + _this.componentId;
+    _this.feedbackContainerId = 'feedbackContainer_' + _this.$scope.nodeId + '_' + _this.componentId;
 
-      // set the id of the svg and other display elements
-      _this.svgId = 'svg_' + _this.$scope.nodeId + '_' + _this.componentId;
-      _this.conceptMapContainerId = 'conceptMapContainer_' + _this.$scope.nodeId + '_' + _this.componentId;
-      _this.selectNodeBarId = 'selectNodeBar_' + _this.$scope.nodeId + '_' + _this.componentId;
-      _this.feedbackContainerId = 'feedbackContainer_' + _this.$scope.nodeId + '_' + _this.componentId;
+    if (_this.componentContent.width != null) {
+      _this.width = _this.componentContent.width;
+    }
 
-      if (_this.componentContent.width != null) {
-        _this.width = _this.componentContent.width;
-      }
+    if (_this.componentContent.height != null) {
+      _this.height = _this.componentContent.height;
+    }
 
-      if (_this.componentContent.height != null) {
-        _this.height = _this.componentContent.height;
-      }
+    if (_this.mode === 'student') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+      _this.availableNodes = _this.componentContent.nodes;
+      _this.availableLinks = _this.componentContent.links;
 
-      if (_this.mode === 'student') {
-        _this.isPromptVisible = true;
-        _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
-        _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-        _this.availableNodes = _this.componentContent.nodes;
-        _this.availableLinks = _this.componentContent.links;
+      // get the latest annotations
+      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+    } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isDisabled = true;
 
-        // get the latest annotations
-        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-      } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
-        _this.isPromptVisible = true;
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isDisabled = true;
+      // get the latest annotations
+      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
 
-        // get the latest annotations
-        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+      var _componentState = _this.$scope.componentState;
 
-        var _componentState = _this.$scope.componentState;
-
-        if (_componentState) {
-          // set ids for the svg and other display elements using the componentStateId (so we have unique ids when showing revisions)
-          /*
-           * the student has work for this component so we will use
-           * the node id, component id, and workgroup id, and
-           * componentStateId for the svg id
-           */
-          var idInfo = _this.nodeId + '_' + _this.componentId + '_' + _this.workgroupId + '_' + _componentState.id;
-          if (_this.mode === 'gradingRevision') {
-            idInfo = '_gradingRevision_' + idInfo;
-            _this.svgId = 'svg_' + idInfo;
-            _this.conceptMapContainerId = 'conceptMapContainer_' + idInfo;
-            _this.selectNodeBarId = 'selectNodeBar_' + idInfo;
-            _this.feedbackContainerId = 'feedbackContainer_' + idInfo;
-          } else {
-            _this.svgId = 'svg_' + idInfo;
-            _this.conceptMapContainerId = 'conceptMapContainer_' + idInfo;
-            _this.selectNodeBarId = 'selectNodeBar_' + idInfo;
-            _this.feedbackContainerId = 'feedbackContainer_' + idInfo;
-          }
-        } else {
-          /*
-           * the student does not have any work for this component so
-           * we will use the node id, component id, and workgroup id
-           * for the svg id
-           */
-          var _idInfo = _this.nodeId + '_' + _this.componentId + '_' + _this.workgroupId;
-          _this.svgId = 'svg_' + _idInfo;
-          _this.conceptMapContainerId = 'conceptMapContainer_' + _idInfo;
-          _this.selectNodeBarId = 'selectNodeBar_' + _idInfo;
-          _this.feedbackContainerId = 'feedbackContainer_' + _idInfo;
-        }
-      } else if (_this.mode === 'onlyShowWork') {
-        _this.isPromptVisible = false;
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isSnipButtonVisible = false;
-        _this.isDisabled = true;
-
-        var componentState = _this.$scope.componentState;
-
-        if (componentState == null) {
-          /*
-           * the student does not have any work for this component so
-           * we will use the node id, component id, and workgroup id
-           * for the svg id
-           */
-          _this.svgId = 'svgOnlyShowWork_' + _this.nodeId + '_' + _this.componentId + '_' + _this.workgroupId;
-        } else {
-          /*
-           * the student has work for this component so we will use
-           * the node id, component id, and component state id
-           * for the svg id
-           */
-          _this.svgId = 'svgOnlyShowWork_' + _this.nodeId + '_' + _this.componentId + '_' + componentState.id;
-        }
-      } else if (_this.mode === 'showPreviousWork') {
-        _this.isPromptVisible = true;
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isSnipButtonVisible = false;
-        _this.isDisabled = true;
-      } else if (_this.mode === 'authoring') {
-        _this.isPromptVisible = true;
-        _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
-        _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-        _this.availableNodes = _this.componentContent.nodes;
-        _this.availableLinks = _this.componentContent.links;
-
-        // generate the summernote rubric element id
-        _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
-
-        // set the component rubric into the summernote rubric
-        _this.summernoteRubricHTML = _this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = _this.$translate('INSERT_ASSET');
-
+      if (_componentState) {
+        // set ids for the svg and other display elements using the componentStateId (so we have unique ids when showing revisions)
         /*
-         * create the custom button for inserting WISE assets into
-         * summernote
+         * the student has work for this component so we will use
+         * the node id, component id, and workgroup id, and
+         * componentStateId for the svg id
          */
-        var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
-
+        var idInfo = _this.nodeId + '_' + _this.componentId + '_' + _this.workgroupId + '_' + _componentState.id;
+        if (_this.mode === 'gradingRevision') {
+          idInfo = '_gradingRevision_' + idInfo;
+          _this.svgId = 'svg_' + idInfo;
+          _this.conceptMapContainerId = 'conceptMapContainer_' + idInfo;
+          _this.selectNodeBarId = 'selectNodeBar_' + idInfo;
+          _this.feedbackContainerId = 'feedbackContainer_' + idInfo;
+        } else {
+          _this.svgId = 'svg_' + idInfo;
+          _this.conceptMapContainerId = 'conceptMapContainer_' + idInfo;
+          _this.selectNodeBarId = 'selectNodeBar_' + idInfo;
+          _this.feedbackContainerId = 'feedbackContainer_' + idInfo;
+        }
+      } else {
         /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
+         * the student does not have any work for this component so
+         * we will use the node id, component id, and workgroup id
+         * for the svg id
          */
-        _this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        _this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return this.authoringComponentContent;
-        }.bind(_this), function (newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-          this.availableNodes = this.componentContent.nodes;
-          this.availableLinks = this.componentContent.links;
-          this.width = this.componentContent.width;
-          this.height = this.componentContent.height;
-          this.setBackgroundImage(this.componentContent.background, this.componentContent.stretchBackground);
-
-          /*
-           * make sure the SVG element can be accessed. we need to
-           * perform this check because this watch is getting fired
-           * before angular sets the svgId on the svg element. if
-           * setupSVG() is called before the svgId is set on the svg
-           * element, we will get an error.
-           */
-          if (document.getElementById(this.svgId) != null) {
-            this.setupSVG();
-          }
-        }.bind(_this), true);
+        var _idInfo = _this.nodeId + '_' + _this.componentId + '_' + _this.workgroupId;
+        _this.svgId = 'svg_' + _idInfo;
+        _this.conceptMapContainerId = 'conceptMapContainer_' + _idInfo;
+        _this.selectNodeBarId = 'selectNodeBar_' + _idInfo;
+        _this.feedbackContainerId = 'feedbackContainer_' + _idInfo;
       }
+    } else if (_this.mode === 'onlyShowWork') {
+      _this.isPromptVisible = false;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isSnipButtonVisible = false;
+      _this.isDisabled = true;
+
+      var componentState = _this.$scope.componentState;
+
+      if (componentState == null) {
+        /*
+         * the student does not have any work for this component so
+         * we will use the node id, component id, and workgroup id
+         * for the svg id
+         */
+        _this.svgId = 'svgOnlyShowWork_' + _this.nodeId + '_' + _this.componentId + '_' + _this.workgroupId;
+      } else {
+        /*
+         * the student has work for this component so we will use
+         * the node id, component id, and component state id
+         * for the svg id
+         */
+        _this.svgId = 'svgOnlyShowWork_' + _this.nodeId + '_' + _this.componentId + '_' + componentState.id;
+      }
+    } else if (_this.mode === 'showPreviousWork') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isSnipButtonVisible = false;
+      _this.isDisabled = true;
+    } else if (_this.mode === 'authoring') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+      _this.availableNodes = _this.componentContent.nodes;
+      _this.availableLinks = _this.componentContent.links;
+
+      // generate the summernote rubric element id
+      _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+
+      // set the component rubric into the summernote rubric
+      _this.summernoteRubricHTML = _this.componentContent.rubric;
+
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = _this.$translate('INSERT_ASSET');
 
       /*
-       * Call the initializeSVG() after a timeout so that angular has a
-       * chance to set the svg element id before we start using it. If we
-       * don't wait for the timeout, the svg id won't be set when we try
-       * to start referencing the svg element.
+       * create the custom button for inserting WISE assets into
+       * summernote
        */
-      _this.$timeout(angular.bind(_this, _this.initializeSVG));
+      var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
+
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      _this.summernoteRubricOptions = {
+        toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
+        }
+      };
+
+      _this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function () {
+        return this.authoringComponentContent;
+      }.bind(_this), function (newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+        this.availableNodes = this.componentContent.nodes;
+        this.availableLinks = this.componentContent.links;
+        this.width = this.componentContent.width;
+        this.height = this.componentContent.height;
+        this.setBackgroundImage(this.componentContent.background, this.componentContent.stretchBackground);
+
+        /*
+         * make sure the SVG element can be accessed. we need to
+         * perform this check because this watch is getting fired
+         * before angular sets the svgId on the svg element. if
+         * setupSVG() is called before the svgId is set on the svg
+         * element, we will get an error.
+         */
+        if (document.getElementById(this.svgId) != null) {
+          this.setupSVG();
+        }
+      }.bind(_this), true);
     }
+
+    /*
+     * Call the initializeSVG() after a timeout so that angular has a
+     * chance to set the svg element id before we start using it. If we
+     * don't wait for the timeout, the svg id won't be set when we try
+     * to start referencing the svg element.
+     */
+    _this.$timeout(angular.bind(_this, _this.initializeSVG));
 
     /**
      * Returns true iff there is student work that hasn't been saved yet

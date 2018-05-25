@@ -88,103 +88,96 @@ var DrawController = function (_ComponentController) {
     // the component types we are allowed to connect to
     _this.allowedConnectedComponentTypes = [{ type: 'ConceptMap' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Table' }];
 
-    if (_this.componentContent != null) {
+    _this.componentType = _this.componentContent.type;
 
-      // get the component id
-      _this.componentId = _this.componentContent.id;
+    if (_this.mode === 'student') {
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+      _this.isResetButtonVisible = true;
 
-      // get the component type
-      _this.componentType = _this.componentContent.type;
+      _this.drawingToolId = 'drawingtool_' + _this.nodeId + '_' + _this.componentId;
 
-      if (_this.mode === 'student') {
-        _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
-        _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-        _this.isResetButtonVisible = true;
+      // get the latest annotations
+      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+    } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision' || _this.mode === 'onlyShowWork') {
+      _this.isSnipDrawingButtonVisible = false;
 
-        _this.drawingToolId = 'drawingtool_' + _this.nodeId + '_' + _this.componentId;
+      // get the component state from the scope
+      var _componentState = _this.$scope.componentState;
 
-        // get the latest annotations
-        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-      } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision' || _this.mode === 'onlyShowWork') {
-        _this.isSnipDrawingButtonVisible = false;
-
-        // get the component state from the scope
-        var _componentState = _this.$scope.componentState;
-
-        if (_componentState != null) {
-          // create a unique id for the application drawing tool element using this component state
-          _this.drawingToolId = 'drawingtool_' + _componentState.id;
-          if (_this.mode === 'gradingRevision') {
-            _this.drawingToolId = 'drawingtool_gradingRevision_' + _componentState.id;
-          }
+      if (_componentState != null) {
+        // create a unique id for the application drawing tool element using this component state
+        _this.drawingToolId = 'drawingtool_' + _componentState.id;
+        if (_this.mode === 'gradingRevision') {
+          _this.drawingToolId = 'drawingtool_gradingRevision_' + _componentState.id;
         }
-
-        if (_this.mode === 'grading') {
-          // get the latest annotations
-          _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-        }
-      } else if (_this.mode === 'showPreviousWork') {
-        // get the component state from the scope
-        var componentState = _this.$scope.componentState;
-        if (componentState != null) {
-          _this.drawingToolId = 'drawingtool_' + componentState.id;
-        }
-        _this.isPromptVisible = true;
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isSnipDrawingButtonVisible = false;
-        _this.isDisabled = true;
-      } else if (_this.mode === 'authoring') {
-        _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
-        _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-        _this.isResetButtonVisible = true;
-
-        // generate the summernote rubric element id
-        _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
-
-        // set the component rubric into the summernote rubric
-        _this.summernoteRubricHTML = _this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = _this.$translate('INSERT_ASSET');
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        _this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        _this.drawingToolId = 'drawingtool_' + _this.nodeId + '_' + _this.componentId;
-        _this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return this.authoringComponentContent;
-        }.bind(_this), function (newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-          this.submitCounter = 0;
-          this.initializeDrawingTool();
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        }.bind(_this), true);
       }
 
-      // running this in side a timeout ensures that the code only runs after the markup is rendered.
-      // maybe there's a better way to do this, like with an event?
-      _this.$timeout(angular.bind(_this, _this.initializeDrawingTool));
+      if (_this.mode === 'grading') {
+        // get the latest annotations
+        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+      }
+    } else if (_this.mode === 'showPreviousWork') {
+      // get the component state from the scope
+      var componentState = _this.$scope.componentState;
+      if (componentState != null) {
+        _this.drawingToolId = 'drawingtool_' + componentState.id;
+      }
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isSnipDrawingButtonVisible = false;
+      _this.isDisabled = true;
+    } else if (_this.mode === 'authoring') {
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+      _this.isResetButtonVisible = true;
+
+      // generate the summernote rubric element id
+      _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+
+      // set the component rubric into the summernote rubric
+      _this.summernoteRubricHTML = _this.componentContent.rubric;
+
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = _this.$translate('INSERT_ASSET');
+
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
+
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      _this.summernoteRubricOptions = {
+        toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
+        }
+      };
+
+      _this.drawingToolId = 'drawingtool_' + _this.nodeId + '_' + _this.componentId;
+      _this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function () {
+        return this.authoringComponentContent;
+      }.bind(_this), function (newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+        this.submitCounter = 0;
+        this.initializeDrawingTool();
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+      }.bind(_this), true);
     }
+
+    // running this in side a timeout ensures that the code only runs after the markup is rendered.
+    // maybe there's a better way to do this, like with an event?
+    _this.$timeout(angular.bind(_this, _this.initializeDrawingTool));
 
     /**
      * Get the component state from this component. The parent node will

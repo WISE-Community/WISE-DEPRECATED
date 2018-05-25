@@ -110,206 +110,200 @@ class AudioOscillatorController extends ComponentController {
      */
     this.originalComponentContent = this.$scope.originalComponentContent;
 
-    if (this.componentContent != null) {
+    if (this.mode === 'student') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
-      // get the component id
-      this.componentId = this.componentContent.id;
+      // get the latest annotations
+      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+    } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
 
-      if (this.mode === 'student') {
-        this.isPromptVisible = true;
+      // get the latest annotations
+      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+    } else if (this.mode === 'onlyShowWork') {
+      this.isPromptVisible = false;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    } else if (this.mode === 'showPreviousWork') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    } else if (this.mode === 'authoring') {
+      // generate the summernote rubric element id
+      this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+
+      // set the component rubric into the summernote rubric
+      this.summernoteRubricHTML = this.componentContent.rubric;
+
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = this.$translate('INSERT_ASSET');
+
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      this.summernoteRubricOptions = {
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['fontname', ['fontname']],
+          ['fontsize', ['fontsize']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'video']],
+          ['view', ['fullscreen', 'codeview', 'help']],
+          ['customButton', ['insertAssetButton']]
+        ],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
+        }
+      };
+
+      // update which oscillator types should be checked
+      this.authoringProcessCheckedOscillatorTypes();
+
+      this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function() {
+        return this.authoringComponentContent;
+      }.bind(this), function(newValue, oldValue) {
+
+        // stop the audio if it is playing
+        this.stop();
+
+        // inject asset paths if necessary
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
+        this.submitCounter = 0;
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
         this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
-        // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
+        // load the parameters into the component
+        this.setParametersFromComponentContent();
 
-        // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      } else if (this.mode === 'onlyShowWork') {
-        this.isPromptVisible = false;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'showPreviousWork') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'authoring') {
-        // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-
-        // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        this.summernoteRubricOptions = {
-          toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']],
-            ['customButton', ['insertAssetButton']]
-          ],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        // update which oscillator types should be checked
-        this.authoringProcessCheckedOscillatorTypes();
-
-        this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function() {
-          return this.authoringComponentContent;
-        }.bind(this), function(newValue, oldValue) {
-
-          // stop the audio if it is playing
-          this.stop();
-
-          // inject asset paths if necessary
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
-          this.submitCounter = 0;
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-          // load the parameters into the component
-          this.setParametersFromComponentContent();
-
-          // draw the oscilloscope gride after the view has rendered
-          $timeout(() => {this.drawOscilloscopeGrid()}, 0);
-        }.bind(this), true);
-      }
-
-      this.oscilloscopeId = 'oscilloscope' + this.componentId;
-
-      // load the parameters into the component
-      this.setParametersFromComponentContent();
-
-      var componentState = null;
-
-      // set whether studentAttachment is enabled
-      this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-      // get the component state from the scope
-      componentState = this.$scope.componentState;
-
-      if (this.mode == 'student') {
-        if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-          // we will show work from another component
-          this.handleConnectedComponents();
-        }  else if (this.AudioOscillatorService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          /*
-           * the student has work so we will populate the work into this
-           * component
-           */
-          this.setStudentWork(componentState);
-        } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // we will import work from another component
-          this.handleConnectedComponents();
-        } else if (componentState == null) {
-          // check if we need to import work
-
-          if (componentState == null) {
-            /*
-             * only import work if the student does not already have
-             * work for this component
-             */
-
-            // check if we need to import work
-            var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-            var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-
-            if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-              /*
-               * check if the node id is in the field that we used to store
-               * the import previous work node id in
-               */
-              importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-            }
-
-            if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-              /*
-               * check if the component id is in the field that we used to store
-               * the import previous work component id in
-               */
-              importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-            }
-
-            if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-              // import the work from the other component
-              this.importWork();
-            } else if (this.componentContent.starterSentence != null) {
-              /*
-               * the student has not done any work and there is a starter sentence
-               * so we will populate the textarea with the starter sentence
-               */
-              this.studentResponse = this.componentContent.starterSentence;
-            }
-          } else {
-            // populate the student work into this component
-            this.setStudentWork(componentState);
-          }
-        }
-      } else {
-        // populate the student work into this component
-        this.setStudentWork(componentState);
-      }
-
-      // check if the student has used up all of their submits
-      if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-        /*
-         * the student has used up all of their chances to submit so we
-         * will disable the submit button
-         */
-        this.isSubmitButtonDisabled = true;
-      }
-
-      // check if we need to lock this component
-      this.calculateDisabled();
-
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-      }
-
-      if (this.mode !== 'grading' && this.mode !== 'gradingRevision') {
-        // create the audio context
-        this.audioContext = new AudioContext();
-
-        /*
-         * draw the oscilloscope grid after angular has finished rendering
-         * the view. we need to wait until after angular has set the
-         * canvas width and height to draw the grid because setting the
-         * dimensions of the canvas will erase it.
-         */
+        // draw the oscilloscope gride after the view has rendered
         $timeout(() => {this.drawOscilloscopeGrid()}, 0);
+      }.bind(this), true);
+    }
+
+    this.oscilloscopeId = 'oscilloscope' + this.componentId;
+
+    // load the parameters into the component
+    this.setParametersFromComponentContent();
+
+    var componentState = null;
+
+    // set whether studentAttachment is enabled
+    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+
+    // get the component state from the scope
+    componentState = this.$scope.componentState;
+
+    if (this.mode == 'student') {
+      if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
+        // we will show work from another component
+        this.handleConnectedComponents();
+      }  else if (this.AudioOscillatorService.componentStateHasStudentWork(componentState, this.componentContent)) {
+        /*
+         * the student has work so we will populate the work into this
+         * component
+         */
+        this.setStudentWork(componentState);
+      } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+        // we will import work from another component
+        this.handleConnectedComponents();
+      } else if (componentState == null) {
+        // check if we need to import work
+
+        if (componentState == null) {
+          /*
+           * only import work if the student does not already have
+           * work for this component
+           */
+
+          // check if we need to import work
+          var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
+          var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
+
+          if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+            /*
+             * check if the node id is in the field that we used to store
+             * the import previous work node id in
+             */
+            importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
+          }
+
+          if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+            /*
+             * check if the component id is in the field that we used to store
+             * the import previous work component id in
+             */
+            importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
+          }
+
+          if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
+            // import the work from the other component
+            this.importWork();
+          } else if (this.componentContent.starterSentence != null) {
+            /*
+             * the student has not done any work and there is a starter sentence
+             * so we will populate the textarea with the starter sentence
+             */
+            this.studentResponse = this.componentContent.starterSentence;
+          }
+        } else {
+          // populate the student work into this component
+          this.setStudentWork(componentState);
+        }
       }
+    } else {
+      // populate the student work into this component
+      this.setStudentWork(componentState);
+    }
+
+    // check if the student has used up all of their submits
+    if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+      /*
+       * the student has used up all of their chances to submit so we
+       * will disable the submit button
+       */
+      this.isSubmitButtonDisabled = true;
+    }
+
+    // check if we need to lock this component
+    this.calculateDisabled();
+
+    if (this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+    }
+
+    if (this.mode !== 'grading' && this.mode !== 'gradingRevision') {
+      // create the audio context
+      this.audioContext = new AudioContext();
+
+      /*
+       * draw the oscilloscope grid after angular has finished rendering
+       * the view. we need to wait until after angular has set the
+       * canvas width and height to draw the grid because setting the
+       * dimensions of the canvas will erase it.
+       */
+      $timeout(() => {this.drawOscilloscopeGrid()}, 0);
     }
 
     /**

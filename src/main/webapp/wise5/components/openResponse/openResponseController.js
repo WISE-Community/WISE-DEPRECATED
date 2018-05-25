@@ -110,173 +110,167 @@ var OpenResponseController = function (_ComponentController) {
      */
     _this.originalComponentContent = _this.$scope.originalComponentContent;
 
-    if (_this.componentContent != null) {
+    if (_this.mode === 'student') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
 
-      // get the component id
-      _this.componentId = _this.componentContent.id;
+      // get the latest annotations
+      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+    } else if (_this.mode === 'grading') {
+      _this.isPromptVisible = false;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isDisabled = true;
+      _this.isSnipButtonVisible = false;
+    } else if (_this.mode === 'onlyShowWork') {
+      _this.onlyShowWork = true;
+      _this.isPromptVisible = false;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isDisabled = true;
+      _this.isSnipButtonVisible = false;
+    } else if (_this.mode === 'showPreviousWork') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isDisabled = true;
+      _this.isSnipButtonVisible = false;
+    } else if (_this.mode === 'authoring') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
 
-      if (_this.mode === 'student') {
-        _this.isPromptVisible = true;
-        _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
-        _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+      // generate the summernote rubric element id
+      _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
 
-        // get the latest annotations
-        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-      } else if (_this.mode === 'grading') {
-        _this.isPromptVisible = false;
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isDisabled = true;
-        _this.isSnipButtonVisible = false;
-      } else if (_this.mode === 'onlyShowWork') {
-        _this.onlyShowWork = true;
-        _this.isPromptVisible = false;
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isDisabled = true;
-        _this.isSnipButtonVisible = false;
-      } else if (_this.mode === 'showPreviousWork') {
-        _this.isPromptVisible = true;
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isDisabled = true;
-        _this.isSnipButtonVisible = false;
-      } else if (_this.mode === 'authoring') {
-        _this.isPromptVisible = true;
-        _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
-        _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+      // set the component rubric into the summernote rubric
+      _this.summernoteRubricHTML = _this.componentContent.rubric;
 
-        // generate the summernote rubric element id
-        _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = _this.$translate('INSERT_ASSET');
 
-        // set the component rubric into the summernote rubric
-        _this.summernoteRubricHTML = _this.componentContent.rubric;
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
 
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = _this.$translate('INSERT_ASSET');
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        _this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        _this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return this.authoringComponentContent;
-        }.bind(_this), function (newValue, oldValue) {
-          // inject the asset paths into the new component content
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
-          /*
-           * reset the values so that the preview is refreshed with
-           * the new content
-           */
-          this.submitCounter = 0;
-          this.studentResponse = '';
-          this.latestAnnotations = null;
-          this.isDirty = false;
-          this.isSubmitDirty = false;
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-          if (this.componentContent.starterSentence != null) {
-            /*
-             * the student has not done any work and there is a starter sentence
-             * so we will populate the textarea with the starter sentence
-             */
-            this.studentResponse = this.componentContent.starterSentence;
-          }
-        }.bind(_this), true);
-      }
-
-      var componentState = null;
-
-      // set whether rich text is enabled
-      _this.isRichTextEnabled = _this.componentContent.isRichTextEnabled;
-
-      // set whether studentAttachment is enabled
-      _this.isStudentAttachmentEnabled = _this.componentContent.isStudentAttachmentEnabled;
-
-      if (_this.componentContent.completionCriteria != null) {
-        _this.useCustomCompletionCriteria = true;
-      }
-
-      // get the component state from the scope
-      componentState = _this.$scope.componentState;
-
-      if (_this.mode == 'student') {
-        if (_this.UtilService.hasShowWorkConnectedComponent(_this.componentContent)) {
-          // we will show work from another component
-          _this.handleConnectedComponents();
-        } else if (componentState != null && _this.OpenResponseService.componentStateHasStudentWork(componentState, _this.componentContent)) {
-          /*
-           * the student has work so we will populate the work into this
-           * component
-           */
-          _this.setStudentWork(componentState);
-        } else if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
-          // we will import work from another component
-          _this.handleConnectedComponents();
-        } else if (componentState == null) {
-          // check if we need to import work
-
-          var importPreviousWorkNodeId = _this.getImportPreviousWorkNodeId();
-          var importPreviousWorkComponentId = _this.getImportPreviousWorkComponentId();
-
-          if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-            // import the work from the other component
-            _this.importWork();
-          } else if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
-            /*
-             * the student does not have any work and there are connected
-             * components so we will get the work from the connected
-             * components
-             */
-            _this.handleConnectedComponents();
-          } else if (_this.componentContent.starterSentence != null) {
-            /*
-             * the student has not done any work and there is a starter sentence
-             * so we will populate the textarea with the starter sentence
-             */
-            _this.studentResponse = _this.componentContent.starterSentence;
-          }
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      _this.summernoteRubricOptions = {
+        toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
         }
-      } else {
-        // populate the student work into this component
-        _this.setStudentWork(componentState);
-      }
+      };
 
-      // check if the student has used up all of their submits
-      if (_this.componentContent.maxSubmitCount != null && _this.submitCounter >= _this.componentContent.maxSubmitCount) {
+      _this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function () {
+        return this.authoringComponentContent;
+      }.bind(_this), function (newValue, oldValue) {
+        // inject the asset paths into the new component content
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
         /*
-         * the student has used up all of their chances to submit so we
-         * will disable the submit button
+         * reset the values so that the preview is refreshed with
+         * the new content
          */
-        _this.isSubmitButtonDisabled = true;
-      }
+        this.submitCounter = 0;
+        this.studentResponse = '';
+        this.latestAnnotations = null;
+        this.isDirty = false;
+        this.isSubmitDirty = false;
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
-      // check if we need to lock this component
-      _this.calculateDisabled();
+        if (this.componentContent.starterSentence != null) {
+          /*
+           * the student has not done any work and there is a starter sentence
+           * so we will populate the textarea with the starter sentence
+           */
+          this.studentResponse = this.componentContent.starterSentence;
+        }
+      }.bind(_this), true);
+    }
 
-      if (_this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
+    var componentState = null;
+
+    // set whether rich text is enabled
+    _this.isRichTextEnabled = _this.componentContent.isRichTextEnabled;
+
+    // set whether studentAttachment is enabled
+    _this.isStudentAttachmentEnabled = _this.componentContent.isStudentAttachmentEnabled;
+
+    if (_this.componentContent.completionCriteria != null) {
+      _this.useCustomCompletionCriteria = true;
+    }
+
+    // get the component state from the scope
+    componentState = _this.$scope.componentState;
+
+    if (_this.mode == 'student') {
+      if (_this.UtilService.hasShowWorkConnectedComponent(_this.componentContent)) {
+        // we will show work from another component
+        _this.handleConnectedComponents();
+      } else if (componentState != null && _this.OpenResponseService.componentStateHasStudentWork(componentState, _this.componentContent)) {
+        /*
+         * the student has work so we will populate the work into this
+         * component
+         */
+        _this.setStudentWork(componentState);
+      } else if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
+        // we will import work from another component
+        _this.handleConnectedComponents();
+      } else if (componentState == null) {
+        // check if we need to import work
+
+        var importPreviousWorkNodeId = _this.getImportPreviousWorkNodeId();
+        var importPreviousWorkComponentId = _this.getImportPreviousWorkComponentId();
+
+        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
+          // import the work from the other component
+          _this.importWork();
+        } else if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
+          /*
+           * the student does not have any work and there are connected
+           * components so we will get the work from the connected
+           * components
+           */
+          _this.handleConnectedComponents();
+        } else if (_this.componentContent.starterSentence != null) {
+          /*
+           * the student has not done any work and there is a starter sentence
+           * so we will populate the textarea with the starter sentence
+           */
+          _this.studentResponse = _this.componentContent.starterSentence;
+        }
       }
+    } else {
+      // populate the student work into this component
+      _this.setStudentWork(componentState);
+    }
+
+    // check if the student has used up all of their submits
+    if (_this.componentContent.maxSubmitCount != null && _this.submitCounter >= _this.componentContent.maxSubmitCount) {
+      /*
+       * the student has used up all of their chances to submit so we
+       * will disable the submit button
+       */
+      _this.isSubmitButtonDisabled = true;
+    }
+
+    // check if we need to lock this component
+    _this.calculateDisabled();
+
+    if (_this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
     }
 
     //$('.openResponse').off('dragover').off('drop');

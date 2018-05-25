@@ -82,148 +82,140 @@ var DiscussionController = function (_ComponentController) {
      */
     _this.originalComponentContent = _this.$scope.originalComponentContent;
 
-    if (_this.componentContent != null) {
+    if (_this.$scope.workgroupId != null) {
+      _this.workgroupId = _this.$scope.workgroupId;
+    }
 
-      // get the component id
-      _this.componentId = _this.componentContent.id;
+    if (_this.$scope.nodeId != null) {
+      _this.nodeId = _this.$scope.nodeId;
+    }
 
-      _this.mode = _this.$scope.mode;
-
-      if (_this.$scope.workgroupId != null) {
-        _this.workgroupId = _this.$scope.workgroupId;
-      }
-
-      if (_this.$scope.nodeId != null) {
-        _this.nodeId = _this.$scope.nodeId;
-      }
-
-      if (_this.mode === 'student') {
-        if (_this.ConfigService.isPreview()) {
-          var _componentStates = null;
-          if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
-            // assume there can only be one connected component
-            var connectedComponent = _this.componentContent.connectedComponents[0];
-            if (_this.authoringGetConnectedComponentType(connectedComponent) == 'Discussion') {
-              _componentStates = _this.StudentDataService.getComponentStatesByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
-            }
-          } else {
-            _componentStates = _this.StudentDataService.getComponentStatesByNodeIdAndComponentId(_this.nodeId, _this.componentId);
+    if (_this.mode === 'student') {
+      if (_this.ConfigService.isPreview()) {
+        var _componentStates = null;
+        if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
+          // assume there can only be one connected component
+          var connectedComponent = _this.componentContent.connectedComponents[0];
+          if (_this.authoringGetConnectedComponentType(connectedComponent) == 'Discussion') {
+            _componentStates = _this.StudentDataService.getComponentStatesByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
           }
-          _this.setClassResponses(_componentStates);
         } else {
-          // we are in regular student run mode
+          _componentStates = _this.StudentDataService.getComponentStatesByNodeIdAndComponentId(_this.nodeId, _this.componentId);
+        }
+        _this.setClassResponses(_componentStates);
+      } else {
+        // we are in regular student run mode
 
-          if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
-            // assume there can only be one connected component
-            var _connectedComponent = _this.componentContent.connectedComponents[0];
-            if (_this.authoringGetConnectedComponentType(_connectedComponent) == 'Discussion') {
-              _this.getClassmateResponses(_connectedComponent.nodeId, _connectedComponent.componentId);
-            }
-          } else {
-            if (_this.isClassmateResponsesGated()) {
+        if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
+          // assume there can only be one connected component
+          var _connectedComponent = _this.componentContent.connectedComponents[0];
+          if (_this.authoringGetConnectedComponentType(_connectedComponent) == 'Discussion') {
+            _this.getClassmateResponses(_connectedComponent.nodeId, _connectedComponent.componentId);
+          }
+        } else {
+          if (_this.isClassmateResponsesGated()) {
+            /*
+             * classmate responses are gated so we will not show them if the student
+             * has not submitted a response
+             */
+
+            // get the component state from the scope
+            var componentState = _this.$scope.componentState;
+
+            if (componentState != null) {
               /*
-               * classmate responses are gated so we will not show them if the student
-               * has not submitted a response
+               * the student has already submitted a response so we will
+               * display the classmate responses
                */
-
-              // get the component state from the scope
-              var componentState = _this.$scope.componentState;
-
-              if (componentState != null) {
-                /*
-                 * the student has already submitted a response so we will
-                 * display the classmate responses
-                 */
-                _this.getClassmateResponses();
-              }
-            } else {
-              // classmate responses are not gated so we will show them
               _this.getClassmateResponses();
             }
+          } else {
+            // classmate responses are not gated so we will show them
+            _this.getClassmateResponses();
           }
-
-          // get the latest annotations
-          _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
         }
 
-        // check if we need to lock this component
-        _this.calculateDisabled();
-      } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
+        // get the latest annotations
+        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+      }
 
-        /*
-         * get all the posts that this workgroup id is part of. if the student
-         * posted a top level response we will get the top level response and
-         * all the replies. if the student replied to a top level response we
-         * will get the top level response and all the replies.
-         */
-        var componentStates = _this.DiscussionService.getPostsAssociatedWithWorkgroupId(_this.componentId, _this.workgroupId);
+      // check if we need to lock this component
+      _this.calculateDisabled();
+    } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
 
-        // get the innappropriate flag annotations for the component states
-        var annotations = _this.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+      /*
+       * get all the posts that this workgroup id is part of. if the student
+       * posted a top level response we will get the top level response and
+       * all the replies. if the student replied to a top level response we
+       * will get the top level response and all the replies.
+       */
+      var componentStates = _this.DiscussionService.getPostsAssociatedWithWorkgroupId(_this.componentId, _this.workgroupId);
 
-        // show the posts
-        _this.setClassResponses(componentStates, annotations);
+      // get the innappropriate flag annotations for the component states
+      var annotations = _this.getInappropriateFlagAnnotationsByComponentStates(componentStates);
 
-        _this.isDisabled = true;
+      // show the posts
+      _this.setClassResponses(componentStates, annotations);
 
-        if (_this.mode === 'grading') {
-          // get the latest annotations
-          _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+      _this.isDisabled = true;
+
+      if (_this.mode === 'grading') {
+        // get the latest annotations
+        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+      }
+    } else if (_this.mode === 'onlyShowWork') {
+      _this.isDisabled = true;
+    } else if (_this.mode === 'showPreviousWork') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isDisabled = true;
+    } else if (_this.mode === 'authoring') {
+      // generate the summernote rubric element id
+      _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+
+      // set the component rubric into the summernote rubric
+      _this.summernoteRubricHTML = _this.componentContent.rubric;
+
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = _this.$translate('INSERT_ASSET');
+
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
+
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      _this.summernoteRubricOptions = {
+        toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
         }
-      } else if (_this.mode === 'onlyShowWork') {
-        _this.isDisabled = true;
-      } else if (_this.mode === 'showPreviousWork') {
-        _this.isPromptVisible = true;
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isDisabled = true;
-      } else if (_this.mode === 'authoring') {
-        // generate the summernote rubric element id
-        _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+      };
 
-        // set the component rubric into the summernote rubric
-        _this.summernoteRubricHTML = _this.componentContent.rubric;
+      _this.updateAdvancedAuthoringView();
 
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = _this.$translate('INSERT_ASSET');
+      $scope.$watch(function () {
+        return this.authoringComponentContent;
+      }.bind(_this), function (newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+      }.bind(_this), true);
+    }
 
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
+    _this.isRichTextEnabled = _this.componentContent.isRichTextEnabled;
 
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        _this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
+    // set whether studentAttachment is enabled
+    _this.isStudentAttachmentEnabled = _this.componentContent.isStudentAttachmentEnabled;
 
-        _this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return this.authoringComponentContent;
-        }.bind(_this), function (newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-        }.bind(_this), true);
-      }
-
-      _this.isRichTextEnabled = _this.componentContent.isRichTextEnabled;
-
-      // set whether studentAttachment is enabled
-      _this.isStudentAttachmentEnabled = _this.componentContent.isStudentAttachmentEnabled;
-
-      if (_this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
-      }
+    if (_this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
     }
 
     /**

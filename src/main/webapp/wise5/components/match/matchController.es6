@@ -90,189 +90,185 @@ class MatchController extends ComponentController {
      */
     this.originalComponentContent = this.$scope.originalComponentContent;
 
-    if (this.componentContent != null) {
 
-      // get the component id
-      this.componentId = this.componentContent.id;
-      this.horizontal = this.componentContent.horizontal;
+    this.horizontal = this.componentContent.horizontal;
 
-      if (this.mode === 'student') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+    if (this.mode === 'student') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
+      // get the latest annotations
+      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+    } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+
+      if (this.mode === 'grading') {
         // get the latest annotations
         this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
+      }
+    } else if (this.mode === 'onlyShowWork') {
+      this.isPromptVisible = false;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    } else if (this.mode === 'showPreviousWork') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    } else if (this.mode === 'authoring') {
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
-        if (this.mode === 'grading') {
-          // get the latest annotations
-          this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+      // generate the summernote rubric element id
+      this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+
+      // set the component rubric into the summernote rubric
+      this.summernoteRubricHTML = this.componentContent.rubric;
+
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = this.$translate('INSERT_ASSET');
+
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      this.summernoteRubricOptions = {
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['fontname', ['fontname']],
+          ['fontsize', ['fontsize']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'video']],
+          ['view', ['fullscreen', 'codeview', 'help']],
+          ['customButton', ['insertAssetButton']]
+        ],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
         }
-      } else if (this.mode === 'onlyShowWork') {
-        this.isPromptVisible = false;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'showPreviousWork') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'authoring') {
+      };
+
+      this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function() {
+        return this.authoringComponentContent;
+      }.bind(this), function(newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
         this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
-        // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-
-        // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
+        this.isCorrect = null;
+        this.submitCounter = 0;
+        this.isDisabled = false;
+        this.isSubmitButtonDisabled = false;
 
         /*
-         * create the custom button for inserting WISE assets into
-         * summernote
+         * initialize the choices and buckets with the values from the
+         * component content
          */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+        this.initializeChoices();
+        this.initializeBuckets();
+      }.bind(this), true);
+    }
 
+    // check if there is a correct answer
+    this.hasCorrectAnswer = this.hasCorrectChoices();
+
+    /*
+     * initialize the choices and buckets with the values from the
+     * component content
+     */
+    this.initializeChoices();
+    this.initializeBuckets();
+
+    // get the component state from the scope
+    var componentState = this.$scope.componentState;
+
+    if (this.mode == 'student') {
+      if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
+        // we will show work from another component
+        this.handleConnectedComponents();
+      }  else if (this.MatchService.componentStateHasStudentWork(componentState, this.componentContent)) {
         /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
+         * the student has work so we will populate the work into this
+         * component
          */
-        this.summernoteRubricOptions = {
-          toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']],
-            ['customButton', ['insertAssetButton']]
-          ],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function() {
-          return this.authoringComponentContent;
-        }.bind(this), function(newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-          this.isCorrect = null;
-          this.submitCounter = 0;
-          this.isDisabled = false;
-          this.isSubmitButtonDisabled = false;
-
-          /*
-           * initialize the choices and buckets with the values from the
-           * component content
-           */
-          this.initializeChoices();
-          this.initializeBuckets();
-        }.bind(this), true);
-      }
-
-      // check if there is a correct answer
-      this.hasCorrectAnswer = this.hasCorrectChoices();
-
-      /*
-       * initialize the choices and buckets with the values from the
-       * component content
-       */
-      this.initializeChoices();
-      this.initializeBuckets();
-
-      // get the component state from the scope
-      var componentState = this.$scope.componentState;
-
-      if (this.mode == 'student') {
-        if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-          // we will show work from another component
-          this.handleConnectedComponents();
-        }  else if (this.MatchService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          /*
-           * the student has work so we will populate the work into this
-           * component
-           */
-          this.setStudentWork(componentState);
-        } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // we will import work from another component
-          this.handleConnectedComponents();
-        } else if (componentState == null) {
-          // check if we need to import work
-
-          // check if we need to import work
-          var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-          var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-
-          if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-            /*
-             * check if the node id is in the field that we used to store
-             * the import previous work node id in
-             */
-            importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-          }
-
-          if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-            /*
-             * check if the component id is in the field that we used to store
-             * the import previous work component id in
-             */
-            importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-          }
-
-          if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-            // import the work from the other component
-            this.importWork();
-          }
-        }
-      } else {
-        // populate the student work into this component
         this.setStudentWork(componentState);
-      }
+      } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+        // we will import work from another component
+        this.handleConnectedComponents();
+      } else if (componentState == null) {
+        // check if we need to import work
 
-      if (componentState != null && componentState.isSubmit) {
-        /*
-         * the latest component state is a submit. this is used to
-         * determine if we should show the feedback.
-         */
-        this.isLatestComponentStateSubmit = true;
-      }
+        // check if we need to import work
+        var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
+        var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
 
-      // check if the student has used up all of their submits
-      if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-        /*
-         * the student has used up all of their chances to submit so we
-         * will disable the submit button
-         */
-        this.isDisabled = true;
-        this.isSubmitButtonDisabled = true;
-      }
+        if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+          /*
+           * check if the node id is in the field that we used to store
+           * the import previous work node id in
+           */
+          importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
+        }
 
-      // check if we need to lock this component
-      this.calculateDisabled();
+        if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+          /*
+           * check if the component id is in the field that we used to store
+           * the import previous work component id in
+           */
+          importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
+        }
 
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
+          // import the work from the other component
+          this.importWork();
+        }
       }
+    } else {
+      // populate the student work into this component
+      this.setStudentWork(componentState);
+    }
+
+    if (componentState != null && componentState.isSubmit) {
+      /*
+       * the latest component state is a submit. this is used to
+       * determine if we should show the feedback.
+       */
+      this.isLatestComponentStateSubmit = true;
+    }
+
+    // check if the student has used up all of their submits
+    if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+      /*
+       * the student has used up all of their chances to submit so we
+       * will disable the submit button
+       */
+      this.isDisabled = true;
+      this.isSubmitButtonDisabled = true;
+    }
+
+    // check if we need to lock this component
+    this.calculateDisabled();
+
+    if (this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
     }
 
     let dragId = 'match_' + this.componentId;

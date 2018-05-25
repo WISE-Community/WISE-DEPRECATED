@@ -85,95 +85,93 @@ class EmbeddedController extends ComponentController {
      */
     this.originalComponentContent = this.$scope.originalComponentContent;
 
-    if (this.componentContent != null) {
-      this.componentId = this.componentContent.id;
-      this.embeddedApplicationIFrameId = 'componentApp_' + this.componentId;
-      this.componentType = this.componentContent.type;
 
-      if (this.mode === 'student') {
+    this.embeddedApplicationIFrameId = 'componentApp_' + this.componentId;
+    this.componentType = this.componentContent.type;
+
+    if (this.mode === 'student') {
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+      this.isSnipModelButtonVisible = true;
+    } else if (this.mode === 'authoring') {
+      this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+      this.summernoteRubricHTML = this.componentContent.rubric;
+
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = this.$translate('INSERT_ASSET');
+
+      // create the custom button for inserting WISE assets into summernote
+      var InsertAssetButton = this.UtilService
+        .createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+
+      this.summernoteRubricOptions = {
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['fontname', ['fontname']],
+          ['fontsize', ['fontsize']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'video']],
+          ['view', ['fullscreen', 'codeview', 'help']],
+          ['customButton', ['insertAssetButton']]
+        ],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
+        }
+      };
+
+      this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function() {
+        return this.authoringComponentContent;
+      }.bind(this), function(newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
         this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-        this.isSnipModelButtonVisible = true;
-      } else if (this.mode === 'authoring') {
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-        this.summernoteRubricHTML = this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
-
-        // create the custom button for inserting WISE assets into summernote
-        var InsertAssetButton = this.UtilService
-            .createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
-
-        this.summernoteRubricOptions = {
-          toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']],
-            ['customButton', ['insertAssetButton']]
-          ],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function() {
-          return this.authoringComponentContent;
-        }.bind(this), function(newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-          this.width = this.componentContent.width ? this.componentContent.width : '100%';
-          this.height = this.componentContent.height ? this.componentContent.height : '100%';
-          this.setURL(this.componentContent.url);
-        }.bind(this), true);
-      } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isSnipModelButtonVisible = false;
-        let componentState = this.$scope.componentState;
-        if (componentState != null) {
-          // create a unique id for the application iframe using this component state
-          this.embeddedApplicationIFrameId = 'componentApp_' + componentState.id;
-          if (this.mode === 'gradingRevision') {
-            this.embeddedApplicationIFrameId = 'componentApp_gradingRevision_' + componentState.id;
-          }
-        }
-
-        if (this.mode === 'grading') {
-          this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-        }
-      } else if (this.mode === 'onlyShowWork') {
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isSnipModelButtonVisible = false;
-      } else if (this.mode === 'showPreviousWork') {
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isSnipModelButtonVisible = false;
-      }
-
-      if (this.componentContent != null) {
+        this.width = this.componentContent.width ? this.componentContent.width : '100%';
+        this.height = this.componentContent.height ? this.componentContent.height : '100%';
         this.setURL(this.componentContent.url);
+      }.bind(this), true);
+    } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isSnipModelButtonVisible = false;
+      let componentState = this.$scope.componentState;
+      if (componentState != null) {
+        // create a unique id for the application iframe using this component state
+        this.embeddedApplicationIFrameId = 'componentApp_' + componentState.id;
+        if (this.mode === 'gradingRevision') {
+          this.embeddedApplicationIFrameId = 'componentApp_gradingRevision_' + componentState.id;
+        }
       }
 
-      this.width = this.componentContent.width ? this.componentContent.width : '100%';
-      this.height = this.componentContent.height ? this.componentContent.height : '100%';
-
-      if (this.$scope.$parent.nodeController != null) {
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+      if (this.mode === 'grading') {
+        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
       }
+    } else if (this.mode === 'onlyShowWork') {
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isSnipModelButtonVisible = false;
+    } else if (this.mode === 'showPreviousWork') {
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isSnipModelButtonVisible = false;
+    }
+
+    if (this.componentContent != null) {
+      this.setURL(this.componentContent.url);
+    }
+
+    this.width = this.componentContent.width ? this.componentContent.width : '100%';
+    this.height = this.componentContent.height ? this.componentContent.height : '100%';
+
+    if (this.$scope.$parent.nodeController != null) {
+      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
     }
 
     /**

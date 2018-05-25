@@ -41,78 +41,73 @@ class OutsideURLController extends ComponentController {
      */
     this.originalComponentContent = this.$scope.originalComponentContent;
 
-    if (this.componentContent != null) {
 
-      // get the component id
-      this.componentId = this.componentContent.id;
+    if (this.mode === 'authoring') {
+      // generate the summernote rubric element id
+      this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
 
-      if (this.mode === 'authoring') {
-        // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+      // set the component rubric into the summernote rubric
+      this.summernoteRubricHTML = this.componentContent.rubric;
 
-        // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = this.$translate('html.insertAsset');
 
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('html.insertAsset');
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
 
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      this.summernoteRubricOptions = {
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['fontname', ['fontname']],
+          ['fontsize', ['fontsize']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'video']],
+          ['view', ['fullscreen', 'codeview', 'help']],
+          ['customButton', ['insertAssetButton']]
+        ],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
+        }
+      };
 
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        this.summernoteRubricOptions = {
-          toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']],
-            ['customButton', ['insertAssetButton']]
-          ],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
+      this.updateAdvancedAuthoringView();
 
-        this.updateAdvancedAuthoringView();
+      $scope.$watch(() => {
+        return this.authoringComponentContent;
+      }, (newValue, oldValue) => {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
 
-        $scope.$watch(() => {
-          return this.authoringComponentContent;
-        }, (newValue, oldValue) => {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
-          // set the url
-          this.setURL(this.authoringComponentContent.url);
-        }, true);
-      }
-
-      if (this.componentContent != null) {
         // set the url
-        this.setURL(this.componentContent.url);
-      }
+        this.setURL(this.authoringComponentContent.url);
+      }, true);
+    }
 
-      // get the max width
-      this.maxWidth = this.componentContent.maxWidth ? this.componentContent.maxWidth : 'none';
+    if (this.componentContent != null) {
+      // set the url
+      this.setURL(this.componentContent.url);
+    }
 
-      // get the max height
-      this.maxHeight = this.componentContent.maxHeight ? this.componentContent.maxHeight : 'none';
+    // get the max width
+    this.maxWidth = this.componentContent.maxWidth ? this.componentContent.maxWidth : 'none';
 
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-      }
+    // get the max height
+    this.maxHeight = this.componentContent.maxHeight ? this.componentContent.maxHeight : 'none';
+
+    if (this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
     }
 
     /**

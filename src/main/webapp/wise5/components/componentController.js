@@ -24,10 +24,10 @@ var ComponentController = function ComponentController($filter, $mdDialog, $root
   this.$translate = this.$filter('translate');
 
   this.nodeId = this.$scope.nodeId;
-  this.componentId = null;
+  this.componentContent = this.$scope.componentContent;
+  this.componentId = this.componentContent.id;
   this.idToOrder = this.ProjectService.idToOrder;
   this.mode = this.$scope.mode;
-  this.componentContent = this.$scope.componentContent;
   this.authoringComponentContent = this.$scope.authoringComponentContent;
   this.isShowPreviousWork = false;
   this.showAdvancedAuthoring = false;

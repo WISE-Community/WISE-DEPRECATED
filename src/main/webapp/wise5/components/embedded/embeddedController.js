@@ -77,83 +77,80 @@ var EmbeddedController = function (_ComponentController) {
      */
     _this.originalComponentContent = _this.$scope.originalComponentContent;
 
-    if (_this.componentContent != null) {
-      _this.componentId = _this.componentContent.id;
-      _this.embeddedApplicationIFrameId = 'componentApp_' + _this.componentId;
-      _this.componentType = _this.componentContent.type;
+    _this.embeddedApplicationIFrameId = 'componentApp_' + _this.componentId;
+    _this.componentType = _this.componentContent.type;
 
-      if (_this.mode === 'student') {
-        _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
-        _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+    if (_this.mode === 'student') {
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+      _this.isSnipModelButtonVisible = true;
+    } else if (_this.mode === 'authoring') {
+      _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+      _this.summernoteRubricHTML = _this.componentContent.rubric;
+
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = _this.$translate('INSERT_ASSET');
+
+      // create the custom button for inserting WISE assets into summernote
+      var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
+
+      _this.summernoteRubricOptions = {
+        toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
+        }
+      };
+
+      _this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function () {
+        return this.authoringComponentContent;
+      }.bind(_this), function (newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+        this.width = this.componentContent.width ? this.componentContent.width : '100%';
+        this.height = this.componentContent.height ? this.componentContent.height : '100%';
+        this.setURL(this.componentContent.url);
+      }.bind(_this), true);
+    } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isSnipModelButtonVisible = false;
+      var componentState = _this.$scope.componentState;
+      if (componentState != null) {
+        // create a unique id for the application iframe using this component state
+        _this.embeddedApplicationIFrameId = 'componentApp_' + componentState.id;
+        if (_this.mode === 'gradingRevision') {
+          _this.embeddedApplicationIFrameId = 'componentApp_gradingRevision_' + componentState.id;
+        }
+      }
+
+      if (_this.mode === 'grading') {
         _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-        _this.isSnipModelButtonVisible = true;
-      } else if (_this.mode === 'authoring') {
-        _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
-        _this.summernoteRubricHTML = _this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = _this.$translate('INSERT_ASSET');
-
-        // create the custom button for inserting WISE assets into summernote
-        var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
-
-        _this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        _this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return this.authoringComponentContent;
-        }.bind(_this), function (newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-          this.width = this.componentContent.width ? this.componentContent.width : '100%';
-          this.height = this.componentContent.height ? this.componentContent.height : '100%';
-          this.setURL(this.componentContent.url);
-        }.bind(_this), true);
-      } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isSnipModelButtonVisible = false;
-        var componentState = _this.$scope.componentState;
-        if (componentState != null) {
-          // create a unique id for the application iframe using this component state
-          _this.embeddedApplicationIFrameId = 'componentApp_' + componentState.id;
-          if (_this.mode === 'gradingRevision') {
-            _this.embeddedApplicationIFrameId = 'componentApp_gradingRevision_' + componentState.id;
-          }
-        }
-
-        if (_this.mode === 'grading') {
-          _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-        }
-      } else if (_this.mode === 'onlyShowWork') {
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isSnipModelButtonVisible = false;
-      } else if (_this.mode === 'showPreviousWork') {
-        _this.isSaveButtonVisible = false;
-        _this.isSubmitButtonVisible = false;
-        _this.isSnipModelButtonVisible = false;
       }
+    } else if (_this.mode === 'onlyShowWork') {
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isSnipModelButtonVisible = false;
+    } else if (_this.mode === 'showPreviousWork') {
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isSnipModelButtonVisible = false;
+    }
 
-      if (_this.componentContent != null) {
-        _this.setURL(_this.componentContent.url);
-      }
+    if (_this.componentContent != null) {
+      _this.setURL(_this.componentContent.url);
+    }
 
-      _this.width = _this.componentContent.width ? _this.componentContent.width : '100%';
-      _this.height = _this.componentContent.height ? _this.componentContent.height : '100%';
+    _this.width = _this.componentContent.width ? _this.componentContent.width : '100%';
+    _this.height = _this.componentContent.height ? _this.componentContent.height : '100%';
 
-      if (_this.$scope.$parent.nodeController != null) {
-        _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
-      }
+    if (_this.$scope.$parent.nodeController != null) {
+      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
     }
 
     /**

@@ -45,67 +45,61 @@ var OutsideURLController = function (_ComponentController) {
      */
     _this.originalComponentContent = _this.$scope.originalComponentContent;
 
-    if (_this.componentContent != null) {
+    if (_this.mode === 'authoring') {
+      // generate the summernote rubric element id
+      _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
 
-      // get the component id
-      _this.componentId = _this.componentContent.id;
+      // set the component rubric into the summernote rubric
+      _this.summernoteRubricHTML = _this.componentContent.rubric;
 
-      if (_this.mode === 'authoring') {
-        // generate the summernote rubric element id
-        _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = _this.$translate('html.insertAsset');
 
-        // set the component rubric into the summernote rubric
-        _this.summernoteRubricHTML = _this.componentContent.rubric;
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
 
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = _this.$translate('html.insertAsset');
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      _this.summernoteRubricOptions = {
+        toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
+        }
+      };
 
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
+      _this.updateAdvancedAuthoringView();
 
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        _this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
+      $scope.$watch(function () {
+        return _this.authoringComponentContent;
+      }, function (newValue, oldValue) {
+        _this.componentContent = _this.ProjectService.injectAssetPaths(newValue);
 
-        _this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return _this.authoringComponentContent;
-        }, function (newValue, oldValue) {
-          _this.componentContent = _this.ProjectService.injectAssetPaths(newValue);
-
-          // set the url
-          _this.setURL(_this.authoringComponentContent.url);
-        }, true);
-      }
-
-      if (_this.componentContent != null) {
         // set the url
-        _this.setURL(_this.componentContent.url);
-      }
+        _this.setURL(_this.authoringComponentContent.url);
+      }, true);
+    }
 
-      // get the max width
-      _this.maxWidth = _this.componentContent.maxWidth ? _this.componentContent.maxWidth : 'none';
+    if (_this.componentContent != null) {
+      // set the url
+      _this.setURL(_this.componentContent.url);
+    }
 
-      // get the max height
-      _this.maxHeight = _this.componentContent.maxHeight ? _this.componentContent.maxHeight : 'none';
+    // get the max width
+    _this.maxWidth = _this.componentContent.maxWidth ? _this.componentContent.maxWidth : 'none';
 
-      if (_this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
-      }
+    // get the max height
+    _this.maxHeight = _this.componentContent.maxHeight ? _this.componentContent.maxHeight : 'none';
+
+    if (_this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
     }
 
     /**
