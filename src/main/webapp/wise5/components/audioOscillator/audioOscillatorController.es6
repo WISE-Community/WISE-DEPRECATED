@@ -1,41 +1,32 @@
 'use strict';
 
-class AudioOscillatorController {
+import ComponentController from "../componentController";
+
+class AudioOscillatorController extends ComponentController {
 
   constructor($filter,
-      $injector,
       $mdDialog,
       $q,
       $rootScope,
       $scope,
       $timeout,
       AnnotationService,
+      AudioOscillatorService,
       ConfigService,
       NodeService,
-      AudioOscillatorService,
+      NotebookService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
       UtilService) {
-
-    this.$filter = $filter
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
+    super($filter, $mdDialog, $rootScope, $scope,
+      AnnotationService, ConfigService, NodeService,
+      NotebookService, ProjectService, StudentAssetService,
+      StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.$timeout = $timeout;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
-    this.NodeService = NodeService;
     this.AudioOscillatorService = AudioOscillatorService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
     this.idToOrder = this.ProjectService.idToOrder;
-
-    this.$translate = this.$filter('translate');
 
     // the node id of the current node
     this.nodeId = null;
@@ -2282,16 +2273,16 @@ class AudioOscillatorController {
 
 AudioOscillatorController.$inject = [
   '$filter',
-  '$injector',
   '$mdDialog',
   '$q',
   '$rootScope',
   '$scope',
   '$timeout',
   'AnnotationService',
+  'AudioOscillatorService',
   'ConfigService',
   'NodeService',
-  'AudioOscillatorService',
+  'NotebookService',
   'ProjectService',
   'StudentAssetService',
   'StudentDataService',

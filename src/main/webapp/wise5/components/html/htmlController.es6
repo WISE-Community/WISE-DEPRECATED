@@ -1,3 +1,5 @@
+'use strict';
+
 import ComponentController from '../componentController';
 
 class HTMLController extends ComponentController {

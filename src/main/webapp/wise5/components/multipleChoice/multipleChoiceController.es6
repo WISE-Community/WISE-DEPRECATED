@@ -1,6 +1,9 @@
-class MultipleChoiceController {
+'use strict';
+
+import ComponentController from "../componentController";
+
+class MultipleChoiceController extends ComponentController {
   constructor($filter,
-      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -9,25 +12,18 @@ class MultipleChoiceController {
       ConfigService,
       MultipleChoiceService,
       NodeService,
+      NotebookService,
       ProjectService,
+      StudentAssetService,
       StudentDataService,
       UtilService) {
-
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
+    super($filter, $mdDialog, $rootScope, $scope,
+      AnnotationService, ConfigService, NodeService,
+      NotebookService, ProjectService, StudentAssetService,
+      StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
     this.MultipleChoiceService = MultipleChoiceService;
-    this.NodeService = NodeService;
-    this.ProjectService = ProjectService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
     this.idToOrder = this.ProjectService.idToOrder;
-    this.$translate = this.$filter('translate');
 
     // the node id of the current node
     this.nodeId = null;
@@ -2513,7 +2509,6 @@ class MultipleChoiceController {
 
 MultipleChoiceController.$inject = [
   '$filter',
-  '$injector',
   '$mdDialog',
   '$q',
   '$rootScope',
@@ -2522,7 +2517,9 @@ MultipleChoiceController.$inject = [
   'ConfigService',
   'MultipleChoiceService',
   'NodeService',
+  'NotebookService',
   'ProjectService',
+  'StudentAssetService',
   'StudentDataService',
   'UtilService'
 ];

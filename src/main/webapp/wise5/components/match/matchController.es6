@@ -1,39 +1,34 @@
+'use strict';
 
-class MatchController {
+import ComponentController from "../componentController";
+
+class MatchController extends ComponentController {
   constructor($filter,
-      $injector,
       $mdDialog,
+      $mdMedia,
       $q,
       $rootScope,
       $scope,
       AnnotationService,
-      dragulaService,
       ConfigService,
+      dragulaService,
       MatchService,
       NodeService,
+      NotebookService,
       ProjectService,
+      StudentAssetService,
       StudentDataService,
-      UtilService,
-      $mdMedia) {
-
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
+      UtilService) {
+    super($filter, $mdDialog, $rootScope, $scope,
+      AnnotationService, ConfigService, NodeService,
+      NotebookService, ProjectService, StudentAssetService,
+      StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.AnnotationService = AnnotationService;
     this.dragulaService = dragulaService;
-    this.ConfigService = ConfigService;
     this.MatchService = MatchService;
-    this.NodeService = NodeService;
-    this.ProjectService = ProjectService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
     this.$mdMedia = $mdMedia;
     this.idToOrder = this.ProjectService.idToOrder;
     this.autoScroll = require('dom-autoscroller');
-    this.$translate = this.$filter('translate');
 
     // the node id of the current node
     this.nodeId = null;
@@ -3456,20 +3451,21 @@ class MatchController {
 
 MatchController.$inject = [
   '$filter',
-  '$injector',
   '$mdDialog',
+  '$mdMedia',
   '$q',
   '$rootScope',
   '$scope',
   'AnnotationService',
-  'dragulaService',
   'ConfigService',
+  'dragulaService',
   'MatchService',
   'NodeService',
+  'NotebookService',
   'ProjectService',
+  'StudentAssetService',
   'StudentDataService',
-  'UtilService',
-  '$mdMedia'
+  'UtilService'
 ];
 
 export default MatchController;

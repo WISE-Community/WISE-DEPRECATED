@@ -1,9 +1,11 @@
-import iframeResizer from 'iframe-resizer';
-import html2canvas from 'html2canvas';
+'use strict';
 
-class EmbeddedController {
+import ComponentController from "../componentController";
+import html2canvas from 'html2canvas';
+import iframeResizer from 'iframe-resizer';
+
+class EmbeddedController extends ComponentController {
   constructor($filter,
-      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -13,32 +15,23 @@ class EmbeddedController {
       $window,
       AnnotationService,
       ConfigService,
+      EmbeddedService,
       NodeService,
       NotebookService,
-      EmbeddedService,
       ProjectService,
+      StudentAssetService,
       StudentDataService,
       UtilService) {
-
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
+    super($filter, $mdDialog, $rootScope, $scope,
+      AnnotationService, ConfigService, NodeService,
+      NotebookService, ProjectService, StudentAssetService,
+      StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.$sce = $sce;
     this.$timeout = $timeout;
     this.$window = $window;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
     this.EmbeddedService = EmbeddedService;
-    this.ProjectService = ProjectService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
     this.idToOrder = this.ProjectService.idToOrder;
-    this.$translate = this.$filter('translate');
     this.nodeId = null;
     this.componentId = null;
     this.componentContent = null;
@@ -1281,7 +1274,6 @@ class EmbeddedController {
 
 EmbeddedController.$inject = [
   '$filter',
-  '$injector',
   '$mdDialog',
   '$q',
   '$rootScope',
@@ -1291,10 +1283,11 @@ EmbeddedController.$inject = [
   '$window',
   'AnnotationService',
   'ConfigService',
+  'EmbeddedService',
   'NodeService',
   'NotebookService',
-  'EmbeddedService',
   'ProjectService',
+  'StudentAssetService',
   'StudentDataService',
   'UtilService'
 ];

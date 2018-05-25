@@ -1,9 +1,11 @@
+'use strict';
+
+import ComponentController from "../componentController";
 import html2canvas from 'html2canvas';
 
-class TableController {
+class TableController extends ComponentController {
   constructor($anchorScroll,
       $filter,
-      $injector,
       $location,
       $mdDialog,
       $q,
@@ -14,29 +16,19 @@ class TableController {
       NodeService,
       NotebookService,
       ProjectService,
+      StudentAssetService,
       StudentDataService,
       TableService,
       UtilService) {
-
+    super($filter, $mdDialog, $rootScope, $scope,
+      AnnotationService, ConfigService, NodeService,
+      NotebookService, ProjectService, StudentAssetService,
+      StudentDataService, UtilService);
     this.$anchorScroll = $anchorScroll;
-    this.$filter = $filter;
-    this.$injector = $injector;
     this.$location = $location;
-    this.$mdDialog = $mdDialog;
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
-    this.ProjectService = ProjectService;
-    this.StudentDataService = StudentDataService;
     this.TableService = TableService;
-    this.UtilService = UtilService;
     this.idToOrder = this.ProjectService.idToOrder;
-
-    this.$translate = this.$filter('translate');
 
     // the node id of the current node
     this.nodeId = null;
@@ -2887,7 +2879,6 @@ class TableController {
 TableController.$inject = [
   '$anchorScroll',
   '$filter',
-  '$injector',
   '$location',
   '$mdDialog',
   '$q',
@@ -2898,6 +2889,7 @@ TableController.$inject = [
   'NodeService',
   'NotebookService',
   'ProjectService',
+  'StudentAssetService',
   'StudentDataService',
   'TableService',
   'UtilService'

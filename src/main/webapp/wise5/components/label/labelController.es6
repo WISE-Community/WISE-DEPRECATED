@@ -1,9 +1,11 @@
-import html2canvas from 'html2canvas';
-import Fabric from 'fabric';
+'use strict';
 
-class LabelController {
+import ComponentController from "../componentController";
+import Fabric from 'fabric';
+import html2canvas from 'html2canvas';
+
+class LabelController extends ComponentController {
   constructor($filter,
-      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -20,28 +22,16 @@ class LabelController {
       StudentAssetService,
       StudentDataService,
       UtilService) {
-
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
+    super($filter, $mdDialog, $rootScope, $scope,
+      AnnotationService, ConfigService, NodeService,
+      NotebookService, ProjectService, StudentAssetService,
+      StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.$timeout = $timeout;
     this.$window = $window;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
     this.LabelService = LabelService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
     this.OpenResponseService = OpenResponseService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
     this.idToOrder = this.ProjectService.idToOrder;
-
-    this.$translate = this.$filter('translate');
 
     // the node id of the current node
     this.nodeId = null;
@@ -3442,7 +3432,6 @@ class LabelController {
 
 LabelController.$inject = [
   '$filter',
-  '$injector',
   '$mdDialog',
   '$q',
   '$rootScope',

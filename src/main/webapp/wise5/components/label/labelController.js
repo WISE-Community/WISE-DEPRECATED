@@ -6,155 +6,150 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _html2canvas = require('html2canvas');
+var _componentController = require('../componentController');
 
-var _html2canvas2 = _interopRequireDefault(_html2canvas);
+var _componentController2 = _interopRequireDefault(_componentController);
 
 var _fabric = require('fabric');
 
 var _fabric2 = _interopRequireDefault(_fabric);
 
+var _html2canvas = require('html2canvas');
+
+var _html2canvas2 = _interopRequireDefault(_html2canvas);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var LabelController = function () {
-  function LabelController($filter, $injector, $mdDialog, $q, $rootScope, $scope, $timeout, $window, AnnotationService, ConfigService, LabelService, NodeService, NotebookService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
-    var _this = this;
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LabelController = function (_ComponentController) {
+  _inherits(LabelController, _ComponentController);
+
+  function LabelController($filter, $mdDialog, $q, $rootScope, $scope, $timeout, $window, AnnotationService, ConfigService, LabelService, NodeService, NotebookService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, LabelController);
 
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.$timeout = $timeout;
-    this.$window = $window;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
-    this.LabelService = LabelService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
-    this.OpenResponseService = OpenResponseService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-    this.idToOrder = this.ProjectService.idToOrder;
+    var _this = _possibleConstructorReturn(this, (LabelController.__proto__ || Object.getPrototypeOf(LabelController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
 
-    this.$translate = this.$filter('translate');
+    _this.$q = $q;
+    _this.$timeout = $timeout;
+    _this.$window = $window;
+    _this.LabelService = LabelService;
+    _this.OpenResponseService = OpenResponseService;
+    _this.idToOrder = _this.ProjectService.idToOrder;
 
     // the node id of the current node
-    this.nodeId = null;
+    _this.nodeId = null;
 
     // the component id
-    this.componentId = null;
+    _this.componentId = null;
 
     // field that will hold the component content
-    this.componentContent = null;
+    _this.componentContent = null;
 
     // field that will hold the authoring component content
-    this.authoringComponentContent = null;
+    _this.authoringComponentContent = null;
 
     // holds student attachments like assets
-    this.attachments = [];
+    _this.attachments = [];
 
     // whether the step should be disabled
-    this.isDisabled = false;
+    _this.isDisabled = false;
 
     // whether the student work is dirty and needs saving
-    this.isDirty = false;
+    _this.isDirty = false;
 
     // whether the student work has changed since last submit
-    this.isSubmitDirty = false;
+    _this.isSubmitDirty = false;
 
     // message to show next to save/submit buttons
-    this.saveMessage = {
+    _this.saveMessage = {
       text: '',
       time: ''
     };
 
     // whether this component is showing previous work
-    this.isShowPreviousWork = false;
+    _this.isShowPreviousWork = false;
 
     // whether the student work is for a submit
-    this.isSubmit = false;
+    _this.isSubmit = false;
 
     // whether students can attach files to their work
-    this.isStudentAttachmentEnabled = false;
+    _this.isStudentAttachmentEnabled = false;
 
     // whether the prompt is shown or not
-    this.isPromptVisible = true;
+    _this.isPromptVisible = true;
 
     // whether the save button is shown or not
-    this.isSaveButtonVisible = false;
+    _this.isSaveButtonVisible = false;
 
     // whether the submit button is shown or not
-    this.isSubmitButtonVisible = false;
+    _this.isSubmitButtonVisible = false;
 
     // whether the submit button is disabled
-    this.isSubmitButtonDisabled = false;
+    _this.isSubmitButtonDisabled = false;
 
     // counter to keep track of the number of submits
-    this.submitCounter = 0;
+    _this.submitCounter = 0;
 
     // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
+    _this.showAdvancedAuthoring = false;
 
     // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
+    _this.showJSONAuthoring = false;
 
     // the latest annotations
-    this.latestAnnotations = null;
+    _this.latestAnnotations = null;
 
     // whether the new label button is shown or not
-    this.isNewLabelButtonVisible = true;
+    _this.isNewLabelButtonVisible = true;
 
     // whether the cancel button is shown or not
-    this.isCancelButtonVisible = false;
+    _this.isCancelButtonVisible = false;
 
     // whether the snip image button is shown or not
-    this.isSnipImageButtonVisible = true;
+    _this.isSnipImageButtonVisible = true;
 
     // the label for the notebook in thos project
-    this.notebookConfig = this.NotebookService.getNotebookConfig();
+    _this.notebookConfig = _this.NotebookService.getNotebookConfig();
 
     // whether the student can create new labels
-    this.canCreateLabels = true;
+    _this.canCreateLabels = true;
 
     // whether the student is in the mode to create a new label
-    this.createLabelMode = false;
+    _this.createLabelMode = false;
 
     // a reference to the canvas
-    this.canvas = null;
+    _this.canvas = null;
 
     // the canvas width
-    this.canvasWidth = 800;
+    _this.canvasWidth = 800;
 
     // the canvas height
-    this.canvasHeight = 600;
+    _this.canvasHeight = 600;
 
     // the z index of line elements
-    this.lineZIndex = 0;
+    _this.lineZIndex = 0;
 
     // the z index of text elements
-    this.textZIndex = 1;
+    _this.textZIndex = 1;
 
     // the z index of circle elements
-    this.circleZIndex = 2;
+    _this.circleZIndex = 2;
 
     // the canvas id
-    this.canvasId = 'c';
+    _this.canvasId = 'c';
 
     // the background image path
-    this.backgroundImage = null;
+    _this.backgroundImage = null;
 
     // whether to show the reset button
-    this.isResetButtonVisible = true;
+    _this.isResetButtonVisible = true;
 
-    this.enableCircles = true;
+    _this.enableCircles = true;
 
     // modify Fabric so that Text elements can utilize padding
     fabric.Text.prototype.set({
@@ -173,16 +168,16 @@ var LabelController = function () {
      * to the circle.
      * Student data version 2 is where the text x and y positioning is absolute.
      */
-    this.studentDataVersion = 2;
+    _this.studentDataVersion = 2;
 
     /*
      * This will hold canvas label objects. A canvas label object contains a
      * circle object, line object, and text object.
      */
-    this.labels = [];
+    _this.labels = [];
 
     // the options for when to update this component from a connected component
-    this.connectedComponentUpdateOnOptions = [{
+    _this.connectedComponentUpdateOnOptions = [{
       value: 'change',
       text: 'Change'
     }, {
@@ -191,132 +186,132 @@ var LabelController = function () {
     }];
 
     // the component types we are allowed to connect to
-    this.allowedConnectedComponentTypes = [{ type: 'ConceptMap' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'OpenResponse' }, { type: 'Table' }];
+    _this.allowedConnectedComponentTypes = [{ type: 'ConceptMap' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'OpenResponse' }, { type: 'Table' }];
 
-    this.nodeId = this.$scope.nodeId;
+    _this.nodeId = _this.$scope.nodeId;
 
     // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
+    _this.componentContent = _this.$scope.componentContent;
 
     // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
-    this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
+    _this.authoringComponentContent = _this.$scope.authoringComponentContent;
+    _this.authoringComponentContentJSONString = _this.$scope.authoringComponentContentJSONString;
 
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
-    this.originalComponentContent = this.$scope.originalComponentContent;
+    _this.originalComponentContent = _this.$scope.originalComponentContent;
 
     // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    this.mode = this.$scope.mode;
+    _this.mode = _this.$scope.mode;
 
-    this.workgroupId = this.$scope.workgroupId;
-    this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
+    _this.workgroupId = _this.$scope.workgroupId;
+    _this.teacherWorkgroupId = _this.$scope.teacherWorkgroupId;
 
-    if (this.componentContent != null) {
+    if (_this.componentContent != null) {
 
       // get the component id
-      this.componentId = this.componentContent.id;
+      _this.componentId = _this.componentContent.id;
 
-      this.canvasId = 'canvas_' + this.nodeId + '_' + this.componentId;
+      _this.canvasId = 'canvas_' + _this.nodeId + '_' + _this.componentId;
 
       // get the component state from the scope
-      var componentState = this.$scope.componentState;
+      var componentState = _this.$scope.componentState;
 
-      if (this.componentContent.canCreateLabels != null) {
-        this.canCreateLabels = this.componentContent.canCreateLabels;
+      if (_this.componentContent.canCreateLabels != null) {
+        _this.canCreateLabels = _this.componentContent.canCreateLabels;
       }
 
-      if (this.componentContent.width != null) {
-        this.canvasWidth = this.componentContent.width;
+      if (_this.componentContent.width != null) {
+        _this.canvasWidth = _this.componentContent.width;
       }
 
-      if (this.componentContent.height != null) {
-        this.canvasHeight = this.componentContent.height;
+      if (_this.componentContent.height != null) {
+        _this.canvasHeight = _this.componentContent.height;
       }
 
-      if (this.componentContent.enableCircles != null) {
-        this.enableCircles = this.componentContent.enableCircles;
+      if (_this.componentContent.enableCircles != null) {
+        _this.enableCircles = _this.componentContent.enableCircles;
       }
 
-      if (this.mode === 'student') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+      if (_this.mode === 'student') {
+        _this.isPromptVisible = true;
+        _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+        _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
 
-        if (this.onlyHasShowWorkConnectedComponents()) {
-          this.isDisabled = true;
+        if (_this.onlyHasShowWorkConnectedComponents()) {
+          _this.isDisabled = true;
         }
 
-        if (this.canCreateLabels) {
-          this.isNewLabelButtonVisible = true;
+        if (_this.canCreateLabels) {
+          _this.isNewLabelButtonVisible = true;
         } else {
-          this.isNewLabelButtonVisible = false;
+          _this.isNewLabelButtonVisible = false;
         }
 
-        if (this.isDisabled) {
-          this.isNewLabelButtonVisible = false;
-          this.canCreateLabels = false;
-          this.isResetButtonVisible = false;
+        if (_this.isDisabled) {
+          _this.isNewLabelButtonVisible = false;
+          _this.canCreateLabels = false;
+          _this.isResetButtonVisible = false;
         }
 
         // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isNewLabelButtonVisible = false;
-        this.isSnipImageButtonVisible = false;
-        this.isDisabled = true;
+        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+      } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
+        _this.isSaveButtonVisible = false;
+        _this.isSubmitButtonVisible = false;
+        _this.isNewLabelButtonVisible = false;
+        _this.isSnipImageButtonVisible = false;
+        _this.isDisabled = true;
 
         if (componentState != null) {
           // create a unique id for the application label element using this component state
-          this.canvasId = 'labelCanvas_' + componentState.id;
-          if (this.mode === 'gradingRevision') {
-            this.canvasId = 'labelCanvas_gradingRevision_' + componentState.id;
+          _this.canvasId = 'labelCanvas_' + componentState.id;
+          if (_this.mode === 'gradingRevision') {
+            _this.canvasId = 'labelCanvas_gradingRevision_' + componentState.id;
           }
         }
 
         // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      } else if (this.mode === 'onlyShowWork') {
-        this.isPromptVisible = false;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isNewLabelButtonVisible = false;
-        this.isSnipImageButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'showPreviousWork') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isNewLabelButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'authoring') {
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+      } else if (_this.mode === 'onlyShowWork') {
+        _this.isPromptVisible = false;
+        _this.isSaveButtonVisible = false;
+        _this.isSubmitButtonVisible = false;
+        _this.isNewLabelButtonVisible = false;
+        _this.isSnipImageButtonVisible = false;
+        _this.isDisabled = true;
+      } else if (_this.mode === 'showPreviousWork') {
+        _this.isPromptVisible = true;
+        _this.isSaveButtonVisible = false;
+        _this.isSubmitButtonVisible = false;
+        _this.isNewLabelButtonVisible = false;
+        _this.isDisabled = true;
+      } else if (_this.mode === 'authoring') {
+        _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+        _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
 
         // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+        _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
 
         // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
+        _this.summernoteRubricHTML = _this.componentContent.rubric;
 
         // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
+        var insertAssetString = _this.$translate('INSERT_ASSET');
 
         /*
          * create the custom button for inserting WISE assets into
          * summernote
          */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+        var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
 
         /*
          * the options that specifies the tools to display in the
          * summernote prompt
          */
-        this.summernoteRubricOptions = {
+        _this.summernoteRubricOptions = {
           toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
           height: 300,
           disableDragAndDrop: true,
@@ -325,20 +320,20 @@ var LabelController = function () {
           }
         };
 
-        if (this.componentContent.enableCircles == null) {
+        if (_this.componentContent.enableCircles == null) {
           /*
            * If this component was created before enableCircles was implemented,
            * we will default it to true in the authoring so that the
            * "Enable Dots" checkbox is checked.
            */
-          this.authoringComponentContent.enableCircles = true;
+          _this.authoringComponentContent.enableCircles = true;
         }
 
-        this.updateAdvancedAuthoringView();
+        _this.updateAdvancedAuthoringView();
 
         $scope.$watch(function () {
           return this.authoringComponentContent;
-        }.bind(this), function (newValue, oldValue) {
+        }.bind(_this), function (newValue, oldValue) {
           this.componentContent = this.ProjectService.injectAssetPaths(newValue);
 
           // the canvas width
@@ -384,10 +379,10 @@ var LabelController = function () {
           } else {
             this.isNewLabelButtonVisible = false;
           }
-        }.bind(this), true);
+        }.bind(_this), true);
       }
 
-      this.$timeout(angular.bind(this, function () {
+      _this.$timeout(angular.bind(_this, function () {
         // wait for angular to completely render the html before we initialize the canvas
 
         this.setupCanvas();
@@ -397,9 +392,9 @@ var LabelController = function () {
     /**
      * Returns true iff there is student work that hasn't been saved yet
      */
-    this.$scope.isDirty = function () {
+    _this.$scope.isDirty = function () {
       return this.$scope.labelController.isDirty;
-    }.bind(this);
+    }.bind(_this);
 
     /**
      * Get the component state from this component. The parent node will
@@ -409,7 +404,7 @@ var LabelController = function () {
      * action (optional; default is false)
      * @return a promise of a component state containing the student data
      */
-    this.$scope.getComponentState = function (isSubmit) {
+    _this.$scope.getComponentState = function (isSubmit) {
       var deferred = this.$q.defer();
       var getState = false;
       var action = 'change';
@@ -441,12 +436,12 @@ var LabelController = function () {
       }
 
       return deferred.promise;
-    }.bind(this);
+    }.bind(_this);
 
     /**
      * The parent node submit button was clicked
      */
-    this.$scope.$on('nodeSubmitClicked', angular.bind(this, function (event, args) {
+    _this.$scope.$on('nodeSubmitClicked', angular.bind(_this, function (event, args) {
 
       // get the node id of the node
       var nodeId = args.nodeId;
@@ -464,7 +459,7 @@ var LabelController = function () {
      * Listen for the 'studentWorkSavedToServer' event which is fired when
      * we receive the response from saving a component state to the server
      */
-    this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function (event, args) {
+    _this.$scope.$on('studentWorkSavedToServer', angular.bind(_this, function (event, args) {
 
       var componentState = args.studentWork;
 
@@ -502,7 +497,7 @@ var LabelController = function () {
      * an image representation of the student data from a specific
      * component.
      */
-    this.$scope.$on('requestImage', function (event, args) {
+    _this.$scope.$on('requestImage', function (event, args) {
 
       // get the node id and component id from the args
       var nodeId = args.nodeId;
@@ -530,7 +525,7 @@ var LabelController = function () {
      * Listen for the 'annotationSavedToServer' event which is fired when
      * we receive the response from saving an annotation to the server
      */
-    this.$scope.$on('annotationSavedToServer', function (event, args) {
+    _this.$scope.$on('annotationSavedToServer', function (event, args) {
 
       if (args != null) {
 
@@ -558,13 +553,13 @@ var LabelController = function () {
      * exits the parent node. This will perform any necessary cleanup
      * when the student exits the parent node.
      */
-    this.$scope.$on('exitNode', angular.bind(this, function (event, args) {}));
+    _this.$scope.$on('exitNode', angular.bind(_this, function (event, args) {}));
 
     /**
      * The student has changed the file input
      * @param element the file input element
      */
-    this.$scope.fileUploadChanged = function (element) {
+    _this.$scope.fileUploadChanged = function (element) {
       var _this2 = this;
 
       // get the current background image if any
@@ -631,7 +626,7 @@ var LabelController = function () {
      * Listen for the assetSelected event which occurs when the user
      * selects an asset from the choose asset popup
      */
-    this.$scope.$on('assetSelected', function (event, args) {
+    _this.$scope.$on('assetSelected', function (event, args) {
 
       if (args != null) {
 
@@ -709,7 +704,7 @@ var LabelController = function () {
      * The advanced button for a component was clicked. If the button was
      * for this component, we will show the advanced authoring.
      */
-    this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
+    _this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
       if (args != null) {
         var componentId = args.componentId;
         if (_this.componentId === componentId) {
@@ -718,7 +713,8 @@ var LabelController = function () {
       }
     });
 
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+    _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
+    return _this;
   }
 
   _createClass(LabelController, [{
@@ -3833,9 +3829,9 @@ var LabelController = function () {
   }]);
 
   return LabelController;
-}();
+}(_componentController2.default);
 
-LabelController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', '$window', 'AnnotationService', 'ConfigService', 'LabelService', 'NodeService', 'NotebookService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+LabelController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', '$window', 'AnnotationService', 'ConfigService', 'LabelService', 'NodeService', 'NotebookService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = LabelController;
 //# sourceMappingURL=labelController.js.map

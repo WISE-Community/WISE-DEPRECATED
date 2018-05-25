@@ -1,11 +1,11 @@
 'use strict';
 
+import ComponentController from '../componentController';
 import 'svg.js';
 
-class AnimationController {
+class AnimationController extends ComponentController {
 
   constructor($filter,
-      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -16,31 +16,21 @@ class AnimationController {
       ConfigService,
       CRaterService,
       NodeService,
+      NotebookService,
       NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
       UtilService) {
-
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
+    super($filter, $mdDialog, $rootScope, $scope,
+      AnnotationService, ConfigService, NodeService,
+      NotebookService, ProjectService, StudentAssetService,
+      StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.$timeout = $timeout;
     this.AnimationService = AnimationService;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
     this.CRaterService = CRaterService;
-    this.NodeService = NodeService;
     this.NotificationService = NotificationService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-
-    this.$translate = this.$filter('translate');
 
     this.idToOrder = this.ProjectService.idToOrder;
 
@@ -4226,7 +4216,6 @@ class AnimationController {
 
 AnimationController.$inject = [
   '$filter',
-  '$injector',
   '$mdDialog',
   '$q',
   '$rootScope',
@@ -4237,6 +4226,7 @@ AnimationController.$inject = [
   'ConfigService',
   'CRaterService',
   'NodeService',
+  'NotebookService',
   'NotificationService',
   'ProjectService',
   'StudentAssetService',

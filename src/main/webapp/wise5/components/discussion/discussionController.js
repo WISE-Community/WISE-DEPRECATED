@@ -6,108 +6,106 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _componentController = require('../componentController');
+
+var _componentController2 = _interopRequireDefault(_componentController);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var DiscussionController = function () {
-  function DiscussionController($filter, $injector, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, DiscussionService, NodeService, NotificationService, ProjectService, StudentAssetService, StudentDataService, StudentWebSocketService, UtilService, $mdMedia) {
-    var _this2 = this;
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DiscussionController = function (_ComponentController) {
+  _inherits(DiscussionController, _ComponentController);
+
+  function DiscussionController($filter, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, DiscussionService, NodeService, NotebookService, NotificationService, ProjectService, StudentAssetService, StudentDataService, StudentWebSocketService, UtilService, $mdMedia) {
     _classCallCheck(this, DiscussionController);
 
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
-    this.DiscussionService = DiscussionService;
-    this.NodeService = NodeService;
-    this.NotificationService = NotificationService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.StudentWebSocketService = StudentWebSocketService;
-    this.UtilService = UtilService;
-    this.idToOrder = this.ProjectService.idToOrder;
-    this.$mdMedia = $mdMedia;
+    var _this = _possibleConstructorReturn(this, (DiscussionController.__proto__ || Object.getPrototypeOf(DiscussionController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
 
-    this.$translate = this.$filter('translate');
+    _this.$q = $q;
+    _this.DiscussionService = DiscussionService;
+    _this.NotificationService = NotificationService;
+    _this.StudentWebSocketService = StudentWebSocketService;
+    _this.idToOrder = _this.ProjectService.idToOrder;
+    _this.$mdMedia = $mdMedia;
 
     // the node id of the current node
-    this.nodeId = null;
+    _this.nodeId = null;
 
     // the component id
-    this.componentId = null;
+    _this.componentId = null;
 
     // field that will hold the component content
-    this.componentContent = null;
+    _this.componentContent = null;
 
     // field that will hold the authoring component content
-    this.authoringComponentContent = null;
+    _this.authoringComponentContent = null;
 
     // holds the text that the student has typed
-    this.studentResponse = '';
+    _this.studentResponse = '';
 
     // holds the text for a new response (not a reply)
-    this.newResponse = '';
+    _this.newResponse = '';
 
     // holds student attachments like assets
-    this.newAttachments = [];
+    _this.newAttachments = [];
 
     // whether the step should be disabled
-    this.isDisabled = false;
+    _this.isDisabled = false;
 
     // whether the student work is dirty and needs saving
-    this.isDirty = false;
+    _this.isDirty = false;
 
     // whether this part is showing previous work
-    this.isShowPreviousWork = false;
+    _this.isShowPreviousWork = false;
 
     // whether the student work is for a submit
-    this.isSubmit = false;
+    _this.isSubmit = false;
 
     // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
+    _this.showAdvancedAuthoring = false;
 
     // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
+    _this.showJSONAuthoring = false;
 
     // will hold the class responses
-    this.classResponses = [];
+    _this.classResponses = [];
 
     // will hold the top level responses
-    this.topLevelResponses = [];
+    _this.topLevelResponses = [];
 
     // the text that is being submitted
-    this.submitText = null;
+    _this.submitText = null;
 
     // map from component state id to response
-    this.responsesMap = {};
+    _this.responsesMap = {};
 
     // whether rich text is enabled
-    this.isRichTextEnabled = false;
+    _this.isRichTextEnabled = false;
 
     // whether students can attach files to their work
-    this.isStudentAttachmentEnabled = false;
+    _this.isStudentAttachmentEnabled = false;
 
     // whether we have retrieved the classmate responses
-    this.retrievedClassmateResponses = false;
+    _this.retrievedClassmateResponses = false;
 
     // the latest annotations
-    this.latestAnnotations = null;
+    _this.latestAnnotations = null;
 
     // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    this.mode = this.$scope.mode;
+    _this.mode = _this.$scope.mode;
 
-    this.workgroupId = this.$scope.workgroupId;
-    this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
+    _this.workgroupId = _this.$scope.workgroupId;
+    _this.teacherWorkgroupId = _this.$scope.teacherWorkgroupId;
 
-    this.workgroupId = null;
+    _this.workgroupId = null;
 
     // the options for when to update this component from a connected component
-    this.connectedComponentUpdateOnOptions = [{
+    _this.connectedComponentUpdateOnOptions = [{
       value: 'change',
       text: 'Change'
     }, {
@@ -116,91 +114,91 @@ var DiscussionController = function () {
     }];
 
     // the component types we are allowed to connect to
-    this.allowedConnectedComponentTypes = [{
+    _this.allowedConnectedComponentTypes = [{
       type: 'Discussion'
     }];
 
-    this.nodeId = this.$scope.nodeId;
+    _this.nodeId = _this.$scope.nodeId;
 
     // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
+    _this.componentContent = _this.$scope.componentContent;
 
     // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
+    _this.authoringComponentContent = _this.$scope.authoringComponentContent;
 
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
-    this.originalComponentContent = this.$scope.originalComponentContent;
+    _this.originalComponentContent = _this.$scope.originalComponentContent;
 
-    if (this.componentContent != null) {
+    if (_this.componentContent != null) {
 
       // get the component id
-      this.componentId = this.componentContent.id;
+      _this.componentId = _this.componentContent.id;
 
-      this.mode = this.$scope.mode;
+      _this.mode = _this.$scope.mode;
 
-      if (this.$scope.workgroupId != null) {
-        this.workgroupId = this.$scope.workgroupId;
+      if (_this.$scope.workgroupId != null) {
+        _this.workgroupId = _this.$scope.workgroupId;
       }
 
-      if (this.$scope.nodeId != null) {
-        this.nodeId = this.$scope.nodeId;
+      if (_this.$scope.nodeId != null) {
+        _this.nodeId = _this.$scope.nodeId;
       }
 
-      if (this.mode === 'student') {
-        if (this.ConfigService.isPreview()) {
+      if (_this.mode === 'student') {
+        if (_this.ConfigService.isPreview()) {
           var _componentStates = null;
-          if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+          if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
             // assume there can only be one connected component
-            var connectedComponent = this.componentContent.connectedComponents[0];
-            if (this.authoringGetConnectedComponentType(connectedComponent) == 'Discussion') {
-              _componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
+            var connectedComponent = _this.componentContent.connectedComponents[0];
+            if (_this.authoringGetConnectedComponentType(connectedComponent) == 'Discussion') {
+              _componentStates = _this.StudentDataService.getComponentStatesByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
             }
           } else {
-            _componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+            _componentStates = _this.StudentDataService.getComponentStatesByNodeIdAndComponentId(_this.nodeId, _this.componentId);
           }
-          this.setClassResponses(_componentStates);
+          _this.setClassResponses(_componentStates);
         } else {
           // we are in regular student run mode
 
-          if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+          if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
             // assume there can only be one connected component
-            var _connectedComponent = this.componentContent.connectedComponents[0];
-            if (this.authoringGetConnectedComponentType(_connectedComponent) == 'Discussion') {
-              this.getClassmateResponses(_connectedComponent.nodeId, _connectedComponent.componentId);
+            var _connectedComponent = _this.componentContent.connectedComponents[0];
+            if (_this.authoringGetConnectedComponentType(_connectedComponent) == 'Discussion') {
+              _this.getClassmateResponses(_connectedComponent.nodeId, _connectedComponent.componentId);
             }
           } else {
-            if (this.isClassmateResponsesGated()) {
+            if (_this.isClassmateResponsesGated()) {
               /*
                * classmate responses are gated so we will not show them if the student
                * has not submitted a response
                */
 
               // get the component state from the scope
-              var componentState = this.$scope.componentState;
+              var componentState = _this.$scope.componentState;
 
               if (componentState != null) {
                 /*
                  * the student has already submitted a response so we will
                  * display the classmate responses
                  */
-                this.getClassmateResponses();
+                _this.getClassmateResponses();
               }
             } else {
               // classmate responses are not gated so we will show them
-              this.getClassmateResponses();
+              _this.getClassmateResponses();
             }
           }
 
           // get the latest annotations
-          this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+          _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
         }
 
         // check if we need to lock this component
-        this.calculateDisabled();
-      } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
+        _this.calculateDisabled();
+      } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
 
         /*
          * get all the posts that this workgroup id is part of. if the student
@@ -208,48 +206,48 @@ var DiscussionController = function () {
          * all the replies. if the student replied to a top level response we
          * will get the top level response and all the replies.
          */
-        var componentStates = this.DiscussionService.getPostsAssociatedWithWorkgroupId(this.componentId, this.workgroupId);
+        var componentStates = _this.DiscussionService.getPostsAssociatedWithWorkgroupId(_this.componentId, _this.workgroupId);
 
         // get the innappropriate flag annotations for the component states
-        var annotations = this.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+        var annotations = _this.getInappropriateFlagAnnotationsByComponentStates(componentStates);
 
         // show the posts
-        this.setClassResponses(componentStates, annotations);
+        _this.setClassResponses(componentStates, annotations);
 
-        this.isDisabled = true;
+        _this.isDisabled = true;
 
-        if (this.mode === 'grading') {
+        if (_this.mode === 'grading') {
           // get the latest annotations
-          this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+          _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
         }
-      } else if (this.mode === 'onlyShowWork') {
-        this.isDisabled = true;
-      } else if (this.mode === 'showPreviousWork') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'authoring') {
+      } else if (_this.mode === 'onlyShowWork') {
+        _this.isDisabled = true;
+      } else if (_this.mode === 'showPreviousWork') {
+        _this.isPromptVisible = true;
+        _this.isSaveButtonVisible = false;
+        _this.isSubmitButtonVisible = false;
+        _this.isDisabled = true;
+      } else if (_this.mode === 'authoring') {
         // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+        _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
 
         // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
+        _this.summernoteRubricHTML = _this.componentContent.rubric;
 
         // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
+        var insertAssetString = _this.$translate('INSERT_ASSET');
 
         /*
          * create the custom button for inserting WISE assets into
          * summernote
          */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+        var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
 
         /*
          * the options that specifies the tools to display in the
          * summernote prompt
          */
-        this.summernoteRubricOptions = {
+        _this.summernoteRubricOptions = {
           toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
           height: 300,
           disableDragAndDrop: true,
@@ -258,23 +256,23 @@ var DiscussionController = function () {
           }
         };
 
-        this.updateAdvancedAuthoringView();
+        _this.updateAdvancedAuthoringView();
 
         $scope.$watch(function () {
           return this.authoringComponentContent;
-        }.bind(this), function (newValue, oldValue) {
+        }.bind(_this), function (newValue, oldValue) {
           this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-        }.bind(this), true);
+        }.bind(_this), true);
       }
 
-      this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
+      _this.isRichTextEnabled = _this.componentContent.isRichTextEnabled;
 
       // set whether studentAttachment is enabled
-      this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+      _this.isStudentAttachmentEnabled = _this.componentContent.isStudentAttachmentEnabled;
 
-      if (this.$scope.$parent.nodeController != null) {
+      if (_this.$scope.$parent.nodeController != null) {
         // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+        _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
       }
     }
 
@@ -282,7 +280,7 @@ var DiscussionController = function () {
      * The submit button was clicked
      * @param response the response object related to the submit button
      */
-    this.$scope.submitbuttonclicked = function (response) {
+    _this.$scope.submitbuttonclicked = function (response) {
 
       if (response) {
         // this submit button was clicked for a reply
@@ -325,7 +323,7 @@ var DiscussionController = function () {
 
       // tell the parent node that this component wants to submit
       this.$scope.$emit('componentSubmitTriggered', { nodeId: this.$scope.discussionController.nodeId, componentId: this.$scope.discussionController.componentId });
-    }.bind(this);
+    }.bind(_this);
 
     /**
      * Get the component state from this component. The parent node will
@@ -333,8 +331,8 @@ var DiscussionController = function () {
      * save student data.
      * @return a component state containing the student data
      */
-    this.$scope.getComponentState = function () {
-      var _this = this;
+    _this.$scope.getComponentState = function () {
+      var _this2 = this;
 
       var deferred = this.$q.defer();
 
@@ -349,10 +347,10 @@ var DiscussionController = function () {
            * clear the component values so they aren't accidentally used again
            * later
            */
-          _this.$scope.discussionController.clearComponentValues();
+          _this2.$scope.discussionController.clearComponentValues();
 
           // set isDirty to false since this student work is about to be saved
-          _this.$scope.discussionController.isDirty = false;
+          _this2.$scope.discussionController.isDirty = false;
 
           deferred.resolve(componentState);
         });
@@ -366,19 +364,19 @@ var DiscussionController = function () {
       }
 
       return deferred.promise;
-    }.bind(this);
+    }.bind(_this);
 
     /**
      * The parent node submit button was clicked
      */
-    this.$scope.$on('nodeSubmitClicked', function (event, args) {
+    _this.$scope.$on('nodeSubmitClicked', function (event, args) {
 
       // get the node id of the node
       var nodeId = args.nodeId;
 
       // make sure the node id matches our parent node
-      if (_this2.nodeId === nodeId) {
-        _this2.isSubmit = true;
+      if (_this.nodeId === nodeId) {
+        _this.isSubmit = true;
       }
     });
 
@@ -386,7 +384,7 @@ var DiscussionController = function () {
      * Listen for the 'annotationSavedToServer' event which is fired when
      * we receive the response from saving an annotation to the server
      */
-    this.$scope.$on('annotationSavedToServer', function (event, args) {
+    _this.$scope.$on('annotationSavedToServer', function (event, args) {
 
       if (args != null) {
 
@@ -400,10 +398,10 @@ var DiscussionController = function () {
           var annotationComponentId = annotation.componentId;
 
           // make sure the annotation was for this component
-          if (_this2.nodeId === annotationNodeId && _this2.componentId === annotationComponentId) {
+          if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
 
             // get latest score and comment annotations for this component
-            _this2.latestAnnotations = _this2.AnnotationService.getLatestComponentAnnotations(_this2.nodeId, _this2.componentId, _this2.workgroupId);
+            _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
           }
         }
       }
@@ -414,7 +412,7 @@ var DiscussionController = function () {
      * exits the parent node. This will perform any necessary cleanup
      * when the student exits the parent node.
      */
-    this.$scope.$on('exitNode', function (event, args) {
+    _this.$scope.$on('exitNode', function (event, args) {
 
       // do nothing
     });
@@ -423,22 +421,22 @@ var DiscussionController = function () {
      * Listen for the 'studentWorkSavedToServer' event which is fired when
      * we receive the response from saving a component state to the server
      */
-    this.$scope.$on('studentWorkSavedToServer', function (event, args) {
+    _this.$scope.$on('studentWorkSavedToServer', function (event, args) {
 
       var componentState = args.studentWork;
 
       // check that the component state is for this component
-      if (componentState && _this2.nodeId === componentState.nodeId && _this2.componentId === componentState.componentId) {
+      if (componentState && _this.nodeId === componentState.nodeId && _this.componentId === componentState.componentId) {
 
         // check if the classmate responses are gated
-        if (_this2.isClassmateResponsesGated() && !_this2.retrievedClassmateResponses) {
+        if (_this.isClassmateResponsesGated() && !_this.retrievedClassmateResponses) {
           /*
            * the classmate responses are gated and we haven't retrieved
            * them yet so we will obtain them now and show them since the student
            * has just submitted a response. getting the classmate responses will
            * also get the post the student just saved to the server.
            */
-          _this2.getClassmateResponses();
+          _this.getClassmateResponses();
         } else {
           /*
            * the classmate responses are not gated or have already been retrieved
@@ -447,20 +445,20 @@ var DiscussionController = function () {
            */
 
           // add the component state to our collection of class responses
-          _this2.addClassResponse(componentState);
+          _this.addClassResponse(componentState);
         }
 
-        _this2.submit();
+        _this.submit();
 
         // send the student post to web sockets so all the classmates receive it in real time
         var messageType = 'studentData';
-        componentState.userNamesArray = _this2.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
+        componentState.userNamesArray = _this.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
 
-        _this2.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
+        _this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
 
         // next, send notifications to students who have posted a response in the same thread as this post
         var studentData = componentState.studentData;
-        if (studentData != null && _this2.responsesMap != null) {
+        if (studentData != null && _this.responsesMap != null) {
           var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
           if (componentStateIdReplyingTo != null) {
             // populate fields of the notification
@@ -469,38 +467,38 @@ var DiscussionController = function () {
             var nodeId = componentState.nodeId;
             var componentId = componentState.componentId;
             // add the user names to the component state so we can display next to the response
-            var userNamesArray = _this2.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
+            var userNamesArray = _this.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
             var userNames = userNamesArray.map(function (obj) {
               return obj.name;
             }).join(', ');
-            var notificationMessage = _this2.$translate('discussion.repliedToADiscussionYouWereIn', { userNames: userNames });
+            var notificationMessage = _this.$translate('discussion.repliedToADiscussionYouWereIn', { userNames: userNames });
 
             var workgroupsNotifiedSoFar = []; // keep track of workgroups we've already notified, in case a workgroup posts twice on a thread we only want to notify once.
             // check if we have the component state that was replied to
-            if (_this2.responsesMap[componentStateIdReplyingTo] != null) {
-              var originalPostComponentState = _this2.responsesMap[componentStateIdReplyingTo];
+            if (_this.responsesMap[componentStateIdReplyingTo] != null) {
+              var originalPostComponentState = _this.responsesMap[componentStateIdReplyingTo];
               var toWorkgroupId = originalPostComponentState.workgroupId; // notify the workgroup who posted this reply
               if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId) {
-                var notification = _this2.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-                _this2.NotificationService.saveNotificationToServer(notification).then(function (savedNotification) {
+                var notification = _this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
+                _this.NotificationService.saveNotificationToServer(notification).then(function (savedNotification) {
                   var messageType = 'notification';
-                  _this2.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
+                  _this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
                 });
                 workgroupsNotifiedSoFar.push(toWorkgroupId); // make sure we don't notify this workgroup again.
               }
 
               // also notify repliers to this thread, if any.
-              if (_this2.responsesMap[componentStateIdReplyingTo].replies != null) {
-                var replies = _this2.responsesMap[componentStateIdReplyingTo].replies;
+              if (_this.responsesMap[componentStateIdReplyingTo].replies != null) {
+                var replies = _this.responsesMap[componentStateIdReplyingTo].replies;
 
                 for (var r = 0; r < replies.length; r++) {
                   var reply = replies[r];
                   var _toWorkgroupId = reply.workgroupId; // notify the workgroup who posted this reply
                   if (_toWorkgroupId != null && _toWorkgroupId != fromWorkgroupId && workgroupsNotifiedSoFar.indexOf(_toWorkgroupId) == -1) {
-                    var _notification = _this2.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, _toWorkgroupId, notificationMessage);
-                    _this2.NotificationService.saveNotificationToServer(_notification).then(function (savedNotification) {
+                    var _notification = _this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, _toWorkgroupId, notificationMessage);
+                    _this.NotificationService.saveNotificationToServer(_notification).then(function (savedNotification) {
                       var messageType = 'notification';
-                      _this2.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
+                      _this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
                     });
                     workgroupsNotifiedSoFar.push(_toWorkgroupId); // make sure we don't notify this workgroup again.
                   }
@@ -511,17 +509,17 @@ var DiscussionController = function () {
         }
       }
 
-      _this2.isSubmit = null;
+      _this.isSubmit = null;
     });
 
-    this.$scope.studentdatachanged = function () {
+    _this.$scope.studentdatachanged = function () {
       this.$scope.discussionController.studentDataChanged();
     };
 
     /**
      * We have recived a web socket message
      */
-    this.$rootScope.$on('webSocketMessageRecieved', function (event, args) {
+    _this.$rootScope.$on('webSocketMessageRecieved', function (event, args) {
       if (args != null) {
         var data = args.data;
 
@@ -530,13 +528,13 @@ var DiscussionController = function () {
         if (componentState != null) {
 
           // check that the web socket message is for this step
-          if (componentState.nodeId === _this2.nodeId) {
+          if (componentState.nodeId === _this.nodeId) {
 
             // get the sender of the message
             var componentStateWorkgroupId = componentState.workgroupId;
 
             // get the workgroup id of the signed in student
-            var workgroupId = _this2.ConfigService.getWorkgroupId();
+            var workgroupId = _this.ConfigService.getWorkgroupId();
 
             /*
              * check if the signed in student sent the message. if the
@@ -544,9 +542,9 @@ var DiscussionController = function () {
              */
             if (workgroupId !== componentStateWorkgroupId) {
 
-              if (_this2.retrievedClassmateResponses) {
+              if (_this.retrievedClassmateResponses) {
                 // display the classmate post
-                _this2.addClassResponse(componentState);
+                _this.addClassResponse(componentState);
               }
             }
           }
@@ -554,12 +552,12 @@ var DiscussionController = function () {
       }
     });
 
-    var scope = this;
-    var themePath = this.ProjectService.getThemePath();
+    var scope = _this;
+    var themePath = _this.ProjectService.getThemePath();
 
     // TODO: make toolbar items and plugins customizable by authors?
     // Rich text editor options
-    this.tinymceOptions = {
+    _this.tinymceOptions = {
       //onChange: function(e) {
       //scope.studentDataChanged();
       //},
@@ -585,7 +583,7 @@ var DiscussionController = function () {
       }
     };
 
-    this.$scope.$watch(function () {
+    _this.$scope.$watch(function () {
       return $mdMedia('gt-sm');
     }, function (md) {
       $scope.mdScreen = md;
@@ -595,12 +593,12 @@ var DiscussionController = function () {
      * Listen for the assetSelected event which occurs when the user
      * selects an asset from the choose asset popup
      */
-    this.$scope.$on('assetSelected', function (event, args) {
+    _this.$scope.$on('assetSelected', function (event, args) {
 
       if (args != null) {
 
         // make sure the event was fired for this component
-        if (args.nodeId == _this2.nodeId && args.componentId == _this2.componentId) {
+        if (args.nodeId == _this.nodeId && args.componentId == _this.componentId) {
           // the asset was selected for this component
           var assetItem = args.assetItem;
 
@@ -613,21 +611,21 @@ var DiscussionController = function () {
                * e.g.
                * /wise/curriculum/3/
                */
-              var assetsDirectoryPath = _this2.ConfigService.getProjectAssetsDirectoryPath();
+              var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
               var fullAssetPath = assetsDirectoryPath + '/' + fileName;
 
               var summernoteId = '';
 
               if (args.target == 'prompt') {
                 // the target is the summernote prompt element
-                summernoteId = 'summernotePrompt_' + _this2.nodeId + '_' + _this2.componentId;
+                summernoteId = 'summernotePrompt_' + _this.nodeId + '_' + _this.componentId;
               } else if (args.target == 'rubric') {
                 // the target is the summernote rubric element
-                summernoteId = 'summernoteRubric_' + _this2.nodeId + '_' + _this2.componentId;
+                summernoteId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
               }
 
               if (summernoteId != '') {
-                if (_this2.UtilService.isImage(fileName)) {
+                if (_this.UtilService.isImage(fileName)) {
                   /*
                    * move the cursor back to its position when the asset chooser
                    * popup was clicked
@@ -637,7 +635,7 @@ var DiscussionController = function () {
 
                   // add the image html
                   $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                } else if (_this2.UtilService.isVideo(fileName)) {
+                } else if (_this.UtilService.isVideo(fileName)) {
                   /*
                    * move the cursor back to its position when the asset chooser
                    * popup was clicked
@@ -658,23 +656,24 @@ var DiscussionController = function () {
       }
 
       // close the popup
-      _this2.$mdDialog.hide();
+      _this.$mdDialog.hide();
     });
 
     /*
      * The advanced button for a component was clicked. If the button was
      * for this component, we will show the advanced authoring.
      */
-    this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
+    _this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
       if (args != null) {
         var componentId = args.componentId;
-        if (_this2.componentId === componentId) {
-          _this2.showAdvancedAuthoring = !_this2.showAdvancedAuthoring;
+        if (_this.componentId === componentId) {
+          _this.showAdvancedAuthoring = !_this.showAdvancedAuthoring;
         }
       }
     });
 
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+    _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
+    return _this;
   }
 
   /**
@@ -2352,9 +2351,9 @@ var DiscussionController = function () {
   }]);
 
   return DiscussionController;
-}();
+}(_componentController2.default);
 
-DiscussionController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'DiscussionService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', 'UtilService', '$mdMedia'];
+DiscussionController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'DiscussionService', 'NodeService', 'NotebookService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', 'UtilService', '$mdMedia'];
 
 exports.default = DiscussionController;
 //# sourceMappingURL=discussionController.js.map

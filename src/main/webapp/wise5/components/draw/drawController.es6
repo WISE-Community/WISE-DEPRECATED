@@ -1,8 +1,11 @@
+'use strict';
+
+import ComponentController from "../componentController";
 import drawingTool from 'lib/drawingTool/drawing-tool';
 import drawingToolVendor from 'lib/drawingTool/vendor.min';
 import html2canvas from 'html2canvas';
 
-class DrawController {
+class DrawController extends ComponentController {
   constructor($filter,
       $injector,
       $mdDialog,
@@ -19,25 +22,14 @@ class DrawController {
       StudentAssetService,
       StudentDataService,
       UtilService) {
-
-    this.$filter = $filter;
+    super($filter, $mdDialog, $rootScope, $scope,
+      AnnotationService, ConfigService, NodeService,
+      NotebookService, ProjectService, StudentAssetService,
+      StudentDataService, UtilService);
     this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.$timeout = $timeout;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
     this.DrawService = DrawService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-
-    this.$translate = this.$filter('translate');
 
     this.idToOrder = this.ProjectService.idToOrder;
 

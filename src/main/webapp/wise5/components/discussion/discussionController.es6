@@ -1,6 +1,9 @@
-class DiscussionController {
+'use strict';
+
+import ComponentController from "../componentController";
+
+class DiscussionController extends ComponentController {
   constructor($filter,
-      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -9,6 +12,7 @@ class DiscussionController {
       ConfigService,
       DiscussionService,
       NodeService,
+      NotebookService,
       NotificationService,
       ProjectService,
       StudentAssetService,
@@ -16,27 +20,16 @@ class DiscussionController {
       StudentWebSocketService,
       UtilService,
       $mdMedia) {
-
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
+    super($filter, $mdDialog, $rootScope, $scope,
+      AnnotationService, ConfigService, NodeService,
+      NotebookService, ProjectService, StudentAssetService,
+      StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
     this.DiscussionService = DiscussionService;
-    this.NodeService = NodeService;
     this.NotificationService = NotificationService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
     this.StudentWebSocketService = StudentWebSocketService;
-    this.UtilService = UtilService;
     this.idToOrder = this.ProjectService.idToOrder;
     this.$mdMedia = $mdMedia;
-
-    this.$translate = this.$filter('translate');
 
     // the node id of the current node
     this.nodeId = null;
@@ -2153,7 +2146,6 @@ class DiscussionController {
 
 DiscussionController.$inject = [
   '$filter',
-  '$injector',
   '$mdDialog',
   '$q',
   '$rootScope',
@@ -2162,6 +2154,7 @@ DiscussionController.$inject = [
   'ConfigService',
   'DiscussionService',
   'NodeService',
+  'NotebookService',
   'NotificationService',
   'ProjectService',
   'StudentAssetService',

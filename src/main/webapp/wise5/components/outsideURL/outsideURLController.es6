@@ -1,31 +1,30 @@
-class OutsideURLController {
+'use strict';
+
+import ComponentController from "../componentController";
+
+class OutsideURLController extends ComponentController {
   constructor($filter,
       $mdDialog,
       $q,
       $rootScope,
-      $scope,
       $sce,
+      $scope,
+      AnnotationService,
       ConfigService,
       NodeService,
+      NotebookService,
       OutsideURLService,
       ProjectService,
+      StudentAssetService,
       StudentDataService,
       UtilService) {
-
-    this.$filter = $filter;
-    this.$mdDialog = $mdDialog;
+    super($filter, $mdDialog, $rootScope, $scope,
+      AnnotationService, ConfigService, NodeService,
+      NotebookService, ProjectService, StudentAssetService,
+      StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.$sce = $sce;
-    this.ConfigService = ConfigService;
-    this.NodeService = NodeService;
     this.OutsideURLService = OutsideURLService;
-    this.ProjectService = ProjectService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-
-    this.$translate = this.$filter('translate');
 
     // the node id of the current node
     this.nodeId = null;
@@ -396,12 +395,15 @@ OutsideURLController.$inject = [
   '$mdDialog',
   '$q',
   '$rootScope',
-  '$scope',
   '$sce',
+  '$scope',
+  'AnnotationService',
   'ConfigService',
   'NodeService',
+  'NotebookService',
   'OutsideURLService',
   'ProjectService',
+  'StudentAssetService',
   'StudentDataService',
   'UtilService'
 ];

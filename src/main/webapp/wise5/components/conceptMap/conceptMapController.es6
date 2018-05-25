@@ -2,12 +2,12 @@
 
 import 'svg.js';
 import 'svg.draggable.js';
+import ComponentController from '../componentController';
 
-class ConceptMapController {
+class ConceptMapController extends ComponentController {
 
   constructor($anchorScroll,
       $filter,
-      $injector,
       $location,
       $mdDialog,
       $q,
@@ -24,29 +24,17 @@ class ConceptMapController {
       StudentAssetService,
       StudentDataService,
       UtilService) {
-
+    super($filter, $mdDialog, $rootScope, $scope,
+      AnnotationService, ConfigService, NodeService,
+      NotebookService, ProjectService, StudentAssetService,
+      StudentDataService, UtilService);
     this.$anchorScroll = $anchorScroll;
-    this.$filter = $filter;
-    this.$injector = $injector;
     this.$location = $location;
-    this.$mdDialog = $mdDialog;
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.$timeout = $timeout;
-    this.AnnotationService = AnnotationService;
     this.ConceptMapService = ConceptMapService;
-    this.ConfigService = ConfigService;
     this.CRaterService = CRaterService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
     this.idToOrder = this.ProjectService.idToOrder;
-
-    this.$translate = this.$filter('translate');
 
     // the node id of the current node
     this.nodeId = null;
@@ -5252,7 +5240,6 @@ class ConceptMapController {
 ConceptMapController.$inject = [
   '$anchorScroll',
   '$filter',
-  '$injector',
   '$location',
   '$mdDialog',
   '$q',

@@ -1,8 +1,10 @@
+'use strict';
+
+import ComponentController from "../componentController";
 import html2canvas from 'html2canvas';
 
-class GraphController {
+class GraphController extends ComponentController {
   constructor($filter,
-      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -17,25 +19,13 @@ class GraphController {
       StudentAssetService,
       StudentDataService,
       UtilService) {
-
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
+    super($filter, $mdDialog, $rootScope, $scope,
+      AnnotationService, ConfigService, NodeService,
+      NotebookService, ProjectService, StudentAssetService,
+      StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.$timeout = $timeout;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
     this.GraphService = GraphService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-
-    this.$translate = this.$filter('translate');
 
     this.idToOrder = this.ProjectService.idToOrder;
 
@@ -6863,7 +6853,6 @@ class GraphController {
 
 GraphController.$inject = [
   '$filter',
-  '$injector',
   '$mdDialog',
   '$q',
   '$rootScope',

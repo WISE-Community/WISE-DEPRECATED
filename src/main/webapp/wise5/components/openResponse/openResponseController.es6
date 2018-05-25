@@ -1,9 +1,10 @@
 'use strict';
 
-class OpenResponseController {
+import ComponentController from "../componentController";
+
+class OpenResponseController extends ComponentController {
 
   constructor($filter,
-      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -19,26 +20,14 @@ class OpenResponseController {
       StudentAssetService,
       StudentDataService,
       UtilService) {
-
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
+    super($filter, $mdDialog, $rootScope, $scope,
+      AnnotationService, ConfigService, NodeService,
+      NotebookService, ProjectService, StudentAssetService,
+      StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
     this.CRaterService = CRaterService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
     this.NotificationService = NotificationService;
     this.OpenResponseService = OpenResponseService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-
-    this.$translate = this.$filter('translate');
 
     this.idToOrder = this.ProjectService.idToOrder;
 
@@ -2816,7 +2805,6 @@ class OpenResponseController {
 
 OpenResponseController.$inject = [
   '$filter',
-  '$injector',
   '$mdDialog',
   '$q',
   '$rootScope',
