@@ -682,28 +682,6 @@ var EmbeddedController = function (_ComponentController) {
       this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
     }
   }, {
-    key: 'isApplicationNode',
-
-
-    /**
-     * Check if a node is a step node
-     * @param nodeId the node id to check
-     * @returns whether the node is an application node
-     */
-    value: function isApplicationNode(nodeId) {
-      return this.ProjectService.isApplicationNode(nodeId);
-    }
-  }, {
-    key: 'getNodePositionAndTitleByNodeId',
-    value: function getNodePositionAndTitleByNodeId(nodeId) {
-      return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-    }
-  }, {
-    key: 'getComponentsByNodeId',
-    value: function getComponentsByNodeId(nodeId) {
-      return this.ProjectService.getComponentsByNodeId(nodeId);
-    }
-  }, {
     key: 'componentHasWork',
     value: function componentHasWork(component) {
       if (component != null) {

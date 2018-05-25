@@ -143,6 +143,41 @@ class ComponentController {
     this.saveMessage.text = message;
     this.saveMessage.time = time;
   }
+
+  /**
+   * Get all the step node ids in the project
+   * @returns {array} an array of step node id strings
+   */
+  getStepNodeIds() {
+    return this.ProjectService.getNodeIds();
+  }
+
+  /**
+   * Get the step number and title for a node
+   * @param {string} get the step number and title for this node
+   * @returns {string} the step number and title example "1.5: Read Information"
+   */
+  getNodePositionAndTitleByNodeId(nodeId) {
+    return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+  }
+
+  /**
+   * Get the components in a step
+   * @param {string} id of the step
+   * @returns {array} an array of component objects
+   */
+  getComponentsByNodeId(nodeId) {
+    return this.ProjectService.getComponentsByNodeId(nodeId);
+  }
+
+  /**
+   * Check if a node is a step node
+   * @param {string} nodeId the node id to check
+   * @returns {boolean} whether the node is a step node
+   */
+  isApplicationNode(nodeId) {
+    return this.ProjectService.isApplicationNode(nodeId);
+  }
 }
 
 ComponentController.$inject = [];

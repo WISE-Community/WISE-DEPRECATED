@@ -674,23 +674,6 @@ class EmbeddedController extends ComponentController {
     }));
   };
 
-  /**
-   * Check if a node is a step node
-   * @param nodeId the node id to check
-   * @returns whether the node is an application node
-   */
-  isApplicationNode(nodeId) {
-    return this.ProjectService.isApplicationNode(nodeId);
-  }
-
-  getNodePositionAndTitleByNodeId(nodeId) {
-    return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-  }
-
-  getComponentsByNodeId(nodeId) {
-    return this.ProjectService.getComponentsByNodeId(nodeId);
-  }
-
   componentHasWork(component) {
     if (component != null) {
       return this.ProjectService.componentHasWork(component);

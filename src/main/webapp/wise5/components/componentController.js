@@ -154,6 +154,53 @@ var ComponentController = function () {
       this.saveMessage.text = message;
       this.saveMessage.time = time;
     }
+
+    /**
+     * Get all the step node ids in the project
+     * @returns {array} an array of step node id strings
+     */
+
+  }, {
+    key: 'getStepNodeIds',
+    value: function getStepNodeIds() {
+      return this.ProjectService.getNodeIds();
+    }
+
+    /**
+     * Get the step number and title for a node
+     * @param {string} get the step number and title for this node
+     * @returns {string} the step number and title example "1.5: Read Information"
+     */
+
+  }, {
+    key: 'getNodePositionAndTitleByNodeId',
+    value: function getNodePositionAndTitleByNodeId(nodeId) {
+      return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+    }
+
+    /**
+     * Get the components in a step
+     * @param {string} id of the step
+     * @returns {array} an array of component objects
+     */
+
+  }, {
+    key: 'getComponentsByNodeId',
+    value: function getComponentsByNodeId(nodeId) {
+      return this.ProjectService.getComponentsByNodeId(nodeId);
+    }
+
+    /**
+     * Check if a node is a step node
+     * @param {string} nodeId the node id to check
+     * @returns {boolean} whether the node is a step node
+     */
+
+  }, {
+    key: 'isApplicationNode',
+    value: function isApplicationNode(nodeId) {
+      return this.ProjectService.isApplicationNode(nodeId);
+    }
   }]);
 
   return ComponentController;
