@@ -13,7 +13,7 @@
 		<%@ include file="favicon.jsp"%>
 		<link rel="apple-touch-icon" href="apple-touch-icon.png">
 	    <script src="${contextPath}/wise5/jspm_packages/system.js"></script>
-    	<script src="${contextPath}/wise5/config.js?v=5.7.5"></script>
+    	<script src="${contextPath}/wise5/config.js?v=5.7.6"></script>
 		<script>
         	System.import('${contextPath}/wise5/vle/bootstrap');
 	    </script>
