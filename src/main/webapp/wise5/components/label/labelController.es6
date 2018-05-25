@@ -917,8 +917,6 @@ class LabelController extends ComponentController {
          * instead of just a save component state
          */
         this.isSubmit = true;
-
-        // increment the submit counter
         this.incrementSubmitCounter();
 
         // check if the student has used up all of their submits
@@ -976,13 +974,6 @@ class LabelController extends ComponentController {
     this.createLabelMode = false;
     this.isCancelButtonVisible = false;
   };
-
-  /**
-   * Increment the submit counter
-   */
-  incrementSubmitCounter() {
-    this.submitCounter++;
-  }
 
   lockIfNecessary() {
     // check if we need to lock the component after the student submits

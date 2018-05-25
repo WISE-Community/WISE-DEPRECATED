@@ -2576,8 +2576,6 @@ class GraphController extends ComponentController {
          * instead of just a save component state
          */
         this.isSubmit = true;
-
-        // increment the submit counter
         this.incrementSubmitCounter();
 
         // check if the student has used up all of their submits
@@ -2629,13 +2627,6 @@ class GraphController extends ComponentController {
     // tell the parent node that this component wants to save
     //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
   };
-
-  /**
-   * Increment the submit counter
-   */
-  incrementSubmitCounter() {
-    this.submitCounter++;
-  }
 
   lockIfNecessary() {
     // check if we need to lock the component after the student submits

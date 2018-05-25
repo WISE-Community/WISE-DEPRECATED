@@ -2667,8 +2667,6 @@ var GraphController = function (_ComponentController) {
            * instead of just a save component state
            */
           this.isSubmit = true;
-
-          // increment the submit counter
           this.incrementSubmitCounter();
 
           // check if the student has used up all of their submits
@@ -2722,16 +2720,6 @@ var GraphController = function (_ComponentController) {
 
       // tell the parent node that this component wants to save
       //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-    }
-  }, {
-    key: 'incrementSubmitCounter',
-
-
-    /**
-     * Increment the submit counter
-     */
-    value: function incrementSubmitCounter() {
-      this.submitCounter++;
     }
   }, {
     key: 'lockIfNecessary',

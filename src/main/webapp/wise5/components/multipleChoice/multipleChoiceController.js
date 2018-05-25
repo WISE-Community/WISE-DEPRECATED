@@ -808,8 +808,6 @@ var MultipleChoiceController = function (_ComponentController) {
 
           // hide any previous feedback
           this.hideAllFeedback();
-
-          // increment the submit counter
           this.incrementSubmitCounter();
 
           // check if the student has used up all of their submits
@@ -872,23 +870,13 @@ var MultipleChoiceController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'incrementSubmitCounter',
+    key: 'checkAnswer',
 
-
-    /**
-     * Increment the submit counter
-     */
-    value: function incrementSubmitCounter() {
-      this.submitCounter++;
-    }
 
     /**
      * Check the answer the student has submitted and display feedback
      * for the choices the student has checked
      */
-
-  }, {
-    key: 'checkAnswer',
     value: function checkAnswer() {
       var isCorrect = false;
 

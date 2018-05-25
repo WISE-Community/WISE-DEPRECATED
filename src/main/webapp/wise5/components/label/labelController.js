@@ -914,8 +914,6 @@ var LabelController = function (_ComponentController) {
            * instead of just a save component state
            */
           this.isSubmit = true;
-
-          // increment the submit counter
           this.incrementSubmitCounter();
 
           // check if the student has used up all of their submits
@@ -978,16 +976,6 @@ var LabelController = function (_ComponentController) {
     value: function cancelButtonClicked() {
       this.createLabelMode = false;
       this.isCancelButtonVisible = false;
-    }
-  }, {
-    key: 'incrementSubmitCounter',
-
-
-    /**
-     * Increment the submit counter
-     */
-    value: function incrementSubmitCounter() {
-      this.submitCounter++;
     }
   }, {
     key: 'lockIfNecessary',

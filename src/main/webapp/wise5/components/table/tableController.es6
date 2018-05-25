@@ -747,8 +747,6 @@ class TableController extends ComponentController {
          * instead of just a save component state
          */
         this.isSubmit = true;
-
-        // increment the submit counter
         this.incrementSubmitCounter();
 
         // check if the student has used up all of their submits
@@ -785,13 +783,6 @@ class TableController extends ComponentController {
         this.isSubmit = false;
       }
     }
-  }
-
-  /**
-   * Increment the submit counter
-   */
-  incrementSubmitCounter() {
-    this.submitCounter++;
   }
 
   lockIfNecessary() {

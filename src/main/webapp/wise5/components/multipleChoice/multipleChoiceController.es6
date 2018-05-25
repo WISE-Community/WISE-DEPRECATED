@@ -788,8 +788,6 @@ class MultipleChoiceController extends ComponentController {
 
         // hide any previous feedback
         this.hideAllFeedback();
-
-        // increment the submit counter
         this.incrementSubmitCounter();
 
         // check if the student has used up all of their submits
@@ -848,13 +846,6 @@ class MultipleChoiceController extends ComponentController {
       }
     }
   };
-
-  /**
-   * Increment the submit counter
-   */
-  incrementSubmitCounter() {
-    this.submitCounter++;
-  }
 
   /**
    * Check the answer the student has submitted and display feedback

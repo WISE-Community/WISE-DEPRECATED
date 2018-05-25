@@ -750,8 +750,6 @@ var TableController = function (_ComponentController) {
            * instead of just a save component state
            */
           this.isSubmit = true;
-
-          // increment the submit counter
           this.incrementSubmitCounter();
 
           // check if the student has used up all of their submits
@@ -788,16 +786,6 @@ var TableController = function (_ComponentController) {
           this.isSubmit = false;
         }
       }
-    }
-
-    /**
-     * Increment the submit counter
-     */
-
-  }, {
-    key: 'incrementSubmitCounter',
-    value: function incrementSubmitCounter() {
-      this.submitCounter++;
     }
   }, {
     key: 'lockIfNecessary',

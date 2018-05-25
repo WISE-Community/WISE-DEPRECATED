@@ -986,8 +986,7 @@ var ConceptMapController = function (_ComponentController) {
         }
 
         if (performSubmit) {
-          // increment the submit counter
-          this.submitCounter++;
+          this.incrementSubmitCounter();
 
           // check if the student has used up all of their submits
           if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {

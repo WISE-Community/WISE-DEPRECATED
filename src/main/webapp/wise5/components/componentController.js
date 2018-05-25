@@ -80,6 +80,11 @@ var ComponentController = function () {
   }, {
     key: 'submit',
     value: function submit(submitTriggeredBy) {}
+  }, {
+    key: 'incrementSubmitCounter',
+    value: function incrementSubmitCounter() {
+      this.submitCounter++;
+    }
   }]);
 
   return ComponentController;

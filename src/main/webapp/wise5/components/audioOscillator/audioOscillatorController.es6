@@ -698,8 +698,6 @@ class AudioOscillatorController extends ComponentController {
          * instead of just a save component state
          */
         this.isSubmit = true;
-
-        // increment the submit counter
         this.incrementSubmitCounter();
 
         // check if the student has used up all of their submits
@@ -736,13 +734,6 @@ class AudioOscillatorController extends ComponentController {
         this.isSubmit = false;
       }
     }
-  }
-
-  /**
-   * Increment the submit counter
-   */
-  incrementSubmitCounter() {
-    this.submitCounter++;
   }
 
   lockIfNecessary() {

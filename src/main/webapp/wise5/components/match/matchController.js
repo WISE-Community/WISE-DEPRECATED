@@ -1001,8 +1001,6 @@ var MatchController = function (_ComponentController) {
 
           // clear the isCorrect value because it will be evaluated again later
           this.isCorrect = null;
-
-          // increment the submit counter
           this.incrementSubmitCounter();
 
           // check if the student has used up all of their submits
@@ -1040,16 +1038,6 @@ var MatchController = function (_ComponentController) {
           this.isSubmit = false;
         }
       }
-    }
-
-    /**
-     * Increment the submit counter
-     */
-
-  }, {
-    key: 'incrementSubmitCounter',
-    value: function incrementSubmitCounter() {
-      this.submitCounter++;
     }
 
     /**

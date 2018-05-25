@@ -975,8 +975,6 @@ class MatchController extends ComponentController {
 
         // clear the isCorrect value because it will be evaluated again later
         this.isCorrect = null;
-
-        // increment the submit counter
         this.incrementSubmitCounter();
 
         // check if the student has used up all of their submits
@@ -1014,13 +1012,6 @@ class MatchController extends ComponentController {
         this.isSubmit = false;
       }
     }
-  }
-
-  /**
-   * Increment the submit counter
-   */
-  incrementSubmitCounter() {
-    this.submitCounter++;
   }
 
   /**

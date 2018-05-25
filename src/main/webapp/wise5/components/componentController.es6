@@ -79,6 +79,10 @@ class ComponentController {
   submit(submitTriggeredBy) {
 
   }
+
+  incrementSubmitCounter() {
+    this.submitCounter++;
+  }
 }
 
 ComponentController.$inject = [];
