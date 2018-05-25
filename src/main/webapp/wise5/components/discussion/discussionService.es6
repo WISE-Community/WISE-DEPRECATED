@@ -1,6 +1,6 @@
-import NodeService from '../../services/nodeService';
+import ComponentService from '../componentService';
 
-class DiscussionService extends NodeService {
+class DiscussionService extends ComponentService {
   constructor($filter,
       $http,
       $rootScope,
@@ -9,61 +9,28 @@ class DiscussionService extends NodeService {
       ConfigService,
       StudentDataService,
       UtilService) {
-    super();
-
-    this.$filter = $filter;
+    super($filter, StudentDataService, UtilService);
     this.$http = $http;
     this.$rootScope = $rootScope;
     this.$q = $q;
     this.$injector = $injector;
     this.ConfigService = ConfigService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-
-    this.$translate = this.$filter('translate');
-
     if (this.ConfigService != null && this.ConfigService.getMode() == 'classroomMonitor') {
       // in the classroom monitor, we need access to the TeacherDataService so it can retrieve posts and replies for all students
       this.TeacherDataService = this.$injector.get('TeacherDataService');
     }
   }
 
-  /**
-   * Get the component type label
-   * example
-   * "Discussion"
-   */
   getComponentTypeLabel() {
     return this.$translate('discussion.componentTypeLabel');
   }
 
-  /**
-   * Create a Discussion component object
-   * @returns a new Discussion component object
-   */
   createComponent() {
-    var component = {};
-    component.id = this.UtilService.generateKey();
+    const component = super.createComponent();
     component.type = 'Discussion';
     component.prompt = this.$translate('ENTER_PROMPT_HERE');
-    component.showSaveButton = false;
-    component.showSubmitButton = false;
     component.isStudentAttachmentEnabled = true;
     component.gateClassmateResponses = true;
-    return component;
-  }
-
-  /**
-   * Copies an existing Discussion component object
-   * @returns a copied Discussion component object
-   */
-  copyComponent(componentToCopy) {
-    var component = this.createComponent();
-    component.prompt = componentToCopy.prompt;
-    component.showSaveButton = componentToCopy.showSaveButton;
-    component.showSubmitButton = componentToCopy.showSubmitButton;
-    component.isStudentAttachmentEnabled = componentToCopy.isStudentAttachmentEnabled;
-    component.gateClassmateResponses = componentToCopy.gateClassmateResponses;
     return component;
   }
 
@@ -110,14 +77,6 @@ class DiscussionService extends NodeService {
     }
   };
 
-  /**
-   * Check if the component was completed
-   * @param component the component object
-   * @param componentStates the component states for the specific component
-   * @param componentEvents the events for the specific component
-   * @param nodeEvents the events for the parent node of the component
-   * @returns whether the component was completed
-   */
   isCompleted(component, componentStates, componentEvents, nodeEvents) {
     var result = false;
 
@@ -253,42 +212,14 @@ class DiscussionService extends NodeService {
     return postAndAllReplies;
   };
 
-  /**
-   * Whether this component generates student work
-   * @param component (optional) the component object. if the component object
-   * is not provided, we will use the default value of whether the
-   * component type usually has work.
-   * @return whether this component generates student work
-   */
-  componentHasWork(component) {
-    return true;
-  }
-
-  /**
-   * Whether this component uses a save button
-   * @return whether this component uses a save button
-   */
   componentUsesSaveButton() {
     return false;
   }
 
-  /**
-   * Whether this component uses a submit button
-   * @return whether this component uses a submit button
-   */
   componentUsesSubmitButton() {
     return false;
   }
 
-  /**
-   * Check if the component state has student work. Sometimes a component
-   * state may be created if the student visits a component but doesn't
-   * actually perform any work. This is where we will check if the student
-   * actually performed any work.
-   * @param componentState the component state object
-   * @param componentContent the component content
-   * @return whether the component state has any work
-   */
   componentStateHasStudentWork(componentState, componentContent) {
 
     if (componentState != null) {

@@ -746,18 +746,22 @@ class ConceptMapController {
         }
       }
     } else {
-      /*
-       * inject the asset path so that the file name is changed to
-       * a relative path
-       * e.g.
-       * 'Sun.png'
-       * will be changed to
-       * '/wise/curriculum/108/assets/Sun.png'
-       */
-      componentState = this.ProjectService.injectAssetPaths(componentState);
+      if (componentState == null) {
+        this.populateStarterConceptMap();
+      } else {
+        /*
+         * inject the asset path so that the file name is changed to
+         * a relative path
+         * e.g.
+         * 'Sun.png'
+         * will be changed to
+         * '/wise/curriculum/108/assets/Sun.png'
+         */
+        componentState = this.ProjectService.injectAssetPaths(componentState);
 
-      // populate the student work into this component
-      this.setStudentWork(componentState);
+        // populate the student work into this component
+        this.setStudentWork(componentState);
+      }
     }
 
     // check if the student has used up all of their submits
@@ -2578,9 +2582,6 @@ class ConceptMapController {
       link.setOriginalId(originalId);
     }
 
-    // hide the link type chooser
-    this.hideLinkTypeChooser();
-
     // make the link not highlighted
     this.clearHighlightedElement();
 
@@ -4394,6 +4395,12 @@ class ConceptMapController {
        * content
        */
       this.authoringViewComponentChanged();
+    }
+  }
+
+  populateStarterConceptMap() {
+    if (this.componentContent.starterConceptMap != null) {
+      this.populateConceptMapData(this.componentContent.starterConceptMap);
     }
   }
 

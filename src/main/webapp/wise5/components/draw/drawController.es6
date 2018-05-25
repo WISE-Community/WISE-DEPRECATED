@@ -760,8 +760,18 @@ class DrawController {
       this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
     }
 
-    // listen for the drawing changed event
-    this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
+    /*
+     * Wait before we start listening for the drawing:changed event. We need to wait
+     * because the calls above to this.drawingTool.setBackgroundImage() will cause
+     * the drawing:changed event to be fired from the drawingTool, but when that happens,
+     * we don't want to call this.studentDataChanged() because it marks the student work
+     * as dirty. We only want to call this.studentDataChanged() when the drawing:changed
+     * event occurs in response to the student changing the drawing and this timeout
+     * will help make sure of that.
+     */
+    this.$timeout(angular.bind(this, () => {
+      this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
+    }), 500);
 
     if (this.mode === 'student') {
       // listen for selected tool changed event

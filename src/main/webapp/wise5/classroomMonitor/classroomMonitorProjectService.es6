@@ -98,6 +98,29 @@ class ClassroomMonitorProjectService extends ProjectService {
     }
     return null;
   }
+
+  /**
+   * Recursively calculates the node order.
+   * @param node
+   */
+  calculateNodeOrder(node) {
+    this.idToOrder[node.id] = {'order': this.nodeCount};
+    this.nodeCount++;
+    if (this.isGroupNode(node.id)) {
+      const childIds = node.ids;
+      for (let childId of childIds) {
+        const child = this.getNodeById(childId);
+        this.calculateNodeOrder(child);
+      }
+      const planningIds = node.availablePlanningNodes;
+      if (planningIds) {
+        for (let planningId of planningIds) {
+          const child = this.getNodeById(planningId.nodeId);
+          this.calculateNodeOrder(child);
+        }
+      }
+    }
+  };
 }
 
 ClassroomMonitorProjectService.$inject = [

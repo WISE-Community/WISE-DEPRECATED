@@ -5,7 +5,6 @@
       <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/dao" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/domain" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/mail" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/presentation/web/controllers/admin" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/presentation/web/controllers/general/contactwise" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/presentation/web/controllers/teacher" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/src/test/java/org/wise/portal/presentation/web/controllers" includeSubdirectories="false" />

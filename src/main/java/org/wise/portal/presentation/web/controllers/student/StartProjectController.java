@@ -23,17 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers.student;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.hibernate.StaleObjectStateException;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +36,14 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
-import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 /**
  * Controller to allow students to launch the VLE using the project.
@@ -170,7 +164,7 @@ public class StartProjectController {
         // create a student attendance entry
         addStudentAttendanceEntry(workgroupId, runId, presentUserIds, absentUserIds);
 
-        return projectService.launchProject(workgroup);
+        return projectService.launchProject(workgroup, request.getContextPath());
       } else {
         // need to create a workgroup for this user, take them to create workgroup wizard
         ModelAndView modelAndView = new ModelAndView(SELECT_TEAM_URL);
@@ -219,7 +213,7 @@ public class StartProjectController {
 
         // update servlet session
         notifyServletSession(request, run);
-        return projectService.launchProject(workgroup);
+        return projectService.launchProject(workgroup, request.getContextPath());
       } else {
         ModelAndView modelAndView = new ModelAndView(TEAM_SIGN_IN_URL);
         modelAndView.addObject("runId", runId);
@@ -264,7 +258,7 @@ public class StartProjectController {
 
         // update servlet session
         notifyServletSession(request, run);
-        return projectService.launchProject(workgroup);
+        return projectService.launchProject(workgroup, request.getContextPath());
       } else {
         ModelAndView modelAndView = new ModelAndView(TEAM_SIGN_IN_URL);
         modelAndView.addObject("runId", runId);

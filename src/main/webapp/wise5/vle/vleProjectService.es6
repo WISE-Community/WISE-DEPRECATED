@@ -73,27 +73,15 @@ class VLEProjectService extends ProjectService {
   /**
    * Check if we need to display the annotation to the student
    * @param annotation the annotation
-   * @returns whether we need to display the annotation to the student
+   * @returns {boolean} whether we need to display the annotation to the student
    */
   displayAnnotation(annotation) {
-    let result = true;
-    if (annotation != null) {
-      const nodeId = annotation.nodeId;
-      const componentId = annotation.componentId;
-      const component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
-      if (component != null) {
-        const componentType = component.type;
-
-        // get the component service
-        const componentService = this.$injector.get(componentType + 'Service');
-
-        if (componentService != null && componentService.displayAnnotation != null) {
-          result = componentService.displayAnnotation(component, annotation);
-        }
-      }
+    const component = this.getComponentByNodeIdAndComponentId(annotation.nodeId, annotation.componentId);
+    if (component != null) {
+      const componentService = this.$injector.get(component.type + 'Service');
+      return componentService.displayAnnotation(component, annotation);
     }
-    return result;
+    return true;
   }
 
   /**

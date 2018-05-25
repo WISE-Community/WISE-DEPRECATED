@@ -321,7 +321,8 @@ class OpenResponseController {
         if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
           // we will show work from another component
           this.handleConnectedComponents();
-        }  else if (this.OpenResponseService.componentStateHasStudentWork(componentState, this.componentContent)) {
+        }  else if (componentState != null &&
+            this.OpenResponseService.componentStateHasStudentWork(componentState, this.componentContent)) {
           /*
            * the student has work so we will populate the work into this
            * component

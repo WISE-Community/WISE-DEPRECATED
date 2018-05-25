@@ -28,6 +28,7 @@ import '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import '../directives/components';
+import ComponentService from '../components/componentService';
 import '../components/discussion/discussionComponentModule';
 import '../components/draw/drawComponentModule';
 import '../components/embedded/embeddedComponentModule';
@@ -50,6 +51,7 @@ import ProjectAssetService from '../services/projectAssetService';
 import ProjectController from './project/projectController';
 import ProjectHistoryController from './history/projectHistoryController';
 import ProjectInfoController from './info/projectInfoController';
+import PlanningService from '../services/planningService';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
 import SpaceService from '../services/spaceService';
@@ -101,11 +103,13 @@ let authoringModule = angular.module('authoring', [
     ])
     .service(AnnotationService.name, AnnotationService)
     .service(AuthorWebSocketService.name, AuthorWebSocketService)
+    .service(ComponentService.name, ComponentService)
     .service(ConfigService.name, ConfigService)
     .service(CRaterService.name, CRaterService)
     .service(NodeService.name, NodeService)
     .service(NotebookService.name, NotebookService)
     .service(NotificationService.name, NotificationService)
+    .service(PlanningService.name, PlanningService)
     .service(ProjectService.name, AuthoringToolProjectService)
     .service(ProjectAssetService.name, ProjectAssetService)
     .service(SessionService.name, SessionService)

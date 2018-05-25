@@ -116,8 +116,8 @@ public class WISE5AuthorProjectController {
       // do nothing
     }
 
-    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-    modelMap.put("configURL", wiseBaseURL + "/authorConfig");
+    String contextPath = request.getContextPath();
+    modelMap.put("configURL", contextPath + "/authorConfig");
     return "author";
   }
 
@@ -343,7 +343,7 @@ public class WISE5AuthorProjectController {
 
     JSONObject config = getDefaultAuthoringConfigJsonObject(request);
     try {
-      String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+      String contextPath = request.getContextPath();
       String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
       String rawProjectUrl = project.getModulePath();
       String projectURL = curriculumBaseWWW + rawProjectUrl;
@@ -358,16 +358,16 @@ public class WISE5AuthorProjectController {
       config.put("projectId", projectId);
       config.put("projectURL", projectURL);
       config.put("projectAssetTotalSizeMax", projectAssetTotalSizeMax);
-      config.put("projectAssetURL", wiseBaseURL + "/project/asset/" + projectId);
+      config.put("projectAssetURL", contextPath + "/project/asset/" + projectId);
       config.put("projectBaseURL", projectBaseURL);
-      config.put("previewProjectURL", wiseBaseURL + "/project/" + projectId);
-      config.put("cRaterRequestURL", wiseBaseURL + "/cRater");
-      config.put("importStepsURL", wiseBaseURL + "/project/importSteps/" + projectId);
+      config.put("previewProjectURL", contextPath + "/project/" + projectId);
+      config.put("cRaterRequestURL", contextPath + "/cRater");
+      config.put("importStepsURL", contextPath + "/project/importSteps/" + projectId);
       config.put("mode", "author");
 
       if (projectService.canAuthorProject(project, ControllerUtil.getSignedInUser())) {
-        config.put("saveProjectURL", wiseBaseURL + "/project/save/" + projectId);
-        config.put("commitProjectURL", wiseBaseURL + "/project/commit/" + projectId);
+        config.put("saveProjectURL", contextPath + "/project/save/" + projectId);
+        config.put("commitProjectURL", contextPath + "/project/commit/" + projectId);
       }
 
       Long runId = this.getRunId(projectId);
@@ -390,18 +390,17 @@ public class WISE5AuthorProjectController {
     User user = ControllerUtil.getSignedInUser();
     try {
       String contextPath = request.getContextPath();
-      String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
       config.put("contextPath", contextPath);
-      config.put("copyProjectURL", wiseBaseURL + "/project/copy");
-      config.put("mainHomePageURL", wiseBaseURL);
-      config.put("renewSessionURL", wiseBaseURL + "/session/renew");
-      config.put("sessionLogOutURL", wiseBaseURL + "/logout");
-      config.put("registerNewProjectURL", wiseBaseURL + "/project/new");
-      config.put("wiseBaseURL", wiseBaseURL);
-      config.put("notifyProjectBeginURL", wiseBaseURL + "/project/notifyAuthorBegin/");
-      config.put("notifyProjectEndURL", wiseBaseURL + "/project/notifyAuthorEnd/");
-      config.put("getLibraryProjectsURL", wiseBaseURL + "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
-      config.put("teacherDataURL", wiseBaseURL + "/teacher/data");
+      config.put("copyProjectURL", contextPath + "/project/copy");
+      config.put("mainHomePageURL", contextPath);
+      config.put("renewSessionURL", contextPath + "/session/renew");
+      config.put("sessionLogOutURL", contextPath + "/logout");
+      config.put("registerNewProjectURL", contextPath + "/project/new");
+      config.put("wiseBaseURL", contextPath);
+      config.put("notifyProjectBeginURL", contextPath + "/project/notifyAuthorBegin/");
+      config.put("notifyProjectEndURL", contextPath + "/project/notifyAuthorEnd/");
+      config.put("getLibraryProjectsURL", contextPath + "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
+      config.put("teacherDataURL", contextPath + "/teacher/data");
 
       String projectMetadataSettings = null;
       try {
@@ -503,8 +502,8 @@ public class WISE5AuthorProjectController {
          * e.g.
          * ws://localhost:8080/wise
          */
-        if (wiseBaseURL.contains("http")) {
-          webSocketBaseURL = wiseBaseURL.replace("http", "ws");
+        if (contextPath.contains("http")) {
+          webSocketBaseURL = contextPath.replace("http", "ws");
         } else {
           String portalContextPath = ControllerUtil.getPortalUrlString(request);
           webSocketBaseURL = portalContextPath.replace("http", "ws");

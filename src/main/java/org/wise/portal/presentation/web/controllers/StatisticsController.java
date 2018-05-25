@@ -118,10 +118,6 @@ public class StatisticsController {
       return null;
     } else {
       ModelAndView modelAndView = new ModelAndView();
-
-      //add the wise base url to the model so the jsp can access it
-      modelAndView.addObject("wiseBaseURL", wiseProperties.getProperty("wiseBaseURL"));
-
       return modelAndView;
     }
   }

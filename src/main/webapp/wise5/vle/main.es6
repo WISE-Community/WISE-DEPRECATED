@@ -23,6 +23,7 @@ import ConceptMapComponentModule from '../components/conceptMap/conceptMapCompon
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import Components from '../directives/components';
+import ComponentService from '../components/componentService';
 import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
 import DrawComponentModule from '../components/draw/drawComponentModule';
 import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
@@ -42,6 +43,7 @@ import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import OpenResponseComponentModule from '../components/openResponse/openResponseComponentModule';
 import OutsideURLComponentModule from '../components/outsideURL/outsideURLComponentModule';
+import PlanningService from '../services/planningService';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
 import StudentAsset from './studentAsset/studentAsset';
@@ -93,11 +95,13 @@ let vleModule = angular.module('vle', [
   .service(AchievementService.name, AchievementService)
   .service(AnnotationService.name, AnnotationService)
   .service(ConfigService.name, ConfigService)
+  .service(ComponentService.name, ComponentService)
   .service(CRaterService.name, CRaterService)
   .service(HttpInterceptor.name, HttpInterceptor)
   .service(NodeService.name, NodeService)
   .service(NotebookService.name, NotebookService)
   .service(NotificationService.name, NotificationService)
+  .service(PlanningService.name, PlanningService)
   .service(ProjectService.name, VLEProjectService)
   .service(SessionService.name, SessionService)
   .service(StudentAssetService.name, StudentAssetService)
