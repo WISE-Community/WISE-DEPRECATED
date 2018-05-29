@@ -2189,71 +2189,15 @@ class TableController extends ComponentController {
   }
 
   /**
-   * Import any work we need from connected components
+   * Only merges the first component state
+   * TODO: implement merging all component states
+   * @param {array} componentStates
+   * @return {object} merged component state
    */
-  handleConnectedComponents() {
-
-    // get the connected components
-    var connectedComponents = this.componentContent.connectedComponents;
-
-    if (connectedComponents != null) {
-
-      var componentStates = [];
-
-      // loop through all the connected components
-      for (var c = 0; c < connectedComponents.length; c++) {
-        var connectedComponent = connectedComponents[c];
-
-        if (connectedComponent != null) {
-          var nodeId = connectedComponent.nodeId;
-          var componentId = connectedComponent.componentId;
-          var type = connectedComponent.type;
-
-          if (type == 'showWork') {
-            // we are getting the work from this student
-
-            // get the latest component state from the component
-            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-            if (componentState != null) {
-              componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-            }
-
-            // we are showing work so we will not allow the student to edit it
-            this.isDisabled = true;
-          } else if (type == 'importWork' || type == null) {
-            // we are getting the work from this student
-
-            // get the latest component state from the component
-            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-            if (componentState != null) {
-              componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-            }
-          }
-        }
-      }
-
-      // create a blank component state without student work
-      var defaultComponentState = this.createBlankComponentState();
-
-      if (defaultComponentState != null && defaultComponentState.studentData != null) {
-        // set the authored component content table data into the component state
-        defaultComponentState.studentData.tableData = this.getCopyOfTableData(this.componentContent.tableData);
-      }
-
-      // copy the cell text values into the default component state
-      var mergedComponentState = this.copyTableDataCellText(componentStates[0], defaultComponentState);
-
-      /*
-       * Populate the component state into this component. For now we will
-       * only handle one component state from one connected component. In
-       * the future we may allow multiple component states from multiple
-       * connected components and merge the tables.
-       */
-      this.setStudentWork(mergedComponentState);
-      this.studentDataChanged();
-    }
+  createMergedComponentState(componentStates) {
+    const defaultComponentState = this.createBlankComponentState();
+    defaultComponentState.studentData.tableData = this.getCopyOfTableData(this.componentContent.tableData);
+    return this.copyTableDataCellText(componentStates[0], defaultComponentState);
   }
 
   /**

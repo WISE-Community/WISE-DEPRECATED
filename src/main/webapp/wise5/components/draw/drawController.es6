@@ -1986,68 +1986,10 @@ class DrawController extends ComponentController {
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * Import any work we need from connected components
-   */
-  handleConnectedComponents() {
-
-    // get the connected components
-    var connectedComponents = this.componentContent.connectedComponents;
-
-    if (connectedComponents != null) {
-
-      var componentStates = [];
-
-      // loop through all the connected components
-      for (var c = 0; c < connectedComponents.length; c++) {
-        var connectedComponent = connectedComponents[c];
-
-        if (connectedComponent != null) {
-          var nodeId = connectedComponent.nodeId;
-          var componentId = connectedComponent.componentId;
-          var type = connectedComponent.type;
-
-          if (type == 'showWork') {
-            // we are getting the work from this student
-
-            // get the latest component state from the component
-            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-            if (componentState != null) {
-              componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-            }
-
-            // we are showing work so we will not allow the student to edit it
-            this.isDisabled = true;
-          } else if (type == 'importWork' || type == null) {
-            // we are getting the work from this student
-
-            // get the latest component state from the component
-            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-            if (componentState != null) {
-              componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-            }
-          }
-        }
-      }
-
-      // merge the student responses from all the component states
-      var mergedComponentState = this.createMergedComponentState(componentStates);
-
-      // set the student work into the component
-      this.setStudentWork(mergedComponentState);
-
-      if (this.componentContent != null &&
-          this.componentContent.background != null) {
-
-        /*
-         * this component has a background so we will use it instead of
-         * the background from the connected
-         */
-        this.drawingTool.setBackgroundImage(this.componentContent.background);
-      }
-      this.studentDataChanged();
+  handleConnectedComponentsPostProcess() {
+    if (this.componentContent != null &&
+      this.componentContent.background != null) {
+      this.drawingTool.setBackgroundImage(this.componentContent.background);
     }
   }
 

@@ -197,6 +197,34 @@ class ComponentController {
      */
     deferred.resolve(componentState);
   }
+
+  /**
+   * Import any work needed from connected components
+   */
+  handleConnectedComponents() {
+    const connectedComponents = this.componentContent.connectedComponents;
+    if (connectedComponents != null) {
+      const componentStates = [];
+      for (let connectedComponent of connectedComponents) {
+        const componentState =
+            this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
+        if (componentState != null) {
+          componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
+        }
+        if (connectedComponent.type == 'showWork') {
+          this.isDisabled = true;
+        }
+      }
+      this.setStudentWork(this.createMergedComponentState(componentStates));
+      this.handleConnectedComponentsPostProcess();
+      this.studentDataChanged();
+    }
+  }
+
+  handleConnectedComponentsPostProcess() {
+    // overriden by children
+  }
+
 }
 
 ComponentController.$inject = [];

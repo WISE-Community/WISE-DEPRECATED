@@ -223,6 +223,58 @@ var ComponentController = function () {
        */
       deferred.resolve(componentState);
     }
+
+    /**
+     * Import any work needed from connected components
+     */
+
+  }, {
+    key: 'handleConnectedComponents',
+    value: function handleConnectedComponents() {
+      var connectedComponents = this.componentContent.connectedComponents;
+      if (connectedComponents != null) {
+        var componentStates = [];
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = connectedComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var connectedComponent = _step.value;
+
+            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
+            if (componentState != null) {
+              componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
+            }
+            if (connectedComponent.type == 'showWork') {
+              this.isDisabled = true;
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+
+        this.setStudentWork(this.createMergedComponentState(componentStates));
+        this.handleConnectedComponentsPostProcess();
+        this.studentDataChanged();
+      }
+    }
+  }, {
+    key: 'handleConnectedComponentsPostProcess',
+    value: function handleConnectedComponentsPostProcess() {
+      // overriden by children
+    }
   }]);
 
   return ComponentController;
