@@ -141,30 +141,18 @@ var VLEProjectService = function (_ProjectService) {
     /**
      * Check if we need to display the annotation to the student
      * @param annotation the annotation
-     * @returns whether we need to display the annotation to the student
+     * @returns {boolean} whether we need to display the annotation to the student
      */
 
   }, {
     key: 'displayAnnotation',
     value: function displayAnnotation(annotation) {
-      var result = true;
-      if (annotation != null) {
-        var nodeId = annotation.nodeId;
-        var componentId = annotation.componentId;
-        var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
-        if (component != null) {
-          var componentType = component.type;
-
-          // get the component service
-          var componentService = this.$injector.get(componentType + 'Service');
-
-          if (componentService != null && componentService.displayAnnotation != null) {
-            result = componentService.displayAnnotation(component, annotation);
-          }
-        }
+      var component = this.getComponentByNodeIdAndComponentId(annotation.nodeId, annotation.componentId);
+      if (component != null) {
+        var componentService = this.$injector.get(component.type + 'Service');
+        return componentService.displayAnnotation(component, annotation);
       }
-      return result;
+      return true;
     }
 
     /**

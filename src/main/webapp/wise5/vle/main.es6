@@ -23,6 +23,7 @@ import ConceptMapComponentModule from '../components/conceptMap/conceptMapCompon
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import Components from '../directives/components';
+import ComponentService from '../components/componentService';
 import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
 import DrawComponentModule from '../components/draw/drawComponentModule';
 import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
@@ -94,6 +95,7 @@ let vleModule = angular.module('vle', [
   .service(AchievementService.name, AchievementService)
   .service(AnnotationService.name, AnnotationService)
   .service(ConfigService.name, ConfigService)
+  .service(ComponentService.name, ComponentService)
   .service(CRaterService.name, CRaterService)
   .service(HttpInterceptor.name, HttpInterceptor)
   .service(NodeService.name, NodeService)

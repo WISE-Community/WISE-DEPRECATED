@@ -26,6 +26,7 @@ import ConceptMapComponentModule from '../components/conceptMap/conceptMapCompon
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import Components from '../directives/components';
+import ComponentService from '../components/componentService';
 import DashboardController from './dashboard/dashboardController';
 import DataExportController from './dataExport/dataExportController';
 import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
@@ -100,6 +101,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
     ])
     .service(AchievementService.name, AchievementService)
     .service(AnnotationService.name, AnnotationService)
+    .service(ComponentService.name, ComponentService)
     .service(ConfigService.name, ConfigService)
     .service(CRaterService.name, CRaterService)
     .service(HttpInterceptor.name, HttpInterceptor)

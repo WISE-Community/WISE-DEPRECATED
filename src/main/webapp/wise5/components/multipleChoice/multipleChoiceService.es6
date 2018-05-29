@@ -1,61 +1,20 @@
-import NodeService from '../../services/nodeService';
+import ComponentService from '../componentService';
 
-class MultipleChoiceService extends NodeService {
-  constructor($filter,
-      StudentDataService,
-      UtilService) {
-    super();
-    this.$filter = $filter;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-    this.$translate = this.$filter('translate');
+class MultipleChoiceService extends ComponentService {
+  constructor($filter, StudentDataService, UtilService) {
+    super($filter, StudentDataService, UtilService);
   }
 
-  /**
-   * Get the component type label
-   * example
-   * "Multiple Choice"
-   */
   getComponentTypeLabel() {
     return this.$translate('multipleChoice.componentTypeLabel');
   }
 
-  /**
-   * Create a MultipleChoice component object
-   * @returns a new MultipleChoice component object
-   */
   createComponent() {
-    let component = {};
-    component.id = this.UtilService.generateKey();
+    const component = super.createComponent();
     component.type = 'MultipleChoice';
-    component.prompt = '';
-    component.showSaveButton = false;
-    component.showSubmitButton = false;
     component.choiceType = 'radio';
     component.choices = [];
     component.showFeedback = true;
-    return component;
-  }
-
-  /**
-   * Copies an existing MultipleChoice component object
-   * @returns a copied MultipleChoice component object
-   */
-  copyComponent(componentToCopy) {
-    var component = this.createComponent();
-    component.prompt = componentToCopy.prompt;
-    component.showSaveButton = componentToCopy.showSaveButton;
-    component.showSubmitButton = componentToCopy.showSubmitButton;
-    component.choiceType = componentToCopy.choiceType;
-    component.choices = [];
-    // go through the original choices and create new id's
-    if (componentToCopy.choices != null && componentToCopy.choices.length > 0) {
-      for (var c = 0; c < componentToCopy.choices.length; c++) {
-        var choice = componentToCopy.choices[c];
-        choice.id = this.UtilService.generateKey();  // generate a new id for this choice.
-        component.choices.push(choice);
-      }
-    }
     return component;
   }
 
@@ -196,49 +155,6 @@ class MultipleChoiceService extends NodeService {
     return choiceIds;
   };
 
-  /**
-   * Populate a component state with the data from another component state
-   * @param componentStateFromOtherComponent the component state to obtain the data from
-   * @return a new component state that contains the student data from the other
-   * component state
-   */
-  populateComponentState(componentStateFromOtherComponent) {
-    let componentState = null;
-
-    if (componentStateFromOtherComponent != null) {
-
-      // create an empty component state
-      componentState = this.StudentDataService.createComponentState();
-
-      // get the component type of the other component state
-      let otherComponentType = componentStateFromOtherComponent.componentType;
-
-      if (otherComponentType === 'MultipleChoice') {
-        // the other component is an MultipleChoice component
-
-        // get the student data from the other component state
-        let studentData = componentStateFromOtherComponent.studentData;
-
-        // create a copy of the student data
-        let studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
-
-        // set the student data into the new component state
-        componentState.studentData = studentDataCopy;
-      }
-    }
-
-    return componentState;
-  };
-
-  /**
-   * Check if the component was completed
-   * @param component the component object
-   * @param componentStates the component states for the specific component
-   * @param componentEvents the events for the specific component
-   * @param nodeEvents the events for the parent node of the component
-   * @param node parent node of the component
-   * @returns whether the component was completed
-   */
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     let result = false;
 
@@ -276,17 +192,6 @@ class MultipleChoiceService extends NodeService {
 
     return result;
   };
-
-  /**
-   * Whether this component generates student work
-   * @param component (optional) the component object. if the component object
-   * is not provided, we will use the default value of whether the
-   * component type usually has work.
-   * @return whether this component generates student work
-   */
-  componentHasWork(component) {
-    return true;
-  }
 
   /**
    * Get the human readable student data string
@@ -330,35 +235,9 @@ class MultipleChoiceService extends NodeService {
         }
       }
     }
-
     return studentDataString;
   }
 
-  /**
-   * Whether this component uses a save button
-   * @return whether this component uses a save button
-   */
-  componentUsesSaveButton() {
-    return true;
-  }
-
-  /**
-   * Whether this component uses a submit button
-   * @return whether this component uses a submit button
-   */
-  componentUsesSubmitButton() {
-    return true;
-  }
-
-  /**
-   * Check if the component state has student work. Sometimes a component
-   * state may be created if the student visits a component but doesn't
-   * actually perform any work. This is where we will check if the student
-   * actually performed any work.
-   * @param componentState the component state object
-   * @param componentContent the component content
-   * @return whether the component state has any work
-   */
   componentStateHasStudentWork(componentState, componentContent) {
     if (componentState != null) {
       let studentData = componentState.studentData;
