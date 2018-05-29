@@ -248,6 +248,11 @@ class ConceptMapController {
         this.height = this.componentContent.height;
       }
 
+      if (this.componentContent.showNodeLabels == null) {
+        this.componentContent.showNodeLabels = true;
+        this.authoringComponentContent.showNodeLabels = true;
+      }
+
       if (this.mode === 'student') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
@@ -902,7 +907,9 @@ class ConceptMapController {
           var height = node.height
 
           // create a ConceptMapNode
-          var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, instanceId, originalId, filePath, label, x, y, width, height);
+          var conceptMapNode = this.ConceptMapService.newConceptMapNode(
+              this.draw, instanceId, originalId, filePath, label,
+              x, y, width, height, this.componentContent.showNodeLabels);
 
           // add the node to our array of nodes
           this.addNode(conceptMapNode);
@@ -988,23 +995,14 @@ class ConceptMapController {
    * This is why this function is called in a $timeout.
    */
   refreshLinkLabels() {
-
-    if (this.nodes != null) {
-
-      // loop through all the nodes
-      for (var n = 0; n < this.nodes.length; n++) {
-        var node = this.nodes[n];
-
-        if (node != null) {
-          // get the label from the node
-          var label = node.getLabel();
-
-          /*
-           * set the label back into the node so that the rectangle
-           * around the text label is resized to the text
-           */
-          node.setLabel(label);
-        }
+    for (let node of this.nodes) {
+      if (node.showLabel) {
+        var label = node.getLabel();
+        /*
+         * set the label back into the node so that the rectangle
+         * around the text label is resized to the text
+         */
+        node.setLabel(label);
       }
     }
 
@@ -3247,7 +3245,9 @@ class ConceptMapController {
       var newConceptMapNodeId = this.getNewConceptMapNodeId();
 
       // create a ConceptMapNode
-      var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, newConceptMapNodeId, originalId, filePath, label, x, y, width, height);
+      var conceptMapNode = this.ConceptMapService.newConceptMapNode(
+          this.draw, newConceptMapNodeId, originalId, filePath, label,
+          x, y, width, height, this.componentContent.showNodeLabels);
 
       // add the node to our array of nodes
       this.addNode(conceptMapNode);

@@ -57,6 +57,7 @@ class ConceptMapService extends NodeService {
     component.customRuleEvaluator = '';
     component.showAutoScore = false;
     component.showAutoFeedback = false;
+    component.showNodeLabels = true;
     return component;
   }
 
@@ -164,10 +165,11 @@ class ConceptMapService extends NodeService {
    * @param y the y coordinate
    * @param width the width of the image
    * @param height the height of the image
+   * @param showLabel whether to show the label
    * @param a ConceptMapNode
    */
-  newConceptMapNode(draw, id, originalId, filePath, label, x, y, width, height) {
-    return new ConceptMapNode(this, draw, id, originalId, filePath, label, x, y, width, height);
+  newConceptMapNode(draw, id, originalId, filePath, label, x, y, width, height, showLabel) {
+    return new ConceptMapNode(this, draw, id, originalId, filePath, label, x, y, width, height, showLabel);
   }
 
   /**
@@ -833,7 +835,6 @@ class ConceptMapService extends NodeService {
    * of nodes and an array of links
    */
   populateConceptMapData(draw, conceptMapData) {
-
     if (conceptMapData != null) {
 
       // get the JSON nodes
@@ -855,10 +856,12 @@ class ConceptMapService extends NodeService {
           var x = node.x;
           var y = node.y;
           var width = node.width;
-          var height = node.height
+          var height = node.height;
+          var showLabel = true;
 
           // create a ConceptMapNode
-          var conceptMapNode = this.newConceptMapNode(draw, instanceId, originalId, filePath, label, x, y, width, height);
+          var conceptMapNode = this.newConceptMapNode(
+              draw, instanceId, originalId, filePath, label, x, y, width, height, showLabel);
 
           conceptMapNodes.push(conceptMapNode);
         }
@@ -1576,8 +1579,9 @@ class ConceptMapNode {
    * @param y the y position of the node
    * @param width the the width of the node
    * @param height the height of the node
+   * @param showLabel whether to show the label
    */
-  constructor(ConceptMapService, draw, id, originalId, filePath, label, x, y, width, height) {
+  constructor(ConceptMapService, draw, id, originalId, filePath, label, x, y, width, height, showLabel) {
 
     // remember the ConceptMapService
     this.ConceptMapService = ConceptMapService;
@@ -1601,6 +1605,7 @@ class ConceptMapNode {
 
     // remember the label
     this.label = label;
+    this.showLabel = showLabel;
 
     // create the svg image object
     this.image = this.draw.image(this.filePath, width, height);
@@ -1626,9 +1631,6 @@ class ConceptMapNode {
     // create the delete button
     this.deleteButtonGroup = this.createDeleteButtonGroup();
 
-    // create the text group
-    this.textGroup = this.createTextGroup();
-
     /*
      * create the border that displays when the node is highighted or
      * moused over
@@ -1648,7 +1650,10 @@ class ConceptMapNode {
     this.group.add(this.image);
     this.group.add(this.connector);
     this.group.add(this.deleteButtonGroup);
-    this.group.add(this.textGroup);
+    if (showLabel) {
+      this.textGroup = this.createTextGroup();
+      this.group.add(this.textGroup);
+    }
 
     // hide the border and delete button
     this.border.hide();
