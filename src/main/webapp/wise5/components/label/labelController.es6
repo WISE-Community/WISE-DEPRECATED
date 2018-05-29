@@ -2152,21 +2152,6 @@ class LabelController extends ComponentController {
   };
 
   /**
-   * Check if a component generates student work
-   * @param component the component
-   * @return whether the component generates student work
-   */
-  componentHasWork(component) {
-    var result = true;
-
-    if (component != null) {
-      result = this.ProjectService.componentHasWork(component);
-    }
-
-    return result;
-  }
-
-  /**
    * The student clicked the save button in the edit label mode
    */
   saveLabelButtonClicked() {

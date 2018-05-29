@@ -2730,21 +2730,6 @@ class AnimationController extends ComponentController {
   }
 
   /**
-   * Check if a component generates student work
-   * @param component the component
-   * @return whether the component generates student work
-   */
-  componentHasWork(component) {
-    var result = true;
-
-    if (component != null) {
-      result = this.ProjectService.componentHasWork(component);
-    }
-
-    return result;
-  }
-
-  /**
    * Returns all the revisions made by this user for the specified component
    */
   getRevisions() {

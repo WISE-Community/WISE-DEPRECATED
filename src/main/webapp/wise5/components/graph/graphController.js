@@ -5156,24 +5156,6 @@ var GraphController = function (_ComponentController) {
     }
 
     /**
-     * Check if a component generates student work
-     * @param component the component
-     * @return whether the component generates student work
-     */
-
-  }, {
-    key: 'componentHasWork',
-    value: function componentHasWork(component) {
-      var result = true;
-
-      if (component != null) {
-        result = this.ProjectService.componentHasWork(component);
-      }
-
-      return result;
-    }
-
-    /**
      * The author has changed the rubric
      */
 
@@ -6053,9 +6035,10 @@ var GraphController = function (_ComponentController) {
         width: 2,
         value: x,
         zIndex: 5
+      };
 
-        // set the plot line into the plot lines array
-      };this.plotLines = [plotLine];
+      // set the plot line into the plot lines array
+      this.plotLines = [plotLine];
 
       /*
        * Call $apply() so that the red plot line position gets updated. If we

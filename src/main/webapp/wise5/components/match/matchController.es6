@@ -2249,21 +2249,6 @@ class MatchController extends ComponentController {
   };
 
   /**
-   * Check if a component generates student work
-   * @param component the component
-   * @return whether the component generates student work
-   */
-  componentHasWork(component) {
-    var result = true;
-
-    if (component != null) {
-      result = this.ProjectService.componentHasWork(component);
-    }
-
-    return result;
-  }
-
-  /**
    * The author has changed the rubric
    */
   summernoteRubricHTMLChanged() {

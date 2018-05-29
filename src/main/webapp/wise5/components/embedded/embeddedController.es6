@@ -674,13 +674,6 @@ class EmbeddedController extends ComponentController {
     }));
   };
 
-  componentHasWork(component) {
-    if (component != null) {
-      return this.ProjectService.componentHasWork(component);
-    }
-    return true;
-  }
-
   submit(submitTriggeredBy) {
     this.isSubmit = true;
     this.$scope.$emit('componentSubmitTriggered',

@@ -682,14 +682,6 @@ var EmbeddedController = function (_ComponentController) {
       this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
     }
   }, {
-    key: 'componentHasWork',
-    value: function componentHasWork(component) {
-      if (component != null) {
-        return this.ProjectService.componentHasWork(component);
-      }
-      return true;
-    }
-  }, {
     key: 'submit',
     value: function submit(submitTriggeredBy) {
       this.isSubmit = true;

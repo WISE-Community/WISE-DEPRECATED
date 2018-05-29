@@ -1491,30 +1491,12 @@ var DrawController = function (_ComponentController) {
       }));
     }
   }, {
-    key: 'componentHasWork',
+    key: 'authoringAddStampButtonClicked',
 
-
-    /**
-     * Check if a component generates student work
-     * @param component the component
-     * @return whether the component generates student work
-     */
-    value: function componentHasWork(component) {
-      var result = true;
-
-      if (component != null) {
-        result = this.ProjectService.componentHasWork(component);
-      }
-
-      return result;
-    }
 
     /**
      * Add a stamp in the authoring
      */
-
-  }, {
-    key: 'authoringAddStampButtonClicked',
     value: function authoringAddStampButtonClicked() {
 
       // create the stamps field in the content if it does not exist

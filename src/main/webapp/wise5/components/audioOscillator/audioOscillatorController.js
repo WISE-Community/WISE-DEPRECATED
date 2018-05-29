@@ -1442,30 +1442,12 @@ var AudioOscillatorController = function (_ComponentController) {
       exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
     }
   }, {
-    key: 'componentHasWork',
+    key: 'summernoteRubricHTMLChanged',
 
-
-    /**
-     * Check if a component generates student work
-     * @param component the component
-     * @return whether the component generates student work
-     */
-    value: function componentHasWork(component) {
-      var result = true;
-
-      if (component != null) {
-        result = this.ProjectService.componentHasWork(component);
-      }
-
-      return result;
-    }
 
     /**
      * The author has changed the rubric
      */
-
-  }, {
-    key: 'summernoteRubricHTMLChanged',
     value: function summernoteRubricHTMLChanged() {
 
       // get the summernote rubric html
