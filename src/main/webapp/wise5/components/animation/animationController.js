@@ -1758,250 +1758,8 @@ var AnimationController = function (_ComponentController) {
       return deferred.promise;
     }
   }, {
-    key: 'createComponentStateAdditionalProcessing',
+    key: 'createAutoScoreAnnotation',
 
-
-    /**
-     * Perform any additional processing that is required before returning the
-     * component state
-     * Note: this function must call deferred.resolve() otherwise student work
-     * will not be saved
-     * @param deferred a deferred object
-     * @param componentState the component state
-     * @param action the action that we are creating the component state for
-     * e.g. 'submit', 'save', 'change'
-     */
-    value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
-      var _this5 = this;
-
-      var performCRaterScoring = false;
-
-      // determine if we need to perform CRater scoring
-      if (action == 'submit' && componentState.isSubmit) {
-        if (this.isCRaterScoreOnSubmit(this.componentContent)) {
-          performCRaterScoring = true;
-        }
-      } else if (action == 'save') {
-        if (this.isCRaterScoreOnSave(this.componentContent)) {
-          performCRaterScoring = true;
-        }
-      } else if (action == 'change' || action == null) {
-        if (this.isCRaterScoreOnChange(this.componentContent)) {
-          performCRaterScoring = true;
-        }
-      }
-
-      if (performCRaterScoring) {
-        // we need to perform CRater scoring
-
-        var cRaterItemType = this.CRaterService.getCRaterItemType(this.componentContent);
-        var cRaterItemId = this.CRaterService.getCRaterItemId(this.componentContent);
-        var cRaterRequestType = 'scoring';
-        var cRaterResponseId = new Date().getTime();
-        var studentData = this.studentResponse;
-
-        /*
-         * display a dialog message while the student waits for their work
-         * to be scored by CRater
-         */
-        this.$mdDialog.show({
-          template: '<md-dialog aria-label="' + this.$translate('animation.pleaseWait') + '"><md-dialog-content><div class="md-dialog-content">' + this.$translate('animation.pleaseWaitWeAreScoringYourWork') + '</div></md-dialog-content></md-dialog>',
-          escapeToClose: false
-        });
-
-        // make the CRater request to score the student data
-        this.CRaterService.makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData).then(function (result) {
-
-          if (result != null) {
-
-            // get the CRater response
-            var data = result.data;
-
-            if (data != null) {
-
-              /*
-               * annotations we put in the component state will be
-               * removed from the component state and saved separately
-               */
-              componentState.annotations = [];
-
-              // get the CRater score
-              var score = data.score;
-              var concepts = data.concepts;
-              var previousScore = null;
-
-              if (score != null) {
-
-                // create the auto score annotation
-                var autoScoreAnnotationData = {};
-                autoScoreAnnotationData.value = score;
-                autoScoreAnnotationData.maxAutoScore = _this5.ProjectService.getMaxScoreForComponent(_this5.nodeId, _this5.componentId);
-                autoScoreAnnotationData.concepts = concepts;
-                autoScoreAnnotationData.autoGrader = 'cRater';
-
-                var autoScoreAnnotation = _this5.createAutoScoreAnnotation(autoScoreAnnotationData);
-
-                var annotationGroupForScore = null;
-
-                if (_this5.$scope.$parent.nodeController != null) {
-                  // get the previous score and comment annotations
-                  var latestAnnotations = _this5.$scope.$parent.nodeController.getLatestComponentAnnotations(_this5.componentId);
-
-                  if (latestAnnotations != null && latestAnnotations.score != null && latestAnnotations.score.data != null) {
-
-                    // get the previous score annotation value
-                    previousScore = latestAnnotations.score.data.value;
-                  }
-
-                  if (_this5.componentContent.enableGlobalAnnotations && _this5.componentContent.globalAnnotationSettings != null) {
-
-                    var globalAnnotationMaxCount = 0;
-                    if (_this5.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
-                      globalAnnotationMaxCount = _this5.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
-                    }
-                    // get the annotation properties for the score that the student got.
-                    annotationGroupForScore = _this5.ProjectService.getGlobalAnnotationGroupByScore(_this5.componentContent, previousScore, score);
-
-                    // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
-                    if (annotationGroupForScore != null) {
-                      var globalAnnotationGroupsByNodeIdAndComponentId = _this5.AnnotationService.getAllGlobalAnnotationGroups(_this5.nodeId, _this5.componentId);
-                      annotationGroupForScore.annotationGroupCreatedTime = autoScoreAnnotation.clientSaveTime; // save annotation creation time
-
-                      if (globalAnnotationGroupsByNodeIdAndComponentId.length >= globalAnnotationMaxCount) {
-                        // we've already applied this annotation properties to maxCount annotations, so we don't need to apply it any more.
-                        annotationGroupForScore = null;
-                      }
-                    }
-
-                    if (annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.unGlobalizeCriteria != null) {
-                      // check if this annotation is global and what criteria needs to be met to un-globalize.
-                      annotationGroupForScore.unGlobalizeCriteria.map(function (unGlobalizeCriteria) {
-                        // if the un-globalize criteria is time-based (e.g. isVisitedAfter, isRevisedAfter, isVisitedAndRevisedAfter, etc), store the timestamp of this annotation in the criteria
-                        // so we can compare it when we check for criteria satisfaction.
-                        if (unGlobalizeCriteria.params != null) {
-                          unGlobalizeCriteria.params.criteriaCreatedTimestamp = autoScoreAnnotation.clientSaveTime; // save annotation creation time to criteria
-                        }
-                      });
-                    }
-
-                    if (annotationGroupForScore != null) {
-                      // copy over the annotation properties into the autoScoreAnnotation's data
-                      angular.merge(autoScoreAnnotation.data, annotationGroupForScore);
-                    }
-                  }
-                }
-
-                componentState.annotations.push(autoScoreAnnotation);
-
-                if (_this5.mode === 'authoring') {
-                  if (_this5.latestAnnotations == null) {
-                    _this5.latestAnnotations = {};
-                  }
-
-                  /*
-                   * we are in the authoring view so we will set the
-                   * latest score annotation manually
-                   */
-                  _this5.latestAnnotations.score = autoScoreAnnotation;
-                }
-
-                var autoComment = null;
-
-                // get the submit counter
-                var submitCounter = _this5.submitCounter;
-
-                if (_this5.componentContent.cRater.enableMultipleAttemptScoringRules && submitCounter > 1) {
-                  /*
-                   * this step has multiple attempt scoring rules and this is
-                   * a subsequent submit
-                   */
-                  // get the feedback based upon the previous score and current score
-                  autoComment = _this5.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(_this5.componentContent, previousScore, score);
-                } else {
-                  // get the feedback text
-                  autoComment = _this5.CRaterService.getCRaterFeedbackTextByScore(_this5.componentContent, score);
-                }
-
-                if (autoComment != null) {
-                  // create the auto comment annotation
-                  var autoCommentAnnotationData = {};
-                  autoCommentAnnotationData.value = autoComment;
-                  autoCommentAnnotationData.concepts = concepts;
-                  autoCommentAnnotationData.autoGrader = 'cRater';
-
-                  var autoCommentAnnotation = _this5.createAutoCommentAnnotation(autoCommentAnnotationData);
-
-                  if (_this5.componentContent.enableGlobalAnnotations) {
-                    if (annotationGroupForScore != null) {
-                      // copy over the annotation properties into the autoCommentAnnotation's data
-                      angular.merge(autoCommentAnnotation.data, annotationGroupForScore);
-                    }
-                  }
-                  componentState.annotations.push(autoCommentAnnotation);
-
-                  if (_this5.mode === 'authoring') {
-                    if (_this5.latestAnnotations == null) {
-                      _this5.latestAnnotations = {};
-                    }
-
-                    /*
-                     * we are in the authoring view so we will set the
-                     * latest comment annotation manually
-                     */
-                    _this5.latestAnnotations.comment = autoCommentAnnotation;
-                  }
-                }
-                if (_this5.componentContent.enableNotifications) {
-                  // get the notification properties for the score that the student got.
-                  var notificationForScore = _this5.ProjectService.getNotificationByScore(_this5.componentContent, previousScore, score);
-
-                  if (notificationForScore != null) {
-                    notificationForScore.score = score;
-                    notificationForScore.nodeId = _this5.nodeId;
-                    notificationForScore.componentId = _this5.componentId;
-                    _this5.NotificationService.sendNotificationForScore(notificationForScore);
-                  }
-                }
-
-                // display global annotations dialog if needed
-                if (_this5.componentContent.enableGlobalAnnotations && annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.isPopup) {
-                  _this5.$scope.$emit('displayGlobalAnnotations');
-                }
-              }
-            }
-          }
-
-          /*
-           * hide the dialog that tells the student to wait since
-           * the work has been scored.
-           */
-          _this5.$mdDialog.hide();
-
-          // resolve the promise now that we are done performing additional processing
-          deferred.resolve(componentState);
-        });
-      } else if (this.ProjectService.hasAdditionalProcessingFunctions(this.nodeId, this.componentId)) {
-        // if there are any additionalProcessingFunctions for this node and component, call all of them
-        var additionalProcessingFunctions = this.ProjectService.getAdditionalProcessingFunctions(this.nodeId, this.componentId);
-        var allPromises = [];
-        for (var i = 0; i < additionalProcessingFunctions.length; i++) {
-          var additionalProcessingFunction = additionalProcessingFunctions[i];
-          var defer = this.$q.defer();
-          var promise = defer.promise;
-          allPromises.push(promise);
-          additionalProcessingFunction(defer, componentState, action);
-        }
-        this.$q.all(allPromises).then(function () {
-          deferred.resolve(componentState);
-        });
-      } else {
-        /*
-         * we don't need to perform any additional processing so we can resolve
-         * the promise immediately
-         */
-        deferred.resolve(componentState);
-      }
-    }
 
     /**
      * Create an auto score annotation
@@ -2013,9 +1771,6 @@ var AnimationController = function (_ComponentController) {
      * @param data the annotation data
      * @returns the auto score annotation
      */
-
-  }, {
-    key: 'createAutoScoreAnnotation',
     value: function createAutoScoreAnnotation(data) {
 
       var runId = this.ConfigService.getRunId();
@@ -2074,7 +1829,7 @@ var AnimationController = function (_ComponentController) {
      * @param studentAsset
      */
     value: function attachStudentAsset(studentAsset) {
-      var _this6 = this;
+      var _this5 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -2084,8 +1839,8 @@ var AnimationController = function (_ComponentController) {
               iconURL: copiedAsset.iconURL
             };
 
-            _this6.attachments.push(attachment);
-            _this6.studentDataChanged();
+            _this5.attachments.push(attachment);
+            _this5.studentDataChanged();
           }
         });
       }
@@ -3118,7 +2873,7 @@ var AnimationController = function (_ComponentController) {
   }, {
     key: 'resetButtonClicked',
     value: function resetButtonClicked() {
-      var _this7 = this;
+      var _this6 = this;
 
       // set the animation state
       this.animationState = 'stopped';
@@ -3174,13 +2929,13 @@ var AnimationController = function (_ComponentController) {
 
       this.$timeout(function () {
         // set the display time to 0
-        _this7.displayAndBroadcastTime(0);
+        _this6.displayAndBroadcastTime(0);
 
         // set the images back to their starting images in case they have changed
-        _this7.initializeObjectImages();
+        _this6.initializeObjectImages();
 
         // put the objects in their starting positions
-        _this7.initializeObjectPositions();
+        _this6.initializeObjectPositions();
       }, 100);
     }
 

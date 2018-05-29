@@ -1396,33 +1396,12 @@ var MatchController = function (_ComponentController) {
       return deferred.promise;
     }
   }, {
-    key: 'createComponentStateAdditionalProcessing',
+    key: 'importWork',
 
-
-    /**
-     * Perform any additional processing that is required before returning the
-     * component state
-     * Note: this function must call deferred.resolve() otherwise student work
-     * will not be saved
-     * @param deferred a deferred object
-     * @param componentState the component state
-     * @param action the action that we are creating the component state for
-     * e.g. 'submit', 'save', 'change'
-     */
-    value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
-      /*
-       * we don't need to perform any additional processing so we can resolve
-       * the promise immediately
-       */
-      deferred.resolve(componentState);
-    }
 
     /**
      * Import work from another component
      */
-
-  }, {
-    key: 'importWork',
     value: function importWork() {
 
       // get the component content
