@@ -679,7 +679,7 @@ class DataExportController {
        */
       let studentDataString = " ";
       let componentType = componentState.componentType;
-      let componentService = this.$injector.get(componentType + 'Service');
+      let componentService = this.getComponentService(componentType);
       if (componentService != null && componentService.getStudentDataString != null) {
         studentDataString = componentService.getStudentDataString(componentState);
         studentDataString = this.UtilService.removeHTMLTags(studentDataString);
