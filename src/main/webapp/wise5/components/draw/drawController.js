@@ -2481,34 +2481,6 @@ var DrawController = function (_ComponentController) {
     value: function authoringJSONChanged() {
       this.jsonStringChanged = true;
     }
-  }, {
-    key: 'showCopyPublicNotebookItemButton',
-    value: function showCopyPublicNotebookItemButton() {
-      return this.ProjectService.isSpaceExists("public");
-    }
-  }, {
-    key: 'copyPublicNotebookItemButtonClicked',
-    value: function copyPublicNotebookItemButtonClicked(event) {
-      this.$rootScope.$broadcast('openNotebook', { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
-    }
-  }, {
-    key: 'importWorkByStudentWorkId',
-    value: function importWorkByStudentWorkId(studentWorkId) {
-      var _this7 = this;
-
-      this.StudentDataService.getStudentWorkById(studentWorkId).then(function (componentState) {
-        if (componentState != null) {
-          _this7.setStudentWork(componentState);
-          _this7.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
-          _this7.$rootScope.$broadcast('closeNotebook');
-        }
-      });
-    }
-  }, {
-    key: 'setParentStudentWorkIdToCurrentStudentWork',
-    value: function setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
-      this.parentStudentWorkIds = [studentWorkId];
-    }
 
     /**
      * The "Import Work As Background" checkbox was clicked.

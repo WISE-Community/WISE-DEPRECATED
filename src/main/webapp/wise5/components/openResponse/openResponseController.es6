@@ -871,7 +871,7 @@ class OpenResponseController extends ComponentController {
                   }
                 }
               }
-
+              
               componentState.annotations.push(autoScoreAnnotation);
 
               if (this.mode === 'authoring') {
@@ -1247,29 +1247,6 @@ class OpenResponseController extends ComponentController {
       const isFileUploadEnabled = false;
       this.NotebookService.addNote($event, imageObject, noteText, [ studentWork.id ], isEditTextEnabled, isFileUploadEnabled);
     }
-  }
-
-  showCopyPublicNotebookItemButton() {
-    return this.ProjectService.isSpaceExists("public");
-  }
-
-  copyPublicNotebookItemButtonClicked(event) {
-    this.$rootScope.$broadcast('openNotebook',
-      { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
-  }
-
-  importWorkByStudentWorkId(studentWorkId) {
-    this.StudentDataService.getStudentWorkById(studentWorkId).then((componentState) => {
-      if (componentState != null) {
-        this.setStudentWork(componentState);
-        this.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
-        this.$rootScope.$broadcast('closeNotebook');
-      }
-    });
-  }
-
-  setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
-    this.parentStudentWorkIds = [studentWorkId];
   }
 
   /**

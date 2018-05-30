@@ -38,6 +38,7 @@ class ComponentController {
     this.showJSONAuthoring = false;
     this.isDisabled = false;
     this.isDirty = false;
+    this.parentStudentWorkIds = null;
 
     // whether the student work has changed since last submit
     this.isSubmitDirty = false;
@@ -223,6 +224,29 @@ class ComponentController {
 
   handleConnectedComponentsPostProcess() {
     // overriden by children
+  }
+
+  showCopyPublicNotebookItemButton() {
+    return this.ProjectService.isSpaceExists("public");
+  }
+
+  copyPublicNotebookItemButtonClicked(event) {
+    this.$rootScope.$broadcast('openNotebook',
+      { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
+  }
+
+  importWorkByStudentWorkId(studentWorkId) {
+    this.StudentDataService.getStudentWorkById(studentWorkId).then((componentState) => {
+      if (componentState != null) {
+        this.setStudentWork(componentState);
+        this.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+        this.$rootScope.$broadcast('closeNotebook');
+      }
+    });
+  }
+
+  setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
+    this.parentStudentWorkIds = [studentWorkId];
   }
 
 }

@@ -38,6 +38,7 @@ var ComponentController = function () {
     this.showJSONAuthoring = false;
     this.isDisabled = false;
     this.isDirty = false;
+    this.parentStudentWorkIds = null;
 
     // whether the student work has changed since last submit
     this.isSubmitDirty = false;
@@ -274,6 +275,34 @@ var ComponentController = function () {
     key: 'handleConnectedComponentsPostProcess',
     value: function handleConnectedComponentsPostProcess() {
       // overriden by children
+    }
+  }, {
+    key: 'showCopyPublicNotebookItemButton',
+    value: function showCopyPublicNotebookItemButton() {
+      return this.ProjectService.isSpaceExists("public");
+    }
+  }, {
+    key: 'copyPublicNotebookItemButtonClicked',
+    value: function copyPublicNotebookItemButtonClicked(event) {
+      this.$rootScope.$broadcast('openNotebook', { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
+    }
+  }, {
+    key: 'importWorkByStudentWorkId',
+    value: function importWorkByStudentWorkId(studentWorkId) {
+      var _this2 = this;
+
+      this.StudentDataService.getStudentWorkById(studentWorkId).then(function (componentState) {
+        if (componentState != null) {
+          _this2.setStudentWork(componentState);
+          _this2.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+          _this2.$rootScope.$broadcast('closeNotebook');
+        }
+      });
+    }
+  }, {
+    key: 'setParentStudentWorkIdToCurrentStudentWork',
+    value: function setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
+      this.parentStudentWorkIds = [studentWorkId];
     }
   }]);
 

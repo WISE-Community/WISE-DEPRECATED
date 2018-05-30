@@ -1281,34 +1281,6 @@ var OpenResponseController = function (_ComponentController) {
         this.NotebookService.addNote($event, imageObject, noteText, [studentWork.id], isEditTextEnabled, isFileUploadEnabled);
       }
     }
-  }, {
-    key: 'showCopyPublicNotebookItemButton',
-    value: function showCopyPublicNotebookItemButton() {
-      return this.ProjectService.isSpaceExists("public");
-    }
-  }, {
-    key: 'copyPublicNotebookItemButtonClicked',
-    value: function copyPublicNotebookItemButtonClicked(event) {
-      this.$rootScope.$broadcast('openNotebook', { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
-    }
-  }, {
-    key: 'importWorkByStudentWorkId',
-    value: function importWorkByStudentWorkId(studentWorkId) {
-      var _this5 = this;
-
-      this.StudentDataService.getStudentWorkById(studentWorkId).then(function (componentState) {
-        if (componentState != null) {
-          _this5.setStudentWork(componentState);
-          _this5.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
-          _this5.$rootScope.$broadcast('closeNotebook');
-        }
-      });
-    }
-  }, {
-    key: 'setParentStudentWorkIdToCurrentStudentWork',
-    value: function setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
-      this.parentStudentWorkIds = [studentWorkId];
-    }
 
     /**
      * Check if CRater is enabled for this component
@@ -2608,7 +2580,7 @@ var OpenResponseController = function (_ComponentController) {
   }, {
     key: 'verifyCRaterItemId',
     value: function verifyCRaterItemId(itemId) {
-      var _this6 = this;
+      var _this5 = this;
 
       // clear the Valid/Invalid text
       this.cRaterItemIdIsValid = null;
@@ -2618,10 +2590,10 @@ var OpenResponseController = function (_ComponentController) {
 
       this.CRaterService.verifyCRaterItemId(itemId).then(function (isValid) {
         // turn off the "Verifying..." text
-        _this6.isVerifyingCRaterItemId = false;
+        _this5.isVerifyingCRaterItemId = false;
 
         // set the Valid/Invalid text
-        _this6.cRaterItemIdIsValid = isValid;
+        _this5.cRaterItemIdIsValid = isValid;
       });
     }
   }]);

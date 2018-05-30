@@ -2323,29 +2323,6 @@ class DrawController extends ComponentController {
     this.jsonStringChanged = true;
   }
 
-  showCopyPublicNotebookItemButton() {
-    return this.ProjectService.isSpaceExists("public");
-  }
-
-  copyPublicNotebookItemButtonClicked(event) {
-    this.$rootScope.$broadcast('openNotebook',
-        { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
-  }
-
-  importWorkByStudentWorkId(studentWorkId) {
-    this.StudentDataService.getStudentWorkById(studentWorkId).then((componentState) => {
-      if (componentState != null) {
-        this.setStudentWork(componentState);
-        this.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
-        this.$rootScope.$broadcast('closeNotebook');
-      }
-    });
-  }
-
-  setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
-    this.parentStudentWorkIds = [studentWorkId];
-  }
-
   /**
    * The "Import Work As Background" checkbox was clicked.
    * @param connectedComponent The connected component associated with the
