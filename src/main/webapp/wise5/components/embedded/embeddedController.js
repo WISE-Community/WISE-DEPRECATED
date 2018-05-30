@@ -243,23 +243,6 @@ var EmbeddedController = function (_ComponentController) {
     }.bind(_this);
 
     /**
-     * Listen for the 'annotationSavedToServer' event which is fired when
-     * we receive the response from saving an annotation to the server
-     */
-    _this.$scope.$on('annotationSavedToServer', function (event, args) {
-      if (args != null) {
-        var annotation = args.annotation;
-        if (annotation != null) {
-          var annotationNodeId = annotation.nodeId;
-          var annotationComponentId = annotation.componentId;
-          if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
-            _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-          }
-        }
-      }
-    });
-
-    /**
      * Listen for the 'exitNode' event which is fired when the student
      * exits the parent node. This will perform any necessary cleanup
      * when the student exits the parent node.

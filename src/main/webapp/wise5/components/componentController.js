@@ -73,6 +73,13 @@ var ComponentController = function () {
     value: function registerListeners() {
       var _this = this;
 
+      this.$scope.$on('annotationSavedToServer', function (event, args) {
+        var annotation = args.annotation;
+        if (_this.nodeId === annotation.nodeId && _this.componentId === annotation.componentId) {
+          _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+        }
+      });
+
       this.$scope.$on('nodeSubmitClicked', function (event, args) {
         if (_this.nodeId === args.nodeId) {
           _this.handleNodeSubmit();

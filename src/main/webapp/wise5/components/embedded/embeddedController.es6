@@ -265,26 +265,6 @@ class EmbeddedController extends ComponentController {
     }.bind(this);
 
     /**
-     * Listen for the 'annotationSavedToServer' event which is fired when
-     * we receive the response from saving an annotation to the server
-     */
-    this.$scope.$on('annotationSavedToServer', (event, args) => {
-      if (args != null ) {
-        var annotation = args.annotation;
-        if (annotation != null) {
-          var annotationNodeId = annotation.nodeId;
-          var annotationComponentId = annotation.componentId;
-          if (this.nodeId === annotationNodeId &&
-            this.componentId === annotationComponentId) {
-            this.latestAnnotations = this.AnnotationService
-                .getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-          }
-        }
-      }
-    });
-
-
-    /**
      * Listen for the 'exitNode' event which is fired when the student
      * exits the parent node. This will perform any necessary cleanup
      * when the student exits the parent node.
