@@ -347,23 +347,6 @@ var ConceptMapController = function (_ComponentController) {
     }.bind(_this);
 
     /**
-     * The parent node submit button was clicked
-     */
-    _this.$scope.$on('nodeSubmitClicked', function (event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-
-        // trigger the submit
-        var submitTriggeredBy = 'nodeSubmitButton';
-        this.submit(submitTriggeredBy);
-      }
-    }.bind(_this));
-
-    /**
      * Listen for the 'studentWorkSavedToServer' event which is fired when
      * we receive the response from saving a component state to the server
      */
@@ -539,12 +522,17 @@ var ConceptMapController = function (_ComponentController) {
     return _this;
   }
 
-  /**
-   * Initialize the SVG
-   */
-
-
   _createClass(ConceptMapController, [{
+    key: 'handleNodeSubmit',
+    value: function handleNodeSubmit() {
+      this.submit('nodeSubmitButton');
+    }
+
+    /**
+     * Initialize the SVG
+     */
+
+  }, {
     key: 'initializeSVG',
     value: function initializeSVG() {
 

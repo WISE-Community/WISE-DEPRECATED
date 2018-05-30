@@ -64,9 +64,27 @@ var ComponentController = function () {
 
     this.workgroupId = this.$scope.workgroupId;
     this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
+
+    this.registerListeners();
   }
 
   _createClass(ComponentController, [{
+    key: 'registerListeners',
+    value: function registerListeners() {
+      var _this = this;
+
+      this.$scope.$on('nodeSubmitClicked', function (event, args) {
+        if (_this.nodeId === args.nodeId) {
+          _this.handleNodeSubmit();
+        }
+      });
+    }
+  }, {
+    key: 'handleNodeSubmit',
+    value: function handleNodeSubmit() {
+      this.isSubmit = true;
+    }
+  }, {
     key: 'getPrompt',
     value: function getPrompt() {
       return this.componentContent.prompt;
@@ -117,7 +135,7 @@ var ComponentController = function () {
   }, {
     key: 'studentDataChanged',
     value: function studentDataChanged() {
-      var _this = this;
+      var _this2 = this;
 
       /*
        * set the dirty flags so we will know we need to save or submit the
@@ -140,7 +158,7 @@ var ComponentController = function () {
 
       // create a component state populated with the student data
       this.createComponentState(action).then(function (componentState) {
-        _this.$scope.$emit('componentStudentDataChanged', { nodeId: _this.nodeId, componentId: _this.componentId, componentState: componentState });
+        _this2.$scope.$emit('componentStudentDataChanged', { nodeId: _this2.nodeId, componentId: _this2.componentId, componentState: componentState });
       });
     }
 
@@ -289,13 +307,13 @@ var ComponentController = function () {
   }, {
     key: 'importWorkByStudentWorkId',
     value: function importWorkByStudentWorkId(studentWorkId) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.StudentDataService.getStudentWorkById(studentWorkId).then(function (componentState) {
         if (componentState != null) {
-          _this2.setStudentWork(componentState);
-          _this2.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
-          _this2.$rootScope.$broadcast('closeNotebook');
+          _this3.setStudentWork(componentState);
+          _this3.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
+          _this3.$rootScope.$broadcast('closeNotebook');
         }
       });
     }

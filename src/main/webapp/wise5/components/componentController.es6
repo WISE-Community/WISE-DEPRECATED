@@ -64,6 +64,20 @@ class ComponentController {
 
     this.workgroupId = this.$scope.workgroupId;
     this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
+
+    this.registerListeners();
+  }
+
+  registerListeners() {
+    this.$scope.$on('nodeSubmitClicked', (event, args) => {
+      if (this.nodeId === args.nodeId) {
+        this.handleNodeSubmit();
+      }
+    });
+  }
+
+  handleNodeSubmit() {
+    this.isSubmit = true;
   }
 
   getPrompt() {
@@ -248,7 +262,6 @@ class ComponentController {
   setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
     this.parentStudentWorkIds = [studentWorkId];
   }
-
 }
 
 ComponentController.$inject = [];

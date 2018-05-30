@@ -222,23 +222,6 @@ var DrawController = function (_ComponentController) {
     }.bind(_this);
 
     /**
-     * The parent node submit button was clicked
-     */
-    _this.$scope.$on('nodeSubmitClicked', angular.bind(_this, function (event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-
-        // trigger the submit
-        var submitTriggeredBy = 'nodeSubmitButton';
-        this.submit(submitTriggeredBy);
-      }
-    }));
-
-    /**
      * Listen for the 'studentWorkSavedToServer' event which is fired when
      * we receive the response from saving a component state to the server
      */
@@ -522,12 +505,17 @@ var DrawController = function (_ComponentController) {
     return _this;
   }
 
-  /**
-   * Initialize the drawing tool
-   */
-
-
   _createClass(DrawController, [{
+    key: 'handleNodeSubmit',
+    value: function handleNodeSubmit() {
+      this.submit('nodeSubmitButton');
+    }
+
+    /**
+     * Initialize the drawing tool
+     */
+
+  }, {
     key: 'initializeDrawingTool',
     value: function initializeDrawingTool() {
       var _this2 = this;

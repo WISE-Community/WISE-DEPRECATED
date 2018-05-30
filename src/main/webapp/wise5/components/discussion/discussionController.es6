@@ -323,20 +323,6 @@ class DiscussionController extends ComponentController {
     }.bind(this);
 
     /**
-     * The parent node submit button was clicked
-     */
-    this.$scope.$on('nodeSubmitClicked', (event, args) => {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-        this.isSubmit = true;
-      }
-    });
-
-    /**
      * Listen for the 'annotationSavedToServer' event which is fired when
      * we receive the response from saving an annotation to the server
      */

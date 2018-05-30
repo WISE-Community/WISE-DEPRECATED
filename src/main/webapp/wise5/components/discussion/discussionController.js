@@ -310,20 +310,6 @@ var DiscussionController = function (_ComponentController) {
     }.bind(_this);
 
     /**
-     * The parent node submit button was clicked
-     */
-    _this.$scope.$on('nodeSubmitClicked', function (event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (_this.nodeId === nodeId) {
-        _this.isSubmit = true;
-      }
-    });
-
-    /**
      * Listen for the 'annotationSavedToServer' event which is fired when
      * we receive the response from saving an annotation to the server
      */

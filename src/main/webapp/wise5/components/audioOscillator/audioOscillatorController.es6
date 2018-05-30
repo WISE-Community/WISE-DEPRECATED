@@ -355,23 +355,6 @@ class AudioOscillatorController extends ComponentController {
     }.bind(this);
 
     /**
-     * The parent node submit button was clicked
-     */
-    this.$scope.$on('nodeSubmitClicked', function(event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-
-        // trigger the submit
-        var submitTriggeredBy = 'nodeSubmitButton';
-        this.submit(submitTriggeredBy);
-      }
-    }.bind(this));
-
-    /**
      * Listen for the 'studentWorkSavedToServer' event which is fired when
      * we receive the response from saving a component state to the server
      */
@@ -534,6 +517,10 @@ class AudioOscillatorController extends ComponentController {
     });
 
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+  }
+
+  handleNodeSubmit() {
+    this.submit('nodeSubmitButton');
   }
 
   /**

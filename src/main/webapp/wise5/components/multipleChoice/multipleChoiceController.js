@@ -261,23 +261,6 @@ var MultipleChoiceController = function (_ComponentController) {
     }.bind(_this);
 
     /**
-     * The parent node submit button was clicked
-     */
-    _this.$scope.$on('nodeSubmitClicked', angular.bind(_this, function (event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-
-        // trigger the submit
-        var submitTriggeredBy = 'nodeSubmitButton';
-        this.submit(submitTriggeredBy);
-      }
-    }));
-
-    /**
      * Listen for the 'studentWorkSavedToServer' event which is fired when
      * we receive the response from saving a component state to the server
      */
@@ -461,13 +444,18 @@ var MultipleChoiceController = function (_ComponentController) {
   }
 
   _createClass(MultipleChoiceController, [{
-    key: 'setStudentWork',
-
+    key: 'handleNodeSubmit',
+    value: function handleNodeSubmit() {
+      this.submit('nodeSubmitButton');
+    }
 
     /**
      * Populate the student work into the component
      * @param componentState the component state to populate into the component
      */
+
+  }, {
+    key: 'setStudentWork',
     value: function setStudentWork(componentState) {
 
       if (componentState != null) {

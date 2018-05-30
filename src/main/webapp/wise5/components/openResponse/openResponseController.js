@@ -324,23 +324,6 @@ var OpenResponseController = function (_ComponentController) {
     }.bind(_this);
 
     /**
-     * The parent node submit button was clicked
-     */
-    _this.$scope.$on('nodeSubmitClicked', function (event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-
-        // trigger the submit
-        var submitTriggeredBy = 'nodeSubmitButton';
-        this.submit(submitTriggeredBy);
-      }
-    }.bind(_this));
-
-    /**
      * Listen for the 'studentWorkSavedToServer' event which is fired when
      * we receive the response from saving a component state to the server
      */
@@ -514,13 +497,18 @@ var OpenResponseController = function (_ComponentController) {
     return _this;
   }
 
-  /**
-   * Populate the student work into the component
-   * @param componentState the component state to populate into the component
-   */
-
-
   _createClass(OpenResponseController, [{
+    key: 'handleNodeSubmit',
+    value: function handleNodeSubmit() {
+      this.submit('nodeSubmitButton');
+    }
+
+    /**
+     * Populate the student work into the component
+     * @param componentState the component state to populate into the component
+     */
+
+  }, {
     key: 'setStudentWork',
     value: function setStudentWork(componentState) {
 

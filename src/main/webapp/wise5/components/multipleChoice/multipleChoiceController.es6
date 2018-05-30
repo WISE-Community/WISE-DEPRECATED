@@ -271,23 +271,6 @@ class MultipleChoiceController extends ComponentController {
     }.bind(this);
 
     /**
-     * The parent node submit button was clicked
-     */
-    this.$scope.$on('nodeSubmitClicked', angular.bind(this, function(event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-
-        // trigger the submit
-        var submitTriggeredBy = 'nodeSubmitButton';
-        this.submit(submitTriggeredBy);
-      }
-    }));
-
-    /**
      * Listen for the 'studentWorkSavedToServer' event which is fired when
      * we receive the response from saving a component state to the server
      */
@@ -472,6 +455,10 @@ class MultipleChoiceController extends ComponentController {
 
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   };
+
+  handleNodeSubmit() {
+    this.submit('nodeSubmitButton');
+  }
 
   /**
    * Populate the student work into the component

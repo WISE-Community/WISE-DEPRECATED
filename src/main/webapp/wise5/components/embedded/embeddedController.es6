@@ -190,13 +190,6 @@ class EmbeddedController extends ComponentController {
       this.sendMessageToApplication(message);
     }
 
-    this.$scope.$on('nodeSubmitClicked', (event, args) => {
-      var nodeId = args.nodeId;
-      if (this.nodeId === nodeId) {
-        this.isSubmit = true;
-      }
-    });
-
     this.$scope.$on('studentWorkSavedToServer', (event, args) => {
       var componentState = args.studentWork;
       if (componentState != null) {

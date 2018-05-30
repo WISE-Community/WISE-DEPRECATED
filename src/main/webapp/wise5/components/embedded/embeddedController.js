@@ -168,13 +168,6 @@ var EmbeddedController = function (_ComponentController) {
       _this.sendMessageToApplication(message);
     };
 
-    _this.$scope.$on('nodeSubmitClicked', function (event, args) {
-      var nodeId = args.nodeId;
-      if (_this.nodeId === nodeId) {
-        _this.isSubmit = true;
-      }
-    });
-
     _this.$scope.$on('studentWorkSavedToServer', function (event, args) {
       var componentState = args.studentWork;
       if (componentState != null) {

@@ -319,23 +319,6 @@ var TableController = function (_ComponentController) {
     }.bind(_this);
 
     /**
-     * The parent node submit button was clicked
-     */
-    _this.$scope.$on('nodeSubmitClicked', angular.bind(_this, function (event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-
-        // trigger the submit
-        var submitTriggeredBy = 'nodeSubmitButton';
-        this.submit(submitTriggeredBy);
-      }
-    }));
-
-    /**
      * Listen for the 'studentWorkSavedToServer' event which is fired when
      * we receive the response from saving a component state to the server
      */
@@ -566,14 +549,19 @@ var TableController = function (_ComponentController) {
     return _this;
   }
 
-  /**
-   * Get a copy of the table data
-   * @param tableData the table data to copy
-   * @return a copy of the table data
-   */
-
-
   _createClass(TableController, [{
+    key: 'handleNodeSubmit',
+    value: function handleNodeSubmit() {
+      this.submit('nodeSubmitButton');
+    }
+
+    /**
+     * Get a copy of the table data
+     * @param tableData the table data to copy
+     * @return a copy of the table data
+     */
+
+  }, {
     key: 'getCopyOfTableData',
     value: function getCopyOfTableData(tableData) {
       var tableDataCopy = null;
