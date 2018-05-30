@@ -35,7 +35,7 @@
   <artifactId>wise</artifactId>
   <packaging>war</packaging>
   <name>Web-based Inquiry Science Environment</name>
-  <version>5.7.4</version>
+  <version>5.7.6</version>
   <url>http://wise5.org</url>
 
   <licenses>
@@ -124,7 +124,6 @@
               <testExcludes>
                 <exclude>**/org/wise/portal/service/**/*.java</exclude>
                 <exclude>**/org/wise/portal/domain/**/*.java</exclude>
-                <exclude>**/org/wise/portal/presentation/web/controllers/admin/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
@@ -148,7 +147,6 @@
           <excludes>
             <exclude>**/org/wise/portal/service/**/*.java</exclude>
             <exclude>**/org/wise/portal/domain/**/*.java</exclude>
-            <exclude>**/org/wise/portal/presentation/web/controllers/admin/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>

@@ -28,6 +28,7 @@ import '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import '../directives/components';
+import ComponentService from '../components/componentService';
 import '../components/discussion/discussionComponentModule';
 import '../components/draw/drawComponentModule';
 import '../components/embedded/embeddedComponentModule';
@@ -102,6 +103,7 @@ let authoringModule = angular.module('authoring', [
     ])
     .service(AnnotationService.name, AnnotationService)
     .service(AuthorWebSocketService.name, AuthorWebSocketService)
+    .service(ComponentService.name, ComponentService)
     .service(ConfigService.name, ConfigService)
     .service(CRaterService.name, CRaterService)
     .service(NodeService.name, NodeService)

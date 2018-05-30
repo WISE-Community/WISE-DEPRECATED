@@ -1394,20 +1394,66 @@ var ProjectController = function () {
   }, {
     key: 'showJSONClicked',
     value: function showJSONClicked() {
-      this.showJSONAuthoring = !this.showJSONAuthoring;
       if (this.showJSONAuthoring) {
+        // we were showing the JSON view and the author now wants to hide it
+        if (this.isJSONValid()) {
+          this.toggleJSONAuthoringView();
+          this.UtilService.hideJSONValidMessage();
+        } else {
+          var answer = confirm(this.$translate('jsonInvalidErrorMessage'));
+          if (answer) {
+            // the author wants to revert back to the last valid JSON
+            this.toggleJSONAuthoringView();
+            this.UtilService.hideJSONValidMessage();
+          }
+        }
+      } else {
+        // we were not showing the JSON view and now the author wants to show it
+        this.toggleJSONAuthoringView();
         this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
+        this.UtilService.showJSONValidMessage();
+      }
+    }
+  }, {
+    key: 'isJSONValid',
+    value: function isJSONValid() {
+      try {
+        angular.fromJson(this.projectJSONString);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+  }, {
+    key: 'toggleJSONAuthoringView',
+    value: function toggleJSONAuthoringView() {
+      this.showJSONAuthoring = !this.showJSONAuthoring;
+    }
+
+    /**
+     * Save the project JSON to the server if the JSON is valid.
+     */
+
+  }, {
+    key: 'autoSaveProjectJSONString',
+    value: function autoSaveProjectJSONString() {
+      try {
+        this.saveProjectJSON(this.projectJSONString);
+        this.UtilService.showJSONValidMessage();
+      } catch (e) {
+        this.UtilService.showJSONInvalidMessage();
       }
     }
 
     /**
      * Save the project JSON string to the server
+     * @param projectJSONString
      */
 
   }, {
-    key: 'saveProjectJSONString',
-    value: function saveProjectJSONString() {
-      var project = angular.fromJson(this.projectJSONString);
+    key: 'saveProjectJSON',
+    value: function saveProjectJSON(projectJSONString) {
+      var project = angular.fromJson(projectJSONString);
       this.ProjectService.setProject(project);
       var scriptFilename = this.ProjectService.getProjectScriptFilename();
       if (scriptFilename != null) {
@@ -1576,6 +1622,9 @@ var ProjectController = function () {
 
         // if the advanced view is shown, do not show the project view
         this.projectMode = !this.advancedMode;
+      }
+      if (!this.showJSONAuthoring) {
+        this.UtilService.hideJSONValidMessage();
       }
     }
 

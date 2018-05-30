@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008 Regents of the University of California (Regents). Created
+ * Copyright (c) 2008-2018 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU Lesser General Public License, v2.
@@ -23,86 +23,71 @@
 package org.wise.portal.presentation.web.controllers.admin;
 
 import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import junit.framework.TestCase;
 import org.easymock.EasyMock;
+import org.easymock.EasyMockRunner;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
 import org.junit.After;
 import org.junit.Before;
-import org.springframework.context.ApplicationContext;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.web.AbstractModelAndViewTests;
-import org.springframework.validation.BindException;
-import org.springframework.web.servlet.ModelAndView;
-import org.wise.portal.domain.project.impl.FindProjectParameters;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.ui.ModelMap;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.service.run.RunService;
+import org.wise.portal.domain.run.impl.RunImpl;
+import org.wise.portal.service.run.impl.RunServiceImpl;
 
 /**
  * @author patrick lawler
- *
  */
-public class FindProjectRunsControllerTest extends AbstractModelAndViewTests  {
+@RunWith(EasyMockRunner.class)
+public class FindProjectRunsControllerTest extends TestCase {
 
-	private final static String VIEW = "admin/manageallprojectruns";
-	
-	private MockHttpServletRequest request;
+  @TestSubject
+  private FindProjectRunsController controller = new FindProjectRunsController();
 
-	private MockHttpServletResponse response;
-	
-	private ApplicationContext mockApplicationContext;
-	
-	private FindProjectRunsController controller;
-	
-	private BindException errors;
-	
-	private RunService runService;
-	
-	private ArrayList<Run> runList;
-	
-	private FindProjectParameters findProjectParameters;
-	
-	@Before
-	public void setUp() {
-		this.request = new MockHttpServletRequest();
-		this.response = new MockHttpServletResponse();
-		this.mockApplicationContext = createMock(ApplicationContext.class);
-		this.runService = createMock(RunService.class);
-		this.controller = new FindProjectRunsController();
-		this.runList = new ArrayList<Run>();
-		this.findProjectParameters = new FindProjectParameters();
-		this.errors = new BindException(findProjectParameters, "");
-	}
-	
-	@After
-	public void tearDown() {
-		this.request = null;
-		this.response = null;
-		this.mockApplicationContext = null;
-		this.runService = null;
-		this.controller = null;
-		this.runList = null;
-		this.errors = null;
-		this.findProjectParameters = null;
-	}
-	
-	public void testOnSubmitNoRuns() {
-		findProjectParameters.setProjectId("1");
-		expect(runService.getAllRunList()).andReturn(runList);
-		replay(runService);
-		ModelAndView modelAndView = null; 
-		try {
-			modelAndView = controller.onSubmit(findProjectParameters, errors);
-		} catch (Exception e) {
-			fail("unexpected exception");
-		}
-		
-		assertModelAttributeValue(modelAndView, "runList", runList);
-		assertEquals(VIEW, modelAndView.getViewName());
-		EasyMock.verify(runService);
-	}
+  @Mock
+  private RunServiceImpl runService;
 
+  private ModelMap modelMap = new ModelMap();
+
+  Run run1;
+  Long run1Id = 1L;
+  String run1Name = "Run 1";
+
+  @Before
+  public void setUp() {
+    run1 = new RunImpl();
+    run1.setName(run1Name);
+  }
+
+  @After
+  public void tearDown() {
+    run1 = null;
+  }
+
+  @Test
+  public void handleGET_byRunId_OK() throws ObjectNotFoundException {
+    EasyMock.expect(runService.retrieveById(run1Id)).andReturn(run1);
+    EasyMock.replay(runService);
+    String view = controller.findRun("runId", run1Id.toString(), modelMap);
+    assertEquals("admin/run/manageprojectruns", view);
+    List<Run> resultRunList = (List<Run>) modelMap.get("runList");
+    assertEquals(1, resultRunList.size());
+    Run resultFirstRun = resultRunList.get(0);
+    assertEquals(run1Name, resultFirstRun.getName());
+    EasyMock.verify(runService);
+  }
+
+  // TODO: test handleGET_byProjectId_OK
+  // TODO: test handleGET_byTeacherUsername_OK
+  // TODO: test handleGET_byRunTitle_OK
 }

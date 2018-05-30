@@ -135,7 +135,8 @@ class ConfigService {
   };
 
   getWebSocketURL() {
-    return this.getConfigParam('webSocketURL');
+    return window.location.protocol.replace("http", "ws") + "//" + window.location.host +
+        this.getContextPath() + "/websocket";
   };
 
   getWISEBaseURL() {
