@@ -1,12 +1,28 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from "@angular/forms";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { LoginComponent } from './login.component';
 import { UserService } from "../services/user.service";
 import { Observable } from "rxjs/Observable";
-import { StudentRun } from "../student/student-run";
 import { User } from "../domain/user";
 import { Router } from '@angular/router';
 import { HttpClient, HttpHandler } from "@angular/common/http";
+
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatInputModule
+} from '@angular/material';
+
+const materialModules = [
+  MatButtonModule,
+  MatCardModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatInputModule
+];
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -31,7 +47,11 @@ describe('LoginComponent', () => {
     }
     TestBed.configureTestingModule({
       declarations: [ LoginComponent ],
-      imports: [ FormsModule],
+      imports: [
+        BrowserAnimationsModule,
+        FormsModule,
+        materialModules,
+        ReactiveFormsModule ],
       providers: [
         HttpClient,
         HttpHandler,

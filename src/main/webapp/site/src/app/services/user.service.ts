@@ -83,6 +83,17 @@ export class UserService {
         });
   }
 
+  getRedirectUrl(): string {
+    if (this.redirectUrl) {
+      return this.redirectUrl;
+    } else if (this.isStudent()) {
+      return '/student';
+    } else {
+      return '/';
+    }
+  }
+
+
   private log(message: string) {
     console.log('UserService: ' + message);
   }

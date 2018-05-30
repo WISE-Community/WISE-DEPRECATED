@@ -1,20 +1,40 @@
-<div class="main main--fullwidth">
-  <section class="section--fullwidth">
-    <div class="content">
-      <div class="alert alert-danger" [hidden]="!error">
-        There was a problem logging in. Please try again.
-      </div>
+<div class="login mat-app-background" fxLayout="column"
+    fxLayoutAlign="center center">
+  <div class="login__logo">
+    <a routerLink="/">
+      <img src="assets/img/wise-web-logo-full.png" alt="WISE logo" />
+    </a>
+  </div>
+  <mat-card>
+    <mat-card-content>
       <form role="form" (submit)="login()">
-        <div class="form-group">
-          <label for="username">Username:</label>
-          <input type="text" class="form-control" id="username" name="username" [(ngModel)]="credentials.username"/>
-        </div>
-        <div class="form-group">
-          <label for="password">Password:</label>
-          <input type="password" class="form-control" id="password" name="password" [(ngModel)]="credentials.password"/>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <h1 class="center">Sign in to WISE</h1>
+        <p class="warn" *ngIf="error">
+          Username or password not recognized. Please try again.
+        </p>
+        <p>
+          <mat-form-field appearance="fill" fxFlex>
+            <input matInput id="username" name="username" placeholder="Username"
+                [(ngModel)]="credentials.username" appearance="fill"/>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="fill" fxFlex>
+            <input matInput id="password" name="password" placeholder="Password"
+                type="password" [(ngModel)]="credentials.password"
+                appearance="fill"/>
+          </mat-form-field>
+        </p>
+        <p>
+          <button fxFlex mat-raised-button color="primary" type="submit">
+            Submit
+          </button>
+        </p>
       </form>
-    </div>
-  </section>
+      <p><a routerLink="/lost">Forgot username or password?</a></p>
+      <p>New to WISE? <a routerLink="/join">Join for free!</a></p>
+    </mat-card-content>
+  </mat-card>
 </div>
+
+

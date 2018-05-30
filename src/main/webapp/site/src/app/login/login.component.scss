@@ -1,0 +1,23 @@
+@import
+  '~style/abstracts/variables',
+  '~style/abstracts/functions';
+
+.login {
+  padding: 32px;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.login__logo {
+  margin-bottom: 16px;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+mat-card, .login__logo {
+  width: 400px;
+}

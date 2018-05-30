@@ -1,3 +1,3 @@
-<app-header class="dark-theme"></app-header>
+<app-header class="dark-theme" *ngIf="showHeaderAndFooter()"></app-header>
 <router-outlet></router-outlet>
-<app-footer></app-footer>
+<app-footer *ngIf="showHeaderAndFooter()"></app-footer>
