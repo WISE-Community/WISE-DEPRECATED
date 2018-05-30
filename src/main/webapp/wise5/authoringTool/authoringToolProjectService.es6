@@ -120,11 +120,10 @@ class AuthoringToolProjectService extends ProjectService {
         return;
       }
     }
-    let notifyProjectBeginURL = this.ConfigService
-      .getConfigParam('notifyProjectBeginURL') + projectId;
-    let httpParams = {
+
+    const httpParams = {
       method: "POST",
-      url: notifyProjectBeginURL
+      url: this.ConfigService.getConfigParam('notifyProjectBeginURL') + projectId
     };
 
     return this.$http(httpParams).then((result) => {
@@ -134,7 +133,7 @@ class AuthoringToolProjectService extends ProjectService {
   }
 
   /**
-   * Notifies others that the specified project is being authored
+   * Notifies others that the specified project is no longer being authored
    * @param projectId id of the project
    */
   notifyAuthorProjectEnd(projectId = null) {
@@ -146,11 +145,10 @@ class AuthoringToolProjectService extends ProjectService {
           resolve();
         }
       }
-      let notifyProjectEndURL = this.ConfigService.getConfigParam('notifyProjectEndURL') + projectId;
-      let httpParams = {};
-      httpParams.method = 'POST';
-      httpParams.url = notifyProjectEndURL;
-
+      const httpParams = {
+        method: 'POST',
+        url: this.ConfigService.getConfigParam('notifyProjectEndURL') + projectId
+      };
       this.$http(httpParams).then(() => {
         resolve();
       })
@@ -176,8 +174,8 @@ class AuthoringToolProjectService extends ProjectService {
   };
 
   /**
-   * Copies the project with the specified id and returns a new project id if the project is
-   * successfully copied
+   * Copies the project with the specified id and returns
+   * a new project id if the project is successfully copied
    */
   copyProject(projectId) {
     const copyProjectURL = this.ConfigService.getConfigParam('copyProjectURL');
@@ -185,17 +183,15 @@ class AuthoringToolProjectService extends ProjectService {
       return null;
     }
 
-    const httpParams = {};
-    httpParams.method = 'POST';
-    httpParams.url = copyProjectURL + "/" + projectId;
-    httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-
-    const params = {};
-    httpParams.data = $.param(params);
+    const httpParams = {
+      method: 'POST',
+      url: copyProjectURL + "/" + projectId,
+      headers:  {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({})
+    };
 
     return this.$http(httpParams).then((result) => {
-      const projectId = result.data;
-      return projectId;
+      return result.data;  // project Id
     });
   };
 
@@ -205,32 +201,27 @@ class AuthoringToolProjectService extends ProjectService {
    * Returns null if Config.registerNewProjectURL is undefined.
    * Throws an error if projectJSONString is invalid JSON string
    */
-  registerNewProject(projectJSONString, commitMessage) {
+  registerNewProject(projectJSONString, commitMessage = "") {
     const registerNewProjectURL = this.ConfigService.getConfigParam('registerNewProjectURL');
     if (registerNewProjectURL == null) {
       return null;
     }
 
     try {
-      // Try parsing the JSON string and throw an error if there's an issue parsing it.
       JSON.parse(projectJSONString);
     } catch (e) {
       throw new Error("Invalid projectJSONString.");
     }
 
-    if (!commitMessage) {
-      commitMessage = "";
-    }
-
-    const httpParams = {};
-    httpParams.method = 'POST';
-    httpParams.url = registerNewProjectURL;
-    httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-
-    const params = {};
-    params.commitMessage = commitMessage;
-    params.projectJSONString = projectJSONString;
-    httpParams.data = $.param(params);
+    const httpParams = {
+      method: 'POST',
+      url: registerNewProjectURL,
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({
+        commitMessage: commitMessage,
+        projectJSONString: projectJSONString
+      })
+    };
 
     return this.$http(httpParams).then((result) => {
       const projectId = result.data;
@@ -280,14 +271,17 @@ class AuthoringToolProjectService extends ProjectService {
    * @returns the group object
    */
   createGroup(title) {
-    const newGroupId = this.getNextAvailableGroupId();
-    const newGroup = {};
-    newGroup.id = newGroupId;
-    newGroup.type = 'group';
-    newGroup.title = title;
-    newGroup.startId = '';
-    newGroup.ids = [];
-    return newGroup;
+    return {
+      id: this.getNextAvailableGroupId(),
+      type: 'group',
+      title: title,
+      startId: '',
+      constraints: [],
+      transitionLogic: {
+        transitions: []
+      },
+      ids: []
+    }
   };
 
   /**
@@ -296,18 +290,18 @@ class AuthoringToolProjectService extends ProjectService {
    * @returns the node object
    */
   createNode(title) {
-    const newNodeId = this.getNextAvailableNodeId();
-    const newNode = {};
-    newNode.id = newNodeId;
-    newNode.title = title;
-    newNode.type = 'node';
-    newNode.constraints = [];
-    newNode.transitionLogic = {};
-    newNode.transitionLogic.transitions = [];
-    newNode.showSaveButton = false;
-    newNode.showSubmitButton = false;
-    newNode.components = [];
-    return newNode;
+    return {
+      id: this.getNextAvailableNodeId(),
+      title: title,
+      type: 'node',
+      constraints: [],
+      transitionLogic: {
+        transitions: []
+      },
+      showSaveButton: false,
+      showSubmitButton: false,
+      components: []
+    }
   };
 
   /**
@@ -351,18 +345,16 @@ class AuthoringToolProjectService extends ProjectService {
    * the new step after it.
    */
   copyNodes(selectedNodes, fromProjectId, toProjectId, nodeIdToInsertInsideOrAfter) {
-    const importStepsURL = this.ConfigService.getConfigParam('importStepsURL');
-
-    const httpParams = {};
-    httpParams.method = 'POST';
-    httpParams.url = importStepsURL;
-    httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-
-    const params = {};
-    params.steps = angular.toJson(selectedNodes);
-    params.fromProjectId = fromProjectId;
-    params.toProjectId = toProjectId;
-    httpParams.data = $.param(params);
+    const httpParams = {
+      method: 'POST',
+      url: this.ConfigService.getConfigParam('importStepsURL'),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({
+        steps: angular.toJson(selectedNodes),
+        fromProjectId: fromProjectId,
+        toProjectId: toProjectId
+      })
+    };
 
     /*
      * Make the request to import the steps. This will copy the asset files
@@ -478,12 +470,8 @@ class AuthoringToolProjectService extends ProjectService {
    * @param nodeId the node id of the group to create the node in
    */
   createNodeInside(node, nodeId) {
-    if (nodeId == 'inactiveNodes') {
-      this.addInactiveNode(node);
-      this.setIdToNode(node.id, node);
-      this.setIdToElement(node.id, node);
-    } else if (nodeId == 'inactiveGroups') {
-      this.addInactiveNode(node);
+    if (nodeId == 'inactiveNodes' || nodeId == 'inactiveGroups') {
+      this.addInactiveNodeInsertAfter(node);
       this.setIdToNode(node.id, node);
       this.setIdToElement(node.id, node);
     } else {
@@ -494,7 +482,7 @@ class AuthoringToolProjectService extends ProjectService {
       } else {
         // we are creating an active node
         this.addNode(node);
-        this.insertNodeInsideInTransitions(node.id, nodeId);
+        this.insertNodeInsideOnlyUpdateTransitions(node.id, nodeId);
         this.insertNodeInsideInGroups(node.id, nodeId);
       }
     }
@@ -509,7 +497,7 @@ class AuthoringToolProjectService extends ProjectService {
     if (this.isInactive(nodeId)) {
       // we are adding the node after a node that is inactive
 
-      this.addInactiveNode(node, nodeId);
+      this.addInactiveNodeInsertAfter(node, nodeId);
       this.setIdToNode(node.id, node);
       this.setIdToElement(node.id, node);
     } else {
@@ -711,42 +699,43 @@ class AuthoringToolProjectService extends ProjectService {
   addBranchPathTakenConstraints(targetNodeId, fromNodeId, toNodeId) {
     if (targetNodeId != null) {
       const node = this.getNodeById(targetNodeId);
-
       if (node != null) {
         /*
          * create the constraint that makes the node not visible until
          * the given branch path is taken
          */
-        const makeThisNodeNotVisibleConstraint = {};
-        makeThisNodeNotVisibleConstraint.id = this.getNextAvailableConstraintIdForNodeId(targetNodeId);
-        makeThisNodeNotVisibleConstraint.action = 'makeThisNodeNotVisible';
-        makeThisNodeNotVisibleConstraint.targetId = targetNodeId;
-        makeThisNodeNotVisibleConstraint.removalCriteria = [];
-        const notVisibleRemovalCriterion = {};
-        notVisibleRemovalCriterion.name = 'branchPathTaken';
-        notVisibleRemovalCriterion.params = {};
-        notVisibleRemovalCriterion.params.fromNodeId = fromNodeId;
-        notVisibleRemovalCriterion.params.toNodeId = toNodeId;
-        makeThisNodeNotVisibleConstraint.removalConditional = 'all';
-        makeThisNodeNotVisibleConstraint.removalCriteria.push(notVisibleRemovalCriterion);
+        const makeThisNodeNotVisibleConstraint = {
+          id: this.getNextAvailableConstraintIdForNodeId(targetNodeId),
+          action: 'makeThisNodeNotVisible',
+          targetId: targetNodeId,
+          removalConditional: 'all',
+          removalCriteria: [{
+            name: 'branchPathTaken',
+            params: {
+              fromNodeId: fromNodeId,
+              toNodeId: toNodeId
+            }
+          }]
+        };
         node.constraints.push(makeThisNodeNotVisibleConstraint);
 
         /*
          * create the constraint that makes the node not visitable until
          * the given branch path is taken
          */
-        const makeThisNodeNotVisitableConstraint = {};
-        makeThisNodeNotVisitableConstraint.id = this.getNextAvailableConstraintIdForNodeId(targetNodeId);
-        makeThisNodeNotVisitableConstraint.action = 'makeThisNodeNotVisitable';
-        makeThisNodeNotVisitableConstraint.targetId = targetNodeId;
-        makeThisNodeNotVisitableConstraint.removalCriteria = [];
-        const notVisitableRemovalCriterion = {};
-        notVisitableRemovalCriterion.name = 'branchPathTaken';
-        notVisitableRemovalCriterion.params = {};
-        notVisitableRemovalCriterion.params.fromNodeId = fromNodeId;
-        notVisitableRemovalCriterion.params.toNodeId = toNodeId;
-        makeThisNodeNotVisitableConstraint.removalConditional = 'all';
-        makeThisNodeNotVisitableConstraint.removalCriteria.push(notVisitableRemovalCriterion);
+        const makeThisNodeNotVisitableConstraint = {
+          id: this.getNextAvailableConstraintIdForNodeId(targetNodeId),
+          action: 'makeThisNodeNotVisitable',
+          targetId: targetNodeId,
+          removalConditional: 'all',
+          removalCriteria: [{
+            name: 'branchPathTaken',
+            params: {
+              fromNodeId: fromNodeId,
+              toNodeId: toNodeId
+            }
+          }]
+        };
         node.constraints.push(makeThisNodeNotVisitableConstraint);
       }
     }
@@ -948,20 +937,16 @@ class AuthoringToolProjectService extends ProjectService {
       }
     }
 
-    const importStepsURL = this.ConfigService.getConfigParam('importStepsURL');
-    const httpParams = {};
-    httpParams.method = 'POST';
-    httpParams.url = importStepsURL;
-    httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-
-    const toProjectId = this.ConfigService.getConfigParam('projectId');
-    const fromProjectId = importProjectId;
-
-    const params = {};
-    params.steps = angular.toJson(newComponents);
-    params.fromProjectId = fromProjectId;
-    params.toProjectId = toProjectId;
-    httpParams.data = $.param(params);
+    const httpParams = {
+      method: 'POST',
+      url: this.ConfigService.getConfigParam('importStepsURL'),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({
+        steps: angular.toJson(newComponents),
+        fromProjectId: importProjectId,
+        toProjectId:  this.ConfigService.getConfigParam('projectId'),
+      })
+    };
 
     /*
      * Make the request to import the components. This will copy the asset files
@@ -1043,6 +1028,216 @@ class AuthoringToolProjectService extends ProjectService {
     return this.idToNode;
   }
 
+  /**
+   * Turn on the save button in all the components in the step
+   * @param node the node
+   */
+  turnOnSaveButtonForAllComponents(node) {
+    for (let component of node.components) {
+      const service = this.$injector.get(component.type + 'Service');
+      if (service.componentUsesSaveButton()) {
+        component.showSaveButton = true;
+      }
+    }
+  }
+
+  /**
+   * Turn off the submit button in all the components in the step
+   * @param node the node
+   */
+  turnOffSaveButtonForAllComponents(node) {
+    for (let component of node.components) {
+      const service = this.$injector.get(component.type + 'Service');
+      if (service.componentUsesSaveButton()) {
+        component.showSaveButton = false;
+      }
+    }
+  }
+
+  /**
+   * Remove the node from the active nodes.
+   * If the node is a group node, also remove its children.
+   * @param nodeId the node to remove
+   * @returns the node that was removed
+   */
+  removeNodeFromActiveNodes(nodeId) {
+    let nodeRemoved = null;
+    const activeNodes = this.project.nodes;
+    for (let a = 0; a < activeNodes.length; a++) {
+      const activeNode = activeNodes[a];
+      if (activeNode.id === nodeId) {
+        activeNodes.splice(a, 1);
+        nodeRemoved = activeNode;
+        if (activeNode.type == 'group') {
+          this.removeChildNodesFromActiveNodes(activeNode);
+        }
+        break;
+      }
+    }
+    return nodeRemoved;
+  }
+
+  /**
+   * Move the child nodes of a group from the active nodes.
+   * @param node The group node.
+   */
+  removeChildNodesFromActiveNodes(node) {
+    for (let childId of node.ids) {
+      this.removeNodeFromActiveNodes(childId);
+    }
+  }
+
+  /**
+   * Move an active node to the inactive nodes array.
+   * @param node the node to move
+   * @param nodeIdToInsertAfter place the node after this
+   */
+  moveToInactive(node, nodeIdToInsertAfter) {
+    if (this.isActive(node.id)) {
+      this.removeNodeFromActiveNodes(node.id);
+      this.addInactiveNodeInsertAfter(node, nodeIdToInsertAfter);
+    }
+  }
+
+  /**
+   * Add the node to the inactive nodes array.
+   * @param node the node to move
+   * @param nodeIdToInsertAfter place the node after this
+   */
+  addInactiveNodeInsertAfter(node, nodeIdToInsertAfter) {
+    this.clearTransitionsFromNode(node);
+
+    if (this.isNodeIdToInsertTargetNotSpecified(nodeIdToInsertAfter)) {
+      this.insertNodeAtBeginningOfInactiveNodes(node);
+    } else {
+      this.insertNodeAfterInactiveNode(node, nodeIdToInsertAfter);
+    }
+
+    if (node.type == 'group') {
+      this.inactiveGroupNodes.push(node.id);
+      this.addGroupChildNodesToInactive(node);
+    } else {
+      this.inactiveStepNodes.push(node.id);
+    }
+  }
+
+  clearTransitionsFromNode(node) {
+    if (node.transitionLogic != null) {
+      node.transitionLogic.transitions = [];
+    }
+  }
+
+  insertNodeAtBeginningOfInactiveNodes(node) {
+    this.project.inactiveNodes.splice(0, 0, node);
+  }
+
+  insertNodeAfterInactiveNode(node, nodeIdToInsertAfter) {
+    const inactiveNodes = this.getInactiveNodes();
+    for (let i = 0; i < inactiveNodes.length; i++) {
+      if (inactiveNodes[i].id === nodeIdToInsertAfter) {
+        let parentGroup = this.getParentGroup(nodeIdToInsertAfter);
+        if (parentGroup != null) {
+          this.insertNodeAfterInGroups(node.id, nodeIdToInsertAfter);
+          this.insertNodeAfterInTransitions(node, nodeIdToInsertAfter);
+        }
+        inactiveNodes.splice(i + 1, 0, node);
+      }
+    }
+  }
+
+  isNodeIdToInsertTargetNotSpecified(nodeIdToInsertTarget) {
+    return nodeIdToInsertTarget == null ||
+        nodeIdToInsertTarget === 'inactiveNodes' ||
+        nodeIdToInsertTarget === 'inactiveSteps' ||
+        nodeIdToInsertTarget === 'inactiveGroups';
+  }
+
+  /**
+   * Move the node from active to inside an inactive group
+   * @param node the node to move
+   * @param nodeIdToInsertInside place the node inside this
+   */
+  moveFromActiveToInactiveInsertInside(node, nodeIdToInsertInside) {
+    this.removeNodeFromActiveNodes(node.id);
+    this.addInactiveNodeInsertInside(node, nodeIdToInsertInside);
+  }
+
+  /**
+   * Move the node from inactive to inside an inactive group
+   * @param node the node to move
+   * @param nodeIdToInsertInside place the node inside this
+   */
+  moveFromInactiveToInactiveInsertInside(node, nodeIdToInsertInside) {
+    this.removeNodeFromInactiveNodes(node.id);
+
+    if (this.isGroupNode(node.id)) {
+      /*
+       * remove the group's child nodes from our data structures so that we can
+       * add them back in later
+       */
+      let childIds = node.ids;
+      for (let childId of childIds) {
+        let childNode = this.getNodeById(childId);
+        let inactiveNodesIndex = this.project.inactiveNodes.indexOf(childNode);
+        if (inactiveNodesIndex != -1) {
+          this.project.inactiveNodes.splice(inactiveNodesIndex, 1);
+        }
+        let inactiveStepNodesIndex = this.inactiveStepNodes.indexOf(childNode);
+        if (inactiveStepNodesIndex != -1) {
+          this.inactiveStepNodes.splice(inactiveStepNodesIndex, 1);
+        }
+      }
+    }
+
+    // add the node to the inactive array
+    this.addInactiveNodeInsertInside(node, nodeIdToInsertInside);
+  }
+
+  /**
+   * Add the node to the inactive nodes array.
+   * @param node the node to move
+   * @param nodeIdToInsertAfter place the node after this
+   */
+  addInactiveNodeInsertInside(node, nodeIdToInsertInside) {
+    this.clearTransitionsFromNode(node);
+    if (this.isNodeIdToInsertTargetNotSpecified(nodeIdToInsertInside)) {
+      this.insertNodeAtBeginningOfInactiveNodes(node);
+    } else {
+      this.insertNodeInsideInactiveNode(node, nodeIdToInsertInside);
+    }
+    if (node.type == 'group') {
+      this.inactiveGroupNodes.push(node.id);
+      this.addGroupChildNodesToInactive(node);
+    } else {
+      this.inactiveStepNodes.push(node.id);
+    }
+  }
+
+  insertNodeInsideInactiveNode(node, nodeIdToInsertInside) {
+    const inactiveNodes = this.getInactiveNodes();
+    const inactiveGroupNodes = this.getInactiveGroupNodes();
+    for (let inactiveGroup of inactiveGroupNodes) {
+      if (nodeIdToInsertInside == inactiveGroup.id) {
+        this.insertNodeInsideOnlyUpdateTransitions(node.id, nodeIdToInsertInside);
+        this.insertNodeInsideInGroups(node.id, nodeIdToInsertInside);
+        for (let i = 0; i < inactiveNodes.length; i++) {
+          if (inactiveNodes[i].id == nodeIdToInsertInside) {
+            inactiveNodes.splice(i + 1, 0, node);
+          }
+        }
+      }
+    }
+  }
+
+  /**
+    * Move an inactive node within the inactive nodes array.
+    * @param node The node to move.
+    * @param nodeIdToInsertAfter Place the node after this.
+    */
+  moveInactiveNodeToInactiveSection(node, nodeIdToInsertAfter) {
+    this.removeNodeFromInactiveNodes(node.id);
+    this.addInactiveNodeInsertAfter(node, nodeIdToInsertAfter);
+  }
 }
 
 AuthoringToolProjectService.$inject = [

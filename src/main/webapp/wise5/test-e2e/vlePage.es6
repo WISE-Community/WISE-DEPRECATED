@@ -8,10 +8,11 @@ export default class VLEPage {
     this.accountMenu = element(by.cssContainingText('.md-open-menu-container','Preview Team'));
     this.notificationButton = element(by.id('viewNotificationsButton'));
     this.notificationMenu = element(by.cssContainingText('.md-open-menu-container','Alerts'));
+    this.toggleConstraintsButton = element(by.id('toggleConstraints'));
     this.exitButton = element(by.id('goHomeButton'));
     this.logOutButton = element(by.id('signOutButton'));
   }
-
+  
   nodeSelectMenuShouldSay(expectedMenuText) {
     expect(this.nodeDropDownMenu.getText()).toBe(expectedMenuText);
   }
@@ -38,5 +39,9 @@ export default class VLEPage {
 
   closeNode() {
     this.closeNodeButton.click();
+  }
+
+  toggleConstraints() {
+    this.toggleConstraintsButton.click();
   }
 }

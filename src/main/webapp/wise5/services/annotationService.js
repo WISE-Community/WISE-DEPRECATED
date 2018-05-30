@@ -416,7 +416,7 @@ var AnnotationService = function () {
               var nodeId = annotation.nodeId;
               var componentId = annotation.componentId;
               var data = annotation.data;
-              if (this.ProjectService.isActive(nodeId, componentId)) {
+              if (this.ProjectService.isActive(nodeId)) {
                 var scoreFound = nodeId + '-' + componentId;
                 if (scoresFound.indexOf(scoreFound) == -1) {
                   if (data != null) {

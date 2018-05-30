@@ -10,7 +10,18 @@
                 "group2",
                 "group3",
                 "group4"
-            ]
+            ],
+          "transitionLogic": {
+            "transitions": [
+              {
+                "to": "group1"
+              }
+            ],
+            "howToChooseAmongAvailablePaths": null,
+            "whenToChoosePath": null,
+            "canChangePath": null,
+            "maxPathsVisitable": null
+          }
         },
         {
             "id": "group1",
