@@ -30,15 +30,15 @@ const materialModules = [
   MatIconModule,
   MatOptionModule,
   MatSelectModule,
-  MatTooltipModule,
-  FormsModule,
-  ReactiveFormsModule
+  MatTooltipModule
 ];
 
 @NgModule({
   imports: [
     CommonModule,
     FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
     materialModules,
     SharedModule
   ],
@@ -52,6 +52,8 @@ const materialModules = [
   entryComponents: [ LibraryProjectDetailsComponent ],
   exports: [
     LibraryComponent,
+    FormsModule,
+    ReactiveFormsModule,
     materialModules
   ],
   providers: [
