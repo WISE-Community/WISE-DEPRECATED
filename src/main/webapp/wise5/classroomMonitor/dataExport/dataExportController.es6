@@ -32,7 +32,7 @@ class DataExportController {
         this.exportStepSelectionType = "exportAllSteps";
         this.exportType = null;  // type of export: [latestWork, allWork, events]
         this.componentTypeToComponentService = {};
-        this.isRunOwner = this.ConfigService.isRunOwner(this.ConfigService.getWorkgroupId());
+        this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
 
         this.availableComponentDataExports = [
             'Match'
@@ -343,7 +343,7 @@ class DataExportController {
       for (let u = 0; u < users.length; u++) {
         let user = users[u];
         extractedWISEIDsAndStudentNames['wiseId' + (u + 1)] = user.id;
-        if (this.isRunOwner) {
+        if (this.canViewStudentNames) {
           extractedWISEIDsAndStudentNames['studentName' + (u + 1)] = user.name;
         }
       }
@@ -2684,7 +2684,11 @@ class DataExportController {
         // settings for one workgroup per row export
         this.includeStudentWork = true;
         this.includeStudentWorkIds = false;
-        this.includeStudentNames = false;
+        if (this.canViewStudentNames) {
+          this.includeStudentNames = true;
+        } else {
+          this.includeStudentNames = false;
+        }
         this.includeStudentWorkTimestamps = false;
         this.includeBranchPathTaken = true;
         this.includeBranchPathTakenStepTitle = false;
