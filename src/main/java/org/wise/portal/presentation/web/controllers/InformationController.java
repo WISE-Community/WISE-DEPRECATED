@@ -386,7 +386,7 @@ public class InformationController {
     JSONArray classmateUserInfos = new JSONArray();
     for (Workgroup classmateWorkgroup : runService.getWorkgroups(run.getId())) {
       if (isClassmateWorkgroup(workgroup, loggedInUser, classmateWorkgroup)) {
-        classmateUserInfos.put(getClassmateUserInfoJSON(classmateWorkgroup));
+        classmateUserInfos.put(getClassmateUserInfoJSON(classmateWorkgroup, run, loggedInUser));
       }
     }
     return classmateUserInfos;
@@ -874,7 +874,7 @@ public class InformationController {
    * @param classmateWorkgroup the workgroup of the classmate
    * @return a json string containing the info for the classmate
    */
-  private JSONObject getClassmateUserInfoJSON(Workgroup classmateWorkgroup) {
+  private JSONObject getClassmateUserInfoJSON(Workgroup classmateWorkgroup, Run run, User loggedInUser) {
     JSONObject classmateUserInfo = new JSONObject();
     try {
       classmateUserInfo.put("workgroupId", classmateWorkgroup.getId());
@@ -884,10 +884,57 @@ public class InformationController {
         classmateUserInfo.put("periodId", classmateWorkgroup.getPeriod().getId());
         classmateUserInfo.put("periodName", classmateWorkgroup.getPeriod().getName());
         classmateUserInfo.put("userIds", getStudentIdsFromWorkgroup(classmateWorkgroup));
+        classmateUserInfo.put("users", getWorkgroupUsers(classmateWorkgroup, run, loggedInUser));
       }
     } catch (JSONException e) {
       e.printStackTrace();
     }
     return classmateUserInfo;
+  }
+
+  /**
+   * Get an array of user objects. Each user object contains the user id,
+   * name, first name, and last name.
+   * @param workgroup
+   * @return A JSONArray of user JSONObjects.
+   */
+  private JSONArray getWorkgroupUsers(Workgroup workgroup, Run run, User loggedInUser) {
+    JSONArray users = new JSONArray();
+    boolean canViewStudentNames = isUserOwnerOfRun(run, loggedInUser) ||
+        isSharedOwnerWithGradePermissionOfRun(run, loggedInUser);
+    for (User user : workgroup.getMembers()) {
+      JSONObject userJSONObject = new JSONObject();
+      try {
+        MutableUserDetails userDetails = user.getUserDetails();
+        userJSONObject.put("id", user.getId());
+        if (canViewStudentNames) {
+          String firstName = userDetails.getFirstname();
+          String lastName = userDetails.getLastname();
+          userJSONObject.put("name", firstName + " " + lastName);
+          userJSONObject.put("firstName", firstName);
+          userJSONObject.put("lastName", lastName);
+        }
+        users.put(userJSONObject);
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
+    }
+    return users;
+  }
+
+  private boolean isUserOwnerOfRun(Run run, User user) {
+    return run.getOwner().getId() == user.getId();
+  }
+
+  private boolean isSharedOwnerWithGradePermissionOfRun(Run run, User user) {
+    for (User sharedOwner : run.getSharedowners()) {
+      if (user.getId() == sharedOwner.getId()) {
+        String sharedTeacherRole = runService.getSharedTeacherRole(run, sharedOwner);
+        if (sharedTeacherRole != null && sharedTeacherRole.equals(UserDetailsService.RUN_GRADE_ROLE)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
