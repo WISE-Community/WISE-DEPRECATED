@@ -54,6 +54,8 @@
                     <md-checkbox ng-model="dataExportController.includeStudentWork">{{ 'includeStudentWork' | translate }}</md-checkbox>
                     <br/>
                     <md-checkbox ng-model="dataExportController.includeStudentWorkIds">{{ 'includeStudentWorkIDs' | translate }}</md-checkbox>
+                    <br ng-if="dataExportController.isRunOwner"/>
+                    <md-checkbox ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.isRunOwner">{{ 'includeStudentNames' | translate }}</md-checkbox>
                     <br/>
                     <md-checkbox ng-model="dataExportController.includeStudentWorkTimestamps">{{ 'includeStudentWorkTimestamps' | translate }}</md-checkbox>
                     <br/>
@@ -76,11 +78,17 @@
                     <md-button class="md-raised" ng-click="dataExportController.everythingClicked()">{{ 'everything' | translate }}</md-button>
                     <br/>
                     <md-checkbox ng-model="dataExportController.includeStudentWork">{{ 'includeStudentWork' | translate }}</md-checkbox>
+                    <br ng-if="dataExportController.isRunOwner"/>
+                    <md-checkbox ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.isRunOwner">{{ 'includeStudentNames' | translate }}</md-checkbox>
                     <br/>
                     <md-checkbox ng-model="dataExportController.includeAnnotations">{{ 'includeAnnotations' | translate }}</md-checkbox>
                     <br/>
                     <md-checkbox ng-model="dataExportController.includeEvents">{{ 'includeEvents' | translate }}</md-checkbox>
                     <br/>
+                </div>
+                <div ng-show="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events'">
+                  <br ng-if="dataExportController.isRunOwner"/>
+                  <md-checkbox ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.isRunOwner">{{ 'includeStudentNames' | translate }}</md-checkbox>
                 </div>
                 <md-radio-group ng-show="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events' || dataExportController.exportType == 'oneWorkgroupPerRow' || dataExportController.exportType == 'rawData'"
                                 ng-model="dataExportController.exportStepSelectionType">
@@ -133,6 +141,8 @@
                   <md-radio-button value="exportAllWork" class="md-primary">{{ 'exportAllStudentWork' | translate }}</md-radio-button>
                   <md-radio-button value="exportLatestWork" class="md-primary">{{ 'exportLatestStudentWork' | translate }}</md-radio-button>
               </md-radio-group>
+              <md-checkbox ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.isRunOwner">{{ 'includeStudentNames' | translate }}</md-checkbox>
+              <br ng-if="dataExportController.isRunOwner"/>
               <md-checkbox ng-model="dataExportController.includeCorrectnessColumns">{{ 'includeCorrectnessColumns' | translate }}</md-checkbox>
               <br/>
               <md-checkbox ng-model="dataExportController.includeOnlySubmits">{{ 'includeOnlySubmits' | translate }}</md-checkbox>
