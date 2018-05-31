@@ -1,9 +1,9 @@
 import { TestBed, async } from '@angular/core/testing';
 import { APP_BASE_HREF } from '@angular/common';
 import { AppComponent } from './app.component';
+import { AppRoutingModule } from "./app-routing.module";
 import { HeaderModule } from "./modules/header/header.module";
 import { FooterModule } from "./modules/footer/footer.module";
-import { AppRoutingModule } from "./app-routing.module";
 import { UserService } from "./services/user.service";
 
 describe('AppComponent', () => {
@@ -18,8 +18,8 @@ describe('AppComponent', () => {
       ],
       imports: [
         AppRoutingModule,
-        FooterModule,
-        HeaderModule
+        HeaderModule,
+        FooterModule
       ]
     }).compileComponents();
   }));
