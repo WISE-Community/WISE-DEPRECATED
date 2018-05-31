@@ -900,13 +900,14 @@ public class InformationController {
    */
   private JSONArray getWorkgroupUsers(Workgroup workgroup, Run run, User loggedInUser) {
     JSONArray users = new JSONArray();
-    boolean isLoggedInUserOwnerofRun = isUserOwnerOfRun(run, loggedInUser);
+    boolean canViewStudentNames = isUserOwnerOfRun(run, loggedInUser) ||
+        isSharedOwnerWithGradePermissionOfRun(run, loggedInUser);
     for (User user : workgroup.getMembers()) {
       JSONObject userJSONObject = new JSONObject();
       try {
         MutableUserDetails userDetails = user.getUserDetails();
         userJSONObject.put("id", user.getId());
-        if (isLoggedInUserOwnerofRun) {
+        if (canViewStudentNames) {
           String firstName = userDetails.getFirstname();
           String lastName = userDetails.getLastname();
           userJSONObject.put("name", firstName + " " + lastName);
@@ -921,7 +922,19 @@ public class InformationController {
     return users;
   }
 
-  private boolean isUserOwnerOfRun(Run run, User loggedInUser) {
-    return run.getOwner().getId() == loggedInUser.getId();
+  private boolean isUserOwnerOfRun(Run run, User user) {
+    return run.getOwner().getId() == user.getId();
+  }
+
+  private boolean isSharedOwnerWithGradePermissionOfRun(Run run, User user) {
+    for (User sharedOwner : run.getSharedowners()) {
+      if (user.getId() == sharedOwner.getId()) {
+        String sharedTeacherRole = runService.getSharedTeacherRole(run, sharedOwner);
+        if (sharedTeacherRole != null && sharedTeacherRole.equals(UserDetailsService.RUN_GRADE_ROLE)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
