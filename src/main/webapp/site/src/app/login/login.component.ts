@@ -20,7 +20,8 @@ export class LoginComponent implements OnInit {
   constructor(private userService: UserService, private http: HttpClient, private router: Router) {
   }
 
-  login() {
+  login(): boolean {
+    this.error = false;
     this.userService.authenticate(this.credentials, () => {
       if (this.userService.isAuthenticated) {
         this.router.navigateByUrl(this.userService.getRedirectUrl());

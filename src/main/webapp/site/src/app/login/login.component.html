@@ -5,17 +5,17 @@
       <img src="assets/img/wise-web-logo-full.png" alt="WISE logo" />
     </a>
   </div>
-  <mat-card>
+  <mat-card class="login__form">
     <mat-card-content>
       <form role="form" (submit)="login()">
-        <h1 class="center">Sign in to WISE</h1>
-        <p class="warn" *ngIf="error">
-          Username or password not recognized. Please try again.
+        <h2 class="accent center">Sign in to WISE</h2>
+        <p class="warn center login__error" [ngClass]="{'active': error}">
+          Username and password not recognized. Please try again.
         </p>
         <p>
           <mat-form-field appearance="fill" fxFlex>
             <input matInput id="username" name="username" placeholder="Username"
-                [(ngModel)]="credentials.username" appearance="fill"/>
+                [(ngModel)]="credentials.username" appearance="fill" autofocus/>
           </mat-form-field>
         </p>
         <p>

@@ -2,6 +2,10 @@
   '~style/abstracts/variables',
   '~style/abstracts/functions';
 
+h2 {
+  margin-bottom: 8px;
+}
+
 .login {
   padding: 32px;
   position: absolute;
@@ -11,6 +15,7 @@
 
 .login__logo {
   margin-bottom: 16px;
+  width: 300px;
 
   img {
     width: 100%;
@@ -18,6 +23,20 @@
   }
 }
 
-mat-card, .login__logo {
+.login__form {
   width: 400px;
+}
+
+.login__form, .login__logo {
+  max-width: 100%;
+}
+
+.login__error {
+  margin: 8px 0;
+  opacity: 0;
+  transition: all 250ms;
+
+  &.active {
+    opacity: 1;
+  }
 }
