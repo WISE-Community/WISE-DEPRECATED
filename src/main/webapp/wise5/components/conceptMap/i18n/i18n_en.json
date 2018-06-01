@@ -36,6 +36,7 @@
   "conceptMap.shouldNot": "should not",
   "conceptMap.showAutoFeedback": "Show Auto Feedback",
   "conceptMap.showAutoScore": "Show Auto Score",
+  "conceptMap.showNodeLabels": "Show Node Labels",
   "conceptMap.stretchBackground": "Stretch Background",
   "conceptMap.thereAreNoLinks": "There are no links. Click the \"Add Link\" button to add a link.",
   "conceptMap.thereAreNoNodes": "There are no nodes. Click the \"Add Node\" button to add a node.",

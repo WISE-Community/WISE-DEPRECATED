@@ -227,6 +227,13 @@ var ConceptMapController = function () {
         this.height = this.componentContent.height;
       }
 
+      if (this.componentContent.showNodeLabels == null) {
+        this.componentContent.showNodeLabels = true;
+        if (this.mode == 'authoring') {
+          this.authoringComponentContent.showNodeLabels = true;
+        }
+      }
+
       if (this.mode === 'student') {
         this.isPromptVisible = true;
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
@@ -878,7 +885,7 @@ var ConceptMapController = function () {
             var height = node.height;
 
             // create a ConceptMapNode
-            var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, instanceId, originalId, filePath, label, x, y, width, height);
+            var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, instanceId, originalId, filePath, label, x, y, width, height, this.componentContent.showNodeLabels);
 
             // add the node to our array of nodes
             this.addNode(conceptMapNode);
@@ -965,22 +972,34 @@ var ConceptMapController = function () {
   }, {
     key: 'refreshLinkLabels',
     value: function refreshLinkLabels() {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-      if (this.nodes != null) {
+      try {
+        for (var _iterator = this.nodes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var node = _step.value;
 
-        // loop through all the nodes
-        for (var n = 0; n < this.nodes.length; n++) {
-          var node = this.nodes[n];
-
-          if (node != null) {
-            // get the label from the node
+          if (node.showLabel) {
             var label = node.getLabel();
-
             /*
              * set the label back into the node so that the rectangle
              * around the text label is resized to the text
              */
             node.setLabel(label);
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
           }
         }
       }
@@ -3428,7 +3447,7 @@ var ConceptMapController = function () {
         var newConceptMapNodeId = this.getNewConceptMapNodeId();
 
         // create a ConceptMapNode
-        var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, newConceptMapNodeId, originalId, filePath, label, x, y, width, height);
+        var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, newConceptMapNodeId, originalId, filePath, label, x, y, width, height, this.componentContent.showNodeLabels);
 
         // add the node to our array of nodes
         this.addNode(conceptMapNode);
@@ -5382,13 +5401,13 @@ var ConceptMapController = function () {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
 
           try {
-            for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var component = _step.value;
+            for (var _iterator2 = components[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var component = _step2.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -5399,16 +5418,16 @@ var ConceptMapController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
+              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
               }
             } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
+              if (_didIteratorError2) {
+                throw _iteratorError2;
               }
             }
           }
