@@ -32,6 +32,7 @@ class DataExportController {
         this.exportStepSelectionType = "exportAllSteps";
         this.exportType = null;  // type of export: [latestWork, allWork, events]
         this.componentTypeToComponentService = {};
+        this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
 
         this.availableComponentDataExports = [
             'Match'
@@ -177,8 +178,11 @@ class DataExportController {
                 "#",
                 "Workgroup ID",
                 "WISE ID 1",
+                "Student Name 1",
                 "WISE ID 2",
+                "Student Name 2",
                 "WISE ID 3",
+                "Student Name 3",
                 "Class Period",
                 "Project ID",
                 "Project Name",
@@ -250,12 +254,7 @@ class DataExportController {
                         var workgroupId = workgroup.workgroupId;
                         var periodName = workgroup.periodName;
                         var userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-
-                        // get the WISE IDs
-                        var wiseIds = this.ConfigService.getWISEIds(workgroupId);
-                        var wiseId1 = wiseIds[0];
-                        var wiseId2 = wiseIds[1];
-                        var wiseId3 = wiseIds[2];
+                        var extractedWISEIDsAndStudentNames = this.extractWISEIDsAndStudentNames(userInfo.users);
 
                         /*
                          * a mapping from component to component revision counter.
@@ -296,7 +295,15 @@ class DataExportController {
                                     if (exportRow) {
 
                                         // create the export row
-                                        var row = this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, componentState);
+                                        var row = this.createStudentWorkExportRow(columnNames,
+                                            columnNameToNumber, rowCounter, workgroupId,
+                                            extractedWISEIDsAndStudentNames['wiseId1'],
+                                            extractedWISEIDsAndStudentNames['wiseId2'],
+                                            extractedWISEIDsAndStudentNames['wiseId3'],
+                                            extractedWISEIDsAndStudentNames['studentName1'],
+                                            extractedWISEIDsAndStudentNames['studentName2'],
+                                            extractedWISEIDsAndStudentNames['studentName3'],
+                                            periodName, componentRevisionCounter, componentState);
 
                                         // add the row to the rows
                                         rows.push(row);
@@ -326,6 +333,24 @@ class DataExportController {
     }
 
     /**
+     * @param users An array of user objects. Each user object contains an id and name.
+     * @returns {object} An object that contains key/value pairs. The key is wiseIdX
+     * or studentNameX where X is an integer. The values are the corresponding actual
+     * values of wise id and student name.
+     */
+    extractWISEIDsAndStudentNames(users) {
+      let extractedWISEIDsAndStudentNames = {};
+      for (let u = 0; u < users.length; u++) {
+        let user = users[u];
+        extractedWISEIDsAndStudentNames['wiseId' + (u + 1)] = user.id;
+        if (this.canViewStudentNames) {
+          extractedWISEIDsAndStudentNames['studentName' + (u + 1)] = user.name;
+        }
+      }
+      return extractedWISEIDsAndStudentNames;
+    }
+
+    /**
      * Create the array that will be used as a row in the student work export
      * @param columnNames all the header column name
      * @param columnNameToNumber the mapping from column name to column number
@@ -339,7 +364,7 @@ class DataExportController {
      * @param componentState the component state
      * @return an array containing the cells in the row
      */
-    createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, componentState) {
+    createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, componentRevisionCounter, componentState) {
 
         // create the row and prepopulate the elements with an empty string
         var row = new Array(columnNames.length);
@@ -355,15 +380,22 @@ class DataExportController {
             // set the WISE ID 1
             row[columnNameToNumber["WISE ID 1"]] = wiseId1;
         }
-
+        if (studentName1 != null && this.includeStudentNames) {
+            row[columnNameToNumber["Student Name 1"]] = studentName1;
+        }
         if (wiseId2 != null) {
             // set the WISE ID 2
             row[columnNameToNumber["WISE ID 2"]] = wiseId2;
         }
-
+        if (studentName2 != null && this.includeStudentNames) {
+            row[columnNameToNumber["Student Name 2"]] = studentName2;
+        }
         if (wiseId3 != null) {
             // set the WISE ID 3
             row[columnNameToNumber["WISE ID 3"]] = wiseId3;
+        }
+        if (studentName3 != null && this.includeStudentNames) {
+          row[columnNameToNumber["Student Name 3"]] = studentName3;
         }
 
         row[columnNameToNumber["Class Period"]] = periodName;
@@ -679,7 +711,7 @@ class DataExportController {
        */
       let studentDataString = " ";
       let componentType = componentState.componentType;
-      let componentService = this.$injector.get(componentType + 'Service');
+      let componentService = this.getComponentService(componentType);
       if (componentService != null && componentService.getStudentDataString != null) {
         studentDataString = componentService.getStudentDataString(componentState);
         studentDataString = this.UtilService.removeHTMLTags(studentDataString);
@@ -930,8 +962,11 @@ class DataExportController {
                 "#",
                 "Workgroup ID",
                 "WISE ID 1",
+                "Student Name 1",
                 "WISE ID 2",
+                "Student Name 2",
                 "WISE ID 3",
+                "Student Name 3",
                 "Class Period",
                 "Project ID",
                 "Project Name",
@@ -989,12 +1024,7 @@ class DataExportController {
                         var workgroupId = workgroup.workgroupId;
                         var periodName = workgroup.periodName;
                         var userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-
-                        // get the WISE IDs
-                        var wiseIds = this.ConfigService.getWISEIds(workgroupId);
-                        var wiseId1 = wiseIds[0];
-                        var wiseId2 = wiseIds[1];
-                        var wiseId3 = wiseIds[2];
+                        var extractedWISEIDsAndStudentNames = this.extractWISEIDsAndStudentNames(userInfo.users);
 
                         /*
                          * a mapping from component to component event count.
@@ -1048,7 +1078,15 @@ class DataExportController {
                                     if (exportRow) {
 
                                         // create the export row
-                                        var row = this.createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentEventCount, event);
+                                        var row = this.createEventExportRow(columnNames,
+                                            columnNameToNumber, rowCounter, workgroupId,
+                                            extractedWISEIDsAndStudentNames['wiseId1'],
+                                            extractedWISEIDsAndStudentNames['wiseId2'],
+                                            extractedWISEIDsAndStudentNames['wiseId3'],
+                                            extractedWISEIDsAndStudentNames['studentName1'],
+                                            extractedWISEIDsAndStudentNames['studentName2'],
+                                            extractedWISEIDsAndStudentNames['studentName3'],
+                                            periodName, componentEventCount, event);
 
                                         // add the row to the rows
                                         rows.push(row);
@@ -1084,7 +1122,8 @@ class DataExportController {
      * @param event the event
      * @return an array containing the cells in the row
      */
-    createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentEventCount, event) {
+    createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3,
+            studentName1, studentName2, studentName3, periodName, componentEventCount, event) {
 
         // create the row and prepopulate the elements with an empty string
         var row = new Array(columnNames.length);
@@ -1100,15 +1139,22 @@ class DataExportController {
             // set the WISE ID 1
             row[columnNameToNumber["WISE ID 1"]] = wiseId1;
         }
-
+        if (studentName1 != null && this.includeStudentNames) {
+          row[columnNameToNumber["Student Name 1"]] = studentName1;
+        }
         if (wiseId2 != null) {
             // set the WISE ID 2
             row[columnNameToNumber["WISE ID 2"]] = wiseId2;
         }
-
+        if (studentName2 != null && this.includeStudentNames) {
+          row[columnNameToNumber["Student Name 2"]] = studentName2;
+        }
         if (wiseId3 != null) {
             // set the WISE ID 3
             row[columnNameToNumber["WISE ID 3"]] = wiseId3;
+        }
+        if (studentName3 != null && this.includeStudentNames) {
+          row[columnNameToNumber["Student Name 3"]] = studentName3;
         }
 
         row[columnNameToNumber["Class Period"]] = periodName;
@@ -1763,8 +1809,11 @@ class DataExportController {
             var descriptionRowHeaders = [
                 "Workgroup ID",
                 "WISE ID 1",
+                "Student Name 1",
                 "WISE ID 2",
+                "Student Name 2",
                 "WISE ID 3",
+                "Student Name 3",
                 "Class Period",
                 "Project ID",
                 "Project Name",
@@ -1808,24 +1857,33 @@ class DataExportController {
                     var periodName = workgroup.periodName;
                     var userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
 
-                    // get the WISE IDs
-                    var wiseIds = this.ConfigService.getWISEIds(workgroupId);
-                    var wiseId1 = wiseIds[0];
-                    var wiseId2 = wiseIds[1];
-                    var wiseId3 = wiseIds[2];
-
                     workgroupRow[columnIdToColumnIndex["Workgroup ID"]] = workgroupId;
+
+                    var extractedWISEIDsAndStudentNames = this.extractWISEIDsAndStudentNames(userInfo.users);
+                    var wiseId1 = extractedWISEIDsAndStudentNames["wiseId1"];
+                    var wiseId2 = extractedWISEIDsAndStudentNames["wiseId2"];
+                    var wiseId3 = extractedWISEIDsAndStudentNames["wiseId3"];
+                    var studentName1 = extractedWISEIDsAndStudentNames["studentName1"];
+                    var studentName2 = extractedWISEIDsAndStudentNames["studentName2"];
+                    var studentName3 = extractedWISEIDsAndStudentNames["studentName3"];
 
                     if (wiseId1 != null) {
                         workgroupRow[columnIdToColumnIndex["WISE ID 1"]] = wiseId1;
                     }
-
+                    if (studentName1 != null && this.includeStudentNames) {
+                      workgroupRow[columnIdToColumnIndex["Student Name 1"]] = studentName1;
+                    }
                     if (wiseId2 != null) {
                         workgroupRow[columnIdToColumnIndex["WISE ID 2"]] = wiseId2;
                     }
-
+                    if (studentName2 != null && this.includeStudentNames) {
+                      workgroupRow[columnIdToColumnIndex["Student Name 2"]] = studentName2;
+                    }
                     if (wiseId3 != null) {
                         workgroupRow[columnIdToColumnIndex["WISE ID 3"]] = wiseId3;
+                    }
+                    if (studentName3 != null && this.includeStudentNames) {
+                      workgroupRow[columnIdToColumnIndex["Student Name 3"]] = studentName3;
                     }
 
                     workgroupRow[columnIdToColumnIndex["Class Period"]] = periodName;
@@ -2601,6 +2659,7 @@ class DataExportController {
         // settings for one workgroup per row export
         this.includeStudentWork = true;
         this.includeStudentWorkIds = true;
+        this.includeStudentNames = true;
         this.includeStudentWorkTimestamps = true;
         this.includeBranchPathTaken = true;
         this.includeBranchPathTakenStepTitle = true;
@@ -2625,6 +2684,11 @@ class DataExportController {
         // settings for one workgroup per row export
         this.includeStudentWork = true;
         this.includeStudentWorkIds = false;
+        if (this.canViewStudentNames) {
+          this.includeStudentNames = true;
+        } else {
+          this.includeStudentNames = false;
+        }
         this.includeStudentWorkTimestamps = false;
         this.includeBranchPathTaken = true;
         this.includeBranchPathTakenStepTitle = false;
@@ -2708,10 +2772,9 @@ class DataExportController {
                 var workgroup = workgroups[w];
 
                 if (workgroup != null) {
-
-                    // remove the user name and display name fields
-                    delete workgroup.userName;
-                    delete workgroup.displayNames;
+                    if (!this.includeStudentNames) {
+                      this.removeNamesFromWorkgroup(workgroup);
+                    }
 
                     // get the workgroup id
                     var workgroupId = workgroup.workgroupId;
@@ -2822,6 +2885,16 @@ class DataExportController {
             // generate a file and download it to the user's computer
             this.FileSaver.saveAs(blob, runId + "_raw_data.json");
         });
+    }
+
+    removeNamesFromWorkgroup(workgroup) {
+      delete workgroup.userName;
+      delete workgroup.displayNames;
+      for (let user of workgroup.users) {
+        delete user.name;
+        delete user.firstName;
+        delete user.lastName;
+      }
     }
 
     /**
@@ -2938,8 +3011,11 @@ class DataExportController {
             "#",
             "Workgroup ID",
             "WISE ID 1",
+            "Student Name 1",
             "WISE ID 2",
+            "Student Name 2",
             "WISE ID 3",
+            "Student Name 3",
             "Class Period",
             "Project ID",
             "Project Name",
@@ -3059,12 +3135,7 @@ class DataExportController {
         let workgroupId = workgroup.workgroupId;
         let periodName = workgroup.periodName;
         let userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-
-        // get the WISE IDs
-        let wiseIds = this.ConfigService.getWISEIds(workgroupId);
-        let wiseId1 = wiseIds[0];
-        let wiseId2 = wiseIds[1];
-        let wiseId3 = wiseIds[2];
+        let extractedWISEIDsAndStudentNames = this.extractWISEIDsAndStudentNames(userInfo.users);
 
         /*
          * a mapping from component to component revision counter.
@@ -3093,7 +3164,15 @@ class DataExportController {
 
                 if (exportRow) {
                     // add the row to the rows that will show up in the export
-                    rows.push(this.generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState));
+                    rows.push(this.generateMatchComponentWorkRow(component,
+                        columnNames, columnNameToNumber, rowCounter, workgroupId,
+                        extractedWISEIDsAndStudentNames['wiseId1'],
+                        extractedWISEIDsAndStudentNames['wiseId2'],
+                        extractedWISEIDsAndStudentNames['wiseId3'],
+                        extractedWISEIDsAndStudentNames['studentName1'],
+                        extractedWISEIDsAndStudentNames['studentName2'],
+                        extractedWISEIDsAndStudentNames['studentName3'],
+                        periodName, componentRevisionCounter, matchComponentState));
                     rowCounter++;
                 } else {
                     /*
@@ -3123,13 +3202,13 @@ class DataExportController {
      * @param matchComponentState The component state.
      * @return The row with the student work.
      */
-    generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState) {
+    generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, componentRevisionCounter, matchComponentState) {
 
         /*
          * Populate the cells in the row that contain the information about the
          * student, project, run, step, and component.
          */
-        let row = this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState);
+        let row = this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, componentRevisionCounter, matchComponentState);
 
         for (let bucket of matchComponentState.studentData.buckets) {
 

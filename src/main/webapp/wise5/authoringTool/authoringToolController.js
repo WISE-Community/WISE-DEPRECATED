@@ -252,6 +252,12 @@ var AuthoringToolController = function () {
       } else {
         this.projectTitle = null;
       }
+      this.turnOffJSONValidMessage();
+    }
+  }, {
+    key: 'turnOffJSONValidMessage',
+    value: function turnOffJSONValidMessage() {
+      this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: null });
     }
 
     /**

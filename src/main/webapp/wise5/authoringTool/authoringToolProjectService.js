@@ -142,10 +142,10 @@ var AuthoringToolProjectService = function (_ProjectService) {
           return;
         }
       }
-      var notifyProjectBeginURL = this.ConfigService.getConfigParam('notifyProjectBeginURL') + projectId;
+
       var httpParams = {
         method: "POST",
-        url: notifyProjectBeginURL
+        url: this.ConfigService.getConfigParam('notifyProjectBeginURL') + projectId
       };
 
       return this.$http(httpParams).then(function (result) {
@@ -155,7 +155,7 @@ var AuthoringToolProjectService = function (_ProjectService) {
     }
 
     /**
-     * Notifies others that the specified project is being authored
+     * Notifies others that the specified project is no longer being authored
      * @param projectId id of the project
      */
 
@@ -174,11 +174,10 @@ var AuthoringToolProjectService = function (_ProjectService) {
             resolve();
           }
         }
-        var notifyProjectEndURL = _this2.ConfigService.getConfigParam('notifyProjectEndURL') + projectId;
-        var httpParams = {};
-        httpParams.method = 'POST';
-        httpParams.url = notifyProjectEndURL;
-
+        var httpParams = {
+          method: 'POST',
+          url: _this2.ConfigService.getConfigParam('notifyProjectEndURL') + projectId
+        };
         _this2.$http(httpParams).then(function () {
           resolve();
         });
@@ -210,8 +209,8 @@ var AuthoringToolProjectService = function (_ProjectService) {
 
 
     /**
-     * Copies the project with the specified id and returns a new project id if the project is
-     * successfully copied
+     * Copies the project with the specified id and returns
+     * a new project id if the project is successfully copied
      */
     value: function copyProject(projectId) {
       var copyProjectURL = this.ConfigService.getConfigParam('copyProjectURL');
@@ -219,17 +218,15 @@ var AuthoringToolProjectService = function (_ProjectService) {
         return null;
       }
 
-      var httpParams = {};
-      httpParams.method = 'POST';
-      httpParams.url = copyProjectURL + "/" + projectId;
-      httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-
-      var params = {};
-      httpParams.data = $.param(params);
+      var httpParams = {
+        method: 'POST',
+        url: copyProjectURL + "/" + projectId,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({})
+      };
 
       return this.$http(httpParams).then(function (result) {
-        var projectId = result.data;
-        return projectId;
+        return result.data; // project Id
       });
     }
   }, {
@@ -242,32 +239,29 @@ var AuthoringToolProjectService = function (_ProjectService) {
      * Returns null if Config.registerNewProjectURL is undefined.
      * Throws an error if projectJSONString is invalid JSON string
      */
-    value: function registerNewProject(projectJSONString, commitMessage) {
+    value: function registerNewProject(projectJSONString) {
+      var commitMessage = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
+
       var registerNewProjectURL = this.ConfigService.getConfigParam('registerNewProjectURL');
       if (registerNewProjectURL == null) {
         return null;
       }
 
       try {
-        // Try parsing the JSON string and throw an error if there's an issue parsing it.
         JSON.parse(projectJSONString);
       } catch (e) {
         throw new Error("Invalid projectJSONString.");
       }
 
-      if (!commitMessage) {
-        commitMessage = "";
-      }
-
-      var httpParams = {};
-      httpParams.method = 'POST';
-      httpParams.url = registerNewProjectURL;
-      httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-
-      var params = {};
-      params.commitMessage = commitMessage;
-      params.projectJSONString = projectJSONString;
-      httpParams.data = $.param(params);
+      var httpParams = {
+        method: 'POST',
+        url: registerNewProjectURL,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({
+          commitMessage: commitMessage,
+          projectJSONString: projectJSONString
+        })
+      };
 
       return this.$http(httpParams).then(function (result) {
         var projectId = result.data;
@@ -326,14 +320,17 @@ var AuthoringToolProjectService = function (_ProjectService) {
      * @returns the group object
      */
     value: function createGroup(title) {
-      var newGroupId = this.getNextAvailableGroupId();
-      var newGroup = {};
-      newGroup.id = newGroupId;
-      newGroup.type = 'group';
-      newGroup.title = title;
-      newGroup.startId = '';
-      newGroup.ids = [];
-      return newGroup;
+      return {
+        id: this.getNextAvailableGroupId(),
+        type: 'group',
+        title: title,
+        startId: '',
+        constraints: [],
+        transitionLogic: {
+          transitions: []
+        },
+        ids: []
+      };
     }
   }, {
     key: 'createNode',
@@ -345,18 +342,18 @@ var AuthoringToolProjectService = function (_ProjectService) {
      * @returns the node object
      */
     value: function createNode(title) {
-      var newNodeId = this.getNextAvailableNodeId();
-      var newNode = {};
-      newNode.id = newNodeId;
-      newNode.title = title;
-      newNode.type = 'node';
-      newNode.constraints = [];
-      newNode.transitionLogic = {};
-      newNode.transitionLogic.transitions = [];
-      newNode.showSaveButton = false;
-      newNode.showSubmitButton = false;
-      newNode.components = [];
-      return newNode;
+      return {
+        id: this.getNextAvailableNodeId(),
+        title: title,
+        type: 'node',
+        constraints: [],
+        transitionLogic: {
+          transitions: []
+        },
+        showSaveButton: false,
+        showSubmitButton: false,
+        components: []
+      };
     }
   }, {
     key: 'copyNodesInside',
@@ -408,18 +405,16 @@ var AuthoringToolProjectService = function (_ProjectService) {
     value: function copyNodes(selectedNodes, fromProjectId, toProjectId, nodeIdToInsertInsideOrAfter) {
       var _this3 = this;
 
-      var importStepsURL = this.ConfigService.getConfigParam('importStepsURL');
-
-      var httpParams = {};
-      httpParams.method = 'POST';
-      httpParams.url = importStepsURL;
-      httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-
-      var params = {};
-      params.steps = angular.toJson(selectedNodes);
-      params.fromProjectId = fromProjectId;
-      params.toProjectId = toProjectId;
-      httpParams.data = $.param(params);
+      var httpParams = {
+        method: 'POST',
+        url: this.ConfigService.getConfigParam('importStepsURL'),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({
+          steps: angular.toJson(selectedNodes),
+          fromProjectId: fromProjectId,
+          toProjectId: toProjectId
+        })
+      };
 
       /*
        * Make the request to import the steps. This will copy the asset files
@@ -602,12 +597,8 @@ var AuthoringToolProjectService = function (_ProjectService) {
   }, {
     key: 'createNodeInside',
     value: function createNodeInside(node, nodeId) {
-      if (nodeId == 'inactiveNodes') {
-        this.addInactiveNode(node);
-        this.setIdToNode(node.id, node);
-        this.setIdToElement(node.id, node);
-      } else if (nodeId == 'inactiveGroups') {
-        this.addInactiveNode(node);
+      if (nodeId == 'inactiveNodes' || nodeId == 'inactiveGroups') {
+        this.addInactiveNodeInsertAfter(node);
         this.setIdToNode(node.id, node);
         this.setIdToElement(node.id, node);
       } else {
@@ -618,7 +609,7 @@ var AuthoringToolProjectService = function (_ProjectService) {
         } else {
           // we are creating an active node
           this.addNode(node);
-          this.insertNodeInsideInTransitions(node.id, nodeId);
+          this.insertNodeInsideOnlyUpdateTransitions(node.id, nodeId);
           this.insertNodeInsideInGroups(node.id, nodeId);
         }
       }
@@ -636,7 +627,7 @@ var AuthoringToolProjectService = function (_ProjectService) {
       if (this.isInactive(nodeId)) {
         // we are adding the node after a node that is inactive
 
-        this.addInactiveNode(node, nodeId);
+        this.addInactiveNodeInsertAfter(node, nodeId);
         this.setIdToNode(node.id, node);
         this.setIdToElement(node.id, node);
       } else {
@@ -987,42 +978,43 @@ var AuthoringToolProjectService = function (_ProjectService) {
     value: function addBranchPathTakenConstraints(targetNodeId, fromNodeId, toNodeId) {
       if (targetNodeId != null) {
         var node = this.getNodeById(targetNodeId);
-
         if (node != null) {
           /*
            * create the constraint that makes the node not visible until
            * the given branch path is taken
            */
-          var makeThisNodeNotVisibleConstraint = {};
-          makeThisNodeNotVisibleConstraint.id = this.getNextAvailableConstraintIdForNodeId(targetNodeId);
-          makeThisNodeNotVisibleConstraint.action = 'makeThisNodeNotVisible';
-          makeThisNodeNotVisibleConstraint.targetId = targetNodeId;
-          makeThisNodeNotVisibleConstraint.removalCriteria = [];
-          var notVisibleRemovalCriterion = {};
-          notVisibleRemovalCriterion.name = 'branchPathTaken';
-          notVisibleRemovalCriterion.params = {};
-          notVisibleRemovalCriterion.params.fromNodeId = fromNodeId;
-          notVisibleRemovalCriterion.params.toNodeId = toNodeId;
-          makeThisNodeNotVisibleConstraint.removalConditional = 'all';
-          makeThisNodeNotVisibleConstraint.removalCriteria.push(notVisibleRemovalCriterion);
+          var makeThisNodeNotVisibleConstraint = {
+            id: this.getNextAvailableConstraintIdForNodeId(targetNodeId),
+            action: 'makeThisNodeNotVisible',
+            targetId: targetNodeId,
+            removalConditional: 'all',
+            removalCriteria: [{
+              name: 'branchPathTaken',
+              params: {
+                fromNodeId: fromNodeId,
+                toNodeId: toNodeId
+              }
+            }]
+          };
           node.constraints.push(makeThisNodeNotVisibleConstraint);
 
           /*
            * create the constraint that makes the node not visitable until
            * the given branch path is taken
            */
-          var makeThisNodeNotVisitableConstraint = {};
-          makeThisNodeNotVisitableConstraint.id = this.getNextAvailableConstraintIdForNodeId(targetNodeId);
-          makeThisNodeNotVisitableConstraint.action = 'makeThisNodeNotVisitable';
-          makeThisNodeNotVisitableConstraint.targetId = targetNodeId;
-          makeThisNodeNotVisitableConstraint.removalCriteria = [];
-          var notVisitableRemovalCriterion = {};
-          notVisitableRemovalCriterion.name = 'branchPathTaken';
-          notVisitableRemovalCriterion.params = {};
-          notVisitableRemovalCriterion.params.fromNodeId = fromNodeId;
-          notVisitableRemovalCriterion.params.toNodeId = toNodeId;
-          makeThisNodeNotVisitableConstraint.removalConditional = 'all';
-          makeThisNodeNotVisitableConstraint.removalCriteria.push(notVisitableRemovalCriterion);
+          var makeThisNodeNotVisitableConstraint = {
+            id: this.getNextAvailableConstraintIdForNodeId(targetNodeId),
+            action: 'makeThisNodeNotVisitable',
+            targetId: targetNodeId,
+            removalConditional: 'all',
+            removalCriteria: [{
+              name: 'branchPathTaken',
+              params: {
+                fromNodeId: fromNodeId,
+                toNodeId: toNodeId
+              }
+            }]
+          };
           node.constraints.push(makeThisNodeNotVisitableConstraint);
         }
       }
@@ -1361,20 +1353,16 @@ var AuthoringToolProjectService = function (_ProjectService) {
         }
       }
 
-      var importStepsURL = this.ConfigService.getConfigParam('importStepsURL');
-      var httpParams = {};
-      httpParams.method = 'POST';
-      httpParams.url = importStepsURL;
-      httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-
-      var toProjectId = this.ConfigService.getConfigParam('projectId');
-      var fromProjectId = importProjectId;
-
-      var params = {};
-      params.steps = angular.toJson(newComponents);
-      params.fromProjectId = fromProjectId;
-      params.toProjectId = toProjectId;
-      httpParams.data = $.param(params);
+      var httpParams = {
+        method: 'POST',
+        url: this.ConfigService.getConfigParam('importStepsURL'),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({
+          steps: angular.toJson(newComponents),
+          fromProjectId: importProjectId,
+          toProjectId: this.ConfigService.getConfigParam('projectId')
+        })
+      };
 
       /*
        * Make the request to import the components. This will copy the asset files
@@ -1485,6 +1473,354 @@ var AuthoringToolProjectService = function (_ProjectService) {
     key: 'getIdToNode',
     value: function getIdToNode() {
       return this.idToNode;
+    }
+
+    /**
+     * Turn on the save button in all the components in the step
+     * @param node the node
+     */
+
+  }, {
+    key: 'turnOnSaveButtonForAllComponents',
+    value: function turnOnSaveButtonForAllComponents(node) {
+      var _iteratorNormalCompletion16 = true;
+      var _didIteratorError16 = false;
+      var _iteratorError16 = undefined;
+
+      try {
+        for (var _iterator16 = node.components[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+          var component = _step16.value;
+
+          var service = this.$injector.get(component.type + 'Service');
+          if (service.componentUsesSaveButton()) {
+            component.showSaveButton = true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError16 = true;
+        _iteratorError16 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion16 && _iterator16.return) {
+            _iterator16.return();
+          }
+        } finally {
+          if (_didIteratorError16) {
+            throw _iteratorError16;
+          }
+        }
+      }
+    }
+
+    /**
+     * Turn off the submit button in all the components in the step
+     * @param node the node
+     */
+
+  }, {
+    key: 'turnOffSaveButtonForAllComponents',
+    value: function turnOffSaveButtonForAllComponents(node) {
+      var _iteratorNormalCompletion17 = true;
+      var _didIteratorError17 = false;
+      var _iteratorError17 = undefined;
+
+      try {
+        for (var _iterator17 = node.components[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+          var component = _step17.value;
+
+          var service = this.$injector.get(component.type + 'Service');
+          if (service.componentUsesSaveButton()) {
+            component.showSaveButton = false;
+          }
+        }
+      } catch (err) {
+        _didIteratorError17 = true;
+        _iteratorError17 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion17 && _iterator17.return) {
+            _iterator17.return();
+          }
+        } finally {
+          if (_didIteratorError17) {
+            throw _iteratorError17;
+          }
+        }
+      }
+    }
+
+    /**
+     * Remove the node from the active nodes.
+     * If the node is a group node, also remove its children.
+     * @param nodeId the node to remove
+     * @returns the node that was removed
+     */
+
+  }, {
+    key: 'removeNodeFromActiveNodes',
+    value: function removeNodeFromActiveNodes(nodeId) {
+      var nodeRemoved = null;
+      var activeNodes = this.project.nodes;
+      for (var a = 0; a < activeNodes.length; a++) {
+        var activeNode = activeNodes[a];
+        if (activeNode.id === nodeId) {
+          activeNodes.splice(a, 1);
+          nodeRemoved = activeNode;
+          if (activeNode.type == 'group') {
+            this.removeChildNodesFromActiveNodes(activeNode);
+          }
+          break;
+        }
+      }
+      return nodeRemoved;
+    }
+
+    /**
+     * Move the child nodes of a group from the active nodes.
+     * @param node The group node.
+     */
+
+  }, {
+    key: 'removeChildNodesFromActiveNodes',
+    value: function removeChildNodesFromActiveNodes(node) {
+      var _iteratorNormalCompletion18 = true;
+      var _didIteratorError18 = false;
+      var _iteratorError18 = undefined;
+
+      try {
+        for (var _iterator18 = node.ids[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+          var childId = _step18.value;
+
+          this.removeNodeFromActiveNodes(childId);
+        }
+      } catch (err) {
+        _didIteratorError18 = true;
+        _iteratorError18 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion18 && _iterator18.return) {
+            _iterator18.return();
+          }
+        } finally {
+          if (_didIteratorError18) {
+            throw _iteratorError18;
+          }
+        }
+      }
+    }
+
+    /**
+     * Move an active node to the inactive nodes array.
+     * @param node the node to move
+     * @param nodeIdToInsertAfter place the node after this
+     */
+
+  }, {
+    key: 'moveToInactive',
+    value: function moveToInactive(node, nodeIdToInsertAfter) {
+      if (this.isActive(node.id)) {
+        this.removeNodeFromActiveNodes(node.id);
+        this.addInactiveNodeInsertAfter(node, nodeIdToInsertAfter);
+      }
+    }
+
+    /**
+     * Add the node to the inactive nodes array.
+     * @param node the node to move
+     * @param nodeIdToInsertAfter place the node after this
+     */
+
+  }, {
+    key: 'addInactiveNodeInsertAfter',
+    value: function addInactiveNodeInsertAfter(node, nodeIdToInsertAfter) {
+      this.clearTransitionsFromNode(node);
+
+      if (this.isNodeIdToInsertTargetNotSpecified(nodeIdToInsertAfter)) {
+        this.insertNodeAtBeginningOfInactiveNodes(node);
+      } else {
+        this.insertNodeAfterInactiveNode(node, nodeIdToInsertAfter);
+      }
+
+      if (node.type == 'group') {
+        this.inactiveGroupNodes.push(node.id);
+        this.addGroupChildNodesToInactive(node);
+      } else {
+        this.inactiveStepNodes.push(node.id);
+      }
+    }
+  }, {
+    key: 'clearTransitionsFromNode',
+    value: function clearTransitionsFromNode(node) {
+      if (node.transitionLogic != null) {
+        node.transitionLogic.transitions = [];
+      }
+    }
+  }, {
+    key: 'insertNodeAtBeginningOfInactiveNodes',
+    value: function insertNodeAtBeginningOfInactiveNodes(node) {
+      this.project.inactiveNodes.splice(0, 0, node);
+    }
+  }, {
+    key: 'insertNodeAfterInactiveNode',
+    value: function insertNodeAfterInactiveNode(node, nodeIdToInsertAfter) {
+      var inactiveNodes = this.getInactiveNodes();
+      for (var i = 0; i < inactiveNodes.length; i++) {
+        if (inactiveNodes[i].id === nodeIdToInsertAfter) {
+          var parentGroup = this.getParentGroup(nodeIdToInsertAfter);
+          if (parentGroup != null) {
+            this.insertNodeAfterInGroups(node.id, nodeIdToInsertAfter);
+            this.insertNodeAfterInTransitions(node, nodeIdToInsertAfter);
+          }
+          inactiveNodes.splice(i + 1, 0, node);
+        }
+      }
+    }
+  }, {
+    key: 'isNodeIdToInsertTargetNotSpecified',
+    value: function isNodeIdToInsertTargetNotSpecified(nodeIdToInsertTarget) {
+      return nodeIdToInsertTarget == null || nodeIdToInsertTarget === 'inactiveNodes' || nodeIdToInsertTarget === 'inactiveSteps' || nodeIdToInsertTarget === 'inactiveGroups';
+    }
+
+    /**
+     * Move the node from active to inside an inactive group
+     * @param node the node to move
+     * @param nodeIdToInsertInside place the node inside this
+     */
+
+  }, {
+    key: 'moveFromActiveToInactiveInsertInside',
+    value: function moveFromActiveToInactiveInsertInside(node, nodeIdToInsertInside) {
+      this.removeNodeFromActiveNodes(node.id);
+      this.addInactiveNodeInsertInside(node, nodeIdToInsertInside);
+    }
+
+    /**
+     * Move the node from inactive to inside an inactive group
+     * @param node the node to move
+     * @param nodeIdToInsertInside place the node inside this
+     */
+
+  }, {
+    key: 'moveFromInactiveToInactiveInsertInside',
+    value: function moveFromInactiveToInactiveInsertInside(node, nodeIdToInsertInside) {
+      this.removeNodeFromInactiveNodes(node.id);
+
+      if (this.isGroupNode(node.id)) {
+        /*
+         * remove the group's child nodes from our data structures so that we can
+         * add them back in later
+         */
+        var childIds = node.ids;
+        var _iteratorNormalCompletion19 = true;
+        var _didIteratorError19 = false;
+        var _iteratorError19 = undefined;
+
+        try {
+          for (var _iterator19 = childIds[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+            var childId = _step19.value;
+
+            var childNode = this.getNodeById(childId);
+            var inactiveNodesIndex = this.project.inactiveNodes.indexOf(childNode);
+            if (inactiveNodesIndex != -1) {
+              this.project.inactiveNodes.splice(inactiveNodesIndex, 1);
+            }
+            var inactiveStepNodesIndex = this.inactiveStepNodes.indexOf(childNode);
+            if (inactiveStepNodesIndex != -1) {
+              this.inactiveStepNodes.splice(inactiveStepNodesIndex, 1);
+            }
+          }
+        } catch (err) {
+          _didIteratorError19 = true;
+          _iteratorError19 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion19 && _iterator19.return) {
+              _iterator19.return();
+            }
+          } finally {
+            if (_didIteratorError19) {
+              throw _iteratorError19;
+            }
+          }
+        }
+      }
+
+      // add the node to the inactive array
+      this.addInactiveNodeInsertInside(node, nodeIdToInsertInside);
+    }
+
+    /**
+     * Add the node to the inactive nodes array.
+     * @param node the node to move
+     * @param nodeIdToInsertAfter place the node after this
+     */
+
+  }, {
+    key: 'addInactiveNodeInsertInside',
+    value: function addInactiveNodeInsertInside(node, nodeIdToInsertInside) {
+      this.clearTransitionsFromNode(node);
+      if (this.isNodeIdToInsertTargetNotSpecified(nodeIdToInsertInside)) {
+        this.insertNodeAtBeginningOfInactiveNodes(node);
+      } else {
+        this.insertNodeInsideInactiveNode(node, nodeIdToInsertInside);
+      }
+      if (node.type == 'group') {
+        this.inactiveGroupNodes.push(node.id);
+        this.addGroupChildNodesToInactive(node);
+      } else {
+        this.inactiveStepNodes.push(node.id);
+      }
+    }
+  }, {
+    key: 'insertNodeInsideInactiveNode',
+    value: function insertNodeInsideInactiveNode(node, nodeIdToInsertInside) {
+      var inactiveNodes = this.getInactiveNodes();
+      var inactiveGroupNodes = this.getInactiveGroupNodes();
+      var _iteratorNormalCompletion20 = true;
+      var _didIteratorError20 = false;
+      var _iteratorError20 = undefined;
+
+      try {
+        for (var _iterator20 = inactiveGroupNodes[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+          var inactiveGroup = _step20.value;
+
+          if (nodeIdToInsertInside == inactiveGroup.id) {
+            this.insertNodeInsideOnlyUpdateTransitions(node.id, nodeIdToInsertInside);
+            this.insertNodeInsideInGroups(node.id, nodeIdToInsertInside);
+            for (var i = 0; i < inactiveNodes.length; i++) {
+              if (inactiveNodes[i].id == nodeIdToInsertInside) {
+                inactiveNodes.splice(i + 1, 0, node);
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError20 = true;
+        _iteratorError20 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion20 && _iterator20.return) {
+            _iterator20.return();
+          }
+        } finally {
+          if (_didIteratorError20) {
+            throw _iteratorError20;
+          }
+        }
+      }
+    }
+
+    /**
+      * Move an inactive node within the inactive nodes array.
+      * @param node The node to move.
+      * @param nodeIdToInsertAfter Place the node after this.
+      */
+
+  }, {
+    key: 'moveInactiveNodeToInactiveSection',
+    value: function moveInactiveNodeToInactiveSection(node, nodeIdToInsertAfter) {
+      this.removeNodeFromInactiveNodes(node.id);
+      this.addInactiveNodeInsertAfter(node, nodeIdToInsertAfter);
     }
   }]);
 

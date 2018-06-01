@@ -266,6 +266,11 @@ class AuthoringToolController {
     } else {
       this.projectTitle = null;
     }
+    this.turnOffJSONValidMessage();
+  }
+
+  turnOffJSONValidMessage() {
+    this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: null });
   }
 
   /**

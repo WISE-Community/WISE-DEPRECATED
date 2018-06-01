@@ -413,7 +413,7 @@ class NodeService {
         }
       } else {
         // get all the nodes that transition to the current node
-        const nodeIdsByToNodeId = this.ProjectService.getNodeIdsByToNodeId(currentNodeId);
+        const nodeIdsByToNodeId = this.ProjectService.getNodesWithTransitionToNodeId(currentNodeId);
         if (nodeIdsByToNodeId == null) {
 
         } else if (nodeIdsByToNodeId.length === 1) {

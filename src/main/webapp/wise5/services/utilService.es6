@@ -987,6 +987,29 @@ class UtilService {
     }
     return null;
   }
+
+  showJSONValidMessage() {
+    this.setIsJSONValidMessage(true);
+  }
+
+  showJSONInvalidMessage() {
+    this.setIsJSONValidMessage(false);
+  }
+
+  hideJSONValidMessage() {
+    this.setIsJSONValidMessage(null);
+  }
+
+  /**
+   * Show the message in the toolbar that says "JSON Valid" or "JSON Invalid".
+   * @param isJSONValid
+   * true if we want to show "JSON Valid"
+   * false if we want to show "JSON Invalid"
+   * null if we don't want to show anything
+   */
+  setIsJSONValidMessage(isJSONValid) {
+    this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: isJSONValid });
+  }
 }
 
 // Get the last element of the array

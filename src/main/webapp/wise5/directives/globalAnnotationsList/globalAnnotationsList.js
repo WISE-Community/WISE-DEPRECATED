@@ -66,8 +66,6 @@ var GlobalAnnotationsListController = function () {
 
                 var nodeId = latestGlobalAnnotationGroup.nodeId;
                 this.nodeTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-
-                var maxScore = this.ProjectService.getMaxScoreForNode(nodeId);
             }
         }
 

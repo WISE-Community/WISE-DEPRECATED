@@ -475,6 +475,7 @@ var DiscussionController = function (_ComponentController) {
         var componentId = args.componentId;
         if (_this.componentId === componentId) {
           _this.showAdvancedAuthoring = !_this.showAdvancedAuthoring;
+          _this.UtilService.hideJSONValidMessage();
         }
       }
     });
@@ -1278,15 +1279,14 @@ var DiscussionController = function (_ComponentController) {
       this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
     }
   }, {
-    key: 'advancedAuthoringViewComponentChanged',
+    key: 'saveJSONAuthoringViewChanges',
 
 
     /**
      * The component has changed in the advanced authoring view so we will update
      * the component and save the project.
      */
-    value: function advancedAuthoringViewComponentChanged() {
-
+    value: function saveJSONAuthoringViewChanges() {
       try {
         /*
          * create a new component by converting the JSON string in the advanced
@@ -1305,6 +1305,10 @@ var DiscussionController = function (_ComponentController) {
          * the project to the server
          */
         this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
+
+        // scroll to the top of the component
+        this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
+        this.jsonStringChanged = false;
       } catch (e) {
         this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
       }
@@ -1962,21 +1966,31 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'showJSONButtonClicked',
     value: function showJSONButtonClicked() {
-      // toggle the JSON authoring textarea
-      this.showJSONAuthoring = !this.showJSONAuthoring;
-
-      if (this.jsonStringChanged && !this.showJSONAuthoring) {
-        /*
-         * the author has changed the JSON and has just closed the JSON
-         * authoring view so we will save the component
-         */
-        this.advancedAuthoringViewComponentChanged();
-
-        // scroll to the top of the component
-        this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
-
-        this.jsonStringChanged = false;
+      if (this.showJSONAuthoring) {
+        // we were showing the JSON authoring view and now we want to hide it
+        if (this.isJSONValid()) {
+          this.saveJSONAuthoringViewChanges();
+          this.toggleJSONAuthoringView();
+          this.UtilService.hideJSONValidMessage();
+        } else {
+          var answer = confirm(this.$translate('jsonInvalidErrorMessage'));
+          if (answer) {
+            // the author wants to revert back to the last valid JSON
+            this.toggleJSONAuthoringView();
+            this.UtilService.hideJSONValidMessage();
+            this.jsonStringChanged = true;
+          }
+        }
+      } else {
+        // we were not showing the JSON authoring view and now we want to show it
+        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+        this.toggleJSONAuthoringView();
       }
+    }
+  }, {
+    key: 'toggleJSONAuthoringView',
+    value: function toggleJSONAuthoringView() {
+      this.showJSONAuthoring = !this.showJSONAuthoring;
     }
 
     /**
@@ -1987,6 +2001,21 @@ var DiscussionController = function (_ComponentController) {
     key: 'authoringJSONChanged',
     value: function authoringJSONChanged() {
       this.jsonStringChanged = true;
+      if (this.isJSONValid()) {
+        this.UtilService.showJSONValidMessage();
+      } else {
+        this.UtilService.showJSONInvalidMessage();
+      }
+    }
+  }, {
+    key: 'isJSONValid',
+    value: function isJSONValid() {
+      try {
+        angular.fromJson(this.authoringComponentContentJSONString);
+        return true;
+      } catch (e) {
+        return false;
+      }
     }
   }]);
 
