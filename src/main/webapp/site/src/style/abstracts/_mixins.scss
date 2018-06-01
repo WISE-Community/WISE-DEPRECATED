@@ -13,15 +13,15 @@
     }
   }
 
-  .active {
+  a.active {
     color: map-get($colors, primary);
   }
 
-  .content-block, .info-block {
+  .content-block {
     background-color: map-get($background, background);
   }
 
-  .notice {
+  .notice, .info-block {
     background-color: map-get($colors, notice-bg);
   }
 

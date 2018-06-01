@@ -9,20 +9,28 @@
     <mat-card-content>
       <form role="form" (submit)="login()">
         <h2 class="accent center">Sign in to WISE</h2>
-        <p class="warn center login__error" [ngClass]="{'active': error}">
+        <p class="warn center login__error inactive"
+           [ngClass]="{'active': error}">
           Username and password not recognized. Please try again.
         </p>
         <p>
-          <mat-form-field appearance="fill" fxFlex>
-            <input matInput id="username" name="username" placeholder="Username"
-                [(ngModel)]="credentials.username" appearance="fill" autofocus/>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="username"
+                   name="username"
+                   placeholder="Username"
+                   [(ngModel)]="credentials.username"
+                   autofocus />
           </mat-form-field>
         </p>
         <p>
-          <mat-form-field appearance="fill" fxFlex>
-            <input matInput id="password" name="password" placeholder="Password"
-                type="password" [(ngModel)]="credentials.password"
-                appearance="fill"/>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="password"
+                   name="password"
+                   placeholder="Password"
+                   type="password"
+                   [(ngModel)]="credentials.password" />
           </mat-form-field>
         </p>
         <p>
