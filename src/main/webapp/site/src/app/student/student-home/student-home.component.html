@@ -1,8 +1,9 @@
 <header fxLayout="row">
   <mat-icon aria-label="User avatar">account_circle</mat-icon>
   <div fxLayout="column">
-    <h1 class="accent">Demo User</h1>
-    <a ngClass="mat-subheading-1" ngClass.xs="{'mat-subheading-1': false}" routerLink="/student/profile/edit">Edit Profile</a>
+    <h1 id="studentName" class="accent">{{ user.firstName}} {{ user.lastName }}</h1>
+    <a ngClass="mat-subheading-1" ngClass.xs="{'mat-subheading-1': false}"
+        routerLink="/student/profile/edit">Edit Profile</a>
   </div>
 </header>
 <section>

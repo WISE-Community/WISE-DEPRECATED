@@ -1,7 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule, MatIconModule, MatInputModule, MatFormFieldModule, MatSelectModule } from '@angular/material';
+import {
+  MatButtonModule,
+  MatIconModule,
+  MatInputModule,
+  MatFormFieldModule,
+  MatSelectModule
+} from '@angular/material';
 
 const materialModules = [
   MatButtonModule,
@@ -26,6 +32,6 @@ import { SelectMenuComponent } from './select-menu/select-menu.component';
     SearchBarComponent,
     SelectMenuComponent
   ],
-  declarations: [SearchBarComponent, SelectMenuComponent]
+  declarations: [ SearchBarComponent, SelectMenuComponent ]
 })
 export class SharedModule { }

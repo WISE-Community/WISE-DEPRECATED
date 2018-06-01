@@ -24,9 +24,9 @@
           </mat-card-subtitle>
         </div>
         <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
-        <div class="mat-body-2" fxFlex="0 1 auto" fxFlex.xs="100%" fxHide fxShow.gt-xs>
-          <span *ngIf="!run.endTime" class="success">Started: {{ run.startTime | amDateFormat:'ll' }}</span>
-          <span *ngIf="run.endTime">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
+        <div fxFlex="0 1 auto" fxFlex.xs="100%" fxHide fxShow.gt-xs>
+          <span *ngIf="!run.endTime" class="mat-card-title success">Started: {{ run.startTime | amDateFormat:'ll' }}</span>
+          <span *ngIf="run.endTime" class="mat-card-title">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
         </div>
 
           </div>

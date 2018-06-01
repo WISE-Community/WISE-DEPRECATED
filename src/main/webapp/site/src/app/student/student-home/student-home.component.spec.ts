@@ -8,8 +8,14 @@ import { StudentRunListComponent } from '../student-run-list/student-run-list.co
 import { StudentRunListItemComponent } from '../student-run-list-item/student-run-list-item.component';
 import { SelectMenuComponent } from "../../modules/shared/select-menu/select-menu.component";
 import { SearchBarComponent } from "../../modules/shared/search-bar/search-bar.component";
+import { User } from "../../domain/user";
+import { UserService } from "../../services/user.service";
 
-import { MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSelectModule } from "@angular/material";
+import { MatCardModule,
+  MatFormFieldModule,
+  MatIconModule,
+  MatInputModule,
+  MatSelectModule } from "@angular/material";
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MomentModule } from "angular2-moment";
@@ -23,15 +29,31 @@ describe('StudentHomeComponent', () => {
   beforeEach(async(() => {
     let studentServiceStub = {
         isLoggedIn: true,
-        user: { name: 'Test User'},
         getRuns(): Observable<StudentRun[]> {
-          let runs : any[] = [{id:1,name:"Photosynthesis"},{id:2,name:"Plate Tectonics"}];
+          let runs : any[] = [
+            {id: 1, name: "Photosynthesis"}, {id: 2, name: "Plate Tectonics"}
+          ];
           return Observable.create( observer => {
               observer.next(runs);
               observer.complete();
           });
         }
-    }
+    };
+
+    let userServiceStub = {
+      getUser(): Observable<User[]> {
+        const user: User = new User();
+        user.firstName = 'Demo';
+        user.lastName = 'User';
+        user.role = 'student';
+        user.userName = 'DemoUser0101';
+        user.id = 123456;
+        return Observable.create( observer => {
+          observer.next(user);
+          observer.complete();
+        });
+      }
+    };
 
     TestBed.configureTestingModule({
       declarations: [
@@ -41,7 +63,10 @@ describe('StudentHomeComponent', () => {
         StudentRunListComponent,
         StudentRunListItemComponent
       ],
-      providers: [ {provide: StudentService, useValue: studentServiceStub } ],
+      providers: [
+        { provide: StudentService, useValue: studentServiceStub },
+        { provide: UserService, useValue: userServiceStub }
+      ],
       imports: [
         BrowserAnimationsModule,
         FormsModule,
@@ -68,8 +93,9 @@ describe('StudentHomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show home page', () => {
+  it('should show student home page', () => {
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Demo User');
+    expect(compiled.querySelector('#studentName').textContent)
+      .toContain('Demo User');
   });
 });
