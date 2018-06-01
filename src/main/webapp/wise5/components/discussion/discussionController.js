@@ -319,101 +319,6 @@ var DiscussionController = function (_ComponentController) {
       // do nothing
     });
 
-    /**
-     * Listen for the 'studentWorkSavedToServer' event which is fired when
-     * we receive the response from saving a component state to the server
-     */
-    _this.$scope.$on('studentWorkSavedToServer', function (event, args) {
-
-      var componentState = args.studentWork;
-
-      // check that the component state is for this component
-      if (componentState && _this.nodeId === componentState.nodeId && _this.componentId === componentState.componentId) {
-
-        // check if the classmate responses are gated
-        if (_this.isClassmateResponsesGated() && !_this.retrievedClassmateResponses) {
-          /*
-           * the classmate responses are gated and we haven't retrieved
-           * them yet so we will obtain them now and show them since the student
-           * has just submitted a response. getting the classmate responses will
-           * also get the post the student just saved to the server.
-           */
-          _this.getClassmateResponses();
-        } else {
-          /*
-           * the classmate responses are not gated or have already been retrieved
-           * which means they are already being displayed. we just need to add the
-           * new response in this case.
-           */
-
-          // add the component state to our collection of class responses
-          _this.addClassResponse(componentState);
-        }
-
-        _this.disableComponentIfNecessary();
-
-        // send the student post to web sockets so all the classmates receive it in real time
-        var messageType = 'studentData';
-        componentState.userNamesArray = _this.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
-
-        _this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
-
-        // next, send notifications to students who have posted a response in the same thread as this post
-        var studentData = componentState.studentData;
-        if (studentData != null && _this.responsesMap != null) {
-          var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
-          if (componentStateIdReplyingTo != null) {
-            // populate fields of the notification
-            var fromWorkgroupId = componentState.workgroupId;
-            var notificationType = 'DiscussionReply';
-            var nodeId = componentState.nodeId;
-            var componentId = componentState.componentId;
-            // add the user names to the component state so we can display next to the response
-            var userNamesArray = _this.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
-            var userNames = userNamesArray.map(function (obj) {
-              return obj.name;
-            }).join(', ');
-            var notificationMessage = _this.$translate('discussion.repliedToADiscussionYouWereIn', { userNames: userNames });
-
-            var workgroupsNotifiedSoFar = []; // keep track of workgroups we've already notified, in case a workgroup posts twice on a thread we only want to notify once.
-            // check if we have the component state that was replied to
-            if (_this.responsesMap[componentStateIdReplyingTo] != null) {
-              var originalPostComponentState = _this.responsesMap[componentStateIdReplyingTo];
-              var toWorkgroupId = originalPostComponentState.workgroupId; // notify the workgroup who posted this reply
-              if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId) {
-                var notification = _this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-                _this.NotificationService.saveNotificationToServer(notification).then(function (savedNotification) {
-                  var messageType = 'notification';
-                  _this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-                });
-                workgroupsNotifiedSoFar.push(toWorkgroupId); // make sure we don't notify this workgroup again.
-              }
-
-              // also notify repliers to this thread, if any.
-              if (_this.responsesMap[componentStateIdReplyingTo].replies != null) {
-                var replies = _this.responsesMap[componentStateIdReplyingTo].replies;
-
-                for (var r = 0; r < replies.length; r++) {
-                  var reply = replies[r];
-                  var _toWorkgroupId = reply.workgroupId; // notify the workgroup who posted this reply
-                  if (_toWorkgroupId != null && _toWorkgroupId != fromWorkgroupId && workgroupsNotifiedSoFar.indexOf(_toWorkgroupId) == -1) {
-                    var _notification = _this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, _toWorkgroupId, notificationMessage);
-                    _this.NotificationService.saveNotificationToServer(_notification).then(function (savedNotification) {
-                      var messageType = 'notification';
-                      _this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-                    });
-                    workgroupsNotifiedSoFar.push(_toWorkgroupId); // make sure we don't notify this workgroup again.
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      _this.isSubmit = null;
-    });
-
     _this.$scope.studentdatachanged = function () {
       this.$scope.discussionController.studentDataChanged();
     };
@@ -578,15 +483,115 @@ var DiscussionController = function (_ComponentController) {
     return _this;
   }
 
-  /**
-   * Get the classmate responses
-   */
-
-
   _createClass(DiscussionController, [{
+    key: 'registerStudentWorkSavedToServerListener',
+    value: function registerStudentWorkSavedToServerListener() {
+      var _this3 = this;
+
+      /**
+       * Listen for the 'studentWorkSavedToServer' event which is fired when
+       * we receive the response from saving a component state to the server
+       */
+      this.$scope.$on('studentWorkSavedToServer', function (event, args) {
+
+        var componentState = args.studentWork;
+
+        // check that the component state is for this component
+        if (componentState && _this3.nodeId === componentState.nodeId && _this3.componentId === componentState.componentId) {
+
+          // check if the classmate responses are gated
+          if (_this3.isClassmateResponsesGated() && !_this3.retrievedClassmateResponses) {
+            /*
+             * the classmate responses are gated and we haven't retrieved
+             * them yet so we will obtain them now and show them since the student
+             * has just submitted a response. getting the classmate responses will
+             * also get the post the student just saved to the server.
+             */
+            _this3.getClassmateResponses();
+          } else {
+            /*
+             * the classmate responses are not gated or have already been retrieved
+             * which means they are already being displayed. we just need to add the
+             * new response in this case.
+             */
+
+            // add the component state to our collection of class responses
+            _this3.addClassResponse(componentState);
+          }
+
+          _this3.disableComponentIfNecessary();
+
+          // send the student post to web sockets so all the classmates receive it in real time
+          var messageType = 'studentData';
+          componentState.userNamesArray = _this3.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
+
+          _this3.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
+
+          // next, send notifications to students who have posted a response in the same thread as this post
+          var studentData = componentState.studentData;
+          if (studentData != null && _this3.responsesMap != null) {
+            var componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
+            if (componentStateIdReplyingTo != null) {
+              // populate fields of the notification
+              var fromWorkgroupId = componentState.workgroupId;
+              var notificationType = 'DiscussionReply';
+              var nodeId = componentState.nodeId;
+              var componentId = componentState.componentId;
+              // add the user names to the component state so we can display next to the response
+              var userNamesArray = _this3.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
+              var userNames = userNamesArray.map(function (obj) {
+                return obj.name;
+              }).join(', ');
+              var notificationMessage = _this3.$translate('discussion.repliedToADiscussionYouWereIn', { userNames: userNames });
+
+              var workgroupsNotifiedSoFar = []; // keep track of workgroups we've already notified, in case a workgroup posts twice on a thread we only want to notify once.
+              // check if we have the component state that was replied to
+              if (_this3.responsesMap[componentStateIdReplyingTo] != null) {
+                var originalPostComponentState = _this3.responsesMap[componentStateIdReplyingTo];
+                var toWorkgroupId = originalPostComponentState.workgroupId; // notify the workgroup who posted this reply
+                if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId) {
+                  var notification = _this3.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
+                  _this3.NotificationService.saveNotificationToServer(notification).then(function (savedNotification) {
+                    var messageType = 'notification';
+                    _this3.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
+                  });
+                  workgroupsNotifiedSoFar.push(toWorkgroupId); // make sure we don't notify this workgroup again.
+                }
+
+                // also notify repliers to this thread, if any.
+                if (_this3.responsesMap[componentStateIdReplyingTo].replies != null) {
+                  var replies = _this3.responsesMap[componentStateIdReplyingTo].replies;
+
+                  for (var r = 0; r < replies.length; r++) {
+                    var reply = replies[r];
+                    var _toWorkgroupId = reply.workgroupId; // notify the workgroup who posted this reply
+                    if (_toWorkgroupId != null && _toWorkgroupId != fromWorkgroupId && workgroupsNotifiedSoFar.indexOf(_toWorkgroupId) == -1) {
+                      var _notification = _this3.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, _toWorkgroupId, notificationMessage);
+                      _this3.NotificationService.saveNotificationToServer(_notification).then(function (savedNotification) {
+                        var messageType = 'notification';
+                        _this3.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
+                      });
+                      workgroupsNotifiedSoFar.push(_toWorkgroupId); // make sure we don't notify this workgroup again.
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        _this3.isSubmit = null;
+      });
+    }
+
+    /**
+     * Get the classmate responses
+     */
+
+  }, {
     key: 'getClassmateResponses',
     value: function getClassmateResponses() {
-      var _this3 = this;
+      var _this4 = this;
 
       var nodeId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.nodeId;
       var componentId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.componentId;
@@ -607,7 +612,7 @@ var DiscussionController = function (_ComponentController) {
           var annotations = result.annotations;
 
           // set the classmate responses
-          _this3.setClassResponses(componentStates, annotations);
+          _this4.setClassResponses(componentStates, annotations);
         }
       });
     }
@@ -641,7 +646,7 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'studentDataChanged',
     value: function studentDataChanged() {
-      var _this4 = this;
+      var _this5 = this;
 
       /*
        * set the dirty flag so we will know we need to save the
@@ -659,7 +664,7 @@ var DiscussionController = function (_ComponentController) {
 
       // create a component state populated with the student data
       this.createComponentState(action).then(function (componentState) {
-        _this4.$scope.$emit('componentStudentDataChanged', { nodeId: _this4.nodeId, componentId: _this4.componentId, componentState: componentState });
+        _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });
       });
     }
   }, {
@@ -889,7 +894,7 @@ var DiscussionController = function (_ComponentController) {
      * @param studentAsset
      */
     value: function attachStudentAsset(studentAsset) {
-      var _this5 = this;
+      var _this6 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -899,8 +904,8 @@ var DiscussionController = function (_ComponentController) {
               iconURL: copiedAsset.iconURL
             };
 
-            _this5.newAttachments.push(attachment);
-            _this5.studentDataChanged();
+            _this6.newAttachments.push(attachment);
+            _this6.studentDataChanged();
           }
         });
       }
@@ -1323,7 +1328,7 @@ var DiscussionController = function (_ComponentController) {
      * so that we can perform saving before exiting.
      */
     value: function registerExitListener() {
-      var _this6 = this;
+      var _this7 = this;
 
       /*
        * Listen for the 'exit' event which is fired when the student exits
@@ -1331,7 +1336,7 @@ var DiscussionController = function (_ComponentController) {
        */
       this.exitListener = this.$scope.$on('exit', function (event, args) {
         // do nothing
-        _this6.$rootScope.$broadcast('doneExiting');
+        _this7.$rootScope.$broadcast('doneExiting');
       });
     }
   }, {
@@ -1426,7 +1431,7 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'deletebuttonclicked',
     value: function deletebuttonclicked(componentState) {
-      var _this7 = this;
+      var _this8 = this;
 
       if (componentState != null) {
 
@@ -1462,13 +1467,13 @@ var DiscussionController = function (_ComponentController) {
         this.AnnotationService.saveAnnotation(annotation).then(function () {
 
           // get the component states made by the student
-          var componentStates = _this7.DiscussionService.getPostsAssociatedWithWorkgroupId(_this7.componentId, _this7.workgroupId);
+          var componentStates = _this8.DiscussionService.getPostsAssociatedWithWorkgroupId(_this8.componentId, _this8.workgroupId);
 
           // get the annotations for the component states
-          var annotations = _this7.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+          var annotations = _this8.getInappropriateFlagAnnotationsByComponentStates(componentStates);
 
           // refresh the teacher view of the posts
-          _this7.setClassResponses(componentStates, annotations);
+          _this8.setClassResponses(componentStates, annotations);
         });
       }
     }
@@ -1485,7 +1490,7 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'undodeletebuttonclicked',
     value: function undodeletebuttonclicked(componentState) {
-      var _this8 = this;
+      var _this9 = this;
 
       if (componentState != null) {
 
@@ -1521,13 +1526,13 @@ var DiscussionController = function (_ComponentController) {
         this.AnnotationService.saveAnnotation(annotation).then(function () {
 
           // get the component states made by the student
-          var componentStates = _this8.DiscussionService.getPostsAssociatedWithWorkgroupId(_this8.componentId, _this8.workgroupId);
+          var componentStates = _this9.DiscussionService.getPostsAssociatedWithWorkgroupId(_this9.componentId, _this9.workgroupId);
 
           // get the annotations for the component states
-          var annotations = _this8.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+          var annotations = _this9.getInappropriateFlagAnnotationsByComponentStates(componentStates);
 
           // refresh the teacher view of the posts
-          _this8.setClassResponses(componentStates, annotations);
+          _this9.setClassResponses(componentStates, annotations);
         });
       }
     }

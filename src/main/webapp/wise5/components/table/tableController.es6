@@ -333,108 +333,6 @@ class TableController extends ComponentController {
     }.bind(this);
 
     /**
-     * Listen for the 'studentWorkSavedToServer' event which is fired when
-     * we receive the response from saving a component state to the server
-     */
-    this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function(event, args) {
-
-      let componentState = args.studentWork;
-
-      // check that the component state is for this component
-      if (componentState && this.nodeId === componentState.nodeId
-        && this.componentId === componentState.componentId) {
-
-        // set isDirty to false because the component state was just saved and notify node
-        this.isDirty = false;
-        this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: false});
-
-        let isAutoSave = componentState.isAutoSave;
-        let isSubmit = componentState.isSubmit;
-        let serverSaveTime = componentState.serverSaveTime;
-        let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-        // set save message
-        if (isSubmit) {
-          this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
-
-          this.lockIfNecessary();
-
-          // set isSubmitDirty to false because the component state was just submitted and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        } else if (isAutoSave) {
-          this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
-        } else {
-          this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
-        }
-      }
-
-      // check if the component state is from a connected component
-      if (this.ProjectService.isConnectedComponent(this.nodeId, this.componentId, componentState.componentId)) {
-
-        // get the connected component params
-        var connectedComponentParams = this.ProjectService.getConnectedComponentParams(this.componentContent, componentState.componentId);
-
-        if (connectedComponentParams != null) {
-
-          if (connectedComponentParams.updateOn === 'save' ||
-            (connectedComponentParams.updateOn === 'submit' && componentState.isSubmit)) {
-
-            var performUpdate = false;
-
-            /*
-             * make a copy of the component state so we don't accidentally
-             * change any values in the referenced object
-             */
-            componentState = this.UtilService.makeCopyOfJSONObject(componentState);
-
-            /*
-             * make sure the student hasn't entered any values into the
-             * table so that we don't overwrite any of their work.
-             */
-            if (this.isTableEmpty() || this.isTableReset()) {
-              /*
-               * the student has not entered any values into the table
-               * so we can update it
-               */
-              performUpdate = true;
-            } else {
-              /*
-               * the student has entered values into the table so we
-               * will ask them if they want to update it
-               */
-              /*
-              var answer = confirm('Do you want to update the connected table?');
-
-              if (answer) {
-                // the student answered yes
-                performUpdate = true;
-              }
-              */
-              performUpdate = true;
-            }
-
-            if (performUpdate) {
-              // set the table data
-              this.$scope.tableController.setStudentWork(componentState);
-
-              // the table has changed
-              this.$scope.tableController.isDirty = true;
-              this.$scope.tableController.isSubmitDirty = true;
-            }
-
-            /*
-             * remember the component state and connected component params
-             * in case we need to use them again later
-             */
-            this.latestConnectedComponentState = componentState;
-            this.latestConnectedComponentParams = connectedComponentParams;
-          }
-        }
-      }
-    }));
-
-    /**
      * Listen for the 'exitNode' event which is fired when the student
      * exits the parent node. This will perform any necessary cleanup
      * when the student exits the parent node.
@@ -538,6 +436,110 @@ class TableController extends ComponentController {
     });
 
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+  }
+
+  registerStudentWorkSavedToServerListener() {
+    /**
+     * Listen for the 'studentWorkSavedToServer' event which is fired when
+     * we receive the response from saving a component state to the server
+     */
+    this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function(event, args) {
+
+      let componentState = args.studentWork;
+
+      // check that the component state is for this component
+      if (componentState && this.nodeId === componentState.nodeId
+        && this.componentId === componentState.componentId) {
+
+        // set isDirty to false because the component state was just saved and notify node
+        this.isDirty = false;
+        this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: false});
+
+        let isAutoSave = componentState.isAutoSave;
+        let isSubmit = componentState.isSubmit;
+        let serverSaveTime = componentState.serverSaveTime;
+        let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+
+        // set save message
+        if (isSubmit) {
+          this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
+
+          this.lockIfNecessary();
+
+          // set isSubmitDirty to false because the component state was just submitted and notify node
+          this.isSubmitDirty = false;
+          this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
+        } else if (isAutoSave) {
+          this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
+        } else {
+          this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
+        }
+      }
+
+      // check if the component state is from a connected component
+      if (this.ProjectService.isConnectedComponent(this.nodeId, this.componentId, componentState.componentId)) {
+
+        // get the connected component params
+        var connectedComponentParams = this.ProjectService.getConnectedComponentParams(this.componentContent, componentState.componentId);
+
+        if (connectedComponentParams != null) {
+
+          if (connectedComponentParams.updateOn === 'save' ||
+            (connectedComponentParams.updateOn === 'submit' && componentState.isSubmit)) {
+
+            var performUpdate = false;
+
+            /*
+             * make a copy of the component state so we don't accidentally
+             * change any values in the referenced object
+             */
+            componentState = this.UtilService.makeCopyOfJSONObject(componentState);
+
+            /*
+             * make sure the student hasn't entered any values into the
+             * table so that we don't overwrite any of their work.
+             */
+            if (this.isTableEmpty() || this.isTableReset()) {
+              /*
+               * the student has not entered any values into the table
+               * so we can update it
+               */
+              performUpdate = true;
+            } else {
+              /*
+               * the student has entered values into the table so we
+               * will ask them if they want to update it
+               */
+              /*
+              var answer = confirm('Do you want to update the connected table?');
+
+              if (answer) {
+                // the student answered yes
+                performUpdate = true;
+              }
+              */
+              performUpdate = true;
+            }
+
+            if (performUpdate) {
+              // set the table data
+              this.$scope.tableController.setStudentWork(componentState);
+
+              // the table has changed
+              this.$scope.tableController.isDirty = true;
+              this.$scope.tableController.isSubmitDirty = true;
+            }
+
+            /*
+             * remember the component state and connected component params
+             * in case we need to use them again later
+             */
+            this.latestConnectedComponentState = componentState;
+            this.latestConnectedComponentParams = connectedComponentParams;
+          }
+        }
+      }
+    }));
   }
 
   handleNodeSubmit() {

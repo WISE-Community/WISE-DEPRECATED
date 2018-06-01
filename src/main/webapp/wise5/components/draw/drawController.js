@@ -221,105 +221,6 @@ var DrawController = function (_ComponentController) {
       return deferred.promise;
     }.bind(_this);
 
-    /**
-     * Listen for the 'studentWorkSavedToServer' event which is fired when
-     * we receive the response from saving a component state to the server
-     */
-    _this.$scope.$on('studentWorkSavedToServer', angular.bind(_this, function (event, args) {
-
-      var componentState = args.studentWork;
-
-      // check that the component state is for this component
-      if (componentState && this.nodeId === componentState.nodeId && this.componentId === componentState.componentId) {
-
-        // set isDirty to false because the component state was just saved and notify node
-        this.isDirty = false;
-        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
-
-        var isAutoSave = componentState.isAutoSave;
-        var isSubmit = componentState.isSubmit;
-        var serverSaveTime = componentState.serverSaveTime;
-        var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-        // set save message
-        if (isSubmit) {
-          this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
-
-          this.lockIfNecessary();
-
-          // set isSubmitDirty to false because the component state was just submitted and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-        } else if (isAutoSave) {
-          this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
-        } else {
-          this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
-        }
-      }
-
-      // check if the component state is from a connected component
-      if (this.ProjectService.isConnectedComponent(this.nodeId, this.componentId, componentState.componentId)) {
-
-        // get the connected component params
-        var connectedComponentParams = this.ProjectService.getConnectedComponentParams(this.componentContent, componentState.componentId);
-
-        if (connectedComponentParams != null) {
-
-          if (connectedComponentParams.updateOn === 'save' || connectedComponentParams.updateOn === 'submit' && componentState.isSubmit) {
-
-            var performUpdate = false;
-
-            /*
-             * make a copy of the component state so we don't accidentally
-             * change any values in the referenced object
-             */
-            componentState = this.UtilService.makeCopyOfJSONObject(componentState);
-
-            /*
-             * check if the the canvas is empty which means the student has
-             * not drawn anything yet
-             */
-            if (this.isCanvasEmpty()) {
-              performUpdate = true;
-            } else {
-              /*
-               * the student has drawn on the canvas so we
-               * will ask them if they want to update it
-               */
-              var answer = confirm(this.$translate('draw.doYouWantToUpdateTheConnectedDrawing'));
-
-              if (answer) {
-                // the student answered yes
-                performUpdate = true;
-              }
-            }
-
-            if (performUpdate) {
-
-              if (!connectedComponentParams.includeBackground) {
-                // remove the background from the draw data
-                this.DrawService.removeBackgroundFromComponentState(componentState);
-              }
-
-              // update the draw data
-              this.setDrawData(componentState);
-
-              // the table has changed
-              this.$scope.drawController.isDirty = true;
-              this.$scope.drawController.isSubmitDirty = true;
-            }
-
-            /*
-             * remember the component state and connected component params
-             * in case we need to use them again later
-             */
-            this.latestConnectedComponentState = componentState;
-            this.latestConnectedComponentParams = connectedComponentParams;
-          }
-        }
-      }
-    }));
-
     /*
      * Listen for the requestImage event which is fired when something needs
      * an image representation of the student data from a specific
@@ -479,6 +380,108 @@ var DrawController = function (_ComponentController) {
   }
 
   _createClass(DrawController, [{
+    key: 'registerStudentWorkSavedToServerListener',
+    value: function registerStudentWorkSavedToServerListener() {
+      /**
+       * Listen for the 'studentWorkSavedToServer' event which is fired when
+       * we receive the response from saving a component state to the server
+       */
+      this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function (event, args) {
+
+        var componentState = args.studentWork;
+
+        // check that the component state is for this component
+        if (componentState && this.nodeId === componentState.nodeId && this.componentId === componentState.componentId) {
+
+          // set isDirty to false because the component state was just saved and notify node
+          this.isDirty = false;
+          this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
+
+          var isAutoSave = componentState.isAutoSave;
+          var isSubmit = componentState.isSubmit;
+          var serverSaveTime = componentState.serverSaveTime;
+          var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+
+          // set save message
+          if (isSubmit) {
+            this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
+
+            this.lockIfNecessary();
+
+            // set isSubmitDirty to false because the component state was just submitted and notify node
+            this.isSubmitDirty = false;
+            this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
+          } else if (isAutoSave) {
+            this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
+          } else {
+            this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
+          }
+        }
+
+        // check if the component state is from a connected component
+        if (this.ProjectService.isConnectedComponent(this.nodeId, this.componentId, componentState.componentId)) {
+
+          // get the connected component params
+          var connectedComponentParams = this.ProjectService.getConnectedComponentParams(this.componentContent, componentState.componentId);
+
+          if (connectedComponentParams != null) {
+
+            if (connectedComponentParams.updateOn === 'save' || connectedComponentParams.updateOn === 'submit' && componentState.isSubmit) {
+
+              var performUpdate = false;
+
+              /*
+               * make a copy of the component state so we don't accidentally
+               * change any values in the referenced object
+               */
+              componentState = this.UtilService.makeCopyOfJSONObject(componentState);
+
+              /*
+               * check if the the canvas is empty which means the student has
+               * not drawn anything yet
+               */
+              if (this.isCanvasEmpty()) {
+                performUpdate = true;
+              } else {
+                /*
+                 * the student has drawn on the canvas so we
+                 * will ask them if they want to update it
+                 */
+                var answer = confirm(this.$translate('draw.doYouWantToUpdateTheConnectedDrawing'));
+
+                if (answer) {
+                  // the student answered yes
+                  performUpdate = true;
+                }
+              }
+
+              if (performUpdate) {
+
+                if (!connectedComponentParams.includeBackground) {
+                  // remove the background from the draw data
+                  this.DrawService.removeBackgroundFromComponentState(componentState);
+                }
+
+                // update the draw data
+                this.setDrawData(componentState);
+
+                // the table has changed
+                this.$scope.drawController.isDirty = true;
+                this.$scope.drawController.isSubmitDirty = true;
+              }
+
+              /*
+               * remember the component state and connected component params
+               * in case we need to use them again later
+               */
+              this.latestConnectedComponentState = componentState;
+              this.latestConnectedComponentParams = connectedComponentParams;
+            }
+          }
+        }
+      }));
+    }
+  }, {
     key: 'handleNodeSubmit',
     value: function handleNodeSubmit() {
       this.submit('nodeSubmitButton');

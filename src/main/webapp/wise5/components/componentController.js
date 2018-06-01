@@ -85,6 +85,30 @@ var ComponentController = function () {
           _this.handleNodeSubmit();
         }
       });
+
+      this.registerStudentWorkSavedToServerListener();
+    }
+  }, {
+    key: 'registerStudentWorkSavedToServerListener',
+    value: function registerStudentWorkSavedToServerListener() {
+      this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function (event, args) {
+        var componentState = args.studentWork;
+        if (componentState && this.nodeId === componentState.nodeId && this.componentId === componentState.componentId) {
+          this.isDirty = false;
+          this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: this.isDirty });
+          var clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
+          if (componentState.isSubmit) {
+            this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
+            this.lockIfNecessary();
+            this.isSubmitDirty = false;
+            this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: this.isSubmitDirty });
+          } else if (componentState.isAutoSave) {
+            this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
+          } else {
+            this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
+          }
+        }
+      }));
     }
   }, {
     key: 'handleNodeSubmit',

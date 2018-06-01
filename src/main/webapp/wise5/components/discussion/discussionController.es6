@@ -332,102 +332,6 @@ class DiscussionController extends ComponentController {
       // do nothing
     });
 
-    /**
-     * Listen for the 'studentWorkSavedToServer' event which is fired when
-     * we receive the response from saving a component state to the server
-     */
-    this.$scope.$on('studentWorkSavedToServer', (event, args) => {
-
-      let componentState = args.studentWork;
-
-      // check that the component state is for this component
-      if (componentState && this.nodeId === componentState.nodeId
-        && this.componentId === componentState.componentId) {
-
-        // check if the classmate responses are gated
-        if (this.isClassmateResponsesGated() && !this.retrievedClassmateResponses) {
-          /*
-           * the classmate responses are gated and we haven't retrieved
-           * them yet so we will obtain them now and show them since the student
-           * has just submitted a response. getting the classmate responses will
-           * also get the post the student just saved to the server.
-           */
-          this.getClassmateResponses();
-        } else {
-          /*
-           * the classmate responses are not gated or have already been retrieved
-           * which means they are already being displayed. we just need to add the
-           * new response in this case.
-           */
-
-          // add the component state to our collection of class responses
-          this.addClassResponse(componentState);
-        }
-
-        this.disableComponentIfNecessary();
-
-        // send the student post to web sockets so all the classmates receive it in real time
-        let messageType = 'studentData';
-        componentState.userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
-
-        this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
-
-        // next, send notifications to students who have posted a response in the same thread as this post
-        let studentData = componentState.studentData;
-        if (studentData != null && this.responsesMap != null) {
-          let componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
-          if (componentStateIdReplyingTo != null) {
-            // populate fields of the notification
-            let fromWorkgroupId = componentState.workgroupId;
-            let notificationType = 'DiscussionReply';
-            let nodeId = componentState.nodeId;
-            let componentId = componentState.componentId;
-            // add the user names to the component state so we can display next to the response
-            let userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
-            let userNames = userNamesArray.map( (obj) => {
-              return obj.name;
-            }).join(', ');
-            let notificationMessage = this.$translate('discussion.repliedToADiscussionYouWereIn', { userNames: userNames });
-
-            let workgroupsNotifiedSoFar = [];  // keep track of workgroups we've already notified, in case a workgroup posts twice on a thread we only want to notify once.
-            // check if we have the component state that was replied to
-            if (this.responsesMap[componentStateIdReplyingTo] != null) {
-              let originalPostComponentState = this.responsesMap[componentStateIdReplyingTo];
-              let toWorkgroupId = originalPostComponentState.workgroupId; // notify the workgroup who posted this reply
-              if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId) {
-                let notification = this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-                this.NotificationService.saveNotificationToServer(notification).then((savedNotification) => {
-                  let messageType = 'notification';
-                  this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-                });
-                workgroupsNotifiedSoFar.push(toWorkgroupId);  // make sure we don't notify this workgroup again.
-              }
-
-              // also notify repliers to this thread, if any.
-              if (this.responsesMap[componentStateIdReplyingTo].replies != null) {
-                let replies = this.responsesMap[componentStateIdReplyingTo].replies;
-
-                for (let r = 0; r < replies.length; r++) {
-                  let reply = replies[r];
-                  let toWorkgroupId = reply.workgroupId; // notify the workgroup who posted this reply
-                  if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId && workgroupsNotifiedSoFar.indexOf(toWorkgroupId) == -1) {
-                    let notification = this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
-                    this.NotificationService.saveNotificationToServer(notification).then((savedNotification) => {
-                      let messageType = 'notification';
-                      this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
-                    });
-                    workgroupsNotifiedSoFar.push(toWorkgroupId);  // make sure we don't notify this workgroup again.
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      this.isSubmit = null;
-    });
-
     this.$scope.studentdatachanged = function() {
       this.$scope.discussionController.studentDataChanged();
     };
@@ -587,6 +491,104 @@ class DiscussionController extends ComponentController {
     });
 
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+  }
+
+  registerStudentWorkSavedToServerListener() {
+    /**
+     * Listen for the 'studentWorkSavedToServer' event which is fired when
+     * we receive the response from saving a component state to the server
+     */
+    this.$scope.$on('studentWorkSavedToServer', (event, args) => {
+
+      let componentState = args.studentWork;
+
+      // check that the component state is for this component
+      if (componentState && this.nodeId === componentState.nodeId
+        && this.componentId === componentState.componentId) {
+
+        // check if the classmate responses are gated
+        if (this.isClassmateResponsesGated() && !this.retrievedClassmateResponses) {
+          /*
+           * the classmate responses are gated and we haven't retrieved
+           * them yet so we will obtain them now and show them since the student
+           * has just submitted a response. getting the classmate responses will
+           * also get the post the student just saved to the server.
+           */
+          this.getClassmateResponses();
+        } else {
+          /*
+           * the classmate responses are not gated or have already been retrieved
+           * which means they are already being displayed. we just need to add the
+           * new response in this case.
+           */
+
+          // add the component state to our collection of class responses
+          this.addClassResponse(componentState);
+        }
+
+        this.disableComponentIfNecessary();
+
+        // send the student post to web sockets so all the classmates receive it in real time
+        let messageType = 'studentData';
+        componentState.userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(componentState.workgroupId);
+
+        this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, componentState);
+
+        // next, send notifications to students who have posted a response in the same thread as this post
+        let studentData = componentState.studentData;
+        if (studentData != null && this.responsesMap != null) {
+          let componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
+          if (componentStateIdReplyingTo != null) {
+            // populate fields of the notification
+            let fromWorkgroupId = componentState.workgroupId;
+            let notificationType = 'DiscussionReply';
+            let nodeId = componentState.nodeId;
+            let componentId = componentState.componentId;
+            // add the user names to the component state so we can display next to the response
+            let userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(fromWorkgroupId);
+            let userNames = userNamesArray.map( (obj) => {
+              return obj.name;
+            }).join(', ');
+            let notificationMessage = this.$translate('discussion.repliedToADiscussionYouWereIn', { userNames: userNames });
+
+            let workgroupsNotifiedSoFar = [];  // keep track of workgroups we've already notified, in case a workgroup posts twice on a thread we only want to notify once.
+            // check if we have the component state that was replied to
+            if (this.responsesMap[componentStateIdReplyingTo] != null) {
+              let originalPostComponentState = this.responsesMap[componentStateIdReplyingTo];
+              let toWorkgroupId = originalPostComponentState.workgroupId; // notify the workgroup who posted this reply
+              if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId) {
+                let notification = this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
+                this.NotificationService.saveNotificationToServer(notification).then((savedNotification) => {
+                  let messageType = 'notification';
+                  this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
+                });
+                workgroupsNotifiedSoFar.push(toWorkgroupId);  // make sure we don't notify this workgroup again.
+              }
+
+              // also notify repliers to this thread, if any.
+              if (this.responsesMap[componentStateIdReplyingTo].replies != null) {
+                let replies = this.responsesMap[componentStateIdReplyingTo].replies;
+
+                for (let r = 0; r < replies.length; r++) {
+                  let reply = replies[r];
+                  let toWorkgroupId = reply.workgroupId; // notify the workgroup who posted this reply
+                  if (toWorkgroupId != null && toWorkgroupId != fromWorkgroupId && workgroupsNotifiedSoFar.indexOf(toWorkgroupId) == -1) {
+                    let notification = this.NotificationService.createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, notificationMessage);
+                    this.NotificationService.saveNotificationToServer(notification).then((savedNotification) => {
+                      let messageType = 'notification';
+                      this.StudentWebSocketService.sendStudentToClassmatesInPeriodMessage(messageType, savedNotification);
+                    });
+                    workgroupsNotifiedSoFar.push(toWorkgroupId);  // make sure we don't notify this workgroup again.
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      this.isSubmit = null;
+    });
   }
 
   /**

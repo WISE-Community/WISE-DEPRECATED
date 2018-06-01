@@ -168,39 +168,6 @@ var EmbeddedController = function (_ComponentController) {
       _this.sendMessageToApplication(message);
     };
 
-    _this.$scope.$on('studentWorkSavedToServer', function (event, args) {
-      var componentState = args.studentWork;
-      if (componentState != null) {
-        if (componentState.componentId === _this.componentId) {
-          // set isDirty to false because the component state was just saved and notify node
-          _this.isDirty = false;
-          _this.$scope.$emit('componentDirty', { componentId: _this.componentId, isDirty: false });
-          _this.$scope.embeddedController.componentState = null;
-
-          var isAutoSave = componentState.isAutoSave;
-          var isSubmit = componentState.isSubmit;
-          var serverSaveTime = componentState.serverSaveTime;
-          var clientSaveTime = _this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-          if (isSubmit) {
-            _this.setSaveMessage(_this.$translate('SUBMITTED'), clientSaveTime);
-            _this.submit();
-            _this.isSubmitDirty = false;
-            _this.$scope.$emit('componentSubmitDirty', { componentId: _this.componentId, isDirty: false });
-          } else if (isAutoSave) {
-            _this.setSaveMessage(_this.$translate('AUTO_SAVED'), clientSaveTime);
-          } else {
-            _this.setSaveMessage(_this.$translate('SAVED'), clientSaveTime);
-          }
-
-          var message = {};
-          message.messageType = 'componentStateSaved';
-          message.componentState = componentState;
-          _this.sendMessageToApplication(message);
-        }
-      }
-    });
-
     /**
      * Get the component state from this component. The parent node will
      * call this function to obtain the component state when it needs to
@@ -430,6 +397,44 @@ var EmbeddedController = function (_ComponentController) {
   }
 
   _createClass(EmbeddedController, [{
+    key: 'registerStudentWorkSavedToServerListener',
+    value: function registerStudentWorkSavedToServerListener() {
+      var _this2 = this;
+
+      this.$scope.$on('studentWorkSavedToServer', function (event, args) {
+        var componentState = args.studentWork;
+        if (componentState != null) {
+          if (componentState.componentId === _this2.componentId) {
+            // set isDirty to false because the component state was just saved and notify node
+            _this2.isDirty = false;
+            _this2.$scope.$emit('componentDirty', { componentId: _this2.componentId, isDirty: false });
+            _this2.$scope.embeddedController.componentState = null;
+
+            var isAutoSave = componentState.isAutoSave;
+            var isSubmit = componentState.isSubmit;
+            var serverSaveTime = componentState.serverSaveTime;
+            var clientSaveTime = _this2.ConfigService.convertToClientTimestamp(serverSaveTime);
+
+            if (isSubmit) {
+              _this2.setSaveMessage(_this2.$translate('SUBMITTED'), clientSaveTime);
+              _this2.submit();
+              _this2.isSubmitDirty = false;
+              _this2.$scope.$emit('componentSubmitDirty', { componentId: _this2.componentId, isDirty: false });
+            } else if (isAutoSave) {
+              _this2.setSaveMessage(_this2.$translate('AUTO_SAVED'), clientSaveTime);
+            } else {
+              _this2.setSaveMessage(_this2.$translate('SAVED'), clientSaveTime);
+            }
+
+            var message = {};
+            message.messageType = 'componentStateSaved';
+            message.componentState = componentState;
+            _this2.sendMessageToApplication(message);
+          }
+        }
+      });
+    }
+  }, {
     key: 'iframeLoaded',
     value: function iframeLoaded(contentLocation) {
       window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.addEventListener('message', this.messageEventListener);
@@ -593,7 +598,7 @@ var EmbeddedController = function (_ComponentController) {
      * @param $event the click event
      */
     value: function snipModel($event) {
-      var _this2 = this;
+      var _this3 = this;
 
       var iframe = $('#' + this.embeddedApplicationIFrameId);
       if (iframe != null && iframe.length > 0) {
@@ -604,8 +609,8 @@ var EmbeddedController = function (_ComponentController) {
           // convert the model element to a canvas element
           (0, _html2canvas2.default)(modelElement).then(function (canvas) {
             var img_b64 = canvas.toDataURL('image/png');
-            var imageObject = _this2.UtilService.getImageObjectFromBase64String(img_b64);
-            _this2.NotebookService.addNote($event, imageObject);
+            var imageObject = _this3.UtilService.getImageObjectFromBase64String(img_b64);
+            _this3.NotebookService.addNote($event, imageObject);
           });
         }
       }

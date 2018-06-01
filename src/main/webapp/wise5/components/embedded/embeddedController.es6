@@ -190,39 +190,6 @@ class EmbeddedController extends ComponentController {
       this.sendMessageToApplication(message);
     }
 
-    this.$scope.$on('studentWorkSavedToServer', (event, args) => {
-      var componentState = args.studentWork;
-      if (componentState != null) {
-        if (componentState.componentId === this.componentId) {
-          // set isDirty to false because the component state was just saved and notify node
-          this.isDirty = false;
-          this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: false});
-          this.$scope.embeddedController.componentState = null;
-
-          let isAutoSave = componentState.isAutoSave;
-          let isSubmit = componentState.isSubmit;
-          let serverSaveTime = componentState.serverSaveTime;
-          let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-          if (isSubmit) {
-            this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
-            this.submit();
-            this.isSubmitDirty = false;
-            this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-          } else if (isAutoSave) {
-            this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
-          } else {
-            this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
-          }
-
-          var message = {};
-          message.messageType = 'componentStateSaved';
-          message.componentState = componentState;
-          this.sendMessageToApplication(message);
-        }
-      }
-    });
-
     /**
      * Get the component state from this component. The parent node will
      * call this function to obtain the component state when it needs to
@@ -448,6 +415,41 @@ class EmbeddedController extends ComponentController {
     });
 
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+  }
+
+  registerStudentWorkSavedToServerListener() {
+    this.$scope.$on('studentWorkSavedToServer', (event, args) => {
+      var componentState = args.studentWork;
+      if (componentState != null) {
+        if (componentState.componentId === this.componentId) {
+          // set isDirty to false because the component state was just saved and notify node
+          this.isDirty = false;
+          this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: false});
+          this.$scope.embeddedController.componentState = null;
+
+          let isAutoSave = componentState.isAutoSave;
+          let isSubmit = componentState.isSubmit;
+          let serverSaveTime = componentState.serverSaveTime;
+          let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+
+          if (isSubmit) {
+            this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
+            this.submit();
+            this.isSubmitDirty = false;
+            this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
+          } else if (isAutoSave) {
+            this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
+          } else {
+            this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
+          }
+
+          var message = {};
+          message.messageType = 'componentStateSaved';
+          message.componentState = componentState;
+          this.sendMessageToApplication(message);
+        }
+      }
+    });
   }
 
   iframeLoaded(contentLocation) {
