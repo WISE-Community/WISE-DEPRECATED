@@ -229,7 +229,9 @@ var ConceptMapController = function () {
 
       if (this.componentContent.showNodeLabels == null) {
         this.componentContent.showNodeLabels = true;
-        this.authoringComponentContent.showNodeLabels = true;
+        if (this.mode == 'authoring') {
+          this.authoringComponentContent.showNodeLabels = true;
+        }
       }
 
       if (this.mode === 'student') {
