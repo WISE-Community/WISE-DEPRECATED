@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { HomeComponent } from './home.component';
 import { LibraryModule } from "../modules/library/library.module";
 import { LibraryService } from "../services/library.service";
+import { SharedModule } from "../modules/shared/shared.module";
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -19,7 +20,8 @@ describe('HomeComponent', () => {
         BrowserAnimationsModule,
         FlexLayoutModule,
         FormsModule,
-        LibraryModule
+        LibraryModule,
+        SharedModule
       ],
       providers: [
         HttpClient,

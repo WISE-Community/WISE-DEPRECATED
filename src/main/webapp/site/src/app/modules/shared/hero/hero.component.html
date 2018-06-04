@@ -1,0 +1,10 @@
+<section class="hero section"
+         [style.background-image]="bgStyle">
+  <div class="hero__content" fxLayout="column" fxLayoutAlign="center center">
+    <h1 *ngIf="headline" class="hero__headline"
+        [ngClass]="{ 'hero__headline--withtagline': tagline }">
+      {{ headline }}
+    </h1>
+    <h2 *ngIf="tagline" class="hero__tagline">{{ tagline }}</h2>
+  </div>
+</section>
