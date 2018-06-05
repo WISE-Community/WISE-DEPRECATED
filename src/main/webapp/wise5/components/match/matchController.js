@@ -47,7 +47,7 @@ var MatchController = function (_ComponentController) {
     _this.bucketWidth = 100;
 
     // the number of columns for displaying the choices
-    _this.choiceColumns = 1;
+    _this.numChoiceColumns = 1;
 
     // whether to orient the choices and buckets side-by-side
     _this.horizontal = false;
@@ -760,30 +760,30 @@ var MatchController = function (_ComponentController) {
 
         if (this.horizontal) {
           this.bucketWidth = 100;
-          this.choiceColumns = 1;
+          this.numChoiceColumns = 1;
         } else {
           if (typeof this.componentContent.bucketWidth === 'number') {
             this.bucketWidth = this.componentContent.bucketWidth;
-            this.choiceColumns = Math.round(100 / this.componentContent.bucketWidth);
+            this.numChoiceColumns = Math.round(100 / this.componentContent.bucketWidth);
           } else {
             var n = buckets.length;
             if (n % 3 === 0 || n > 4) {
               this.bucketWidth = Math.round(100 / 3);
-              this.choiceColumns = 3;
+              this.numChoiceColumns = 3;
             } else if (n % 2 === 0) {
               this.bucketWidth = 100 / 2;
-              this.choiceColumns = 2;
+              this.numChoiceColumns = 2;
             }
           }
 
-          if (typeof this.componentContent.choiceColumns === 'number') {
-            this.choiceColumns = this.componentContent.choiceColumns;
+          if (typeof this.componentContent.numChoiceColumns === 'number') {
+            this.numChoiceColumns = this.componentContent.numChoiceColumns;
           }
 
           this.choiceStyle = {
-            '-moz-column-count': this.choiceColumns,
-            '-webkit-column-count': this.choiceColumns,
-            'column-count': this.choiceColumns
+            '-moz-column-count': this.numChoiceColumns,
+            '-webkit-column-count': this.numChoiceColumns,
+            'column-count': this.numChoiceColumns
           };
 
           if (this.bucketWidth === 100) {

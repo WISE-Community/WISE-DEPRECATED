@@ -29,43 +29,18 @@ class MatchController extends ComponentController {
     this.$mdMedia = $mdMedia;
     this.autoScroll = require('dom-autoscroller');
 
-    // the choices
     this.choices = [];
-
-    // the buckets
     this.buckets = [];
-
-    // whether the student has correctly placed the choices
     this.isCorrect = null;
-
-    // the flex (%) width for displaying the buckets
-    this.bucketWidth = 100;
-
-    // the number of columns for displaying the choices
-    this.choiceColumns = 1;
-
-    // whether to orient the choices and buckets side-by-side
-    this.horizontal = false;
-
-    // css style for the choice items
+    this.bucketWidth = 100; // the flex (%) width for displaying the buckets
+    this.numChoiceColumns = 1;
+    this.isHorizontal = this.componentContent.horizontal; // whether to orient the choices and buckets side-by-side
     this.choiceStyle = '';
-
-    // css style for the buckets
     this.bucketStyle = '';
-
-    // the latest annotations
     this.latestAnnotations = null;
-
-    // the id for the source bucket
     this.sourceBucketId = '0';
-
-    // whether this component has been authored with a correct answer
     this.hasCorrectAnswer = false;
-
-    // whether the latest component state was a submit
     this.isLatestComponentStateSubmit = false;
-
-    // the options for when to update this component from a connected component
     this.connectedComponentUpdateOnOptions = [
       {
         value: 'change',
@@ -76,37 +51,23 @@ class MatchController extends ComponentController {
         text: 'Submit'
       }
     ];
-
-    // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [
       {
         type: 'Match'
       }
     ];
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    this.originalComponentContent = this.$scope.originalComponentContent;
-
-
-    this.horizontal = this.componentContent.horizontal;
-
     if (this.mode === 'student') {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-      // get the latest annotations
       this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
     } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
+      this.isPromptVisible = false;
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
       this.isDisabled = true;
-
       if (this.mode === 'grading') {
-        // get the latest annotations
         this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
       }
     } else if (this.mode === 'onlyShowWork') {
@@ -122,26 +83,10 @@ class MatchController extends ComponentController {
     } else if (this.mode === 'authoring') {
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-      // generate the summernote rubric element id
       this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-
-      // set the component rubric into the summernote rubric
       this.summernoteRubricHTML = this.componentContent.rubric;
-
-      // the tooltip text for the insert WISE asset button
-      var insertAssetString = this.$translate('INSERT_ASSET');
-
-      /*
-       * create the custom button for inserting WISE assets into
-       * summernote
-       */
-      var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
-
-      /*
-       * the options that specifies the tools to display in the
-       * summernote prompt
-       */
+      const insertAssetString = this.$translate('INSERT_ASSET');
+      const InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
       this.summernoteRubricOptions = {
         toolbar: [
           ['style', ['style']],
@@ -168,97 +113,38 @@ class MatchController extends ComponentController {
         return this.authoringComponentContent;
       }.bind(this), function(newValue, oldValue) {
         this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
         this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
         this.isCorrect = null;
         this.submitCounter = 0;
         this.isDisabled = false;
         this.isSubmitButtonDisabled = false;
-
-        /*
-         * initialize the choices and buckets with the values from the
-         * component content
-         */
         this.initializeChoices();
         this.initializeBuckets();
       }.bind(this), true);
     }
 
-    // check if there is a correct answer
     this.hasCorrectAnswer = this.hasCorrectChoices();
-
-    /*
-     * initialize the choices and buckets with the values from the
-     * component content
-     */
     this.initializeChoices();
     this.initializeBuckets();
-
-    // get the component state from the scope
-    var componentState = this.$scope.componentState;
-
+    const componentState = this.$scope.componentState;
     if (this.mode == 'student') {
       if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-        // we will show work from another component
         this.handleConnectedComponents();
       }  else if (this.MatchService.componentStateHasStudentWork(componentState, this.componentContent)) {
-        /*
-         * the student has work so we will populate the work into this
-         * component
-         */
         this.setStudentWork(componentState);
       } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-        // we will import work from another component
         this.handleConnectedComponents();
-      } else if (componentState == null) {
-        // check if we need to import work
-
-        // check if we need to import work
-        var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-        var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-
-        if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-          /*
-           * check if the node id is in the field that we used to store
-           * the import previous work node id in
-           */
-          importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-        }
-
-        if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-          /*
-           * check if the component id is in the field that we used to store
-           * the import previous work component id in
-           */
-          importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-        }
-
-        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-          // import the work from the other component
-          this.importWork();
-        }
       }
     } else {
-      // populate the student work into this component
       this.setStudentWork(componentState);
     }
 
     if (componentState != null && componentState.isSubmit) {
-      /*
-       * the latest component state is a submit. this is used to
-       * determine if we should show the feedback.
-       */
-      this.isLatestComponentStateSubmit = true;
+      this.isLatestComponentStateSubmit = componentState.isSubmit === true;
     }
 
-    // check if the student has used up all of their submits
-    if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-      /*
-       * the student has used up all of their chances to submit so we
-       * will disable the submit button
-       */
+    if (this.studentHasUsedAllSubmits()) {
       this.isDisabled = true;
       this.isSubmitButtonDisabled = true;
     }
@@ -266,27 +152,127 @@ class MatchController extends ComponentController {
     this.disableComponentIfNecessary();
 
     if (this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
       this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
     }
 
-    let dragId = 'match_' + this.componentId;
-    // handle choice drop events
-    let dropEvent = dragId + '.drop-model';
-    this.$scope.$on(dropEvent, (e, el, container, source) => {
-      // choice item has been dropped in new location, so run studentDataChanged function
-      this.$scope.matchController.studentDataChanged();
+    this.registerDragListeners();
+
+    /**
+     * Get the component state from this component. The parent node will
+     * call this function to obtain the component state when it needs to
+     * save student data.
+     * @param {boolean} isSubmit whether the request is coming from a submit
+     * action (optional; default is false)
+     * @return {promise} a promise of a component state containing the student data
+     */
+    this.$scope.getComponentState = (isSubmit) => {
+      const deferred = this.$q.defer();
+      let hasDirtyWork = false;
+      let action = 'change';
+
+      if (isSubmit) {
+        if (this.$scope.matchController.isSubmitDirty) {
+          hasDirtyWork = true;
+          action = 'submit';
+        }
+      } else {
+        if (this.$scope.matchController.isDirty) {
+          hasDirtyWork = true;
+          action = 'save';
+        }
+      }
+
+      if (hasDirtyWork) {
+        this.$scope.matchController.createComponentState(action).then((componentState) => {
+          deferred.resolve(componentState);
+        });
+      } else {
+        deferred.resolve();
+      }
+      return deferred.promise;
+    };
+
+    this.$scope.$on('assetSelected', (event, args) => {
+      if (args.nodeId == this.nodeId && args.componentId == this.componentId) {
+        const assetItem = args.assetItem;
+        const fileName = assetItem.fileName;
+        const assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
+        const fullAssetPath = assetsDirectoryPath + '/' + fileName;
+        if (args.target == 'prompt' || args.target == 'rubric') {
+          let summernoteId = '';
+          if (args.target == 'prompt') {
+            summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
+          } else if (args.target == 'rubric') {
+            summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+          }
+          if (summernoteId != '') {
+            /*
+             * move the cursor back to its position when the asset chooser
+             * popup was clicked
+             */
+            $('#' + summernoteId).summernote('editor.restoreRange');
+            $('#' + summernoteId).summernote('editor.focus');
+
+            if (this.UtilService.isImage(fileName)) {
+              $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+            } else if (this.UtilService.isVideo(fileName)) {
+              const videoElement = document.createElement('video');
+              videoElement.controls = 'true';
+              videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+              $('#' + summernoteId).summernote('insertNode', videoElement);
+            }
+          }
+        } else if (args.target == 'choice') {
+          const choiceObject = args.targetObject;
+          choiceObject.value = '<img src="' + fileName + '"/>';
+          this.authoringViewComponentChanged();
+        } else if (args.target == 'bucket') {
+          const bucketObject = args.targetObject;
+          bucketObject.value = '<img src="' + fileName + '"/>';
+          this.authoringViewComponentChanged();
+        }
+      }
+      this.$mdDialog.hide();
     });
 
-    // drag and drop options
+    this.$scope.$on('componentAdvancedButtonClicked', (event, args) => {
+      if (this.componentId === args.componentId) {
+        this.showAdvancedAuthoring = !this.showAdvancedAuthoring;
+      }
+    });
+
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+  }
+
+  studentHasUsedAllSubmits() {
+    return this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount;
+  }
+
+  registerDragListeners() {
+    const dragId = 'match_' + this.componentId;
+    this.registerStudentDataChangedOnDrop(dragId);
+    this.disableDraggingIfNeeded(dragId);
+    const drake = this.dragulaService.find(this.$scope, dragId).drake;
+    this.showVisualIndicatorWhileDragging(drake);
+    this.supportScrollWhileDragging(drake);
+  }
+
+  registerStudentDataChangedOnDrop(dragId) {
+    const dropEvent = dragId + '.drop-model';
+    this.$scope.$on(dropEvent, (e, el, container, source) => {
+      this.$scope.matchController.studentDataChanged();
+    });
+  }
+
+  disableDraggingIfNeeded(dragId) {
     this.dragulaService.options(this.$scope, dragId, {
       moves: (el, source, handle, sibling) => {
         return !this.$scope.matchController.isDisabled;
       }
     });
+  }
 
-    // provide visual indicator when choice is dragged over a new bucket
-    let drake = dragulaService.find(this.$scope, dragId).drake;
+  showVisualIndicatorWhileDragging(drake) {
     drake.on('over', (el, container, source) => {
       if (source !== container) {
         container.className += ' match-bucket__contents--over';
@@ -296,201 +282,19 @@ class MatchController extends ComponentController {
         container.className = container.className.replace('match-bucket__contents--over', '');;
       }
     });
+  }
 
-    // support scroll while dragging
-    let scroll = this.autoScroll(
+  supportScrollWhileDragging(drake) {
+    this.autoScroll(
       [document.querySelector('#content')], {
-      margin: 30,
-      pixels: 50,
-      scrollWhenOutside: true,
-      autoScroll: function() {
-        // Only scroll when the pointer is down, and there is a child being dragged
-        return this.down && drake.dragging;
-      }
-    });
-
-    /**
-     * Get the component state from this component. The parent node will
-     * call this function to obtain the component state when it needs to
-     * save student data.
-     * @param isSubmit boolean whether the request is coming from a submit
-     * action (optional; default is false)
-     * @return a promise of a component state containing the student data
-     */
-    this.$scope.getComponentState = function(isSubmit) {
-      var deferred = this.$q.defer();
-      let getState = false;
-      let action = 'change';
-
-      if (isSubmit) {
-        if (this.$scope.matchController.isSubmitDirty) {
-          getState = true;
-          action = 'submit';
+        margin: 30,
+        pixels: 50,
+        scrollWhenOutside: true,
+        autoScroll: function() {
+          // Only scroll when the pointer is down, and there is a child being dragged
+          return this.down && drake.dragging;
         }
-      } else {
-        if (this.$scope.matchController.isDirty) {
-          getState = true;
-          action = 'save';
-        }
-      }
-
-      if (getState) {
-        // create a component state populated with the student data
-        this.$scope.matchController.createComponentState(action).then((componentState) => {
-          deferred.resolve(componentState);
-        });
-      } else {
-        /*
-         * the student does not have any unsaved changes in this component
-         * so we don't need to save a component state for this component.
-         * we will immediately resolve the promise here.
-         */
-        deferred.resolve();
-      }
-
-      return deferred.promise;
-    }.bind(this);
-
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    this.$scope.$on('exitNode', angular.bind(this, function(event, args) {
-      // do nothing
-    }));
-
-    this.$scope.$watch(function() { return $mdMedia('gt-sm'); }, function(md) {
-      $scope.mdScreen = md;
-    });
-
-    /*
-     * Listen for the assetSelected event which occurs when the user
-     * selects an asset from the choose asset popup
-     */
-    this.$scope.$on('assetSelected', (event, args) => {
-
-      if (args != null) {
-
-        // make sure the event was fired for this component
-        if (args.nodeId == this.nodeId && args.componentId == this.componentId) {
-          // the asset was selected for this component
-          var assetItem = args.assetItem;
-
-          if (assetItem != null) {
-            var fileName = assetItem.fileName;
-
-            if (fileName != null) {
-              /*
-               * get the assets directory path
-               * e.g.
-               * /wise/curriculum/3/
-               */
-              var assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
-              var fullAssetPath = assetsDirectoryPath + '/' + fileName;
-
-              if (args.target == 'prompt' || args.target == 'rubric') {
-
-                var summernoteId = '';
-
-                if (args.target == 'prompt') {
-                  // the target is the summernote prompt element
-                  summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
-                } else if (args.target == 'rubric') {
-                  // the target is the summernote rubric element
-                  summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-                }
-
-                if (summernoteId != '') {
-                  if (this.UtilService.isImage(fileName)) {
-                    /*
-                     * move the cursor back to its position when the asset chooser
-                     * popup was clicked
-                     */
-                    $('#' + summernoteId).summernote('editor.restoreRange');
-                    $('#' + summernoteId).summernote('editor.focus');
-
-                    // add the image html
-                    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                  } else if (this.UtilService.isVideo(fileName)) {
-                    /*
-                     * move the cursor back to its position when the asset chooser
-                     * popup was clicked
-                     */
-                    $('#' + summernoteId).summernote('editor.restoreRange');
-                    $('#' + summernoteId).summernote('editor.focus');
-
-                    // insert the video element
-                    var videoElement = document.createElement('video');
-                    videoElement.controls = 'true';
-                    videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                    $('#' + summernoteId).summernote('insertNode', videoElement);
-                  }
-                }
-              } else if (args.target == 'choice') {
-                // the target is a choice
-
-                /*
-                 * get the target object which should be a
-                 * choice object
-                 */
-                var targetObject = args.targetObject;
-
-                if (targetObject != null) {
-
-                  // create the img html
-                  var text = '<img src="' + fileName + '"/>';
-
-                  // set the html into the choice text
-                  targetObject.value = text;
-
-                  // save the component
-                  this.authoringViewComponentChanged();
-                }
-              } else if (args.target == 'bucket') {
-                // the target is a bucket
-
-                /*
-                 * get the target object which should be a
-                 * choice object
-                 */
-                var targetObject = args.targetObject;
-
-                if (targetObject != null) {
-
-                  // create the img html
-                  var text = '<img src="' + fileName + '"/>';
-
-                  // set the html into the choice text
-                  targetObject.value = text;
-
-                  // save the component
-                  this.authoringViewComponentChanged();
-                }
-              }
-            }
-          }
-        }
-      }
-
-      // close the popup
-      this.$mdDialog.hide();
-    });
-
-    /*
-     * The advanced button for a component was clicked. If the button was
-     * for this component, we will show the advanced authoring.
-     */
-    this.$scope.$on('componentAdvancedButtonClicked', (event, args) => {
-      if (args != null) {
-        let componentId = args.componentId;
-        if (this.componentId === componentId) {
-          this.showAdvancedAuthoring = !this.showAdvancedAuthoring;
-        }
-      }
-    });
-
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+      });
   }
 
   handleNodeSubmit() {
@@ -739,32 +543,32 @@ class MatchController extends ComponentController {
       // get the buckets from the component content
       let buckets = this.componentContent.buckets;
 
-      if (this.horizontal) {
+      if (this.isHorizontal) {
         this.bucketWidth = 100;
-        this.choiceColumns = 1;
+        this.numChoiceColumns = 1;
       } else {
         if (typeof this.componentContent.bucketWidth === 'number') {
           this.bucketWidth = this.componentContent.bucketWidth;
-          this.choiceColumns = Math.round(100/this.componentContent.bucketWidth);
+          this.numChoiceColumns = Math.round(100/this.componentContent.bucketWidth);
         } else {
           let n = buckets.length;
           if (n % 3 === 0 || n > 4) {
             this.bucketWidth = Math.round(100/3);
-            this.choiceColumns = 3;
+            this.numChoiceColumns = 3;
           } else if (n % 2 === 0) {
             this.bucketWidth = 100/2;
-            this.choiceColumns = 2;
+            this.numChoiceColumns = 2;
           }
         }
 
         if (typeof this.componentContent.choiceColumns === 'number') {
-          this.choiceColumns = this.componentContent.choiceColumns;
+          this.numChoiceColumns = this.componentContent.choiceColumns;
         }
 
         this.choiceStyle = {
-          '-moz-column-count': this.choiceColumns,
-          '-webkit-column-count': this.choiceColumns,
-          'column-count':this.choiceColumns
+          '-moz-column-count': this.numChoiceColumns,
+          '-webkit-column-count': this.numChoiceColumns,
+          'column-count':this.numChoiceColumns
         };
 
         if (this.bucketWidth === 100) {
