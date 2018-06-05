@@ -34,43 +34,18 @@ var MatchController = function (_ComponentController) {
     _this.$mdMedia = $mdMedia;
     _this.autoScroll = require('dom-autoscroller');
 
-    // the choices
     _this.choices = [];
-
-    // the buckets
     _this.buckets = [];
-
-    // whether the student has correctly placed the choices
     _this.isCorrect = null;
-
-    // the flex (%) width for displaying the buckets
-    _this.bucketWidth = 100;
-
-    // the number of columns for displaying the choices
+    _this.bucketWidth = 100; // the flex (%) width for displaying the buckets
     _this.numChoiceColumns = 1;
-
-    // whether to orient the choices and buckets side-by-side
-    _this.horizontal = false;
-
-    // css style for the choice items
+    _this.isHorizontal = _this.componentContent.horizontal; // whether to orient the choices and buckets side-by-side
     _this.choiceStyle = '';
-
-    // css style for the buckets
     _this.bucketStyle = '';
-
-    // the latest annotations
     _this.latestAnnotations = null;
-
-    // the id for the source bucket
     _this.sourceBucketId = '0';
-
-    // whether this component has been authored with a correct answer
     _this.hasCorrectAnswer = false;
-
-    // whether the latest component state was a submit
     _this.isLatestComponentStateSubmit = false;
-
-    // the options for when to update this component from a connected component
     _this.connectedComponentUpdateOnOptions = [{
       value: 'change',
       text: 'Change'
@@ -78,34 +53,21 @@ var MatchController = function (_ComponentController) {
       value: 'submit',
       text: 'Submit'
     }];
-
-    // the component types we are allowed to connect to
     _this.allowedConnectedComponentTypes = [{
       type: 'Match'
     }];
-
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    _this.originalComponentContent = _this.$scope.originalComponentContent;
-
-    _this.horizontal = _this.componentContent.horizontal;
 
     if (_this.mode === 'student') {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
       _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-
-      // get the latest annotations
       _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
     } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
+      _this.isPromptVisible = false;
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
       _this.isDisabled = true;
-
       if (_this.mode === 'grading') {
-        // get the latest annotations
         _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
       }
     } else if (_this.mode === 'onlyShowWork') {
@@ -121,26 +83,10 @@ var MatchController = function (_ComponentController) {
     } else if (_this.mode === 'authoring') {
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
       _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-
-      // generate the summernote rubric element id
       _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
-
-      // set the component rubric into the summernote rubric
       _this.summernoteRubricHTML = _this.componentContent.rubric;
-
-      // the tooltip text for the insert WISE asset button
       var insertAssetString = _this.$translate('INSERT_ASSET');
-
-      /*
-       * create the custom button for inserting WISE assets into
-       * summernote
-       */
       var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
-
-      /*
-       * the options that specifies the tools to display in the
-       * summernote prompt
-       */
       _this.summernoteRubricOptions = {
         toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
         height: 300,
@@ -156,97 +102,38 @@ var MatchController = function (_ComponentController) {
         return this.authoringComponentContent;
       }.bind(_this), function (newValue, oldValue) {
         this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
         this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
         this.isCorrect = null;
         this.submitCounter = 0;
         this.isDisabled = false;
         this.isSubmitButtonDisabled = false;
-
-        /*
-         * initialize the choices and buckets with the values from the
-         * component content
-         */
         this.initializeChoices();
         this.initializeBuckets();
       }.bind(_this), true);
     }
 
-    // check if there is a correct answer
     _this.hasCorrectAnswer = _this.hasCorrectChoices();
-
-    /*
-     * initialize the choices and buckets with the values from the
-     * component content
-     */
     _this.initializeChoices();
     _this.initializeBuckets();
-
-    // get the component state from the scope
     var componentState = _this.$scope.componentState;
-
     if (_this.mode == 'student') {
       if (_this.UtilService.hasShowWorkConnectedComponent(_this.componentContent)) {
-        // we will show work from another component
         _this.handleConnectedComponents();
       } else if (_this.MatchService.componentStateHasStudentWork(componentState, _this.componentContent)) {
-        /*
-         * the student has work so we will populate the work into this
-         * component
-         */
         _this.setStudentWork(componentState);
       } else if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
-        // we will import work from another component
         _this.handleConnectedComponents();
-      } else if (componentState == null) {
-        // check if we need to import work
-
-        // check if we need to import work
-        var importPreviousWorkNodeId = _this.componentContent.importPreviousWorkNodeId;
-        var importPreviousWorkComponentId = _this.componentContent.importPreviousWorkComponentId;
-
-        if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-          /*
-           * check if the node id is in the field that we used to store
-           * the import previous work node id in
-           */
-          importPreviousWorkNodeId = _this.componentContent.importWorkNodeId;
-        }
-
-        if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-          /*
-           * check if the component id is in the field that we used to store
-           * the import previous work component id in
-           */
-          importPreviousWorkComponentId = _this.componentContent.importWorkComponentId;
-        }
-
-        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-          // import the work from the other component
-          _this.importWork();
-        }
       }
-    } else {
-      // populate the student work into this component
+    } else if (_this.mode != 'authoring') {
       _this.setStudentWork(componentState);
     }
 
     if (componentState != null && componentState.isSubmit) {
-      /*
-       * the latest component state is a submit. this is used to
-       * determine if we should show the feedback.
-       */
-      _this.isLatestComponentStateSubmit = true;
+      _this.isLatestComponentStateSubmit = componentState.isSubmit === true;
     }
 
-    // check if the student has used up all of their submits
-    if (_this.componentContent.maxSubmitCount != null && _this.submitCounter >= _this.componentContent.maxSubmitCount) {
-      /*
-       * the student has used up all of their chances to submit so we
-       * will disable the submit button
-       */
+    if (_this.studentHasUsedAllSubmits()) {
       _this.isDisabled = true;
       _this.isSubmitButtonDisabled = true;
     }
@@ -254,228 +141,92 @@ var MatchController = function (_ComponentController) {
     _this.disableComponentIfNecessary();
 
     if (_this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
       _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
     }
 
-    var dragId = 'match_' + _this.componentId;
-    // handle choice drop events
-    var dropEvent = dragId + '.drop-model';
-    _this.$scope.$on(dropEvent, function (e, el, container, source) {
-      // choice item has been dropped in new location, so run studentDataChanged function
-      _this.$scope.matchController.studentDataChanged();
-    });
-
-    // drag and drop options
-    _this.dragulaService.options(_this.$scope, dragId, {
-      moves: function moves(el, source, handle, sibling) {
-        return !_this.$scope.matchController.isDisabled;
-      }
-    });
-
-    // provide visual indicator when choice is dragged over a new bucket
-    var drake = dragulaService.find(_this.$scope, dragId).drake;
-    drake.on('over', function (el, container, source) {
-      if (source !== container) {
-        container.className += ' match-bucket__contents--over';
-      }
-    }).on('out', function (el, container, source) {
-      if (source !== container) {
-        container.className = container.className.replace('match-bucket__contents--over', '');;
-      }
-    });
-
-    // support scroll while dragging
-    var scroll = _this.autoScroll([document.querySelector('#content')], {
-      margin: 30,
-      pixels: 50,
-      scrollWhenOutside: true,
-      autoScroll: function autoScroll() {
-        // Only scroll when the pointer is down, and there is a child being dragged
-        return this.down && drake.dragging;
-      }
-    });
+    _this.registerDragListeners();
 
     /**
      * Get the component state from this component. The parent node will
      * call this function to obtain the component state when it needs to
      * save student data.
-     * @param isSubmit boolean whether the request is coming from a submit
+     * @param {boolean} isSubmit whether the request is coming from a submit
      * action (optional; default is false)
-     * @return a promise of a component state containing the student data
+     * @return {promise} a promise of a component state containing the student data
      */
     _this.$scope.getComponentState = function (isSubmit) {
-      var deferred = this.$q.defer();
-      var getState = false;
+      var deferred = _this.$q.defer();
+      var hasDirtyWork = false;
       var action = 'change';
 
       if (isSubmit) {
-        if (this.$scope.matchController.isSubmitDirty) {
-          getState = true;
+        if (_this.$scope.matchController.isSubmitDirty) {
+          hasDirtyWork = true;
           action = 'submit';
         }
       } else {
-        if (this.$scope.matchController.isDirty) {
-          getState = true;
+        if (_this.$scope.matchController.isDirty) {
+          hasDirtyWork = true;
           action = 'save';
         }
       }
 
-      if (getState) {
-        // create a component state populated with the student data
-        this.$scope.matchController.createComponentState(action).then(function (componentState) {
+      if (hasDirtyWork) {
+        _this.$scope.matchController.createComponentState(action).then(function (componentState) {
           deferred.resolve(componentState);
         });
       } else {
-        /*
-         * the student does not have any unsaved changes in this component
-         * so we don't need to save a component state for this component.
-         * we will immediately resolve the promise here.
-         */
         deferred.resolve();
       }
-
       return deferred.promise;
-    }.bind(_this);
+    };
 
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    _this.$scope.$on('exitNode', angular.bind(_this, function (event, args) {
-      // do nothing
-    }));
-
-    _this.$scope.$watch(function () {
-      return $mdMedia('gt-sm');
-    }, function (md) {
-      $scope.mdScreen = md;
-    });
-
-    /*
-     * Listen for the assetSelected event which occurs when the user
-     * selects an asset from the choose asset popup
-     */
     _this.$scope.$on('assetSelected', function (event, args) {
+      if (args.nodeId == _this.nodeId && args.componentId == _this.componentId) {
+        var assetItem = args.assetItem;
+        var fileName = assetItem.fileName;
+        var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
+        var fullAssetPath = assetsDirectoryPath + '/' + fileName;
+        if (args.target == 'prompt' || args.target == 'rubric') {
+          var summernoteId = '';
+          if (args.target == 'prompt') {
+            summernoteId = 'summernotePrompt_' + _this.nodeId + '_' + _this.componentId;
+          } else if (args.target == 'rubric') {
+            summernoteId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+          }
+          if (summernoteId != '') {
+            /*
+             * move the cursor back to its position when the asset chooser
+             * popup was clicked
+             */
+            $('#' + summernoteId).summernote('editor.restoreRange');
+            $('#' + summernoteId).summernote('editor.focus');
 
-      if (args != null) {
-
-        // make sure the event was fired for this component
-        if (args.nodeId == _this.nodeId && args.componentId == _this.componentId) {
-          // the asset was selected for this component
-          var assetItem = args.assetItem;
-
-          if (assetItem != null) {
-            var fileName = assetItem.fileName;
-
-            if (fileName != null) {
-              /*
-               * get the assets directory path
-               * e.g.
-               * /wise/curriculum/3/
-               */
-              var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
-              var fullAssetPath = assetsDirectoryPath + '/' + fileName;
-
-              if (args.target == 'prompt' || args.target == 'rubric') {
-
-                var summernoteId = '';
-
-                if (args.target == 'prompt') {
-                  // the target is the summernote prompt element
-                  summernoteId = 'summernotePrompt_' + _this.nodeId + '_' + _this.componentId;
-                } else if (args.target == 'rubric') {
-                  // the target is the summernote rubric element
-                  summernoteId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
-                }
-
-                if (summernoteId != '') {
-                  if (_this.UtilService.isImage(fileName)) {
-                    /*
-                     * move the cursor back to its position when the asset chooser
-                     * popup was clicked
-                     */
-                    $('#' + summernoteId).summernote('editor.restoreRange');
-                    $('#' + summernoteId).summernote('editor.focus');
-
-                    // add the image html
-                    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                  } else if (_this.UtilService.isVideo(fileName)) {
-                    /*
-                     * move the cursor back to its position when the asset chooser
-                     * popup was clicked
-                     */
-                    $('#' + summernoteId).summernote('editor.restoreRange');
-                    $('#' + summernoteId).summernote('editor.focus');
-
-                    // insert the video element
-                    var videoElement = document.createElement('video');
-                    videoElement.controls = 'true';
-                    videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                    $('#' + summernoteId).summernote('insertNode', videoElement);
-                  }
-                }
-              } else if (args.target == 'choice') {
-                // the target is a choice
-
-                /*
-                 * get the target object which should be a
-                 * choice object
-                 */
-                var targetObject = args.targetObject;
-
-                if (targetObject != null) {
-
-                  // create the img html
-                  var text = '<img src="' + fileName + '"/>';
-
-                  // set the html into the choice text
-                  targetObject.value = text;
-
-                  // save the component
-                  _this.authoringViewComponentChanged();
-                }
-              } else if (args.target == 'bucket') {
-                // the target is a bucket
-
-                /*
-                 * get the target object which should be a
-                 * choice object
-                 */
-                var targetObject = args.targetObject;
-
-                if (targetObject != null) {
-
-                  // create the img html
-                  var text = '<img src="' + fileName + '"/>';
-
-                  // set the html into the choice text
-                  targetObject.value = text;
-
-                  // save the component
-                  _this.authoringViewComponentChanged();
-                }
-              }
+            if (_this.UtilService.isImage(fileName)) {
+              $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+            } else if (_this.UtilService.isVideo(fileName)) {
+              var videoElement = document.createElement('video');
+              videoElement.controls = 'true';
+              videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+              $('#' + summernoteId).summernote('insertNode', videoElement);
             }
           }
+        } else if (args.target == 'choice') {
+          var choiceObject = args.targetObject;
+          choiceObject.value = '<img src="' + fileName + '"/>';
+          _this.authoringViewComponentChanged();
+        } else if (args.target == 'bucket') {
+          var bucketObject = args.targetObject;
+          bucketObject.value = '<img src="' + fileName + '"/>';
+          _this.authoringViewComponentChanged();
         }
       }
-
-      // close the popup
       _this.$mdDialog.hide();
     });
 
-    /*
-     * The advanced button for a component was clicked. If the button was
-     * for this component, we will show the advanced authoring.
-     */
     _this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
-      if (args != null) {
-        var componentId = args.componentId;
-        if (_this.componentId === componentId) {
-          _this.showAdvancedAuthoring = !_this.showAdvancedAuthoring;
-        }
+      if (_this.componentId === args.componentId) {
+        _this.showAdvancedAuthoring = !_this.showAdvancedAuthoring;
       }
     });
 
@@ -484,246 +235,283 @@ var MatchController = function (_ComponentController) {
   }
 
   _createClass(MatchController, [{
+    key: 'studentHasUsedAllSubmits',
+    value: function studentHasUsedAllSubmits() {
+      return this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount;
+    }
+  }, {
+    key: 'registerDragListeners',
+    value: function registerDragListeners() {
+      var dragId = 'match_' + this.componentId;
+      this.registerStudentDataChangedOnDrop(dragId);
+      this.disableDraggingIfNeeded(dragId);
+      var drake = this.dragulaService.find(this.$scope, dragId).drake;
+      this.showVisualIndicatorWhileDragging(drake);
+      this.supportScrollWhileDragging(drake);
+    }
+  }, {
+    key: 'registerStudentDataChangedOnDrop',
+    value: function registerStudentDataChangedOnDrop(dragId) {
+      var _this2 = this;
+
+      var dropEvent = dragId + '.drop-model';
+      this.$scope.$on(dropEvent, function (e, el, container, source) {
+        _this2.$scope.matchController.studentDataChanged();
+      });
+    }
+  }, {
+    key: 'disableDraggingIfNeeded',
+    value: function disableDraggingIfNeeded(dragId) {
+      var _this3 = this;
+
+      this.dragulaService.options(this.$scope, dragId, {
+        moves: function moves(el, source, handle, sibling) {
+          return !_this3.$scope.matchController.isDisabled;
+        }
+      });
+    }
+  }, {
+    key: 'showVisualIndicatorWhileDragging',
+    value: function showVisualIndicatorWhileDragging(drake) {
+      drake.on('over', function (el, container, source) {
+        if (source !== container) {
+          container.className += ' match-bucket__contents--over';
+        }
+      }).on('out', function (el, container, source) {
+        if (source !== container) {
+          container.className = container.className.replace('match-bucket__contents--over', '');;
+        }
+      });
+    }
+  }, {
+    key: 'supportScrollWhileDragging',
+    value: function supportScrollWhileDragging(drake) {
+      this.autoScroll([document.querySelector('#content')], {
+        margin: 30,
+        pixels: 50,
+        scrollWhenOutside: true,
+        autoScroll: function autoScroll() {
+          // Only scroll when the pointer is down, and there is a child being dragged
+          return this.down && drake.dragging;
+        }
+      });
+    }
+  }, {
     key: 'handleNodeSubmit',
     value: function handleNodeSubmit() {
       this.submit('nodeSubmitButton');
     }
-
-    /**
-     * Populate the student work into the component
-     * @param componentState the component state to populate into the component
-     */
-
   }, {
     key: 'setStudentWork',
     value: function setStudentWork(componentState) {
-      if (componentState != null) {
+      var studentData = componentState.studentData;
+      var componentStateBuckets = studentData.buckets;
+      var sourceBucket = this.getBucketById(this.sourceBucketId);
+      sourceBucket.items = []; // clear the source bucket
+      var bucketIds = this.getBucketIds();
+      var choiceIds = this.getChoiceIds();
 
-        // get the student data from the component state
-        var studentData = componentState.studentData;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-        if (studentData != null) {
+      try {
+        for (var _iterator = componentStateBuckets[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var componentStateBucket = _step.value;
 
-          // get the buckets and number of submits
-          var componentStateBuckets = studentData.buckets;
+          var componentStateBucketId = componentStateBucket.id;
+          if (bucketIds.indexOf(componentStateBucketId) > -1) {
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
 
-          // set the buckets
-          if (componentStateBuckets != null) {
+            try {
+              for (var _iterator3 = componentStateBucket.items[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var currentChoice = _step3.value;
 
-            // clear the choices bucket
-            var choicesBucket = this.getBucketById(this.sourceBucketId);
-            choicesBucket.items = [];
-
-            var bucketIds = this.buckets.map(function (b) {
-              return b.id;
-            });
-            var choiceIds = this.choices.map(function (c) {
-              return c.id;
-            });
-
-            for (var i = 0, l = componentStateBuckets.length; i < l; i++) {
-              var componentStateBucketId = componentStateBuckets[i].id;
-              // componentState bucket is a valid bucket, so process choices
-              if (bucketIds.indexOf(componentStateBucketId) > -1) {
-                var currentBucket = componentStateBuckets[i];
-                var currentChoices = currentBucket.items;
-
-                for (var x = 0, len = currentChoices.length; x < len; x++) {
-                  var currentChoice = currentChoices[x];
-                  var currentChoiceId = currentChoice.id;
-                  var currentChoiceLocation = choiceIds.indexOf(currentChoiceId);
-                  if (currentChoiceLocation > -1) {
-                    // choice is valid and used by student in a valid bucket, so add it to that bucket
-                    var bucket = this.getBucketById(componentStateBucketId);
-                    // content for choice with this id may have change, so get updated content
-                    var updatedChoice = this.getChoiceById(currentChoiceId);
-                    bucket.items.push(updatedChoice);
-                    choiceIds.splice(currentChoiceLocation, 1);
-                  }
+                var currentChoiceId = currentChoice.id;
+                var currentChoiceLocation = choiceIds.indexOf(currentChoiceId);
+                if (currentChoiceLocation > -1) {
+                  // choice is valid and used by student in a valid bucket, so add it to that bucket
+                  var bucket = this.getBucketById(componentStateBucketId);
+                  // content for choice with this id may have change, so get updated content
+                  var updatedChoice = this.getChoiceById(currentChoiceId);
+                  bucket.items.push(updatedChoice);
+                  choiceIds.splice(currentChoiceLocation, 1);
+                }
+              }
+            } catch (err) {
+              _didIteratorError3 = true;
+              _iteratorError3 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                  _iterator3.return();
+                }
+              } finally {
+                if (_didIteratorError3) {
+                  throw _iteratorError3;
                 }
               }
             }
-
-            // add unused choices to the source bucket
-            for (var _i = 0, _l = choiceIds.length; _i < _l; _i++) {
-              choicesBucket.items.push(this.getChoiceById(choiceIds[_i]));
-            }
           }
+        }
 
-          var submitCounter = studentData.submitCounter;
-
-          if (submitCounter != null) {
-            // populate the submit counter
-            this.submitCounter = submitCounter;
+        // add unused choices to the source bucket
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
           }
-
-          if (this.submitCounter > 0) {
-            // the student has submitted at least once in the past
-
-            if (componentState.isSubmit) {
-              /*
-               * the component state was a submit so we will check the
-               * answer
-               */
-              this.checkAnswer();
-            } else {
-              /*
-               * The component state was not a submit but the student
-               * submitted some time in the past. We want to show the
-               * feedback for choices that have not moved since the
-               * student submitted.
-               */
-              this.processLatestSubmit(true);
-            }
-          } else {
-            /*
-             * there was no submit in the past but we will still need to
-             * check if submit is dirty.
-             */
-            this.processLatestSubmit(true);
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
           }
         }
       }
+
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = choiceIds[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var choiceId = _step2.value;
+
+          sourceBucket.items.push(this.getChoiceById(choiceId));
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      var submitCounter = studentData.submitCounter;
+      if (submitCounter != null) {
+        this.submitCounter = submitCounter;
+      }
+
+      if (this.submitCounter > 0) {
+        if (componentState.isSubmit) {
+          this.checkAnswer();
+        } else {
+          /*
+           * This component state was not a submit, but the student
+           * submitted some time in the past. We want to show the
+           * feedback for choices that have not moved since the
+           * student submitted.
+           */
+          this.processPreviousStudentWork();
+        }
+      } else {
+        /*
+         * there was no submit in the past but we will still need to
+         * check if submit is dirty.
+         */
+        this.processPreviousStudentWork();
+      }
     }
   }, {
-    key: 'processLatestSubmit',
+    key: 'processPreviousStudentWork',
 
 
     /**
      * Get the latest submitted componentState and display feedback for choices
      * that haven't changed since. This will also determine if submit is dirty.
-     * @param onload boolean whether this function is being executed on the
-     * initial component load or not
      */
-    value: function processLatestSubmit(onload) {
-      var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-      var numStates = componentStates.length;
-      var latestSubmitState = null;
-
-      for (var l = numStates - 1; l > -1; l--) {
-        var componentState = componentStates[l];
-        if (componentState.isSubmit) {
-          latestSubmitState = componentState;
-          break;
-        }
+    value: function processPreviousStudentWork() {
+      var latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+      if (latestComponentState == null) {
+        return;
       }
 
-      if (latestSubmitState && latestSubmitState.studentData) {
-        var latestBucketIds = this.buckets.map(function (b) {
-          return b.id;
-        });
-        var latestChoiceIds = this.choices.map(function (c) {
-          return c.id;
-        });
-        var excludeIds = [];
-        var latestSubmitStateBuckets = latestSubmitState.studentData.buckets;
-
-        // loop through all the buckets in the latest student data
-        for (var b = 0; b < this.buckets.length; b++) {
-
-          // get a bucket from the latest student data
-          var latestBucket = this.buckets[b];
-
-          if (latestBucket != null) {
-            var latestBucketId = latestBucket.id;
-
-            // get the same bucket in the previously submitted student data
-            var submitBucket = this.getBucketById(latestBucketId, latestSubmitStateBuckets);
-
-            if (submitBucket != null) {
-              // get the choice ids in the bucket in the latest student data
-              var latestBucketChoiceIds = latestBucket.items.map(function (c) {
-                return c.id;
-              });
-
-              // get the choice ids in the bucket in the previously submitted student data
-              var submitChoiceIds = submitBucket.items.map(function (c) {
-                return c.id;
-              });
-
-              // loop through all the choice ids in the bucket in the latest student data
-              for (var c = 0; c < latestBucketChoiceIds.length; c++) {
-                var latestBucketChoiceId = latestBucketChoiceIds[c];
-
-                if (submitChoiceIds.indexOf(latestBucketChoiceId) == -1) {
-                  /*
-                   * the choice in the latest state is not in the same
-                   * bucket as it was in the last submit so we will
-                   * not show the feedback for this choice by adding
-                   * it to the excluded choice ids
-                   */
-                  excludeIds.push(latestBucketChoiceId);
-                } else {
-                  /*
-                   * the choice is in the same bucket as it was in
-                   * the last submit
-                   */
-
-                  if (this.choiceHasCorrectPosition(latestBucketChoiceId)) {
-                    /*
-                     * the choice has a correct position so we will check if
-                     * the position is the same in the submit vs the latest
-                     */
-                    if (c != submitChoiceIds.indexOf(latestBucketChoiceId)) {
-                      // the position has changed so we will not show the feedback
-                      excludeIds.push(latestBucketChoiceId);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        if (excludeIds.length) {
-          // state has changed since last submit, so set isSubmitDirty to true and notify node
-          this.isSubmitDirty = true;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-        } else {
-          // state has not changed since last submit, so set isSubmitDirty to false and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-        }
-        this.checkAnswer(excludeIds);
+      var serverSaveTime = latestComponentState.serverSaveTime;
+      var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+      if (latestComponentState.isSubmit === true) {
+        this.isCorrect = latestComponentState.isCorrect;
+        this.setIsSubmitDirty(false);
+        this.showSubmitMessage(clientSaveTime);
+        this.checkAnswer();
       } else {
-        this.isSubmitDirty = true;
-        this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-      }
-
-      if (onload && numStates) {
-        var latestState = componentStates[numStates - 1];
-
-        if (latestState) {
-          var serverSaveTime = latestState.serverSaveTime;
-          var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-          if (latestState.isSubmit) {
-            // set whether the latest component state is correct
-            this.isCorrect = latestState.isCorrect;
-            // latest state is a submission, so set isSubmitDirty to false and notify node
-            this.isSubmitDirty = false;
-            this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-            this.setSaveMessage(this.$translate('LAST_SUBMITTED'), clientSaveTime);
-          } else {
-            /*
-             * the latest component state was not a submit so we will
-             * not show whether it was correct or incorrect
-             */
-            this.isCorrect = null;
-            // latest state is not a submission, so set isSubmitDirty to true and notify node
-            this.isSubmitDirty = true;
-            this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-            this.setSaveMessage(this.$translate('LAST_SAVED'), clientSaveTime);
-          }
+        var latestSubmitComponentState = this.StudentDataService.getLatestSubmitComponentState(this.nodeId, this.componentId);
+        if (latestSubmitComponentState != null) {
+          this.showFeedbackOnUnchangedChoices(latestSubmitComponentState);
+        } else {
+          this.isCorrect = null;
+          this.setIsSubmitDirty(false);
+          this.showSaveMessage(clientSaveTime);
         }
       }
     }
   }, {
-    key: 'initializeChoices',
+    key: 'processDirtyStudentWork',
 
+
+    /**
+     * There is unsaved student work that is not yet saved in a component state
+     */
+    value: function processDirtyStudentWork() {
+      var latestSubmitComponentState = this.StudentDataService.getLatestSubmitComponentState(this.nodeId, this.componentId);
+      if (latestSubmitComponentState != null) {
+        this.showFeedbackOnUnchangedChoices(latestSubmitComponentState);
+      } else {
+        var latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+        if (latestComponentState != null) {
+          this.isCorrect = null;
+          this.setIsSubmitDirty(true);
+          this.showSaveMessage(latestComponentState.clientSaveTime);
+        }
+      }
+    }
+  }, {
+    key: 'showFeedbackOnUnchangedChoices',
+    value: function showFeedbackOnUnchangedChoices(latestSubmitComponentState) {
+      var choicesThatChangedSinceLastSubmit = this.getChoicesThatChangedSinceLastSubmit(latestSubmitComponentState);
+      if (choicesThatChangedSinceLastSubmit.length > 0) {
+        this.setIsSubmitDirty(true);
+      } else {
+        this.setIsSubmitDirty(false);
+      }
+      this.checkAnswer(choicesThatChangedSinceLastSubmit);
+    }
+  }, {
+    key: 'showSaveMessage',
+    value: function showSaveMessage(time) {
+      this.setSaveMessage(this.$translate('LAST_SAVED'), time);
+    }
+  }, {
+    key: 'showSubmitMessage',
+    value: function showSubmitMessage(time) {
+      this.setSaveMessage(this.$translate('LAST_SUBMITTED'), time);
+    }
+  }, {
+    key: 'setIsSubmitDirty',
+    value: function setIsSubmitDirty(isSubmitDirty) {
+      this.isSubmitDirty = isSubmitDirty;
+      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isSubmitDirty });
+    }
+  }, {
+    key: 'isLatestComponentStateASubmit',
+    value: function isLatestComponentStateASubmit() {}
 
     /**
      * Initialize the available choices from the component content
      */
+
+  }, {
+    key: 'initializeChoices',
     value: function initializeChoices() {
 
       this.choices = [];
@@ -733,12 +521,75 @@ var MatchController = function (_ComponentController) {
       }
     }
   }, {
-    key: 'getChoices',
+    key: 'getBucketIds',
+    value: function getBucketIds() {
+      return this.buckets.map(function (b) {
+        return b.id;
+      });
+    }
+  }, {
+    key: 'getChoiceIds',
+    value: function getChoiceIds() {
+      return this.choices.map(function (c) {
+        return c.id;
+      });
+    }
+  }, {
+    key: 'getChoicesThatChangedSinceLastSubmit',
+    value: function getChoicesThatChangedSinceLastSubmit(latestSubmitComponentState) {
+      var latestSubmitComponentStateBuckets = latestSubmitComponentState.studentData.buckets;
+      var choicesThatChangedSinceLastSubmit = [];
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
 
+      try {
+        for (var _iterator4 = this.buckets[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var currentComponentStateBucket = _step4.value;
+
+          var currentComponentStateBucketChoiceIds = currentComponentStateBucket.items.map(function (choice) {
+            return choice.id;
+          });
+          var bucketFromSubmitComponentState = this.getBucketById(currentComponentStateBucket.id, latestSubmitComponentStateBuckets);
+          if (bucketFromSubmitComponentState != null) {
+            var latestSubmitComponentStateChoiceIds = bucketFromSubmitComponentState.items.map(function (choice) {
+              return choice.id;
+            });
+
+            for (var choiceIndexInBucket = 0; choiceIndexInBucket < currentComponentStateBucketChoiceIds.length; choiceIndexInBucket++) {
+              var currentBucketChoiceId = currentComponentStateBucketChoiceIds[choiceIndexInBucket];
+              if (latestSubmitComponentStateChoiceIds.indexOf(currentBucketChoiceId) == -1) {
+                choicesThatChangedSinceLastSubmit.push(currentBucketChoiceId);
+              } else if (this.isAuthorHasSpecifiedACorrectPosition(currentBucketChoiceId) && choiceIndexInBucket != latestSubmitComponentStateChoiceIds.indexOf(currentBucketChoiceId)) {
+                choicesThatChangedSinceLastSubmit.push(currentBucketChoiceId);
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
+          }
+        }
+      }
+
+      return choicesThatChangedSinceLastSubmit;
+    }
 
     /**
      * Get the choices
      */
+
+  }, {
+    key: 'getChoices',
     value: function getChoices() {
       return this.choices;
     }
@@ -758,7 +609,7 @@ var MatchController = function (_ComponentController) {
         // get the buckets from the component content
         var buckets = this.componentContent.buckets;
 
-        if (this.horizontal) {
+        if (this.isHorizontal) {
           this.bucketWidth = 100;
           this.numChoiceColumns = 1;
         } else {
@@ -776,8 +627,8 @@ var MatchController = function (_ComponentController) {
             }
           }
 
-          if (typeof this.componentContent.numChoiceColumns === 'number') {
-            this.numChoiceColumns = this.componentContent.numChoiceColumns;
+          if (typeof this.componentContent.choiceColumns === 'number') {
+            this.numChoiceColumns = this.componentContent.choiceColumns;
           }
 
           this.choiceStyle = {
@@ -1269,7 +1120,7 @@ var MatchController = function (_ComponentController) {
 
           // clear the feedback in the choices
           this.clearFeedback();
-          this.processLatestSubmit();
+          this.processDirtyStudentWork();
 
           /*
            * the latest component state is not a submit. this is used to
@@ -2460,14 +2311,14 @@ var MatchController = function (_ComponentController) {
     }
 
     /**
-     * Check if the choice has a correct position
+     * Returns true if the choice has been authored to have a correct position
      * @param choiceId the choice id
      * @return whether the choice has a correct position in any bucket
      */
 
   }, {
-    key: 'choiceHasCorrectPosition',
-    value: function choiceHasCorrectPosition(choiceId) {
+    key: 'isAuthorHasSpecifiedACorrectPosition',
+    value: function isAuthorHasSpecifiedACorrectPosition(choiceId) {
       var buckets = this.getFeedback();
 
       if (buckets != null) {
@@ -2503,6 +2354,13 @@ var MatchController = function (_ComponentController) {
         }
       }
 
+      return false;
+    }
+  }, {
+    key: 'choiceIsInCorrectPosition',
+    value: function choiceIsInCorrectPosition(choiceId) {
+      // dummy. not called.
+      // TODO: implement me.
       return false;
     }
 
@@ -3005,13 +2863,13 @@ var MatchController = function (_ComponentController) {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
+          var _iteratorNormalCompletion5 = true;
+          var _didIteratorError5 = false;
+          var _iteratorError5 = undefined;
 
           try {
-            for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var component = _step.value;
+            for (var _iterator5 = components[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+              var component = _step5.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -3022,16 +2880,16 @@ var MatchController = function (_ComponentController) {
               }
             }
           } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
+            _didIteratorError5 = true;
+            _iteratorError5 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
+              if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                _iterator5.return();
               }
             } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
+              if (_didIteratorError5) {
+                throw _iteratorError5;
               }
             }
           }

@@ -2197,14 +2197,36 @@ var StudentDataService = function () {
       return null;
     }
   }, {
-    key: 'getStudentWorkByStudentWorkId',
+    key: 'getLatestSubmitComponentState',
 
+
+    /**
+     * Get the latest component state that was a submit
+     * for the given node id and component id.
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @return the latest component state that was a submit with the matching
+     * node id and component id or null if none are found
+     */
+    value: function getLatestSubmitComponentState(nodeId, componentId) {
+      var componentStates = this.studentData.componentStates;
+      for (var c = componentStates.length - 1; c >= 0; c--) {
+        var componentState = componentStates[c];
+        if (componentState.nodeId === nodeId && componentState.componentId === componentId && componentState.isSubmit) {
+          return componentState;
+        }
+      }
+      return null;
+    }
 
     /**
      * Get the student work by specified student work id, which can be a ComponentState or NodeState
      * @param studentWorkId the student work id
      * @return an StudentWork or null
      */
+
+  }, {
+    key: 'getStudentWorkByStudentWorkId',
     value: function getStudentWorkByStudentWorkId(studentWorkId) {
       if (studentWorkId != null) {
         var componentStates = this.studentData.componentStates;

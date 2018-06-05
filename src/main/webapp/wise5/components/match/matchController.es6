@@ -136,7 +136,7 @@ class MatchController extends ComponentController {
       } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
         this.handleConnectedComponents();
       }
-    } else {
+    } else if (this.mode != 'authoring') {
       this.setStudentWork(componentState);
     }
 
@@ -301,216 +301,137 @@ class MatchController extends ComponentController {
     this.submit('nodeSubmitButton');
   }
 
-  /**
-   * Populate the student work into the component
-   * @param componentState the component state to populate into the component
-   */
   setStudentWork(componentState) {
-    if (componentState != null) {
+    const studentData = componentState.studentData;
+    const componentStateBuckets = studentData.buckets;
+    const sourceBucket = this.getBucketById(this.sourceBucketId);
+    sourceBucket.items = []; // clear the source bucket
+    const bucketIds = this.getBucketIds();
+    const choiceIds = this.getChoiceIds();
 
-      // get the student data from the component state
-      let studentData = componentState.studentData;
-
-      if (studentData != null) {
-
-        // get the buckets and number of submits
-        let componentStateBuckets = studentData.buckets;
-
-        // set the buckets
-        if (componentStateBuckets != null) {
-
-          // clear the choices bucket
-          let choicesBucket = this.getBucketById(this.sourceBucketId);
-          choicesBucket.items = [];
-
-          let bucketIds = this.buckets.map(b => { return b.id; });
-          let choiceIds = this.choices.map(c => { return c.id; });
-
-          for (let i = 0, l = componentStateBuckets.length; i < l; i++) {
-            let componentStateBucketId = componentStateBuckets[i].id;
-            // componentState bucket is a valid bucket, so process choices
-            if (bucketIds.indexOf(componentStateBucketId) > -1) {
-              let currentBucket = componentStateBuckets[i];
-              let currentChoices = currentBucket.items;
-
-              for (let x = 0, len = currentChoices.length; x < len; x++) {
-                let currentChoice = currentChoices[x];
-                let currentChoiceId = currentChoice.id;
-                let currentChoiceLocation = choiceIds.indexOf(currentChoiceId);
-                if (currentChoiceLocation > -1) {
-                  // choice is valid and used by student in a valid bucket, so add it to that bucket
-                  let bucket = this.getBucketById(componentStateBucketId);
-                  // content for choice with this id may have change, so get updated content
-                  let updatedChoice = this.getChoiceById(currentChoiceId);
-                  bucket.items.push(updatedChoice);
-                  choiceIds.splice(currentChoiceLocation, 1);
-                }
-              }
-            }
+    for (let componentStateBucket of componentStateBuckets) {
+      let componentStateBucketId = componentStateBucket.id;
+      if (bucketIds.indexOf(componentStateBucketId) > -1) {
+        for (let currentChoice of componentStateBucket.items) {
+          const currentChoiceId = currentChoice.id;
+          const currentChoiceLocation = choiceIds.indexOf(currentChoiceId);
+          if (currentChoiceLocation > -1) {
+            // choice is valid and used by student in a valid bucket, so add it to that bucket
+            const bucket = this.getBucketById(componentStateBucketId);
+            // content for choice with this id may have change, so get updated content
+            const updatedChoice = this.getChoiceById(currentChoiceId);
+            bucket.items.push(updatedChoice);
+            choiceIds.splice(currentChoiceLocation, 1);
           }
-
-          // add unused choices to the source bucket
-          for (let i = 0, l = choiceIds.length; i < l; i++) {
-            choicesBucket.items.push(this.getChoiceById(choiceIds[i]));
-          }
-        }
-
-        var submitCounter = studentData.submitCounter;
-
-        if (submitCounter != null) {
-          // populate the submit counter
-          this.submitCounter = submitCounter;
-        }
-
-        if (this.submitCounter > 0) {
-          // the student has submitted at least once in the past
-
-          if (componentState.isSubmit) {
-            /*
-             * the component state was a submit so we will check the
-             * answer
-             */
-            this.checkAnswer()
-          } else {
-            /*
-             * The component state was not a submit but the student
-             * submitted some time in the past. We want to show the
-             * feedback for choices that have not moved since the
-             * student submitted.
-             */
-            this.processLatestSubmit(true);
-          }
-        } else {
-          /*
-           * there was no submit in the past but we will still need to
-           * check if submit is dirty.
-           */
-          this.processLatestSubmit(true);
         }
       }
+    }
+
+    // add unused choices to the source bucket
+    for (let choiceId of choiceIds) {
+      sourceBucket.items.push(this.getChoiceById(choiceId));
+    }
+
+    const submitCounter = studentData.submitCounter;
+    if (submitCounter != null) {
+      this.submitCounter = submitCounter;
+    }
+
+    if (this.submitCounter > 0) {
+      if (componentState.isSubmit) {
+        this.checkAnswer()
+      } else {
+        /*
+         * This component state was not a submit, but the student
+         * submitted some time in the past. We want to show the
+         * feedback for choices that have not moved since the
+         * student submitted.
+         */
+        this.processPreviousStudentWork();
+      }
+    } else {
+      /*
+       * there was no submit in the past but we will still need to
+       * check if submit is dirty.
+       */
+      this.processPreviousStudentWork();
     }
   };
 
   /**
    * Get the latest submitted componentState and display feedback for choices
    * that haven't changed since. This will also determine if submit is dirty.
-   * @param onload boolean whether this function is being executed on the
-   * initial component load or not
    */
-  processLatestSubmit(onload) {
-    let componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-    let numStates = componentStates.length
-    let latestSubmitState = null;
-
-    for (let l = numStates-1; l > -1; l--) {
-      let componentState = componentStates[l];
-      if (componentState.isSubmit) {
-        latestSubmitState = componentState;
-        break;
-      }
+  processPreviousStudentWork() {
+    const latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+    if (latestComponentState == null) {
+      return;
     }
 
-    if (latestSubmitState && latestSubmitState.studentData) {
-      let latestBucketIds = this.buckets.map(b => { return b.id; });
-      let latestChoiceIds = this.choices.map(c => { return c.id; });
-      let excludeIds = [];
-      let latestSubmitStateBuckets = latestSubmitState.studentData.buckets;
-
-      // loop through all the buckets in the latest student data
-      for (let b = 0; b < this.buckets.length; b++) {
-
-        // get a bucket from the latest student data
-        let latestBucket = this.buckets[b];
-
-        if (latestBucket != null) {
-          let latestBucketId = latestBucket.id;
-
-          // get the same bucket in the previously submitted student data
-          let submitBucket = this.getBucketById(latestBucketId, latestSubmitStateBuckets);
-
-          if (submitBucket != null) {
-            // get the choice ids in the bucket in the latest student data
-            let latestBucketChoiceIds = latestBucket.items.map(c => { return c.id; });
-
-            // get the choice ids in the bucket in the previously submitted student data
-            let submitChoiceIds = submitBucket.items.map(c => { return c.id; });
-
-            // loop through all the choice ids in the bucket in the latest student data
-            for (let c = 0; c < latestBucketChoiceIds.length; c++) {
-              let latestBucketChoiceId = latestBucketChoiceIds[c];
-
-              if (submitChoiceIds.indexOf(latestBucketChoiceId) == -1) {
-                /*
-                 * the choice in the latest state is not in the same
-                 * bucket as it was in the last submit so we will
-                 * not show the feedback for this choice by adding
-                 * it to the excluded choice ids
-                 */
-                excludeIds.push(latestBucketChoiceId);
-              } else {
-                /*
-                 * the choice is in the same bucket as it was in
-                 * the last submit
-                 */
-
-                 if (this.choiceHasCorrectPosition(latestBucketChoiceId)) {
-                   /*
-                    * the choice has a correct position so we will check if
-                    * the position is the same in the submit vs the latest
-                    */
-                   if (c != submitChoiceIds.indexOf(latestBucketChoiceId)) {
-                     // the position has changed so we will not show the feedback
-                     excludeIds.push(latestBucketChoiceId);
-                   }
-                 }
-              }
-            }
-          }
-        }
-      }
-
-      if (excludeIds.length) {
-        // state has changed since last submit, so set isSubmitDirty to true and notify node
-        this.isSubmitDirty = true;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-      } else {
-        // state has not changed since last submit, so set isSubmitDirty to false and notify node
-        this.isSubmitDirty = false;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-      }
-      this.checkAnswer(excludeIds);
+    const serverSaveTime = latestComponentState.serverSaveTime;
+    const clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+    if (latestComponentState.isSubmit === true) {
+      this.isCorrect = latestComponentState.isCorrect;
+      this.setIsSubmitDirty(false);
+      this.showSubmitMessage(clientSaveTime);
+      this.checkAnswer();
     } else {
-      this.isSubmitDirty = true;
-      this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-    }
-
-    if (onload && numStates) {
-      let latestState = componentStates[numStates-1];
-
-      if (latestState) {
-        let serverSaveTime = latestState.serverSaveTime;
-        let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-        if (latestState.isSubmit) {
-          // set whether the latest component state is correct
-          this.isCorrect = latestState.isCorrect;
-          // latest state is a submission, so set isSubmitDirty to false and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-          this.setSaveMessage(this.$translate('LAST_SUBMITTED'), clientSaveTime);
-        } else {
-          /*
-           * the latest component state was not a submit so we will
-           * not show whether it was correct or incorrect
-           */
-          this.isCorrect = null;
-          // latest state is not a submission, so set isSubmitDirty to true and notify node
-          this.isSubmitDirty = true;
-          this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-          this.setSaveMessage(this.$translate('LAST_SAVED'), clientSaveTime);
-        }
+      const latestSubmitComponentState =
+          this.StudentDataService.getLatestSubmitComponentState(this.nodeId, this.componentId);
+      if (latestSubmitComponentState != null) {
+        this.showFeedbackOnUnchangedChoices(latestSubmitComponentState);
+      } else {
+        this.isCorrect = null;
+        this.setIsSubmitDirty(false);
+        this.showSaveMessage(clientSaveTime);
       }
     }
   };
+
+  /**
+   * There is unsaved student work that is not yet saved in a component state
+   */
+  processDirtyStudentWork() {
+    const latestSubmitComponentState =
+        this.StudentDataService.getLatestSubmitComponentState(this.nodeId, this.componentId);
+    if (latestSubmitComponentState != null) {
+      this.showFeedbackOnUnchangedChoices(latestSubmitComponentState);
+    } else {
+      const latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+      if (latestComponentState != null) {
+        this.isCorrect = null;
+        this.setIsSubmitDirty(true);
+        this.showSaveMessage(latestComponentState.clientSaveTime);
+      }
+    }
+  };
+
+  showFeedbackOnUnchangedChoices(latestSubmitComponentState) {
+    const choicesThatChangedSinceLastSubmit = this.getChoicesThatChangedSinceLastSubmit(latestSubmitComponentState);
+    if (choicesThatChangedSinceLastSubmit.length > 0) {
+      this.setIsSubmitDirty(true);
+    } else {
+      this.setIsSubmitDirty(false);
+    }
+    this.checkAnswer(choicesThatChangedSinceLastSubmit);
+  }
+
+  showSaveMessage(time) {
+    this.setSaveMessage(this.$translate('LAST_SAVED'), time);
+  }
+
+  showSubmitMessage(time) {
+    this.setSaveMessage(this.$translate('LAST_SUBMITTED'), time);
+  }
+
+  setIsSubmitDirty(isSubmitDirty) {
+    this.isSubmitDirty = isSubmitDirty;
+    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: isSubmitDirty});
+  }
+
+  isLatestComponentStateASubmit() {
+
+  }
 
   /**
    * Initialize the available choices from the component content
@@ -523,6 +444,38 @@ class MatchController extends ComponentController {
       this.choices = this.componentContent.choices;
     }
   };
+
+  getBucketIds() {
+    return this.buckets.map(b => { return b.id; });
+  }
+
+  getChoiceIds() {
+    return this.choices.map(c => { return c.id; });
+  }
+
+  getChoicesThatChangedSinceLastSubmit(latestSubmitComponentState) {
+    const latestSubmitComponentStateBuckets = latestSubmitComponentState.studentData.buckets;
+    const choicesThatChangedSinceLastSubmit = [];
+    for (let currentComponentStateBucket of this.buckets) {
+      const currentComponentStateBucketChoiceIds = currentComponentStateBucket.items.map(choice => { return choice.id; });
+      let bucketFromSubmitComponentState = this.getBucketById(currentComponentStateBucket.id, latestSubmitComponentStateBuckets);
+      if (bucketFromSubmitComponentState != null) {
+        const latestSubmitComponentStateChoiceIds =
+            bucketFromSubmitComponentState.items.map(choice => { return choice.id; });
+
+        for (let choiceIndexInBucket = 0; choiceIndexInBucket < currentComponentStateBucketChoiceIds.length; choiceIndexInBucket++) {
+          const currentBucketChoiceId = currentComponentStateBucketChoiceIds[choiceIndexInBucket];
+          if (latestSubmitComponentStateChoiceIds.indexOf(currentBucketChoiceId) == -1) {
+            choicesThatChangedSinceLastSubmit.push(currentBucketChoiceId);
+          } else if (this.isAuthorHasSpecifiedACorrectPosition(currentBucketChoiceId) &&
+              choiceIndexInBucket != latestSubmitComponentStateChoiceIds.indexOf(currentBucketChoiceId)) {
+            choicesThatChangedSinceLastSubmit.push(currentBucketChoiceId);
+          }
+        }
+      }
+    }
+    return choicesThatChangedSinceLastSubmit;
+  }
 
   /**
    * Get the choices
@@ -1033,7 +986,7 @@ class MatchController extends ComponentController {
 
         // clear the feedback in the choices
         this.clearFeedback();
-        this.processLatestSubmit();
+        this.processDirtyStudentWork();
 
         /*
          * the latest component state is not a submit. this is used to
@@ -2134,11 +2087,11 @@ class MatchController extends ComponentController {
   }
 
   /**
-   * Check if the choice has a correct position
+   * Returns true if the choice has been authored to have a correct position
    * @param choiceId the choice id
    * @return whether the choice has a correct position in any bucket
    */
-  choiceHasCorrectPosition(choiceId) {
+  isAuthorHasSpecifiedACorrectPosition(choiceId) {
     var buckets = this.getFeedback();
 
     if (buckets != null) {
@@ -2174,6 +2127,12 @@ class MatchController extends ComponentController {
       }
     }
 
+    return false;
+  }
+
+  choiceIsInCorrectPosition(choiceId) {
+    // dummy. not called.
+    // TODO: implement me.
     return false;
   }
 
