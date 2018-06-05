@@ -306,6 +306,7 @@ create table portal (
     google_map_key varchar(255),
     sendmail_on_exception bit,
     portalname varchar(255),
+    projectLibraryGroups text,
     projectMetadataSettings text,
     run_survey_template text,
     sendmail_properties tinyblob,
