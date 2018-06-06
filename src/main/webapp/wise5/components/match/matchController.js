@@ -505,21 +505,6 @@ var MatchController = function (_ComponentController) {
   }, {
     key: 'isLatestComponentStateASubmit',
     value: function isLatestComponentStateASubmit() {}
-
-    /**
-     * Initialize the available choices from the component content
-     */
-
-  }, {
-    key: 'initializeChoices',
-    value: function initializeChoices() {
-
-      this.choices = [];
-
-      if (this.componentContent != null && this.componentContent.choices != null) {
-        this.choices = this.componentContent.choices;
-      }
-    }
   }, {
     key: 'getBucketIds',
     value: function getBucketIds() {
@@ -583,104 +568,139 @@ var MatchController = function (_ComponentController) {
 
       return choicesThatChangedSinceLastSubmit;
     }
-
-    /**
-     * Get the choices
-     */
-
   }, {
     key: 'getChoices',
     value: function getChoices() {
       return this.choices;
     }
   }, {
+    key: 'initializeChoices',
+    value: function initializeChoices() {
+      this.choices = this.componentContent.choices;
+    }
+  }, {
     key: 'initializeBuckets',
-
-
-    /**
-     * Initialize the available buckets from the component content
-     */
     value: function initializeBuckets() {
-
       this.buckets = [];
+      this.setBucketWidth();
+      this.setNumChoiceColumns();
+      this.setChoiceStyle();
+      this.setBucketStyle();
+      var sourceBucket = {
+        id: this.sourceBucketId,
+        value: this.componentContent.choicesLabel ? this.componentContent.choicesLabel : this.$translate('match.choices'),
+        type: 'bucket',
+        items: []
+      };
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
 
-      if (this.componentContent != null && this.componentContent.buckets != null) {
+      try {
+        for (var _iterator5 = this.getChoices()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var choice = _step5.value;
 
-        // get the buckets from the component content
-        var buckets = this.componentContent.buckets;
-
-        if (this.isHorizontal) {
-          this.bucketWidth = 100;
-          this.numChoiceColumns = 1;
-        } else {
-          if (typeof this.componentContent.bucketWidth === 'number') {
-            this.bucketWidth = this.componentContent.bucketWidth;
-            this.numChoiceColumns = Math.round(100 / this.componentContent.bucketWidth);
-          } else {
-            var n = buckets.length;
-            if (n % 3 === 0 || n > 4) {
-              this.bucketWidth = Math.round(100 / 3);
-              this.numChoiceColumns = 3;
-            } else if (n % 2 === 0) {
-              this.bucketWidth = 100 / 2;
-              this.numChoiceColumns = 2;
-            }
+          sourceBucket.items.push(choice);
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
           }
-
-          if (typeof this.componentContent.choiceColumns === 'number') {
-            this.numChoiceColumns = this.componentContent.choiceColumns;
-          }
-
-          this.choiceStyle = {
-            '-moz-column-count': this.numChoiceColumns,
-            '-webkit-column-count': this.numChoiceColumns,
-            'column-count': this.numChoiceColumns
-          };
-
-          if (this.bucketWidth === 100) {
-            this.bucketStyle = this.choiceStyle;
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
           }
         }
+      }
 
-        /*
-         * create a bucket that will contain the choices when
-         * the student first starts working
-         */
-        var originBucket = {};
-        originBucket.id = this.sourceBucketId;
-        originBucket.value = this.componentContent.choicesLabel ? this.componentContent.choicesLabel : this.$translate('match.choices');
-        originBucket.type = 'bucket';
-        originBucket.items = [];
+      this.buckets.push(sourceBucket);
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
 
-        var choices = this.getChoices();
-
-        // add all the choices to the origin bucket
-        for (var c = 0; c < choices.length; c++) {
-          var choice = choices[c];
-
-          originBucket.items.push(choice);
-        }
-
-        // add the origin bucket to our array of buckets
-        this.buckets.push(originBucket);
-
-        // add all the other buckets to our array of buckets
-        for (var b = 0; b < buckets.length; b++) {
-          var bucket = buckets[b];
+      try {
+        for (var _iterator6 = this.componentContent.buckets[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var bucket = _step6.value;
 
           bucket.items = [];
-
           this.buckets.push(bucket);
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
+          }
         }
       }
     }
   }, {
+    key: 'setBucketWidth',
+    value: function setBucketWidth() {
+      if (this.isHorizontal) {
+        this.bucketWidth = 100;
+      } else {
+        if (typeof this.componentContent.bucketWidth === 'number') {
+          this.bucketWidth = this.componentContent.bucketWidth;
+        } else {
+          var n = this.componentContent.buckets.length;
+          if (n % 3 === 0 || n > 4) {
+            this.bucketWidth = Math.round(100 / 3);
+          } else if (n % 2 === 0) {
+            this.bucketWidth = 100 / 2;
+          }
+        }
+      }
+    }
+  }, {
+    key: 'setNumChoiceColumns',
+    value: function setNumChoiceColumns() {
+      if (this.isHorizontal) {
+        this.numChoiceColumns = 1;
+      } else {
+        if (typeof this.componentContent.bucketWidth === 'number') {
+          this.numChoiceColumns = Math.round(100 / this.componentContent.bucketWidth);
+        } else {
+          var n = this.componentContent.buckets.length;
+          if (n % 3 === 0 || n > 4) {
+            this.numChoiceColumns = 3;
+          } else if (n % 2 === 0) {
+            this.numChoiceColumns = 2;
+          }
+        }
+        if (typeof this.componentContent.choiceColumns === 'number') {
+          this.numChoiceColumns = this.componentContent.choiceColumns;
+        }
+      }
+    }
+  }, {
+    key: 'setChoiceStyle',
+    value: function setChoiceStyle() {
+      this.choiceStyle = {
+        '-moz-column-count': this.numChoiceColumns,
+        '-webkit-column-count': this.numChoiceColumns,
+        'column-count': this.numChoiceColumns
+      };
+    }
+  }, {
+    key: 'setBucketStyle',
+    value: function setBucketStyle() {
+      if (this.bucketWidth === 100) {
+        this.bucketStyle = this.choiceStyle;
+      }
+    }
+  }, {
     key: 'getBuckets',
-
-
-    /**
-     * Get the buckets
-     */
     value: function getBuckets() {
       return this.buckets;
     }
@@ -689,81 +709,33 @@ var MatchController = function (_ComponentController) {
 
 
     /**
-     * Create a copy of the buckets for cases when we want to make
-     * sure we don't accidentally change a bucket and have it also
-     * change previous versions of the buckets.
-     * @return a copy of the buckets
+     * Create a copy of the array of buckets with brand new objects.
+     * @return {array}
      */
     value: function getCopyOfBuckets() {
-      var buckets = this.getBuckets();
-
-      // get a JSON string representation of the buckets
-      var bucketsJSONString = angular.toJson(buckets);
-
-      // turn the JSON string back into a JSON array
-      var copyOfBuckets = angular.fromJson(bucketsJSONString);
-
-      return copyOfBuckets;
+      var bucketsJSONString = angular.toJson(this.getBuckets());
+      return angular.fromJson(bucketsJSONString);
     }
-  }, {
-    key: 'submit',
-
 
     /**
      * A submit was triggered by the component submit button or node submit button
-     * @param submitTriggeredBy what triggered the submit
+     * @param {string} submitTriggeredBy what triggered the submit
      * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
      */
+
+  }, {
+    key: 'submit',
     value: function submit(submitTriggeredBy) {
-
       if (this.isSubmitDirty) {
-        // the student has unsubmitted work
-
         var performSubmit = true;
-
-        if (this.componentContent.maxSubmitCount != null) {
-          // there is a max submit count
-
-          // calculate the number of submits this student has left
-          var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
-
-          var message = '';
-
-          if (numberOfSubmitsLeft <= 0) {
-            // the student does not have any more chances to submit
-            performSubmit = false;
-          } else if (numberOfSubmitsLeft == 1) {
-            /*
-             * the student has one more chance to submit left so maybe
-             * we should ask the student if they are sure they want to submit
-             */
-          } else if (numberOfSubmitsLeft > 1) {
-            /*
-             * the student has more than one chance to submit left so maybe
-             * we should ask the student if they are sure they want to submit
-             */
-          }
+        if (this.componentContent.maxSubmitCount != null && this.hasStudentUsedAllSubmits()) {
+          performSubmit = false;
         }
-
         if (performSubmit) {
-
-          /*
-           * set isSubmit to true so that when the component state is
-           * created, it will know it is a submit component state
-           * instead of just a save component state
-           */
           this.isSubmit = true;
-
-          // clear the isCorrect value because it will be evaluated again later
           this.isCorrect = null;
           this.incrementSubmitCounter();
-
-          // check if the student has used up all of their submits
-          if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-            /*
-             * the student has used up all of their submits so we will
-             * disable the submit button
-             */
+          if (this.componentContent.maxSubmitCount != null && this.hasStudentUsedAllSubmits()) {
             this.isDisabled = true;
             this.isSubmitButtonDisabled = true;
           }
@@ -779,295 +751,219 @@ var MatchController = function (_ComponentController) {
             this.createComponentState('submit');
           }
 
-          if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
-            // tell the parent node that this component wants to submit
+          if (submitTriggeredBy === 'componentSubmitButton') {
             this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-          } else if (submitTriggeredBy === 'nodeSubmitButton') {
-            // nothing extra needs to be performed
           }
         } else {
-          /*
-           * the student has cancelled the submit so if a component state
-           * is created, it will just be a regular save and not submit
-           */
           this.isSubmit = false;
         }
       }
     }
+  }, {
+    key: 'getNumSubmitsLeft',
+    value: function getNumSubmitsLeft() {
+      return this.componentContent.maxSubmitCount - this.submitCounter;
+    }
+  }, {
+    key: 'hasStudentUsedAllSubmits',
+    value: function hasStudentUsedAllSubmits() {
+      return this.getNumSubmitsLeft() <= 0;
+    }
 
     /**
-     * Check if the student has answered correctly
-     * @param ids array of choice ids to exclude
+     * Check if the student has answered correctly and show feedback.
+     * @param {array} choice ids to not show feedback for
      */
 
   }, {
     key: 'checkAnswer',
-    value: function checkAnswer(ids) {
+    value: function checkAnswer() {
+      var choiceIdsExcludedFromFeedback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
       var isCorrect = true;
-
-      // get the buckets
       var buckets = this.getBuckets();
-      var excludeIds = ids ? ids : [];
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
 
-      if (buckets != null) {
+      try {
+        for (var _iterator7 = buckets[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var bucket = _step7.value;
 
-        // loop through all the buckets
-        for (var b = 0, l = buckets.length; b < l; b++) {
-
-          // get a bucket
-          var bucket = buckets[b];
-
-          if (bucket != null) {
-            var bucketId = bucket.id;
-            var items = bucket.items;
-
-            if (items != null) {
-
-              // loop through all the items in the bucket
-              for (var i = 0, len = items.length; i < len; i++) {
-                var item = items[i];
-                var position = i + 1;
-
-                if (item != null) {
-                  var choiceId = item.id;
-
-                  // check if the choice has a correct bucket it should be in
-                  var choiceIdHasCorrectBucket = this.choiceHasCorrectBucket(choiceId);
-
-                  // get the feedback object for the bucket and choice
-                  var feedbackObject = this.getFeedbackObject(bucketId, choiceId);
-
-                  if (feedbackObject != null) {
-                    var feedback = feedbackObject.feedback;
-
-                    var feedbackPosition = feedbackObject.position;
-                    var feedbackIsCorrect = feedbackObject.isCorrect;
-
-                    if (this.hasCorrectAnswer) {
-
-                      if (!choiceIdHasCorrectBucket) {
-                        /*
-                         * the component has a correct answer but there
-                         * is no correct bucket for the current choice
-                         */
-
-                        if (bucketId == this.sourceBucketId) {
-                          /*
-                           * the choice is in the source bucket and
-                           * the choice does not have a correct bucket
-                           * so we will mark the choice as correct
-                           */
-                          feedbackIsCorrect = true;
-                        }
-                      }
-                    }
-
-                    if (feedback == null || feedback == '') {
-                      // there is no authored feedback
-
-                      if (this.hasCorrectAnswer) {
-                        /*
-                         * there is a correct answer for the component
-                         * so we will show default feedback
-                         */
-                        if (feedbackIsCorrect) {
-                          feedback = this.$translate('CORRECT');
-                        } else {
-                          feedback = this.$translate('INCORRECT');
-                        }
-                      }
-                    }
-
-                    if (!this.componentContent.ordered || feedbackPosition == null) {
-                      /*
-                       * position does not matter and the choice may be
-                       * in the correct or incorrect bucket
-                       */
-
-                      // set the feedback into the item
-                      item.feedback = feedback;
-
-                      // set whether the choice is in the correct bucket
-                      item.isCorrect = feedbackIsCorrect;
-
-                      /*
-                       * there is no feedback position in the feeback object so
-                       * position doesn't matter
-                       */
-                      item.isIncorrectPosition = false;
-
-                      // update whether the student has answered the step correctly
-                      isCorrect = isCorrect && feedbackIsCorrect;
-                    } else {
-                      /*
-                       * position does matter and the choice is in a correct
-                       * bucket. we know this because a feedback object will
-                       * only have a non-null position value if the choice is
-                       * in the correct bucket. if the feedback object is for
-                       * a choice that is in an incorrect bucket, the position
-                       * value will be null.
-                       */
-
-                      if (position === feedbackPosition) {
-                        // the item is in the correct position
-
-                        // set the feedback into the item
-                        item.feedback = feedback;
-
-                        // set whether the choice is in the correct bucket
-                        item.isCorrect = feedbackIsCorrect;
-
-                        // the choice is in the correct position
-                        item.isIncorrectPosition = false;
-
-                        // update whether the student has answered the step correctly
-                        isCorrect = isCorrect && feedbackIsCorrect;
-                      } else {
-                        // item is in the correct bucket but wrong position
-
-                        /*
-                         * get the feedback for when the choice is in the correct
-                         * bucket but wrong position
-                         */
-                        var incorrectPositionFeedback = feedbackObject.incorrectPositionFeedback;
-
-                        // set the default feedback if none is authored
-                        if (incorrectPositionFeedback == null || incorrectPositionFeedback == '') {
-                          incorrectPositionFeedback = this.$translate('match.correctBucketButWrongPosition');
-                        }
-
-                        item.feedback = incorrectPositionFeedback;
-
-                        /*
-                         * the choice is in the incorrect position so it isn't correct
-                         */
-                        item.isCorrect = false;
-
-                        // the choice is in the incorrect position
-                        item.isIncorrectPosition = true;
-
-                        // the student has answered incorrectly
-                        isCorrect = false;
-                      }
-                    }
-                  }
-
-                  if (!this.hasCorrectAnswer) {
-                    /*
-                     * the component does not have a correct answer
-                     * so we will clear the isCorrect and isIncorrectPosition
-                     * fields
-                     */
-                    item.isCorrect = null;
-                    item.isIncorrectPosition = null;
-                  }
-
-                  if (excludeIds.indexOf(choiceId) > -1) {
-                    // don't show feedback for choices that should be excluded
-                    item.feedback = null;
+          var bucketId = bucket.id;
+          var items = bucket.items;
+          for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var position = i + 1;
+            var choiceId = item.id;
+            var feedbackObject = this.getFeedbackObject(bucketId, choiceId);
+            if (feedbackObject != null) {
+              var feedback = feedbackObject.feedback;
+              var correctPosition = feedbackObject.position;
+              var feedbackIsCorrect = feedbackObject.isCorrect;
+              if (this.hasCorrectAnswer) {
+                if (!this.isAuthorHasSpecifiedACorrectBucket(choiceId)) {
+                  if (bucketId == this.sourceBucketId) {
+                    // set this choice as correct because this choice belongs in the source bucket
+                    feedbackIsCorrect = true;
                   }
                 }
               }
+
+              if (feedback == '') {
+                if (this.hasCorrectAnswer) {
+                  if (feedbackIsCorrect) {
+                    feedback = this.$translate('CORRECT');
+                  } else {
+                    feedback = this.$translate('INCORRECT');
+                  }
+                }
+              }
+
+              if (this.doesPositionNotMatter(correctPosition)) {
+                item.feedback = feedback;
+                item.isCorrect = feedbackIsCorrect;
+                item.isIncorrectPosition = false;
+                isCorrect = isCorrect && feedbackIsCorrect;
+              } else {
+                /*
+                 * position does matter and the choice is in a correct
+                 * bucket. we know this because a feedback object will
+                 * only have a non-null position value if the choice is
+                 * in the correct bucket. if the feedback object is for
+                 * a choice that is in an incorrect bucket, the position
+                 * value will be null.
+                 */
+                if (position === correctPosition) {
+                  item.feedback = feedback;
+                  item.isCorrect = feedbackIsCorrect;
+                  item.isIncorrectPosition = false;
+                  isCorrect = isCorrect && feedbackIsCorrect;
+                } else {
+                  // item is in the correct bucket but wrong position
+                  var incorrectPositionFeedback = feedbackObject.incorrectPositionFeedback;
+                  if (incorrectPositionFeedback == null || incorrectPositionFeedback == '') {
+                    incorrectPositionFeedback = this.$translate('match.correctBucketButWrongPosition');
+                  }
+                  item.feedback = incorrectPositionFeedback;
+                  item.isCorrect = false;
+                  item.isIncorrectPosition = true;
+                  isCorrect = false;
+                }
+              }
             }
+
+            if (!this.hasCorrectAnswer) {
+              item.isCorrect = null;
+              item.isIncorrectPosition = null;
+            }
+
+            if (choiceIdsExcludedFromFeedback.indexOf(choiceId) > -1) {
+              item.feedback = null;
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion7 && _iterator7.return) {
+            _iterator7.return();
+          }
+        } finally {
+          if (_didIteratorError7) {
+            throw _iteratorError7;
           }
         }
       }
 
       if (this.hasCorrectAnswer) {
-        /*
-         * set the isCorrect value into the controller
-         * so we can read it later
-         */
         this.isCorrect = isCorrect;
       } else {
         this.isCorrect = null;
       }
     }
-  }, {
-    key: 'getFeedback',
-
 
     /**
      * Get the array of feedback
-     * @return the array of feedback objects
+     * @return {array} the array of feedback objects
      */
-    value: function getFeedback() {
-      var feedback = null;
 
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // get the feedback from the component content
-        feedback = componentContent.feedback;
-      }
-
-      return feedback;
+  }, {
+    key: 'getAllFeedback',
+    value: function getAllFeedback() {
+      return this.componentContent.feedback;
     }
 
     /**
      * Get the feedback object for the combination of bucket and choice
-     * @param bucketId the bucket id
-     * @param choiceId the choice id
-     * @return the feedback object for the combination of bucket and choice
+     * @param {string} bucketId the bucket id
+     * @param {string} choiceId the choice id
+     * @return {object} the feedback object for the combination of bucket and choice
      */
 
   }, {
     key: 'getFeedbackObject',
     value: function getFeedbackObject(bucketId, choiceId) {
-      var feedbackObject = null;
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
 
-      // get the feedback
-      var feedback = this.getFeedback();
+      try {
+        for (var _iterator8 = this.getAllFeedback()[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var bucketFeedback = _step8.value;
 
-      if (feedback != null) {
+          if (bucketFeedback.bucketId === bucketId) {
+            var _iteratorNormalCompletion9 = true;
+            var _didIteratorError9 = false;
+            var _iteratorError9 = undefined;
 
-        /*
-         * loop through the feedback. each element in the feedback represents
-         * a bucket
-         */
-        for (var f = 0; f < feedback.length; f++) {
+            try {
+              for (var _iterator9 = bucketFeedback.choices[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                var choiceFeedback = _step9.value;
 
-          // get a bucket feedback object
-          var bucketFeedback = feedback[f];
-
-          if (bucketFeedback != null) {
-
-            // get the bucket id
-            var tempBucketId = bucketFeedback.bucketId;
-
-            if (bucketId === tempBucketId) {
-              // we have found the bucket we are looking for
-
-              var choices = bucketFeedback.choices;
-
-              if (choices != null) {
-
-                // loop through all the choice feedback
-                for (var c = 0; c < choices.length; c++) {
-                  var choiceFeedback = choices[c];
-
-                  if (choiceFeedback != null) {
-                    var tempChoiceId = choiceFeedback.choiceId;
-
-                    if (choiceId === tempChoiceId) {
-                      // we have found the choice we are looking for
-                      feedbackObject = choiceFeedback;
-                      break;
-                    }
-                  }
+                if (choiceFeedback.choiceId === choiceId) {
+                  return choiceFeedback;
                 }
-
-                if (feedbackObject != null) {
-                  break;
+              }
+            } catch (err) {
+              _didIteratorError9 = true;
+              _iteratorError9 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                  _iterator9.return();
+                }
+              } finally {
+                if (_didIteratorError9) {
+                  throw _iteratorError9;
                 }
               }
             }
           }
         }
+      } catch (err) {
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
+          }
+        } finally {
+          if (_didIteratorError8) {
+            throw _iteratorError8;
+          }
+        }
       }
 
-      return feedbackObject;
+      return null;
+    }
+  }, {
+    key: 'doesPositionNotMatter',
+    value: function doesPositionNotMatter(feedbackPosition) {
+      return !this.componentContent.ordered || feedbackPosition == null;
     }
   }, {
     key: 'studentDataChanged',
@@ -1129,7 +1025,10 @@ var MatchController = function (_ComponentController) {
           this.isLatestComponentStateSubmit = false;
         }
 
-        // set the buckets into the student data
+        /*
+         * Create a copy of the buckets so we don't accidentally change a bucket and have it also
+         * change previous versions of the buckets.
+         */
         studentData.buckets = this.getCopyOfBuckets();
 
         // the student submitted this work
@@ -2269,10 +2168,10 @@ var MatchController = function (_ComponentController) {
      */
 
   }, {
-    key: 'choiceHasCorrectBucket',
-    value: function choiceHasCorrectBucket(choiceId) {
+    key: 'isAuthorHasSpecifiedACorrectBucket',
+    value: function isAuthorHasSpecifiedACorrectBucket(choiceId) {
 
-      var buckets = this.getFeedback();
+      var buckets = this.getAllFeedback();
 
       if (buckets != null) {
 
@@ -2319,7 +2218,7 @@ var MatchController = function (_ComponentController) {
   }, {
     key: 'isAuthorHasSpecifiedACorrectPosition',
     value: function isAuthorHasSpecifiedACorrectPosition(choiceId) {
-      var buckets = this.getFeedback();
+      var buckets = this.getAllFeedback();
 
       if (buckets != null) {
 
@@ -2863,13 +2762,13 @@ var MatchController = function (_ComponentController) {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion5 = true;
-          var _didIteratorError5 = false;
-          var _iteratorError5 = undefined;
+          var _iteratorNormalCompletion10 = true;
+          var _didIteratorError10 = false;
+          var _iteratorError10 = undefined;
 
           try {
-            for (var _iterator5 = components[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-              var component = _step5.value;
+            for (var _iterator10 = components[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+              var component = _step10.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -2880,16 +2779,16 @@ var MatchController = function (_ComponentController) {
               }
             }
           } catch (err) {
-            _didIteratorError5 = true;
-            _iteratorError5 = err;
+            _didIteratorError10 = true;
+            _iteratorError10 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                _iterator5.return();
+              if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                _iterator10.return();
               }
             } finally {
-              if (_didIteratorError5) {
-                throw _iteratorError5;
+              if (_didIteratorError10) {
+                throw _iteratorError10;
               }
             }
           }
