@@ -125,7 +125,7 @@ var MatchController = function (_ComponentController) {
       } else if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
         _this.handleConnectedComponents();
       }
-    } else if (_this.mode != 'authoring') {
+    } else if (componentState != null) {
       _this.setStudentWork(componentState);
     }
 
@@ -972,9 +972,6 @@ var MatchController = function (_ComponentController) {
       this.isLatestComponentStateSubmit = false;
       _get(MatchController.prototype.__proto__ || Object.getPrototypeOf(MatchController.prototype), 'studentDataChanged', this).call(this);
     }
-  }, {
-    key: 'createComponentState',
-
 
     /**
      * Create a new component state populated with the student data
@@ -982,79 +979,42 @@ var MatchController = function (_ComponentController) {
      * e.g. 'submit', 'save', 'change'
      * @return a promise that will return a component state
      */
+
+  }, {
+    key: 'createComponentState',
     value: function createComponentState(action) {
-
-      // create a new component state
       var componentState = this.NodeService.createNewComponentState();
-
-      if (componentState != null) {
-
-        var studentData = {};
-
-        if (action === 'submit') {
-
-          /*
-           * check if the choices are in the correct buckets and also
-           * display feedback
-           */
-          this.checkAnswer();
-
-          if (this.hasCorrectAnswer && this.isCorrect != null) {
-            /*
-             * there are correct choices so we will set whether the
-             * student was correct
-             */
-            studentData.isCorrect = this.isCorrect;
-          }
-
-          /*
-           * the latest component state is a submit. this is used to
-           * determine if we should show the feedback.
-           */
-          this.isLatestComponentStateSubmit = true;
-        } else {
-
-          // clear the feedback in the choices
-          this.clearFeedback();
-          this.processDirtyStudentWork();
-
-          /*
-           * the latest component state is not a submit. this is used to
-           * determine if we should show the feedback.
-           */
-          this.isLatestComponentStateSubmit = false;
+      var studentData = {};
+      if (action === 'submit') {
+        this.checkAnswer();
+        if (this.hasCorrectAnswer && this.isCorrect != null) {
+          studentData.isCorrect = this.isCorrect;
         }
-
-        /*
-         * Create a copy of the buckets so we don't accidentally change a bucket and have it also
-         * change previous versions of the buckets.
-         */
-        studentData.buckets = this.getCopyOfBuckets();
-
-        // the student submitted this work
-        componentState.isSubmit = this.isSubmit;
-
-        // set the submit counter
-        studentData.submitCounter = this.submitCounter;
-
-        /*
-         * reset the isSubmit value so that the next component state
-         * doesn't maintain the same value
-         */
-        this.isSubmit = false;
-
-        //set the student data into the component state
-        componentState.studentData = studentData;
-
-        // set the component type
-        componentState.componentType = 'Match';
-
-        // set the node id
-        componentState.nodeId = this.nodeId;
-
-        // set the component id
-        componentState.componentId = this.componentId;
+        this.isLatestComponentStateSubmit = true;
+      } else {
+        this.clearFeedback();
+        this.processDirtyStudentWork();
+        this.isLatestComponentStateSubmit = false;
       }
+
+      /*
+       * Create a copy of the buckets so we don't accidentally change a bucket and have it also
+       * change previous versions of the buckets.
+       */
+      studentData.buckets = this.getCopyOfBuckets();
+      componentState.isSubmit = this.isSubmit;
+      studentData.submitCounter = this.submitCounter;
+
+      /*
+       * reset the isSubmit value so that the next component state
+       * doesn't maintain the same value
+       */
+      this.isSubmit = false;
+
+      componentState.studentData = studentData;
+      componentState.componentType = 'Match';
+      componentState.nodeId = this.nodeId;
+      componentState.componentId = this.componentId;
 
       var deferred = this.$q.defer();
 
@@ -1063,160 +1023,7 @@ var MatchController = function (_ComponentController) {
        * the component state
        */
       this.createComponentStateAdditionalProcessing(deferred, componentState, action);
-
       return deferred.promise;
-    }
-  }, {
-    key: 'importWork',
-
-
-    /**
-     * Import work from another component
-     */
-    value: function importWork() {
-
-      // get the component content
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // get the import previous work node id and component id
-        var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
-        var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-
-        if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-
-          /*
-           * check if the node id is in the field that we used to store
-           * the import previous work node id in
-           */
-          if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
-            importPreviousWorkNodeId = componentContent.importWorkNodeId;
-          }
-        }
-
-        if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-
-          /*
-           * check if the component id is in the field that we used to store
-           * the import previous work component id in
-           */
-          if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
-            importPreviousWorkComponentId = componentContent.importWorkComponentId;
-          }
-        }
-
-        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-
-          // get the latest component state for this component
-          var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          /*
-           * we will only import work into this component if the student
-           * has not done any work for this component
-           */
-          if (componentState == null) {
-            // the student has not done any work for this component
-
-            // get the latest component state from the component we are importing from
-            var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
-
-            if (importWorkComponentState != null) {
-              /*
-               * populate a new component state with the work from the
-               * imported component state
-               */
-              var populatedComponentState = this.MatchService.populateComponentState(importWorkComponentState);
-
-              /*
-               * update the choice ids so that it uses the choice ids
-               * from this component. we need to do this because the choice
-               * ids are likely to be different. we update the choice ids
-               * by matching the choice text.
-               */
-              this.updateIdsFromImportedWork(populatedComponentState);
-
-              // populate the component state into this component
-              this.setStudentWork(populatedComponentState);
-              this.studentDataChanged();
-            }
-          }
-        }
-      }
-    }
-  }, {
-    key: 'updateIdsFromImportedWork',
-
-
-    /**
-     * Update the choice ids and bucket ids to use the ids from this component.
-     * We will use the choice text and bucket text to perform matching.
-     * @param componentState the component state
-     */
-    value: function updateIdsFromImportedWork(componentState) {
-
-      if (componentState != null) {
-
-        // get the student data
-        var studentData = componentState.studentData;
-
-        if (studentData != null) {
-
-          // get the buckets from the student data
-          var studentBuckets = studentData.buckets;
-
-          if (studentBuckets != null) {
-
-            // loop through all the student buckets
-            for (var b = 0; b < studentBuckets.length; b++) {
-
-              // get a student bucket
-              var studentBucket = studentBuckets[b];
-
-              if (studentBucket != null) {
-
-                // get the text of the student bucket
-                var tempStudentBucketText = studentBucket.value;
-
-                // get the bucket from this component that has the matching text
-                var bucket = this.getBucketByText(tempStudentBucketText);
-
-                if (bucket != null) {
-                  // change the id of the student bucket
-                  studentBucket.id = bucket.id;
-                }
-
-                // get the choices the student put into this bucket
-                var studentChoices = studentBucket.items;
-
-                if (studentChoices != null) {
-
-                  // loop through the choices in the bucket
-                  for (var c = 0; c < studentChoices.length; c++) {
-
-                    // get a student choice
-                    var studentChoice = studentChoices[c];
-
-                    if (studentChoice != null) {
-
-                      // get the text of the student choice
-                      var tempStudentChoiceText = studentChoice.value;
-
-                      // get the choice from this component that has the matching text
-                      var choice = this.getChoiceByText(tempStudentChoiceText);
-
-                      if (choice != null) {
-                        // change the id of the student choice
-                        studentChoice.id = choice.id;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     }
 
     /**
@@ -1618,193 +1425,153 @@ var MatchController = function (_ComponentController) {
 
     /**
      * Get the choice by id from the authoring component content
-     * @param id the choice id
-     * @returns the choice object from the authoring component content
+     * @param {string} id the choice id
+     * @returns {object} the choice object from the authoring component content
      */
 
   }, {
     key: 'getChoiceById',
     value: function getChoiceById(id) {
+      var _iteratorNormalCompletion10 = true;
+      var _didIteratorError10 = false;
+      var _iteratorError10 = undefined;
 
-      var choice = null;
+      try {
+        for (var _iterator10 = this.componentContent.choices[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+          var choice = _step10.value;
 
-      // get the choices
-      var choices = this.componentContent.choices;
-
-      // loop through all the choices
-      for (var c = 0; c < choices.length; c++) {
-        // get a choice
-        var tempChoice = choices[c];
-
-        if (tempChoice != null) {
-          if (id === tempChoice.id) {
-            // we have found the choice we want
-            choice = tempChoice;
-            break;
+          if (choice.id === id) {
+            return choice;
+          }
+        }
+      } catch (err) {
+        _didIteratorError10 = true;
+        _iteratorError10 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion10 && _iterator10.return) {
+            _iterator10.return();
+          }
+        } finally {
+          if (_didIteratorError10) {
+            throw _iteratorError10;
           }
         }
       }
 
-      return choice;
+      return null;
     }
 
     /**
-     * Get the choice by text
-     * @param text look for a choice with this text
-     * @returns the choice with the given text
+     * Get the choice with the given text.
+     * @param {string} text look for a choice with this text
+     * @returns {object} the choice with the given text
      */
 
   }, {
     key: 'getChoiceByText',
     value: function getChoiceByText(text) {
+      var _iteratorNormalCompletion11 = true;
+      var _didIteratorError11 = false;
+      var _iteratorError11 = undefined;
 
-      var choice = null;
+      try {
+        for (var _iterator11 = this.componentContent.choices[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+          var choice = _step11.value;
 
-      if (text != null) {
-
-        // get the choices from the component content
-        var choices = this.componentContent.choices;
-
-        if (choices != null) {
-
-          // loop through all the choices
-          for (var c = 0; c < choices.length; c++) {
-            var tempChoice = choices[c];
-
-            if (tempChoice != null) {
-              if (text == tempChoice.value) {
-                // we have found the choice we want
-                choice = tempChoice;
-                break;
-              }
-            }
+          if (choice.value === text) {
+            return choice;
+          }
+        }
+      } catch (err) {
+        _didIteratorError11 = true;
+        _iteratorError11 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion11 && _iterator11.return) {
+            _iterator11.return();
+          }
+        } finally {
+          if (_didIteratorError11) {
+            throw _iteratorError11;
           }
         }
       }
 
-      return choice;
+      return null;
     }
 
     /**
-     * Get the bucket by id from the authoring component content
-     * @param id the bucket id
-     * @param buckets (optional) the buckets to get the bucket from
-     * @returns the bucket object from the authoring component content
+     * Get the bucket by id from the authoring component content.
+     * @param {string} id the bucket id
+     * @param {array} buckets (optional) the buckets to get the bucket from
+     * @returns {object} the bucket object from the authoring component content
      */
 
   }, {
     key: 'getBucketById',
-    value: function getBucketById(id, buckets) {
+    value: function getBucketById(id) {
+      var buckets = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.buckets;
+      var _iteratorNormalCompletion12 = true;
+      var _didIteratorError12 = false;
+      var _iteratorError12 = undefined;
 
-      var bucket = null;
+      try {
+        for (var _iterator12 = buckets[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+          var bucket = _step12.value;
 
-      if (buckets == null) {
-        if (this.buckets != null) {
-          // get the buckets from the component
-          buckets = this.buckets;
-        } else {
-          // get the buckets from the authoring component content
-          buckets = this.authoringComponentContent.buckets;
+          if (bucket.id == id) {
+            return bucket;
+          }
         }
-      }
-
-      // loop through the buckets
-      for (var b = 0; b < buckets.length; b++) {
-        var tempBucket = buckets[b];
-
-        if (tempBucket != null) {
-          if (id == tempBucket.id) {
-            // we have found the bucket we want
-            bucket = tempBucket;
-            break;
+      } catch (err) {
+        _didIteratorError12 = true;
+        _iteratorError12 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion12 && _iterator12.return) {
+            _iterator12.return();
+          }
+        } finally {
+          if (_didIteratorError12) {
+            throw _iteratorError12;
           }
         }
       }
 
-      return bucket;
-    }
-
-    /**
-     * Get the bucket by text
-     * @param text look for a bucket with this text
-     * @returns the bucket with the given text
-     */
-
-  }, {
-    key: 'getBucketByText',
-    value: function getBucketByText(text) {
-
-      var bucket = null;
-
-      if (text != null) {
-
-        // get the buckets from the component content
-        var buckets = this.componentContent.buckets;
-
-        if (buckets != null) {
-
-          // loop throgh all the buckets
-          for (var b = 0; b < buckets.length; b++) {
-            var tempBucket = buckets[b];
-
-            if (tempBucket != null) {
-              if (text == tempBucket.value) {
-                // we have found the bucket we want
-                bucket = tempBucket;
-                break;
-              }
-            }
-          }
-        }
-      }
-
-      return bucket;
+      return null;
     }
 
     /**
      * Get the choice value by id from the authoring component content
-     * @param id the choice id
-     * @returns the choice value from the authoring component content
+     * @param {string} choiceId the choice id
+     * @returns {string} the choice value from the authoring component content
      */
 
   }, {
     key: 'getChoiceValueById',
-    value: function getChoiceValueById(id) {
-
-      var value = null;
-
-      // get the choice
-      var choice = this.getChoiceById(id);
-
+    value: function getChoiceValueById(choiceId) {
+      var choice = this.getChoiceById(choiceId);
       if (choice != null) {
-        // get the value
-        value = choice.value;
+        return choice.value;
       }
-
-      return value;
+      return null;
     }
 
     /**
      * Get the bucket value by id from the authoring component content
-     * @param id the bucket id
-     * @returns the bucket value from the authoring component content
+     * @param {string} bucketId the bucket id
+     * @returns {string} the bucket value from the authoring component content
      */
 
   }, {
     key: 'getBucketValueById',
-    value: function getBucketValueById(id) {
-
-      var value = null;
-
-      // get the bucket
-      var bucket = this.getBucketById(id);
-
+    value: function getBucketValueById(bucketId) {
+      var bucket = this.getBucketById(bucketId);
       if (bucket != null) {
-        // get the value
-        value = bucket.value;
+        return bucket.value;
       }
-
-      return value;
+      return null;
     }
 
     /**
@@ -1994,31 +1761,11 @@ var MatchController = function (_ComponentController) {
     }
 
     /**
-     * Register the the listener that will listen for the exit event
-     * so that we can perform saving before exiting.
-     */
-
-  }, {
-    key: 'registerExitListener',
-    value: function registerExitListener() {
-
-      /*
-       * Listen for the 'exit' event which is fired when the student exits
-       * the VLE. This will perform saving before the VLE exits.
-       */
-      this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {
-
-        // do nothing
-        this.$rootScope.$broadcast('doneExiting');
-      }));
-    }
-  }, {
-    key: 'summernoteRubricHTMLChanged',
-
-
-    /**
      * The author has changed the rubric
      */
+
+  }, {
+    key: 'summernoteRubricHTMLChanged',
     value: function summernoteRubricHTMLChanged() {
 
       // get the summernote rubric html
@@ -2048,48 +1795,57 @@ var MatchController = function (_ComponentController) {
 
     /**
      * Check if the component has been authored with a correct choice
-     * @return whether the component has been authored with a correct choice
+     * @return {boolean} whether the component has been authored with a correct choice
      */
 
   }, {
     key: 'hasCorrectChoices',
     value: function hasCorrectChoices() {
-      var result = false;
+      var _iteratorNormalCompletion13 = true;
+      var _didIteratorError13 = false;
+      var _iteratorError13 = undefined;
 
-      // get the component content
-      var componentContent = this.componentContent;
+      try {
+        for (var _iterator13 = this.componentContent.feedback[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+          var bucket = _step13.value;
+          var _iteratorNormalCompletion14 = true;
+          var _didIteratorError14 = false;
+          var _iteratorError14 = undefined;
 
-      if (componentContent != null) {
+          try {
+            for (var _iterator14 = bucket.choices[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+              var choice = _step14.value;
 
-        // get the buckets
-        var buckets = componentContent.feedback;
-
-        if (buckets != null) {
-
-          // loop through all the buckets
-          for (var b = 0; b < buckets.length; b++) {
-            var bucket = buckets[b];
-
-            if (bucket != null) {
-
-              // get the choices
-              var choices = bucket.choices;
-
-              if (choices != null) {
-
-                // loop through all the choices
-                for (var c = 0; c < choices.length; c++) {
-                  var choice = choices[c];
-
-                  if (choice != null) {
-                    if (choice.isCorrect) {
-                      // there is a correct choice
-                      return true;
-                    }
-                  }
-                }
+              if (choice.isCorrect) {
+                return true;
               }
             }
+          } catch (err) {
+            _didIteratorError14 = true;
+            _iteratorError14 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion14 && _iterator14.return) {
+                _iterator14.return();
+              }
+            } finally {
+              if (_didIteratorError14) {
+                throw _iteratorError14;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError13 = true;
+        _iteratorError13 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion13 && _iterator13.return) {
+            _iterator13.return();
+          }
+        } finally {
+          if (_didIteratorError13) {
+            throw _iteratorError13;
           }
         }
       }
@@ -2097,65 +1853,31 @@ var MatchController = function (_ComponentController) {
       return false;
     }
   }, {
-    key: 'removeChoiceFromBucket',
-
-
-    /**
-     * Remove a choice from a bucket
-     * @param choiceId the choice id we want to remove
-     * @param bucketId remove the choice from this bucket
-     */
-    value: function removeChoiceFromBucket(choiceId, bucketId) {
-
-      if (choiceId != null && bucketId != null) {
-
-        // get the bucket
-        var bucket = this.getBucketById(bucketId);
-
-        if (bucket != null) {
-
-          // get the choices in the bucket
-          var bucketItems = bucket.items;
-
-          if (bucketItems != null) {
-
-            // loop through all the choices in the bucket
-            for (var i = 0; i < bucketItems.length; i++) {
-              var bucketItem = bucketItems[i];
-
-              if (bucketItem != null && bucketItem.id === choiceId) {
-                // we have found the choice we want to remove
-                bucketItems.splice(i, 1);
-                break;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    /**
-     * Clear the feedback and isCorrect fields in all the choices
-     */
-
-  }, {
     key: 'clearFeedback',
     value: function clearFeedback() {
+      var _iteratorNormalCompletion15 = true;
+      var _didIteratorError15 = false;
+      var _iteratorError15 = undefined;
 
-      // get all the choices
-      var choices = this.getChoices();
+      try {
+        for (var _iterator15 = this.getChoices()[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+          var choice = _step15.value;
 
-      if (choices != null) {
-
-        // loop through all the choices
-        for (var c = 0; c < choices.length; c++) {
-          var choice = choices[c];
-
-          if (choice != null) {
-            // set the feedback fields to null
-            choice.isCorrect = null;
-            choice.isIncorrectPosition = null;
-            choice.feedback = null;
+          choice.isCorrect = null;
+          choice.isIncorrectPosition = null;
+          choice.feedback = null;
+        }
+      } catch (err) {
+        _didIteratorError15 = true;
+        _iteratorError15 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion15 && _iterator15.return) {
+            _iterator15.return();
+          }
+        } finally {
+          if (_didIteratorError15) {
+            throw _iteratorError15;
           }
         }
       }
@@ -2163,45 +1885,60 @@ var MatchController = function (_ComponentController) {
 
     /**
      * Check if a choice has a correct bucket
-     * @param choiceId the choice id
-     * @return whether the choice has a correct bucket
+     * @param {string} choiceId the choice id
+     * @return {boolean} whether the choice has a correct bucket
      */
 
   }, {
     key: 'isAuthorHasSpecifiedACorrectBucket',
     value: function isAuthorHasSpecifiedACorrectBucket(choiceId) {
+      var _iteratorNormalCompletion16 = true;
+      var _didIteratorError16 = false;
+      var _iteratorError16 = undefined;
 
-      var buckets = this.getAllFeedback();
+      try {
+        for (var _iterator16 = this.getAllFeedback()[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+          var bucket = _step16.value;
+          var _iteratorNormalCompletion17 = true;
+          var _didIteratorError17 = false;
+          var _iteratorError17 = undefined;
 
-      if (buckets != null) {
+          try {
+            for (var _iterator17 = bucket.choices[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+              var choice = _step17.value;
 
-        // loop through all the buckets
-        for (var b = 0; b < buckets.length; b++) {
-          var bucket = buckets[b];
-
-          if (bucket != null) {
-            var choices = bucket.choices;
-
-            if (choices != null) {
-
-              // loop through all the choices in the bucket
-              for (var c = 0; c < choices.length; c++) {
-                var choice = choices[c];
-
-                if (choice != null && choice.choiceId === choiceId) {
-                  // we have found the choice we are looking for
-
-                  if (choice.isCorrect) {
-                    /*
-                     * the item is correct when placed in this bucket
-                     * which means this choice does have a correct
-                     * bucket
-                     */
-                    return true;
-                  }
+              if (choice.choiceId === choiceId) {
+                if (choice.isCorrect) {
+                  return true;
                 }
               }
             }
+          } catch (err) {
+            _didIteratorError17 = true;
+            _iteratorError17 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion17 && _iterator17.return) {
+                _iterator17.return();
+              }
+            } finally {
+              if (_didIteratorError17) {
+                throw _iteratorError17;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError16 = true;
+        _iteratorError16 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion16 && _iterator16.return) {
+            _iterator16.return();
+          }
+        } finally {
+          if (_didIteratorError16) {
+            throw _iteratorError16;
           }
         }
       }
@@ -2211,44 +1948,60 @@ var MatchController = function (_ComponentController) {
 
     /**
      * Returns true if the choice has been authored to have a correct position
-     * @param choiceId the choice id
-     * @return whether the choice has a correct position in any bucket
+     * @param {string} choiceId the choice id
+     * @return {boolean} whether the choice has a correct position in any bucket
      */
 
   }, {
     key: 'isAuthorHasSpecifiedACorrectPosition',
     value: function isAuthorHasSpecifiedACorrectPosition(choiceId) {
-      var buckets = this.getAllFeedback();
+      var _iteratorNormalCompletion18 = true;
+      var _didIteratorError18 = false;
+      var _iteratorError18 = undefined;
 
-      if (buckets != null) {
+      try {
+        for (var _iterator18 = this.getAllFeedback()[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+          var bucket = _step18.value;
+          var _iteratorNormalCompletion19 = true;
+          var _didIteratorError19 = false;
+          var _iteratorError19 = undefined;
 
-        // loop through all the buckets
-        for (var b = 0; b < buckets.length; b++) {
-          var bucket = buckets[b];
+          try {
+            for (var _iterator19 = bucket.choices[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+              var choice = _step19.value;
 
-          if (bucket != null) {
-            var choices = bucket.choices;
-
-            if (choices != null) {
-
-              // loop through all the choices in the bucket
-              for (var c = 0; c < choices.length; c++) {
-                var choice = choices[c];
-
-                if (choice != null && choice.choiceId === choiceId) {
-                  // we have found the choice we are looking for
-
-                  if (choice.position != null) {
-                    /*
-                     * the item has a position when placed in this bucket
-                     * which means this choice does have a correct
-                     * position
-                     */
-                    return true;
-                  }
+              if (choice.choiceId === choiceId) {
+                if (choice.position != null) {
+                  return true;
                 }
               }
             }
+          } catch (err) {
+            _didIteratorError19 = true;
+            _iteratorError19 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion19 && _iterator19.return) {
+                _iterator19.return();
+              }
+            } finally {
+              if (_didIteratorError19) {
+                throw _iteratorError19;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError18 = true;
+        _iteratorError18 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion18 && _iterator18.return) {
+            _iterator18.return();
+          }
+        } finally {
+          if (_didIteratorError18) {
+            throw _iteratorError18;
           }
         }
       }
@@ -2588,129 +2341,194 @@ var MatchController = function (_ComponentController) {
 
     /**
      * Create a component state with the merged student responses
-     * @param componentStates an array of component states
-     * @return a component state with the merged student responses
+     * @param {array} componentStates an array of component states
+     * @return {object} a component state with the merged student responses
      */
 
   }, {
     key: 'createMergedComponentState',
     value: function createMergedComponentState(componentStates) {
+      var mergedBuckets = [];
+      var _iteratorNormalCompletion20 = true;
+      var _didIteratorError20 = false;
+      var _iteratorError20 = undefined;
 
-      // create a new component state
-      var mergedComponentState = this.NodeService.createNewComponentState();
+      try {
+        for (var _iterator20 = componentStates[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+          var componentState = _step20.value;
+          var _iteratorNormalCompletion21 = true;
+          var _didIteratorError21 = false;
+          var _iteratorError21 = undefined;
 
-      if (componentStates != null) {
-        var mergedBuckets = [];
-        // loop through all the component states and merge the buckets
-        for (var c = 0; c < componentStates.length; c++) {
-          var componentState = componentStates[c];
-          if (componentState != null) {
-            var studentData = componentState.studentData;
-            if (studentData != null) {
-              var buckets = studentData.buckets;
-              for (var b = 0; b < buckets.length; b++) {
-                var bucket = buckets[b];
-                this.mergeBucket(mergedBuckets, bucket);
+          try {
+            for (var _iterator21 = componentState.studentData.buckets[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+              var bucket = _step21.value;
+
+              this.mergeBucket(mergedBuckets, bucket);
+            }
+          } catch (err) {
+            _didIteratorError21 = true;
+            _iteratorError21 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion21 && _iterator21.return) {
+                _iterator21.return();
+              }
+            } finally {
+              if (_didIteratorError21) {
+                throw _iteratorError21;
               }
             }
           }
         }
-
-        if (mergedBuckets != null && mergedBuckets != '') {
-          // set the merged response into the merged component state
-          mergedComponentState.studentData = {};
-          mergedComponentState.studentData.buckets = mergedBuckets;
+      } catch (err) {
+        _didIteratorError20 = true;
+        _iteratorError20 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion20 && _iterator20.return) {
+            _iterator20.return();
+          }
+        } finally {
+          if (_didIteratorError20) {
+            throw _iteratorError20;
+          }
         }
       }
 
+      var mergedComponentState = this.NodeService.createNewComponentState();
+      mergedComponentState.studentData = {
+        buckets: mergedBuckets
+      };
       return mergedComponentState;
     }
 
     /**
      * Merge a bucket into the array of buckets
-     * @param buckets an array of buckets to merge into
-     * @param bucket the bucket to merge into the array of buckets
-     * @return an array of buckets with the merged bucket
+     * @param {array} buckets an array of buckets to merge into
+     * @param {object} bucket the bucket to merge into the array of buckets
+     * @return {array} an array of buckets with the merged bucket
      */
 
   }, {
     key: 'mergeBucket',
     value: function mergeBucket(buckets, bucket) {
+      var bucketFound = false;
+      var _iteratorNormalCompletion22 = true;
+      var _didIteratorError22 = false;
+      var _iteratorError22 = undefined;
 
-      if (buckets != null && bucket != null) {
-        var bucketFound = false;
-        for (var b = 0; b < buckets.length; b++) {
-          var tempBucket = buckets[b];
-          if (tempBucket != null) {
-            if (tempBucket.id == bucket.id) {
-              /*
-               * the bucket is already in the array of buckets so we
-               * will just merge the items
-               */
-              bucketFound = true;
-              var tempItems = tempBucket.items;
-              this.mergeItems(tempItems, bucket.items);
-            }
+      try {
+        for (var _iterator22 = buckets[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
+          var tempBucket = _step22.value;
+
+          if (tempBucket.id == bucket.id) {
+            /*
+             * the bucket is already in the array of buckets so we
+             * will just merge the items
+             */
+            bucketFound = true;
+            this.mergeChoices(tempBucket.items, bucket.items);
           }
         }
-        if (!bucketFound) {
-          /*
-           * the bucket was not in the array of buckets so we will add the
-           * bucket
-           */
-          buckets.push(bucket);
+      } catch (err) {
+        _didIteratorError22 = true;
+        _iteratorError22 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion22 && _iterator22.return) {
+            _iterator22.return();
+          }
+        } finally {
+          if (_didIteratorError22) {
+            throw _iteratorError22;
+          }
         }
       }
 
+      if (!bucketFound) {
+        /*
+         * the bucket was not in the array of buckets so we will add the
+         * bucket
+         */
+        buckets.push(bucket);
+      }
       return buckets;
     }
 
     /**
      * Merge the items. Only merge the items with an id that is not already in
-     * the array of items
-     * @param oldItems an array of objects with ids
-     * @param newItems an array of objects with ids
-     * @return an array of objects that have been merged
+     * the array of items.
+     * @param {array} choices1 an array of choice objects
+     * @param {array} choices2 an array of choice objects
+     * @return {array} an array of objects that have been merged
      */
 
   }, {
-    key: 'mergeItems',
-    value: function mergeItems(oldItems, newItems) {
+    key: 'mergeChoices',
+    value: function mergeChoices(choices1, choices2) {
+      var choices1Ids = this.getIds(choices1);
+      var _iteratorNormalCompletion23 = true;
+      var _didIteratorError23 = false;
+      var _iteratorError23 = undefined;
 
-      var oldItemIds = this.getIds(oldItems);
+      try {
+        for (var _iterator23 = choices2[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+          var choice2 = _step23.value;
 
-      /*
-       * loop through all the new items and add them to the old items if the
-       * item does not already exist in the old items array
-       */
-      for (var i = 0; i < newItems.length; i++) {
-        var newItem = newItems[i];
-        if (newItem != null) {
-          if (oldItemIds.indexOf(newItem.id) == -1) {
-            // the new item is not in the old items array so we will add it
-            oldItems.push(newItem);
+          if (choices1Ids.indexOf(choice2.id) == -1) {
+            choices1.push(choice2);
+          }
+        }
+      } catch (err) {
+        _didIteratorError23 = true;
+        _iteratorError23 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion23 && _iterator23.return) {
+            _iterator23.return();
+          }
+        } finally {
+          if (_didIteratorError23) {
+            throw _iteratorError23;
           }
         }
       }
 
-      return oldItems;
+      return choices1;
     }
 
     /**
      * Get the ids from the array of objects
-     * @param arrayOfObjects an array of objects that have ids
-     * @param an array of id strings
+     * @param {array} objects an array of objects that have ids
+     * @param {array} an array of id strings
      */
 
   }, {
     key: 'getIds',
-    value: function getIds(arrayOfObjects) {
+    value: function getIds(objects) {
       var ids = [];
-      if (arrayOfObjects != null) {
-        for (var o = 0; o < arrayOfObjects.length; o++) {
-          var obj = arrayOfObjects[o];
-          if (obj != null) {
-            ids.push(obj.id);
+      var _iteratorNormalCompletion24 = true;
+      var _didIteratorError24 = false;
+      var _iteratorError24 = undefined;
+
+      try {
+        for (var _iterator24 = objects[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
+          var object = _step24.value;
+
+          ids.push(object.id);
+        }
+      } catch (err) {
+        _didIteratorError24 = true;
+        _iteratorError24 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion24 && _iterator24.return) {
+            _iterator24.return();
+          }
+        } finally {
+          if (_didIteratorError24) {
+            throw _iteratorError24;
           }
         }
       }
@@ -2762,13 +2580,13 @@ var MatchController = function (_ComponentController) {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion10 = true;
-          var _didIteratorError10 = false;
-          var _iteratorError10 = undefined;
+          var _iteratorNormalCompletion25 = true;
+          var _didIteratorError25 = false;
+          var _iteratorError25 = undefined;
 
           try {
-            for (var _iterator10 = components[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-              var component = _step10.value;
+            for (var _iterator25 = components[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
+              var component = _step25.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -2779,16 +2597,16 @@ var MatchController = function (_ComponentController) {
               }
             }
           } catch (err) {
-            _didIteratorError10 = true;
-            _iteratorError10 = err;
+            _didIteratorError25 = true;
+            _iteratorError25 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion10 && _iterator10.return) {
-                _iterator10.return();
+              if (!_iteratorNormalCompletion25 && _iterator25.return) {
+                _iterator25.return();
               }
             } finally {
-              if (_didIteratorError10) {
-                throw _iteratorError10;
+              if (_didIteratorError25) {
+                throw _iteratorError25;
               }
             }
           }

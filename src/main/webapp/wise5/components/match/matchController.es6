@@ -136,7 +136,7 @@ class MatchController extends ComponentController {
       } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
         this.handleConnectedComponents();
       }
-    } else if (this.mode != 'authoring') {
+    } else if (componentState != null) {
       this.setStudentWork(componentState);
     }
 
@@ -731,7 +731,7 @@ class MatchController extends ComponentController {
     this.isCorrect = null;
     this.isLatestComponentStateSubmit = false;
     super.studentDataChanged();
-  };
+  }
 
   /**
    * Create a new component state populated with the student data
@@ -740,79 +740,38 @@ class MatchController extends ComponentController {
    * @return a promise that will return a component state
    */
   createComponentState(action) {
-
-    // create a new component state
     let componentState = this.NodeService.createNewComponentState();
-
-    if (componentState != null) {
-
-      let studentData = {};
-
-
-      if (action === 'submit') {
-
-        /*
-         * check if the choices are in the correct buckets and also
-         * display feedback
-         */
-        this.checkAnswer();
-
-        if (this.hasCorrectAnswer && this.isCorrect != null) {
-          /*
-           * there are correct choices so we will set whether the
-           * student was correct
-           */
-          studentData.isCorrect = this.isCorrect;
-        }
-
-        /*
-         * the latest component state is a submit. this is used to
-         * determine if we should show the feedback.
-         */
-        this.isLatestComponentStateSubmit = true;
-      } else {
-
-        // clear the feedback in the choices
-        this.clearFeedback();
-        this.processDirtyStudentWork();
-
-        /*
-         * the latest component state is not a submit. this is used to
-         * determine if we should show the feedback.
-         */
-        this.isLatestComponentStateSubmit = false;
+    let studentData = {};
+    if (action === 'submit') {
+      this.checkAnswer();
+      if (this.hasCorrectAnswer && this.isCorrect != null) {
+        studentData.isCorrect = this.isCorrect;
       }
-
-      /*
-       * Create a copy of the buckets so we don't accidentally change a bucket and have it also
-       * change previous versions of the buckets.
-       */
-      studentData.buckets = this.getCopyOfBuckets();
-
-      // the student submitted this work
-      componentState.isSubmit = this.isSubmit;
-
-      // set the submit counter
-      studentData.submitCounter = this.submitCounter;
-
-      /*
-       * reset the isSubmit value so that the next component state
-       * doesn't maintain the same value
-       */
-      this.isSubmit = false;
-
-      //set the student data into the component state
-      componentState.studentData = studentData;
-
-      // set the component type
-      componentState.componentType = 'Match';
-
-      // set the node id
-      componentState.nodeId = this.nodeId;
-
-      // set the component id
-      componentState.componentId = this.componentId;
+      this.isLatestComponentStateSubmit = true;
+    } else {
+      this.clearFeedback();
+      this.processDirtyStudentWork();
+      this.isLatestComponentStateSubmit = false;
     }
+
+    /*
+     * Create a copy of the buckets so we don't accidentally change a bucket and have it also
+     * change previous versions of the buckets.
+     */
+    studentData.buckets = this.getCopyOfBuckets();
+    componentState.isSubmit = this.isSubmit;
+    studentData.submitCounter = this.submitCounter;
+
+    /*
+     * reset the isSubmit value so that the next component state
+     * doesn't maintain the same value
+     */
+    this.isSubmit = false;
+
+    componentState.studentData = studentData;
+    componentState.componentType = 'Match';
+    componentState.nodeId = this.nodeId;
+    componentState.componentId = this.componentId;
 
     let deferred = this.$q.defer();
 
@@ -821,154 +780,7 @@ class MatchController extends ComponentController {
      * the component state
      */
     this.createComponentStateAdditionalProcessing(deferred, componentState, action);
-
     return deferred.promise;
-  };
-
-  /**
-   * Import work from another component
-   */
-  importWork() {
-
-    // get the component content
-    var componentContent = this.componentContent;
-
-    if (componentContent != null) {
-
-      // get the import previous work node id and component id
-      var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
-      var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-
-      if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-
-        /*
-         * check if the node id is in the field that we used to store
-         * the import previous work node id in
-         */
-        if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
-          importPreviousWorkNodeId = componentContent.importWorkNodeId;
-        }
-      }
-
-      if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-
-        /*
-         * check if the component id is in the field that we used to store
-         * the import previous work component id in
-         */
-        if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
-          importPreviousWorkComponentId = componentContent.importWorkComponentId;
-        }
-      }
-
-      if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-
-        // get the latest component state for this component
-        var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-        /*
-         * we will only import work into this component if the student
-         * has not done any work for this component
-         */
-        if(componentState == null) {
-          // the student has not done any work for this component
-
-          // get the latest component state from the component we are importing from
-          var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
-
-          if (importWorkComponentState != null) {
-            /*
-             * populate a new component state with the work from the
-             * imported component state
-             */
-            var populatedComponentState = this.MatchService.populateComponentState(importWorkComponentState);
-
-            /*
-             * update the choice ids so that it uses the choice ids
-             * from this component. we need to do this because the choice
-             * ids are likely to be different. we update the choice ids
-             * by matching the choice text.
-             */
-            this.updateIdsFromImportedWork(populatedComponentState);
-
-            // populate the component state into this component
-            this.setStudentWork(populatedComponentState);
-            this.studentDataChanged();
-          }
-        }
-      }
-    }
-  };
-
-  /**
-   * Update the choice ids and bucket ids to use the ids from this component.
-   * We will use the choice text and bucket text to perform matching.
-   * @param componentState the component state
-   */
-  updateIdsFromImportedWork(componentState) {
-
-    if (componentState != null) {
-
-      // get the student data
-      var studentData = componentState.studentData;
-
-      if (studentData != null) {
-
-        // get the buckets from the student data
-        var studentBuckets = studentData.buckets;
-
-        if (studentBuckets != null) {
-
-          // loop through all the student buckets
-          for (var b = 0; b < studentBuckets.length; b++) {
-
-            // get a student bucket
-            var studentBucket = studentBuckets[b];
-
-            if (studentBucket != null) {
-
-              // get the text of the student bucket
-              var tempStudentBucketText = studentBucket.value;
-
-              // get the bucket from this component that has the matching text
-              var bucket = this.getBucketByText(tempStudentBucketText);
-
-              if (bucket != null) {
-                // change the id of the student bucket
-                studentBucket.id = bucket.id;
-              }
-
-              // get the choices the student put into this bucket
-              var studentChoices = studentBucket.items;
-
-              if (studentChoices != null) {
-
-                // loop through the choices in the bucket
-                for (var c = 0; c < studentChoices.length; c++) {
-
-                  // get a student choice
-                  var studentChoice = studentChoices[c];
-
-                  if (studentChoice != null) {
-
-                    // get the text of the student choice
-                    var tempStudentChoiceText = studentChoice.value;
-
-                    // get the choice from this component that has the matching text
-                    var choice = this.getChoiceByText(tempStudentChoiceText);
-
-                    if (choice != null) {
-                      // change the id of the student choice
-                      studentChoice.id = choice.id;
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
   }
 
   /**
@@ -1337,175 +1149,71 @@ class MatchController extends ComponentController {
 
   /**
    * Get the choice by id from the authoring component content
-   * @param id the choice id
-   * @returns the choice object from the authoring component content
+   * @param {string} id the choice id
+   * @returns {object} the choice object from the authoring component content
    */
   getChoiceById(id) {
-
-    var choice = null;
-
-    // get the choices
-    var choices = this.componentContent.choices;
-
-    // loop through all the choices
-    for (var c = 0; c < choices.length; c++) {
-      // get a choice
-      var tempChoice = choices[c];
-
-      if (tempChoice != null) {
-        if (id === tempChoice.id) {
-          // we have found the choice we want
-          choice = tempChoice;
-          break;
-        }
+    for (let choice of this.componentContent.choices) {
+      if (choice.id === id) {
+        return choice;
       }
     }
-
-    return choice;
+    return null;
   }
 
   /**
-   * Get the choice by text
-   * @param text look for a choice with this text
-   * @returns the choice with the given text
+   * Get the choice with the given text.
+   * @param {string} text look for a choice with this text
+   * @returns {object} the choice with the given text
    */
   getChoiceByText(text) {
-
-    var choice = null;
-
-    if (text != null) {
-
-      // get the choices from the component content
-      var choices = this.componentContent.choices;
-
-      if (choices != null) {
-
-        // loop through all the choices
-        for (var c = 0; c < choices.length; c++) {
-          var tempChoice = choices[c];
-
-          if (tempChoice != null) {
-            if (text == tempChoice.value) {
-              // we have found the choice we want
-              choice = tempChoice;
-              break;
-            }
-          }
-        }
+    for (let choice of this.componentContent.choices) {
+      if (choice.value === text) {
+        return choice;
       }
     }
-
-    return choice;
+    return null;
   }
 
   /**
-   * Get the bucket by id from the authoring component content
-   * @param id the bucket id
-   * @param buckets (optional) the buckets to get the bucket from
-   * @returns the bucket object from the authoring component content
+   * Get the bucket by id from the authoring component content.
+   * @param {string} id the bucket id
+   * @param {array} buckets (optional) the buckets to get the bucket from
+   * @returns {object} the bucket object from the authoring component content
    */
-  getBucketById(id, buckets) {
-
-    var bucket = null;
-
-    if (buckets == null) {
-      if (this.buckets != null) {
-        // get the buckets from the component
-        buckets = this.buckets;
-      } else {
-        // get the buckets from the authoring component content
-        buckets = this.authoringComponentContent.buckets;
+  getBucketById(id, buckets = this.buckets) {
+    for (let bucket of buckets) {
+      if (bucket.id == id) {
+        return bucket;
       }
     }
-
-    // loop through the buckets
-    for (var b = 0; b < buckets.length; b++) {
-      var tempBucket = buckets[b];
-
-      if (tempBucket != null) {
-        if (id == tempBucket.id) {
-          // we have found the bucket we want
-          bucket = tempBucket;
-          break;
-        }
-      }
-    }
-
-    return bucket;
-  }
-
-  /**
-   * Get the bucket by text
-   * @param text look for a bucket with this text
-   * @returns the bucket with the given text
-   */
-  getBucketByText(text) {
-
-    var bucket = null;
-
-    if (text != null) {
-
-      // get the buckets from the component content
-      var buckets = this.componentContent.buckets;
-
-      if (buckets != null) {
-
-        // loop throgh all the buckets
-        for (var b = 0; b < buckets.length; b++) {
-          var tempBucket = buckets[b];
-
-          if (tempBucket != null) {
-            if (text == tempBucket.value) {
-              // we have found the bucket we want
-              bucket = tempBucket;
-              break;
-            }
-          }
-        }
-      }
-    }
-
-    return bucket;
+    return null;
   }
 
   /**
    * Get the choice value by id from the authoring component content
-   * @param id the choice id
-   * @returns the choice value from the authoring component content
+   * @param {string} choiceId the choice id
+   * @returns {string} the choice value from the authoring component content
    */
-  getChoiceValueById(id) {
-
-    var value = null;
-
-    // get the choice
-    var choice = this.getChoiceById(id);
-
+  getChoiceValueById(choiceId) {
+    const choice = this.getChoiceById(choiceId);
     if (choice != null) {
-      // get the value
-      value = choice.value;
+      return choice.value;
     }
-
-    return value;
+    return null;
   }
 
   /**
    * Get the bucket value by id from the authoring component content
-   * @param id the bucket id
-   * @returns the bucket value from the authoring component content
+   * @param {string} bucketId the bucket id
+   * @returns {string} the bucket value from the authoring component content
    */
-  getBucketValueById(id) {
-
-    var value = null;
-
-    // get the bucket
-    var bucket = this.getBucketById(id);
-
+  getBucketValueById(bucketId) {
+    const bucket = this.getBucketById(bucketId);
     if (bucket != null) {
-      // get the value
-      value = bucket.value;
+      return bucket.value;
     }
-
-    return value;
+    return null;
   }
 
   /**
@@ -1680,23 +1388,6 @@ class MatchController extends ComponentController {
   }
 
   /**
-   * Register the the listener that will listen for the exit event
-   * so that we can perform saving before exiting.
-   */
-  registerExitListener() {
-
-    /*
-     * Listen for the 'exit' event which is fired when the student exits
-     * the VLE. This will perform saving before the VLE exits.
-     */
-    this.exitListener = this.$scope.$on('exit', angular.bind(this, function(event, args) {
-
-      // do nothing
-      this.$rootScope.$broadcast('doneExiting');
-    }));
-  };
-
-  /**
    * The author has changed the rubric
    */
   summernoteRubricHTMLChanged() {
@@ -1728,196 +1419,60 @@ class MatchController extends ComponentController {
 
   /**
    * Check if the component has been authored with a correct choice
-   * @return whether the component has been authored with a correct choice
+   * @return {boolean} whether the component has been authored with a correct choice
    */
   hasCorrectChoices() {
-    var result = false;
-
-    // get the component content
-    var componentContent = this.componentContent;
-
-    if (componentContent != null) {
-
-      // get the buckets
-      var buckets = componentContent.feedback;
-
-      if (buckets != null) {
-
-        // loop through all the buckets
-        for (var b = 0; b < buckets.length; b++) {
-          var bucket = buckets[b];
-
-          if (bucket != null) {
-
-            // get the choices
-            var choices = bucket.choices;
-
-            if (choices != null) {
-
-              // loop through all the choices
-              for (var c = 0; c < choices.length; c++) {
-                var choice = choices[c];
-
-                if (choice != null) {
-                  if (choice.isCorrect) {
-                    // there is a correct choice
-                    return true;
-                  }
-                }
-              }
-            }
-          }
+    for (let bucket of this.componentContent.feedback) {
+      for (let choice of bucket.choices) {
+        if (choice.isCorrect) {
+          return true;
         }
       }
     }
-
     return false;
-  };
-
-  /**
-   * Remove a choice from a bucket
-   * @param choiceId the choice id we want to remove
-   * @param bucketId remove the choice from this bucket
-   */
-  removeChoiceFromBucket(choiceId, bucketId) {
-
-    if (choiceId != null && bucketId != null) {
-
-      // get the bucket
-      var bucket = this.getBucketById(bucketId);
-
-      if (bucket != null) {
-
-        // get the choices in the bucket
-        var bucketItems = bucket.items;
-
-        if (bucketItems != null) {
-
-          // loop through all the choices in the bucket
-          for (var i = 0; i < bucketItems.length; i++) {
-            var bucketItem = bucketItems[i];
-
-            if (bucketItem != null && bucketItem.id === choiceId) {
-              // we have found the choice we want to remove
-              bucketItems.splice(i, 1);
-              break;
-            }
-          }
-        }
-      }
-    }
   }
 
-  /**
-   * Clear the feedback and isCorrect fields in all the choices
-   */
   clearFeedback() {
-
-    // get all the choices
-    var choices = this.getChoices();
-
-    if (choices != null) {
-
-      // loop through all the choices
-      for (var c = 0; c < choices.length; c++) {
-        var choice = choices[c];
-
-        if (choice != null) {
-          // set the feedback fields to null
-          choice.isCorrect = null;
-          choice.isIncorrectPosition = null;
-          choice.feedback = null;
-        }
-      }
+    for (let choice of this.getChoices()) {
+      choice.isCorrect = null;
+      choice.isIncorrectPosition = null;
+      choice.feedback = null;
     }
   }
 
   /**
    * Check if a choice has a correct bucket
-   * @param choiceId the choice id
-   * @return whether the choice has a correct bucket
+   * @param {string} choiceId the choice id
+   * @return {boolean} whether the choice has a correct bucket
    */
   isAuthorHasSpecifiedACorrectBucket(choiceId) {
-
-    var buckets = this.getAllFeedback();
-
-    if (buckets != null) {
-
-      // loop through all the buckets
-      for (var b = 0; b < buckets.length; b++) {
-        var bucket = buckets[b];
-
-        if (bucket != null) {
-          var choices = bucket.choices;
-
-          if (choices != null) {
-
-            // loop through all the choices in the bucket
-            for (var c = 0; c < choices.length; c++) {
-              var choice = choices[c];
-
-              if (choice != null && choice.choiceId === choiceId) {
-                // we have found the choice we are looking for
-
-                if (choice.isCorrect) {
-                  /*
-                   * the item is correct when placed in this bucket
-                   * which means this choice does have a correct
-                   * bucket
-                   */
-                  return true;
-                }
-              }
-            }
+    for (let bucket of this.getAllFeedback()) {
+      for (let choice of bucket.choices) {
+        if (choice.choiceId === choiceId) {
+          if (choice.isCorrect) {
+            return true;
           }
         }
       }
     }
-
     return false;
   }
 
   /**
    * Returns true if the choice has been authored to have a correct position
-   * @param choiceId the choice id
-   * @return whether the choice has a correct position in any bucket
+   * @param {string} choiceId the choice id
+   * @return {boolean} whether the choice has a correct position in any bucket
    */
   isAuthorHasSpecifiedACorrectPosition(choiceId) {
-    var buckets = this.getAllFeedback();
-
-    if (buckets != null) {
-
-      // loop through all the buckets
-      for (var b = 0; b < buckets.length; b++) {
-        var bucket = buckets[b];
-
-        if (bucket != null) {
-          var choices = bucket.choices;
-
-          if (choices != null) {
-
-            // loop through all the choices in the bucket
-            for (var c = 0; c < choices.length; c++) {
-              var choice = choices[c];
-
-              if (choice != null && choice.choiceId === choiceId) {
-                // we have found the choice we are looking for
-
-                if (choice.position != null) {
-                  /*
-                   * the item has a position when placed in this bucket
-                   * which means this choice does have a correct
-                   * position
-                   */
-                  return true;
-                }
-              }
-            }
+    for (let bucket of this.getAllFeedback()) {
+      for (let choice of bucket.choices) {
+        if (choice.choiceId === choiceId) {
+          if (choice.position != null) {
+            return true;
           }
         }
       }
     }
-
     return false;
   }
 
@@ -2213,121 +1768,78 @@ class MatchController extends ComponentController {
 
   /**
    * Create a component state with the merged student responses
-   * @param componentStates an array of component states
-   * @return a component state with the merged student responses
+   * @param {array} componentStates an array of component states
+   * @return {object} a component state with the merged student responses
    */
   createMergedComponentState(componentStates) {
-
-    // create a new component state
-    let mergedComponentState = this.NodeService.createNewComponentState();
-
-    if (componentStates != null) {
-      let mergedBuckets = [];
-      // loop through all the component states and merge the buckets
-      for (let c = 0; c < componentStates.length; c++) {
-        let componentState = componentStates[c];
-        if (componentState != null) {
-          let studentData = componentState.studentData;
-          if (studentData != null) {
-            let buckets = studentData.buckets;
-            for (let b = 0; b < buckets.length; b++) {
-              let bucket = buckets[b];
-              this.mergeBucket(mergedBuckets, bucket);
-            }
-          }
-        }
-      }
-
-      if (mergedBuckets != null && mergedBuckets != '') {
-        // set the merged response into the merged component state
-        mergedComponentState.studentData = {};
-        mergedComponentState.studentData.buckets = mergedBuckets;
+    const mergedBuckets = [];
+    for (let componentState of componentStates) {
+      for (let bucket of componentState.studentData.buckets) {
+        this.mergeBucket(mergedBuckets, bucket);
       }
     }
-
+    const mergedComponentState = this.NodeService.createNewComponentState();
+    mergedComponentState.studentData = {
+      buckets: mergedBuckets
+    };
     return mergedComponentState;
   }
 
   /**
    * Merge a bucket into the array of buckets
-   * @param buckets an array of buckets to merge into
-   * @param bucket the bucket to merge into the array of buckets
-   * @return an array of buckets with the merged bucket
+   * @param {array} buckets an array of buckets to merge into
+   * @param {object} bucket the bucket to merge into the array of buckets
+   * @return {array} an array of buckets with the merged bucket
    */
   mergeBucket(buckets, bucket) {
-
-    if (buckets != null && bucket != null) {
-      let bucketFound = false;
-      for (let b = 0; b < buckets.length; b++) {
-        let tempBucket = buckets[b];
-        if (tempBucket != null) {
-          if (tempBucket.id == bucket.id) {
-            /*
-             * the bucket is already in the array of buckets so we
-             * will just merge the items
-             */
-            bucketFound = true;
-            let tempItems = tempBucket.items;
-            this.mergeItems(tempItems, bucket.items);
-          }
-        }
-      }
-      if (!bucketFound) {
+    let bucketFound = false;
+    for (let tempBucket of buckets) {
+      if (tempBucket.id == bucket.id) {
         /*
-         * the bucket was not in the array of buckets so we will add the
-         * bucket
+         * the bucket is already in the array of buckets so we
+         * will just merge the items
          */
-        buckets.push(bucket);
+        bucketFound = true;
+        this.mergeChoices(tempBucket.items, bucket.items);
       }
     }
-
+    if (!bucketFound) {
+      /*
+       * the bucket was not in the array of buckets so we will add the
+       * bucket
+       */
+      buckets.push(bucket);
+    }
     return buckets;
   }
 
   /**
    * Merge the items. Only merge the items with an id that is not already in
-   * the array of items
-   * @param oldItems an array of objects with ids
-   * @param newItems an array of objects with ids
-   * @return an array of objects that have been merged
+   * the array of items.
+   * @param {array} choices1 an array of choice objects
+   * @param {array} choices2 an array of choice objects
+   * @return {array} an array of objects that have been merged
    */
-  mergeItems(oldItems, newItems) {
-
-    let oldItemIds = this.getIds(oldItems);
-
-    /*
-     * loop through all the new items and add them to the old items if the
-     * item does not already exist in the old items array
-     */
-    for (let i = 0; i < newItems.length; i++) {
-      let newItem = newItems[i];
-      if (newItem != null) {
-        if (oldItemIds.indexOf(newItem.id) == -1) {
-          // the new item is not in the old items array so we will add it
-          oldItems.push(newItem);
-        }
+  mergeChoices(choices1, choices2) {
+    const choices1Ids = this.getIds(choices1);
+    for (let choice2 of choices2) {
+      if (choices1Ids.indexOf(choice2.id) == -1) {
+        choices1.push(choice2);
       }
     }
-
-    return oldItems;
+    return choices1;
   }
 
   /**
    * Get the ids from the array of objects
-   * @param arrayOfObjects an array of objects that have ids
-   * @param an array of id strings
+   * @param {array} objects an array of objects that have ids
+   * @param {array} an array of id strings
    */
-  getIds(arrayOfObjects) {
-    let ids = [];
-    if (arrayOfObjects != null) {
-      for (let o = 0; o < arrayOfObjects.length; o++) {
-        let obj = arrayOfObjects[o];
-        if (obj != null) {
-          ids.push(obj.id);
-        }
-      }
+  getIds(objects) {
+    const ids = [];
+    for (let object of objects) {
+      ids.push(object.id);
     }
-
     return ids;
   }
 
