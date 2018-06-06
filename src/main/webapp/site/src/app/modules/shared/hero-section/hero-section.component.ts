@@ -2,11 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-hero',
-  templateUrl: './hero.component.html',
-  styleUrls: ['./hero.component.scss']
+  selector: 'app-hero-section',
+  templateUrl: './hero-section.component.html',
+  styleUrls: ['./hero-section.component.scss']
 })
-export class HeroComponent implements OnInit {
+export class HeroSectionComponent implements OnInit {
 
   @Input()
   imgSrc: string = '';

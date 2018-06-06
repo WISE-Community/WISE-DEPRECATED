@@ -19,7 +19,7 @@ const materialModules = [
 
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { SelectMenuComponent } from './select-menu/select-menu.component';
-import { HeroComponent } from './hero/hero.component';
+import { HeroSectionComponent } from './hero-section/hero-section.component';
 
 @NgModule({
   imports: [
@@ -32,11 +32,11 @@ import { HeroComponent } from './hero/hero.component';
   exports: [
     materialModules,
     FlexLayoutModule,
-    HeroComponent,
+    HeroSectionComponent,
     SearchBarComponent,
     SelectMenuComponent
   ],
   declarations: [
-    SearchBarComponent, SelectMenuComponent, HeroComponent]
+    SearchBarComponent, SelectMenuComponent, HeroSectionComponent]
 })
 export class SharedModule { }

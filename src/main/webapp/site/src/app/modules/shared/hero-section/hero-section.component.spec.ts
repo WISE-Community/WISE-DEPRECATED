@@ -1,21 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { HeroComponent } from './hero.component';
+import { HeroSectionComponent } from './hero-section.component';
 
-describe('HeroComponent', () => {
-  let component: HeroComponent;
-  let fixture: ComponentFixture<HeroComponent>;
+describe('HeroSectionComponent', () => {
+  let component: HeroSectionComponent;
+  let fixture: ComponentFixture<HeroSectionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HeroComponent ],
+      declarations: [ HeroSectionComponent ],
       imports: [ FlexLayoutModule ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HeroComponent);
+    fixture = TestBed.createComponent(HeroSectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
