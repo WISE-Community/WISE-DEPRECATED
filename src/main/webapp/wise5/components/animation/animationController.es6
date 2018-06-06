@@ -1,11 +1,10 @@
 'use strict';
 
+import ComponentController from '../componentController';
 import 'svg.js';
 
-class AnimationController {
-
+class AnimationController extends ComponentController {
   constructor($filter,
-      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -16,45 +15,21 @@ class AnimationController {
       ConfigService,
       CRaterService,
       NodeService,
+      NotebookService,
       NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
       UtilService) {
-
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
+    super($filter, $mdDialog, $rootScope, $scope,
+        AnnotationService, ConfigService, NodeService,
+        NotebookService, ProjectService, StudentAssetService,
+        StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.$timeout = $timeout;
     this.AnimationService = AnimationService;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
     this.CRaterService = CRaterService;
-    this.NodeService = NodeService;
     this.NotificationService = NotificationService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-
-    this.$translate = this.$filter('translate');
-
-    this.idToOrder = this.ProjectService.idToOrder;
-
-    // the node id of the current node
-    this.nodeId = null;
-
-    // the component id
-    this.componentId = null;
-
-    // field that will hold the component content
-    this.componentContent = null;
-
-    // field that will hold the authoring component content
-    this.authoringComponentContent = null;
 
     // holds the text that the student has typed
     this.studentResponse = '';
@@ -62,46 +37,8 @@ class AnimationController {
     // holds student attachments like assets
     this.attachments = [];
 
-    // whether the step should be disabled
-    this.isDisabled = false;
-
-    // whether the student work is dirty and needs saving
-    this.isDirty = false;
-
-    // whether the student work has changed since last submit
-    this.isSubmitDirty = false;
-
-    // message to show next to save/submit buttons
-    this.saveMessage = {
-      text: '',
-      time: ''
-    };
-
-    // whether this component is showing previous work
-    this.isShowPreviousWork = false;
-
-    // whether the student work is for a submit
-    this.isSubmit = false;
-
-    // whether rich text editing is enabled
-    this.isRichTextEnabled = false;
-
-    // whether students can attach files to their work
-    this.isStudentAttachmentEnabled = false;
-
-    // whether the prompt is shown or not
-    this.isPromptVisible = true;
-
-    // whether the save button is shown or not
-    this.isSaveButtonVisible = false;
-
-    // whether the submit button is shown or not
-    this.isSubmitButtonVisible = false;
-
-    // whether the submit button is disabled
-    this.isSubmitButtonDisabled = false;
-
     // whether we're only showing the student work
+    // TODO: refactor. do we need this?
     this.onlyShowWork = false;
 
     // the latest annotations
@@ -109,15 +46,6 @@ class AnimationController {
 
     // used to hold a message dialog if we need to use one
     this.messageDialog = null;
-
-    // counter to keep track of the number of submits
-    this.submitCounter = 0;
-
-    // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
 
     // mapping from object id to svg object
     this.idToSVGObject = {};
@@ -173,25 +101,11 @@ class AnimationController {
       }
     ];
 
-    this.nodeId = this.$scope.nodeId;
-
-    // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
-
-    // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
-
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
     this.originalComponentContent = this.$scope.originalComponentContent;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    this.mode = this.$scope.mode;
-
-    this.workgroupId = this.$scope.workgroupId;
-    this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
     // the default width and height
     this.width = 800;
@@ -230,173 +144,160 @@ class AnimationController {
     // get the component state from the scope
     var componentState = this.$scope.componentState;
 
-    if (this.componentContent != null) {
+    // get the svg id
+    this.svgId = 'svg_' + this.nodeId + '_' + this.componentId;
 
-      // get the component id
-      this.componentId = this.componentContent.id;
+    // initialize all the coordinates
+    this.initializeCoordinates();
+
+    if (this.mode === 'student') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
+      // get the latest annotations
+      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+    } else if (this.mode === 'grading') {
 
       // get the svg id
-      this.svgId = 'svg_' + this.nodeId + '_' + this.componentId;
-
-      // initialize all the coordinates
-      this.initializeCoordinates();
-
-      if (this.mode === 'student') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-        // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      } else if (this.mode === 'grading') {
-
-        // get the svg id
-        if (componentState != null) {
-          this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + componentState.id;
-        } else {
-
-          this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
-        }
-
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'onlyShowWork') {
-        this.onlyShowWork = true;
-        this.isPromptVisible = false;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'showPreviousWork') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'authoring') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-        // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-
-        // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        this.summernoteRubricOptions = {
-          toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']],
-            ['customButton', ['insertAssetButton']]
-          ],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function() {
-          return this.authoringComponentContent;
-        }.bind(this), function(newValue, oldValue) {
-          // inject the asset paths into the new component content
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
-          /*
-           * reset the values so that the preview is refreshed with
-           * the new content
-           */
-          this.submitCounter = 0;
-          this.studentResponse = '';
-          this.latestAnnotations = null;
-          this.isDirty = false;
-          this.isSubmitDirty = false;
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-          if (this.componentContent.starterSentence != null) {
-            /*
-             * the student has not done any work and there is a starter sentence
-             * so we will populate the textarea with the starter sentence
-             */
-            this.studentResponse = this.componentContent.starterSentence;
-          }
-
-          // remove all the old objects
-          this.removeAllObjects();
-
-          // initialize all the coordinates
-          this.initializeCoordinates();
-
-          // re-render the svg div
-          this.setup();
-        }.bind(this), true);
-      }
-
-      // set whether rich text is enabled
-      this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
-
-      // set whether studentAttachment is enabled
-      this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-      if (this.mode == 'student') {
-        if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-          // we will show work from another component
-          this.handleConnectedComponents();
-        }  else if (this.AnimationService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          /*
-           * the student has work so we will populate the work into this
-           * component
-           */
-          this.setStudentWork(componentState);
-        } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // we will import work from another component
-          this.handleConnectedComponents();
-        }
+      if (componentState != null) {
+        this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + componentState.id;
       } else {
-        // populate the student work into this component
-        this.setStudentWork(componentState);
+
+        this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
       }
 
-      // check if the student has used up all of their submits
-      if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    } else if (this.mode === 'onlyShowWork') {
+      this.onlyShowWork = true;
+      this.isPromptVisible = false;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    } else if (this.mode === 'showPreviousWork') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    } else if (this.mode === 'authoring') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
+      // generate the summernote rubric element id
+      this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+
+      // set the component rubric into the summernote rubric
+      this.summernoteRubricHTML = this.componentContent.rubric;
+
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = this.$translate('INSERT_ASSET');
+
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      this.summernoteRubricOptions = {
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['fontname', ['fontname']],
+          ['fontsize', ['fontsize']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'video']],
+          ['view', ['fullscreen', 'codeview', 'help']],
+          ['customButton', ['insertAssetButton']]
+        ],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
+        }
+      };
+
+      this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function() {
+        return this.authoringComponentContent;
+      }.bind(this), function(newValue, oldValue) {
+        // inject the asset paths into the new component content
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
         /*
-         * the student has used up all of their chances to submit so we
-         * will disable the submit button
+         * reset the values so that the preview is refreshed with
+         * the new content
          */
-        this.isSubmitButtonDisabled = true;
-      }
+        this.submitCounter = 0;
+        this.studentResponse = '';
+        this.latestAnnotations = null;
+        this.isDirty = false;
+        this.isSubmitDirty = false;
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
-      // check if we need to lock this component
-      this.calculateDisabled();
+        if (this.componentContent.starterSentence != null) {
+          /*
+           * the student has not done any work and there is a starter sentence
+           * so we will populate the textarea with the starter sentence
+           */
+          this.studentResponse = this.componentContent.starterSentence;
+        }
 
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+        // remove all the old objects
+        this.removeAllObjects();
+
+        // initialize all the coordinates
+        this.initializeCoordinates();
+
+        // re-render the svg div
+        this.setup();
+      }.bind(this), true);
+    }
+
+    if (this.mode == 'student') {
+      if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
+        // we will show work from another component
+        this.handleConnectedComponents();
+      }  else if (this.AnimationService.componentStateHasStudentWork(componentState, this.componentContent)) {
+        /*
+         * the student has work so we will populate the work into this
+         * component
+         */
+        this.setStudentWork(componentState);
+      } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+        // we will import work from another component
+        this.handleConnectedComponents();
       }
+    } else {
+      // populate the student work into this component
+      this.setStudentWork(componentState);
+    }
+
+    // check if the student has used up all of their submits
+    if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+      /*
+       * the student has used up all of their chances to submit so we
+       * will disable the submit button
+       */
+      this.isSubmitButtonDisabled = true;
+    }
+
+    this.disableComponentIfNecessary();
+
+    if (this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
     }
 
     /*
@@ -455,89 +356,6 @@ class AnimationController {
 
       return deferred.promise;
     }.bind(this);
-
-    /**
-     * The parent node submit button was clicked
-     */
-    this.$scope.$on('nodeSubmitClicked', function(event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-
-        // trigger the submit
-        var submitTriggeredBy = 'nodeSubmitButton';
-        this.submit(submitTriggeredBy);
-      }
-    }.bind(this));
-
-    /**
-     * Listen for the 'studentWorkSavedToServer' event which is fired when
-     * we receive the response from saving a component state to the server
-     */
-    this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function(event, args) {
-
-      let componentState = args.studentWork;
-
-      // check that the component state is for this component
-      if (componentState && this.nodeId === componentState.nodeId
-        && this.componentId === componentState.componentId) {
-
-        // set isDirty to false because the component state was just saved and notify node
-        this.isDirty = false;
-        this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: false});
-
-        let isAutoSave = componentState.isAutoSave;
-        let isSubmit = componentState.isSubmit;
-        let serverSaveTime = componentState.serverSaveTime;
-        let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-        // set save message
-        if (isSubmit) {
-          this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
-
-          this.lockIfNecessary();
-
-          // set isSubmitDirty to false because the component state was just submitted and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        } else if (isAutoSave) {
-          this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
-        } else {
-          this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
-        }
-      }
-    }));
-
-    /**
-     * Listen for the 'annotationSavedToServer' event which is fired when
-     * we receive the response from saving an annotation to the server
-     */
-    this.$scope.$on('annotationSavedToServer', (event, args) => {
-
-      if (args != null ) {
-
-        // get the annotation that was saved to the server
-        var annotation = args.annotation;
-
-        if (annotation != null) {
-
-          // get the node id and component id of the annotation
-          var annotationNodeId = annotation.nodeId;
-          var annotationComponentId = annotation.componentId;
-
-          // make sure the annotation was for this component
-          if (this.nodeId === annotationNodeId &&
-            this.componentId === annotationComponentId) {
-
-            // get latest score and comment annotations for this component
-            this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-          }
-        }
-      }
-    });
 
     /**
      * Listen for the 'exitNode' event which is fired when the student
@@ -681,6 +499,10 @@ class AnimationController {
     }
 
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+  }
+
+  handleNodeSubmit() {
+    this.submit('nodeSubmitButton');
   }
 
   /**
@@ -1628,44 +1450,14 @@ class AnimationController {
         // latest state is a submission, so set isSubmitDirty to false and notify node
         this.isSubmitDirty = false;
         this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        // set save message
         this.setSaveMessage(this.$translate('LAST_SUBMITTED'), clientSaveTime);
       } else {
         // latest state is not a submission, so set isSubmitDirty to true and notify node
         this.isSubmitDirty = true;
         this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-        // set save message
         this.setSaveMessage(this.$translate('LAST_SAVED'), clientSaveTime);
       }
     }
-  };
-
-  /**
-   * Called when the student clicks the save button
-   */
-  saveButtonClicked() {
-    this.isSubmit = false;
-
-    if (this.mode === 'authoring') {
-      /*
-       * we are in authoring mode so we will set isDirty to false here
-       * because the 'componentSaveTriggered' event won't work in
-       * authoring mode
-       */
-      this.isDirty = false;
-    }
-
-    // tell the parent node that this component wants to save
-    this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-  };
-
-  /**
-   * Called when the student clicks the submit button
-   */
-  submitButtonClicked() {
-    // trigger the submit
-    var submitTriggeredBy = 'componentSubmitButton';
-    this.submit(submitTriggeredBy);
   };
 
   /**
@@ -1716,8 +1508,6 @@ class AnimationController {
          * instead of just a save component state
          */
         this.isSubmit = true;
-
-        // increment the submit counter
         this.incrementSubmitCounter();
 
         // check if the student has used up all of their submits
@@ -1757,20 +1547,6 @@ class AnimationController {
   }
 
   /**
-   * Increment the submit counter
-   */
-  incrementSubmitCounter() {
-    this.submitCounter++;
-  }
-
-  lockIfNecessary() {
-    // check if we need to lock the component after the student submits
-    if (this.isLockAfterSubmit()) {
-      this.isDisabled = true;
-    }
-  };
-
-  /**
    * Called when the student changes their work
    */
   studentDataChanged() {
@@ -1783,12 +1559,7 @@ class AnimationController {
 
     this.isSubmitDirty = true;
     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-
-    // clear out the save message
     this.setSaveMessage('', null);
-
-    // get this part id
-    var componentId = this.getComponentId();
 
     /*
      * the student work in this component has changed so we will tell
@@ -1800,7 +1571,7 @@ class AnimationController {
 
     // create a component state populated with the student data
     this.createComponentState(action).then((componentState) => {
-      this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
+      this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
     });
   };
 
@@ -1845,248 +1616,6 @@ class AnimationController {
 
     return deferred.promise;
   };
-
-  /**
-   * Perform any additional processing that is required before returning the
-   * component state
-   * Note: this function must call deferred.resolve() otherwise student work
-   * will not be saved
-   * @param deferred a deferred object
-   * @param componentState the component state
-   * @param action the action that we are creating the component state for
-   * e.g. 'submit', 'save', 'change'
-   */
-  createComponentStateAdditionalProcessing(deferred, componentState, action) {
-
-    var performCRaterScoring = false;
-
-    // determine if we need to perform CRater scoring
-    if (action == 'submit' && componentState.isSubmit) {
-      if (this.isCRaterScoreOnSubmit(this.componentContent)) {
-        performCRaterScoring = true;
-      }
-    } else if (action == 'save') {
-      if (this.isCRaterScoreOnSave(this.componentContent)) {
-        performCRaterScoring = true;
-      }
-    } else if (action == 'change' || action == null) {
-      if (this.isCRaterScoreOnChange(this.componentContent)) {
-        performCRaterScoring = true;
-      }
-    }
-
-    if (performCRaterScoring) {
-      // we need to perform CRater scoring
-
-      var cRaterItemType = this.CRaterService.getCRaterItemType(this.componentContent);
-      var cRaterItemId = this.CRaterService.getCRaterItemId(this.componentContent);
-      var cRaterRequestType = 'scoring';
-      var cRaterResponseId = new Date().getTime();
-      var studentData = this.studentResponse;
-
-      /*
-       * display a dialog message while the student waits for their work
-       * to be scored by CRater
-       */
-      this.$mdDialog.show({
-        template: '<md-dialog aria-label="' + this.$translate('animation.pleaseWait') + '"><md-dialog-content><div class="md-dialog-content">' + this.$translate('animation.pleaseWaitWeAreScoringYourWork') + '</div></md-dialog-content></md-dialog>',
-        escapeToClose: false
-      });
-
-      // make the CRater request to score the student data
-      this.CRaterService.makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData).then((result) => {
-
-        if (result != null) {
-
-          // get the CRater response
-          var data = result.data;
-
-          if (data != null) {
-
-            /*
-             * annotations we put in the component state will be
-             * removed from the component state and saved separately
-             */
-            componentState.annotations = [];
-
-            // get the CRater score
-            let score = data.score;
-            let concepts = data.concepts;
-            let previousScore = null;
-
-            if (score != null) {
-
-              // create the auto score annotation
-              let autoScoreAnnotationData = {};
-              autoScoreAnnotationData.value = score;
-              autoScoreAnnotationData.maxAutoScore = this.ProjectService.getMaxScoreForComponent(this.nodeId, this.componentId);
-              autoScoreAnnotationData.concepts = concepts;
-              autoScoreAnnotationData.autoGrader = 'cRater';
-
-              let autoScoreAnnotation = this.createAutoScoreAnnotation(autoScoreAnnotationData);
-
-              let annotationGroupForScore = null;
-
-              if (this.$scope.$parent.nodeController != null) {
-                // get the previous score and comment annotations
-                let latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
-
-                if (latestAnnotations != null && latestAnnotations.score != null &&
-                  latestAnnotations.score.data != null) {
-
-                  // get the previous score annotation value
-                  previousScore = latestAnnotations.score.data.value;
-                }
-
-                if (this.componentContent.enableGlobalAnnotations && this.componentContent.globalAnnotationSettings != null) {
-
-                  let globalAnnotationMaxCount = 0;
-                  if (this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
-                    globalAnnotationMaxCount = this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
-                  }
-                  // get the annotation properties for the score that the student got.
-                  annotationGroupForScore = this.ProjectService.getGlobalAnnotationGroupByScore(this.componentContent, previousScore, score);
-
-                  // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
-                  if (annotationGroupForScore != null) {
-                    let globalAnnotationGroupsByNodeIdAndComponentId = this.AnnotationService.getAllGlobalAnnotationGroups(this.nodeId, this.componentId);
-                    annotationGroupForScore.annotationGroupCreatedTime = autoScoreAnnotation.clientSaveTime;  // save annotation creation time
-
-                    if (globalAnnotationGroupsByNodeIdAndComponentId.length >= globalAnnotationMaxCount) {
-                      // we've already applied this annotation properties to maxCount annotations, so we don't need to apply it any more.
-                      annotationGroupForScore = null;
-                    }
-                  }
-
-                  if (annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.unGlobalizeCriteria != null) {
-                    // check if this annotation is global and what criteria needs to be met to un-globalize.
-                    annotationGroupForScore.unGlobalizeCriteria.map( (unGlobalizeCriteria) => {
-                      // if the un-globalize criteria is time-based (e.g. isVisitedAfter, isRevisedAfter, isVisitedAndRevisedAfter, etc), store the timestamp of this annotation in the criteria
-                      // so we can compare it when we check for criteria satisfaction.
-                      if (unGlobalizeCriteria.params != null) {
-                        unGlobalizeCriteria.params.criteriaCreatedTimestamp = autoScoreAnnotation.clientSaveTime;  // save annotation creation time to criteria
-                      }
-                    });
-                  }
-
-                  if (annotationGroupForScore != null) {
-                    // copy over the annotation properties into the autoScoreAnnotation's data
-                    angular.merge(autoScoreAnnotation.data, annotationGroupForScore);
-                  }
-                }
-              }
-
-              componentState.annotations.push(autoScoreAnnotation);
-
-              if (this.mode === 'authoring') {
-                if (this.latestAnnotations == null) {
-                  this.latestAnnotations = {};
-                }
-
-                /*
-                 * we are in the authoring view so we will set the
-                 * latest score annotation manually
-                 */
-                this.latestAnnotations.score = autoScoreAnnotation;
-              }
-
-              var autoComment = null;
-
-              // get the submit counter
-              var submitCounter = this.submitCounter;
-
-              if (this.componentContent.cRater.enableMultipleAttemptScoringRules && submitCounter > 1) {
-                /*
-                 * this step has multiple attempt scoring rules and this is
-                 * a subsequent submit
-                 */
-                // get the feedback based upon the previous score and current score
-                autoComment = this.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(this.componentContent, previousScore, score);
-              } else {
-                // get the feedback text
-                autoComment = this.CRaterService.getCRaterFeedbackTextByScore(this.componentContent, score);
-              }
-
-              if (autoComment != null) {
-                // create the auto comment annotation
-                var autoCommentAnnotationData = {};
-                autoCommentAnnotationData.value = autoComment;
-                autoCommentAnnotationData.concepts = concepts;
-                autoCommentAnnotationData.autoGrader = 'cRater';
-
-                var autoCommentAnnotation = this.createAutoCommentAnnotation(autoCommentAnnotationData);
-
-                if (this.componentContent.enableGlobalAnnotations) {
-                  if (annotationGroupForScore != null) {
-                    // copy over the annotation properties into the autoCommentAnnotation's data
-                    angular.merge(autoCommentAnnotation.data, annotationGroupForScore);
-                  }
-                }
-                componentState.annotations.push(autoCommentAnnotation);
-
-                if (this.mode === 'authoring') {
-                  if (this.latestAnnotations == null) {
-                    this.latestAnnotations = {};
-                  }
-
-                  /*
-                   * we are in the authoring view so we will set the
-                   * latest comment annotation manually
-                   */
-                  this.latestAnnotations.comment = autoCommentAnnotation;
-                }
-              }
-              if (this.componentContent.enableNotifications) {
-                // get the notification properties for the score that the student got.
-                let notificationForScore = this.ProjectService.getNotificationByScore(this.componentContent, previousScore, score);
-
-                if (notificationForScore != null) {
-                  notificationForScore.score = score;
-                  notificationForScore.nodeId = this.nodeId;
-                  notificationForScore.componentId = this.componentId;
-                  this.NotificationService.sendNotificationForScore(notificationForScore);
-                }
-              }
-
-              // display global annotations dialog if needed
-              if (this.componentContent.enableGlobalAnnotations && annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.isPopup) {
-                this.$scope.$emit('displayGlobalAnnotations');
-              }
-            }
-          }
-        }
-
-        /*
-         * hide the dialog that tells the student to wait since
-         * the work has been scored.
-         */
-        this.$mdDialog.hide();
-
-        // resolve the promise now that we are done performing additional processing
-        deferred.resolve(componentState);
-      });
-    } else if (this.ProjectService.hasAdditionalProcessingFunctions(this.nodeId, this.componentId)) {
-      // if there are any additionalProcessingFunctions for this node and component, call all of them
-      let additionalProcessingFunctions = this.ProjectService.getAdditionalProcessingFunctions(this.nodeId, this.componentId);
-      let allPromises = [];
-      for (let i = 0; i < additionalProcessingFunctions.length; i++) {
-        let additionalProcessingFunction = additionalProcessingFunctions[i];
-        let defer = this.$q.defer();
-        let promise = defer.promise;
-        allPromises.push(promise);
-        additionalProcessingFunction(defer, componentState, action);
-      }
-      this.$q.all(allPromises).then(() => {
-        deferred.resolve(componentState);
-      });
-    } else {
-      /*
-       * we don't need to perform any additional processing so we can resolve
-       * the promise immediately
-       */
-      deferred.resolve(componentState);
-    }
-  }
 
   /**
    * Create an auto score annotation
@@ -2136,54 +1665,6 @@ class AnimationController {
     return annotation;
   }
 
-  /**
-   * Check if we need to lock the component
-   */
-  calculateDisabled() {
-
-    // get the component content
-    var componentContent = this.componentContent;
-
-    if (componentContent != null) {
-
-      // check if the parent has set this component to disabled
-      if (componentContent.isDisabled) {
-        this.isDisabled = true;
-      } else if (componentContent.lockAfterSubmit) {
-        // we need to lock the component after the student has submitted
-
-        // get the component states for this component
-        var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-        // check if any of the component states were submitted
-        var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-        if (isSubmitted) {
-          // the student has submitted work for this component
-          this.isDisabled = true;
-        }
-      }
-    }
-  };
-
-  /**
-   * Check whether we need to lock the component after the student
-   * submits an answer.
-   */
-  isLockAfterSubmit() {
-    var result = false;
-
-    if (this.componentContent != null) {
-
-      // check the lockAfterSubmit field in the component content
-      if (this.componentContent.lockAfterSubmit) {
-        result = true;
-      }
-    }
-
-    return result;
-  };
-
   removeAttachment(attachment) {
     if (this.attachments.indexOf(attachment) != -1) {
       this.attachments.splice(this.attachments.indexOf(attachment), 1);
@@ -2210,29 +1691,6 @@ class AnimationController {
         }
       });
     }
-  };
-
-  /**
-   * Get the prompt to show to the student
-   */
-  getPrompt() {
-    var prompt = null;
-
-    if (this.originalComponentContent != null) {
-      // this is a show previous work component
-
-      if (this.originalComponentContent.showPreviousWorkPrompt) {
-        // show the prompt from the previous work component
-        prompt = this.componentContent.prompt;
-      } else {
-        // show the prompt from the original component
-        prompt = this.originalComponentContent.prompt;
-      }
-    } else if (this.componentContent != null) {
-      prompt = this.componentContent.prompt;
-    }
-
-    return prompt;
   };
 
   /**
@@ -2344,14 +1802,6 @@ class AnimationController {
   };
 
   /**
-   * Get the component id
-   * @return the component id
-   */
-  getComponentId() {
-    return this.componentContent.id;
-  };
-
-  /**
    * The component has changed in the regular authoring view so we will save the project
    */
   authoringViewComponentChanged() {
@@ -2396,63 +1846,10 @@ class AnimationController {
   };
 
   /**
-   * Get all the step node ids in the project
-   * @returns all the step node ids
-   */
-  getStepNodeIds() {
-    var stepNodeIds = this.ProjectService.getNodeIds();
-
-    return stepNodeIds;
-  }
-
-  /**
-   * Get the step number and title
-   * @param nodeId get the step number and title for this node
-   * @returns the step number and title
-   */
-  getNodePositionAndTitleByNodeId(nodeId) {
-    var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-
-    return nodePositionAndTitle;
-  }
-
-  /**
-   * Get the components in a step
-   * @param nodeId get the components in the step
-   * @returns the components in the step
-   */
-  getComponentsByNodeId(nodeId) {
-    var components = this.ProjectService.getComponentsByNodeId(nodeId);
-
-    return components;
-  }
-
-  /**
-   * Check if a node is a step node
-   * @param nodeId the node id to check
-   * @returns whether the node is an application node
-   */
-  isApplicationNode(nodeId) {
-    var result = this.ProjectService.isApplicationNode(nodeId);
-
-    return result;
-  }
-
-  /**
    * Update the component JSON string that will be displayed in the advanced authoring view textarea
    */
   updateAdvancedAuthoringView() {
     this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-  };
-
-  /**
-   * Set the message next to the save button
-   * @param message the message to display
-   * @param time the time to display
-   */
-  setSaveMessage(message, time) {
-    this.saveMessage.text = message;
-    this.saveMessage.time = time;
   };
 
   /**
@@ -3009,21 +2406,6 @@ class AnimationController {
      * content
      */
     this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Check if a component generates student work
-   * @param component the component
-   * @return whether the component generates student work
-   */
-  componentHasWork(component) {
-    var result = true;
-
-    if (component != null) {
-      result = this.ProjectService.componentHasWork(component);
-    }
-
-    return result;
   }
 
   /**
@@ -3924,63 +3306,6 @@ class AnimationController {
   }
 
   /**
-   * Import any work we need from connected components
-   */
-  handleConnectedComponents() {
-
-    // get the connected components
-    var connectedComponents = this.componentContent.connectedComponents;
-
-    if (connectedComponents != null) {
-
-      var componentStates = [];
-
-      // loop through all the connected components
-      for (var c = 0; c < connectedComponents.length; c++) {
-        var connectedComponent = connectedComponents[c];
-
-        if (connectedComponent != null) {
-          var nodeId = connectedComponent.nodeId;
-          var componentId = connectedComponent.componentId;
-          var type = connectedComponent.type;
-
-          if (type == 'showWork') {
-            // we are getting the work from this student
-
-            // get the latest component state from the component
-            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-            if (componentState != null) {
-              componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-            }
-
-            // we are showing work so we will not allow the student to edit it
-            this.isDisabled = true;
-          } else if (type == 'importWork' || type == null) {
-            // we are getting the work from this student
-
-            // get the latest component state from the component
-            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-            if (componentState != null) {
-              componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-            }
-          }
-        }
-      }
-
-      // merge the student responses from all the component states
-      var mergedComponentState = this.createMergedComponentState(componentStates);
-
-      // set the student work into the component
-      this.setStudentWork(mergedComponentState);
-
-      // make the work dirty so that it gets saved
-      this.studentDataChanged();
-    }
-  }
-
-  /**
    * Create a component state with the merged student data
    * @param componentStates an array of component states
    * @return a component state with the merged student data
@@ -4226,7 +3551,6 @@ class AnimationController {
 
 AnimationController.$inject = [
   '$filter',
-  '$injector',
   '$mdDialog',
   '$q',
   '$rootScope',
@@ -4237,6 +3561,7 @@ AnimationController.$inject = [
   'ConfigService',
   'CRaterService',
   'NodeService',
+  'NotebookService',
   'NotificationService',
   'ProjectService',
   'StudentAssetService',

@@ -1,66 +1,33 @@
+'use strict';
 
-class MatchController {
+import ComponentController from "../componentController";
+
+class MatchController extends ComponentController {
   constructor($filter,
-      $injector,
       $mdDialog,
+      $mdMedia,
       $q,
       $rootScope,
       $scope,
       AnnotationService,
-      dragulaService,
       ConfigService,
+      dragulaService,
       MatchService,
       NodeService,
+      NotebookService,
       ProjectService,
+      StudentAssetService,
       StudentDataService,
-      UtilService,
-      $mdMedia) {
-
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
+      UtilService) {
+    super($filter, $mdDialog, $rootScope, $scope,
+        AnnotationService, ConfigService, NodeService,
+        NotebookService, ProjectService, StudentAssetService,
+        StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.AnnotationService = AnnotationService;
     this.dragulaService = dragulaService;
-    this.ConfigService = ConfigService;
     this.MatchService = MatchService;
-    this.NodeService = NodeService;
-    this.ProjectService = ProjectService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
     this.$mdMedia = $mdMedia;
-    this.idToOrder = this.ProjectService.idToOrder;
     this.autoScroll = require('dom-autoscroller');
-    this.$translate = this.$filter('translate');
-
-    // the node id of the current node
-    this.nodeId = null;
-
-    // the component id
-    this.componentId = null;
-
-    // field that will hold the component content
-    this.componentContent = null;
-
-    // field that will hold the authoring component content
-    this.authoringComponentContent = null;
-
-    // whether the step should be disabled
-    this.isDisabled = false;
-
-    // whether the student work is dirty and needs saving
-    this.isDirty = false;
-
-    // whether the student work has changed since last submit
-    this.isSubmitDirty = false;
-
-    // whether this part is showing previous work
-    this.isShowPreviousWork = false;
-
-    // whether the student work is for a submit
-    this.isSubmit = false;
 
     // the choices
     this.choices = [];
@@ -86,23 +53,8 @@ class MatchController {
     // css style for the buckets
     this.bucketStyle = '';
 
-    // message to show next to save/submit buttons
-    this.saveMessage = {
-      text: '',
-      time: ''
-    };
-
-    // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
-
     // the latest annotations
     this.latestAnnotations = null;
-
-    // counter to keep track of the number of submits
-    this.submitCounter = 0;
 
     // the id for the source bucket
     this.sourceBucketId = '0';
@@ -132,209 +84,190 @@ class MatchController {
       }
     ];
 
-    this.nodeId = this.$scope.nodeId;
-
-    // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
-
-    // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
-
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
     this.originalComponentContent = this.$scope.originalComponentContent;
 
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    this.mode = this.$scope.mode;
 
-    this.workgroupId = this.$scope.workgroupId;
-    this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
+    this.horizontal = this.componentContent.horizontal;
 
-    if (this.componentContent != null) {
+    if (this.mode === 'student') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
-      // get the component id
-      this.componentId = this.componentContent.id;
-      this.horizontal = this.componentContent.horizontal;
+      // get the latest annotations
+      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+    } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
 
-      if (this.mode === 'student') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
+      if (this.mode === 'grading') {
         // get the latest annotations
         this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
+      }
+    } else if (this.mode === 'onlyShowWork') {
+      this.isPromptVisible = false;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    } else if (this.mode === 'showPreviousWork') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+    } else if (this.mode === 'authoring') {
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
-        if (this.mode === 'grading') {
-          // get the latest annotations
-          this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+      // generate the summernote rubric element id
+      this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+
+      // set the component rubric into the summernote rubric
+      this.summernoteRubricHTML = this.componentContent.rubric;
+
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = this.$translate('INSERT_ASSET');
+
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      this.summernoteRubricOptions = {
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['fontname', ['fontname']],
+          ['fontsize', ['fontsize']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'video']],
+          ['view', ['fullscreen', 'codeview', 'help']],
+          ['customButton', ['insertAssetButton']]
+        ],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
         }
-      } else if (this.mode === 'onlyShowWork') {
-        this.isPromptVisible = false;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'showPreviousWork') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'authoring') {
+      };
+
+      this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function() {
+        return this.authoringComponentContent;
+      }.bind(this), function(newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
         this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
-        // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-
-        // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
+        this.isCorrect = null;
+        this.submitCounter = 0;
+        this.isDisabled = false;
+        this.isSubmitButtonDisabled = false;
 
         /*
-         * create the custom button for inserting WISE assets into
-         * summernote
+         * initialize the choices and buckets with the values from the
+         * component content
          */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+        this.initializeChoices();
+        this.initializeBuckets();
+      }.bind(this), true);
+    }
 
+    // check if there is a correct answer
+    this.hasCorrectAnswer = this.hasCorrectChoices();
+
+    /*
+     * initialize the choices and buckets with the values from the
+     * component content
+     */
+    this.initializeChoices();
+    this.initializeBuckets();
+
+    // get the component state from the scope
+    var componentState = this.$scope.componentState;
+
+    if (this.mode == 'student') {
+      if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
+        // we will show work from another component
+        this.handleConnectedComponents();
+      }  else if (this.MatchService.componentStateHasStudentWork(componentState, this.componentContent)) {
         /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
+         * the student has work so we will populate the work into this
+         * component
          */
-        this.summernoteRubricOptions = {
-          toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']],
-            ['customButton', ['insertAssetButton']]
-          ],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function() {
-          return this.authoringComponentContent;
-        }.bind(this), function(newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-          this.isCorrect = null;
-          this.submitCounter = 0;
-          this.isDisabled = false;
-          this.isSubmitButtonDisabled = false;
-
-          /*
-           * initialize the choices and buckets with the values from the
-           * component content
-           */
-          this.initializeChoices();
-          this.initializeBuckets();
-        }.bind(this), true);
-      }
-
-      // check if there is a correct answer
-      this.hasCorrectAnswer = this.hasCorrectChoices();
-
-      /*
-       * initialize the choices and buckets with the values from the
-       * component content
-       */
-      this.initializeChoices();
-      this.initializeBuckets();
-
-      // get the component state from the scope
-      var componentState = this.$scope.componentState;
-
-      if (this.mode == 'student') {
-        if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-          // we will show work from another component
-          this.handleConnectedComponents();
-        }  else if (this.MatchService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          /*
-           * the student has work so we will populate the work into this
-           * component
-           */
-          this.setStudentWork(componentState);
-        } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // we will import work from another component
-          this.handleConnectedComponents();
-        } else if (componentState == null) {
-          // check if we need to import work
-
-          // check if we need to import work
-          var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-          var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-
-          if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-            /*
-             * check if the node id is in the field that we used to store
-             * the import previous work node id in
-             */
-            importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-          }
-
-          if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-            /*
-             * check if the component id is in the field that we used to store
-             * the import previous work component id in
-             */
-            importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-          }
-
-          if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-            // import the work from the other component
-            this.importWork();
-          }
-        }
-      } else {
-        // populate the student work into this component
         this.setStudentWork(componentState);
-      }
+      } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+        // we will import work from another component
+        this.handleConnectedComponents();
+      } else if (componentState == null) {
+        // check if we need to import work
 
-      if (componentState != null && componentState.isSubmit) {
-        /*
-         * the latest component state is a submit. this is used to
-         * determine if we should show the feedback.
-         */
-        this.isLatestComponentStateSubmit = true;
-      }
+        // check if we need to import work
+        var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
+        var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
 
-      // check if the student has used up all of their submits
-      if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-        /*
-         * the student has used up all of their chances to submit so we
-         * will disable the submit button
-         */
-        this.isDisabled = true;
-        this.isSubmitButtonDisabled = true;
-      }
+        if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+          /*
+           * check if the node id is in the field that we used to store
+           * the import previous work node id in
+           */
+          importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
+        }
 
-      // check if we need to lock this component
-      this.calculateDisabled();
+        if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+          /*
+           * check if the component id is in the field that we used to store
+           * the import previous work component id in
+           */
+          importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
+        }
 
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
+          // import the work from the other component
+          this.importWork();
+        }
       }
+    } else {
+      // populate the student work into this component
+      this.setStudentWork(componentState);
+    }
+
+    if (componentState != null && componentState.isSubmit) {
+      /*
+       * the latest component state is a submit. this is used to
+       * determine if we should show the feedback.
+       */
+      this.isLatestComponentStateSubmit = true;
+    }
+
+    // check if the student has used up all of their submits
+    if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+      /*
+       * the student has used up all of their chances to submit so we
+       * will disable the submit button
+       */
+      this.isDisabled = true;
+      this.isSubmitButtonDisabled = true;
+    }
+
+    this.disableComponentIfNecessary();
+
+    if (this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
     }
 
     let dragId = 'match_' + this.componentId;
@@ -417,92 +350,6 @@ class MatchController {
 
       return deferred.promise;
     }.bind(this);
-
-    /**
-     * The parent node submit button was clicked
-     */
-    this.$scope.$on('nodeSubmitClicked', angular.bind(this, function(event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-
-        // trigger the submit
-        var submitTriggeredBy = 'nodeSubmitButton';
-        this.submit(submitTriggeredBy);
-      }
-    }));
-
-    /**
-     * Listen for the 'studentWorkSavedToServer' event which is fired when
-     * we receive the response from saving a component state to the server
-     */
-    this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function(event, args) {
-
-      let componentState = args.studentWork;
-
-      // check that the component state is for this component
-      if (componentState && this.nodeId === componentState.nodeId
-        && this.componentId === componentState.componentId) {
-
-        // set isDirty to false because the component state was just saved
-        this.isDirty = false;
-        this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: false});
-
-        // set saveFailed to false because the save was successful
-        this.saveFailed = false;
-
-        let isAutoSave = componentState.isAutoSave;
-        let isSubmit = componentState.isSubmit;
-        let serverSaveTime = componentState.serverSaveTime;
-        let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-        // set save message
-        if (isSubmit) {
-          this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
-
-          this.lockIfNecessary();
-
-          // set isSubmitDirty to false because the component state was just submitted and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        } else if (isAutoSave) {
-          this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
-        } else {
-          this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
-        }
-      }
-    }));
-
-    /**
-     * Listen for the 'annotationSavedToServer' event which is fired when
-     * we receive the response from saving an annotation to the server
-     */
-    this.$scope.$on('annotationSavedToServer', (event, args) => {
-
-      if (args != null ) {
-
-        // get the annotation that was saved to the server
-        var annotation = args.annotation;
-
-        if (annotation != null) {
-
-          // get the node id and component id of the annotation
-          var annotationNodeId = annotation.nodeId;
-          var annotationComponentId = annotation.componentId;
-
-          // make sure the annotation was for this component
-          if (this.nodeId === annotationNodeId &&
-            this.componentId === annotationComponentId) {
-
-            // get latest score and comment annotations for this component
-            this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-          }
-        }
-      }
-    });
 
     /**
      * Listen for the 'exitNode' event which is fired when the student
@@ -644,6 +491,10 @@ class MatchController {
     });
 
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+  }
+
+  handleNodeSubmit() {
+    this.submit('nodeSubmitButton');
   }
 
   /**
@@ -841,7 +692,6 @@ class MatchController {
           // latest state is a submission, so set isSubmitDirty to false and notify node
           this.isSubmitDirty = false;
           this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-          // set save message
           this.setSaveMessage(this.$translate('LAST_SUBMITTED'), clientSaveTime);
         } else {
           /*
@@ -852,7 +702,6 @@ class MatchController {
           // latest state is not a submission, so set isSubmitDirty to true and notify node
           this.isSubmitDirty = true;
           this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-          // set save message
           this.setSaveMessage(this.$translate('LAST_SAVED'), clientSaveTime);
         }
       }
@@ -982,47 +831,6 @@ class MatchController {
   };
 
   /**
-   * Called when the student clicks the save button
-   */
-  saveButtonClicked() {
-    this.isSubmit = false;
-
-    if (this.mode === 'authoring') {
-      /*
-       * we are in authoring mode so we will set isDirty to false here
-       * because the 'componentSaveTriggered' event won't work in
-       * authoring mode
-       */
-      this.isDirty = false;
-    }
-
-    // tell the parent node that this component wants to save
-    this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-  };
-
-  /**
-  * Called when either the component or node is submitted
-  */
-  lockIfNecessary() {
-    // check if we need to lock the component after the student submits
-    if (this.isLockAfterSubmit()) {
-      this.isDisabled = true;
-    }
-
-    // check if the student answered correctly
-    //this.processLatestSubmit();
-  }
-
-  /**
-   * Called when the student clicks the submit button
-   */
-  submitButtonClicked() {
-    // trigger the submit
-    var submitTriggeredBy = 'componentSubmitButton';
-    this.submit(submitTriggeredBy);
-  };
-
-  /**
    * A submit was triggered by the component submit button or node submit button
    * @param submitTriggeredBy what triggered the submit
    * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
@@ -1069,8 +877,6 @@ class MatchController {
 
         // clear the isCorrect value because it will be evaluated again later
         this.isCorrect = null;
-
-        // increment the submit counter
         this.incrementSubmitCounter();
 
         // check if the student has used up all of their submits
@@ -1108,13 +914,6 @@ class MatchController {
         this.isSubmit = false;
       }
     }
-  }
-
-  /**
-   * Increment the submit counter
-   */
-  incrementSubmitCounter() {
-    this.submitCounter++;
   }
 
   /**
@@ -1383,41 +1182,10 @@ class MatchController {
     return feedbackObject;
   };
 
-  /**
-   * Called when the student changes their work
-   */
   studentDataChanged() {
-    /*
-     * set the dirty flag so we will know we need to save the
-     * student work later
-     */
-    this.isDirty = true;
-    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: true});
-
-    this.isSubmitDirty = true;
-    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-
-    // clear out the save message
-    this.setSaveMessage('', null);
-
-    // get this part id
-    var componentId = this.getComponentId();
-
     this.isCorrect = null;
     this.isLatestComponentStateSubmit = false;
-
-    /*
-     * the student work in this component has changed so we will tell
-     * the parent node that the student data will need to be saved.
-     * this will also notify connected parts that this component's student
-     * data has changed.
-     */
-    var action = 'change';
-
-    // create a component state populated with the student data
-    this.createComponentState(action).then((componentState) => {
-      this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
-    });
+    super.studentDataChanged();
   };
 
   /**
@@ -1510,97 +1278,6 @@ class MatchController {
   };
 
   /**
-   * Perform any additional processing that is required before returning the
-   * component state
-   * Note: this function must call deferred.resolve() otherwise student work
-   * will not be saved
-   * @param deferred a deferred object
-   * @param componentState the component state
-   * @param action the action that we are creating the component state for
-   * e.g. 'submit', 'save', 'change'
-   */
-  createComponentStateAdditionalProcessing(deferred, componentState, action) {
-    /*
-     * we don't need to perform any additional processing so we can resolve
-     * the promise immediately
-     */
-    deferred.resolve(componentState);
-  }
-
-  /**
-   * Check if we need to lock the component
-   */
-  calculateDisabled() {
-
-    var nodeId = this.nodeId;
-
-    // get the component content
-    var componentContent = this.componentContent;
-
-    if (componentContent != null) {
-
-      // check if the parent has set this component to disabled
-      if (componentContent.isDisabled) {
-        this.isDisabled = true;
-      } else if (componentContent.lockAfterSubmit) {
-        // we need to lock the step after the student has submitted
-
-        // get the component states for this component
-        var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-        // check if any of the component states were submitted
-        var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-        if (isSubmitted) {
-          // the student has submitted work for this component
-          this.isDisabled = true;
-        }
-      }
-    }
-  };
-
-  /**
-   * Check whether we need to lock the component after the student
-   * submits an answer.
-   */
-  isLockAfterSubmit() {
-    var result = false;
-
-    if (this.componentContent != null) {
-
-      // check the lockAfterSubmit field in the component content
-      if (this.componentContent.lockAfterSubmit) {
-        result = true;
-      }
-    }
-
-    return result;
-  };
-
-  /**
-   * Get the prompt to show to the student
-   */
-  getPrompt() {
-    var prompt = null;
-
-    if (this.originalComponentContent != null) {
-      // this is a show previous work component
-
-      if (this.originalComponentContent.showPreviousWorkPrompt) {
-        // show the prompt from the previous work component
-        prompt = this.componentContent.prompt;
-      } else {
-        // show the prompt from the original component
-        prompt = this.originalComponentContent.prompt;
-      }
-    } else if (this.componentContent != null) {
-      prompt = this.componentContent.prompt;
-    }
-
-    return prompt;
-  };
-
-  /**
    * Import work from another component
    */
   importWork() {
@@ -1668,8 +1345,6 @@ class MatchController {
 
             // populate the component state into this component
             this.setStudentWork(populatedComponentState);
-
-            // make the work dirty so that it gets saved
             this.studentDataChanged();
           }
         }
@@ -1749,14 +1424,6 @@ class MatchController {
   }
 
   /**
-   * Get the component id
-   * @return the component id
-   */
-  getComponentId() {
-    return this.componentContent.id;
-  };
-
-  /**
    * The component has changed in the regular authoring view so we will save the project
    */
   authoringViewComponentChanged() {
@@ -1809,49 +1476,6 @@ class MatchController {
   updateAdvancedAuthoringView() {
     this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
   };
-
-  /**
-   * Get all the step node ids in the project
-   * @returns all the step node ids
-   */
-  getStepNodeIds() {
-    var stepNodeIds = this.ProjectService.getNodeIds();
-
-    return stepNodeIds;
-  }
-
-  /**
-   * Get the step number and title
-   * @param nodeId get the step number and title for this node
-   * @returns the step number and title
-   */
-  getNodePositionAndTitleByNodeId(nodeId) {
-    var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-
-    return nodePositionAndTitle;
-  }
-
-  /**
-   * Get the components in a step
-   * @param nodeId get the components in the step
-   * @returns the components in the step
-   */
-  getComponentsByNodeId(nodeId) {
-    var components = this.ProjectService.getComponentsByNodeId(nodeId);
-
-    return components;
-  }
-
-  /**
-   * Check if a node is a step node
-   * @param nodeId the node id to check
-   * @returns whether the node is an application node
-   */
-  isApplicationNode(nodeId) {
-    var result = this.ProjectService.isApplicationNode(nodeId);
-
-    return result;
-  }
 
   /**
    * Add a choice
@@ -2508,16 +2132,6 @@ class MatchController {
   }
 
   /**
-   * Set the message next to the save button
-   * @param message the message to display
-   * @param time the time to display
-   */
-  setSaveMessage(message, time) {
-    this.saveMessage.text = message;
-    this.saveMessage.time = time;
-  };
-
-  /**
    * Register the the listener that will listen for the exit event
    * so that we can perform saving before exiting.
    */
@@ -2533,21 +2147,6 @@ class MatchController {
       this.$rootScope.$broadcast('doneExiting');
     }));
   };
-
-  /**
-   * Check if a component generates student work
-   * @param component the component
-   * @return whether the component generates student work
-   */
-  componentHasWork(component) {
-    var result = true;
-
-    if (component != null) {
-      result = this.ProjectService.componentHasWork(component);
-    }
-
-    return result;
-  }
 
   /**
    * The author has changed the rubric
@@ -3059,63 +2658,6 @@ class MatchController {
   }
 
   /**
-   * Import any work we need from connected components
-   */
-  handleConnectedComponents() {
-
-    // get the connected components
-    var connectedComponents = this.componentContent.connectedComponents;
-
-    if (connectedComponents != null) {
-
-      var componentStates = [];
-
-      // loop through all the connected components
-      for (var c = 0; c < connectedComponents.length; c++) {
-        var connectedComponent = connectedComponents[c];
-
-        if (connectedComponent != null) {
-          var nodeId = connectedComponent.nodeId;
-          var componentId = connectedComponent.componentId;
-          var type = connectedComponent.type;
-
-          if (type == 'showWork') {
-            // we are getting the work from this student
-
-            // get the latest component state from the component
-            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-            if (componentState != null) {
-              componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-            }
-
-            // we are showing work so we will not allow the student to edit it
-            this.isDisabled = true;
-          } else if (type == 'importWork' || type == null) {
-            // we are getting the work from this student
-
-            // get the latest component state from the component
-            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-            if (componentState != null) {
-              componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-            }
-          }
-        }
-      }
-
-      // merge the student responses from all the component states
-      var mergedComponentState = this.createMergedComponentState(componentStates);
-
-      // set the student work into the component
-      this.setStudentWork(mergedComponentState);
-
-      // make the work dirty so that it gets saved
-      this.studentDataChanged();
-    }
-  }
-
-  /**
    * Create a component state with the merged student responses
    * @param componentStates an array of component states
    * @return a component state with the merged student responses
@@ -3456,20 +2998,21 @@ class MatchController {
 
 MatchController.$inject = [
   '$filter',
-  '$injector',
   '$mdDialog',
+  '$mdMedia',
   '$q',
   '$rootScope',
   '$scope',
   'AnnotationService',
-  'dragulaService',
   'ConfigService',
+  'dragulaService',
   'MatchService',
   'NodeService',
+  'NotebookService',
   'ProjectService',
+  'StudentAssetService',
   'StudentDataService',
-  'UtilService',
-  '$mdMedia'
+  'UtilService'
 ];
 
 export default MatchController;

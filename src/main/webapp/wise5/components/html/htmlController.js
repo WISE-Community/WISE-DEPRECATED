@@ -6,161 +6,124 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _componentController = require('../componentController');
+
+var _componentController2 = _interopRequireDefault(_componentController);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var HTMLController = function () {
-  function HTMLController($rootScope, $scope, $state, $stateParams, $sce, $filter, $mdDialog, ConfigService, NodeService, ProjectService, StudentDataService, UtilService) {
-    var _this = this;
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var HTMLController = function (_ComponentController) {
+  _inherits(HTMLController, _ComponentController);
+
+  function HTMLController($rootScope, $scope, $state, $stateParams, $sce, $filter, $mdDialog, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, HTMLController);
 
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.$state = $state;
-    this.$stateParams = $stateParams;
-    this.$sce = $sce;
-    this.$filter = $filter;
-    this.$mdDialog = $mdDialog;
-    this.ConfigService = ConfigService;
-    this.NodeService = NodeService;
-    this.ProjectService = ProjectService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
+    var _this = _possibleConstructorReturn(this, (HTMLController.__proto__ || Object.getPrototypeOf(HTMLController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
 
-    this.$translate = this.$filter('translate');
-
-    // the node id of the current node
-    this.nodeId = null;
-
-    // the component id
-    this.componentId = null;
-
-    // field that will hold the component content
-    this.componentContent = null;
-
-    // field that will hold the authoring component content
-    this.authoringComponentContent = null;
-
-    // whether this part is showing previous work
-    this.isShowPreviousWork = false;
-
-    // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
+    _this.$state = $state;
+    _this.$stateParams = $stateParams;
+    _this.$sce = $sce;
 
     // the summernote prompt element id
-    this.summernotePromptId = '';
+    _this.summernotePromptId = '';
 
     // the summernote prompt html
-    this.summernotePromptHTML = '';
-
-    this.mode = this.$scope.mode;
-
-    // perform setup of this component
-
-    this.nodeId = this.$scope.nodeId;
-
-    // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
-
-    // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
+    _this.summernotePromptHTML = '';
 
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
-    this.originalComponentContent = this.$scope.originalComponentContent;
+    // TODO: remove. no longer used
+    _this.originalComponentContent = _this.$scope.originalComponentContent;
 
-    if (this.componentContent != null) {
+    if (_this.mode === 'authoring') {
+      var thisController = _this;
 
-      // get the component id
-      this.componentId = this.componentContent.id;
+      // the tooltip text for the the WISE Link authoring button
+      var insertWISELinkString = _this.$translate('INSERT_WISE_LINK');
 
-      if (this.mode === 'authoring') {
-        var thisController = this;
+      /*
+       * create the custom button for inserting a WISE Link into
+       * summernote
+       */
+      var InsertWISELinkButton = _this.UtilService.createInsertWISELinkButton(_this, null, _this.nodeId, _this.componentId, 'prompt', insertWISELinkString);
 
-        // the tooltip text for the the WISE Link authoring button
-        var insertWISELinkString = this.$translate('INSERT_WISE_LINK');
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = _this.$translate('INSERT_ASSET');
 
-        /*
-         * create the custom button for inserting a WISE Link into
-         * summernote
-         */
-        var InsertWISELinkButton = this.UtilService.createInsertWISELinkButton(this, null, this.nodeId, this.componentId, 'prompt', insertWISELinkString);
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'prompt', insertAssetString);
 
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'prompt', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        this.summernotePromptOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['customButton', ['insertWISELinkButton', 'insertAssetButton']], ['view', ['fullscreen', 'help']], ['view', ['codeview']]],
-          minHeight: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertWISELinkButton: InsertWISELinkButton,
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        // get the id of the summernote prompt element
-        this.summernotePromptId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
-
-        // replace all <wiselink> elements with <a> or <button> elements
-        this.summernotePromptHTML = this.UtilService.replaceWISELinks(this.componentContent.html);
-
-        // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-
-        // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButtonRubric = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButtonRubric
-          }
-        };
-
-        this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return this.authoringComponentContent;
-        }.bind(this), function (newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-        }.bind(this), true);
-      } else if (this.mode === 'grading') {} else if (this.mode === 'student') {
-        if (this.componentContent != null) {
-          this.html = this.componentContent.html;
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      _this.summernotePromptOptions = {
+        toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['customButton', ['insertWISELinkButton', 'insertAssetButton']], ['view', ['fullscreen', 'help']], ['view', ['codeview']]],
+        minHeight: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertWISELinkButton: InsertWISELinkButton,
+          insertAssetButton: InsertAssetButton
         }
+      };
 
-        if ($scope.$parent.registerComponentController != null) {
-          // register this component with the parent node
-          $scope.$parent.registerComponentController($scope, this.componentContent);
+      // get the id of the summernote prompt element
+      _this.summernotePromptId = 'summernotePrompt_' + _this.nodeId + '_' + _this.componentId;
+
+      // replace all <wiselink> elements with <a> or <button> elements
+      _this.summernotePromptHTML = _this.UtilService.replaceWISELinks(_this.componentContent.html);
+
+      // generate the summernote rubric element id
+      _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+
+      // set the component rubric into the summernote rubric
+      _this.summernoteRubricHTML = _this.componentContent.rubric;
+
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButtonRubric = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
+
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      _this.summernoteRubricOptions = {
+        toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButtonRubric
         }
+      };
+
+      _this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function () {
+        return this.authoringComponentContent;
+      }.bind(_this), function (newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+      }.bind(_this), true);
+    } else if (_this.mode === 'grading') {} else if (_this.mode === 'student') {
+      if (_this.componentContent != null) {
+        _this.html = _this.componentContent.html;
+      }
+
+      if ($scope.$parent.registerComponentController != null) {
+        // register this component with the parent node
+        $scope.$parent.registerComponentController($scope, _this.componentContent);
       }
     }
 
@@ -169,7 +132,7 @@ var HTMLController = function () {
      * an image representation of the student data from a specific
      * component.
      */
-    this.$scope.$on('requestImage', function (event, args) {
+    _this.$scope.$on('requestImage', function (event, args) {
       // get the node id and component id from the args
       var nodeId = args.nodeId;
       var componentId = args.componentId;
@@ -196,7 +159,7 @@ var HTMLController = function () {
      * Listen for the assetSelected event which occurs when the user
      * selects an asset from the choose asset popup
      */
-    this.$scope.$on('assetSelected', function (event, args) {
+    _this.$scope.$on('assetSelected', function (event, args) {
 
       if (args != null) {
 
@@ -266,7 +229,7 @@ var HTMLController = function () {
      * Listen for the createWISELink event so that we can insert a WISE Link
      * in the summernote rich text editor
      */
-    this.$scope.$on('createWISELink', function (event, args) {
+    _this.$scope.$on('createWISELink', function (event, args) {
       if (args != null) {
 
         // make sure the event was fired for this component
@@ -342,7 +305,7 @@ var HTMLController = function () {
      * The advanced button for a component was clicked. If the button was
      * for this component, we will show the advanced authoring.
      */
-    this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
+    _this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
       if (args != null) {
         var componentId = args.componentId;
         if (_this.componentId === componentId) {
@@ -351,7 +314,8 @@ var HTMLController = function () {
       }
     });
 
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+    _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
+    return _this;
   }
 
   /**
@@ -550,9 +514,9 @@ var HTMLController = function () {
   }]);
 
   return HTMLController;
-}();
+}(_componentController2.default);
 
-HTMLController.$inject = ['$rootScope', '$scope', '$state', '$stateParams', '$sce', '$filter', '$mdDialog', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
+HTMLController.$inject = ['$rootScope', '$scope', '$state', '$stateParams', '$sce', '$filter', '$mdDialog', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = HTMLController;
 //# sourceMappingURL=htmlController.js.map

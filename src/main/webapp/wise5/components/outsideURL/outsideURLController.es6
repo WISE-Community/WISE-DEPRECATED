@@ -1,49 +1,30 @@
-class OutsideURLController {
+'use strict';
+
+import ComponentController from "../componentController";
+
+class OutsideURLController extends ComponentController {
   constructor($filter,
       $mdDialog,
       $q,
       $rootScope,
-      $scope,
       $sce,
+      $scope,
+      AnnotationService,
       ConfigService,
       NodeService,
+      NotebookService,
       OutsideURLService,
       ProjectService,
+      StudentAssetService,
       StudentDataService,
       UtilService) {
-
-    this.$filter = $filter;
-    this.$mdDialog = $mdDialog;
+    super($filter, $mdDialog, $rootScope, $scope,
+        AnnotationService, ConfigService, NodeService,
+        NotebookService, ProjectService, StudentAssetService,
+        StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.$sce = $sce;
-    this.ConfigService = ConfigService;
-    this.NodeService = NodeService;
     this.OutsideURLService = OutsideURLService;
-    this.ProjectService = ProjectService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-
-    this.$translate = this.$filter('translate');
-
-    // the node id of the current node
-    this.nodeId = null;
-
-    // the component id
-    this.componentId = null;
-
-    // field that will hold the component content
-    this.componentContent = null;
-
-    // field that will hold the authoring component content
-    this.authoringComponentContent = null;
-
-    // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
 
     // the url to the web page to display
     this.url = null;
@@ -54,94 +35,79 @@ class OutsideURLController {
     // the max height of the iframe
     this.maxHeight = null;
 
-    this.nodeId = this.$scope.nodeId;
-
-    // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
-
-    // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
-
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
     this.originalComponentContent = this.$scope.originalComponentContent;
 
-    this.mode = this.$scope.mode;
+
+    if (this.mode === 'authoring') {
+      // generate the summernote rubric element id
+      this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+
+      // set the component rubric into the summernote rubric
+      this.summernoteRubricHTML = this.componentContent.rubric;
+
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = this.$translate('html.insertAsset');
+
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      this.summernoteRubricOptions = {
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['fontname', ['fontname']],
+          ['fontsize', ['fontsize']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'video']],
+          ['view', ['fullscreen', 'codeview', 'help']],
+          ['customButton', ['insertAssetButton']]
+        ],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
+        }
+      };
+
+      this.updateAdvancedAuthoringView();
+
+      $scope.$watch(() => {
+        return this.authoringComponentContent;
+      }, (newValue, oldValue) => {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
+        // set the url
+        this.setURL(this.authoringComponentContent.url);
+      }, true);
+    }
 
     if (this.componentContent != null) {
+      // set the url
+      this.setURL(this.componentContent.url);
+    }
 
-      // get the component id
-      this.componentId = this.componentContent.id;
+    // get the max width
+    this.maxWidth = this.componentContent.maxWidth ? this.componentContent.maxWidth : 'none';
 
-      if (this.mode === 'authoring') {
-        // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+    // get the max height
+    this.maxHeight = this.componentContent.maxHeight ? this.componentContent.maxHeight : 'none';
 
-        // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('html.insertAsset');
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        this.summernoteRubricOptions = {
-          toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']],
-            ['customButton', ['insertAssetButton']]
-          ],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        this.updateAdvancedAuthoringView();
-
-        $scope.$watch(() => {
-          return this.authoringComponentContent;
-        }, (newValue, oldValue) => {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
-          // set the url
-          this.setURL(this.authoringComponentContent.url);
-        }, true);
-      }
-
-      if (this.componentContent != null) {
-        // set the url
-        this.setURL(this.componentContent.url);
-      }
-
-      // get the max width
-      this.maxWidth = this.componentContent.maxWidth ? this.componentContent.maxWidth : 'none';
-
-      // get the max height
-      this.maxHeight = this.componentContent.maxHeight ? this.componentContent.maxHeight : 'none';
-
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-      }
+    if (this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
     }
 
     /**
@@ -396,12 +362,15 @@ OutsideURLController.$inject = [
   '$mdDialog',
   '$q',
   '$rootScope',
-  '$scope',
   '$sce',
+  '$scope',
+  'AnnotationService',
   'ConfigService',
   'NodeService',
+  'NotebookService',
   'OutsideURLService',
   'ProjectService',
+  'StudentAssetService',
   'StudentDataService',
   'UtilService'
 ];

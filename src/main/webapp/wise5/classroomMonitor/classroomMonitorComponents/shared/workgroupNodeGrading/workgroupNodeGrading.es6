@@ -52,10 +52,6 @@ class WorkgroupNodeGradingController {
                     component.isDisabled = true;
                 }
 
-                if (this.nodeContent.lockAfterSubmit) {
-                    component.lockAfterSubmit = true;
-                }
-
                 // set whether component captures student work (for filtering purposes)
                 component.hasWork = this.ProjectService.componentHasWork(component);
             }
