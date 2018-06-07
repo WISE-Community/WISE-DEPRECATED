@@ -56,12 +56,19 @@ var MatchController = function (_ComponentController) {
     _this.allowedConnectedComponentTypes = [{
       type: 'Match'
     }];
+    _this.privateNotebookItems = [];
 
     if (_this.mode === 'student') {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
       _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
       _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+      if (_this.shouldImportPrivateNotes()) {
+        _this.privateNotebookItems = _this.NotebookService.getPrivateNotebookItems();
+        _this.$rootScope.$on('notebookUpdated', function (event, args) {
+          _this.addNotebookItemToSourceBucket(args.notebookItem);
+        });
+      }
     } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
       _this.isPromptVisible = false;
       _this.isSaveButtonVisible = false;
@@ -69,6 +76,9 @@ var MatchController = function (_ComponentController) {
       _this.isDisabled = true;
       if (_this.mode === 'grading') {
         _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+      }
+      if (_this.shouldImportPrivateNotes()) {
+        _this.privateNotebookItems = _this.NotebookService.getPrivateNotebookItems(_this.workgroupId);
       }
     } else if (_this.mode === 'onlyShowWork') {
       _this.isPromptVisible = false;
@@ -235,6 +245,14 @@ var MatchController = function (_ComponentController) {
   }
 
   _createClass(MatchController, [{
+    key: 'addNotebookItemToSourceBucket',
+    value: function addNotebookItemToSourceBucket(notebookItem) {
+      var choice = this.createChoiceFromNotebookItem(notebookItem);
+      this.choices.push(choice);
+      var sourceBucket = this.getBucketById(this.sourceBucketId);
+      sourceBucket.items.push(choice);
+    }
+  }, {
     key: 'studentHasUsedAllSubmits',
     value: function studentHasUsedAllSubmits() {
       return this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount;
@@ -423,14 +441,14 @@ var MatchController = function (_ComponentController) {
         this.processPreviousStudentWork();
       }
     }
-  }, {
-    key: 'processPreviousStudentWork',
-
 
     /**
      * Get the latest submitted componentState and display feedback for choices
      * that haven't changed since. This will also determine if submit is dirty.
      */
+
+  }, {
+    key: 'processPreviousStudentWork',
     value: function processPreviousStudentWork() {
       var latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
       if (latestComponentState == null) {
@@ -577,6 +595,72 @@ var MatchController = function (_ComponentController) {
     key: 'initializeChoices',
     value: function initializeChoices() {
       this.choices = this.componentContent.choices;
+      if (this.shouldImportPrivateNotes()) {
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
+
+        try {
+          for (var _iterator5 = this.privateNotebookItems[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var privateNotebookItem = _step5.value;
+
+            this.choices.push(this.createChoiceFromNotebookItem(privateNotebookItem));
+          }
+        } catch (err) {
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
+            }
+          } finally {
+            if (_didIteratorError5) {
+              throw _iteratorError5;
+            }
+          }
+        }
+      }
+    }
+  }, {
+    key: 'shouldImportPrivateNotes',
+    value: function shouldImportPrivateNotes() {
+      return this.isNotebookEnabled() && this.componentContent.importPrivateNotes;
+    }
+  }, {
+    key: 'createChoiceFromNotebookItem',
+    value: function createChoiceFromNotebookItem(notebookItem) {
+      var value = notebookItem.content.text;
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
+
+      try {
+        for (var _iterator6 = notebookItem.content.attachments[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var attachment = _step6.value;
+
+          value += '<br/><img src="' + attachment.iconURL + '"/>';
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
+          }
+        }
+      }
+
+      return {
+        id: notebookItem.localNotebookItemId,
+        value: value,
+        type: 'choice'
+      };
     }
   }, {
     key: 'initializeBuckets',
@@ -592,54 +676,54 @@ var MatchController = function (_ComponentController) {
         type: 'bucket',
         items: []
       };
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
 
       try {
-        for (var _iterator5 = this.getChoices()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var choice = _step5.value;
+        for (var _iterator7 = this.getChoices()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var choice = _step7.value;
 
           sourceBucket.items.push(choice);
         }
       } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return) {
-            _iterator5.return();
+          if (!_iteratorNormalCompletion7 && _iterator7.return) {
+            _iterator7.return();
           }
         } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
+          if (_didIteratorError7) {
+            throw _iteratorError7;
           }
         }
       }
 
       this.buckets.push(sourceBucket);
-      var _iteratorNormalCompletion6 = true;
-      var _didIteratorError6 = false;
-      var _iteratorError6 = undefined;
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
 
       try {
-        for (var _iterator6 = this.componentContent.buckets[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-          var bucket = _step6.value;
+        for (var _iterator8 = this.componentContent.buckets[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var bucket = _step8.value;
 
           bucket.items = [];
           this.buckets.push(bucket);
         }
       } catch (err) {
-        _didIteratorError6 = true;
-        _iteratorError6 = err;
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion6 && _iterator6.return) {
-            _iterator6.return();
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
           }
         } finally {
-          if (_didIteratorError6) {
-            throw _iteratorError6;
+          if (_didIteratorError8) {
+            throw _iteratorError8;
           }
         }
       }
@@ -782,13 +866,13 @@ var MatchController = function (_ComponentController) {
 
       var isCorrect = true;
       var buckets = this.getBuckets();
-      var _iteratorNormalCompletion7 = true;
-      var _didIteratorError7 = false;
-      var _iteratorError7 = undefined;
+      var _iteratorNormalCompletion9 = true;
+      var _didIteratorError9 = false;
+      var _iteratorError9 = undefined;
 
       try {
-        for (var _iterator7 = buckets[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-          var bucket = _step7.value;
+        for (var _iterator9 = buckets[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+          var bucket = _step9.value;
 
           var bucketId = bucket.id;
           var items = bucket.items;
@@ -864,16 +948,16 @@ var MatchController = function (_ComponentController) {
           }
         }
       } catch (err) {
-        _didIteratorError7 = true;
-        _iteratorError7 = err;
+        _didIteratorError9 = true;
+        _iteratorError9 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion7 && _iterator7.return) {
-            _iterator7.return();
+          if (!_iteratorNormalCompletion9 && _iterator9.return) {
+            _iterator9.return();
           }
         } finally {
-          if (_didIteratorError7) {
-            throw _iteratorError7;
+          if (_didIteratorError9) {
+            throw _iteratorError9;
           }
         }
       }
@@ -906,54 +990,54 @@ var MatchController = function (_ComponentController) {
   }, {
     key: 'getFeedbackObject',
     value: function getFeedbackObject(bucketId, choiceId) {
-      var _iteratorNormalCompletion8 = true;
-      var _didIteratorError8 = false;
-      var _iteratorError8 = undefined;
+      var _iteratorNormalCompletion10 = true;
+      var _didIteratorError10 = false;
+      var _iteratorError10 = undefined;
 
       try {
-        for (var _iterator8 = this.getAllFeedback()[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-          var bucketFeedback = _step8.value;
+        for (var _iterator10 = this.getAllFeedback()[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+          var bucketFeedback = _step10.value;
 
           if (bucketFeedback.bucketId === bucketId) {
-            var _iteratorNormalCompletion9 = true;
-            var _didIteratorError9 = false;
-            var _iteratorError9 = undefined;
+            var _iteratorNormalCompletion11 = true;
+            var _didIteratorError11 = false;
+            var _iteratorError11 = undefined;
 
             try {
-              for (var _iterator9 = bucketFeedback.choices[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-                var choiceFeedback = _step9.value;
+              for (var _iterator11 = bucketFeedback.choices[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+                var choiceFeedback = _step11.value;
 
                 if (choiceFeedback.choiceId === choiceId) {
                   return choiceFeedback;
                 }
               }
             } catch (err) {
-              _didIteratorError9 = true;
-              _iteratorError9 = err;
+              _didIteratorError11 = true;
+              _iteratorError11 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                  _iterator9.return();
+                if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                  _iterator11.return();
                 }
               } finally {
-                if (_didIteratorError9) {
-                  throw _iteratorError9;
+                if (_didIteratorError11) {
+                  throw _iteratorError11;
                 }
               }
             }
           }
         }
       } catch (err) {
-        _didIteratorError8 = true;
-        _iteratorError8 = err;
+        _didIteratorError10 = true;
+        _iteratorError10 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion8 && _iterator8.return) {
-            _iterator8.return();
+          if (!_iteratorNormalCompletion10 && _iterator10.return) {
+            _iterator10.return();
           }
         } finally {
-          if (_didIteratorError8) {
-            throw _iteratorError8;
+          if (_didIteratorError10) {
+            throw _iteratorError10;
           }
         }
       }
@@ -1432,29 +1516,29 @@ var MatchController = function (_ComponentController) {
   }, {
     key: 'getChoiceById',
     value: function getChoiceById(id) {
-      var _iteratorNormalCompletion10 = true;
-      var _didIteratorError10 = false;
-      var _iteratorError10 = undefined;
+      var _iteratorNormalCompletion12 = true;
+      var _didIteratorError12 = false;
+      var _iteratorError12 = undefined;
 
       try {
-        for (var _iterator10 = this.componentContent.choices[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-          var choice = _step10.value;
+        for (var _iterator12 = this.componentContent.choices[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+          var choice = _step12.value;
 
           if (choice.id === id) {
             return choice;
           }
         }
       } catch (err) {
-        _didIteratorError10 = true;
-        _iteratorError10 = err;
+        _didIteratorError12 = true;
+        _iteratorError12 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion10 && _iterator10.return) {
-            _iterator10.return();
+          if (!_iteratorNormalCompletion12 && _iterator12.return) {
+            _iterator12.return();
           }
         } finally {
-          if (_didIteratorError10) {
-            throw _iteratorError10;
+          if (_didIteratorError12) {
+            throw _iteratorError12;
           }
         }
       }
@@ -1471,29 +1555,29 @@ var MatchController = function (_ComponentController) {
   }, {
     key: 'getChoiceByText',
     value: function getChoiceByText(text) {
-      var _iteratorNormalCompletion11 = true;
-      var _didIteratorError11 = false;
-      var _iteratorError11 = undefined;
+      var _iteratorNormalCompletion13 = true;
+      var _didIteratorError13 = false;
+      var _iteratorError13 = undefined;
 
       try {
-        for (var _iterator11 = this.componentContent.choices[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-          var choice = _step11.value;
+        for (var _iterator13 = this.componentContent.choices[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+          var choice = _step13.value;
 
           if (choice.value === text) {
             return choice;
           }
         }
       } catch (err) {
-        _didIteratorError11 = true;
-        _iteratorError11 = err;
+        _didIteratorError13 = true;
+        _iteratorError13 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion11 && _iterator11.return) {
-            _iterator11.return();
+          if (!_iteratorNormalCompletion13 && _iterator13.return) {
+            _iterator13.return();
           }
         } finally {
-          if (_didIteratorError11) {
-            throw _iteratorError11;
+          if (_didIteratorError13) {
+            throw _iteratorError13;
           }
         }
       }
@@ -1512,29 +1596,29 @@ var MatchController = function (_ComponentController) {
     key: 'getBucketById',
     value: function getBucketById(id) {
       var buckets = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.buckets;
-      var _iteratorNormalCompletion12 = true;
-      var _didIteratorError12 = false;
-      var _iteratorError12 = undefined;
+      var _iteratorNormalCompletion14 = true;
+      var _didIteratorError14 = false;
+      var _iteratorError14 = undefined;
 
       try {
-        for (var _iterator12 = buckets[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-          var bucket = _step12.value;
+        for (var _iterator14 = buckets[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+          var bucket = _step14.value;
 
           if (bucket.id == id) {
             return bucket;
           }
         }
       } catch (err) {
-        _didIteratorError12 = true;
-        _iteratorError12 = err;
+        _didIteratorError14 = true;
+        _iteratorError14 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion12 && _iterator12.return) {
-            _iterator12.return();
+          if (!_iteratorNormalCompletion14 && _iterator14.return) {
+            _iterator14.return();
           }
         } finally {
-          if (_didIteratorError12) {
-            throw _iteratorError12;
+          if (_didIteratorError14) {
+            throw _iteratorError14;
           }
         }
       }
@@ -1801,71 +1885,39 @@ var MatchController = function (_ComponentController) {
   }, {
     key: 'hasCorrectChoices',
     value: function hasCorrectChoices() {
-      var _iteratorNormalCompletion13 = true;
-      var _didIteratorError13 = false;
-      var _iteratorError13 = undefined;
+      var _iteratorNormalCompletion15 = true;
+      var _didIteratorError15 = false;
+      var _iteratorError15 = undefined;
 
       try {
-        for (var _iterator13 = this.componentContent.feedback[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-          var bucket = _step13.value;
-          var _iteratorNormalCompletion14 = true;
-          var _didIteratorError14 = false;
-          var _iteratorError14 = undefined;
+        for (var _iterator15 = this.componentContent.feedback[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+          var bucket = _step15.value;
+          var _iteratorNormalCompletion16 = true;
+          var _didIteratorError16 = false;
+          var _iteratorError16 = undefined;
 
           try {
-            for (var _iterator14 = bucket.choices[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-              var choice = _step14.value;
+            for (var _iterator16 = bucket.choices[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+              var choice = _step16.value;
 
               if (choice.isCorrect) {
                 return true;
               }
             }
           } catch (err) {
-            _didIteratorError14 = true;
-            _iteratorError14 = err;
+            _didIteratorError16 = true;
+            _iteratorError16 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion14 && _iterator14.return) {
-                _iterator14.return();
+              if (!_iteratorNormalCompletion16 && _iterator16.return) {
+                _iterator16.return();
               }
             } finally {
-              if (_didIteratorError14) {
-                throw _iteratorError14;
+              if (_didIteratorError16) {
+                throw _iteratorError16;
               }
             }
           }
-        }
-      } catch (err) {
-        _didIteratorError13 = true;
-        _iteratorError13 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion13 && _iterator13.return) {
-            _iterator13.return();
-          }
-        } finally {
-          if (_didIteratorError13) {
-            throw _iteratorError13;
-          }
-        }
-      }
-
-      return false;
-    }
-  }, {
-    key: 'clearFeedback',
-    value: function clearFeedback() {
-      var _iteratorNormalCompletion15 = true;
-      var _didIteratorError15 = false;
-      var _iteratorError15 = undefined;
-
-      try {
-        for (var _iterator15 = this.getChoices()[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-          var choice = _step15.value;
-
-          choice.isCorrect = null;
-          choice.isIncorrectPosition = null;
-          choice.feedback = null;
         }
       } catch (err) {
         _didIteratorError15 = true;
@@ -1881,6 +1933,38 @@ var MatchController = function (_ComponentController) {
           }
         }
       }
+
+      return false;
+    }
+  }, {
+    key: 'clearFeedback',
+    value: function clearFeedback() {
+      var _iteratorNormalCompletion17 = true;
+      var _didIteratorError17 = false;
+      var _iteratorError17 = undefined;
+
+      try {
+        for (var _iterator17 = this.getChoices()[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+          var choice = _step17.value;
+
+          choice.isCorrect = null;
+          choice.isIncorrectPosition = null;
+          choice.feedback = null;
+        }
+      } catch (err) {
+        _didIteratorError17 = true;
+        _iteratorError17 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion17 && _iterator17.return) {
+            _iterator17.return();
+          }
+        } finally {
+          if (_didIteratorError17) {
+            throw _iteratorError17;
+          }
+        }
+      }
     }
 
     /**
@@ -1892,69 +1976,6 @@ var MatchController = function (_ComponentController) {
   }, {
     key: 'isAuthorHasSpecifiedACorrectBucket',
     value: function isAuthorHasSpecifiedACorrectBucket(choiceId) {
-      var _iteratorNormalCompletion16 = true;
-      var _didIteratorError16 = false;
-      var _iteratorError16 = undefined;
-
-      try {
-        for (var _iterator16 = this.getAllFeedback()[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
-          var bucket = _step16.value;
-          var _iteratorNormalCompletion17 = true;
-          var _didIteratorError17 = false;
-          var _iteratorError17 = undefined;
-
-          try {
-            for (var _iterator17 = bucket.choices[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-              var choice = _step17.value;
-
-              if (choice.choiceId === choiceId) {
-                if (choice.isCorrect) {
-                  return true;
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError17 = true;
-            _iteratorError17 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion17 && _iterator17.return) {
-                _iterator17.return();
-              }
-            } finally {
-              if (_didIteratorError17) {
-                throw _iteratorError17;
-              }
-            }
-          }
-        }
-      } catch (err) {
-        _didIteratorError16 = true;
-        _iteratorError16 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion16 && _iterator16.return) {
-            _iterator16.return();
-          }
-        } finally {
-          if (_didIteratorError16) {
-            throw _iteratorError16;
-          }
-        }
-      }
-
-      return false;
-    }
-
-    /**
-     * Returns true if the choice has been authored to have a correct position
-     * @param {string} choiceId the choice id
-     * @return {boolean} whether the choice has a correct position in any bucket
-     */
-
-  }, {
-    key: 'isAuthorHasSpecifiedACorrectPosition',
-    value: function isAuthorHasSpecifiedACorrectPosition(choiceId) {
       var _iteratorNormalCompletion18 = true;
       var _didIteratorError18 = false;
       var _iteratorError18 = undefined;
@@ -1971,7 +1992,7 @@ var MatchController = function (_ComponentController) {
               var choice = _step19.value;
 
               if (choice.choiceId === choiceId) {
-                if (choice.position != null) {
+                if (choice.isCorrect) {
                   return true;
                 }
               }
@@ -2002,6 +2023,69 @@ var MatchController = function (_ComponentController) {
         } finally {
           if (_didIteratorError18) {
             throw _iteratorError18;
+          }
+        }
+      }
+
+      return false;
+    }
+
+    /**
+     * Returns true if the choice has been authored to have a correct position
+     * @param {string} choiceId the choice id
+     * @return {boolean} whether the choice has a correct position in any bucket
+     */
+
+  }, {
+    key: 'isAuthorHasSpecifiedACorrectPosition',
+    value: function isAuthorHasSpecifiedACorrectPosition(choiceId) {
+      var _iteratorNormalCompletion20 = true;
+      var _didIteratorError20 = false;
+      var _iteratorError20 = undefined;
+
+      try {
+        for (var _iterator20 = this.getAllFeedback()[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+          var bucket = _step20.value;
+          var _iteratorNormalCompletion21 = true;
+          var _didIteratorError21 = false;
+          var _iteratorError21 = undefined;
+
+          try {
+            for (var _iterator21 = bucket.choices[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+              var choice = _step21.value;
+
+              if (choice.choiceId === choiceId) {
+                if (choice.position != null) {
+                  return true;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError21 = true;
+            _iteratorError21 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion21 && _iterator21.return) {
+                _iterator21.return();
+              }
+            } finally {
+              if (_didIteratorError21) {
+                throw _iteratorError21;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError20 = true;
+        _iteratorError20 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion20 && _iterator20.return) {
+            _iterator20.return();
+          }
+        } finally {
+          if (_didIteratorError20) {
+            throw _iteratorError20;
           }
         }
       }
@@ -2349,49 +2433,49 @@ var MatchController = function (_ComponentController) {
     key: 'createMergedComponentState',
     value: function createMergedComponentState(componentStates) {
       var mergedBuckets = [];
-      var _iteratorNormalCompletion20 = true;
-      var _didIteratorError20 = false;
-      var _iteratorError20 = undefined;
+      var _iteratorNormalCompletion22 = true;
+      var _didIteratorError22 = false;
+      var _iteratorError22 = undefined;
 
       try {
-        for (var _iterator20 = componentStates[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
-          var componentState = _step20.value;
-          var _iteratorNormalCompletion21 = true;
-          var _didIteratorError21 = false;
-          var _iteratorError21 = undefined;
+        for (var _iterator22 = componentStates[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
+          var componentState = _step22.value;
+          var _iteratorNormalCompletion23 = true;
+          var _didIteratorError23 = false;
+          var _iteratorError23 = undefined;
 
           try {
-            for (var _iterator21 = componentState.studentData.buckets[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
-              var bucket = _step21.value;
+            for (var _iterator23 = componentState.studentData.buckets[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+              var bucket = _step23.value;
 
               this.mergeBucket(mergedBuckets, bucket);
             }
           } catch (err) {
-            _didIteratorError21 = true;
-            _iteratorError21 = err;
+            _didIteratorError23 = true;
+            _iteratorError23 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion21 && _iterator21.return) {
-                _iterator21.return();
+              if (!_iteratorNormalCompletion23 && _iterator23.return) {
+                _iterator23.return();
               }
             } finally {
-              if (_didIteratorError21) {
-                throw _iteratorError21;
+              if (_didIteratorError23) {
+                throw _iteratorError23;
               }
             }
           }
         }
       } catch (err) {
-        _didIteratorError20 = true;
-        _iteratorError20 = err;
+        _didIteratorError22 = true;
+        _iteratorError22 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion20 && _iterator20.return) {
-            _iterator20.return();
+          if (!_iteratorNormalCompletion22 && _iterator22.return) {
+            _iterator22.return();
           }
         } finally {
-          if (_didIteratorError20) {
-            throw _iteratorError20;
+          if (_didIteratorError22) {
+            throw _iteratorError22;
           }
         }
       }
@@ -2414,13 +2498,13 @@ var MatchController = function (_ComponentController) {
     key: 'mergeBucket',
     value: function mergeBucket(buckets, bucket) {
       var bucketFound = false;
-      var _iteratorNormalCompletion22 = true;
-      var _didIteratorError22 = false;
-      var _iteratorError22 = undefined;
+      var _iteratorNormalCompletion24 = true;
+      var _didIteratorError24 = false;
+      var _iteratorError24 = undefined;
 
       try {
-        for (var _iterator22 = buckets[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
-          var tempBucket = _step22.value;
+        for (var _iterator24 = buckets[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
+          var tempBucket = _step24.value;
 
           if (tempBucket.id == bucket.id) {
             /*
@@ -2432,16 +2516,16 @@ var MatchController = function (_ComponentController) {
           }
         }
       } catch (err) {
-        _didIteratorError22 = true;
-        _iteratorError22 = err;
+        _didIteratorError24 = true;
+        _iteratorError24 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion22 && _iterator22.return) {
-            _iterator22.return();
+          if (!_iteratorNormalCompletion24 && _iterator24.return) {
+            _iterator24.return();
           }
         } finally {
-          if (_didIteratorError22) {
-            throw _iteratorError22;
+          if (_didIteratorError24) {
+            throw _iteratorError24;
           }
         }
       }
@@ -2468,29 +2552,29 @@ var MatchController = function (_ComponentController) {
     key: 'mergeChoices',
     value: function mergeChoices(choices1, choices2) {
       var choices1Ids = this.getIds(choices1);
-      var _iteratorNormalCompletion23 = true;
-      var _didIteratorError23 = false;
-      var _iteratorError23 = undefined;
+      var _iteratorNormalCompletion25 = true;
+      var _didIteratorError25 = false;
+      var _iteratorError25 = undefined;
 
       try {
-        for (var _iterator23 = choices2[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
-          var choice2 = _step23.value;
+        for (var _iterator25 = choices2[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
+          var choice2 = _step25.value;
 
           if (choices1Ids.indexOf(choice2.id) == -1) {
             choices1.push(choice2);
           }
         }
       } catch (err) {
-        _didIteratorError23 = true;
-        _iteratorError23 = err;
+        _didIteratorError25 = true;
+        _iteratorError25 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion23 && _iterator23.return) {
-            _iterator23.return();
+          if (!_iteratorNormalCompletion25 && _iterator25.return) {
+            _iterator25.return();
           }
         } finally {
-          if (_didIteratorError23) {
-            throw _iteratorError23;
+          if (_didIteratorError25) {
+            throw _iteratorError25;
           }
         }
       }
@@ -2508,27 +2592,27 @@ var MatchController = function (_ComponentController) {
     key: 'getIds',
     value: function getIds(objects) {
       var ids = [];
-      var _iteratorNormalCompletion24 = true;
-      var _didIteratorError24 = false;
-      var _iteratorError24 = undefined;
+      var _iteratorNormalCompletion26 = true;
+      var _didIteratorError26 = false;
+      var _iteratorError26 = undefined;
 
       try {
-        for (var _iterator24 = objects[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
-          var object = _step24.value;
+        for (var _iterator26 = objects[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
+          var object = _step26.value;
 
           ids.push(object.id);
         }
       } catch (err) {
-        _didIteratorError24 = true;
-        _iteratorError24 = err;
+        _didIteratorError26 = true;
+        _iteratorError26 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion24 && _iterator24.return) {
-            _iterator24.return();
+          if (!_iteratorNormalCompletion26 && _iterator26.return) {
+            _iterator26.return();
           }
         } finally {
-          if (_didIteratorError24) {
-            throw _iteratorError24;
+          if (_didIteratorError26) {
+            throw _iteratorError26;
           }
         }
       }
@@ -2580,13 +2664,13 @@ var MatchController = function (_ComponentController) {
         if (components != null) {
           var numberOfAllowedComponents = 0;
           var allowedComponent = null;
-          var _iteratorNormalCompletion25 = true;
-          var _didIteratorError25 = false;
-          var _iteratorError25 = undefined;
+          var _iteratorNormalCompletion27 = true;
+          var _didIteratorError27 = false;
+          var _iteratorError27 = undefined;
 
           try {
-            for (var _iterator25 = components[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
-              var component = _step25.value;
+            for (var _iterator27 = components[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+              var component = _step27.value;
 
               if (component != null) {
                 if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
@@ -2597,16 +2681,16 @@ var MatchController = function (_ComponentController) {
               }
             }
           } catch (err) {
-            _didIteratorError25 = true;
-            _iteratorError25 = err;
+            _didIteratorError27 = true;
+            _iteratorError27 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion25 && _iterator25.return) {
-                _iterator25.return();
+              if (!_iteratorNormalCompletion27 && _iterator27.return) {
+                _iterator27.return();
               }
             } finally {
-              if (_didIteratorError25) {
-                throw _iteratorError25;
+              if (_didIteratorError27) {
+                throw _iteratorError27;
               }
             }
           }
@@ -2802,6 +2886,11 @@ var MatchController = function (_ComponentController) {
     key: 'authoringJSONChanged',
     value: function authoringJSONChanged() {
       this.jsonStringChanged = true;
+    }
+  }, {
+    key: 'isNotebookEnabled',
+    value: function isNotebookEnabled() {
+      return this.NotebookService.isNotebookEnabled();
     }
   }]);
 

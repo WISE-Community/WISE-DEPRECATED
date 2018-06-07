@@ -56,12 +56,19 @@ class MatchController extends ComponentController {
         type: 'Match'
       }
     ];
+    this.privateNotebookItems = [];
 
     if (this.mode === 'student') {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+      if (this.shouldImportPrivateNotes()) {
+        this.privateNotebookItems = this.NotebookService.getPrivateNotebookItems();
+        this.$rootScope.$on('notebookUpdated', (event, args) => {
+          this.addNotebookItemToSourceBucket(args.notebookItem);
+        });
+      }
     } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
       this.isPromptVisible = false;
       this.isSaveButtonVisible = false;
@@ -69,6 +76,9 @@ class MatchController extends ComponentController {
       this.isDisabled = true;
       if (this.mode === 'grading') {
         this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+      }
+      if (this.shouldImportPrivateNotes()) {
+        this.privateNotebookItems = this.NotebookService.getPrivateNotebookItems(this.workgroupId);
       }
     } else if (this.mode === 'onlyShowWork') {
       this.isPromptVisible = false;
@@ -244,6 +254,13 @@ class MatchController extends ComponentController {
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
+  addNotebookItemToSourceBucket(notebookItem) {
+    const choice = this.createChoiceFromNotebookItem(notebookItem);
+    this.choices.push(choice);
+    const sourceBucket = this.getBucketById(this.sourceBucketId);
+    sourceBucket.items.push(choice);
+  }
+
   studentHasUsedAllSubmits() {
     return this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount;
   }
@@ -356,7 +373,7 @@ class MatchController extends ComponentController {
        */
       this.processPreviousStudentWork();
     }
-  };
+  }
 
   /**
    * Get the latest submitted componentState and display feedback for choices
@@ -471,6 +488,27 @@ class MatchController extends ComponentController {
 
   initializeChoices() {
     this.choices = this.componentContent.choices;
+    if (this.shouldImportPrivateNotes()) {
+      for (let privateNotebookItem of this.privateNotebookItems) {
+        this.choices.push(this.createChoiceFromNotebookItem(privateNotebookItem));
+      }
+    }
+  }
+
+  shouldImportPrivateNotes() {
+    return this.isNotebookEnabled() && this.componentContent.importPrivateNotes;
+  }
+
+  createChoiceFromNotebookItem(notebookItem) {
+    let value = notebookItem.content.text;
+    for (let attachment of notebookItem.content.attachments) {
+      value += '<br/><img src="' + attachment.iconURL + '"/>';
+    }
+    return {
+      id: notebookItem.localNotebookItemId,
+      value: value,
+      type: 'choice'
+    }
   }
 
   initializeBuckets() {
@@ -2059,6 +2097,10 @@ class MatchController extends ComponentController {
    */
   authoringJSONChanged() {
     this.jsonStringChanged = true;
+  }
+
+  isNotebookEnabled() {
+    return this.NotebookService.isNotebookEnabled();
   }
 }
 

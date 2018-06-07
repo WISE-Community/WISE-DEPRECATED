@@ -20,6 +20,14 @@
         </md-checkbox>
       </div>
       <div>
+        <md-checkbox class='md-primary'
+            ng-if='matchController.isNotebookEnabled()'
+            ng-model='matchController.authoringComponentContent.importPrivateNotes'
+            ng-change='matchController.authoringViewComponentChanged()'>
+          {{ 'match.showPrivateNotesAsChoices' | translate }}
+        </md-checkbox>
+      </div>
+      <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
             ng-if='matchController.authoringComponentContent.showSubmitButton'>
           <label>{{ 'MAX_SUBMIT' | translate }}</label>
