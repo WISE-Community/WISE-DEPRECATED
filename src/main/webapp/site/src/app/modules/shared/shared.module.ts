@@ -17,6 +17,7 @@ const materialModules = [
   MatSelectModule
 ];
 
+import { BlurbComponent } from './blurb/blurb.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { SelectMenuComponent } from './select-menu/select-menu.component';
 import { HeroSectionComponent } from './hero-section/hero-section.component';
@@ -32,11 +33,16 @@ import { HeroSectionComponent } from './hero-section/hero-section.component';
   exports: [
     materialModules,
     FlexLayoutModule,
+    BlurbComponent,
     HeroSectionComponent,
     SearchBarComponent,
     SelectMenuComponent
   ],
   declarations: [
-    SearchBarComponent, SelectMenuComponent, HeroSectionComponent]
+    BlurbComponent,
+    SearchBarComponent,
+    SelectMenuComponent,
+    HeroSectionComponent
+  ]
 })
 export class SharedModule { }

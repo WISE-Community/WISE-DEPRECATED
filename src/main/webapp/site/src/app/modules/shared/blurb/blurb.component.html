@@ -1,0 +1,10 @@
+<div class="blurb">
+  <img *ngIf="imgSrc"
+       class="blurb__image"
+       src="{{ imgSrc }}"
+       alt="{{ imgDescription }}" />
+  <h2 *ngIf="headline">{{ headline }}</h2>
+  <p *ngIf="content" class="accent-1 mat-subheading-2">
+    {{ content }}
+  </p>
+</div>
