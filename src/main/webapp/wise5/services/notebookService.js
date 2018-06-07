@@ -616,7 +616,7 @@ var NotebookService = function () {
             title: title,
             type: type,
             workgroupId: _this3.ConfigService.getWorkgroupId(),
-            groups: angular.toJson(groups),
+            groups: groups,
             clientSaveTime: clientSaveTime,
             clientDeleteTime: clientDeleteTime
           };
