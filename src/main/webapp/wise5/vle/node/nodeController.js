@@ -67,7 +67,6 @@ var NodeController = function () {
       this.nodeContent = this.ProjectService.getNodeById(this.nodeId);
       this.nodeTitle = this.ProjectService.getNodeTitleByNodeId(this.nodeId);
       this.nodeStatus = this.StudentDataService.nodeStatuses[this.nodeId];
-      this.calculateDisabled();
       this.startAutoSaveInterval();
       this.registerExitListener();
 
@@ -593,28 +592,6 @@ var NodeController = function () {
       this.createAndSaveComponentData(isAutoSave, null, isSubmit);
     }
   }, {
-    key: 'calculateDisabled',
-
-
-    /**
-     * Check if we need to lock the node
-     */
-    value: function calculateDisabled() {
-      var nodeId = this.nodeId;
-      var nodeContent = this.nodeContent;
-
-      if (nodeContent) {
-        var lockAfterSubmit = nodeContent.lockAfterSubmit;
-        if (lockAfterSubmit) {
-          var componentStates = this.StudentDataService.getComponentStatesByNodeId(nodeId);
-          var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-          if (isSubmitted) {
-            this.isDisabled = true;
-          }
-        }
-      }
-    }
-  }, {
     key: 'getComponents',
 
 
@@ -628,7 +605,6 @@ var NodeController = function () {
       if (this.nodeContent != null) {
         components = this.nodeContent.components;
       }
-
       if (components != null && this.isDisabled) {
         var _iteratorNormalCompletion3 = true;
         var _didIteratorError3 = false;
@@ -655,33 +631,6 @@ var NodeController = function () {
           }
         }
       }
-
-      if (components != null && this.nodeContent.lockAfterSubmit) {
-        var _iteratorNormalCompletion4 = true;
-        var _didIteratorError4 = false;
-        var _iteratorError4 = undefined;
-
-        try {
-          for (var _iterator4 = components[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var _component = _step4.value;
-
-            _component.lockAfterSubmit = true;
-          }
-        } catch (err) {
-          _didIteratorError4 = true;
-          _iteratorError4 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-              _iterator4.return();
-            }
-          } finally {
-            if (_didIteratorError4) {
-              throw _iteratorError4;
-            }
-          }
-        }
-      }
       return components;
     }
   }, {
@@ -696,13 +645,13 @@ var NodeController = function () {
     value: function getComponentById(componentId) {
       if (componentId != null) {
         var components = this.getComponents();
-        var _iteratorNormalCompletion5 = true;
-        var _didIteratorError5 = false;
-        var _iteratorError5 = undefined;
+        var _iteratorNormalCompletion4 = true;
+        var _didIteratorError4 = false;
+        var _iteratorError4 = undefined;
 
         try {
-          for (var _iterator5 = components[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-            var tempComponent = _step5.value;
+          for (var _iterator4 = components[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var tempComponent = _step4.value;
 
             if (tempComponent != null) {
               var tempComponentId = tempComponent.id;
@@ -712,16 +661,16 @@ var NodeController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError5 = true;
-          _iteratorError5 = err;
+          _didIteratorError4 = true;
+          _iteratorError4 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion5 && _iterator5.return) {
-              _iterator5.return();
+            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+              _iterator4.return();
             }
           } finally {
-            if (_didIteratorError5) {
-              throw _iteratorError5;
+            if (_didIteratorError4) {
+              throw _iteratorError4;
             }
           }
         }
@@ -740,13 +689,13 @@ var NodeController = function () {
     value: function nodeContainsComponent(componentId) {
       if (componentId != null) {
         var components = this.getComponents();
-        var _iteratorNormalCompletion6 = true;
-        var _didIteratorError6 = false;
-        var _iteratorError6 = undefined;
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
 
         try {
-          for (var _iterator6 = components[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-            var tempComponent = _step6.value;
+          for (var _iterator5 = components[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var tempComponent = _step5.value;
 
             if (tempComponent != null) {
               var tempComponentId = tempComponent.id;
@@ -756,16 +705,16 @@ var NodeController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError6 = true;
-          _iteratorError6 = err;
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-              _iterator6.return();
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
             }
           } finally {
-            if (_didIteratorError6) {
-              throw _iteratorError6;
+            if (_didIteratorError5) {
+              throw _iteratorError5;
             }
           }
         }
@@ -805,17 +754,6 @@ var NodeController = function () {
      */
     value: function showSubmitButton() {
       return this.nodeContent != null && this.nodeContent.showSubmitButton;
-    }
-  }, {
-    key: 'isLockAfterSubmit',
-
-
-    /**
-     * Check whether we need to lock the component after the student
-     * submits an answer.
-     */
-    value: function isLockAfterSubmit() {
-      return this.componentContent != null && this.componentContent.lockAfterSubmit;
     }
   }, {
     key: 'setSaveMessage',
@@ -879,13 +817,13 @@ var NodeController = function () {
         var componentEvents = [];
         var nodeStates = [];
         if (_this3.UtilService.arrayHasNonNullElement(componentStates)) {
-          var _iteratorNormalCompletion7 = true;
-          var _didIteratorError7 = false;
-          var _iteratorError7 = undefined;
+          var _iteratorNormalCompletion6 = true;
+          var _didIteratorError6 = false;
+          var _iteratorError6 = undefined;
 
           try {
-            for (var _iterator7 = componentStates[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-              var componentState = _step7.value;
+            for (var _iterator6 = componentStates[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+              var componentState = _step6.value;
 
               if (componentState != null) {
                 var annotations = componentState.annotations;
@@ -896,16 +834,16 @@ var NodeController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError7 = true;
-            _iteratorError7 = err;
+            _didIteratorError6 = true;
+            _iteratorError6 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                _iterator7.return();
+              if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                _iterator6.return();
               }
             } finally {
-              if (_didIteratorError7) {
-                throw _iteratorError7;
+              if (_didIteratorError6) {
+                throw _iteratorError6;
               }
             }
           }
@@ -919,13 +857,13 @@ var NodeController = function () {
                 if (_this3.NodeService.evaluateTransitionLogicOn('scoreChanged')) {
                   if (componentAnnotations != null && componentAnnotations.length > 0) {
                     var evaluateTransitionLogic = false;
-                    var _iteratorNormalCompletion8 = true;
-                    var _didIteratorError8 = false;
-                    var _iteratorError8 = undefined;
+                    var _iteratorNormalCompletion7 = true;
+                    var _didIteratorError7 = false;
+                    var _iteratorError7 = undefined;
 
                     try {
-                      for (var _iterator8 = componentAnnotations[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                        var componentAnnotation = _step8.value;
+                      for (var _iterator7 = componentAnnotations[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                        var componentAnnotation = _step7.value;
 
                         if (componentAnnotation != null) {
                           if (componentAnnotation.type === 'autoScore') {
@@ -934,16 +872,16 @@ var NodeController = function () {
                         }
                       }
                     } catch (err) {
-                      _didIteratorError8 = true;
-                      _iteratorError8 = err;
+                      _didIteratorError7 = true;
+                      _iteratorError7 = err;
                     } finally {
                       try {
-                        if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                          _iterator8.return();
+                        if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                          _iterator7.return();
                         }
                       } finally {
-                        if (_didIteratorError8) {
-                          throw _iteratorError8;
+                        if (_didIteratorError7) {
+                          throw _iteratorError7;
                         }
                       }
                     }
@@ -1006,17 +944,17 @@ var NodeController = function () {
         var workgroupId = this.ConfigService.getWorkgroupId();
         var nodeId = this.nodeId;
 
-        var _iteratorNormalCompletion9 = true;
-        var _didIteratorError9 = false;
-        var _iteratorError9 = undefined;
+        var _iteratorNormalCompletion8 = true;
+        var _didIteratorError8 = false;
+        var _iteratorError8 = undefined;
 
         try {
-          for (var _iterator9 = components[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-            var _component2 = _step9.value;
+          for (var _iterator8 = components[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+            var _component = _step8.value;
 
-            if (_component2 != null) {
-              var tempComponentId = _component2.id;
-              var componentType = _component2.type;
+            if (_component != null) {
+              var tempComponentId = _component.id;
+              var componentType = _component.type;
 
               var childScope = this.componentToScope[tempComponentId];
               if (childScope != null) {
@@ -1028,16 +966,16 @@ var NodeController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError9 = true;
-          _iteratorError9 = err;
+          _didIteratorError8 = true;
+          _iteratorError8 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion9 && _iterator9.return) {
-              _iterator9.return();
+            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+              _iterator8.return();
             }
           } finally {
-            if (_didIteratorError9) {
-              throw _iteratorError9;
+            if (_didIteratorError8) {
+              throw _iteratorError8;
             }
           }
         }
@@ -1161,13 +1099,13 @@ var NodeController = function () {
            * only notify components that are listening for changes
            * from the specific component id.
            */
-          var _iteratorNormalCompletion10 = true;
-          var _didIteratorError10 = false;
-          var _iteratorError10 = undefined;
+          var _iteratorNormalCompletion9 = true;
+          var _didIteratorError9 = false;
+          var _iteratorError9 = undefined;
 
           try {
-            for (var _iterator10 = components[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-              var tempComponent = _step10.value;
+            for (var _iterator9 = components[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+              var tempComponent = _step9.value;
 
               if (tempComponent != null) {
                 var tempComponentId = tempComponent.id;
@@ -1177,13 +1115,13 @@ var NodeController = function () {
                  */
                 var connectedComponents = tempComponent.connectedComponents;
                 if (connectedComponents != null) {
-                  var _iteratorNormalCompletion11 = true;
-                  var _didIteratorError11 = false;
-                  var _iteratorError11 = undefined;
+                  var _iteratorNormalCompletion10 = true;
+                  var _didIteratorError10 = false;
+                  var _iteratorError10 = undefined;
 
                   try {
-                    for (var _iterator11 = connectedComponents[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-                      var connectedComponentParams = _step11.value;
+                    for (var _iterator10 = connectedComponents[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                      var connectedComponentParams = _step10.value;
 
                       if (connectedComponentParams != null) {
                         var nodeId = connectedComponentParams.nodeId;
@@ -1238,16 +1176,16 @@ var NodeController = function () {
                       }
                     }
                   } catch (err) {
-                    _didIteratorError11 = true;
-                    _iteratorError11 = err;
+                    _didIteratorError10 = true;
+                    _iteratorError10 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                        _iterator11.return();
+                      if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                        _iterator10.return();
                       }
                     } finally {
-                      if (_didIteratorError11) {
-                        throw _iteratorError11;
+                      if (_didIteratorError10) {
+                        throw _iteratorError10;
                       }
                     }
                   }
@@ -1255,16 +1193,16 @@ var NodeController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError10 = true;
-            _iteratorError10 = err;
+            _didIteratorError9 = true;
+            _iteratorError9 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion10 && _iterator10.return) {
-                _iterator10.return();
+              if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                _iterator9.return();
               }
             } finally {
-              if (_didIteratorError10) {
-                throw _iteratorError10;
+              if (_didIteratorError9) {
+                throw _iteratorError9;
               }
             }
           }
@@ -1327,13 +1265,13 @@ var NodeController = function () {
     value: function getSubmitDirty() {
       var components = this.getComponents();
       if (components != null) {
-        var _iteratorNormalCompletion12 = true;
-        var _didIteratorError12 = false;
-        var _iteratorError12 = undefined;
+        var _iteratorNormalCompletion11 = true;
+        var _didIteratorError11 = false;
+        var _iteratorError11 = undefined;
 
         try {
-          for (var _iterator12 = components[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-            var component = _step12.value;
+          for (var _iterator11 = components[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+            var component = _step11.value;
 
             var componentId = component.id;
             var latestState = this.getComponentStateByComponentId(componentId);
@@ -1342,16 +1280,16 @@ var NodeController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError12 = true;
-          _iteratorError12 = err;
+          _didIteratorError11 = true;
+          _iteratorError11 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion12 && _iterator12.return) {
-              _iterator12.return();
+            if (!_iteratorNormalCompletion11 && _iterator11.return) {
+              _iterator11.return();
             }
           } finally {
-            if (_didIteratorError12) {
-              throw _iteratorError12;
+            if (_didIteratorError11) {
+              throw _iteratorError11;
             }
           }
         }

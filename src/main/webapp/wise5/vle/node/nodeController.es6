@@ -69,7 +69,6 @@ class NodeController {
       this.nodeContent = this.ProjectService.getNodeById(this.nodeId);
       this.nodeTitle = this.ProjectService.getNodeTitleByNodeId(this.nodeId);
       this.nodeStatus = this.StudentDataService.nodeStatuses[this.nodeId];
-      this.calculateDisabled();
       this.startAutoSaveInterval();
       this.registerExitListener();
 
@@ -556,25 +555,6 @@ class NodeController {
   };
 
   /**
-   * Check if we need to lock the node
-   */
-  calculateDisabled() {
-    const nodeId = this.nodeId;
-    const nodeContent = this.nodeContent;
-
-    if (nodeContent) {
-      const lockAfterSubmit = nodeContent.lockAfterSubmit;
-      if (lockAfterSubmit) {
-        const componentStates = this.StudentDataService.getComponentStatesByNodeId(nodeId);
-        const isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-        if (isSubmitted) {
-          this.isDisabled = true;
-        }
-      }
-    }
-  };
-
-  /**
    * Get the components for this node.
    * @return an array that contains the content for the components.
    * TODO: can we not return null? This will simplify code a lot
@@ -584,16 +564,9 @@ class NodeController {
     if (this.nodeContent != null) {
       components = this.nodeContent.components;
     }
-
     if (components != null && this.isDisabled) {
       for (const component of components) {
         component.isDisabled = true;
-      }
-    }
-
-    if (components != null && this.nodeContent.lockAfterSubmit) {
-      for (const component of components) {
-        component.lockAfterSubmit = true;
       }
     }
     return components;
@@ -662,15 +635,6 @@ class NodeController {
    */
   showSubmitButton() {
     return this.nodeContent != null && this.nodeContent.showSubmitButton;
-  };
-
-  /**
-   * Check whether we need to lock the component after the student
-   * submits an answer.
-   */
-  isLockAfterSubmit() {
-    return this.componentContent != null &&
-        this.componentContent.lockAfterSubmit;
   };
 
   /**

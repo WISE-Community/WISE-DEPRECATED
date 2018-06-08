@@ -48,10 +48,6 @@ class NodeInfoController {
                     component.isDisabled = true;
                 }
 
-                if (this.nodeContent.lockAfterSubmit) {
-                    component.lockAfterSubmit = true;
-                }
-
                 component.hasWork = this.ProjectService.componentHasWork(component);
                 if (component.hasWork) {
                     assessmentItemIndex++;
