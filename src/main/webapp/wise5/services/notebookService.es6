@@ -393,7 +393,7 @@ class NotebookService {
           title: title,
           type: type,
           workgroupId: this.ConfigService.getWorkgroupId(),
-          groups: angular.toJson(groups),
+          groups: groups,
           clientSaveTime: clientSaveTime,
           clientDeleteTime: clientDeleteTime
         };
