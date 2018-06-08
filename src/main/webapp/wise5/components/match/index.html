@@ -424,7 +424,7 @@
                   layout-wrap>
                 <div class='match-bucket match-bucket--choices'
                     flex='100'
-                    flex-gt-sm='{{matchController.horizontal ? 50: 100}}'>
+                    flex-gt-sm='{{matchController.isHorizontal ? 50: 100}}'>
                   <md-card>
                     <md-card-title class='match-bucket__header'>
                       <md-card-title-text>
@@ -469,18 +469,18 @@
                       </md-list>
                     </md-card-content>
                   </md-card>
-                  <md-divider class='match-divider {{matchController.horizontal ? "match-divider--horizontal" : ""}}'></md-divider>
+                  <md-divider class='match-divider {{matchController.isHorizontal ? "match-divider--horizontal" : ""}}'></md-divider>
                 </div>
                 <div layout='row'
                     layout-wrap
                     layout-align='center start'
                     flex='100'
-                    flex-gt-sm='{{matchController.horizontal ? 50 : 100}}'>
+                    flex-gt-sm='{{matchController.isHorizontal ? 50 : 100}}'>
                   <div ng-repeat='bucket in matchController.buckets'
                       ng-if='$index > 0'
                       class='match-bucket'
                       flex='100'
-                      flex-gt-sm='{{matchController.horizontal ? 100 : matchController.bucketWidth}}'>
+                      flex-gt-sm='{{matchController.isHorizontal ? 100 : matchController.bucketWidth}}'>
                     <md-card>
                       <md-card-title class='match-bucket__header'>
                         <md-card-title-text><compile data='bucket.value'></compile></md-card-title-text>
@@ -593,7 +593,7 @@
               layout-wrap>
             <div class='match-bucket match-bucket--choices'
                 flex='100'
-                flex-gt-sm='{{matchController.horizontal ? 50: 100}}'>
+                flex-gt-sm='{{matchController.isHorizontal ? 50: 100}}'>
               <md-card>
                 <md-card-title class='match-bucket__header'>
                   <md-card-title-text>
@@ -640,17 +640,17 @@
                   </md-list>
                 </md-card-content>
               </md-card>
-              <md-divider class='match-divider {{matchController.horizontal ? "match-divider--horizontal" : ""}}'></md-divider>
+              <md-divider class='match-divider {{matchController.isHorizontal ? "match-divider--horizontal" : ""}}'></md-divider>
             </div>
             <div layout='row'
                 layout-wrap layout-align='center start'
                 flex='100'
-                flex-gt-sm='{{matchController.horizontal ? 50 : 100}}'>
+                flex-gt-sm='{{matchController.isHorizontal ? 50 : 100}}'>
               <div ng-repeat='bucket in matchController.buckets'
                   ng-if='$index > 0'
                   class='match-bucket'
                   flex='100'
-                  flex-gt-sm='{{matchController.horizontal ? 100 : matchController.bucketWidth}}'>
+                  flex-gt-sm='{{matchController.isHorizontal ? 100 : matchController.bucketWidth}}'>
                 <md-card>
                   <md-card-title class='match-bucket__header'>
                     <md-card-title-text>
