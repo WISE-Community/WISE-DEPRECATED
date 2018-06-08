@@ -1491,6 +1491,27 @@ class StudentDataService {
   };
 
   /**
+   * Get the latest component state that was a submit
+   * for the given node id and component id.
+   * @param nodeId the node id
+   * @param componentId the component id
+   * @return the latest component state that was a submit with the matching
+   * node id and component id or null if none are found
+   */
+  getLatestSubmitComponentState(nodeId, componentId) {
+    const componentStates = this.studentData.componentStates;
+    for (let c = componentStates.length - 1; c >= 0; c--) {
+      const componentState = componentStates[c];
+      if (componentState.nodeId === nodeId &&
+          componentState.componentId === componentId &&
+          componentState.isSubmit) {
+        return componentState;
+      }
+    }
+    return null;
+  }
+
+  /**
    * Get the student work by specified student work id, which can be a ComponentState or NodeState
    * @param studentWorkId the student work id
    * @return an StudentWork or null
