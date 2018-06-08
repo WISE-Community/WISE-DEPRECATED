@@ -66,7 +66,9 @@ var MatchController = function (_ComponentController) {
       if (_this.shouldImportPrivateNotes()) {
         _this.privateNotebookItems = _this.NotebookService.getPrivateNotebookItems();
         _this.$rootScope.$on('notebookUpdated', function (event, args) {
-          _this.addNotebookItemToSourceBucket(args.notebookItem);
+          if (args.notebookItem.type === 'note') {
+            _this.addNotebookItemToSourceBucket(args.notebookItem);
+          }
         });
       }
     } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
@@ -604,7 +606,9 @@ var MatchController = function (_ComponentController) {
           for (var _iterator5 = this.privateNotebookItems[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
             var privateNotebookItem = _step5.value;
 
-            this.choices.push(this.createChoiceFromNotebookItem(privateNotebookItem));
+            if (privateNotebookItem.type === 'note') {
+              this.choices.push(this.createChoiceFromNotebookItem(privateNotebookItem));
+            }
           }
         } catch (err) {
           _didIteratorError5 = true;

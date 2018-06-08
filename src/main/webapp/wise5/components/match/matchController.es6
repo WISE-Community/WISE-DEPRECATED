@@ -66,7 +66,9 @@ class MatchController extends ComponentController {
       if (this.shouldImportPrivateNotes()) {
         this.privateNotebookItems = this.NotebookService.getPrivateNotebookItems();
         this.$rootScope.$on('notebookUpdated', (event, args) => {
-          this.addNotebookItemToSourceBucket(args.notebookItem);
+          if (args.notebookItem.type === 'note') {
+            this.addNotebookItemToSourceBucket(args.notebookItem);
+          }
         });
       }
     } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
@@ -490,7 +492,9 @@ class MatchController extends ComponentController {
     this.choices = this.componentContent.choices;
     if (this.shouldImportPrivateNotes()) {
       for (let privateNotebookItem of this.privateNotebookItems) {
-        this.choices.push(this.createChoiceFromNotebookItem(privateNotebookItem));
+        if (privateNotebookItem.type === 'note') {
+          this.choices.push(this.createChoiceFromNotebookItem(privateNotebookItem));
+        }
       }
     }
   }
