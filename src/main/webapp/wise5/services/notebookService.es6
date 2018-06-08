@@ -298,6 +298,17 @@ class NotebookService {
     }
   }
 
+  getPrivateNotebookItems(workgroupId = this.ConfigService.getWorkgroupId()) {
+    const notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
+    const privateNotebookItems = [];
+    for (let notebookItem of notebookByWorkgroup.allItems) {
+      if (notebookItem.groups == null || notebookItem.groups.length == 0) {
+        privateNotebookItems.push(notebookItem);
+      }
+    }
+    return privateNotebookItems;
+  }
+
   getNotebookItemById(notebookItemId, workgroupId = null) {
     let notebookItem = this.getPrivateNotebookItemById(notebookItemId, workgroupId);
     if (notebookItem == null) {
@@ -329,10 +340,7 @@ class NotebookService {
     return null;
   }
 
-  getNotebookByWorkgroup(workgroupId = null) {
-    if (workgroupId == null) {
-      workgroupId = this.ConfigService.getWorkgroupId();
-    }
+  getNotebookByWorkgroup(workgroupId = this.ConfigService.getWorkgroupId()) {
     let notebookByWorkgroup = this.notebooksByWorkgroup[workgroupId];
     if (notebookByWorkgroup == null) {
       notebookByWorkgroup = {
