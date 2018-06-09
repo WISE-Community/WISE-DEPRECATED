@@ -51,10 +51,10 @@ var ProjectService = function () {
     this.additionalProcessingFunctionsMap = {};
 
     // filtering options for navigation displays
-    this.filters = [{ 'name': 'all', 'label': 'All' }
-    //{'name': 'todo', 'label': 'Todo'},
-    //{'name': 'completed', 'label': 'Completed'}
-    ];
+    this.filters = [{ 'name': 'all', 'label': 'All'
+      //{'name': 'todo', 'label': 'Todo'},
+      //{'name': 'completed', 'label': 'Completed'}
+    }];
   }
 
   _createClass(ProjectService, [{
@@ -860,7 +860,7 @@ var ProjectService = function () {
         // only look for string that starts with ' or " and ends in png, jpg, jpeg, pdf, etc.
         // the string we're looking for can't start with '/ and "/.
         // note that this also works for \"abc.png and \'abc.png, where the quotes are escaped
-        contentString = contentString.replace(new RegExp('(\'|\"|\\\\\'|\\\\\")[^:][^\/]?[^\/]?[a-zA-Z0-9@%&;\\._\\/\\s\\-]*[\.](png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html.*?|js).*?(\'|\"|\\\\\'|\\\\\")', 'gi'), function (matchedString) {
+        contentString = contentString.replace(new RegExp('(\'|\"|\\\\\'|\\\\\")[^:][^\/]?[^\/]?[a-zA-Z0-9@%&;\\._\\/\\s\\-\']*[\.](png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html.*?|js).*?(\'|\"|\\\\\'|\\\\\")', 'gi'), function (matchedString) {
           // once found, we prepend the contentBaseURL + "assets/" to the string within the quotes and keep everything else the same.
           var delimiter = '';
           var matchedStringWithoutQuotes = '';
