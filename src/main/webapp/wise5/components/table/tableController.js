@@ -44,9 +44,6 @@ var TableController = function (_ComponentController) {
     // whether the reset table button is shown or not
     _this.isResetTableButtonVisible = true;
 
-    // whether the snip table button is shown or not
-    _this.isSnipTableButtonVisible = true;
-
     // the label for the notebook in thos project
     _this.notebookConfig = _this.NotebookService.getNotebookConfig();
 
@@ -95,7 +92,6 @@ var TableController = function (_ComponentController) {
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
       _this.isResetTableButtonVisible = false;
-      _this.isSnipTableButtonVisible = false;
       _this.isDisabled = true;
 
       if (_this.mode === 'grading') {
@@ -107,7 +103,6 @@ var TableController = function (_ComponentController) {
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
       _this.isResetTableButtonVisible = false;
-      _this.isSnipTableButtonVisible = false;
       _this.isDisabled = true;
     } else if (_this.mode === 'showPreviousWork') {
       _this.isPromptVisible = true;
@@ -2072,21 +2067,6 @@ var TableController = function (_ComponentController) {
           // create a notebook item with the image populated into it
           _this2.NotebookService.addNote($event, imageObject);
         });
-      }
-    }
-
-    /**
-     * Check whether we need to show the snip table button
-     * @return whether to show the snip table button
-     */
-
-  }, {
-    key: 'showSnipTableButton',
-    value: function showSnipTableButton() {
-      if (this.NotebookService.isNotebookEnabled() && this.isSnipTableButtonVisible) {
-        return true;
-      } else {
-        return false;
       }
     }
 

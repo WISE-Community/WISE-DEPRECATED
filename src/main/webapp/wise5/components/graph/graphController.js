@@ -60,9 +60,6 @@ var GraphController = function (_ComponentController) {
     // whether the select series input is shown or not
     _this.isSelectSeriesVisible = false;
 
-    // whether the snip drawing button is shown or not
-    _this.isSnipDrawingButtonVisible = true;
-
     // the label for the notebook in the project
     _this.notebookConfig = _this.NotebookService.getNotebookConfig();
 
@@ -253,7 +250,6 @@ var GraphController = function (_ComponentController) {
       _this.isResetSeriesButtonVisible = false;
       _this.isSelectSeriesVisible = false;
       _this.isDisabled = true;
-      _this.isSnipDrawingButtonVisible = false;
 
       // get the component state from the scope
       var _componentState = _this.$scope.componentState;
@@ -278,7 +274,6 @@ var GraphController = function (_ComponentController) {
       _this.isResetSeriesButtonVisible = false;
       _this.isSelectSeriesVisible = false;
       _this.isDisabled = true;
-      _this.isSnipDrawingButtonVisible = false;
       _this.backgroundImage = _this.componentContent.backgroundImage;
     } else if (_this.mode === 'showPreviousWork') {
       _this.isPromptVisible = true;
@@ -4965,21 +4960,6 @@ var GraphController = function (_ComponentController) {
     }
 
     /**
-     * Check whether we need to show the snip drawing button
-     * @return whether to show the snip drawing button
-     */
-
-  }, {
-    key: 'showSnipDrawingButton',
-    value: function showSnipDrawingButton() {
-      if (this.NotebookService.isNotebookEnabled() && this.isSnipDrawingButtonVisible) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    /**
      * Snip the drawing by converting it to an image
      * @param $event the click event
      */
@@ -5959,10 +5939,9 @@ var GraphController = function (_ComponentController) {
         width: 2,
         value: x,
         zIndex: 5
-      };
 
-      // set the plot line into the plot lines array
-      this.plotLines = [plotLine];
+        // set the plot line into the plot lines array
+      };this.plotLines = [plotLine];
 
       /*
        * Call $apply() so that the red plot line position gets updated. If we

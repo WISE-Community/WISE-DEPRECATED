@@ -51,9 +51,6 @@ class GraphController extends ComponentController {
     // whether the select series input is shown or not
     this.isSelectSeriesVisible = false;
 
-    // whether the snip drawing button is shown or not
-    this.isSnipDrawingButtonVisible = true;
-
     // the label for the notebook in the project
     this.notebookConfig = this.NotebookService.getNotebookConfig();
 
@@ -281,7 +278,6 @@ class GraphController extends ComponentController {
       this.isResetSeriesButtonVisible = false;
       this.isSelectSeriesVisible = false;
       this.isDisabled = true;
-      this.isSnipDrawingButtonVisible = false;
 
       // get the component state from the scope
       let componentState = this.$scope.componentState;
@@ -306,7 +302,6 @@ class GraphController extends ComponentController {
       this.isResetSeriesButtonVisible = false;
       this.isSelectSeriesVisible = false;
       this.isDisabled = true;
-      this.isSnipDrawingButtonVisible = false;
       this.backgroundImage = this.componentContent.backgroundImage;
     } else if (this.mode === 'showPreviousWork') {
       this.isPromptVisible = true;
@@ -4653,18 +4648,6 @@ class GraphController extends ComponentController {
     }
 
     this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Check whether we need to show the snip drawing button
-   * @return whether to show the snip drawing button
-   */
-  showSnipDrawingButton() {
-    if (this.NotebookService.isNotebookEnabled() && this.isSnipDrawingButtonVisible) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   /**

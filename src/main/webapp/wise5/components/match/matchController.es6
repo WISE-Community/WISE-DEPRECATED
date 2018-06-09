@@ -2102,10 +2102,6 @@ class MatchController extends ComponentController {
   authoringJSONChanged() {
     this.jsonStringChanged = true;
   }
-
-  isNotebookEnabled() {
-    return this.NotebookService.isNotebookEnabled();
-  }
 }
 
 MatchController.$inject = [

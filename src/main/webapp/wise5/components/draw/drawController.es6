@@ -34,9 +34,6 @@ class DrawController extends ComponentController {
     // whether the reset button is visible or not
     this.isResetButtonVisible = false;
 
-    // whether the snip drawing button is shown or not
-    this.isSnipDrawingButtonVisible = true;
-
     // the label for the notebook in thos project
     this.notebookConfig = this.NotebookService.getNotebookConfig();
 
@@ -99,8 +96,6 @@ class DrawController extends ComponentController {
       // get the latest annotations
       this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
     } else if (this.mode === 'grading' || this.mode === 'gradingRevision' || this.mode === 'onlyShowWork') {
-      this.isSnipDrawingButtonVisible = false;
-
       // get the component state from the scope
       let componentState = this.$scope.componentState;
 
@@ -125,7 +120,6 @@ class DrawController extends ComponentController {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
-      this.isSnipDrawingButtonVisible = false;
       this.isDisabled = true;
     } else if (this.mode === 'authoring') {
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
@@ -1313,18 +1307,6 @@ class DrawController extends ComponentController {
     }
 
     return result;
-  }
-
-  /**
-   * Check whether we need to show the snip drawing button
-   * @return whether to show the snip drawing button
-   */
-  showSnipDrawingButton() {
-    if (this.NotebookService.isNotebookEnabled() && this.isSnipDrawingButtonVisible) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   /**

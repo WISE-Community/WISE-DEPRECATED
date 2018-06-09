@@ -221,7 +221,6 @@ class ConceptMapController extends ComponentController {
       this.isPromptVisible = false;
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
-      this.isSnipButtonVisible = false;
       this.isDisabled = true;
 
       var componentState = this.$scope.componentState;
@@ -245,7 +244,6 @@ class ConceptMapController extends ComponentController {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
-      this.isSnipButtonVisible = false;
       this.isDisabled = true;
     } else if (this.mode === 'authoring') {
       this.isPromptVisible = true;
@@ -4150,19 +4148,6 @@ class ConceptMapController extends ComponentController {
 
     // display the asset chooser
     this.$rootScope.$broadcast('openAssetChooser', params);
-  }
-
-
-  /**
-   * Check whether we need to show the snip button
-   * @return whether to show the snip button
-   */
-  showSnipButton() {
-    if (this.NotebookService.isNotebookEnabled() && this.isSnipButtonVisible) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   /**

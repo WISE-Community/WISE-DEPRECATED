@@ -44,9 +44,6 @@ class LabelController extends ComponentController {
     // whether the cancel button is shown or not
     this.isCancelButtonVisible = false;
 
-    // whether the snip image button is shown or not
-    this.isSnipImageButtonVisible = true;
-
     // the label for the notebook in thos project
     this.notebookConfig = this.NotebookService.getNotebookConfig();
 
@@ -189,7 +186,6 @@ class LabelController extends ComponentController {
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
       this.isNewLabelButtonVisible = false;
-      this.isSnipImageButtonVisible = false;
       this.isDisabled = true;
 
       if (componentState != null) {
@@ -207,7 +203,6 @@ class LabelController extends ComponentController {
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
       this.isNewLabelButtonVisible = false;
-      this.isSnipImageButtonVisible = false;
       this.isDisabled = true;
     } else if (this.mode === 'showPreviousWork') {
       this.isPromptVisible = true;
@@ -2000,18 +1995,6 @@ class LabelController extends ComponentController {
     }
 
     return pngFile;
-  }
-
-  /**
-   * Check whether we need to show the snip image button
-   * @return whether to show the snip image button
-   */
-  showSnipImageButton() {
-    if (this.NotebookService.isNotebookEnabled() && this.isSnipImageButtonVisible) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   /**

@@ -46,7 +46,6 @@ class EmbeddedController extends ComponentController {
     // the max height of the iframe
     this.maxHeight = null;
 
-    this.isSnipModelButtonVisible = true;
     this.notebookConfig = this.NotebookService.getNotebookConfig();
 
     this.latestAnnotations = null;
@@ -93,7 +92,6 @@ class EmbeddedController extends ComponentController {
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      this.isSnipModelButtonVisible = true;
     } else if (this.mode === 'authoring') {
       this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
       this.summernoteRubricHTML = this.componentContent.rubric;
@@ -140,7 +138,6 @@ class EmbeddedController extends ComponentController {
     } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
-      this.isSnipModelButtonVisible = false;
       let componentState = this.$scope.componentState;
       if (componentState != null) {
         // create a unique id for the application iframe using this component state
@@ -156,11 +153,9 @@ class EmbeddedController extends ComponentController {
     } else if (this.mode === 'onlyShowWork') {
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
-      this.isSnipModelButtonVisible = false;
     } else if (this.mode === 'showPreviousWork') {
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
-      this.isSnipModelButtonVisible = false;
     }
 
     if (this.componentContent != null) {
@@ -606,15 +601,6 @@ class EmbeddedController extends ComponentController {
         });
       }
     }
-  }
-
-  /**
-   * Check whether we need to show the snip model button
-   * @return whether to show the snip model button
-   */
-  showSnipModelButton() {
-    return this.NotebookService.isNotebookEnabled() &&
-        this.isSnipModelButtonVisible;
   }
 
   /**
