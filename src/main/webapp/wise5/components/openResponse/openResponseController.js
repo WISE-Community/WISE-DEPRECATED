@@ -58,9 +58,6 @@ var OpenResponseController = function (_ComponentController) {
     // whether the CRater item id is valid
     _this.cRaterItemIdIsValid = null;
 
-    // whether the snip button is shown or not
-    _this.isSnipButtonVisible = true;
-
     //var scope = this;
     var themePath = _this.ProjectService.getThemePath();
 
@@ -122,20 +119,17 @@ var OpenResponseController = function (_ComponentController) {
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
       _this.isDisabled = true;
-      _this.isSnipButtonVisible = false;
     } else if (_this.mode === 'onlyShowWork') {
       _this.onlyShowWork = true;
       _this.isPromptVisible = false;
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
       _this.isDisabled = true;
-      _this.isSnipButtonVisible = false;
     } else if (_this.mode === 'showPreviousWork') {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
       _this.isDisabled = true;
-      _this.isSnipButtonVisible = false;
     } else if (_this.mode === 'authoring') {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
@@ -1172,11 +1166,6 @@ var OpenResponseController = function (_ComponentController) {
      */
     value: function updateAdvancedAuthoringView() {
       this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-    }
-  }, {
-    key: 'showSnipButton',
-    value: function showSnipButton() {
-      return this.NotebookService.isNotebookEnabled() && this.isSnipButtonVisible;
     }
   }, {
     key: 'snipButtonClicked',

@@ -65,6 +65,17 @@ class ComponentController {
     this.workgroupId = this.$scope.workgroupId;
     this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
+    this.showAddToNotebookButton =
+      this.componentContent.showAddToNotebookButton == null ? true : this.componentContent.showAddToNotebookButton;
+
+    if (this.mode === 'grading' || this.mode === 'gradingRevision' || this.mode === 'onlyShowWork') {
+      this.showAddToNotebookButton = false;
+    } else if (this.mode === 'authoring') {
+      if (this.authoringComponentContent.showAddToNotebookButton == null) {
+        this.authoringComponentContent.showAddToNotebookButton = true;
+      }
+    }
+
     this.registerListeners();
   }
 
@@ -295,6 +306,14 @@ class ComponentController {
 
   setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
     this.parentStudentWorkIds = [studentWorkId];
+  }
+
+  isNotebookEnabled() {
+    return this.NotebookService.isNotebookEnabled();
+  }
+
+  isAddToNotebookEnabled() {
+    return this.isNotebookEnabled() && this.showAddToNotebookButton;
   }
 }
 

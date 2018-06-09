@@ -52,9 +52,6 @@ var LabelController = function (_ComponentController) {
     // whether the cancel button is shown or not
     _this.isCancelButtonVisible = false;
 
-    // whether the snip image button is shown or not
-    _this.isSnipImageButtonVisible = true;
-
     // the label for the notebook in thos project
     _this.notebookConfig = _this.NotebookService.getNotebookConfig();
 
@@ -186,7 +183,6 @@ var LabelController = function (_ComponentController) {
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
       _this.isNewLabelButtonVisible = false;
-      _this.isSnipImageButtonVisible = false;
       _this.isDisabled = true;
 
       if (componentState != null) {
@@ -204,7 +200,6 @@ var LabelController = function (_ComponentController) {
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
       _this.isNewLabelButtonVisible = false;
-      _this.isSnipImageButtonVisible = false;
       _this.isDisabled = true;
     } else if (_this.mode === 'showPreviousWork') {
       _this.isPromptVisible = true;
@@ -2132,21 +2127,6 @@ var LabelController = function (_ComponentController) {
       }
 
       return pngFile;
-    }
-
-    /**
-     * Check whether we need to show the snip image button
-     * @return whether to show the snip image button
-     */
-
-  }, {
-    key: 'showSnipImageButton',
-    value: function showSnipImageButton() {
-      if (this.NotebookService.isNotebookEnabled() && this.isSnipImageButtonVisible) {
-        return true;
-      } else {
-        return false;
-      }
     }
 
     /**

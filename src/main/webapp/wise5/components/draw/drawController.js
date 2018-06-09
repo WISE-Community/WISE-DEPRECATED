@@ -46,9 +46,6 @@ var DrawController = function (_ComponentController) {
     // whether the reset button is visible or not
     _this.isResetButtonVisible = false;
 
-    // whether the snip drawing button is shown or not
-    _this.isSnipDrawingButtonVisible = true;
-
     // the label for the notebook in thos project
     _this.notebookConfig = _this.NotebookService.getNotebookConfig();
 
@@ -100,8 +97,6 @@ var DrawController = function (_ComponentController) {
       // get the latest annotations
       _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
     } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision' || _this.mode === 'onlyShowWork') {
-      _this.isSnipDrawingButtonVisible = false;
-
       // get the component state from the scope
       var _componentState = _this.$scope.componentState;
 
@@ -126,7 +121,6 @@ var DrawController = function (_ComponentController) {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
-      _this.isSnipDrawingButtonVisible = false;
       _this.isDisabled = true;
     } else if (_this.mode === 'authoring') {
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
@@ -1351,21 +1345,6 @@ var DrawController = function (_ComponentController) {
       }
 
       return result;
-    }
-
-    /**
-     * Check whether we need to show the snip drawing button
-     * @return whether to show the snip drawing button
-     */
-
-  }, {
-    key: 'showSnipDrawingButton',
-    value: function showSnipDrawingButton() {
-      if (this.NotebookService.isNotebookEnabled() && this.isSnipDrawingButtonVisible) {
-        return true;
-      } else {
-        return false;
-      }
     }
 
     /**

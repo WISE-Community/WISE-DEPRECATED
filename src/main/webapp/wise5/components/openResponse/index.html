@@ -196,6 +196,14 @@
         </md-checkbox>
       </div>
       <div>
+        <md-checkbox class='md-primary'
+            ng-if='openResponseController.isNotebookEnabled()'
+            ng-model='openResponseController.authoringComponentContent.showAddToNotebookButton'
+            ng-change='openResponseController.authoringViewComponentChanged()'>
+          {{ 'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
+        </md-checkbox>
+      </div>
+      <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
                   ng-if='openResponseController.authoringComponentContent.showSubmitButton'>
           <label>{{ 'MAX_SUBMIT' | translate }}</label>
@@ -485,7 +493,7 @@
           </label>
           <md-button class='md-accent md-primary'
                      ng-click='openResponseController.snipButtonClicked($event)'
-                     ng-if='openResponseController.showSnipButton()'>
+                     ng-if='openResponseController.isAddToNotebookEnabled()'>
             <md-icon>note_add</md-icon>
             {{ 'ADD_TO_NOTEBOOK' | translate:{label:openResponseController.notebookConfig.label} }}
           </md-button>

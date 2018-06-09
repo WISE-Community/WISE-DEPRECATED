@@ -177,8 +177,8 @@ class NotebookService {
   }
 
   isNotebookEnabled() {
-    return this.config.enabled;
-  };
+    return this.ProjectService.project.notebook != null && this.ProjectService.project.notebook.enabled;
+  }
 
   retrieveNotebookItems(workgroupId = null, periodId = null) {
     if (this.ConfigService.isPreview()) {

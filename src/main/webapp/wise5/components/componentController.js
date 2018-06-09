@@ -65,6 +65,16 @@ var ComponentController = function () {
     this.workgroupId = this.$scope.workgroupId;
     this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
+    this.showAddToNotebookButton = this.componentContent.showAddToNotebookButton == null ? true : this.componentContent.showAddToNotebookButton;
+
+    if (this.mode === 'grading' || this.mode === 'gradingRevision' || this.mode === 'onlyShowWork') {
+      this.showAddToNotebookButton = false;
+    } else if (this.mode === 'authoring') {
+      if (this.authoringComponentContent.showAddToNotebookButton == null) {
+        this.authoringComponentContent.showAddToNotebookButton = true;
+      }
+    }
+
     this.registerListeners();
   }
 
@@ -352,6 +362,16 @@ var ComponentController = function () {
     key: 'setParentStudentWorkIdToCurrentStudentWork',
     value: function setParentStudentWorkIdToCurrentStudentWork(studentWorkId) {
       this.parentStudentWorkIds = [studentWorkId];
+    }
+  }, {
+    key: 'isNotebookEnabled',
+    value: function isNotebookEnabled() {
+      return this.NotebookService.isNotebookEnabled();
+    }
+  }, {
+    key: 'isAddToNotebookEnabled',
+    value: function isAddToNotebookEnabled() {
+      return this.isNotebookEnabled() && this.showAddToNotebookButton;
     }
   }]);
 

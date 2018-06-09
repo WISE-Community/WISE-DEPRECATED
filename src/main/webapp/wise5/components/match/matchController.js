@@ -2891,11 +2891,6 @@ var MatchController = function (_ComponentController) {
     value: function authoringJSONChanged() {
       this.jsonStringChanged = true;
     }
-  }, {
-    key: 'isNotebookEnabled',
-    value: function isNotebookEnabled() {
-      return this.NotebookService.isNotebookEnabled();
-    }
   }]);
 
   return MatchController;

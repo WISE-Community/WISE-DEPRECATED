@@ -208,7 +208,6 @@ var ConceptMapController = function (_ComponentController) {
       _this.isPromptVisible = false;
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
-      _this.isSnipButtonVisible = false;
       _this.isDisabled = true;
 
       var componentState = _this.$scope.componentState;
@@ -232,7 +231,6 @@ var ConceptMapController = function (_ComponentController) {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
-      _this.isSnipButtonVisible = false;
       _this.isDisabled = true;
     } else if (_this.mode === 'authoring') {
       _this.isPromptVisible = true;
@@ -4451,21 +4449,6 @@ var ConceptMapController = function (_ComponentController) {
 
       // display the asset chooser
       this.$rootScope.$broadcast('openAssetChooser', params);
-    }
-
-    /**
-     * Check whether we need to show the snip button
-     * @return whether to show the snip button
-     */
-
-  }, {
-    key: 'showSnipButton',
-    value: function showSnipButton() {
-      if (this.NotebookService.isNotebookEnabled() && this.isSnipButtonVisible) {
-        return true;
-      } else {
-        return false;
-      }
     }
 
     /**
