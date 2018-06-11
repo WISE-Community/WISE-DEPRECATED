@@ -97,31 +97,31 @@ var NodeService = function () {
     }
   }, {
     key: "getComponentTemplatePath",
-
+    value: function getComponentTemplatePath(componentType) {
+      return this.getComponentFolderPath(componentType) + '/index.html';
+    }
+  }, {
+    key: "getComponentAuthoringTemplatePath",
+    value: function getComponentAuthoringTemplatePath(componentType) {
+      return this.getComponentFolderPath(componentType) + '/authoring.html';
+    }
 
     /**
      * Get the html template for the component
      * @param componentType the component type
      * @return the path to the html template for the component
      */
-    value: function getComponentTemplatePath(componentType) {
-      if (componentType == null) {
-        // error
-      } else if (this.isStringUpperCase(componentType)) {
-        /*
-         * the component type is all uppercase so we will convert it to all
-         * lowercase
-         */
+
+  }, {
+    key: "getComponentFolderPath",
+    value: function getComponentFolderPath(componentType) {
+      if (this.isStringUpperCase(componentType)) {
         componentType = componentType.toLowerCase();
       } else {
         componentType = this.toCamelCase(componentType);
       }
-      var wiseBaseURL = this.ConfigService.getWISEBaseURL();
-      return wiseBaseURL + '/wise5/components/' + componentType + '/index.html';
+      return this.ConfigService.getWISEBaseURL() + '/wise5/components/' + componentType;
     }
-  }, {
-    key: "getComponentContentById",
-
 
     /**
      * Get the component content
@@ -129,6 +129,9 @@ var NodeService = function () {
      * @param componentId the component id
      * @return the component content
      */
+
+  }, {
+    key: "getComponentContentById",
     value: function getComponentContentById(nodeContent, componentId) {
       if (nodeContent != null && componentId != null) {
         var components = nodeContent.components;

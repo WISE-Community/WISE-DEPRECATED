@@ -98,7 +98,7 @@ require('../lib/highcharts@4.2.1');
 
 require('../components/graph/graphComponentModule');
 
-require('../components/html/htmlComponentModule');
+require('../components/html/htmlAuthoringComponentModule');
 
 require('../components/label/labelComponentModule');
 

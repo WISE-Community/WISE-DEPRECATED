@@ -35,7 +35,7 @@ import '../components/embedded/embeddedComponentModule';
 import '../filters/filters';
 import '../lib/highcharts@4.2.1';
 import '../components/graph/graphComponentModule';
-import '../components/html/htmlComponentModule';
+import '../components/html/htmlAuthoringComponentModule';
 import '../components/label/labelComponentModule';
 import '../components/match/matchComponentModule';
 import '../components/multipleChoice/multipleChoiceComponentModule';
