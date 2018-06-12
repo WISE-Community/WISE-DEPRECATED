@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2018 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -164,6 +164,8 @@ public interface Portal extends Persistable {
    * @param projectMetadataSettings  project metadata settings string
    */
   void setProjectMetadataSettings(String projectMetadataSettings);
+
+  void setProjectLibraryGroups(String projectLibraryGroups);
 
   String getProjectLibraryGroups();
 }

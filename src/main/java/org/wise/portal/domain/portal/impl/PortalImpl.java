@@ -282,6 +282,10 @@ public class PortalImpl implements Portal {
     this.projectMetadataSettings = projectMetadataSettings;
   }
 
+  public void setProjectLibraryGroups(String projectLibraryGroups) {
+    this.projectLibraryGroups = projectLibraryGroups;
+  }
+
   public String getProjectLibraryGroups() {
     return projectLibraryGroups;
   }
