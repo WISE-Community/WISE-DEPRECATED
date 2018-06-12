@@ -49,10 +49,14 @@ public interface PortalService {
    */
   String getWISEVersion() throws Exception;
 
-
   /**
    * Get the default project metadata settings
    * @return the default project metadata settings
    */
   String getDefaultProjectMetadataSettings();
+
+  /**
+   * @return the default project library groups
+   */
+  String getDefaultProjectLibraryGroups();
 }
