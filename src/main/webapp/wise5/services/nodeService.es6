@@ -81,26 +81,28 @@ class NodeService {
     return str != null && str === str.toUpperCase();
   };
 
+  getComponentTemplatePath(componentType) {
+    return this.getComponentFolderPath(componentType) + '/index.html';
+  }
+
+  getComponentAuthoringTemplatePath(componentType) {
+    return this.getComponentFolderPath(componentType) + '/authoring.html';
+  }
+
   /**
    * Get the html template for the component
    * @param componentType the component type
    * @return the path to the html template for the component
    */
-  getComponentTemplatePath(componentType) {
-    if (componentType == null) {
-      // error
-    } else if (this.isStringUpperCase(componentType)) {
-      /*
-       * the component type is all uppercase so we will convert it to all
-       * lowercase
-       */
+  getComponentFolderPath(componentType) {
+    if (this.isStringUpperCase(componentType)) {
       componentType = componentType.toLowerCase();
     } else {
       componentType = this.toCamelCase(componentType);
     }
-    const wiseBaseURL = this.ConfigService.getWISEBaseURL();
-    return wiseBaseURL + '/wise5/components/' + componentType + '/index.html';
-  };
+    return this.ConfigService.getWISEBaseURL() + '/wise5/components/' + componentType;
+  }
+
 
   /**
    * Get the component content
