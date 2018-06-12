@@ -107,7 +107,7 @@ class NotebookService {
   }
 
   // looks up notebook item by local notebook item id, including deleted notes
-  getLatestNotebookItemByLocalNotebookItemId(itemId, workgroupId = null) {
+  getLatestNotebookItemByLocalNotebookItemId(itemId, workgroupId = this.ConfigService.getWorkgroupId()) {
     if (this.getNotebookByWorkgroup(workgroupId).items.hasOwnProperty(itemId)) {
       const items = this.getNotebookByWorkgroup(workgroupId).items[itemId];
       return items.last();
@@ -120,7 +120,7 @@ class NotebookService {
   }
 
   // returns student's report item if they've done work, or the template if they haven't
-  getLatestNotebookReportItemByReportId(reportId, workgroupId = null) {
+  getLatestNotebookReportItemByReportId(reportId, workgroupId = this.ConfigService.getWorkgroupId()) {
     return this.getLatestNotebookItemByLocalNotebookItemId(reportId, workgroupId);
   }
 
