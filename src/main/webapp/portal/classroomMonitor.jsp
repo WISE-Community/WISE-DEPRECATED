@@ -13,6 +13,7 @@
         <%@ include file="favicon.jsp"%>
         <script src="${contextPath}/wise5/jspm_packages/system.js"></script>
         <script src="${contextPath}/wise5/config.js?v=5.7.6"></script>
+        <script src="${contextPath}/wise5/cacheBuster.js?v=5.7.6"></script>
         <script>
             System.import('${contextPath}/wise5/classroomMonitor/bootstrap');
         </script>
