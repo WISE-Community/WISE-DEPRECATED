@@ -1,7 +1,23 @@
 <div class="main main--fullwidth">
-  <app-hero-section imgSrc="assets/img/wise-students-hero.jpg"
-                    headline="WISE"
-                    tagline="Integrated science learning and teaching with technology"></app-hero-section>
+  <app-hero-section imgSrc="assets/img/wise-students-hero.jpg">
+    <ng-template #headlineTemplate>
+      <div class="accent-2">
+        <mat-icon [@jackInTheBox]="{value: '*', params: {delay: '1s'}}"
+                  svgIcon="ki-elicit"></mat-icon>
+        <mat-icon [@bounceIn]="{value: '*', params: {delay: '1500ms'}}"
+                  svgIcon="ki-add"></mat-icon>
+        <mat-icon [@rotateIn]="{value: '*', params: {delay: '2s'}}"
+                  svgIcon="ki-distinguish"></mat-icon>
+        <mat-icon [@flipInY]="{value: '*', params: {delay: '2500ms'}}"
+                  svgIcon="ki-sort"></mat-icon>
+      </div>
+    </ng-template>
+    <ng-template #taglineTemplate>
+      <div [@flipInX]="{value: '*', params: {delay: '3500ms'}}">
+        <span>Integrated</span> science learning and teaching with technology
+      </div>
+    </ng-template>
+  </app-hero-section>
   <section class="section">
     <div class="section--fullwidth section--slant">
       <div class="content">
@@ -17,7 +33,7 @@
           <app-blurb fxFlex.gt-sm="33%"
                      imgSrc="assets/img/wise-students-building.jpg"
                      imgDescription="WISE students building"
-                     content="Free, standards-aligned, and research-based inquiry science curricula that address NGSS 3-D proficiency"></app-blurb>
+                     content="Free, standards-aligned, and research-based inquiry science curricula that address NGSS 3D proficiency"></app-blurb>
           <app-blurb fxFlex.gt-sm="33%"
                      imgSrc="assets/img/wise-project-view.jpg"
                      imgDescription="WISE project on laptop"

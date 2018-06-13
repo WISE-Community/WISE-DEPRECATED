@@ -1,21 +1,26 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ContentChild, Input, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-hero-section',
   templateUrl: './hero-section.component.html',
-  styleUrls: ['./hero-section.component.scss']
+  styleUrls: ['./hero-section.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class HeroSectionComponent implements OnInit {
 
   @Input()
-  imgSrc: string = '';
+  imgSrc: string;
 
   @Input()
-  headline: string = '';
+  headline: string;
+
+  @ContentChild('headlineTemplate') headlineRef: TemplateRef<any>;
 
   @Input()
-  tagline: string = '';
+  tagline: string;
+
+  @ContentChild('taglineTemplate') taglineRef: TemplateRef<any>;
 
   bgStyle: SafeStyle;
 

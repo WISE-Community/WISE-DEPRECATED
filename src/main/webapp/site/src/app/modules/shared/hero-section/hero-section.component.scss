@@ -21,6 +21,10 @@ $config: mat-typography-config();
   @media (min-width: breakpoint('lg.min')) {
     padding: 33% 0 0;
   }
+
+  .mat-icon {
+    margin: 0 4px;
+  }
 }
 
 .hero__content {
@@ -28,7 +32,7 @@ $config: mat-typography-config();
   top: 0;
   bottom: 0;
   width: 100%;
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.4);
   color: #ffffff;
   text-align: center;
   padding: 32px;
@@ -38,16 +42,26 @@ $config: mat-typography-config();
   }
 }
 
-.hero__headline {
+h1.hero__headline {
   @include mat-typography-level-to-styles($config, display-1);
 
+  .mat-icon {
+    height: mat-font-size($config, display-1);
+    width: mat-font-size($config, display-1);
+  }
+
   @media (min-width: breakpoint('sm.min')) {
-    margin-bottom: 16px;
+    margin-bottom: 24px;
     @include mat-typography-level-to-styles($config, display-3);
+
+    .mat-icon {
+      height: mat-font-size($config, display-3);
+      width: mat-font-size($config, display-3);
+    }
   }
 }
 
-.hero__headline--withtagline {
+h1.hero__headline--withtagline {
   margin-bottom: 4px;
 
   @media (min-width: breakpoint('sm.min')) {
@@ -59,15 +73,25 @@ $config: mat-typography-config();
   }
 }
 
-.hero__tagline {
+h2.hero__tagline {
   @include mat-typography-level-to-styles($config, headline);
   line-height: mat-line-height($config, subheading-2);
 
+  .mat-icon {
+    height: mat-font-size($config, subheading-2);
+    width: mat-font-size($config, subheading-2);
+  }
+
   @media (min-width: breakpoint('sm.min')) {
     @include mat-typography-level-to-styles($config, display-1);
+
+    .mat-icon {
+      height: mat-font-size($config, subheading-2);
+      width: mat-font-size($config, subheading-2);
+    }
   }
 }
 
-.hero__tagline {
+h2.hero__tagline {
   font-weight: 300;
 }

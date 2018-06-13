@@ -1,10 +1,14 @@
 <section class="hero section"
          [style.background-image]="bgStyle">
   <div class="hero__content" fxLayout="column" fxLayoutAlign="center center">
-    <h1 *ngIf="headline" class="hero__headline accent-2"
+    <ng-template #defaultHeadline>{{ headline }}</ng-template>
+    <h1 *ngIf="headline || headlineRef" class="hero__headline"
         [ngClass]="{ 'hero__headline--withtagline': tagline }">
-      {{ headline }}
+      <ng-container *ngTemplateOutlet="headlineRef ? headlineRef: defaultHeadline"></ng-container>
     </h1>
-    <h2 *ngIf="tagline" class="hero__tagline">{{ tagline }}</h2>
+    <ng-template #defaultTagline>{{ tagline }}</ng-template>
+    <h2 *ngIf="tagline || taglineRef" class="hero__tagline">
+      <ng-container *ngTemplateOutlet="taglineRef ? taglineRef: defaultTagline"></ng-container>
+    </h2>
   </div>
 </section>
