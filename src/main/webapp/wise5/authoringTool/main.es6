@@ -36,7 +36,7 @@ import '../filters/filters';
 import '../lib/highcharts@4.2.1';
 import '../components/graph/graphAuthoringComponentModule';
 import '../components/html/htmlAuthoringComponentModule';
-import '../components/label/labelComponentModule';
+import '../components/label/labelAuthoringComponentModule';
 import '../components/match/matchComponentModule';
 import '../components/multipleChoice/multipleChoiceComponentModule';
 import NodeAuthoringController from './node/nodeAuthoringController';
@@ -84,7 +84,7 @@ let authoringModule = angular.module('authoring', [
     'graphAuthoringComponentModule',
     'highcharts-ng',
     'htmlComponentModule',
-    'labelComponentModule',
+    'labelAuthoringComponentModule',
     'matchComponentModule',
     'multipleChoiceComponentModule',
     'ngAnimate',
