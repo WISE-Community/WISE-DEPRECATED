@@ -769,8 +769,8 @@ class DiscussionController extends ComponentController {
 
   disableComponentIfNecessary() {
     super.disableComponentIfNecessary();
-    if (this.UtilService.hasConnectedComponent(componentContent)) {
-      for (let connectedComponent of componentContent.connectedComponents) {
+    if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+      for (let connectedComponent of this.componentContent.connectedComponents) {
         if (connectedComponent.type == 'showWork') {
           this.isDisabled = true;
         }
