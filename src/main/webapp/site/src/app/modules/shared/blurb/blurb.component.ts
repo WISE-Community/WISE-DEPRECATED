@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ContentChild, Input, OnInit, TemplateRef } from '@angular/core';
 
 @Component({
   selector: 'app-blurb',
@@ -16,8 +16,12 @@ export class BlurbComponent implements OnInit {
   @Input()
   headline: string;
 
+  @ContentChild('headlineTemplate') headlineRef: TemplateRef<any>;
+
   @Input()
   content: string;
+
+  @ContentChild('contentTemplate') contentRef: TemplateRef<any>;
 
   constructor() { }
 

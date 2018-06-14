@@ -3,8 +3,12 @@
        class="blurb__image"
        src="{{ imgSrc }}"
        alt="{{ imgDescription }}" />
-  <h2 *ngIf="headline">{{ headline }}</h2>
-  <p *ngIf="content" class="accent-1 mat-subheading-2">
-    {{ content }}
+  <ng-template #defaultHeadline>{{ headline }}</ng-template>
+  <h2 *ngIf="headline || headlineRef">
+    <ng-container *ngTemplateOutlet="headlineRef ? headlineRef: defaultHeadline"></ng-container>
+  </h2>
+  <ng-template #defaultContent>{{ content }}</ng-template>
+  <p *ngIf="content || contentRef" class="accent-1 mat-subheading-2">
+    <ng-container *ngTemplateOutlet="contentRef ? contentRef: defaultContent"></ng-container>
   </p>
 </div>
