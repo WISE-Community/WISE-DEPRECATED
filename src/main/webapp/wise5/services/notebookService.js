@@ -131,7 +131,7 @@ var NotebookService = function () {
   }, {
     key: "getLatestNotebookItemByLocalNotebookItemId",
     value: function getLatestNotebookItemByLocalNotebookItemId(itemId) {
-      var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.ConfigService.getWorkgroupId();
 
       if (this.getNotebookByWorkgroup(workgroupId).items.hasOwnProperty(itemId)) {
         var items = this.getNotebookByWorkgroup(workgroupId).items[itemId];
@@ -149,7 +149,7 @@ var NotebookService = function () {
   }, {
     key: "getLatestNotebookReportItemByReportId",
     value: function getLatestNotebookReportItemByReportId(reportId) {
-      var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.ConfigService.getWorkgroupId();
 
       return this.getLatestNotebookItemByLocalNotebookItemId(reportId, workgroupId);
     }
