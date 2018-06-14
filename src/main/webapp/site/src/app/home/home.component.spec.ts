@@ -3,6 +3,7 @@ import { HttpClient, HttpHandler } from "@angular/common/http";
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { HomeComponent } from './home.component';
 import { LibraryModule } from "../modules/library/library.module";
@@ -21,6 +22,7 @@ describe('HomeComponent', () => {
         FlexLayoutModule,
         FormsModule,
         LibraryModule,
+        RouterTestingModule,
         SharedModule
       ],
       providers: [

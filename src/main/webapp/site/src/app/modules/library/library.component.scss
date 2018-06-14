@@ -17,6 +17,8 @@
 
   .info-block {
     background-color: transparent;
+    margin-bottom: 0;
+    font-weight: 500;
   }
 }
 
@@ -49,4 +51,8 @@
 .library-group__title {
   white-space: nowrap;
   margin-right: 8px;
+}
+
+.library__links {
+  margin-top: 48px;
 }

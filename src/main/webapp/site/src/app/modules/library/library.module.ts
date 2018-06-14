@@ -8,6 +8,7 @@ import { LibraryGroupThumbsComponent } from './library-group-thumbs/library-grou
 import { LibraryProjectComponent, LibraryProjectDetailsComponent } from './library-project/library-project.component';
 import { LibraryProjectDisciplineIconComponent } from './library-project-discipline-icon/library-project-discipline-icon.component';
 import { LibraryService } from "../../services/library.service";
+import { RouterModule } from '@angular/router';
 import { SharedModule } from "../shared/shared.module";
 
 import {
@@ -31,14 +32,15 @@ const materialModules = [
   MatOptionModule,
   MatSelectModule,
   MatTooltipModule,
-  FormsModule,
-  ReactiveFormsModule
 ];
 
 @NgModule({
   imports: [
     CommonModule,
     FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
     materialModules,
     SharedModule
   ],

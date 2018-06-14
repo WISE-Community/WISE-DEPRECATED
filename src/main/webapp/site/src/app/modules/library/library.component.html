@@ -1,8 +1,8 @@
 <div class="library">
   <div class="content-block dark-theme primary-bg library__header">
-    <h2 fxLayout="row" fxLayoutAlign="start center">
-      <mat-icon> filter_list </mat-icon>Browse
-    </h2>
+    <h4 class="info-block center">
+     Explore suggested WISE curricula for the grade levels below or search for specific units that address your needs.
+    </h4>
     <div fxLayout="row wrap" fxLayout.xs="column">
       <div *ngIf="disciplineOptions.length > 0" class="library-filter" fxFlex
            fxFlex.xs="100%" >
@@ -43,9 +43,6 @@
                         (update)="searchUpdated($event)">
         </app-search-bar>
       </div>
-    </div>
-    <div class="info-block center">
-      Explore suggested curricula for the grade levels below or use the search and browse tools to find specific units that address your needs.
     </div>
   </div>
   <div *ngIf="searchValue || hasFilters()" class="notice" fxShow fxHide.gt-xs>
@@ -118,4 +115,17 @@
       </ng-container>
     </mat-accordion>
   </ng-container>
+  <div class="library__links">
+    <h2 class="accent-1 center"
+        fxLayout="row"
+        fxLayout.xs="column"
+        fxLayoutGap="16px"
+        fxLayoutAlign="center center"
+        fxLayoutWrap>
+      <span>Ready to try WISE in the Classroom?</span>
+      <a mat-raised-button color="accent" routerLink="/join">
+        Sign up for free!
+      </a>
+    </h2>
+  </div>
 </div>
