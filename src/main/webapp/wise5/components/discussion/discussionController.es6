@@ -81,10 +81,8 @@ class DiscussionController extends ComponentController {
         if (this.UtilService.hasConnectedComponent(this.componentContent)) {
           // assume there can only be one connected component
           let connectedComponent = this.componentContent.connectedComponents[0];
-          if (this.authoringGetConnectedComponentType(connectedComponent) == 'Discussion') {
-            componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-              connectedComponent.nodeId, connectedComponent.componentId);
-          }
+          componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+            connectedComponent.nodeId, connectedComponent.componentId);
         } else {
           componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
             this.nodeId, this.componentId);
@@ -96,9 +94,7 @@ class DiscussionController extends ComponentController {
         if (this.UtilService.hasConnectedComponent(this.componentContent)) {
           // assume there can only be one connected component
           let connectedComponent = this.componentContent.connectedComponents[0];
-          if (this.authoringGetConnectedComponentType(connectedComponent) == 'Discussion') {
-            this.getClassmateResponses(connectedComponent.nodeId, connectedComponent.componentId);
-          }
+          this.getClassmateResponses(connectedComponent.nodeId, connectedComponent.componentId);
         } else {
           if (this.isClassmateResponsesGated()) {
             /*

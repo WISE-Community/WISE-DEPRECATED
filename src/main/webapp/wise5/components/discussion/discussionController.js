@@ -84,9 +84,7 @@ var DiscussionController = function (_ComponentController) {
         if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
           // assume there can only be one connected component
           var connectedComponent = _this.componentContent.connectedComponents[0];
-          if (_this.authoringGetConnectedComponentType(connectedComponent) == 'Discussion') {
-            _componentStates = _this.StudentDataService.getComponentStatesByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
-          }
+          _componentStates = _this.StudentDataService.getComponentStatesByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
         } else {
           _componentStates = _this.StudentDataService.getComponentStatesByNodeIdAndComponentId(_this.nodeId, _this.componentId);
         }
@@ -97,9 +95,7 @@ var DiscussionController = function (_ComponentController) {
         if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
           // assume there can only be one connected component
           var _connectedComponent = _this.componentContent.connectedComponents[0];
-          if (_this.authoringGetConnectedComponentType(_connectedComponent) == 'Discussion') {
-            _this.getClassmateResponses(_connectedComponent.nodeId, _connectedComponent.componentId);
-          }
+          _this.getClassmateResponses(_connectedComponent.nodeId, _connectedComponent.componentId);
         } else {
           if (_this.isClassmateResponsesGated()) {
             /*
