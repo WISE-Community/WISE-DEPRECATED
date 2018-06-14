@@ -786,13 +786,13 @@ var DiscussionController = function (_ComponentController) {
     key: 'disableComponentIfNecessary',
     value: function disableComponentIfNecessary() {
       _get(DiscussionController.prototype.__proto__ || Object.getPrototypeOf(DiscussionController.prototype), 'disableComponentIfNecessary', this).call(this);
-      if (this.UtilService.hasConnectedComponent(componentContent)) {
+      if (this.UtilService.hasConnectedComponent(this.componentContent)) {
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
 
         try {
-          for (var _iterator = componentContent.connectedComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          for (var _iterator = this.componentContent.connectedComponents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var connectedComponent = _step.value;
 
             if (connectedComponent.type == 'showWork') {
