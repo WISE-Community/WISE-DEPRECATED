@@ -34,7 +34,7 @@ import '../components/draw/drawComponentModule';
 import '../components/embedded/embeddedComponentModule';
 import '../filters/filters';
 import '../lib/highcharts@4.2.1';
-import '../components/graph/graphComponentModule';
+import '../components/graph/graphAuthoringComponentModule';
 import '../components/html/htmlAuthoringComponentModule';
 import '../components/label/labelComponentModule';
 import '../components/match/matchComponentModule';
@@ -81,7 +81,7 @@ let authoringModule = angular.module('authoring', [
     'drawComponentModule',
     'embeddedComponentModule',
     'filters',
-    'graphComponentModule',
+    'graphAuthoringComponentModule',
     'highcharts-ng',
     'htmlComponentModule',
     'labelComponentModule',
