@@ -84,7 +84,7 @@ var ComponentController = function ComponentController($injector, $scope, $compi
         $scope.nodeAuthoringController = $scope.$parent.nodeAuthoringController;
     }
 
-    if ($scope.mode === 'authoring' && (componentContent.type == 'HTML' || componentContent.type == 'ConceptMap' || componentContent.type == 'Animation' || componentContent.type == 'Graph' || componentContent.type == 'Label')) {
+    if ($scope.mode === 'authoring' && (componentContent.type == 'HTML' || componentContent.type == 'ConceptMap' || componentContent.type == 'Animation' || componentContent.type == 'Graph' || componentContent.type == 'Label' || componentContent.type == 'Match')) {
         $scope.componentTemplatePath = this.NodeService.getComponentAuthoringTemplatePath(componentContent.type);
     } else {
         $scope.componentTemplatePath = this.NodeService.getComponentTemplatePath(componentContent.type);
