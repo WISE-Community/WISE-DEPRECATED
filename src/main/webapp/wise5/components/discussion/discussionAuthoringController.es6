@@ -479,33 +479,6 @@ class DiscussionAuthoringController extends DiscussionController {
   }
 
   /**
-   * Get the connected component type
-   * @param connectedComponent get the component type of this connected component
-   * @return the connected component type
-   */
-  authoringGetConnectedComponentType(connectedComponent) {
-
-    var connectedComponentType = null;
-
-    if (connectedComponent != null) {
-
-      // get the node id and component id of the connected component
-      var nodeId = connectedComponent.nodeId;
-      var componentId = connectedComponent.componentId;
-
-      // get the component
-      var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
-      if (component != null) {
-        // get the component type
-        connectedComponentType = component.type;
-      }
-    }
-
-    return connectedComponentType;
-  }
-
-  /**
    * The connected component node id has changed
    * @param connectedComponent the connected component that has changed
    */
