@@ -24,7 +24,7 @@ import AuthoringToolNewProjectController from './main/authoringToolNewProjectCon
 import AuthoringToolProjectService from './authoringToolProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
 import AuthorWebSocketService from '../services/authorWebSocketService';
-import '../components/conceptMap/conceptMapComponentModule';
+import '../components/conceptMap/conceptMapAuthoringComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import '../directives/components';
@@ -76,7 +76,7 @@ let authoringModule = angular.module('authoring', [
     'audioOscillatorComponentModule',
     'authoringTool.components',
     'components',
-    'conceptMapComponentModule',
+    'conceptMapAuthoringComponentModule',
     'discussionComponentModule',
     'drawComponentModule',
     'embeddedComponentModule',
