@@ -29,7 +29,7 @@ import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import '../directives/components';
 import ComponentService from '../components/componentService';
-import '../components/discussion/discussionComponentModule';
+import '../components/discussion/discussionAuthoringComponentModule';
 import '../components/draw/drawComponentModule';
 import '../components/embedded/embeddedComponentModule';
 import '../filters/filters';
@@ -77,7 +77,7 @@ let authoringModule = angular.module('authoring', [
     'authoringTool.components',
     'components',
     'conceptMapAuthoringComponentModule',
-    'discussionComponentModule',
+    'discussionAuthoringComponentModule',
     'drawComponentModule',
     'embeddedComponentModule',
     'filters',

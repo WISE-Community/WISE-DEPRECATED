@@ -80,7 +80,9 @@ class ComponentController {
 
         }
 
-        if ($scope.mode === 'authoring' && (componentContent.type == 'HTML' || componentContent.type == 'ConceptMap')) {
+        if ($scope.mode === 'authoring' &&
+              (componentContent.type == 'HTML' || componentContent.type == 'ConceptMap' ||
+              componentContent.type == 'Discussion')) {
             $scope.componentTemplatePath = this.NodeService.getComponentAuthoringTemplatePath(componentContent.type);
         } else {
             $scope.componentTemplatePath = this.NodeService.getComponentTemplatePath(componentContent.type);
