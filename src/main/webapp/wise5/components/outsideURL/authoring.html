@@ -1,0 +1,73 @@
+<div ng-controller='OutsideURLAuthoringController as outsideURLController'>
+  <div>
+    <div class='advancedAuthoringDiv'
+         ng-if='outsideURLController.showAdvancedAuthoring'>
+      <div>
+        <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+      </div>
+      <div>
+        <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+          <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+          <input type='number'
+                 ng-model='outsideURLController.authoringComponentContent.componentWidth'
+                 ng-model-options='{ debounce: 1000 }'
+                 ng-change='outsideURLController.authoringViewComponentChanged()'/>
+        </md-input-container>
+      </div>
+      <div>
+        <md-button class='topButton md-raised md-primary'
+                   ng-click='outsideURLController.showRubricAuthoring = !outsideURLController.showRubricAuthoring'>
+          <md-icon>message</md-icon>
+          <md-tooltip md-direction='top'
+                      class='projectButtonTooltip'>
+            {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+          </md-tooltip>
+        </md-button>
+        <div ng-if='outsideURLController.showRubricAuthoring'>
+          <summernote id='{{outsideURLController.summernoteRubricId}}'
+                      ng-model='outsideURLController.summernoteRubricHTML'
+                      ng-change='outsideURLController.summernoteRubricHTMLChanged()'
+                      config='outsideURLController.summernoteRubricOptions'
+                      ng-model-options='{ debounce: 1000 }'
+                      rows='10'
+                      cols='100'>
+          </summernote>
+        </div>
+      </div>
+      <div>
+        <label class='node__label--vertical-alignment'>{{ 'json' | translate }}</label>
+        <md-button class='topButton md-raised md-primary'
+                   ng-click='outsideURLController.showJSONButtonClicked()'>
+          <md-icon>code</md-icon>
+          <md-tooltip md-direction='top'
+                      class='projectButtonTooltip'>
+            {{ 'SHOW_JSON' | translate }}
+          </md-tooltip>
+        </md-button>
+        <span ng-if='outsideURLController.jsonStringChanged'>
+          {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+        </span>
+        <div ng-if='outsideURLController.showJSONAuthoring'>
+          <md-input-container style='width: 100%;'>
+            <textarea ng-model='outsideURLController.authoringComponentContentJSONString'
+                      style='width: 90%; border: 1px solid black;'
+                      ng-change='outsideURLController.authoringJSONChanged()'>
+            </textarea>
+          </md-input-container>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <md-input-container>
+      <label>{{ 'outsideURL.url' | translate }}</label>
+      <input size='150'
+             ng-model='outsideURLController.authoringComponentContent.url'
+             ng-change='outsideURLController.authoringViewComponentChanged()'
+             ng-model-options='{ debounce: 1000 }'
+             placeholder='{{ "outsideURL.enterURLHere" | translate }}'/>
+    </md-input-container>
+  </div>
+  <iframe ng-src='{{outsideURLController.url}}'
+          style="height: 100%; width:100%; max-width: {{outsideURLController.maxWidth}}; max-height: {{outsideURLController.maxHeight}};">
+  </iframe>
+</div>
