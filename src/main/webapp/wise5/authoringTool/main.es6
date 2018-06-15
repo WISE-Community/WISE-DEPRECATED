@@ -30,7 +30,7 @@ import CRaterService from '../services/cRaterService';
 import '../directives/components';
 import ComponentService from '../components/componentService';
 import '../components/discussion/discussionAuthoringComponentModule';
-import '../components/draw/drawComponentModule';
+import '../components/draw/drawAuthoringComponentModule';
 import '../components/embedded/embeddedComponentModule';
 import '../filters/filters';
 import '../lib/highcharts@4.2.1';
@@ -78,7 +78,7 @@ let authoringModule = angular.module('authoring', [
     'components',
     'conceptMapAuthoringComponentModule',
     'discussionAuthoringComponentModule',
-    'drawComponentModule',
+    'drawAuthoringComponentModule',
     'embeddedComponentModule',
     'filters',
     'graphComponentModule',
