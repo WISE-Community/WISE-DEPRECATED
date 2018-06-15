@@ -31,7 +31,7 @@ import '../directives/components';
 import ComponentService from '../components/componentService';
 import '../components/discussion/discussionComponentModule';
 import '../components/draw/drawComponentModule';
-import '../components/embedded/embeddedComponentModule';
+import '../components/embedded/embeddedAuthoringComponentModule';
 import '../filters/filters';
 import '../lib/highcharts@4.2.1';
 import '../components/graph/graphAuthoringComponentModule';
@@ -79,7 +79,7 @@ let authoringModule = angular.module('authoring', [
     'conceptMapAuthoringComponentModule',
     'discussionComponentModule',
     'drawComponentModule',
-    'embeddedComponentModule',
+    'embeddedAuthoringComponentModule',
     'filters',
     'graphAuthoringComponentModule',
     'highcharts-ng',
