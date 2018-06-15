@@ -84,7 +84,7 @@ var ComponentController = function ComponentController($injector, $scope, $compi
         $scope.nodeAuthoringController = $scope.$parent.nodeAuthoringController;
     }
 
-    if ($scope.mode === 'authoring' && (componentContent.type == 'HTML' || componentContent.type == 'ConceptMap' || componentContent.type == 'Animation' || componentContent.type == 'Graph' || componentContent.type == 'Label' || componentContent.type == 'Match' || componentContent.type == 'OpenResponse' || componentContent.type == 'Table' || componentContent.type == 'OutsideURL' || componentContent.type == 'MultipleChoice' || componentContent.type == 'Embedded')) {
+    if ($scope.mode === 'authoring' && (componentContent.type == 'HTML' || componentContent.type == 'ConceptMap' || componentContent.type == 'Animation' || componentContent.type == 'Graph' || componentContent.type == 'Label' || componentContent.type == 'Match' || componentContent.type == 'OpenResponse' || componentContent.type == 'Table' || componentContent.type == 'OutsideURL' || componentContent.type == 'MultipleChoice' || componentContent.type == 'Embedded' || componentContent.type == 'AudioOscillator')) {
         $scope.componentTemplatePath = this.NodeService.getComponentAuthoringTemplatePath(componentContent.type);
     } else {
         $scope.componentTemplatePath = this.NodeService.getComponentTemplatePath(componentContent.type);
