@@ -91,12 +91,7 @@ var ProjectService = function () {
   }, {
     key: 'getStyle',
     value: function getStyle() {
-      var style = '';
-      var project = this.project;
-      if (project != null) {
-        style = project.style;
-      }
-      return style;
+      return this.project.style;
     }
   }, {
     key: 'getFilters',
@@ -105,27 +100,15 @@ var ProjectService = function () {
     }
   }, {
     key: 'getProjectTitle',
-
-
-    /**
-     * Returns the name/title of the current project
-     */
     value: function getProjectTitle() {
       var name = this.getProjectMetadata().title;
       return name ? name : 'A WISE Project (No name)';
     }
   }, {
     key: 'setProjectTitle',
-
-
-    /**
-     * Set the project title
-     */
     value: function setProjectTitle(projectTitle) {
       var metadata = this.getProjectMetadata();
-      if (metadata != null) {
-        metadata.title = projectTitle;
-      }
+      metadata.title = projectTitle;
     }
   }, {
     key: 'getProjectMetadata',
@@ -135,11 +118,7 @@ var ProjectService = function () {
   }, {
     key: 'getNodes',
     value: function getNodes() {
-      var project = this.project;
-      if (project != null) {
-        return project.nodes;
-      }
-      return null;
+      return this.project.nodes;
     }
   }, {
     key: 'getChildNodeIdsById',
@@ -159,37 +138,33 @@ var ProjectService = function () {
     key: 'isNode',
     value: function isNode(id) {
       var nodes = this.getNodes();
-      if (nodes != null) {
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-        try {
-          for (var _iterator = nodes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var node = _step.value;
+      try {
+        for (var _iterator = nodes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var node = _step.value;
 
-            if (node != null) {
-              var nodeId = node.id;
-              if (nodeId === id) {
-                return true;
-              }
-            }
+          if (node.id === id) {
+            return true;
           }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
         } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
+          if (_didIteratorError) {
+            throw _iteratorError;
           }
         }
       }
+
       return false;
     }
   }, {
@@ -200,8 +175,7 @@ var ProjectService = function () {
       if (node != null && existingNodes != null) {
         for (var n = 0; n < existingNodes.length; n++) {
           var existingNode = existingNodes[n];
-          var existingNodeId = existingNode.id;
-          if (existingNodeId === node.id) {
+          if (existingNode.id === node.id) {
             existingNodes.splice(n, 1, node);
             replaced = true;
           }
@@ -246,26 +220,14 @@ var ProjectService = function () {
   }, {
     key: 'isGroupNode',
     value: function isGroupNode(id) {
-      var groupNode = this.getNodeById(id);
-      if (groupNode != null) {
-        var type = groupNode.type;
-        if (type === 'group') {
-          return true;
-        }
-      }
-      return false;
+      var node = this.getNodeById(id);
+      return node != null && node.type == 'group';
     }
   }, {
     key: 'isApplicationNode',
     value: function isApplicationNode(id) {
-      var applicationNode = this.getNodeById(id);
-      if (applicationNode != null) {
-        var type = applicationNode.type;
-        if (type !== 'group') {
-          return true;
-        }
-      }
-      return false;
+      var node = this.getNodeById(id);
+      return node != null && node.type !== 'group';
     }
   }, {
     key: 'getGroups',
@@ -274,12 +236,6 @@ var ProjectService = function () {
     }
   }, {
     key: 'getInactiveGroupNodes',
-
-
-    /**
-     * Get the inactive group nodes.
-     * @return An array of inactive group nodes.
-     */
     value: function getInactiveGroupNodes() {
       return this.inactiveGroupNodes;
     }
@@ -548,13 +504,12 @@ var ProjectService = function () {
       this.idToOrder[node.id] = { 'order': this.nodeCount };
       this.nodeCount++;
       if (this.isGroupNode(node.id)) {
-        var childIds = node.ids;
         var _iteratorNormalCompletion6 = true;
         var _didIteratorError6 = false;
         var _iteratorError6 = undefined;
 
         try {
-          for (var _iterator6 = childIds[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          for (var _iterator6 = node.ids[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
             var childId = _step6.value;
 
             var child = this.getNodeById(childId);
@@ -587,18 +542,18 @@ var ProjectService = function () {
      * of nodes
      */
     value: function getNodeOrderOfProject(project) {
-      var idToOrder = {};
-      idToOrder.nodeCount = 0;
-      var startGroupId = project.startGroupId;
-      var rootNode = this.getNodeById(startGroupId, project);
+      var rootNode = this.getNodeById(project.startGroupId, project);
+      var idToOrder = {
+        nodeCount: 0
+      };
       var stepNumber = '';
       var nodes = [];
       var importProjectIdToOrder = this.getNodeOrderOfProjectHelper(project, rootNode, idToOrder, stepNumber, nodes);
       delete importProjectIdToOrder.nodeCount;
-      var result = {};
-      result.idToOrder = importProjectIdToOrder;
-      result.nodes = nodes;
-      return result;
+      return {
+        idToOrder: importProjectIdToOrder,
+        nodes: nodes
+      };
     }
 
     /**
@@ -803,71 +758,59 @@ var ProjectService = function () {
   }, {
     key: 'getNodePositionById',
     value: function getNodePositionById(id) {
-      var position = null;
       if (id != null) {
-        position = this.nodeIdToNumber[id];
+        return this.nodeIdToNumber[id];
       }
-      return position;
+      return null;
     }
   }, {
     key: 'getNodeIdByOrder',
     value: function getNodeIdByOrder(order) {
-      var id = null;
-      if (order != null) {
-        var _iteratorNormalCompletion8 = true;
-        var _didIteratorError8 = false;
-        var _iteratorError8 = undefined;
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
 
-        try {
-          for (var _iterator8 = Object.entries(this.idToOrder)[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-            var _step8$value = _slicedToArray(_step8.value, 2),
-                nodeId = _step8$value[0],
-                value = _step8$value[1];
+      try {
+        for (var _iterator8 = Object.entries(this.idToOrder)[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var _step8$value = _slicedToArray(_step8.value, 2),
+              nodeId = _step8$value[0],
+              value = _step8$value[1];
 
-            if (value.order === order) {
-              id = nodeId;
-              break;
-            }
+          if (value.order === order) {
+            return nodeId;
           }
-        } catch (err) {
-          _didIteratorError8 = true;
-          _iteratorError8 = err;
+        }
+      } catch (err) {
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
+          }
         } finally {
-          try {
-            if (!_iteratorNormalCompletion8 && _iterator8.return) {
-              _iterator8.return();
-            }
-          } finally {
-            if (_didIteratorError8) {
-              throw _iteratorError8;
-            }
+          if (_didIteratorError8) {
+            throw _iteratorError8;
           }
         }
       }
-      return id;
+
+      return null;
     }
   }, {
     key: 'getNodeOrderById',
     value: function getNodeOrderById(id) {
-      var order = null;
-      if (id != null) {
-        order = this.idToOrder[id] ? this.idToOrder[id].order : null;
-      }
-      return order;
+      return this.idToOrder[id] ? this.idToOrder[id].order : null;
     }
   }, {
     key: 'setIdToNode',
     value: function setIdToNode(id, element) {
-      if (id != null) {
-        this.idToNode[id] = element;
-      }
+      this.idToNode[id] = element;
     }
   }, {
     key: 'setIdToElement',
     value: function setIdToElement(id, element) {
-      if (id != null) {
-        this.idToElement[id] = element;
-      }
+      this.idToElement[id] = element;
     }
   }, {
     key: 'injectAssetPaths',
@@ -917,7 +860,7 @@ var ProjectService = function () {
         // only look for string that starts with ' or " and ends in png, jpg, jpeg, pdf, etc.
         // the string we're looking for can't start with '/ and "/.
         // note that this also works for \"abc.png and \'abc.png, where the quotes are escaped
-        contentString = contentString.replace(new RegExp('(\'|\"|\\\\\'|\\\\\")[^:][^\/]?[^\/]?[a-zA-Z0-9@%&;\\._\\/\\s\\-]*[\.](png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html.*?|js).*?(\'|\"|\\\\\'|\\\\\")', 'gi'), function (matchedString) {
+        contentString = contentString.replace(new RegExp('(\'|\"|\\\\\'|\\\\\")[^:][^\/]?[^\/]?[a-zA-Z0-9@%&;\\._\\/\\s\\-\']*[\.](png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html.*?|js).*?(\'|\"|\\\\\'|\\\\\")', 'gi'), function (matchedString) {
           // once found, we prepend the contentBaseURL + "assets/" to the string within the quotes and keep everything else the same.
           var delimiter = '';
           var matchedStringWithoutQuotes = '';
@@ -1023,15 +966,10 @@ var ProjectService = function () {
     key: 'getNodeById',
     value: function getNodeById(nodeId, project) {
       if (project == null) {
-        // the project argument is null so we will get it from the current project
-        if (nodeId != null && this.idToNode[nodeId]) {
+        if (this.idToNode[nodeId]) {
           return this.idToNode[nodeId];
         }
       } else {
-        /*
-         * the project argument is not null so we will get the node from
-         * project that was passed in
-         */
         var _iteratorNormalCompletion9 = true;
         var _didIteratorError9 = false;
         var _iteratorError9 = undefined;
@@ -1130,15 +1068,12 @@ var ProjectService = function () {
       var node = this.getNodeById(nodeId);
       var nodeIcon = null;
       if (node != null) {
-        var nodeType = node.type;
-
         // set defaults (TODO: get from configService?)
-        var defaultName = nodeType === 'group' ? 'explore' : 'school';
         nodeIcon = {
           color: 'rgba(0,0,0,0.54)',
           type: 'font',
           fontSet: 'material-icons',
-          fontName: defaultName,
+          fontName: node.type === 'group' ? 'explore' : 'school',
           imgSrc: '',
           imgAlt: 'node icon'
         };
@@ -1274,7 +1209,6 @@ var ProjectService = function () {
       if (node != null && group != null) {
         var nodeId = node.id;
         var groupIds = group.ids;
-
         if (groupIds != null && groupIds.indexOf(nodeId) != -1) {
           return true;
         }
@@ -1287,7 +1221,6 @@ var ProjectService = function () {
       if (node != null && group != null) {
         var descendents = this.getDescendentsOfGroup(group);
         var nodeId = node.id;
-
         if (descendents.indexOf(nodeId) != -1) {
           return true;
         }
@@ -1335,141 +1268,53 @@ var ProjectService = function () {
       return descendents;
     }
   }, {
-    key: 'isStartNode',
-    value: function isStartNode(node) {
-      var result = false;
-      if (node != null) {
-        var nodeId = node.id;
-        var projectStartId = this.getStartNodeId();
-        if (nodeId === projectStartId) {
-          result = true;
-        }
-
-        var groups = this.getGroups();
-        var _iteratorNormalCompletion14 = true;
-        var _didIteratorError14 = false;
-        var _iteratorError14 = undefined;
-
-        try {
-          for (var _iterator14 = groups[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-            var group = _step14.value;
-
-            if (group != null) {
-              var groupStartId = group.startId;
-              if (nodeId === groupStartId) {
-                result = true;
-                break;
-              }
-            }
-          }
-        } catch (err) {
-          _didIteratorError14 = true;
-          _iteratorError14 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion14 && _iterator14.return) {
-              _iterator14.return();
-            }
-          } finally {
-            if (_didIteratorError14) {
-              throw _iteratorError14;
-            }
-          }
-        }
-      }
-      return result;
-    }
-  }, {
     key: 'getStartNodeId',
-
-
-    /**
-     * Returns the Project's start node id, or null if it's not defined in the project
-     */
     value: function getStartNodeId() {
-      var project = this.project;
-      if (project != null) {
-        return project.startNodeId;
-      }
-      return null;
+      return this.project.startNodeId;
     }
   }, {
     key: 'setStartNodeId',
-
-
-    /**
-     * Set the start node id
-     * @param nodeId the new start node id
-     */
     value: function setStartNodeId(nodeId) {
-      if (nodeId != null) {
-        var project = this.project;
-        if (project != null) {
-          project.startNodeId = nodeId;
-        }
-      }
+      this.project.startNodeId = nodeId;
     }
-
-    /**
-     * Get the start group id
-     * @return the start group id
-     */
-
   }, {
     key: 'getStartGroupId',
     value: function getStartGroupId() {
-      var project = this.project;
-      if (project != null) {
-        return project.startGroupId;
-      }
-      return null;
+      return this.project.startGroupId;
     }
-
-    /**
-     * Check if the given node id is the start node id
-     * @return whether the node id is the start node id
-     */
-
   }, {
     key: 'isStartNodeId',
     value: function isStartNodeId(nodeId) {
-      var project = this.project;
-      if (project != null) {
-        var startNodeId = project.startNodeId;
-        if (nodeId === startNodeId) {
-          return true;
-        }
-      }
-      return false;
+      return this.project.startNodeId === nodeId;
     }
   }, {
     key: 'getConstraintsForNode',
     value: function getConstraintsForNode(node) {
       var constraints = [];
       var allConstraints = this.activeConstraints;
-      var _iteratorNormalCompletion15 = true;
-      var _didIteratorError15 = false;
-      var _iteratorError15 = undefined;
+      var _iteratorNormalCompletion14 = true;
+      var _didIteratorError14 = false;
+      var _iteratorError14 = undefined;
 
       try {
-        for (var _iterator15 = allConstraints[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-          var constraint = _step15.value;
+        for (var _iterator14 = allConstraints[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+          var constraint = _step14.value;
 
           if (this.isNodeAffectedByConstraint(node, constraint)) {
             constraints.push(constraint);
           }
         }
       } catch (err) {
-        _didIteratorError15 = true;
-        _iteratorError15 = err;
+        _didIteratorError14 = true;
+        _iteratorError14 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion15 && _iterator15.return) {
-            _iterator15.return();
+          if (!_iteratorNormalCompletion14 && _iterator14.return) {
+            _iterator14.return();
           }
         } finally {
-          if (_didIteratorError15) {
-            throw _iteratorError15;
+          if (_didIteratorError14) {
+            throw _iteratorError14;
           }
         }
       }
@@ -1481,9 +1326,9 @@ var ProjectService = function () {
 
 
     /**
-     * Get the constraints authored on the node.
+     * Get the constraints on the node.
      * @param nodeId The node id of the node.
-     * @return An array of constraint JSON objects.
+     * @return An array of constraint objects.
      */
     value: function getConstraintsOnNode(nodeId) {
       var node = this.getNodeById(nodeId);
@@ -1491,19 +1336,30 @@ var ProjectService = function () {
     }
 
     /**
+     * @param node A node object.
+     * @param constraint A constraint object.
+     */
+
+  }, {
+    key: 'addConstraintToNode',
+    value: function addConstraintToNode(node, constraint) {
+      if (node.constraints == null) {
+        node.constraints = [];
+      }
+      node.constraints.push(constraint);
+    }
+
+    /**
      * Check if a node has constraints.
      * @param nodeId The node id of the node.
-     * @return Whether the node has constraints authored on it.
+     * @return true iff the node has constraints authored on it.
      */
 
   }, {
     key: 'nodeHasConstraint',
     value: function nodeHasConstraint(nodeId) {
       var constraints = this.getConstraintsOnNode(nodeId);
-      if (constraints.length > 0) {
-        return true;
-      }
-      return false;
+      return constraints.length > 0;
     }
 
     /**
@@ -1554,200 +1410,143 @@ var ProjectService = function () {
   }, {
     key: 'isNodeAffectedByConstraint',
     value: function isNodeAffectedByConstraint(node, constraint) {
-      var result = false;
-      if (node != null && constraint != null) {
-        // check if we have previously calculated the result before
-        var rememberedResult = this.getIsNodeAffectedByConstraintResult(node.id, constraint.id, result);
-        if (rememberedResult != null) {
-          // we have calculated the result before
+      var cachedResult = this.getCachedIsNodeAffectedByConstraintResult(node.id, constraint.id);
+      if (cachedResult != null) {
+        return cachedResult;
+      } else {
+        var result = false;
+        var nodeId = node.id;
+        var targetId = constraint.targetId;
+        var action = constraint.action;
 
-          // use the remembered result
-          result = rememberedResult;
+        if (action === 'makeAllNodesAfterThisNotVisible' && this.isNodeIdAfter(targetId, node.id)) {
+          result = true;
+        } else if (action === 'makeAllNodesAfterThisNotVisitable' && this.isNodeIdAfter(targetId, node.id)) {
+          result = true;
         } else {
-          // we have not calculated the result before
-          var nodeId = node.id;
-          var targetId = constraint.targetId;
-          var action = constraint.action;
-
-          if (action === 'makeAllNodesAfterThisNotVisible') {
-            if (this.isNodeIdAfter(targetId, node.id)) {
+          var targetNode = this.getNodeById(targetId);
+          if (targetNode != null) {
+            var nodeType = targetNode.type;
+            if (nodeType === 'node' && nodeId === targetId) {
               result = true;
-            }
-          } else if (action === 'makeAllNodesAfterThisNotVisitable') {
-            if (this.isNodeIdAfter(targetId, node.id)) {
+            } else if (nodeType === 'group' && (nodeId === targetId || this.isNodeDescendentOfGroup(node, targetNode))) {
               result = true;
-            }
-          } else {
-            var targetNode = this.getNodeById(targetId);
-            if (targetNode != null) {
-              var nodeType = targetNode.type;
-              if (nodeType === 'node') {
-                if (nodeId === targetId) {
-                  result = true;
-                }
-              } else if (nodeType === 'group') {
-                if (nodeId === targetId) {
-                  result = true;
-                }
-                if (this.isNodeDescendentOfGroup(node, targetNode)) {
-                  result = true;
-                }
-              }
             }
           }
-
-          // remember the result so we can look it up in the future
-          this.setIsNodeAffectedByConstraintResult(node.id, constraint.id, result);
         }
+
+        this.cacheIsNodeAffectedByConstraintResult(node.id, constraint.id, result);
+        return result;
       }
-      return result;
     }
   }, {
     key: 'isNodeIdAfter',
 
 
     /**
-     * Check if a node id comes after another node id in the project
-     * @param nodeIdBefore the node id before
-     * @param nodeIdAfter the node id after
+     * Check if a node id comes after another node id in the project.
+     * @param nodeId1 The node id of a step or group.
+     * @param nodeId2 The node id of a step or group.
+     * @returns {boolean} True iff nodeId2 comes after nodeId1.
      */
-    value: function isNodeIdAfter(nodeIdBefore, nodeIdAfter) {
-      var result = false;
-      if (nodeIdBefore != null && nodeIdAfter != null) {
-        if (this.isApplicationNode(nodeIdBefore)) {
-          // the node id before is a step
+    value: function isNodeIdAfter(nodeId1, nodeId2) {
+      if (this.isApplicationNode(nodeId1)) {
+        var pathsFromNodeId1ToEnd = this.getAllPaths([], nodeId1, true);
+        var _iteratorNormalCompletion15 = true;
+        var _didIteratorError15 = false;
+        var _iteratorError15 = undefined;
 
-          // get all the paths from the beforeNodeId to the end of the project
-          var pathsToEnd = this.getAllPaths([], nodeIdBefore, true);
+        try {
+          for (var _iterator15 = pathsFromNodeId1ToEnd[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+            var pathToEnd = _step15.value;
 
-          if (pathsToEnd != null) {
-            var _iteratorNormalCompletion16 = true;
-            var _didIteratorError16 = false;
-            var _iteratorError16 = undefined;
-
-            try {
-              for (var _iterator16 = pathsToEnd[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
-                var pathToEnd = _step16.value;
-
-                if (pathToEnd != null) {
-                  /*
-                   * remove the first node id and its parent id because
-                   * we will check the remaining node ids in the array
-                   * for the nodeIdAfter
-                   */
-
-                  // get the index of the node id before
-                  var index = pathToEnd.indexOf(nodeIdBefore);
-
-                  if (index != -1) {
-                    // remove the node id before
-                    pathToEnd.splice(index, 1);
-                  }
-
-                  // get the parent group of the node id before
-                  var parentGroup = this.getParentGroup(nodeIdBefore);
-
-                  if (parentGroup != null) {
-                    // remove the parent group of the node id before
-                    var parentGroupId = parentGroup.id;
-                    var parentGroupIndex = pathToEnd.indexOf(parentGroupId);
-                    if (parentGroupIndex != -1) {
-                      pathToEnd.splice(parentGroupIndex, 1);
-                    }
-                  }
-
-                  if (pathToEnd.indexOf(nodeIdAfter) != -1) {
-                    // we have found the nodeIdAfter in the path to the end of the project
-                    result = true;
-                  }
-                }
-              }
-            } catch (err) {
-              _didIteratorError16 = true;
-              _iteratorError16 = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion16 && _iterator16.return) {
-                  _iterator16.return();
-                }
-              } finally {
-                if (_didIteratorError16) {
-                  throw _iteratorError16;
-                }
-              }
+            if (pathToEnd.indexOf(nodeId2) != -1) {
+              return true;
             }
           }
-        } else {
-          // the node id before is an activity
-
-          var group = this.getNodeById(nodeIdBefore);
-          if (group != null) {
-            var transitions = this.getTransitionsByFromNodeId(nodeIdBefore);
-            if (transitions != null) {
-              var _iteratorNormalCompletion17 = true;
-              var _didIteratorError17 = false;
-              var _iteratorError17 = undefined;
-
-              try {
-                for (var _iterator17 = transitions[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-                  var transition = _step17.value;
-
-                  if (transition != null) {
-                    var toNodeId = transition.to;
-
-                    // get the paths between to toNodeId and the end of the project
-                    var _pathsToEnd = this.getAllPaths([], toNodeId, true);
-
-                    var _iteratorNormalCompletion18 = true;
-                    var _didIteratorError18 = false;
-                    var _iteratorError18 = undefined;
-
-                    try {
-                      for (var _iterator18 = _pathsToEnd[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
-                        var _pathToEnd = _step18.value;
-
-                        if (_pathToEnd != null) {
-                          if (_pathToEnd.indexOf(nodeIdAfter) != -1) {
-                            // we have found the nodeIdAfter in the path to the end of the project
-                            result = true;
-                          }
-                        }
-                      }
-                    } catch (err) {
-                      _didIteratorError18 = true;
-                      _iteratorError18 = err;
-                    } finally {
-                      try {
-                        if (!_iteratorNormalCompletion18 && _iterator18.return) {
-                          _iterator18.return();
-                        }
-                      } finally {
-                        if (_didIteratorError18) {
-                          throw _iteratorError18;
-                        }
-                      }
-                    }
-                  }
-                }
-              } catch (err) {
-                _didIteratorError17 = true;
-                _iteratorError17 = err;
-              } finally {
-                try {
-                  if (!_iteratorNormalCompletion17 && _iterator17.return) {
-                    _iterator17.return();
-                  }
-                } finally {
-                  if (_didIteratorError17) {
-                    throw _iteratorError17;
-                  }
-                }
-              }
+        } catch (err) {
+          _didIteratorError15 = true;
+          _iteratorError15 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion15 && _iterator15.return) {
+              _iterator15.return();
+            }
+          } finally {
+            if (_didIteratorError15) {
+              throw _iteratorError15;
             }
           }
         }
+      } else {
+        return this.isNodeAfterGroup(nodeId1, nodeId2);
       }
-      return result;
+      return false;
+    }
+
+    /**
+     * @param groupId
+     * @param nodeId The node id of a step or group.
+     * @returns {boolean} True iff nodeId comes after groupId.
+     */
+
+  }, {
+    key: 'isNodeAfterGroup',
+    value: function isNodeAfterGroup(groupId, nodeId) {
+      var transitions = this.getTransitionsByFromNodeId(groupId);
+      try {
+        var _iteratorNormalCompletion16 = true;
+        var _didIteratorError16 = false;
+        var _iteratorError16 = undefined;
+
+        try {
+          for (var _iterator16 = transitions[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+            var transition = _step16.value;
+
+            var pathFromGroupToEnd = this.getAllPaths([], transition.to, true);
+            var _iteratorNormalCompletion17 = true;
+            var _didIteratorError17 = false;
+            var _iteratorError17 = undefined;
+
+            try {
+              for (var _iterator17 = pathFromGroupToEnd[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+                var pathToEnd = _step17.value;
+
+                if (pathToEnd.indexOf(nodeId) != -1) {
+                  return true;
+                }
+              }
+            } catch (err) {
+              _didIteratorError17 = true;
+              _iteratorError17 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion17 && _iterator17.return) {
+                  _iterator17.return();
+                }
+              } finally {
+                if (_didIteratorError17) {
+                  throw _iteratorError17;
+                }
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError16 = true;
+          _iteratorError16 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion16 && _iterator16.return) {
+              _iterator16.return();
+            }
+          } finally {
+            if (_didIteratorError16) {
+              throw _iteratorError16;
+            }
+          }
+        }
+      } catch (e) {}
+      return false;
     }
 
     /**
@@ -1759,16 +1558,13 @@ var ProjectService = function () {
   }, {
     key: 'getTransitionLogicByFromNodeId',
     value: function getTransitionLogicByFromNodeId(fromNodeId) {
-      if (fromNodeId != null) {
-        // get the node
-        var node = this.getNodeById(fromNodeId);
-
-        if (node != null) {
-          // get the transition logic
-          return node.transitionLogic;
-        }
+      var node = this.getNodeById(fromNodeId);
+      if (node.transitionLogic == null) {
+        node.transitionLogic = {
+          transitions: []
+        };
       }
-      return null;
+      return node.transitionLogic;
     }
   }, {
     key: 'getTransitionsByFromNodeId',
@@ -1777,19 +1573,11 @@ var ProjectService = function () {
     /**
      * Get the transitions for a node
      * @param fromNodeId the node to get transitions from
-     * @returns an array of transitions
+     * @returns {Array} an array of transitions
      */
     value: function getTransitionsByFromNodeId(fromNodeId) {
-      if (fromNodeId != null) {
-        // get the transition logic
-        var transitionLogic = this.getTransitionLogicByFromNodeId(fromNodeId);
-
-        if (transitionLogic != null) {
-          // get the transitions
-          return transitionLogic.transitions;
-        }
-      }
-      return null;
+      var transitionLogic = this.getTransitionLogicByFromNodeId(fromNodeId);
+      return transitionLogic.transitions;
     }
 
     /**
@@ -1805,16 +1593,44 @@ var ProjectService = function () {
       var nodesByToNodeId = [];
       if (toNodeId != null) {
         var nodes = this.project.nodes;
+        var _iteratorNormalCompletion18 = true;
+        var _didIteratorError18 = false;
+        var _iteratorError18 = undefined;
+
+        try {
+          for (var _iterator18 = nodes[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+            var node = _step18.value;
+
+            if (this.nodeHasTransitionToNodeId(node, toNodeId)) {
+              nodesByToNodeId.push(node);
+            }
+          }
+        } catch (err) {
+          _didIteratorError18 = true;
+          _iteratorError18 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion18 && _iterator18.return) {
+              _iterator18.return();
+            }
+          } finally {
+            if (_didIteratorError18) {
+              throw _iteratorError18;
+            }
+          }
+        }
+
+        var inactiveNodes = this.getInactiveNodes();
         var _iteratorNormalCompletion19 = true;
         var _didIteratorError19 = false;
         var _iteratorError19 = undefined;
 
         try {
-          for (var _iterator19 = nodes[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
-            var node = _step19.value;
+          for (var _iterator19 = inactiveNodes[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+            var inactiveNode = _step19.value;
 
-            if (this.nodeHasTransitionToNodeId(node, toNodeId)) {
-              nodesByToNodeId.push(node);
+            if (this.nodeHasTransitionToNodeId(inactiveNode, toNodeId)) {
+              nodesByToNodeId.push(inactiveNode);
             }
           }
         } catch (err) {
@@ -1828,34 +1644,6 @@ var ProjectService = function () {
           } finally {
             if (_didIteratorError19) {
               throw _iteratorError19;
-            }
-          }
-        }
-
-        var inactiveNodes = this.getInactiveNodes();
-        var _iteratorNormalCompletion20 = true;
-        var _didIteratorError20 = false;
-        var _iteratorError20 = undefined;
-
-        try {
-          for (var _iterator20 = inactiveNodes[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
-            var inactiveNode = _step20.value;
-
-            if (this.nodeHasTransitionToNodeId(inactiveNode, toNodeId)) {
-              nodesByToNodeId.push(inactiveNode);
-            }
-          }
-        } catch (err) {
-          _didIteratorError20 = true;
-          _iteratorError20 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion20 && _iterator20.return) {
-              _iterator20.return();
-            }
-          } finally {
-            if (_didIteratorError20) {
-              throw _iteratorError20;
             }
           }
         }
@@ -1873,36 +1661,31 @@ var ProjectService = function () {
      * @returns Whether the node has a transition to the given nodeId.
      */
     value: function nodeHasTransitionToNodeId(node, toNodeId) {
-      var transitionLogic = node.transitionLogic;
-      if (transitionLogic != null) {
-        var transitions = transitionLogic.transitions;
-        if (transitions != null) {
-          var _iteratorNormalCompletion21 = true;
-          var _didIteratorError21 = false;
-          var _iteratorError21 = undefined;
+      var transitions = this.getTransitionsByFromNodeId(node.id);
+      if (transitions != null) {
+        var _iteratorNormalCompletion20 = true;
+        var _didIteratorError20 = false;
+        var _iteratorError20 = undefined;
 
-          try {
-            for (var _iterator21 = transitions[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
-              var transition = _step21.value;
+        try {
+          for (var _iterator20 = transitions[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+            var transition = _step20.value;
 
-              if (transition != null) {
-                if (toNodeId === transition.to) {
-                  return true;
-                }
-              }
+            if (toNodeId === transition.to) {
+              return true;
             }
-          } catch (err) {
-            _didIteratorError21 = true;
-            _iteratorError21 = err;
+          }
+        } catch (err) {
+          _didIteratorError20 = true;
+          _iteratorError20 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion20 && _iterator20.return) {
+              _iterator20.return();
+            }
           } finally {
-            try {
-              if (!_iteratorNormalCompletion21 && _iterator21.return) {
-                _iterator21.return();
-              }
-            } finally {
-              if (_didIteratorError21) {
-                throw _iteratorError21;
-              }
+            if (_didIteratorError20) {
+              throw _iteratorError20;
             }
           }
         }
@@ -1917,21 +1700,59 @@ var ProjectService = function () {
      */
 
   }, {
-    key: 'getNodeIdsByToNodeId',
-    value: function getNodeIdsByToNodeId(toNodeId) {
+    key: 'getNodesWithTransitionToNodeId',
+    value: function getNodesWithTransitionToNodeId(toNodeId) {
       var nodeIds = [];
       var nodes = this.getNodesByToNodeId(toNodeId);
-      if (nodes != null) {
+      var _iteratorNormalCompletion21 = true;
+      var _didIteratorError21 = false;
+      var _iteratorError21 = undefined;
+
+      try {
+        for (var _iterator21 = nodes[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+          var node = _step21.value;
+
+          nodeIds.push(node.id);
+        }
+      } catch (err) {
+        _didIteratorError21 = true;
+        _iteratorError21 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion21 && _iterator21.return) {
+            _iterator21.return();
+          }
+        } finally {
+          if (_didIteratorError21) {
+            throw _iteratorError21;
+          }
+        }
+      }
+
+      return nodeIds;
+    }
+
+    /**
+     * Get the group nodes that point to a given node id
+     * @param toNodeId
+     */
+
+  }, {
+    key: 'getGroupNodesByToNodeId',
+    value: function getGroupNodesByToNodeId(toNodeId) {
+      var groupsThatPointToNodeId = [];
+      if (toNodeId != null) {
+        var groups = this.getGroups();
         var _iteratorNormalCompletion22 = true;
         var _didIteratorError22 = false;
         var _iteratorError22 = undefined;
 
         try {
-          for (var _iterator22 = nodes[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
-            var node = _step22.value;
+          for (var _iterator22 = groups[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
+            var group = _step22.value;
 
-            if (node != null) {
-              nodeIds.push(node.id);
+            if (this.nodeHasTransitionToNodeId(group, toNodeId)) {
+              groupsThatPointToNodeId.push(group);
             }
           }
         } catch (err) {
@@ -1949,161 +1770,16 @@ var ProjectService = function () {
           }
         }
       }
-      return nodeIds;
-    }
-
-    /**
-     * Get the group nodes that point to a given node id
-     * @param toNodeId
-     */
-
-  }, {
-    key: 'getGroupNodesByToNodeId',
-    value: function getGroupNodesByToNodeId(toNodeId) {
-      var groupsThatPointToNodeId = [];
-      if (toNodeId != null) {
-        var groups = this.getGroups();
-        var _iteratorNormalCompletion23 = true;
-        var _didIteratorError23 = false;
-        var _iteratorError23 = undefined;
-
-        try {
-          for (var _iterator23 = groups[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
-            var group = _step23.value;
-
-            if (group != null) {
-              if (this.hasTransitionTo(group, toNodeId)) {
-                groupsThatPointToNodeId.push(group);
-              }
-            }
-          }
-        } catch (err) {
-          _didIteratorError23 = true;
-          _iteratorError23 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion23 && _iterator23.return) {
-              _iterator23.return();
-            }
-          } finally {
-            if (_didIteratorError23) {
-              throw _iteratorError23;
-            }
-          }
-        }
-      }
       return groupsThatPointToNodeId;
     }
-
-    /**
-     * Check if a node has a transition to a node id
-     * @param node check if this node has a transition to the node id
-     * @param toNodeId we will look for a transition to this node id
-     * @returns whether the node has a transition to the node id
-     */
-
-  }, {
-    key: 'hasTransitionTo',
-    value: function hasTransitionTo(node, toNodeId) {
-      if (node != null && toNodeId != null) {
-        var transitionLogic = node.transitionLogic;
-        if (transitionLogic != null) {
-          var transitions = transitionLogic.transitions;
-          if (transitions != null) {
-            var _iteratorNormalCompletion24 = true;
-            var _didIteratorError24 = false;
-            var _iteratorError24 = undefined;
-
-            try {
-              for (var _iterator24 = transitions[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
-                var transition = _step24.value;
-
-                if (toNodeId === transition.to) {
-                  return true;
-                }
-              }
-            } catch (err) {
-              _didIteratorError24 = true;
-              _iteratorError24 = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion24 && _iterator24.return) {
-                  _iterator24.return();
-                }
-              } finally {
-                if (_didIteratorError24) {
-                  throw _iteratorError24;
-                }
-              }
-            }
-          }
-        }
-      }
-      return false;
-    }
-
-    /**
-     * Get the transitions that traverse from the fromNodeId and to the toNodeId
-     * @param fromNodeId the from node id
-     * @param toNodeId the to node id
-     * @returns an array of transitions that traverse from the fromNodeId and
-     * to the toNodeId
-     */
-
-  }, {
-    key: 'getTransitionsByFromAndToNodeId',
-    value: function getTransitionsByFromAndToNodeId(fromNodeId, toNodeId) {
-      var transitionsResults = [];
-      if (fromNodeId != null && toNodeId != null) {
-        var node = this.getNodeById(fromNodeId);
-        if (node != null) {
-          var transitionLogic = node.transitionLogic;
-          if (transitionLogic != null) {
-            var transitions = transitionLogic.transitions;
-            if (transitions != null) {
-              var _iteratorNormalCompletion25 = true;
-              var _didIteratorError25 = false;
-              var _iteratorError25 = undefined;
-
-              try {
-                for (var _iterator25 = transitions[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
-                  var transition = _step25.value;
-
-                  if (transition != null) {
-                    var to = transition.to;
-                    if (toNodeId === to) {
-                      transitionsResults.push(transition);
-                    }
-                  }
-                }
-              } catch (err) {
-                _didIteratorError25 = true;
-                _iteratorError25 = err;
-              } finally {
-                try {
-                  if (!_iteratorNormalCompletion25 && _iterator25.return) {
-                    _iterator25.return();
-                  }
-                } finally {
-                  if (_didIteratorError25) {
-                    throw _iteratorError25;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      return transitionsResults;
-    }
-  }, {
-    key: 'retrieveProject',
-
 
     /**
      * Retrieves the project JSON from Config.projectURL and returns it.
      * If Config.projectURL is undefined, returns null.
      */
+
+  }, {
+    key: 'retrieveProject',
     value: function retrieveProject() {
       var _this = this;
 
@@ -2138,30 +1814,16 @@ var ProjectService = function () {
       var _this2 = this;
 
       if (projectId != null) {
-        // get the config URL for the project
         var configURL = window.configURL + '/' + projectId;
-
-        // get the config for the project
         return this.$http.get(configURL).then(function (result) {
           var configJSON = result.data;
-
           if (configJSON != null) {
-            // get the project URL and preview project URL
             var projectURL = configJSON.projectURL;
             var previewProjectURL = configJSON.previewProjectURL;
-
             if (projectURL != null) {
-              // get the project JSON
               return _this2.$http.get(projectURL).then(function (result) {
                 var projectJSON = result.data;
-
-                /*
-                 * set the preview project URL into the project JSON
-                 * so that we easily obtain the preview project URL
-                 * later
-                 */
                 projectJSON.previewProjectURL = previewProjectURL;
-
                 return projectJSON;
               });
             }
@@ -2183,7 +1845,6 @@ var ProjectService = function () {
       var commitMessage = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
 
       this.$rootScope.$broadcast('savingProject');
-      // perform any cleanup before saving the project
       this.cleanupBeforeSave();
 
       var projectId = this.ConfigService.getProjectId();
@@ -2192,19 +1853,16 @@ var ProjectService = function () {
         return null;
       }
 
-      // Get the project from this service
-      var projectJSONString = angular.toJson(this.project, 4);
-
-      var httpParams = {};
-      httpParams.method = 'POST';
-      httpParams.url = saveProjectURL;
-      httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-
-      var params = {};
-      params.projectId = projectId;
-      params.commitMessage = commitMessage;
-      params.projectJSONString = projectJSONString;
-      httpParams.data = $.param(params);
+      var httpParams = {
+        method: 'POST',
+        url: saveProjectURL,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: $.param({
+          projectId: projectId,
+          commitMessage: commitMessage,
+          projectJSONString: angular.toJson(this.project, 4)
+        })
+      };
 
       return this.$http(httpParams).then(function (result) {
         var commitHistory = result.data;
@@ -2223,70 +1881,67 @@ var ProjectService = function () {
      */
     value: function cleanupBeforeSave() {
       var activeNodes = this.getActiveNodes();
-      var _iteratorNormalCompletion26 = true;
-      var _didIteratorError26 = false;
-      var _iteratorError26 = undefined;
+      var _iteratorNormalCompletion23 = true;
+      var _didIteratorError23 = false;
+      var _iteratorError23 = undefined;
 
       try {
-        for (var _iterator26 = activeNodes[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
-          var activeNode = _step26.value;
+        for (var _iterator23 = activeNodes[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+          var activeNode = _step23.value;
 
           this.cleanupNode(activeNode);
         }
       } catch (err) {
-        _didIteratorError26 = true;
-        _iteratorError26 = err;
+        _didIteratorError23 = true;
+        _iteratorError23 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion26 && _iterator26.return) {
-            _iterator26.return();
+          if (!_iteratorNormalCompletion23 && _iterator23.return) {
+            _iterator23.return();
           }
         } finally {
-          if (_didIteratorError26) {
-            throw _iteratorError26;
+          if (_didIteratorError23) {
+            throw _iteratorError23;
           }
         }
       }
 
       var inactiveNodes = this.getInactiveNodes();
-      var _iteratorNormalCompletion27 = true;
-      var _didIteratorError27 = false;
-      var _iteratorError27 = undefined;
+      var _iteratorNormalCompletion24 = true;
+      var _didIteratorError24 = false;
+      var _iteratorError24 = undefined;
 
       try {
-        for (var _iterator27 = inactiveNodes[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
-          var inactiveNode = _step27.value;
+        for (var _iterator24 = inactiveNodes[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
+          var inactiveNode = _step24.value;
 
           this.cleanupNode(inactiveNode);
         }
       } catch (err) {
-        _didIteratorError27 = true;
-        _iteratorError27 = err;
+        _didIteratorError24 = true;
+        _iteratorError24 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion27 && _iterator27.return) {
-            _iterator27.return();
+          if (!_iteratorNormalCompletion24 && _iterator24.return) {
+            _iterator24.return();
           }
         } finally {
-          if (_didIteratorError27) {
-            throw _iteratorError27;
+          if (_didIteratorError24) {
+            throw _iteratorError24;
           }
         }
       }
     }
 
     /**
-     * Remove any fields that are used temporarily for display purposes.
+     * Remove any fields that are used temporarily for display purposes like when
+     * the project is loaded in the authoring tool and grading tool
      * @param node The node object.
      */
 
   }, {
     key: 'cleanupNode',
     value: function cleanupNode(node) {
-      /*
-       * Remove fields that are added when the project is loaded in the authoring
-       * tool and grading tool.
-       */
       delete node.checked;
       delete node.hasWork;
       delete node.hasAlert;
@@ -2304,27 +1959,27 @@ var ProjectService = function () {
       var components = node.components;
       // activity nodes do not have components but step nodes do have components
       if (components != null) {
-        var _iteratorNormalCompletion28 = true;
-        var _didIteratorError28 = false;
-        var _iteratorError28 = undefined;
+        var _iteratorNormalCompletion25 = true;
+        var _didIteratorError25 = false;
+        var _iteratorError25 = undefined;
 
         try {
-          for (var _iterator28 = components[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
-            var component = _step28.value;
+          for (var _iterator25 = components[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
+            var component = _step25.value;
 
             this.cleanupComponent(component);
           }
         } catch (err) {
-          _didIteratorError28 = true;
-          _iteratorError28 = err;
+          _didIteratorError25 = true;
+          _iteratorError25 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion28 && _iterator28.return) {
-              _iterator28.return();
+            if (!_iteratorNormalCompletion25 && _iterator25.return) {
+              _iterator25.return();
             }
           } finally {
-            if (_didIteratorError28) {
-              throw _iteratorError28;
+            if (_didIteratorError25) {
+              throw _iteratorError25;
             }
           }
         }
@@ -2332,17 +1987,14 @@ var ProjectService = function () {
     }
 
     /**
-     * Remove any fields that are used temporarily for display purposes.
+     * Remove any fields that are used temporarily for display purposes like when
+     * the project is loaded in the authoring tool and grading tool
      * @param component The component object.
      */
 
   }, {
     key: 'cleanupComponent',
     value: function cleanupComponent(component) {
-      /*
-       * Remove fields that are added when the project is loaded in the authoring
-       * tool and grading tool.
-       */
       delete component.checked;
       delete component.hasWork;
     }
@@ -2400,7 +2052,6 @@ var ProjectService = function () {
         return this.flattenedProjectAsNodeIds;
       }
 
-      // get the start node id
       var startNodeId = this.getStartNodeId();
 
       /*
@@ -2473,13 +2124,13 @@ var ProjectService = function () {
               var parentGroupTransitions = this.getTransitionsByFromNodeId(_parentGroupId);
 
               if (parentGroupTransitions != null) {
-                var _iteratorNormalCompletion29 = true;
-                var _didIteratorError29 = false;
-                var _iteratorError29 = undefined;
+                var _iteratorNormalCompletion26 = true;
+                var _didIteratorError26 = false;
+                var _iteratorError26 = undefined;
 
                 try {
-                  for (var _iterator29 = parentGroupTransitions[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
-                    var parentGroupTransition = _step29.value;
+                  for (var _iterator26 = parentGroupTransitions[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
+                    var parentGroupTransition = _step26.value;
 
                     if (parentGroupTransition != null) {
                       var toNodeId = parentGroupTransition.to;
@@ -2490,29 +2141,29 @@ var ProjectService = function () {
                          */
                         var allPathsFromToNode = this.getAllPaths(pathSoFar, toNodeId, includeGroups);
 
-                        var _iteratorNormalCompletion30 = true;
-                        var _didIteratorError30 = false;
-                        var _iteratorError30 = undefined;
+                        var _iteratorNormalCompletion27 = true;
+                        var _didIteratorError27 = false;
+                        var _iteratorError27 = undefined;
 
                         try {
-                          for (var _iterator30 = allPathsFromToNode[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
-                            var tempPath = _step30.value;
+                          for (var _iterator27 = allPathsFromToNode[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+                            var tempPath = _step27.value;
 
                             tempPath.unshift(nodeId);
                             allPaths.push(tempPath);
                             addedCurrentNodeId = true;
                           }
                         } catch (err) {
-                          _didIteratorError30 = true;
-                          _iteratorError30 = err;
+                          _didIteratorError27 = true;
+                          _iteratorError27 = err;
                         } finally {
                           try {
-                            if (!_iteratorNormalCompletion30 && _iterator30.return) {
-                              _iterator30.return();
+                            if (!_iteratorNormalCompletion27 && _iterator27.return) {
+                              _iterator27.return();
                             }
                           } finally {
-                            if (_didIteratorError30) {
-                              throw _iteratorError30;
+                            if (_didIteratorError27) {
+                              throw _iteratorError27;
                             }
                           }
                         }
@@ -2520,16 +2171,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError29 = true;
-                  _iteratorError29 = err;
+                  _didIteratorError26 = true;
+                  _iteratorError26 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion29 && _iterator29.return) {
-                      _iterator29.return();
+                    if (!_iteratorNormalCompletion26 && _iterator26.return) {
+                      _iterator26.return();
                     }
                   } finally {
-                    if (_didIteratorError29) {
-                      throw _iteratorError29;
+                    if (_didIteratorError26) {
+                      throw _iteratorError26;
                     }
                   }
                 }
@@ -2546,13 +2197,13 @@ var ProjectService = function () {
             } else {
               // there are transitions from this node id
 
-              var _iteratorNormalCompletion31 = true;
-              var _didIteratorError31 = false;
-              var _iteratorError31 = undefined;
+              var _iteratorNormalCompletion28 = true;
+              var _didIteratorError28 = false;
+              var _iteratorError28 = undefined;
 
               try {
-                for (var _iterator31 = transitions[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
-                  var transition = _step31.value;
+                for (var _iterator28 = transitions[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
+                  var transition = _step28.value;
 
                   if (transition != null) {
                     var _toNodeId = transition.to;
@@ -2566,13 +2217,13 @@ var ProjectService = function () {
                       var _allPathsFromToNode = this.getAllPaths(pathSoFar, _toNodeId, includeGroups);
 
                       if (_allPathsFromToNode != null) {
-                        var _iteratorNormalCompletion32 = true;
-                        var _didIteratorError32 = false;
-                        var _iteratorError32 = undefined;
+                        var _iteratorNormalCompletion29 = true;
+                        var _didIteratorError29 = false;
+                        var _iteratorError29 = undefined;
 
                         try {
-                          for (var _iterator32 = _allPathsFromToNode[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
-                            var _tempPath = _step32.value;
+                          for (var _iterator29 = _allPathsFromToNode[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
+                            var _tempPath = _step29.value;
 
                             if (includeGroups) {
                               // we need to add the group id to the path
@@ -2599,16 +2250,16 @@ var ProjectService = function () {
                             allPaths.push(_tempPath);
                           }
                         } catch (err) {
-                          _didIteratorError32 = true;
-                          _iteratorError32 = err;
+                          _didIteratorError29 = true;
+                          _iteratorError29 = err;
                         } finally {
                           try {
-                            if (!_iteratorNormalCompletion32 && _iterator32.return) {
-                              _iterator32.return();
+                            if (!_iteratorNormalCompletion29 && _iterator29.return) {
+                              _iterator29.return();
                             }
                           } finally {
-                            if (_didIteratorError32) {
-                              throw _iteratorError32;
+                            if (_didIteratorError29) {
+                              throw _iteratorError29;
                             }
                           }
                         }
@@ -2628,16 +2279,16 @@ var ProjectService = function () {
                   }
                 }
               } catch (err) {
-                _didIteratorError31 = true;
-                _iteratorError31 = err;
+                _didIteratorError28 = true;
+                _iteratorError28 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion31 && _iterator31.return) {
-                    _iterator31.return();
+                  if (!_iteratorNormalCompletion28 && _iterator28.return) {
+                    _iterator28.return();
                   }
                 } finally {
-                  if (_didIteratorError31) {
-                    throw _iteratorError31;
+                  if (_didIteratorError28) {
+                    throw _iteratorError28;
                   }
                 }
               }
@@ -2673,13 +2324,13 @@ var ProjectService = function () {
                  * to all of the paths
                  */
 
-                var _iteratorNormalCompletion33 = true;
-                var _didIteratorError33 = false;
-                var _iteratorError33 = undefined;
+                var _iteratorNormalCompletion30 = true;
+                var _didIteratorError30 = false;
+                var _iteratorError30 = undefined;
 
                 try {
-                  for (var _iterator33 = allPaths[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
-                    var _path = _step33.value;
+                  for (var _iterator30 = allPaths[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
+                    var _path = _step30.value;
 
                     if (_path != null) {
                       /*
@@ -2697,16 +2348,16 @@ var ProjectService = function () {
                    * calculating all the paths
                    */
                 } catch (err) {
-                  _didIteratorError33 = true;
-                  _iteratorError33 = err;
+                  _didIteratorError30 = true;
+                  _iteratorError30 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion33 && _iterator33.return) {
-                      _iterator33.return();
+                    if (!_iteratorNormalCompletion30 && _iterator30.return) {
+                      _iterator30.return();
                     }
                   } finally {
-                    if (_didIteratorError33) {
-                      throw _iteratorError33;
+                    if (_didIteratorError30) {
+                      throw _iteratorError30;
                     }
                   }
                 }
@@ -2733,13 +2384,13 @@ var ProjectService = function () {
 
               var _transitions = this.getTransitionsByFromNodeId(groupNode.id);
               if (_transitions != null && _transitions.length > 0) {
-                var _iteratorNormalCompletion34 = true;
-                var _didIteratorError34 = false;
-                var _iteratorError34 = undefined;
+                var _iteratorNormalCompletion31 = true;
+                var _didIteratorError31 = false;
+                var _iteratorError31 = undefined;
 
                 try {
-                  for (var _iterator34 = _transitions[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
-                    var _transition = _step34.value;
+                  for (var _iterator31 = _transitions[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
+                    var _transition = _step31.value;
 
                     if (_transition != null) {
                       var _toNodeId2 = _transition.to;
@@ -2747,28 +2398,28 @@ var ProjectService = function () {
                       var _allPathsFromToNode2 = this.getAllPaths(pathSoFar, _toNodeId2, includeGroups);
 
                       if (_allPathsFromToNode2 != null) {
-                        var _iteratorNormalCompletion35 = true;
-                        var _didIteratorError35 = false;
-                        var _iteratorError35 = undefined;
+                        var _iteratorNormalCompletion32 = true;
+                        var _didIteratorError32 = false;
+                        var _iteratorError32 = undefined;
 
                         try {
-                          for (var _iterator35 = _allPathsFromToNode2[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
-                            var _tempPath2 = _step35.value;
+                          for (var _iterator32 = _allPathsFromToNode2[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
+                            var _tempPath2 = _step32.value;
 
                             _tempPath2.unshift(nodeId);
                             allPaths.push(_tempPath2);
                           }
                         } catch (err) {
-                          _didIteratorError35 = true;
-                          _iteratorError35 = err;
+                          _didIteratorError32 = true;
+                          _iteratorError32 = err;
                         } finally {
                           try {
-                            if (!_iteratorNormalCompletion35 && _iterator35.return) {
-                              _iterator35.return();
+                            if (!_iteratorNormalCompletion32 && _iterator32.return) {
+                              _iterator32.return();
                             }
                           } finally {
-                            if (_didIteratorError35) {
-                              throw _iteratorError35;
+                            if (_didIteratorError32) {
+                              throw _iteratorError32;
                             }
                           }
                         }
@@ -2776,16 +2427,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError34 = true;
-                  _iteratorError34 = err;
+                  _didIteratorError31 = true;
+                  _iteratorError31 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion34 && _iterator34.return) {
-                      _iterator34.return();
+                    if (!_iteratorNormalCompletion31 && _iterator31.return) {
+                      _iterator31.return();
                     }
                   } finally {
-                    if (_didIteratorError34) {
-                      throw _iteratorError34;
+                    if (_didIteratorError31) {
+                      throw _iteratorError31;
                     }
                   }
                 }
@@ -2805,28 +2456,28 @@ var ProjectService = function () {
               var _allPathsFromToNode3 = this.getAllPaths(pathSoFar, startId, includeGroups);
 
               if (_allPathsFromToNode3 != null) {
-                var _iteratorNormalCompletion36 = true;
-                var _didIteratorError36 = false;
-                var _iteratorError36 = undefined;
+                var _iteratorNormalCompletion33 = true;
+                var _didIteratorError33 = false;
+                var _iteratorError33 = undefined;
 
                 try {
-                  for (var _iterator36 = _allPathsFromToNode3[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
-                    var _tempPath4 = _step36.value;
+                  for (var _iterator33 = _allPathsFromToNode3[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
+                    var _tempPath4 = _step33.value;
 
                     _tempPath4.unshift(nodeId);
                     allPaths.push(_tempPath4);
                   }
                 } catch (err) {
-                  _didIteratorError36 = true;
-                  _iteratorError36 = err;
+                  _didIteratorError33 = true;
+                  _iteratorError33 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion36 && _iterator36.return) {
-                      _iterator36.return();
+                    if (!_iteratorNormalCompletion33 && _iterator33.return) {
+                      _iterator33.return();
                     }
                   } finally {
-                    if (_didIteratorError36) {
-                      throw _iteratorError36;
+                    if (_didIteratorError33) {
+                      throw _iteratorError33;
                     }
                   }
                 }
@@ -2922,140 +2573,62 @@ var ProjectService = function () {
      * @return an array of node ids that we have consumed
      */
     value: function consumePathsUntilNodeId(paths, nodeId) {
-      var consumedNodeIds = [];
+      var consumedNodes = [];
+      var _iteratorNormalCompletion34 = true;
+      var _didIteratorError34 = false;
+      var _iteratorError34 = undefined;
 
-      if (paths != null && nodeId != null) {
-        for (var p = 0; p < paths.length; p++) {
-          var path = paths[p];
+      try {
+        for (var _iterator34 = paths[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
+          var path = _step34.value;
 
-          // check if the path contains the node id to stop consuming at
-          if (path != null && path.indexOf(nodeId) != -1) {
-            /*
-             * the path does contain the node id to stop consuming at
-             * so we will consume the node ids in this path until
-             * we get to the given node id to stop consuming at
-             */
+          if (path.includes(nodeId)) {
+            var subPath = path.slice(0, path.indexOf(nodeId));
+            var _iteratorNormalCompletion35 = true;
+            var _didIteratorError35 = false;
+            var _iteratorError35 = undefined;
 
-            for (var x = 0; x < path.length; x++) {
-              var tempNodeId = path[x];
+            try {
+              for (var _iterator35 = subPath[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
+                var nodeIdInPath = _step35.value;
 
-              if (nodeId === tempNodeId) {
-                /*
-                 * the node id is the same as the one we need to
-                 * stop consuming at so we will stop looking
-                 * at this path
-                 */
-                break;
-              } else {
-                /*
-                 * the node id is not the one that we need to stop consuming at
-                 * so we will consume it
-                 */
-
-                // get all the paths that contain the node id
-                var pathsThatContainNodeId = this.getPathsThatContainNodeId(tempNodeId, paths);
-
-                if (pathsThatContainNodeId.length === 1) {
-                  // there is only one path with this node id
-
-                  // remove the node id from the path
-                  this.removeNodeIdFromPath(tempNodeId, paths, p);
-
-                  // move the counter back one since we have just removed a node id
-                  x--;
-
-                  // add the node id to the consumed node ids array
-                  consumedNodeIds.push(tempNodeId);
-                } else {
-                  // there are multiple paths with this node id
-
-                  // tempNodeId must come before nodeId
-
-                  var pathsToConsume = [];
-
-                  var _iteratorNormalCompletion37 = true;
-                  var _didIteratorError37 = false;
-                  var _iteratorError37 = undefined;
-
-                  try {
-                    for (var _iterator37 = pathsThatContainNodeId[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
-                      var pathThatContainsNodeId = _step37.value;
-
-                      // get the index of the node id we want to remove
-                      var tempNodeIdIndex = pathThatContainsNodeId.indexOf(tempNodeId);
-
-                      // get the index of the node id we want to stop consuming at
-                      var nodeIdIndex = pathThatContainsNodeId.indexOf(nodeId);
-
-                      /*
-                       * check if the node id we want to remove comes before
-                       * the node id we want to stop consuming at. we need to
-                       * do this to prevent an infinite loop. an example of
-                       * when this can happen is if there are two paths
-                       *
-                       * path1 = 1, 2, 3, 4, 5
-                       * path2 = 1, 2, 4, 3, 5
-                       *
-                       * as we consume path1 we will need to consume 3. in order to
-                       * consume 3, we must consume consume up to 3 in path2.
-                       * in order to consume up to 3 in path2 we must consume 4.
-                       * in order to consume 4, we must consume everything before
-                       * 4 in path1. everything before 4 in path1 is 1, 2, 3.
-                       * this means we need to consume 3 which brings us back up
-                       * to the top of this paragraph creating an infinite loop.
-                       *
-                       * this check below will prevent infinite loops by only
-                       * adding paths that have the tempNodeId come before the
-                       * nodeId to stop consuming at.
-                       */
-                      if (tempNodeIdIndex < nodeIdIndex) {
-                        pathsToConsume.push(pathThatContainsNodeId);
-                      }
-                    }
-
-                    /*
-                     * take the paths that contain the given node id and consume
-                     * the paths until the given node id
-                     */
-                  } catch (err) {
-                    _didIteratorError37 = true;
-                    _iteratorError37 = err;
-                  } finally {
-                    try {
-                      if (!_iteratorNormalCompletion37 && _iterator37.return) {
-                        _iterator37.return();
-                      }
-                    } finally {
-                      if (_didIteratorError37) {
-                        throw _iteratorError37;
-                      }
-                    }
-                  }
-
-                  var tempConsumedNodeIds = this.consumePathsUntilNodeId(pathsToConsume, tempNodeId);
-
-                  // remove the node id from the paths that contain it
-                  this.removeNodeIdFromPaths(tempNodeId, pathsThatContainNodeId);
-
-                  // add the temp consumed node ids to our consumed node ids array
-                  consumedNodeIds = consumedNodeIds.concat(tempConsumedNodeIds);
-
-                  // move the counter back one since we have just removed a node id
-                  x--;
-
-                  // add the node id to the consumed node ids array
-                  consumedNodeIds.push(tempNodeId);
+                if (!consumedNodes.includes(nodeIdInPath)) {
+                  consumedNodes.push(nodeIdInPath);
+                }
+              }
+            } catch (err) {
+              _didIteratorError35 = true;
+              _iteratorError35 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion35 && _iterator35.return) {
+                  _iterator35.return();
+                }
+              } finally {
+                if (_didIteratorError35) {
+                  throw _iteratorError35;
                 }
               }
             }
           }
         }
+      } catch (err) {
+        _didIteratorError34 = true;
+        _iteratorError34 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion34 && _iterator34.return) {
+            _iterator34.return();
+          }
+        } finally {
+          if (_didIteratorError34) {
+            throw _iteratorError34;
+          }
+        }
       }
-      return consumedNodeIds;
-    }
-  }, {
-    key: 'getFirstNodeIdInPathAtIndex',
 
+      return consumedNodes;
+    }
 
     /**
      * Get the path at the given index and get the first node id in
@@ -3064,6 +2637,9 @@ var ProjectService = function () {
      * @param index the index of the path we want
      * @return the first node in the given path
      */
+
+  }, {
+    key: 'getFirstNodeIdInPathAtIndex',
     value: function getFirstNodeIdInPathAtIndex(paths, index) {
       var nodeId = null;
       if (paths != null && index != null) {
@@ -3085,13 +2661,13 @@ var ProjectService = function () {
      */
     value: function removeNodeIdFromPaths(nodeId, paths) {
       if (nodeId != null && paths != null) {
-        var _iteratorNormalCompletion38 = true;
-        var _didIteratorError38 = false;
-        var _iteratorError38 = undefined;
+        var _iteratorNormalCompletion36 = true;
+        var _didIteratorError36 = false;
+        var _iteratorError36 = undefined;
 
         try {
-          for (var _iterator38 = paths[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
-            var path = _step38.value;
+          for (var _iterator36 = paths[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
+            var path = _step36.value;
 
             for (var x = 0; x < path.length; x++) {
               var tempNodeId = path[x];
@@ -3118,16 +2694,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError38 = true;
-          _iteratorError38 = err;
+          _didIteratorError36 = true;
+          _iteratorError36 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion38 && _iterator38.return) {
-              _iterator38.return();
+            if (!_iteratorNormalCompletion36 && _iterator36.return) {
+              _iterator36.return();
             }
           } finally {
-            if (_didIteratorError38) {
-              throw _iteratorError38;
+            if (_didIteratorError36) {
+              throw _iteratorError36;
             }
           }
         }
@@ -3186,13 +2762,13 @@ var ProjectService = function () {
       var result = true;
       var nodeId = null;
       if (paths != null) {
-        var _iteratorNormalCompletion39 = true;
-        var _didIteratorError39 = false;
-        var _iteratorError39 = undefined;
+        var _iteratorNormalCompletion37 = true;
+        var _didIteratorError37 = false;
+        var _iteratorError37 = undefined;
 
         try {
-          for (var _iterator39 = paths[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
-            var path = _step39.value;
+          for (var _iterator37 = paths[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
+            var path = _step37.value;
 
             var tempNodeId = path[0];
             if (nodeId == null) {
@@ -3212,16 +2788,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError39 = true;
-          _iteratorError39 = err;
+          _didIteratorError37 = true;
+          _iteratorError37 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion39 && _iterator39.return) {
-              _iterator39.return();
+            if (!_iteratorNormalCompletion37 && _iterator37.return) {
+              _iterator37.return();
             }
           } finally {
-            if (_didIteratorError39) {
-              throw _iteratorError39;
+            if (_didIteratorError37) {
+              throw _iteratorError37;
             }
           }
         }
@@ -3239,13 +2815,13 @@ var ProjectService = function () {
      */
     value: function arePathsEmpty(paths) {
       if (paths != null) {
-        var _iteratorNormalCompletion40 = true;
-        var _didIteratorError40 = false;
-        var _iteratorError40 = undefined;
+        var _iteratorNormalCompletion38 = true;
+        var _didIteratorError38 = false;
+        var _iteratorError38 = undefined;
 
         try {
-          for (var _iterator40 = paths[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
-            var path = _step40.value;
+          for (var _iterator38 = paths[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
+            var path = _step38.value;
 
             if (path != null) {
               if (path.length !== 0) {
@@ -3254,16 +2830,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError40 = true;
-          _iteratorError40 = err;
+          _didIteratorError38 = true;
+          _iteratorError38 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion40 && _iterator40.return) {
-              _iterator40.return();
+            if (!_iteratorNormalCompletion38 && _iterator38.return) {
+              _iterator38.return();
             }
           } finally {
-            if (_didIteratorError40) {
-              throw _iteratorError40;
+            if (_didIteratorError38) {
+              throw _iteratorError38;
             }
           }
         }
@@ -3283,13 +2859,13 @@ var ProjectService = function () {
     value: function getPathsThatContainNodeId(nodeId, paths) {
       var pathsThatContainNodeId = [];
       if (nodeId != null && paths != null) {
-        var _iteratorNormalCompletion41 = true;
-        var _didIteratorError41 = false;
-        var _iteratorError41 = undefined;
+        var _iteratorNormalCompletion39 = true;
+        var _didIteratorError39 = false;
+        var _iteratorError39 = undefined;
 
         try {
-          for (var _iterator41 = paths[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
-            var path = _step41.value;
+          for (var _iterator39 = paths[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
+            var path = _step39.value;
 
             // check if the path contains the node id
             if (path.indexOf(nodeId) != -1) {
@@ -3301,16 +2877,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError41 = true;
-          _iteratorError41 = err;
+          _didIteratorError39 = true;
+          _iteratorError39 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion41 && _iterator41.return) {
-              _iterator41.return();
+            if (!_iteratorNormalCompletion39 && _iterator39.return) {
+              _iterator39.return();
             }
           } finally {
-            if (_didIteratorError41) {
-              throw _iteratorError41;
+            if (_didIteratorError39) {
+              throw _iteratorError39;
             }
           }
         }
@@ -3360,21 +2936,11 @@ var ProjectService = function () {
     value: function getBranchesCache() {
       return this.branchesCache;
     }
-
-    /**
-     * Remove the branches cache.
-     */
-
   }, {
     key: 'clearBranchesCache',
     value: function clearBranchesCache() {
       this.branchesCache = null;
     }
-
-    /**
-     * Get the branches in the project
-     */
-
   }, {
     key: 'getBranches',
     value: function getBranches() {
@@ -3489,14 +3055,13 @@ var ProjectService = function () {
       if (paths != null) {
         if (paths.length > 0) {
           var path = paths[0];
-
-          var _iteratorNormalCompletion42 = true;
-          var _didIteratorError42 = false;
-          var _iteratorError42 = undefined;
+          var _iteratorNormalCompletion40 = true;
+          var _didIteratorError40 = false;
+          var _iteratorError40 = undefined;
 
           try {
-            for (var _iterator42 = path[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
-              var tempNodeId = _step42.value;
+            for (var _iterator40 = path[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
+              var tempNodeId = _step40.value;
 
               if (this.allPathsContainNodeId(paths, tempNodeId)) {
                 /*
@@ -3508,16 +3073,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError42 = true;
-            _iteratorError42 = err;
+            _didIteratorError40 = true;
+            _iteratorError40 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion42 && _iterator42.return) {
-                _iterator42.return();
+              if (!_iteratorNormalCompletion40 && _iterator40.return) {
+                _iterator40.return();
               }
             } finally {
-              if (_didIteratorError42) {
-                throw _iteratorError42;
+              if (_didIteratorError40) {
+                throw _iteratorError40;
               }
             }
           }
@@ -3538,13 +3103,13 @@ var ProjectService = function () {
     value: function allPathsContainNodeId(paths, nodeId) {
       var result = false;
       if (paths != null) {
-        var _iteratorNormalCompletion43 = true;
-        var _didIteratorError43 = false;
-        var _iteratorError43 = undefined;
+        var _iteratorNormalCompletion41 = true;
+        var _didIteratorError41 = false;
+        var _iteratorError41 = undefined;
 
         try {
-          for (var _iterator43 = paths[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
-            var path = _step43.value;
+          for (var _iterator41 = paths[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
+            var path = _step41.value;
 
             var index = path.indexOf(nodeId);
             if (index == -1) {
@@ -3555,16 +3120,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError43 = true;
-          _iteratorError43 = err;
+          _didIteratorError41 = true;
+          _iteratorError41 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion43 && _iterator43.return) {
-              _iterator43.return();
+            if (!_iteratorNormalCompletion41 && _iterator41.return) {
+              _iterator41.return();
             }
           } finally {
-            if (_didIteratorError43) {
-              throw _iteratorError43;
+            if (_didIteratorError41) {
+              throw _iteratorError41;
             }
           }
         }
@@ -3584,13 +3149,13 @@ var ProjectService = function () {
      */
     value: function trimPathsUpToNodeId(paths, nodeId) {
       if (paths != null) {
-        var _iteratorNormalCompletion44 = true;
-        var _didIteratorError44 = false;
-        var _iteratorError44 = undefined;
+        var _iteratorNormalCompletion42 = true;
+        var _didIteratorError42 = false;
+        var _iteratorError42 = undefined;
 
         try {
-          for (var _iterator44 = paths[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
-            var path = _step44.value;
+          for (var _iterator42 = paths[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
+            var path = _step42.value;
 
             if (path != null) {
               var index = path.indexOf(nodeId);
@@ -3612,16 +3177,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError44 = true;
-          _iteratorError44 = err;
+          _didIteratorError42 = true;
+          _iteratorError42 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion44 && _iterator44.return) {
-              _iterator44.return();
+            if (!_iteratorNormalCompletion42 && _iterator42.return) {
+              _iterator42.return();
             }
           } finally {
-            if (_didIteratorError44) {
-              throw _iteratorError44;
+            if (_didIteratorError42) {
+              throw _iteratorError42;
             }
           }
         }
@@ -3641,17 +3206,16 @@ var ProjectService = function () {
     value: function extractPathsUpToNodeId(paths, nodeId) {
       var extractedPaths = [];
       if (paths != null) {
-        var _iteratorNormalCompletion45 = true;
-        var _didIteratorError45 = false;
-        var _iteratorError45 = undefined;
+        var _iteratorNormalCompletion43 = true;
+        var _didIteratorError43 = false;
+        var _iteratorError43 = undefined;
 
         try {
-          for (var _iterator45 = paths[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
-            var path = _step45.value;
+          for (var _iterator43 = paths[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
+            var path = _step43.value;
 
             if (path != null) {
               var index = path.indexOf(nodeId);
-
               if (index == -1) {
                 /*
                  * the node id is not in the path so we will
@@ -3665,21 +3229,20 @@ var ProjectService = function () {
                * not modify the path array.
                */
               var extractedPath = path.slice(0, index);
-
               extractedPaths.push(extractedPath);
             }
           }
         } catch (err) {
-          _didIteratorError45 = true;
-          _iteratorError45 = err;
+          _didIteratorError43 = true;
+          _iteratorError43 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion45 && _iterator45.return) {
-              _iterator45.return();
+            if (!_iteratorNormalCompletion43 && _iterator43.return) {
+              _iterator43.return();
             }
           } finally {
-            if (_didIteratorError45) {
-              throw _iteratorError45;
+            if (_didIteratorError43) {
+              throw _iteratorError43;
             }
           }
         }
@@ -3698,38 +3261,38 @@ var ProjectService = function () {
     value: function removeDuplicatePaths(paths) {
       var uniquePaths = [];
       if (paths != null) {
-        var _iteratorNormalCompletion46 = true;
-        var _didIteratorError46 = false;
-        var _iteratorError46 = undefined;
+        var _iteratorNormalCompletion44 = true;
+        var _didIteratorError44 = false;
+        var _iteratorError44 = undefined;
 
         try {
-          for (var _iterator46 = paths[Symbol.iterator](), _step46; !(_iteratorNormalCompletion46 = (_step46 = _iterator46.next()).done); _iteratorNormalCompletion46 = true) {
-            var path = _step46.value;
+          for (var _iterator44 = paths[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
+            var path = _step44.value;
 
             var isPathInUniquePaths = false;
-            var _iteratorNormalCompletion47 = true;
-            var _didIteratorError47 = false;
-            var _iteratorError47 = undefined;
+            var _iteratorNormalCompletion45 = true;
+            var _didIteratorError45 = false;
+            var _iteratorError45 = undefined;
 
             try {
-              for (var _iterator47 = uniquePaths[Symbol.iterator](), _step47; !(_iteratorNormalCompletion47 = (_step47 = _iterator47.next()).done); _iteratorNormalCompletion47 = true) {
-                var uniquePath = _step47.value;
+              for (var _iterator45 = uniquePaths[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
+                var uniquePath = _step45.value;
 
                 if (this.pathsEqual(path, uniquePath)) {
                   isPathInUniquePaths = true;
                 }
               }
             } catch (err) {
-              _didIteratorError47 = true;
-              _iteratorError47 = err;
+              _didIteratorError45 = true;
+              _iteratorError45 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion47 && _iterator47.return) {
-                  _iterator47.return();
+                if (!_iteratorNormalCompletion45 && _iterator45.return) {
+                  _iterator45.return();
                 }
               } finally {
-                if (_didIteratorError47) {
-                  throw _iteratorError47;
+                if (_didIteratorError45) {
+                  throw _iteratorError45;
                 }
               }
             }
@@ -3741,16 +3304,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError46 = true;
-          _iteratorError46 = err;
+          _didIteratorError44 = true;
+          _iteratorError44 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion46 && _iterator46.return) {
-              _iterator46.return();
+            if (!_iteratorNormalCompletion44 && _iterator44.return) {
+              _iterator44.return();
             }
           } finally {
-            if (_didIteratorError46) {
-              throw _iteratorError46;
+            if (_didIteratorError44) {
+              throw _iteratorError44;
             }
           }
         }
@@ -3798,6 +3361,79 @@ var ProjectService = function () {
      */
     value: function isNodeIdInABranch(branches, nodeId) {
       if (branches != null && nodeId != null) {
+        var _iteratorNormalCompletion46 = true;
+        var _didIteratorError46 = false;
+        var _iteratorError46 = undefined;
+
+        try {
+          for (var _iterator46 = branches[Symbol.iterator](), _step46; !(_iteratorNormalCompletion46 = (_step46 = _iterator46.next()).done); _iteratorNormalCompletion46 = true) {
+            var branch = _step46.value;
+
+            if (branch != null) {
+              var branchPaths = branch.branchPaths;
+              if (branchPaths != null) {
+                var _iteratorNormalCompletion47 = true;
+                var _didIteratorError47 = false;
+                var _iteratorError47 = undefined;
+
+                try {
+                  for (var _iterator47 = branchPaths[Symbol.iterator](), _step47; !(_iteratorNormalCompletion47 = (_step47 = _iterator47.next()).done); _iteratorNormalCompletion47 = true) {
+                    var branchPath = _step47.value;
+
+                    if (branchPath != null) {
+                      var index = branchPath.indexOf(nodeId);
+                      if (index != -1) {
+                        return true;
+                      }
+                    }
+                  }
+                } catch (err) {
+                  _didIteratorError47 = true;
+                  _iteratorError47 = err;
+                } finally {
+                  try {
+                    if (!_iteratorNormalCompletion47 && _iterator47.return) {
+                      _iterator47.return();
+                    }
+                  } finally {
+                    if (_didIteratorError47) {
+                      throw _iteratorError47;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError46 = true;
+          _iteratorError46 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion46 && _iterator46.return) {
+              _iterator46.return();
+            }
+          } finally {
+            if (_didIteratorError46) {
+              throw _iteratorError46;
+            }
+          }
+        }
+      }
+      return false;
+    }
+  }, {
+    key: 'getBranchPathsByNodeId',
+
+
+    /**
+     * Get the branch paths that a node id is in
+     * @param branches an array of branch objects
+     * @param nodeId the node id to check
+     * @return an array of the branch paths that the node id is in
+     */
+    value: function getBranchPathsByNodeId(branches, nodeId) {
+      var branchPathsIn = [];
+      if (branches != null && nodeId != null) {
         var _iteratorNormalCompletion48 = true;
         var _didIteratorError48 = false;
         var _iteratorError48 = undefined;
@@ -3820,7 +3456,11 @@ var ProjectService = function () {
                     if (branchPath != null) {
                       var index = branchPath.indexOf(nodeId);
                       if (index != -1) {
-                        return true;
+                        /*
+                         * the node is in this branch path so we will
+                         * add the branch path to our array
+                         */
+                        branchPathsIn.push(branchPath);
                       }
                     }
                   }
@@ -3856,83 +3496,6 @@ var ProjectService = function () {
           }
         }
       }
-      return false;
-    }
-  }, {
-    key: 'getBranchPathsByNodeId',
-
-
-    /**
-     * Get the branch paths that a node id is in
-     * @param branches an array of branch objects
-     * @param nodeId the node id to check
-     * @return an array of the branch paths that the node id is in
-     */
-    value: function getBranchPathsByNodeId(branches, nodeId) {
-      var branchPathsIn = [];
-      if (branches != null && nodeId != null) {
-        var _iteratorNormalCompletion50 = true;
-        var _didIteratorError50 = false;
-        var _iteratorError50 = undefined;
-
-        try {
-          for (var _iterator50 = branches[Symbol.iterator](), _step50; !(_iteratorNormalCompletion50 = (_step50 = _iterator50.next()).done); _iteratorNormalCompletion50 = true) {
-            var branch = _step50.value;
-
-            if (branch != null) {
-              var branchPaths = branch.branchPaths;
-              if (branchPaths != null) {
-                var _iteratorNormalCompletion51 = true;
-                var _didIteratorError51 = false;
-                var _iteratorError51 = undefined;
-
-                try {
-                  for (var _iterator51 = branchPaths[Symbol.iterator](), _step51; !(_iteratorNormalCompletion51 = (_step51 = _iterator51.next()).done); _iteratorNormalCompletion51 = true) {
-                    var branchPath = _step51.value;
-
-                    if (branchPath != null) {
-                      var index = branchPath.indexOf(nodeId);
-                      if (index != -1) {
-                        /*
-                         * the node is in this branch path so we will
-                         * add the branch path to our array
-                         */
-                        branchPathsIn.push(branchPath);
-                      }
-                    }
-                  }
-                } catch (err) {
-                  _didIteratorError51 = true;
-                  _iteratorError51 = err;
-                } finally {
-                  try {
-                    if (!_iteratorNormalCompletion51 && _iterator51.return) {
-                      _iterator51.return();
-                    }
-                  } finally {
-                    if (_didIteratorError51) {
-                      throw _iteratorError51;
-                    }
-                  }
-                }
-              }
-            }
-          }
-        } catch (err) {
-          _didIteratorError50 = true;
-          _iteratorError50 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion50 && _iterator50.return) {
-              _iterator50.return();
-            }
-          } finally {
-            if (_didIteratorError50) {
-              throw _iteratorError50;
-            }
-          }
-        }
-      }
       return branchPathsIn;
     }
 
@@ -3948,13 +3511,13 @@ var ProjectService = function () {
     value: function getComponentByNodeIdAndComponentId(nodeId, componentId) {
       if (nodeId != null && componentId != null) {
         var components = this.getComponentsByNodeId(nodeId);
-        var _iteratorNormalCompletion52 = true;
-        var _didIteratorError52 = false;
-        var _iteratorError52 = undefined;
+        var _iteratorNormalCompletion50 = true;
+        var _didIteratorError50 = false;
+        var _iteratorError50 = undefined;
 
         try {
-          for (var _iterator52 = components[Symbol.iterator](), _step52; !(_iteratorNormalCompletion52 = (_step52 = _iterator52.next()).done); _iteratorNormalCompletion52 = true) {
-            var tempComponent = _step52.value;
+          for (var _iterator50 = components[Symbol.iterator](), _step50; !(_iteratorNormalCompletion50 = (_step50 = _iterator50.next()).done); _iteratorNormalCompletion50 = true) {
+            var tempComponent = _step50.value;
 
             if (tempComponent != null) {
               var tempComponentId = tempComponent.id;
@@ -3964,16 +3527,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError52 = true;
-          _iteratorError52 = err;
+          _didIteratorError50 = true;
+          _iteratorError50 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion52 && _iterator52.return) {
-              _iterator52.return();
+            if (!_iteratorNormalCompletion50 && _iterator50.return) {
+              _iterator50.return();
             }
           } finally {
-            if (_didIteratorError52) {
-              throw _iteratorError52;
+            if (_didIteratorError50) {
+              throw _iteratorError50;
             }
           }
         }
@@ -4035,14 +3598,13 @@ var ProjectService = function () {
 
     // TODO: how is this different from straight-up calling getNodeById?
     value: function getNodeContentByNodeId(nodeId) {
-      var nodeContent = null;
       if (nodeId != null) {
         var node = this.getNodeById(nodeId);
         if (node != null) {
-          nodeContent = node;
+          return node;
         }
       }
-      return nodeContent;
+      return null;
     }
   }, {
     key: 'insertNodeAfterInGroups',
@@ -4057,58 +3619,58 @@ var ProjectService = function () {
     value: function insertNodeAfterInGroups(nodeIdToInsert, nodeIdToInsertAfter) {
       var groupNodes = this.getGroupNodes();
       if (groupNodes != null) {
-        var _iteratorNormalCompletion53 = true;
-        var _didIteratorError53 = false;
-        var _iteratorError53 = undefined;
+        var _iteratorNormalCompletion51 = true;
+        var _didIteratorError51 = false;
+        var _iteratorError51 = undefined;
 
         try {
-          for (var _iterator53 = groupNodes[Symbol.iterator](), _step53; !(_iteratorNormalCompletion53 = (_step53 = _iterator53.next()).done); _iteratorNormalCompletion53 = true) {
-            var group = _step53.value;
+          for (var _iterator51 = groupNodes[Symbol.iterator](), _step51; !(_iteratorNormalCompletion51 = (_step51 = _iterator51.next()).done); _iteratorNormalCompletion51 = true) {
+            var group = _step51.value;
 
             if (group != null) {
               this.insertNodeAfterInGroup(group, nodeIdToInsert, nodeIdToInsertAfter);
             }
           }
         } catch (err) {
-          _didIteratorError53 = true;
-          _iteratorError53 = err;
+          _didIteratorError51 = true;
+          _iteratorError51 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion53 && _iterator53.return) {
-              _iterator53.return();
+            if (!_iteratorNormalCompletion51 && _iterator51.return) {
+              _iterator51.return();
             }
           } finally {
-            if (_didIteratorError53) {
-              throw _iteratorError53;
+            if (_didIteratorError51) {
+              throw _iteratorError51;
             }
           }
         }
       }
       var inactiveGroupNodes = this.getInactiveGroupNodes();
       if (inactiveGroupNodes != null) {
-        var _iteratorNormalCompletion54 = true;
-        var _didIteratorError54 = false;
-        var _iteratorError54 = undefined;
+        var _iteratorNormalCompletion52 = true;
+        var _didIteratorError52 = false;
+        var _iteratorError52 = undefined;
 
         try {
-          for (var _iterator54 = inactiveGroupNodes[Symbol.iterator](), _step54; !(_iteratorNormalCompletion54 = (_step54 = _iterator54.next()).done); _iteratorNormalCompletion54 = true) {
-            var inactiveGroup = _step54.value;
+          for (var _iterator52 = inactiveGroupNodes[Symbol.iterator](), _step52; !(_iteratorNormalCompletion52 = (_step52 = _iterator52.next()).done); _iteratorNormalCompletion52 = true) {
+            var inactiveGroup = _step52.value;
 
             if (inactiveGroup != null) {
               this.insertNodeAfterInGroup(inactiveGroup, nodeIdToInsert, nodeIdToInsertAfter);
             }
           }
         } catch (err) {
-          _didIteratorError54 = true;
-          _iteratorError54 = err;
+          _didIteratorError52 = true;
+          _iteratorError52 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion54 && _iterator54.return) {
-              _iterator54.return();
+            if (!_iteratorNormalCompletion52 && _iterator52.return) {
+              _iterator52.return();
             }
           } finally {
-            if (_didIteratorError54) {
-              throw _iteratorError54;
+            if (_didIteratorError52) {
+              throw _iteratorError52;
             }
           }
         }
@@ -4140,147 +3702,176 @@ var ProjectService = function () {
     }
 
     /**
-     * Update the transitions to handle inserting a node after another node
-     * @param node the node to insert
-     * @param nodeId the node id to insert after
+     * Update the transitions to handle inserting a node after another node.
+     * The two nodes must either both be steps or both be activities.
+     * @param nodeToInsert the node to insert
+     * @param nodeIdToInsertAfter the node id to insert after
      */
 
   }, {
     key: 'insertNodeAfterInTransitions',
-    value: function insertNodeAfterInTransitions(node, nodeId) {
-      var previousNode = this.getNodeById(nodeId);
+    value: function insertNodeAfterInTransitions(nodeToInsert, nodeIdToInsertAfter) {
+      var nodeToInsertAfter = this.getNodeById(nodeIdToInsertAfter);
+      if (nodeToInsert.type != nodeToInsertAfter.type) {
+        throw 'Error: insertNodeAfterInTransitions() nodes are not the same type';
+      }
+      if (nodeToInsertAfter.transitionLogic == null) {
+        nodeToInsertAfter.transitionLogic = {
+          transitions: []
+        };
+      }
+      if (nodeToInsert.transitionLogic == null) {
+        nodeToInsert.transitionLogic = {
+          transitions: []
+        };
+      }
+      if (this.isGroupNode(nodeToInsert.id)) {
+        this.updateChildrenTransitionsInAndOutOfGroup(nodeToInsert, nodeIdToInsertAfter);
+      }
+      this.copyTransitions(nodeToInsertAfter, nodeToInsert);
+      if (nodeToInsert.transitionLogic.transitions.length == 0) {
+        this.copyParentTransitions(nodeIdToInsertAfter, nodeToInsert);
+      }
+      var transitionObject = {
+        to: nodeToInsert.id
+      };
+      nodeToInsertAfter.transitionLogic.transitions = [transitionObject];
+      this.updateBranchPathTakenConstraints(nodeToInsert, nodeIdToInsertAfter);
+    }
 
-      if (previousNode != null) {
-        if (previousNode.transitionLogic == null) {
-          previousNode.transitionLogic = {};
-          previousNode.transitionLogic.transitions = [];
-        }
+    /*
+     * Copy the transitions from nodeId's parent and add to node's transitions.
+     * @param nodeId Copy the transition of this nodeId's parent.
+     * @param node The node to add transitions to.
+     */
 
-        if (node.transitionLogic == null) {
-          node.transitionLogic = {};
-        }
+  }, {
+    key: 'copyParentTransitions',
+    value: function copyParentTransitions(nodeId, node) {
+      var parentGroupId = this.getParentGroupId(nodeId);
+      if (parentGroupId != 'group0') {
+        var parentTransitions = this.getTransitionsByFromNodeId(parentGroupId);
+        var _iteratorNormalCompletion53 = true;
+        var _didIteratorError53 = false;
+        var _iteratorError53 = undefined;
 
-        if (node.transitionLogic.transitions == null) {
-          node.transitionLogic.transitions = [];
-        }
+        try {
+          for (var _iterator53 = parentTransitions[Symbol.iterator](), _step53; !(_iteratorNormalCompletion53 = (_step53 = _iterator53.next()).done); _iteratorNormalCompletion53 = true) {
+            var parentTransition = _step53.value;
 
-        if (this.isGroupNode(node.id)) {
-          /*
-           * the node we are inserting is a group so we will update
-           * the transitions of its children so that they transition
-           * to the correct node
-           */
-          this.updateChildrenTransitionsForMovingGroup(node, nodeId);
-        }
-
-        var previousNodeTransitionLogic = previousNode.transitionLogic;
-
-        if (previousNodeTransitionLogic != null) {
-          var transitions = previousNodeTransitionLogic.transitions;
-
-          if (transitions != null) {
-            var transitionsJSONString = angular.toJson(transitions);
-            var transitionsCopy = angular.fromJson(transitionsJSONString);
-
-            // set the transitions from the before node into the inserted node
-            node.transitionLogic.transitions = transitionsCopy;
-          }
-        }
-
-        if (node.transitionLogic.transitions.length == 0) {
-          /*
-           * The node does not have any transitions so we will look for
-           * a transition on the parent group. If the parent has a
-           * transition we will use it for the node.
-           */
-
-          var parentGroupId = this.getParentGroupId(nodeId);
-
-          if (parentGroupId != null && parentGroupId != '' && parentGroupId != 'group0') {
-            var parentTransitions = this.getTransitionsByFromNodeId(parentGroupId);
-
-            if (parentTransitions != null) {
-              var _iteratorNormalCompletion55 = true;
-              var _didIteratorError55 = false;
-              var _iteratorError55 = undefined;
-
-              try {
-                for (var _iterator55 = parentTransitions[Symbol.iterator](), _step55; !(_iteratorNormalCompletion55 = (_step55 = _iterator55.next()).done); _iteratorNormalCompletion55 = true) {
-                  var parentTransition = _step55.value;
-
-                  var newTransition = {};
-                  if (parentTransition != null) {
-                    var toNodeId = parentTransition.to;
-                    if (this.isGroupNode(toNodeId)) {
-                      var startId = this.getGroupStartId(toNodeId);
-                      if (startId == null || startId == '') {
-                        // there is no start id so we will just use the group id
-                        newTransition.to = toNodeId;
-                      } else {
-                        // there is a start id so we will use it as the to node
-                        newTransition.to = startId;
-                      }
-                    } else {
-                      newTransition.to = toNodeId;
-                    }
-                  }
-                  node.transitionLogic.transitions.push(newTransition);
-                }
-              } catch (err) {
-                _didIteratorError55 = true;
-                _iteratorError55 = err;
-              } finally {
-                try {
-                  if (!_iteratorNormalCompletion55 && _iterator55.return) {
-                    _iterator55.return();
-                  }
-                } finally {
-                  if (_didIteratorError55) {
-                    throw _iteratorError55;
-                  }
-                }
+            var newTransition = {};
+            var toNodeId = parentTransition.to;
+            if (this.isGroupNode(toNodeId)) {
+              var startId = this.getGroupStartId(toNodeId);
+              if (startId == null || startId == '') {
+                newTransition.to = toNodeId;
+              } else {
+                newTransition.to = startId;
               }
+            }
+            node.transitionLogic.transitions.push(newTransition);
+          }
+        } catch (err) {
+          _didIteratorError53 = true;
+          _iteratorError53 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion53 && _iterator53.return) {
+              _iterator53.return();
+            }
+          } finally {
+            if (_didIteratorError53) {
+              throw _iteratorError53;
             }
           }
         }
+      }
+    }
+  }, {
+    key: 'copyTransitions',
+    value: function copyTransitions(previousNode, node) {
+      var transitionsJSONString = angular.toJson(previousNode.transitionLogic.transitions);
+      var transitionsCopy = angular.fromJson(transitionsJSONString);
+      node.transitionLogic.transitions = transitionsCopy;
+    }
 
-        var newNodeId = node.id;
+    /**
+     * If the previous node was in a branch path, we will also put the
+     * inserted node into the branch path.
+     * @param node The node that is in the branch path.
+     * @param nodeId The node we are adding to the branch path.
+     */
 
-        // TODO handle branching case
+  }, {
+    key: 'updateBranchPathTakenConstraints',
+    value: function updateBranchPathTakenConstraints(node, nodeId) {
+      this.removeBranchPathTakenNodeConstraintsIfAny(node.id);
+      var branchPathTakenConstraints = this.getBranchPathTakenConstraintsByNodeId(nodeId);
+      var _iteratorNormalCompletion54 = true;
+      var _didIteratorError54 = false;
+      var _iteratorError54 = undefined;
 
-        previousNode.transitionLogic.transitions = [];
+      try {
+        for (var _iterator54 = branchPathTakenConstraints[Symbol.iterator](), _step54; !(_iteratorNormalCompletion54 = (_step54 = _iterator54.next()).done); _iteratorNormalCompletion54 = true) {
+          var branchPathTakenConstraint = _step54.value;
 
-        var transitionObject = {};
-        transitionObject.to = newNodeId;
-        previousNode.transitionLogic.transitions.push(transitionObject);
-        this.removeBranchPathTakenNodeConstraints(node.id);
-        var branchPathTakenConstraints = this.getBranchPathTakenConstraintsByNodeId(nodeId);
-
-        /*
-         * if the previous node was in a branch path, we will also put the
-         * inserted node into the branch path
-         */
-        if (branchPathTakenConstraints != null && branchPathTakenConstraints.length > 0) {
-          if (node.constraints == null) {
-            node.constraints = [];
+          var newConstraint = {
+            id: this.getNextAvailableConstraintIdForNodeId(node.id),
+            action: branchPathTakenConstraint.action,
+            targetId: node.id,
+            removalCriteria: this.UtilService.makeCopyOfJSONObject(branchPathTakenConstraint.removalCriteria)
+          };
+          this.addConstraintToNode(newConstraint);
+        }
+      } catch (err) {
+        _didIteratorError54 = true;
+        _iteratorError54 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion54 && _iterator54.return) {
+            _iterator54.return();
           }
+        } finally {
+          if (_didIteratorError54) {
+            throw _iteratorError54;
+          }
+        }
+      }
+    }
 
+    /**
+     * Update a node's branchPathTaken constraint's fromNodeId and toNodeId
+     * @param node update the branch path taken constraints in this node
+     * @param currentFromNodeId the current from node id
+     * @param currentToNodeId the current to node id
+     * @param newFromNodeId the new from node id
+     * @param newToNodeId the new to node id
+     */
+
+  }, {
+    key: 'updateBranchPathTakenConstraint',
+    value: function updateBranchPathTakenConstraint(node, currentFromNodeId, currentToNodeId, newFromNodeId, newToNodeId) {
+      var _iteratorNormalCompletion55 = true;
+      var _didIteratorError55 = false;
+      var _iteratorError55 = undefined;
+
+      try {
+        for (var _iterator55 = node.constraints[Symbol.iterator](), _step55; !(_iteratorNormalCompletion55 = (_step55 = _iterator55.next()).done); _iteratorNormalCompletion55 = true) {
+          var constraint = _step55.value;
           var _iteratorNormalCompletion56 = true;
           var _didIteratorError56 = false;
           var _iteratorError56 = undefined;
 
           try {
-            for (var _iterator56 = branchPathTakenConstraints[Symbol.iterator](), _step56; !(_iteratorNormalCompletion56 = (_step56 = _iterator56.next()).done); _iteratorNormalCompletion56 = true) {
-              var branchPathTakenConstraint = _step56.value;
+            for (var _iterator56 = constraint.removalCriteria[Symbol.iterator](), _step56; !(_iteratorNormalCompletion56 = (_step56 = _iterator56.next()).done); _iteratorNormalCompletion56 = true) {
+              var removalCriterion = _step56.value;
 
-              if (branchPathTakenConstraint != null) {
-                // create a new constraint with the same branch path taken parameters
-                var newConstraint = {};
-                newConstraint.id = this.getNextAvailableConstraintIdForNodeId(node.id);
-                newConstraint.action = branchPathTakenConstraint.action;
-                newConstraint.targetId = node.id;
-                newConstraint.removalCriteria = this.UtilService.makeCopyOfJSONObject(branchPathTakenConstraint.removalCriteria);
-                node.constraints.push(newConstraint);
+              if (removalCriterion.name === 'branchPathTaken') {
+                var params = removalCriterion.params;
+                if (params.fromNodeId === currentFromNodeId && params.toNodeId === currentToNodeId) {
+                  params.fromNodeId = newFromNodeId;
+                  params.toNodeId = newToNodeId;
+                }
               }
             }
           } catch (err) {
@@ -4296,6 +3887,19 @@ var ProjectService = function () {
                 throw _iteratorError56;
               }
             }
+          }
+        }
+      } catch (err) {
+        _didIteratorError55 = true;
+        _iteratorError55 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion55 && _iterator55.return) {
+            _iterator55.return();
+          }
+        } finally {
+          if (_didIteratorError55) {
+            throw _iteratorError55;
           }
         }
       }
@@ -4321,255 +3925,169 @@ var ProjectService = function () {
     }
 
     /**
-     * Update the transitions to handle inserting a node into a group
+     * Update the transitions to handle inserting a node as the first step in a group.
      * @param nodeIdToInsert node id that we will insert
      * @param nodeIdToInsertInside the node id of the group we are inserting into
      */
 
   }, {
-    key: 'insertNodeInsideInTransitions',
-    value: function insertNodeInsideInTransitions(nodeIdToInsert, nodeIdToInsertInside) {
-      var nodeToInsert = this.getNodeById(nodeIdToInsert);
-
-      if (nodeToInsert != null && nodeToInsert.transitionLogic != null && nodeToInsert.transitionLogic.transitions != null) {
-        nodeToInsert.transitionLogic.transitions = [];
-
-        /*
-         * remove the branch path taken constraints from the node we are
-         * inserting
-         */
-        this.removeBranchPathTakenNodeConstraints(nodeIdToInsert);
+    key: 'insertNodeInsideOnlyUpdateTransitions',
+    value: function insertNodeInsideOnlyUpdateTransitions(nodeIdToInsert, nodeIdToInsertInside) {
+      if (!this.isGroupNode(nodeIdToInsertInside)) {
+        throw 'Error: insertNodeInsideOnlyUpdateTransitions() second parameter must be a group';
       }
 
-      var group = this.getNodeById(nodeIdToInsertInside);
+      var nodeToInsert = this.getNodeById(nodeIdToInsert);
+      nodeToInsert.transitionLogic.transitions = [];
+      this.removeBranchPathTakenNodeConstraintsIfAny(nodeIdToInsert);
+
       if (this.isGroupNode(nodeIdToInsert)) {
-        /*
-         * the node we are inserting is a group so we will update
-         * the transitions of its children so that they transition
-         * to the correct node
-         */
-        this.updateChildrenTransitionsForMovingGroup(nodeToInsert, null);
+        this.updateChildrenTransitionsInAndOutOfGroup(nodeToInsert);
       }
 
       /*
-       * since we are inserting a node into a group, the node will become
-       * the first node in the group. this means we need to update any nodes
-       * that point to the old start id and make them point to the node
-       * we are inserting.
+       * the node will become the first node in the group. this means we need to update any nodes
+       * that point to the old start id and make them point to the node we are inserting.
        */
-      if (nodeToInsert != null && group != null) {
-        var startId = group.startId;
-        var previousNodes = this.getNodesByToNodeId(startId);
+      var group = this.getNodeById(nodeIdToInsertInside);
+      var startId = group.startId;
+      this.updateTransitionsToStartId(startId, nodeIdToInsert);
+      this.updateStepTransitionsToGroup(nodeIdToInsertInside, nodeIdToInsert);
+      this.createTransitionFromNodeToInsertToOldStartNode(startId, nodeToInsert);
+      var transitions = this.getTransitionsByFromNodeId(nodeIdToInsert);
+      if (transitions.length == 0) {
+        this.inheritParentTransitions(nodeIdToInsertInside, nodeToInsert);
+      }
+    }
 
-        if (previousNodes == null || previousNodes.length == 0) {
-          var previousGroups = this.getGroupNodesByToNodeId(nodeIdToInsertInside);
-          var _iteratorNormalCompletion57 = true;
-          var _didIteratorError57 = false;
-          var _iteratorError57 = undefined;
+    /**
+     * Copy the transitions from the parent to the node we are inserting.
+     * @param nodeIdToInsertInside
+     * @param nodeToInsert
+     */
 
-          try {
-            for (var _iterator57 = previousGroups[Symbol.iterator](), _step57; !(_iteratorNormalCompletion57 = (_step57 = _iterator57.next()).done); _iteratorNormalCompletion57 = true) {
-              var previousGroup = _step57.value;
+  }, {
+    key: 'inheritParentTransitions',
+    value: function inheritParentTransitions(nodeIdToInsertInside, nodeToInsert) {
+      var parentTransitions = this.getTransitionsByFromNodeId(nodeIdToInsertInside);
+      var _iteratorNormalCompletion57 = true;
+      var _didIteratorError57 = false;
+      var _iteratorError57 = undefined;
 
-              if (previousGroup != null) {
-                // get the nodes that do not have a transition in the previous group
-                var lastNodesInGroup = this.getLastNodesInGroup(previousGroup.id);
+      try {
+        for (var _iterator57 = parentTransitions[Symbol.iterator](), _step57; !(_iteratorNormalCompletion57 = (_step57 = _iterator57.next()).done); _iteratorNormalCompletion57 = true) {
+          var parentTransition = _step57.value;
 
-                var _iteratorNormalCompletion58 = true;
-                var _didIteratorError58 = false;
-                var _iteratorError58 = undefined;
-
-                try {
-                  for (var _iterator58 = lastNodesInGroup[Symbol.iterator](), _step58; !(_iteratorNormalCompletion58 = (_step58 = _iterator58.next()).done); _iteratorNormalCompletion58 = true) {
-                    var node = _step58.value;
-
-                    // add a transition from the node to the node we are inserting
-                    this.addToTransition(node, nodeIdToInsert);
-                  }
-                } catch (err) {
-                  _didIteratorError58 = true;
-                  _iteratorError58 = err;
-                } finally {
-                  try {
-                    if (!_iteratorNormalCompletion58 && _iterator58.return) {
-                      _iterator58.return();
-                    }
-                  } finally {
-                    if (_didIteratorError58) {
-                      throw _iteratorError58;
-                    }
-                  }
-                }
-              }
+          var toNodeId = parentTransition.to;
+          if (this.isGroupNode(toNodeId)) {
+            var nextGroup = this.getNodeById(toNodeId);
+            var startId = nextGroup.startId;
+            if (startId == null || startId == '') {
+              this.addToTransition(nodeToInsert, toNodeId);
+            } else {
+              this.addToTransition(nodeToInsert, startId);
             }
-          } catch (err) {
-            _didIteratorError57 = true;
-            _iteratorError57 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion57 && _iterator57.return) {
-                _iterator57.return();
-              }
-            } finally {
-              if (_didIteratorError57) {
-                throw _iteratorError57;
-              }
-            }
-          }
-        } else {
-          var _iteratorNormalCompletion59 = true;
-          var _didIteratorError59 = false;
-          var _iteratorError59 = undefined;
-
-          try {
-            for (var _iterator59 = previousNodes[Symbol.iterator](), _step59; !(_iteratorNormalCompletion59 = (_step59 = _iterator59.next()).done); _iteratorNormalCompletion59 = true) {
-              var previousNode = _step59.value;
-
-              if (previousNode != null && previousNode.id != 'group0') {
-                // change the transition to point to the node we are inserting
-                this.updateToTransition(previousNode, startId, nodeIdToInsert);
-              }
-            }
-          } catch (err) {
-            _didIteratorError59 = true;
-            _iteratorError59 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion59 && _iterator59.return) {
-                _iterator59.return();
-              }
-            } finally {
-              if (_didIteratorError59) {
-                throw _iteratorError59;
-              }
-            }
+          } else {
+            this.addToTransition(nodeToInsert, toNodeId);
           }
         }
-
-        /*
-         * update all the transitions that point to the group and change
-         * them to point to the new start id
-         */
-        var nodesThatTransitionToGroup = this.getNodesByToNodeId(nodeIdToInsertInside);
-
-        if (nodesThatTransitionToGroup != null) {
-          var _iteratorNormalCompletion60 = true;
-          var _didIteratorError60 = false;
-          var _iteratorError60 = undefined;
-
-          try {
-            for (var _iterator60 = nodesThatTransitionToGroup[Symbol.iterator](), _step60; !(_iteratorNormalCompletion60 = (_step60 = _iterator60.next()).done); _iteratorNormalCompletion60 = true) {
-              var nodeThatTransitionsToGroup = _step60.value;
-
-              if (!this.isGroupNode(nodeThatTransitionsToGroup.id)) {
-                this.updateToTransition(nodeThatTransitionsToGroup, nodeIdToInsertInside, nodeIdToInsert);
-              }
-            }
-          } catch (err) {
-            _didIteratorError60 = true;
-            _iteratorError60 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion60 && _iterator60.return) {
-                _iterator60.return();
-              }
-            } finally {
-              if (_didIteratorError60) {
-                throw _iteratorError60;
-              }
-            }
+      } catch (err) {
+        _didIteratorError57 = true;
+        _iteratorError57 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion57 && _iterator57.return) {
+            _iterator57.return();
+          }
+        } finally {
+          if (_didIteratorError57) {
+            throw _iteratorError57;
           }
         }
+      }
+    }
 
-        /*
-         * create a transition from the node we are inserting to the node that
-         * was previously the start node
-         */
-        if (startId != null && startId != '') {
-          var startNode = this.getNodeById(startId);
+    /*
+     * Create a transition from the node we are inserting to the node that
+     * was the start node.
+     * @param startId
+     * @param nodeToInsert
+     */
 
-          if (startNode != null) {
-            // the group has a start node which will become the transition to node
+  }, {
+    key: 'createTransitionFromNodeToInsertToOldStartNode',
+    value: function createTransitionFromNodeToInsertToOldStartNode(startId, nodeToInsert) {
+      var startNode = this.getNodeById(startId);
+      if (startNode != null) {
+        var transitions = this.getTransitionsByFromNodeId(nodeToInsert.id);
+        var transitionObject = {
+          to: startId
+        };
+        transitions.push(transitionObject);
+      }
+    }
 
-            if (nodeToInsert.transitionLogic == null) {
-              nodeToInsert.transitionLogic = {};
-            }
+    /*
+     * Update all the transitions that point to the group and change
+     * them to point to the new start id
+     */
 
-            if (nodeToInsert.transitionLogic.transitions == null) {
-              nodeToInsert.transitionLogic.transitions = [];
-            }
+  }, {
+    key: 'updateStepTransitionsToGroup',
+    value: function updateStepTransitionsToGroup(nodeIdToInsertInside, nodeIdToInsert) {
+      var nodesThatTransitionToGroup = this.getNodesByToNodeId(nodeIdToInsertInside);
+      var _iteratorNormalCompletion58 = true;
+      var _didIteratorError58 = false;
+      var _iteratorError58 = undefined;
 
-            /*
-             * make the inserted node transition to the previous start node
-             */
-            var transitionObject = {};
-            transitionObject.to = startId;
-            nodeToInsert.transitionLogic.transitions.push(transitionObject);
+      try {
+        for (var _iterator58 = nodesThatTransitionToGroup[Symbol.iterator](), _step58; !(_iteratorNormalCompletion58 = (_step58 = _iterator58.next()).done); _iteratorNormalCompletion58 = true) {
+          var nodeThatTransitionsToGroup = _step58.value;
+
+          if (!this.isGroupNode(nodeThatTransitionsToGroup.id)) {
+            this.updateToTransition(nodeThatTransitionsToGroup, nodeIdToInsertInside, nodeIdToInsert);
           }
         }
+      } catch (err) {
+        _didIteratorError58 = true;
+        _iteratorError58 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion58 && _iterator58.return) {
+            _iterator58.return();
+          }
+        } finally {
+          if (_didIteratorError58) {
+            throw _iteratorError58;
+          }
+        }
+      }
+    }
+  }, {
+    key: 'updateTransitionsToStartId',
+    value: function updateTransitionsToStartId(startId, nodeIdToInsert) {
+      var nodesThatTransitionToStartId = this.getNodesByToNodeId(startId);
+      var _iteratorNormalCompletion59 = true;
+      var _didIteratorError59 = false;
+      var _iteratorError59 = undefined;
 
-        // check if the node we inserted has any transitions now
-        var transitions = this.getTransitionsByFromNodeId(nodeIdToInsert);
+      try {
+        for (var _iterator59 = nodesThatTransitionToStartId[Symbol.iterator](), _step59; !(_iteratorNormalCompletion59 = (_step59 = _iterator59.next()).done); _iteratorNormalCompletion59 = true) {
+          var nodeThatTransitionToStartId = _step59.value;
 
-        if (transitions == null || transitions.length == 0) {
-          /*
-           * the node doesn't have any transitions so we will see if
-           * the parent group transitions to anything and use that
-           * transition
-           */
-
-          var parentTransitions = this.getTransitionsByFromNodeId(nodeIdToInsertInside);
-
-          if (parentTransitions != null) {
-            var _iteratorNormalCompletion61 = true;
-            var _didIteratorError61 = false;
-            var _iteratorError61 = undefined;
-
-            try {
-              for (var _iterator61 = parentTransitions[Symbol.iterator](), _step61; !(_iteratorNormalCompletion61 = (_step61 = _iterator61.next()).done); _iteratorNormalCompletion61 = true) {
-                var parentTransition = _step61.value;
-
-                if (parentTransition != null) {
-                  var toNodeId = parentTransition.to;
-                  if (this.isGroupNode(toNodeId)) {
-                    var nextGroup = this.getNodeById(toNodeId);
-
-                    if (nextGroup != null) {
-                      var _startId = nextGroup.startId;
-
-                      if (_startId == null || _startId == '') {
-                        // there is no start id so we will just transition to the group
-                        this.addToTransition(nodeToInsert, toNodeId);
-                      } else {
-                        // there is a start id so we will transition to that
-                        this.addToTransition(nodeToInsert, _startId);
-                      }
-                    }
-                  } else {
-                    // the to node is not a group
-
-                    /*
-                     * we will add a transition from the node we are inserting to
-                     * to that node
-                     */
-                    this.addToTransition(nodeToInsert, toNodeId);
-                  }
-                }
-              }
-            } catch (err) {
-              _didIteratorError61 = true;
-              _iteratorError61 = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion61 && _iterator61.return) {
-                  _iterator61.return();
-                }
-              } finally {
-                if (_didIteratorError61) {
-                  throw _iteratorError61;
-                }
-              }
-            }
+          this.updateToTransition(nodeThatTransitionToStartId, startId, nodeIdToInsert);
+        }
+      } catch (err) {
+        _didIteratorError59 = true;
+        _iteratorError59 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion59 && _iterator59.return) {
+            _iterator59.return();
+          }
+        } finally {
+          if (_didIteratorError59) {
+            throw _iteratorError59;
           }
         }
       }
@@ -4622,13 +4140,13 @@ var ProjectService = function () {
         }
 
         var transitions = node.transitionLogic.transitions;
-        var _iteratorNormalCompletion62 = true;
-        var _didIteratorError62 = false;
-        var _iteratorError62 = undefined;
+        var _iteratorNormalCompletion60 = true;
+        var _didIteratorError60 = false;
+        var _iteratorError60 = undefined;
 
         try {
-          for (var _iterator62 = transitions[Symbol.iterator](), _step62; !(_iteratorNormalCompletion62 = (_step62 = _iterator62.next()).done); _iteratorNormalCompletion62 = true) {
-            var transition = _step62.value;
+          for (var _iterator60 = transitions[Symbol.iterator](), _step60; !(_iteratorNormalCompletion60 = (_step60 = _iterator60.next()).done); _iteratorNormalCompletion60 = true) {
+            var transition = _step60.value;
 
             if (transition != null) {
               var toNodeId = transition.to;
@@ -4638,16 +4156,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError62 = true;
-          _iteratorError62 = err;
+          _didIteratorError60 = true;
+          _iteratorError60 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion62 && _iterator62.return) {
-              _iterator62.return();
+            if (!_iteratorNormalCompletion60 && _iterator60.return) {
+              _iterator60.return();
             }
           } finally {
-            if (_didIteratorError62) {
-              throw _iteratorError62;
+            if (_didIteratorError60) {
+              throw _iteratorError60;
             }
           }
         }
@@ -4655,58 +4173,44 @@ var ProjectService = function () {
     }
 
     /**
-     * Get the nodes in a group that do not have transitions
-     * @param groupId the group id
-     * @returns the nodes in the group that do not have transitions
+     * @param group The group object.
+     * @returns {Array} The nodes in the group that do not have transitions.
      */
 
   }, {
-    key: 'getLastNodesInGroup',
-    value: function getLastNodesInGroup(groupId) {
+    key: 'getChildNodesWithoutTransitions',
+    value: function getChildNodesWithoutTransitions(group) {
       var lastNodes = [];
-      if (groupId != null) {
-        var group = this.getNodeById(groupId);
-        if (group != null) {
-          var childIds = group.ids;
-          if (childIds != null) {
-            var _iteratorNormalCompletion63 = true;
-            var _didIteratorError63 = false;
-            var _iteratorError63 = undefined;
+      var _iteratorNormalCompletion61 = true;
+      var _didIteratorError61 = false;
+      var _iteratorError61 = undefined;
 
-            try {
-              for (var _iterator63 = childIds[Symbol.iterator](), _step63; !(_iteratorNormalCompletion63 = (_step63 = _iterator63.next()).done); _iteratorNormalCompletion63 = true) {
-                var childId = _step63.value;
+      try {
+        for (var _iterator61 = group.ids[Symbol.iterator](), _step61; !(_iteratorNormalCompletion61 = (_step61 = _iterator61.next()).done); _iteratorNormalCompletion61 = true) {
+          var childId = _step61.value;
 
-                if (childId != null) {
-                  var child = this.getNodeById(childId);
-                  if (child != null) {
-                    var transitionLogic = child.transitionLogic;
-                    if (transitionLogic != null) {
-                      var transitions = transitionLogic.transitions;
-                      if (transitions == null || transitions.length == 0) {
-                        lastNodes.push(child);
-                      }
-                    }
-                  }
-                }
-              }
-            } catch (err) {
-              _didIteratorError63 = true;
-              _iteratorError63 = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion63 && _iterator63.return) {
-                  _iterator63.return();
-                }
-              } finally {
-                if (_didIteratorError63) {
-                  throw _iteratorError63;
-                }
-              }
-            }
+          var child = this.getNodeById(childId);
+          var transitionLogic = child.transitionLogic;
+          var transitions = transitionLogic.transitions;
+          if (transitions.length == 0) {
+            lastNodes.push(child);
+          }
+        }
+      } catch (err) {
+        _didIteratorError61 = true;
+        _iteratorError61 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion61 && _iterator61.return) {
+            _iterator61.return();
+          }
+        } finally {
+          if (_didIteratorError61) {
+            throw _iteratorError61;
           }
         }
       }
+
       return lastNodes;
     }
 
@@ -4720,13 +4224,13 @@ var ProjectService = function () {
     value: function getNextAvailableGroupId() {
       var groupIds = this.getGroupIds();
       var largestGroupIdNumber = null;
-      var _iteratorNormalCompletion64 = true;
-      var _didIteratorError64 = false;
-      var _iteratorError64 = undefined;
+      var _iteratorNormalCompletion62 = true;
+      var _didIteratorError62 = false;
+      var _iteratorError62 = undefined;
 
       try {
-        for (var _iterator64 = groupIds[Symbol.iterator](), _step64; !(_iteratorNormalCompletion64 = (_step64 = _iterator64.next()).done); _iteratorNormalCompletion64 = true) {
-          var groupId = _step64.value;
+        for (var _iterator62 = groupIds[Symbol.iterator](), _step62; !(_iteratorNormalCompletion62 = (_step62 = _iterator62.next()).done); _iteratorNormalCompletion62 = true) {
+          var groupId = _step62.value;
 
           // get the number from the group id e.g. the number of 'group2' would be 2
           var groupIdNumber = groupId.replace('group', '');
@@ -4744,16 +4248,16 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError64 = true;
-        _iteratorError64 = err;
+        _didIteratorError62 = true;
+        _iteratorError62 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion64 && _iterator64.return) {
-            _iterator64.return();
+          if (!_iteratorNormalCompletion62 && _iterator62.return) {
+            _iterator62.return();
           }
         } finally {
-          if (_didIteratorError64) {
-            throw _iteratorError64;
+          if (_didIteratorError62) {
+            throw _iteratorError62;
           }
         }
       }
@@ -4771,15 +4275,14 @@ var ProjectService = function () {
     key: 'getGroupIds',
     value: function getGroupIds() {
       var groupIds = [];
-
       var groupNodes = this.groupNodes;
-      var _iteratorNormalCompletion65 = true;
-      var _didIteratorError65 = false;
-      var _iteratorError65 = undefined;
+      var _iteratorNormalCompletion63 = true;
+      var _didIteratorError63 = false;
+      var _iteratorError63 = undefined;
 
       try {
-        for (var _iterator65 = groupNodes[Symbol.iterator](), _step65; !(_iteratorNormalCompletion65 = (_step65 = _iterator65.next()).done); _iteratorNormalCompletion65 = true) {
-          var group = _step65.value;
+        for (var _iterator63 = groupNodes[Symbol.iterator](), _step63; !(_iteratorNormalCompletion63 = (_step63 = _iterator63.next()).done); _iteratorNormalCompletion63 = true) {
+          var group = _step63.value;
 
           if (group != null) {
             var groupId = group.id;
@@ -4789,28 +4292,28 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError65 = true;
-        _iteratorError65 = err;
+        _didIteratorError63 = true;
+        _iteratorError63 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion65 && _iterator65.return) {
-            _iterator65.return();
+          if (!_iteratorNormalCompletion63 && _iterator63.return) {
+            _iterator63.return();
           }
         } finally {
-          if (_didIteratorError65) {
-            throw _iteratorError65;
+          if (_didIteratorError63) {
+            throw _iteratorError63;
           }
         }
       }
 
       var inactiveGroupNodes = this.getInactiveGroupNodes();
-      var _iteratorNormalCompletion66 = true;
-      var _didIteratorError66 = false;
-      var _iteratorError66 = undefined;
+      var _iteratorNormalCompletion64 = true;
+      var _didIteratorError64 = false;
+      var _iteratorError64 = undefined;
 
       try {
-        for (var _iterator66 = inactiveGroupNodes[Symbol.iterator](), _step66; !(_iteratorNormalCompletion66 = (_step66 = _iterator66.next()).done); _iteratorNormalCompletion66 = true) {
-          var inactiveGroup = _step66.value;
+        for (var _iterator64 = inactiveGroupNodes[Symbol.iterator](), _step64; !(_iteratorNormalCompletion64 = (_step64 = _iterator64.next()).done); _iteratorNormalCompletion64 = true) {
+          var inactiveGroup = _step64.value;
 
           if (inactiveGroup != null) {
             var inactiveGroupId = inactiveGroup.id;
@@ -4820,16 +4323,16 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError66 = true;
-        _iteratorError66 = err;
+        _didIteratorError64 = true;
+        _iteratorError64 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion66 && _iterator66.return) {
-            _iterator66.return();
+          if (!_iteratorNormalCompletion64 && _iterator64.return) {
+            _iterator64.return();
           }
         } finally {
-          if (_didIteratorError66) {
-            throw _iteratorError66;
+          if (_didIteratorError64) {
+            throw _iteratorError64;
           }
         }
       }
@@ -4858,13 +4361,13 @@ var ProjectService = function () {
       var nodeIds = this.getNodeIds();
       var largestNodeIdNumber = null;
 
-      var _iteratorNormalCompletion67 = true;
-      var _didIteratorError67 = false;
-      var _iteratorError67 = undefined;
+      var _iteratorNormalCompletion65 = true;
+      var _didIteratorError65 = false;
+      var _iteratorError65 = undefined;
 
       try {
-        for (var _iterator67 = nodeIds[Symbol.iterator](), _step67; !(_iteratorNormalCompletion67 = (_step67 = _iterator67.next()).done); _iteratorNormalCompletion67 = true) {
-          var nodeId = _step67.value;
+        for (var _iterator65 = nodeIds[Symbol.iterator](), _step65; !(_iteratorNormalCompletion65 = (_step65 = _iterator65.next()).done); _iteratorNormalCompletion65 = true) {
+          var nodeId = _step65.value;
 
           // get the number from the node id e.g. the number of 'node2' would be 2
           var _nodeIdNumber = nodeId.replace('node', '');
@@ -4882,33 +4385,32 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError67 = true;
-        _iteratorError67 = err;
+        _didIteratorError65 = true;
+        _iteratorError65 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion67 && _iterator67.return) {
-            _iterator67.return();
+          if (!_iteratorNormalCompletion65 && _iterator65.return) {
+            _iterator65.return();
           }
         } finally {
-          if (_didIteratorError67) {
-            throw _iteratorError67;
+          if (_didIteratorError65) {
+            throw _iteratorError65;
           }
         }
       }
 
       var inactiveNodeIds = this.getInactiveNodeIds();
-      var _iteratorNormalCompletion68 = true;
-      var _didIteratorError68 = false;
-      var _iteratorError68 = undefined;
+      var _iteratorNormalCompletion66 = true;
+      var _didIteratorError66 = false;
+      var _iteratorError66 = undefined;
 
       try {
-        for (var _iterator68 = inactiveNodeIds[Symbol.iterator](), _step68; !(_iteratorNormalCompletion68 = (_step68 = _iterator68.next()).done); _iteratorNormalCompletion68 = true) {
-          var inactiveNodeId = _step68.value;
+        for (var _iterator66 = inactiveNodeIds[Symbol.iterator](), _step66; !(_iteratorNormalCompletion66 = (_step66 = _iterator66.next()).done); _iteratorNormalCompletion66 = true) {
+          var inactiveNodeId = _step66.value;
 
           // get the number from the node id e.g. the number of 'node2' would be 2
           var _nodeIdNumber2 = inactiveNodeId.replace('node', '');
 
-          // make sure the number is an actual number
           if (!isNaN(_nodeIdNumber2)) {
             _nodeIdNumber2 = parseInt(_nodeIdNumber2);
 
@@ -4918,6 +4420,84 @@ var ProjectService = function () {
             } else if (_nodeIdNumber2 > largestNodeIdNumber) {
               largestNodeIdNumber = _nodeIdNumber2;
             }
+          }
+        }
+      } catch (err) {
+        _didIteratorError66 = true;
+        _iteratorError66 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion66 && _iterator66.return) {
+            _iterator66.return();
+          }
+        } finally {
+          if (_didIteratorError66) {
+            throw _iteratorError66;
+          }
+        }
+      }
+
+      if (nodeIdsToSkip != null) {
+        var _iteratorNormalCompletion67 = true;
+        var _didIteratorError67 = false;
+        var _iteratorError67 = undefined;
+
+        try {
+          for (var _iterator67 = nodeIdsToSkip[Symbol.iterator](), _step67; !(_iteratorNormalCompletion67 = (_step67 = _iterator67.next()).done); _iteratorNormalCompletion67 = true) {
+            var nodeIdToSkip = _step67.value;
+
+            // get the number from the node id e.g. the number of 'node2' would be 2
+            var nodeIdNumber = nodeIdToSkip.replace('node', '');
+
+            if (!isNaN(nodeIdNumber)) {
+              nodeIdNumber = parseInt(nodeIdNumber);
+
+              // update the largest node id number if necessary
+              if (largestNodeIdNumber == null) {
+                largestNodeIdNumber = nodeIdNumber;
+              } else if (nodeIdNumber > largestNodeIdNumber) {
+                largestNodeIdNumber = nodeIdNumber;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError67 = true;
+          _iteratorError67 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion67 && _iterator67.return) {
+              _iterator67.return();
+            }
+          } finally {
+            if (_didIteratorError67) {
+              throw _iteratorError67;
+            }
+          }
+        }
+      }
+      return 'node' + (largestNodeIdNumber + 1);
+    }
+
+    /**
+     * Get all the node ids from steps (not groups)
+     * @returns an array with all the node ids
+     */
+
+  }, {
+    key: 'getNodeIds',
+    value: function getNodeIds() {
+      var nodeIds = [];
+      var _iteratorNormalCompletion68 = true;
+      var _didIteratorError68 = false;
+      var _iteratorError68 = undefined;
+
+      try {
+        for (var _iterator68 = this.applicationNodes[Symbol.iterator](), _step68; !(_iteratorNormalCompletion68 = (_step68 = _iterator68.next()).done); _iteratorNormalCompletion68 = true) {
+          var node = _step68.value;
+
+          var nodeId = node.id;
+          if (nodeId != null) {
+            nodeIds.push(nodeId);
           }
         }
       } catch (err) {
@@ -4931,91 +4511,6 @@ var ProjectService = function () {
         } finally {
           if (_didIteratorError68) {
             throw _iteratorError68;
-          }
-        }
-      }
-
-      if (nodeIdsToSkip != null) {
-        // there are node ids to skip
-
-        var _iteratorNormalCompletion69 = true;
-        var _didIteratorError69 = false;
-        var _iteratorError69 = undefined;
-
-        try {
-          for (var _iterator69 = nodeIdsToSkip[Symbol.iterator](), _step69; !(_iteratorNormalCompletion69 = (_step69 = _iterator69.next()).done); _iteratorNormalCompletion69 = true) {
-            var nodeIdToSkip = _step69.value;
-
-            // get the number from the node id e.g. the number of 'node2' would be 2
-            var nodeIdNumber = nodeIdToSkip.replace('node', '');
-
-            // make sure the number is an actual number
-            if (!isNaN(nodeIdNumber)) {
-              nodeIdNumber = parseInt(nodeIdNumber);
-
-              // update the largest node id number if necessary
-              if (largestNodeIdNumber == null) {
-                largestNodeIdNumber = nodeIdNumber;
-              } else if (nodeIdNumber > largestNodeIdNumber) {
-                largestNodeIdNumber = nodeIdNumber;
-              }
-            }
-          }
-        } catch (err) {
-          _didIteratorError69 = true;
-          _iteratorError69 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion69 && _iterator69.return) {
-              _iterator69.return();
-            }
-          } finally {
-            if (_didIteratorError69) {
-              throw _iteratorError69;
-            }
-          }
-        }
-      }
-
-      var nextAvailableNodeId = 'node' + (largestNodeIdNumber + 1);
-      return nextAvailableNodeId;
-    }
-
-    /**
-     * Get all the node ids from steps (not groups)
-     * @returns an array with all the node ids
-     */
-
-  }, {
-    key: 'getNodeIds',
-    value: function getNodeIds() {
-      var nodeIds = [];
-      var _iteratorNormalCompletion70 = true;
-      var _didIteratorError70 = false;
-      var _iteratorError70 = undefined;
-
-      try {
-        for (var _iterator70 = this.applicationNodes[Symbol.iterator](), _step70; !(_iteratorNormalCompletion70 = (_step70 = _iterator70.next()).done); _iteratorNormalCompletion70 = true) {
-          var node = _step70.value;
-
-          if (node != null) {
-            var nodeId = node.id;
-            if (nodeId != null) {
-              nodeIds.push(nodeId);
-            }
-          }
-        }
-      } catch (err) {
-        _didIteratorError70 = true;
-        _iteratorError70 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion70 && _iterator70.return) {
-            _iterator70.return();
-          }
-        } finally {
-          if (_didIteratorError70) {
-            throw _iteratorError70;
           }
         }
       }
@@ -5034,13 +4529,13 @@ var ProjectService = function () {
       var nodeIds = [];
       var inactiveNodes = this.project.inactiveNodes;
       if (inactiveNodes != null) {
-        var _iteratorNormalCompletion71 = true;
-        var _didIteratorError71 = false;
-        var _iteratorError71 = undefined;
+        var _iteratorNormalCompletion69 = true;
+        var _didIteratorError69 = false;
+        var _iteratorError69 = undefined;
 
         try {
-          for (var _iterator71 = inactiveNodes[Symbol.iterator](), _step71; !(_iteratorNormalCompletion71 = (_step71 = _iterator71.next()).done); _iteratorNormalCompletion71 = true) {
-            var inactiveNode = _step71.value;
+          for (var _iterator69 = inactiveNodes[Symbol.iterator](), _step69; !(_iteratorNormalCompletion69 = (_step69 = _iterator69.next()).done); _iteratorNormalCompletion69 = true) {
+            var inactiveNode = _step69.value;
 
             if (inactiveNode != null) {
               var nodeId = inactiveNode.id;
@@ -5050,16 +4545,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError71 = true;
-          _iteratorError71 = err;
+          _didIteratorError69 = true;
+          _iteratorError69 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion71 && _iterator71.return) {
-              _iterator71.return();
+            if (!_iteratorNormalCompletion69 && _iterator69.return) {
+              _iterator69.return();
             }
           } finally {
-            if (_didIteratorError71) {
-              throw _iteratorError71;
+            if (_didIteratorError69) {
+              throw _iteratorError69;
             }
           }
         }
@@ -5087,8 +4582,6 @@ var ProjectService = function () {
         var stationaryNodeIsActive = this.isActive(nodeId);
 
         if (movingNodeIsActive && stationaryNodeIsActive) {
-          // we are moving from active to active
-
           this.removeNodeIdFromTransitions(tempNodeId);
           this.removeNodeIdFromGroups(tempNodeId);
 
@@ -5097,7 +4590,7 @@ var ProjectService = function () {
              * this is the first node we are moving so we will insert it
              * into the beginning of the group
              */
-            this.insertNodeInsideInTransitions(tempNodeId, nodeId);
+            this.insertNodeInsideOnlyUpdateTransitions(tempNodeId, nodeId);
             this.insertNodeInsideInGroups(tempNodeId, nodeId);
           } else {
             /*
@@ -5108,8 +4601,6 @@ var ProjectService = function () {
             this.insertNodeAfterInGroups(tempNodeId, nodeId);
           }
         } else if (movingNodeIsActive && !stationaryNodeIsActive) {
-          // we are moving from active to inactive
-
           this.removeNodeIdFromTransitions(tempNodeId);
           this.removeNodeIdFromGroups(tempNodeId);
 
@@ -5127,8 +4618,6 @@ var ProjectService = function () {
             this.moveToInactive(tempNode, nodeId);
           }
         } else if (!movingNodeIsActive && stationaryNodeIsActive) {
-          // we are moving from inactive to active
-
           this.moveToActive(tempNode);
 
           if (n == 0) {
@@ -5136,7 +4625,7 @@ var ProjectService = function () {
              * this is the first node we are moving so we will insert it
              * into the beginning of the group
              */
-            this.insertNodeInsideInTransitions(tempNodeId, nodeId);
+            this.insertNodeInsideOnlyUpdateTransitions(tempNodeId, nodeId);
             this.insertNodeInsideInGroups(tempNodeId, nodeId);
           } else {
             /*
@@ -5147,8 +4636,6 @@ var ProjectService = function () {
             this.insertNodeAfterInGroups(tempNodeId, nodeId);
           }
         } else if (!movingNodeIsActive && !stationaryNodeIsActive) {
-          // we are moving from inactive to inactive
-
           this.removeNodeIdFromTransitions(tempNodeId);
           this.removeNodeIdFromGroups(tempNodeId);
 
@@ -5163,7 +4650,7 @@ var ProjectService = function () {
              * this is not the first node we are moving so we will insert
              * it after the node we previously inserted
              */
-            this.moveInactiveNode(tempNode, nodeId);
+            this.moveInactiveNodeToInactiveSection(tempNode, nodeId);
           }
         }
 
@@ -5187,13 +4674,13 @@ var ProjectService = function () {
     value: function moveNodesAfter(nodeIds, nodeId) {
       var movedNodes = [];
 
-      var _iteratorNormalCompletion72 = true;
-      var _didIteratorError72 = false;
-      var _iteratorError72 = undefined;
+      var _iteratorNormalCompletion70 = true;
+      var _didIteratorError70 = false;
+      var _iteratorError70 = undefined;
 
       try {
-        for (var _iterator72 = nodeIds[Symbol.iterator](), _step72; !(_iteratorNormalCompletion72 = (_step72 = _iterator72.next()).done); _iteratorNormalCompletion72 = true) {
-          var tempNodeId = _step72.value;
+        for (var _iterator70 = nodeIds[Symbol.iterator](), _step70; !(_iteratorNormalCompletion70 = (_step70 = _iterator70.next()).done); _iteratorNormalCompletion70 = true) {
+          var tempNodeId = _step70.value;
 
           var node = this.getNodeById(tempNodeId);
           movedNodes.push(node);
@@ -5202,46 +4689,38 @@ var ProjectService = function () {
           var stationaryNodeIsActive = this.isActive(nodeId);
 
           if (movingNodeIsActive && stationaryNodeIsActive) {
-            // we are moving from active to active
-
             this.removeNodeIdFromTransitions(tempNodeId);
             this.removeNodeIdFromGroups(tempNodeId);
             this.insertNodeAfterInGroups(tempNodeId, nodeId);
             this.insertNodeAfterInTransitions(node, nodeId);
           } else if (movingNodeIsActive && !stationaryNodeIsActive) {
-            // we are moving from active to inactive
-
             this.removeNodeIdFromTransitions(tempNodeId);
             this.removeNodeIdFromGroups(tempNodeId);
             this.moveToInactive(node, nodeId);
           } else if (!movingNodeIsActive && stationaryNodeIsActive) {
-            // we are moving from inactive to active
-
             this.moveToActive(node);
             this.insertNodeAfterInGroups(tempNodeId, nodeId);
             this.insertNodeAfterInTransitions(node, nodeId);
           } else if (!movingNodeIsActive && !stationaryNodeIsActive) {
-            // we are moving from inactive to inactive
-
             this.removeNodeIdFromTransitions(tempNodeId);
             this.removeNodeIdFromGroups(tempNodeId);
-            this.moveInactiveNode(node, nodeId);
+            this.moveInactiveNodeToInactiveSection(node, nodeId);
           }
 
           // remember the node id so we can put the next node (if any) after this one
           nodeId = node.id;
         }
       } catch (err) {
-        _didIteratorError72 = true;
-        _iteratorError72 = err;
+        _didIteratorError70 = true;
+        _iteratorError70 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion72 && _iterator72.return) {
-            _iterator72.return();
+          if (!_iteratorNormalCompletion70 && _iterator70.return) {
+            _iterator70.return();
           }
         } finally {
-          if (_didIteratorError72) {
-            throw _iteratorError72;
+          if (_didIteratorError70) {
+            throw _iteratorError70;
           }
         }
       }
@@ -5265,29 +4744,29 @@ var ProjectService = function () {
       nodeCopy.constraints = []; // clear constraints
 
       var newComponentIds = [];
-      var _iteratorNormalCompletion73 = true;
-      var _didIteratorError73 = false;
-      var _iteratorError73 = undefined;
+      var _iteratorNormalCompletion71 = true;
+      var _didIteratorError71 = false;
+      var _iteratorError71 = undefined;
 
       try {
-        for (var _iterator73 = nodeCopy.components[Symbol.iterator](), _step73; !(_iteratorNormalCompletion73 = (_step73 = _iterator73.next()).done); _iteratorNormalCompletion73 = true) {
-          var component = _step73.value;
+        for (var _iterator71 = nodeCopy.components[Symbol.iterator](), _step71; !(_iteratorNormalCompletion71 = (_step71 = _iterator71.next()).done); _iteratorNormalCompletion71 = true) {
+          var component = _step71.value;
 
           var newComponentId = this.getUnusedComponentId(newComponentIds);
           newComponentIds.push(newComponentId);
           component.id = newComponentId;
         }
       } catch (err) {
-        _didIteratorError73 = true;
-        _iteratorError73 = err;
+        _didIteratorError71 = true;
+        _iteratorError71 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion73 && _iterator73.return) {
-            _iterator73.return();
+          if (!_iteratorNormalCompletion71 && _iterator71.return) {
+            _iterator71.return();
           }
         } finally {
-          if (_didIteratorError73) {
-            throw _iteratorError73;
+          if (_didIteratorError71) {
+            throw _iteratorError71;
           }
         }
       }
@@ -5296,187 +4775,163 @@ var ProjectService = function () {
     }
 
     /**
-     * Delete a node
-     * @param nodeId the node id
+     * Delete a node from the project and update transitions.
+     *
+     * If we are deleting the project start node id, we will need
+     * to change it to the next logical node id that will be used
+     * as the project start.
+     *
+     * @param nodeId the node id to delete from the project. It can be a step
+     * or an activity.
      */
 
   }, {
     key: 'deleteNode',
     value: function deleteNode(nodeId) {
-      /*
-       * flag for whether we are deleting the project start node id.
-       * if we are deleting the project start node id, we will need
-       * to change it to the next logical node id that will be used
-       * as the project start.
-       */
-      var removingProjectStartNodeId = false;
+      var parentGroup = this.getParentGroup(nodeId);
+      if (parentGroup.startId === nodeId) {
+        this.setGroupStartIdToNextChildId(parentGroup);
+      }
+
+      if (this.isProjectStartNodeIdOrContainsProjectStartNodeId(nodeId)) {
+        this.updateProjectStartNodeIdToNextLogicalNode(nodeId);
+      }
 
       if (this.isGroupNode(nodeId)) {
-        // the node is a group node so we will also remove all of its children
-        var group = this.getNodeById(nodeId);
-
-        // TODO check if the child is in another group, if so do not remove
-
-        if (group != null) {
-          var ids = group.ids;
-          for (var i = 0; i < ids.length; i++) {
-            var id = ids[i];
-            this.removeNodeIdFromTransitions(id);
-            this.removeNodeIdFromGroups(id);
-            this.removeNodeIdFromNodes(id);
-
-            if (this.project.startNodeId == id) {
-              removingProjectStartNodeId = true;
-            }
-
-            /*
-             * move the counter back because we have removed a child
-             * from the parent group's array of child ids so all of
-             * the child ids were shifted back one and the next child
-             * we want will be at i--
-             */
-            i--;
-          }
-        }
-      }
-
-      var parentGroup = this.getParentGroup(nodeId);
-
-      // check if we need to update the start id of the parent group
-      if (parentGroup != null) {
-
-        /*
-         * the node is the start node of the parent group so we need
-         * to update the start id of the parent group to point to
-         * the next node
-         */
-        if (nodeId === parentGroup.startId) {
-          var hasSetNewStartId = false;
-
-          var node = this.getNodeById(nodeId);
-          if (node != null) {
-            var transitionLogic = node.transitionLogic;
-            if (transitionLogic != null) {
-              var transitions = transitionLogic.transitions;
-              if (transitions != null && transitions.length > 0) {
-                var transition = transitions[0];
-                if (transition != null) {
-                  var toNodeId = transition.to;
-                  if (toNodeId != null) {
-                    if (this.isNodeInGroup(toNodeId, parentGroup.id)) {
-                      parentGroup.startId = toNodeId;
-                      hasSetNewStartId = true;
-                    }
-                  }
-                }
-              }
-            }
-          }
-
-          if (!hasSetNewStartId) {
-            parentGroup.startId = '';
-          }
-        }
-      }
-
-      if (nodeId === this.getStartNodeId()) {
-        removingProjectStartNodeId = true;
-      }
-
-      if (removingProjectStartNodeId) {
-        /*
-         * we are removing the project start node id so we need to update
-         * the startNodeId to something else
-         */
-
-        if (this.isGroupNode(nodeId)) {
-          /*
-           * we are removing a group so we need to set the startNodeId to
-           * the first node of the next group or if the next group doesn't
-           * have any nodes, we will just use the next group
-           */
-
-          // get the transitions of the group we are removing
-          var _transitions2 = this.getTransitionsByFromNodeId(nodeId);
-
-          if (_transitions2 == null || _transitions2.length == 0) {
-            /*
-             * the group doesn't have any transitions so we will set
-             * the startNodeId to 'group0'
-             */
-            this.setStartNodeId('group0');
-          } else {
-            // the group has transitions
-
-            var nextNodeId = null;
-
-            if (_transitions2[0] != null && _transitions2[0].to != null) {
-              nextNodeId = _transitions2[0].to;
-            }
-
-            if (nextNodeId != null) {
-              if (this.isGroupNode(nextNodeId)) {
-                var nextGroupNode = this.getNodeById(nextNodeId);
-
-                if (nextGroupNode != null) {
-                  var nextGroupStartId = nextGroupNode.startId;
-
-                  if (nextGroupStartId == null) {
-                    /*
-                     * the next group does not have a start id so we
-                     * will just use the next group id as the project
-                     * start node id
-                     */
-                    this.setStartNodeId(nextNodeId);
-                  } else {
-                    /*
-                     * the next group has a start id so we will use
-                     * it as the project start node id
-                     */
-                    this.setStartNodeId(nextGroupStartId);
-                  }
-                }
-              } else {
-                /*
-                 * the transition is to a step so we will use it as the
-                 * project start node id
-                 */
-                this.setStartNodeId(nextNodeId);
-              }
-            }
-          }
-        } else {
-          /*
-           * we are removing a step node so we will set the startNodeId to
-           * the next node in the transitions, or if there are no
-           * transitions, we will use the parent group
-           */
-
-          // get the transitions from the step we are removing
-          var _transitions3 = this.getTransitionsByFromNodeId(nodeId);
-          var parentGroupId = this.getParentGroupId(nodeId);
-          if (_transitions3 == null || _transitions3.length == 0) {
-            this.setStartNodeId(parentGroupId);
-          } else {
-            if (_transitions3[0] != null && _transitions3[0].to != null) {
-              var _toNodeId3 = _transitions3[0].to;
-              if (this.isNodeInGroup(_toNodeId3, parentGroupId)) {
-                this.setStartNodeId(_toNodeId3);
-              } else {
-                this.setStartNodeId(this.getParentGroupId(nodeId));
-              }
-            }
-          }
-        }
+        this.removeChildNodes(nodeId);
       }
 
       this.removeNodeIdFromTransitions(nodeId);
       this.removeNodeIdFromGroups(nodeId);
       this.removeNodeIdFromNodes(nodeId);
-
-      if (parentGroup != null) {
-        this.recalculatePositionsInGroup(parentGroup.id);
+      this.recalculatePositionsInGroup(parentGroup.id);
+    }
+  }, {
+    key: 'updateProjectStartNodeIdToNextLogicalNode',
+    value: function updateProjectStartNodeIdToNextLogicalNode(nodeId) {
+      if (this.isGroupNode(nodeId)) {
+        this.updateProjectStartNodeIdToNextLogicalNodeForRemovingGroup(nodeId);
+      } else {
+        this.updateProjectStartNodeIdToNextLogicalNodeForRemovingStep(nodeId);
       }
+    }
+
+    /**
+     * Set the startNodeId of the specified group to the first node of the next group.
+     * If the next group doesn't have any nodes, startNodeId should point
+     * to the next group.
+     */
+
+  }, {
+    key: 'updateProjectStartNodeIdToNextLogicalNodeForRemovingGroup',
+    value: function updateProjectStartNodeIdToNextLogicalNodeForRemovingGroup(nodeId) {
+      var transitions = this.getTransitionsByFromNodeId(nodeId);
+      if (transitions.length == 0) {
+        this.setStartNodeId('group0');
+      } else {
+        var nextNodeId = transitions[0].to;
+        if (this.isGroupNode(nextNodeId)) {
+          var nextGroupStartId = this.getGroupStartId(nextNodeId);
+          if (nextGroupStartId == null) {
+            this.setStartNodeId(nextNodeId);
+          } else {
+            this.setStartNodeId(nextGroupStartId);
+          }
+        } else {
+          this.setStartNodeId(nextNodeId);
+        }
+      }
+    }
+
+    /**
+     * Set the startNodeId to the next node in the transitions.
+     * If there are no transitions, set it to the parent group of the node.
+     */
+
+  }, {
+    key: 'updateProjectStartNodeIdToNextLogicalNodeForRemovingStep',
+    value: function updateProjectStartNodeIdToNextLogicalNodeForRemovingStep(nodeId) {
+      var transitions = this.getTransitionsByFromNodeId(nodeId);
+      var parentGroupId = this.getParentGroupId(nodeId);
+      if (transitions.length == 0) {
+        this.setStartNodeId(parentGroupId);
+      } else {
+        var nextNodeId = transitions[0].to;
+        if (this.isNodeInGroup(nextNodeId, parentGroupId)) {
+          this.setStartNodeId(nextNodeId);
+        } else {
+          this.setStartNodeId(this.getParentGroupId(nodeId));
+        }
+      }
+    }
+  }, {
+    key: 'setGroupStartIdToNextChildId',
+    value: function setGroupStartIdToNextChildId(group) {
+      var hasSetNewStartId = false;
+      var transitions = this.getTransitionsByFromNodeId(group.startId);
+      if (transitions.length > 0) {
+        var transition = transitions[0];
+        var toNodeId = transition.to;
+        if (this.isNodeInGroup(toNodeId, group.id)) {
+          group.startId = toNodeId;
+          hasSetNewStartId = true;
+        }
+      }
+
+      if (!hasSetNewStartId) {
+        group.startId = '';
+      }
+    }
+  }, {
+    key: 'removeChildNodes',
+    value: function removeChildNodes(groupId) {
+      var group = this.getNodeById(groupId);
+      for (var i = 0; i < group.ids.length; i++) {
+        var childId = group.ids[i];
+        this.removeNodeIdFromTransitions(childId);
+        this.removeNodeIdFromGroups(childId);
+        this.removeNodeIdFromNodes(childId);
+        i--; // so it won't skip the next element
+      }
+    }
+  }, {
+    key: 'isProjectStartNodeIdOrContainsProjectStartNodeId',
+    value: function isProjectStartNodeIdOrContainsProjectStartNodeId(nodeId) {
+      return this.getStartNodeId() === nodeId || this.isGroupNode(nodeId) && this.containsStartNodeId(nodeId);
+    }
+  }, {
+    key: 'containsStartNodeId',
+    value: function containsStartNodeId(groupId) {
+      var group = this.getNodeById(groupId);
+      var projectStartNodeId = this.getStartNodeId();
+      var _iteratorNormalCompletion72 = true;
+      var _didIteratorError72 = false;
+      var _iteratorError72 = undefined;
+
+      try {
+        for (var _iterator72 = group.ids[Symbol.iterator](), _step72; !(_iteratorNormalCompletion72 = (_step72 = _iterator72.next()).done); _iteratorNormalCompletion72 = true) {
+          var childId = _step72.value;
+
+          if (childId === projectStartNodeId) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError72 = true;
+        _iteratorError72 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion72 && _iterator72.return) {
+            _iterator72.return();
+          }
+        } finally {
+          if (_didIteratorError72) {
+            throw _iteratorError72;
+          }
+        }
+      }
+
+      return false;
     }
 
     /**
@@ -5508,13 +4963,13 @@ var ProjectService = function () {
             // the node we are removing is the start node
 
             if (nodeToRemoveTransitions != null && nodeToRemoveTransitions.length > 0) {
-              var _iteratorNormalCompletion74 = true;
-              var _didIteratorError74 = false;
-              var _iteratorError74 = undefined;
+              var _iteratorNormalCompletion73 = true;
+              var _didIteratorError73 = false;
+              var _iteratorError73 = undefined;
 
               try {
-                for (var _iterator74 = nodeToRemoveTransitions[Symbol.iterator](), _step74; !(_iteratorNormalCompletion74 = (_step74 = _iterator74.next()).done); _iteratorNormalCompletion74 = true) {
-                  var nodeToRemoveTransition = _step74.value;
+                for (var _iterator73 = nodeToRemoveTransitions[Symbol.iterator](), _step73; !(_iteratorNormalCompletion73 = (_step73 = _iterator73.next()).done); _iteratorNormalCompletion73 = true) {
+                  var nodeToRemoveTransition = _step73.value;
 
                   if (nodeToRemoveTransition != null) {
                     var toNodeId = nodeToRemoveTransition.to;
@@ -5533,16 +4988,16 @@ var ProjectService = function () {
                   }
                 }
               } catch (err) {
-                _didIteratorError74 = true;
-                _iteratorError74 = err;
+                _didIteratorError73 = true;
+                _iteratorError73 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion74 && _iterator74.return) {
-                    _iterator74.return();
+                  if (!_iteratorNormalCompletion73 && _iterator73.return) {
+                    _iterator73.return();
                   }
                 } finally {
-                  if (_didIteratorError74) {
-                    throw _iteratorError74;
+                  if (_didIteratorError73) {
+                    throw _iteratorError73;
                   }
                 }
               }
@@ -5556,7 +5011,6 @@ var ProjectService = function () {
 
       for (var n = 0; n < nodesByToNodeId.length; n++) {
         var node = nodesByToNodeId[n];
-
         if (node != null) {
           var parentIdOfFromNode = this.getParentGroupId(node.id);
           var transitionLogic = node.transitionLogic;
@@ -5607,22 +5061,22 @@ var ProjectService = function () {
                   var nodeIdsInBranch = this.getNodeIdsInBranch(node.id, nodeId);
 
                   if (nodeIdsInBranch != null) {
-                    var _iteratorNormalCompletion75 = true;
-                    var _didIteratorError75 = false;
-                    var _iteratorError75 = undefined;
+                    var _iteratorNormalCompletion74 = true;
+                    var _didIteratorError74 = false;
+                    var _iteratorError74 = undefined;
 
                     try {
-                      for (var _iterator75 = nodeIdsInBranch[Symbol.iterator](), _step75; !(_iteratorNormalCompletion75 = (_step75 = _iterator75.next()).done); _iteratorNormalCompletion75 = true) {
-                        var nodeIdInBranch = _step75.value;
+                      for (var _iterator74 = nodeIdsInBranch[Symbol.iterator](), _step74; !(_iteratorNormalCompletion74 = (_step74 = _iterator74.next()).done); _iteratorNormalCompletion74 = true) {
+                        var nodeIdInBranch = _step74.value;
 
                         var nodeInBranch = this.getNodeById(nodeIdInBranch);
-                        var _iteratorNormalCompletion76 = true;
-                        var _didIteratorError76 = false;
-                        var _iteratorError76 = undefined;
+                        var _iteratorNormalCompletion75 = true;
+                        var _didIteratorError75 = false;
+                        var _iteratorError75 = undefined;
 
                         try {
-                          for (var _iterator76 = transitionsCopy[Symbol.iterator](), _step76; !(_iteratorNormalCompletion76 = (_step76 = _iterator76.next()).done); _iteratorNormalCompletion76 = true) {
-                            var transitionCopy = _step76.value;
+                          for (var _iterator75 = transitionsCopy[Symbol.iterator](), _step75; !(_iteratorNormalCompletion75 = (_step75 = _iterator75.next()).done); _iteratorNormalCompletion75 = true) {
+                            var transitionCopy = _step75.value;
 
                             if (transitionCopy != null) {
                               var currentFromNodeId = node.id;
@@ -5638,31 +5092,31 @@ var ProjectService = function () {
                             }
                           }
                         } catch (err) {
-                          _didIteratorError76 = true;
-                          _iteratorError76 = err;
+                          _didIteratorError75 = true;
+                          _iteratorError75 = err;
                         } finally {
                           try {
-                            if (!_iteratorNormalCompletion76 && _iterator76.return) {
-                              _iterator76.return();
+                            if (!_iteratorNormalCompletion75 && _iterator75.return) {
+                              _iterator75.return();
                             }
                           } finally {
-                            if (_didIteratorError76) {
-                              throw _iteratorError76;
+                            if (_didIteratorError75) {
+                              throw _iteratorError75;
                             }
                           }
                         }
                       }
                     } catch (err) {
-                      _didIteratorError75 = true;
-                      _iteratorError75 = err;
+                      _didIteratorError74 = true;
+                      _iteratorError74 = err;
                     } finally {
                       try {
-                        if (!_iteratorNormalCompletion75 && _iterator75.return) {
-                          _iterator75.return();
+                        if (!_iteratorNormalCompletion74 && _iterator74.return) {
+                          _iterator74.return();
                         }
                       } finally {
-                        if (_didIteratorError75) {
-                          throw _iteratorError75;
+                        if (_didIteratorError74) {
+                          throw _iteratorError74;
                         }
                       }
                     }
@@ -5674,13 +5128,13 @@ var ProjectService = function () {
                    */
                   var branches = this.getBranchesByBranchStartPointNodeId(nodeId);
 
-                  var _iteratorNormalCompletion77 = true;
-                  var _didIteratorError77 = false;
-                  var _iteratorError77 = undefined;
+                  var _iteratorNormalCompletion76 = true;
+                  var _didIteratorError76 = false;
+                  var _iteratorError76 = undefined;
 
                   try {
-                    for (var _iterator77 = branches[Symbol.iterator](), _step77; !(_iteratorNormalCompletion77 = (_step77 = _iterator77.next()).done); _iteratorNormalCompletion77 = true) {
-                      var branch = _step77.value;
+                    for (var _iterator76 = branches[Symbol.iterator](), _step76; !(_iteratorNormalCompletion76 = (_step76 = _iterator76.next()).done); _iteratorNormalCompletion76 = true) {
+                      var branch = _step76.value;
 
                       if (branch != null) {
                         /*
@@ -5690,57 +5144,57 @@ var ProjectService = function () {
                         var branchPaths = branch.branchPaths;
 
                         if (branchPaths != null) {
-                          var _iteratorNormalCompletion78 = true;
-                          var _didIteratorError78 = false;
-                          var _iteratorError78 = undefined;
+                          var _iteratorNormalCompletion77 = true;
+                          var _didIteratorError77 = false;
+                          var _iteratorError77 = undefined;
 
                           try {
-                            for (var _iterator78 = branchPaths[Symbol.iterator](), _step78; !(_iteratorNormalCompletion78 = (_step78 = _iterator78.next()).done); _iteratorNormalCompletion78 = true) {
-                              var branchPath = _step78.value;
+                            for (var _iterator77 = branchPaths[Symbol.iterator](), _step77; !(_iteratorNormalCompletion77 = (_step77 = _iterator77.next()).done); _iteratorNormalCompletion77 = true) {
+                              var branchPath = _step77.value;
 
                               if (branchPath != null) {
                                 var _currentFromNodeId = nodeId;
                                 var _currentToNodeId = branchPath[0];
                                 var _newFromNodeId = node.id;
                                 var _newToNodeId = branchPath[0];
-                                var _iteratorNormalCompletion79 = true;
-                                var _didIteratorError79 = false;
-                                var _iteratorError79 = undefined;
+                                var _iteratorNormalCompletion78 = true;
+                                var _didIteratorError78 = false;
+                                var _iteratorError78 = undefined;
 
                                 try {
-                                  for (var _iterator79 = branchPath[Symbol.iterator](), _step79; !(_iteratorNormalCompletion79 = (_step79 = _iterator79.next()).done); _iteratorNormalCompletion79 = true) {
-                                    var branchPathNodeId = _step79.value;
+                                  for (var _iterator78 = branchPath[Symbol.iterator](), _step78; !(_iteratorNormalCompletion78 = (_step78 = _iterator78.next()).done); _iteratorNormalCompletion78 = true) {
+                                    var branchPathNodeId = _step78.value;
 
                                     var branchPathNode = this.getNodeById(branchPathNodeId);
                                     this.updateBranchPathTakenConstraint(branchPathNode, _currentFromNodeId, _currentToNodeId, _newFromNodeId, _newToNodeId);
                                   }
                                 } catch (err) {
-                                  _didIteratorError79 = true;
-                                  _iteratorError79 = err;
+                                  _didIteratorError78 = true;
+                                  _iteratorError78 = err;
                                 } finally {
                                   try {
-                                    if (!_iteratorNormalCompletion79 && _iterator79.return) {
-                                      _iterator79.return();
+                                    if (!_iteratorNormalCompletion78 && _iterator78.return) {
+                                      _iterator78.return();
                                     }
                                   } finally {
-                                    if (_didIteratorError79) {
-                                      throw _iteratorError79;
+                                    if (_didIteratorError78) {
+                                      throw _iteratorError78;
                                     }
                                   }
                                 }
                               }
                             }
                           } catch (err) {
-                            _didIteratorError78 = true;
-                            _iteratorError78 = err;
+                            _didIteratorError77 = true;
+                            _iteratorError77 = err;
                           } finally {
                             try {
-                              if (!_iteratorNormalCompletion78 && _iterator78.return) {
-                                _iterator78.return();
+                              if (!_iteratorNormalCompletion77 && _iterator77.return) {
+                                _iterator77.return();
                               }
                             } finally {
-                              if (_didIteratorError78) {
-                                throw _iteratorError78;
+                              if (_didIteratorError77) {
+                                throw _iteratorError77;
                               }
                             }
                           }
@@ -5748,16 +5202,16 @@ var ProjectService = function () {
                       }
                     }
                   } catch (err) {
-                    _didIteratorError77 = true;
-                    _iteratorError77 = err;
+                    _didIteratorError76 = true;
+                    _iteratorError76 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion77 && _iterator77.return) {
-                        _iterator77.return();
+                      if (!_iteratorNormalCompletion76 && _iterator76.return) {
+                        _iterator76.return();
                       }
                     } finally {
-                      if (_didIteratorError77) {
-                        throw _iteratorError77;
+                      if (_didIteratorError76) {
+                        throw _iteratorError76;
                       }
                     }
                   }
@@ -5795,29 +5249,29 @@ var ProjectService = function () {
                    *     }
                    * ]
                    */
-                  var _iteratorNormalCompletion80 = true;
-                  var _didIteratorError80 = false;
-                  var _iteratorError80 = undefined;
+                  var _iteratorNormalCompletion79 = true;
+                  var _didIteratorError79 = false;
+                  var _iteratorError79 = undefined;
 
                   try {
-                    for (var _iterator80 = transitionsCopy[Symbol.iterator](), _step80; !(_iteratorNormalCompletion80 = (_step80 = _iterator80.next()).done); _iteratorNormalCompletion80 = true) {
-                      var _transitionCopy = _step80.value;
+                    for (var _iterator79 = transitionsCopy[Symbol.iterator](), _step79; !(_iteratorNormalCompletion79 = (_step79 = _iterator79.next()).done); _iteratorNormalCompletion79 = true) {
+                      var _transitionCopy = _step79.value;
 
                       // insert a transition from the node we are removing
                       transitions.splice(insertIndex, 0, _transitionCopy);
                       insertIndex++;
                     }
                   } catch (err) {
-                    _didIteratorError80 = true;
-                    _iteratorError80 = err;
+                    _didIteratorError79 = true;
+                    _iteratorError79 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion80 && _iterator80.return) {
-                        _iterator80.return();
+                      if (!_iteratorNormalCompletion79 && _iterator79.return) {
+                        _iterator79.return();
                       }
                     } finally {
-                      if (_didIteratorError80) {
-                        throw _iteratorError80;
+                      if (_didIteratorError79) {
+                        throw _iteratorError79;
                       }
                     }
                   }
@@ -5859,10 +5313,6 @@ var ProjectService = function () {
       }
 
       if (this.isGroupNode(nodeId)) {
-        /*
-         * this is a group node so we will remove all child transitions that
-         * go out of this group
-         */
         this.removeTransitionsOutOfGroup(nodeId);
       }
     }
@@ -5871,20 +5321,44 @@ var ProjectService = function () {
 
 
     /**
-     * Remove the node id from a group
+     * Remove the node id from all groups
      * @param nodeId the node id to remove
      */
     value: function removeNodeIdFromGroups(nodeId) {
-      var groups = this.getGroupNodes();
+      var _iteratorNormalCompletion80 = true;
+      var _didIteratorError80 = false;
+      var _iteratorError80 = undefined;
+
+      try {
+        for (var _iterator80 = this.getGroupNodes()[Symbol.iterator](), _step80; !(_iteratorNormalCompletion80 = (_step80 = _iterator80.next()).done); _iteratorNormalCompletion80 = true) {
+          var group = _step80.value;
+
+          this.removeNodeIdFromGroup(group, nodeId);
+        }
+      } catch (err) {
+        _didIteratorError80 = true;
+        _iteratorError80 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion80 && _iterator80.return) {
+            _iterator80.return();
+          }
+        } finally {
+          if (_didIteratorError80) {
+            throw _iteratorError80;
+          }
+        }
+      }
+
       var _iteratorNormalCompletion81 = true;
       var _didIteratorError81 = false;
       var _iteratorError81 = undefined;
 
       try {
-        for (var _iterator81 = groups[Symbol.iterator](), _step81; !(_iteratorNormalCompletion81 = (_step81 = _iterator81.next()).done); _iteratorNormalCompletion81 = true) {
-          var group = _step81.value;
+        for (var _iterator81 = this.getInactiveGroupNodes()[Symbol.iterator](), _step81; !(_iteratorNormalCompletion81 = (_step81 = _iterator81.next()).done); _iteratorNormalCompletion81 = true) {
+          var inactiveGroup = _step81.value;
 
-          this.removeNodeIdFromGroup(group, nodeId);
+          this.removeNodeIdFromGroup(inactiveGroup, nodeId);
         }
       } catch (err) {
         _didIteratorError81 = true;
@@ -5900,36 +5374,12 @@ var ProjectService = function () {
           }
         }
       }
-
-      var inactiveGroups = this.getInactiveGroupNodes();
-      var _iteratorNormalCompletion82 = true;
-      var _didIteratorError82 = false;
-      var _iteratorError82 = undefined;
-
-      try {
-        for (var _iterator82 = inactiveGroups[Symbol.iterator](), _step82; !(_iteratorNormalCompletion82 = (_step82 = _iterator82.next()).done); _iteratorNormalCompletion82 = true) {
-          var inactiveGroup = _step82.value;
-
-          this.removeNodeIdFromGroup(inactiveGroup, nodeId);
-        }
-      } catch (err) {
-        _didIteratorError82 = true;
-        _iteratorError82 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion82 && _iterator82.return) {
-            _iterator82.return();
-          }
-        } finally {
-          if (_didIteratorError82) {
-            throw _iteratorError82;
-          }
-        }
-      }
     }
 
     /**
-     * Remove a node id from a group.
+     * Remove a node from a group.
+     * If the node is a start node of the group, update the group's start node to
+     * the next node in the group after removing.
      * @param group The group to remove from.
      * @param nodeId The node id to remove.
      */
@@ -5937,53 +5387,28 @@ var ProjectService = function () {
   }, {
     key: 'removeNodeIdFromGroup',
     value: function removeNodeIdFromGroup(group, nodeId) {
-      var startId = group.startId;
       var ids = group.ids;
       for (var i = 0; i < ids.length; i++) {
         var id = ids[i];
-        if (nodeId === id) {
+        if (id === nodeId) {
           ids.splice(i, 1);
-
-          if (nodeId === startId) {
-            /*
-             * the node id is also the start id so we will get the
-             * next node id and set it as the new start id
-             */
-
-            var hasSetNewStartId = false;
-
-            var node = this.getNodeById(id);
-
-            if (node != null) {
-              var transitionLogic = node.transitionLogic;
-              if (transitionLogic != null) {
-                var transitions = transitionLogic.transitions;
-                if (transitions != null && transitions.length > 0) {
-                  // get the first transition
-                  // TODO handle the case when the node we are removing is a branch point
-                  var transition = transitions[0];
-
-                  if (transition != null) {
-                    var to = transition.to;
-
-                    if (to != null) {
-                      group.startId = to;
-                      hasSetNewStartId = true;
-                    }
-                  }
-                }
-              }
-            }
-
-            if (!hasSetNewStartId) {
-              /*
-               * the node we are removing did not have a transition
-               * so there will be no start id
-               */
-              group.startId = '';
-            }
+          if (id === group.startId) {
+            this.shiftGroupStartNodeByOne(group);
           }
         }
+      }
+    }
+
+    // TODO handle the case when the start node of the group is a branch point
+
+  }, {
+    key: 'shiftGroupStartNodeByOne',
+    value: function shiftGroupStartNodeByOne(group) {
+      var transitionsFromStartNode = this.getTransitionsByFromNodeId(group.startId);
+      if (transitionsFromStartNode.length > 0) {
+        group.startId = transitionsFromStartNode[0].to;
+      } else {
+        group.startId = '';
       }
     }
 
@@ -6016,6 +5441,8 @@ var ProjectService = function () {
           }
         }
       }
+
+      this.idToNode[nodeId] = null;
     }
 
     /**
@@ -6027,17 +5454,12 @@ var ProjectService = function () {
     key: 'removeNodeIdFromInactiveNodes',
     value: function removeNodeIdFromInactiveNodes(nodeId) {
       var inactiveNodes = this.project.inactiveNodes;
-
       if (inactiveNodes != null) {
         for (var i = 0; i < inactiveNodes.length; i++) {
           var inactiveNode = inactiveNodes[i];
           if (inactiveNode != null) {
             var inactiveNodeId = inactiveNode.id;
-            if (nodeId === inactiveNodeId) {
-              /*
-               * we have found the node we are looking for so we will
-               * remove it
-               */
+            if (inactiveNodeId === nodeId) {
               inactiveNodes.splice(i, 1);
             }
           }
@@ -6059,14 +5481,9 @@ var ProjectService = function () {
     value: function createComponent(nodeId, componentType, insertAfterComponentId) {
       var component = null;
       if (nodeId != null && componentType != null) {
-        // get the node we will create the component in
         var node = this.getNodeById(nodeId);
-
-        // get the service for the component type
         var service = this.$injector.get(componentType + 'Service');
-
         if (node != null && service != null) {
-          // create the new component
           component = service.createComponent();
 
           if (service.componentHasWork()) {
@@ -6082,30 +5499,22 @@ var ProjectService = function () {
                * the save button on this new component
                */
             } else {
-              // the step is not showing a save button
-
               if (this.doesAnyComponentShowSubmitButton(node.id)) {
                 /*
                  * at least one of the other components in the step are
                  * showing a submit button so we will also show the save
                  * button on this new component
                  */
-
-                // turn on the component save button
                 component.showSaveButton = true;
               } else {
                 /*
                  * none of the other components are showing a submit button
                  * so we will show the save button on the step
                  */
-
-                // turn on the step save button
                 node.showSaveButton = true;
               }
             }
           }
-
-          // add the component to the node
           this.addComponentToNode(node, component, insertAfterComponentId);
         }
       }
@@ -6113,7 +5522,7 @@ var ProjectService = function () {
     }
 
     /**
-     * Does any component in the step generate work
+     * Returns true iff any component in the step generates work
      * @param nodeId the node id
      * @return whether any components in the step generates work
      */
@@ -6121,6 +5530,47 @@ var ProjectService = function () {
   }, {
     key: 'doesAnyComponentHaveWork',
     value: function doesAnyComponentHaveWork(nodeId) {
+      var node = this.getNodeById(nodeId);
+      var _iteratorNormalCompletion82 = true;
+      var _didIteratorError82 = false;
+      var _iteratorError82 = undefined;
+
+      try {
+        for (var _iterator82 = node.components[Symbol.iterator](), _step82; !(_iteratorNormalCompletion82 = (_step82 = _iterator82.next()).done); _iteratorNormalCompletion82 = true) {
+          var component = _step82.value;
+
+          var service = this.$injector.get(component.type + 'Service');
+          if (service != null && service.componentHasWork()) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError82 = true;
+        _iteratorError82 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion82 && _iterator82.return) {
+            _iterator82.return();
+          }
+        } finally {
+          if (_didIteratorError82) {
+            throw _iteratorError82;
+          }
+        }
+      }
+
+      return false;
+    }
+
+    /**
+     * Check if any of the components in the node are showing their save button
+     * @param nodeId the node id to check
+     * @return whether any of the components in the node show their save button
+     */
+
+  }, {
+    key: 'doesAnyComponentShowSaveButton',
+    value: function doesAnyComponentShowSaveButton(nodeId) {
       var node = this.getNodeById(nodeId);
       if (node != null) {
         var components = node.components;
@@ -6134,12 +5584,8 @@ var ProjectService = function () {
               var component = _step83.value;
 
               if (component != null) {
-                var componentType = component.type;
-                var service = this.$injector.get(componentType + 'Service');
-                if (service != null) {
-                  if (service.componentHasWork()) {
-                    return true;
-                  }
+                if (component.showSaveButton == true) {
+                  return true;
                 }
               }
             }
@@ -6163,14 +5609,14 @@ var ProjectService = function () {
     }
 
     /**
-     * Check if any of the components in the node are showing their save button
+     * Check if any of the components in the node are showing their submit button
      * @param nodeId the node id to check
-     * @return whether any of the components in the node show their save button
+     * @return whether any of the components in the node show their submit button
      */
 
   }, {
-    key: 'doesAnyComponentShowSaveButton',
-    value: function doesAnyComponentShowSaveButton(nodeId) {
+    key: 'doesAnyComponentShowSubmitButton',
+    value: function doesAnyComponentShowSubmitButton(nodeId) {
       var node = this.getNodeById(nodeId);
       if (node != null) {
         var components = node.components;
@@ -6184,7 +5630,7 @@ var ProjectService = function () {
               var component = _step84.value;
 
               if (component != null) {
-                if (component.showSaveButton == true) {
+                if (component.showSubmitButton == true) {
                   return true;
                 }
               }
@@ -6206,152 +5652,6 @@ var ProjectService = function () {
         }
       }
       return false;
-    }
-
-    /**
-     * Check if any of the components in the node are showing their submit button
-     * @param nodeId the node id to check
-     * @return whether any of the components in the node show their submit button
-     */
-
-  }, {
-    key: 'doesAnyComponentShowSubmitButton',
-    value: function doesAnyComponentShowSubmitButton(nodeId) {
-      var node = this.getNodeById(nodeId);
-      if (node != null) {
-        var components = node.components;
-        if (components != null) {
-          var _iteratorNormalCompletion85 = true;
-          var _didIteratorError85 = false;
-          var _iteratorError85 = undefined;
-
-          try {
-            for (var _iterator85 = components[Symbol.iterator](), _step85; !(_iteratorNormalCompletion85 = (_step85 = _iterator85.next()).done); _iteratorNormalCompletion85 = true) {
-              var component = _step85.value;
-
-              if (component != null) {
-                if (component.showSubmitButton == true) {
-                  return true;
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError85 = true;
-            _iteratorError85 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion85 && _iterator85.return) {
-                _iterator85.return();
-              }
-            } finally {
-              if (_didIteratorError85) {
-                throw _iteratorError85;
-              }
-            }
-          }
-        }
-      }
-      return false;
-    }
-
-    /**
-     * Turn on the save button in all the components in the step
-     * @param nodeId the node id
-     */
-
-  }, {
-    key: 'turnOnSaveButtonInComponents',
-    value: function turnOnSaveButtonInComponents(nodeId) {
-      var node = this.getNodeById(nodeId);
-      if (node != null) {
-        var components = node.components;
-        if (components != null) {
-          var _iteratorNormalCompletion86 = true;
-          var _didIteratorError86 = false;
-          var _iteratorError86 = undefined;
-
-          try {
-            for (var _iterator86 = components[Symbol.iterator](), _step86; !(_iteratorNormalCompletion86 = (_step86 = _iterator86.next()).done); _iteratorNormalCompletion86 = true) {
-              var component = _step86.value;
-
-              if (component != null) {
-                var componentType = component.type;
-                if (componentType != null) {
-                  var service = this.$injector.get(componentType + 'Service');
-                  if (service != null) {
-                    if (service.componentUsesSaveButton()) {
-                      component.showSaveButton = true;
-                    }
-                  }
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError86 = true;
-            _iteratorError86 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion86 && _iterator86.return) {
-                _iterator86.return();
-              }
-            } finally {
-              if (_didIteratorError86) {
-                throw _iteratorError86;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    /**
-     * Turn off the submit button in all the components in the step
-     * @param nodeId the node id
-     */
-
-  }, {
-    key: 'turnOffSaveButtonInComponents',
-    value: function turnOffSaveButtonInComponents(nodeId) {
-      var node = this.getNodeById(nodeId);
-      if (node != null) {
-        var components = node.components;
-        if (components != null) {
-          var _iteratorNormalCompletion87 = true;
-          var _didIteratorError87 = false;
-          var _iteratorError87 = undefined;
-
-          try {
-            for (var _iterator87 = components[Symbol.iterator](), _step87; !(_iteratorNormalCompletion87 = (_step87 = _iterator87.next()).done); _iteratorNormalCompletion87 = true) {
-              var component = _step87.value;
-
-              if (component != null) {
-                var componentType = component.type;
-                if (componentType != null) {
-                  var service = this.$injector.get(componentType + 'Service');
-                  if (service != null) {
-                    if (service.componentUsesSaveButton()) {
-                      component.showSaveButton = false;
-                    }
-                  }
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError87 = true;
-            _iteratorError87 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion87 && _iterator87.return) {
-                _iterator87.return();
-              }
-            } finally {
-              if (_didIteratorError87) {
-                throw _iteratorError87;
-              }
-            }
-          }
-        }
-      }
     }
 
     /**
@@ -6388,7 +5688,6 @@ var ProjectService = function () {
                * one after
                */
 
-              // add the component
               components.splice(c + 1, 0, component);
               added = true;
               break;
@@ -6418,9 +5717,7 @@ var ProjectService = function () {
   }, {
     key: 'moveComponent',
     value: function moveComponent(nodeId, componentIds, insertAfterComponentId) {
-      // get the node for which we are moving components
       var node = this.getNodeById(nodeId);
-
       var components = node.components;
       var componentsToMove = [];
 
@@ -6476,6 +5773,7 @@ var ProjectService = function () {
   }, {
     key: 'deleteComponent',
     value: function deleteComponent(nodeId, componentId) {
+      // TODO refactor and move to authoringToolProjectService
       if (nodeId != null && componentId != null) {
         var node = this.getNodeById(nodeId);
         if (node != null) {
@@ -6484,9 +5782,6 @@ var ProjectService = function () {
             for (var c = 0; c < components.length; c++) {
               var component = components[c];
               if (component.id === componentId) {
-                // we have found the component we want to delete
-
-                // remove the component
                 components.splice(c, 1);
                 break;
               }
@@ -6516,13 +5811,13 @@ var ProjectService = function () {
 
       if (allPaths != null && allPaths.length > 0) {
         var firstPath = allPaths[0];
-        var _iteratorNormalCompletion88 = true;
-        var _didIteratorError88 = false;
-        var _iteratorError88 = undefined;
+        var _iteratorNormalCompletion85 = true;
+        var _didIteratorError85 = false;
+        var _iteratorError85 = undefined;
 
         try {
-          for (var _iterator88 = firstPath[Symbol.iterator](), _step88; !(_iteratorNormalCompletion88 = (_step88 = _iterator88.next()).done); _iteratorNormalCompletion88 = true) {
-            var nodeId = _step88.value;
+          for (var _iterator85 = firstPath[Symbol.iterator](), _step85; !(_iteratorNormalCompletion85 = (_step85 = _iterator85.next()).done); _iteratorNormalCompletion85 = true) {
+            var nodeId = _step85.value;
 
             var nodeMaxScore = this.getMaxScoreForNode(nodeId);
             if (nodeMaxScore != null) {
@@ -6534,16 +5829,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError88 = true;
-          _iteratorError88 = err;
+          _didIteratorError85 = true;
+          _iteratorError85 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion88 && _iterator88.return) {
-              _iterator88.return();
+            if (!_iteratorNormalCompletion85 && _iterator85.return) {
+              _iterator85.return();
             }
           } finally {
-            if (_didIteratorError88) {
-              throw _iteratorError88;
+            if (_didIteratorError85) {
+              throw _iteratorError85;
             }
           }
         }
@@ -6553,55 +5848,45 @@ var ProjectService = function () {
 
     /**
      * Get the max score for the node
-     * @param nodeId the node id
-     * @returns the max score for the node
+     * @param nodeId the node id which can be a step or an activity
+     * @returns the max score for the node which can be null or a number
+     * if null, author/teacher has not set a max score for the node
      */
 
   }, {
     key: 'getMaxScoreForNode',
     value: function getMaxScoreForNode(nodeId) {
       var maxScore = null;
-      var node = this.getNodeById(nodeId);
-      if (node != null) {
-        var components = node.components;
-        if (components != null) {
-          var _iteratorNormalCompletion89 = true;
-          var _didIteratorError89 = false;
-          var _iteratorError89 = undefined;
+      if (!this.isGroupNode(nodeId)) {
+        var node = this.getNodeById(nodeId);
+        var _iteratorNormalCompletion86 = true;
+        var _didIteratorError86 = false;
+        var _iteratorError86 = undefined;
 
-          try {
-            for (var _iterator89 = components[Symbol.iterator](), _step89; !(_iteratorNormalCompletion89 = (_step89 = _iterator89.next()).done); _iteratorNormalCompletion89 = true) {
-              var component = _step89.value;
+        try {
+          for (var _iterator86 = node.components[Symbol.iterator](), _step86; !(_iteratorNormalCompletion86 = (_step86 = _iterator86.next()).done); _iteratorNormalCompletion86 = true) {
+            var component = _step86.value;
 
-              if (component != null) {
-                var componentMaxScore = component.maxScore;
-
-                // check if the component has a max score
-                if (componentMaxScore != null) {
-                  // make sure the max score is a valid number
-                  if (!isNaN(componentMaxScore)) {
-                    if (maxScore == null) {
-                      maxScore = componentMaxScore;
-                    } else {
-                      // accumulate the max score
-                      maxScore += componentMaxScore;
-                    }
-                  }
-                }
+            var componentMaxScore = component.maxScore;
+            if (typeof componentMaxScore == 'number') {
+              if (maxScore == null) {
+                maxScore = componentMaxScore;
+              } else {
+                maxScore += componentMaxScore;
               }
             }
-          } catch (err) {
-            _didIteratorError89 = true;
-            _iteratorError89 = err;
+          }
+        } catch (err) {
+          _didIteratorError86 = true;
+          _iteratorError86 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion86 && _iterator86.return) {
+              _iterator86.return();
+            }
           } finally {
-            try {
-              if (!_iteratorNormalCompletion89 && _iterator89.return) {
-                _iterator89.return();
-              }
-            } finally {
-              if (_didIteratorError89) {
-                throw _iteratorError89;
-              }
+            if (_didIteratorError86) {
+              throw _iteratorError86;
             }
           }
         }
@@ -6653,13 +5938,7 @@ var ProjectService = function () {
     key: 'isNodeInGroup',
     value: function isNodeInGroup(nodeId, groupId) {
       var group = this.getNodeById(groupId);
-      var childIds = group.ids;
-      if (childIds != null) {
-        if (childIds.indexOf(nodeId) != -1) {
-          return true;
-        }
-      }
-      return false;
+      return group.ids.indexOf(nodeId) != -1;
     }
 
     /**
@@ -6680,12 +5959,9 @@ var ProjectService = function () {
         if (node == null) {
           done = true;
         } else if (this.isGroupNode(node.id)) {
-          // set the first leaf node id to the group id for now
           firstLeafNodeId = node.id;
-
           node = this.getNodeById(node.startId);
         } else if (this.isApplicationNode(node.id)) {
-          // the current node is a leaf
           firstLeafNodeId = node.id;
           done = true;
         } else {
@@ -6750,28 +6026,28 @@ var ProjectService = function () {
     value: function recalculatePositionsInGroup(groupId) {
       if (groupId != null) {
         var childIds = this.getChildNodeIdsById(groupId);
-        var _iteratorNormalCompletion90 = true;
-        var _didIteratorError90 = false;
-        var _iteratorError90 = undefined;
+        var _iteratorNormalCompletion87 = true;
+        var _didIteratorError87 = false;
+        var _iteratorError87 = undefined;
 
         try {
-          for (var _iterator90 = childIds[Symbol.iterator](), _step90; !(_iteratorNormalCompletion90 = (_step90 = _iterator90.next()).done); _iteratorNormalCompletion90 = true) {
-            var childId = _step90.value;
+          for (var _iterator87 = childIds[Symbol.iterator](), _step87; !(_iteratorNormalCompletion87 = (_step87 = _iterator87.next()).done); _iteratorNormalCompletion87 = true) {
+            var childId = _step87.value;
 
             var pos = this.getPositionById(childId);
             this.setIdToPosition(childId, pos);
           }
         } catch (err) {
-          _didIteratorError90 = true;
-          _iteratorError90 = err;
+          _didIteratorError87 = true;
+          _iteratorError87 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion90 && _iterator90.return) {
-              _iterator90.return();
+            if (!_iteratorNormalCompletion87 && _iterator87.return) {
+              _iterator87.return();
             }
           } finally {
-            if (_didIteratorError90) {
-              throw _iteratorError90;
+            if (_didIteratorError87) {
+              throw _iteratorError87;
             }
           }
         }
@@ -6801,13 +6077,13 @@ var ProjectService = function () {
 
         if (removalCriteria != null) {
           var criteriaMessages = '';
-          var _iteratorNormalCompletion91 = true;
-          var _didIteratorError91 = false;
-          var _iteratorError91 = undefined;
+          var _iteratorNormalCompletion88 = true;
+          var _didIteratorError88 = false;
+          var _iteratorError88 = undefined;
 
           try {
-            for (var _iterator91 = removalCriteria[Symbol.iterator](), _step91; !(_iteratorNormalCompletion91 = (_step91 = _iterator91.next()).done); _iteratorNormalCompletion91 = true) {
-              var tempRemovalCriteria = _step91.value;
+            for (var _iterator88 = removalCriteria[Symbol.iterator](), _step88; !(_iteratorNormalCompletion88 = (_step88 = _iterator88.next()).done); _iteratorNormalCompletion88 = true) {
+              var tempRemovalCriteria = _step88.value;
 
               if (tempRemovalCriteria != null) {
                 // get the message that describes the criteria that needs to be satisfied
@@ -6823,16 +6099,16 @@ var ProjectService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError91 = true;
-            _iteratorError91 = err;
+            _didIteratorError88 = true;
+            _iteratorError88 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion91 && _iterator91.return) {
-                _iterator91.return();
+              if (!_iteratorNormalCompletion88 && _iterator88.return) {
+                _iterator88.return();
               }
             } finally {
-              if (_didIteratorError91) {
-                throw _iteratorError91;
+              if (_didIteratorError88) {
+                throw _iteratorError88;
               }
             }
           }
@@ -6857,13 +6133,13 @@ var ProjectService = function () {
       var message = '';
       var action = constraint.action;
       var actionMessage = this.getActionMessage(action);
-      var _iteratorNormalCompletion92 = true;
-      var _didIteratorError92 = false;
-      var _iteratorError92 = undefined;
+      var _iteratorNormalCompletion89 = true;
+      var _didIteratorError89 = false;
+      var _iteratorError89 = undefined;
 
       try {
-        for (var _iterator92 = constraint.removalCriteria[Symbol.iterator](), _step92; !(_iteratorNormalCompletion92 = (_step92 = _iterator92.next()).done); _iteratorNormalCompletion92 = true) {
-          var singleRemovalCriteria = _step92.value;
+        for (var _iterator89 = constraint.removalCriteria[Symbol.iterator](), _step89; !(_iteratorNormalCompletion89 = (_step89 = _iterator89.next()).done); _iteratorNormalCompletion89 = true) {
+          var singleRemovalCriteria = _step89.value;
 
           if (message != '') {
             // this constraint has multiple removal criteria
@@ -6876,16 +6152,16 @@ var ProjectService = function () {
           message += this.getCriteriaMessage(singleRemovalCriteria);
         }
       } catch (err) {
-        _didIteratorError92 = true;
-        _iteratorError92 = err;
+        _didIteratorError89 = true;
+        _iteratorError89 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion92 && _iterator92.return) {
-            _iterator92.return();
+          if (!_iteratorNormalCompletion89 && _iterator89.return) {
+            _iterator89.return();
           }
         } finally {
-          if (_didIteratorError92) {
-            throw _iteratorError92;
+          if (_didIteratorError89) {
+            throw _iteratorError89;
           }
         }
       }
@@ -6984,15 +6260,12 @@ var ProjectService = function () {
           var _nodeId5 = params.nodeId;
           var _nodeTitle5 = '';
 
-          // get the number of times the student must submit
           var requiredSubmitCount = params.requiredSubmitCount;
 
           if (_nodeId5 != null) {
-            // get the step number and title
             _nodeTitle5 = this.getNodePositionAndTitleByNodeId(_nodeId5);
           }
 
-          // generate the message
           if (requiredSubmitCount == 1) {
             message += this.$translate('submitXTimeOnNodeTitle', { requiredSubmitCount: requiredSubmitCount, nodeTitle: _nodeTitle5 });
           } else {
@@ -7065,29 +6338,29 @@ var ProjectService = function () {
     value: function getChoiceTextByNodeIdAndComponentId(nodeId, componentId, choiceIds) {
       var choices = this.getChoicesByNodeIdAndComponentId(nodeId, componentId);
       var choicesText = [];
-      var _iteratorNormalCompletion93 = true;
-      var _didIteratorError93 = false;
-      var _iteratorError93 = undefined;
+      var _iteratorNormalCompletion90 = true;
+      var _didIteratorError90 = false;
+      var _iteratorError90 = undefined;
 
       try {
-        for (var _iterator93 = choices[Symbol.iterator](), _step93; !(_iteratorNormalCompletion93 = (_step93 = _iterator93.next()).done); _iteratorNormalCompletion93 = true) {
-          var choice = _step93.value;
+        for (var _iterator90 = choices[Symbol.iterator](), _step90; !(_iteratorNormalCompletion90 = (_step90 = _iterator90.next()).done); _iteratorNormalCompletion90 = true) {
+          var choice = _step90.value;
 
           if (choiceIds.indexOf(choice.id) != -1) {
             choicesText.push(choice.text);
           }
         }
       } catch (err) {
-        _didIteratorError93 = true;
-        _iteratorError93 = err;
+        _didIteratorError90 = true;
+        _iteratorError90 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion93 && _iterator93.return) {
-            _iterator93.return();
+          if (!_iteratorNormalCompletion90 && _iterator90.return) {
+            _iterator90.return();
           }
         } finally {
-          if (_didIteratorError93) {
-            throw _iteratorError93;
+          if (_didIteratorError90) {
+            throw _iteratorError90;
           }
         }
       }
@@ -7104,14 +6377,8 @@ var ProjectService = function () {
   }, {
     key: 'getGroupStartId',
     value: function getGroupStartId(nodeId) {
-      if (nodeId != null) {
-        var node = this.getNodeById(nodeId);
-
-        if (node != null) {
-          return node.startId;
-        }
-      }
-      return null;
+      var node = this.getNodeById(nodeId);
+      return node.startId;
     }
 
     /**
@@ -7170,13 +6437,13 @@ var ProjectService = function () {
 
           // update the children of the from group to point to the new to group
           if (childIds != null) {
-            var _iteratorNormalCompletion94 = true;
-            var _didIteratorError94 = false;
-            var _iteratorError94 = undefined;
+            var _iteratorNormalCompletion91 = true;
+            var _didIteratorError91 = false;
+            var _iteratorError91 = undefined;
 
             try {
-              for (var _iterator94 = childIds[Symbol.iterator](), _step94; !(_iteratorNormalCompletion94 = (_step94 = _iterator94.next()).done); _iteratorNormalCompletion94 = true) {
-                var childId = _step94.value;
+              for (var _iterator91 = childIds[Symbol.iterator](), _step91; !(_iteratorNormalCompletion91 = (_step91 = _iterator91.next()).done); _iteratorNormalCompletion91 = true) {
+                var childId = _step91.value;
 
                 var child = this.getNodeById(childId);
                 var transitions = this.getTransitionsByFromNodeId(childId);
@@ -7215,16 +6482,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError94 = true;
-              _iteratorError94 = err;
+              _didIteratorError91 = true;
+              _iteratorError91 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion94 && _iterator94.return) {
-                  _iterator94.return();
+                if (!_iteratorNormalCompletion91 && _iterator91.return) {
+                  _iterator91.return();
                 }
               } finally {
-                if (_didIteratorError94) {
-                  throw _iteratorError94;
+                if (_didIteratorError91) {
+                  throw _iteratorError91;
                 }
               }
             }
@@ -7242,28 +6509,28 @@ var ProjectService = function () {
 
           // remove the transitions from the old to group that point to the new to group
           if (_childIds != null) {
-            var _iteratorNormalCompletion95 = true;
-            var _didIteratorError95 = false;
-            var _iteratorError95 = undefined;
+            var _iteratorNormalCompletion92 = true;
+            var _didIteratorError92 = false;
+            var _iteratorError92 = undefined;
 
             try {
-              for (var _iterator95 = _childIds[Symbol.iterator](), _step95; !(_iteratorNormalCompletion95 = (_step95 = _iterator95.next()).done); _iteratorNormalCompletion95 = true) {
-                var _childId = _step95.value;
+              for (var _iterator92 = _childIds[Symbol.iterator](), _step92; !(_iteratorNormalCompletion92 = (_step92 = _iterator92.next()).done); _iteratorNormalCompletion92 = true) {
+                var _childId = _step92.value;
 
                 var _child = this.getNodeById(_childId);
-                var _transitions4 = this.getTransitionsByFromNodeId(_childId);
-                if (_transitions4 != null) {
-                  for (var _t = 0; _t < _transitions4.length; _t++) {
-                    var _transition2 = _transitions4[_t];
+                var _transitions2 = this.getTransitionsByFromNodeId(_childId);
+                if (_transitions2 != null) {
+                  for (var _t = 0; _t < _transitions2.length; _t++) {
+                    var _transition2 = _transitions2[_t];
                     if (_transition2 != null) {
-                      var _toNodeId4 = _transition2.to;
-                      if (_toNodeId4 === newToGroupId) {
+                      var _toNodeId3 = _transition2.to;
+                      if (_toNodeId3 === newToGroupId) {
                         // the transition is to the group so we will remove it
-                        _transitions4.splice(_t, 1);
+                        _transitions2.splice(_t, 1);
                         _t--;
-                      } else if (this.isNodeInGroup(_toNodeId4, newToGroupId)) {
+                      } else if (this.isNodeInGroup(_toNodeId3, newToGroupId)) {
                         // the transition is to a node in the group so we will remove it
-                        _transitions4.splice(_t, 1);
+                        _transitions2.splice(_t, 1);
                         _t--;
                       }
                     }
@@ -7271,16 +6538,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError95 = true;
-              _iteratorError95 = err;
+              _didIteratorError92 = true;
+              _iteratorError92 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion95 && _iterator95.return) {
-                  _iterator95.return();
+                if (!_iteratorNormalCompletion92 && _iterator92.return) {
+                  _iterator92.return();
                 }
               } finally {
-                if (_didIteratorError95) {
-                  throw _iteratorError95;
+                if (_didIteratorError92) {
+                  throw _iteratorError92;
                 }
               }
             }
@@ -7322,13 +6589,13 @@ var ProjectService = function () {
         var childIds = fromGroup.ids;
         var newToGroupStartId = newToGroup.startId;
         if (childIds != null) {
-          var _iteratorNormalCompletion96 = true;
-          var _didIteratorError96 = false;
-          var _iteratorError96 = undefined;
+          var _iteratorNormalCompletion93 = true;
+          var _didIteratorError93 = false;
+          var _iteratorError93 = undefined;
 
           try {
-            for (var _iterator96 = childIds[Symbol.iterator](), _step96; !(_iteratorNormalCompletion96 = (_step96 = _iterator96.next()).done); _iteratorNormalCompletion96 = true) {
-              var childId = _step96.value;
+            for (var _iterator93 = childIds[Symbol.iterator](), _step93; !(_iteratorNormalCompletion93 = (_step93 = _iterator93.next()).done); _iteratorNormalCompletion93 = true) {
+              var childId = _step93.value;
 
               var child = this.getNodeById(childId);
 
@@ -7346,24 +6613,24 @@ var ProjectService = function () {
                   this.addToTransition(child, newToGroupStartId);
                 }
               } else if (transitions != null) {
-                var _iteratorNormalCompletion97 = true;
-                var _didIteratorError97 = false;
-                var _iteratorError97 = undefined;
+                var _iteratorNormalCompletion94 = true;
+                var _didIteratorError94 = false;
+                var _iteratorError94 = undefined;
 
                 try {
-                  for (var _iterator97 = transitions[Symbol.iterator](), _step97; !(_iteratorNormalCompletion97 = (_step97 = _iterator97.next()).done); _iteratorNormalCompletion97 = true) {
-                    var transition = _step97.value;
+                  for (var _iterator94 = transitions[Symbol.iterator](), _step94; !(_iteratorNormalCompletion94 = (_step94 = _iterator94.next()).done); _iteratorNormalCompletion94 = true) {
+                    var transition = _step94.value;
 
                     if (transition != null) {
                       var toNodeId = transition.to;
                       if (oldToGroupIds != null) {
-                        var _iteratorNormalCompletion98 = true;
-                        var _didIteratorError98 = false;
-                        var _iteratorError98 = undefined;
+                        var _iteratorNormalCompletion95 = true;
+                        var _didIteratorError95 = false;
+                        var _iteratorError95 = undefined;
 
                         try {
-                          for (var _iterator98 = oldToGroupIds[Symbol.iterator](), _step98; !(_iteratorNormalCompletion98 = (_step98 = _iterator98.next()).done); _iteratorNormalCompletion98 = true) {
-                            var oldToGroupId = _step98.value;
+                          for (var _iterator95 = oldToGroupIds[Symbol.iterator](), _step95; !(_iteratorNormalCompletion95 = (_step95 = _iterator95.next()).done); _iteratorNormalCompletion95 = true) {
+                            var oldToGroupId = _step95.value;
 
                             if (toNodeId === oldToGroupId) {
                               /*
@@ -7384,16 +6651,16 @@ var ProjectService = function () {
                             }
                           }
                         } catch (err) {
-                          _didIteratorError98 = true;
-                          _iteratorError98 = err;
+                          _didIteratorError95 = true;
+                          _iteratorError95 = err;
                         } finally {
                           try {
-                            if (!_iteratorNormalCompletion98 && _iterator98.return) {
-                              _iterator98.return();
+                            if (!_iteratorNormalCompletion95 && _iterator95.return) {
+                              _iterator95.return();
                             }
                           } finally {
-                            if (_didIteratorError98) {
-                              throw _iteratorError98;
+                            if (_didIteratorError95) {
+                              throw _iteratorError95;
                             }
                           }
                         }
@@ -7401,16 +6668,96 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError97 = true;
-                  _iteratorError97 = err;
+                  _didIteratorError94 = true;
+                  _iteratorError94 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion97 && _iterator97.return) {
-                      _iterator97.return();
+                    if (!_iteratorNormalCompletion94 && _iterator94.return) {
+                      _iterator94.return();
                     }
                   } finally {
-                    if (_didIteratorError97) {
-                      throw _iteratorError97;
+                    if (_didIteratorError94) {
+                      throw _iteratorError94;
+                    }
+                  }
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError93 = true;
+            _iteratorError93 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion93 && _iterator93.return) {
+                _iterator93.return();
+              }
+            } finally {
+              if (_didIteratorError93) {
+                throw _iteratorError93;
+              }
+            }
+          }
+        }
+      }
+
+      /*
+       * make the steps that do not have a transition now point to the old
+       * group
+       * newToGroup -> oldToGroup
+       */
+      if (newToGroup != null) {
+        var _childIds2 = newToGroup.ids;
+        if (_childIds2 != null) {
+          var _iteratorNormalCompletion96 = true;
+          var _didIteratorError96 = false;
+          var _iteratorError96 = undefined;
+
+          try {
+            for (var _iterator96 = _childIds2[Symbol.iterator](), _step96; !(_iteratorNormalCompletion96 = (_step96 = _iterator96.next()).done); _iteratorNormalCompletion96 = true) {
+              var _childId2 = _step96.value;
+
+              var _child2 = this.getNodeById(_childId2);
+              var _transitions3 = this.getTransitionsByFromNodeId(_childId2);
+
+              if (_transitions3 == null || _transitions3.length == 0) {
+                if (oldToGroupIds != null) {
+                  var _iteratorNormalCompletion97 = true;
+                  var _didIteratorError97 = false;
+                  var _iteratorError97 = undefined;
+
+                  try {
+                    for (var _iterator97 = oldToGroupIds[Symbol.iterator](), _step97; !(_iteratorNormalCompletion97 = (_step97 = _iterator97.next()).done); _iteratorNormalCompletion97 = true) {
+                      var _oldToGroupId = _step97.value;
+
+                      var oldToGroup = this.getNodeById(_oldToGroupId);
+                      if (oldToGroup != null) {
+                        var oldToGroupStartId = oldToGroup.startId;
+                        var _transition3 = {};
+                        var _toNodeId4 = '';
+                        if (oldToGroupStartId == null) {
+                          // there is no start node id so we will just point to the group
+                          _toNodeId4 = oldToGroup;
+                        } else {
+                          // there is a start node id so we will point to it
+                          _toNodeId4 = oldToGroupStartId;
+                        }
+
+                        // create the transition from the child to the old group
+                        this.addToTransition(_child2, _toNodeId4);
+                      }
+                    }
+                  } catch (err) {
+                    _didIteratorError97 = true;
+                    _iteratorError97 = err;
+                  } finally {
+                    try {
+                      if (!_iteratorNormalCompletion97 && _iterator97.return) {
+                        _iterator97.return();
+                      }
+                    } finally {
+                      if (_didIteratorError97) {
+                        throw _iteratorError97;
+                      }
                     }
                   }
                 }
@@ -7432,68 +6779,131 @@ var ProjectService = function () {
           }
         }
       }
+    }
+
+    /**
+     * Update the child transitions because we are moving a group. We will
+     * update the transitions into and out of the group in the location
+     * we are extracting the group from and also in the location we are
+     * inserting the group into.
+     * @param node the group we are moving
+     * @param nodeId we will put the group after this node id
+     */
+
+  }, {
+    key: 'updateChildrenTransitionsInAndOutOfGroup',
+    value: function updateChildrenTransitionsInAndOutOfGroup(node) {
+      var nodeId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+      var transitionsBefore = null;
+
+      // get the group nodes that point to the group we are moving
+      var previousGroupNodes = this.getGroupNodesByToNodeId(node.id);
+
+      // get all the transitions from the group we are moving
+      var transitionsAfter = this.getTransitionsByFromNodeId(node.id);
+
+      var extracted = false;
 
       /*
-       * make the steps that do not have a transition now point to the old
-       * group
-       * newToGroup -> oldToGroup
+       * extract the group we are moving by updating the transitions of the
+       * from group and the new to group. also remove the transitions from the
+       * group we are moving.
        */
-      if (newToGroup != null) {
-        var _childIds2 = newToGroup.ids;
-        if (_childIds2 != null) {
+
+      var _iteratorNormalCompletion98 = true;
+      var _didIteratorError98 = false;
+      var _iteratorError98 = undefined;
+
+      try {
+        for (var _iterator98 = previousGroupNodes[Symbol.iterator](), _step98; !(_iteratorNormalCompletion98 = (_step98 = _iterator98.next()).done); _iteratorNormalCompletion98 = true) {
+          var previousGroupNode = _step98.value;
+
+          if (transitionsAfter == null || transitionsAfter.length == 0) {
+            // the group we are moving does not have any transitions
+
+            /*
+             * remove the transitions to the group we are moving and make
+             * new transitions from the from group to the new to group
+             */
+            this.updateTransitionsForExtractingGroup(previousGroupNode.id, node.id, null);
+            extracted = true;
+          } else {
+            // the group we are moving has transitions
+
+            // make the previous group point to the new to group
+            var _iteratorNormalCompletion101 = true;
+            var _didIteratorError101 = false;
+            var _iteratorError101 = undefined;
+
+            try {
+              for (var _iterator101 = transitionsAfter[Symbol.iterator](), _step101; !(_iteratorNormalCompletion101 = (_step101 = _iterator101.next()).done); _iteratorNormalCompletion101 = true) {
+                var _transitionAfter2 = _step101.value;
+
+                if (_transitionAfter2 != null) {
+                  var _toNodeId6 = _transitionAfter2.to;
+
+                  /*
+                   * remove the transitions to the group we are moving and make
+                   * new transitions from the from group to the new to group
+                   */
+                  this.updateTransitionsForExtractingGroup(previousGroupNode.id, node.id, _toNodeId6);
+                  extracted = true;
+                }
+              }
+            } catch (err) {
+              _didIteratorError101 = true;
+              _iteratorError101 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion101 && _iterator101.return) {
+                  _iterator101.return();
+                }
+              } finally {
+                if (_didIteratorError101) {
+                  throw _iteratorError101;
+                }
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError98 = true;
+        _iteratorError98 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion98 && _iterator98.return) {
+            _iterator98.return();
+          }
+        } finally {
+          if (_didIteratorError98) {
+            throw _iteratorError98;
+          }
+        }
+      }
+
+      if (!extracted) {
+        /*
+         * we have not removed the transitions yet because the group
+         * we are moving does not have any groups before it
+         */
+
+        if (transitionsAfter != null) {
+          // remove the transitions from the group we are moving
           var _iteratorNormalCompletion99 = true;
           var _didIteratorError99 = false;
           var _iteratorError99 = undefined;
 
           try {
-            for (var _iterator99 = _childIds2[Symbol.iterator](), _step99; !(_iteratorNormalCompletion99 = (_step99 = _iterator99.next()).done); _iteratorNormalCompletion99 = true) {
-              var _childId2 = _step99.value;
+            for (var _iterator99 = transitionsAfter[Symbol.iterator](), _step99; !(_iteratorNormalCompletion99 = (_step99 = _iterator99.next()).done); _iteratorNormalCompletion99 = true) {
+              var transitionAfter = _step99.value;
 
-              var _child2 = this.getNodeById(_childId2);
-              var _transitions5 = this.getTransitionsByFromNodeId(_childId2);
+              if (transitionAfter != null) {
+                var toNodeId = transitionAfter.to;
 
-              if (_transitions5 == null || _transitions5.length == 0) {
-                if (oldToGroupIds != null) {
-                  var _iteratorNormalCompletion100 = true;
-                  var _didIteratorError100 = false;
-                  var _iteratorError100 = undefined;
-
-                  try {
-                    for (var _iterator100 = oldToGroupIds[Symbol.iterator](), _step100; !(_iteratorNormalCompletion100 = (_step100 = _iterator100.next()).done); _iteratorNormalCompletion100 = true) {
-                      var _oldToGroupId = _step100.value;
-
-                      var oldToGroup = this.getNodeById(_oldToGroupId);
-                      if (oldToGroup != null) {
-                        var oldToGroupStartId = oldToGroup.startId;
-                        var _transition3 = {};
-                        var _toNodeId5 = '';
-                        if (oldToGroupStartId == null) {
-                          // there is no start node id so we will just point to the group
-                          _toNodeId5 = oldToGroup;
-                        } else {
-                          // there is a start node id so we will point to it
-                          _toNodeId5 = oldToGroupStartId;
-                        }
-
-                        // create the transition from the child to the old group
-                        this.addToTransition(_child2, _toNodeId5);
-                      }
-                    }
-                  } catch (err) {
-                    _didIteratorError100 = true;
-                    _iteratorError100 = err;
-                  } finally {
-                    try {
-                      if (!_iteratorNormalCompletion100 && _iterator100.return) {
-                        _iterator100.return();
-                      }
-                    } finally {
-                      if (_didIteratorError100) {
-                        throw _iteratorError100;
-                      }
-                    }
-                  }
-                }
+                // remove the transitions to the group we are moving
+                this.updateTransitionsForExtractingGroup(null, node.id, toNodeId);
+                extracted = true;
               }
             }
           } catch (err) {
@@ -7512,147 +6922,6 @@ var ProjectService = function () {
           }
         }
       }
-    }
-
-    /**
-     * Update the child transitions because we are moving a group. We will
-     * update the transitions into and out of the group in the location
-     * we are extracting the group from and also in the location we are
-     * inserting the group into.
-     * @param node the group we are moving
-     * @param nodeId we will put the group after this node id
-     */
-
-  }, {
-    key: 'updateChildrenTransitionsForMovingGroup',
-    value: function updateChildrenTransitionsForMovingGroup(node, nodeId) {
-      var transitionsBefore = null;
-
-      // get the group nodes that point to the group we are moving
-      var previousGroupNodes = this.getGroupNodesByToNodeId(node.id);
-
-      // get all the transitions from the group we are moving
-      var transitionsAfter = this.getTransitionsByFromNodeId(node.id);
-
-      var extracted = false;
-
-      /*
-       * extract the group we are moving by updating the transitions of the
-       * from group and the new to group. also remove the transitions from the
-       * group we are moving.
-       */
-
-      var _iteratorNormalCompletion101 = true;
-      var _didIteratorError101 = false;
-      var _iteratorError101 = undefined;
-
-      try {
-        for (var _iterator101 = previousGroupNodes[Symbol.iterator](), _step101; !(_iteratorNormalCompletion101 = (_step101 = _iterator101.next()).done); _iteratorNormalCompletion101 = true) {
-          var previousGroupNode = _step101.value;
-
-          if (transitionsAfter == null || transitionsAfter.length == 0) {
-            // the group we are moving does not have any transitions
-
-            /*
-             * remove the transitions to the group we are moving and make
-             * new transitions from the from group to the new to group
-             */
-            this.updateTransitionsForExtractingGroup(previousGroupNode.id, node.id, null);
-            extracted = true;
-          } else {
-            // the group we are moving has transitions
-
-            // make the previous group point to the new to group
-            var _iteratorNormalCompletion104 = true;
-            var _didIteratorError104 = false;
-            var _iteratorError104 = undefined;
-
-            try {
-              for (var _iterator104 = transitionsAfter[Symbol.iterator](), _step104; !(_iteratorNormalCompletion104 = (_step104 = _iterator104.next()).done); _iteratorNormalCompletion104 = true) {
-                var _transitionAfter2 = _step104.value;
-
-                if (_transitionAfter2 != null) {
-                  var _toNodeId7 = _transitionAfter2.to;
-
-                  /*
-                   * remove the transitions to the group we are moving and make
-                   * new transitions from the from group to the new to group
-                   */
-                  this.updateTransitionsForExtractingGroup(previousGroupNode.id, node.id, _toNodeId7);
-                  extracted = true;
-                }
-              }
-            } catch (err) {
-              _didIteratorError104 = true;
-              _iteratorError104 = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion104 && _iterator104.return) {
-                  _iterator104.return();
-                }
-              } finally {
-                if (_didIteratorError104) {
-                  throw _iteratorError104;
-                }
-              }
-            }
-          }
-        }
-      } catch (err) {
-        _didIteratorError101 = true;
-        _iteratorError101 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion101 && _iterator101.return) {
-            _iterator101.return();
-          }
-        } finally {
-          if (_didIteratorError101) {
-            throw _iteratorError101;
-          }
-        }
-      }
-
-      if (!extracted) {
-        /*
-         * we have not removed the transitions yet because the group
-         * we are moving does not have any groups before it
-         */
-
-        if (transitionsAfter != null) {
-          // remove the transitions from the group we are moving
-          var _iteratorNormalCompletion102 = true;
-          var _didIteratorError102 = false;
-          var _iteratorError102 = undefined;
-
-          try {
-            for (var _iterator102 = transitionsAfter[Symbol.iterator](), _step102; !(_iteratorNormalCompletion102 = (_step102 = _iterator102.next()).done); _iteratorNormalCompletion102 = true) {
-              var transitionAfter = _step102.value;
-
-              if (transitionAfter != null) {
-                var toNodeId = transitionAfter.to;
-
-                // remove the transitions to the group we are moving
-                this.updateTransitionsForExtractingGroup(null, node.id, toNodeId);
-                extracted = true;
-              }
-            }
-          } catch (err) {
-            _didIteratorError102 = true;
-            _iteratorError102 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion102 && _iterator102.return) {
-                _iterator102.return();
-              }
-            } finally {
-              if (_didIteratorError102) {
-                throw _iteratorError102;
-              }
-            }
-          }
-        }
-      }
 
       var inserted = false;
 
@@ -7664,16 +6933,16 @@ var ProjectService = function () {
         // get the transitions from the previous group to the next group
         var _transitionsAfter = this.getTransitionsByFromNodeId(nodeId);
 
-        var _iteratorNormalCompletion103 = true;
-        var _didIteratorError103 = false;
-        var _iteratorError103 = undefined;
+        var _iteratorNormalCompletion100 = true;
+        var _didIteratorError100 = false;
+        var _iteratorError100 = undefined;
 
         try {
-          for (var _iterator103 = _transitionsAfter[Symbol.iterator](), _step103; !(_iteratorNormalCompletion103 = (_step103 = _iterator103.next()).done); _iteratorNormalCompletion103 = true) {
-            var _transitionAfter = _step103.value;
+          for (var _iterator100 = _transitionsAfter[Symbol.iterator](), _step100; !(_iteratorNormalCompletion100 = (_step100 = _iterator100.next()).done); _iteratorNormalCompletion100 = true) {
+            var _transitionAfter = _step100.value;
 
             if (_transitionAfter != null) {
-              var _toNodeId6 = _transitionAfter.to;
+              var _toNodeId5 = _transitionAfter.to;
 
               /*
                * create the transitions that traverse from the from group
@@ -7681,21 +6950,21 @@ var ProjectService = function () {
                * that traverse from the group we are moving to the old
                * to group.
                */
-              this.updateTransitionsForInsertingGroup(nodeId, [_toNodeId6], node.id);
+              this.updateTransitionsForInsertingGroup(nodeId, [_toNodeId5], node.id);
               inserted = true;
             }
           }
         } catch (err) {
-          _didIteratorError103 = true;
-          _iteratorError103 = err;
+          _didIteratorError100 = true;
+          _iteratorError100 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion103 && _iterator103.return) {
-              _iterator103.return();
+            if (!_iteratorNormalCompletion100 && _iterator100.return) {
+              _iterator100.return();
             }
           } finally {
-            if (_didIteratorError103) {
-              throw _iteratorError103;
+            if (_didIteratorError100) {
+              throw _iteratorError100;
             }
           }
         }
@@ -7722,7 +6991,6 @@ var ProjectService = function () {
             var startGroup = this.getNodeById(startGroupId);
 
             if (startGroup != null) {
-              // get the first activity
               var firstGroupId = startGroup.startId;
 
               /*
@@ -7746,23 +7014,11 @@ var ProjectService = function () {
         }
       }
     }
-
-    /**
-     * Get the active nodes.
-     * @return An array of the active node objects.
-     */
-
   }, {
     key: 'getActiveNodes',
     value: function getActiveNodes() {
       return this.project.nodes;
     }
-
-    /**
-     * Get the inactive nodes
-     * @returns the inactive nodes
-     */
-
   }, {
     key: 'getInactiveNodes',
     value: function getInactiveNodes() {
@@ -7774,78 +7030,6 @@ var ProjectService = function () {
         inactiveNodes = this.project.inactiveNodes;
       }
       return inactiveNodes;
-    }
-
-    /**
-     * Remove the node from the active nodes
-     * @param nodeId the node to remove
-     * @returns the node that we have removed
-     */
-
-  }, {
-    key: 'removeNodeFromActiveNodes',
-    value: function removeNodeFromActiveNodes(nodeId) {
-      var node = null;
-      if (nodeId != null) {
-        var activeNodes = this.project.nodes;
-        if (activeNodes != null) {
-          for (var a = 0; a < activeNodes.length; a++) {
-            var activeNode = activeNodes[a];
-            if (activeNode != null) {
-              if (nodeId === activeNode.id) {
-                node = activeNode;
-
-                // remove the node from the array
-                activeNodes.splice(a, 1);
-
-                if (activeNode.type == 'group') {
-                  this.removeChildNodesFromActiveNodes(activeNode);
-                }
-                break;
-              }
-            }
-          }
-        }
-      }
-      return node;
-    }
-
-    /**
-     * Move the child nodes of a group from the active nodes and put them into
-     * the inactive nodes.
-     * @param node The group node.
-     */
-
-  }, {
-    key: 'removeChildNodesFromActiveNodes',
-    value: function removeChildNodesFromActiveNodes(node) {
-      if (node != null) {
-        var childIds = node.ids;
-        var _iteratorNormalCompletion105 = true;
-        var _didIteratorError105 = false;
-        var _iteratorError105 = undefined;
-
-        try {
-          for (var _iterator105 = childIds[Symbol.iterator](), _step105; !(_iteratorNormalCompletion105 = (_step105 = _iterator105.next()).done); _iteratorNormalCompletion105 = true) {
-            var childId = _step105.value;
-
-            this.removeNodeFromActiveNodes(childId);
-          }
-        } catch (err) {
-          _didIteratorError105 = true;
-          _iteratorError105 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion105 && _iterator105.return) {
-              _iterator105.return();
-            }
-          } finally {
-            if (_didIteratorError105) {
-              throw _iteratorError105;
-            }
-          }
-        }
-      }
     }
 
     /**
@@ -7861,7 +7045,6 @@ var ProjectService = function () {
       if (nodeId != null) {
         var parentGroup = this.getParentGroup(nodeId);
         if (parentGroup != null) {
-          // The node has a parent so we will remove it from the parent.
           this.removeChildFromParent(nodeId);
         }
 
@@ -7872,8 +7055,6 @@ var ProjectService = function () {
             if (inactiveNode != null) {
               if (nodeId === inactiveNode.id) {
                 node = inactiveNode;
-
-                // remove the node from the array
                 inactiveNodes.splice(i, 1);
                 break;
               }
@@ -7971,17 +7152,16 @@ var ProjectService = function () {
     key: 'loadInactiveNodes',
     value: function loadInactiveNodes(nodes) {
       if (nodes != null) {
-        var _iteratorNormalCompletion106 = true;
-        var _didIteratorError106 = false;
-        var _iteratorError106 = undefined;
+        var _iteratorNormalCompletion102 = true;
+        var _didIteratorError102 = false;
+        var _iteratorError102 = undefined;
 
         try {
-          for (var _iterator106 = nodes[Symbol.iterator](), _step106; !(_iteratorNormalCompletion106 = (_step106 = _iterator106.next()).done); _iteratorNormalCompletion106 = true) {
-            var node = _step106.value;
+          for (var _iterator102 = nodes[Symbol.iterator](), _step102; !(_iteratorNormalCompletion102 = (_step102 = _iterator102.next()).done); _iteratorNormalCompletion102 = true) {
+            var node = _step102.value;
 
             if (node != null) {
               var nodeId = node.id;
-
               this.setIdToNode(nodeId, node);
               this.setIdToElement(nodeId, node);
               if (node.type == 'group') {
@@ -7992,16 +7172,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError106 = true;
-          _iteratorError106 = err;
+          _didIteratorError102 = true;
+          _iteratorError102 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion106 && _iterator106.return) {
-              _iterator106.return();
+            if (!_iteratorNormalCompletion102 && _iterator102.return) {
+              _iterator102.return();
             }
           } finally {
-            if (_didIteratorError106) {
-              throw _iteratorError106;
+            if (_didIteratorError102) {
+              throw _iteratorError102;
             }
           }
         }
@@ -8009,140 +7189,52 @@ var ProjectService = function () {
     }
 
     /**
-     * Check if the node is active
-     * @param nodeId the node to check
-     * @param componentId (optional) the component to check
-     * @returns whether the node or component is active
+     * Check if the target is active
+     * @param target the node id or inactiveNodes/inactiveGroups to check
+     * @returns whether the target is active
      */
 
   }, {
     key: 'isActive',
-    value: function isActive(nodeId, componentId) {
-      if (nodeId != null) {
-        if (nodeId === 'inactiveNodes') {
-          // this occurs when the author puts a step into the inactive nodes
-          return false;
-        } else if (nodeId === 'inactiveGroups') {
-          // this occurs when the author puts a group into the inactive groups
-          return false;
-        } else if (this.isGroupNode(nodeId)) {
-          return this.isGroupActive(nodeId);
-        } else {
-          // the node is a step node
-
-          var activeNodes = this.project.nodes;
-          if (activeNodes != null) {
-            var _iteratorNormalCompletion107 = true;
-            var _didIteratorError107 = false;
-            var _iteratorError107 = undefined;
-
-            try {
-              for (var _iterator107 = activeNodes[Symbol.iterator](), _step107; !(_iteratorNormalCompletion107 = (_step107 = _iterator107.next()).done); _iteratorNormalCompletion107 = true) {
-                var activeNode = _step107.value;
-
-                if (activeNode != null) {
-                  var activeNodeId = activeNode.id;
-                  if (nodeId == activeNodeId) {
-                    // we have found the node id we are looking for
-
-                    if (componentId != null) {
-                      // we need to find the node id and component id
-
-                      var activeComponents = activeNode.components;
-
-                      if (activeComponents != null) {
-                        var _iteratorNormalCompletion108 = true;
-                        var _didIteratorError108 = false;
-                        var _iteratorError108 = undefined;
-
-                        try {
-                          for (var _iterator108 = activeComponents[Symbol.iterator](), _step108; !(_iteratorNormalCompletion108 = (_step108 = _iterator108.next()).done); _iteratorNormalCompletion108 = true) {
-                            var activeComponent = _step108.value;
-
-                            if (activeComponent != null) {
-                              var activeComponentId = activeComponent.id;
-                              if (componentId == activeComponentId) {
-                                /*
-                                 * we have found the component id we are
-                                 * looking for so we are done
-                                 */
-                                return true;
-                              }
-                            }
-                          }
-                        } catch (err) {
-                          _didIteratorError108 = true;
-                          _iteratorError108 = err;
-                        } finally {
-                          try {
-                            if (!_iteratorNormalCompletion108 && _iterator108.return) {
-                              _iterator108.return();
-                            }
-                          } finally {
-                            if (_didIteratorError108) {
-                              throw _iteratorError108;
-                            }
-                          }
-                        }
-                      }
-                    } else {
-                      //we only need to find the node id so we are done
-                      return true;
-                    }
-                  }
-                }
-              }
-            } catch (err) {
-              _didIteratorError107 = true;
-              _iteratorError107 = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion107 && _iterator107.return) {
-                  _iterator107.return();
-                }
-              } finally {
-                if (_didIteratorError107) {
-                  throw _iteratorError107;
-                }
-              }
-            }
-          }
-        }
+    value: function isActive(target) {
+      if (target === 'inactiveNodes' || target === 'inactiveGroups') {
+        return false;
+      } else {
+        return this.isNodeActive(target);
       }
-      return false;
     }
 
     /**
-     * Check if a group is active.
-     * @param nodeId the node id of the group
+     * Check if a node is active.
+     * @param nodeId the id of the node
      */
 
   }, {
-    key: 'isGroupActive',
-    value: function isGroupActive(nodeId) {
-      var _iteratorNormalCompletion109 = true;
-      var _didIteratorError109 = false;
-      var _iteratorError109 = undefined;
+    key: 'isNodeActive',
+    value: function isNodeActive(nodeId) {
+      var _iteratorNormalCompletion103 = true;
+      var _didIteratorError103 = false;
+      var _iteratorError103 = undefined;
 
       try {
-        for (var _iterator109 = this.project.nodes[Symbol.iterator](), _step109; !(_iteratorNormalCompletion109 = (_step109 = _iterator109.next()).done); _iteratorNormalCompletion109 = true) {
-          var activeNode = _step109.value;
+        for (var _iterator103 = this.project.nodes[Symbol.iterator](), _step103; !(_iteratorNormalCompletion103 = (_step103 = _iterator103.next()).done); _iteratorNormalCompletion103 = true) {
+          var activeNode = _step103.value;
 
-          if (nodeId == activeNode.id) {
+          if (activeNode.id == nodeId) {
             return true;
           }
         }
       } catch (err) {
-        _didIteratorError109 = true;
-        _iteratorError109 = err;
+        _didIteratorError103 = true;
+        _iteratorError103 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion109 && _iterator109.return) {
-            _iterator109.return();
+          if (!_iteratorNormalCompletion103 && _iterator103.return) {
+            _iterator103.return();
           }
         } finally {
-          if (_didIteratorError109) {
-            throw _iteratorError109;
+          if (_didIteratorError103) {
+            throw _iteratorError103;
           }
         }
       }
@@ -8151,291 +7243,41 @@ var ProjectService = function () {
     }
 
     /**
-     * Move the node to the active nodes array
+     * Move the node to the active nodes array. If the node is a group node,
+     * also move all of its children to active.
      */
 
   }, {
     key: 'moveToActive',
     value: function moveToActive(node) {
-      if (node != null) {
-        if (!this.isActive(node.id)) {
-          // the node is inactive so we will move it to the active array
+      if (!this.isActive(node.id)) {
+        this.removeNodeFromInactiveNodes(node.id);
+        this.addNode(node);
+        if (this.isGroupNode(node.id)) {
+          var _iteratorNormalCompletion104 = true;
+          var _didIteratorError104 = false;
+          var _iteratorError104 = undefined;
 
-          // remove the node from inactive nodes array
-          this.removeNodeFromInactiveNodes(node.id);
-
-          this.addNode(node);
-
-          if (this.isGroupNode(node.id)) {
-            /*
-             * This is a group node so we will also move all of its
-             * children to active.
-             */
-            var childIds = node.ids;
-            var _iteratorNormalCompletion110 = true;
-            var _didIteratorError110 = false;
-            var _iteratorError110 = undefined;
-
-            try {
-              for (var _iterator110 = childIds[Symbol.iterator](), _step110; !(_iteratorNormalCompletion110 = (_step110 = _iterator110.next()).done); _iteratorNormalCompletion110 = true) {
-                var childId = _step110.value;
-
-                var childNode = this.removeNodeFromInactiveNodes(childId);
-                this.addNode(childNode);
-              }
-            } catch (err) {
-              _didIteratorError110 = true;
-              _iteratorError110 = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion110 && _iterator110.return) {
-                  _iterator110.return();
-                }
-              } finally {
-                if (_didIteratorError110) {
-                  throw _iteratorError110;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    /**
-     * Move the node to the inactive nodes array
-     * @param node the node to move
-     * @param nodeIdToInsertAfter place the node after this
-     */
-
-  }, {
-    key: 'moveToInactive',
-    value: function moveToInactive(node, nodeIdToInsertAfter) {
-      if (node != null) {
-        if (this.isActive(node.id)) {
-          // the node is active so we will move it to the inactive array
-
-          this.removeNodeFromActiveNodes(node.id);
-
-          // add the node to the inactive array
-          this.addInactiveNode(node, nodeIdToInsertAfter);
-        }
-      }
-    }
-
-    /**
-     * Move the node from active to inside an inactive group
-     * @param node the node to move
-     * @param nodeIdToInsertInside place the node inside this
-     */
-
-  }, {
-    key: 'moveFromActiveToInactiveInsertInside',
-    value: function moveFromActiveToInactiveInsertInside(node, nodeIdToInsertInside) {
-      this.removeNodeFromActiveNodes(node.id);
-
-      // add the node to the inactive array
-      this.addInactiveNodeInsertInside(node, nodeIdToInsertInside);
-    }
-
-    /**
-     * Move the node from inactive to inside an inactive group
-     * @param node the node to move
-     * @param nodeIdToInsertInside place the node inside this
-     */
-
-  }, {
-    key: 'moveFromInactiveToInactiveInsertInside',
-    value: function moveFromInactiveToInactiveInsertInside(node, nodeIdToInsertInside) {
-      this.removeNodeFromInactiveNodes(node.id);
-
-      if (this.isGroupNode(node.id)) {
-        /*
-         * remove the group's child nodes from our data structures so that we can
-         * add them back in later
-         */
-        var childIds = node.ids;
-        var _iteratorNormalCompletion111 = true;
-        var _didIteratorError111 = false;
-        var _iteratorError111 = undefined;
-
-        try {
-          for (var _iterator111 = childIds[Symbol.iterator](), _step111; !(_iteratorNormalCompletion111 = (_step111 = _iterator111.next()).done); _iteratorNormalCompletion111 = true) {
-            var childId = _step111.value;
-
-            var childNode = this.getNodeById(childId);
-            var inactiveNodesIndex = this.project.inactiveNodes.indexOf(childNode);
-            if (inactiveNodesIndex != -1) {
-              this.project.inactiveNodes.splice(inactiveNodesIndex, 1);
-            }
-            var inactiveStepNodesIndex = this.inactiveStepNodes.indexOf(childNode);
-            if (inactiveStepNodesIndex != -1) {
-              this.inactiveStepNodes.splice(inactiveStepNodesIndex, 1);
-            }
-          }
-        } catch (err) {
-          _didIteratorError111 = true;
-          _iteratorError111 = err;
-        } finally {
           try {
-            if (!_iteratorNormalCompletion111 && _iterator111.return) {
-              _iterator111.return();
+            for (var _iterator104 = node.ids[Symbol.iterator](), _step104; !(_iteratorNormalCompletion104 = (_step104 = _iterator104.next()).done); _iteratorNormalCompletion104 = true) {
+              var childId = _step104.value;
+
+              var childNode = this.removeNodeFromInactiveNodes(childId);
+              this.addNode(childNode);
             }
+          } catch (err) {
+            _didIteratorError104 = true;
+            _iteratorError104 = err;
           } finally {
-            if (_didIteratorError111) {
-              throw _iteratorError111;
-            }
-          }
-        }
-      }
-
-      // add the node to the inactive array
-      this.addInactiveNodeInsertInside(node, nodeIdToInsertInside);
-    }
-
-    /**
-     * Add the node to the inactive nodes array
-     * @param node the node to move
-     * @param nodeIdToInsertAfter place the node after this
-     */
-
-  }, {
-    key: 'addInactiveNode',
-    value: function addInactiveNode(node, nodeIdToInsertAfter) {
-      if (node != null) {
-        var inactiveNodes = this.project.inactiveNodes;
-
-        if (inactiveNodes != null) {
-          // clear the transitions from this node
-          if (node.transitionLogic != null) {
-            node.transitionLogic.transitions = [];
-          }
-
-          if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveNodes' || nodeIdToInsertAfter === 'inactiveSteps' || nodeIdToInsertAfter === 'inactiveGroups') {
-            // put the node at the beginning of the inactive steps
-            inactiveNodes.splice(0, 0, node);
-          } else {
-            // put the node after one of the inactive nodes
-
-            var added = false;
-            for (var i = 0; i < inactiveNodes.length; i++) {
-              var inactiveNode = inactiveNodes[i];
-              if (inactiveNode != null) {
-                if (nodeIdToInsertAfter === inactiveNode.id) {
-                  var parentGroup = this.getParentGroup(nodeIdToInsertAfter);
-                  if (parentGroup != null) {
-                    this.insertNodeAfterInGroups(node.id, nodeIdToInsertAfter);
-                    this.insertNodeAfterInTransitions(node, nodeIdToInsertAfter);
-                  }
-                  // we have found the position to place the node
-                  inactiveNodes.splice(i + 1, 0, node);
-                  added = true;
-                }
-              }
-            }
-
-            if (!added) {
-              /*
-               * we haven't added the node yet so we will just add it
-               * to the end of the array
-               */
-              inactiveNodes.push(node);
-            }
-          }
-
-          if (node.type == 'group') {
-            this.inactiveGroupNodes.push(node.id);
-            this.addGroupChildNodesToInactive(node);
-          } else {
-            this.inactiveStepNodes.push(node.id);
-          }
-        }
-      }
-    }
-
-    /**
-     * Add the node to the inactive nodes array
-     * @param node the node to move
-     * @param nodeIdToInsertInside place the node inside this group
-     */
-
-  }, {
-    key: 'addInactiveNodeInsertInside',
-    value: function addInactiveNodeInsertInside(node, nodeIdToInsertInside) {
-      if (node != null) {
-        var inactiveNodes = this.project.inactiveNodes;
-        var inactiveGroups = this.getInactiveGroupNodes();
-
-        if (inactiveNodes != null) {
-          // clear the transitions from this node
-          if (node.transitionLogic != null) {
-            node.transitionLogic.transitions = [];
-          }
-
-          if (nodeIdToInsertInside == null || nodeIdToInsertInside === 'inactiveNodes' || nodeIdToInsertInside === 'inactiveSteps' || nodeIdToInsertInside === 'inactiveGroups') {
-            // put the node at the beginning of the inactive steps
-            inactiveNodes.splice(0, 0, node);
-          } else {
-            // put the node after one of the inactive nodes
-
-            var added = false;
-            var _iteratorNormalCompletion112 = true;
-            var _didIteratorError112 = false;
-            var _iteratorError112 = undefined;
-
             try {
-              for (var _iterator112 = inactiveGroups[Symbol.iterator](), _step112; !(_iteratorNormalCompletion112 = (_step112 = _iterator112.next()).done); _iteratorNormalCompletion112 = true) {
-                var inactiveGroup = _step112.value;
-
-                if (nodeIdToInsertInside == inactiveGroup.id) {
-                  // we have found the group we want to insert into
-                  this.insertNodeInsideInTransitions(node.id, nodeIdToInsertInside);
-                  this.insertNodeInsideInGroups(node.id, nodeIdToInsertInside);
-
-                  /*
-                   * Loop through the inactive nodes array which contains all
-                   * inactive groups and inactive nodes in a flattened array.
-                   * Find the inactive group and place the node right after it
-                   * for the sake of keeping things organized.
-                   */
-                  for (var i = 0; i < inactiveNodes.length; i++) {
-                    var inactiveNode = inactiveNodes[i];
-                    if (nodeIdToInsertInside == inactiveNode.id) {
-                      inactiveNodes.splice(i + 1, 0, node);
-                      added = true;
-                    }
-                  }
-                }
+              if (!_iteratorNormalCompletion104 && _iterator104.return) {
+                _iterator104.return();
               }
-            } catch (err) {
-              _didIteratorError112 = true;
-              _iteratorError112 = err;
             } finally {
-              try {
-                if (!_iteratorNormalCompletion112 && _iterator112.return) {
-                  _iterator112.return();
-                }
-              } finally {
-                if (_didIteratorError112) {
-                  throw _iteratorError112;
-                }
+              if (_didIteratorError104) {
+                throw _iteratorError104;
               }
             }
-
-            if (!added) {
-              /*
-               * we haven't added the node yet so we will just add it
-               * to the end of the array
-               */
-              inactiveNodes.push(node);
-            }
-          }
-
-          if (node.type == 'group') {
-            this.inactiveGroupNodes.push(node.id);
-            this.addGroupChildNodesToInactive(node);
-          } else {
-            this.inactiveStepNodes.push(node.id);
           }
         }
       }
@@ -8449,158 +7291,73 @@ var ProjectService = function () {
   }, {
     key: 'addGroupChildNodesToInactive',
     value: function addGroupChildNodesToInactive(node) {
-      if (node != null) {
-        var childIds = node.ids;
-        var _iteratorNormalCompletion113 = true;
-        var _didIteratorError113 = false;
-        var _iteratorError113 = undefined;
+      var _iteratorNormalCompletion105 = true;
+      var _didIteratorError105 = false;
+      var _iteratorError105 = undefined;
 
+      try {
+        for (var _iterator105 = node.ids[Symbol.iterator](), _step105; !(_iteratorNormalCompletion105 = (_step105 = _iterator105.next()).done); _iteratorNormalCompletion105 = true) {
+          var childId = _step105.value;
+
+          var childNode = this.getNodeById(childId);
+          this.project.inactiveNodes.push(childNode);
+          this.inactiveStepNodes.push(childNode);
+        }
+      } catch (err) {
+        _didIteratorError105 = true;
+        _iteratorError105 = err;
+      } finally {
         try {
-          for (var _iterator113 = childIds[Symbol.iterator](), _step113; !(_iteratorNormalCompletion113 = (_step113 = _iterator113.next()).done); _iteratorNormalCompletion113 = true) {
-            var childId = _step113.value;
-
-            var childNode = this.getNodeById(childId);
-            this.project.inactiveNodes.push(childNode);
-            this.inactiveStepNodes.push(childNode);
+          if (!_iteratorNormalCompletion105 && _iterator105.return) {
+            _iterator105.return();
           }
-        } catch (err) {
-          _didIteratorError113 = true;
-          _iteratorError113 = err;
         } finally {
-          try {
-            if (!_iteratorNormalCompletion113 && _iterator113.return) {
-              _iterator113.return();
-            }
-          } finally {
-            if (_didIteratorError113) {
-              throw _iteratorError113;
-            }
+          if (_didIteratorError105) {
+            throw _iteratorError105;
           }
         }
       }
     }
 
     /**
-     * Move an inactive node within the inactive nodes array
-     * @param node the node to move
-     * @param nodeIdToInsertAfter place the node after this
-     */
-
-  }, {
-    key: 'moveInactiveNode',
-    value: function moveInactiveNode(node, nodeIdToInsertAfter) {
-      if (node != null) {
-        var inactiveNodes = this.project.inactiveNodes;
-        if (inactiveNodes != null) {
-          // remove the node from inactive nodes
-
-          for (var i = 0; i < inactiveNodes.length; i++) {
-            var inactiveNode = inactiveNodes[i];
-            if (inactiveNode != null) {
-              if (node.id === inactiveNode.id) {
-                // we have found the node we want to remove
-                inactiveNodes.splice(i, 1);
-              }
-            }
-          }
-
-          // add the node back into the inactive nodes
-
-          if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveSteps' || nodeIdToInsertAfter === 'inactiveNodes') {
-            // put the node at the beginning of the inactive nodes
-            inactiveNodes.splice(0, 0, node);
-          } else {
-            // put the node after one of the inactive nodes
-
-            var added = false;
-            for (var _i = 0; _i < inactiveNodes.length; _i++) {
-              var _inactiveNode = inactiveNodes[_i];
-              if (_inactiveNode != null) {
-                if (nodeIdToInsertAfter === _inactiveNode.id) {
-                  // we have found the position to place the node
-                  var parentGroup = this.getParentGroup(nodeIdToInsertAfter);
-                  if (parentGroup != null) {
-                    this.insertNodeAfterInGroups(node.id, nodeIdToInsertAfter);
-                    this.insertNodeAfterInTransitions(node, nodeIdToInsertAfter);
-                  }
-                  inactiveNodes.splice(_i + 1, 0, node);
-                  added = true;
-                }
-              }
-            }
-
-            if (!added) {
-              /*
-               * we haven't added the node yet so we will just add it
-               * to the end of the array
-               */
-              inactiveNodes.push(node);
-            }
-          }
-        }
-      }
-    }
-
-    /**
-     * Remove transitions that go out of the group
+     * Remove transition from nodes in the specified group that go out of the group
      * @param nodeId the group id
      */
 
   }, {
     key: 'removeTransitionsOutOfGroup',
-    value: function removeTransitionsOutOfGroup(nodeId) {
-      if (nodeId != null) {
-        var group = this.getNodeById(nodeId);
-        if (group != null) {
-          var childIds = group.ids;
-          if (childIds != null) {
-            var _iteratorNormalCompletion114 = true;
-            var _didIteratorError114 = false;
-            var _iteratorError114 = undefined;
+    value: function removeTransitionsOutOfGroup(groupId) {
+      var group = this.getNodeById(groupId);
+      var _iteratorNormalCompletion106 = true;
+      var _didIteratorError106 = false;
+      var _iteratorError106 = undefined;
 
-            try {
-              for (var _iterator114 = childIds[Symbol.iterator](), _step114; !(_iteratorNormalCompletion114 = (_step114 = _iterator114.next()).done); _iteratorNormalCompletion114 = true) {
-                var childId = _step114.value;
+      try {
+        for (var _iterator106 = group.ids[Symbol.iterator](), _step106; !(_iteratorNormalCompletion106 = (_step106 = _iterator106.next()).done); _iteratorNormalCompletion106 = true) {
+          var childId = _step106.value;
 
-                if (childId != null) {
-                  var transitions = this.getTransitionsByFromNodeId(childId);
-                  if (transitions != null) {
-                    for (var t = 0; t < transitions.length; t++) {
-                      var transition = transitions[t];
-                      if (transition != null) {
-                        var toNodeId = transition.to;
-                        if (toNodeId != null) {
-                          var toNodeIdParentGroupId = this.getParentGroupId(toNodeId);
-                          if (nodeId != toNodeIdParentGroupId) {
-                            /*
-                             * the parent group is different which means it is a
-                             * transition that goes out of the group
-                             */
-
-                            // remove the transition
-                            transitions.splice(t, 1);
-                            t--;
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            } catch (err) {
-              _didIteratorError114 = true;
-              _iteratorError114 = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion114 && _iterator114.return) {
-                  _iterator114.return();
-                }
-              } finally {
-                if (_didIteratorError114) {
-                  throw _iteratorError114;
-                }
-              }
+          var transitions = this.getTransitionsByFromNodeId(childId);
+          for (var t = 0; t < transitions.length; t++) {
+            var transition = transitions[t];
+            var parentGroupId = this.getParentGroupId(transition.to);
+            if (parentGroupId != groupId) {
+              // this is a transition that goes out of the specified group
+              transitions.splice(t, 1);
+              t--; // so it won't skip the next element
             }
+          }
+        }
+      } catch (err) {
+        _didIteratorError106 = true;
+        _iteratorError106 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion106 && _iterator106.return) {
+            _iterator106.return();
+          }
+        } finally {
+          if (_didIteratorError106) {
+            throw _iteratorError106;
           }
         }
       }
@@ -8657,13 +7414,13 @@ var ProjectService = function () {
             var childIds = groupThatTransitionsToGroupWeAreMoving.ids;
 
             if (childIds != null) {
-              var _iteratorNormalCompletion115 = true;
-              var _didIteratorError115 = false;
-              var _iteratorError115 = undefined;
+              var _iteratorNormalCompletion107 = true;
+              var _didIteratorError107 = false;
+              var _iteratorError107 = undefined;
 
               try {
-                for (var _iterator115 = childIds[Symbol.iterator](), _step115; !(_iteratorNormalCompletion115 = (_step115 = _iterator115.next()).done); _iteratorNormalCompletion115 = true) {
-                  var childId = _step115.value;
+                for (var _iterator107 = childIds[Symbol.iterator](), _step107; !(_iteratorNormalCompletion107 = (_step107 = _iterator107.next()).done); _iteratorNormalCompletion107 = true) {
+                  var childId = _step107.value;
 
                   var transitionsFromChild = this.getTransitionsByFromNodeId(childId);
                   if (transitionsFromChild != null) {
@@ -8671,14 +7428,10 @@ var ProjectService = function () {
                       var transitionFromChild = transitionsFromChild[tfc];
                       if (transitionFromChild != null) {
                         var toNodeId = transitionFromChild.to;
-
-                        // get the parent group id of the toNodeId
                         var toNodeIdParentGroupId = this.getParentGroupId(toNodeId);
 
                         if (groupIdWeAreMoving === toNodeIdParentGroupId) {
                           // the transition is to a child in the group we are moving
-
-                          // remove the transition
                           transitionsFromChild.splice(tfc, 1);
 
                           /*
@@ -8692,16 +7445,16 @@ var ProjectService = function () {
                   }
                 }
               } catch (err) {
-                _didIteratorError115 = true;
-                _iteratorError115 = err;
+                _didIteratorError107 = true;
+                _iteratorError107 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion115 && _iterator115.return) {
-                    _iterator115.return();
+                  if (!_iteratorNormalCompletion107 && _iterator107.return) {
+                    _iterator107.return();
                   }
                 } finally {
-                  if (_didIteratorError115) {
-                    throw _iteratorError115;
+                  if (_didIteratorError107) {
+                    throw _iteratorError107;
                   }
                 }
               }
@@ -8719,29 +7472,29 @@ var ProjectService = function () {
               var _childIds3 = groupThatTransitionsToGroupWeAreMoving.ids;
 
               if (_childIds3 != null) {
-                var _iteratorNormalCompletion116 = true;
-                var _didIteratorError116 = false;
-                var _iteratorError116 = undefined;
+                var _iteratorNormalCompletion108 = true;
+                var _didIteratorError108 = false;
+                var _iteratorError108 = undefined;
 
                 try {
-                  for (var _iterator116 = _childIds3[Symbol.iterator](), _step116; !(_iteratorNormalCompletion116 = (_step116 = _iterator116.next()).done); _iteratorNormalCompletion116 = true) {
-                    var _childId3 = _step116.value;
+                  for (var _iterator108 = _childIds3[Symbol.iterator](), _step108; !(_iteratorNormalCompletion108 = (_step108 = _iterator108.next()).done); _iteratorNormalCompletion108 = true) {
+                    var _childId3 = _step108.value;
 
                     var _transitionsFromChild = this.getTransitionsByFromNodeId(_childId3);
                     if (_transitionsFromChild != null) {
-                      var _iteratorNormalCompletion117 = true;
-                      var _didIteratorError117 = false;
-                      var _iteratorError117 = undefined;
+                      var _iteratorNormalCompletion109 = true;
+                      var _didIteratorError109 = false;
+                      var _iteratorError109 = undefined;
 
                       try {
-                        for (var _iterator117 = _transitionsFromChild[Symbol.iterator](), _step117; !(_iteratorNormalCompletion117 = (_step117 = _iterator117.next()).done); _iteratorNormalCompletion117 = true) {
-                          var _transitionFromChild = _step117.value;
+                        for (var _iterator109 = _transitionsFromChild[Symbol.iterator](), _step109; !(_iteratorNormalCompletion109 = (_step109 = _iterator109.next()).done); _iteratorNormalCompletion109 = true) {
+                          var _transitionFromChild = _step109.value;
 
                           if (_transitionFromChild != null) {
-                            var _toNodeId8 = _transitionFromChild.to;
+                            var _toNodeId7 = _transitionFromChild.to;
 
                             // get the parent group id of the toNodeId
-                            var _toNodeIdParentGroupId = this.getParentGroupId(_toNodeId8);
+                            var _toNodeIdParentGroupId = this.getParentGroupId(_toNodeId7);
 
                             if (groupIdWeAreMoving === _toNodeIdParentGroupId) {
                               // the transition is to a child in the group we are moving
@@ -8757,32 +7510,32 @@ var ProjectService = function () {
                           }
                         }
                       } catch (err) {
-                        _didIteratorError117 = true;
-                        _iteratorError117 = err;
+                        _didIteratorError109 = true;
+                        _iteratorError109 = err;
                       } finally {
                         try {
-                          if (!_iteratorNormalCompletion117 && _iterator117.return) {
-                            _iterator117.return();
+                          if (!_iteratorNormalCompletion109 && _iterator109.return) {
+                            _iterator109.return();
                           }
                         } finally {
-                          if (_didIteratorError117) {
-                            throw _iteratorError117;
+                          if (_didIteratorError109) {
+                            throw _iteratorError109;
                           }
                         }
                       }
                     }
                   }
                 } catch (err) {
-                  _didIteratorError116 = true;
-                  _iteratorError116 = err;
+                  _didIteratorError108 = true;
+                  _iteratorError108 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion116 && _iterator116.return) {
-                      _iterator116.return();
+                    if (!_iteratorNormalCompletion108 && _iterator108.return) {
+                      _iterator108.return();
                     }
                   } finally {
-                    if (_didIteratorError116) {
-                      throw _iteratorError116;
+                    if (_didIteratorError108) {
+                      throw _iteratorError108;
                     }
                   }
                 }
@@ -8807,13 +7560,13 @@ var ProjectService = function () {
         if (nodeContent != null) {
           var components = nodeContent.components;
           if (components != null) {
-            var _iteratorNormalCompletion118 = true;
-            var _didIteratorError118 = false;
-            var _iteratorError118 = undefined;
+            var _iteratorNormalCompletion110 = true;
+            var _didIteratorError110 = false;
+            var _iteratorError110 = undefined;
 
             try {
-              for (var _iterator118 = components[Symbol.iterator](), _step118; !(_iteratorNormalCompletion118 = (_step118 = _iterator118.next()).done); _iteratorNormalCompletion118 = true) {
-                var component = _step118.value;
+              for (var _iterator110 = components[Symbol.iterator](), _step110; !(_iteratorNormalCompletion110 = (_step110 = _iterator110.next()).done); _iteratorNormalCompletion110 = true) {
+                var component = _step110.value;
 
                 if (component != null) {
                   var componentHasWork = this.componentHasWork(component);
@@ -8823,16 +7576,16 @@ var ProjectService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError118 = true;
-              _iteratorError118 = err;
+              _didIteratorError110 = true;
+              _iteratorError110 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion118 && _iterator118.return) {
-                  _iterator118.return();
+                if (!_iteratorNormalCompletion110 && _iterator110.return) {
+                  _iterator110.return();
                 }
               } finally {
-                if (_didIteratorError118) {
-                  throw _iteratorError118;
+                if (_didIteratorError110) {
+                  throw _iteratorError110;
                 }
               }
             }
@@ -8934,7 +7687,6 @@ var ProjectService = function () {
          * one that isn't already being used
          */
         while (!alreadyUsed) {
-          // generate a new id
           newComponentId = this.UtilService.generateKey(idLength);
 
           // check if the id is already being used in the project
@@ -8962,24 +7714,24 @@ var ProjectService = function () {
   }, {
     key: 'isComponentIdUsed',
     value: function isComponentIdUsed(componentId) {
-      var _iteratorNormalCompletion119 = true;
-      var _didIteratorError119 = false;
-      var _iteratorError119 = undefined;
+      var _iteratorNormalCompletion111 = true;
+      var _didIteratorError111 = false;
+      var _iteratorError111 = undefined;
 
       try {
-        for (var _iterator119 = this.project.nodes[Symbol.iterator](), _step119; !(_iteratorNormalCompletion119 = (_step119 = _iterator119.next()).done); _iteratorNormalCompletion119 = true) {
-          var node = _step119.value;
+        for (var _iterator111 = this.project.nodes[Symbol.iterator](), _step111; !(_iteratorNormalCompletion111 = (_step111 = _iterator111.next()).done); _iteratorNormalCompletion111 = true) {
+          var node = _step111.value;
 
           if (node != null) {
             var components = node.components;
             if (components != null) {
-              var _iteratorNormalCompletion121 = true;
-              var _didIteratorError121 = false;
-              var _iteratorError121 = undefined;
+              var _iteratorNormalCompletion113 = true;
+              var _didIteratorError113 = false;
+              var _iteratorError113 = undefined;
 
               try {
-                for (var _iterator121 = components[Symbol.iterator](), _step121; !(_iteratorNormalCompletion121 = (_step121 = _iterator121.next()).done); _iteratorNormalCompletion121 = true) {
-                  var component = _step121.value;
+                for (var _iterator113 = components[Symbol.iterator](), _step113; !(_iteratorNormalCompletion113 = (_step113 = _iterator113.next()).done); _iteratorNormalCompletion113 = true) {
+                  var component = _step113.value;
 
                   if (component != null) {
                     if (componentId === component.id) {
@@ -8988,16 +7740,16 @@ var ProjectService = function () {
                   }
                 }
               } catch (err) {
-                _didIteratorError121 = true;
-                _iteratorError121 = err;
+                _didIteratorError113 = true;
+                _iteratorError113 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion121 && _iterator121.return) {
-                    _iterator121.return();
+                  if (!_iteratorNormalCompletion113 && _iterator113.return) {
+                    _iterator113.return();
                   }
                 } finally {
-                  if (_didIteratorError121) {
-                    throw _iteratorError121;
+                  if (_didIteratorError113) {
+                    throw _iteratorError113;
                   }
                 }
               }
@@ -9005,38 +7757,38 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError119 = true;
-        _iteratorError119 = err;
+        _didIteratorError111 = true;
+        _iteratorError111 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion119 && _iterator119.return) {
-            _iterator119.return();
+          if (!_iteratorNormalCompletion111 && _iterator111.return) {
+            _iterator111.return();
           }
         } finally {
-          if (_didIteratorError119) {
-            throw _iteratorError119;
+          if (_didIteratorError111) {
+            throw _iteratorError111;
           }
         }
       }
 
-      var _iteratorNormalCompletion120 = true;
-      var _didIteratorError120 = false;
-      var _iteratorError120 = undefined;
+      var _iteratorNormalCompletion112 = true;
+      var _didIteratorError112 = false;
+      var _iteratorError112 = undefined;
 
       try {
-        for (var _iterator120 = this.project.inactiveNodes[Symbol.iterator](), _step120; !(_iteratorNormalCompletion120 = (_step120 = _iterator120.next()).done); _iteratorNormalCompletion120 = true) {
-          var _node = _step120.value;
+        for (var _iterator112 = this.project.inactiveNodes[Symbol.iterator](), _step112; !(_iteratorNormalCompletion112 = (_step112 = _iterator112.next()).done); _iteratorNormalCompletion112 = true) {
+          var _node = _step112.value;
 
           if (_node != null) {
             var _components = _node.components;
             if (_components != null) {
-              var _iteratorNormalCompletion122 = true;
-              var _didIteratorError122 = false;
-              var _iteratorError122 = undefined;
+              var _iteratorNormalCompletion114 = true;
+              var _didIteratorError114 = false;
+              var _iteratorError114 = undefined;
 
               try {
-                for (var _iterator122 = _components[Symbol.iterator](), _step122; !(_iteratorNormalCompletion122 = (_step122 = _iterator122.next()).done); _iteratorNormalCompletion122 = true) {
-                  var _component = _step122.value;
+                for (var _iterator114 = _components[Symbol.iterator](), _step114; !(_iteratorNormalCompletion114 = (_step114 = _iterator114.next()).done); _iteratorNormalCompletion114 = true) {
+                  var _component = _step114.value;
 
                   if (_component != null) {
                     if (componentId === _component.id) {
@@ -9045,16 +7797,16 @@ var ProjectService = function () {
                   }
                 }
               } catch (err) {
-                _didIteratorError122 = true;
-                _iteratorError122 = err;
+                _didIteratorError114 = true;
+                _iteratorError114 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion122 && _iterator122.return) {
-                    _iterator122.return();
+                  if (!_iteratorNormalCompletion114 && _iterator114.return) {
+                    _iterator114.return();
                   }
                 } finally {
-                  if (_didIteratorError122) {
-                    throw _iteratorError122;
+                  if (_didIteratorError114) {
+                    throw _iteratorError114;
                   }
                 }
               }
@@ -9062,16 +7814,16 @@ var ProjectService = function () {
           }
         }
       } catch (err) {
-        _didIteratorError120 = true;
-        _iteratorError120 = err;
+        _didIteratorError112 = true;
+        _iteratorError112 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion120 && _iterator120.return) {
-            _iterator120.return();
+          if (!_iteratorNormalCompletion112 && _iterator112.return) {
+            _iterator112.return();
           }
         } finally {
-          if (_didIteratorError120) {
-            throw _iteratorError120;
+          if (_didIteratorError112) {
+            throw _iteratorError112;
           }
         }
       }
@@ -9091,39 +7843,35 @@ var ProjectService = function () {
     value: function getNextAvailableConstraintIdForNodeId(nodeId) {
       var nextAvailableConstraintId = null;
       if (nodeId != null) {
-        // an array to hold the constraint ids that are already being used
         var usedConstraintIds = [];
         var node = this.getNodeById(nodeId);
-
         if (node != null) {
           var constraints = node.constraints;
           if (constraints != null) {
-            var _iteratorNormalCompletion123 = true;
-            var _didIteratorError123 = false;
-            var _iteratorError123 = undefined;
+            var _iteratorNormalCompletion115 = true;
+            var _didIteratorError115 = false;
+            var _iteratorError115 = undefined;
 
             try {
-              for (var _iterator123 = constraints[Symbol.iterator](), _step123; !(_iteratorNormalCompletion123 = (_step123 = _iterator123.next()).done); _iteratorNormalCompletion123 = true) {
-                var constraint = _step123.value;
+              for (var _iterator115 = constraints[Symbol.iterator](), _step115; !(_iteratorNormalCompletion115 = (_step115 = _iterator115.next()).done); _iteratorNormalCompletion115 = true) {
+                var constraint = _step115.value;
 
                 if (constraint != null) {
                   var constraintId = constraint.id;
-
-                  // add the constraint id to the array of used constraint ids
                   usedConstraintIds.push(constraintId);
                 }
               }
             } catch (err) {
-              _didIteratorError123 = true;
-              _iteratorError123 = err;
+              _didIteratorError115 = true;
+              _iteratorError115 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion123 && _iterator123.return) {
-                  _iterator123.return();
+                if (!_iteratorNormalCompletion115 && _iterator115.return) {
+                  _iterator115.return();
                 }
               } finally {
-                if (_didIteratorError123) {
-                  throw _iteratorError123;
+                if (_didIteratorError115) {
+                  throw _iteratorError115;
                 }
               }
             }
@@ -9135,7 +7883,6 @@ var ProjectService = function () {
 
         while (!foundNextAvailableConstraintId) {
           var potentialConstraintId = nodeId + 'Constraint' + counter;
-          // check if the constraint id has been used
           if (usedConstraintIds.indexOf(potentialConstraintId) == -1) {
             nextAvailableConstraintId = potentialConstraintId;
             foundNextAvailableConstraintId = true;
@@ -9161,35 +7908,31 @@ var ProjectService = function () {
       var nodeIdsInBranch = [];
       var nodes = this.getNodes();
       if (nodes != null) {
-        var _iteratorNormalCompletion124 = true;
-        var _didIteratorError124 = false;
-        var _iteratorError124 = undefined;
+        var _iteratorNormalCompletion116 = true;
+        var _didIteratorError116 = false;
+        var _iteratorError116 = undefined;
 
         try {
-          for (var _iterator124 = nodes[Symbol.iterator](), _step124; !(_iteratorNormalCompletion124 = (_step124 = _iterator124.next()).done); _iteratorNormalCompletion124 = true) {
-            var node = _step124.value;
+          for (var _iterator116 = nodes[Symbol.iterator](), _step116; !(_iteratorNormalCompletion116 = (_step116 = _iterator116.next()).done); _iteratorNormalCompletion116 = true) {
+            var node = _step116.value;
 
             if (node != null) {
               if (this.hasBranchPathTakenConstraint(node, fromNodeId, toNodeId)) {
-                /*
-                 * this node has the the branch path taken constraint we are
-                 * looking for
-                 */
                 nodeIdsInBranch.push(node.id);
               }
             }
           }
         } catch (err) {
-          _didIteratorError124 = true;
-          _iteratorError124 = err;
+          _didIteratorError116 = true;
+          _iteratorError116 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion124 && _iterator124.return) {
-              _iterator124.return();
+            if (!_iteratorNormalCompletion116 && _iterator116.return) {
+              _iterator116.return();
             }
           } finally {
-            if (_didIteratorError124) {
-              throw _iteratorError124;
+            if (_didIteratorError116) {
+              throw _iteratorError116;
             }
           }
         }
@@ -9248,69 +7991,56 @@ var ProjectService = function () {
   }, {
     key: 'hasBranchPathTakenConstraint',
     value: function hasBranchPathTakenConstraint(node, fromNodeId, toNodeId) {
-      if (node != null) {
-        var constraints = node.constraints;
-        if (constraints != null) {
-          var _iteratorNormalCompletion125 = true;
-          var _didIteratorError125 = false;
-          var _iteratorError125 = undefined;
+      var constraints = node.constraints;
+      if (constraints != null) {
+        var _iteratorNormalCompletion117 = true;
+        var _didIteratorError117 = false;
+        var _iteratorError117 = undefined;
 
-          try {
-            for (var _iterator125 = constraints[Symbol.iterator](), _step125; !(_iteratorNormalCompletion125 = (_step125 = _iterator125.next()).done); _iteratorNormalCompletion125 = true) {
-              var constraint = _step125.value;
+        try {
+          for (var _iterator117 = constraints[Symbol.iterator](), _step117; !(_iteratorNormalCompletion117 = (_step117 = _iterator117.next()).done); _iteratorNormalCompletion117 = true) {
+            var constraint = _step117.value;
+            var _iteratorNormalCompletion118 = true;
+            var _didIteratorError118 = false;
+            var _iteratorError118 = undefined;
 
-              if (constraint != null) {
-                var removalCriteria = constraint.removalCriteria;
-                if (removalCriteria != null) {
-                  var _iteratorNormalCompletion126 = true;
-                  var _didIteratorError126 = false;
-                  var _iteratorError126 = undefined;
+            try {
+              for (var _iterator118 = constraint.removalCriteria[Symbol.iterator](), _step118; !(_iteratorNormalCompletion118 = (_step118 = _iterator118.next()).done); _iteratorNormalCompletion118 = true) {
+                var removalCriterion = _step118.value;
 
-                  try {
-                    for (var _iterator126 = removalCriteria[Symbol.iterator](), _step126; !(_iteratorNormalCompletion126 = (_step126 = _iterator126.next()).done); _iteratorNormalCompletion126 = true) {
-                      var removalCriterion = _step126.value;
-
-                      if (removalCriterion != null) {
-                        var name = removalCriterion.name;
-                        if (name == 'branchPathTaken') {
-                          var params = removalCriterion.params;
-                          if (params != null) {
-                            if (fromNodeId == params.fromNodeId && toNodeId == params.toNodeId) {
-                              return true;
-                            }
-                          }
-                        }
-                      }
-                    }
-                  } catch (err) {
-                    _didIteratorError126 = true;
-                    _iteratorError126 = err;
-                  } finally {
-                    try {
-                      if (!_iteratorNormalCompletion126 && _iterator126.return) {
-                        _iterator126.return();
-                      }
-                    } finally {
-                      if (_didIteratorError126) {
-                        throw _iteratorError126;
-                      }
-                    }
+                if (removalCriterion.name == 'branchPathTaken') {
+                  var params = removalCriterion.params;
+                  if (params.fromNodeId == fromNodeId && params.toNodeId == toNodeId) {
+                    return true;
                   }
                 }
               }
-            }
-          } catch (err) {
-            _didIteratorError125 = true;
-            _iteratorError125 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion125 && _iterator125.return) {
-                _iterator125.return();
-              }
+            } catch (err) {
+              _didIteratorError118 = true;
+              _iteratorError118 = err;
             } finally {
-              if (_didIteratorError125) {
-                throw _iteratorError125;
+              try {
+                if (!_iteratorNormalCompletion118 && _iterator118.return) {
+                  _iterator118.return();
+                }
+              } finally {
+                if (_didIteratorError118) {
+                  throw _iteratorError118;
+                }
               }
+            }
+          }
+        } catch (err) {
+          _didIteratorError117 = true;
+          _iteratorError117 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion117 && _iterator117.return) {
+              _iterator117.return();
+            }
+          } finally {
+            if (_didIteratorError117) {
+              throw _iteratorError117;
             }
           }
         }
@@ -9319,54 +8049,43 @@ var ProjectService = function () {
     }
 
     /**
-     * Remove the branch path taken constraints from a node
-     * @param nodeId remove the constraints from this node
+     * Remove all branch path taken constraints from a node.
+     * @param nodeId Remove the constraints from this node.
      */
 
   }, {
-    key: 'removeBranchPathTakenNodeConstraints',
-    value: function removeBranchPathTakenNodeConstraints(nodeId) {
+    key: 'removeBranchPathTakenNodeConstraintsIfAny',
+    value: function removeBranchPathTakenNodeConstraintsIfAny(nodeId) {
       var node = this.getNodeById(nodeId);
-      if (node != null) {
-        var constraints = node.constraints;
-        if (constraints != null) {
-          for (var c = 0; c < constraints.length; c++) {
-            var constraint = constraints[c];
-            if (constraint != null) {
-              var removalCriteria = constraint.removalCriteria;
+      var constraints = node.constraints;
+      if (constraints != null) {
+        for (var c = 0; c < constraints.length; c++) {
+          var constraint = constraints[c];
+          var removalCriteria = constraint.removalCriteria;
+          var _iteratorNormalCompletion119 = true;
+          var _didIteratorError119 = false;
+          var _iteratorError119 = undefined;
 
-              if (removalCriteria != null) {
-                var _iteratorNormalCompletion127 = true;
-                var _didIteratorError127 = false;
-                var _iteratorError127 = undefined;
+          try {
+            for (var _iterator119 = removalCriteria[Symbol.iterator](), _step119; !(_iteratorNormalCompletion119 = (_step119 = _iterator119.next()).done); _iteratorNormalCompletion119 = true) {
+              var removalCriterion = _step119.value;
 
-                try {
-                  for (var _iterator127 = removalCriteria[Symbol.iterator](), _step127; !(_iteratorNormalCompletion127 = (_step127 = _iterator127.next()).done); _iteratorNormalCompletion127 = true) {
-                    var removalCriterion = _step127.value;
-
-                    if (removalCriterion != null) {
-                      if (removalCriterion.name == 'branchPathTaken') {
-                        var params = removalCriterion.params;
-                        constraints.splice(c, 1);
-                        // move the counter back one because we just removed a constraint
-                        c--;
-                      }
-                    }
-                  }
-                } catch (err) {
-                  _didIteratorError127 = true;
-                  _iteratorError127 = err;
-                } finally {
-                  try {
-                    if (!_iteratorNormalCompletion127 && _iterator127.return) {
-                      _iterator127.return();
-                    }
-                  } finally {
-                    if (_didIteratorError127) {
-                      throw _iteratorError127;
-                    }
-                  }
-                }
+              if (removalCriterion.name == 'branchPathTaken') {
+                constraints.splice(c, 1);
+                c--; // update the counter so we don't skip over the next element
+              }
+            }
+          } catch (err) {
+            _didIteratorError119 = true;
+            _iteratorError119 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion119 && _iterator119.return) {
+                _iterator119.return();
+              }
+            } finally {
+              if (_didIteratorError119) {
+                throw _iteratorError119;
               }
             }
           }
@@ -9375,171 +8094,68 @@ var ProjectService = function () {
     }
 
     /**
-     * Get the branch path taken constraints from a node
-     * @param nodeId get the branch path taken constraints from this node
-     * @return an array of branch path taken constraints from the node
+     * @param nodeId Get the branch path taken constraints from this node.
+     * @return {Array} An array of branch path taken constraints from the node.
      */
 
   }, {
     key: 'getBranchPathTakenConstraintsByNodeId',
     value: function getBranchPathTakenConstraintsByNodeId(nodeId) {
       var branchPathTakenConstraints = [];
-      if (nodeId != null) {
-        var node = this.getNodeById(nodeId);
-        if (node != null) {
-          var constraints = node.constraints;
-          if (constraints != null) {
-            var _iteratorNormalCompletion128 = true;
-            var _didIteratorError128 = false;
-            var _iteratorError128 = undefined;
+      var node = this.getNodeById(nodeId);
+      var constraints = node.constraints;
+      if (constraints != null) {
+        var _iteratorNormalCompletion120 = true;
+        var _didIteratorError120 = false;
+        var _iteratorError120 = undefined;
+
+        try {
+          for (var _iterator120 = constraints[Symbol.iterator](), _step120; !(_iteratorNormalCompletion120 = (_step120 = _iterator120.next()).done); _iteratorNormalCompletion120 = true) {
+            var constraint = _step120.value;
+            var _iteratorNormalCompletion121 = true;
+            var _didIteratorError121 = false;
+            var _iteratorError121 = undefined;
 
             try {
-              for (var _iterator128 = constraints[Symbol.iterator](), _step128; !(_iteratorNormalCompletion128 = (_step128 = _iterator128.next()).done); _iteratorNormalCompletion128 = true) {
-                var constraint = _step128.value;
+              for (var _iterator121 = constraint.removalCriteria[Symbol.iterator](), _step121; !(_iteratorNormalCompletion121 = (_step121 = _iterator121.next()).done); _iteratorNormalCompletion121 = true) {
+                var removalCriterion = _step121.value;
 
-                if (constraint != null) {
-                  var removalCriteria = constraint.removalCriteria;
-                  if (removalCriteria != null) {
-                    var _iteratorNormalCompletion129 = true;
-                    var _didIteratorError129 = false;
-                    var _iteratorError129 = undefined;
-
-                    try {
-                      for (var _iterator129 = removalCriteria[Symbol.iterator](), _step129; !(_iteratorNormalCompletion129 = (_step129 = _iterator129.next()).done); _iteratorNormalCompletion129 = true) {
-                        var removalCriterion = _step129.value;
-
-                        if (removalCriterion != null) {
-                          if (removalCriterion.name == 'branchPathTaken') {
-                            /*
-                             * we have found a branch path taken constraint so
-                             * we will add the constraint to the array
-                             */
-                            branchPathTakenConstraints.push(constraint);
-                            break;
-                          }
-                        }
-                      }
-                    } catch (err) {
-                      _didIteratorError129 = true;
-                      _iteratorError129 = err;
-                    } finally {
-                      try {
-                        if (!_iteratorNormalCompletion129 && _iterator129.return) {
-                          _iterator129.return();
-                        }
-                      } finally {
-                        if (_didIteratorError129) {
-                          throw _iteratorError129;
-                        }
-                      }
-                    }
-                  }
+                if (removalCriterion.name == 'branchPathTaken') {
+                  branchPathTakenConstraints.push(constraint);
+                  break;
                 }
               }
             } catch (err) {
-              _didIteratorError128 = true;
-              _iteratorError128 = err;
+              _didIteratorError121 = true;
+              _iteratorError121 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion128 && _iterator128.return) {
-                  _iterator128.return();
+                if (!_iteratorNormalCompletion121 && _iterator121.return) {
+                  _iterator121.return();
                 }
               } finally {
-                if (_didIteratorError128) {
-                  throw _iteratorError128;
+                if (_didIteratorError121) {
+                  throw _iteratorError121;
                 }
               }
+            }
+          }
+        } catch (err) {
+          _didIteratorError120 = true;
+          _iteratorError120 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion120 && _iterator120.return) {
+              _iterator120.return();
+            }
+          } finally {
+            if (_didIteratorError120) {
+              throw _iteratorError120;
             }
           }
         }
       }
       return branchPathTakenConstraints;
-    }
-
-    /**
-     * Update the branch path taken constraint
-     * @param node update the branch path taken constraints in this node
-     * @param currentFromNodeId the current from node id
-     * @param currentToNodeId the current to node id
-     * @param newFromNodeId the new from node id
-     * @param newToNodeId the new to node id
-     */
-
-  }, {
-    key: 'updateBranchPathTakenConstraint',
-    value: function updateBranchPathTakenConstraint(node, currentFromNodeId, currentToNodeId, newFromNodeId, newToNodeId) {
-      if (node != null) {
-        var constraints = node.constraints;
-        if (constraints != null) {
-          var _iteratorNormalCompletion130 = true;
-          var _didIteratorError130 = false;
-          var _iteratorError130 = undefined;
-
-          try {
-            for (var _iterator130 = constraints[Symbol.iterator](), _step130; !(_iteratorNormalCompletion130 = (_step130 = _iterator130.next()).done); _iteratorNormalCompletion130 = true) {
-              var constraint = _step130.value;
-
-              if (constraint != null) {
-                var removalCriteria = constraint.removalCriteria;
-                if (removalCriteria != null) {
-                  var _iteratorNormalCompletion131 = true;
-                  var _didIteratorError131 = false;
-                  var _iteratorError131 = undefined;
-
-                  try {
-                    for (var _iterator131 = removalCriteria[Symbol.iterator](), _step131; !(_iteratorNormalCompletion131 = (_step131 = _iterator131.next()).done); _iteratorNormalCompletion131 = true) {
-                      var removalCriterion = _step131.value;
-
-                      if (removalCriterion != null) {
-                        if (removalCriterion.name === 'branchPathTaken') {
-                          var params = removalCriterion.params;
-                          if (params != null) {
-                            if (params.fromNodeId === currentFromNodeId && params.toNodeId === currentToNodeId) {
-                              /*
-                               * we have found a branchPathTaken removal criterion
-                               * with the fromNodeId and toNodeId that we are
-                               * looking for so we will now update the values
-                               */
-                              params.fromNodeId = newFromNodeId;
-                              params.toNodeId = newToNodeId;
-                            }
-                          }
-                        }
-                      }
-                    }
-                  } catch (err) {
-                    _didIteratorError131 = true;
-                    _iteratorError131 = err;
-                  } finally {
-                    try {
-                      if (!_iteratorNormalCompletion131 && _iterator131.return) {
-                        _iterator131.return();
-                      }
-                    } finally {
-                      if (_didIteratorError131) {
-                        throw _iteratorError131;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError130 = true;
-            _iteratorError130 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion130 && _iterator130.return) {
-                _iterator130.return();
-              }
-            } finally {
-              if (_didIteratorError130) {
-                throw _iteratorError130;
-              }
-            }
-          }
-        }
-      }
     }
 
     /**
@@ -9554,7 +8170,8 @@ var ProjectService = function () {
     }
 
     /**
-     * Check if a node is a branch point
+     * Check if a node is a branch point. A branch point is a node with more
+     * than one transition.
      * @param nodeId the node id
      * @return whether the node is a branch point
      */
@@ -9563,16 +8180,7 @@ var ProjectService = function () {
     key: 'isBranchPoint',
     value: function isBranchPoint(nodeId) {
       var transitions = this.getTransitionsByFromNodeId(nodeId);
-      if (transitions != null) {
-        if (transitions.length > 1) {
-          /*
-           * the node contains more than one transition which means it is
-           * a branch point
-           */
-          return true;
-        }
-      }
-      return false;
+      return transitions != null && transitions.length > 1;
     }
 
     /**
@@ -9586,13 +8194,13 @@ var ProjectService = function () {
     value: function isFirstNodeInBranchPath(nodeId) {
       var nodes = this.getNodes();
       if (nodes != null) {
-        var _iteratorNormalCompletion132 = true;
-        var _didIteratorError132 = false;
-        var _iteratorError132 = undefined;
+        var _iteratorNormalCompletion122 = true;
+        var _didIteratorError122 = false;
+        var _iteratorError122 = undefined;
 
         try {
-          for (var _iterator132 = nodes[Symbol.iterator](), _step132; !(_iteratorNormalCompletion132 = (_step132 = _iterator132.next()).done); _iteratorNormalCompletion132 = true) {
-            var node = _step132.value;
+          for (var _iterator122 = nodes[Symbol.iterator](), _step122; !(_iteratorNormalCompletion122 = (_step122 = _iterator122.next()).done); _iteratorNormalCompletion122 = true) {
+            var node = _step122.value;
 
             if (node != null && node.transitionLogic != null && node.transitionLogic.transitions != null) {
               var transitions = node.transitionLogic.transitions;
@@ -9602,13 +8210,13 @@ var ProjectService = function () {
                  * there is more than one transition from this node
                  * which means it is a branch point
                  */
-                var _iteratorNormalCompletion133 = true;
-                var _didIteratorError133 = false;
-                var _iteratorError133 = undefined;
+                var _iteratorNormalCompletion123 = true;
+                var _didIteratorError123 = false;
+                var _iteratorError123 = undefined;
 
                 try {
-                  for (var _iterator133 = transitions[Symbol.iterator](), _step133; !(_iteratorNormalCompletion133 = (_step133 = _iterator133.next()).done); _iteratorNormalCompletion133 = true) {
-                    var transition = _step133.value;
+                  for (var _iterator123 = transitions[Symbol.iterator](), _step123; !(_iteratorNormalCompletion123 = (_step123 = _iterator123.next()).done); _iteratorNormalCompletion123 = true) {
+                    var transition = _step123.value;
 
                     if (transition != null) {
                       var transitionTo = transition.to;
@@ -9618,16 +8226,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError133 = true;
-                  _iteratorError133 = err;
+                  _didIteratorError123 = true;
+                  _iteratorError123 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion133 && _iterator133.return) {
-                      _iterator133.return();
+                    if (!_iteratorNormalCompletion123 && _iterator123.return) {
+                      _iterator123.return();
                     }
                   } finally {
-                    if (_didIteratorError133) {
-                      throw _iteratorError133;
+                    if (_didIteratorError123) {
+                      throw _iteratorError123;
                     }
                   }
                 }
@@ -9635,16 +8243,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError132 = true;
-          _iteratorError132 = err;
+          _didIteratorError122 = true;
+          _iteratorError122 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion132 && _iterator132.return) {
-              _iterator132.return();
+            if (!_iteratorNormalCompletion122 && _iterator122.return) {
+              _iterator122.return();
             }
           } finally {
-            if (_didIteratorError132) {
-              throw _iteratorError132;
+            if (_didIteratorError122) {
+              throw _iteratorError122;
             }
           }
         }
@@ -9693,42 +8301,31 @@ var ProjectService = function () {
   }, {
     key: 'isBranchStartPoint',
     value: function isBranchStartPoint(nodeId) {
-      /*
-       * Get all the branches. Each branch is represented as an object that
-       * contains the branchStartPoint, branchEndPoint, and branchPaths.
-       */
       var branches = this.getBranches();
-
       if (branches != null) {
-        var _iteratorNormalCompletion134 = true;
-        var _didIteratorError134 = false;
-        var _iteratorError134 = undefined;
+        var _iteratorNormalCompletion124 = true;
+        var _didIteratorError124 = false;
+        var _iteratorError124 = undefined;
 
         try {
-          for (var _iterator134 = branches[Symbol.iterator](), _step134; !(_iteratorNormalCompletion134 = (_step134 = _iterator134.next()).done); _iteratorNormalCompletion134 = true) {
-            var branch = _step134.value;
+          for (var _iterator124 = branches[Symbol.iterator](), _step124; !(_iteratorNormalCompletion124 = (_step124 = _iterator124.next()).done); _iteratorNormalCompletion124 = true) {
+            var branch = _step124.value;
 
-            if (branch != null) {
-              if (branch.branchStartPoint == nodeId) {
-                /*
-                 * we have found a branch with the given nodeId as the
-                 * start point
-                 */
-                return true;
-              }
+            if (branch.branchStartPoint == nodeId) {
+              return true;
             }
           }
         } catch (err) {
-          _didIteratorError134 = true;
-          _iteratorError134 = err;
+          _didIteratorError124 = true;
+          _iteratorError124 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion134 && _iterator134.return) {
-              _iterator134.return();
+            if (!_iteratorNormalCompletion124 && _iterator124.return) {
+              _iterator124.return();
             }
           } finally {
-            if (_didIteratorError134) {
-              throw _iteratorError134;
+            if (_didIteratorError124) {
+              throw _iteratorError124;
             }
           }
         }
@@ -9745,42 +8342,31 @@ var ProjectService = function () {
   }, {
     key: 'isBranchMergePoint',
     value: function isBranchMergePoint(nodeId) {
-      /*
-       * Get all the branches. Each branch is represented as an object that
-       * contains the branchStartPoint, branchEndPoint, and branchPaths.
-       */
       var branches = this.getBranches();
-
       if (branches != null) {
-        var _iteratorNormalCompletion135 = true;
-        var _didIteratorError135 = false;
-        var _iteratorError135 = undefined;
+        var _iteratorNormalCompletion125 = true;
+        var _didIteratorError125 = false;
+        var _iteratorError125 = undefined;
 
         try {
-          for (var _iterator135 = branches[Symbol.iterator](), _step135; !(_iteratorNormalCompletion135 = (_step135 = _iterator135.next()).done); _iteratorNormalCompletion135 = true) {
-            var branch = _step135.value;
+          for (var _iterator125 = branches[Symbol.iterator](), _step125; !(_iteratorNormalCompletion125 = (_step125 = _iterator125.next()).done); _iteratorNormalCompletion125 = true) {
+            var branch = _step125.value;
 
-            if (branch != null) {
-              if (branch.branchEndPoint == nodeId) {
-                /*
-                 * we have found a branch with the given nodeId as the
-                 * end point
-                 */
-                return true;
-              }
+            if (branch.branchEndPoint == nodeId) {
+              return true;
             }
           }
         } catch (err) {
-          _didIteratorError135 = true;
-          _iteratorError135 = err;
+          _didIteratorError125 = true;
+          _iteratorError125 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion135 && _iterator135.return) {
-              _iterator135.return();
+            if (!_iteratorNormalCompletion125 && _iterator125.return) {
+              _iterator125.return();
             }
           } finally {
-            if (_didIteratorError135) {
-              throw _iteratorError135;
+            if (_didIteratorError125) {
+              throw _iteratorError125;
             }
           }
         }
@@ -9801,13 +8387,13 @@ var ProjectService = function () {
       var allBranches = this.getBranches();
 
       if (allBranches != null) {
-        var _iteratorNormalCompletion136 = true;
-        var _didIteratorError136 = false;
-        var _iteratorError136 = undefined;
+        var _iteratorNormalCompletion126 = true;
+        var _didIteratorError126 = false;
+        var _iteratorError126 = undefined;
 
         try {
-          for (var _iterator136 = allBranches[Symbol.iterator](), _step136; !(_iteratorNormalCompletion136 = (_step136 = _iterator136.next()).done); _iteratorNormalCompletion136 = true) {
-            var branch = _step136.value;
+          for (var _iterator126 = allBranches[Symbol.iterator](), _step126; !(_iteratorNormalCompletion126 = (_step126 = _iterator126.next()).done); _iteratorNormalCompletion126 = true) {
+            var branch = _step126.value;
 
             if (branch != null) {
               if (nodeId == branch.branchStartPoint) {
@@ -9820,16 +8406,16 @@ var ProjectService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError136 = true;
-          _iteratorError136 = err;
+          _didIteratorError126 = true;
+          _iteratorError126 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion136 && _iterator136.return) {
-              _iterator136.return();
+            if (!_iteratorNormalCompletion126 && _iterator126.return) {
+              _iterator126.return();
             }
           } finally {
-            if (_didIteratorError136) {
-              throw _iteratorError136;
+            if (_didIteratorError126) {
+              throw _iteratorError126;
             }
           }
         }
@@ -9847,11 +8433,8 @@ var ProjectService = function () {
       this.nodeIdToNumber = {};
       this.nodeIdToBranchPathLetter = {};
       var startNodeId = this.getStartNodeId();
-
       var currentActivityNumber = 0;
       var currentStepNumber = 0;
-
-      // recursively calculate the node numbers by traversing the project tree
       this.calculateNodeNumbersHelper(startNodeId, currentActivityNumber, currentStepNumber);
     }
 
@@ -10025,13 +8608,13 @@ var ProjectService = function () {
                  * would have gone inside the other block of code where
                  * this.isBranchStartPoint() is true.
                  */
-                var _iteratorNormalCompletion137 = true;
-                var _didIteratorError137 = false;
-                var _iteratorError137 = undefined;
+                var _iteratorNormalCompletion127 = true;
+                var _didIteratorError127 = false;
+                var _iteratorError127 = undefined;
 
                 try {
-                  for (var _iterator137 = transitions[Symbol.iterator](), _step137; !(_iteratorNormalCompletion137 = (_step137 = _iterator137.next()).done); _iteratorNormalCompletion137 = true) {
-                    var transition = _step137.value;
+                  for (var _iterator127 = transitions[Symbol.iterator](), _step127; !(_iteratorNormalCompletion127 = (_step127 = _iterator127.next()).done); _iteratorNormalCompletion127 = true) {
+                    var transition = _step127.value;
 
                     if (transition != null) {
                       if (this.isBranchMergePoint(transition.to)) {} else {
@@ -10040,16 +8623,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError137 = true;
-                  _iteratorError137 = err;
+                  _didIteratorError127 = true;
+                  _iteratorError127 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion137 && _iterator137.return) {
-                      _iterator137.return();
+                    if (!_iteratorNormalCompletion127 && _iterator127.return) {
+                      _iterator127.return();
                     }
                   } finally {
-                    if (_didIteratorError137) {
-                      throw _iteratorError137;
+                    if (_didIteratorError127) {
+                      throw _iteratorError127;
                     }
                   }
                 }
@@ -10057,29 +8640,29 @@ var ProjectService = function () {
                 // if there are no transitions, check if the parent group has a transition
 
                 if (parentGroup != null && parentGroup.transitionLogic != null && parentGroup.transitionLogic.transitions != null && parentGroup.transitionLogic.transitions.length > 0) {
-                  var _iteratorNormalCompletion138 = true;
-                  var _didIteratorError138 = false;
-                  var _iteratorError138 = undefined;
+                  var _iteratorNormalCompletion128 = true;
+                  var _didIteratorError128 = false;
+                  var _iteratorError128 = undefined;
 
                   try {
-                    for (var _iterator138 = parentGroup.transitionLogic.transitions[Symbol.iterator](), _step138; !(_iteratorNormalCompletion138 = (_step138 = _iterator138.next()).done); _iteratorNormalCompletion138 = true) {
-                      var _transition4 = _step138.value;
+                    for (var _iterator128 = parentGroup.transitionLogic.transitions[Symbol.iterator](), _step128; !(_iteratorNormalCompletion128 = (_step128 = _iterator128.next()).done); _iteratorNormalCompletion128 = true) {
+                      var _transition4 = _step128.value;
 
                       if (_transition4 != null) {
                         this.calculateNodeNumbersHelper(_transition4.to, currentActivityNumber, currentStepNumber, branchLetterCode);
                       }
                     }
                   } catch (err) {
-                    _didIteratorError138 = true;
-                    _iteratorError138 = err;
+                    _didIteratorError128 = true;
+                    _iteratorError128 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion138 && _iterator138.return) {
-                        _iterator138.return();
+                      if (!_iteratorNormalCompletion128 && _iterator128.return) {
+                        _iterator128.return();
                       }
                     } finally {
-                      if (_didIteratorError138) {
-                        throw _iteratorError138;
+                      if (_didIteratorError128) {
+                        throw _iteratorError128;
                       }
                     }
                   }
@@ -10136,13 +8719,13 @@ var ProjectService = function () {
                */
 
               if (_node2 != null && _node2.transitionLogic != null && _node2.transitionLogic.transitions != null && _node2.transitionLogic.transitions.length > 0) {
-                var _iteratorNormalCompletion139 = true;
-                var _didIteratorError139 = false;
-                var _iteratorError139 = undefined;
+                var _iteratorNormalCompletion129 = true;
+                var _didIteratorError129 = false;
+                var _iteratorError129 = undefined;
 
                 try {
-                  for (var _iterator139 = _node2.transitionLogic.transitions[Symbol.iterator](), _step139; !(_iteratorNormalCompletion139 = (_step139 = _iterator139.next()).done); _iteratorNormalCompletion139 = true) {
-                    var _transition5 = _step139.value;
+                  for (var _iterator129 = _node2.transitionLogic.transitions[Symbol.iterator](), _step129; !(_iteratorNormalCompletion129 = (_step129 = _iterator129.next()).done); _iteratorNormalCompletion129 = true) {
+                    var _transition5 = _step129.value;
 
                     if (_transition5 != null) {
                       /*
@@ -10153,16 +8736,16 @@ var ProjectService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError139 = true;
-                  _iteratorError139 = err;
+                  _didIteratorError129 = true;
+                  _iteratorError129 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion139 && _iterator139.return) {
-                      _iterator139.return();
+                    if (!_iteratorNormalCompletion129 && _iterator129.return) {
+                      _iterator129.return();
                     }
                   } finally {
-                    if (_didIteratorError139) {
-                      throw _iteratorError139;
+                    if (_didIteratorError129) {
+                      throw _iteratorError129;
                     }
                   }
                 }
@@ -10172,11 +8755,6 @@ var ProjectService = function () {
         }
       }
     }
-
-    /**
-     * Get script for this project
-     */
-
   }, {
     key: 'getProjectScript',
     value: function getProjectScript() {
@@ -10184,7 +8762,7 @@ var ProjectService = function () {
     }
 
     /**
-     * Get the next node
+     * Get the next node after the specified node
      * @param nodeId get the node id that comes after this one
      * @return the node id that comes after
      */
@@ -10256,29 +8834,29 @@ var ProjectService = function () {
         if (achievements != null) {
           var achievementItems = achievements.items;
           if (achievementItems != null) {
-            var _iteratorNormalCompletion140 = true;
-            var _didIteratorError140 = false;
-            var _iteratorError140 = undefined;
+            var _iteratorNormalCompletion130 = true;
+            var _didIteratorError130 = false;
+            var _iteratorError130 = undefined;
 
             try {
-              for (var _iterator140 = achievementItems[Symbol.iterator](), _step140; !(_iteratorNormalCompletion140 = (_step140 = _iterator140.next()).done); _iteratorNormalCompletion140 = true) {
-                var achievement = _step140.value;
+              for (var _iterator130 = achievementItems[Symbol.iterator](), _step130; !(_iteratorNormalCompletion130 = (_step130 = _iterator130.next()).done); _iteratorNormalCompletion130 = true) {
+                var achievement = _step130.value;
 
                 if (achievement != null && achievement.id == achievementId) {
                   return achievement;
                 }
               }
             } catch (err) {
-              _didIteratorError140 = true;
-              _iteratorError140 = err;
+              _didIteratorError130 = true;
+              _iteratorError130 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion140 && _iterator140.return) {
-                  _iterator140.return();
+                if (!_iteratorNormalCompletion130 && _iterator130.return) {
+                  _iterator130.return();
                 }
               } finally {
-                if (_didIteratorError140) {
-                  throw _iteratorError140;
+                if (_didIteratorError130) {
+                  throw _iteratorError130;
                 }
               }
             }
@@ -10297,48 +8875,48 @@ var ProjectService = function () {
   }, {
     key: 'getNumberOfRubricsByNodeId',
     value: function getNumberOfRubricsByNodeId(nodeId) {
-      var n = 0;
+      var numRubrics = 0;
       var nodeContent = this.getNodeContentByNodeId(nodeId);
       if (nodeContent) {
         var nodeRubric = nodeContent.rubric;
         if (nodeRubric != null && nodeRubric != '') {
-          n++;
+          numRubrics++;
         }
 
         var components = nodeContent.components;
         if (components && components.length) {
-          var _iteratorNormalCompletion141 = true;
-          var _didIteratorError141 = false;
-          var _iteratorError141 = undefined;
+          var _iteratorNormalCompletion131 = true;
+          var _didIteratorError131 = false;
+          var _iteratorError131 = undefined;
 
           try {
-            for (var _iterator141 = components[Symbol.iterator](), _step141; !(_iteratorNormalCompletion141 = (_step141 = _iterator141.next()).done); _iteratorNormalCompletion141 = true) {
-              var component = _step141.value;
+            for (var _iterator131 = components[Symbol.iterator](), _step131; !(_iteratorNormalCompletion131 = (_step131 = _iterator131.next()).done); _iteratorNormalCompletion131 = true) {
+              var component = _step131.value;
 
               if (component) {
                 var componentRubric = component.rubric;
                 if (componentRubric != null && componentRubric != '') {
-                  n++;
+                  numRubrics++;
                 }
               }
             }
           } catch (err) {
-            _didIteratorError141 = true;
-            _iteratorError141 = err;
+            _didIteratorError131 = true;
+            _iteratorError131 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion141 && _iterator141.return) {
-                _iterator141.return();
+              if (!_iteratorNormalCompletion131 && _iterator131.return) {
+                _iterator131.return();
               }
             } finally {
-              if (_didIteratorError141) {
-                throw _iteratorError141;
+              if (_didIteratorError131) {
+                throw _iteratorError131;
               }
             }
           }
         }
       }
-      return n;
+      return numRubrics;
     }
 
     /**
@@ -10349,8 +8927,8 @@ var ProjectService = function () {
      */
 
   }, {
-    key: 'setIsNodeAffectedByConstraintResult',
-    value: function setIsNodeAffectedByConstraintResult(nodeId, constraintId, result) {
+    key: 'cacheIsNodeAffectedByConstraintResult',
+    value: function cacheIsNodeAffectedByConstraintResult(nodeId, constraintId, result) {
       this.isNodeAffectedByConstraintResult[nodeId + '-' + constraintId] = result;
     }
 
@@ -10360,12 +8938,12 @@ var ProjectService = function () {
      * @param nodeId the node id
      * @param constraintId the constraint id
      * @return Return the result if we have calculated the result before. If we
-     * have not calculated the result before, we will return null.
+     * have not calculated the result before, we will return null
      */
 
   }, {
-    key: 'getIsNodeAffectedByConstraintResult',
-    value: function getIsNodeAffectedByConstraintResult(nodeId, constraintId) {
+    key: 'getCachedIsNodeAffectedByConstraintResult',
+    value: function getCachedIsNodeAffectedByConstraintResult(nodeId, constraintId) {
       return this.isNodeAffectedByConstraintResult[nodeId + '-' + constraintId];
     }
 
@@ -10419,29 +8997,29 @@ var ProjectService = function () {
     key: 'isSpaceExists',
     value: function isSpaceExists(id) {
       var spaces = this.getSpaces();
-      var _iteratorNormalCompletion142 = true;
-      var _didIteratorError142 = false;
-      var _iteratorError142 = undefined;
+      var _iteratorNormalCompletion132 = true;
+      var _didIteratorError132 = false;
+      var _iteratorError132 = undefined;
 
       try {
-        for (var _iterator142 = spaces[Symbol.iterator](), _step142; !(_iteratorNormalCompletion142 = (_step142 = _iterator142.next()).done); _iteratorNormalCompletion142 = true) {
-          var space = _step142.value;
+        for (var _iterator132 = spaces[Symbol.iterator](), _step132; !(_iteratorNormalCompletion132 = (_step132 = _iterator132.next()).done); _iteratorNormalCompletion132 = true) {
+          var space = _step132.value;
 
           if (space.id === id) {
             return true;
           }
         }
       } catch (err) {
-        _didIteratorError142 = true;
-        _iteratorError142 = err;
+        _didIteratorError132 = true;
+        _iteratorError132 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion142 && _iterator142.return) {
-            _iterator142.return();
+          if (!_iteratorNormalCompletion132 && _iterator132.return) {
+            _iterator132.return();
           }
         } finally {
-          if (_didIteratorError142) {
-            throw _iteratorError142;
+          if (_didIteratorError132) {
+            throw _iteratorError132;
           }
         }
       }

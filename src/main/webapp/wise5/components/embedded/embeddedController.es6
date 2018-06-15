@@ -1,9 +1,11 @@
-import iframeResizer from 'iframe-resizer';
-import html2canvas from 'html2canvas';
+'use strict';
 
-class EmbeddedController {
+import ComponentController from "../componentController";
+import html2canvas from 'html2canvas';
+import iframeResizer from 'iframe-resizer';
+
+class EmbeddedController extends ComponentController {
   constructor($filter,
-      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -13,36 +15,22 @@ class EmbeddedController {
       $window,
       AnnotationService,
       ConfigService,
+      EmbeddedService,
       NodeService,
       NotebookService,
-      EmbeddedService,
       ProjectService,
+      StudentAssetService,
       StudentDataService,
       UtilService) {
-
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
+    super($filter, $mdDialog, $rootScope, $scope,
+        AnnotationService, ConfigService, NodeService,
+        NotebookService, ProjectService, StudentAssetService,
+        StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.$sce = $sce;
     this.$timeout = $timeout;
     this.$window = $window;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
     this.EmbeddedService = EmbeddedService;
-    this.ProjectService = ProjectService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-    this.idToOrder = this.ProjectService.idToOrder;
-    this.$translate = this.$filter('translate');
-    this.nodeId = null;
-    this.componentId = null;
-    this.componentContent = null;
-    this.authoringComponentContent = null;
     this.componentType = null;
     this.url = null;
 
@@ -58,23 +46,11 @@ class EmbeddedController {
     // the max height of the iframe
     this.maxHeight = null;
 
-    this.isDirty = false;
-    this.isSubmitDirty = false;
-    this.isSnipModelButtonVisible = true;
     this.notebookConfig = this.NotebookService.getNotebookConfig();
-
-    this.saveMessage = {
-      text: '',
-      time: ''
-    };
 
     this.latestAnnotations = null;
     this.componentStateId = null;
     this.embeddedApplicationIFrameId = '';
-    this.isSaveButtonVisible = false;
-    this.isSubmitButtonVisible = false;
-    this.showAdvancedAuthoring = false;
-    this.showJSONAuthoring = false;
 
     this.connectedComponentUpdateOnOptions = [
       {
@@ -102,112 +78,95 @@ class EmbeddedController {
       { type: 'Table' }
     ];
 
-    this.nodeId = this.$scope.nodeId;
-
-    this.componentContent = this.$scope.componentContent;
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
-
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
     this.originalComponentContent = this.$scope.originalComponentContent;
 
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    this.mode = this.$scope.mode;
 
-    this.workgroupId = this.$scope.workgroupId;
-    this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
+    this.embeddedApplicationIFrameId = 'componentApp_' + this.componentId;
+    this.componentType = this.componentContent.type;
 
-    if (this.componentContent != null) {
-      this.componentId = this.componentContent.id;
-      this.embeddedApplicationIFrameId = 'componentApp_' + this.componentId;
-      this.componentType = this.componentContent.type;
+    if (this.mode === 'student') {
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+    } else if (this.mode === 'authoring') {
+      this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+      this.summernoteRubricHTML = this.componentContent.rubric;
 
-      if (this.mode === 'student') {
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = this.$translate('INSERT_ASSET');
+
+      // create the custom button for inserting WISE assets into summernote
+      var InsertAssetButton = this.UtilService
+        .createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+
+      this.summernoteRubricOptions = {
+        toolbar: [
+          ['style', ['style']],
+          ['font', ['bold', 'underline', 'clear']],
+          ['fontname', ['fontname']],
+          ['fontsize', ['fontsize']],
+          ['color', ['color']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['table', ['table']],
+          ['insert', ['link', 'video']],
+          ['view', ['fullscreen', 'codeview', 'help']],
+          ['customButton', ['insertAssetButton']]
+        ],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
+        }
+      };
+
+      this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function() {
+        return this.authoringComponentContent;
+      }.bind(this), function(newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
         this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-        this.isSnipModelButtonVisible = true;
-      } else if (this.mode === 'authoring') {
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-        this.summernoteRubricHTML = this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
-
-        // create the custom button for inserting WISE assets into summernote
-        var InsertAssetButton = this.UtilService
-            .createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
-
-        this.summernoteRubricOptions = {
-          toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']],
-            ['customButton', ['insertAssetButton']]
-          ],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function() {
-          return this.authoringComponentContent;
-        }.bind(this), function(newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-          this.width = this.componentContent.width ? this.componentContent.width : '100%';
-          this.height = this.componentContent.height ? this.componentContent.height : '100%';
-          this.setURL(this.componentContent.url);
-        }.bind(this), true);
-      } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isSnipModelButtonVisible = false;
-        let componentState = this.$scope.componentState;
-        if (componentState != null) {
-          // create a unique id for the application iframe using this component state
-          this.embeddedApplicationIFrameId = 'componentApp_' + componentState.id;
-          if (this.mode === 'gradingRevision') {
-            this.embeddedApplicationIFrameId = 'componentApp_gradingRevision_' + componentState.id;
-          }
-        }
-
-        if (this.mode === 'grading') {
-          this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-        }
-      } else if (this.mode === 'onlyShowWork') {
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isSnipModelButtonVisible = false;
-      } else if (this.mode === 'showPreviousWork') {
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isSnipModelButtonVisible = false;
-      }
-
-      if (this.componentContent != null) {
+        this.width = this.componentContent.width ? this.componentContent.width : '100%';
+        this.height = this.componentContent.height ? this.componentContent.height : '100%';
         this.setURL(this.componentContent.url);
+      }.bind(this), true);
+    } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      let componentState = this.$scope.componentState;
+      if (componentState != null) {
+        // create a unique id for the application iframe using this component state
+        this.embeddedApplicationIFrameId = 'componentApp_' + componentState.id;
+        if (this.mode === 'gradingRevision') {
+          this.embeddedApplicationIFrameId = 'componentApp_gradingRevision_' + componentState.id;
+        }
       }
 
-      this.width = this.componentContent.width ? this.componentContent.width : '100%';
-      this.height = this.componentContent.height ? this.componentContent.height : '100%';
-
-      if (this.$scope.$parent.nodeController != null) {
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+      if (this.mode === 'grading') {
+        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
       }
+    } else if (this.mode === 'onlyShowWork') {
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+    } else if (this.mode === 'showPreviousWork') {
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+    }
+
+    if (this.componentContent != null) {
+      this.setURL(this.componentContent.url);
+    }
+
+    this.width = this.componentContent.width ? this.componentContent.width : '100%';
+    this.height = this.componentContent.height ? this.componentContent.height : '100%';
+
+    if (this.$scope.$parent.nodeController != null) {
+      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
     }
 
     /**
@@ -225,46 +184,6 @@ class EmbeddedController {
       message.componentState = componentState;
       this.sendMessageToApplication(message);
     }
-
-    this.$scope.$on('nodeSubmitClicked', (event, args) => {
-      var nodeId = args.nodeId;
-      if (this.nodeId === nodeId) {
-        this.isSubmit = true;
-      }
-    });
-
-    this.$scope.$on('studentWorkSavedToServer', (event, args) => {
-      var componentState = args.studentWork;
-      if (componentState != null) {
-        if (componentState.componentId === this.componentId) {
-          // set isDirty to false because the component state was just saved and notify node
-          this.isDirty = false;
-          this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: false});
-          this.$scope.embeddedController.componentState = null;
-
-          let isAutoSave = componentState.isAutoSave;
-          let isSubmit = componentState.isSubmit;
-          let serverSaveTime = componentState.serverSaveTime;
-          let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-          if (isSubmit) {
-            this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
-            this.submit();
-            this.isSubmitDirty = false;
-            this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-          } else if (isAutoSave) {
-            this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
-          } else {
-            this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
-          }
-
-          var message = {};
-          message.messageType = 'componentStateSaved';
-          message.componentState = componentState;
-          this.sendMessageToApplication(message);
-        }
-      }
-    });
 
     /**
      * Get the component state from this component. The parent node will
@@ -306,26 +225,6 @@ class EmbeddedController {
 
       return deferred.promise;
     }.bind(this);
-
-    /**
-     * Listen for the 'annotationSavedToServer' event which is fired when
-     * we receive the response from saving an annotation to the server
-     */
-    this.$scope.$on('annotationSavedToServer', (event, args) => {
-      if (args != null ) {
-        var annotation = args.annotation;
-        if (annotation != null) {
-          var annotationNodeId = annotation.nodeId;
-          var annotationComponentId = annotation.componentId;
-          if (this.nodeId === annotationNodeId &&
-            this.componentId === annotationComponentId) {
-            this.latestAnnotations = this.AnnotationService
-                .getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-          }
-        }
-      }
-    });
-
 
     /**
      * Listen for the 'exitNode' event which is fired when the student
@@ -513,6 +412,41 @@ class EmbeddedController {
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
+  registerStudentWorkSavedToServerListener() {
+    this.$scope.$on('studentWorkSavedToServer', (event, args) => {
+      var componentState = args.studentWork;
+      if (componentState != null) {
+        if (componentState.componentId === this.componentId) {
+          // set isDirty to false because the component state was just saved and notify node
+          this.isDirty = false;
+          this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: false});
+          this.$scope.embeddedController.componentState = null;
+
+          let isAutoSave = componentState.isAutoSave;
+          let isSubmit = componentState.isSubmit;
+          let serverSaveTime = componentState.serverSaveTime;
+          let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+
+          if (isSubmit) {
+            this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
+            this.submit();
+            this.isSubmitDirty = false;
+            this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
+          } else if (isAutoSave) {
+            this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
+          } else {
+            this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
+          }
+
+          var message = {};
+          message.messageType = 'componentStateSaved';
+          message.componentState = componentState;
+          this.sendMessageToApplication(message);
+        }
+      }
+    });
+  }
+
   iframeLoaded(contentLocation) {
     window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.addEventListener('message', this.messageEventListener);
   }
@@ -547,36 +481,6 @@ class EmbeddedController {
     if (this.isLockAfterSubmit()) {
       this.isDisabled = true;
     }
-  };
-
-  /**
-   * Called when the student changes their work
-   */
-  studentDataChanged() {
-    /*
-     * set the dirty flags so we will know we need to save or submit the
-     * student work later
-     */
-    this.isDirty = true;
-    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: true});
-
-    this.isSubmitDirty = true;
-    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-
-    this.setSaveMessage('', null);
-    var componentId = this.getComponentId();
-
-    /*
-     * the student work in this component has changed so we will tell
-     * the parent node that the student data will need to be saved.
-     * this will also notify connected parts that this component's student
-     * data has changed.
-     */
-    var action = 'change';
-
-    this.createComponentState(action).then((componentState) => {
-      this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
-    });
   };
 
   /**
@@ -615,24 +519,6 @@ class EmbeddedController {
     return deferred.promise;
   };
 
-  /**
-   * Perform any additional processing that is required before returning the
-   * component state
-   * Note: this function must call deferred.resolve() otherwise student work
-   * will not be saved
-   * @param deferred a deferred object
-   * @param componentState the component state
-   * @param action the action that we are creating the component state for
-   * e.g. 'submit', 'save', 'change'
-   */
-  createComponentStateAdditionalProcessing(deferred, componentState, action) {
-    /*
-     * we don't need to perform any additional processing so we can resolve
-     * the promise immediately
-     */
-    deferred.resolve(componentState);
-  }
-
   sendLatestWorkToApplication() {
     let componentState = this.$scope.componentState;
     if (this.UtilService.hasConnectedComponent(this.componentContent)) {
@@ -648,24 +534,6 @@ class EmbeddedController {
 
   sendMessageToApplication(message) {
     window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.postMessage(message, '*');
-  };
-
-  /**
-   * Set the message next to the save button
-   * @param message the message to display
-   * @param time the time to display
-   */
-  setSaveMessage(message, time) {
-    this.saveMessage.text = message;
-    this.saveMessage.time = time;
-  };
-
-  /**
-   * Get the component id
-   * @return the component id
-   */
-  getComponentId() {
-    return this.componentContent.id;
   };
 
   /**
@@ -736,15 +604,6 @@ class EmbeddedController {
   }
 
   /**
-   * Check whether we need to show the snip model button
-   * @return whether to show the snip model button
-   */
-  showSnipModelButton() {
-    return this.NotebookService.isNotebookEnabled() &&
-        this.isSnipModelButtonVisible;
-  }
-
-  /**
    * Register the the listener that will listen for the exit event
    * so that we can perform saving before exiting.
    */
@@ -758,47 +617,10 @@ class EmbeddedController {
     }));
   };
 
-  /**
-   * Check if a node is a step node
-   * @param nodeId the node id to check
-   * @returns whether the node is an application node
-   */
-  isApplicationNode(nodeId) {
-    return this.ProjectService.isApplicationNode(nodeId);
-  }
-
-  getNodePositionAndTitleByNodeId(nodeId) {
-    return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-  }
-
-  getComponentsByNodeId(nodeId) {
-    return this.ProjectService.getComponentsByNodeId(nodeId);
-  }
-
-  componentHasWork(component) {
-    if (component != null) {
-      return this.ProjectService.componentHasWork(component);
-    }
-    return true;
-  }
-
-  isLockAfterSubmit() {
-    if (this.componentContent != null) {
-      if (this.componentContent.lockAfterSubmit) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  saveButtonClicked() {
-    this.isSubmit = false;
-    this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-  };
-
-  submitButtonClicked() {
+  submit(submitTriggeredBy) {
     this.isSubmit = true;
-    this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+    this.$scope.$emit('componentSubmitTriggered',
+        {nodeId: this.nodeId, componentId: this.componentId});
   };
 
   getLatestStudentWork() {
@@ -1281,7 +1103,6 @@ class EmbeddedController {
 
 EmbeddedController.$inject = [
   '$filter',
-  '$injector',
   '$mdDialog',
   '$q',
   '$rootScope',
@@ -1291,10 +1112,11 @@ EmbeddedController.$inject = [
   '$window',
   'AnnotationService',
   'ConfigService',
+  'EmbeddedService',
   'NodeService',
   'NotebookService',
-  'EmbeddedService',
   'ProjectService',
+  'StudentAssetService',
   'StudentDataService',
   'UtilService'
 ];

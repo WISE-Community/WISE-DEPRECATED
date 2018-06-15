@@ -107,7 +107,7 @@ class NotebookService {
   }
 
   // looks up notebook item by local notebook item id, including deleted notes
-  getLatestNotebookItemByLocalNotebookItemId(itemId, workgroupId = null) {
+  getLatestNotebookItemByLocalNotebookItemId(itemId, workgroupId = this.ConfigService.getWorkgroupId()) {
     if (this.getNotebookByWorkgroup(workgroupId).items.hasOwnProperty(itemId)) {
       const items = this.getNotebookByWorkgroup(workgroupId).items[itemId];
       return items.last();
@@ -120,7 +120,7 @@ class NotebookService {
   }
 
   // returns student's report item if they've done work, or the template if they haven't
-  getLatestNotebookReportItemByReportId(reportId, workgroupId = null) {
+  getLatestNotebookReportItemByReportId(reportId, workgroupId = this.ConfigService.getWorkgroupId()) {
     return this.getLatestNotebookItemByLocalNotebookItemId(reportId, workgroupId);
   }
 
@@ -177,8 +177,8 @@ class NotebookService {
   }
 
   isNotebookEnabled() {
-    return this.config.enabled;
-  };
+    return this.ProjectService.project.notebook != null && this.ProjectService.project.notebook.enabled;
+  }
 
   retrieveNotebookItems(workgroupId = null, periodId = null) {
     if (this.ConfigService.isPreview()) {
@@ -298,6 +298,17 @@ class NotebookService {
     }
   }
 
+  getPrivateNotebookItems(workgroupId = this.ConfigService.getWorkgroupId()) {
+    const notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
+    const privateNotebookItems = [];
+    for (let notebookItem of notebookByWorkgroup.allItems) {
+      if (notebookItem.groups == null || notebookItem.groups.length == 0) {
+        privateNotebookItems.push(notebookItem);
+      }
+    }
+    return privateNotebookItems;
+  }
+
   getNotebookItemById(notebookItemId, workgroupId = null) {
     let notebookItem = this.getPrivateNotebookItemById(notebookItemId, workgroupId);
     if (notebookItem == null) {
@@ -329,10 +340,7 @@ class NotebookService {
     return null;
   }
 
-  getNotebookByWorkgroup(workgroupId = null) {
-    if (workgroupId == null) {
-      workgroupId = this.ConfigService.getWorkgroupId();
-    }
+  getNotebookByWorkgroup(workgroupId = this.ConfigService.getWorkgroupId()) {
     let notebookByWorkgroup = this.notebooksByWorkgroup[workgroupId];
     if (notebookByWorkgroup == null) {
       notebookByWorkgroup = {
@@ -393,7 +401,7 @@ class NotebookService {
           title: title,
           type: type,
           workgroupId: this.ConfigService.getWorkgroupId(),
-          groups: angular.toJson(groups),
+          groups: groups,
           clientSaveTime: clientSaveTime,
           clientDeleteTime: clientDeleteTime
         };

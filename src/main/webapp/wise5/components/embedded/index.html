@@ -34,6 +34,14 @@
           </md-checkbox>
         </div>
         <div>
+          <md-checkbox class='md-primary'
+              ng-if='embeddedController.isNotebookEnabled()'
+              ng-model='embeddedController.authoringComponentContent.showAddToNotebookButton'
+              ng-change='embeddedController.authoringViewComponentChanged()'>
+            {{ 'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
+          </md-checkbox>
+        </div>
+        <div>
           <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
                     ng-if='embeddedController.authoringComponentContent.showSubmitButton'>
             <label>{{ 'MAX_SUBMIT' | translate }}</label>
@@ -264,7 +272,7 @@
           <div style='text-align: center'>
             <md-button class='md-accent md-primary'
                   ng-click='embeddedController.snipModel($event)'
-                  ng-if='embeddedController.showSnipModelButton()'>
+                  ng-if='embeddedController.isAddToNotebookEnabled()'>
               <md-icon> note_add </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:embeddedController.notebookConfig.label} }}
             </md-button>
             <br/>

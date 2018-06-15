@@ -58,6 +58,14 @@
           </md-checkbox>
         </div>
         <div>
+          <md-checkbox class='md-primary'
+              ng-if='graphController.isNotebookEnabled()'
+              ng-model='graphController.authoringComponentContent.showAddToNotebookButton'
+              ng-change='graphController.authoringViewComponentChanged()'>
+            {{ 'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
+          </md-checkbox>
+        </div>
+        <div>
           <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
                     ng-if='graphController.authoringComponentContent.showSubmitButton'>
             <label>{{ 'MAX_SUBMIT' | translate }}</label>
@@ -788,7 +796,7 @@
             </md-button>
             <md-button class='md-accent md-primary'
                 ng-click='graphController.snipDrawing($event)'
-                ng-if='graphController.showSnipDrawingButton()'>
+                ng-if='graphController.isAddToNotebookEnabled()'>
               <md-icon> note_add </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:graphController.notebookConfig.label} }}
             </md-button>
             <md-button class='md-accent' ng-if='graphController.isStudentAttachmentEnabled'

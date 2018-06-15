@@ -473,7 +473,7 @@ class NodeAuthoringController {
         this.node.showSubmitButton = false;
 
         // turn on the save buttons for all components in this step
-        this.ProjectService.turnOnSaveButtonInComponents(this.node.id);
+        this.ProjectService.turnOnSaveButtonForAllComponents(this.node);
       } else {
         /*
          * a component is hiding their submit button so we may need
@@ -487,7 +487,7 @@ class NodeAuthoringController {
            */
 
           // turn on the save buttons for all components in this step
-          this.ProjectService.turnOnSaveButtonInComponents(this.node.id);
+          this.ProjectService.turnOnSaveButtonForAllComponents(this.node);
         } else {
           /*
            * no components in this step show their submit button so we
@@ -497,7 +497,7 @@ class NodeAuthoringController {
           this.node.showSubmitButton = false;
 
           // turn off the save buttons for all the components
-          this.ProjectService.turnOffSaveButtonInComponents(this.node.id);
+          this.ProjectService.turnOffSaveButtonForAllComponents(this.node);
         }
       }
 
@@ -2194,9 +2194,7 @@ class NodeAuthoringController {
     let node = this.ProjectService.getNodeById(nodeId);
 
     if (node != null) {
-
-      // remove all branch path taken constraints from the node
-      this.ProjectService.removeBranchPathTakenNodeConstraints(nodeId);
+      this.ProjectService.removeBranchPathTakenNodeConstraintsIfAny(nodeId);
 
       if (item.checked) {
         // the item was checked so we will add the branch path taken constraints to it
@@ -2225,9 +2223,7 @@ class NodeAuthoringController {
      */
     for (let item of checkedItemsInBranchPath) {
       let itemNodeId = item.$key;
-
-      // remove all branch path taken constraints from the node
-      this.ProjectService.removeBranchPathTakenNodeConstraints(itemNodeId);
+      this.ProjectService.removeBranchPathTakenNodeConstraintsIfAny(itemNodeId);
 
       /*
        * the branch path taken constraints will be from this node to
@@ -2452,9 +2448,7 @@ class NodeAuthoringController {
           if (checkedItem != null) {
             // get the node id of the checked item
             let nodeId = checkedItem.$key;
-
-            // remove the branchPathTaken constraints from the step
-            this.ProjectService.removeBranchPathTakenNodeConstraints(nodeId);
+            this.ProjectService.removeBranchPathTakenNodeConstraintsIfAny(nodeId);
 
             /*
              * update the transition of the step to point to the next step

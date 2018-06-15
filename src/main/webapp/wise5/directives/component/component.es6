@@ -77,11 +77,17 @@ class ComponentController {
             $scope.authoringComponentContent = authoringComponentContent;
             $scope.authoringComponentContentJSONString = angular.toJson($scope.authoringComponentContent, 4);
             $scope.nodeAuthoringController = $scope.$parent.nodeAuthoringController;
+
+        }
+
+        if ($scope.mode === 'authoring' && componentContent.type == 'HTML') {
+            $scope.componentTemplatePath = this.NodeService.getComponentAuthoringTemplatePath(componentContent.type);
+        } else {
+            $scope.componentTemplatePath = this.NodeService.getComponentTemplatePath(componentContent.type);
         }
 
         $scope.componentContent = componentContent;
         $scope.componentState = this.componentState;
-        $scope.componentTemplatePath = this.NodeService.getComponentTemplatePath(componentContent.type);
         $scope.nodeId = this.nodeId;
         $scope.workgroupId = this.workgroupId;
         $scope.teacherWorkgroupId = this.teacherWorkgroupId;

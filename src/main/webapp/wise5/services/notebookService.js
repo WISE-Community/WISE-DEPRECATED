@@ -131,7 +131,7 @@ var NotebookService = function () {
   }, {
     key: "getLatestNotebookItemByLocalNotebookItemId",
     value: function getLatestNotebookItemByLocalNotebookItemId(itemId) {
-      var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.ConfigService.getWorkgroupId();
 
       if (this.getNotebookByWorkgroup(workgroupId).items.hasOwnProperty(itemId)) {
         var items = this.getNotebookByWorkgroup(workgroupId).items[itemId];
@@ -149,7 +149,7 @@ var NotebookService = function () {
   }, {
     key: "getLatestNotebookReportItemByReportId",
     value: function getLatestNotebookReportItemByReportId(reportId) {
-      var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.ConfigService.getWorkgroupId();
 
       return this.getLatestNotebookItemByLocalNotebookItemId(reportId, workgroupId);
     }
@@ -260,7 +260,7 @@ var NotebookService = function () {
   }, {
     key: "isNotebookEnabled",
     value: function isNotebookEnabled() {
-      return this.config.enabled;
+      return this.ProjectService.project.notebook != null && this.ProjectService.project.notebook.enabled;
     }
   }, {
     key: "retrieveNotebookItems",
@@ -438,30 +438,22 @@ var NotebookService = function () {
       }
     }
   }, {
-    key: "getNotebookItemById",
-    value: function getNotebookItemById(notebookItemId) {
-      var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    key: "getPrivateNotebookItems",
+    value: function getPrivateNotebookItems() {
+      var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.ConfigService.getWorkgroupId();
 
-      var notebookItem = this.getPrivateNotebookItemById(notebookItemId, workgroupId);
-      if (notebookItem == null) {
-        notebookItem = this.getPublicNotebookItemById(notebookItemId);
-      }
-      return notebookItem;
-    }
-  }, {
-    key: "getPublicNotebookItem",
-    value: function getPublicNotebookItem(group, localNotebookItemId, workgroupId) {
-      var publicNotebookItemsInGroup = this.publicNotebookItems[group];
+      var notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
+      var privateNotebookItems = [];
       var _iteratorNormalCompletion5 = true;
       var _didIteratorError5 = false;
       var _iteratorError5 = undefined;
 
       try {
-        for (var _iterator5 = publicNotebookItemsInGroup[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var publicNotebookItemInGroup = _step5.value;
+        for (var _iterator5 = notebookByWorkgroup.allItems[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var notebookItem = _step5.value;
 
-          if (publicNotebookItemInGroup.localNotebookItemId === localNotebookItemId && publicNotebookItemInGroup.workgroupId === workgroupId) {
-            return publicNotebookItemInGroup;
+          if (notebookItem.groups == null || notebookItem.groups.length == 0) {
+            privateNotebookItems.push(notebookItem);
           }
         }
       } catch (err) {
@@ -479,6 +471,50 @@ var NotebookService = function () {
         }
       }
 
+      return privateNotebookItems;
+    }
+  }, {
+    key: "getNotebookItemById",
+    value: function getNotebookItemById(notebookItemId) {
+      var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+      var notebookItem = this.getPrivateNotebookItemById(notebookItemId, workgroupId);
+      if (notebookItem == null) {
+        notebookItem = this.getPublicNotebookItemById(notebookItemId);
+      }
+      return notebookItem;
+    }
+  }, {
+    key: "getPublicNotebookItem",
+    value: function getPublicNotebookItem(group, localNotebookItemId, workgroupId) {
+      var publicNotebookItemsInGroup = this.publicNotebookItems[group];
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
+
+      try {
+        for (var _iterator6 = publicNotebookItemsInGroup[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var publicNotebookItemInGroup = _step6.value;
+
+          if (publicNotebookItemInGroup.localNotebookItemId === localNotebookItemId && publicNotebookItemInGroup.workgroupId === workgroupId) {
+            return publicNotebookItemInGroup;
+          }
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
+          }
+        }
+      }
+
       return null;
     }
   }, {
@@ -486,29 +522,29 @@ var NotebookService = function () {
     value: function getPublicNotebookItemById(id) {
       for (var group in this.publicNotebookItems) {
         var itemsInGroup = this.publicNotebookItems[group];
-        var _iteratorNormalCompletion6 = true;
-        var _didIteratorError6 = false;
-        var _iteratorError6 = undefined;
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
 
         try {
-          for (var _iterator6 = itemsInGroup[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-            var itemInGroup = _step6.value;
+          for (var _iterator7 = itemsInGroup[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var itemInGroup = _step7.value;
 
             if (id == itemInGroup.id) {
               return itemInGroup;
             }
           }
         } catch (err) {
-          _didIteratorError6 = true;
-          _iteratorError6 = err;
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-              _iterator6.return();
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
             }
           } finally {
-            if (_didIteratorError6) {
-              throw _iteratorError6;
+            if (_didIteratorError7) {
+              throw _iteratorError7;
             }
           }
         }
@@ -518,11 +554,8 @@ var NotebookService = function () {
   }, {
     key: "getNotebookByWorkgroup",
     value: function getNotebookByWorkgroup() {
-      var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.ConfigService.getWorkgroupId();
 
-      if (workgroupId == null) {
-        workgroupId = this.ConfigService.getWorkgroupId();
-      }
       var notebookByWorkgroup = this.notebooksByWorkgroup[workgroupId];
       if (notebookByWorkgroup == null) {
         notebookByWorkgroup = {
@@ -565,27 +598,27 @@ var NotebookService = function () {
         }
         return this.$http(config).then(function (response) {
           var publicNotebookItemsForGroup = response.data;
-          var _iteratorNormalCompletion7 = true;
-          var _didIteratorError7 = false;
-          var _iteratorError7 = undefined;
+          var _iteratorNormalCompletion8 = true;
+          var _didIteratorError8 = false;
+          var _iteratorError8 = undefined;
 
           try {
-            for (var _iterator7 = publicNotebookItemsForGroup[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-              var publicNotebookItemForGroup = _step7.value;
+            for (var _iterator8 = publicNotebookItemsForGroup[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+              var publicNotebookItemForGroup = _step8.value;
 
               publicNotebookItemForGroup.content = angular.fromJson(publicNotebookItemForGroup.content);
             }
           } catch (err) {
-            _didIteratorError7 = true;
-            _iteratorError7 = err;
+            _didIteratorError8 = true;
+            _iteratorError8 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                _iterator7.return();
+              if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                _iterator8.return();
               }
             } finally {
-              if (_didIteratorError7) {
-                throw _iteratorError7;
+              if (_didIteratorError8) {
+                throw _iteratorError8;
               }
             }
           }
@@ -616,7 +649,7 @@ var NotebookService = function () {
             title: title,
             type: type,
             workgroupId: _this3.ConfigService.getWorkgroupId(),
-            groups: angular.toJson(groups),
+            groups: groups,
             clientSaveTime: clientSaveTime,
             clientDeleteTime: clientDeleteTime
           };

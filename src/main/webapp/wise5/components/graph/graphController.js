@@ -8,6 +8,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _componentController = require('../componentController');
+
+var _componentController2 = _interopRequireDefault(_componentController);
+
 var _html2canvas = require('html2canvas');
 
 var _html2canvas2 = _interopRequireDefault(_html2canvas);
@@ -16,200 +20,129 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var GraphController = function () {
-  function GraphController($filter, $injector, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConfigService, GraphService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
-    var _this = this;
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var GraphController = function (_ComponentController) {
+  _inherits(GraphController, _ComponentController);
+
+  function GraphController($filter, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConfigService, GraphService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, GraphController);
 
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.$timeout = $timeout;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
-    this.GraphService = GraphService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
+    var _this = _possibleConstructorReturn(this, (GraphController.__proto__ || Object.getPrototypeOf(GraphController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
 
-    this.$translate = this.$filter('translate');
-
-    this.idToOrder = this.ProjectService.idToOrder;
-
-    // the node id of the current node
-    this.nodeId = null;
-
-    // the component id
-    this.componentId = null;
-
-    // field that will hold the component content
-    this.componentContent = null;
-
-    // field that will hold the authoring component content
-    this.authoringComponentContent = null;
-
-    // whether the component should be disabled
-    this.isDisabled = false;
-
-    // whether the student work is dirty and needs saving
-    this.isDirty = false;
-
-    // whether the student work has changed since last submit
-    this.isSubmitDirty = false;
-
-    // message to show next to save/submit buttons
-    this.saveMessage = {
-      text: '',
-      time: ''
-    };
+    _this.$q = $q;
+    _this.$timeout = $timeout;
+    _this.GraphService = GraphService;
 
     // the graph type
-    this.graphType = null;
+    _this.graphType = null;
 
     // holds all the series
-    this.series = [];
+    _this.series = [];
 
     // which color the series will be in
-    this.seriesColors = ['blue', 'red', 'green', 'orange', 'purple', 'black'];
+    _this.seriesColors = ['blue', 'red', 'green', 'orange', 'purple', 'black'];
 
     // series marker options
-    this.seriesMarkers = ['circle', 'square', 'diamond', 'triangle', 'triangle-down', 'circle'];
-
-    // whether this part is showing previous work
-    this.isShowPreviousWork = false;
-
-    // whether the student work is for a submit
-    this.isSubmit = false;
-
-    // whether students can attach files to their work
-    this.isStudentAttachmentEnabled = false;
+    _this.seriesMarkers = ['circle', 'square', 'diamond', 'triangle', 'triangle-down', 'circle'];
 
     // will hold the active series
-    this.activeSeries = null;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    this.mode = null;
-
-    // whether the prompt is shown or not
-    this.isPromptVisible = true;
-
-    // whether the save button is shown or not
-    this.isSaveButtonVisible = false;
-
-    // whether the submit button is shown or not
-    this.isSubmitButtonVisible = false;
-
-    // counter to keep track of the number of submits
-    this.submitCounter = 0;
-
-    // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
+    _this.activeSeries = null;
 
     // the latest annotations
-    this.latestAnnotations = null;
+    _this.latestAnnotations = null;
 
     // whether the reset graph button is shown or not
-    this.isResetGraphButtonVisible = false;
+    _this.isResetGraphButtonVisible = false;
 
     // whether the select series input is shown or not
-    this.isSelectSeriesVisible = false;
-
-    // whether the snip drawing button is shown or not
-    this.isSnipDrawingButtonVisible = true;
+    _this.isSelectSeriesVisible = false;
 
     // the label for the notebook in the project
-    this.notebookConfig = this.NotebookService.getNotebookConfig();
+    _this.notebookConfig = _this.NotebookService.getNotebookConfig();
 
     // whether to only show the new trial when a new trial is created
-    this.hideAllTrialsOnNewTrial = true;
+    _this.hideAllTrialsOnNewTrial = true;
 
     // whether to show the undo button
-    this.showUndoButton = false;
+    _this.showUndoButton = false;
 
-    this.legendEnabled = true;
+    _this.legendEnabled = true;
 
-    this.hasCustomLegendBeenSet = false;
+    _this.hasCustomLegendBeenSet = false;
 
-    this.showTrialSelect = true;
+    _this.showTrialSelect = true;
 
     // the id of the chart element
-    this.chartId = 'chart1';
+    _this.chartId = 'chart1';
 
     // the available graph types
-    this.availableGraphTypes = [{
+    _this.availableGraphTypes = [{
       value: 'line',
-      text: this.$translate('graph.linePlot')
+      text: _this.$translate('graph.linePlot')
     }, {
       value: 'column',
-      text: this.$translate('graph.columnPlot')
+      text: _this.$translate('graph.columnPlot')
     }, {
       value: 'scatter',
-      text: this.$translate('graph.scatterPlot')
+      text: _this.$translate('graph.scatterPlot')
     }];
 
     // the options for rounding data point values
-    this.availableRoundingOptions = [{
+    _this.availableRoundingOptions = [{
       value: null,
-      text: this.$translate('graph.noRounding')
+      text: _this.$translate('graph.noRounding')
     }, {
       value: 'integer',
-      text: this.$translate('graph.roundToInteger')
+      text: _this.$translate('graph.roundToInteger')
     }, {
       value: 'tenth',
-      text: this.$translate('graph.roundToTenth')
+      text: _this.$translate('graph.roundToTenth')
     }, {
       value: 'hundredth',
-      text: this.$translate('graph.roundToHundredth')
+      text: _this.$translate('graph.roundToHundredth')
     }];
 
     // the options for data point symbols
-    this.availableSymbols = [{
+    _this.availableSymbols = [{
       value: 'circle',
-      text: this.$translate('graph.circle')
+      text: _this.$translate('graph.circle')
     }, {
       value: 'square',
-      text: this.$translate('graph.square')
+      text: _this.$translate('graph.square')
     }, {
       value: 'triangle',
-      text: this.$translate('graph.triangle')
+      text: _this.$translate('graph.triangle')
     }, {
       value: 'triangle-down',
-      text: this.$translate('graph.triangleDown')
+      text: _this.$translate('graph.triangleDown')
     }, {
       value: 'diamond',
-      text: this.$translate('graph.diamond')
+      text: _this.$translate('graph.diamond')
     }];
 
     // the options for line types
-    this.availableLineTypes = [{
+    _this.availableLineTypes = [{
       value: 'Solid',
-      text: this.$translate('graph.solid')
+      text: _this.$translate('graph.solid')
     }, {
       value: 'Dash',
-      text: this.$translate('graph.dash')
+      text: _this.$translate('graph.dash')
     }, {
       value: 'Dot',
-      text: this.$translate('graph.dot')
+      text: _this.$translate('graph.dot')
     }, {
       value: 'ShortDash',
-      text: this.$translate('graph.shortDash')
+      text: _this.$translate('graph.shortDash')
     }, {
       value: 'ShortDot',
-      text: this.$translate('graph.shortDot')
+      text: _this.$translate('graph.shortDot')
     }];
 
     // the options for the x axis types
-    this.availableXAxisTypes = [{
+    _this.availableXAxisTypes = [{
       value: 'limits',
       text: 'Limits'
     }, {
@@ -218,290 +151,267 @@ var GraphController = function () {
     }];
 
     // the width of the graph
-    this.width = null;
+    _this.width = null;
 
     // the height of the graph
-    this.height = null;
+    _this.height = null;
 
     // the options for when to update this component from a connected component
-    this.connectedComponentUpdateOnOptions = [{
+    _this.connectedComponentUpdateOnOptions = [{
       value: 'change',
-      text: this.$translate('change')
+      text: _this.$translate('change')
     }, {
       value: 'save',
-      text: this.$translate('SAVE')
+      text: _this.$translate('SAVE')
     }, {
       value: 'submit',
-      text: this.$translate('SUBMIT')
+      text: _this.$translate('SUBMIT')
     }];
 
     // the component types we are allowed to connect to
-    this.allowedConnectedComponentTypes = [{ type: 'Animation' }, { type: 'ConceptMap' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Table' }];
-
-    this.nodeId = this.$scope.nodeId;
-
-    // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
-
-    // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
+    _this.allowedConnectedComponentTypes = [{ type: 'Animation' }, { type: 'ConceptMap' }, { type: 'Draw' }, { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Table' }];
 
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
-    this.originalComponentContent = this.$scope.originalComponentContent;
+    _this.originalComponentContent = _this.$scope.originalComponentContent;
 
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    this.mode = this.$scope.mode;
+    _this.trials = [];
+    _this.activeTrial = null;
+    _this.trialIdsToShow = [];
+    _this.selectedTrialsText = '';
 
-    this.workgroupId = this.$scope.workgroupId;
-    this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
+    _this.studentDataVersion = 2;
 
-    this.trials = [];
-    this.activeTrial = null;
-    this.trialIdsToShow = [];
-    this.selectedTrialsText = '';
+    _this.canCreateNewTrials = false;
+    _this.canDeleteTrials = false;
 
-    this.studentDataVersion = 2;
+    _this.uploadedFileName = null;
 
-    this.canCreateNewTrials = false;
-    this.canDeleteTrials = false;
-
-    this.uploadedFileName = null;
-
-    this.backgroundImage = null;
+    _this.backgroundImage = null;
 
     /*
      * An array to store the component states for the student to undo.
      * The undoStack will contain the component states from the current
      * visit except for the current component state.
      */
-    this.undoStack = [];
+    _this.undoStack = [];
 
     // used to hold the component state that is loaded when this component loads
-    this.initialComponentState = null;
+    _this.initialComponentState = null;
 
     /*
      * whether to add the next component state created in
      * studentDataChanged() to the undoStack
      */
-    this.addNextComponentStateToUndoStack = false;
+    _this.addNextComponentStateToUndoStack = false;
 
-    this.mouseOverPoints = [];
+    _this.mouseOverPoints = [];
 
-    if (this.componentContent != null) {
+    // set the chart id
+    _this.chartId = 'chart_' + _this.componentId;
 
-      // get the component id
-      this.componentId = this.componentContent.id;
+    // get the graph type
+    _this.graphType = _this.componentContent.graphType;
 
-      // set the chart id
-      this.chartId = 'chart_' + this.componentId;
+    if (_this.graphType == null) {
+      // there is no graph type so we will default to line plot
+      _this.graphType = 'line';
+    }
 
-      // get the graph type
-      this.graphType = this.componentContent.graphType;
+    if (_this.componentContent.canCreateNewTrials) {
+      _this.canCreateNewTrials = _this.componentContent.canCreateNewTrials;
+    }
 
-      if (this.graphType == null) {
-        // there is no graph type so we will default to line plot
-        this.graphType = 'line';
-      }
+    if (_this.componentContent.canDeleteTrials) {
+      _this.canDeleteTrials = _this.componentContent.canDeleteTrials;
+    }
 
-      if (this.componentContent.canCreateNewTrials) {
-        this.canCreateNewTrials = this.componentContent.canCreateNewTrials;
-      }
+    if (_this.componentContent.hideAllTrialsOnNewTrial === false) {
+      _this.hideAllTrialsOnNewTrial = false;
+    }
 
-      if (this.componentContent.canDeleteTrials) {
-        this.canDeleteTrials = this.componentContent.canDeleteTrials;
-      }
+    if (_this.mode === 'student') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+      _this.isResetSeriesButtonVisible = true;
+      _this.isSelectSeriesVisible = true;
 
-      if (this.componentContent.hideAllTrialsOnNewTrial === false) {
-        this.hideAllTrialsOnNewTrial = false;
-      }
-
-      if (this.mode === 'student') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        this.isResetSeriesButtonVisible = true;
-        this.isSelectSeriesVisible = true;
-
-        // get the latest annotations
-        // TODO: watch for new annotations and update accordingly
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-        this.backgroundImage = this.componentContent.backgroundImage;
-      } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        //this.isResetGraphButtonVisible = false;
-        this.isResetSeriesButtonVisible = false;
-        this.isSelectSeriesVisible = false;
-        this.isDisabled = true;
-        this.isSnipDrawingButtonVisible = false;
-
-        // get the component state from the scope
-        var _componentState = this.$scope.componentState;
-
-        if (_componentState != null) {
-          // create a unique id for the chart element using this component state
-          this.chartId = 'chart_' + _componentState.id;
-          if (this.mode === 'gradingRevision') {
-            this.chartId = 'chart_gradingRevision_' + _componentState.id;
-          }
-        }
-
-        if (this.mode === 'grading') {
-          // get the latest annotations
-          this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-        }
-      } else if (this.mode === 'onlyShowWork') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isResetGraphButtonVisible = false;
-        this.isResetSeriesButtonVisible = false;
-        this.isSelectSeriesVisible = false;
-        this.isDisabled = true;
-        this.isSnipDrawingButtonVisible = false;
-        this.backgroundImage = this.componentContent.backgroundImage;
-      } else if (this.mode === 'showPreviousWork') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-        this.backgroundImage = this.componentContent.backgroundImage;
-      } else if (this.mode === 'authoring') {
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        this.isResetSeriesButtonVisible = true;
-        this.isSelectSeriesVisible = true;
-
-        // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-
-        // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        this.backgroundImage = this.componentContent.backgroundImage;
-        this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return this.authoringComponentContent;
-        }.bind(this), function (newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-          this.series = null;
-          this.xAxis = null;
-          this.yAxis = null;
-          this.submitCounter = 0;
-          this.backgroundImage = this.componentContent.backgroundImage;
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-          this.graphType = this.componentContent.graphType;
-          this.isResetSeriesButtonVisible = true;
-          this.isSelectSeriesVisible = true;
-          this.legendEnabled = !this.componentContent.hideLegend;
-          this.showTrialSelect = !this.componentContent.hideTrialSelect;
-          this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
-          this.setDefaultActiveSeries();
-          this.trials = [];
-          this.newTrial();
-          this.clearPlotLines();
-          this.setupGraph();
-        }.bind(this), true);
-      }
+      // get the latest annotations
+      // TODO: watch for new annotations and update accordingly
+      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+      _this.backgroundImage = _this.componentContent.backgroundImage;
+    } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      //this.isResetGraphButtonVisible = false;
+      _this.isResetSeriesButtonVisible = false;
+      _this.isSelectSeriesVisible = false;
+      _this.isDisabled = true;
 
       // get the component state from the scope
-      var componentState = this.$scope.componentState;
+      var _componentState = _this.$scope.componentState;
 
-      // set whether studentAttachment is enabled
-      this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-      if (this.mode == 'student') {
-        if (!this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          this.newTrial();
+      if (_componentState != null) {
+        // create a unique id for the chart element using this component state
+        _this.chartId = 'chart_' + _componentState.id;
+        if (_this.mode === 'gradingRevision') {
+          _this.chartId = 'chart_gradingRevision_' + _componentState.id;
         }
-        if (this.UtilService.hasConnectedComponentAlwaysField(this.componentContent)) {
-          /*
-           * This component has a connected component that we always want to look at for
-           * merging student data.
-           */
-          this.handleConnectedComponents();
-        } else if (this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          // this student has previous work so we will load it
-          this.setStudentWork(componentState);
-        } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          /*
-           * This student doesn't have any previous work but this component has connected components
-           * so we will get the work from the connected component.
-           */
-          this.handleConnectedComponents();
+      }
+
+      if (_this.mode === 'grading') {
+        // get the latest annotations
+        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+      }
+    } else if (_this.mode === 'onlyShowWork') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isResetGraphButtonVisible = false;
+      _this.isResetSeriesButtonVisible = false;
+      _this.isSelectSeriesVisible = false;
+      _this.isDisabled = true;
+      _this.backgroundImage = _this.componentContent.backgroundImage;
+    } else if (_this.mode === 'showPreviousWork') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isDisabled = true;
+      _this.backgroundImage = _this.componentContent.backgroundImage;
+    } else if (_this.mode === 'authoring') {
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+      _this.isResetSeriesButtonVisible = true;
+      _this.isSelectSeriesVisible = true;
+
+      // generate the summernote rubric element id
+      _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+
+      // set the component rubric into the summernote rubric
+      _this.summernoteRubricHTML = _this.componentContent.rubric;
+
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = _this.$translate('INSERT_ASSET');
+
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
+
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      _this.summernoteRubricOptions = {
+        toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
         }
-      } else {
-        // populate the student work into this component
-        this.setStudentWork(componentState);
+      };
+
+      _this.backgroundImage = _this.componentContent.backgroundImage;
+      _this.updateAdvancedAuthoringView();
+
+      $scope.$watch(function () {
+        return this.authoringComponentContent;
+      }.bind(_this), function (newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+        this.series = null;
+        this.xAxis = null;
+        this.yAxis = null;
+        this.submitCounter = 0;
+        this.backgroundImage = this.componentContent.backgroundImage;
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+        this.graphType = this.componentContent.graphType;
+        this.isResetSeriesButtonVisible = true;
+        this.isSelectSeriesVisible = true;
+        this.legendEnabled = !this.componentContent.hideLegend;
+        this.showTrialSelect = !this.componentContent.hideTrialSelect;
+        this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
+        this.setDefaultActiveSeries();
+        this.trials = [];
+        this.newTrial();
+        this.clearPlotLines();
+        this.setupGraph();
+      }.bind(_this), true);
+    }
+
+    // get the component state from the scope
+    var componentState = _this.$scope.componentState;
+
+    // set whether studentAttachment is enabled
+    _this.isStudentAttachmentEnabled = _this.componentContent.isStudentAttachmentEnabled;
+
+    if (_this.mode == 'student') {
+      if (!_this.GraphService.componentStateHasStudentWork(componentState, _this.componentContent)) {
+        _this.newTrial();
       }
-
-      if (componentState != null) {
-        // there is an initial component state so we will remember it
-        this.initialComponentState = componentState;
-
+      if (_this.UtilService.hasConnectedComponentAlwaysField(_this.componentContent)) {
         /*
-         * remember this component state as the previous component
-         * state for undo purposes
+         * This component has a connected component that we always want to look at for
+         * merging student data.
          */
-        this.previousComponentState = componentState;
-      }
-
-      // check if the student has used up all of their submits
-      if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+        _this.handleConnectedComponents();
+      } else if (_this.GraphService.componentStateHasStudentWork(componentState, _this.componentContent)) {
+        // this student has previous work so we will load it
+        _this.setStudentWork(componentState);
+      } else if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
         /*
-         * the student has used up all of their chances to submit so we
-         * will disable the submit button
+         * This student doesn't have any previous work but this component has connected components
+         * so we will get the work from the connected component.
          */
-        this.isSubmitButtonDisabled = true;
+        _this.handleConnectedComponents();
       }
+    } else {
+      // populate the student work into this component
+      _this.setStudentWork(componentState);
+    }
 
-      if (this.componentContent.hideLegend) {
-        this.legendEnabled = false;
-      }
+    if (componentState != null) {
+      // there is an initial component state so we will remember it
+      _this.initialComponentState = componentState;
 
-      if (this.componentContent.hideTrialSelect) {
-        this.showTrialSelect = false;
-      }
+      /*
+       * remember this component state as the previous component
+       * state for undo purposes
+       */
+      _this.previousComponentState = componentState;
+    }
 
-      // check if we need to lock this component
-      this.calculateDisabled();
+    // check if the student has used up all of their submits
+    if (_this.componentContent.maxSubmitCount != null && _this.submitCounter >= _this.componentContent.maxSubmitCount) {
+      /*
+       * the student has used up all of their chances to submit so we
+       * will disable the submit button
+       */
+      _this.isSubmitButtonDisabled = true;
+    }
 
-      // setup the graph
-      this.setupGraph().then(function () {
-        _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
-      });
+    if (_this.componentContent.hideLegend) {
+      _this.legendEnabled = false;
+    }
 
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-      }
+    if (_this.componentContent.hideTrialSelect) {
+      _this.showTrialSelect = false;
+    }
+
+    _this.disableComponentIfNecessary();
+
+    // setup the graph
+    _this.setupGraph().then(function () {
+      _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
+    });
+
+    if (_this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
     }
 
     /**
@@ -512,7 +422,7 @@ var GraphController = function () {
      * @param componentState the student data from the connected
      * component that has changed
      */
-    this.$scope.handleConnectedComponentStudentDataChanged = function (connectedComponent, connectedComponentParams, componentState) {
+    _this.$scope.handleConnectedComponentStudentDataChanged = function (connectedComponent, connectedComponentParams, componentState) {
 
       if (connectedComponent != null && componentState != null) {
 
@@ -597,11 +507,6 @@ var GraphController = function () {
             componentState = this.UtilService.makeCopyOfJSONObject(componentState);
             var _studentData = componentState.studentData;
             this.processConnectedComponentStudentData(_studentData, connectedComponentParams);
-
-            /*
-             * notify the controller that the student data has
-             * changed so that it will perform any necessary saving
-             */
             this.studentDataChanged();
           }
         } else if (componentType == 'Animation') {
@@ -616,7 +521,7 @@ var GraphController = function () {
           }
         }
       }
-    }.bind(this);
+    }.bind(_this);
 
     /**
      * Get the component state from this component. The parent node will
@@ -626,7 +531,7 @@ var GraphController = function () {
      * action (optional; default is false)
      * @return a component state containing the student data
      */
-    this.$scope.getComponentState = function (isSubmit) {
+    _this.$scope.getComponentState = function (isSubmit) {
       var deferred = this.$q.defer();
       var getState = false;
       var action = 'change';
@@ -658,94 +563,13 @@ var GraphController = function () {
       }
 
       return deferred.promise;
-    }.bind(this);
-
-    /**
-     * The parent node submit button was clicked
-     */
-    this.$scope.$on('nodeSubmitClicked', angular.bind(this, function (event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-
-        // trigger the submit
-        var submitTriggeredBy = 'nodeSubmitButton';
-        this.submit(submitTriggeredBy);
-      }
-    }));
-
-    /**
-     * Listen for the 'studentWorkSavedToServer' event which is fired when
-     * we receive the response from saving a component state to the server
-     */
-    this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function (event, args) {
-
-      var componentState = args.studentWork;
-
-      // check that the component state is for this component
-      if (componentState && this.nodeId === componentState.nodeId && this.componentId === componentState.componentId) {
-
-        // set isDirty to false because the component state was just saved and notify node
-        this.isDirty = false;
-        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
-
-        var isAutoSave = componentState.isAutoSave;
-        var isSubmit = componentState.isSubmit;
-        var serverSaveTime = componentState.serverSaveTime;
-        var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-        // set save message
-        if (isSubmit) {
-          this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
-
-          this.lockIfNecessary();
-
-          // set isSubmitDirty to false because the component state was just submitted and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-        } else if (isAutoSave) {
-          this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
-        } else {
-          this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
-        }
-      }
-    }));
+    }.bind(_this);
 
     /*
      * Handle the delete key pressed event
      */
-    this.deleteKeyPressedListenerDestroyer = this.$scope.$on('deleteKeyPressed', function () {
+    _this.deleteKeyPressedListenerDestroyer = _this.$scope.$on('deleteKeyPressed', function () {
       _this.handleDeleteKeyPressed();
-    });
-
-    /**
-     * Listen for the 'annotationSavedToServer' event which is fired when
-     * we receive the response from saving an annotation to the server
-     */
-    this.$scope.$on('annotationSavedToServer', function (event, args) {
-
-      if (args != null) {
-
-        // get the annotation that was saved to the server
-        var annotation = args.annotation;
-
-        if (annotation != null) {
-
-          // get the node id and component id of the annotation
-          var annotationNodeId = annotation.nodeId;
-          var annotationComponentId = annotation.componentId;
-
-          // make sure the annotation was for this component
-          if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
-
-            // get latest score and comment annotations for this component
-            _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-          }
-        }
-      }
     });
 
     /**
@@ -753,7 +577,7 @@ var GraphController = function () {
      * exits the parent node. This will perform any necessary cleanup
      * when the student exits the parent node.
      */
-    this.$scope.$on('exitNode', angular.bind(this, function (event, args) {
+    _this.$scope.$on('exitNode', angular.bind(_this, function (event, args) {
       // destroy the delete key pressed listener
       this.deleteKeyPressedListenerDestroyer();
     }));
@@ -762,7 +586,7 @@ var GraphController = function () {
      * The student has changed the file input
      * @param element the file input element
      */
-    this.$scope.fileUploadChanged = function (element) {
+    _this.$scope.fileUploadChanged = function (element) {
 
       var overwrite = true;
 
@@ -808,11 +632,6 @@ var GraphController = function () {
 
             // remember the file name
             this.scope.graphController.setUploadedFileName(this.fileName);
-
-            /*
-             * notify the controller that the student data has
-             * changed so that it will perform any necessary saving
-             */
             this.scope.graphController.studentDataChanged();
           };
 
@@ -845,7 +664,7 @@ var GraphController = function () {
      * Listen for the assetSelected event which occurs when the user
      * selects an asset from the choose asset popup
      */
-    this.$scope.$on('assetSelected', function (event, args) {
+    _this.$scope.$on('assetSelected', function (event, args) {
 
       if (args != null) {
 
@@ -923,7 +742,7 @@ var GraphController = function () {
      * The advanced button for a component was clicked. If the button was
      * for this component, we will show the advanced authoring.
      */
-    this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
+    _this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
       if (args != null) {
         var componentId = args.componentId;
         if (_this.componentId === componentId) {
@@ -931,15 +750,21 @@ var GraphController = function () {
         }
       }
     });
+    return _this;
   }
 
-  /**
-   * Set up the mouse over listener which will be used to draw plot lines at the
-   * mouse position.
-   */
-
-
   _createClass(GraphController, [{
+    key: 'handleNodeSubmit',
+    value: function handleNodeSubmit() {
+      this.submit('nodeSubmitButton');
+    }
+
+    /**
+     * Set up the mouse over listener which will be used to draw plot lines at the
+     * mouse position.
+     */
+
+  }, {
     key: 'setupMouseMoveListener',
     value: function setupMouseMoveListener() {
       var _this2 = this;
@@ -1698,8 +1523,6 @@ var GraphController = function () {
                        * undo stack
                        */
                       thisGraphController.addNextComponentStateToUndoStack = true;
-
-                      // notify the controller that the student data has changed
                       thisGraphController.studentDataChanged();
                     } else {
                       if (thisGraphController.isMousePlotLineOn()) {
@@ -1840,8 +1663,6 @@ var GraphController = function () {
                              * undo stack
                              */
                             thisGraphController.addNextComponentStateToUndoStack = true;
-
-                            // tell the controller the student data has changed
                             thisGraphController.studentDataChanged();
                           }
                         }
@@ -2144,11 +1965,6 @@ var GraphController = function () {
 
                             // remove the element at the given index
                             data.splice(index, 1);
-
-                            /*
-                             * notify the controller that the student data has changed
-                             * so that the graph will be redrawn
-                             */
                             thisGraphController.studentDataChanged();
                           }
                         }
@@ -2450,11 +2266,6 @@ var GraphController = function () {
        * studentDataChanged() to the undo stack
        */
       this.addNextComponentStateToUndoStack = true;
-
-      /*
-       * notify the controller that the student data has changed
-       * so that the graph will be redrawn
-       */
       this.studentDataChanged();
     }
   }, {
@@ -2571,11 +2382,6 @@ var GraphController = function () {
              * studentDataChanged() to the undo stack
              */
             this.addNextComponentStateToUndoStack = true;
-
-            /*
-             * notify the controller that the student data has changed
-             * so that the graph will be redrawn
-             */
             this.studentDataChanged();
           }
         }
@@ -2691,40 +2497,14 @@ var GraphController = function () {
           // latest state is a submission, so set isSubmitDirty to false and notify node
           this.isSubmitDirty = false;
           this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          // set save message
           this.setSaveMessage(this.$translate('LAST_SUBMITTED'), clientSaveTime);
         } else {
           // latest state is not a submission, so set isSubmitDirty to true and notify node
           this.isSubmitDirty = true;
           this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          // set save message
           this.setSaveMessage(this.$translate('LAST_SAVED'), clientSaveTime);
         }
       }
-    }
-  }, {
-    key: 'saveButtonClicked',
-
-
-    /**
-     * Called when the student clicks the save button
-     */
-    value: function saveButtonClicked() {
-      // trigger the submit
-      var submitTriggeredBy = 'componentSubmitButton';
-      this.submit(submitTriggeredBy);
-    }
-  }, {
-    key: 'submitButtonClicked',
-
-
-    /**
-     * Called when the student clicks the submit button
-     */
-    value: function submitButtonClicked() {
-      // trigger the submit
-      var submitTriggeredBy = 'componentSubmitButton';
-      this.submit(submitTriggeredBy);
     }
   }, {
     key: 'submit',
@@ -2774,8 +2554,6 @@ var GraphController = function () {
            * instead of just a save component state
            */
           this.isSubmit = true;
-
-          // increment the submit counter
           this.incrementSubmitCounter();
 
           // check if the student has used up all of their submits
@@ -2831,24 +2609,6 @@ var GraphController = function () {
       //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     }
   }, {
-    key: 'incrementSubmitCounter',
-
-
-    /**
-     * Increment the submit counter
-     */
-    value: function incrementSubmitCounter() {
-      this.submitCounter++;
-    }
-  }, {
-    key: 'lockIfNecessary',
-    value: function lockIfNecessary() {
-      // check if we need to lock the component after the student submits
-      if (this.isLockAfterSubmit()) {
-        this.isDisabled = true;
-      }
-    }
-  }, {
     key: 'studentDataChanged',
 
 
@@ -2867,15 +2627,10 @@ var GraphController = function () {
 
       this.isSubmitDirty = true;
       this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-
-      // clear out the save message
       this.setSaveMessage('', null);
 
       // re-draw the graph
       this.setupGraph(useTimeoutSetupGraph);
-
-      // get this component id
-      var componentId = this.getComponentId();
 
       /*
        * the student work in this component has changed so we will tell
@@ -2926,7 +2681,7 @@ var GraphController = function () {
          * this componentStudentDataChanged event
          */
         _this5.$timeout(function () {
-          _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: componentId, componentState: componentState });
+          _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });
         }, 100);
       });
     }
@@ -3091,47 +2846,12 @@ var GraphController = function () {
     }
 
     /**
-     * Check if we need to lock the component
-     */
-
-  }, {
-    key: 'calculateDisabled',
-    value: function calculateDisabled() {
-
-      var nodeId = this.nodeId;
-
-      // get the component content
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // check if the parent has set this component to disabled
-        if (componentContent.isDisabled) {
-          this.isDisabled = true;
-        } else if (componentContent.lockAfterSubmit) {
-          // we need to lock the step after the student has submitted
-
-          // get the component states for this component
-          var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          // check if any of the component states were submitted
-          var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-          if (isSubmitted) {
-            // the student has submitted work for this component
-            this.isDisabled = true;
-          }
-        }
-      }
-    }
-  }, {
-    key: 'showPrompt',
-
-
-    /**
      * Check whether we need to show the prompt
      * @return whether to show the prompt
      */
+
+  }, {
+    key: 'showPrompt',
     value: function showPrompt() {
       var show = false;
 
@@ -3177,61 +2897,13 @@ var GraphController = function () {
     }
 
     /**
-     * Check whether we need to lock the component after the student
-     * submits an answer.
-     */
-
-  }, {
-    key: 'isLockAfterSubmit',
-    value: function isLockAfterSubmit() {
-      var result = false;
-
-      if (this.componentContent != null) {
-
-        // check the lockAfterSubmit field in the component content
-        if (this.componentContent.lockAfterSubmit) {
-          result = true;
-        }
-      }
-
-      return result;
-    }
-  }, {
-    key: 'getPrompt',
-
-
-    /**
-     * Get the prompt to show to the student
-     * @return a string containing the prompt
-     */
-    value: function getPrompt() {
-      var prompt = null;
-
-      if (this.originalComponentContent != null) {
-        // this is a show previous work component
-
-        if (this.originalComponentContent.showPreviousWorkPrompt) {
-          // show the prompt from the previous work component
-          prompt = this.componentContent.prompt;
-        } else {
-          // show the prompt from the original component
-          prompt = this.originalComponentContent.prompt;
-        }
-      } else if (this.componentContent != null) {
-        prompt = this.componentContent.prompt;
-      }
-
-      return prompt;
-    }
-  }, {
-    key: 'getSeriesIndex',
-
-
-    /**
      * Get the index of a series
      * @param series the series
      * @return the index of the series
      */
+
+  }, {
+    key: 'getSeriesIndex',
     value: function getSeriesIndex(series) {
       var index = null;
 
@@ -3388,8 +3060,6 @@ var GraphController = function () {
 
               // populate the component state into this component
               this.setStudentWork(populatedComponentState);
-
-              // make the work dirty so that it gets saved
               this.studentDataChanged();
             }
           }
@@ -3501,8 +3171,6 @@ var GraphController = function () {
 
             // populate the component state into this component
             _this6.setStudentWork(newComponentState);
-
-            // make the work dirty so that it gets saved
             _this6.studentDataChanged();
           });
         }
@@ -3707,7 +3375,6 @@ var GraphController = function () {
                * studentDataChanged() to the undo stack
                */
               _this8.addNextComponentStateToUndoStack = true;
-
               _this8.studentDataChanged();
             });
           }
@@ -3994,21 +3661,9 @@ var GraphController = function () {
            * studentDataChanged() to the undo stack
            */
           this.addNextComponentStateToUndoStack = true;
-
           this.studentDataChanged();
         }
       }
-    }
-  }, {
-    key: 'getComponentId',
-
-
-    /**
-     * Get the component id
-     * @return the component id
-     */
-    value: function getComponentId() {
-      return this.componentContent.id;
     }
   }, {
     key: 'authoringViewComponentChanged',
@@ -4074,67 +3729,12 @@ var GraphController = function () {
       this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     }
   }, {
-    key: 'getStepNodeIds',
+    key: 'authoringAddSeriesClicked',
 
-
-    /**
-     * Get all the step node ids in the project
-     * @returns all the step node ids
-     */
-    value: function getStepNodeIds() {
-      var stepNodeIds = this.ProjectService.getNodeIds();
-
-      return stepNodeIds;
-    }
-
-    /**
-     * Get the step number and title
-     * @param nodeId get the step number and title for this node
-     * @returns the step number and title
-     */
-
-  }, {
-    key: 'getNodePositionAndTitleByNodeId',
-    value: function getNodePositionAndTitleByNodeId(nodeId) {
-      var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-
-      return nodePositionAndTitle;
-    }
-
-    /**
-     * Get the components in a step
-     * @param nodeId get the components in the step
-     * @returns the components in the step
-     */
-
-  }, {
-    key: 'getComponentsByNodeId',
-    value: function getComponentsByNodeId(nodeId) {
-      var components = this.ProjectService.getComponentsByNodeId(nodeId);
-
-      return components;
-    }
-
-    /**
-     * Check if a node is a step node
-     * @param nodeId the node id to check
-     * @returns whether the node is an application node
-     */
-
-  }, {
-    key: 'isApplicationNode',
-    value: function isApplicationNode(nodeId) {
-      var result = this.ProjectService.isApplicationNode(nodeId);
-
-      return result;
-    }
 
     /**
      * Add a series in the authoring view
      */
-
-  }, {
-    key: 'authoringAddSeriesClicked',
     value: function authoringAddSeriesClicked() {
 
       // create a new series
@@ -4213,19 +3813,6 @@ var GraphController = function () {
         // save the project
         this.authoringViewComponentChanged();
       }
-    }
-  }, {
-    key: 'setSaveMessage',
-
-
-    /**
-     * Set the message next to the save button
-     * @param message the message to display
-     * @param time the time to display
-     */
-    value: function setSaveMessage(message, time) {
-      this.saveMessage.text = message;
-      this.saveMessage.time = time;
     }
   }, {
     key: 'registerExitListener',
@@ -4324,11 +3911,6 @@ var GraphController = function () {
        * studentDataChanged() to the undo stack
        */
       this.addNextComponentStateToUndoStack = true;
-
-      /*
-       * notify the controller that the student data has
-       * changed so that it will perform any necessary saving
-       */
       this.studentDataChanged();
     }
 
@@ -4557,11 +4139,6 @@ var GraphController = function () {
        * studentDataChanged() to the undo stack
        */
       this.addNextComponentStateToUndoStack = true;
-
-      /*
-       * notify the controller that the student data has
-       * changed so that it will perform any necessary saving
-       */
       this.studentDataChanged();
 
       // update the selected trial text
@@ -4609,11 +4186,6 @@ var GraphController = function () {
          * studentDataChanged() to the undo stack
          */
         this.addNextComponentStateToUndoStack = true;
-
-        /*
-         * notify the controller that the student data has
-         * changed so that it will perform any necessary saving
-         */
         this.studentDataChanged();
       }
     }
@@ -4698,11 +4270,6 @@ var GraphController = function () {
       if (!this.UtilService.arraysContainSameValues(this.previousTrialIdsToShow, trialIdsToShow)) {
         // update the trialIdsToShow
         this.trialIdsToShow = trialIdsToShow;
-
-        /*
-         * notify the controller that the student data has
-         * changed so that it will perform any necessary saving
-         */
         this.studentDataChanged();
       }
 
@@ -5393,21 +4960,6 @@ var GraphController = function () {
     }
 
     /**
-     * Check whether we need to show the snip drawing button
-     * @return whether to show the snip drawing button
-     */
-
-  }, {
-    key: 'showSnipDrawingButton',
-    value: function showSnipDrawingButton() {
-      if (this.NotebookService.isNotebookEnabled() && this.isSnipDrawingButtonVisible) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    /**
      * Snip the drawing by converting it to an image
      * @param $event the click event
      */
@@ -5505,24 +5057,6 @@ var GraphController = function () {
     key: 'getUploadedFileName',
     value: function getUploadedFileName() {
       return this.uploadedFileName;
-    }
-
-    /**
-     * Check if a component generates student work
-     * @param component the component
-     * @return whether the component generates student work
-     */
-
-  }, {
-    key: 'componentHasWork',
-    value: function componentHasWork(component) {
-      var result = true;
-
-      if (component != null) {
-        result = this.ProjectService.componentHasWork(component);
-      }
-
-      return result;
     }
 
     /**
@@ -6405,10 +5939,9 @@ var GraphController = function () {
         width: 2,
         value: x,
         zIndex: 5
-      };
 
-      // set the plot line into the plot lines array
-      this.plotLines = [plotLine];
+        // set the plot line into the plot lines array
+      };this.plotLines = [plotLine];
 
       /*
        * Call $apply() so that the red plot line position gets updated. If we
@@ -6603,8 +6136,6 @@ var GraphController = function () {
 
           // populate the component state into this component
           _this12.setStudentWork(newComponentState);
-
-          // make the work dirty so that it gets saved
           _this12.studentDataChanged();
         });
       }
@@ -7671,9 +7202,9 @@ var GraphController = function () {
   }]);
 
   return GraphController;
-}();
+}(_componentController2.default);
 
-GraphController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'GraphService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+GraphController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'GraphService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = GraphController;
 //# sourceMappingURL=graphController.js.map

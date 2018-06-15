@@ -43,7 +43,7 @@ var EditNotebookItemController = function () {
         }
       };
     } else {
-      this.item = angular.copy(this.NotebookService.getNotebookItemById(this.itemId));
+      this.item = angular.copy(this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId));
       this.item.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
       if (this.NotebookService.isNotebookItemPublic(this.item) && this.item.workgroupId != this.ConfigService.getWorkgroupId()) {
         this.isEditMode = false;
@@ -118,30 +118,53 @@ var EditNotebookItemController = function () {
     }
   }, {
     key: 'attachStudentAssetToNote',
-    value: function attachStudentAssetToNote(files) {
+    value: function attachStudentAssetToNote() {
       var _this = this;
 
-      if (files != null) {
-        var _loop = function _loop(f) {
-          var file = files[f];
-          // create a temporary attachment object
+      var files = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        var _loop = function _loop() {
+          var file = _step.value;
+
           var attachment = {
             studentAssetId: null,
             iconURL: "",
-            file: file // add the file for uploading in the future
+            file: file
           };
-          _this.item.content.attachments.push(attachment);
-          // read image data as URL and set it in the temp attachment src attribute so students can preview the image
+
+          /*
+           * read image data as URL and set it in the attachment iconURL attribute
+           * so students can preview the image
+           */
           var reader = new FileReader();
           reader.onload = function (event) {
             attachment.iconURL = event.target.result;
+            _this.item.content.attachments.push(attachment);
+            _this.update();
+            _this.$scope.$apply();
           };
           reader.readAsDataURL(file);
-          _this.update();
         };
 
-        for (var f = 0; f < files.length; f++) {
-          _loop(f);
+        for (var _iterator = files[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          _loop();
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
         }
       }
     }

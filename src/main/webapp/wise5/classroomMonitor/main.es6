@@ -185,6 +185,15 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                         },
                         annotations: function(TeacherDataService, config) {
                             return TeacherDataService.retrieveAnnotations();
+                        },
+                        notebook: function (NotebookService, ConfigService, config, project) {
+                          if (NotebookService.isNotebookEnabled()) {
+                            return NotebookService.retrieveNotebookItems().then((notebook) => {
+                              return notebook;
+                            });
+                          } else {
+                            return NotebookService.notebook;
+                          }
                         }
                     }
                 })
@@ -237,20 +246,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                     url: '/notebook',
                     templateUrl: 'wise5/classroomMonitor/notebook/notebook.html',
                     controller: 'NotebookGradingController',
-                    controllerAs: 'notebookGradingController',
-                    resolve: {
-                        notebook: function (NotebookService, ConfigService, config, project, StudentAssetService) {
-                            if (!ConfigService.isPreview()) {
-                                //StudentAssetService.retrieveAssets().then((studentAssets) => {
-                                    return NotebookService.retrieveNotebookItems().then((notebook) => {
-                                        return notebook;
-                                    });
-                                //});
-                            } else {
-                                return NotebookService.notebook;
-                            }
-                        }
-                    }
+                    controllerAs: 'notebookGradingController'
                 });
 
             $httpProvider.interceptors.push('HttpInterceptor');

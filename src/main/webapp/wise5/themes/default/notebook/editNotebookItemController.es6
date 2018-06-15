@@ -44,7 +44,7 @@ class EditNotebookItemController {
         }
       };
     } else {
-      this.item = angular.copy(this.NotebookService.getNotebookItemById(this.itemId));
+      this.item = angular.copy(this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId));
       this.item.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
       if (this.NotebookService.isNotebookItemPublic(this.item) &&
           this.item.workgroupId != this.ConfigService.getWorkgroupId()) {
@@ -115,25 +115,26 @@ class EditNotebookItemController {
     this.$mdDialog.hide();
   }
 
-  attachStudentAssetToNote(files) {
-    if (files != null) {
-      for (let f = 0; f < files.length; f++) {
-        let file = files[f];
-        // create a temporary attachment object
-        let attachment = {
-          studentAssetId: null,
-          iconURL: "",
-          file: file  // add the file for uploading in the future
-        };
+  attachStudentAssetToNote(files = []) {
+    for (let file of files) {
+      const attachment = {
+        studentAssetId: null,
+        iconURL: "",
+        file: file
+      };
+
+      /*
+       * read image data as URL and set it in the attachment iconURL attribute
+       * so students can preview the image
+       */
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        attachment.iconURL = event.target.result;
         this.item.content.attachments.push(attachment);
-        // read image data as URL and set it in the temp attachment src attribute so students can preview the image
-        let reader = new FileReader();
-        reader.onload = (event) => {
-          attachment.iconURL = event.target.result;
-        };
-        reader.readAsDataURL(file);
         this.update();
-      }
+        this.$scope.$apply();
+      };
+      reader.readAsDataURL(file);
     }
   }
 

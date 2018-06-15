@@ -122,7 +122,7 @@ var PlanningService = function () {
       this.ProjectService.setIdToNode(planningNodeInstanceNodeId, planningNodeInstance);
       this.ProjectService.setIdToElement(planningNodeInstanceNodeId, planningNodeInstance);
       this.ProjectService.addNode(planningNodeInstance);
-      this.ProjectService.insertNodeInsideInTransitions(planningNodeInstanceNodeId, nodeIdToInsertInside);
+      this.ProjectService.insertNodeInsideOnlyUpdateTransitions(planningNodeInstanceNodeId, nodeIdToInsertInside);
       this.ProjectService.insertNodeInsideInGroups(planningNodeInstanceNodeId, nodeIdToInsertInside);
       this.ProjectService.recalculatePositionsInGroup(nodeIdToInsertInside);
       this.ProjectService.calculateNodeOrderOfProject();

@@ -6,133 +6,100 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _componentController = require('../componentController');
+
+var _componentController2 = _interopRequireDefault(_componentController);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var OutsideURLController = function () {
-  function OutsideURLController($filter, $mdDialog, $q, $rootScope, $scope, $sce, ConfigService, NodeService, OutsideURLService, ProjectService, StudentDataService, UtilService) {
-    var _this = this;
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var OutsideURLController = function (_ComponentController) {
+  _inherits(OutsideURLController, _ComponentController);
+
+  function OutsideURLController($filter, $mdDialog, $q, $rootScope, $sce, $scope, AnnotationService, ConfigService, NodeService, NotebookService, OutsideURLService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, OutsideURLController);
 
-    this.$filter = $filter;
-    this.$mdDialog = $mdDialog;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.$sce = $sce;
-    this.ConfigService = ConfigService;
-    this.NodeService = NodeService;
-    this.OutsideURLService = OutsideURLService;
-    this.ProjectService = ProjectService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
+    var _this = _possibleConstructorReturn(this, (OutsideURLController.__proto__ || Object.getPrototypeOf(OutsideURLController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
 
-    this.$translate = this.$filter('translate');
-
-    // the node id of the current node
-    this.nodeId = null;
-
-    // the component id
-    this.componentId = null;
-
-    // field that will hold the component content
-    this.componentContent = null;
-
-    // field that will hold the authoring component content
-    this.authoringComponentContent = null;
-
-    // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
+    _this.$q = $q;
+    _this.$sce = $sce;
+    _this.OutsideURLService = OutsideURLService;
 
     // the url to the web page to display
-    this.url = null;
+    _this.url = null;
 
     // the max width of the iframe
-    this.maxWidth = null;
+    _this.maxWidth = null;
 
     // the max height of the iframe
-    this.maxHeight = null;
-
-    this.nodeId = this.$scope.nodeId;
-
-    // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
-
-    // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
+    _this.maxHeight = null;
 
     /*
      * get the original component content. this is used when showing
      * previous work from another component.
      */
-    this.originalComponentContent = this.$scope.originalComponentContent;
+    _this.originalComponentContent = _this.$scope.originalComponentContent;
 
-    this.mode = this.$scope.mode;
+    if (_this.mode === 'authoring') {
+      // generate the summernote rubric element id
+      _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
 
-    if (this.componentContent != null) {
+      // set the component rubric into the summernote rubric
+      _this.summernoteRubricHTML = _this.componentContent.rubric;
 
-      // get the component id
-      this.componentId = this.componentContent.id;
+      // the tooltip text for the insert WISE asset button
+      var insertAssetString = _this.$translate('html.insertAsset');
 
-      if (this.mode === 'authoring') {
-        // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+      /*
+       * create the custom button for inserting WISE assets into
+       * summernote
+       */
+      var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
 
-        // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
+      /*
+       * the options that specifies the tools to display in the
+       * summernote prompt
+       */
+      _this.summernoteRubricOptions = {
+        toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
+        height: 300,
+        disableDragAndDrop: true,
+        buttons: {
+          insertAssetButton: InsertAssetButton
+        }
+      };
 
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('html.insertAsset');
+      _this.updateAdvancedAuthoringView();
 
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+      $scope.$watch(function () {
+        return _this.authoringComponentContent;
+      }, function (newValue, oldValue) {
+        _this.componentContent = _this.ProjectService.injectAssetPaths(newValue);
 
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return _this.authoringComponentContent;
-        }, function (newValue, oldValue) {
-          _this.componentContent = _this.ProjectService.injectAssetPaths(newValue);
-
-          // set the url
-          _this.setURL(_this.authoringComponentContent.url);
-        }, true);
-      }
-
-      if (this.componentContent != null) {
         // set the url
-        this.setURL(this.componentContent.url);
-      }
+        _this.setURL(_this.authoringComponentContent.url);
+      }, true);
+    }
 
-      // get the max width
-      this.maxWidth = this.componentContent.maxWidth ? this.componentContent.maxWidth : 'none';
+    if (_this.componentContent != null) {
+      // set the url
+      _this.setURL(_this.componentContent.url);
+    }
 
-      // get the max height
-      this.maxHeight = this.componentContent.maxHeight ? this.componentContent.maxHeight : 'none';
+    // get the max width
+    _this.maxWidth = _this.componentContent.maxWidth ? _this.componentContent.maxWidth : 'none';
 
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-      }
+    // get the max height
+    _this.maxHeight = _this.componentContent.maxHeight ? _this.componentContent.maxHeight : 'none';
+
+    if (_this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
     }
 
     /**
@@ -141,7 +108,7 @@ var OutsideURLController = function () {
      * save student data.
      * @return a promise of a component state containing the student data
      */
-    this.$scope.getComponentState = function () {
+    _this.$scope.getComponentState = function () {
       var deferred = this.$q.defer();
 
       /*
@@ -152,13 +119,13 @@ var OutsideURLController = function () {
       deferred.resolve();
 
       return deferred.promise;
-    }.bind(this);
+    }.bind(_this);
 
     /*
      * Listen for the assetSelected event which occurs when the user
      * selects an asset from the choose asset popup
      */
-    this.$scope.$on('assetSelected', function (event, args) {
+    _this.$scope.$on('assetSelected', function (event, args) {
 
       if (args != null) {
 
@@ -228,7 +195,7 @@ var OutsideURLController = function () {
      * The advanced button for a component was clicked. If the button was
      * for this component, we will show the advanced authoring.
      */
-    this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
+    _this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
       if (args != null) {
         var componentId = args.componentId;
         if (_this.componentId === componentId) {
@@ -237,7 +204,8 @@ var OutsideURLController = function () {
       }
     });
 
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+    _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
+    return _this;
   }
 
   /**
@@ -406,9 +374,9 @@ var OutsideURLController = function () {
   }]);
 
   return OutsideURLController;
-}();
+}(_componentController2.default);
 
-OutsideURLController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', '$sce', 'ConfigService', 'NodeService', 'OutsideURLService', 'ProjectService', 'StudentDataService', 'UtilService'];
+OutsideURLController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$sce', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'OutsideURLService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = OutsideURLController;
 //# sourceMappingURL=outsideURLController.js.map

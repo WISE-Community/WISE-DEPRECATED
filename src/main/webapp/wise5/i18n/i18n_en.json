@@ -105,6 +105,7 @@
     "SESSION_TIMEOUT": "Session Timeout",
     "SESSION_TIMEOUT_MESSAGE": "You have been inactive for a long time. Do you want to stay logged in?",
     "SET_SCORE": "Set Score",
+    "SHOW_ADD_TO_NOTEBOOK_BUTTON": "Show Add to Notebook Button",
     "SHOW_FEEDBACK": "Show Feedback",
     "SHOW_MORE": "Show More",
     "SHOW_JSON": "Show JSON",

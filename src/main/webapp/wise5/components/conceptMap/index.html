@@ -112,6 +112,14 @@
         </md-checkbox>
       </div>
       <div>
+        <md-checkbox class='md-primary'
+            ng-if='conceptMapController.isNotebookEnabled()'
+            ng-model='conceptMapController.authoringComponentContent.showAddToNotebookButton'
+            ng-change='conceptMapController.authoringViewComponentChanged()'>
+          {{ 'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
+        </md-checkbox>
+      </div>
+      <div>
         <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
             ng-if='conceptMapController.authoringComponentContent.showSubmitButton'>
           <label>{{ 'MAX_SUBMIT' | translate }}</label>
@@ -368,6 +376,15 @@
               ng-change='conceptMapController.authoringViewComponentChanged()'/>
         </md-input-container>
       </div>
+      <div style='height: 60px;'>
+        <md-input-container>
+          <md-checkbox class='md-primary'
+                       ng-model='conceptMapController.authoringComponentContent.showNodeLabels'
+                       ng-change='conceptMapController.authoringViewComponentChanged()'>
+            {{ 'conceptMap.showNodeLabels' | translate }}
+          </md-checkbox>
+        </md-input-container>
+      </div>
       <div layout='row'>
         <h6>{{ 'conceptMap.nodes' | translate }}</h6>
         <md-button class='topButton md-raised md-primary'
@@ -596,7 +613,7 @@
             </md-button>
             <md-button class='md-accent'
                 ng-click='conceptMapController.snip($event)'
-                ng-if='conceptMapController.mode !== "grading" && conceptMapController.showSnipButton()'>
+                ng-if='conceptMapController.isAddToNotebookEnabled()'>
               <md-icon> note_add </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
             </md-button>
             <div id='{{conceptMapController.conceptMapContainerId}}'

@@ -30,6 +30,7 @@ var DataExportController = function () {
         this.exportStepSelectionType = "exportAllSteps";
         this.exportType = null; // type of export: [latestWork, allWork, events]
         this.componentTypeToComponentService = {};
+        this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
 
         this.availableComponentDataExports = ['Match'];
 
@@ -196,7 +197,7 @@ var DataExportController = function () {
                 var columnNameToNumber = {};
 
                 // an array of column names
-                var columnNames = ["#", "Workgroup ID", "WISE ID 1", "WISE ID 2", "WISE ID 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Student Work ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Teacher Score Server Timestamp", "Teacher Score Client Timestamp", "Teacher Score", "Max Teacher Score", "Teacher Comment Server Timestamp", "Teacher Comment Client Timestamp", "Teacher Comment", "Auto Score Server Timestamp", "Auto Score Client Timestamp", "Auto Score", "Max Auto Score", "Auto Comment Server Timestamp", "Auto Comment Client Timestamp", "Auto Comment", "Step Title", "Component Type", "Component Prompt", "Student Data", "Component Revision Counter", "Is Correct", "Is Submit", "Submit Count", "Response"];
+                var columnNames = ["#", "Workgroup ID", "WISE ID 1", "Student Name 1", "WISE ID 2", "Student Name 2", "WISE ID 3", "Student Name 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Student Work ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Teacher Score Server Timestamp", "Teacher Score Client Timestamp", "Teacher Score", "Max Teacher Score", "Teacher Comment Server Timestamp", "Teacher Comment Client Timestamp", "Teacher Comment", "Auto Score Server Timestamp", "Auto Score Client Timestamp", "Auto Score", "Max Auto Score", "Auto Comment Server Timestamp", "Auto Comment Client Timestamp", "Auto Comment", "Step Title", "Component Type", "Component Prompt", "Student Data", "Component Revision Counter", "Is Correct", "Is Submit", "Submit Count", "Response"];
 
                 var headerRow = [];
 
@@ -232,12 +233,7 @@ var DataExportController = function () {
                             var workgroupId = workgroup.workgroupId;
                             var periodName = workgroup.periodName;
                             var userInfo = _this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-
-                            // get the WISE IDs
-                            var wiseIds = _this.ConfigService.getWISEIds(workgroupId);
-                            var wiseId1 = wiseIds[0];
-                            var wiseId2 = wiseIds[1];
-                            var wiseId3 = wiseIds[2];
+                            var extractedWISEIDsAndStudentNames = _this.extractWISEIDsAndStudentNames(userInfo.users);
 
                             /*
                              * a mapping from component to component revision counter.
@@ -278,7 +274,7 @@ var DataExportController = function () {
                                         if (exportRow) {
 
                                             // create the export row
-                                            var row = _this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, componentState);
+                                            var row = _this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, extractedWISEIDsAndStudentNames['wiseId1'], extractedWISEIDsAndStudentNames['wiseId2'], extractedWISEIDsAndStudentNames['wiseId3'], extractedWISEIDsAndStudentNames['studentName1'], extractedWISEIDsAndStudentNames['studentName2'], extractedWISEIDsAndStudentNames['studentName3'], periodName, componentRevisionCounter, componentState);
 
                                             // add the row to the rows
                                             rows.push(row);
@@ -308,6 +304,27 @@ var DataExportController = function () {
         }
 
         /**
+         * @param users An array of user objects. Each user object contains an id and name.
+         * @returns {object} An object that contains key/value pairs. The key is wiseIdX
+         * or studentNameX where X is an integer. The values are the corresponding actual
+         * values of wise id and student name.
+         */
+
+    }, {
+        key: 'extractWISEIDsAndStudentNames',
+        value: function extractWISEIDsAndStudentNames(users) {
+            var extractedWISEIDsAndStudentNames = {};
+            for (var u = 0; u < users.length; u++) {
+                var user = users[u];
+                extractedWISEIDsAndStudentNames['wiseId' + (u + 1)] = user.id;
+                if (this.canViewStudentNames) {
+                    extractedWISEIDsAndStudentNames['studentName' + (u + 1)] = user.name;
+                }
+            }
+            return extractedWISEIDsAndStudentNames;
+        }
+
+        /**
          * Create the array that will be used as a row in the student work export
          * @param columnNames all the header column name
          * @param columnNameToNumber the mapping from column name to column number
@@ -324,7 +341,7 @@ var DataExportController = function () {
 
     }, {
         key: 'createStudentWorkExportRow',
-        value: function createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, componentState) {
+        value: function createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, componentRevisionCounter, componentState) {
 
             // create the row and prepopulate the elements with an empty string
             var row = new Array(columnNames.length);
@@ -340,15 +357,22 @@ var DataExportController = function () {
                 // set the WISE ID 1
                 row[columnNameToNumber["WISE ID 1"]] = wiseId1;
             }
-
+            if (studentName1 != null && this.includeStudentNames) {
+                row[columnNameToNumber["Student Name 1"]] = studentName1;
+            }
             if (wiseId2 != null) {
                 // set the WISE ID 2
                 row[columnNameToNumber["WISE ID 2"]] = wiseId2;
             }
-
+            if (studentName2 != null && this.includeStudentNames) {
+                row[columnNameToNumber["Student Name 2"]] = studentName2;
+            }
             if (wiseId3 != null) {
                 // set the WISE ID 3
                 row[columnNameToNumber["WISE ID 3"]] = wiseId3;
+            }
+            if (studentName3 != null && this.includeStudentNames) {
+                row[columnNameToNumber["Student Name 3"]] = studentName3;
             }
 
             row[columnNameToNumber["Class Period"]] = periodName;
@@ -667,7 +691,7 @@ var DataExportController = function () {
              */
             var studentDataString = " ";
             var componentType = componentState.componentType;
-            var componentService = this.$injector.get(componentType + 'Service');
+            var componentService = this.getComponentService(componentType);
             if (componentService != null && componentService.getStudentDataString != null) {
                 studentDataString = componentService.getStudentDataString(componentState);
                 studentDataString = this.UtilService.removeHTMLTags(studentDataString);
@@ -930,7 +954,7 @@ var DataExportController = function () {
                 var columnNameToNumber = {};
 
                 // an array of column names
-                var columnNames = ["#", "Workgroup ID", "WISE ID 1", "WISE ID 2", "WISE ID 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Event ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Group Event Counter", "Context", "Category", "Event", "Event Data", "Response"];
+                var columnNames = ["#", "Workgroup ID", "WISE ID 1", "Student Name 1", "WISE ID 2", "Student Name 2", "WISE ID 3", "Student Name 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Event ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Group Event Counter", "Context", "Category", "Event", "Event Data", "Response"];
 
                 var headerRow = [];
 
@@ -966,12 +990,7 @@ var DataExportController = function () {
                             var workgroupId = workgroup.workgroupId;
                             var periodName = workgroup.periodName;
                             var userInfo = _this2.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-
-                            // get the WISE IDs
-                            var wiseIds = _this2.ConfigService.getWISEIds(workgroupId);
-                            var wiseId1 = wiseIds[0];
-                            var wiseId2 = wiseIds[1];
-                            var wiseId3 = wiseIds[2];
+                            var extractedWISEIDsAndStudentNames = _this2.extractWISEIDsAndStudentNames(userInfo.users);
 
                             /*
                              * a mapping from component to component event count.
@@ -1023,7 +1042,7 @@ var DataExportController = function () {
                                         if (exportRow) {
 
                                             // create the export row
-                                            var row = _this2.createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentEventCount, event);
+                                            var row = _this2.createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, extractedWISEIDsAndStudentNames['wiseId1'], extractedWISEIDsAndStudentNames['wiseId2'], extractedWISEIDsAndStudentNames['wiseId3'], extractedWISEIDsAndStudentNames['studentName1'], extractedWISEIDsAndStudentNames['studentName2'], extractedWISEIDsAndStudentNames['studentName3'], periodName, componentEventCount, event);
 
                                             // add the row to the rows
                                             rows.push(row);
@@ -1062,7 +1081,7 @@ var DataExportController = function () {
 
     }, {
         key: 'createEventExportRow',
-        value: function createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentEventCount, event) {
+        value: function createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, componentEventCount, event) {
 
             // create the row and prepopulate the elements with an empty string
             var row = new Array(columnNames.length);
@@ -1078,15 +1097,22 @@ var DataExportController = function () {
                 // set the WISE ID 1
                 row[columnNameToNumber["WISE ID 1"]] = wiseId1;
             }
-
+            if (studentName1 != null && this.includeStudentNames) {
+                row[columnNameToNumber["Student Name 1"]] = studentName1;
+            }
             if (wiseId2 != null) {
                 // set the WISE ID 2
                 row[columnNameToNumber["WISE ID 2"]] = wiseId2;
             }
-
+            if (studentName2 != null && this.includeStudentNames) {
+                row[columnNameToNumber["Student Name 2"]] = studentName2;
+            }
             if (wiseId3 != null) {
                 // set the WISE ID 3
                 row[columnNameToNumber["WISE ID 3"]] = wiseId3;
+            }
+            if (studentName3 != null && this.includeStudentNames) {
+                row[columnNameToNumber["Student Name 3"]] = studentName3;
             }
 
             row[columnNameToNumber["Class Period"]] = periodName;
@@ -1781,7 +1807,7 @@ var DataExportController = function () {
                 var nodeIds = _this5.ProjectService.getFlattenedProjectAsNodeIds();
 
                 // the headers for the description row
-                var descriptionRowHeaders = ["Workgroup ID", "WISE ID 1", "WISE ID 2", "WISE ID 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date"];
+                var descriptionRowHeaders = ["Workgroup ID", "WISE ID 1", "Student Name 1", "WISE ID 2", "Student Name 2", "WISE ID 3", "Student Name 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date"];
 
                 // generate the mapping from column id to column index
                 var columnIdToColumnIndex = _this5.getColumnIdToColumnIndex(columnIds, descriptionRowHeaders);
@@ -1818,24 +1844,33 @@ var DataExportController = function () {
                         var periodName = workgroup.periodName;
                         var userInfo = _this5.ConfigService.getUserInfoByWorkgroupId(workgroupId);
 
-                        // get the WISE IDs
-                        var wiseIds = _this5.ConfigService.getWISEIds(workgroupId);
-                        var wiseId1 = wiseIds[0];
-                        var wiseId2 = wiseIds[1];
-                        var wiseId3 = wiseIds[2];
-
                         workgroupRow[columnIdToColumnIndex["Workgroup ID"]] = workgroupId;
+
+                        var extractedWISEIDsAndStudentNames = _this5.extractWISEIDsAndStudentNames(userInfo.users);
+                        var wiseId1 = extractedWISEIDsAndStudentNames["wiseId1"];
+                        var wiseId2 = extractedWISEIDsAndStudentNames["wiseId2"];
+                        var wiseId3 = extractedWISEIDsAndStudentNames["wiseId3"];
+                        var studentName1 = extractedWISEIDsAndStudentNames["studentName1"];
+                        var studentName2 = extractedWISEIDsAndStudentNames["studentName2"];
+                        var studentName3 = extractedWISEIDsAndStudentNames["studentName3"];
 
                         if (wiseId1 != null) {
                             workgroupRow[columnIdToColumnIndex["WISE ID 1"]] = wiseId1;
                         }
-
+                        if (studentName1 != null && _this5.includeStudentNames) {
+                            workgroupRow[columnIdToColumnIndex["Student Name 1"]] = studentName1;
+                        }
                         if (wiseId2 != null) {
                             workgroupRow[columnIdToColumnIndex["WISE ID 2"]] = wiseId2;
                         }
-
+                        if (studentName2 != null && _this5.includeStudentNames) {
+                            workgroupRow[columnIdToColumnIndex["Student Name 2"]] = studentName2;
+                        }
                         if (wiseId3 != null) {
                             workgroupRow[columnIdToColumnIndex["WISE ID 3"]] = wiseId3;
+                        }
+                        if (studentName3 != null && _this5.includeStudentNames) {
+                            workgroupRow[columnIdToColumnIndex["Student Name 3"]] = studentName3;
                         }
 
                         workgroupRow[columnIdToColumnIndex["Class Period"]] = periodName;
@@ -2647,6 +2682,7 @@ var DataExportController = function () {
             // settings for one workgroup per row export
             this.includeStudentWork = true;
             this.includeStudentWorkIds = true;
+            this.includeStudentNames = true;
             this.includeStudentWorkTimestamps = true;
             this.includeBranchPathTaken = true;
             this.includeBranchPathTakenStepTitle = true;
@@ -2674,6 +2710,11 @@ var DataExportController = function () {
             // settings for one workgroup per row export
             this.includeStudentWork = true;
             this.includeStudentWorkIds = false;
+            if (this.canViewStudentNames) {
+                this.includeStudentNames = true;
+            } else {
+                this.includeStudentNames = false;
+            }
             this.includeStudentWorkTimestamps = false;
             this.includeBranchPathTaken = true;
             this.includeBranchPathTakenStepTitle = false;
@@ -2765,10 +2806,9 @@ var DataExportController = function () {
                     var workgroup = workgroups[w];
 
                     if (workgroup != null) {
-
-                        // remove the user name and display name fields
-                        delete workgroup.userName;
-                        delete workgroup.displayNames;
+                        if (!_this6.includeStudentNames) {
+                            _this6.removeNamesFromWorkgroup(workgroup);
+                        }
 
                         // get the workgroup id
                         var workgroupId = workgroup.workgroupId;
@@ -2880,6 +2920,38 @@ var DataExportController = function () {
                 _this6.FileSaver.saveAs(blob, runId + "_raw_data.json");
             });
         }
+    }, {
+        key: 'removeNamesFromWorkgroup',
+        value: function removeNamesFromWorkgroup(workgroup) {
+            delete workgroup.userName;
+            delete workgroup.displayNames;
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = workgroup.users[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var user = _step.value;
+
+                    delete user.name;
+                    delete user.firstName;
+                    delete user.lastName;
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+        }
 
         /**
          * Get the composite id for a given object
@@ -2917,29 +2989,29 @@ var DataExportController = function () {
     }, {
         key: 'canExportComponentDataType',
         value: function canExportComponentDataType(componentType) {
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
 
             try {
-                for (var _iterator = this.availableComponentDataExports[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var tempComponentType = _step.value;
+                for (var _iterator2 = this.availableComponentDataExports[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var tempComponentType = _step2.value;
 
                     if (componentType == tempComponentType) {
                         return true;
                     }
                 }
             } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
                     }
                 } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
                     }
                 }
             }
@@ -3033,7 +3105,7 @@ var DataExportController = function () {
         value: function populateMatchColumnNames(component, columnNames, columnNameToNumber) {
 
             // an array of column names
-            var defaultMatchColumnNames = ["#", "Workgroup ID", "WISE ID 1", "WISE ID 2", "WISE ID 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Student Work ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Student Data", "Component Revision Counter", "Is Submit", "Submit Count"];
+            var defaultMatchColumnNames = ["#", "Workgroup ID", "WISE ID 1", "Student Name 1", "WISE ID 2", "Student Name 2", "WISE ID 3", "Student Name 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Student Work ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Student Data", "Component Revision Counter", "Is Submit", "Submit Count"];
 
             /*
              * Add the default column names that contain the information about the
@@ -3051,13 +3123,13 @@ var DataExportController = function () {
             }
 
             // Add the header cells for the choices
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
 
             try {
-                for (var _iterator2 = component.choices[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var _choice = _step2.value;
+                for (var _iterator3 = component.choices[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var _choice = _step3.value;
 
                     columnNameToNumber[_choice.id] = columnNames.length;
                     columnNames.push(_choice.value);
@@ -3065,43 +3137,43 @@ var DataExportController = function () {
 
                 // Add the header cells for the choice correctness
             } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
+                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                        _iterator3.return();
                     }
                 } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
+                    if (_didIteratorError3) {
+                        throw _iteratorError3;
                     }
                 }
             }
 
             if (this.includeCorrectnessColumns && this.MatchService.hasCorrectAnswer(component)) {
-                var _iteratorNormalCompletion3 = true;
-                var _didIteratorError3 = false;
-                var _iteratorError3 = undefined;
+                var _iteratorNormalCompletion4 = true;
+                var _didIteratorError4 = false;
+                var _iteratorError4 = undefined;
 
                 try {
-                    for (var _iterator3 = component.choices[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                        var choice = _step3.value;
+                    for (var _iterator4 = component.choices[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                        var choice = _step4.value;
 
                         columnNameToNumber[choice.id + '-boolean'] = columnNames.length;
                         columnNames.push(choice.value);
                     }
                 } catch (err) {
-                    _didIteratorError3 = true;
-                    _iteratorError3 = err;
+                    _didIteratorError4 = true;
+                    _iteratorError4 = err;
                 } finally {
                     try {
-                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                            _iterator3.return();
+                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                            _iterator4.return();
                         }
                     } finally {
-                        if (_didIteratorError3) {
-                            throw _iteratorError3;
+                        if (_didIteratorError4) {
+                            throw _iteratorError4;
                         }
                     }
                 }
@@ -3126,28 +3198,28 @@ var DataExportController = function () {
             var headerRow = [];
 
             // generate the header row by looping through all the column names
-            var _iteratorNormalCompletion4 = true;
-            var _didIteratorError4 = false;
-            var _iteratorError4 = undefined;
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
 
             try {
-                for (var _iterator4 = columnNames[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                    var columnName = _step4.value;
+                for (var _iterator5 = columnNames[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                    var columnName = _step5.value;
 
                     // add the column name to the header row
                     headerRow.push(columnName);
                 }
             } catch (err) {
-                _didIteratorError4 = true;
-                _iteratorError4 = err;
+                _didIteratorError5 = true;
+                _iteratorError5 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                        _iterator4.return();
+                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                        _iterator5.return();
                     }
                 } finally {
-                    if (_didIteratorError4) {
-                        throw _iteratorError4;
+                    if (_didIteratorError5) {
+                        throw _iteratorError5;
                     }
                 }
             }
@@ -3177,29 +3249,29 @@ var DataExportController = function () {
 
             var rowCounter = 1;
 
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
 
             try {
-                for (var _iterator5 = workgroups[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var workgroup = _step5.value;
+                for (var _iterator6 = workgroups[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var workgroup = _step6.value;
 
                     var rowsForWorkgroup = this.generateMatchComponentWorkRowsForWorkgroup(component, workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter);
                     rows = rows.concat(rowsForWorkgroup);
                     rowCounter += rowsForWorkgroup.length;
                 }
             } catch (err) {
-                _didIteratorError5 = true;
-                _iteratorError5 = err;
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                        _iterator5.return();
+                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                        _iterator6.return();
                     }
                 } finally {
-                    if (_didIteratorError5) {
-                        throw _iteratorError5;
+                    if (_didIteratorError6) {
+                        throw _iteratorError6;
                     }
                 }
             }
@@ -3227,12 +3299,7 @@ var DataExportController = function () {
             var workgroupId = workgroup.workgroupId;
             var periodName = workgroup.periodName;
             var userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-
-            // get the WISE IDs
-            var wiseIds = this.ConfigService.getWISEIds(workgroupId);
-            var wiseId1 = wiseIds[0];
-            var wiseId2 = wiseIds[1];
-            var wiseId3 = wiseIds[2];
+            var extractedWISEIDsAndStudentNames = this.extractWISEIDsAndStudentNames(userInfo.users);
 
             /*
              * a mapping from component to component revision counter.
@@ -3260,7 +3327,7 @@ var DataExportController = function () {
 
                     if (exportRow) {
                         // add the row to the rows that will show up in the export
-                        rows.push(this.generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState));
+                        rows.push(this.generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, extractedWISEIDsAndStudentNames['wiseId1'], extractedWISEIDsAndStudentNames['wiseId2'], extractedWISEIDsAndStudentNames['wiseId3'], extractedWISEIDsAndStudentNames['studentName1'], extractedWISEIDsAndStudentNames['studentName2'], extractedWISEIDsAndStudentNames['studentName3'], periodName, componentRevisionCounter, matchComponentState));
                         rowCounter++;
                     } else {
                         /*
@@ -3293,31 +3360,31 @@ var DataExportController = function () {
 
     }, {
         key: 'generateMatchComponentWorkRow',
-        value: function generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState) {
+        value: function generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, componentRevisionCounter, matchComponentState) {
 
             /*
              * Populate the cells in the row that contain the information about the
              * student, project, run, step, and component.
              */
-            var row = this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState);
+            var row = this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, componentRevisionCounter, matchComponentState);
 
-            var _iteratorNormalCompletion6 = true;
-            var _didIteratorError6 = false;
-            var _iteratorError6 = undefined;
+            var _iteratorNormalCompletion7 = true;
+            var _didIteratorError7 = false;
+            var _iteratorError7 = undefined;
 
             try {
-                for (var _iterator6 = matchComponentState.studentData.buckets[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                    var bucket = _step6.value;
+                for (var _iterator7 = matchComponentState.studentData.buckets[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                    var bucket = _step7.value;
 
 
                     // loop through all the choices that the student put in this bucket
-                    var _iteratorNormalCompletion7 = true;
-                    var _didIteratorError7 = false;
-                    var _iteratorError7 = undefined;
+                    var _iteratorNormalCompletion8 = true;
+                    var _didIteratorError8 = false;
+                    var _iteratorError8 = undefined;
 
                     try {
-                        for (var _iterator7 = bucket.items[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-                            var item = _step7.value;
+                        for (var _iterator8 = bucket.items[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                            var item = _step8.value;
 
                             // put the bucket name in the column corresponding to the choice
                             row[columnNameToNumber[item.id]] = bucket.value;
@@ -3327,31 +3394,31 @@ var DataExportController = function () {
                             }
                         }
                     } catch (err) {
-                        _didIteratorError7 = true;
-                        _iteratorError7 = err;
+                        _didIteratorError8 = true;
+                        _iteratorError8 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                                _iterator7.return();
+                            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                                _iterator8.return();
                             }
                         } finally {
-                            if (_didIteratorError7) {
-                                throw _iteratorError7;
+                            if (_didIteratorError8) {
+                                throw _iteratorError8;
                             }
                         }
                     }
                 }
             } catch (err) {
-                _didIteratorError6 = true;
-                _iteratorError6 = err;
+                _didIteratorError7 = true;
+                _iteratorError7 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                        _iterator6.return();
+                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                        _iterator7.return();
                     }
                 } finally {
-                    if (_didIteratorError6) {
-                        throw _iteratorError6;
+                    if (_didIteratorError7) {
+                        throw _iteratorError7;
                     }
                 }
             }

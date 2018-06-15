@@ -13,6 +13,7 @@
   "match.deleteBucket": "Delete Bucket",
   "match.deleteChoice": "Delete Choice",
   "match.incorrectPositionFeedback": "Incorrect Position Feedback",
+  "match.showPrivateNotesAsChoices": "Show Private Notes As Choices",
   "match.originBucketName": "Origin Bucket Name",
   "match.position": "Position"
 }
