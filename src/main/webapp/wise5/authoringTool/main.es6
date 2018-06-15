@@ -38,7 +38,7 @@ import '../components/graph/graphAuthoringComponentModule';
 import '../components/html/htmlAuthoringComponentModule';
 import '../components/label/labelAuthoringComponentModule';
 import '../components/match/matchAuthoringComponentModule';
-import '../components/multipleChoice/multipleChoiceComponentModule';
+import '../components/multipleChoice/multipleChoiceAuthoringComponentModule';
 import NodeAuthoringController from './node/nodeAuthoringController';
 import NodeService from '../services/nodeService';
 import '../directives/notebook/notebook';
@@ -86,7 +86,7 @@ let authoringModule = angular.module('authoring', [
     'htmlComponentModule',
     'labelAuthoringComponentModule',
     'matchAuthoringComponentModule',
-    'multipleChoiceComponentModule',
+    'multipleChoiceAuthoringComponentModule',
     'ngAnimate',
     'ngAria',
     'ngFileUpload',
