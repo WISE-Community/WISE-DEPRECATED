@@ -26,8 +26,16 @@ export class AppComponent {
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/ki-distinguish.svg')
     );
     iconRegistry.addSvgIcon(
-      'ki-sort',
-      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/ki-sort.svg')
+      'ki-connect',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/ki-connect.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'facebook',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/facebook.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'twitter',
+      sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/twitter.svg')
     );
   }
 
