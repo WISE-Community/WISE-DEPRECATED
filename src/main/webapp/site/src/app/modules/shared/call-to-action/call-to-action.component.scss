@@ -1,0 +1,19 @@
+@import '~style/abstracts/mixins';
+
+.cta {
+  border-radius: 4px;
+  padding: 16px;
+  display: block;
+  text-align: center;
+  text-transform: none;
+  white-space: normal;
+}
+
+.cta__icon {
+  @include mat-icon-size(48px);
+  margin: 8px 0 16px;
+}
+
+.cta__tagline {
+  margin-bottom: 0;
+}

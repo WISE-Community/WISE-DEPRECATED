@@ -1,1 +1,5 @@
+@import '~style/abstracts/mixins';
 
+.mat-icon {
+  @include mat-icon-size(32px);
+}

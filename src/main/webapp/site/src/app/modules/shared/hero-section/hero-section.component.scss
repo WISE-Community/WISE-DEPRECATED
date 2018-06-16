@@ -1,7 +1,8 @@
 @import
   '~@angular/material/theming',
   '~style/abstracts/functions',
-  '~style/abstracts/variables';
+  '~style/abstracts/variables',
+  '~style/abstracts/mixins';
 
 // Create a config with the default typography levels.
 $config: mat-typography-config();
@@ -46,8 +47,7 @@ h1.hero__headline {
   @include mat-typography-level-to-styles($config, display-1);
 
   .mat-icon {
-    height: mat-font-size($config, display-1);
-    width: mat-font-size($config, display-1);
+    @include mat-icon-size(mat-font-size($config, display-1));
   }
 
   @media (min-width: breakpoint('sm.min')) {
@@ -55,8 +55,7 @@ h1.hero__headline {
     @include mat-typography-level-to-styles($config, display-3);
 
     .mat-icon {
-      height: mat-font-size($config, display-3);
-      width: mat-font-size($config, display-3);
+      @include mat-icon-size(mat-font-size($config, display-3));
     }
   }
 }
@@ -78,16 +77,14 @@ h2.hero__tagline {
   line-height: mat-line-height($config, subheading-2);
 
   .mat-icon {
-    height: mat-font-size($config, subheading-2);
-    width: mat-font-size($config, subheading-2);
+    @include mat-icon-size(mat-font-size($config, headline));
   }
 
   @media (min-width: breakpoint('sm.min')) {
     @include mat-typography-level-to-styles($config, display-1);
 
     .mat-icon {
-      height: mat-font-size($config, subheading-2);
-      width: mat-font-size($config, subheading-2);
+      @include mat-icon-size(mat-font-size($config, display-1));
     }
   }
 }
