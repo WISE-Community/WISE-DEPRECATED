@@ -210,27 +210,6 @@ class VLEProjectService extends ProjectService {
     }
     this.additionalProcessingFunctionsMap[key].push(additionalProcessingFunction);
   }
-
-  /**
-   * Returns true iff the specified node and component has any registered additionalProcessingFunctions
-   * @param nodeId the node id
-   * @param componentId the component id
-   * @returns true/false
-   */
-  hasAdditionalProcessingFunctions(nodeId, componentId) {
-    return this.getAdditionalProcessingFunctions(nodeId, componentId) != null;
-  }
-
-  /**
-   * Returns an array of registered additionalProcessingFunctions for the specified node and component
-   * @param nodeId the node id
-   * @param componentId the component id
-   * @returns an array of additionalProcessingFunctions
-   */
-  getAdditionalProcessingFunctions(nodeId, componentId) {
-    let key = nodeId + "_" + componentId;
-    return this.additionalProcessingFunctionsMap[key];
-  }
 }
 
 VLEProjectService.$inject = [

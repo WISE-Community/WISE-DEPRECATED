@@ -34,7 +34,7 @@ import '../components/draw/drawAuthoringComponentModule';
 import '../components/embedded/embeddedComponentModule';
 import '../filters/filters';
 import '../lib/highcharts@4.2.1';
-import '../components/graph/graphComponentModule';
+import '../components/graph/graphAuthoringComponentModule';
 import '../components/html/htmlAuthoringComponentModule';
 import '../components/label/labelComponentModule';
 import '../components/match/matchComponentModule';
@@ -68,7 +68,7 @@ import WISELinkAuthoringController from './wiseLink/wiseLinkAuthoringController'
 import 'lib/angular-summernote/dist/angular-summernote.min';
 import moment from 'moment';
 
-let authoringModule = angular.module('authoring', [
+const authoringModule = angular.module('authoring', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
@@ -81,7 +81,7 @@ let authoringModule = angular.module('authoring', [
     'drawAuthoringComponentModule',
     'embeddedComponentModule',
     'filters',
-    'graphComponentModule',
+    'graphAuthoringComponentModule',
     'highcharts-ng',
     'htmlComponentModule',
     'labelComponentModule',
