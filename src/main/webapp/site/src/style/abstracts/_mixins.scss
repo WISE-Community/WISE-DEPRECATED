@@ -37,6 +37,10 @@
     }
   }
 
+  .cta {
+    box-shadow: 0 0 2px map-get($colors, disabled-text);
+  }
+
   .select-menu {
     .mat-form-field-infix {
       background-color: map-get($colors, control-bg);
