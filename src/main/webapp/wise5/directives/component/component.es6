@@ -83,7 +83,7 @@ class ComponentController {
               (componentContent.type == 'Animation' || componentContent.type == 'ConceptMap' ||
               componentContent.type == 'Discussion' || componentContent.type == 'Draw' ||
               componentContent.type == 'Graph' || componentContent.type == 'HTML' ||
-              componentContent.type == 'Label')) {
+              componentContent.type == 'Label' || componentContent.type == 'Match')) {
             $scope.componentTemplatePath = this.NodeService.getComponentAuthoringTemplatePath(componentContent.type);
         } else {
             $scope.componentTemplatePath = this.NodeService.getComponentTemplatePath(componentContent.type);
