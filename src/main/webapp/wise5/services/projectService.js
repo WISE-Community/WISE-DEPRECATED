@@ -9038,6 +9038,33 @@ var ProjectService = function () {
         }
       }
     }
+
+    /**
+     * Returns true iff the specified node and component has any registered additionalProcessingFunctions
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @returns true/false
+     */
+
+  }, {
+    key: 'hasAdditionalProcessingFunctions',
+    value: function hasAdditionalProcessingFunctions(nodeId, componentId) {
+      return this.getAdditionalProcessingFunctions(nodeId, componentId) != null;
+    }
+
+    /**
+     * Returns an array of registered additionalProcessingFunctions for the specified node and component
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @returns an array of additionalProcessingFunctions
+     */
+
+  }, {
+    key: 'getAdditionalProcessingFunctions',
+    value: function getAdditionalProcessingFunctions(nodeId, componentId) {
+      var key = nodeId + "_" + componentId;
+      return this.additionalProcessingFunctionsMap[key];
+    }
   }]);
 
   return ProjectService;
