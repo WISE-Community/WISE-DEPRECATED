@@ -34,10 +34,10 @@ import '../components/draw/drawAuthoringComponentModule';
 import '../components/embedded/embeddedComponentModule';
 import '../filters/filters';
 import '../lib/highcharts@4.2.1';
-import '../components/graph/graphComponentModule';
+import '../components/graph/graphAuthoringComponentModule';
 import '../components/html/htmlAuthoringComponentModule';
-import '../components/label/labelComponentModule';
-import '../components/match/matchComponentModule';
+import '../components/label/labelAuthoringComponentModule';
+import '../components/match/matchAuthoringComponentModule';
 import '../components/multipleChoice/multipleChoiceComponentModule';
 import NodeAuthoringController from './node/nodeAuthoringController';
 import NodeService from '../services/nodeService';
@@ -68,7 +68,7 @@ import WISELinkAuthoringController from './wiseLink/wiseLinkAuthoringController'
 import 'lib/angular-summernote/dist/angular-summernote.min';
 import moment from 'moment';
 
-let authoringModule = angular.module('authoring', [
+const authoringModule = angular.module('authoring', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
@@ -81,11 +81,11 @@ let authoringModule = angular.module('authoring', [
     'drawAuthoringComponentModule',
     'embeddedComponentModule',
     'filters',
-    'graphComponentModule',
+    'graphAuthoringComponentModule',
     'highcharts-ng',
     'htmlComponentModule',
-    'labelComponentModule',
-    'matchComponentModule',
+    'labelAuthoringComponentModule',
+    'matchAuthoringComponentModule',
     'multipleChoiceComponentModule',
     'ngAnimate',
     'ngAria',
