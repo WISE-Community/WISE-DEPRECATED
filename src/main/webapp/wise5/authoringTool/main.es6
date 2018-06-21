@@ -59,7 +59,7 @@ import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
-import '../components/table/tableComponentModule';
+import '../components/table/tableAuthoringComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
@@ -98,7 +98,7 @@ const authoringModule = angular.module('authoring', [
     'outsideURLComponentModule',
     'pascalprecht.translate',
     'summernote',
-    'tableComponentModule',
+    'tableAuthoringComponentModule',
     'ui.router'
     ])
     .service(AnnotationService.name, AnnotationService)
