@@ -80,8 +80,9 @@ class ComponentController {
         }
 
         if ($scope.mode === 'authoring' &&
-            (componentContent.type == 'HTML' || componentContent.type == 'ConceptMap' ||
-              componentContent.type == 'Animation' || componentContent.type == 'Graph' ||
+              (componentContent.type == 'Animation' || componentContent.type == 'ConceptMap' ||
+              componentContent.type == 'Discussion' || componentContent.type == 'Draw' ||
+              componentContent.type == 'Graph' || componentContent.type == 'HTML' ||
               componentContent.type == 'Label' || componentContent.type == 'Match' ||
               componentContent.type == 'OpenResponse' || componentContent.type == 'Table' ||
               componentContent.type == 'OutsideURL' || componentContent.type == 'MultipleChoice' ||
