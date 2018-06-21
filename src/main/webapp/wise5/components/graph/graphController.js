@@ -2340,7 +2340,8 @@ var GraphController = function (_ComponentController) {
          * one.
          */
         this.newTrial();
-        this.handleConnectedComponents();
+        var isReset = true;
+        this.handleConnectedComponents(isReset);
       } else {
         // get the index of the active series
         var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
@@ -5959,7 +5960,7 @@ var GraphController = function (_ComponentController) {
 
   }, {
     key: 'handleConnectedComponents',
-    value: function handleConnectedComponents() {
+    value: function handleConnectedComponents(isReset) {
       var _this12 = this;
 
       // get the connected components
@@ -6132,7 +6133,7 @@ var GraphController = function (_ComponentController) {
             newComponentState.studentData.backgroundImage = connectedComponentBackgroundImage;
           }
 
-          newComponentState = _this12.handleConnectedComponentsHelper(newComponentState);
+          newComponentState = _this12.handleConnectedComponentsHelper(newComponentState, isReset);
 
           // populate the component state into this component
           _this12.setStudentWork(newComponentState);
@@ -6164,10 +6165,10 @@ var GraphController = function (_ComponentController) {
 
   }, {
     key: 'handleConnectedComponentsHelper',
-    value: function handleConnectedComponentsHelper(newComponentState) {
+    value: function handleConnectedComponentsHelper(newComponentState, isReset) {
       var mergedComponentState = this.$scope.componentState;
       var firstTime = true;
-      if (mergedComponentState == null) {
+      if (mergedComponentState == null || isReset) {
         mergedComponentState = newComponentState;
       } else {
         /*
