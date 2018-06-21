@@ -45,7 +45,7 @@ import '../directives/notebook/notebook';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import '../components/openResponse/openResponseAuthoringComponentModule';
-import '../components/outsideURL/outsideURLComponentModule';
+import '../components/outsideURL/outsideURLAuthoringComponentModule';
 import ProjectAssetController from './asset/projectAssetController';
 import ProjectAssetService from '../services/projectAssetService';
 import ProjectController from './project/projectController';
@@ -95,7 +95,7 @@ const authoringModule = angular.module('authoring', [
     'ngWebSocket',
     'notebook',
     'openResponseAuthoringComponentModule',
-    'outsideURLComponentModule',
+    'outsideURLAuthoringComponentModule',
     'pascalprecht.translate',
     'summernote',
     'tableAuthoringComponentModule',
