@@ -373,6 +373,36 @@ var ComponentController = function () {
     value: function isAddToNotebookEnabled() {
       return this.isNotebookEnabled() && this.showAddToNotebookButton;
     }
+
+    /**
+     * Get the connected component type
+     * @param connectedComponent get the component type of this connected component
+     * @return the connected component type2
+     */
+
+  }, {
+    key: 'authoringGetConnectedComponentType',
+    value: function authoringGetConnectedComponentType(connectedComponent) {
+
+      var connectedComponentType = null;
+
+      if (connectedComponent != null) {
+
+        // get the node id and component id of the connected component
+        var nodeId = connectedComponent.nodeId;
+        var componentId = connectedComponent.componentId;
+
+        // get the component
+        var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+        if (component != null) {
+          // get the component type
+          connectedComponentType = component.type;
+        }
+      }
+
+      return connectedComponentType;
+    }
   }]);
 
   return ComponentController;
