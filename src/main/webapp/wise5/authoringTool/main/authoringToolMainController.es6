@@ -5,6 +5,7 @@ class AuthoringToolMainController {
   constructor(
       $anchorScroll,
       $filter,
+      $mdDialog,
       $rootScope,
       $state,
       $timeout,
@@ -14,6 +15,7 @@ class AuthoringToolMainController {
       UtilService) {
     this.$anchorScroll = $anchorScroll;
     this.$filter = $filter;
+    this.$mdDialog = $mdDialog;
     this.$rootScope = $rootScope;
     this.$state = $state;
     this.$timeout = $timeout;
@@ -83,6 +85,7 @@ class AuthoringToolMainController {
         '\n\n' + projectInfo;
     if (confirm(doCopyConfirmMessage)) {
       this.ProjectService.copyProject(projectId).then((projectId) => {
+        this.showCopyingProjectMessage();
         this.saveEvent('projectCopied', 'Authoring', null, projectId);
 
         // refresh the project list and highlight the newly copied project
@@ -94,9 +97,26 @@ class AuthoringToolMainController {
             let highlightDuration = 3000;
             this.UtilService.temporarilyHighlightElement(projectId, highlightDuration);
           });
+          this.$mdDialog.hide();
         });
       });
     }
+  }
+
+  showCopyingProjectMessage() {
+    this.$mdDialog.show({
+      template: `
+        <div align="center">
+          <div style="width: 200px; height: 100px; margin: 20px;">
+            <span>{{ "copyingProject" | translate }}...</span>
+            <br/>
+            <br/>
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          </div>
+        </div>
+      `,
+      clickOutsideToClose: false
+    });
   }
 
   createNewProjectButtonClicked() {
@@ -264,6 +284,7 @@ class AuthoringToolMainController {
 AuthoringToolMainController.$inject = [
     '$anchorScroll',
     '$filter',
+    '$mdDialog',
     '$rootScope',
     '$state',
     '$timeout',
