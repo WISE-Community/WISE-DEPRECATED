@@ -173,7 +173,7 @@ class NotebookController {
   }
 
   insert(notebookItemId, $event) {
-    let notebookItem = this.NotebookService.getNotebookItemById(notebookItemId, this.workgroupId);
+    let notebookItem = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(notebookItemId, this.workgroupId);
     if (this.requester == 'report') {
       this.insertContent = angular.copy(notebookItem);
     } else {
