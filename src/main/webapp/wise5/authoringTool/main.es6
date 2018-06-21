@@ -14,7 +14,7 @@ import 'lib/angular-toArrayFilter/toArrayFilter';
 import 'angular-translate';
 import 'angular-translate-loader-partial';
 import 'angular-websocket';
-import '../components/animation/animationComponentModule';
+import '../components/animation/animationAuthoringComponentModule';
 import AnnotationService from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
 import './components/authoringToolComponents';
@@ -24,27 +24,27 @@ import AuthoringToolNewProjectController from './main/authoringToolNewProjectCon
 import AuthoringToolProjectService from './authoringToolProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
 import AuthorWebSocketService from '../services/authorWebSocketService';
-import '../components/conceptMap/conceptMapComponentModule';
+import '../components/conceptMap/conceptMapAuthoringComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import '../directives/components';
 import ComponentService from '../components/componentService';
-import '../components/discussion/discussionComponentModule';
-import '../components/draw/drawComponentModule';
+import '../components/discussion/discussionAuthoringComponentModule';
+import '../components/draw/drawAuthoringComponentModule';
 import '../components/embedded/embeddedComponentModule';
 import '../filters/filters';
 import '../lib/highcharts@4.2.1';
-import '../components/graph/graphComponentModule';
-import '../components/html/htmlComponentModule';
-import '../components/label/labelComponentModule';
-import '../components/match/matchComponentModule';
+import '../components/graph/graphAuthoringComponentModule';
+import '../components/html/htmlAuthoringComponentModule';
+import '../components/label/labelAuthoringComponentModule';
+import '../components/match/matchAuthoringComponentModule';
 import '../components/multipleChoice/multipleChoiceComponentModule';
 import NodeAuthoringController from './node/nodeAuthoringController';
 import NodeService from '../services/nodeService';
 import '../directives/notebook/notebook';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
-import '../components/openResponse/openResponseComponentModule';
+import '../components/openResponse/openResponseAuthoringComponentModule';
 import '../components/outsideURL/outsideURLComponentModule';
 import ProjectAssetController from './asset/projectAssetController';
 import ProjectAssetService from '../services/projectAssetService';
@@ -68,24 +68,24 @@ import WISELinkAuthoringController from './wiseLink/wiseLinkAuthoringController'
 import 'lib/angular-summernote/dist/angular-summernote.min';
 import moment from 'moment';
 
-let authoringModule = angular.module('authoring', [
+const authoringModule = angular.module('authoring', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
-    'animationComponentModule',
+    'animationAuthoringComponentModule',
     'audioOscillatorComponentModule',
     'authoringTool.components',
     'components',
-    'conceptMapComponentModule',
-    'discussionComponentModule',
-    'drawComponentModule',
+    'conceptMapAuthoringComponentModule',
+    'discussionAuthoringComponentModule',
+    'drawAuthoringComponentModule',
     'embeddedComponentModule',
     'filters',
-    'graphComponentModule',
+    'graphAuthoringComponentModule',
     'highcharts-ng',
     'htmlComponentModule',
-    'labelComponentModule',
-    'matchComponentModule',
+    'labelAuthoringComponentModule',
+    'matchAuthoringComponentModule',
     'multipleChoiceComponentModule',
     'ngAnimate',
     'ngAria',
@@ -94,7 +94,7 @@ let authoringModule = angular.module('authoring', [
     'ngSanitize',
     'ngWebSocket',
     'notebook',
-    'openResponseComponentModule',
+    'openResponseAuthoringComponentModule',
     'outsideURLComponentModule',
     'pascalprecht.translate',
     'summernote',
