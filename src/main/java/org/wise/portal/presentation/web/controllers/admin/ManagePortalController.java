@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2018 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -33,8 +33,7 @@ import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.service.portal.PortalService;
 
 /**
- * Controller for configuring this WISE instance.
- *
+ * Controller for configuring this WISE instance
  * @author Hiroki Terashima
  */
 @Controller
@@ -45,25 +44,22 @@ public class ManagePortalController {
   private PortalService portalService;
 
   @RequestMapping(method = RequestMethod.GET)
-  protected String handleGET(
-    ModelMap modelMap,
-    @RequestParam(value = "portalId", defaultValue = "1") Integer portalId) throws Exception {
-
+  protected String showPortalSettings(ModelMap modelMap,
+      @RequestParam(value = "portalId", defaultValue = "1") Integer portalId) throws Exception {
     Portal portal = portalService.getById(portalId);
     modelMap.put("portal", portal);
     modelMap.put("defaultProjectMetadataSettings", portalService.getDefaultProjectMetadataSettings());
+    modelMap.put("defaultProjectLibraryGroups", portalService.getDefaultProjectLibraryGroups());
     return "admin/portal/manage";
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  protected void handlePOST(
-    ModelMap modelMap,
-    @RequestParam(value = "portalId", defaultValue = "1") Integer portalId,
-    @RequestParam(value = "attr") String attr,
-    @RequestParam(value = "val") String val) throws Exception {
-
+  protected void savePortalChanges(
+      ModelMap modelMap,
+      @RequestParam(value = "portalId", defaultValue = "1") Integer portalId,
+      @RequestParam(value = "attr") String attr,
+      @RequestParam(value = "val") String val) throws Exception {
     Portal portal = portalService.getById(portalId);
-
     try {
       if (attr.equals("portalName")) {
         portal.setPortalName(val);
@@ -83,6 +79,10 @@ public class ManagePortalController {
         modelMap.put("msg", "success");
       } else if (attr.equals("projectMetadataSettings")) {
         portal.setProjectMetadataSettings(val);
+        portalService.updatePortal(portal);
+        modelMap.put("msg", "success");
+      } else if (attr.equals("projectLibraryGroups")) {
+        portal.setProjectLibraryGroups(val);
         portalService.updatePortal(portal);
         modelMap.put("msg", "success");
       } else {

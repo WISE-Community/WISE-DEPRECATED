@@ -31,7 +31,7 @@ const materialModules = [
   MatIconModule,
   MatOptionModule,
   MatSelectModule,
-  MatTooltipModule,
+  MatTooltipModule
 ];
 
 @NgModule({
@@ -54,6 +54,8 @@ const materialModules = [
   entryComponents: [ LibraryProjectDetailsComponent ],
   exports: [
     LibraryComponent,
+    FormsModule,
+    ReactiveFormsModule,
     materialModules
   ],
   providers: [

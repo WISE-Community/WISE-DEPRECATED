@@ -5,6 +5,10 @@
 .mat-card {
   margin-top: 16px;
   padding-top: 12px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    padding: 16px 28px 28px;
+  }
 }
 
 .mat-card-content {

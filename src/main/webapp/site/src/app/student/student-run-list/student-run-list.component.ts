@@ -38,6 +38,7 @@ export class StudentRunListComponent implements OnInit {
       .subscribe(runs => {
         this.runs = runs;
         this.filteredRuns = runs;
+        this.searchUpdated(this.search);
         this.sortUpdated(this.sortValue);
         this.loaded = true;
       });
@@ -55,14 +56,15 @@ export class StudentRunListComponent implements OnInit {
 
   performFilter(filterValue: string) {
     filterValue = this.search.toLocaleLowerCase();
-    // TODO: extract this for global use
+    // TODO: extract this for global use?
     return this.runs.filter((run: StudentRun) =>
       Object.keys(run).some(prop => {
         let value = run[prop];
-        if (typeof value === "string") {
-          value = value.toLocaleLowerCase();
+        if (typeof value === 'undefined' || value === null) {
+          return false;
+        } else {
+          return value.toString().toLocaleLowerCase().indexOf(filterValue) !== -1;
         }
-        return value.toString().indexOf(filterValue) !== -1;
       })
     );
   }

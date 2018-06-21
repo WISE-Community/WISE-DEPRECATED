@@ -8,7 +8,8 @@ import {
   MatIconModule,
   MatInputModule,
   MatFormFieldModule,
-  MatSelectModule } from '@angular/material';
+  MatSelectModule
+} from '@angular/material';
 
 const materialModules = [
   MatButtonModule,
@@ -20,9 +21,9 @@ const materialModules = [
 
 import { BlurbComponent } from './blurb/blurb.component';
 import { CallToActionComponent } from './call-to-action/call-to-action.component';
+import { HeroSectionComponent } from './hero-section/hero-section.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { SelectMenuComponent } from './select-menu/select-menu.component';
-import { HeroSectionComponent } from './hero-section/hero-section.component';
 
 @NgModule({
   imports: [
