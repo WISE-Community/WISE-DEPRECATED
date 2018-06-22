@@ -1,10 +1,8 @@
 {
-  "match.addBucket": "Add Bucket",
   "match.addChoice": "Add Choice",
+  "match.addTargetBucket": "Add Target Bucket",
   "match.areYouSureYouWantToDeleteThisBucket": "Are you sure you want to delete this bucket?",
   "match.areYouSureYouWantToDeleteThisChoice": "Are you sure you want to delete this choice?",
-  "match.bucketName": "Bucket Name",
-  "match.buckets": "Buckets",
   "match.choiceName": "Choice Name",
   "match.choices": "Choices",
   "match.choicesNeedToBeOrderedWithinBuckets": "Choices need to be ordered within buckets",
@@ -13,8 +11,12 @@
   "match.deleteBucket": "Delete Bucket",
   "match.deleteChoice": "Delete Choice",
   "match.incorrectPositionFeedback": "Incorrect Position Feedback",
-  "match.originBucketName": "Origin Bucket Name",
   "match.position": "Position",
   "match.showPrivateNotesAsChoices": "Show Private Notes As Choices",
-  "match.showSourceBucketOnTheLeftAndTargetBucketsOnTheRight": "Show Source Bucket on the Left and Target Buckets on the Right"
+  "match.showSourceBucketOnTheLeftAndTargetBucketsOnTheRight": "Show Source Bucket on the Left and Target Buckets on the Right",
+  "match.sourceBucketName": "Source Bucket Name",
+  "match.targetBucketName": "Target Bucket Name",
+  "match.targetBuckets": "Target Buckets",
+  "match.thereAreNoChoices": "There are no choices. Click the \"Add Choice\" button to add a choice.",
+  "match.thereAreNoTargetBuckets": "There are no target buckets. Click the \"Add Target Bucket\" button to add a bucket."
 }
