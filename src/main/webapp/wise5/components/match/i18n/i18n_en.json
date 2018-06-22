@@ -14,7 +14,7 @@
   "match.position": "Position",
   "match.showPrivateNotesAsChoices": "Show Private Notes As Choices",
   "match.showSourceBucketOnTheLeftAndTargetBucketsOnTheRight": "Show Source Bucket on the Left and Target Buckets on the Right",
-  "match.sourceBucketName": "Source Bucket Name",
+  "match.sourceBucketName": "Source Bucket Name (this is where all the choices initially show up)",
   "match.targetBucketName": "Target Bucket Name",
   "match.targetBuckets": "Target Buckets",
   "match.thereAreNoChoices": "There are no choices. Click the \"Add Choice\" button to add a choice.",
