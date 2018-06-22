@@ -737,6 +737,7 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
            */
           connectedComponent.componentId = allowedComponent.id;
           connectedComponent.type = 'importWork';
+          this.copyChoicesFromConnectedComponentIfNecessary(connectedComponent);
         }
       }
     }
@@ -815,10 +816,28 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
 
       // default the type to import work
       connectedComponent.type = 'importWork';
+      this.copyChoicesFromConnectedComponentIfNecessary(connectedComponent);
 
       // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
+  }
+
+  copyChoicesFromConnectedComponentIfNecessary(connectedComponent) {
+    const nodeId = connectedComponent.nodeId;
+    const componentId = connectedComponent.componentId;
+    if (this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId).type == "MultipleChoice") {
+      this.copyChoicesFromComponent(nodeId, componentId);
+    }
+  }
+
+  copyChoicesFromComponent(nodeId, componentId) {
+    this.authoringComponentContent.choices = this.getCopyOfChoicesFromComponent(nodeId, componentId);
+  }
+
+  getCopyOfChoicesFromComponent(nodeId, componentId) {
+    const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+    return this.UtilService.makeCopyOfJSONObject(component.choices);
   }
 
   /**
