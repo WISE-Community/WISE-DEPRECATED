@@ -391,6 +391,7 @@ public class WISE5AuthorProjectController {
     try {
       String contextPath = request.getContextPath();
       config.put("contextPath", contextPath);
+      config.put("userType", "teacher");
       config.put("copyProjectURL", contextPath + "/project/copy");
       config.put("mainHomePageURL", contextPath);
       config.put("renewSessionURL", contextPath + "/session/renew");

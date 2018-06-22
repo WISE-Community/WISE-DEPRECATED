@@ -49,16 +49,14 @@ var TopBarController = function () {
     value: function helpButtonClicked() {
       this.$window.open('https://docs.google.com/document/d/1G8lVtiUlGXLRAyFOvkEdadHYhJhJLW4aor9dol2VzeU', '_blank');
     }
-
-    /**
-     * Navigate the teacher to the teacher home page
-     */
-
   }, {
     key: 'goHome',
     value: function goHome() {
-      // fire the goHome event
-      this.$rootScope.$broadcast('goHome');
+      var _this = this;
+
+      this.ProjectService.notifyAuthorProjectEnd().then(function () {
+        _this.$rootScope.$broadcast('goHome');
+      });
     }
   }, {
     key: 'logOut',

@@ -32,9 +32,6 @@ class AuthoringToolMainController {
     this.showCreatingProjectMessage = false;
     this.showErrorCreatingProjectMessage = false;
 
-    this.$rootScope.$on('goHome', () => {
-      this.saveEvent('goToTeacherHome', 'Navigation', null, null);
-    });
     this.$rootScope.$on('logOut', () => {
       this.saveEvent('logOut', 'Navigation', null, null);
     });
@@ -264,6 +261,7 @@ class AuthoringToolMainController {
    * Send the user to the teacher home page
    */
   goHome() {
+    this.saveEvent('goToTeacherHome', 'Navigation', null, null);
     window.location = this.ConfigService.getWISEBaseURL() + '/teacher';
   }
 
