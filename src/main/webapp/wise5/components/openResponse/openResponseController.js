@@ -149,13 +149,7 @@ var OpenResponseController = function (_ComponentController) {
       } else if (componentState == null) {
         // check if we need to import work
 
-        var importPreviousWorkNodeId = _this.getImportPreviousWorkNodeId();
-        var importPreviousWorkComponentId = _this.getImportPreviousWorkComponentId();
-
-        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-          // import the work from the other component
-          _this.importWork();
-        } else if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
+        if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
           /*
            * the student does not have any work and there are connected
            * components so we will get the work from the connected
@@ -880,76 +874,6 @@ var OpenResponseController = function (_ComponentController) {
       return response;
     }
   }, {
-    key: 'importWork',
-
-
-    /**
-     * Import work from another component
-     */
-    value: function importWork() {
-
-      // get the component content
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // get the import previous work node id and component id
-        var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
-        var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-
-        if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-
-          /*
-           * check if the node id is in the field that we used to store
-           * the import previous work node id in
-           */
-          if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
-            importPreviousWorkNodeId = componentContent.importWorkNodeId;
-          }
-        }
-
-        if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-
-          /*
-           * check if the component id is in the field that we used to store
-           * the import previous work component id in
-           */
-          if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
-            importPreviousWorkComponentId = componentContent.importWorkComponentId;
-          }
-        }
-
-        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-
-          // get the latest component state for this component
-          var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          /*
-           * we will only import work into this component if the student
-           * has not done any work for this component
-           */
-          if (componentState == null) {
-            // the student has not done any work for this component
-
-            // get the latest component state from the component we are importing from
-            var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
-
-            if (importWorkComponentState != null) {
-              /*
-               * populate a new component state with the work from the
-               * imported component state
-               */
-              var populatedComponentState = this.OpenResponseService.populateComponentState(importWorkComponentState);
-
-              // populate the component state into this component
-              this.setStudentWork(populatedComponentState);
-              this.studentDataChanged();
-            }
-          }
-        }
-      }
-    }
-  }, {
     key: 'snipButtonClicked',
     value: function snipButtonClicked($event) {
       var _this4 = this;
@@ -1089,64 +1013,14 @@ var OpenResponseController = function (_ComponentController) {
       return this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
     }
   }, {
-    key: 'getImportPreviousWorkNodeId',
+    key: 'createMergedComponentState',
 
-
-    /**
-     * Get the import previous work node id
-     * @return the import previous work node id or null
-     */
-    value: function getImportPreviousWorkNodeId() {
-      var importPreviousWorkNodeId = null;
-
-      if (this.componentContent != null && this.componentContent.importPreviousWorkNodeId != null) {
-        importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-
-        if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-          /*
-           * check if the node id is in the field that we used to store
-           * the import previous work node id in
-           */
-          importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-        }
-      }
-
-      return importPreviousWorkNodeId;
-    }
-
-    /**
-     * Get the import previous work component id
-     * @return the import previous work component id or null
-     */
-
-  }, {
-    key: 'getImportPreviousWorkComponentId',
-    value: function getImportPreviousWorkComponentId() {
-      var importPreviousWorkComponentId = null;
-
-      if (this.componentContent != null && this.componentContent.importPreviousWorkComponentId != null) {
-        var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-
-        if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-          /*
-           * check if the component id is in the field that we used to store
-           * the import previous work component id in
-           */
-          importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-        }
-      }
-
-      return importPreviousWorkComponentId;
-    }
 
     /**
      * Create a component state with the merged student responses
      * @param componentStates an array of component states
      * @return a component state with the merged student responses
      */
-
-  }, {
-    key: 'createMergedComponentState',
     value: function createMergedComponentState(componentStates) {
 
       // create a new component state

@@ -2759,191 +2759,6 @@ var GraphController = function (_ComponentController) {
     }
 
     /**
-     * Import work from another component
-     */
-
-  }, {
-    key: 'importWork',
-    value: function importWork() {
-      var _this6 = this;
-
-      // get the component content
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // get the import previous work node id and component id
-        var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
-        var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-        var importWork = componentContent.importWork;
-
-        if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-
-          /*
-           * check if the node id is in the field that we used to store
-           * the import previous work node id in
-           */
-          if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
-            importPreviousWorkNodeId = componentContent.importWorkNodeId;
-          }
-        }
-
-        if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-
-          /*
-           * check if the component id is in the field that we used to store
-           * the import previous work component id in
-           */
-          if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
-            importPreviousWorkComponentId = componentContent.importWorkComponentId;
-          }
-        }
-
-        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-
-          // get the latest component state for this component
-          var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          /*
-           * we will only import work into this component if the student
-           * has not done any work for this component
-           */
-          if (componentState == null || !this.GraphService.componentStateHasStudentWork(componentState)) {
-            // the student has not done any work for this component
-
-            // get the latest component state from the component we are importing from
-            var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
-
-            if (importWorkComponentState != null) {
-              /*
-               * populate a new component state with the work from the
-               * imported component state
-               */
-              var populatedComponentState = this.GraphService.populateComponentState(importWorkComponentState);
-
-              // populate the component state into this component
-              this.setStudentWork(populatedComponentState);
-              this.studentDataChanged();
-            }
-          }
-        }
-
-        if (importWork != null) {
-          // we are importing work
-
-          var mergedTrials = [];
-
-          /*
-           * This will hold all the promises that will return the trials
-           * that we want. The trials will either be from this student
-           * or from classmates.
-           */
-          var promises = [];
-
-          // get the components to import work from
-          var importWorkComponents = importWork.components;
-
-          // loop through all the import work components
-          for (var c = 0; c < importWorkComponents.length; c++) {
-            var importWorkComponent = importWorkComponents[c];
-
-            if (importWorkComponent != null) {
-
-              // get the node id and component id to import from
-              var nodeId = importWorkComponent.nodeId;
-              var componentId = importWorkComponent.componentId;
-
-              /*
-               * example of the importWork field in a component that
-               * shows classmate work
-               *
-               * "importWork": {
-               *   "components": [
-               *     {
-               *       "nodeId": "node1",
-               *       "componentId": "yppyfy01er",
-               *       "showClassmateWork": true,
-               *       "showClassmateWorkSource": "period"
-               *     }
-               *   ]
-               * }
-               */
-
-              // whether we are showing classmate work
-              var showClassmateWork = importWorkComponent.showClassmateWork;
-
-              if (showClassmateWork) {
-                // we are showing classmate work
-
-                /*
-                 * showClassmateWorkSource determines whether to get
-                 * work from the period or the whole class (all periods)
-                 */
-                var showClassmateWorkSource = importWorkComponent.showClassmateWorkSource;
-
-                // get the trials from the classmates
-                promises.push(this.getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource));
-              } else {
-                // we are getting the work from this student
-
-                // get the latest component state from the component
-                var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-                // get the trials from the component state
-                promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
-              }
-            }
-          }
-
-          /*
-           * wait for all the promises to resolve because we may need to
-           * request the classmate work from the server
-           */
-          this.$q.all(promises).then(function (promiseResults) {
-
-            // this will hold all the trials
-            var mergedTrials = [];
-
-            /*
-             * Loop through all the promise results. There will be a
-             * promise result for each component we are importing from.
-             * Each promiseResult is an array of trials.
-             */
-            for (var p = 0; p < promiseResults.length; p++) {
-
-              // get the array of trials for one component
-              var trials = promiseResults[p];
-
-              // loop through all the trials from the component
-              for (var t = 0; t < trials.length; t++) {
-                var trial = trials[t];
-
-                // add the trial to our array of merged trials
-                mergedTrials.push(trial);
-              }
-            }
-
-            // create a new student data
-            var studentData = {};
-            studentData.trials = mergedTrials;
-            studentData.version = 2;
-
-            // create a new component state
-            var newComponentState = _this6.NodeService.createNewComponentState();
-            newComponentState.studentData = studentData;
-
-            // populate the component state into this component
-            _this6.setStudentWork(newComponentState);
-            _this6.studentDataChanged();
-          });
-        }
-      }
-    }
-  }, {
-    key: 'getTrialsFromClassmates',
-
-
-    /**
      * Get the trials from classmates
      * @param nodeId the node id
      * @param componentId the component id
@@ -2952,8 +2767,11 @@ var GraphController = function (_ComponentController) {
      * are "period" or "class".
      * @return a promise that will return all the trials from the classmates
      */
+
+  }, {
+    key: 'getTrialsFromClassmates',
     value: function getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource) {
-      var _this7 = this;
+      var _this6 = this;
 
       var deferred = this.$q.defer();
 
@@ -2969,12 +2787,12 @@ var GraphController = function (_ComponentController) {
           if (componentState != null) {
 
             // get the trials from the component state
-            promises.push(_this7.getTrialsFromComponentState(nodeId, componentId, componentState));
+            promises.push(_this6.getTrialsFromComponentState(nodeId, componentId, componentState));
           }
         }
 
         // wait for all the promises of trials
-        _this7.$q.all(promises).then(function (promiseResults) {
+        _this6.$q.all(promises).then(function (promiseResults) {
 
           var mergedTrials = [];
 
@@ -3089,41 +2907,41 @@ var GraphController = function (_ComponentController) {
   }, {
     key: 'attachStudentAsset',
     value: function attachStudentAsset(studentAsset) {
-      var _this8 = this;
+      var _this7 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
           if (copiedAsset != null) {
 
-            _this8.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
-              var rowData = _this8.StudentDataService.CSVToArray(assetContent);
+            _this7.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
+              var rowData = _this7.StudentDataService.CSVToArray(assetContent);
               var params = {};
               params.skipFirstRow = true; // first row contains header, so ignore it
               params.xColumn = 0; // assume (for now) x-axis data is in first column
               params.yColumn = 1; // assume (for now) y-axis data is in second column
 
-              var seriesData = _this8.convertRowDataToSeriesData(rowData, params);
+              var seriesData = _this7.convertRowDataToSeriesData(rowData, params);
 
               // get the index of the series that we will put the data into
-              var seriesIndex = _this8.series.length; // we're always appending a new series
+              var seriesIndex = _this7.series.length; // we're always appending a new series
 
               if (seriesIndex != null) {
 
                 // get the series
-                var series = _this8.series[seriesIndex];
+                var series = _this7.series[seriesIndex];
 
                 if (series == null) {
                   // the series is null so we will create a series
                   series = {};
                   series.name = copiedAsset.fileName;
-                  series.color = _this8.seriesColors[seriesIndex];
+                  series.color = _this7.seriesColors[seriesIndex];
                   series.marker = {
-                    'symbol': _this8.seriesMarkers[seriesIndex]
+                    'symbol': _this7.seriesMarkers[seriesIndex]
                   };
                   series.regression = false;
                   series.regressionSettings = {};
                   series.canEdit = false;
-                  _this8.series[seriesIndex] = series;
+                  _this7.series[seriesIndex] = series;
                 }
 
                 // set the data into the series
@@ -3131,14 +2949,14 @@ var GraphController = function (_ComponentController) {
               }
 
               // the graph has changed
-              _this8.isDirty = true;
+              _this7.isDirty = true;
 
               /*
                * set the flag to add the next component state created in
                * studentDataChanged() to the undo stack
                */
-              _this8.addNextComponentStateToUndoStack = true;
-              _this8.studentDataChanged();
+              _this7.addNextComponentStateToUndoStack = true;
+              _this7.studentDataChanged();
             });
           }
         });
@@ -4136,7 +3954,7 @@ var GraphController = function (_ComponentController) {
   }, {
     key: 'parseLatestTrial',
     value: function parseLatestTrial(studentData, params) {
-      var _this9 = this;
+      var _this8 = this;
 
       if (studentData != null) {
 
@@ -4283,7 +4101,7 @@ var GraphController = function (_ComponentController) {
                     if (params.highlightLatestPoint) {
                       this.$timeout(function () {
                         //this.showTooltipOnX(studentData.trial.id, studentData.showTooltipOnX);
-                        _this9.highlightPointOnX(studentData.trial.id, studentData.xPointToHighlight);
+                        _this8.highlightPointOnX(studentData.trial.id, studentData.xPointToHighlight);
                       }, 1);
                     }
                   }
@@ -4583,7 +4401,7 @@ var GraphController = function (_ComponentController) {
   }, {
     key: 'snipDrawing',
     value: function snipDrawing($event) {
-      var _this10 = this;
+      var _this9 = this;
 
       // get the highcharts div
       var highchartsDiv = angular.element('#' + this.chartId).find('.highcharts-container');
@@ -4598,10 +4416,10 @@ var GraphController = function (_ComponentController) {
           var img_b64 = canvas.toDataURL('image/png');
 
           // get the image object
-          var imageObject = _this10.UtilService.getImageObjectFromBase64String(img_b64);
+          var imageObject = _this9.UtilService.getImageObjectFromBase64String(img_b64);
 
           // create a notebook item with the image populated into it
-          _this10.NotebookService.addNote($event, imageObject);
+          _this9.NotebookService.addNote($event, imageObject);
         });
       }
     }
@@ -4870,7 +4688,7 @@ var GraphController = function (_ComponentController) {
   }, {
     key: 'setVerticalPlotLine',
     value: function setVerticalPlotLine(x) {
-      var _this11 = this;
+      var _this10 = this;
 
       // make the plot line
       var plotLine = {
@@ -4888,7 +4706,7 @@ var GraphController = function (_ComponentController) {
        * moves their mouse around which forces angular to update.
        */
       this.$timeout(function () {
-        _this11.$scope.$apply();
+        _this10.$scope.$apply();
       });
     }
 
@@ -4901,7 +4719,7 @@ var GraphController = function (_ComponentController) {
   }, {
     key: 'handleConnectedComponents',
     value: function handleConnectedComponents(isReset) {
-      var _this12 = this;
+      var _this11 = this;
 
       // get the connected components
       var connectedComponents = this.componentContent.connectedComponents;
@@ -5062,22 +4880,22 @@ var GraphController = function (_ComponentController) {
           studentData.version = 2;
 
           // create a new component state
-          var newComponentState = _this12.NodeService.createNewComponentState();
+          var newComponentState = _this11.NodeService.createNewComponentState();
           newComponentState.studentData = studentData;
 
-          if (_this12.componentContent.backgroundImage != null && _this12.componentContent.backgroundImage != '') {
+          if (_this11.componentContent.backgroundImage != null && _this11.componentContent.backgroundImage != '') {
             // use the background image from this component
-            newComponentState.studentData.backgroundImage = _this12.componentContent.backgroundImage;
+            newComponentState.studentData.backgroundImage = _this11.componentContent.backgroundImage;
           } else if (connectedComponentBackgroundImage != null) {
             // use the background image from the connected component
             newComponentState.studentData.backgroundImage = connectedComponentBackgroundImage;
           }
 
-          newComponentState = _this12.handleConnectedComponentsHelper(newComponentState, isReset);
+          newComponentState = _this11.handleConnectedComponentsHelper(newComponentState, isReset);
 
           // populate the component state into this component
-          _this12.setStudentWork(newComponentState);
-          _this12.studentDataChanged();
+          _this11.setStudentWork(newComponentState);
+          _this11.studentDataChanged();
         });
       }
     }
