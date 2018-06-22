@@ -142,49 +142,6 @@ var AudioOscillatorController = function (_ComponentController) {
       } else if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
         // we will import work from another component
         _this.handleConnectedComponents();
-      } else if (componentState == null) {
-        // check if we need to import work
-
-        if (componentState == null) {
-          /*
-           * only import work if the student does not already have
-           * work for this component
-           */
-
-          // check if we need to import work
-          var importPreviousWorkNodeId = _this.componentContent.importPreviousWorkNodeId;
-          var importPreviousWorkComponentId = _this.componentContent.importPreviousWorkComponentId;
-
-          if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-            /*
-             * check if the node id is in the field that we used to store
-             * the import previous work node id in
-             */
-            importPreviousWorkNodeId = _this.componentContent.importWorkNodeId;
-          }
-
-          if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-            /*
-             * check if the component id is in the field that we used to store
-             * the import previous work component id in
-             */
-            importPreviousWorkComponentId = _this.componentContent.importWorkComponentId;
-          }
-
-          if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-            // import the work from the other component
-            _this.importWork();
-          } else if (_this.componentContent.starterSentence != null) {
-            /*
-             * the student has not done any work and there is a starter sentence
-             * so we will populate the textarea with the starter sentence
-             */
-            _this.studentResponse = _this.componentContent.starterSentence;
-          }
-        } else {
-          // populate the student work into this component
-          _this.setStudentWork(componentState);
-        }
       }
     } else {
       // populate the student work into this component
@@ -982,82 +939,12 @@ var AudioOscillatorController = function (_ComponentController) {
     }
 
     /**
-     * Import work from another component
-     */
-
-  }, {
-    key: 'importWork',
-    value: function importWork() {
-
-      // get the component content
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // get the import previous work node id and component id
-        var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
-        var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-
-        if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-
-          /*
-           * check if the node id is in the field that we used to store
-           * the import previous work node id in
-           */
-          if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
-            importPreviousWorkNodeId = componentContent.importWorkNodeId;
-          }
-        }
-
-        if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-
-          /*
-           * check if the component id is in the field that we used to store
-           * the import previous work component id in
-           */
-          if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
-            importPreviousWorkComponentId = componentContent.importWorkComponentId;
-          }
-        }
-
-        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-
-          // get the latest component state for this component
-          var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          /*
-           * we will only import work into this component if the student
-           * has not done any work for this component
-           */
-          if (componentState == null) {
-            // the student has not done any work for this component
-
-            // get the latest component state from the component we are importing from
-            var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
-
-            if (importWorkComponentState != null) {
-              /*
-               * populate a new component state with the work from the
-               * imported component state
-               */
-              var populatedComponentState = this.AudioOscillatorService.populateComponentState(importWorkComponentState);
-
-              // populate the component state into this component
-              this.setStudentWork(populatedComponentState);
-              this.studentDataChanged();
-            }
-          }
-        }
-      }
-    }
-  }, {
-    key: 'registerExitListener',
-
-
-    /**
      * Register the the listener that will listen for the exit event
      * so that we can perform saving before exiting.
      */
+
+  }, {
+    key: 'registerExitListener',
     value: function registerExitListener() {
 
       /*

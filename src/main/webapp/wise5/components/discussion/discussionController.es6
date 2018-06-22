@@ -706,49 +706,6 @@ class DiscussionController extends ComponentController {
   };
 
   /**
-   * Import work from another component
-   */
-  importWork() {
-
-    // get the component content
-    var componentContent = this.componentContent;
-
-    if (componentContent != null) {
-
-      var importWorkNodeId = componentContent.importWorkNodeId;
-      var importWorkComponentId = componentContent.importWorkComponentId;
-
-      if (importWorkNodeId != null && importWorkComponentId != null) {
-
-        // get the latest component state for this component
-        var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-        /*
-         * we will only import work into this component if the student
-         * has not done any work for this component
-         */
-        if(componentState == null) {
-          // the student has not done any work for this component
-
-          // get the latest component state from the component we are importing from
-          var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
-
-          if (importWorkComponentState != null) {
-            /*
-             * populate a new component state with the work from the
-             * imported component state
-             */
-            var populatedComponentState = this.DiscussionService.populateComponentState(importWorkComponentState);
-
-            // populate the component state into this component
-            this.setStudentWork(populatedComponentState);
-          }
-        }
-      }
-    }
-  };
-
-  /**
    * Set the class responses into the controller
    * @param componentStates the class component states
    * @param annotations the inappropriate flag annotations

@@ -391,35 +391,7 @@ class LabelController extends ComponentController {
         // the student labels are the same as the starter labels
         this.setStudentWork(componentState);
       } else if (componentState == null) {
-        /*
-         * only import work if the student does not already have
-         * work for this component
-         */
-
-        // check if we need to import work
-        var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-        var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-
-        if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-          /*
-           * check if the node id is in the field that we used to store
-           * the import previous work node id in
-           */
-          importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-        }
-
-        if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-          /*
-           * check if the component id is in the field that we used to store
-           * the import previous work component id in
-           */
-          importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-        }
-
-        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-          // import the work from the other component
-          this.importWork();
-        } else if (this.componentContent.labels != null) {
+        if (this.componentContent.labels != null) {
           /*
            * the student has not done any work and there are starter labels
            * so we will populate the canvas with the starter labels
@@ -920,73 +892,6 @@ class LabelController extends ComponentController {
           this.studentDataChanged();
         }
       });
-    }
-  };
-
-  /**
-   * Import work from another component
-   */
-  importWork() {
-
-    // get the component content
-    var componentContent = this.componentContent;
-
-    if (componentContent != null) {
-
-      // get the import previous work node id and component id
-      var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
-      var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-
-      if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-
-        /*
-         * check if the node id is in the field that we used to store
-         * the import previous work node id in
-         */
-        if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
-          importPreviousWorkNodeId = componentContent.importWorkNodeId;
-        }
-      }
-
-      if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-
-        /*
-         * check if the component id is in the field that we used to store
-         * the import previous work component id in
-         */
-        if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
-          importPreviousWorkComponentId = componentContent.importWorkComponentId;
-        }
-      }
-
-      if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-
-        // get the latest component state for this component
-        var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-        /*
-         * we will only import work into this component if the student
-         * has not done any work for this component
-         */
-        if(componentState == null) {
-          // the student has not done any work for this component
-
-          // get the latest component state from the component we are importing from
-          var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
-
-          if (importWorkComponentState != null) {
-            /*
-             * populate a new component state with the work from the
-             * imported component state
-             */
-            var populatedComponentState = this.LabelService.populateComponentState(importWorkComponentState);
-
-            // populate the component state into this component
-            this.setStudentWork(populatedComponentState);
-            this.studentDataChanged();
-          }
-        }
-      }
     }
   };
 
