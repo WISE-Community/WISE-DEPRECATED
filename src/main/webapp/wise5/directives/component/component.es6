@@ -84,8 +84,9 @@ class ComponentController {
               componentContent.type == 'Discussion' || componentContent.type == 'Draw' ||
               componentContent.type == 'Graph' || componentContent.type == 'HTML' ||
               componentContent.type == 'Label' || componentContent.type == 'Match' ||
-              componentContent.type == 'OpenResponse' || componentContent.type == 'Table'  ||
-              componentContent.type == 'OutsideURL' || componentContent.type == 'MultipleChoice')) {
+              componentContent.type == 'OpenResponse' || componentContent.type == 'Table' ||
+              componentContent.type == 'OutsideURL' || componentContent.type == 'MultipleChoice' ||
+              componentContent.type == 'Embedded')) {
             $scope.componentTemplatePath = this.NodeService.getComponentAuthoringTemplatePath(componentContent.type);
         } else {
             $scope.componentTemplatePath = this.NodeService.getComponentTemplatePath(componentContent.type);
