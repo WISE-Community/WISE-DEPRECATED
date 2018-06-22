@@ -1874,24 +1874,11 @@ class StudentDataService {
           if (component != null) {
             const componentId = component.id;
             const componentType = component.type;
-            const showPreviousWorkNodeId = component.showPreviousWorkNodeId;
-            const showPreviousWorkComponentId = component.showPreviousWorkComponentId;
 
             let tempNodeId = nodeId;
             let tempNode = node;
             let tempComponentId = componentId;
             let tempComponent = component;
-
-            if (showPreviousWorkNodeId != null && showPreviousWorkComponentId != null) {
-              /*
-               * this is a show previous work component so we will check if the
-               * previous component was completed
-               */
-              tempNodeId = showPreviousWorkNodeId;
-              tempComponentId = showPreviousWorkComponentId;
-              tempNode = this.ProjectService.getNodeById(tempNodeId);
-              tempComponent = this.ProjectService.getComponentByNodeIdAndComponentId(tempNodeId, tempComponentId);
-            }
 
             if (componentType != null) {
               try {
