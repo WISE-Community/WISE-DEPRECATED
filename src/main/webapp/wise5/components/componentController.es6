@@ -342,6 +342,49 @@ class ComponentController {
 
     return connectedComponentType;
   }
+
+  addTag() {
+    if (this.authoringComponentContent.tags == null) {
+      this.authoringComponentContent.tags = [];
+    }
+    this.authoringComponentContent.tags.push('');
+    this.authoringViewComponentChanged();
+  }
+
+  /**
+   * Move a tag up
+   * @param index the index of the tag to move up
+   */
+  moveTagUp(index) {
+    if (index > 0) {
+      // the index is not at the top so we can move it up
+      let tag = this.authoringComponentContent.tags[index];
+      this.authoringComponentContent.tags.splice(index, 1);
+      this.authoringComponentContent.tags.splice(index - 1, 0, tag);
+      this.authoringViewComponentChanged();
+    }
+  }
+
+  /**
+   * Move a tag down
+   * @param index the index of the tag to move down
+   */
+  moveTagDown(index) {
+    if (index < this.authoringComponentContent.tags.length - 1) {
+      // the index is not at the bottom so we can move it down
+      let tag = this.authoringComponentContent.tags[index];
+      this.authoringComponentContent.tags.splice(index, 1);
+      this.authoringComponentContent.tags.splice(index + 1, 0, tag);
+      this.authoringViewComponentChanged();
+    }
+  }
+
+  deleteTag(indexOfTagToDelete) {
+    if (confirm(this.$translate('areYouSureYouWantToDeleteThisTag'))) {
+      this.authoringComponentContent.tags.splice(indexOfTagToDelete, 1);
+      this.authoringViewComponentChanged();
+    }
+  }
 }
 
 ComponentController.$inject = [];
