@@ -33,9 +33,6 @@ var AuthoringToolMainController = function () {
     this.showCreatingProjectMessage = false;
     this.showErrorCreatingProjectMessage = false;
 
-    this.$rootScope.$on('goHome', function () {
-      _this.saveEvent('goToTeacherHome', 'Navigation', null, null);
-    });
     this.$rootScope.$on('logOut', function () {
       _this.saveEvent('logOut', 'Navigation', null, null);
     });
@@ -345,6 +342,7 @@ var AuthoringToolMainController = function () {
   }, {
     key: 'goHome',
     value: function goHome() {
+      this.saveEvent('goToTeacherHome', 'Navigation', null, null);
       window.location = this.ConfigService.getWISEBaseURL() + '/teacher';
     }
 
