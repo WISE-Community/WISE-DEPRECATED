@@ -38,14 +38,14 @@ import '../components/graph/graphAuthoringComponentModule';
 import '../components/html/htmlAuthoringComponentModule';
 import '../components/label/labelAuthoringComponentModule';
 import '../components/match/matchAuthoringComponentModule';
-import '../components/multipleChoice/multipleChoiceComponentModule';
+import '../components/multipleChoice/multipleChoiceAuthoringComponentModule';
 import NodeAuthoringController from './node/nodeAuthoringController';
 import NodeService from '../services/nodeService';
 import '../directives/notebook/notebook';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import '../components/openResponse/openResponseAuthoringComponentModule';
-import '../components/outsideURL/outsideURLComponentModule';
+import '../components/outsideURL/outsideURLAuthoringComponentModule';
 import ProjectAssetController from './asset/projectAssetController';
 import ProjectAssetService from '../services/projectAssetService';
 import ProjectController from './project/projectController';
@@ -59,7 +59,7 @@ import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
-import '../components/table/tableComponentModule';
+import '../components/table/tableAuthoringComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
@@ -86,7 +86,7 @@ const authoringModule = angular.module('authoring', [
     'htmlComponentModule',
     'labelAuthoringComponentModule',
     'matchAuthoringComponentModule',
-    'multipleChoiceComponentModule',
+    'multipleChoiceAuthoringComponentModule',
     'ngAnimate',
     'ngAria',
     'ngFileUpload',
@@ -95,10 +95,10 @@ const authoringModule = angular.module('authoring', [
     'ngWebSocket',
     'notebook',
     'openResponseAuthoringComponentModule',
-    'outsideURLComponentModule',
+    'outsideURLAuthoringComponentModule',
     'pascalprecht.translate',
     'summernote',
-    'tableComponentModule',
+    'tableAuthoringComponentModule',
     'ui.router'
     ])
     .service(AnnotationService.name, AnnotationService)
