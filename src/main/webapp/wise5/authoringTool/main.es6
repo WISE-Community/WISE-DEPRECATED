@@ -16,7 +16,7 @@ import 'angular-translate-loader-partial';
 import 'angular-websocket';
 import '../components/animation/animationAuthoringComponentModule';
 import AnnotationService from '../services/annotationService';
-import '../components/audioOscillator/audioOscillatorComponentModule';
+import '../components/audioOscillator/audioOscillatorAuthoringComponentModule';
 import './components/authoringToolComponents';
 import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
@@ -31,7 +31,7 @@ import '../directives/components';
 import ComponentService from '../components/componentService';
 import '../components/discussion/discussionAuthoringComponentModule';
 import '../components/draw/drawAuthoringComponentModule';
-import '../components/embedded/embeddedComponentModule';
+import '../components/embedded/embeddedAuthoringComponentModule';
 import '../filters/filters';
 import '../lib/highcharts@4.2.1';
 import '../components/graph/graphAuthoringComponentModule';
@@ -73,13 +73,13 @@ const authoringModule = angular.module('authoring', [
     'angularMoment',
     'angular-toArrayFilter',
     'animationAuthoringComponentModule',
-    'audioOscillatorComponentModule',
+    'audioOscillatorAuthoringComponentModule',
     'authoringTool.components',
     'components',
     'conceptMapAuthoringComponentModule',
     'discussionAuthoringComponentModule',
     'drawAuthoringComponentModule',
-    'embeddedComponentModule',
+    'embeddedAuthoringComponentModule',
     'filters',
     'graphAuthoringComponentModule',
     'highcharts-ng',

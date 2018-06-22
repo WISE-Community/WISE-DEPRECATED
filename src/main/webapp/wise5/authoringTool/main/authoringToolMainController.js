@@ -9,13 +9,14 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthoringToolMainController = function () {
-  function AuthoringToolMainController($anchorScroll, $filter, $rootScope, $state, $timeout, ConfigService, ProjectService, TeacherDataService, UtilService) {
+  function AuthoringToolMainController($anchorScroll, $filter, $mdDialog, $rootScope, $state, $timeout, ConfigService, ProjectService, TeacherDataService, UtilService) {
     var _this = this;
 
     _classCallCheck(this, AuthoringToolMainController);
 
     this.$anchorScroll = $anchorScroll;
     this.$filter = $filter;
+    this.$mdDialog = $mdDialog;
     this.$rootScope = $rootScope;
     this.$state = $state;
     this.$timeout = $timeout;
@@ -135,6 +136,7 @@ var AuthoringToolMainController = function () {
       var doCopyConfirmMessage = this.$translate('areYouSureYouWantToCopyThisProject') + '\n\n' + projectInfo;
       if (confirm(doCopyConfirmMessage)) {
         this.ProjectService.copyProject(projectId).then(function (projectId) {
+          _this2.showCopyingProjectMessage();
           _this2.saveEvent('projectCopied', 'Authoring', null, projectId);
 
           // refresh the project list and highlight the newly copied project
@@ -146,9 +148,28 @@ var AuthoringToolMainController = function () {
               var highlightDuration = 3000;
               _this2.UtilService.temporarilyHighlightElement(projectId, highlightDuration);
             });
+            _this2.$mdDialog.hide();
           });
         });
       }
+    }
+  }, {
+    key: 'showCopyingProjectMessage',
+    value: function showCopyingProjectMessage() {
+      this.showMessageInModalDialog(this.$translate('copyingProject'));
+    }
+  }, {
+    key: 'showLoadingProjectMessage',
+    value: function showLoadingProjectMessage() {
+      this.showMessageInModalDialog(this.$translate('loadingProject'));
+    }
+  }, {
+    key: 'showMessageInModalDialog',
+    value: function showMessageInModalDialog(message) {
+      this.$mdDialog.show({
+        template: '\n        <div align="center">\n          <div style="width: 200px; height: 100px; margin: 20px;">\n            <span>' + message + '...</span>\n            <br/>\n            <br/>\n            <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n          </div>\n        </div>\n      ',
+        clickOutsideToClose: false
+      });
     }
   }, {
     key: 'createNewProjectButtonClicked',
@@ -301,6 +322,7 @@ var AuthoringToolMainController = function () {
   }, {
     key: 'openProject',
     value: function openProject(projectId) {
+      this.showLoadingProjectMessage();
       this.$state.go('root.project', { projectId: projectId });
     }
 
@@ -357,7 +379,7 @@ var AuthoringToolMainController = function () {
 
 ;
 
-AuthoringToolMainController.$inject = ['$anchorScroll', '$filter', '$rootScope', '$state', '$timeout', 'ConfigService', 'ProjectService', 'TeacherDataService', 'UtilService'];
+AuthoringToolMainController.$inject = ['$anchorScroll', '$filter', '$mdDialog', '$rootScope', '$state', '$timeout', 'ConfigService', 'ProjectService', 'TeacherDataService', 'UtilService'];
 
 exports.default = AuthoringToolMainController;
 //# sourceMappingURL=authoringToolMainController.js.map
