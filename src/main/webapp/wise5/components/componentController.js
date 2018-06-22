@@ -377,7 +377,7 @@ var ComponentController = function () {
     /**
      * Get the connected component type
      * @param connectedComponent get the component type of this connected component
-     * @return the connected component type2
+     * @return the connected component type
      */
 
   }, {
