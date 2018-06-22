@@ -93,6 +93,7 @@
     "constraint": "Constraint",
     "constraints": "Constraints",
     "copy": "Copy",
+    "copyingProject": "Copying Project",
     "copyProjectURLToClipboard": "Copy Project URL to Clipboard",
     "correctlyAnswerNodeTitle": "the student correctly answers \"{{nodeTitle}}\"",
     "createAWISELink": "Create a WISE Link",
