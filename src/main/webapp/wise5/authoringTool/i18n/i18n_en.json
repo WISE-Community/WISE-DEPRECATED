@@ -169,6 +169,7 @@
     "labelSingular": "Label (Singular)",
     "libraryProjects": "Library Projects",
     "link": "Link",
+    "loadingProject": "Loading Project",
     "madeChangesToNotebook": "Made changes to Notebook.",
     "makeAllNodesAfterThisNotVisible": "Make all nodes after this not visible",
     "makeAllNodesAfterThisNotVisitable": "Make all nodes after this not visitable",

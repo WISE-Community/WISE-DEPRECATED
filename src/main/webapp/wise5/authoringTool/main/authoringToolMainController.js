@@ -156,8 +156,18 @@ var AuthoringToolMainController = function () {
   }, {
     key: 'showCopyingProjectMessage',
     value: function showCopyingProjectMessage() {
+      this.showMessageInModalDialog(this.$translate('copyingProject'));
+    }
+  }, {
+    key: 'showLoadingProjectMessage',
+    value: function showLoadingProjectMessage() {
+      this.showMessageInModalDialog(this.$translate('loadingProject'));
+    }
+  }, {
+    key: 'showMessageInModalDialog',
+    value: function showMessageInModalDialog(message) {
       this.$mdDialog.show({
-        template: '\n        <div align="center">\n          <div style="width: 200px; height: 100px; margin: 20px;">\n            <span>{{ "copyingProject" | translate }}...</span>\n            <br/>\n            <br/>\n            <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n          </div>\n        </div>\n      ',
+        template: '\n        <div align="center">\n          <div style="width: 200px; height: 100px; margin: 20px;">\n            <span>' + message + '...</span>\n            <br/>\n            <br/>\n            <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n          </div>\n        </div>\n      ',
         clickOutsideToClose: false
       });
     }
@@ -312,6 +322,7 @@ var AuthoringToolMainController = function () {
   }, {
     key: 'openProject',
     value: function openProject(projectId) {
+      this.showLoadingProjectMessage();
       this.$state.go('root.project', { projectId: projectId });
     }
 
