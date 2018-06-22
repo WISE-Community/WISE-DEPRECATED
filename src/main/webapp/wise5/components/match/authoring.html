@@ -251,6 +251,7 @@
             </md-tooltip>
           </md-button>
         </md-input-container>
+        <div ng-if="matchController.authoringComponentContent.choices.length == 0">{{ 'match.thereAreNoChoices' | translate }}</div>
         <div ng-repeat='choice in matchController.authoringComponentContent.choices track by $index'
              style='height: 80'
              layout='row'>
@@ -297,30 +298,31 @@
         </div>
       </div>
       <div style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
-        <md-input-container layout='row'
-                            style='height: 50; margin-top: 0;'>
-          <h6>{{ 'match.buckets' | translate }}</h6>
-          <md-button class='topButton md-raised md-primary'
-                     ng-click='matchController.authoringAddBucket()'>
-            <md-icon>add</md-icon>
-            <md-tooltip md-direction='top'
-                        class='projectButtonTooltip'>
-              {{ 'match.addBucket' | translate }}
-            </md-tooltip>
-          </md-button>
-        </md-input-container>
-        <md-input-container>
-          <label>{{ 'match.originBucketName' | translate }}</label>
+        <md-input-container style="height: 30;">
+          <label>{{ 'match.sourceBucketName' | translate }}</label>
           <input ng-model='matchController.authoringComponentContent.choicesLabel'
                  ng-change='matchController.authoringViewComponentChanged()'
                  ng-model-options='{ debounce: 1000 }'
                  size='80'/>
         </md-input-container>
+        <md-input-container layout='row'
+                            style='height: 50; margin-top: 0;'>
+          <h6>{{ 'match.targetBuckets' | translate }}</h6>
+          <md-button class='topButton md-raised md-primary'
+                     ng-click='matchController.authoringAddBucket()'>
+            <md-icon>add</md-icon>
+            <md-tooltip md-direction='top'
+                        class='projectButtonTooltip'>
+              {{ 'match.addTargetBucket' | translate }}
+            </md-tooltip>
+          </md-button>
+        </md-input-container>
+        <div ng-if="matchController.authoringComponentContent.buckets.length == 0">{{ 'match.thereAreNoTargetBuckets' | translate }}</div>
         <div ng-repeat='bucket in matchController.authoringComponentContent.buckets track by $index'
              style='height: 80'
              layout='row'>
           <md-input-container>
-            <label>{{ 'match.bucketName' | translate }}</label>
+            <label>{{ 'match.targetBucketName' | translate }}</label>
             <input ng-model='bucket.value'
                    ng-model-options='{ debounce: 1000 }'
                    ng-change='matchController.authoringViewComponentChanged()'
