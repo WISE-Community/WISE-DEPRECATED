@@ -102,10 +102,6 @@ class ConfigService {
     return this.getConfigParam('projectId');
   };
 
-  getOpenCPUURL() {
-    return this.getConfigParam('openCPUURL');
-  };
-
   getSessionLogOutURL() {
     return this.getConfigParam('sessionLogOutURL');
   };

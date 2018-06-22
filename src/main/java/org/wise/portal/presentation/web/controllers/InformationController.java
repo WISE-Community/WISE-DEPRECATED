@@ -683,10 +683,6 @@ public class InformationController {
     config.put("studentNotebookURL", contextPath + "/student/notebook/" + runId);
     config.put("achievementURL", contextPath + "/achievement/" + runId);
     config.put("notificationURL", contextPath + "/notification/" + runId);
-    String openCPUURL = wiseProperties.getProperty("openCPUURL");
-    if (openCPUURL != null) {
-      config.put("openCPUURL", openCPUURL);
-    }
   }
 
   private void printConfigToResponse(HttpServletResponse response, JSONObject config) throws IOException {
