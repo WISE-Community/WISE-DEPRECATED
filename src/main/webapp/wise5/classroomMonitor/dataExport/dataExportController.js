@@ -52,39 +52,14 @@ var DataExportController = function () {
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
+    /**
+     * Export all or latest work for this run in CSV format
+     * latestWork, allWork, and events will call this function with a null exportType.
+     */
+
+
     _createClass(DataExportController, [{
-        key: 'hello',
-        value: function hello() {
-            ocpu.seturl("//128.32.189.240:81/ocpu/user/wiser/library/wiser/R");
-            // perform the request
-            var req = ocpu.call("hello", {
-                "name": "Hiroki"
-            }, function (session) {
-                session.getStdout(function (returnedCSVString) {
-                    var csvBlob = new Blob([returnedCSVString], { type: 'text/csv' });
-                    var csvUrl = URL.createObjectURL(csvBlob);
-                    var a = document.createElement("a");
-                    document.body.appendChild(a);
-                    a.style = "display: none";
-                    a.href = csvUrl;
-                    a.download = "export_" + runId + ".csv";
-                    a.click();
-
-                    // timeout is required for FF.
-                    window.setTimeout(function () {
-                        URL.revokeObjectURL(csvUrl); // tell browser to release URL reference
-                    }, 3000);
-                });
-            });
-        }
-    }, {
         key: 'export',
-
-
-        /**
-         * Export all or latest work for this run in CSV format
-         * latestWork, allWork, and events will call this function with a null exportType.
-         */
         value: function _export() {
             var exportType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
