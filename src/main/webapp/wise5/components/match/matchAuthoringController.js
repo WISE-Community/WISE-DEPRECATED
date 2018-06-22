@@ -58,6 +58,7 @@ var MatchAuthoringController = function (_MatchController) {
       return this.authoringComponentContent;
     }.bind(_this), function (newValue, oldValue) {
       this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+      this.isHorizontal = this.componentContent.horizontal;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       this.isCorrect = null;
