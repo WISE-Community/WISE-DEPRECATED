@@ -752,50 +752,19 @@ class GraphService extends ComponentService {
     return result;
   };
 
-  /**
-   * Check if the student data contains any trial data
-   * @param studentData student data from a component state
-   * @return whether the student data has trial data
-   */
   hasTrialData(studentData) {
-    var result = false;
-
-    if (studentData != null) {
-      var trials = studentData.trials;
-
-      if (trials != null) {
-
-        // loop through all the trials
-        for (var t = 0; t < trials.length; t++) {
-
-          var trial = trials[t];
-
-          if (trial != null) {
-            var series = trial.series;
-
-            // loop through all the series
-            for (var s = 0; s < series.length; s++) {
-
-              // get a single series
-              var singleSeries = series[s];
-
-              if (singleSeries != null) {
-
-                // get the data from the single series
-                var data = singleSeries.data;
-
-                if (data != null && data.length > 0) {
-                  // the single series has data
-                  return true;
-                }
-              }
-            }
+    const trials = studentData.trials;
+    if (trials != null) {
+      for (let trial of trials) {
+        for (let singleSeries of trial.series) {
+          const seriesData = singleSeries.data;
+          if (seriesData != null && seriesData.length > 0) {
+            return true;
           }
         }
       }
     }
-
-    return result;
+    return false;
   }
 
   componentStateHasStudentWork(componentState, componentContent) {
