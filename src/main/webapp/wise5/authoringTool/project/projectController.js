@@ -177,6 +177,13 @@ var ProjectController = function () {
     });
 
     this.saveEvent('projectOpened', 'Navigation');
+
+    /*
+     * When the project is loaded from the project list view, we display a
+     * "Loading Project" message using the mdDialog. Now that the project
+     * has loaded, we will hide the message.
+     */
+    this.$mdDialog.hide();
   }
 
   _createClass(ProjectController, [{

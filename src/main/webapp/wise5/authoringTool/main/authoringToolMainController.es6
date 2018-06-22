@@ -104,11 +104,19 @@ class AuthoringToolMainController {
   }
 
   showCopyingProjectMessage() {
+    this.showMessageInModalDialog(this.$translate('copyingProject'));
+  }
+
+  showLoadingProjectMessage() {
+    this.showMessageInModalDialog(this.$translate('loadingProject'));
+  }
+
+  showMessageInModalDialog(message) {
     this.$mdDialog.show({
       template: `
         <div align="center">
           <div style="width: 200px; height: 100px; margin: 20px;">
-            <span>{{ "copyingProject" | translate }}...</span>
+            <span>${message}...</span>
             <br/>
             <br/>
             <md-progress-circular md-mode="indeterminate"></md-progress-circular>
@@ -239,6 +247,7 @@ class AuthoringToolMainController {
    * @param projectId the project id to open
    */
   openProject(projectId) {
+    this.showLoadingProjectMessage();
     this.$state.go('root.project', {projectId:projectId});
   }
 
