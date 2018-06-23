@@ -306,101 +306,6 @@ var DiscussionAuthoringController = function (_DiscussionController) {
     }
 
     /**
-     * Add a tag
-     */
-
-  }, {
-    key: 'addTag',
-    value: function addTag() {
-
-      if (this.authoringComponentContent.tags == null) {
-        // initialize the tags array
-        this.authoringComponentContent.tags = [];
-      }
-
-      // add a tag
-      this.authoringComponentContent.tags.push('');
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Move a tag up
-     * @param index the index of the tag to move up
-     */
-
-  }, {
-    key: 'moveTagUp',
-    value: function moveTagUp(index) {
-
-      if (index > 0) {
-        // the index is not at the top so we can move it up
-
-        // remember the tag
-        var tag = this.authoringComponentContent.tags[index];
-
-        // remove the tag
-        this.authoringComponentContent.tags.splice(index, 1);
-
-        // insert the tag one index back
-        this.authoringComponentContent.tags.splice(index - 1, 0, tag);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Move a tag down
-     * @param index the index of the tag to move down
-     */
-
-  }, {
-    key: 'moveTagDown',
-    value: function moveTagDown(index) {
-
-      if (index < this.authoringComponentContent.tags.length - 1) {
-        // the index is not at the bottom so we can move it down
-
-        // remember the tag
-        var tag = this.authoringComponentContent.tags[index];
-
-        // remove the tag
-        this.authoringComponentContent.tags.splice(index, 1);
-
-        // insert the tag one index forward
-        this.authoringComponentContent.tags.splice(index + 1, 0, tag);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Delete a tag
-     * @param index the index of the tag to delete
-     */
-
-  }, {
-    key: 'deleteTag',
-    value: function deleteTag(index) {
-
-      // ask the author if they are sure they want to delete the tag
-      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisTag'));
-
-      if (answer) {
-        // the author answered yes to delete the tag
-
-        // remove the tag
-        this.authoringComponentContent.tags.splice(index, 1);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
      * Add a connected component
      */
 
@@ -509,36 +414,6 @@ var DiscussionAuthoringController = function (_DiscussionController) {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
       }
-    }
-
-    /**
-     * Get the connected component type
-     * @param connectedComponent get the component type of this connected component
-     * @return the connected component type
-     */
-
-  }, {
-    key: 'authoringGetConnectedComponentType',
-    value: function authoringGetConnectedComponentType(connectedComponent) {
-
-      var connectedComponentType = null;
-
-      if (connectedComponent != null) {
-
-        // get the node id and component id of the connected component
-        var nodeId = connectedComponent.nodeId;
-        var componentId = connectedComponent.componentId;
-
-        // get the component
-        var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
-        if (component != null) {
-          // get the component type
-          connectedComponentType = component.type;
-        }
-      }
-
-      return connectedComponentType;
     }
 
     /**

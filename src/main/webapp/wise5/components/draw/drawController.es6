@@ -365,39 +365,9 @@ class DrawController extends ComponentController {
          * does not already have work for this component
          */
 
-        // check if we need to import work
-        var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-        var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-
         // get the starter draw data if any
         var starterDrawData = this.componentContent.starterDrawData;
-
-        if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-          /*
-           * check if the node id is in the field that we used to store
-           * the import previous work node id in
-           */
-          importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-        }
-
-        if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-          /*
-           * check if the component id is in the field that we used to store
-           * the import previous work component id in
-           */
-          importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-        }
-
-        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-
-          if (this.componentContent.background != null) {
-            // set the background from the component content
-            this.drawingTool.setBackgroundImage(this.componentContent.background);
-          }
-
-          // import the work from the other component
-          this.importWork();
-        } else if (starterDrawData != null) {
+        if (starterDrawData != null) {
           // there is starter draw data so we will populate it into the draw tool
           this.drawingTool.load(starterDrawData);
 
@@ -774,18 +744,6 @@ class DrawController extends ComponentController {
       } else if (this.latestConnectedComponentState && this.latestConnectedComponentParams) {
         // reload the student data from the connected component
         this.setDrawData(latestConnectedComponentState, latestConnectedComponentParams);
-      } else if (this.componentContent.importPreviousWorkNodeId != null &&
-             this.componentContent.importPreviousWorkNodeId != '' &&
-             this.componentContent.importPreviousWorkComponentId != null &&
-             this.componentContent.importPreviousWorkComponentId != '') {
-
-        // this component imports work from another component
-
-        // boolean flag to overwrite the work when we import
-        var overwrite = true;
-
-        // import work from another component
-        this.importWork(overwrite);
       } else if (this.componentContent.starterDrawData != null) {
         // this component has starter draw data
 
@@ -892,109 +850,6 @@ class DrawController extends ComponentController {
     drawData = this.drawingTool.save();
 
     return drawData;
-  };
-
-  /**
-   * Import work from another component
-   * @param overwrite boolean value whether to import the work even if the
-   * student already has work for this component
-   */
-  importWork(overwrite) {
-
-    // get the component content
-    var componentContent = this.componentContent;
-
-    if (componentContent != null) {
-
-      // get the import previous work node id and component id
-      var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
-      var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-
-      if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-
-        /*
-         * check if the node id is in the field that we used to store
-         * the import previous work node id in
-         */
-        if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
-          importPreviousWorkNodeId = componentContent.importWorkNodeId;
-        }
-      }
-
-      if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-
-        /*
-         * check if the component id is in the field that we used to store
-         * the import previous work component id in
-         */
-        if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
-          importPreviousWorkComponentId = componentContent.importWorkComponentId;
-        }
-      }
-
-      if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-
-        // get the latest component state for this component
-        var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-        /*
-         * we will only import work into this component if the student
-         * has not done any work for this component
-         */
-        if(componentState == null || overwrite == true) {
-          // the student has not done any work for this component
-
-          // get the latest component state from the component we are importing from
-          var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
-
-          if (importWorkComponentState != null) {
-
-            if (importWorkComponentState.componentType == 'ConceptMap') {
-
-              var conceptMapData = null;
-
-              if (importWorkComponentState.studentData != null) {
-                // get the concept map data from the other component state
-                conceptMapData = importWorkComponentState.studentData.conceptMapData;
-              }
-
-              if (conceptMapData != null) {
-                var serviceName = 'ConceptMapService';
-
-                if (this.$injector.has(serviceName)) {
-
-                  // get the ConceptMapService
-                  var service = this.$injector.get(serviceName);
-
-                  // create an image from the concept map data
-                  service.createImage(conceptMapData, componentContent.width, componentContent.height).then((image) => {
-
-                    // set the image as the background
-                    this.drawingTool.setBackgroundImage(image);
-                    this.studentDataChanged();
-                  });
-                }
-              }
-            } else {
-              /*
-               * populate a new component state with the work from the
-               * imported component state
-               */
-              var populatedComponentState = this.DrawService.populateComponentState(importWorkComponentState);
-
-              // populate the component state into this component
-              this.setStudentWork(populatedComponentState);
-
-              if (this.componentContent.background != null && this.componentContent.background != '') {
-                // set the background
-                this.drawingTool.setBackgroundImage(this.componentContent.background);
-                this.studentDataChanged();
-              }
-            }
-          }
-        }
-      }
-    }
   };
 
   /**

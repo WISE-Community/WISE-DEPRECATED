@@ -2792,24 +2792,11 @@ var StudentDataService = function () {
               if (_component != null) {
                 var _componentId = _component.id;
                 var _componentType = _component.type;
-                var showPreviousWorkNodeId = _component.showPreviousWorkNodeId;
-                var showPreviousWorkComponentId = _component.showPreviousWorkComponentId;
 
                 var tempNodeId = nodeId;
                 var tempNode = _node;
                 var tempComponentId = _componentId;
                 var tempComponent = _component;
-
-                if (showPreviousWorkNodeId != null && showPreviousWorkComponentId != null) {
-                  /*
-                   * this is a show previous work component so we will check if the
-                   * previous component was completed
-                   */
-                  tempNodeId = showPreviousWorkNodeId;
-                  tempComponentId = showPreviousWorkComponentId;
-                  tempNode = this.ProjectService.getNodeById(tempNodeId);
-                  tempComponent = this.ProjectService.getComponentByNodeIdAndComponentId(tempNodeId, tempComponentId);
-                }
 
                 if (_componentType != null) {
                   try {

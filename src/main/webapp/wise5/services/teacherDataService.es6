@@ -230,12 +230,9 @@ class TeacherDataService {
   retrieveStudentDataByNodeId(nodeId) {
     const nodeIdsAndComponentIds =
         this.ProjectService.getNodeIdsAndComponentIds(nodeId);
-    const showPreviousWorkNodeIdsAndComponentIds =
-        this.ProjectService.getShowPreviousWorkNodeIdsAndComponentIds(nodeId);
 
     let components = [];
     components = components.concat(nodeIdsAndComponentIds);
-    components = components.concat(showPreviousWorkNodeIdsAndComponentIds);
 
     const params = {};
     params.periodId = null;
