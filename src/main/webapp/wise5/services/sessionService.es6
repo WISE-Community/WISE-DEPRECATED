@@ -285,7 +285,6 @@ class SessionService {
    * components left to wait for, we can then exit.
    */
   attemptExit() {
-    // get all the components listening for the exit event
     const exitListenerCount = this.$rootScope.$$listenerCount.exit;
 
     /*
@@ -296,42 +295,18 @@ class SessionService {
     if (exitListenerCount != null && exitListenerCount > 0) {
       // don't log out yet because there are still listeners
     } else {
-      // there are no more listeners so we will exit
-      const mainHomePageURL = this.ConfigService.getMainHomePageURL();
-
       if (this.performLogOut) {
-        // log out the user and bring them to the home page
-
-        // get the url that will log out the user
-        const sessionLogOutURL = this.ConfigService.getSessionLogOutURL();
-
-        // take user to log out url
-        window.location.href = sessionLogOutURL;
+        window.location.href = this.ConfigService.getSessionLogOutURL();
       } else {
-        /*
-         * bring the user to the student or teacher home page but
-         * do not log them out
-         */
-
-        // Get the wiseBaseURL e.g. /wise
         const wiseBaseURL = this.ConfigService.getWISEBaseURL();
-
-        let homePageURL = '';
-
-        // get the user type
         const userType = this.ConfigService.getConfigParam('userType');
-
         if (userType === 'student') {
-          // send the user to the student home page
-          homePageURL = wiseBaseURL + '/student';
+          window.location.href = wiseBaseURL + '/student';
         } else if (userType === 'teacher') {
-          // send the user to the teacher home page
-          homePageURL = wiseBaseURL + '/teacher';
+          window.location.href = wiseBaseURL + '/teacher';
         } else {
-          // send the user to the main home page
-          homePageURL = mainHomePageURL;
+          window.location.href = this.ConfigService.getMainHomePageURL();
         }
-        window.location.href = homePageURL;
       }
     }
   };

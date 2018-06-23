@@ -42,12 +42,10 @@ class TopBarController {
     this.$window.open('https://docs.google.com/document/d/1G8lVtiUlGXLRAyFOvkEdadHYhJhJLW4aor9dol2VzeU', '_blank');
   }
 
-  /**
-   * Navigate the teacher to the teacher home page
-   */
   goHome() {
-    // fire the goHome event
-    this.$rootScope.$broadcast('goHome');
+    this.ProjectService.notifyAuthorProjectEnd().then(() => {
+      this.$rootScope.$broadcast('goHome');
+    });
   };
 
   /**
