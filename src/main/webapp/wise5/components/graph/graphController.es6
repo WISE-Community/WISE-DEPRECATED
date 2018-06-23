@@ -77,12 +77,6 @@ class GraphController extends ComponentController {
     // the height of the graph
     this.height = null;
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    this.originalComponentContent = this.$scope.originalComponentContent;
-
     this.trials = [];
     this.activeTrial = null;
     this.trialIdsToShow = [];

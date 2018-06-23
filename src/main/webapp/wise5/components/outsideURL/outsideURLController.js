@@ -39,12 +39,6 @@ var OutsideURLController = function (_ComponentController) {
     // the max height of the iframe
     _this.maxHeight = null;
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    _this.originalComponentContent = _this.$scope.originalComponentContent;
-
     if (_this.componentContent != null) {
       // set the url
       _this.setURL(_this.componentContent.url);

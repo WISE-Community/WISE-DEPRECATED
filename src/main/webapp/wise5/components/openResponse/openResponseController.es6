@@ -85,12 +85,6 @@ class OpenResponseController extends ComponentController {
       }
     };
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    this.originalComponentContent = this.$scope.originalComponentContent;
-
     if (this.mode === 'student') {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
