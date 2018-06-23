@@ -737,7 +737,7 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
            */
           connectedComponent.componentId = allowedComponent.id;
           connectedComponent.type = 'importWork';
-          this.copyChoicesFromConnectedComponentIfNecessary(connectedComponent);
+          this.copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent);
         }
       }
     }
@@ -816,19 +816,25 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
 
       // default the type to import work
       connectedComponent.type = 'importWork';
-      this.copyChoicesFromConnectedComponentIfNecessary(connectedComponent);
+      this.copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent);
 
       // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
   }
 
-  copyChoicesFromConnectedComponentIfNecessary(connectedComponent) {
+  copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent) {
     const nodeId = connectedComponent.nodeId;
     const componentId = connectedComponent.componentId;
     if (this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId).type == "MultipleChoice") {
+      this.copyChoiceTypeFromComponent(nodeId, componentId);
       this.copyChoicesFromComponent(nodeId, componentId);
     }
+  }
+
+  copyChoiceTypeFromComponent(nodeId, componentId) {
+    const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+    this.authoringComponentContent.choiceType = component.choiceType;
   }
 
   copyChoicesFromComponent(nodeId, componentId) {

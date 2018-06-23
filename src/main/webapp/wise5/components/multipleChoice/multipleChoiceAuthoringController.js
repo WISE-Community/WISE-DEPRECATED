@@ -800,7 +800,7 @@ var MultipleChoiceAuthoringController = function (_MultipleChoiceContro) {
              */
             connectedComponent.componentId = allowedComponent.id;
             connectedComponent.type = 'importWork';
-            this.copyChoicesFromConnectedComponentIfNecessary(connectedComponent);
+            this.copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent);
           }
         }
       }
@@ -891,20 +891,27 @@ var MultipleChoiceAuthoringController = function (_MultipleChoiceContro) {
 
         // default the type to import work
         connectedComponent.type = 'importWork';
-        this.copyChoicesFromConnectedComponentIfNecessary(connectedComponent);
+        this.copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent);
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
       }
     }
   }, {
-    key: 'copyChoicesFromConnectedComponentIfNecessary',
-    value: function copyChoicesFromConnectedComponentIfNecessary(connectedComponent) {
+    key: 'copyChoiceTypeAndChoicesFromConnectedComponent',
+    value: function copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent) {
       var nodeId = connectedComponent.nodeId;
       var componentId = connectedComponent.componentId;
       if (this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId).type == "MultipleChoice") {
+        this.copyChoiceTypeFromComponent(nodeId, componentId);
         this.copyChoicesFromComponent(nodeId, componentId);
       }
+    }
+  }, {
+    key: 'copyChoiceTypeFromComponent',
+    value: function copyChoiceTypeFromComponent(nodeId, componentId) {
+      var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+      this.authoringComponentContent.choiceType = component.choiceType;
     }
   }, {
     key: 'copyChoicesFromComponent',
