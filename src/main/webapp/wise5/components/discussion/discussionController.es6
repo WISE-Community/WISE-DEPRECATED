@@ -60,12 +60,6 @@ class DiscussionController extends ComponentController {
     // the latest annotations
     this.latestAnnotations = null;
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    this.originalComponentContent = this.$scope.originalComponentContent;
-
 
     if (this.$scope.workgroupId != null) {
       this.workgroupId = this.$scope.workgroupId;

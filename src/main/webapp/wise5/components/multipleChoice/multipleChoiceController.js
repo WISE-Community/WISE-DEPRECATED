@@ -49,12 +49,6 @@ var MultipleChoiceController = function (_ComponentController) {
     // whether the latest component state was a submit
     _this.isLatestComponentStateSubmit = false;
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    _this.originalComponentContent = _this.$scope.originalComponentContent;
-
     if (_this.mode === 'student') {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;

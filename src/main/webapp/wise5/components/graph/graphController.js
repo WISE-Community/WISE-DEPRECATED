@@ -84,12 +84,6 @@ var GraphController = function (_ComponentController) {
     // the height of the graph
     _this.height = null;
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    _this.originalComponentContent = _this.$scope.originalComponentContent;
-
     _this.trials = [];
     _this.activeTrial = null;
     _this.trialIdsToShow = [];

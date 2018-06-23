@@ -52,12 +52,6 @@ class EmbeddedController extends ComponentController {
     this.componentStateId = null;
     this.embeddedApplicationIFrameId = '';
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    this.originalComponentContent = this.$scope.originalComponentContent;
-
 
     this.embeddedApplicationIFrameId = 'componentApp_' + this.componentId;
     this.componentType = this.componentContent.type;

@@ -50,12 +50,6 @@ class AnimationController extends ComponentController {
     // mapping from object id to svg object
     this.idToSVGObject = {};
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    this.originalComponentContent = this.$scope.originalComponentContent;
-
     // the default width and height
     this.width = 800;
     this.height = 600;

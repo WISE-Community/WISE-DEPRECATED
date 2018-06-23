@@ -84,12 +84,6 @@ var AudioOscillatorController = function (_ComponentController) {
     // the text to display on the play/stop button
     _this.playStopButtonText = _this.$translate('audioOscillator.play');
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    _this.originalComponentContent = _this.$scope.originalComponentContent;
-
     if (_this.mode === 'student') {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;

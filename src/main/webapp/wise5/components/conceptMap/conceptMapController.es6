@@ -95,12 +95,6 @@ class ConceptMapController extends ComponentController {
 
     let themePath = this.ProjectService.getThemePath();
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    this.originalComponentContent = this.$scope.originalComponentContent;
-
     // the auto feedback string
     this.autoFeedbackString = '';
 
