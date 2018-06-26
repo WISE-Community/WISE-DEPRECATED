@@ -52,12 +52,6 @@ var DrawController = function (_ComponentController) {
     // will hold the drawing tool object
     _this.drawingTool = null;
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    _this.originalComponentContent = _this.$scope.originalComponentContent;
-
     _this.latestConnectedComponentState = null;
     _this.latestConnectedComponentParams = null;
 

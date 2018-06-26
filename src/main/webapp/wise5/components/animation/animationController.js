@@ -53,12 +53,6 @@ var AnimationController = function (_ComponentController) {
     // mapping from object id to svg object
     _this.idToSVGObject = {};
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    _this.originalComponentContent = _this.$scope.originalComponentContent;
-
     // the default width and height
     _this.width = 800;
     _this.height = 600;

@@ -89,19 +89,6 @@ class ComponentController {
         $scope.type = componentContent.type;
         $scope.nodeController = $scope.$parent.nodeController;
 
-        if (this.originalNodeId != null && this.originalComponentId != null) {
-            /*
-             * set the original node id and component id. this is used
-             * when we are showing previous work from another component.
-             */
-            $scope.originalNodeId = this.originalNodeId;
-            $scope.originalComponentId = this.originalComponentId;
-
-            // get the original component
-            var originalComponentContent = this.ProjectService.getComponentByNodeIdAndComponentId(this.originalNodeId, this.originalComponentId);
-            $scope.originalComponentContent = originalComponentContent;
-        }
-
         var componentHTML =
             `<div class="component__wrapper">
                 <div ng-include="componentTemplatePath" class="component__content component__content--{{type}}"></div>
@@ -123,8 +110,6 @@ const Component = {
         componentState: '@',
         mode: '@',
         nodeId: '@',
-        originalNodeId: '@',
-        originalComponentId: '@',
         teacherWorkgroupId: '@',
         workgroupId: '@'
     },

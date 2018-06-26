@@ -87,12 +87,6 @@ var OpenResponseController = function (_ComponentController) {
       }
     };
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    _this.originalComponentContent = _this.$scope.originalComponentContent;
-
     if (_this.mode === 'student') {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;

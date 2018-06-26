@@ -98,12 +98,6 @@ var ConceptMapController = function (_ComponentController) {
 
     var themePath = _this.ProjectService.getThemePath();
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    _this.originalComponentContent = _this.$scope.originalComponentContent;
-
     // the auto feedback string
     _this.autoFeedbackString = '';
 

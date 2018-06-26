@@ -41,12 +41,6 @@ class TableController extends ComponentController {
     // the label for the notebook in thos project
     this.notebookConfig = this.NotebookService.getNotebookConfig();
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    this.originalComponentContent = this.$scope.originalComponentContent;
-
     this.latestConnectedComponentState = null;
     this.latestConnectedComponentParams = null;
 

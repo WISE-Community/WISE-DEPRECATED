@@ -115,12 +115,6 @@ var LabelController = function (_ComponentController) {
      */
     _this.labels = [];
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    _this.originalComponentContent = _this.$scope.originalComponentContent;
-
     _this.canvasId = 'canvas_' + _this.nodeId + '_' + _this.componentId;
 
     // get the component state from the scope

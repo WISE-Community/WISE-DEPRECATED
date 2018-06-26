@@ -404,6 +404,81 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
     // display the asset chooser
     this.$rootScope.$broadcast('openAssetChooser', params);
   }
+
+  /**
+   * Automatically set the component id for the connected component if there
+   * is only one viable option.
+   * @param connectedComponent the connected component object we are authoring
+   */
+  authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
+    if (connectedComponent != null) {
+      let components = this.getComponentsByNodeId(connectedComponent.nodeId);
+      if (components != null) {
+        let numberOfAllowedComponents = 0;
+        let allowedComponent = null;
+        for (let component of components) {
+          if (component != null) {
+            if (this.isConnectedComponentTypeAllowed(component.type) &&
+              component.id != this.componentId) {
+              // we have found a viable component we can connect to
+              numberOfAllowedComponents += 1;
+              allowedComponent = component;
+            }
+          }
+        }
+
+        if (numberOfAllowedComponents == 1) {
+          /*
+           * there is only one viable component to connect to so we
+           * will use it
+           */
+          connectedComponent.componentId = allowedComponent.id;
+          connectedComponent.type = 'importWork';
+          this.copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent);
+        }
+      }
+    }
+  }
+
+  /**
+   * The connected component component id has changed
+   * @param connectedComponent the connected component that has changed
+   */
+  authoringConnectedComponentComponentIdChanged(connectedComponent) {
+
+    if (connectedComponent != null) {
+
+      // default the type to import work
+      connectedComponent.type = 'importWork';
+      this.copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent);
+
+      // the authoring component content has changed so we will save the project
+      this.authoringViewComponentChanged();
+    }
+  }
+
+  copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent) {
+    const nodeId = connectedComponent.nodeId;
+    const componentId = connectedComponent.componentId;
+    if (this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId).type == "MultipleChoice") {
+      this.copyChoiceTypeFromComponent(nodeId, componentId);
+      this.copyChoicesFromComponent(nodeId, componentId);
+    }
+  }
+
+  copyChoiceTypeFromComponent(nodeId, componentId) {
+    const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+    this.authoringComponentContent.choiceType = component.choiceType;
+  }
+
+  copyChoicesFromComponent(nodeId, componentId) {
+    this.authoringComponentContent.choices = this.getCopyOfChoicesFromComponent(nodeId, componentId);
+  }
+
+  getCopyOfChoicesFromComponent(nodeId, componentId) {
+    const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+    return this.UtilService.makeCopyOfJSONObject(component.choices);
+  }
 };
 
 MultipleChoiceAuthoringController.$inject = [

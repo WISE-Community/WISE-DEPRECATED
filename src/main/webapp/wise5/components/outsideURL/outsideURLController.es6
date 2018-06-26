@@ -35,12 +35,6 @@ class OutsideURLController extends ComponentController {
     // the max height of the iframe
     this.maxHeight = null;
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    this.originalComponentContent = this.$scope.originalComponentContent;
-
     if (this.componentContent != null) {
       // set the url
       this.setURL(this.componentContent.url);

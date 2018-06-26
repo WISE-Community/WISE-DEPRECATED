@@ -425,6 +425,111 @@ var MultipleChoiceAuthoringController = function (_MultipleChoiceContro) {
       // display the asset chooser
       this.$rootScope.$broadcast('openAssetChooser', params);
     }
+
+    /**
+     * Automatically set the component id for the connected component if there
+     * is only one viable option.
+     * @param connectedComponent the connected component object we are authoring
+     */
+
+  }, {
+    key: 'authoringAutomaticallySetConnectedComponentComponentIdIfPossible',
+    value: function authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
+      if (connectedComponent != null) {
+        var components = this.getComponentsByNodeId(connectedComponent.nodeId);
+        if (components != null) {
+          var numberOfAllowedComponents = 0;
+          var allowedComponent = null;
+          var _iteratorNormalCompletion = true;
+          var _didIteratorError = false;
+          var _iteratorError = undefined;
+
+          try {
+            for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var component = _step.value;
+
+              if (component != null) {
+                if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
+                  // we have found a viable component we can connect to
+                  numberOfAllowedComponents += 1;
+                  allowedComponent = component;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+
+          if (numberOfAllowedComponents == 1) {
+            /*
+             * there is only one viable component to connect to so we
+             * will use it
+             */
+            connectedComponent.componentId = allowedComponent.id;
+            connectedComponent.type = 'importWork';
+            this.copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent);
+          }
+        }
+      }
+    }
+
+    /**
+     * The connected component component id has changed
+     * @param connectedComponent the connected component that has changed
+     */
+
+  }, {
+    key: 'authoringConnectedComponentComponentIdChanged',
+    value: function authoringConnectedComponentComponentIdChanged(connectedComponent) {
+
+      if (connectedComponent != null) {
+
+        // default the type to import work
+        connectedComponent.type = 'importWork';
+        this.copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent);
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+      }
+    }
+  }, {
+    key: 'copyChoiceTypeAndChoicesFromConnectedComponent',
+    value: function copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent) {
+      var nodeId = connectedComponent.nodeId;
+      var componentId = connectedComponent.componentId;
+      if (this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId).type == "MultipleChoice") {
+        this.copyChoiceTypeFromComponent(nodeId, componentId);
+        this.copyChoicesFromComponent(nodeId, componentId);
+      }
+    }
+  }, {
+    key: 'copyChoiceTypeFromComponent',
+    value: function copyChoiceTypeFromComponent(nodeId, componentId) {
+      var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+      this.authoringComponentContent.choiceType = component.choiceType;
+    }
+  }, {
+    key: 'copyChoicesFromComponent',
+    value: function copyChoicesFromComponent(nodeId, componentId) {
+      this.authoringComponentContent.choices = this.getCopyOfChoicesFromComponent(nodeId, componentId);
+    }
+  }, {
+    key: 'getCopyOfChoicesFromComponent',
+    value: function getCopyOfChoicesFromComponent(nodeId, componentId) {
+      var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+      return this.UtilService.makeCopyOfJSONObject(component.choices);
+    }
   }]);
 
   return MultipleChoiceAuthoringController;

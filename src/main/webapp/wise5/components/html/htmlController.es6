@@ -26,13 +26,6 @@ class HTMLController extends ComponentController {
     this.$stateParams = $stateParams;
     this.$sce = $sce;
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    // TODO: remove. no longer used
-    this.originalComponentContent = this.$scope.originalComponentContent;
-
     if (this.mode === 'authoring') {
 
     } else if (this.mode === 'grading') {

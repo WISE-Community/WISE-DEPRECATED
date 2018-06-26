@@ -30,13 +30,6 @@ var HTMLController = function (_ComponentController) {
     _this.$stateParams = $stateParams;
     _this.$sce = $sce;
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    // TODO: remove. no longer used
-    _this.originalComponentContent = _this.$scope.originalComponentContent;
-
     if (_this.mode === 'authoring') {} else if (_this.mode === 'grading') {} else if (_this.mode === 'student') {
       if (_this.componentContent != null) {
         _this.html = _this.componentContent.html;

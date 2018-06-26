@@ -64,12 +64,6 @@ var DiscussionController = function (_ComponentController) {
     // the latest annotations
     _this.latestAnnotations = null;
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    _this.originalComponentContent = _this.$scope.originalComponentContent;
-
     if (_this.$scope.workgroupId != null) {
       _this.workgroupId = _this.$scope.workgroupId;
     }

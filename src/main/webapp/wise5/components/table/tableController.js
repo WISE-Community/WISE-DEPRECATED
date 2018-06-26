@@ -47,12 +47,6 @@ var TableController = function (_ComponentController) {
     // the label for the notebook in thos project
     _this.notebookConfig = _this.NotebookService.getNotebookConfig();
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    _this.originalComponentContent = _this.$scope.originalComponentContent;
-
     _this.latestConnectedComponentState = null;
     _this.latestConnectedComponentParams = null;
 

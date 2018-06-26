@@ -40,12 +40,6 @@ class DrawController extends ComponentController {
     // will hold the drawing tool object
     this.drawingTool = null;
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    this.originalComponentContent = this.$scope.originalComponentContent;
-
     this.latestConnectedComponentState = null;
     this.latestConnectedComponentParams = null;
 
