@@ -131,22 +131,6 @@ class GraphAuthoringController extends GraphController {
       }
     ]
 
-    // the options for when to update this component from a connected component
-    this.connectedComponentUpdateOnOptions = [
-      {
-        value: 'change',
-        text: this.$translate('change')
-      },
-      {
-        value: 'save',
-        text: this.$translate('SAVE')
-      },
-      {
-        value: 'submit',
-        text: this.$translate('SUBMIT')
-      }
-    ];
-
     // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [
       { type: 'Animation' },
@@ -158,52 +142,10 @@ class GraphAuthoringController extends GraphController {
       { type: 'Table' }
     ];
 
-    this.isSaveButtonVisible = this.componentContent.showSaveButton;
-    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
     this.isResetSeriesButtonVisible = true;
     this.isSelectSeriesVisible = true;
 
-    // generate the summernote rubric element id
-    this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-
-    // set the component rubric into the summernote rubric
-    this.summernoteRubricHTML = this.componentContent.rubric;
-
-    // the tooltip text for the insert WISE asset button
-    var insertAssetString = this.$translate('INSERT_ASSET');
-
-    /*
-     * create the custom button for inserting WISE assets into
-     * summernote
-     */
-    var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
-
-    /*
-     * the options that specifies the tools to display in the
-     * summernote prompt
-     */
-    this.summernoteRubricOptions = {
-      toolbar: [
-        ['style', ['style']],
-        ['font', ['bold', 'underline', 'clear']],
-        ['fontname', ['fontname']],
-        ['fontsize', ['fontsize']],
-        ['color', ['color']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['table', ['table']],
-        ['insert', ['link', 'video']],
-        ['view', ['fullscreen', 'codeview', 'help']],
-        ['customButton', ['insertAssetButton']]
-      ],
-      height: 300,
-      disableDragAndDrop: true,
-      buttons: {
-        insertAssetButton: InsertAssetButton
-      }
-    };
-
     this.backgroundImage = this.componentContent.backgroundImage;
-    this.updateAdvancedAuthoringView()
 
     $scope.$watch(function() {
       return this.authoringComponentContent;
@@ -306,74 +248,7 @@ class GraphAuthoringController extends GraphController {
       // close the popup
       this.$mdDialog.hide();
     });
-
-    /*
-     * The advanced button for a component was clicked. If the button was
-     * for this component, we will show the advanced authoring.
-     */
-    this.$scope.$on('componentAdvancedButtonClicked', (event, args) => {
-      if (args != null) {
-        let componentId = args.componentId;
-        if (this.componentId === componentId) {
-          this.showAdvancedAuthoring = !this.showAdvancedAuthoring;
-        }
-      }
-    });
   }
-
-  /**
-   * The component has changed in the regular authoring view so we will save the project
-   */
-  authoringViewComponentChanged() {
-
-    // update the JSON string in the advanced authoring view textarea
-    this.updateAdvancedAuthoringView();
-
-    /*
-     * notify the parent node that the content has changed which will save
-     * the project to the server
-     */
-    this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-  };
-
-  /**
-   * The component has changed in the advanced authoring view so we will update
-   * the component and save the project.
-   */
-  advancedAuthoringViewComponentChanged() {
-
-    try {
-      /*
-       * create a new component by converting the JSON string in the advanced
-       * authoring view into a JSON object
-       */
-      var authoringComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
-
-      // replace the component in the project
-      this.ProjectService.replaceComponent(this.nodeId, this.componentId, authoringComponentContent);
-
-      // set the new authoring component content
-      this.authoringComponentContent = authoringComponentContent;
-
-      // set the new component into the controller
-      this.componentContent = authoringComponentContent;
-
-      /*
-       * notify the parent node that the content has changed which will save
-       * the project to the server
-       */
-      this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-    } catch(e) {
-      this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
-    }
-  };
-
-  /**
-   * Update the component JSON string that will be displayed in the advanced authoring view textarea
-   */
-  updateAdvancedAuthoringView() {
-    this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-  };
 
   /**
    * Add a series in the authoring view
@@ -447,36 +322,6 @@ class GraphAuthoringController extends GraphController {
       this.authoringComponentContent.hideAllTrialsOnNewTrial = true;
     }
 
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * The author has changed the rubric
-   */
-  summernoteRubricHTMLChanged() {
-
-    // get the summernote rubric html
-    var html = this.summernoteRubricHTML;
-
-    /*
-     * remove the absolute asset paths
-     * e.g.
-     * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
-     * will be changed to
-     * <img src='sun.png'/>
-     */
-    html = this.ConfigService.removeAbsoluteAssetPaths(html);
-
-    /*
-     * replace <a> and <button> elements with <wiselink> elements when
-     * applicable
-     */
-    html = this.UtilService.insertWISELinks(html);
-
-    // update the component rubric
-    this.authoringComponentContent.rubric = html;
-
-    // the authoring component content has changed so we will save the project
     this.authoringViewComponentChanged();
   }
 
@@ -815,66 +660,6 @@ class GraphAuthoringController extends GraphController {
   }
 
   /**
-   * Delete a connected component
-   * @param index the index of the component to delete
-   */
-  authoringDeleteConnectedComponent(index) {
-
-    // ask the author if they are sure they want to delete the connected component
-    let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
-
-    if (answer) {
-      // the author answered yes to delete
-
-      if (this.authoringComponentContent.connectedComponents != null) {
-        this.authoringComponentContent.connectedComponents.splice(index, 1);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * Set the show submit button value
-   * @param show whether to show the submit button
-   */
-  setShowSubmitButtonValue(show) {
-
-    if (show == null || show == false) {
-      // we are hiding the submit button
-      this.authoringComponentContent.showSaveButton = false;
-      this.authoringComponentContent.showSubmitButton = false;
-    } else {
-      // we are showing the submit button
-      this.authoringComponentContent.showSaveButton = true;
-      this.authoringComponentContent.showSubmitButton = true;
-    }
-
-    /*
-     * notify the parent node that this component is changing its
-     * showSubmitButton value so that it can show save buttons on the
-     * step or sibling components accordingly
-     */
-    this.$scope.$emit('componentShowSubmitButtonValueChanged', {nodeId: this.nodeId, componentId: this.componentId, showSubmitButton: show});
-  }
-
-  /**
-   * The showSubmitButton value has changed
-   */
-  showSubmitButtonValueChanged() {
-
-    /*
-     * perform additional processing for when we change the showSubmitButton
-     * value
-     */
-    this.setShowSubmitButtonValue(this.authoringComponentContent.showSubmitButton);
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
    * Add a connected component series number
    * @param connectedComponent the connected component object
    */
@@ -938,49 +723,6 @@ class GraphAuthoringController extends GraphController {
         // update the series number at the given index
         connectedComponent.seriesNumbers[seriesNumberIndex] = value;
       }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * Get the connected component type
-   * @param connectedComponent get the component type of this connected component
-   * @return the connected component type
-   */
-  authoringGetConnectedComponentType(connectedComponent) {
-
-    var connectedComponentType = null;
-
-    if (connectedComponent != null) {
-
-      // get the node id and component id of the connected component
-      var nodeId = connectedComponent.nodeId;
-      var componentId = connectedComponent.componentId;
-
-      // get the component
-      var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
-      if (component != null) {
-        // get the component type
-        connectedComponentType = component.type;
-      }
-    }
-
-    return connectedComponentType;
-  }
-
-  /**
-   * The connected component node id has changed
-   * @param connectedComponent the connected component that has changed
-   */
-  authoringConnectedComponentNodeIdChanged(connectedComponent) {
-    if (connectedComponent != null) {
-      connectedComponent.componentId = null;
-      connectedComponent.type = null;
-      delete connectedComponent.importWorkAsBackground;
-      this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
       // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
@@ -1118,61 +860,6 @@ class GraphAuthoringController extends GraphController {
       // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
-  }
-
-  /**
-   * Check if we are allowed to connect to this component type
-   * @param componentType the component type
-   * @return whether we can connect to the component type
-   */
-  isConnectedComponentTypeAllowed(componentType) {
-
-    if (componentType != null) {
-
-      let allowedConnectedComponentTypes = this.allowedConnectedComponentTypes;
-
-      // loop through the allowed connected component types
-      for (let a = 0; a < allowedConnectedComponentTypes.length; a++) {
-        let allowedConnectedComponentType = allowedConnectedComponentTypes[a];
-
-        if (allowedConnectedComponentType != null) {
-          if (componentType == allowedConnectedComponentType.type) {
-            // the component type is allowed
-            return true;
-          }
-        }
-      }
-    }
-
-    return false;
-  }
-
-  /**
-   * The show JSON button was clicked to show or hide the JSON authoring
-   */
-  showJSONButtonClicked() {
-    // toggle the JSON authoring textarea
-    this.showJSONAuthoring = !this.showJSONAuthoring;
-
-    if (this.jsonStringChanged && !this.showJSONAuthoring) {
-      /*
-       * the author has changed the JSON and has just closed the JSON
-       * authoring view so we will save the component
-       */
-      this.advancedAuthoringViewComponentChanged();
-
-      // scroll to the top of the component
-      this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
-
-      this.jsonStringChanged = false;
-    }
-  }
-
-  /**
-   * The author has changed the JSON manually in the advanced view
-   */
-  authoringJSONChanged() {
-    this.jsonStringChanged = true;
   }
 
   /**

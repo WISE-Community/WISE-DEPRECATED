@@ -43,13 +43,7 @@ var HTMLAuthoringController = function (_HTMLController) {
      */
     var InsertWISELinkButton = _this.UtilService.createInsertWISELinkButton(_this, null, _this.nodeId, _this.componentId, 'prompt', insertWISELinkString);
 
-    // the tooltip text for the insert WISE asset button
     var insertAssetString = _this.$translate('INSERT_ASSET');
-
-    /*
-     * create the custom button for inserting WISE assets into
-     * summernote
-     */
     var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'prompt', insertAssetString);
 
     /*
@@ -71,33 +65,6 @@ var HTMLAuthoringController = function (_HTMLController) {
 
     // replace all <wiselink> elements with <a> or <button> elements
     _this.summernotePromptHTML = _this.UtilService.replaceWISELinks(_this.componentContent.html);
-
-    // generate the summernote rubric element id
-    _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
-
-    // set the component rubric into the summernote rubric
-    _this.summernoteRubricHTML = _this.componentContent.rubric;
-
-    /*
-     * create the custom button for inserting WISE assets into
-     * summernote
-     */
-    var InsertAssetButtonRubric = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
-
-    /*
-     * the options that specifies the tools to display in the
-     * summernote prompt
-     */
-    _this.summernoteRubricOptions = {
-      toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-      height: 300,
-      disableDragAndDrop: true,
-      buttons: {
-        insertAssetButton: InsertAssetButtonRubric
-      }
-    };
-
-    _this.updateAdvancedAuthoringView();
 
     $scope.$watch(function () {
       return this.authoringComponentContent;
@@ -250,89 +217,16 @@ var HTMLAuthoringController = function (_HTMLController) {
       // close the popup
       _this.$mdDialog.hide();
     });
-
-    /*
-     * The advanced button for a component was clicked. If the button was
-     * for this component, we will show the advanced authoring.
-     */
-    _this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
-      if (args != null) {
-        var componentId = args.componentId;
-        if (_this.componentId === componentId) {
-          _this.showAdvancedAuthoring = !_this.showAdvancedAuthoring;
-        }
-      }
-    });
     return _this;
   }
 
   /**
-   * The component has changed in the regular authoring view so we will save the project
+   * The summernote prompt html has changed so we will update the authoring
+   * component content
    */
 
 
   _createClass(HTMLAuthoringController, [{
-    key: 'authoringViewComponentChanged',
-    value: function authoringViewComponentChanged() {
-
-      // update the JSON string in the advanced authoring view textarea
-      this.updateAdvancedAuthoringView();
-
-      /*
-       * notify the parent node that the content has changed which will save
-       * the project to the server
-       */
-      this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-    }
-
-    /**
-     * The component has changed in the advanced authoring view so we will update
-     * the component and save the project.
-     */
-
-  }, {
-    key: 'advancedAuthoringViewComponentChanged',
-    value: function advancedAuthoringViewComponentChanged() {
-
-      try {
-        /*
-         * create a new component by converting the JSON string in the advanced
-         * authoring view into a JSON object
-         */
-        var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
-
-        // replace the component in the project
-        this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
-
-        // set the new component into the controller
-        this.componentContent = editedComponentContent;
-
-        /*
-         * notify the parent node that the content has changed which will save
-         * the project to the server
-         */
-        this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-      } catch (e) {
-        this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
-      }
-    }
-
-    /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-
-  }, {
-    key: 'updateAdvancedAuthoringView',
-    value: function updateAdvancedAuthoringView() {
-      this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-    }
-
-    /**
-     * The summernote prompt html has changed so we will update the authoring
-     * component content
-     */
-
-  }, {
     key: 'summernotePromptHTMLChanged',
     value: function summernotePromptHTMLChanged() {
 
@@ -359,73 +253,6 @@ var HTMLAuthoringController = function (_HTMLController) {
 
       // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The author has changed the rubric
-     */
-
-  }, {
-    key: 'summernoteRubricHTMLChanged',
-    value: function summernoteRubricHTMLChanged() {
-
-      // get the summernote rubric html
-      var html = this.summernoteRubricHTML;
-
-      /*
-       * remove the absolute asset paths
-       * e.g.
-       * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
-       * will be changed to
-       * <img src='sun.png'/>
-       */
-      html = this.ConfigService.removeAbsoluteAssetPaths(html);
-
-      /*
-       * replace <a> and <button> elements with <wiselink> elements when
-       * applicable
-       */
-      html = this.UtilService.insertWISELinks(html);
-
-      // update the component rubric
-      this.authoringComponentContent.rubric = html;
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The show JSON button was clicked to show or hide the JSON authoring
-     */
-
-  }, {
-    key: 'showJSONButtonClicked',
-    value: function showJSONButtonClicked() {
-      // toggle the JSON authoring textarea
-      this.showJSONAuthoring = !this.showJSONAuthoring;
-
-      if (this.jsonStringChanged && !this.showJSONAuthoring) {
-        /*
-         * the author has changed the JSON and has just closed the JSON
-         * authoring view so we will save the component
-         */
-        this.advancedAuthoringViewComponentChanged();
-
-        // scroll to the top of the component
-        this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
-
-        this.jsonStringChanged = false;
-      }
-    }
-
-    /**
-     * The author has changed the JSON manually in the advanced view
-     */
-
-  }, {
-    key: 'authoringJSONChanged',
-    value: function authoringJSONChanged() {
-      this.jsonStringChanged = true;
     }
   }]);
 

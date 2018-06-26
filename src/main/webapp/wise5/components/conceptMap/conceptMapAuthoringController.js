@@ -40,18 +40,6 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
       value: true, label: _this.$translate('conceptMap.shouldNot')
     }];
 
-    // the options for when to update this component from a connected component
-    _this.connectedComponentUpdateOnOptions = [{
-      value: 'change',
-      text: 'Change'
-    }, {
-      value: 'submit',
-      text: 'Submit'
-    }];
-
-    _this.isPromptVisible = true;
-    _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
-    _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
     _this.availableNodes = _this.componentContent.nodes;
     _this.availableLinks = _this.componentContent.links;
 
@@ -59,36 +47,6 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
       _this.componentContent.showNodeLabels = true;
       _this.authoringComponentContent.showNodeLabels = true;
     }
-
-    // generate the summernote rubric element id
-    _this.summernoteRubricId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
-
-    // set the component rubric into the summernote rubric
-    _this.summernoteRubricHTML = _this.componentContent.rubric;
-
-    // the tooltip text for the insert WISE asset button
-    var insertAssetString = _this.$translate('INSERT_ASSET');
-
-    /*
-     * create the custom button for inserting WISE assets into
-     * summernote
-     */
-    var InsertAssetButton = _this.UtilService.createInsertAssetButton(_this, null, _this.nodeId, _this.componentId, 'rubric', insertAssetString);
-
-    /*
-     * the options that specifies the tools to display in the
-     * summernote prompt
-     */
-    _this.summernoteRubricOptions = {
-      toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-      height: 300,
-      disableDragAndDrop: true,
-      buttons: {
-        insertAssetButton: InsertAssetButton
-      }
-    };
-
-    _this.updateAdvancedAuthoringView();
 
     $scope.$watch(function () {
       return this.authoringComponentContent;
@@ -204,81 +162,18 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
       // close the popup
       _this.$mdDialog.hide();
     });
-
-    /*
-     * The advanced button for a component was clicked. If the button was
-     * for this component, we will show the advanced authoring.
-     */
-    _this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
-      if (args != null) {
-        var componentId = args.componentId;
-        if (_this.componentId === componentId) {
-          _this.showAdvancedAuthoring = !_this.showAdvancedAuthoring;
-        }
-      }
-    });
     return _this;
   }
 
   /**
-   * The component has changed in the regular authoring view so we will save the project
+   * A node up button was clicked in the authoring tool so we will move the
+   * node up
+   * @param index the index of the node that we will move
    */
 
 
   _createClass(ConceptMapAuthoringController, [{
-    key: 'authoringViewComponentChanged',
-    value: function authoringViewComponentChanged() {
-
-      // update the JSON string in the advanced authoring view textarea
-      this.updateAdvancedAuthoringView();
-
-      /*
-       * notify the parent node that the content has changed which will save
-       * the project to the server
-       */
-      this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-    }
-  }, {
-    key: 'advancedAuthoringViewComponentChanged',
-
-
-    /**
-     * The component has changed in the advanced authoring view so we will update
-     * the component and save the project.
-     */
-    value: function advancedAuthoringViewComponentChanged() {
-
-      try {
-        /*
-         * create a new component by converting the JSON string in the advanced
-         * authoring view into a JSON object
-         */
-        var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
-
-        // replace the component in the project
-        this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
-
-        // set the new component into the controller
-        this.componentContent = editedComponentContent;
-
-        /*
-         * notify the parent node that the content has changed which will save
-         * the project to the server
-         */
-        this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-      } catch (e) {
-        this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
-      }
-    }
-  }, {
     key: 'authoringViewNodeUpButtonClicked',
-
-
-    /**
-     * A node up button was clicked in the authoring tool so we will move the
-     * node up
-     * @param index the index of the node that we will move
-     */
     value: function authoringViewNodeUpButtonClicked(index) {
 
       // check if the node is at the top
@@ -922,16 +817,6 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
     }
 
     /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-
-  }, {
-    key: 'updateAdvancedAuthoringView',
-    value: function updateAdvancedAuthoringView() {
-      this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-    }
-
-    /**
      * Save the starter concept map
      */
 
@@ -982,71 +867,6 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
     }
 
     /**
-     * The authoring view show save button checkbox was clicked
-     */
-
-  }, {
-    key: 'authoringViewShowSaveButtonClicked',
-    value: function authoringViewShowSaveButtonClicked() {
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The authoring view show submit button checkbox was clicked
-     */
-
-  }, {
-    key: 'authoringViewShowSubmitButtonClicked',
-    value: function authoringViewShowSubmitButtonClicked() {
-
-      if (!this.authoringComponentContent.showSubmitButton) {
-        /*
-         * we are not showing the submit button to the student so
-         * we will clear the max submit count
-         */
-        this.authoringComponentContent.maxSubmitCount = null;
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The author has changed the rubric
-     */
-
-  }, {
-    key: 'summernoteRubricHTMLChanged',
-    value: function summernoteRubricHTMLChanged() {
-
-      // get the summernote rubric html
-      var html = this.summernoteRubricHTML;
-
-      /*
-       * remove the absolute asset paths
-       * e.g.
-       * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
-       * will be changed to
-       * <img src='sun.png'/>
-       */
-      html = this.ConfigService.removeAbsoluteAssetPaths(html);
-
-      /*
-       * replace <a> and <button> elements with <wiselink> elements when
-       * applicable
-       */
-      html = this.UtilService.insertWISELinks(html);
-
-      // update the component rubric
-      this.authoringComponentContent.rubric = html;
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
      * Show the asset popup to allow the author to choose the background image
      */
 
@@ -1082,127 +902,6 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
 
       // display the asset chooser
       this.$rootScope.$broadcast('openAssetChooser', params);
-    }
-
-    /**
-     * Add a connected component
-     */
-
-  }, {
-    key: 'addConnectedComponent',
-    value: function addConnectedComponent() {
-
-      /*
-       * create the new connected component object that will contain a
-       * node id and component id
-       */
-      var newConnectedComponent = {};
-      newConnectedComponent.nodeId = this.nodeId;
-      newConnectedComponent.componentId = null;
-      newConnectedComponent.updateOn = 'change';
-
-      // initialize the array of connected components if it does not exist yet
-      if (this.authoringComponentContent.connectedComponents == null) {
-        this.authoringComponentContent.connectedComponents = [];
-      }
-
-      // add the connected component
-      this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Delete a connected component
-     * @param index the index of the component to delete
-     */
-
-  }, {
-    key: 'deleteConnectedComponent',
-    value: function deleteConnectedComponent(index) {
-
-      if (this.authoringComponentContent.connectedComponents != null) {
-        this.authoringComponentContent.connectedComponents.splice(index, 1);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Set the show submit button value
-     * @param show whether to show the submit button
-     */
-
-  }, {
-    key: 'setShowSubmitButtonValue',
-    value: function setShowSubmitButtonValue(show) {
-
-      if (show == null || show == false) {
-        // we are hiding the submit button
-        this.authoringComponentContent.showSaveButton = false;
-        this.authoringComponentContent.showSubmitButton = false;
-      } else {
-        // we are showing the submit button
-        this.authoringComponentContent.showSaveButton = true;
-        this.authoringComponentContent.showSubmitButton = true;
-      }
-
-      /*
-       * notify the parent node that this component is changing its
-       * showSubmitButton value so that it can show save buttons on the
-       * step or sibling components accordingly
-       */
-      this.$scope.$emit('componentShowSubmitButtonValueChanged', { nodeId: this.nodeId, componentId: this.componentId, showSubmitButton: show });
-    }
-
-    /**
-     * The showSubmitButton value has changed
-     */
-
-  }, {
-    key: 'showSubmitButtonValueChanged',
-    value: function showSubmitButtonValueChanged() {
-
-      /*
-       * perform additional processing for when we change the showSubmitButton
-       * value
-       */
-      this.setShowSubmitButtonValue(this.authoringComponentContent.showSubmitButton);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Add a connected component
-     */
-
-  }, {
-    key: 'authoringAddConnectedComponent',
-    value: function authoringAddConnectedComponent() {
-
-      /*
-       * create the new connected component object that will contain a
-       * node id and component id
-       */
-      var newConnectedComponent = {};
-      newConnectedComponent.nodeId = this.nodeId;
-      newConnectedComponent.componentId = null;
-      newConnectedComponent.type = null;
-      this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(newConnectedComponent);
-
-      // initialize the array of connected components if it does not exist yet
-      if (this.authoringComponentContent.connectedComponents == null) {
-        this.authoringComponentContent.connectedComponents = [];
-      }
-
-      // add the connected component
-      this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
     }
 
     /**
@@ -1264,79 +963,6 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
     }
 
     /**
-     * Delete a connected component
-     * @param index the index of the component to delete
-     */
-
-  }, {
-    key: 'authoringDeleteConnectedComponent',
-    value: function authoringDeleteConnectedComponent(index) {
-
-      // ask the author if they are sure they want to delete the connected component
-      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
-
-      if (answer) {
-        // the author answered yes to delete
-
-        if (this.authoringComponentContent.connectedComponents != null) {
-          this.authoringComponentContent.connectedComponents.splice(index, 1);
-        }
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * Get the connected component type
-     * @param connectedComponent get the component type of this connected component
-     * @return the connected component type
-     */
-
-  }, {
-    key: 'authoringGetConnectedComponentType',
-    value: function authoringGetConnectedComponentType(connectedComponent) {
-
-      var connectedComponentType = null;
-
-      if (connectedComponent != null) {
-
-        // get the node id and component id of the connected component
-        var nodeId = connectedComponent.nodeId;
-        var componentId = connectedComponent.componentId;
-
-        // get the component
-        var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
-        if (component != null) {
-          // get the component type
-          connectedComponentType = component.type;
-        }
-      }
-
-      return connectedComponentType;
-    }
-
-    /**
-     * The connected component node id has changed
-     * @param connectedComponent the connected component that has changed
-     */
-
-  }, {
-    key: 'authoringConnectedComponentNodeIdChanged',
-    value: function authoringConnectedComponentNodeIdChanged(connectedComponent) {
-      if (connectedComponent != null) {
-        connectedComponent.componentId = null;
-        connectedComponent.type = null;
-        delete connectedComponent.importWorkAsBackground;
-        this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
      * The connected component component id has changed
      * @param connectedComponent the connected component that has changed
      */
@@ -1371,96 +997,6 @@ var ConceptMapAuthoringController = function (_ConceptMapController) {
       } else {
         delete connectedComponent.importWorkAsBackground;
       }
-    }
-
-    /**
-     * The connected component type has changed
-     * @param connectedComponent the connected component that changed
-     */
-
-  }, {
-    key: 'authoringConnectedComponentTypeChanged',
-    value: function authoringConnectedComponentTypeChanged(connectedComponent) {
-
-      if (connectedComponent != null) {
-
-        if (connectedComponent.type == 'importWork') {
-          /*
-           * the type has changed to import work
-           */
-        } else if (connectedComponent.type == 'showWork') {}
-        /*
-         * the type has changed to show work
-         */
-
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * Check if we are allowed to connect to this component type
-     * @param componentType the component type
-     * @return whether we can connect to the component type
-     */
-
-  }, {
-    key: 'isConnectedComponentTypeAllowed',
-    value: function isConnectedComponentTypeAllowed(componentType) {
-
-      if (componentType != null) {
-
-        var allowedConnectedComponentTypes = this.allowedConnectedComponentTypes;
-
-        // loop through the allowed connected component types
-        for (var a = 0; a < allowedConnectedComponentTypes.length; a++) {
-          var allowedConnectedComponentType = allowedConnectedComponentTypes[a];
-
-          if (allowedConnectedComponentType != null) {
-            if (componentType == allowedConnectedComponentType.type) {
-              // the component type is allowed
-              return true;
-            }
-          }
-        }
-      }
-
-      return false;
-    }
-
-    /**
-     * The show JSON button was clicked to show or hide the JSON authoring
-     */
-
-  }, {
-    key: 'showJSONButtonClicked',
-    value: function showJSONButtonClicked() {
-      // toggle the JSON authoring textarea
-      this.showJSONAuthoring = !this.showJSONAuthoring;
-
-      if (this.jsonStringChanged && !this.showJSONAuthoring) {
-        /*
-         * the author has changed the JSON and has just closed the JSON
-         * authoring view so we will save the component
-         */
-        this.advancedAuthoringViewComponentChanged();
-
-        // scroll to the top of the component
-        this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
-
-        this.jsonStringChanged = false;
-      }
-    }
-
-    /**
-     * The author has changed the JSON manually in the advanced view
-     */
-
-  }, {
-    key: 'authoringJSONChanged',
-    value: function authoringJSONChanged() {
-      this.jsonStringChanged = true;
     }
 
     /**
