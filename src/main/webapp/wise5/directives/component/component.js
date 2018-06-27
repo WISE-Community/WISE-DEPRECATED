@@ -80,7 +80,6 @@ var ComponentController = function ComponentController($injector, $scope, $compi
 
     if ($scope.mode === 'authoring') {
         $scope.authoringComponentContent = authoringComponentContent;
-        $scope.authoringComponentContentJSONString = angular.toJson($scope.authoringComponentContent, 4);
         $scope.nodeAuthoringController = $scope.$parent.nodeAuthoringController;
         $scope.componentTemplatePath = this.NodeService.getComponentAuthoringTemplatePath(componentContent.type);
     } else {

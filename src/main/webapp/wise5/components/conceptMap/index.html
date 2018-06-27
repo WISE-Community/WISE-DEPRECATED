@@ -58,16 +58,7 @@
         </label>
         <possible-score max-score='conceptMapController.componentContent.maxScore'
                         ng-if='conceptMapController.mode === "student" && !conceptMapController.latestAnnotations.score'></possible-score>
-        <div class='input-wrapper'
-             ng-class='{"input-wrapper--richtext": conceptMapController.isRichTextEnabled}'>
-            <textarea ng-if='conceptMapController.isRichTextEnabled && !conceptMapController.isDisabled'
-                      ui-tinymce='conceptMapController.tinymceOptions'
-                      ng-model='conceptMapController.studentResponse'
-                      ng-model-options='{ debounce: 100 }'
-                      ng-change='conceptMapController.studentDataChanged()'></textarea>
-          <div ng-if='conceptMapController.isRichTextEnabled && conceptMapController.isDisabled'
-               class='input--textarea input--textarea--disabled'>
-          </div>
+        <div class='input-wrapper'>
           <md-button class='md-raised md-primary'
                      ng-if='conceptMapController.mode !== "grading"'
                      ng-click='conceptMapController.resetConceptMap()'>
