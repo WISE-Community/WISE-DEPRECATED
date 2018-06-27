@@ -1047,22 +1047,6 @@ var MultipleChoiceController = function (_ComponentController) {
       return choices;
     }
   }, {
-    key: 'registerExitListener',
-
-
-    /**
-     * Register the the listener that will listen for the exit event
-     * so that we can perform saving before exiting.
-     */
-    value: function registerExitListener() {
-
-      /*
-       * Listen for the 'exit' event which is fired when the student exits
-       * the VLE. This will perform saving before the VLE exits.
-       */
-      this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
-    }
-  }, {
     key: 'createMergedComponentState',
 
 

@@ -1344,33 +1344,14 @@ var TableController = function (_ComponentController) {
     }
 
     /**
-     * Register the the listener that will listen for the exit event
-     * so that we can perform saving before exiting.
-     */
-
-  }, {
-    key: 'registerExitListener',
-    value: function registerExitListener() {
-
-      /*
-       * Listen for the 'exit' event which is fired when the student exits
-       * the VLE. This will perform saving before the VLE exits.
-       */
-      this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {
-
-        this.$rootScope.$broadcast('doneExiting');
-      }));
-    }
-  }, {
-    key: 'createMergedComponentState',
-
-
-    /**
      * Only merges the first component state
      * TODO: implement merging all component states
      * @param {array} componentStates
      * @return {object} merged component state
      */
+
+  }, {
+    key: 'createMergedComponentState',
     value: function createMergedComponentState(componentStates) {
       var defaultComponentState = this.createBlankComponentState();
       defaultComponentState.studentData.tableData = this.getCopyOfTableData(this.componentContent.tableData);

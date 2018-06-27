@@ -1205,28 +1205,12 @@ var ConceptMapController = function (_ComponentController) {
     }
 
     /**
-     * Register the the listener that will listen for the exit event
-     * so that we can perform saving before exiting.
-     */
-
-  }, {
-    key: 'registerExitListener',
-    value: function registerExitListener() {
-
-      /*
-       * Listen for the 'exit' event which is fired when the student exits
-       * the VLE. This will perform saving before the VLE exits.
-       */
-      exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
-    }
-  }, {
-    key: 'linkTypeSelected',
-
-
-    /**
      * A link type was selected in the link type chooser popup
      * @param linkType the authored link object that was selected
      */
+
+  }, {
+    key: 'linkTypeSelected',
     value: function linkTypeSelected(selectedLink) {
 
       if (this.highlightedElement != null && this.highlightedElement.constructor.name == 'ConceptMapLink') {

@@ -981,27 +981,11 @@ var OpenResponseController = function (_ComponentController) {
     }
 
     /**
-     * Register the the listener that will listen for the exit event
-     * so that we can perform saving before exiting.
-     */
-
-  }, {
-    key: 'registerExitListener',
-    value: function registerExitListener() {
-
-      /*
-       * Listen for the 'exit' event which is fired when the student exits
-       * the VLE. This will perform saving before the VLE exits.
-       */
-      this.exitListener = this.$scope.$on('exit', function (event, args) {});
-    }
-  }, {
-    key: 'getRevisions',
-
-
-    /**
      * Returns all the revisions made by this user for the specified component
      */
+
+  }, {
+    key: 'getRevisions',
     value: function getRevisions() {
       // get the component states for this component
       return this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
