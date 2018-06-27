@@ -34,21 +34,12 @@ var AnimationController = function (_ComponentController) {
     _this.CRaterService = CRaterService;
     _this.NotificationService = NotificationService;
 
-    // holds the text that the student has typed
-    _this.studentResponse = '';
-
-    // holds student attachments like assets
-    _this.attachments = [];
-
     // whether we're only showing the student work
     // TODO: refactor. do we need this?
     _this.onlyShowWork = false;
 
     // the latest annotations
     _this.latestAnnotations = null;
-
-    // used to hold a message dialog if we need to use one
-    _this.messageDialog = null;
 
     // mapping from object id to svg object
     _this.idToSVGObject = {};
@@ -1240,24 +1231,11 @@ var AnimationController = function (_ComponentController) {
         var studentData = componentState.studentData;
 
         if (studentData != null) {
-          var response = studentData.response;
-
-          if (response != null) {
-            // populate the text the student previously typed
-            this.studentResponse = response;
-          }
-
           var submitCounter = studentData.submitCounter;
 
           if (submitCounter != null) {
             // populate the submit counter
             this.submitCounter = submitCounter;
-          }
-
-          var attachments = studentData.attachments;
-
-          if (attachments != null) {
-            this.attachments = attachments;
           }
 
           this.processLatestSubmit();
@@ -1430,10 +1408,7 @@ var AnimationController = function (_ComponentController) {
       // create a new component state
       var componentState = this.NodeService.createNewComponentState();
 
-      // set the response into the component state
       var studentData = {};
-
-      studentData.attachments = angular.copy(this.attachments); // create a copy without reference to original array
 
       // set the submit counter
       studentData.submitCounter = this.submitCounter;
@@ -1511,177 +1486,6 @@ var AnimationController = function (_ComponentController) {
       var annotation = this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
 
       return annotation;
-    }
-
-    // TODO: remove attachments. not used in this component
-
-  }, {
-    key: 'removeAttachment',
-    value: function removeAttachment(attachment) {
-      if (this.attachments.indexOf(attachment) != -1) {
-        this.attachments.splice(this.attachments.indexOf(attachment), 1);
-        this.studentDataChanged();
-        // YOU ARE NOW FREEEEEEEEE!
-      }
-    }
-  }, {
-    key: 'attachStudentAsset',
-
-
-    /**
-     * Attach student asset to this Component's attachments
-     * @param studentAsset
-     */
-    value: function attachStudentAsset(studentAsset) {
-      var _this5 = this;
-
-      if (studentAsset != null) {
-        this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
-          if (copiedAsset != null) {
-            var attachment = {
-              studentAssetId: copiedAsset.id,
-              iconURL: copiedAsset.iconURL
-            };
-
-            _this5.attachments.push(attachment);
-            _this5.studentDataChanged();
-          }
-        });
-      }
-    }
-  }, {
-    key: 'getNumRows',
-
-
-    /**
-     * Get the number of rows for the textarea
-     */
-    value: function getNumRows() {
-      var numRows = null;
-
-      if (this.componentContent != null) {
-        numRows = this.componentContent.numRows;
-      }
-
-      return numRows;
-    }
-  }, {
-    key: 'getNumColumns',
-
-
-    /**
-     * Get the number of columns for the textarea
-     */
-    value: function getNumColumns() {
-      var numColumns = null;
-
-      if (this.componentContent != null) {
-        numColumns = this.componentContent.numColumns;
-      }
-
-      return numColumns;
-    }
-  }, {
-    key: 'getResponse',
-
-
-    /**
-     * Get the text the student typed
-     */
-    value: function getResponse() {
-      var response = null;
-
-      if (this.studentResponse != null) {
-        response = this.studentResponse;
-      }
-
-      return response;
-    }
-  }, {
-    key: 'isCRaterEnabled',
-
-
-    /**
-     * Check if CRater is enabled for this component
-     * @returns whether CRater is enabled for this component
-     */
-    // TODO: remove CRater
-    value: function isCRaterEnabled() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterEnabled(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
-    }
-
-    /**
-     * Check if CRater is set to score on save
-     * @returns whether CRater is set to score on save
-     */
-
-  }, {
-    key: 'isCRaterScoreOnSave',
-    value: function isCRaterScoreOnSave() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterScoreOnSave(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
-    }
-
-    /**
-     * Check if CRater is set to score on submit
-     * @returns whether CRater is set to score on submit
-     */
-
-  }, {
-    key: 'isCRaterScoreOnSubmit',
-    value: function isCRaterScoreOnSubmit() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterScoreOnSubmit(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
-    }
-
-    /**
-     * Check if CRater is set to score on change
-     * @returns whether CRater is set to score on change
-     */
-
-  }, {
-    key: 'isCRaterScoreOnChange',
-    value: function isCRaterScoreOnChange() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterScoreOnChange(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
-    }
-
-    /**
-     * Check if CRater is set to score when the student exits the step
-     * @returns whether CRater is set to score when the student exits the step
-     */
-
-  }, {
-    key: 'isCRaterScoreOnExit',
-    value: function isCRaterScoreOnExit() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterScoreOnExit(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
     }
 
     /**
@@ -1818,7 +1622,7 @@ var AnimationController = function (_ComponentController) {
   }, {
     key: 'resetButtonClicked',
     value: function resetButtonClicked() {
-      var _this6 = this;
+      var _this5 = this;
 
       // set the animation state
       this.animationState = 'stopped';
@@ -1874,13 +1678,13 @@ var AnimationController = function (_ComponentController) {
 
       this.$timeout(function () {
         // set the display time to 0
-        _this6.displayAndBroadcastTime(0);
+        _this5.displayAndBroadcastTime(0);
 
         // set the images back to their starting images in case they have changed
-        _this6.initializeObjectImages();
+        _this5.initializeObjectImages();
 
         // put the objects in their starting positions
-        _this6.initializeObjectPositions();
+        _this5.initializeObjectPositions();
       }, 100);
     }
 

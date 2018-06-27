@@ -31,21 +31,12 @@ class AnimationController extends ComponentController {
     this.CRaterService = CRaterService;
     this.NotificationService = NotificationService;
 
-    // holds the text that the student has typed
-    this.studentResponse = '';
-
-    // holds student attachments like assets
-    this.attachments = [];
-
     // whether we're only showing the student work
     // TODO: refactor. do we need this?
     this.onlyShowWork = false;
 
     // the latest annotations
     this.latestAnnotations = null;
-
-    // used to hold a message dialog if we need to use one
-    this.messageDialog = null;
 
     // mapping from object id to svg object
     this.idToSVGObject = {};
@@ -1174,24 +1165,11 @@ class AnimationController extends ComponentController {
       var studentData = componentState.studentData;
 
       if (studentData != null) {
-        var response = studentData.response;
-
-        if (response != null) {
-          // populate the text the student previously typed
-          this.studentResponse = response;
-        }
-
         var submitCounter = studentData.submitCounter;
 
         if (submitCounter != null) {
           // populate the submit counter
           this.submitCounter = submitCounter;
-        }
-
-        var attachments = studentData.attachments;
-
-        if (attachments != null) {
-          this.attachments = attachments;
         }
 
         this.processLatestSubmit();
@@ -1350,10 +1328,7 @@ class AnimationController extends ComponentController {
     // create a new component state
     var componentState = this.NodeService.createNewComponentState();
 
-    // set the response into the component state
     var studentData = {};
-
-    studentData.attachments = angular.copy(this.attachments);  // create a copy without reference to original array
 
     // set the submit counter
     studentData.submitCounter = this.submitCounter;
@@ -1425,145 +1400,6 @@ class AnimationController extends ComponentController {
     var annotation = this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
 
     return annotation;
-  }
-
-  // TODO: remove attachments. not used in this component
-  removeAttachment(attachment) {
-    if (this.attachments.indexOf(attachment) != -1) {
-      this.attachments.splice(this.attachments.indexOf(attachment), 1);
-      this.studentDataChanged();
-      // YOU ARE NOW FREEEEEEEEE!
-    }
-  };
-
-  /**
-   * Attach student asset to this Component's attachments
-   * @param studentAsset
-   */
-  attachStudentAsset(studentAsset) {
-    if (studentAsset != null) {
-      this.StudentAssetService.copyAssetForReference(studentAsset).then( (copiedAsset) => {
-        if (copiedAsset != null) {
-          var attachment = {
-            studentAssetId: copiedAsset.id,
-            iconURL: copiedAsset.iconURL
-          };
-
-          this.attachments.push(attachment);
-          this.studentDataChanged();
-        }
-      });
-    }
-  };
-
-  /**
-   * Get the number of rows for the textarea
-   */
-  getNumRows() {
-    var numRows = null;
-
-    if (this.componentContent != null) {
-      numRows = this.componentContent.numRows;
-    }
-
-    return numRows;
-  };
-
-  /**
-   * Get the number of columns for the textarea
-   */
-  getNumColumns() {
-    var numColumns = null;
-
-    if (this.componentContent != null) {
-      numColumns = this.componentContent.numColumns;
-    }
-
-    return numColumns;
-  };
-
-  /**
-   * Get the text the student typed
-   */
-  getResponse() {
-    var response = null;
-
-    if (this.studentResponse != null) {
-      response = this.studentResponse;
-    }
-
-    return response;
-  };
-
-  /**
-   * Check if CRater is enabled for this component
-   * @returns whether CRater is enabled for this component
-   */
-  // TODO: remove CRater
-  isCRaterEnabled() {
-    var result = false;
-
-    if (this.CRaterService.isCRaterEnabled(this.componentContent)) {
-      result = true;
-    }
-
-    return result;
-  }
-
-  /**
-   * Check if CRater is set to score on save
-   * @returns whether CRater is set to score on save
-   */
-  isCRaterScoreOnSave() {
-    var result = false;
-
-    if (this.CRaterService.isCRaterScoreOnSave(this.componentContent)) {
-      result = true;
-    }
-
-    return result;
-  }
-
-  /**
-   * Check if CRater is set to score on submit
-   * @returns whether CRater is set to score on submit
-   */
-  isCRaterScoreOnSubmit() {
-    var result = false;
-
-    if (this.CRaterService.isCRaterScoreOnSubmit(this.componentContent)) {
-      result = true;
-    }
-
-    return result;
-  }
-
-  /**
-   * Check if CRater is set to score on change
-   * @returns whether CRater is set to score on change
-   */
-  isCRaterScoreOnChange() {
-    var result = false;
-
-    if (this.CRaterService.isCRaterScoreOnChange(this.componentContent)) {
-      result = true;
-    }
-
-    return result;
-  }
-
-  /**
-   * Check if CRater is set to score when the student exits the step
-   * @returns whether CRater is set to score when the student exits the step
-   */
-  isCRaterScoreOnExit() {
-    var result = false;
-
-    if (this.CRaterService.isCRaterScoreOnExit(this.componentContent)) {
-      result = true;
-    }
-
-    return result;
   }
 
   /**
