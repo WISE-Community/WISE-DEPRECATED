@@ -968,22 +968,6 @@ class DiscussionController extends ComponentController {
   };
 
   /**
-   * Register the the listener that will listen for the exit event
-   * so that we can perform saving before exiting.
-   */
-  registerExitListener() {
-
-    /*
-     * Listen for the 'exit' event which is fired when the student exits
-     * the VLE. This will perform saving before the VLE exits.
-     */
-    this.exitListener = this.$scope.$on('exit', (event, args) => {
-      // do nothing
-      this.$rootScope.$broadcast('doneExiting');
-    });
-  };
-
-  /**
    * The teacher has clicked the delete button to delete a post. We won't
    * actually delete the student work, we'll just create an inappropriate
    * flag annotation which prevents the students in the class from seeing

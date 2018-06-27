@@ -1055,26 +1055,6 @@ var DiscussionController = function (_ComponentController) {
       return level1Responses;
     }
   }, {
-    key: 'registerExitListener',
-
-
-    /**
-     * Register the the listener that will listen for the exit event
-     * so that we can perform saving before exiting.
-     */
-    value: function registerExitListener() {
-      var _this7 = this;
-
-      /*
-       * Listen for the 'exit' event which is fired when the student exits
-       * the VLE. This will perform saving before the VLE exits.
-       */
-      this.exitListener = this.$scope.$on('exit', function (event, args) {
-        // do nothing
-        _this7.$rootScope.$broadcast('doneExiting');
-      });
-    }
-  }, {
     key: 'deletebuttonclicked',
 
 
@@ -1087,7 +1067,7 @@ var DiscussionController = function (_ComponentController) {
      * delete.
      */
     value: function deletebuttonclicked(componentState) {
-      var _this8 = this;
+      var _this7 = this;
 
       if (componentState != null) {
 
@@ -1123,13 +1103,13 @@ var DiscussionController = function (_ComponentController) {
         this.AnnotationService.saveAnnotation(annotation).then(function () {
 
           // get the component states made by the student
-          var componentStates = _this8.DiscussionService.getPostsAssociatedWithWorkgroupId(_this8.componentId, _this8.workgroupId);
+          var componentStates = _this7.DiscussionService.getPostsAssociatedWithWorkgroupId(_this7.componentId, _this7.workgroupId);
 
           // get the annotations for the component states
-          var annotations = _this8.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+          var annotations = _this7.getInappropriateFlagAnnotationsByComponentStates(componentStates);
 
           // refresh the teacher view of the posts
-          _this8.setClassResponses(componentStates, annotations);
+          _this7.setClassResponses(componentStates, annotations);
         });
       }
     }
@@ -1146,7 +1126,7 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'undodeletebuttonclicked',
     value: function undodeletebuttonclicked(componentState) {
-      var _this9 = this;
+      var _this8 = this;
 
       if (componentState != null) {
 
@@ -1182,13 +1162,13 @@ var DiscussionController = function (_ComponentController) {
         this.AnnotationService.saveAnnotation(annotation).then(function () {
 
           // get the component states made by the student
-          var componentStates = _this9.DiscussionService.getPostsAssociatedWithWorkgroupId(_this9.componentId, _this9.workgroupId);
+          var componentStates = _this8.DiscussionService.getPostsAssociatedWithWorkgroupId(_this8.componentId, _this8.workgroupId);
 
           // get the annotations for the component states
-          var annotations = _this9.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+          var annotations = _this8.getInappropriateFlagAnnotationsByComponentStates(componentStates);
 
           // refresh the teacher view of the posts
-          _this9.setClassResponses(componentStates, annotations);
+          _this8.setClassResponses(componentStates, annotations);
         });
       }
     }

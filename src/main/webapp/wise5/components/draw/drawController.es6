@@ -964,22 +964,6 @@ class DrawController extends ComponentController {
   }
 
   /**
-   * Register the the listener that will listen for the exit event
-   * so that we can perform saving before exiting.
-   */
-  registerExitListener() {
-
-    /*
-     * Listen for the 'exit' event which is fired when the student exits
-     * the VLE. This will perform saving before the VLE exits.
-     */
-    this.exitListener = this.$scope.$on('exit', angular.bind(this, function(event, args) {
-
-      this.$rootScope.$broadcast('doneExiting');
-    }));
-  };
-
-  /**
    * Create a component state with the merged student responses
    * @param componentStates an array of component states
    * @return a component state with the merged student responses

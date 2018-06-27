@@ -3266,32 +3266,13 @@ var GraphController = function (_ComponentController) {
     }
 
     /**
-     * Register the the listener that will listen for the exit event
-     * so that we can perform saving before exiting.
-     */
-
-  }, {
-    key: 'registerExitListener',
-    value: function registerExitListener() {
-
-      /*
-       * Listen for the 'exit' event which is fired when the student exits
-       * the VLE. This will perform saving before the VLE exits.
-       */
-      this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {
-
-        this.$rootScope.$broadcast('doneExiting');
-      }));
-    }
-  }, {
-    key: 'isActiveSeries',
-
-
-    /**
      * Check if a series is the active series. There can only be on active series.
      * @param series the series
      * @returns whether the series is the active series
      */
+
+  }, {
+    key: 'isActiveSeries',
     value: function isActiveSeries(series) {
 
       // get the series index

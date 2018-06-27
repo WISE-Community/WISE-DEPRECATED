@@ -394,20 +394,6 @@ class EmbeddedController extends ComponentController {
     }
   }
 
-  /**
-   * Register the the listener that will listen for the exit event
-   * so that we can perform saving before exiting.
-   */
-  registerExitListener() {
-    /*
-     * Listen for the 'exit' event which is fired when the student exits
-     * the VLE. This will perform saving before the VLE exits.
-     */
-    this.exitListener = this.$scope.$on('exit', angular.bind(this, function(event, args) {
-
-    }));
-  };
-
   submit(submitTriggeredBy) {
     this.isSubmit = true;
     this.$scope.$emit('componentSubmitTriggered',
