@@ -1,0 +1,29 @@
+<ng-template #linkContent>
+  <mat-icon *ngIf="isSvgIcon" class="cta__icon secondary-text" svgIcon="{{ icon }}"></mat-icon>
+  <mat-icon *ngIf="!isSvgIcon" class="cta__icon secondary-text">{{ icon }}</mat-icon>
+  <ng-template #defaultHeadline>{{ headline }}</ng-template>
+  <h2 *ngIf="headline || headlineRef" class="cta__headline primary">
+    <ng-container *ngTemplateOutlet="headlineRef ? headlineRef: defaultHeadline"></ng-container>
+  </h2>
+  <ng-template #defaultContent>{{ content }}</ng-template>
+  <div *ngIf="content || contentRef"
+       class="cta__tagline mat-subheading-2 accent-1">
+    <ng-container *ngTemplateOutlet="contentRef ? contentRef: defaultContent"></ng-container>
+  </div>
+</ng-template>
+
+<a *ngIf="isOutsideLink"
+   mat-button
+   class="cta"
+   href="{{ destination }}"
+   target="{{ linkTarget }}"
+   fxFlex>
+  <ng-container *ngTemplateOutlet="linkContent"></ng-container>
+</a>
+
+<a *ngIf="!isOutsideLink"
+   mat-button class="cta"
+   routerLink="{{ destination }}"
+   fxFlex>
+  <ng-container *ngTemplateOutlet="linkContent"></ng-container>
+</a>

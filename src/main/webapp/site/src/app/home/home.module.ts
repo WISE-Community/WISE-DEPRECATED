@@ -1,22 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { RouterModule } from '@angular/router';
+
 import { HomeComponent } from "./home.component";
 import { HomeRoutingModule } from "./home-routing.module";
 import { LibraryModule } from "../modules/library/library.module";
+import { SharedModule } from "../modules/shared/shared.module";
 
 @NgModule({
   imports: [
     CommonModule,
-    FlexLayoutModule,
     HomeRoutingModule,
-    LibraryModule
+    LibraryModule,
+    SharedModule,
+    RouterModule
   ],
   declarations: [
     HomeComponent
   ],
   exports: [
-    HomeComponent
+    HomeComponent,
+    SharedModule
   ]
 })
 export class HomeModule { }

@@ -15,7 +15,6 @@ import { StudentModule } from './student/student.module';
 import { StudentService } from './student/student.service';
 import { UserService } from './services/user.service';
 
-
 export function initialize(configService: ConfigService, userService: UserService) {
   return () => {
     return userService.retrieveUserPromise().then((user) => {

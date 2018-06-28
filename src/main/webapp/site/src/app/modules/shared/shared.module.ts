@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import {
   MatButtonModule,
   MatIconModule,
@@ -17,21 +19,36 @@ const materialModules = [
   MatSelectModule
 ];
 
+import { BlurbComponent } from './blurb/blurb.component';
+import { CallToActionComponent } from './call-to-action/call-to-action.component';
+import { HeroSectionComponent } from './hero-section/hero-section.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { SelectMenuComponent } from './select-menu/select-menu.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    FlexLayoutModule,
     FormsModule,
-    materialModules,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule,
+    materialModules
   ],
   exports: [
     materialModules,
+    FlexLayoutModule,
+    BlurbComponent,
+    CallToActionComponent,
+    HeroSectionComponent,
     SearchBarComponent,
     SelectMenuComponent
   ],
-  declarations: [ SearchBarComponent, SelectMenuComponent ]
+  declarations: [
+    BlurbComponent,
+    CallToActionComponent,
+    HeroSectionComponent,
+    SearchBarComponent,
+    SelectMenuComponent
+  ]
 })
 export class SharedModule { }

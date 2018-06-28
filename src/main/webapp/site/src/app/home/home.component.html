@@ -1,22 +1,58 @@
 <div class="main main--fullwidth">
-  <section class="section">
-    <div class="section--fullwidth section--slant section--slant--rtl mat-app-background">
-      <div class="content">
-        <p>Header image and tagline go here</p>
+  <app-hero-section imgSrc="assets/img/wise-students-hero.jpg">
+    <ng-template #headlineTemplate>
+      <div class="accent-2">
+        <mat-icon [@jackInTheBox]="{value: '*', params: {delay: '1s'}}"
+                  svgIcon="ki-elicit" aria-label="Elicit Ideas"></mat-icon>
+        <mat-icon [@bounceIn]="{value: '*', params: {delay: '1500ms'}}"
+                  svgIcon="ki-add" aria-label="Add Ideas"></mat-icon>
+        <mat-icon [@rotateIn]="{value: '*', params: {delay: '2s'}}"
+                  svgIcon="ki-distinguish" aria-label="Distinguish Ideas"></mat-icon>
+        <mat-icon [@flipInY]="{value: '*', params: {delay: '2500ms'}}"
+                  svgIcon="ki-connect" aria-label="Connect Ideas"></mat-icon>
       </div>
-    </div>
-  </section>
+    </ng-template>
+    <ng-template #taglineTemplate>
+      <div [@flipInX]="{value: '*', params: {delay: '3500ms'}}">
+        <span>Integrated</span> science learning and teaching with technology
+      </div>
+    </ng-template>
+  </app-hero-section>
   <section class="section">
     <div class="section--fullwidth section--slant">
       <div class="content">
-        <h1 class="accent" ngClass="mat-display-1" [ngClass.xs]="{ 'mat-display-1': false }">The WISE Advantage</h1>
+        <h1 class="accent section__header" ngClass="mat-display-1"
+            [ngClass.xs]="{ 'mat-display-1': false }">
+          The WISE Advantage
+        </h1>
+        <div fxLayout="row"
+             fxLayout.xs="column"
+             fxLayoutAlign="center start"
+             fxLayoutGap="32px"
+             fxLayoutGap.sm="16px">
+          <app-blurb fxFlex.gt-sm="33%"
+                     imgSrc="assets/img/wise-students-building.jpg"
+                     imgDescription="WISE students building"
+                     content="Free, standards-aligned, and research-based inquiry science curricula that address NGSS 3D proficiency"></app-blurb>
+          <app-blurb fxFlex.gt-sm="33%"
+                     imgSrc="assets/img/wise-project-view.jpg"
+                     imgDescription="WISE project on laptop"
+                     content="Interactive scientific models combined with hands-on activities, personalized guidance, and rich embedded assessments"></app-blurb>
+          <app-blurb fxFlex.gt-sm="33%"
+                     imgSrc="assets/img/wise-students-and-teacher.jpg"
+                     imgDescription="WISE students and teacher"
+                     content="Robust teacher grading and management tools supporting individualized and customized learning"></app-blurb>
+        </div>
       </div>
     </div>
   </section>
   <section class="section">
     <div class="section--fullwidth section--slant section--slant--rtl mat-app-background">
       <div class="content">
-        <h1 class="accent" ngClass="mat-display-1" [ngClass.xs]="{ 'mat-display-1': false }">Curriculum Offerings</h1>
+        <h1 class="accent section__header" ngClass="mat-display-1"
+            [ngClass.xs]="{ 'mat-display-1': false }">
+          Curriculum Offerings
+        </h1>
         <app-library></app-library>
       </div>
     </div>
@@ -24,7 +60,46 @@
   <section class="section">
     <div class="section--fullwidth section--slant">
       <div class="content">
-        <h1 class="accent" ngClass="mat-display-1" [ngClass.xs]="{ 'mat-display-1': false }">Connect</h1>
+        <h1 class="accent section__header"
+            ngClass="mat-display-1"
+            [ngClass.xs]="{ 'mat-display-1': false }"
+            fxLayoutAlign="start center"
+            fxLayoutGap="16px">
+          <span>Connect</span>
+          <a href="https://www.facebook.com/wisetels/"
+             target="_blank" mat-icon-button>
+            <mat-icon svgIcon="facebook"
+                      aria-label="WISE on Facebook"></mat-icon>
+          </a>
+          <a href="https://twitter.com/WISETELS"
+             target="_blank" mat-icon-button>
+            <mat-icon svgIcon="twitter" aria-label="WISE on Twitter"></mat-icon>
+          </a>
+        </h1>
+        <div fxLayout="row"
+             fxLayout.xs="column"
+             fxLayoutAlign="center stretch"
+             fxLayoutGap="32px"
+             fxLayoutGap.sm="16px">
+          <app-call-to-action fxFlex="100%"
+                              fxFlex.gt-sm="33%"
+                              icon="record_voice_over"
+                              headline="News"
+                              content="Learn what's new in the WISE community."
+                              destination="/news"></app-call-to-action>
+          <app-call-to-action fxFlex="100%"
+                              fxFlex.gt-sm="33%"
+                              icon="live_help"
+                              headline="Help + FAQs"
+                              content="View tutorials and common questions."
+                              destination="/help"></app-call-to-action>
+          <app-call-to-action fxFlex="100%"
+                              fxFlex.gt-sm="33%"
+                              icon="contact_mail"
+                              headline="Contact Us"
+                              content="Want to get in touch? Send us a message."
+                              destination="/contact"></app-call-to-action>
+        </div>
       </div>
     </div>
   </section>

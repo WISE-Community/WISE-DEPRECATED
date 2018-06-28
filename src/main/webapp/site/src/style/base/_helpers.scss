@@ -9,3 +9,14 @@
 .center {
   text-align: center;
 }
+
+.inactive {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 250ms;
+}
+
+.active {
+  opacity: 1;
+  visibility: visible;
+}
