@@ -305,7 +305,7 @@
     <div layout='row'>
       <h6>{{ 'animation.objects' | translate }}</h6>
       <md-button class='topButton md-raised md-primary'
-                 ng-click='animationController.authoringAddObjectClicked()'>
+                 ng-click='animationController.authoringAddObject()'>
         <md-icon>add</md-icon>
         <md-tooltip md-direction='top'
                     class='projectButtonTooltip'>
@@ -346,7 +346,7 @@
         </md-input-container>
         <div>
           <md-radio-group ng-model='object.type'
-                          ng-change='animationController.authoringObjectTypeChanged(object)'>
+                          ng-change='animationController.authoringAnimationObjectTypeChanged(object)'>
             <md-radio-button value='image'
                              class='md-primary'>
               {{ 'animation.image' | translate }}
@@ -359,7 +359,7 @@
         </div>
         <span flex></span>
         <md-button class='regularButton md-raised md-primary'
-                   ng-click='animationController.authoringMoveObjectUpClicked($index)'>
+                   ng-click='animationController.authoringMoveAnimationObjectUp($index)'>
           <md-icon>arrow_upward</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
@@ -367,7 +367,7 @@
           </md-tooltip>
         </md-button>
         <md-button class='regularButton md-raised md-primary'
-                   ng-click='animationController.authoringMoveObjectDownClicked($index)'>
+                   ng-click='animationController.authoringMoveAnimationObjectDown($index)'>
           <md-icon>arrow_downward</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
@@ -375,7 +375,7 @@
           </md-tooltip>
         </md-button>
         <md-button class='regularButton md-raised md-primary'
-                   ng-click='animationController.authoringDeleteObjectClicked($index)'>
+                   ng-click='animationController.authoringDeleteAnimationObjectClicked($index)'>
           <md-icon>delete</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
@@ -470,7 +470,7 @@
       <div>
         <span>{{ 'animation.dataPoints' | translate }}</span>
         <md-button class='topButton md-raised md-primary'
-                   ng-click='animationController.authoringAddDataPointClicked(object)'>
+                   ng-click='animationController.authoringAddDataPointToObject(object)'>
           <md-icon>add</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
@@ -507,7 +507,7 @@
                    ng-change='animationController.authoringViewComponentChanged()'/>
           </md-input-container>
           <md-button class='regularButton md-raised md-primary'
-                     ng-click='animationController.authoringMoveObjectDataPointUpClicked(object, $index)'>
+                     ng-click='animationController.authoringMoveAnimationObjectDataPointUp(object, $index)'>
             <md-icon>arrow_upward</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
@@ -515,7 +515,7 @@
             </md-tooltip>
           </md-button>
           <md-button class='regularButton md-raised md-primary'
-                     ng-click='animationController.authoringMoveObjectDataPointDownClicked(object, $index)'>
+                     ng-click='animationController.authoringMoveAnimationObjectDataPointDown(object, $index)'>
             <md-icon>arrow_downward</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
@@ -523,7 +523,7 @@
             </md-tooltip>
           </md-button>
           <md-button class='regularButton md-raised md-primary'
-                     ng-click='animationController.authoringDeleteObjectDataPointClicked(object, $index)'>
+                     ng-click='animationController.authoringDeleteAnimationObjectDataPointClicked(object, $index)'>
             <md-icon>delete</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
@@ -535,7 +535,7 @@
       <div>
         <span>{{ 'animation.dataSource' | translate }}</span>
         <md-button class='topButton md-raised md-primary'
-                   ng-click='animationController.authoringAddDataSourceClicked(object)'
+                   ng-click='animationController.authoringAddDataSource(object)'
                    ng-show='object.dataSource == null'>
           <md-icon>add</md-icon>
           <md-tooltip md-direction='top'

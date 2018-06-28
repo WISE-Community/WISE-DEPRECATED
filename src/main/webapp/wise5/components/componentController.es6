@@ -737,6 +737,30 @@ class ComponentController {
   authoringJSONChanged() {
     this.jsonStringChanged = true;
   }
+
+  isEventTargetThisComponent(args) {
+    return this.nodeId == args.nodeId && this.componentId == args.componentId;
+  }
+
+  createSummernoteRubricId() {
+    return 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+  }
+
+  restoreSummernoteCursorPosition(summernoteId) {
+    $('#' + summernoteId).summernote('editor.restoreRange');
+    $('#' + summernoteId).summernote('editor.focus');
+  }
+
+  insertImageIntoSummernote(fullAssetPath, fileName) {
+    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+  }
+
+  insertVideoIntoSummernote(fullAssetPath) {
+    const videoElement = document.createElement('video');
+    videoElement.controls = 'true';
+    videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+    $('#' + summernoteId).summernote('insertNode', videoElement);
+  }
 }
 
 ComponentController.$inject = [];
