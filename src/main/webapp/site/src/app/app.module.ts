@@ -13,6 +13,7 @@ import { FooterModule } from './modules/footer/footer.module';
 import { LoginModule } from "./login/login.module";
 import { StudentModule } from './student/student.module';
 import { StudentService } from './student/student.service';
+import { TeacherModule } from './teacher/teacher.module';
 import { UserService } from './services/user.service';
 
 export function initialize(configService: ConfigService, userService: UserService) {
@@ -37,7 +38,8 @@ export function initialize(configService: ConfigService, userService: UserServic
     HeaderModule,
     HomeModule,
     LoginModule,
-    StudentModule
+    StudentModule,
+    TeacherModule
   ],
   providers: [
     ConfigService,
