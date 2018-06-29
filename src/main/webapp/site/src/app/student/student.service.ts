@@ -59,6 +59,6 @@ export class StudentService {
   }
 
   private log(message: string) {
-    console.log('RunService: ' + message);
+    console.log('StudentService: ' + message);
   }
 }

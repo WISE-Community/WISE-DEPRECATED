@@ -370,7 +370,9 @@ public class WISE5AuthorProjectController {
         config.put("commitProjectURL", wiseBaseURL + "/project/commit/" + projectId);
       }
 
-      Long runId = this.getRunId(projectId);
+      User user = ControllerUtil.getSignedInUser();
+      List<Run> runsOwnedByUser = runService.getRunListByOwner(user);
+      Long runId = this.getRunId(projectId, runsOwnedByUser);
       if (runId != null) {
         config.put("runId", runId);
       }
@@ -434,6 +436,7 @@ public class WISE5AuthorProjectController {
       userInfo.put("myUserInfo", myUserInfo);
       config.put("userInfo", userInfo);
 
+      List<Run> runsOwnedByUser = runService.getRunListByOwner(user);
       List<Project> allProjectsOwnedByUser = projectService.getProjectList(user);
       List<JSONObject> wise5ProjectsOwnedByUser = new ArrayList<JSONObject>();
       for (Project project : allProjectsOwnedByUser) {
@@ -443,7 +446,7 @@ public class WISE5AuthorProjectController {
           projectJSONObject.put("name", project.getName());
           String projectIdString = project.getId().toString();
           Long projectId = new Long(projectIdString);
-          Long runId = this.getRunId(projectId);
+          Long runId = this.getRunId(projectId, runsOwnedByUser);
           if (runId != null) {
             projectJSONObject.put("runId", runId);
           }
@@ -456,6 +459,7 @@ public class WISE5AuthorProjectController {
       config.put("projects", wise5ProjectsOwnedByUser);
 
       List<Project> sharedProjects = projectService.getSharedProjectList(user);
+      List<Run> sharedRuns = runService.getRunListBySharedOwner(user);
       List<JSONObject> wise5SharedProjects = new ArrayList<JSONObject>();
       for (Project project : sharedProjects) {
         if (project.getWiseVersion().equals(5)) {
@@ -464,7 +468,7 @@ public class WISE5AuthorProjectController {
           projectJSONObject.put("name", project.getName());
           String projectIdString = project.getId().toString();
           Long projectId = new Long(projectIdString);
-          Long runId = this.getRunId(projectId);
+          Long runId = this.getRunId(projectId, sharedRuns);
           if (runId != null) {
             projectJSONObject.put("runId", runId);
           }
@@ -815,21 +819,16 @@ public class WISE5AuthorProjectController {
   /**
    * Get the run id that uses the project id
    * @param projectId the project id
+   * @param runs list of runs to look in
    * @returns the run id that uses the project if the project is used in a run
    */
-  private Long getRunId(Long projectId) {
-    Long runId = null;
-    if (projectId != null) {
-      List<Run> runs = this.runService.getProjectRuns(projectId);
-      if (runs != null && runs.size() > 0) {
-        // get the first run since a project can only be used in one run
-        Run run = runs.get(0);
-        if (run != null) {
-          runId = run.getId();
-        }
+  private Long getRunId(Long projectId, List<Run> runs) {
+    for (Run run : runs) {
+      if (run.getProject().getId().equals(projectId)) {
+        return run.getId();
       }
     }
-    return runId;
+    return null;
   }
 
   /**

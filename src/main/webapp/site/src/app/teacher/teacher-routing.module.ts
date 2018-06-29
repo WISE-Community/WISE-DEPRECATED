@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from "./auth.guard";
 import { TeacherComponent } from "../teacher/teacher.component";
-// import { TeacherEditProfileComponent } from "../teacher/teacher-edit-profile/teacher-edit-profile.component";
 import { TeacherHomeComponent } from "../teacher/teacher-home/teacher-home.component";
 
 const teacherRoutes: Routes = [

@@ -6,6 +6,8 @@ import { UserService } from "../../services/user.service";
 import { TeacherService } from "../../teacher/teacher.service";
 import { StudentRun } from "../../student/student-run";
 import { User } from "../../domain/user";
+import { TeacherProjectListComponent } from "../teacher-project-list/teacher-project-list.component";
+import { Project } from "../project";
 
 describe('TeacherHomeComponent', () => {
   let component: TeacherHomeComponent;
@@ -14,12 +16,12 @@ describe('TeacherHomeComponent', () => {
   beforeEach(async(() => {
     let teacherServiceStub = {
       isLoggedIn: true,
-      getRuns(): Observable<StudentRun[]> {
-        let runs : any[] = [
+      getProjects(): Observable<Project[]> {
+        let projects : any[] = [
           {id: 1, name: "Photosynthesis"}, {id: 2, name: "Plate Tectonics"}
         ];
         return Observable.create( observer => {
-          observer.next(runs);
+          observer.next(projects);
           observer.complete();
         });
       }
@@ -41,7 +43,9 @@ describe('TeacherHomeComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [ TeacherHomeComponent ],
+      declarations: [ TeacherHomeComponent,
+        TeacherProjectListComponent
+      ],
       providers: [
         { provide: TeacherService, useValue: teacherServiceStub },
         { provide: UserService, useValue: userServiceStub }

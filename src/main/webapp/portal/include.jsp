@@ -1,4 +1,4 @@
-<!-- 
+<!--
  * Copyright (c) 2008-2015 Regents of the University of California (Regents). Created
  * by WISE, Graduate School of Education, University of California, Berkeley.
  *
@@ -33,5 +33,5 @@
 
 <c:set var="sessionLocale" value="${sessionScope['org.springframework.web.servlet.i18n.SessionLocaleResolver.LOCALE']}"/>
 <c:set var="locale" value="${ empty sessionLocale ? pageContext.request.locale : sessionLocale }" />
-<c:set var="textDirection" value="${'iw' == locale ? 'rtl' : 'ltr'}" />
+<c:set var="textDirection" value="${'iw' == locale || 'ar' == locale ? 'rtl' : 'ltr'}" />
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>

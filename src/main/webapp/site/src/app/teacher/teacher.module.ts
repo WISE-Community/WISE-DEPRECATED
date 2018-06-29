@@ -6,6 +6,7 @@ import { TeacherComponent } from './teacher.component';
 import { TeacherHomeComponent } from "./teacher-home/teacher-home.component";
 import { AuthGuard } from "./auth.guard";
 import { StudentComponent } from "../student/student.component";
+import { TeacherProjectListComponent } from './teacher-project-list/teacher-project-list.component';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { StudentComponent } from "../student/student.component";
   ],
   declarations: [
     TeacherComponent,
-    TeacherHomeComponent
+    TeacherHomeComponent,
+    TeacherProjectListComponent
   ],
   providers: [
     AuthGuard

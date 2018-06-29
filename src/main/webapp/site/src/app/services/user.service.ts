@@ -27,8 +27,9 @@ export class UserService {
   }
 
   isTeacher(): boolean {
+    const role = this.user$.getValue().role;
     return this.isAuthenticated &&
-      (this.user$.getValue().role === 'teacher' || this.user$.getValue().role === 'admin');
+      (role === 'teacher' || role === 'admin' || role === 'researcher');
   }
 
   retrieveUserPromise(): Promise<User> {

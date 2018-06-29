@@ -15,6 +15,7 @@ import { StudentModule } from './student/student.module';
 import { StudentService } from './student/student.service';
 import { TeacherModule } from './teacher/teacher.module';
 import { UserService } from './services/user.service';
+import { TeacherService } from "./teacher/teacher.service";
 
 export function initialize(configService: ConfigService, userService: UserService) {
   return () => {
@@ -44,6 +45,7 @@ export function initialize(configService: ConfigService, userService: UserServic
   providers: [
     ConfigService,
     StudentService,
+    TeacherService,
     UserService,
     {
       provide: APP_INITIALIZER,
