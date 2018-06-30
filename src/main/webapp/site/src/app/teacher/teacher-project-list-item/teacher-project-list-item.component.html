@@ -1,0 +1,31 @@
+<mat-card>
+  <mat-card-content fxLayout="row">
+    <div mat-card-avatar [style.background-image]="thumbStyle"></div>
+    <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
+      <div fxLayout="column">
+        <mat-card-title>{{ project.name }}</mat-card-title>
+        <mat-card-subtitle *ngIf="project.run != null">
+          <div *ngIf="project.run">
+            Code: {{ project.run.runCode }}
+          </div>
+        </mat-card-subtitle>
+      </div>
+      <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
+      <div *ngIf="project.run == null" fxFlex="0 1 auto" fxFlex.xs="100%" fxHide fxShow.gt-xs>
+        <span class="mat-card-title success">Created: {{ project.dateCreated | amDateFormat:'ll' }}</span>
+        <span class="mat-card-title success">Project ID: {{ project.id }}</span>
+      </div>
+      <div *ngIf="project.run != null" fxFlex="0 1 auto" fxFlex.xs="100%" fxHide fxShow.gt-xs>
+        <span *ngIf="project.run.startTime" class="mat-card-title success">Started: {{ project.run.startTime | amDateFormat:'ll' }}</span>
+        <span *ngIf="project.run.endTime" class="mat-card-title">Ended: {{ project.run.endTime | amDateFormat:'ll' }}</span>
+        <span class="mat-card-title success">Project ID: {{ project.id }}</span>
+        <span class="mat-card-title success">Run ID: {{ project.run.id }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <span fxFlex="1 1 auto"></span>
+    <a mat-button *ngIf="project.run == null" href="{{ editLink }}" class="secondary-text">Edit</a>
+    <a mat-button *ngIf="project.run != null" href="{{ gradeAndManageLink }}" class="secondary-text">Grade & Manage</a>
+  </mat-card-actions>
+</mat-card>

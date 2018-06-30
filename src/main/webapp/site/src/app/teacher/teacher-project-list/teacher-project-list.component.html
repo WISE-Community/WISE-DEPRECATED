@@ -1,3 +1,13 @@
-<p>
-  teacher-project-list works!
-</p>
+<div class="content-block">
+  <div fxLayout="row" fxLayout.xs="column" *ngIf="projects.length">
+    <app-search-bar fxFlex="0 0 auto" fxFlex.xs="0 0 100%" [placeholderText]="'Search'"
+                    (update)="searchChanged($event)"></app-search-bar>
+    <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
+    <app-select-menu fxFlex="0 1 auto" fxFlex.xs="100%" [options]="filterOptions" [placeholderText]="'Filter by'"
+                     [value]="filterValue" (update)="filterChanged($event)"></app-select-menu>
+  </div>
+
+  <div id="teacherProjects" *ngFor="let project of filteredProjects">
+    <app-teacher-project-list-item [project]="project"></app-teacher-project-list-item>
+  </div>
+</div>

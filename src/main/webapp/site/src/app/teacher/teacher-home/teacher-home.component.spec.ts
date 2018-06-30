@@ -4,10 +4,22 @@ import { Observable } from "rxjs/Observable";
 import { TeacherHomeComponent } from './teacher-home.component';
 import { UserService } from "../../services/user.service";
 import { TeacherService } from "../../teacher/teacher.service";
-import { StudentRun } from "../../student/student-run";
 import { User } from "../../domain/user";
 import { TeacherProjectListComponent } from "../teacher-project-list/teacher-project-list.component";
 import { Project } from "../project";
+import { TeacherProjectListItemComponent } from "../teacher-project-list-item/teacher-project-list-item.component";
+import { SearchBarComponent } from "../../modules/shared/search-bar/search-bar.component";
+import { SelectMenuComponent } from "../../modules/shared/select-menu/select-menu.component";
+
+import { MatCardModule,
+  MatFormFieldModule,
+  MatIconModule,
+  MatInputModule,
+  MatSelectModule } from "@angular/material";
+import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MomentModule } from "angular2-moment";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 describe('TeacherHomeComponent', () => {
   let component: TeacherHomeComponent;
@@ -43,12 +55,28 @@ describe('TeacherHomeComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [ TeacherHomeComponent,
-        TeacherProjectListComponent
+      declarations: [
+        SearchBarComponent,
+        SelectMenuComponent,
+        TeacherHomeComponent,
+        TeacherProjectListComponent,
+        TeacherProjectListItemComponent
       ],
       providers: [
         { provide: TeacherService, useValue: teacherServiceStub },
         { provide: UserService, useValue: userServiceStub }
+      ],
+      imports: [
+        BrowserAnimationsModule,
+        FormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatSelectModule,
+        MomentModule,
+        ReactiveFormsModule,
+        RouterTestingModule
       ]
     })
     .compileComponents();

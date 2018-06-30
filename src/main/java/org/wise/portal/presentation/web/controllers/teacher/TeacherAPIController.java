@@ -68,6 +68,8 @@ public class TeacherAPIController {
     JSONObject projectJSON = new JSONObject();
     projectJSON.put("id", project.getId());
     projectJSON.put("name", project.getName());
+    projectJSON.put("dateCreated", project.getDateCreated());
+    projectJSON.put("dateArchived", project.getDateDeleted());
     if (projectRun != null) {
       JSONObject runJSON = new JSONObject();
       runJSON.put("id", projectRun.getId());

@@ -2,9 +2,15 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TeacherProjectListComponent } from './teacher-project-list.component';
 import { TeacherService } from "../teacher.service";
-import { StudentRun } from "../../student/student-run";
 import { Observable } from "rxjs/Observable";
 import { Project } from "../project";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatCardModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule } from "@angular/material";
+import { SearchBarComponent } from "../../modules/shared/search-bar/search-bar.component";
+import { SelectMenuComponent } from "../../modules/shared/select-menu/select-menu.component";
+import { MomentModule } from "angular2-moment";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { TeacherProjectListItemComponent } from "../teacher-project-list-item/teacher-project-list-item.component";
 
 describe('TeacherProjectListComponent', () => {
   let component: TeacherProjectListComponent;
@@ -25,7 +31,23 @@ describe('TeacherProjectListComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [ TeacherProjectListComponent ],
+      declarations: [
+        SearchBarComponent,
+        SelectMenuComponent,
+        TeacherProjectListComponent,
+        TeacherProjectListItemComponent
+      ],
+      imports: [
+        BrowserAnimationsModule,
+        FormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatSelectModule,
+        MomentModule,
+        ReactiveFormsModule
+      ],
       providers: [ {provide: TeacherService, useValue: teacherServiceStub}]
     })
     .compileComponents();
