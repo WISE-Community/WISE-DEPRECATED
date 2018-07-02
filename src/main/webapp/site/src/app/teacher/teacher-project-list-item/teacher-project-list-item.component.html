@@ -6,7 +6,13 @@
         <mat-card-title>{{ project.name }}</mat-card-title>
         <mat-card-subtitle *ngIf="project.run != null">
           <div *ngIf="project.run">
-            Code: {{ project.run.runCode }}
+            Code: {{ project.run.runCode }}<br/>
+            {{project.run.numStudents}}
+            <span [ngPlural]="project.run.numStudents">
+              <ng-template ngPluralCase="=0">students</ng-template>
+              <ng-template ngPluralCase="=1">student</ng-template>
+              <ng-template ngPluralCase="other">students</ng-template>
+            </span>
           </div>
         </mat-card-subtitle>
       </div>

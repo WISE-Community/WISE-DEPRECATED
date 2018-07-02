@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -19,6 +20,7 @@ import org.wise.portal.service.run.RunService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Controller for Teacher REST API
@@ -77,6 +79,7 @@ public class TeacherAPIController {
       runJSON.put("runCode", projectRun.getRuncode());
       runJSON.put("startTime", projectRun.getStarttime());
       runJSON.put("endTime", projectRun.getEndtime());
+      runJSON.put("numStudents", getNumStudentsInRun(projectRun));
       runJSON.put("teacherFirstName", projectRun.getOwner().getUserDetails().getFirstname());
       runJSON.put("teacherLastName", projectRun.getOwner().getUserDetails().getLastname());
       runJSON.put("teacherDisplayName",
@@ -86,4 +89,13 @@ public class TeacherAPIController {
     return projectJSON;
   }
 
+  private int getNumStudentsInRun(Run projectRun) {
+    Set<Group> periods = projectRun.getPeriods();
+    int numStudents = 0;
+    for (Group period : periods) {
+      Set<User> members = period.getMembers();
+      numStudents += members.size();
+    }
+    return numStudents;
+  }
 }
