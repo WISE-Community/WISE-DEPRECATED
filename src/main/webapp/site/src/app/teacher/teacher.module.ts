@@ -11,13 +11,17 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MomentModule } from 'angular2-moment';
 import {
   MatButtonModule,
-  MatCardModule,
-  MatIconModule } from '@angular/material';
+  MatCardModule, MatDividerModule,
+  MatIconModule, MatMenuModule
+} from '@angular/material';
+import { ProjectRunMenuComponent } from './project-run-menu/project-run-menu.component';
 
 const materialModules = [
   MatButtonModule,
+  MatDividerModule,
   MatCardModule,
-  MatIconModule
+  MatIconModule,
+  MatMenuModule
 ];
 @NgModule({
   imports: [
@@ -32,7 +36,8 @@ const materialModules = [
     TeacherComponent,
     TeacherHomeComponent,
     TeacherProjectListComponent,
-    TeacherProjectListItemComponent
+    TeacherProjectListItemComponent,
+    ProjectRunMenuComponent
   ],
   providers: [
     AuthGuard

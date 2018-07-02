@@ -5,5 +5,6 @@ export class Project {
   name: string;
   dateCreated: string;
   dateArchived: string;
+  thumbIconPath: string;
   run: Run;
 }

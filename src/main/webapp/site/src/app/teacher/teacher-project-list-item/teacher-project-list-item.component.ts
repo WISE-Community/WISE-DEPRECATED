@@ -15,16 +15,23 @@ export class TeacherProjectListItemComponent implements OnInit {
 
   editLink: string = '';
   gradeAndManageLink: string = '';
+  thumbStyle: SafeStyle;
 
-  constructor() {
+  constructor(private sanitizer: DomSanitizer) {
+    this.sanitizer = sanitizer;
+  }
 
+  getThumbStyle() {
+    const DEFAULT_THUMB = 'assets/img/default-picture.svg';
+    const STYLE = `url(${this.project.thumbIconPath}), url(${DEFAULT_THUMB})`;
+    return this.sanitizer.bypassSecurityTrustStyle(STYLE);
   }
 
   ngOnInit() {
-    this.editLink = `/wise/author#/project/${ this.project.id }`;
+    this.thumbStyle = this.getThumbStyle();
+    this.editLink = `/wise/author/authorproject.html?projectId=${ this.project.id }`;
     if (this.project.run != null) {
       this.gradeAndManageLink = `/wise/classroomMonitor/${ this.project.run.id }`;
     }
   }
-
 }

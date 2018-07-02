@@ -33,5 +33,6 @@
     <span fxFlex="1 1 auto"></span>
     <a mat-button *ngIf="project.run == null" href="{{ editLink }}" class="secondary-text">Edit</a>
     <a mat-button *ngIf="project.run != null" href="{{ gradeAndManageLink }}" class="secondary-text">Grade & Manage</a>
+    <app-project-run-menu [project]="project"></app-project-run-menu>
   </mat-card-actions>
 </mat-card>

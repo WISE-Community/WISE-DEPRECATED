@@ -72,6 +72,7 @@ public class TeacherAPIController {
     projectJSON.put("name", project.getName());
     projectJSON.put("dateCreated", project.getDateCreated());
     projectJSON.put("dateArchived", project.getDateDeleted());
+    projectJSON.put("thumbIconPath", getProjectThumbIconPath(project));
     if (projectRun != null) {
       JSONObject runJSON = new JSONObject();
       runJSON.put("id", projectRun.getId());
@@ -87,6 +88,16 @@ public class TeacherAPIController {
       projectJSON.put("run", runJSON);
     }
     return projectJSON;
+  }
+
+  private String getProjectThumbIconPath(Project project) {
+    String modulePath = project.getModulePath();
+    int lastIndexOfSlash = modulePath.lastIndexOf("/");
+    if (lastIndexOfSlash != -1) {
+      String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+      return curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + "/assets/project_thumb.png";
+    }
+    return "";
   }
 
   private int getNumStudentsInRun(Run projectRun) {
