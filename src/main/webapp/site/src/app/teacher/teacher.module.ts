@@ -12,21 +12,24 @@ import { MomentModule } from 'angular2-moment';
 import {
   MatButtonModule,
   MatCardModule, MatDividerModule,
-  MatIconModule, MatMenuModule
+  MatIconModule, MatMenuModule, MatTabsModule
 } from '@angular/material';
 import { ProjectRunMenuComponent } from './project-run-menu/project-run-menu.component';
+import { LibraryModule } from "../modules/library/library.module";
 
 const materialModules = [
   MatButtonModule,
   MatDividerModule,
   MatCardModule,
   MatIconModule,
-  MatMenuModule
+  MatMenuModule,
+  MatTabsModule
 ];
 @NgModule({
   imports: [
     CommonModule,
     FlexLayoutModule,
+    LibraryModule,
     materialModules,
     MomentModule,
     SharedModule,

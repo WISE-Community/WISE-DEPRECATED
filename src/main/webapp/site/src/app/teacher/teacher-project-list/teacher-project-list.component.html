@@ -7,7 +7,13 @@
                      [value]="filterValue" (update)="filterChanged($event)"></app-select-menu>
   </div>
 
-  <div id="teacherProjects" *ngFor="let project of filteredProjects">
-    <app-teacher-project-list-item [project]="project"></app-teacher-project-list-item>
+  <div id="teacherProjects" *ngFor="let project of filteredProjects; let i=index">
+    <app-teacher-project-list-item [project]="project" *ngIf="i < 10 || showAll"></app-teacher-project-list-item>
+  </div>
+  <br/>
+  <div fxLayout="row">
+    <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
+    <a mat-raised-button color="primary" *ngIf="!showAll" (click)="showAll = true">Show All</a>
+    <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
   </div>
 </div>
