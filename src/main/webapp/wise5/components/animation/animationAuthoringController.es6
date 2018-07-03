@@ -12,7 +12,6 @@ class AnimationAuthoringController extends AnimationController {
               AnimationService,
               AnnotationService,
               ConfigService,
-              CRaterService,
               NodeService,
               NotebookService,
               NotificationService,
@@ -29,7 +28,6 @@ class AnimationAuthoringController extends AnimationController {
       AnimationService,
       AnnotationService,
       ConfigService,
-      CRaterService,
       NodeService,
       NotebookService,
       NotificationService,
@@ -85,9 +83,17 @@ class AnimationAuthoringController extends AnimationController {
     this.isSubmitDirty = false;
     this.isSaveButtonVisible = this.componentContent.showSaveButton;
     this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-    this.removeAllObjects();
+    this.removeAllObjectsFromSVG();
     this.initializeCoordinates();
     this.setup();
+  }
+
+  removeAllObjectsFromSVG() {
+    const ids = Object.keys(this.idToSVGObject);
+    for (let id of ids) {
+      const svgObject = this.idToSVGObject[id];
+      svgObject.remove();
+    }
   }
 
   authoringAddObject() {
@@ -104,47 +110,43 @@ class AnimationAuthoringController extends AnimationController {
     this.authoringViewComponentChanged();
   }
 
-  authoringAddDataPointToObject(animationObject) {
-    if (this.animationObjectHasDataSource(animationObject)) {
+  authoringAddDataPointToObject(authoredObject) {
+    if (this.authoredObjectHasDataSource(authoredObject)) {
       if (this.askIfWantToDeleteDataSource()) {
-        delete animationObject.dataSource;
-        this.addNewDataPoint(animationObject);
+        delete authoredObject.dataSource;
+        this.addNewDataPoint(authoredObject);
       }
     } else {
-      this.addNewDataPoint(animationObject);
+      this.addNewDataPoint(authoredObject);
     }
 
     this.authoringViewComponentChanged();
-  }
-
-  animationObjectHasDataSource(animationObject) {
-    return animationObject.dataSource != null;
   }
 
   askIfWantToDeleteDataSource() {
     return confirm(this.$translate('animation.areYouSureYouWantToAddADataPoint'));
   }
 
-  initializeAnimationObjectDataIfNecessary(animationObject) {
-    if (animationObject.data == null) {
-      animationObject.data = [];
+  initializeAuthoredObjectDataIfNecessary(authoredObject) {
+    if (authoredObject.data == null) {
+      authoredObject.data = [];
     }
   }
 
-  addNewDataPoint(animationObject) {
-    this.initializeAnimationObjectDataIfNecessary(animationObject);
+  addNewDataPoint(authoredObject) {
+    this.initializeAuthoredObjectDataIfNecessary(authoredObject);
     const newDataPoint = {};
-    animationObject.data.push(newDataPoint);
+    authoredObject.data.push(newDataPoint);
   }
 
-  authoringDeleteAnimationObjectDataPointClicked(animationObject, index) {
+  authoringDeleteAuthoredObjectDataPointClicked(authoredObject, index) {
     if (confirm(this.$translate('animation.areYouSureYouWantToDeleteThisDataPoint'))) {
-      animationObject.data.splice(index, 1);
+      authoredObject.data.splice(index, 1);
       this.authoringViewComponentChanged();
     }
   }
 
-  authoringMoveAnimationObjectDataPointUp(object, index) {
+  authoringMoveAuthoredObjectDataPointUp(object, index) {
     if (this.canMoveUp(index)) {
       const dataPoint = object.data[index];
       object.data.splice(index, 1);
@@ -153,7 +155,7 @@ class AnimationAuthoringController extends AnimationController {
     }
   }
 
-  authoringMoveAnimationObjectDataPointDown(object, index) {
+  authoringMoveAuthoredObjectDataPointDown(object, index) {
     if (this.canMoveDown(index, object.data.length)) {
       const dataPoint = object.data[index];
       object.data.splice(index, 1);
@@ -162,7 +164,7 @@ class AnimationAuthoringController extends AnimationController {
     }
   }
 
-  authoringMoveAnimationObjectUp(index) {
+  authoringMoveAuthoredObjectUp(index) {
     if (this.canMoveUp(index)) {
       const object = this.authoringComponentContent.objects[index];
       objects.splice(index, 1);
@@ -171,7 +173,7 @@ class AnimationAuthoringController extends AnimationController {
     }
   }
 
-  authoringMoveAnimationObjectDown(index) {
+  authoringMoveAuthoredObjectDown(index) {
     const objects = this.authoringComponentContent.objects;
     if (this.canMoveDown(index, objects.length)) {
       const object = objects[index];
@@ -189,134 +191,130 @@ class AnimationAuthoringController extends AnimationController {
     return index < length - 1;
   }
 
-  authoringDeleteAnimationObjectClicked(index) {
+  authoringDeleteAuthoredObjectClicked(index) {
     if (confirm(this.$translate('animation.areYouSureYouWantToDeleteThisObject'))) {
       this.authoringComponentContent.objects.splice(index, 1);
       this.authoringViewComponentChanged();
     }
   }
 
-  authoringAddDataSource(animationObject) {
-    if (this.animationObjectHasData(animationObject)) {
+  authoringAddDataSource(authoredObject) {
+    if (this.authoredObjectHasData(authoredObject)) {
       if (confirm(this.$translate('animation.areYouSureYouWantToAddADataSource'))) {
-        this.deleteDataAndAddDataSource(animationObject);
+        this.deleteDataAndAddDataSource(authoredObject);
       }
     } else {
-      this.deleteDataAndAddDataSource(animationObject);
+      this.deleteDataAndAddDataSource(authoredObject);
     }
     this.authoringViewComponentChanged();
   }
 
-  deleteDataAndAddDataSource(animationObject) {
-    this.deleteDataFromAnimationObject(animationObject);
-    this.addDataSourceToAnimationObject(animationObject);
+  deleteDataAndAddDataSource(authoredObject) {
+    this.deleteDataFromAuthoredObject(authoredObject);
+    this.addDataSourceToAuthoredObject(authoredObject);
   }
 
-  deleteDataFromAnimationObject(animationObject) {
-    delete animationObject.data;
+  deleteDataFromAuthoredObject(authoredObject) {
+    delete authoredObject.data;
   }
 
-  addDataSourceToAnimationObject(animationObject) {
-    animationObject.dataSource = {};
+  addDataSourceToAuthoredObject(authoredObject) {
+    authoredObject.dataSource = {};
   }
 
-  animationObjectHasData(animationObject) {
-    return animationObject.data != null && animationObject.data.length > 0;
-  }
-
-  authoringDeleteDataSourceClicked(animationObject) {
+  authoringDeleteDataSourceClicked(authoredObject) {
     if (confirm(this.$translate('animation.areYouSureYouWantToDeleteTheDataSource'))) {
-      delete animationObject.dataSource;
+      delete authoredObject.dataSource;
       this.authoringViewComponentChanged();
     }
   }
 
-  dataSourceNodeChanged(animationObject) {
-    const nodeId = animationObject.dataSource.nodeId;
-    animationObject.dataSource = {
+  dataSourceNodeChanged(authoredObject) {
+    const nodeId = authoredObject.dataSource.nodeId;
+    authoredObject.dataSource = {
       nodeId: nodeId
     }
     this.authoringViewComponentChanged();
   }
 
-  dataSourceComponentChanged(animationObject) {
-    const nodeId = animationObject.dataSource.nodeId;
-    const componentId = animationObject.dataSource.componentId;
+  dataSourceComponentChanged(authoredObject) {
+    const nodeId = authoredObject.dataSource.nodeId;
+    const componentId = authoredObject.dataSource.componentId;
     const component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
-    animationObject.dataSource = {
+    authoredObject.dataSource = {
       nodeId: nodeId,
       componentId: componentId
     };
 
     if (component.type == 'Graph') {
-      this.setDefaultParamsForGraphDataSource(animationObject);
+      this.setDefaultParamsForGraphDataSource(authoredObject);
     }
 
     this.authoringViewComponentChanged();
   }
 
-  setDefaultParamsForGraphDataSource(animationObject) {
-    animationObject.dataSource.trialIndex = 0;
-    animationObject.dataSource.seriesIndex = 0;
-    animationObject.dataSource.tColumnIndex = 0;
-    animationObject.dataSource.xColumnIndex = 1;
+  setDefaultParamsForGraphDataSource(authoredObject) {
+    authoredObject.dataSource.trialIndex = 0;
+    authoredObject.dataSource.seriesIndex = 0;
+    authoredObject.dataSource.tColumnIndex = 0;
+    authoredObject.dataSource.xColumnIndex = 1;
   }
 
-  chooseImage(animationObject) {
+  chooseImage(authoredObject) {
     const targetString = 'image';
-    const params = this.createOpenAssetChooserParamsObject(targetString, animationObject);
+    const params = this.createOpenAssetChooserParamsObject(targetString, authoredObject);
     this.$rootScope.$broadcast('openAssetChooser', params);
   }
 
-  chooseImageMovingLeft(animationObject) {
+  chooseImageMovingLeft(authoredObject) {
     const targetString = 'imageMovingLeft';
-    const params = this.createOpenAssetChooserParamsObject(targetString, animationObject);
+    const params = this.createOpenAssetChooserParamsObject(targetString, authoredObject);
     this.$rootScope.$broadcast('openAssetChooser', params);
   }
 
-  chooseImageMovingRight(animationObject) {
+  chooseImageMovingRight(authoredObject) {
     const targetString = 'imageMovingRight';
-    const params = this.createOpenAssetChooserParamsObject(targetString, animationObject);
+    const params = this.createOpenAssetChooserParamsObject(targetString, authoredObject);
     this.$rootScope.$broadcast('openAssetChooser', params);
   }
 
   /**
    * @param {string} targetString Can be 'image', 'imageMovingLeft', or 'imageMovingRight'.
-   * @param {object} animationObject
+   * @param {object} authoredObject
    * @returns {object}
    */
-  createOpenAssetChooserParamsObject(targetString, animationObject) {
+  createOpenAssetChooserParamsObject(targetString, authoredObject) {
     return {
       isPopup: true,
       nodeId: this.nodeId,
       componentId: this.componentId,
       target: targetString,
-      targetObject: animationObject
+      targetObject: authoredObject
     };
   }
 
-  authoringAnimationObjectTypeChanged(animationObject) {
-    if (animationObject.type == 'image') {
-      this.removeTextFromAnimationObject(animationObject);
-    } else if (animationObject.type == 'text') {
-      this.removeImageFromAnimationObject(animationObject);
+  authoringAuthoredObjectTypeChanged(authoredObject) {
+    if (authoredObject.type == 'image') {
+      this.removeTextFromAuthoredObject(authoredObject);
+    } else if (authoredObject.type == 'text') {
+      this.removeImageFromAuthoredObject(authoredObject);
     }
 
     this.authoringViewComponentChanged();
   }
 
-  removeTextFromAnimationObject(animationObject) {
-    delete animationObject.text;
+  removeTextFromAuthoredObject(authoredObject) {
+    delete authoredObject.text;
   }
 
-  removeImageFromAnimationObject(animationObject) {
-    delete animationObject.image;
-    delete animationObject.width;
-    delete animationObject.height;
-    delete animationObject.imageMovingLeft;
-    delete animationObject.imageMovingRight;
-    delete animationObject.imageMovingUp;
-    delete animationObject.imageMovingDown;
+  removeImageFromAuthoredObject(authoredObject) {
+    delete authoredObject.image;
+    delete authoredObject.width;
+    delete authoredObject.height;
+    delete authoredObject.imageMovingLeft;
+    delete authoredObject.imageMovingRight;
+    delete authoredObject.imageMovingUp;
+    delete authoredObject.imageMovingDown;
   }
 }
 
@@ -330,7 +328,6 @@ AnimationAuthoringController.$inject = [
   'AnimationService',
   'AnnotationService',
   'ConfigService',
-  'CRaterService',
   'NodeService',
   'NotebookService',
   'NotificationService',
