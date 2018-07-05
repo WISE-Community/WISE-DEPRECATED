@@ -11,15 +11,21 @@ import { TeacherProjectListItemComponent } from "../teacher-project-list-item/te
 import { SearchBarComponent } from "../../modules/shared/search-bar/search-bar.component";
 import { SelectMenuComponent } from "../../modules/shared/select-menu/select-menu.component";
 
-import { MatCardModule,
+import {
+  MatCardModule,
   MatFormFieldModule,
   MatIconModule,
-  MatInputModule,
-  MatSelectModule } from "@angular/material";
+  MatInputModule, MatMenuModule,
+  MatSelectModule, MatTabsModule
+} from "@angular/material";
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MomentModule } from "angular2-moment";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { LibraryModule } from "../../modules/library/library.module";
+import { SharedModule } from "../../modules/shared/shared.module";
+import { ProjectRunMenuComponent } from "../project-run-menu/project-run-menu.component";
+import { HttpClient, HttpHandler } from "@angular/common/http";
 
 describe('TeacherHomeComponent', () => {
   let component: TeacherHomeComponent;
@@ -56,27 +62,32 @@ describe('TeacherHomeComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [
-        SearchBarComponent,
-        SelectMenuComponent,
         TeacherHomeComponent,
         TeacherProjectListComponent,
-        TeacherProjectListItemComponent
+        TeacherProjectListItemComponent,
+        ProjectRunMenuComponent,
       ],
       providers: [
         { provide: TeacherService, useValue: teacherServiceStub },
-        { provide: UserService, useValue: userServiceStub }
+        { provide: UserService, useValue: userServiceStub },
+        HttpClient,
+        HttpHandler
       ],
       imports: [
         BrowserAnimationsModule,
         FormsModule,
+        LibraryModule,
         MatCardModule,
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
+        MatMenuModule,
         MatSelectModule,
+        MatTabsModule,
         MomentModule,
         ReactiveFormsModule,
-        RouterTestingModule
+        RouterTestingModule,
+        SharedModule
       ]
     })
     .compileComponents();

@@ -5,12 +5,16 @@ import { TeacherService } from "../teacher.service";
 import { Observable } from "rxjs/Observable";
 import { Project } from "../project";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatCardModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule } from "@angular/material";
+import {
+  MatCardModule, MatIconModule, MatFormFieldModule, MatInputModule,
+  MatSelectModule, MatMenuModule
+} from "@angular/material";
 import { SearchBarComponent } from "../../modules/shared/search-bar/search-bar.component";
 import { SelectMenuComponent } from "../../modules/shared/select-menu/select-menu.component";
 import { MomentModule } from "angular2-moment";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { TeacherProjectListItemComponent } from "../teacher-project-list-item/teacher-project-list-item.component";
+import { ProjectRunMenuComponent } from "../project-run-menu/project-run-menu.component";
 
 describe('TeacherProjectListComponent', () => {
   let component: TeacherProjectListComponent;
@@ -35,7 +39,8 @@ describe('TeacherProjectListComponent', () => {
         SearchBarComponent,
         SelectMenuComponent,
         TeacherProjectListComponent,
-        TeacherProjectListItemComponent
+        TeacherProjectListItemComponent,
+        ProjectRunMenuComponent
       ],
       imports: [
         BrowserAnimationsModule,
@@ -44,6 +49,7 @@ describe('TeacherProjectListComponent', () => {
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
+        MatMenuModule,
         MatSelectModule,
         MomentModule,
         ReactiveFormsModule
