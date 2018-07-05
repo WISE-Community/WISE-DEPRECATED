@@ -83,9 +83,9 @@ class NodeController {
       if (latestComponentState) {
         const latestClientSaveTime = latestComponentState.clientSaveTime;
         if (latestComponentState.isSubmit) {
-          this.setSaveMessage(this.$translate('LAST_SUBMITTED'), latestClientSaveTime);
+          this.setSubmittedMessage(latestClientSaveTime);
         } else {
-          this.setSaveMessage(this.$translate('LAST_SAVED'), latestClientSaveTime);
+          this.setSavedMessage(latestClientSaveTime);
         }
       }
 
@@ -637,15 +637,31 @@ class NodeController {
     return this.nodeContent != null && this.nodeContent.showSubmitButton;
   };
 
+  setSavedMessage(time) {
+    this.setSaveText(this.$translate('SAVED'), time);
+  }
+
+  setAutoSavedMessage(time) {
+    this.setSaveText(this.$translate('AUTO_SAVED'), time);
+  }
+
+  setSubmittedMessage(time) {
+    this.setSaveText(this.$translate('SUBMITTED'), time);
+  }
+
   /**
    * Set the message next to the save button
    * @param message the message to display
    * @param time the time to display
    */
-  setSaveMessage(message, time) {
+  setSaveText(message, time) {
     this.saveMessage.text = message;
     this.saveMessage.time = time;
   };
+
+  clearSaveText() {
+    this.setSaveText('', null);
+  }
 
   /**
    * Start the auto save interval for this node
@@ -721,14 +737,14 @@ class NodeController {
               const serverSaveTime = latestStudentWork.serverSaveTime;
               const clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
               if (isAutoSave) {
-                this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
+                this.setAutoSavedMessage(clientSaveTime);
               } else if (isSubmit) {
-                this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
+                this.setSubmittedMessage(clientSaveTime);
               } else {
-                this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
+                this.setSavedMessage(clientSaveTime);
               }
             } else {
-              this.setSaveMessage('', null);
+              this.clearSaveText();
             }
           }
           return savedStudentDataResponse;

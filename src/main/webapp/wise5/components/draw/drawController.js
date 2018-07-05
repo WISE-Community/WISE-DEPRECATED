@@ -222,19 +222,17 @@ var DrawController = function (_ComponentController) {
           var serverSaveTime = componentState.serverSaveTime;
           var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
-          // set save message
           if (isSubmit) {
-            this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
-
+            this.setSubmittedMessage(clientSaveTime);
             this.lockIfNecessary();
 
             // set isSubmitDirty to false because the component state was just submitted and notify node
             this.isSubmitDirty = false;
             this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
           } else if (isAutoSave) {
-            this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
+            this.setAutoSavedMessage(clientSaveTime);
           } else {
-            this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
+            this.setSavedMessage(clientSaveTime);
           }
         }
 
@@ -652,12 +650,12 @@ var DrawController = function (_ComponentController) {
           // latest state is a submission, so set isSubmitDirty to false and notify node
           this.isSubmitDirty = false;
           this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          this.setSaveMessage(this.$translate('LAST_SUBMITTED'), clientSaveTime);
+          this.setSubmittedMessage(clientSaveTime);
         } else {
           // latest state is not a submission, so set isSubmitDirty to true and notify node
           this.isSubmitDirty = true;
           this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          this.setSaveMessage(this.$translate('LAST_SAVED'), clientSaveTime);
+          this.setSavedMessage(clientSaveTime);
         }
       }
     }

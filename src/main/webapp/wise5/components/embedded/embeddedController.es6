@@ -265,14 +265,14 @@ class EmbeddedController extends ComponentController {
           let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
           if (isSubmit) {
-            this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
+            this.setSubmittedMessage(clientSaveTime);
             this.submit();
             this.isSubmitDirty = false;
             this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
           } else if (isAutoSave) {
-            this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
+            this.setAutoSavedMessage(clientSaveTime);
           } else {
-            this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
+            this.setSavedMessage(clientSaveTime);
           }
 
           var message = {};
@@ -299,11 +299,11 @@ class EmbeddedController extends ComponentController {
       if (latestState.isSubmit) {
         this.isSubmitDirty = false;
         this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        this.setSaveMessage(this.$translate('LAST_SUBMITTED'), clientSaveTime);
+        this.setSubmittedMessage(clientSaveTime);
       } else {
         this.isSubmitDirty = true;
         this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-        this.setSaveMessage(this.$translate('LAST_SAVED'), clientSaveTime);
+        this.setSavedMessage(clientSaveTime);
       }
     }
   };

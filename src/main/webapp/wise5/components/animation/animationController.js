@@ -1267,7 +1267,7 @@ var AnimationController = function (_ComponentController) {
       this.setIsSubmitDirty(true);
       this.emitComponentSubmitDirty(true);
 
-      this.clearSaveMessage();
+      this.clearSaveText();
 
       this.createComponentState('change').then(function (componentState) {
         _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });

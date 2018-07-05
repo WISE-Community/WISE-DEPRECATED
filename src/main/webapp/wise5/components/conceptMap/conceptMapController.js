@@ -656,12 +656,12 @@ var ConceptMapController = function (_ComponentController) {
           // latest state is a submission, so set isSubmitDirty to false and notify node
           this.isSubmitDirty = false;
           this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          this.setSaveMessage(this.$translate('LAST_SUBMITTED'), latestState.clientSaveTime);
+          this.setSubmittedMessage(latestState.clientSaveTime);
         } else {
           // latest state is not a submission, so set isSubmitDirty to true and notify node
           this.isSubmitDirty = true;
           this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          this.setSaveMessage(this.$translate('LAST_SAVED'), latestState.clientSaveTime);
+          this.setSavedMessage(latestState.clientSaveTime);
         }
       }
     }

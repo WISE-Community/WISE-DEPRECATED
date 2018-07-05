@@ -249,7 +249,7 @@ class ComponentController {
 
     this.isSubmitDirty = true;
     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-    this.clearSaveMessage();
+    this.clearSaveText();
 
     /*
      * the student work in this component has changed so we will tell
@@ -265,15 +265,6 @@ class ComponentController {
     });
   }
 
-  setSaveText(message, time) {
-    this.saveMessage.text = message;
-    this.saveMessage.time = time;
-  }
-
-  clearSaveMessage() {
-    this.setSaveText('', null);
-  }
-
   setSavedMessage(time) {
     this.setSaveText(this.$translate('SAVED'), time);
   }
@@ -286,16 +277,14 @@ class ComponentController {
     this.setSaveText(this.$translate('SUBMITTED'), time);
   }
 
-  /**
-   * Set the message next to the save button
-   * TODO: Replace calls to this function with calls to setSavedMessage() in all the components.
-   * @param message the message to display
-   * @param time the time to display
-   */
-  setSaveMessage(message, time) {
+  setSaveText(message, time) {
     this.saveMessage.text = message;
     this.saveMessage.time = time;
-  };
+  }
+
+  clearSaveText() {
+    this.setSaveText('', null);
+  }
 
   /**
    * Get all the step node ids in the project
