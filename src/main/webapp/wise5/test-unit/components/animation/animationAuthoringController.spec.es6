@@ -64,7 +64,7 @@ describe('AnimationAuthoringController', () => {
     const animationObject = {
       dataSource: {}
     };
-    animationAuthoringController.authoringDeleteDataSourceClicked(animationObject);
+    animationAuthoringController.authoringDeleteDataSource(animationObject);
     expect(animationObject.hasOwnProperty('dataSource')).toBeFalsy();
   });
 

@@ -38,7 +38,6 @@ var AnimationAuthoringController = function (_AnimationController) {
     _this.$scope.$on('assetSelected', function (event, args) {
       if (_this.isEventTargetThisComponent(args)) {
         var fileName = args.assetItem.fileName;
-
         if (args.target == 'rubric') {
           var summernoteId = _this.createSummernoteRubricId();
           _this.restoreSummernoteCursorPosition(summernoteId);
@@ -57,7 +56,6 @@ var AnimationAuthoringController = function (_AnimationController) {
           args.targetObject.imageMovingRight = fileName;
         }
       }
-
       _this.authoringViewComponentChanged();
       _this.$mdDialog.hide();
     });
@@ -113,12 +111,10 @@ var AnimationAuthoringController = function (_AnimationController) {
       if (this.authoringComponentContent.objects == null) {
         this.authoringComponentContent.objects = [];
       }
-
       var newObject = {
         id: this.UtilService.generateKey(10),
         type: 'image'
       };
-
       this.authoringComponentContent.objects.push(newObject);
       this.authoringViewComponentChanged();
     }
@@ -133,7 +129,6 @@ var AnimationAuthoringController = function (_AnimationController) {
       } else {
         this.addNewDataPoint(authoredObject);
       }
-
       this.authoringViewComponentChanged();
     }
   }, {
@@ -156,16 +151,21 @@ var AnimationAuthoringController = function (_AnimationController) {
       authoredObject.data.push(newDataPoint);
     }
   }, {
-    key: 'authoringDeleteAuthoredObjectDataPointClicked',
-    value: function authoringDeleteAuthoredObjectDataPointClicked(authoredObject, index) {
+    key: 'authoringConfirmDeleteAnimationObjectDataPoint',
+    value: function authoringConfirmDeleteAnimationObjectDataPoint(animationObject, index) {
       if (confirm(this.$translate('animation.areYouSureYouWantToDeleteThisDataPoint'))) {
-        authoredObject.data.splice(index, 1);
-        this.authoringViewComponentChanged();
+        this.authoringDeleteAnimationObjectDataPoint(animationObject, index);
       }
     }
   }, {
-    key: 'authoringMoveAuthoredObjectDataPointUp',
-    value: function authoringMoveAuthoredObjectDataPointUp(object, index) {
+    key: 'authoringDeleteAnimationObjectDataPoint',
+    value: function authoringDeleteAnimationObjectDataPoint(animationObject, index) {
+      animationObject.data.splice(index, 1);
+      this.authoringViewComponentChanged();
+    }
+  }, {
+    key: 'authoringMoveAnimationObjectDataPointUp',
+    value: function authoringMoveAnimationObjectDataPointUp(object, index) {
       if (this.canMoveUp(index)) {
         var dataPoint = object.data[index];
         object.data.splice(index, 1);
@@ -215,12 +215,17 @@ var AnimationAuthoringController = function (_AnimationController) {
       return index < length - 1;
     }
   }, {
-    key: 'authoringDeleteAuthoredObjectClicked',
-    value: function authoringDeleteAuthoredObjectClicked(index) {
+    key: 'authoringConfirmDeleteAnimationObject',
+    value: function authoringConfirmDeleteAnimationObject(index) {
       if (confirm(this.$translate('animation.areYouSureYouWantToDeleteThisObject'))) {
-        this.authoringComponentContent.objects.splice(index, 1);
-        this.authoringViewComponentChanged();
+        this.authoringDeleteAnimationObject(index);
       }
+    }
+  }, {
+    key: 'authoringDeleteAnimationObject',
+    value: function authoringDeleteAnimationObject(index) {
+      this.authoringComponentContent.objects.splice(index, 1);
+      this.authoringViewComponentChanged();
     }
   }, {
     key: 'authoringAddDataSource',
@@ -251,17 +256,23 @@ var AnimationAuthoringController = function (_AnimationController) {
       authoredObject.dataSource = {};
     }
   }, {
-    key: 'authoringDeleteDataSourceClicked',
-    value: function authoringDeleteDataSourceClicked(authoredObject) {
+    key: 'authoringConfirmDeleteDataSource',
+    value: function authoringConfirmDeleteDataSource(animationObject) {
       if (confirm(this.$translate('animation.areYouSureYouWantToDeleteTheDataSource'))) {
-        delete authoredObject.dataSource;
-        this.authoringViewComponentChanged();
+        this.authoringDeleteDataSource(animationObject);
       }
+    }
+  }, {
+    key: 'authoringDeleteDataSource',
+    value: function authoringDeleteDataSource(animationObject) {
+      delete animationObject.dataSource;
+      this.authoringViewComponentChanged();
     }
   }, {
     key: 'dataSourceNodeChanged',
     value: function dataSourceNodeChanged(authoredObject) {
       var nodeId = authoredObject.dataSource.nodeId;
+      // clear the dataSource object except for the node id
       authoredObject.dataSource = {
         nodeId: nodeId
       };
@@ -281,7 +292,6 @@ var AnimationAuthoringController = function (_AnimationController) {
       if (component.type == 'Graph') {
         this.setDefaultParamsForGraphDataSource(authoredObject);
       }
-
       this.authoringViewComponentChanged();
     }
   }, {
@@ -339,7 +349,6 @@ var AnimationAuthoringController = function (_AnimationController) {
       } else if (authoredObject.type == 'text') {
         this.removeImageFromAuthoredObject(authoredObject);
       }
-
       this.authoringViewComponentChanged();
     }
   }, {
