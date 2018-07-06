@@ -375,7 +375,7 @@
           </md-tooltip>
         </md-button>
         <md-button class='regularButton md-raised md-primary'
-                   ng-click='animationController.authoringDeleteAnimationObjectClicked($index)'>
+                   ng-click="animationController.authoringConfirmDeleteAnimationObject($index)">
           <md-icon>delete</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
@@ -523,7 +523,7 @@
             </md-tooltip>
           </md-button>
           <md-button class='regularButton md-raised md-primary'
-                     ng-click='animationController.authoringDeleteAnimationObjectDataPointClicked(object, $index)'>
+                     ng-click="animationController.authoringConfirmDeleteAnimationObjectDataPoint(object, $index)">
             <md-icon>delete</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
@@ -544,7 +544,7 @@
           </md-tooltip>
         </md-button>
         <md-button class='topButton md-raised md-primary'
-                   ng-click='animationController.authoringDeleteDataSourceClicked(object)'
+                   ng-click="animationController.authoringConfirmDeleteDataSource(object)"
                    ng-show='object.dataSource != null'>
           <md-icon>delete</md-icon>
           <md-tooltip md-direction='top'
@@ -557,7 +557,7 @@
           <md-input-container style='margin-right: 20px; width: 300px;'>
             <label>{{ 'animation.step' | translate }}</label>
             <md-select ng-model='object.dataSource.nodeId'
-                       ng-change='animationController.dataSourceNodeChanged()'
+                       ng-change='animationController.dataSourceNodeChanged(object)'
                        style='width: 300px'>
               <md-option ng-repeat='item in animationController.idToOrder | toArray | orderBy : "order"'
                          value='{{item.$key}}'

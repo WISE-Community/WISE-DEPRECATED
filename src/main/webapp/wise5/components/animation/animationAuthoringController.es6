@@ -53,7 +53,6 @@ class AnimationAuthoringController extends AnimationController {
     this.$scope.$on('assetSelected', (event, args) => {
       if (this.isEventTargetThisComponent(args)) {
         const fileName = args.assetItem.fileName;
-
         if (args.target == 'rubric') {
           const summernoteId = this.createSummernoteRubricId();
           this.restoreSummernoteCursorPosition(summernoteId);
@@ -72,7 +71,6 @@ class AnimationAuthoringController extends AnimationController {
           args.targetObject.imageMovingRight = fileName;
         }
       }
-
       this.authoringViewComponentChanged();
       this.$mdDialog.hide();
     });
@@ -94,12 +92,10 @@ class AnimationAuthoringController extends AnimationController {
     if (this.authoringComponentContent.objects == null) {
       this.authoringComponentContent.objects = [];
     }
-
     const newObject = {
       id: this.UtilService.generateKey(10),
       type: 'image'
     };
-
     this.authoringComponentContent.objects.push(newObject);
     this.authoringViewComponentChanged();
   }
@@ -113,7 +109,6 @@ class AnimationAuthoringController extends AnimationController {
     } else {
       this.addNewDataPoint(animationObject);
     }
-
     this.authoringViewComponentChanged();
   }
 
@@ -137,11 +132,15 @@ class AnimationAuthoringController extends AnimationController {
     animationObject.data.push(newDataPoint);
   }
 
-  authoringDeleteAnimationObjectDataPointClicked(animationObject, index) {
+  authoringConfirmDeleteAnimationObjectDataPoint(animationObject, index) {
     if (confirm(this.$translate('animation.areYouSureYouWantToDeleteThisDataPoint'))) {
-      animationObject.data.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.authoringDeleteAnimationObjectDataPoint(animationObject, index);
     }
+  }
+
+  authoringDeleteAnimationObjectDataPoint(animationObject, index) {
+    animationObject.data.splice(index, 1);
+    this.authoringViewComponentChanged();
   }
 
   authoringMoveAnimationObjectDataPointUp(object, index) {
@@ -189,11 +188,15 @@ class AnimationAuthoringController extends AnimationController {
     return index < length - 1;
   }
 
-  authoringDeleteAnimationObjectClicked(index) {
+  authoringConfirmDeleteAnimationObject(index) {
     if (confirm(this.$translate('animation.areYouSureYouWantToDeleteThisObject'))) {
-      this.authoringComponentContent.objects.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.authoringDeleteAnimationObject(index);
     }
+  }
+
+  authoringDeleteAnimationObject(index) {
+    this.authoringComponentContent.objects.splice(index, 1);
+    this.authoringViewComponentChanged();
   }
 
   authoringAddDataSource(animationObject) {
@@ -224,15 +227,20 @@ class AnimationAuthoringController extends AnimationController {
     return animationObject.data != null && animationObject.data.length > 0;
   }
 
-  authoringDeleteDataSourceClicked(animationObject) {
+  authoringConfirmDeleteDataSource(animationObject) {
     if (confirm(this.$translate('animation.areYouSureYouWantToDeleteTheDataSource'))) {
-      delete animationObject.dataSource;
-      this.authoringViewComponentChanged();
+      this.authoringDeleteDataSource(animationObject);
     }
+  }
+
+  authoringDeleteDataSource(animationObject) {
+    delete animationObject.dataSource;
+    this.authoringViewComponentChanged();
   }
 
   dataSourceNodeChanged(animationObject) {
     const nodeId = animationObject.dataSource.nodeId;
+    // clear the dataSource object except for the node id
     animationObject.dataSource = {
       nodeId: nodeId
     }
@@ -251,7 +259,6 @@ class AnimationAuthoringController extends AnimationController {
     if (component.type == 'Graph') {
       this.setDefaultParamsForGraphDataSource(animationObject);
     }
-
     this.authoringViewComponentChanged();
   }
 
@@ -301,7 +308,6 @@ class AnimationAuthoringController extends AnimationController {
     } else if (animationObject.type == 'text') {
       this.removeImageFromAnimationObject(animationObject);
     }
-
     this.authoringViewComponentChanged();
   }
 
