@@ -981,7 +981,7 @@ class AnimationController extends ComponentController {
     this.setIsSubmitDirty(true);
     this.emitComponentSubmitDirty(true);
 
-    this.clearSaveMessage();
+    this.clearSaveText();
 
     this.createComponentState('change').then((componentState) => {
       this.$scope.$emit('componentStudentDataChanged',

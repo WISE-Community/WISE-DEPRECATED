@@ -373,7 +373,7 @@ var MatchController = function (_ComponentController) {
       if (latestComponentState.isSubmit === true) {
         this.isCorrect = latestComponentState.isCorrect;
         this.setIsSubmitDirty(false);
-        this.showSubmitMessage(clientSaveTime);
+        this.setSubmittedMessage(clientSaveTime);
         this.checkAnswer();
       } else {
         var latestSubmitComponentState = this.StudentDataService.getLatestSubmitComponentState(this.nodeId, this.componentId);
@@ -382,7 +382,7 @@ var MatchController = function (_ComponentController) {
         } else {
           this.isCorrect = null;
           this.setIsSubmitDirty(false);
-          this.showSaveMessage(clientSaveTime);
+          this.setSavedMessage(clientSaveTime);
         }
       }
     }
@@ -402,7 +402,7 @@ var MatchController = function (_ComponentController) {
         if (latestComponentState != null) {
           this.isCorrect = null;
           this.setIsSubmitDirty(true);
-          this.showSaveMessage(latestComponentState.clientSaveTime);
+          this.setSavedMessage(latestComponentState.clientSaveTime);
         }
       }
     }
@@ -416,16 +416,6 @@ var MatchController = function (_ComponentController) {
         this.setIsSubmitDirty(false);
       }
       this.checkAnswer(choicesThatChangedSinceLastSubmit);
-    }
-  }, {
-    key: 'showSaveMessage',
-    value: function showSaveMessage(time) {
-      this.setSaveMessage(this.$translate('LAST_SAVED'), time);
-    }
-  }, {
-    key: 'showSubmitMessage',
-    value: function showSubmitMessage(time) {
-      this.setSaveMessage(this.$translate('LAST_SUBMITTED'), time);
     }
   }, {
     key: 'setIsSubmitDirty',

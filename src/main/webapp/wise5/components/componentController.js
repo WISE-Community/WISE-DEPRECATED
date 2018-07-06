@@ -252,7 +252,7 @@ var ComponentController = function () {
 
       this.isSubmitDirty = true;
       this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-      this.clearSaveMessage();
+      this.clearSaveText();
 
       /*
        * the student work in this component has changed so we will tell
@@ -266,17 +266,6 @@ var ComponentController = function () {
       this.createComponentState(action).then(function (componentState) {
         _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: _this3.componentId, componentState: componentState });
       });
-    }
-  }, {
-    key: 'setSaveText',
-    value: function setSaveText(message, time) {
-      this.saveMessage.text = message;
-      this.saveMessage.time = time;
-    }
-  }, {
-    key: 'clearSaveMessage',
-    value: function clearSaveMessage() {
-      this.setSaveText('', null);
     }
   }, {
     key: 'setSavedMessage',
@@ -293,28 +282,25 @@ var ComponentController = function () {
     value: function setSubmittedMessage(time) {
       this.setSaveText(this.$translate('SUBMITTED'), time);
     }
-
-    /**
-     * Set the message next to the save button
-     * TODO: Replace calls to this function with calls to setSavedMessage() in all the components.
-     * @param message the message to display
-     * @param time the time to display
-     */
-
   }, {
-    key: 'setSaveMessage',
-    value: function setSaveMessage(message, time) {
+    key: 'setSaveText',
+    value: function setSaveText(message, time) {
       this.saveMessage.text = message;
       this.saveMessage.time = time;
     }
   }, {
-    key: 'getStepNodeIds',
-
+    key: 'clearSaveText',
+    value: function clearSaveText() {
+      this.setSaveText('', null);
+    }
 
     /**
      * Get all the step node ids in the project
      * @returns {array} an array of step node id strings
      */
+
+  }, {
+    key: 'getStepNodeIds',
     value: function getStepNodeIds() {
       return this.ProjectService.getNodeIds();
     }

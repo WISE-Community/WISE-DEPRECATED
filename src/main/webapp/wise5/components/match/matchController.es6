@@ -287,7 +287,7 @@ class MatchController extends ComponentController {
     if (latestComponentState.isSubmit === true) {
       this.isCorrect = latestComponentState.isCorrect;
       this.setIsSubmitDirty(false);
-      this.showSubmitMessage(clientSaveTime);
+      this.setSubmittedMessage(clientSaveTime);
       this.checkAnswer();
     } else {
       const latestSubmitComponentState =
@@ -297,7 +297,7 @@ class MatchController extends ComponentController {
       } else {
         this.isCorrect = null;
         this.setIsSubmitDirty(false);
-        this.showSaveMessage(clientSaveTime);
+        this.setSavedMessage(clientSaveTime);
       }
     }
   };
@@ -315,7 +315,7 @@ class MatchController extends ComponentController {
       if (latestComponentState != null) {
         this.isCorrect = null;
         this.setIsSubmitDirty(true);
-        this.showSaveMessage(latestComponentState.clientSaveTime);
+        this.setSavedMessage(latestComponentState.clientSaveTime);
       }
     }
   };
@@ -328,14 +328,6 @@ class MatchController extends ComponentController {
       this.setIsSubmitDirty(false);
     }
     this.checkAnswer(choicesThatChangedSinceLastSubmit);
-  }
-
-  showSaveMessage(time) {
-    this.setSaveMessage(this.$translate('LAST_SAVED'), time);
-  }
-
-  showSubmitMessage(time) {
-    this.setSaveMessage(this.$translate('LAST_SUBMITTED'), time);
   }
 
   setIsSubmitDirty(isSubmitDirty) {

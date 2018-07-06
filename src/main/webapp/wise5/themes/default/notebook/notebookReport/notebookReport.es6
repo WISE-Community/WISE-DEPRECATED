@@ -33,7 +33,7 @@ class NotebookReportController {
     if (this.reportItem) {
       let serverSaveTime = this.reportItem.serverSaveTime;
       let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-      this.setSaveMessage(this.$translate('saved'), clientSaveTime);
+      this.setSavedMessage(clientSaveTime);
     } else {
       // Student doesn't have work for this report yet, so we'll use the template.
       this.reportItem = this.NotebookService.getTemplateReportItemByReportId(this.reportId);
@@ -231,12 +231,16 @@ class NotebookReportController {
           this.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
           let serverSaveTime = result.serverSaveTime;
           let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-          this.setSaveMessage(this.$translate('saved'), clientSaveTime);
+          this.setSavedMessage(clientSaveTime);
         }
       });
   }
 
-  setSaveMessage(message, time) {
+  setSavedMessage(time) {
+    this.setSaveText(this.$translate('SAVED'), time);
+  }
+
+  setSaveText(message, time) {
     this.saveMessage.text = message;
     this.saveMessage.time = time;
   }
