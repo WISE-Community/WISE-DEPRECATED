@@ -863,6 +863,35 @@ var ComponentController = function () {
     value: function authoringJSONChanged() {
       this.jsonStringChanged = true;
     }
+  }, {
+    key: 'isEventTargetThisComponent',
+    value: function isEventTargetThisComponent(args) {
+      return this.nodeId == args.nodeId && this.componentId == args.componentId;
+    }
+  }, {
+    key: 'createSummernoteRubricId',
+    value: function createSummernoteRubricId() {
+      return 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+    }
+  }, {
+    key: 'restoreSummernoteCursorPosition',
+    value: function restoreSummernoteCursorPosition(summernoteId) {
+      $('#' + summernoteId).summernote('editor.restoreRange');
+      $('#' + summernoteId).summernote('editor.focus');
+    }
+  }, {
+    key: 'insertImageIntoSummernote',
+    value: function insertImageIntoSummernote(fullAssetPath, fileName) {
+      $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+    }
+  }, {
+    key: 'insertVideoIntoSummernote',
+    value: function insertVideoIntoSummernote(fullAssetPath) {
+      var videoElement = document.createElement('video');
+      videoElement.controls = 'true';
+      videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+      $('#' + summernoteId).summernote('insertNode', videoElement);
+    }
   }]);
 
   return ComponentController;
