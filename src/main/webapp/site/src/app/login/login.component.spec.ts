@@ -1,28 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { LoginComponent } from './login.component';
 import { UserService } from "../services/user.service";
 import { Observable } from "rxjs/Observable";
 import { User } from "../domain/user";
 import { Router } from '@angular/router';
 import { HttpClient, HttpHandler } from "@angular/common/http";
-
-import {
-  MatButtonModule,
-  MatCardModule,
-  MatDialogModule,
-  MatFormFieldModule,
-  MatInputModule
-} from '@angular/material';
-
-const materialModules = [
-  MatButtonModule,
-  MatCardModule,
-  MatDialogModule,
-  MatFormFieldModule,
-  MatInputModule
-];
+import { LoginModule } from "./login.module";
+import { RouterTestingModule } from "@angular/router/testing";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -46,16 +31,15 @@ describe('LoginComponent', () => {
       }
     }
     TestBed.configureTestingModule({
-      declarations: [ LoginComponent ],
+      declarations: [],
       imports: [
         BrowserAnimationsModule,
-        FormsModule,
-        materialModules,
-        ReactiveFormsModule ],
+        LoginModule,
+        RouterTestingModule.withRoutes([])
+      ],
       providers: [
         HttpClient,
         HttpHandler,
-        { provide: Router, useClass: RouterStub },
         { provide: UserService, useValue: userServiceStub }]
     })
     .compileComponents();

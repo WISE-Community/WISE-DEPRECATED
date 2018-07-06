@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HeaderLinksComponent } from './header-links.component';
-import {HeaderSigninComponent} from "../header-signin/header-signin.component";
-import { RouterTestingModule } from '@angular/router/testing';
-import {User} from "../../../domain/user";
+import { User } from "../../../domain/user";
+import { HeaderModule } from "../header.module";
+import { APP_BASE_HREF } from "@angular/common";
 
 describe('HeaderLinksComponent', () => {
   let component: HeaderLinksComponent;
@@ -11,9 +11,11 @@ describe('HeaderLinksComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [],
-      declarations: [ HeaderLinksComponent, HeaderSigninComponent ],
-      imports: [ RouterTestingModule ]
+      providers: [
+        { provide: APP_BASE_HREF, useValue : '/' }
+      ],
+      declarations: [],
+      imports: [ HeaderModule ]
     })
     .compileComponents();
   }));

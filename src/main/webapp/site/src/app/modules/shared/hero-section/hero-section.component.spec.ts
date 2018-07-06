@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { HeroSectionComponent } from './hero-section.component';
+import { SharedModule } from "../shared.module";
 
 describe('HeroSectionComponent', () => {
   let component: HeroSectionComponent;
@@ -8,8 +8,8 @@ describe('HeroSectionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HeroSectionComponent ],
-      imports: [ FlexLayoutModule ]
+      declarations: [],
+      imports: [ SharedModule ]
     })
     .compileComponents();
   }));

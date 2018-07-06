@@ -3,24 +3,13 @@ import { Observable } from "rxjs/Observable";
 
 import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
-import { StudentHomeComponent } from './student-home.component';
-import { StudentRunListComponent } from '../student-run-list/student-run-list.component';
-import { StudentRunListItemComponent } from '../student-run-list-item/student-run-list-item.component';
-import { SelectMenuComponent } from "../../modules/shared/select-menu/select-menu.component";
-import { SearchBarComponent } from "../../modules/shared/search-bar/search-bar.component";
 import { User } from "../../domain/user";
 import { UserService } from "../../services/user.service";
 
-import { MatCardModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatInputModule,
-  MatSelectModule } from "@angular/material";
-import { RouterTestingModule } from '@angular/router/testing';
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MomentModule } from "angular2-moment";
+import { StudentModule } from "../student.module";
+import { StudentHomeComponent } from "./student-home.component";
+import { RouterTestingModule } from "@angular/router/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-
 
 describe('StudentHomeComponent', () => {
   let component: StudentHomeComponent;
@@ -56,29 +45,12 @@ describe('StudentHomeComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [
-        SearchBarComponent,
-        SelectMenuComponent,
-        StudentHomeComponent,
-        StudentRunListComponent,
-        StudentRunListItemComponent
-      ],
+      declarations: [],
       providers: [
         { provide: StudentService, useValue: studentServiceStub },
         { provide: UserService, useValue: userServiceStub }
       ],
-      imports: [
-        BrowserAnimationsModule,
-        FormsModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatInputModule,
-        MatSelectModule,
-        MomentModule,
-        ReactiveFormsModule,
-        RouterTestingModule
-      ]
+      imports: [ BrowserAnimationsModule, StudentModule, RouterTestingModule ]
     })
     .compileComponents();
   }));

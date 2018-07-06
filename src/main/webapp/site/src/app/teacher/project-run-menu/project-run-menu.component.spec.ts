@@ -1,8 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ProjectRunMenuComponent } from './project-run-menu.component';
-import { MatIconModule, MatMenuModule } from "@angular/material";
 import { Project } from "../project";
+import { TeacherModule } from "../teacher.module";
+import { ProjectRunMenuComponent } from "./project-run-menu.component";
 
 describe('ProjectRunMenuComponent', () => {
   let component: ProjectRunMenuComponent;
@@ -10,8 +9,8 @@ describe('ProjectRunMenuComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ MatIconModule, MatMenuModule ],
-      declarations: [ ProjectRunMenuComponent ]
+      imports: [ TeacherModule ],
+      declarations: [ ]
     })
     .compileComponents();
   }));

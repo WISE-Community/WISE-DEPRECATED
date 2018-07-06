@@ -1,31 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable } from "rxjs/Observable";
 
-import { TeacherHomeComponent } from './teacher-home.component';
 import { UserService } from "../../services/user.service";
 import { TeacherService } from "../../teacher/teacher.service";
 import { User } from "../../domain/user";
-import { TeacherProjectListComponent } from "../teacher-project-list/teacher-project-list.component";
 import { Project } from "../project";
-import { TeacherProjectListItemComponent } from "../teacher-project-list-item/teacher-project-list-item.component";
-import { SearchBarComponent } from "../../modules/shared/search-bar/search-bar.component";
-import { SelectMenuComponent } from "../../modules/shared/select-menu/select-menu.component";
 
-import {
-  MatCardModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatInputModule, MatMenuModule,
-  MatSelectModule, MatTabsModule
-} from "@angular/material";
 import { RouterTestingModule } from '@angular/router/testing';
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MomentModule } from "angular2-moment";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { LibraryModule } from "../../modules/library/library.module";
-import { SharedModule } from "../../modules/shared/shared.module";
-import { ProjectRunMenuComponent } from "../project-run-menu/project-run-menu.component";
 import { HttpClient, HttpHandler } from "@angular/common/http";
+import { TeacherModule } from "../teacher.module";
+import { DebugElement, DebugNode } from "@angular/core";
+import { By } from "@angular/platform-browser";
+import { TeacherHomeComponent } from "./teacher-home.component";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 describe('TeacherHomeComponent', () => {
   let component: TeacherHomeComponent;
@@ -61,12 +48,7 @@ describe('TeacherHomeComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [
-        TeacherHomeComponent,
-        TeacherProjectListComponent,
-        TeacherProjectListItemComponent,
-        ProjectRunMenuComponent,
-      ],
+      declarations: [],
       providers: [
         { provide: TeacherService, useValue: teacherServiceStub },
         { provide: UserService, useValue: userServiceStub },
@@ -75,19 +57,7 @@ describe('TeacherHomeComponent', () => {
       ],
       imports: [
         BrowserAnimationsModule,
-        FormsModule,
-        LibraryModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatInputModule,
-        MatMenuModule,
-        MatSelectModule,
-        MatTabsModule,
-        MomentModule,
-        ReactiveFormsModule,
-        RouterTestingModule,
-        SharedModule
+        TeacherModule
       ]
     })
     .compileComponents();
@@ -102,4 +72,11 @@ describe('TeacherHomeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should show two tabs', () => {
+    const bannerDe: DebugElement = fixture.debugElement;
+    const tabGroupDe = bannerDe.query(By.css('mat-tab-group'));
+    const tabs: DebugElement[] = tabGroupDe.children;
+    expect(tabs.length).toEqual(2);
+  })
 });
