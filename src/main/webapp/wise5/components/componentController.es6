@@ -68,9 +68,9 @@ class ComponentController {
     this.showAddToNotebookButton =
       this.componentContent.showAddToNotebookButton == null ? true : this.componentContent.showAddToNotebookButton;
 
-    if (this.mode === 'grading' || this.mode === 'gradingRevision' || this.mode === 'onlyShowWork') {
+    if (this.isGradingMode() || this.mode === 'gradingRevision' || this.mode === 'onlyShowWork') {
       this.showAddToNotebookButton = false;
-    } else if (this.mode === 'authoring') {
+    } else if (this.isAuthoringMode()) {
       if (this.authoringComponentContent.showAddToNotebookButton == null) {
         this.authoringComponentContent.showAddToNotebookButton = true;
       }
@@ -78,6 +78,18 @@ class ComponentController {
     }
 
     this.registerListeners();
+  }
+
+  isStudentMode() {
+    return this.mode === 'student';
+  }
+
+  isAuthoringMode() {
+    return this.mode === 'authoring';
+  }
+
+  isGradingMode() {
+    return this.mode === 'grading';
   }
 
   authoringConstructor() {
@@ -137,7 +149,24 @@ class ComponentController {
       }
     });
 
+    /**
+     * Listen for the 'exitNode' event which is fired when the student
+     * exits the parent node. This will perform any necessary cleanup
+     * when the student exits the parent node.
+     */
+    this.$scope.$on('exitNode', (event, args) => {
+      this.cleanupBeforeExiting();
+    });
+
     this.registerStudentWorkSavedToServerListener();
+  }
+
+  cleanupBeforeExiting() {
+
+  }
+
+  broadcastDoneRenderingComponent() {
+    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
   }
 
   registerStudentWorkSavedToServerListener() {
@@ -149,14 +178,14 @@ class ComponentController {
         this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: this.isDirty});
         const clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
         if (componentState.isSubmit) {
-          this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
+          this.setSubmittedMessage(clientSaveTime);
           this.lockIfNecessary();
           this.isSubmitDirty = false;
           this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: this.isSubmitDirty});
         } else if (componentState.isAutoSave) {
-          this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
+          this.setAutoSavedMessage(clientSaveTime);
         } else {
-          this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
+          this.setSavedMessage(clientSaveTime);
         }
       }
     }));
@@ -220,7 +249,7 @@ class ComponentController {
 
     this.isSubmitDirty = true;
     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-    this.setSaveMessage('', null);
+    this.clearSaveMessage();
 
     /*
      * the student work in this component has changed so we will tell
@@ -236,15 +265,37 @@ class ComponentController {
     });
   }
 
+  setSaveText(message, time) {
+    this.saveMessage.text = message;
+    this.saveMessage.time = time;
+  }
+
+  clearSaveMessage() {
+    this.setSaveText('', null);
+  }
+
+  setSavedMessage(time) {
+    this.setSaveText(this.$translate('SAVED'), time);
+  }
+
+  setAutoSavedMessage(time) {
+    this.setSaveText(this.$translate('AUTO_SAVED'), time);
+  }
+
+  setSubmittedMessage(time) {
+    this.setSaveText(this.$translate('SUBMITTED'), time);
+  }
+
   /**
    * Set the message next to the save button
+   * TODO: Replace calls to this function with calls to setSavedMessage() in all the components.
    * @param message the message to display
    * @param time the time to display
    */
   setSaveMessage(message, time) {
     this.saveMessage.text = message;
     this.saveMessage.time = time;
-  }
+  };
 
   /**
    * Get all the step node ids in the project
@@ -760,6 +811,42 @@ class ComponentController {
     videoElement.controls = 'true';
     videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
     $('#' + summernoteId).summernote('insertNode', videoElement);
+  }
+
+  hasMaxSubmitCount() {
+    return this.getMaxSubmitCount() != null;
+  }
+
+  getMaxSubmitCount() {
+    return this.componentContent.maxSubmitCount;
+  }
+
+  getNumberOfSubmitsLeft() {
+    return this.getMaxSubmitCount() - this.submitCounter;
+  }
+
+  hasSubmitsLeft() {
+    return this.getNumberOfSubmitsLeft() > 0;
+  }
+
+  setIsSubmitTrue() {
+    this.setIsSubmit(true);
+  }
+
+  setIsSubmitFalse() {
+    this.setIsSubmit(false);
+  }
+
+  setIsSubmit(isSubmit) {
+    this.isSubmit = isSubmit;
+  }
+
+  getIsSubmit() {
+    return this.isSubmit;
+  }
+
+  setIsDirty(isDirty) {
+    this.isDirty = isDirty;
   }
 }
 

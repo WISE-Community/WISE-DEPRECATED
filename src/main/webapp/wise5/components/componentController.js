@@ -67,9 +67,9 @@ var ComponentController = function () {
 
     this.showAddToNotebookButton = this.componentContent.showAddToNotebookButton == null ? true : this.componentContent.showAddToNotebookButton;
 
-    if (this.mode === 'grading' || this.mode === 'gradingRevision' || this.mode === 'onlyShowWork') {
+    if (this.isGradingMode() || this.mode === 'gradingRevision' || this.mode === 'onlyShowWork') {
       this.showAddToNotebookButton = false;
-    } else if (this.mode === 'authoring') {
+    } else if (this.isAuthoringMode()) {
       if (this.authoringComponentContent.showAddToNotebookButton == null) {
         this.authoringComponentContent.showAddToNotebookButton = true;
       }
@@ -80,6 +80,21 @@ var ComponentController = function () {
   }
 
   _createClass(ComponentController, [{
+    key: 'isStudentMode',
+    value: function isStudentMode() {
+      return this.mode === 'student';
+    }
+  }, {
+    key: 'isAuthoringMode',
+    value: function isAuthoringMode() {
+      return this.mode === 'authoring';
+    }
+  }, {
+    key: 'isGradingMode',
+    value: function isGradingMode() {
+      return this.mode === 'grading';
+    }
+  }, {
     key: 'authoringConstructor',
     value: function authoringConstructor() {
       var _this = this;
@@ -129,7 +144,24 @@ var ComponentController = function () {
         }
       });
 
+      /**
+       * Listen for the 'exitNode' event which is fired when the student
+       * exits the parent node. This will perform any necessary cleanup
+       * when the student exits the parent node.
+       */
+      this.$scope.$on('exitNode', function (event, args) {
+        _this2.cleanupBeforeExiting();
+      });
+
       this.registerStudentWorkSavedToServerListener();
+    }
+  }, {
+    key: 'cleanupBeforeExiting',
+    value: function cleanupBeforeExiting() {}
+  }, {
+    key: 'broadcastDoneRenderingComponent',
+    value: function broadcastDoneRenderingComponent() {
+      this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
     }
   }, {
     key: 'registerStudentWorkSavedToServerListener',
@@ -141,14 +173,14 @@ var ComponentController = function () {
           this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: this.isDirty });
           var clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
           if (componentState.isSubmit) {
-            this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
+            this.setSubmittedMessage(clientSaveTime);
             this.lockIfNecessary();
             this.isSubmitDirty = false;
             this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: this.isSubmitDirty });
           } else if (componentState.isAutoSave) {
-            this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
+            this.setAutoSavedMessage(clientSaveTime);
           } else {
-            this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
+            this.setSavedMessage(clientSaveTime);
           }
         }
       }));
@@ -220,7 +252,7 @@ var ComponentController = function () {
 
       this.isSubmitDirty = true;
       this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-      this.setSaveMessage('', null);
+      this.clearSaveMessage();
 
       /*
        * the student work in this component has changed so we will tell
@@ -235,9 +267,36 @@ var ComponentController = function () {
         _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: _this3.componentId, componentState: componentState });
       });
     }
+  }, {
+    key: 'setSaveText',
+    value: function setSaveText(message, time) {
+      this.saveMessage.text = message;
+      this.saveMessage.time = time;
+    }
+  }, {
+    key: 'clearSaveMessage',
+    value: function clearSaveMessage() {
+      this.setSaveText('', null);
+    }
+  }, {
+    key: 'setSavedMessage',
+    value: function setSavedMessage(time) {
+      this.setSaveText(this.$translate('SAVED'), time);
+    }
+  }, {
+    key: 'setAutoSavedMessage',
+    value: function setAutoSavedMessage(time) {
+      this.setSaveText(this.$translate('AUTO_SAVED'), time);
+    }
+  }, {
+    key: 'setSubmittedMessage',
+    value: function setSubmittedMessage(time) {
+      this.setSaveText(this.$translate('SUBMITTED'), time);
+    }
 
     /**
      * Set the message next to the save button
+     * TODO: Replace calls to this function with calls to setSavedMessage() in all the components.
      * @param message the message to display
      * @param time the time to display
      */
@@ -248,14 +307,14 @@ var ComponentController = function () {
       this.saveMessage.text = message;
       this.saveMessage.time = time;
     }
+  }, {
+    key: 'getStepNodeIds',
+
 
     /**
      * Get all the step node ids in the project
      * @returns {array} an array of step node id strings
      */
-
-  }, {
-    key: 'getStepNodeIds',
     value: function getStepNodeIds() {
       return this.ProjectService.getNodeIds();
     }
@@ -891,6 +950,51 @@ var ComponentController = function () {
       videoElement.controls = 'true';
       videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
       $('#' + summernoteId).summernote('insertNode', videoElement);
+    }
+  }, {
+    key: 'hasMaxSubmitCount',
+    value: function hasMaxSubmitCount() {
+      return this.getMaxSubmitCount() != null;
+    }
+  }, {
+    key: 'getMaxSubmitCount',
+    value: function getMaxSubmitCount() {
+      return this.componentContent.maxSubmitCount;
+    }
+  }, {
+    key: 'getNumberOfSubmitsLeft',
+    value: function getNumberOfSubmitsLeft() {
+      return this.getMaxSubmitCount() - this.submitCounter;
+    }
+  }, {
+    key: 'hasSubmitsLeft',
+    value: function hasSubmitsLeft() {
+      return this.getNumberOfSubmitsLeft() > 0;
+    }
+  }, {
+    key: 'setIsSubmitTrue',
+    value: function setIsSubmitTrue() {
+      this.setIsSubmit(true);
+    }
+  }, {
+    key: 'setIsSubmitFalse',
+    value: function setIsSubmitFalse() {
+      this.setIsSubmit(false);
+    }
+  }, {
+    key: 'setIsSubmit',
+    value: function setIsSubmit(isSubmit) {
+      this.isSubmit = isSubmit;
+    }
+  }, {
+    key: 'getIsSubmit',
+    value: function getIsSubmit() {
+      return this.isSubmit;
+    }
+  }, {
+    key: 'setIsDirty',
+    value: function setIsDirty(isDirty) {
+      this.isDirty = isDirty;
     }
   }]);
 

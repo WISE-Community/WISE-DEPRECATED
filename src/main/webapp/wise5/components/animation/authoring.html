@@ -346,7 +346,7 @@
         </md-input-container>
         <div>
           <md-radio-group ng-model='object.type'
-                          ng-change='animationController.authoringAnimationObjectTypeChanged(object)'>
+                          ng-change='animationController.authoringAuthoredObjectTypeChanged(object)'>
             <md-radio-button value='image'
                              class='md-primary'>
               {{ 'animation.image' | translate }}
@@ -359,7 +359,7 @@
         </div>
         <span flex></span>
         <md-button class='regularButton md-raised md-primary'
-                   ng-click='animationController.authoringMoveAnimationObjectUp($index)'>
+                   ng-click='animationController.authoringMoveAuthoredObjectUp($index)'>
           <md-icon>arrow_upward</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
@@ -367,7 +367,7 @@
           </md-tooltip>
         </md-button>
         <md-button class='regularButton md-raised md-primary'
-                   ng-click='animationController.authoringMoveAnimationObjectDown($index)'>
+                   ng-click='animationController.authoringMoveAuthoredObjectDown($index)'>
           <md-icon>arrow_downward</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
@@ -507,7 +507,7 @@
                    ng-change='animationController.authoringViewComponentChanged()'/>
           </md-input-container>
           <md-button class='regularButton md-raised md-primary'
-                     ng-click='animationController.authoringMoveAnimationObjectDataPointUp(object, $index)'>
+                     ng-click='animationController.authoringMoveAuthoredObjectDataPointUp(object, $index)'>
             <md-icon>arrow_upward</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
@@ -515,7 +515,7 @@
             </md-tooltip>
           </md-button>
           <md-button class='regularButton md-raised md-primary'
-                     ng-click='animationController.authoringMoveAnimationObjectDataPointDown(object, $index)'>
+                     ng-click='animationController.authoringMoveAuthoredObjectDataPointDown(object, $index)'>
             <md-icon>arrow_downward</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
