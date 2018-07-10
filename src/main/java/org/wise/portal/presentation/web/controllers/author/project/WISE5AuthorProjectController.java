@@ -494,24 +494,7 @@ public class WISE5AuthorProjectController {
         }
       }
       config.put("locale", locale);
-      String webSocketBaseURL = wiseProperties.getProperty("webSocketBaseUrl");
-
-      if (webSocketBaseURL == null) {
-        /*
-         * if the websocket base url was not provided in the portal properties
-         * we will use the default websocket base url.
-         * e.g.
-         * ws://localhost:8080/wise
-         */
-        if (contextPath.contains("http")) {
-          webSocketBaseURL = contextPath.replace("http", "ws");
-        } else {
-          String portalContextPath = ControllerUtil.getPortalUrlString(request);
-          webSocketBaseURL = portalContextPath.replace("http", "ws");
-        }
-      }
-
-      config.put("webSocketURL", webSocketBaseURL + "/websocket");
+      config.put("webSocketURL", ControllerUtil.getWebSocketURL(request, contextPath));
     } catch (JSONException e) {
       e.printStackTrace();
     }
