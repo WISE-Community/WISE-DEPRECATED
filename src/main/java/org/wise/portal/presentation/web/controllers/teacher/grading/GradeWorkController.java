@@ -64,6 +64,26 @@ public class GradeWorkController {
   Properties wiseProperties;
 
   /**
+   * Invokes WISE4 or WISE5 Classroom Monitor based on the specified run
+   * @param runId ID of the run
+   */
+  @RequestMapping(value = "/teacher/run/manage/{runId}")
+  protected ModelAndView launchClassroomMonitor(@PathVariable Integer runId,
+      HttpServletRequest request, HttpServletResponse response) throws Exception {
+    Run run = runService.retrieveById(new Long(runId));
+    if (5 == run.getProject().getWiseVersion()) {
+      return this.launchClassroomMonitorWISE5(runId);
+    } else if (4 == run.getProject().getWiseVersion()) {
+      String action = null;
+      String gradingType = "monitor";
+      String getRevisions = null;
+      return this.launchClassroomMonitorWISE4(runId.toString(), action, gradingType, getRevisions,
+          request, response);
+    }
+    return null;
+  }
+
+  /**
    * Handles launching classroom monitor for WISE5 runs
    * @param runId ID of the run
    * @return
@@ -71,25 +91,13 @@ public class GradeWorkController {
    */
   @RequestMapping(value = "/classroomMonitor/{runId}")
   protected ModelAndView launchClassroomMonitorWISE5(@PathVariable Integer runId) throws Exception {
-    Run run = null;
-    try {
-      run = runService.retrieveById(new Long(runId));
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    }
-
+    Run run = runService.retrieveById(new Long(runId));
     User user = ControllerUtil.getSignedInUser();
-
-    // check that the user has read or write permission on the run
     if (user.isAdmin() ||
-      this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
-      this.runService.hasRunPermission(run, user, BasePermission.READ)) {
-
+        this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
+        this.runService.hasRunPermission(run, user, BasePermission.READ)) {
       String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
       String getClassroomMonitorConfigUrl = wiseBaseURL + "/config/classroomMonitor/" + runId;
-
       ModelAndView modelAndView = new ModelAndView("classroomMonitor");
       modelAndView.addObject("configURL", getClassroomMonitorConfigUrl);
       return modelAndView;
@@ -111,42 +119,31 @@ public class GradeWorkController {
   @RequestMapping(value = {
     "/teacher/grading/gradework.html",
     "/teacher/classroomMonitor/classroomMonitor"})
-  protected ModelAndView handleRequestInternal(
-    @RequestParam("runId") String runId,
-    @RequestParam(value = "action", required = false) String action,
-    @RequestParam(value = "gradingType", required = false) String gradingType,
-    @RequestParam(value = "getRevisions", required = false) String getRevisions,
-    HttpServletRequest request,
-    HttpServletResponse response) throws Exception {
-
+  protected ModelAndView launchClassroomMonitorWISE4(
+      @RequestParam("runId") String runId,
+      @RequestParam(value = "action", required = false) String action,
+      @RequestParam(value = "gradingType", required = false) String gradingType,
+      @RequestParam(value = "getRevisions", required = false) String getRevisions,
+      HttpServletRequest request,
+      HttpServletResponse response) throws Exception {
     Run run = runService.retrieveById(new Long(runId));
-
     if (action != null) {
       if (action.equals("postMaxScore")) {
         return handlePostMaxScore(request, response, run);
       }
     } else {
-
       ProjectType projectType = run.getProject().getProjectType();
-
       if (projectType.equals(ProjectType.LD)) {
         User user = ControllerUtil.getSignedInUser();
-
-        // check that the user has read or write permission on the run
         if (user.isAdmin() ||
-          this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
-          this.runService.hasRunPermission(run, user, BasePermission.READ)) {
-
+            this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
+            this.runService.hasRunPermission(run, user, BasePermission.READ)) {
           String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-
           String getGradeWorkUrl = wiseBaseURL + "/vle/gradework.html";
           String getGradingConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
-
-          // get the classroom monitor urls
           String getClassroomMonitorUrl = wiseBaseURL + "/vle/classroomMonitor.html";
           String getClassroomMonitorConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
 
-          // set the permission variable so that we can access it in the .jsp
           if (this.runService.hasRunPermission(run, user, BasePermission.WRITE)) {
             getGradeWorkUrl += "?loadScriptsIndividually&permission=write";
             getClassroomMonitorUrl += "?loadScriptsIndividually&permission=write";
@@ -165,9 +162,7 @@ public class GradeWorkController {
             modelAndView.addObject("vleurl", getGradeWorkUrl);
             modelAndView.addObject("vleConfigUrl", getGradingConfigUrl);
           }
-
           return modelAndView;
-
         } else {
           return new ModelAndView("errors/accessdenied");
         }
@@ -176,12 +171,9 @@ public class GradeWorkController {
         modelAndView.addObject("runId", runId);
         return modelAndView;
       } else {
-        //throw error
       }
     }
-
-    ModelAndView modelAndView = new ModelAndView();
-    return modelAndView;
+    return new ModelAndView();
   }
 
   /**
@@ -191,8 +183,8 @@ public class GradeWorkController {
    * @param run
    * @return
    */
-  private ModelAndView handlePostMaxScore(HttpServletRequest request,
-                                          HttpServletResponse response, Run run) {
+  private ModelAndView handlePostMaxScore(
+      HttpServletRequest request, HttpServletResponse response, Run run) {
     try {
       //get the nodeId
       String nodeId = request.getParameter("nodeId");
