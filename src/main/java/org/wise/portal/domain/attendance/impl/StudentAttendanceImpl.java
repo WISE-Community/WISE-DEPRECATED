@@ -33,6 +33,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.attendance.StudentAttendance;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +42,8 @@ import org.json.JSONObject;
 
 @Entity
 @Table(name = StudentAttendanceImpl.DATA_STORE_NAME)
+@Getter
+@Setter
 public class StudentAttendanceImpl implements StudentAttendance {
 
   @Transient
@@ -69,18 +73,18 @@ public class StudentAttendanceImpl implements StudentAttendance {
   private String absentUserIds;
 
   public StudentAttendanceImpl() {
-
   }
 
   /**
-   * Constructor the populates the fields
+   * Constructor that populates the fields
    * @param workgroupId
    * @param runId
    * @param loginTimestamp
    * @param presentUserIds
    * @param absentUserIds
    */
-  public StudentAttendanceImpl(Long workgroupId, Long runId, Date loginTimestamp, String presentUserIds, String absentUserIds) {
+  public StudentAttendanceImpl(Long workgroupId, Long runId, Date loginTimestamp,
+      String presentUserIds, String absentUserIds) {
     super();
     setWorkgroupId(workgroupId);
     setRunId(runId);
@@ -120,53 +124,5 @@ public class StudentAttendanceImpl implements StudentAttendance {
     }
 
     return jsonObject;
-  }
-
-  public Integer getId() {
-    return this.id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public Long getWorkgroupId() {
-    return workgroupId;
-  }
-
-  public void setWorkgroupId(Long workgroupId) {
-    this.workgroupId = workgroupId;
-  }
-
-  public Long getRunId() {
-    return runId;
-  }
-
-  public void setRunId(Long runId) {
-    this.runId = runId;
-  }
-
-  public Date getLoginTimestamp() {
-    return loginTimestamp;
-  }
-
-  public void setLoginTimestamp(Date loginTimestamp) {
-    this.loginTimestamp = loginTimestamp;
-  }
-
-  public String getPresentUserIds() {
-    return presentUserIds;
-  }
-
-  public void setPresentUserIds(String presentUserIds) {
-    this.presentUserIds = presentUserIds;
-  }
-
-  public String getAbsentUserIds() {
-    return absentUserIds;
-  }
-
-  public void setAbsentUserIds(String absentUserIds) {
-    this.absentUserIds = absentUserIds;
   }
 }
