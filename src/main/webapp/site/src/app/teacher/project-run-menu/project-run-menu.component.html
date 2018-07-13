@@ -7,7 +7,7 @@
       <mat-icon>tv</mat-icon>
       <span>Preview</span>
     </a>
-    <a *ngIf="project.run != null" mat-menu-item href="{{ editLink }}">
+    <a *ngIf="project.run" mat-menu-item href="{{ editLink }}">
       <mat-icon>edit</mat-icon>
       <span>Edit Project Content</span>
     </a>
@@ -15,13 +15,17 @@
       <mat-icon>share</mat-icon>
       <span>Share</span>
     </a>
-    <a *ngIf="project.run != null" mat-menu-item>
+    <a *ngIf="project.run" mat-menu-item>
       <mat-icon>refresh</mat-icon>
       <span>Run Again</span>
     </a>
-    <a class="warn" *ngIf="project.run != null" mat-menu-item>
-      <mat-icon>stop</mat-icon>
+    <a class="warn" *ngIf="project.run && !project.run.endTime" mat-menu-item>
+      <mat-icon color="warn">stop</mat-icon>
       <span>End Run</span>
+    </a>
+    <a class="success" *ngIf="project.run && project.run.endTime" mat-menu-item>
+      <mat-icon color="success">play_arrow</mat-icon>
+      <span>Restart Run</span>
     </a>
   </div>
 </mat-menu>
