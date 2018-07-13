@@ -11,6 +11,7 @@ export class TeacherProjectListComponent implements OnInit {
 
   projects: Project[] = [];
   filteredProjects: Project[] = [];
+  loaded: boolean = false; // whether array of runs has been retrieved from server
   searchValue: string = '';
   filterOptions: any[] = [
     { value: 'projectsAndRuns', viewValue: 'Projects & Runs' },
@@ -32,6 +33,7 @@ export class TeacherProjectListComponent implements OnInit {
         this.projects = projects;
         this.filteredProjects = projects;
         this.performSearchAndFilter();
+        this.loaded = true;
       });
   }
 
