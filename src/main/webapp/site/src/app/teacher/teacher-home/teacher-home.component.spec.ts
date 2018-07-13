@@ -36,9 +36,9 @@ describe('TeacherHomeComponent', () => {
       getUser(): Observable<User[]> {
         const user: User = new User();
         user.firstName = 'Demo';
-        user.lastName = 'User';
-        user.role = 'student';
-        user.userName = 'DemoUser0101';
+        user.lastName = 'Teacher';
+        user.role = 'teacher';
+        user.userName = 'DemoTeacher';
         user.id = 123456;
         return Observable.create( observer => {
           observer.next(user);
@@ -57,7 +57,8 @@ describe('TeacherHomeComponent', () => {
       ],
       imports: [
         BrowserAnimationsModule,
-        TeacherModule
+        TeacherModule,
+        RouterTestingModule
       ]
     })
     .compileComponents();
@@ -78,5 +79,11 @@ describe('TeacherHomeComponent', () => {
     const tabGroupDe = bannerDe.query(By.css('mat-tab-group'));
     const tabs: DebugElement[] = tabGroupDe.children;
     expect(tabs.length).toEqual(2);
-  })
+  });
+
+  it('should show teacher name and avatar', () => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('#teacherName').textContent)
+      .toContain('Demo Teacher');
+  });
 });
