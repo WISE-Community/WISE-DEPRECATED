@@ -38,8 +38,7 @@ import org.wise.portal.domain.Persistable;
 public interface MutableAclSid extends Sid, Persistable {
 
   /**
-   * Tests whether this instance of <code>Sid</code> was created as a
-   * principal.
+   * Tests whether this instance of <code>Sid</code> was created as a principal.
    *
    * @return <code>true</code> if this instance of <code>Sid</code> has
    *         been created using a principal, <code>false</code> if this has
@@ -49,29 +48,25 @@ public interface MutableAclSid extends Sid, Persistable {
   Boolean isPrincipal();
 
   /**
-   * Gets the <code>Sid</code> as a <code>String</code> if this instance
-   * has been created using a principal.
+   * Gets the <code>Sid</code> as a <code>String</code> if this instance has been created
+   * using a principal.
    *
    * @return the principal
-   * @throws UnsupportedOperationException
-   *                 if this instance of Sid is not a principal
+   * @throws UnsupportedOperationException if this instance of Sid is not a principal
    */
   String getPrincipal();
 
   /**
-   * Sets the <code>Sid</code> using an <code>Authentication</code>
-   * principal.
+   * Sets the <code>Sid</code> using an <code>Authentication</code> principal.
    *
-   * @param authentication
-   *                to set
+   * @param authentication to set
    */
   void setPrincipal(Authentication authentication);
 
   /**
    * Sets the <code>Sid</code> using a <code>GrantedAuthority</code>.
    *
-   * @param grantedAuthority
-   *                to set
+   * @param grantedAuthority to set
    */
   void setGrantedAuthority(GrantedAuthority grantedAuthority);
 
@@ -80,9 +75,7 @@ public interface MutableAclSid extends Sid, Persistable {
    * has been created using a granted authority.
    *
    * @return the granted authority
-   * @throws UnsupportedOperationException
-   *                 if this instance of Sid is not a granted authority
+   * @throws UnsupportedOperationException if this instance of Sid is not a granted authority
    */
   String getGrantedAuthority();
-
 }
