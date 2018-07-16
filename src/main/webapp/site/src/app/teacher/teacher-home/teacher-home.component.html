@@ -1,0 +1,21 @@
+<header fxLayout="row">
+  <mat-icon aria-label="User avatar">account_box</mat-icon>
+  <div fxLayout="column">
+    <h1 id="teacherName" class="accent">{{ user.firstName}} {{ user.lastName }}</h1>
+    <a ngClass="mat-subheading-1" ngClass.xs="{'mat-subheading-1': false}"
+       routerLink="/teacher/profile/edit">Edit Profile</a>
+  </div>
+</header>
+
+<section>
+  <mat-tab-group>
+    <mat-tab label="My Projects">
+      <app-teacher-project-list></app-teacher-project-list>
+    </mat-tab>
+    <mat-tab label="Library Projects">
+      <div class="content-block">
+        <app-library></app-library>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</section>

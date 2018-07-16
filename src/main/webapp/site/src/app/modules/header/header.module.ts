@@ -9,6 +9,8 @@ import { HeaderComponent } from "./header.component";
 import { HeaderSigninComponent } from './header-signin/header-signin.component';
 import { HeaderLinksComponent } from './header-links/header-links.component';
 import { HeaderAccountMenuComponent } from './header-account-menu/header-account-menu.component';
+import { ConfigService } from "../../services/config.service";
+import { UserService } from "../../services/user.service";
 
 const materialModules = [
   MatButtonModule,
@@ -30,6 +32,10 @@ const materialModules = [
     HeaderSigninComponent,
     HeaderLinksComponent,
     HeaderAccountMenuComponent
+  ],
+  providers: [
+    ConfigService,
+    UserService
   ],
   exports: [
     HeaderComponent

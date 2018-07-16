@@ -22,6 +22,7 @@ import { StudentEditProfileComponent } from './student-edit-profile/student-edit
 import { StudentRunListComponent } from './student-run-list/student-run-list.component';
 import { StudentRunListItemComponent } from './student-run-list-item/student-run-list-item.component';
 import { AuthGuard } from "./auth.guard";
+import { AddProjectDialogComponent } from "./add-project-dialog/add-project-dialog.component";
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import { AuthGuard } from "./auth.guard";
     StudentRoutingModule
   ],
   declarations: [
+    AddProjectDialogComponent,
     StudentComponent,
     StudentHomeComponent,
     StudentEditProfileComponent,

@@ -2,16 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LibraryProjectComponent } from './library-project.component';
 import { LibraryProject } from "../libraryProject";
-
-import { MatCardModule, MatIconModule, MatDialogModule, MatTooltipModule } from '@angular/material';
-import { LibraryProjectDisciplineIconComponent } from "../library-project-discipline-icon/library-project-discipline-icon.component";
-
-const materialModules = [
-  MatCardModule,
-  MatIconModule,
-  MatDialogModule,
-  MatTooltipModule
-];
+import { LibraryModule } from "../library.module";
 
 describe('LibraryProjectComponent', () => {
   let component: LibraryProjectComponent;
@@ -19,8 +10,8 @@ describe('LibraryProjectComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LibraryProjectComponent, LibraryProjectDisciplineIconComponent ],
-      imports: [ materialModules ]
+      declarations: [],
+      imports: [ LibraryModule ]
     })
     .compileComponents();
   }));

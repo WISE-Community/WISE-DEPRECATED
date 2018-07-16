@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 import { LibraryGroupThumbsComponent } from './library-group-thumbs.component';
 import { LibraryGroup } from "../libraryGroup";
+import { LibraryModule } from "../library.module";
 
 describe('LibraryGroupThumbsComponent', () => {
   let component: LibraryGroupThumbsComponent;
@@ -10,8 +10,8 @@ describe('LibraryGroupThumbsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ BrowserAnimationsModule ],
-      declarations: [ LibraryGroupThumbsComponent ]
+      imports: [ LibraryModule ],
+      declarations: []
     })
     .compileComponents();
   }));

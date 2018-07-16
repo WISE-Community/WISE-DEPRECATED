@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { BlurbComponent } from './blurb.component';
+import { SharedModule } from "../shared.module";
 
 describe('BlurbComponent', () => {
   let component: BlurbComponent;
@@ -8,7 +8,8 @@ describe('BlurbComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BlurbComponent ]
+      declarations: [],
+      imports: [ SharedModule ]
     })
     .compileComponents();
   }));

@@ -1,0 +1,24 @@
+<div class="content-block">
+  <div fxLayout="row" fxLayout.xs="column" *ngIf="projects.length">
+    <app-search-bar fxFlex="0 0 auto" fxFlex.xs="0 0 100%" [placeholderText]="'Search'"
+                    (update)="searchChanged($event)"></app-search-bar>
+    <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
+    <app-select-menu fxFlex="0 1 auto" fxFlex.xs="100%" [options]="filterOptions" [placeholderText]="'Filter by'"
+                     [value]="filterValue" (update)="filterChanged($event)"></app-select-menu>
+  </div>
+  <div *ngIf="searchValue && loaded" class="notice">
+    <p>Projects found: {{ filteredProjects.length }}</p>
+  </div>
+  <div class="notice" *ngIf="!projects.length && loaded">
+    <p>Hey there! Looks like you don't have any projects or classroom runs yet.</p>
+    <p>Check out the WISE <b>Library Projects</b> to find units to use with your students.</p>
+  </div>
+
+  <div id="teacherProjects" *ngFor="let project of filteredProjects; let i=index">
+    <app-teacher-project-list-item [project]="project" *ngIf="i < 10 || showAll"></app-teacher-project-list-item>
+  </div>
+
+  <div class="content-block__actions" *ngIf="filteredProjects.length > 10 && !showAll" >
+    <a mat-raised-button color="primary" (click)="showAll = true">Show All</a>
+  </div>
+</div>

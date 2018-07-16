@@ -2,8 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StudentRun } from '../student-run';
 import { StudentRunListItemComponent } from './student-run-list-item.component';
-import { MatCardModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule } from "@angular/material";
-import {MomentModule} from "angular2-moment";
+import { StudentModule } from "../student.module";
 
 describe('StudentRunListItemComponent', () => {
   let component: StudentRunListItemComponent;
@@ -11,14 +10,8 @@ describe('StudentRunListItemComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StudentRunListItemComponent ],
-      imports: [
-        MatCardModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatInputModule,
-        MatSelectModule,
-        MomentModule]
+      declarations: [ ],
+      imports: [ StudentModule ]
     })
     .compileComponents();
   }));

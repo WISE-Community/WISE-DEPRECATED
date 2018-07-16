@@ -1,26 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { APP_BASE_HREF } from '@angular/common';
-import { SearchBarComponent } from "../modules/shared/search-bar/search-bar.component";
-import { SelectMenuComponent } from "../modules/shared/select-menu/select-menu.component";
 import { StudentComponent } from './student.component';
-import { StudentEditProfileComponent } from './student-edit-profile/student-edit-profile.component';
-import { StudentHomeComponent } from './student-home/student-home.component';
-import { StudentRoutingModule } from './student-routing.module';
-import { StudentRunListComponent } from './student-run-list/student-run-list.component';
-import { StudentRunListItemComponent } from './student-run-list-item/student-run-list-item.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MomentModule } from "angular2-moment";
 
-import { MatCardModule, MatFormFieldModule, MatIconModule, MatSelectModule } from "@angular/material";
-let materialModules = [
-  MatCardModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatSelectModule,
-  MomentModule,
-]
+import { StudentModule } from "./student.module";
 
 describe('StudentComponent', () => {
   let component: StudentComponent;
@@ -30,23 +14,12 @@ describe('StudentComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        FormsModule,
-        materialModules,
-        StudentRoutingModule,
-        ReactiveFormsModule,
+        StudentModule,
         RouterTestingModule.withRoutes([]) ],
       providers: [
         { provide: APP_BASE_HREF, useValue : '/' }
       ],
-      declarations: [
-        SearchBarComponent,
-        SelectMenuComponent,
-        StudentComponent,
-        StudentEditProfileComponent,
-        StudentHomeComponent,
-        StudentRunListComponent,
-        StudentRunListItemComponent
-      ]
+      declarations: []
     })
     .compileComponents();
   }));

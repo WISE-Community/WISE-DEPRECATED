@@ -1,37 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClient, HttpHandler } from "@angular/common/http";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-
 import { LibraryComponent } from './library.component';
-import { LibraryGroupThumbsComponent } from "./library-group-thumbs/library-group-thumbs.component";
-import { LibraryProjectComponent, LibraryProjectDetailsComponent } from "./library-project/library-project.component";
-import { LibraryProjectDisciplineIconComponent } from "./library-project-discipline-icon/library-project-discipline-icon.component";
-import { LibraryService } from "../../services/library.service";
-import { SharedModule } from "../shared/shared.module";
-
-import {
-  MatButtonModule,
-  MatCardModule,
-  MatDialogModule,
-  MatExpansionModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatOptionModule,
-  MatSelectModule,
-  MatTooltipModule} from '@angular/material';
-
-const materialModules = [
-  MatButtonModule,
-  MatCardModule,
-  MatDialogModule,
-  MatExpansionModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatOptionModule,
-  MatSelectModule,
-  MatTooltipModule
-];
+import { LibraryModule } from "./library.module";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 describe('LibraryComponent', () => {
   let component: LibraryComponent;
@@ -39,24 +10,11 @@ describe('LibraryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        BrowserAnimationsModule,
-        FormsModule,
-        materialModules,
-        ReactiveFormsModule,
-        SharedModule
-      ],
-      declarations: [
-        LibraryComponent,
-        LibraryGroupThumbsComponent,
-        LibraryProjectComponent,
-        LibraryProjectDetailsComponent,
-        LibraryProjectDisciplineIconComponent
-      ],
+      imports: [ BrowserAnimationsModule, LibraryModule ],
+      declarations: [],
       providers: [
         HttpClient,
-        HttpHandler,
-        LibraryService
+        HttpHandler
       ]
     })
     .compileComponents();

@@ -1,8 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatTooltipModule } from '@angular/material';
-
 import { LibraryProjectDisciplineIconComponent } from './library-project-discipline-icon.component';
 import { LibraryProject } from "../libraryProject";
+import { LibraryModule } from "../library.module";
 
 describe('LibraryProjectDisciplineIconComponent', () => {
   let component: LibraryProjectDisciplineIconComponent;
@@ -10,8 +9,8 @@ describe('LibraryProjectDisciplineIconComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LibraryProjectDisciplineIconComponent ],
-      imports: [ MatTooltipModule ]
+      declarations: [],
+      imports: [ LibraryModule ]
     })
     .compileComponents();
   }));

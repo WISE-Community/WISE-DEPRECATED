@@ -6,4 +6,5 @@ export class Run {
   projectId: number;
   projectThumb: string;
   startTime: number;
+  numStudents: number;
 }

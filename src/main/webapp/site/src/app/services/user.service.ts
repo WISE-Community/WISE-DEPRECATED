@@ -23,7 +23,13 @@ export class UserService {
 
   isStudent(): boolean {
     return this.isAuthenticated &&
-        this.user$.getValue().role === 'student';
+      this.user$.getValue().role === 'student';
+  }
+
+  isTeacher(): boolean {
+    const role = this.user$.getValue().role;
+    return this.isAuthenticated &&
+      (role === 'teacher' || role === 'admin' || role === 'researcher');
   }
 
   retrieveUserPromise(): Promise<User> {
@@ -88,6 +94,8 @@ export class UserService {
       return this.redirectUrl;
     } else if (this.isStudent()) {
       return '/student';
+    } else if (this.isTeacher()) {
+      return '/teacher';
     } else {
       return '/';
     }

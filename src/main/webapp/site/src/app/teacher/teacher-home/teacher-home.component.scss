@@ -1,0 +1,25 @@
+@import
+'~style/abstracts/functions',
+'~style/abstracts/variables',
+'~style/abstracts/mixins';
+
+h1 {
+  margin-bottom: 0;
+
+  @media (max-width: breakpoint('xs.max')) {
+    font-size: mat-font-size($config, title);
+  }
+}
+
+mat-icon {
+  padding-right: 8px;
+  @include mat-icon-size(52px);
+
+  @media (min-width: breakpoint('sm.min')) {
+    @include mat-icon-size(56px);
+  }
+}
+
+.content-block {
+  margin-top: 24px;
+}
