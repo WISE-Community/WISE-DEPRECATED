@@ -27,7 +27,7 @@ var EditNotebookItemController = function () {
     this.$translate = this.$filter('translate');
     this.showUpload = false;
 
-    if (this.itemId == null) {
+    if (this.note == null) {
       var currentNodeId = this.StudentDataService.getCurrentNodeId();
       var currentNodeTitle = this.ProjectService.getNodeTitleByNodeId(currentNodeId);
 
@@ -43,7 +43,8 @@ var EditNotebookItemController = function () {
         }
       };
     } else {
-      this.item = angular.copy(this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId));
+      this.item = angular.copy(this.note);
+      this.itemId = this.item.id;
       this.item.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
       if (this.NotebookService.isNotebookItemPublic(this.item) && this.item.workgroupId != this.ConfigService.getWorkgroupId()) {
         this.isEditMode = false;

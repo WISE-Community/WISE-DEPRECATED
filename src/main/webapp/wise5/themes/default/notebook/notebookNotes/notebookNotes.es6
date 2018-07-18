@@ -133,15 +133,15 @@ class NotebookNotesController {
     return title;
   }
 
-  editItem($ev, $itemId) {
-    this.$rootScope.$broadcast('editNote', {itemId: $itemId, ev: $ev});
+  editItem($ev, note) {
+    this.$rootScope.$broadcast('editNote', {note: note, ev: $ev});
   }
 
-  select($ev, $itemId) {
+  select($ev, note) {
     if (this.insertMode) {
-      this.onInsert({value: $itemId, event: $ev});
+      this.onInsert({note: note, event: $ev});
     } else {
-      this.editItem($ev, $itemId);
+      this.editItem($ev, note);
     }
   }
 
@@ -212,8 +212,9 @@ const NotebookNotes = {
                     item-id="note.localNotebookItemId"
                     is-edit-allowed="group.isEditAllowed"
                     is-choose-mode="$ctrl.insertMode"
+                    note="note"
                     workgroup-id="note.workgroupId"
-                    on-select="$ctrl.select($ev, note.localNotebookItemId)"
+                    on-select="$ctrl.select($ev, note)"
                     style="display: flex;"
                     flex="100"
                     flex-gt-xs="50">

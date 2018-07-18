@@ -25,11 +25,7 @@ class NotebookItemController {
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
 
-    if (this.group != null && this.group != 'private') {
-      this.item = this.NotebookService.getPublicNotebookItem(this.group, this.itemId, this.workgroupId);
-    } else {
-      this.item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId, this.workgroupId);
-    }
+    this.item = this.note;
 
     this.type = this.item ? this.item.type : null;
     this.label = this.config.itemTypes[this.type].label;
@@ -81,14 +77,14 @@ class NotebookItemController {
 
   doDelete(ev) {
     ev.stopPropagation();
-    let confirm = this.$mdDialog.confirm()
+    const confirm = this.$mdDialog.confirm()
       .title(this.$translate('deleteNoteConfirmMessage'))
       .ariaLabel('delete note confirmation')
       .targetEvent(ev)
       .ok(this.$translate('delete'))
       .cancel(this.$translate('cancel'));
     this.$mdDialog.show(confirm).then(() => {
-      this.NotebookService.deleteItem(this.item.localNotebookItemId);
+      this.NotebookService.deleteNote(this.item);
     }, () => {
       // they chose not to delete. Do nothing, the dialog will close.
     });
@@ -96,14 +92,14 @@ class NotebookItemController {
 
   doRevive(ev) {
     ev.stopPropagation();
-    let confirm = this.$mdDialog.confirm()
+    const confirm = this.$mdDialog.confirm()
       .title(this.$translate('reviveNoteConfirmMessage'))
       .ariaLabel('revive note confirmation')
       .targetEvent(ev)
       .ok(this.$translate('revive'))
       .cancel(this.$translate('cancel'));
     this.$mdDialog.show(confirm).then(() => {
-      this.NotebookService.reviveItem(this.item.localNotebookItemId);
+      this.NotebookService.reviveNote(this.item);
     }, () => {
       // they chose not to delete. Do nothing, the dialog will close.
     });
@@ -111,7 +107,7 @@ class NotebookItemController {
 
   doSelect(ev) {
     if (this.onSelect) {
-      this.onSelect({$ev: ev, $itemId: this.item.id});
+      this.onSelect({$ev: ev, note: this.item});
     }
   }
 
@@ -164,6 +160,7 @@ const NotebookItem = {
   bindings: {
     itemId: '<',
     group: '@',
+    note: '<',
     isChooseMode: '<',
     config: '<',
     componentController: '<',
