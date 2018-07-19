@@ -123,6 +123,7 @@ public class ProjectImpl implements Project {
   public ProjectInfo projectinfo = new ProjectInfoImpl();
 
   @Column(name = COLUMN_NAME_PROJECT_NAME, nullable = false)
+  @Setter
   protected String name;
 
   @OneToOne(targetEntity = ProjectMetadataImpl.class, fetch = FetchType.LAZY)
@@ -160,6 +161,7 @@ public class ProjectImpl implements Project {
   protected FamilyTag familytag;
 
   @Column(name = ProjectImpl.COLUMN_NAME_ISCURRENT, nullable = true)
+  @Getter
   protected boolean isCurrent;
 
   @Column(name = ProjectImpl.COLUMN_NAME_PROJECTTYPE, nullable = true)
@@ -193,6 +195,7 @@ public class ProjectImpl implements Project {
   protected Integer version = null;
 
   @Column(name = ProjectImpl.ISPUBLIC_COLUMN_NAME)
+  @Getter
   protected boolean isPublic;
 
   @Column(name = ProjectImpl.COLUMN_NAME_DATE_CREATED, nullable = false)
@@ -247,46 +250,24 @@ public class ProjectImpl implements Project {
     return true;
   }
 
-  /**
-   * @return the familyTag
-   */
   public FamilyTag getFamilytag() {
     return familytag;
   }
 
-  /**
-   * @param familytag the familyTag to set
-   */
   public void setFamilytag(FamilyTag familytag) {
     this.familytag = familytag;
     this.projectinfo.setFamilyTag(familytag);
   }
 
-  /**
-   * @return the isCurrent
-   */
-  public boolean isCurrent() {
-    return isCurrent;
-  }
-
-  /**
-   * @param isCurrent the isCurrent to set
-   */
   public void setCurrent(boolean isCurrent) {
     this.isCurrent = isCurrent;
     this.projectinfo.setCurrent(isCurrent);
   }
 
-  /**
-   * @return the projectInfo
-   */
   public ProjectInfo getProjectInfo() {
     return projectinfo;
   }
 
-  /**
-   * @param projectInfo the projectInfo to set
-   */
   public void setProjectInfo(ProjectInfo projectInfo) {
     this.projectinfo = projectInfo;
     this.isCurrent = projectInfo.isCurrent();
@@ -313,9 +294,6 @@ public class ProjectImpl implements Project {
     return sharedOwnersList;
   }
 
-  /**
-   * @return the name
-   */
   public String getName() {
     if (name == null) {
       return "";
@@ -323,16 +301,6 @@ public class ProjectImpl implements Project {
     return name;
   }
 
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  /**
-   * @see org.wise.portal.domain.project.Project#populateProjectInfo()
-   */
   public void populateProjectInfo(){
     this.projectinfo = new ProjectInfoImpl();
     this.projectinfo.setName(this.getName());
@@ -342,9 +310,6 @@ public class ProjectImpl implements Project {
     return metadataObj;
   }
 
-  /**
-   * @see org.wise.portal.domain.project.Project#getMetadata()
-   */
   public ProjectMetadata getMetadata() {
     ProjectMetadata metadata = new ProjectMetadataImpl();
     if (this.metadata != null) {
@@ -358,18 +323,12 @@ public class ProjectImpl implements Project {
     return metadata;
   }
 
-  /**
-   * @see org.wise.portal.domain.project.Project#setMetadata(ProjectMetadata)
-   */
   public void setMetadata(ProjectMetadata metadata) {
     if (metadata != null) {
       this.metadata = metadata.toJSONString();
     }
   }
 
-  /**
-   * @see org.wise.portal.domain.project.Project#setMetadata(String)
-   */
   public void setMetadata(String metadataJSONString) {
     if (metadataJSONString != null) {
       this.metadata = metadataJSONString;
@@ -384,16 +343,6 @@ public class ProjectImpl implements Project {
     return visitor.visit(this);
   }
 
-  /**
-   * @return the isPublic
-   */
-  public boolean isPublic() {
-    return isPublic;
-  }
-
-  /**
-   * @param isPublic the isPublic to set
-   */
   public void setPublic(boolean isPublic) {
     this.isPublic = isPublic;
   }
@@ -413,18 +362,10 @@ public class ProjectImpl implements Project {
     return true;
   }
 
-  /**
-   * Whether this project is deleted
-   * @return
-   */
   public boolean isDeleted() {
     return isDeleted;
   }
 
-  /**
-   * Set whether this project is deleted
-   * @param isDeleted
-   */
   public void setDeleted(boolean isDeleted) {
     this.isDeleted = isDeleted;
   }

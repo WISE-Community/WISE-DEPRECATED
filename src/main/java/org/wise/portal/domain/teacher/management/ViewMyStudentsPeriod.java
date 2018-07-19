@@ -25,17 +25,20 @@ package org.wise.portal.domain.teacher.management;
 
 import java.util.Set;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
- * This domain object will contain information needed for the
- * teacher's viewmystudents page
+ * This domain object will contain information needed for the teacher's viewmystudents page
  *
  * @author Hiroki Terashima
  */
+@Getter
+@Setter
 public class ViewMyStudentsPeriod implements Comparable<ViewMyStudentsPeriod> {
 
   private Run run;
@@ -45,62 +48,6 @@ public class ViewMyStudentsPeriod implements Comparable<ViewMyStudentsPeriod> {
   private Set<User> grouplessStudents;
 
   private Set<Workgroup> workgroups;
-
-  /**
-   * @return the run
-   */
-  public Run getRun() {
-    return run;
-  }
-
-  /**
-   * @param run the run to set
-   */
-  public void setRun(Run run) {
-    this.run = run;
-  }
-
-  /**
-   * @return the period
-   */
-  public Group getPeriod() {
-    return period;
-  }
-
-  /**
-   * @param period the period to set
-   */
-  public void setPeriod(Group period) {
-    this.period = period;
-  }
-
-  /**
-   * @return the grouplessStudents
-   */
-  public Set<User> getGrouplessStudents() {
-    return grouplessStudents;
-  }
-
-  /**
-   * @param grouplessStudents the grouplessStudents to set
-   */
-  public void setGrouplessStudents(Set<User> grouplessStudents) {
-    this.grouplessStudents = grouplessStudents;
-  }
-
-  /**
-   * @return the workgroups
-   */
-  public Set<Workgroup> getWorkgroups() {
-    return workgroups;
-  }
-
-  /**
-   * @param workgroups the workgroups to set
-   */
-  public void setWorkgroups(Set<Workgroup> workgroups) {
-    this.workgroups = workgroups;
-  }
 
   /**
    * Natural order is based on periodname
