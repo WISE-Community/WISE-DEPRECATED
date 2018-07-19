@@ -88,35 +88,27 @@ class NotebookService {
           isEditTextEnabled: isEditTextEnabled, isFileUploadEnabled: isFileUploadEnabled});
   };
 
-  deleteItem(itemId) {
-    const noteCopy = angular.copy(this.getLatestNotebookItemByLocalNotebookItemId(itemId));
+  deleteNote(note) {
+    const noteCopy = angular.copy(note);
     noteCopy.id = null; // set to null so we're creating a new notebook item
     noteCopy.content.clientSaveTime = Date.parse(new Date());
-    let clientDeleteTime = Date.parse(new Date());
+    const clientDeleteTime = Date.parse(new Date());
     return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type,
         noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
   }
 
-  reviveItem(itemId) {
-    const noteCopy = angular.copy(this.getLatestNotebookItemByLocalNotebookItemId(itemId));
+  reviveNote(note) {
+    const noteCopy = angular.copy(note);
     noteCopy.id = null; // set to null so we're creating a new notebook item
     noteCopy.content.clientSaveTime = Date.parse(new Date());
-    let clientDeleteTime = null; // if delete timestamp is null, then we are in effect un-deleting this note item
+    const clientDeleteTime = null; // if delete timestamp is null, then we are in effect un-deleting this note item
     return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type,
         noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
   }
 
   // looks up notebook item by local notebook item id, including deleted notes
   getLatestNotebookItemByLocalNotebookItemId(itemId, workgroupId = this.ConfigService.getWorkgroupId()) {
-    if (this.getNotebookByWorkgroup(workgroupId).items.hasOwnProperty(itemId)) {
-      const items = this.getNotebookByWorkgroup(workgroupId).items[itemId];
-      return items.last();
-    } else if (this.getNotebookByWorkgroup(workgroupId).deletedItems.hasOwnProperty(itemId)) {
-      const items = this.getNotebookByWorkgroup(workgroupId).deletedItems[itemId];
-      return items.last();
-    } else {
-      return null;
-    }
+    return this.getNotebookItemById(itemId, workgroupId);
   }
 
   // returns student's report item if they've done work, or the template if they haven't
