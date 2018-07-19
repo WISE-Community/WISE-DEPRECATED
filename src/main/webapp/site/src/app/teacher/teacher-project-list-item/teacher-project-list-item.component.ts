@@ -31,7 +31,7 @@ export class TeacherProjectListItemComponent implements OnInit {
     this.thumbStyle = this.getThumbStyle();
     this.editLink = `/wise/author/authorproject.html?projectId=${ this.project.id }`;
     if (this.project.run != null) {
-      this.gradeAndManageLink = `/wise/classroomMonitor/${ this.project.run.id }`;
+      this.gradeAndManageLink = `/wise/teacher/run/manage/${ this.project.run.id }`;
     }
   }
 }
