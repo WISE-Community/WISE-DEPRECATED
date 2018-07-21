@@ -1,5 +1,6 @@
 {
   "animation.addDataPoint": "Add Data Point",
+  "animation.addDataSource": "Add Data Source",
   "animation.addObject": "Add Object",
   "animation.areYouSureYouWantToAddADataPoint": "You can only have Data Points or a Data Source. If you add a Data Point, the Data Source will be deleted. Are you sure you want to add a Data Point?",
   "animation.areYouSureYouWantToAddADataSource": "You can only have Data Points or a Data Source. If you add a Data Source, the Data Points will be deleted. Are you sure you want to add a Data Source?",
