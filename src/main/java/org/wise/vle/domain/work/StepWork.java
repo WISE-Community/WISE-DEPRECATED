@@ -27,6 +27,8 @@ import java.sql.Timestamp;
 
 import javax.persistence.*;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +44,8 @@ import org.wise.vle.domain.user.UserInfo;
 @Entity
 @Table(name = "stepwork")
 @Inheritance(strategy = InheritanceType.JOINED)
+@Getter
+@Setter
 public class StepWork extends PersistableDomain {
 
   @Id
@@ -68,95 +72,10 @@ public class StepWork extends PersistableDomain {
   @Column(name = "data", length = 5120000, columnDefinition = "mediumtext", nullable = false)
   private String data;
 
-  public Long getId() {
-    return id;
-  }
-
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
-
-
-  public UserInfo getUserInfo() {
-    return userInfo;
-  }
-
-  public void setUserInfo(UserInfo userInfo) {
-    this.userInfo = userInfo;
-  }
-
-  /**
-   * @return the node
-   */
-  public Node getNode() {
-    return node;
-  }
-
-  /**
-   * @param node the node to set
-   */
-  public void setNode(Node node) {
-    this.node = node;
-  }
-
-  /**
-   * @return the postTime
-   */
-  public Timestamp getPostTime() {
-    return postTime;
-  }
-
-  /**
-   * @param postTime the postTime to set
-   */
-  public void setPostTime(Timestamp postTime) {
-    this.postTime = postTime;
-  }
-
-  /**
-   * @return the startTime
-   */
-  public Timestamp getStartTime() {
-    return startTime;
-  }
-
-  /**
-   * @param startTime the startTime to set
-   */
-  public void setStartTime(Timestamp startTime) {
-    this.startTime = startTime;
-  }
-
-  /**
-   * @return the endTime
-   */
-  public Timestamp getEndTime() {
-    return endTime;
-  }
-
-  /**
-   * @param endTime the endTime to set
-   */
-  public void setEndTime(Timestamp endTime) {
-    this.endTime = endTime;
-  }
-
-  public String getData() {
-    return data;
-  }
-
-  public void setData(String data) {
-    this.data = data;
-  }
-
   public void populateData(JSONObject nodeVisitJSON) {
     this.data = nodeVisitJSON.toString();
   }
 
-  /**
-   * @see org.wise.vle.domain.PersistableDomain#getObjectClass()
-   */
   @Override
   protected Class<?> getObjectClass() {
     return StepWork.class;
@@ -197,7 +116,6 @@ public class StepWork extends PersistableDomain {
    */
   public String getCRaterItemId() {
     String cRaterItemId = null;
-
     try {
       JSONObject dataJSON = new JSONObject(this.data);
       if (dataJSON != null) {
@@ -216,7 +134,6 @@ public class StepWork extends PersistableDomain {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return cRaterItemId;
   }
 
@@ -227,7 +144,6 @@ public class StepWork extends PersistableDomain {
    */
   public String getCRaterItemType() {
     String cRaterItemType = null;
-
     try {
       JSONObject dataJSON = new JSONObject(this.data);
       if (dataJSON != null) {
@@ -246,7 +162,6 @@ public class StepWork extends PersistableDomain {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return cRaterItemType;
   }
   /**
@@ -257,7 +172,6 @@ public class StepWork extends PersistableDomain {
    */
   public long getLastNodeStateTimestamp() {
     long timestamp = 0;
-
     try {
       JSONObject dataJSON = new JSONObject(this.data);
       if (dataJSON != null) {
@@ -272,7 +186,6 @@ public class StepWork extends PersistableDomain {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return timestamp;
   }
 
@@ -282,7 +195,6 @@ public class StepWork extends PersistableDomain {
    */
   public JSONObject toJSON() {
     JSONObject stepWorkJSONObject = new JSONObject();
-
     try {
       stepWorkJSONObject.put("id", getId());
 
@@ -297,7 +209,6 @@ public class StepWork extends PersistableDomain {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return stepWorkJSONObject;
   }
 }

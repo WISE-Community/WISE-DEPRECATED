@@ -23,6 +23,8 @@
  */
 package org.wise.vle.domain.work;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.portal.domain.group.Group;
@@ -44,6 +46,8 @@ import java.sql.Timestamp;
 @Table(name = "studentAssets",  indexes = {
   @Index(columnList = "runId", name = "studentAssetsRunIdIndex"),
   @Index(columnList = "workgroupId", name = "studentAssetsWorkgroupIdIndex")})
+@Getter
+@Setter
 public class StudentAsset extends PersistableDomain {
 
   @Id
@@ -100,135 +104,13 @@ public class StudentAsset extends PersistableDomain {
     return StudentAsset.class;
   }
 
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-  public Run getRun() {
-    return run;
-  }
-
-  public void setRun(Run run) {
-    this.run = run;
-  }
-
-  public Group getPeriod() {
-    return period;
-  }
-
-  public void setPeriod(Group period) {
-    this.period = period;
-  }
-
-  public Workgroup getWorkgroup() {
-    return workgroup;
-  }
-
-  public void setWorkgroup(Workgroup workgroup) {
-    this.workgroup = workgroup;
-  }
-
-  public Boolean isReferenced() {
-    return isReferenced;
-  }
-
-  public void setIsReferenced(Boolean isReferenced) {
-    this.isReferenced = isReferenced;
-  }
-
-  public String getFileName() {
-    return fileName;
-  }
-
-  public void setFileName(String fileName) {
-    this.fileName = fileName;
-  }
-
-  public String getFilePath() {
-    return filePath;
-  }
-
-  public void setFilePath(String filePath) {
-    this.filePath = filePath;
-  }
-
-  public Long getFileSize() {
-    return fileSize;
-  }
-
-  public void setFileSize(Long fileSize) {
-    this.fileSize = fileSize;
-  }
-
-  public String getNodeId() {
-    return nodeId;
-  }
-
-  public void setNodeId(String nodeId) {
-    this.nodeId = nodeId;
-  }
-
-  public String getComponentType() {
-    return componentType;
-  }
-
-  public void setComponentType(String componentType) {
-    this.componentType = componentType;
-  }
-
-  public String getComponentId() {
-    return componentId;
-  }
-
-  public void setComponentId(String componentId) {
-    this.componentId = componentId;
-  }
-
-  public Timestamp getServerSaveTime() {
-    return serverSaveTime;
-  }
-
-  public void setServerSaveTime(Timestamp serverSaveTime) {
-    this.serverSaveTime = serverSaveTime;
-  }
-
-  public Timestamp getClientDeleteTime() {
-    return clientDeleteTime;
-  }
-
-  public void setClientDeleteTime(Timestamp clientDeleteTime) {
-    this.clientDeleteTime = clientDeleteTime;
-  }
-
-  public Timestamp getServerDeleteTime() {
-    return serverDeleteTime;
-  }
-
-  public void setServerDeleteTime(Timestamp serverDeleteTime) {
-    this.serverDeleteTime = serverDeleteTime;
-  }
-
-  public Timestamp getClientSaveTime() {
-    return clientSaveTime;
-  }
-
-  public void setClientSaveTime(Timestamp clientSaveTime) {
-    this.clientSaveTime = clientSaveTime;
-  }
-
   /**
    * Get the JSON representation of the StudentWork
    * @return a JSONObject with the values from the StudentWork
    */
   public JSONObject toJSON() {
     JSONObject studentWorkJSONObject = new JSONObject();
-
     try {
-
-      // set the id
       if (this.id != null) {
         studentWorkJSONObject.put("id", this.id);
       }
@@ -295,7 +177,6 @@ public class StudentAsset extends PersistableDomain {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return studentWorkJSONObject;
   }
 }

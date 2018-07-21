@@ -28,6 +28,8 @@ import java.util.Calendar;
 
 import javax.persistence.*;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.vle.domain.PersistableDomain;
 
 /**
@@ -35,6 +37,8 @@ import org.wise.vle.domain.PersistableDomain;
  */
 @Entity
 @Table(name = "runstatus", indexes = { @Index(columnList = "runId", name = "runstatusRunIdIndex") } )
+@Getter
+@Setter
 public class RunStatus extends PersistableDomain {
 
   @Id
@@ -50,9 +54,6 @@ public class RunStatus extends PersistableDomain {
   @Column(name = "status", length = 5120000, columnDefinition = "mediumtext")
   private String status = null;
 
-  /**
-   * Constructor for RunStatus
-   */
   public RunStatus() {
   }
 
@@ -72,29 +73,4 @@ public class RunStatus extends PersistableDomain {
   protected Class<?> getObjectClass() {
     return null;
   }
-
-  public Long getRunId() {
-    return runId;
-  }
-
-  public void setRunId(Long runId) {
-    this.runId = runId;
-  }
-
-  public Timestamp getTimestamp() {
-    return timestamp;
-  }
-
-  public void setTimestamp(Timestamp timestamp) {
-    this.timestamp = timestamp;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
-  }
-
 }

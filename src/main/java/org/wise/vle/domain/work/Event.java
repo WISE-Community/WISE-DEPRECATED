@@ -23,6 +23,8 @@
  */
 package org.wise.vle.domain.work;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.portal.domain.group.Group;
@@ -55,6 +57,8 @@ import java.sql.Timestamp;
   @Index(columnList = "workgroupId", name = "eventsWorkgroupIdIndex"),
   @Index(columnList = "projectId", name = "eventsProjectIdIndex"),
   @Index(columnList = "userId", name = "eventsUserIdIndex")})
+@Getter
+@Setter
 public class Event extends PersistableDomain {
 
   @Id
@@ -111,126 +115,6 @@ public class Event extends PersistableDomain {
   @Override
   protected Class<?> getObjectClass() {
     return Event.class;
-  }
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public Project getProject() {
-    return project;
-  }
-
-  public void setProject(Project project) {
-    this.project = project;
-  }
-
-  public Run getRun() {
-    return run;
-  }
-
-  public void setRun(Run run) {
-    this.run = run;
-  }
-
-  public Group getPeriod() {
-    return period;
-  }
-
-  public void setPeriod(Group period) {
-    this.period = period;
-  }
-
-  public Workgroup getWorkgroup() {
-    return workgroup;
-  }
-
-  public void setWorkgroup(Workgroup workgroup) {
-    this.workgroup = workgroup;
-  }
-
-  public User getUser() {
-    return user;
-  }
-
-  public void setUser(User user) {
-    this.user = user;
-  }
-
-  public String getNodeId() {
-    return nodeId;
-  }
-
-  public void setNodeId(String nodeId) {
-    this.nodeId = nodeId;
-  }
-
-  public String getComponentType() {
-    return componentType;
-  }
-
-  public void setComponentType(String componentType) {
-    this.componentType = componentType;
-  }
-
-  public String getComponentId() {
-    return componentId;
-  }
-
-  public void setComponentId(String componentId) {
-    this.componentId = componentId;
-  }
-
-  public String getContext() {
-    return context;
-  }
-
-  public void setContext(String context) {
-    this.context = context;
-  }
-
-  public String getCategory() {
-    return category;
-  }
-
-  public void setCategory(String category) {
-    this.category = category;
-  }
-
-  public String getEvent() {
-    return event;
-  }
-
-  public void setEvent(String event) {
-    this.event = event;
-  }
-
-  public String getData() {
-    return data;
-  }
-
-  public void setData(String data) {
-    this.data = data;
-  }
-
-  public Timestamp getServerSaveTime() {
-    return serverSaveTime;
-  }
-
-  public void setServerSaveTime(Timestamp serverSaveTime) {
-    this.serverSaveTime = serverSaveTime;
-  }
-
-  public Timestamp getClientSaveTime() {
-    return clientSaveTime;
-  }
-
-  public void setClientSaveTime(Timestamp clientSaveTime) {
-    this.clientSaveTime = clientSaveTime;
   }
 
   /**
@@ -303,7 +187,6 @@ public class Event extends PersistableDomain {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return eventJSONObject;
   }
 }

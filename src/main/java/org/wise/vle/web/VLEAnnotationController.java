@@ -647,7 +647,7 @@ public class VLEAnnotationController {
             if (cRaterRequest != null) {
               Calendar cRaterRequestCompletedTime = Calendar.getInstance();
               cRaterRequest.setTimeCompleted(new Timestamp(cRaterRequestCompletedTime.getTimeInMillis()));
-              cRaterRequest.setcRaterResponse(cRaterResponseXML);
+              cRaterRequest.setCRaterResponse(cRaterResponseXML);
               vleService.saveCRaterRequest(cRaterRequest);
             }
           }
@@ -729,7 +729,7 @@ public class VLEAnnotationController {
             if (cRaterRequest != null) {
               Calendar cRaterRequestCompletedTime = Calendar.getInstance();
               cRaterRequest.setTimeCompleted(new Timestamp(cRaterRequestCompletedTime.getTimeInMillis()));
-              cRaterRequest.setcRaterResponse(cRaterResponse);
+              cRaterRequest.setCRaterResponse(cRaterResponse);
               vleService.saveCRaterRequest(cRaterRequest);
             }
           }

@@ -23,6 +23,8 @@
  */
 package org.wise.vle.domain.achievement;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.portal.domain.run.Run;
@@ -45,6 +47,8 @@ import java.sql.Timestamp;
   @Index(columnList = "workgroupId", name = "achievementsWorkgroupIdIndex")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
+@Getter
+@Setter
 public class Achievement extends PersistableDomain {
 
   @Id
@@ -53,7 +57,7 @@ public class Achievement extends PersistableDomain {
 
   @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "runId", nullable = false)
-  private Run run;   // which run this achievement is for
+  private Run run;  // which run this achievement is for
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "workgroupId", nullable = false)
@@ -69,67 +73,11 @@ public class Achievement extends PersistableDomain {
   private Timestamp achievementTime;  // when the achievement occurred, saved as server time
 
   @Column(name = "data", length = 65536, columnDefinition = "text", nullable = false)
-  private String data;    // achievement data, actual achievement content stored in the project
+  private String data;  // achievement data, actual achievement content stored in the project
 
   @Override
   protected Class<?> getObjectClass() {
     return Achievement.class;
-  }
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public Run getRun() {
-    return run;
-  }
-
-  public void setRun(Run run) {
-    this.run = run;
-  }
-
-  public Workgroup getWorkgroup() {
-    return workgroup;
-  }
-
-  public void setWorkgroup(Workgroup workgroup) {
-    this.workgroup = workgroup;
-  }
-
-  public String getAchievementId() {
-    return achievementId;
-  }
-
-  public void setAchievementId(String achievementId) {
-    this.achievementId = achievementId;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public Timestamp getAchievementTime() {
-    return achievementTime;
-  }
-
-  public void setAchievementTime(Timestamp achievementTime) {
-    this.achievementTime = achievementTime;
-  }
-
-  public String getData() {
-    return data;
-  }
-
-  public void setData(String data) {
-    this.data = data;
   }
 
   /**

@@ -23,6 +23,8 @@
  */
 package org.wise.vle.domain.annotation.wise5;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.portal.domain.group.Group;
@@ -49,6 +51,8 @@ import java.sql.Timestamp;
 @Table(name = "annotations",  indexes = {
   @Index(columnList = "runId", name = "annotationsRunIdIndex"),
   @Index(columnList = "toWorkgroupId", name = "annotationsToWorkgroupIdIndex")})
+@Getter
+@Setter
 public class Annotation extends PersistableDomain {
 
   @Id
@@ -99,118 +103,6 @@ public class Annotation extends PersistableDomain {
 
   @Column(name = "serverSaveTime", nullable = false)
   private Timestamp serverSaveTime;
-
-  public Timestamp getClientSaveTime() {
-    return clientSaveTime;
-  }
-
-  public void setClientSaveTime(Timestamp clientSaveTime) {
-    this.clientSaveTime = clientSaveTime;
-  }
-
-  public Timestamp getServerSaveTime() {
-    return serverSaveTime;
-  }
-
-  public void setServerSaveTime(Timestamp serverSaveTime) {
-    this.serverSaveTime = serverSaveTime;
-  }
-
-  public Run getRun() {
-    return run;
-  }
-
-  public void setRun(Run run) {
-    this.run = run;
-  }
-
-  public Group getPeriod() {
-    return period;
-  }
-
-  public void setPeriod(Group period) {
-    this.period = period;
-  }
-
-  public Workgroup getFromWorkgroup() {
-    return fromWorkgroup;
-  }
-
-  public void setFromWorkgroup(Workgroup fromWorkgroup) {
-    this.fromWorkgroup = fromWorkgroup;
-  }
-
-  public Workgroup getToWorkgroup() {
-    return toWorkgroup;
-  }
-
-  public void setToWorkgroup(Workgroup toWorkgroup) {
-    this.toWorkgroup = toWorkgroup;
-  }
-
-  public String getNodeId() {
-    return nodeId;
-  }
-
-  public void setNodeId(String nodeId) {
-    this.nodeId = nodeId;
-  }
-
-  public String getComponentId() {
-    return componentId;
-  }
-
-  public void setComponentId(String componentId) {
-    this.componentId = componentId;
-  }
-
-  public StudentWork getStudentWork() {
-    return studentWork;
-  }
-
-  public void setStudentWork(StudentWork studentWork) {
-    this.studentWork = studentWork;
-  }
-
-  public String getLocalNotebookItemId() {
-    return localNotebookItemId;
-  }
-
-  public void setLocalNotebookItemId(String localNotebookItemId) {
-    this.localNotebookItemId = localNotebookItemId;
-  }
-
-  public NotebookItem getNotebookItem() {
-    return notebookItem;
-  }
-
-  public void setNotebookItem(NotebookItem notebookItem) {
-    this.notebookItem = notebookItem;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public String getData() {
-    return data;
-  }
-
-  public void setData(String data) {
-    this.data = data;
-  }
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
 
   @Override
   protected Class<?> getObjectClass() {
