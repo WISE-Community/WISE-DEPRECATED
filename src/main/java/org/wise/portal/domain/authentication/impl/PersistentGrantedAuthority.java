@@ -29,6 +29,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.authentication.MutableGrantedAuthority;
 
 /**
@@ -52,6 +54,7 @@ public class PersistentGrantedAuthority implements MutableGrantedAuthority {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Getter
   private Long id;
 
   @Version
@@ -59,62 +62,17 @@ public class PersistentGrantedAuthority implements MutableGrantedAuthority {
   private Integer version;
 
   @Column(name = PersistentGrantedAuthority.COLUMN_NAME_ROLE, unique = true, nullable = false)
+  @Getter
+  @Setter
   private String authority;
 
-  /**
-   * Default Constructor
-   * @param role
-   */
   public PersistentGrantedAuthority() {
   }
 
-  /**
-   * Constructor
-   * @param role
-   */
-  public PersistentGrantedAuthority(String role) {
-    this.authority = role;
+  public PersistentGrantedAuthority(String authority) {
+    this.authority = authority;
   }
 
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableGrantedAuthority#setAuthority(java.lang.String)
-   */
-  public void setAuthority(String role) {
-    this.authority = role;
-  }
-
-  /**
-   * @see org.acegisecurity.GrantedAuthority#getAuthority()
-   */
-  public String getAuthority() {
-    return this.authority;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.Persistable#getId()
-   */
-  public Long getId() {
-    return id;
-  }
-
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
-
-  @SuppressWarnings("unused")
-  private Integer getVersion() {
-    return version;
-  }
-
-  @SuppressWarnings("unused")
-  private void setVersion(Integer version) {
-    this.version = version;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     final int PRIME = 31;
@@ -124,9 +82,6 @@ public class PersistentGrantedAuthority implements MutableGrantedAuthority {
     return result;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)

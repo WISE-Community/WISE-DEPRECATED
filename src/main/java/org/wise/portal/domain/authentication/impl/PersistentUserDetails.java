@@ -42,6 +42,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 
@@ -98,6 +100,7 @@ public class PersistentUserDetails implements MutableUserDetails {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Getter
   private Long id = null;
 
   @Version
@@ -112,12 +115,17 @@ public class PersistentUserDetails implements MutableUserDetails {
   private Set<GrantedAuthority> grantedAuthorities = null;
 
   @Column(name = PersistentUserDetails.COLUMN_NAME_PASSWORD, nullable = false)
+  @Getter
+  @Setter
   private String password = null;
 
   @Column(name = PersistentUserDetails.COLUMN_NAME_USERNAME, unique = true, nullable = false)
+  @Getter
+  @Setter
   private String username = null;
 
   @Column(name = PersistentUserDetails.COLUMN_NAME_EMAIL_ADDRESS, nullable = true)
+  @Setter
   private String emailAddress = null;
 
   @Column(name = "account_not_expired", nullable = false)
@@ -133,63 +141,28 @@ public class PersistentUserDetails implements MutableUserDetails {
   private Boolean enabled = Boolean.TRUE;
 
   @Column(name = PersistentUserDetails.COLUMN_NAME_RECENT_FAILED_LOGIN, nullable = true)
+  @Getter
+  @Setter
   private Date recentFailedLoginTime = null;
 
   @Column(name = PersistentUserDetails.COLUMN_NAME_RECENT_NUMBER_FAILED_LOGINS, nullable = true)
+  @Getter
+  @Setter
   private Integer numberOfRecentFailedLoginAttempts = 0;
 
   @Column(name = PersistentUserDetails.COLUMN_NAME_REST_PASSWORD_KEY, nullable = true)
+  @Getter
+  @Setter
   private String resetPasswordKey = null;
 
   @Column(name = PersistentUserDetails.COLUMN_NAME_RESET_PASSWORD_REQUEST_TIME, nullable = true)
+  @Getter
+  @Setter
   private Date resetPasswordRequestTime = null;
 
   @Column(name = PersistentUserDetails.COLUMN_NAME_LANGUAGE, nullable = true)
   private String language = null;
 
-  public Long getId() {
-    return id;
-  }
-
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the version
-   */
-  @SuppressWarnings("unused")
-  private Integer getVersion() {
-    return version;
-  }
-
-  /**
-   * @param version
-   *            the version to set
-   */
-  @SuppressWarnings("unused")
-  private void setVersion(Integer version) {
-    this.version = version;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableUserDetails#setPassword(java.lang.String)
-   */
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableUserDetails#setUsername(java.lang.String)
-   */
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  /**
-   * @see org.acegisecurity.userdetails.UserDetails#getAuthorities()
-   */
   @Transient
   public Collection<? extends GrantedAuthority> getAuthorities() {
     // Used by Acegi Security. This implements the required method from
@@ -198,16 +171,13 @@ public class PersistentUserDetails implements MutableUserDetails {
     return this.getGrantedAuthorities();
   }
 
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableUserDetails#setAuthorities(org.acegisecurity.GrantedAuthority[])
-   */
   @SuppressWarnings("unchecked")
   public synchronized void setAuthorities(GrantedAuthority[] authorities) {
     this.setGrantedAuthorities(new HashSet(Arrays.asList(authorities)));
   }
 
   private Set<GrantedAuthority> getGrantedAuthorities() {
-        /* Used only for persistence */
+    /* Used only for persistence */
     return this.grantedAuthorities;
   }
 
@@ -218,88 +188,42 @@ public class PersistentUserDetails implements MutableUserDetails {
     this.grantedAuthorities = grantedAuthorities;
   }
 
-  /**
-   * @see org.acegisecurity.userdetails.UserDetails#getPassword()
-   */
-  public String getPassword() {
-    return this.password;
-  }
-
-  /**
-   * @see org.acegisecurity.userdetails.UserDetails#getUsername()
-   */
-  public String getUsername() {
-    return this.username;
-  }
-
-  /**
-   * @see org.acegisecurity.userdetails.UserDetails#isAccountNonExpired()
-   */
   public boolean isAccountNonExpired() {
     return this.accountNonExpired;
   }
 
-  /**
-   * @see org.acegisecurity.userdetails.UserDetails#isAccountNonLocked()
-   */
   public boolean isAccountNonLocked() {
     return this.accountNonLocked;
   }
 
-  /**
-   * @see org.acegisecurity.userdetails.UserDetails#isCredentialsNonExpired()
-   */
   public boolean isCredentialsNonExpired() {
     return this.credentialsNonExpired;
   }
 
-  /**
-   * @see org.acegisecurity.userdetails.UserDetails#isEnabled()
-   */
   public boolean isEnabled() {
     return this.enabled;
   }
 
-
-  /**
-   * @param accountNonExpired
-   *            the accountNonExpired to set
-   */
   @SuppressWarnings("unused")
   private void setAccountNonExpired(Boolean accountNonExpired) {
     this.accountNonExpired = accountNonExpired;
   }
 
-  /**
-   * @param accountNonLocked
-   *            the accountNonLocked to set
-   */
   @SuppressWarnings("unused")
   private void setAccountNonLocked(Boolean accountNonLocked) {
     this.accountNonLocked = accountNonLocked;
   }
 
-  /**
-   * @param credentialsNonExpired
-   *            the credentialsNonExpired to set
-   */
   @SuppressWarnings("unused")
   private void setCredentialsNonExpired(Boolean credentialsNonExpired) {
     this.credentialsNonExpired = credentialsNonExpired;
   }
 
-  /**
-   * @param enabled
-   *            the enabled to set
-   */
   @SuppressWarnings("unused")
   private void setEnabled(Boolean enabled) {
     this.enabled = enabled;
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     final int PRIME = 31;
@@ -309,9 +233,6 @@ public class PersistentUserDetails implements MutableUserDetails {
     return result;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
@@ -329,9 +250,6 @@ public class PersistentUserDetails implements MutableUserDetails {
     return true;
   }
 
-  /**
-   * @see MutableUserDetails#getEmailAddress()
-   */
   public String getEmailAddress() {
     if (emailAddress != null) {
       return emailAddress;
@@ -340,34 +258,18 @@ public class PersistentUserDetails implements MutableUserDetails {
     }
   }
 
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableUserDetails#setEmailAddress(java.lang.String)
-   */
-  public void setEmailAddress(String emailAddress) {
-    this.emailAddress = emailAddress;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableUserDetails#addAuthority(org.acegisecurity.GrantedAuthority)
-   */
   public synchronized void addAuthority(GrantedAuthority authority) {
     if (this.grantedAuthorities == null)
       this.grantedAuthorities = new HashSet<GrantedAuthority>();
     this.grantedAuthorities.add(authority);
   }
 
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableUserDetails#removeAuthority(org.acegisecurity.GrantedAuthority)
-   */
   public synchronized void removeAuthority(GrantedAuthority authority) {
     if (this.grantedAuthorities != null && this.grantedAuthorities.contains(authority)) {
       this.grantedAuthorities.remove(authority);
     }
   }
 
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableUserDetails#hasGrantedAuthority(java.lang.String)
-   */
   public boolean hasGrantedAuthority(String authority) {
     for (GrantedAuthority grantedAuthority : this.grantedAuthorities) {
       if (grantedAuthority.getAuthority().equals(authority)) {
@@ -377,86 +279,12 @@ public class PersistentUserDetails implements MutableUserDetails {
     return false;
   }
 
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableUserDetails#setEnabled(boolean)
-   */
   public void setEnabled(boolean enabled) {
     this.enabled = enabled;
   }
 
-  /**
-   * Get the recent failed login timestamp
-   * @return
-   */
-  public Date getRecentFailedLoginTime() {
-    return this.recentFailedLoginTime;
-  }
-
-  /**
-   * Set the recent failed login timestamp
-   * @param recentFailedLoginTime
-   */
-  public void setRecentFailedLoginTime(Date recentFailedLoginTime) {
-    this.recentFailedLoginTime = recentFailedLoginTime;
-  }
-
-  /**
-   * Get the number of recent failed login attempts
-   * @return
-   */
-  public Integer getNumberOfRecentFailedLoginAttempts() {
-    return this.numberOfRecentFailedLoginAttempts;
-  }
-
-  /**
-   * Set the number of recent failed login attempts
-   * @param numberOfFailedLoginAttempts
-   */
-  public void setNumberOfRecentFailedLoginAttempts(Integer numberOfRecentFailedLoginAttempts) {
-    this.numberOfRecentFailedLoginAttempts = numberOfRecentFailedLoginAttempts;
-  }
-
-  /**
-   * Increase the number of recent failed login attempts by 1
-   */
   public void incrementNumberOfRecentFailedLoginAttempts() {
     this.numberOfRecentFailedLoginAttempts++;
-  }
-
-  /**
-   * Set the password key
-   * @param passwordKey an alphanumeric string
-   */
-  @Override
-  public void setResetPasswordKey(String resetPasswordKey) {
-    this.resetPasswordKey = resetPasswordKey;
-  }
-
-  /**
-   * Get the password key
-   * @return an alphanumeric string
-   */
-  @Override
-  public String getResetPasswordKey() {
-    return this.resetPasswordKey;
-  }
-
-  /**
-   * Set the time the user requested a password reset
-   * @param resetPasswordRequestTime the time the user requested the password reset
-   */
-  @Override
-  public void setResetPasswordRequestTime(Date resetPasswordRequestTime) {
-    this.resetPasswordRequestTime = resetPasswordRequestTime;
-  }
-
-  /**
-   * Get the time the user requested a password reset
-   * @return the time the user requested the password reset
-   */
-  @Override
-  public Date getResetPasswordRequestTime() {
-    return this.resetPasswordRequestTime;
   }
 
   @Override

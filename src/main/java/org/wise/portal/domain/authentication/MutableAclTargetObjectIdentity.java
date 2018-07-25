@@ -32,8 +32,7 @@ import org.wise.portal.domain.Persistable;
  *
  * @see org.acegisecurity.acls.objectidentity.ObjectIdentity
  */
-public interface MutableAclTargetObjectIdentity extends ObjectIdentity,
-  Persistable {
+public interface MutableAclTargetObjectIdentity extends ObjectIdentity, Persistable {
 
   /**
    * @return the aclTargetObject
@@ -41,11 +40,9 @@ public interface MutableAclTargetObjectIdentity extends ObjectIdentity,
   MutableAclTargetObject getAclTargetObject();
 
   /**
-   * @param aclTargetObject
-   *                the aclTargetObject to set
+   * @param aclTargetObject the aclTargetObject to set
    */
-  void setAclTargetObject(
-    MutableAclTargetObject aclTargetObject);
+  void setAclTargetObject(MutableAclTargetObject aclTargetObject);
 
   /**
    * @return the aclTargetObjectId
@@ -53,8 +50,7 @@ public interface MutableAclTargetObjectIdentity extends ObjectIdentity,
   Long getAclTargetObjectId();
 
   /**
-   * @param aclTargetObjectId
-   *                the aclTargetObjectId to set
+   * @param aclTargetObjectId the aclTargetObjectId to set
    */
   void setAclTargetObjectId(Long aclTargetObjectId);
 
@@ -64,8 +60,7 @@ public interface MutableAclTargetObjectIdentity extends ObjectIdentity,
   Boolean isInheriting();
 
   /**
-   * @param inheriting
-   *                the inheriting to set
+   * @param inheriting the inheriting to set
    */
   void setInheriting(Boolean isInheriting);
 
@@ -75,8 +70,7 @@ public interface MutableAclTargetObjectIdentity extends ObjectIdentity,
   MutableAclSid getOwnerSid();
 
   /**
-   * @param ownerSid
-   *                the ownerSid to set
+   * @param ownerSid the ownerSid to set
    */
   void setOwnerSid(MutableAclSid ownerSid);
 
@@ -86,9 +80,7 @@ public interface MutableAclTargetObjectIdentity extends ObjectIdentity,
   MutableAclTargetObjectIdentity getParent();
 
   /**
-   * @param parent
-   *                the parent to set
+   * @param parent the parent to set
    */
   void setParent(MutableAclTargetObjectIdentity parent);
-
 }

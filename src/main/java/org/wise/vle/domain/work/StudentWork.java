@@ -27,6 +27,8 @@ import java.sql.Timestamp;
 
 import javax.persistence.*;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.portal.domain.group.Group;
@@ -45,6 +47,8 @@ import org.wise.vle.domain.PersistableDomain;
 @Table(name = "studentWork",  indexes = {
     @Index(columnList = "runId", name = "studentWorkRunIdIndex"),
     @Index(columnList = "workgroupId", name = "studentWorkWorkgroupIdIndex")})
+@Getter
+@Setter
 public class StudentWork extends PersistableDomain {
 
   @Id
@@ -92,102 +96,6 @@ public class StudentWork extends PersistableDomain {
     return StudentWork.class;
   }
 
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public Run getRun() {
-    return run;
-  }
-
-  public void setRun(Run run) {
-    this.run = run;
-  }
-
-  public Group getPeriod() {
-    return period;
-  }
-
-  public void setPeriod(Group period) {
-    this.period = period;
-  }
-
-  public Workgroup getWorkgroup() {
-    return workgroup;
-  }
-
-  public void setWorkgroup(Workgroup workgroup) {
-    this.workgroup = workgroup;
-  }
-
-  public Boolean isAutoSave() {
-    return isAutoSave;
-  }
-
-  public void setIsAutoSave(Boolean isAutoSave) {
-    this.isAutoSave = isAutoSave;
-  }
-
-  public Boolean isSubmit() {
-    return isSubmit;
-  }
-
-  public void setIsSubmit(Boolean isSubmit) {
-    this.isSubmit = isSubmit;
-  }
-
-  public String getNodeId() {
-    return nodeId;
-  }
-
-  public void setNodeId(String nodeId) {
-    this.nodeId = nodeId;
-  }
-
-  public String getComponentType() {
-    return componentType;
-  }
-
-  public void setComponentType(String componentType) {
-    this.componentType = componentType;
-  }
-
-  public String getComponentId() {
-    return componentId;
-  }
-
-  public void setComponentId(String componentId) {
-    this.componentId = componentId;
-  }
-
-  public Timestamp getServerSaveTime() {
-    return serverSaveTime;
-  }
-
-  public void setServerSaveTime(Timestamp serverSaveTime) {
-    this.serverSaveTime = serverSaveTime;
-  }
-
-  public Timestamp getClientSaveTime() {
-    return clientSaveTime;
-  }
-
-  public void setClientSaveTime(Timestamp clientSaveTime) {
-    this.clientSaveTime = clientSaveTime;
-  }
-
-  public String getStudentData() {
-    return studentData;
-  }
-
-  public void setStudentData(String studentData) {
-    this.studentData = studentData;
-  }
-
   /**
    * Get the JSON representation of the StudentWork
    * @return a JSONObject with the values from the StudentWork
@@ -195,7 +103,6 @@ public class StudentWork extends PersistableDomain {
   public JSONObject toJSON() {
     JSONObject studentWorkJSONObject = new JSONObject();
     try {
-
       if (this.id != null) {
         studentWorkJSONObject.put("id", this.id);
       }
@@ -250,11 +157,9 @@ public class StudentWork extends PersistableDomain {
           studentWorkJSONObject.put("studentData", this.studentData);
         }
       }
-
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return studentWorkJSONObject;
   }
 }

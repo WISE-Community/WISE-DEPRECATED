@@ -28,6 +28,8 @@ import java.util.Calendar;
 
 import javax.persistence.*;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.vle.domain.PersistableDomain;
@@ -39,20 +41,19 @@ import org.wise.vle.domain.PersistableDomain;
  */
 @Entity
 @Table(name = "portfolio", indexes = { @Index(columnList = "runId,workgroupId", name = "portfolioRunIdAndWorkgroupIdIndex") } )
+@Getter
+@Setter
 public class Portfolio extends PersistableDomain implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  //the unique id of the Portfolio
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id = null;
 
-  //the id of the run
   @Column(name = "runId")
   private Long runId = null;
 
-  //the id of the workgroup
   @Column(name = "workgroupId")
   private Long workgroupId = null;
 
@@ -65,27 +66,19 @@ public class Portfolio extends PersistableDomain implements Serializable {
   @Column(name = "deletedItems", length = 512000, columnDefinition = "mediumtext")
   private String deletedItems = null;
 
-  //whether this portfolio is a public portfolio
   @Column(name = "isPublic")
   private Boolean isPublic = false;
 
-  //whether this portfolio is submitted
   @Column(name = "isSubmitted")
   private Boolean isSubmitted = false;
 
-  //portfolio tags
   @Column(name = "tags")
   private String tags;
 
-  //the time the portfolio was posted
   @Column(name = "postTime")
   private Timestamp postTime;
 
-  /**
-   * the no args constructor
-   */
   public Portfolio() {
-
   }
 
   /**
@@ -117,96 +110,9 @@ public class Portfolio extends PersistableDomain implements Serializable {
     this.postTime = new Timestamp(now.getTimeInMillis());
   }
 
-  /**
-   * @see org.wise.vle.domain.PersistableDomain#getObjectClass()
-   */
   @Override
   protected Class<?> getObjectClass() {
     return Portfolio.class;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public Long getRunId() {
-    return runId;
-  }
-
-  public void setRunId(Long runId) {
-    this.runId = runId;
-  }
-
-  public Long getWorkgroupId() {
-    return workgroupId;
-  }
-
-  public void setWorkgroupId(Long workgroupId) {
-    this.workgroupId = workgroupId;
-  }
-
-  public String getMetadata() {
-    return metadata;
-  }
-
-  public void setMetadata(String metadata) {
-    this.metadata = metadata;
-  }
-
-  /**
-   * @return the items
-   */
-  public String getItems() {
-    return items;
-  }
-
-  /**
-   * @param items the items to set
-   */
-  public void setItems(String items) {
-    this.items = items;
-  }
-
-  /**
-   * @return the deletedItems
-   */
-  public String getDeletedItems() {
-    return deletedItems;
-  }
-
-  /**
-   * @param deletedItems the deletedItems to set
-   */
-  public void setDeletedItems(String deletedItems) {
-    this.deletedItems = deletedItems;
-  }
-
-  public Timestamp getPostTime() {
-    return postTime;
-  }
-
-  public void setPostTime(Timestamp postTime) {
-    this.postTime = postTime;
-  }
-
-  public Boolean isPublic() {
-    return isPublic;
-  }
-
-  public void setPublic(Boolean isPublic) {
-    this.isPublic = isPublic;
-  }
-
-  public Boolean isSubmitted() {
-    return isSubmitted;
-  }
-
-  public void setSubmitted(Boolean isSubmitted) {
-    this.isSubmitted = isSubmitted;
   }
 
   /**

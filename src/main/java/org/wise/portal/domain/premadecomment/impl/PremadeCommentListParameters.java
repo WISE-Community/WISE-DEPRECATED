@@ -26,30 +26,40 @@ package org.wise.portal.domain.premadecomment.impl;
 import java.util.Set;
 import java.util.TreeSet;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.premadecomment.PremadeComment;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 
 /**
  * @author Patrick Lawler
- *
  */
 public class PremadeCommentListParameters {
 
+  @Getter
+  @Setter
   private Set<PremadeComment> list = null;
 
+  @Getter
+  @Setter
   private String label = null;
 
+  @Getter
+  @Setter
   private User owner = null;
 
+  @Getter
+  @Setter
   private Run run = null;
 
   private boolean global = false;
 
+  @Getter
+  @Setter
   private Long projectId = null;
 
   public PremadeCommentListParameters() {
-
   }
 
   public PremadeCommentListParameters(String label, User owner) {
@@ -64,75 +74,11 @@ public class PremadeCommentListParameters {
     this.list = new TreeSet<PremadeComment>();
   }
 
-  /**
-   * @return the list
-   */
-  public Set<PremadeComment> getList() {
-    return list;
-  }
-
-  /**
-   * @param list the list to set
-   */
-  public void setList(Set<PremadeComment> list) {
-    this.list = list;
-  }
-
-  /**
-   * @return the label
-   */
-  public String getLabel() {
-    return label;
-  }
-
-  /**
-   * @param label the label to set
-   */
-  public void setLabel(String label) {
-    this.label = label;
-  }
-
-  /**
-   * @return the owner
-   */
-  public User getOwner() {
-    return owner;
-  }
-
-  /**
-   * @param owner the owner to set
-   */
-  public void setOwner(User owner) {
-    this.owner = owner;
-  }
-
-  /**
-   * @return the run
-   */
-  public Run getRun() {
-    return run;
-  }
-
-  /**
-   * @param run the run to set
-   */
-  public void setRun(Run run) {
-    this.run = run;
-  }
-
   public void setGlobal(boolean global) {
     this.global = global;
   }
 
   public boolean isGlobal() {
     return global;
-  }
-
-  public Long getProjectId() {
-    return projectId;
-  }
-
-  public void setProjectId(Long projectId) {
-    this.projectId = projectId;
   }
 }

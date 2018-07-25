@@ -34,6 +34,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.premadecomment.PremadeComment;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
@@ -45,7 +47,6 @@ import org.wise.portal.domain.user.impl.UserImpl;
  *
  * @author Patrick Lawler
  */
-
 @Entity
 @Table(name = PremadeCommentImpl.DATA_STORE_NAME)
 public class PremadeCommentImpl implements PremadeComment, Comparable<PremadeComment>{
@@ -75,79 +76,31 @@ public class PremadeCommentImpl implements PremadeComment, Comparable<PremadeCom
   public static final long serialVersionUID = 1L;
 
   @Column(name = PremadeCommentImpl.COLUMN_NAME_COMMENT, nullable = false)
+  @Getter
+  @Setter
   private String comment;
 
   @OneToOne(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
   @JoinColumn(name = PremadeCommentImpl.COLUMN_NAME_OWNER, nullable = true)
+  @Getter
+  @Setter
   private User owner = null;
 
   @Column(name = PremadeCommentImpl.COLUMN_NAME_LISTPOSITION, nullable = true)
+  @Getter
+  @Setter
   private Long listPosition = null;
 
   @Column(name = PremadeCommentImpl.COLUMN_NAME_LABELS, nullable = true)
+  @Getter
+  @Setter
   private String labels;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Getter
+  @Setter
   private Long id = null;
-
-  /**
-   * @return the comment
-   */
-  public String getComment() {
-    return comment;
-  }
-
-  /**
-   * @param comment the comment to set
-   */
-  public void setComment(String comment) {
-    this.comment = comment;
-  }
-
-  /**
-   * @return the owner
-   */
-  public User getOwner() {
-    return owner;
-  }
-
-  /**
-   * @param owner the owner to set
-   */
-  public void setOwner(User owner) {
-    this.owner = owner;
-  }
-
-  /**
-   * @return the id
-   */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public Long getListPosition() {
-    return listPosition;
-  }
-
-  public void setListPosition(Long listPosition) {
-    this.listPosition = listPosition;
-  }
-
-  public String getLabels() {
-    return labels;
-  }
-
-  public void setLabels(String labels) {
-    this.labels = labels;
-  }
 
   public int compareTo(PremadeComment o) {
     int result = 0;

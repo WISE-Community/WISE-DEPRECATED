@@ -28,7 +28,5 @@ package org.wise.vle.domain;
  * @author Hiroki Terashima
  */
 public abstract class PersistableDomain {
-
   protected abstract Class<?> getObjectClass();
-
 }

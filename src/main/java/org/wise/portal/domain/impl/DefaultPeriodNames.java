@@ -24,8 +24,7 @@
 package org.wise.portal.domain.impl;
 
 /**
- * Dnumeration for default period names available to the teacher
- * when setting up a new run
+ * Dnumeration for default period names available to the teacher when setting up a new run
  *
  * @author Hiroki Terashima
  */

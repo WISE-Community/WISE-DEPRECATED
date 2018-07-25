@@ -25,14 +25,18 @@ package org.wise.portal.domain.project.impl;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.user.User;
 
 /**
- * Represents the parameters required to create a WISE Project.
+ * Parameters required to create a WISE Project.
  *
  * @author Hiroki Terashima
  */
+@Getter
+@Setter
 public class ProjectParameters implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -52,95 +56,4 @@ public class ProjectParameters implements Serializable {
   private Long rootProjectId;
 
   private Integer wiseVersion;
-
-  /**
-   * @return the projectType
-   */
-  public ProjectType getProjectType() {
-    return projectType;
-  }
-
-  /**
-   * @param projectType the projectType to set
-   */
-  public void setProjectType(ProjectType projectType) {
-    this.projectType = projectType;
-  }
-
-  /**
-   * @return the projectname
-   */
-  public String getProjectname() {
-    return projectname;
-  }
-
-  /**
-   * @param projectname the projectname to set
-   */
-  public void setProjectname(String projectname) {
-    this.projectname = projectname;
-  }
-
-  public String getModulePath() {
-    return modulePath;
-  }
-
-  public void setModulePath(String modulePath) {
-    this.modulePath = modulePath;
-  }
-
-  /**
-   * @return the owner
-   */
-  public User getOwner() {
-    return owner;
-  }
-
-  /**
-   * @param owners the owner to set
-   */
-  public void setOwner(User owner) {
-    this.owner = owner;
-  }
-
-  /**
-   * @return <code>ProjectMetadata</code> the metadata to get
-   */
-  public ProjectMetadata getMetadata() {
-    return metadata;
-  }
-
-  /**
-   * @param <code>ProjectMetadata</code> the metadata to set
-   */
-  public void setMetadata(ProjectMetadata metadata) {
-    this.metadata = metadata;
-  }
-
-  /**
-   * @param parentProjectId
-   */
-  public void setParentProjectId(Long parentProjectId) {
-    this.parentProjectId = parentProjectId;
-  }
-
-  public Long getParentProjectId() {
-    return this.parentProjectId;
-  }
-
-  public void setRootProjectId(Long rootProjectId) {
-    this.rootProjectId = rootProjectId;
-  }
-
-  public Long getRootProjectId() {
-    return rootProjectId;
-  }
-
-  public void setWiseVersion(Integer wiseVersion) {
-    this.wiseVersion = wiseVersion;
-  }
-
-  public Integer getWiseVersion() {
-    return wiseVersion;
-  }
 }

@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
@@ -40,6 +42,8 @@ import org.wise.portal.service.user.UserService;
 /**
  * @author Hiroki Terashima
  */
+@Getter
+@Setter
 public class ContactWISEForm implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -76,115 +80,15 @@ public class ContactWISEForm implements Serializable {
 
   private String browserVersion;
 
-  /**
-   * @see org.wise.portal.domain.general.contactwise.ContactWISE#getDescription()
-   */
-  public String getDescription() {
-    return description;
-  }
-
-  /**
-   * @see org.wise.portal.domain.general.contactwise.ContactWISE#getEmail()
-   */
-  public String getEmail() {
-    return email;
-  }
-
-  /**
-   * @return the teacherId
-   */
-  public Long getTeacherId() {
-    return teacherId;
-  }
-
-  /**
-   * @param teacherId the teacherId to set
-   */
-  public void setTeacherId(Long teacherId) {
-    this.teacherId = teacherId;
-  }
-
-  /**
-   * @see org.wise.portal.domain.general.contactwise.ContactWISE#getIssueType()
-   */
-  public IssueType getIssuetype() {
-    return issuetype;
-  }
-
-  /**
-   * @see org.wise.portal.domain.general.contactwise.ContactWISE#getName()
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * @see org.wise.portal.domain.general.contactwise.ContactWISE#getSummary()
-   */
-  public String getSummary() {
-    return summary;
-  }
-
-  /**
-   * @param issueType the issueType to set
-   */
-  public void setIssuetype(IssueType issuetype) {
-    this.issuetype = issuetype;
-  }
-
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  /**
-   * @param email the email to set
-   */
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  /**
-   * @return the teacherName
-   */
-  public String getTeacherName() {
-    return teacherName;
-  }
-
-  /**
-   * @param teacherName the teacherName to set
-   */
-  public void setTeacherName(String teacherName) {
-    this.teacherName = teacherName;
-  }
-
-  /**
-   * @param summary the summary to set
-   */
-  public void setSummary(String summary) {
-    this.summary = summary;
-  }
-
-  /**
-   * @param description the description to set
-   */
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
   public String getMailSubject() {
-    String subject = "[Contact WISE] " + issuetype + ": " + summary;
-
-    return subject;
+    return "[Contact WISE] " + issuetype + ": " + summary;
   }
 
   public String getMailMessage() {
     StringBuffer message = new StringBuffer();
 
     if(getIsStudent()) {
-      //a student is submitting this contact form and we are cc'ing their teacher
+      // a student is submitting this contact form and we are cc'ing their teacher
       message.append("Dear " + getTeacherName() + ",");
       message.append("\n\n");
       message.append("One of your students has submitted a WISE trouble ticket.\n\n");
@@ -205,7 +109,7 @@ public class ContactWISEForm implements Serializable {
     message.append("Project Name: " + projectName + "\n");
     message.append("Project ID: " + projectId + "\n");
 
-    //display the run id if it is not null
+    // display the run id if it is not null
     if(runId != null) {
       message.append("Run ID: " + runId + "\n");
     }
@@ -215,7 +119,6 @@ public class ContactWISEForm implements Serializable {
     message.append("Description: " + description + "\n");
 
     // get the operating system name and version
-
     String operatingSystem = "";
 
     if (this.operatingSystemName != null) {
@@ -231,7 +134,6 @@ public class ContactWISEForm implements Serializable {
     }
 
     // get the browser name and version
-
     String browser = "";
 
     if (this.browserName != null) {
@@ -268,94 +170,5 @@ public class ContactWISEForm implements Serializable {
 
   public Boolean getIsStudent() {
     return isStudent;
-  }
-
-
-  /**
-   * @return the usersystem
-   */
-  public String getUsersystem() {
-    return usersystem;
-  }
-
-  /**
-   * @param usersystem the usersystem to set
-   */
-  public void setUsersystem(String usersystem) {
-    this.usersystem = usersystem;
-  }
-
-  /**
-   * @return the projectName
-   */
-  public String getProjectName() {
-    return projectName;
-  }
-
-  /**
-   * @param projectName the projectName to set
-   */
-  public void setProjectName(String projectName) {
-    this.projectName = projectName;
-  }
-
-  /**
-   * @return the projectId
-   */
-  public Long getProjectId() {
-    return projectId;
-  }
-
-  /**
-   * @param projectId the projectId to set
-   */
-  public void setProjectId(Long projectId) {
-    this.projectId = projectId;
-  }
-
-  /**
-   * @return the run id
-   */
-  public Long getRunId() {
-    return runId;
-  }
-
-  /**
-   * @param runId the run id
-   */
-  public void setRunId(Long runId) {
-    this.runId = runId;
-  }
-
-  public String getOperatingSystemName() {
-    return operatingSystemName;
-  }
-
-  public void setOperatingSystemName(String operatingSystemName) {
-    this.operatingSystemName = operatingSystemName;
-  }
-
-  public String getOperatingSystemVersion() {
-    return operatingSystemVersion;
-  }
-
-  public void setOperatingSystemVersion(String operatingSystemVersion) {
-    this.operatingSystemVersion = operatingSystemVersion;
-  }
-
-  public String getBrowserName() {
-    return browserName;
-  }
-
-  public void setBrowserName(String browserName) {
-    this.browserName = browserName;
-  }
-
-  public String getBrowserVersion() {
-    return browserVersion;
-  }
-
-  public void setBrowserVersion(String browserVersion) {
-    this.browserVersion = browserVersion;
   }
 }
