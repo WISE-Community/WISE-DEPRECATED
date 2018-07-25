@@ -1,10 +1,10 @@
-Web-based Inquiry Science Education (WISE) 
+Web-based Inquiry Science Environment (WISE) 
 ====
 
 [![Join the chat at https://gitter.im/WISE-Community/WISE](https://badges.gitter.im/WISE-Community/WISE.svg)](https://gitter.im/WISE-Community/WISE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/WISE-Community/WISE.svg?branch=master)](https://travis-ci.org/WISE-Community/WISE)
 
-Setup WISE on a Server: https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE-on-a-Server
+Setup WISE on a Server: https://github.com/WISE-Community/WISE/wiki#Install_WISE_on_a_server
 
 Develop WISE locally: https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE-Local-Development
 
