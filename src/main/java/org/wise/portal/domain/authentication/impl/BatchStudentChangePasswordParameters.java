@@ -23,6 +23,9 @@
  */
 package org.wise.portal.domain.authentication.impl;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author Sally Ahn
  */
@@ -30,20 +33,7 @@ public class BatchStudentChangePasswordParameters extends ChangePasswordParamete
 
   private static final long serialVersionUID = 1L;
 
+  @Getter
+  @Setter
   private Long groupId;
-
-  /**
-   * @return the groupId
-   */
-  public Long getGroupId() {
-    return this.groupId;
-  }
-
-  /**
-   * @param groupId the groupId to set
-   */
-  public void setGroupId(Long groupId) {
-    this.groupId = groupId;
-  }
-
 }

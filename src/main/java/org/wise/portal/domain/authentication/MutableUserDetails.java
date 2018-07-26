@@ -98,14 +98,12 @@ public interface MutableUserDetails extends UserDetails, Persistable {
    */
   boolean hasGrantedAuthority(String role);
 
-
   /**
    * Gets the id for this user details object in the persistent store
    *
    * @return The id of this user details object
    */
   Long getId();
-
 
   /**
    * Enables/Disables account.
@@ -245,5 +243,4 @@ public interface MutableUserDetails extends UserDetails, Persistable {
    * @param numberOfLogins
    */
   void incrementNumberOfLogins();
-
 }

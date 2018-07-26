@@ -27,11 +27,7 @@ var NotebookItemController = function () {
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
 
-    if (this.group != null && this.group != 'private') {
-      this.item = this.NotebookService.getPublicNotebookItem(this.group, this.itemId, this.workgroupId);
-    } else {
-      this.item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId, this.workgroupId);
-    }
+    this.item = this.note;
 
     this.type = this.item ? this.item.type : null;
     this.label = this.config.itemTypes[this.type].label;
@@ -94,7 +90,7 @@ var NotebookItemController = function () {
       ev.stopPropagation();
       var confirm = this.$mdDialog.confirm().title(this.$translate('deleteNoteConfirmMessage')).ariaLabel('delete note confirmation').targetEvent(ev).ok(this.$translate('delete')).cancel(this.$translate('cancel'));
       this.$mdDialog.show(confirm).then(function () {
-        _this2.NotebookService.deleteItem(_this2.item.localNotebookItemId);
+        _this2.NotebookService.deleteNote(_this2.item);
       }, function () {
         // they chose not to delete. Do nothing, the dialog will close.
       });
@@ -107,7 +103,7 @@ var NotebookItemController = function () {
       ev.stopPropagation();
       var confirm = this.$mdDialog.confirm().title(this.$translate('reviveNoteConfirmMessage')).ariaLabel('revive note confirmation').targetEvent(ev).ok(this.$translate('revive')).cancel(this.$translate('cancel'));
       this.$mdDialog.show(confirm).then(function () {
-        _this3.NotebookService.reviveItem(_this3.item.localNotebookItemId);
+        _this3.NotebookService.reviveNote(_this3.item);
       }, function () {
         // they chose not to delete. Do nothing, the dialog will close.
       });
@@ -116,7 +112,7 @@ var NotebookItemController = function () {
     key: 'doSelect',
     value: function doSelect(ev) {
       if (this.onSelect) {
-        this.onSelect({ $ev: ev, $itemId: this.item.id });
+        this.onSelect({ $ev: ev, note: this.item });
       }
     }
   }, {
@@ -155,6 +151,7 @@ var NotebookItem = {
   bindings: {
     itemId: '<',
     group: '@',
+    note: '<',
     isChooseMode: '<',
     config: '<',
     componentController: '<',

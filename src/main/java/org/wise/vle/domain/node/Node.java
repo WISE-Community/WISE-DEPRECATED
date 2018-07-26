@@ -25,6 +25,8 @@ package org.wise.vle.domain.node;
 
 import javax.persistence.*;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.vle.domain.PersistableDomain;
 
 /**
@@ -33,69 +35,23 @@ import org.wise.vle.domain.PersistableDomain;
  */
 @Entity
 @Table(name = "node", indexes = { @Index(columnList = "runId", name = "nodeRunIdIndex") } )
+@Getter
+@Setter
 public class Node extends PersistableDomain {
 
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id = null;
 
-  @Column(name="nodeId")
+  @Column(name = "nodeId")
   private String nodeId;
 
-  @Column(name="runId")
+  @Column(name = "runId")
   private String runId;
 
-  @Column(name="nodeType")
+  @Column(name = "nodeType")
   private String nodeType;
 
-  public Long getId() {
-    return id;
-  }
-
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the nodeId
-   */
-  public String getNodeId() {
-    return nodeId;
-  }
-
-  /**
-   * @param nodeId the nodeId to set
-   */
-  public void setNodeId(String nodeId) {
-    this.nodeId = nodeId;
-  }
-
-  /**
-   * @return the runId
-   */
-  public String getRunId() {
-    return runId;
-  }
-
-  /**
-   * @param runId the runId to set
-   */
-  public void setRunId(String runId) {
-    this.runId = runId;
-  }
-
-  public String getNodeType() {
-    return nodeType;
-  }
-
-  public void setNodeType(String nodeType) {
-    this.nodeType = nodeType;
-  }
-
-  /**
-   * @see org.wise.vle.domain.PersistableDomain#getObjectClass()
-   */
   @Override
   protected Class<?> getObjectClass() {
     return Node.class;

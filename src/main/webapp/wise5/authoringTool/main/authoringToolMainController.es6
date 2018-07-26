@@ -5,6 +5,7 @@ class AuthoringToolMainController {
   constructor(
       $anchorScroll,
       $filter,
+      $mdDialog,
       $rootScope,
       $state,
       $timeout,
@@ -14,6 +15,7 @@ class AuthoringToolMainController {
       UtilService) {
     this.$anchorScroll = $anchorScroll;
     this.$filter = $filter;
+    this.$mdDialog = $mdDialog;
     this.$rootScope = $rootScope;
     this.$state = $state;
     this.$timeout = $timeout;
@@ -30,9 +32,6 @@ class AuthoringToolMainController {
     this.showCreatingProjectMessage = false;
     this.showErrorCreatingProjectMessage = false;
 
-    this.$rootScope.$on('goHome', () => {
-      this.saveEvent('goToTeacherHome', 'Navigation', null, null);
-    });
     this.$rootScope.$on('logOut', () => {
       this.saveEvent('logOut', 'Navigation', null, null);
     });
@@ -83,6 +82,7 @@ class AuthoringToolMainController {
         '\n\n' + projectInfo;
     if (confirm(doCopyConfirmMessage)) {
       this.ProjectService.copyProject(projectId).then((projectId) => {
+        this.showCopyingProjectMessage();
         this.saveEvent('projectCopied', 'Authoring', null, projectId);
 
         // refresh the project list and highlight the newly copied project
@@ -94,9 +94,34 @@ class AuthoringToolMainController {
             let highlightDuration = 3000;
             this.UtilService.temporarilyHighlightElement(projectId, highlightDuration);
           });
+          this.$mdDialog.hide();
         });
       });
     }
+  }
+
+  showCopyingProjectMessage() {
+    this.showMessageInModalDialog(this.$translate('copyingProject'));
+  }
+
+  showLoadingProjectMessage() {
+    this.showMessageInModalDialog(this.$translate('loadingProject'));
+  }
+
+  showMessageInModalDialog(message) {
+    this.$mdDialog.show({
+      template: `
+        <div align="center">
+          <div style="width: 200px; height: 100px; margin: 20px;">
+            <span>${message}...</span>
+            <br/>
+            <br/>
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          </div>
+        </div>
+      `,
+      clickOutsideToClose: false
+    });
   }
 
   createNewProjectButtonClicked() {
@@ -219,6 +244,7 @@ class AuthoringToolMainController {
    * @param projectId the project id to open
    */
   openProject(projectId) {
+    this.showLoadingProjectMessage();
     this.$state.go('root.project', {projectId:projectId});
   }
 
@@ -235,6 +261,7 @@ class AuthoringToolMainController {
    * Send the user to the teacher home page
    */
   goHome() {
+    this.saveEvent('goToTeacherHome', 'Navigation', null, null);
     window.location = this.ConfigService.getWISEBaseURL() + '/teacher';
   }
 
@@ -264,6 +291,7 @@ class AuthoringToolMainController {
 AuthoringToolMainController.$inject = [
     '$anchorScroll',
     '$filter',
+    '$mdDialog',
     '$rootScope',
     '$state',
     '$timeout',

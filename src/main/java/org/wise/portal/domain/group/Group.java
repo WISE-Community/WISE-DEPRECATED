@@ -37,32 +37,28 @@ public interface Group extends Persistable, Comparable<Group> {
   /**
    * Add a single member to the group.
    *
-   * @param member
-   *            single member to add
+   * @param member single member to add
    */
   void addMember(User member);
 
   /**
    * Removes a single member from the group.
    *
-   * @param member
-   *            single member to remove
+   * @param member single member to remove
    */
   void removeMember(User member);
 
   /**
    * Replace any existing list of members with the new list.
    *
-   * @param members
-   *            new <code>List</code> of members to set
+   * @param members new <code>List</code> of members to set
    */
   void setMembers(Set<User> members);
 
   /**
    * Get the list of members of this group.
    *
-   * @return <code>List</code> of <code>User</code> objects that belong to
-   *         this group.
+   * @return <code>List</code> of <code>User</code> objects that belong to this group.
    */
   Set<User> getMembers();
 
@@ -76,8 +72,7 @@ public interface Group extends Persistable, Comparable<Group> {
   /**
    * Sets the name of this group.
    *
-   * @param name
-   *            the name to set for this group.
+   * @param name the name to set for this group.
    */
   void setName(String name);
 
@@ -92,8 +87,7 @@ public interface Group extends Persistable, Comparable<Group> {
   /**
    * Sets the parent group for this group.
    *
-   * @param parent
-   *            the parent to set
+   * @param parent the parent to set
    */
   void setParent(Group parent);
 

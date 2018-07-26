@@ -528,7 +528,7 @@ public class DailyAdminJob {
       for(int x=0; x<incompleteCRaterRequests.size(); x++) {
         //get a CRater request that needs to be scored
         CRaterRequest cRaterRequest = incompleteCRaterRequests.get(x);
-        String cRaterItemType = cRaterRequest.getcRaterItemType();
+        String cRaterItemType = cRaterRequest.getCRaterItemType();
 
         String scoringUrl = "";
         String clientId = "";

@@ -78,33 +78,45 @@ class DiscussionService extends ComponentService {
   };
 
   isCompleted(component, componentStates, componentEvents, nodeEvents) {
-    var result = false;
+    if (this.hasShowWorkConnectedComponentThatHasWork(component)) {
+      if (this.hasNodeEnteredEvent(nodeEvents)) {
+        return true;
+      }
+    } else {
+      for (let componentState of componentStates) {
+        if (componentState.studentData.response != null) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
 
-    if (componentStates != null) {
-
-      // loop through all the component states
-      for (var c = 0; c < componentStates.length; c++) {
-
-        // the component state
-        var componentState = componentStates[c];
-
-        // get the student data from the component state
-        var studentData = componentState.studentData;
-
-        if (studentData != null) {
-          var response = studentData.response;
-
-          if (response != null) {
-            // there is a response so the component is completed
-            result = true;
-            break;
+  hasShowWorkConnectedComponentThatHasWork(componentContent) {
+    const connectedComponents = componentContent.connectedComponents;
+    if (connectedComponents != null) {
+      for (let connectedComponent of connectedComponents) {
+        if (connectedComponent.type == 'showWork') {
+          const componentStates =
+              this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+              connectedComponent.nodeId, connectedComponent.componentId);
+          if (componentStates.length > 0) {
+            return true;
           }
         }
       }
     }
+    return false;
+  }
 
-    return result;
-  };
+  hasNodeEnteredEvent(nodeEvents) {
+    for (let nodeEvent of nodeEvents) {
+      if (nodeEvent.event == 'nodeEntered') {
+        return true;
+      }
+    }
+    return false;
+  }
 
   /**
    * Get all the posts associated with a workgroup id. This will

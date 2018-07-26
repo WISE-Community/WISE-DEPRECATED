@@ -23,9 +23,14 @@
  */
 package org.wise.portal.domain.impl;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author Patrick Lawler
  */
+@Getter
+@Setter
 public class LookupUserParameters {
 
   private String lookupField;
@@ -33,46 +38,4 @@ public class LookupUserParameters {
   private String lookupCriteria;
 
   private String lookupData;
-
-  /**
-   * @return the lookupField
-   */
-  public String getLookupField() {
-    return lookupField;
-  }
-
-  /**
-   * @param lookupField the lookupField to set
-   */
-  public void setLookupField(String lookupField) {
-    this.lookupField = lookupField;
-  }
-
-  /**
-   * @return the lookupCriteria
-   */
-  public String getLookupCriteria() {
-    return lookupCriteria;
-  }
-
-  /**
-   * @param lookupCriteria the lookupCriteria to set
-   */
-  public void setLookupCriteria(String lookupCriteria) {
-    this.lookupCriteria = lookupCriteria;
-  }
-
-  /**
-   * @return the lookupData
-   */
-  public String getLookupData() {
-    return lookupData;
-  }
-
-  /**
-   * @param lookupData the lookupData to set
-   */
-  public void setLookupData(String lookupData) {
-    this.lookupData = lookupData;
-  }
 }

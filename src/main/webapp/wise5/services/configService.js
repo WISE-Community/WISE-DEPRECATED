@@ -126,11 +126,6 @@ var ConfigService = function () {
       return this.getConfigParam('projectId');
     }
   }, {
-    key: 'getOpenCPUURL',
-    value: function getOpenCPUURL() {
-      return this.getConfigParam('openCPUURL');
-    }
-  }, {
     key: 'getSessionLogOutURL',
     value: function getSessionLogOutURL() {
       return this.getConfigParam('sessionLogOutURL');

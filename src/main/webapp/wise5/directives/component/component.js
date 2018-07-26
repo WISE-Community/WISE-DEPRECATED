@@ -80,11 +80,7 @@ var ComponentController = function ComponentController($injector, $scope, $compi
 
     if ($scope.mode === 'authoring') {
         $scope.authoringComponentContent = authoringComponentContent;
-        $scope.authoringComponentContentJSONString = angular.toJson($scope.authoringComponentContent, 4);
         $scope.nodeAuthoringController = $scope.$parent.nodeAuthoringController;
-    }
-
-    if ($scope.mode === 'authoring' && componentContent.type == 'HTML') {
         $scope.componentTemplatePath = this.NodeService.getComponentAuthoringTemplatePath(componentContent.type);
     } else {
         $scope.componentTemplatePath = this.NodeService.getComponentTemplatePath(componentContent.type);
@@ -97,19 +93,6 @@ var ComponentController = function ComponentController($injector, $scope, $compi
     $scope.teacherWorkgroupId = this.teacherWorkgroupId;
     $scope.type = componentContent.type;
     $scope.nodeController = $scope.$parent.nodeController;
-
-    if (this.originalNodeId != null && this.originalComponentId != null) {
-        /*
-         * set the original node id and component id. this is used
-         * when we are showing previous work from another component.
-         */
-        $scope.originalNodeId = this.originalNodeId;
-        $scope.originalComponentId = this.originalComponentId;
-
-        // get the original component
-        var originalComponentContent = this.ProjectService.getComponentByNodeIdAndComponentId(this.originalNodeId, this.originalComponentId);
-        $scope.originalComponentContent = originalComponentContent;
-    }
 
     var componentHTML = "<div class=\"component__wrapper\">\n                <div ng-include=\"componentTemplatePath\" class=\"component__content component__content--{{type}}\"></div>\n            </div>";
 
@@ -128,8 +111,6 @@ var Component = {
         componentState: '@',
         mode: '@',
         nodeId: '@',
-        originalNodeId: '@',
-        originalComponentId: '@',
         teacherWorkgroupId: '@',
         workgroupId: '@'
     },

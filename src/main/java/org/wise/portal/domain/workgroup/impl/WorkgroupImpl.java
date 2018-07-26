@@ -37,6 +37,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.run.Run;
@@ -49,6 +51,8 @@ import org.wise.portal.domain.workgroup.Workgroup;
  */
 @Entity
 @Table(name = WorkgroupImpl.DATA_STORE_NAME)
+@Getter
+@Setter
 public class WorkgroupImpl implements Workgroup, Comparable<WorkgroupImpl> {
 
   @Transient
@@ -80,117 +84,31 @@ public class WorkgroupImpl implements Workgroup, Comparable<WorkgroupImpl> {
   @Column(name = "isTeacherWorkgroup")
   private boolean teacherWorkgroup;
 
-  /**
-   * @see Workgroup#getMembers()
-   */
   public Set<User> getMembers() {
     return this.group.getMembers();
   }
 
-  /**
-   * @see Workgroup#addMember(User)
-   */
   public void addMember(User member) {
     this.group.addMember(member);
     this.group.setName(this.generateWorkgroupName());
   }
 
-  /**
-   * @see Workgroup#removeMember(User)
-   */
   public void removeMember(User member) {
     this.group.getMembers().remove(member);
   }
 
-  /**
-   * @see Workgroup#setMembers(java.util.Set)
-   */
   public void setMembers(Set<User> members) {
     this.group.setMembers(members);
-  }
-
-  /**
-   * @return the group
-   */
-  public Group getGroup() {
-    return group;
-  }
-
-  /**
-   * @param group the group to set
-   */
-  public void setGroup(Group group) {
-    this.group = group;
-  }
-
-  /**
-   * @see Workgroup#getRun()
-   */
-  public Run getRun() {
-    return run;
-  }
-
-  /**
-   * @see Workgroup#setRun(Run)
-   */
-  public void setRun(Run run) {
-    this.run = run;
-  }
-
-  /**
-   * @return the id
-   */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * @see Workgroup#getPeriod()
-   */
-  public Group getPeriod() {
-    return period;
-  }
-
-  /**
-   * @see Workgroup#setPeriod(Group)
-   */
-  public void setPeriod(Group period) {
-    this.period = period;
   }
 
   public int compareTo(WorkgroupImpl o) {
     return this.id.compareTo(o.id);
   }
 
-  /**
-   * @return the teacherWorkgroup
-   */
-  public boolean isTeacherWorkgroup() {
-    return teacherWorkgroup;
-  }
-
-  /**
-   * @param teacherWorkgroup the teacherWorkgroup to set
-   */
-  public void setTeacherWorkgroup(boolean teacherWorkgroup) {
-    this.teacherWorkgroup = teacherWorkgroup;
-  }
-
   public boolean isStudentWorkgroup() {
     return !teacherWorkgroup;
   }
 
-  /**
-   * @see Workgroup#generateWorkgroupName()
-   */
   public String generateWorkgroupName() {
     String workgroupName = "";
     for (User member : group.getMembers()) {
@@ -199,9 +117,6 @@ public class WorkgroupImpl implements Workgroup, Comparable<WorkgroupImpl> {
     return workgroupName;
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -212,9 +127,6 @@ public class WorkgroupImpl implements Workgroup, Comparable<WorkgroupImpl> {
     return result;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)

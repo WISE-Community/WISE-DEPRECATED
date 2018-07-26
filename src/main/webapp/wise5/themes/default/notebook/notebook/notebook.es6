@@ -52,7 +52,7 @@ class NotebookController {
     });
 
     this.$scope.$on('editNote', (event, args) => {
-      const itemId = args.itemId;
+      const note = args.note;
       const isEditMode = true;
       const file = null;
       const noteText = null;
@@ -60,11 +60,11 @@ class NotebookController {
       const isFileUploadEnabled = true;
       const studentWorkIds = null;
       const ev = args.ev;
-      this.showEditNoteDialog(itemId, isEditMode, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
+      this.showEditNoteDialog(note, isEditMode, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
     });
 
     this.$scope.$on('addNote', (event, args) => {
-      const itemId = null;
+      const note = null;
       const isEditMode = true;
       const file = args.file;
       const noteText = args.text;
@@ -72,7 +72,7 @@ class NotebookController {
       const isFileUploadEnabled = args.isFileUploadEnabled;
       const studentWorkIds = args.studentWorkIds;
       const ev = args.ev;
-      this.showEditNoteDialog(itemId, isEditMode, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
+      this.showEditNoteDialog(note, isEditMode, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
     });
 
     this.$scope.$on('copyNote', (event, args) => {
@@ -97,7 +97,7 @@ class NotebookController {
     alert(this.$translate('deleteStudentAssetFromNotebookNotImplementedYet'));
   }
 
-  showEditNoteDialog(itemId, isEditMode, file, text, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev) {
+  showEditNoteDialog(note, isEditMode, file, text, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev) {
     const notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
     this.$mdDialog.show({
       parent: angular.element(document.body),
@@ -107,7 +107,7 @@ class NotebookController {
       controllerAs: 'editNotebookItemController',
       bindToController: true,
       locals: {
-        itemId: itemId,
+        note: note,
         isEditMode: isEditMode,
         file: file,
         text: text,
@@ -172,8 +172,7 @@ class NotebookController {
     this.requester = requester;
   }
 
-  insert(notebookItemId, $event) {
-    let notebookItem = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(notebookItemId, this.workgroupId);
+  insert(notebookItem, $event) {
     if (this.requester == 'report') {
       this.insertContent = angular.copy(notebookItem);
     } else {
@@ -221,7 +220,7 @@ const Notebook = {
             insert-mode="$ctrl.insertMode"
             workgroup-id="$ctrl.workgroupId"
             on-close="$ctrl.closeNotes()"
-            on-insert="$ctrl.insert(value, event)"
+            on-insert="$ctrl.insert(note, event)"
             on-set-insert-mode="$ctrl.setInsertMode(value, requester)"></notebook-notes>`,
   controller: NotebookController
 };

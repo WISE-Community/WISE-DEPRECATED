@@ -35,40 +35,6 @@ class ClassroomMonitorProjectService extends ProjectService {
   }
 
   /**
-   * Get the show previous work node ids and component ids in a node
-   * @param nodeId get the show previous work node ids and component ids in
-   * this node
-   * @returns an array of objects. the objects contain a node id
-   * and component id.
-   */
-  getShowPreviousWorkNodeIdsAndComponentIds(nodeId) {
-    const nodeIdAndComponentIds = [];
-    if (nodeId != null) {
-      const nodeContent = this.getNodeContentByNodeId(nodeId);
-      if (nodeContent != null) {
-        const components = nodeContent.components;
-        if (components != null) {
-          for (let component of components) {
-            if (component != null) {
-              const showPreviousWorkNodeId = component.showPreviousWorkNodeId;
-              const showPreviousWorkComponentId =
-                component.showPreviousWorkComponentId;
-              if (showPreviousWorkNodeId != null &&
-                showPreviousWorkComponentId != null) {
-                const nodeIdAndComponentId = {};
-                nodeIdAndComponentId.nodeId = showPreviousWorkNodeId;
-                nodeIdAndComponentId.componentId = showPreviousWorkComponentId;
-                nodeIdAndComponentIds.push(nodeIdAndComponentId);
-              }
-            }
-          }
-        }
-      }
-    }
-    return nodeIdAndComponentIds;
-  }
-
-  /**
    * Get the branch letter in the node position string if the node is in a
    * branch path
    * @param nodeId the node id we want the branch letter for

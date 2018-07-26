@@ -103,36 +103,109 @@ var DiscussionService = function (_ComponentService) {
   }, {
     key: 'isCompleted',
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
-      var result = false;
+      if (this.hasShowWorkConnectedComponentThatHasWork(component)) {
+        if (this.hasNodeEnteredEvent(nodeEvents)) {
+          return true;
+        }
+      } else {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-      if (componentStates != null) {
+        try {
+          for (var _iterator = componentStates[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var componentState = _step.value;
 
-        // loop through all the component states
-        for (var c = 0; c < componentStates.length; c++) {
-
-          // the component state
-          var componentState = componentStates[c];
-
-          // get the student data from the component state
-          var studentData = componentState.studentData;
-
-          if (studentData != null) {
-            var response = studentData.response;
-
-            if (response != null) {
-              // there is a response so the component is completed
-              result = true;
-              break;
+            if (componentState.studentData.response != null) {
+              return true;
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
             }
           }
         }
       }
-
-      return result;
+      return false;
     }
   }, {
-    key: 'getPostsAssociatedWithWorkgroupId',
+    key: 'hasShowWorkConnectedComponentThatHasWork',
+    value: function hasShowWorkConnectedComponentThatHasWork(componentContent) {
+      var connectedComponents = componentContent.connectedComponents;
+      if (connectedComponents != null) {
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
 
+        try {
+          for (var _iterator2 = connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var connectedComponent = _step2.value;
+
+            if (connectedComponent.type == 'showWork') {
+              var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
+              if (componentStates.length > 0) {
+                return true;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
+      }
+      return false;
+    }
+  }, {
+    key: 'hasNodeEnteredEvent',
+    value: function hasNodeEnteredEvent(nodeEvents) {
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = nodeEvents[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var nodeEvent = _step3.value;
+
+          if (nodeEvent.event == 'nodeEntered') {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
+
+      return false;
+    }
 
     /**
      * Get all the posts associated with a workgroup id. This will
@@ -144,6 +217,9 @@ var DiscussionService = function (_ComponentService) {
      * top level posts and replies that are associated with the
      * workgroup
      */
+
+  }, {
+    key: 'getPostsAssociatedWithWorkgroupId',
     value: function getPostsAssociatedWithWorkgroupId(componentId, workgroupId) {
       var allPosts = [];
 

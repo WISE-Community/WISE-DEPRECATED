@@ -28,6 +28,8 @@ import java.util.Calendar;
 
 import javax.persistence.*;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.vle.domain.PersistableDomain;
 
 /**
@@ -36,10 +38,12 @@ import org.wise.vle.domain.PersistableDomain;
 @Entity
 @Table(name = "studentstatus",
   indexes = { @Index(columnList = "runId", name = "studentstatusRunIdIndex"), @Index(columnList = "workgroupId", name = "studentstatusWorkgroupIdIndex")} )
+@Getter
+@Setter
 public class StudentStatus extends PersistableDomain {
 
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id = null;
 
   @Column(name = "runId")
@@ -79,45 +83,5 @@ public class StudentStatus extends PersistableDomain {
   @Override
   protected Class<?> getObjectClass() {
     return StudentStatus.class;
-  }
-
-  public Long getRunId() {
-    return runId;
-  }
-
-  public void setRunId(Long runId) {
-    this.runId = runId;
-  }
-
-  public Long getPeriodId() {
-    return periodId;
-  }
-
-  public void setPeriodId(Long periodId) {
-    this.periodId = periodId;
-  }
-
-  public Long getWorkgroupId() {
-    return workgroupId;
-  }
-
-  public void setWorkgroupId(Long workgroupId) {
-    this.workgroupId = workgroupId;
-  }
-
-  public Timestamp getTimestamp() {
-    return timestamp;
-  }
-
-  public void setTimestamp(Timestamp timestamp) {
-    this.timestamp = timestamp;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
   }
 }

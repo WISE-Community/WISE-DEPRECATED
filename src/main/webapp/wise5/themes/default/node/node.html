@@ -19,17 +19,7 @@
                            icon="'info'"
                            icon-class="'info'"></help-icon>
             </div>
-            <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""'
-                       node-id='{{component.showPreviousWorkNodeId}}'
-                       component-id='{{component.showPreviousWorkComponentId}}'
-                       component-state='{{nodeController.getComponentStateByNodeIdAndComponentId(component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}'
-                       workgroup-id='{{nodeController.workgroupId}}'
-                       teacher-workgroup-id='{{nodeController.teacherWorkgroupId}}'
-                       original-node-id={{nodeController.nodeId}}
-                       original-component-id={{component.id}}
-                       mode='showPreviousWork'></component>
-            <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null || component.showPreviousWorkNodeId == "" || component.showPreviousWorkComponentId == ""'
-                       node-id='{{nodeController.nodeId}}'
+            <component node-id='{{nodeController.nodeId}}'
                        component-id='{{component.id}}'
                        component-state='{{nodeController.getComponentStateByComponentId(component.id)}}'
                        workgroup-id='{{nodeController.workgroupId}}'

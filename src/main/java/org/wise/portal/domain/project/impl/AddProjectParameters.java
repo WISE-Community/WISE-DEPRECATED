@@ -23,61 +23,25 @@
  */
 package org.wise.portal.domain.project.impl;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 /**
- * A form-backing obejct for WISE students when adding a
- * new project
+ * A form-backing obejct for WISE students when adding a new project
  *
  * @author Hiroki Terashima
  */
+@Getter
+@Setter
 public class AddProjectParameters implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
   private String projectcode;
-  private String runCode_part1;    // first part of projectcode, e.g. "Swan155"
-  private String runCode_part2;    // period, e.g. "1"
 
-  /**
-   * @return the projectcode
-   */
-  public String getProjectcode() {
-    return projectcode;
-  }
+  private String runCode_part1;  // first part of projectcode, e.g. "Swan155"
 
-  /**
-   * @param projectcode the projectcode to set
-   */
-  public void setProjectcode(String projectcode) {
-    this.projectcode = projectcode;
-  }
-
-  /**
-   * @return the runCode_part1
-   */
-  public String getRunCode_part1() {
-    return runCode_part1;
-  }
-
-  /**
-   * @param runCodePart1 the runCode_part1 to set
-   */
-  public void setRunCode_part1(String runCodePart1) {
-    runCode_part1 = runCodePart1;
-  }
-
-  /**
-   * @return the runCode_part2
-   */
-  public String getRunCode_part2() {
-    return runCode_part2;
-  }
-
-  /**
-   * @param runCodePart2 the runCode_part2 to set
-   */
-  public void setRunCode_part2(String runCodePart2) {
-    runCode_part2 = runCodePart2;
-  }
+  private String runCode_part2;  // period, e.g. "1"
 }

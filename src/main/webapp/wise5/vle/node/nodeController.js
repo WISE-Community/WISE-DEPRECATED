@@ -81,9 +81,9 @@ var NodeController = function () {
       if (latestComponentState) {
         var latestClientSaveTime = latestComponentState.clientSaveTime;
         if (latestComponentState.isSubmit) {
-          this.setSaveMessage(this.$translate('LAST_SUBMITTED'), latestClientSaveTime);
+          this.setSubmittedMessage(latestClientSaveTime);
         } else {
-          this.setSaveMessage(this.$translate('LAST_SAVED'), latestClientSaveTime);
+          this.setSavedMessage(latestClientSaveTime);
         }
       }
 
@@ -756,25 +756,45 @@ var NodeController = function () {
       return this.nodeContent != null && this.nodeContent.showSubmitButton;
     }
   }, {
-    key: 'setSaveMessage',
-
+    key: 'setSavedMessage',
+    value: function setSavedMessage(time) {
+      this.setSaveText(this.$translate('SAVED'), time);
+    }
+  }, {
+    key: 'setAutoSavedMessage',
+    value: function setAutoSavedMessage(time) {
+      this.setSaveText(this.$translate('AUTO_SAVED'), time);
+    }
+  }, {
+    key: 'setSubmittedMessage',
+    value: function setSubmittedMessage(time) {
+      this.setSaveText(this.$translate('SUBMITTED'), time);
+    }
 
     /**
      * Set the message next to the save button
      * @param message the message to display
      * @param time the time to display
      */
-    value: function setSaveMessage(message, time) {
+
+  }, {
+    key: 'setSaveText',
+    value: function setSaveText(message, time) {
       this.saveMessage.text = message;
       this.saveMessage.time = time;
     }
   }, {
-    key: 'startAutoSaveInterval',
-
+    key: 'clearSaveText',
+    value: function clearSaveText() {
+      this.setSaveText('', null);
+    }
 
     /**
      * Start the auto save interval for this node
      */
+
+  }, {
+    key: 'startAutoSaveInterval',
     value: function startAutoSaveInterval() {
       var _this2 = this;
 
@@ -898,14 +918,14 @@ var NodeController = function () {
                 var serverSaveTime = latestStudentWork.serverSaveTime;
                 var clientSaveTime = _this3.ConfigService.convertToClientTimestamp(serverSaveTime);
                 if (isAutoSave) {
-                  _this3.setSaveMessage(_this3.$translate('AUTO_SAVED'), clientSaveTime);
+                  _this3.setAutoSavedMessage(clientSaveTime);
                 } else if (isSubmit) {
-                  _this3.setSaveMessage(_this3.$translate('SUBMITTED'), clientSaveTime);
+                  _this3.setSubmittedMessage(clientSaveTime);
                 } else {
-                  _this3.setSaveMessage(_this3.$translate('SAVED'), clientSaveTime);
+                  _this3.setSavedMessage(clientSaveTime);
                 }
               } else {
-                _this3.setSaveMessage('', null);
+                _this3.clearSaveText();
               }
             }
             return savedStudentDataResponse;

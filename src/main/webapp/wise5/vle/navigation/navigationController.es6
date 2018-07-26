@@ -29,28 +29,6 @@ class NavigationController {
       }
     }.bind(this));
   }
-
-  /**
-   * Invokes OpenCPU to calculate and display student statistics
-   */
-  showStudentStatistics() {
-    let openCPUURL = this.ConfigService.getOpenCPUURL();
-    if (openCPUURL != null) {
-      let allEvents = this.StudentDataService.getEvents();
-      ocpu.seturl(openCPUURL);
-      const request = ocpu.call("getTotalTimeSpent", {
-        "events": allEvents
-      }, (session) => {
-        session.getStdout((echoedData) => {
-          alert(echoedData);
-        });
-      });
-
-      request.fail(() => {
-        alert(this.$translate('serverError') + request.responseText);
-      });
-    }
-  }
 }
 
 NavigationController.$inject = [

@@ -36,6 +36,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.newsitem.NewsItem;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
@@ -48,6 +50,8 @@ import org.wise.portal.domain.user.impl.UserImpl;
  */
 @Entity
 @Table(name = NewsItemImpl.DATA_STORE_NAME)
+@Getter
+@Setter
 public class NewsItemImpl implements NewsItem, Comparable<NewsItem> {
 
   @Transient
@@ -91,91 +95,10 @@ public class NewsItemImpl implements NewsItem, Comparable<NewsItem> {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id = null;
 
-  /**
-   * @return the news
-   */
-  public String getNews() {
-    return news;
-  }
-
-  /**
-   * @param news the news to set
-   */
-  public void setNews(String news) {
-    this.news = news;
-  }
-
-  /**
-   * @return the id
-   */
-  public Integer getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the date
-   */
-  public Date getDate() {
-    return date;
-  }
-
-  /**
-   * @param date the date to set
-   */
-  public void setDate(Date date) {
-    this.date = date;
-  }
-
-  /**
-   * @return the owner
-   */
-  public User getOwner() {
-    return owner;
-  }
-
-  /**
-   * @param owner the owner to set
-   */
-  public void setOwner(User owner) {
-    this.owner = owner;
-  }
-
-  /**
-   * @return the title
-   */
-  public String getTitle() {
-    return title;
-  }
-
-  /**
-   * @param title the title to set
-   */
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
   public int compareTo(NewsItem news){
     return news.getDate().compareTo(this.getDate());
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -187,9 +110,6 @@ public class NewsItemImpl implements NewsItem, Comparable<NewsItem> {
     return result;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)

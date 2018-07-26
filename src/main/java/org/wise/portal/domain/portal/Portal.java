@@ -164,5 +164,4 @@ public interface Portal extends Persistable {
    * @param projectMetadataSettings  project metadata settings string
    */
   void setProjectMetadataSettings(String projectMetadataSettings);
-
 }

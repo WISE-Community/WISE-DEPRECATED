@@ -23,6 +23,8 @@
  */
 package org.wise.vle.domain.work;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +48,8 @@ import java.util.Calendar;
 @Table(name = "notebookItems",  indexes = {
   @Index(columnList = "runId", name = "notebookItemsRunIdIndex"),
   @Index(columnList = "workgroupId", name = "notebookItemsWorkgroupIdIndex")})
+@Getter
+@Setter
 public class NotebookItem extends PersistableDomain {
 
   @Id
@@ -113,156 +117,12 @@ public class NotebookItem extends PersistableDomain {
     return NotebookItem.class;
   }
 
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-  public Run getRun() {
-    return run;
-  }
-
-  public void setRun(Run run) {
-    this.run = run;
-  }
-
-  public Group getPeriod() {
-    return period;
-  }
-
-  public void setPeriod(Group period) {
-    this.period = period;
-  }
-
-  public Workgroup getWorkgroup() {
-    return workgroup;
-  }
-
-  public void setWorkgroup(Workgroup workgroup) {
-    this.workgroup = workgroup;
-  }
-
-  public String getNodeId() {
-    return nodeId;
-  }
-
-  public void setNodeId(String nodeId) {
-    this.nodeId = nodeId;
-  }
-
-  public StudentWork getStudentWork() {
-    return studentWork;
-  }
-
-  public void setStudentWork(StudentWork studentWork) {
-    this.studentWork = studentWork;
-  }
-
-  public StudentAsset getStudentAsset() {
-    return studentAsset;
-  }
-
-  public void setStudentAsset(StudentAsset studentAsset) {
-    this.studentAsset = studentAsset;
-  }
-
-  public String getLocalNotebookItemId() {
-    return localNotebookItemId;
-  }
-
-  public void setLocalNotebookItemId(String localNotebookItemId) {
-    this.localNotebookItemId = localNotebookItemId;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public String getContent() {
-    return content;
-  }
-
-  public void setContent(String content) {
-    this.content = content;
-  }
-
-  public String getComponentId() {
-    return componentId;
-  }
-
-  public void setComponentId(String componentId) {
-    this.componentId = componentId;
-  }
-
-  public Timestamp getServerSaveTime() {
-    return serverSaveTime;
-  }
-
-  public void setServerSaveTime(Timestamp serverSaveTime) {
-    this.serverSaveTime = serverSaveTime;
-  }
-
-  public Timestamp getClientDeleteTime() {
-    return clientDeleteTime;
-  }
-
-  public void setClientDeleteTime(Timestamp clientDeleteTime) {
-    this.clientDeleteTime = clientDeleteTime;
-  }
-
-  public Timestamp getServerDeleteTime() {
-    return serverDeleteTime;
-  }
-
-  public void setServerDeleteTime(Timestamp serverDeleteTime) {
-    this.serverDeleteTime = serverDeleteTime;
-  }
-
-  public Timestamp getClientSaveTime() {
-    return clientSaveTime;
-  }
-
-  public void setClientSaveTime(Timestamp clientSaveTime) {
-    this.clientSaveTime = clientSaveTime;
-  }
-
-  public Integer getParentNotebookItemId() {
-    return parentNotebookItemId;
-  }
-
-  public void setParentNotebookItemId(Integer parentNotebookItemId) {
-    this.parentNotebookItemId = parentNotebookItemId;
-  }
-
-  public String getGroups() {
-    return groups;
-  }
-
-  public void setGroups(String groups) {
-    this.groups = groups;
-  }
-
   /**
    * Get the JSON representation of the NotebookItem
    * @return a JSONObject with the values from the NotebookItem
    */
   public JSONObject toJSON() {
     JSONObject notebookItemJSONObject = new JSONObject();
-
     try {
 
       if (id != null) {
@@ -342,7 +202,6 @@ public class NotebookItem extends PersistableDomain {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return notebookItemJSONObject;
   }
 

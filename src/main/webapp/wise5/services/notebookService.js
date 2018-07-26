@@ -108,18 +108,18 @@ var NotebookService = function () {
         isEditTextEnabled: isEditTextEnabled, isFileUploadEnabled: isFileUploadEnabled });
     }
   }, {
-    key: "deleteItem",
-    value: function deleteItem(itemId) {
-      var noteCopy = angular.copy(this.getLatestNotebookItemByLocalNotebookItemId(itemId));
+    key: "deleteNote",
+    value: function deleteNote(note) {
+      var noteCopy = angular.copy(note);
       noteCopy.id = null; // set to null so we're creating a new notebook item
       noteCopy.content.clientSaveTime = Date.parse(new Date());
       var clientDeleteTime = Date.parse(new Date());
       return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
     }
   }, {
-    key: "reviveItem",
-    value: function reviveItem(itemId) {
-      var noteCopy = angular.copy(this.getLatestNotebookItemByLocalNotebookItemId(itemId));
+    key: "reviveNote",
+    value: function reviveNote(note) {
+      var noteCopy = angular.copy(note);
       noteCopy.id = null; // set to null so we're creating a new notebook item
       noteCopy.content.clientSaveTime = Date.parse(new Date());
       var clientDeleteTime = null; // if delete timestamp is null, then we are in effect un-deleting this note item
@@ -133,15 +133,7 @@ var NotebookService = function () {
     value: function getLatestNotebookItemByLocalNotebookItemId(itemId) {
       var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.ConfigService.getWorkgroupId();
 
-      if (this.getNotebookByWorkgroup(workgroupId).items.hasOwnProperty(itemId)) {
-        var items = this.getNotebookByWorkgroup(workgroupId).items[itemId];
-        return items.last();
-      } else if (this.getNotebookByWorkgroup(workgroupId).deletedItems.hasOwnProperty(itemId)) {
-        var _items = this.getNotebookByWorkgroup(workgroupId).deletedItems[itemId];
-        return _items.last();
-      } else {
-        return null;
-      }
+      return this.getNotebookItemById(itemId, workgroupId);
     }
 
     // returns student's report item if they've done work, or the template if they haven't

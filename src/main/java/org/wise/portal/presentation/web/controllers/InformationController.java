@@ -494,7 +494,7 @@ public class InformationController {
       config.put("studentAssetManagerURL", contextPath + "/assetManager?type=studentAssetManager&runId=" + runId);
       config.put("runInfo", run.getInfo());
       config.put("isRealTimeEnabled", true);  // TODO: make this run-specific setting
-      config.put("webSocketURL", getWebSocketURL(request, contextPath));
+      config.put("webSocketURL", ControllerUtil.getWebSocketURL(request, contextPath));
       config.put("studentStatusURL", contextPath + "/studentStatus");
       config.put("runStatusURL", contextPath + "/runStatus");
       config.put("postLevel", run.getPostLevel());
@@ -576,27 +576,6 @@ public class InformationController {
     return ideaBasketURL;
   }
 
-  /**
-   * Get the websocket base url e.g. ws://wise4.berkeley.edu:8080
-   *
-   * if the websocket base url was not provided in the portal properties
-   * we will use the default websocket base url.
-   * e.g.
-   * ws://localhost:8080/wise
-   */
-  private String getWebSocketURL(HttpServletRequest request, String contextPath) {
-    String webSocketBaseURL = wiseProperties.getProperty("webSocketBaseUrl");
-    if (webSocketBaseURL == null) {
-      if (contextPath.contains("http")) {
-        webSocketBaseURL = contextPath.replace("http", "ws");
-      } else {
-        String portalContextPath = ControllerUtil.getPortalUrlString(request);
-        webSocketBaseURL = portalContextPath.replace("http", "ws");
-      }
-    }
-    return webSocketBaseURL + "/websocket";
-  }
-
   private void addRetrievalTimestamp(JSONObject config) throws JSONException {
     Calendar now = Calendar.getInstance();
     config.put("retrievalTimestamp", now.getTimeInMillis());
@@ -674,7 +653,7 @@ public class InformationController {
     config.put("annotationsURL", annotationsURL);
     config.put("runInfo", run.getInfo());
     config.put("isRealTimeEnabled", run.isRealTimeEnabled());
-    config.put("webSocketURL", getWebSocketURL(request, contextPath));
+    config.put("webSocketURL", ControllerUtil.getWebSocketURL(request, contextPath));
     config.put("studentStatusURL", studentStatusURL);
     config.put("runStatusURL", runStatusURL);
     config.put("userInfo", getUserInfo(run));
@@ -683,10 +662,6 @@ public class InformationController {
     config.put("studentNotebookURL", contextPath + "/student/notebook/" + runId);
     config.put("achievementURL", contextPath + "/achievement/" + runId);
     config.put("notificationURL", contextPath + "/notification/" + runId);
-    String openCPUURL = wiseProperties.getProperty("openCPUURL");
-    if (openCPUURL != null) {
-      config.put("openCPUURL", openCPUURL);
-    }
   }
 
   private void printConfigToResponse(HttpServletResponse response, JSONObject config) throws IOException {

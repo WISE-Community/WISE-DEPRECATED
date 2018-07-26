@@ -866,52 +866,60 @@ var GraphService = function (_ComponentService) {
     }
   }, {
     key: 'hasTrialData',
-
-
-    /**
-     * Check if the student data contains any trial data
-     * @param studentData student data from a component state
-     * @return whether the student data has trial data
-     */
     value: function hasTrialData(studentData) {
-      var result = false;
+      var trials = studentData.trials;
+      if (trials != null) {
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
 
-      if (studentData != null) {
-        var trials = studentData.trials;
+        try {
+          for (var _iterator2 = trials[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var trial = _step2.value;
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
 
-        if (trials != null) {
+            try {
+              for (var _iterator3 = trial.series[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var singleSeries = _step3.value;
 
-          // loop through all the trials
-          for (var t = 0; t < trials.length; t++) {
-
-            var trial = trials[t];
-
-            if (trial != null) {
-              var series = trial.series;
-
-              // loop through all the series
-              for (var s = 0; s < series.length; s++) {
-
-                // get a single series
-                var singleSeries = series[s];
-
-                if (singleSeries != null) {
-
-                  // get the data from the single series
-                  var data = singleSeries.data;
-
-                  if (data != null && data.length > 0) {
-                    // the single series has data
-                    return true;
-                  }
+                var seriesData = singleSeries.data;
+                if (seriesData != null && seriesData.length > 0) {
+                  return true;
+                }
+              }
+            } catch (err) {
+              _didIteratorError3 = true;
+              _iteratorError3 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                  _iterator3.return();
+                }
+              } finally {
+                if (_didIteratorError3) {
+                  throw _iteratorError3;
                 }
               }
             }
           }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
         }
       }
-
-      return result;
+      return false;
     }
   }, {
     key: 'componentStateHasStudentWork',
