@@ -3426,7 +3426,7 @@ class ProjectService {
              * the save button on this new component
              */
           } else {
-            if (this.doesAnyComponentShowSubmitButton(node.id)) {
+            if (this.doesAnyComponentInNodeShowSubmitButton(node.id)) {
               /*
                * at least one of the other components in the step are
                * showing a submit button so we will also show the save
@@ -3465,44 +3465,15 @@ class ProjectService {
   }
 
   /**
-   * Check if any of the components in the node are showing their save button
-   * @param nodeId the node id to check
-   * @return whether any of the components in the node show their save button
+   * Check if any of the components in the node are showing their submit button.
+   * @param nodeId {string} The node id to check.
+   * @return {boolean} Whether any of the components in the node show their submit button.
    */
-  doesAnyComponentShowSaveButton(nodeId) {
+  doesAnyComponentInNodeShowSubmitButton(nodeId) {
     const node = this.getNodeById(nodeId);
-    if (node != null) {
-      const components = node.components;
-      if (components != null) {
-        for (let component of components) {
-          if (component != null) {
-            if (component.showSaveButton == true) {
-              return true;
-            }
-          }
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Check if any of the components in the node are showing their submit button
-   * @param nodeId the node id to check
-   * @return whether any of the components in the node show their submit button
-   */
-  doesAnyComponentShowSubmitButton(nodeId) {
-    const node = this.getNodeById(nodeId);
-    if (node != null) {
-      const components = node.components;
-      if (components != null) {
-        for (let component of components) {
-          if (component != null) {
-            if (component.showSubmitButton == true) {
-              return true;
-            }
-          }
-        }
+    for (let component of node.components) {
+      if (component.showSubmitButton == true) {
+        return true;
       }
     }
     return false;
