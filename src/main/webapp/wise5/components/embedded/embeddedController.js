@@ -249,6 +249,13 @@ var EmbeddedController = function (_ComponentController) {
         parameters.componentId = this.componentId;
         message.parameters = parameters;
         this.sendMessageToApplication(message);
+      } else if (messageEventData.messageType === 'getProjectPath') {
+        var _message = {
+          messageType: 'projectPath',
+          projectPath: this.ConfigService.getConfigParam('projectBaseURL'),
+          projectAssetsPath: this.ConfigService.getConfigParam('projectBaseURL') + 'assets'
+        };
+        this.sendMessageToApplication(_message);
       }
     });
 
