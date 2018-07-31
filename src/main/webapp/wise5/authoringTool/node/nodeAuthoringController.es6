@@ -479,7 +479,7 @@ class NodeAuthoringController {
          * a component is hiding their submit button so we may need
          * to show the step save button
          */
-        if (this.ProjectService.doesAnyComponentShowSubmitButton(this.node.id)) {
+        if (this.ProjectService.doesAnyComponentInNodeShowSubmitButton(this.node.id)) {
           /*
            * there is at least one component in the step that is showing
            * their submit button so we will show the save button on
@@ -2836,7 +2836,7 @@ class NodeAuthoringController {
    * Check if we need to show the node save or node submit buttons
    */
   checkIfNeedToShowNodeSaveOrNodeSubmitButtons() {
-    if (this.ProjectService.doesAnyComponentShowSubmitButton(this.nodeId)) {
+    if (this.ProjectService.doesAnyComponentInNodeShowSubmitButton(this.nodeId)) {
       /*
        * there is a component in this step that is showing their
        * submit button

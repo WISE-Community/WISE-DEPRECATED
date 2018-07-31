@@ -372,7 +372,7 @@ var NodeAuthoringController = function () {
          * a component is hiding their submit button so we may need
          * to show the step save button
          */
-        if (_this.ProjectService.doesAnyComponentShowSubmitButton(_this.node.id)) {
+        if (_this.ProjectService.doesAnyComponentInNodeShowSubmitButton(_this.node.id)) {
           /*
            * there is at least one component in the step that is showing
            * their submit button so we will show the save button on
@@ -3208,7 +3208,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'checkIfNeedToShowNodeSaveOrNodeSubmitButtons',
     value: function checkIfNeedToShowNodeSaveOrNodeSubmitButtons() {
-      if (this.ProjectService.doesAnyComponentShowSubmitButton(this.nodeId)) {
+      if (this.ProjectService.doesAnyComponentInNodeShowSubmitButton(this.nodeId)) {
         /*
          * there is a component in this step that is showing their
          * submit button
