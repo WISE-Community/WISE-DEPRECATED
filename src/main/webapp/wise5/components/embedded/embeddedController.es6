@@ -243,6 +243,13 @@ class EmbeddedController extends ComponentController {
         parameters.componentId = this.componentId;
         message.parameters = parameters;
         this.sendMessageToApplication(message);
+      } else if (messageEventData.messageType === 'getProjectPath') {
+        const message = {
+          messageType: 'projectPath',
+          projectPath: this.ConfigService.getConfigParam('projectBaseURL'),
+          projectAssetsPath: this.ConfigService.getConfigParam('projectBaseURL') + 'assets'
+        };
+        this.sendMessageToApplication(message);
       }
     });
 
