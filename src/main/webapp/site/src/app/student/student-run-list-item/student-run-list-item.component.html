@@ -25,7 +25,8 @@
         </div>
         <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
         <div fxFlex="0 1 auto" fxFlex.xs="100%" fxHide fxShow.gt-xs>
-          <span *ngIf="!run.endTime" class="mat-card-title success">Started: {{ run.startTime | amDateFormat:'ll' }}</span>
+          <span *ngIf="!run.endTime && isNotAvailableYet" class="mat-card-title">Will start on: {{ run.startTime | amDateFormat:'ll' }}</span>
+          <span *ngIf="!run.endTime && !isNotAvailableYet" class="mat-card-title success">Started: {{ run.startTime | amDateFormat:'ll' }}</span>
           <span *ngIf="run.endTime" class="mat-card-title">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
         </div>
 
@@ -33,8 +34,8 @@
     </mat-card-content>
   <mat-card-actions>
     <span fxFlex="1 1 auto"></span>
-    <a mat-button *ngIf="!run.endTime" href="{{ problemLink }}" class="secondary-text">Report Problem</a>
-    <a mat-raised-button *ngIf="!run.endTime" href="{{ runLink }}" color="primary">Launch</a>
+    <a mat-button *ngIf="!run.endTime && !isNotAvailableYet" href="{{ problemLink }}" class="secondary-text">Report Problem</a>
+    <a mat-raised-button *ngIf="!run.endTime && !isNotAvailableYet" href="{{ runLink }}" color="primary">Launch</a>
     <a mat-button *ngIf="run.endTime" href="{{ runLink }}" class="secondary-text">Review</a>
   </mat-card-actions>
 </mat-card>
