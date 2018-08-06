@@ -50,49 +50,19 @@ var AudioOscillatorService = function (_ComponentService) {
   }, {
     key: 'isCompleted',
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-      var result = false;
-
       if (componentStates && componentStates.length) {
-        var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
-
-        if (submitRequired) {
-          // completion requires a submission, so check for isSubmit in any component states
-          for (var i = 0, l = componentStates.length; i < l; i++) {
-            var state = componentStates[i];
-            if (state.isSubmit && state.studentData) {
-              // component state is a submission
-              if (state.studentData.frequenciesPlayed != null && studentData.frequenciesPlayed.length > 0) {
-                // the student has played at least one frequency so the component is completed
-                result = true;
-                break;
-              }
-            }
-          }
-        } else {
-          // get the last component state
-          var _l = componentStates.length - 1;
-          var componentState = componentStates[_l];
-
-          var _studentData = componentState.studentData;
-
-          if (_studentData != null) {
-            if (_studentData.frequenciesPlayed != null && _studentData.frequenciesPlayed.length > 0) {
-              // the student has played at least one frequency so the component is completed
-              result = true;
-            }
-          }
-        }
+        var componentState = componentStates[componentStates.length - 1];
+        return this.componentStateHasStudentWork(componentState);
       }
-
-      return result;
+      return false;
     }
   }, {
     key: 'componentStateHasStudentWork',
     value: function componentStateHasStudentWork(componentState, componentContent) {
       if (componentState != null) {
-        var _studentData2 = componentState.studentData;
-        if (_studentData2 != null) {
-          if (_studentData2.frequenciesPlayed != null && _studentData2.frequenciesPlayed.length > 0) {
+        var studentData = componentState.studentData;
+        if (studentData != null) {
+          if (studentData.frequenciesPlayed != null && studentData.frequenciesPlayed.length > 0) {
             return true;
           }
         }
