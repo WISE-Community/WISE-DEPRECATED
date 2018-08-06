@@ -45,6 +45,8 @@ var StepToolsController = function () {
        * added, deleted, or moved a step
        */
 
+      _this.projectId = _this.ConfigService.getProjectId();
+
       // update the idToOrder mappings
       _this.idToOrder = _this.ProjectService.idToOrder;
 
