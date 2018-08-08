@@ -25,12 +25,12 @@ import {
   GoogleLoginProvider,
 } from "angular5-social-login";
 
-export function getAuthServiceConfigs() {
+export function getAuthServiceConfigs(configService: ConfigService) {
   let config = new AuthServiceConfig(
     [
       {
         id: GoogleLoginProvider.PROVIDER_ID,
-        provider: new GoogleLoginProvider("903533729693-4igjkdedq4ij5k48qnln43bmj5mdk24r.apps.googleusercontent.com")
+        provider: new GoogleLoginProvider(configService.getGoogleClientId())
       }
     ]);
   return config;
@@ -79,7 +79,10 @@ export function initialize(configService: ConfigService, userService: UserServic
     },
     {
       provide: AuthServiceConfig,
-      useFactory: getAuthServiceConfigs
+      useFactory: getAuthServiceConfigs,
+      deps: [
+        ConfigService
+      ]
     }
   ],
   bootstrap: [AppComponent]
