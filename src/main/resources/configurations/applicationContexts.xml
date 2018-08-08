@@ -46,6 +46,10 @@
 
   <!-- ======================== FILTER CHAIN ======================= -->
 
+  <!-- ======================== AUTHENTICATION ======================= -->
+
+  <context:component-scan base-package="org.wise.portal.presentation.web.config" />
+
   <bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
     <sec:filter-chain-map request-matcher="ant">
       <sec:filter-chain pattern="/**" filters="
@@ -53,6 +57,8 @@
           charsetFilter,
           httpSessionContextIntegrationFilter,
           logoutFilter,
+          oAuth2ClientContextFilter,
+          googleOpenIdConnectFilter,
           authenticationProcessingFilter,
           anonymousProcessingFilter,
           exceptionTranslationFilter,
@@ -60,8 +66,6 @@
           switchUserProcessingFilter" />
     </sec:filter-chain-map>
   </bean>
-
-  <!-- ======================== AUTHENTICATION ======================= -->
 
   <bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
     <constructor-arg>
@@ -77,6 +81,14 @@
     <property name="userDetailsService" ref="userDetailsService" />
     <property name="passwordEncoder" ref="passwordEncoder" />
     <property name="saltSource" ref="systemSaltSource" />
+  </bean>
+
+  <bean id="oAuth2ClientContextFilter" class="org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter" />
+
+  <bean id="googleOpenIdConnectFilter" class="org.wise.portal.presentation.web.filters.GoogleOpenIdConnectFilter">
+    <constructor-arg value="/google-login" />
+    <property name="authenticationSuccessHandler" ref="authSuccessHandler" />
+    <property name="authenticationFailureHandler" ref="authFailureHandler" />
   </bean>
 
   <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />

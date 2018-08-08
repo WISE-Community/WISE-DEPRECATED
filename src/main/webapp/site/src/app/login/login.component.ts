@@ -17,7 +17,8 @@ export class LoginComponent implements OnInit {
   credentials: any = {username: '', password: ''};
   error: boolean = false;
 
-  constructor(private userService: UserService, private http: HttpClient, private router: Router) {
+  constructor(private userService: UserService, private http: HttpClient,
+      private router: Router) {
   }
 
   login(): boolean {
@@ -30,5 +31,9 @@ export class LoginComponent implements OnInit {
       }
     });
     return false;
+  }
+
+  public socialSignIn(socialPlatform : string) {
+    window.location.href = "/wise/google-login";
   }
 }

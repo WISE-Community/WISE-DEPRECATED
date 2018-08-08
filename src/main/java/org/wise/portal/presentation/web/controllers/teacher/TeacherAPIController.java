@@ -1,26 +1,26 @@
 package org.wise.portal.presentation.web.controllers.teacher;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
+import org.wise.portal.service.user.UserService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Controller for Teacher REST API
@@ -41,6 +41,9 @@ public class TeacherAPIController {
 
   @Autowired
   private RunService runService;
+
+  @Autowired
+  private UserService userService;
 
   @RequestMapping(value = "/config", method = RequestMethod.GET)
   protected String getConfig(ModelMap modelMap) throws JSONException {
@@ -64,6 +67,31 @@ public class TeacherAPIController {
       projectsArray.put(getProjectJSON(project, projectRun));
     }
     return projectsArray.toString();
+  }
+
+  @ResponseBody
+  @RequestMapping(value = "/register", method = RequestMethod.POST)
+  protected String createTeacherAccount(
+    @RequestBody Map<String, String> teacherFields
+  ) throws DuplicateUsernameException {
+    TeacherUserDetails teacherUserDetails = new TeacherUserDetails();
+    teacherUserDetails.setFirstname(teacherFields.get("firstName"));
+    teacherUserDetails.setLastname(teacherFields.get("lastName"));
+    teacherUserDetails.setEmailAddress(teacherFields.get("email"));
+    teacherUserDetails.setCity(teacherFields.get("city"));
+    teacherUserDetails.setState(teacherFields.get("state"));
+    teacherUserDetails.setCountry(teacherFields.get("country"));
+    if (teacherFields.containsKey("googleUserId")) {
+      teacherUserDetails.setGoogleUserId(teacherFields.get("googleUserId"));
+      teacherUserDetails.setPassword(RandomStringUtils.random(10, true, true));
+    }
+    teacherUserDetails.setDisplayname(teacherUserDetails.getFirstname() + " " + teacherUserDetails.getLastname());
+    teacherUserDetails.setEmailValid(true);
+    teacherUserDetails.setSchoollevel(Schoollevel.valueOf(teacherFields.get("schoolLevel")));
+    teacherUserDetails.setSchoolname(teacherFields.get("schoolName"));
+    teacherUserDetails.setHowDidYouHearAboutUs(teacherFields.get("howDidYouHearAboutUs"));
+    User createdUser = this.userService.createUser(teacherUserDetails);
+    return createdUser.getUserDetails().getUsername();
   }
 
   private JSONObject getProjectJSON(Project project, Run projectRun) throws JSONException {

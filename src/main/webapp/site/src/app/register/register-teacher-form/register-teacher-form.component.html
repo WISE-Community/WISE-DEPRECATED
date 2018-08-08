@@ -1,0 +1,118 @@
+<div class="login mat-app-background" fxLayout="column"
+     fxLayoutAlign="start center">
+  <div class="login__logo">
+    <a routerLink="/">
+      <img src="assets/img/wise-web-logo-full.png" alt="WISE logo" />
+    </a>
+  </div>
+  <mat-card class="login__form">
+    <mat-card-content>
+      <form role="form" (submit)="createAccount()">
+        <h2 class="accent center">Sign in to WISE</h2>
+        <p class="warn center login__error inactive"
+           [ngClass]="{'active': error}">
+          Username and password not recognized. Please try again.
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="firstName"
+                   name="firstName"
+                   placeholder="First Name"
+                   [(ngModel)]="teacherUser.firstName"
+                   autofocus />
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="lastName"
+                   name="lastName"
+                   placeholder="Last Name"
+                   [(ngModel)]="teacherUser.lastName" />
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="email"
+                   name="email"
+                   placeholder="Email"
+                   [(ngModel)]="teacherUser.email" />
+          </mat-form-field>
+        </p>
+        <p>
+          We’ll occasionally send updates about your account to this inbox. We’ll never share your email address or personal information with anyone without your consent.
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="city"
+                   name="city"
+                   placeholder="City"
+                   [(ngModel)]="teacherUser.city" />
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="state"
+                   name="state"
+                   placeholder="State"
+                   [(ngModel)]="teacherUser.state" />
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="country"
+                   name="country"
+                   placeholder="Country"
+                   [(ngModel)]="teacherUser.country" />
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="schoolName"
+                   name="schoolName"
+                   placeholder="School Name"
+                   [(ngModel)]="teacherUser.schoolName" />
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <mat-select placeholder="School Level" [(value)]="teacherUser.schoolLevel">
+              <mat-option *ngFor="let schoolLevel of schoolLevels" [value]="schoolLevel">
+                {{schoolLevel}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="howDidYouHearAboutUs"
+                   name="howDidYouHearAboutUs"
+                   placeholder="How did you hear about us"
+                   [(ngModel)]="teacherUser.howDidYouHearAboutUs" />
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-checkbox>I agree to the <a href="/pages/privacy-terms.html" target="_blank">WISE Privacy Policy & Terms of Use</a></mat-checkbox>
+        </p>
+        <input id="googleUserId"
+               name="googleUserId"
+               placeholder="googleUserId"
+               type="hidden"
+               [(ngModel)]="teacherUser.googleUserId" />
+        <p>
+          <button fxFlex mat-raised-button color="primary" type="submit">
+            Create Account
+          </button>
+        </p>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+

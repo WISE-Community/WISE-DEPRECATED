@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2018 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -48,6 +48,10 @@ import org.wise.portal.service.authentication.AuthorityNotFoundException;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.portal.PortalService;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author Hiroki Terashima
  */
@@ -60,10 +64,8 @@ public class WISEAuthenticationSuccessHandler
   private PortalService portalService;
 
   @Override
-  public void onAuthenticationSuccess(javax.servlet.http.HttpServletRequest request,
-                                      javax.servlet.http.HttpServletResponse response,
-                                      Authentication authentication)
-      throws javax.servlet.ServletException, java.io.IOException {
+  public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+      Authentication authentication) throws ServletException, IOException {
     MutableUserDetails userDetails = (MutableUserDetails) authentication.getPrincipal();
     boolean userIsAdmin = false;
     if (userDetails instanceof StudentUserDetails) {
@@ -74,15 +76,19 @@ public class WISEAuthenticationSuccessHandler
         pLT = lastLoginTime.getTime();
       }
       this.setDefaultTargetUrl(WISEAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH + "?pLT=" + pLT);
-    }
-    else if (userDetails instanceof TeacherUserDetails) {
-      this.setDefaultTargetUrl(WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
+    } else if (userDetails instanceof TeacherUserDetails) {
+      if (request.getServletPath().contains("google-login")) {
+        // google login is only allowed for angular apps
+        String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/site/teacher");
+        return;
+      }
 
+      this.setDefaultTargetUrl(WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
       GrantedAuthority researcherAuth = null;
       try {
         researcherAuth = userDetailsService.loadAuthorityByName(UserDetailsService.RESEARCHER_ROLE);
       } catch (AuthorityNotFoundException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
       Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
@@ -96,7 +102,6 @@ public class WISEAuthenticationSuccessHandler
       try {
         adminAuth = userDetailsService.loadAuthorityByName(UserDetailsService.ADMIN_ROLE);
       } catch (AuthorityNotFoundException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
       for (GrantedAuthority authority : authorities) {

@@ -156,4 +156,12 @@ public interface UserService {
    * @return a User object or null if there is no user with the given reset password key
    */
   User retrieveByResetPasswordKey(String resetPasswordKey);
+
+  /**
+   * Assigns the specified role to the user. Does not save to database
+   * @param userDetails
+   * @param role
+   */
+  void assignRole(MutableUserDetails userDetails, final String role);
+
 }

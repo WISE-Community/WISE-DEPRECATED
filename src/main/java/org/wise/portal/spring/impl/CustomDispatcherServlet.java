@@ -55,17 +55,10 @@ public class CustomDispatcherServlet extends DispatcherServlet {
     this.addRequiredProperty(CONFIG_CLASS_PARAM);
   }
 
-  /**
-   * @param contextConfigClass
-   *            the contextConfigClass to set
-   */
   public void setContextConfigClass(String contextConfigClass) {
     this.contextConfigClass = contextConfigClass;
   }
 
-  /**
-   * @see org.springframework.web.servlet.FrameworkServlet#createWebApplicationContext(org.springframework.web.context.WebApplicationContext)
-   */
   @Override
   protected WebApplicationContext createWebApplicationContext(
     WebApplicationContext parent) throws BeansException {

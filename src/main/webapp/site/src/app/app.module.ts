@@ -17,6 +17,24 @@ import { UserService } from './services/user.service';
 import { TeacherService } from "./teacher/teacher.service";
 import { CommonModule } from "@angular/common";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { RegisterModule } from "./register/register.module";
+
+import {
+  SocialLoginModule,
+  AuthServiceConfig,
+  GoogleLoginProvider,
+} from "angular5-social-login";
+
+export function getAuthServiceConfigs() {
+  let config = new AuthServiceConfig(
+    [
+      {
+        id: GoogleLoginProvider.PROVIDER_ID,
+        provider: new GoogleLoginProvider("903533729693-4igjkdedq4ij5k48qnln43bmj5mdk24r.apps.googleusercontent.com")
+      }
+    ]);
+  return config;
+}
 
 export function initialize(configService: ConfigService, userService: UserService) {
   return () => {
@@ -40,8 +58,10 @@ export function initialize(configService: ConfigService, userService: UserServic
     HeaderModule,
     HomeModule,
     LoginModule,
+    RegisterModule,
     StudentModule,
-    TeacherModule
+    TeacherModule,
+    SocialLoginModule
   ],
   providers: [
     ConfigService,
@@ -56,6 +76,10 @@ export function initialize(configService: ConfigService, userService: UserServic
         UserService
       ],
       multi: true
+    },
+    {
+      provide: AuthServiceConfig,
+      useFactory: getAuthServiceConfigs
     }
   ],
   bootstrap: [AppComponent]

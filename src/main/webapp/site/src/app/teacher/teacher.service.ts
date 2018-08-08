@@ -4,11 +4,13 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, tap } from "rxjs/operators";
 import { of } from "rxjs/observable/of";
 import { Project } from "./project";
+import { Teacher } from "../domain/teacher";
 
 @Injectable()
 export class TeacherService {
 
   private projectsUrl = 'api/teacher/projects';
+  private registerUrl = 'api/teacher/register';
 
   constructor(private http: HttpClient) { }
 
@@ -19,6 +21,19 @@ export class TeacherService {
         tap(runs => this.log(`fetched projects`)),
         catchError(this.handleError('getProjects', []))
       );
+  }
+
+  registerTeacherAccount(teacherUser: Teacher, callback: any) {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    this.http.post(this.registerUrl,
+      teacherUser,
+      { headers: headers, responseType: "text" })
+      .subscribe(response => {
+        const userName = response;
+        callback(userName);
+      });
   }
 
   /**
