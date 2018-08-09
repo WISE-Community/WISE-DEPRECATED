@@ -40,6 +40,8 @@ class StepToolsController {
        * added, deleted, or moved a step
        */
 
+      this.projectId = this.ConfigService.getProjectId();
+
       // update the idToOrder mappings
       this.idToOrder = this.ProjectService.idToOrder;
 
