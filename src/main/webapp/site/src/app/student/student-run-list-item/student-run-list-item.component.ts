@@ -17,7 +17,7 @@ export class StudentRunListItemComponent implements OnInit {
   runLink: string = '';
   problemLink: string = '';
   thumbStyle: SafeStyle;
-  isNotAvailableYet: boolean = false;
+  isAvailable: boolean = true;
 
   constructor(private sanitizer: DomSanitizer, private configService: ConfigService) {
     this.sanitizer = sanitizer;
@@ -37,7 +37,7 @@ export class StudentRunListItemComponent implements OnInit {
     this.configService.getConfig().subscribe(config => {
       if (config != null) {
         if (this.run.startTime > config.currentTime) {
-          this.isNotAvailableYet = true;
+          this.isAvailable = false;
         }
       }
     });
