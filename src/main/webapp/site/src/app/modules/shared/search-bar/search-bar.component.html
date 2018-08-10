@@ -1,4 +1,5 @@
 <mat-form-field class="search-bar" [floatLabel]="floatLabel">
+  <mat-icon matPrefix>search</mat-icon>
   <input matInput type="text" placeholder="{{ placeholderText }}"  [(ngModel)]="value" [disabled]="disable"
     (ngModelChange)="changed($event)"/>
   <button mat-button matSuffix mat-icon-button [ngClass]="{'invisible': !value}" aria-label="Clear" (click)="clear()" >

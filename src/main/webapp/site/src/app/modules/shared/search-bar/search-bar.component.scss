@@ -1,4 +1,5 @@
-//@import '~@angular/material/theming';
+@import
+  '~style/abstracts/variables';
 
 .search-bar {
   width: 100%;
@@ -7,7 +8,7 @@
     display: flex;
     width: auto;
     padding: 0 .656em;
-    border-radius: 2px;
+    border-radius: $card-border-radius;
     line-height: 2.875em;
     margin-top: 1.4375em;
     //@include mat-elevation(1);
@@ -41,20 +42,25 @@
     top: -1.4375em;
   }
 
-  .mat-form-field-suffix {
-    .mat-icon-button {
+  .mat-form-field-suffix, .mat-form-field-prefix {
+    .mat-icon-button, .mat-icon {
       vertical-align: middle;
       line-height: 1em;
     }
   }
+
+  .mat-form-field-prefix {
+    margin-right: 4px;
+  }
+
 
   .mat-form-field-underline {
     height: 0;
 
     .mat-form-field-ripple {
       top: -2px;
-      border-bottom-left-radius: 2px;
-      border-bottom-right-radius: 2px;
+      border-bottom-left-radius: $card-border-radius;
+      border-bottom-right-radius: $card-border-radius;
     }
   }
 }
