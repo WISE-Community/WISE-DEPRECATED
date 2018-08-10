@@ -1,4 +1,7 @@
+@import
+  '~style/abstracts/variables';
+
 .info-block {
-  border-radius: 3px;
+  border-radius: $card-border-radius;
   padding: 8px;
 }

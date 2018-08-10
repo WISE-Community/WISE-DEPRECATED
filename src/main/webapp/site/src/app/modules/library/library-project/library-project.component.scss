@@ -23,7 +23,7 @@ $config: mat-typography-config();
   padding-top: 75%;
   background-size: cover;
   background-position: center;
-  border-radius: 2px;
+  border-radius: $card-border-radius;
 
   &:after {
     content: '';
@@ -33,7 +33,7 @@ $config: mat-typography-config();
     left: 0;
     right: 0;
     background-color: rgba(0,0,0,0.6);
-    border-radius: 2px;
+    border-radius: $card-border-radius;
     transition: background-color 280ms cubic-bezier(.4,0,.2,1);
   }
 }
@@ -57,7 +57,14 @@ $config: mat-typography-config();
   padding: 10px 12px;
   border-radius: 2px;
   color: #ffffff;
-  font-size: mat-font-size($config, subheading-2);
+
+  @media (min-width: breakpoint('md.min')) {
+    font-size: mat-font-size($config, body-1);
+  }
+
+  @media (min-width: breakpoint('lg.min')) {
+    font-size: mat-font-size($config, subheading-2);
+  }
 }
 
 .library-project__discipline {

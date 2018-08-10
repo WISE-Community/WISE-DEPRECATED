@@ -1,5 +1,13 @@
+@import
+  '~@angular/material/theming',
+  '~style/abstracts/variables',
+  '~style/abstracts/mixins',
+  '~style/abstracts/functions';
+
 .library {
   text-align: left;
+  border-radius: $card-border-radius;
+  overflow: hidden;
 
   h2 {
     font-weight: 400;
@@ -13,12 +21,27 @@
 
 .library__header {
   color: #ffffff;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
+  border-radius: 0;
+
+  @media (min-width: breakpoint('md.min')) {
+    margin-bottom: 0;
+  }
 
   .info-block {
     background-color: transparent;
-    margin-bottom: 0;
-    font-weight: 500;
+    padding: 0;
+    font-size: mat-font-size($config, subheading-2);
+  }
+}
+
+.library__content {
+  &.content-block {
+    background-color: transparent;
+  }
+
+  .notice {
+    margin-top: 0;
   }
 }
 

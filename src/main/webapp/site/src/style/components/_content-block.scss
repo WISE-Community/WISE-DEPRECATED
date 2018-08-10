@@ -1,6 +1,9 @@
+@import
+  '~style/abstracts/variables';
+
 .content-block {
   padding: 16px;
-  border-radius: 4px;
+  border-radius: $card-border-radius;
 
   @media (min-width: breakpoint('sm.min')) {
     padding: 24px;
