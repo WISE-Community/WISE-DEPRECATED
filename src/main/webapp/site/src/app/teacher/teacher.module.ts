@@ -10,19 +10,27 @@ import { TeacherProjectListItemComponent } from './teacher-project-list-item/tea
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MomentModule } from 'angular2-moment';
 import {
-  MatButtonModule,
-  MatCardModule, MatDividerModule,
-  MatIconModule, MatMenuModule, MatTabsModule
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatDatepickerModule,
+  MatDividerModule, MatIconModule, MatMenuModule, MatNativeDateModule,
+  MatRadioModule, MatTabsModule
 } from '@angular/material';
-import { ProjectRunMenuComponent } from './project-run-menu/project-run-menu.component';
+import {
+  CreateRunDialog,
+  ProjectRunMenuComponent
+} from './project-run-menu/project-run-menu.component';
 import { LibraryModule } from "../modules/library/library.module";
+
 
 const materialModules = [
   MatButtonModule,
-  MatDividerModule,
   MatCardModule,
+  MatCheckboxModule,
+  MatDatepickerModule,
+  MatDividerModule,
   MatIconModule,
   MatMenuModule,
+  MatNativeDateModule,
+  MatRadioModule,
   MatTabsModule
 ];
 @NgModule({
@@ -36,11 +44,15 @@ const materialModules = [
     TeacherRoutingModule
   ],
   declarations: [
+    CreateRunDialog,
     TeacherComponent,
     TeacherHomeComponent,
     TeacherProjectListComponent,
     TeacherProjectListItemComponent,
     ProjectRunMenuComponent
+  ],
+  entryComponents: [
+    CreateRunDialog
   ],
   providers: [
     AuthGuard

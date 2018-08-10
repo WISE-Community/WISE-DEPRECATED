@@ -23,23 +23,14 @@
  */
 package org.wise.portal.service.run.impl;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.GroupDao;
-import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.dao.project.ProjectDao;
+import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.announcement.Announcement;
@@ -55,9 +46,13 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.portal.PortalService;
+import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.DuplicateRunCodeException;
 import org.wise.portal.service.run.RunService;
-import org.wise.portal.service.portal.PortalService;
+import org.wise.portal.service.workgroup.WorkgroupService;
+
+import java.util.*;
 
 /**
  * Services for WISE Run
@@ -98,6 +93,12 @@ public class RunServiceImpl implements RunService {
 
   @Autowired
   protected AclService<Persistable> aclService;
+
+  @Autowired
+  private WorkgroupService workgroupService;
+
+  @Autowired
+  private ProjectService projectService;
 
   /**
    * @see RunService#getRunList()
@@ -186,7 +187,7 @@ public class RunServiceImpl implements RunService {
     Project project = runParameters.getProject();
     Run run = new RunImpl();
     run.setEndtime(null);
-    run.setStarttime(Calendar.getInstance().getTime());
+    run.setStarttime(runParameters.getStartTime());
     run.setRuncode(generateUniqueRunCode(runParameters.getLocale()));
     run.setOwner(runParameters.getOwner());
     run.setMaxWorkgroupSize(runParameters.getMaxWorkgroupSize());
@@ -228,6 +229,36 @@ public class RunServiceImpl implements RunService {
     this.runDao.save(run);
     this.aclService.addPermission(run, BasePermission.ADMINISTRATION);
     return run;
+  }
+
+  public Run createRun(Integer projectId, User user, Set<String> periodNames,
+        Integer studentsPerTeam, Long startDate, Locale locale) throws Exception {
+    Project project = projectService.copyProject(projectId, user);
+    RunParameters runParameters = createRunParameters(project, user, periodNames,
+        studentsPerTeam, startDate, locale);
+    Run run = createRun(runParameters);
+    createTeacherWorkgroup(run, user);
+    return run;
+  }
+
+  public RunParameters createRunParameters(Project project, User user, Set<String> periodNames,
+        Integer studentsPerTeam, Long startDate, Locale locale) {
+    RunParameters runParameters = new RunParameters();
+    runParameters.setOwner(user);
+    runParameters.setName(project.getName());
+    runParameters.setProject(project);
+    runParameters.setLocale(locale);
+    runParameters.setPostLevel(5);
+    runParameters.setPeriodNames(periodNames);
+    runParameters.setMaxWorkgroupSize(studentsPerTeam);
+    runParameters.setStartTime(new Date(startDate));
+    return runParameters;
+  }
+
+  private void createTeacherWorkgroup(Run run, User user) throws Exception {
+    HashSet<User> members = new HashSet<>();
+    members.add(user);
+    workgroupService.createWorkgroup("teacher", members, run, null);
   }
 
   /**

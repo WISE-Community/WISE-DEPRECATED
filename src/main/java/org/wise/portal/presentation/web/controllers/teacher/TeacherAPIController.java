@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
@@ -17,10 +18,8 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * Controller for Teacher REST API
@@ -108,5 +107,49 @@ public class TeacherAPIController {
       numStudents += members.size();
     }
     return numStudents;
+  }
+
+  @RequestMapping(value = "/run/create", method = RequestMethod.POST)
+  protected String createRun(HttpServletRequest request,
+                             @RequestParam("projectId") String projectId,
+                             @RequestParam("periods") String periods,
+                             @RequestParam("studentsPerTeam") String studentsPerTeam,
+                             @RequestParam("startDate") String startDate) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
+    Locale locale = request.getLocale();
+    Set<String> periodNames = createPeriodNamesSet(periods);
+    Run run = runService.createRun(Integer.parseInt(projectId), user, periodNames, Integer.parseInt(studentsPerTeam),
+        Long.parseLong(startDate), locale);
+    JSONObject createRunResponse = generateCreateRunResponse(run);
+    return createRunResponse.toString();
+  }
+
+  Set<String> createPeriodNamesSet(String periodsString) {
+    Set<String> periods = new TreeSet<String>();
+    String[] periodsSplit = periodsString.split(",");
+    for (String period : periodsSplit) {
+      periods.add(period.trim());
+    }
+    return periods;
+  }
+
+  JSONArray createPeriodNamesArray(Set<Group> periods) {
+    JSONArray periodsArray = new JSONArray();
+    for (Group period : periods) {
+      periodsArray.put(period.getName());
+    }
+    return periodsArray;
+  }
+
+  JSONObject generateCreateRunResponse(Run run) throws Exception {
+    JSONObject runJSON = new JSONObject();
+    runJSON.put("runId", run.getId());
+    runJSON.put("projectId", run.getProject().getId());
+    runJSON.put("runCode", run.getRuncode());
+    runJSON.put("runName", run.getName());
+    runJSON.put("periods", createPeriodNamesArray(run.getPeriods()));
+    runJSON.put("startTime", run.getStarttime().getTime());
+    runJSON.put("maxWorkgroupSize", run.getMaxWorkgroupSize());
+    return runJSON;
   }
 }

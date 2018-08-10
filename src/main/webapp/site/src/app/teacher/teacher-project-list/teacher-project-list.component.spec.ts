@@ -12,7 +12,7 @@ describe('TeacherProjectListComponent', () => {
   let fixture: ComponentFixture<TeacherProjectListComponent>;
 
   beforeEach(async(() => {
-    let teacherServiceStub = {
+    const teacherServiceStub = {
       isLoggedIn: true,
       getProjects(): Observable<Project[]> {
         let projects : any[] = [
