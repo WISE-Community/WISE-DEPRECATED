@@ -23,6 +23,7 @@
  */
 package org.wise.portal.presentation.web.controllers.student;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -106,8 +107,7 @@ public class TeamSignInController {
   private TeamSignInFormValidator teamSignInFormValidator;
 
   /**
-   * On submission of the Team Sign In form, the workgroup is updated and
-   * the project is launched.
+   * On submission of the Team Sign In form, the workgroup is updated and the project is launched.
    *
    * Assume that the usernames are valid usernames that exist in the data store
    *
@@ -342,9 +342,8 @@ public class TeamSignInController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  public String initializeForm(
-    ModelMap modelMap,
-    @RequestParam(value = "runId") Long runId) throws Exception {
+  public String initializeSignInForm(ModelMap modelMap, @RequestParam(value = "runId") Long runId)
+      throws Exception {
     User user = ControllerUtil.getSignedInUser();
     String signedInUsername = user.getUserDetails().getUsername();
 
@@ -355,11 +354,13 @@ public class TeamSignInController {
 
     try {
       Run run = runService.retrieveById(runId);
+      if (run.getStarttime().after(new Timestamp(System.currentTimeMillis()))) {
+        return "errors/friendlyerror";
+      }
       User signedInUser = ControllerUtil.getSignedInUser();
       if (!run.isStudentAssociatedToThisRun(signedInUser)) {
         return "student/index";
       }
-      // always use run's maxWorkgroupSize, if it's set
       Integer runMaxWorkgroupSize = run.getMaxWorkgroupSize();
       if (runMaxWorkgroupSize != null) {
         maxWorkgroupSize = runMaxWorkgroupSize;
@@ -374,7 +375,6 @@ public class TeamSignInController {
        * the project for the first time, the workgroup will not exist
        */
       Workgroup workgroup = studentRunInfo.getWorkgroup();
-
       if (workgroup != null) {
         Set<User> members = workgroup.getMembers();
         int numMembersCounter = 2;
@@ -421,8 +421,6 @@ public class TeamSignInController {
       modelMap.put("teamSignInForm", form);
       return "student/teamsignin";
     } catch (NumberFormatException nfe) {
-      // if there was an error (e.g. runId=abc or no runId specified,
-      // redirect to student homepage.
       return "student/index";
     }
   }
