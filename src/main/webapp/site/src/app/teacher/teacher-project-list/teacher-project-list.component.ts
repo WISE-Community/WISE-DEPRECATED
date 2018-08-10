@@ -21,7 +21,12 @@ export class TeacherProjectListComponent implements OnInit {
   ];
   filterValue: string = 'projectsAndRuns';
 
-  constructor(private teacherService: TeacherService) { }
+  constructor(private teacherService: TeacherService) {
+    teacherService.newProjectSource$.subscribe(project => {
+      this.projects.unshift(project);
+      this.performSearchAndFilter();
+    });
+  }
 
   ngOnInit() {
     this.getProjects();

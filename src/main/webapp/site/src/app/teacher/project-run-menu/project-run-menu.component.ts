@@ -2,6 +2,7 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Project } from "../project";
 import { TeacherService } from "../teacher.service";
+import { Run } from "../../domain/run";
 
 @Component({
   selector: 'app-project-run-menu',
@@ -28,10 +29,8 @@ export class ProjectRunMenuComponent implements OnInit {
       data: { project: this.project }
     });
 
-    const teacherService = this.teacherService;
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-      teacherService.getProjects().subscribe();
+      scrollTo(0, 0);
     });
   }
 }
@@ -78,8 +77,14 @@ export class CreateRunDialog {
     } else {
       this.teacherService.createRun(
         this.project.id, combinedPeriods, this.studentsPerTeam, this.startDate.getTime())
-        .subscribe((run) => {
-          this.dialogRef.close(run);
+        .subscribe((run: Run) => {
+          const project = new Project();
+          project.id = run.projectId;
+          project.name = run.name;
+          project.dateCreated = new Date().toString();
+          project.run = run;
+          this.teacherService.addNewProject(project);
+          this.dialogRef.close();
       });
     }
   }

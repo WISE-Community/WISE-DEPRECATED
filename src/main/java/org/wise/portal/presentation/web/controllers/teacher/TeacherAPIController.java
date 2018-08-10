@@ -143,13 +143,13 @@ public class TeacherAPIController {
 
   JSONObject generateCreateRunResponse(Run run) throws Exception {
     JSONObject runJSON = new JSONObject();
-    runJSON.put("runId", run.getId());
+    runJSON.put("id", run.getId());
     runJSON.put("projectId", run.getProject().getId());
-    runJSON.put("runCode", run.getRuncode());
-    runJSON.put("runName", run.getName());
+    runJSON.put("accessCode", run.getRuncode());
+    runJSON.put("name", run.getName());
     runJSON.put("periods", createPeriodNamesArray(run.getPeriods()));
     runJSON.put("startTime", run.getStarttime().getTime());
-    runJSON.put("maxWorkgroupSize", run.getMaxWorkgroupSize());
+    runJSON.put("numStudents", 0);
     return runJSON;
   }
 }
