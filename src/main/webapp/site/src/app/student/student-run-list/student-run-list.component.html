@@ -19,25 +19,7 @@
   <div *ngIf="search && loaded" class="notice">
     <p>Projects found: {{ filteredRuns.length }}</p>
   </div>
-  <div *ngIf="isAddingRun">
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="Project Code" value="" (keyup)="checkRunCode($event)">
-    </mat-form-field>
-    <mat-form-field>
-      <mat-select [disabled]="registerRunPeriods.length == 0" [(value)]="selectedPeriod" placeholder="Choose Period">
-        <mat-option *ngFor="let period of registerRunPeriods" value="{{ period }}">{{ period }}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <button mat-raised-button (click)="addRun()"
-        [disabled]="registerRunRunCode == '' || selectedPeriod == ''"
-        aria-label="Submit add project"
-        color="accent">
-      Submit
-    </button>
-    <button mat-raised-button (click)="cancelAddRun()" aria-label="Cancel add project" color="accent">
-      Cancel
-    </button>
-  </div>
+
   <div class="notice" *ngIf="!runs.length && loaded">
     <p>Hey there! Looks like you don't have any projects yet.</p>
     <p>Ask your teacher for an <b>Access Code</b> and then tap the <b>Add Project</b> button to get started.</p>

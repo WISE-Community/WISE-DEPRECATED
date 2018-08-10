@@ -41,6 +41,9 @@ import { AddProjectDialogComponent } from "./add-project-dialog/add-project-dial
     StudentRunListComponent,
     StudentRunListItemComponent
   ],
+  entryComponents: [
+    AddProjectDialogComponent
+  ],
   providers: [
     AuthGuard
   ],

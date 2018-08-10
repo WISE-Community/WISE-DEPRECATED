@@ -1,3 +1,24 @@
-<p>
-  add-project-dialog works!
-</p>
+<div>
+  <h2>Add a Project</h2>
+  <mat-form-field class="example-full-width add-run-input">
+    <input matInput placeholder="Project Code" value="" (keyup)="checkRunCode($event)">
+  </mat-form-field>
+  <mat-form-field class="add-run-input">
+    <mat-select [disabled]="registerRunPeriods.length == 0" [(value)]="selectedPeriod" placeholder="Choose Period">
+      <mat-option *ngFor="let period of registerRunPeriods" value="{{ period }}">{{ period }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-raised-button (click)="addRun()"
+          [disabled]="registerRunRunCode == '' || selectedPeriod == ''"
+          aria-label="Submit add project"
+          color="accent"
+          class="add-run-input">
+    Submit
+  </button>
+  <button mat-raised-button (click)="cancelAddRun()"
+          aria-label="Cancel add project"
+          color="accent"
+          class="add-run-input">
+    Cancel
+  </button>
+</div>
