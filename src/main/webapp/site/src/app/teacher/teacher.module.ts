@@ -14,10 +14,8 @@ import {
   MatDividerModule, MatIconModule, MatMenuModule, MatNativeDateModule,
   MatRadioModule, MatTabsModule
 } from '@angular/material';
-import {
-  CreateRunDialog,
-  ProjectRunMenuComponent
-} from './project-run-menu/project-run-menu.component';
+import { ProjectRunMenuComponent } from './project-run-menu/project-run-menu.component';
+import { CreateRunDialogComponent } from './project-run-menu/create-run-dialog.component';
 import { LibraryModule } from "../modules/library/library.module";
 
 
@@ -44,7 +42,7 @@ const materialModules = [
     TeacherRoutingModule
   ],
   declarations: [
-    CreateRunDialog,
+    CreateRunDialogComponent,
     TeacherComponent,
     TeacherHomeComponent,
     TeacherProjectListComponent,
@@ -52,7 +50,7 @@ const materialModules = [
     ProjectRunMenuComponent
   ],
   entryComponents: [
-    CreateRunDialog
+    CreateRunDialogComponent
   ],
   providers: [
     AuthGuard
