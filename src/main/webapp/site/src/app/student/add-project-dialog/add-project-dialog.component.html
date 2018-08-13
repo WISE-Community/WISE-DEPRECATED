@@ -2,8 +2,8 @@
   <h2>Add a Project</h2>
   <form [formGroup]="addProjectForm">
     <mat-form-field class="example-full-width add-run-input">
-      <input name="runCode" matInput placeholder="Run Code" value="" (keyup)="checkRunCode($event)" [formControl]="runCodeFormControl">
-      <mat-error *ngIf="runCodeFormControl.hasError('invalidRunCodeSyntax') || runCodeFormControl.hasError('invalidRunCode')">Invalid Run Code</mat-error>
+      <input name="runCode" matInput placeholder="Project Code" value="" (keyup)="checkRunCode($event)" [formControl]="runCodeFormControl">
+      <mat-error *ngIf="runCodeFormControl.hasError('invalidRunCodeSyntax') || runCodeFormControl.hasError('invalidRunCode')">Invalid Project Code</mat-error>
     </mat-form-field>
     <mat-form-field class="add-run-input">
       <mat-select [disabled]="registerRunPeriods.length == 0" [(value)]="selectedPeriod" placeholder="Choose Period">
@@ -25,7 +25,7 @@
     </button>
     <div class="already-added-run-error-message-div">
       <div></div>
-      <div><mat-error *ngIf="alreadyAddedRun">You have already added this run</mat-error></div>
+      <div><mat-error *ngIf="alreadyAddedRun">You have already added this project</mat-error></div>
       <div></div>
     </div>
   </form>
