@@ -23,5 +23,10 @@
             class="add-run-input">
       Cancel
     </button>
+    <div class="already-added-run-error-message-div">
+      <div></div>
+      <div><mat-error *ngIf="alreadyAddedRun">You have already added this run</mat-error></div>
+      <div></div>
+    </div>
   </form>
 </div>

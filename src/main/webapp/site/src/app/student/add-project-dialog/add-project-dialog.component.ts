@@ -18,6 +18,7 @@ export class AddProjectDialogComponent implements OnInit {
   addProjectForm: FormGroup = new FormGroup({
     runCode: this.runCodeFormControl
   });
+  alreadyAddedRun: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<AddProjectDialogComponent>,
       private studentService: StudentService) {
@@ -29,7 +30,7 @@ export class AddProjectDialogComponent implements OnInit {
   addRun() {
     this.studentService.addRun(this.registerRunRunCode, this.selectedPeriod).subscribe((studentRun) => {
       if (studentRun.error) {
-        alert(studentRun.error);
+        this.alreadyAddedRun = true;
       } else {
         this.studentService.addNewProject(studentRun);
         this.endAddRun();
@@ -55,6 +56,7 @@ export class AddProjectDialogComponent implements OnInit {
   checkRunCode(event: KeyboardEvent) {
     const runCode = (<HTMLInputElement>event.target).value;
     this.registerRunRunCode = runCode;
+    this.alreadyAddedRun = false;
     if (this.isValidRunCodeSyntax(runCode)) {
       this.studentService.getRunInfo(runCode).subscribe(runInfo => {
         if (runInfo.error) {
