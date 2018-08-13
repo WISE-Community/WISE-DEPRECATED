@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card [ngClass]="{ 'highlighted': project.highlighted }">
   <mat-card-content fxLayout="row">
     <div mat-card-avatar [style.background-image]="thumbStyle"></div>
     <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>

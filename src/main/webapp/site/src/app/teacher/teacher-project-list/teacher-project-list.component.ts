@@ -23,6 +23,7 @@ export class TeacherProjectListComponent implements OnInit {
 
   constructor(private teacherService: TeacherService) {
     teacherService.newProjectSource$.subscribe(project => {
+      project.highlighted = true;
       this.projects.unshift(project);
       this.performSearchAndFilter();
     });
