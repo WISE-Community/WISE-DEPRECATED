@@ -23,9 +23,6 @@
  */
 package org.wise.portal.service.run;
 
-import java.util.List;
-import java.util.Set;
-
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +33,10 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * A service for working with <code>Run</code> objects
@@ -53,6 +54,9 @@ public interface RunService {
    * @return the run created.
    */
   Run createRun(RunParameters runParameters) throws ObjectNotFoundException;
+
+  Run createRun(Integer projectId, User user, Set<String> periodNames, Integer studentsPerTeam,
+      Long startDate, Locale locale) throws Exception;
 
   /**
    * Ends this run. The side effect is that the run's endtime gets set.

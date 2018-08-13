@@ -7,6 +7,10 @@
       <mat-icon>tv</mat-icon>
       <span>Preview</span>
     </a>
+    <a *ngIf="!project.run" mat-menu-item (click)="showCreateRunDialog()">
+      <mat-icon>play_arrow</mat-icon>
+      <span>Create Run</span>
+    </a>
     <a *ngIf="project.run" mat-menu-item href="{{ editLink }}">
       <mat-icon>edit</mat-icon>
       <span>Edit Project Content</span>

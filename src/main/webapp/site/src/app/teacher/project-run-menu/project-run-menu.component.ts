@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Project } from "../project";
+import { TeacherService } from "../teacher.service";
+import { CreateRunDialogComponent } from "../create-run-dialog/create-run-dialog.component";
 
 @Component({
   selector: 'app-project-run-menu',
@@ -14,11 +17,20 @@ export class ProjectRunMenuComponent implements OnInit {
   editLink: string = '';
   previewLink: string = '';
 
-  constructor() { }
+  constructor(public dialog: MatDialog, public teacherService: TeacherService) { }
 
   ngOnInit() {
     this.editLink = `/wise/author/authorproject.html?projectId=${ this.project.id }`;
     this.previewLink = `/wise/previewproject.html?projectId=${ this.project.id }`;
   }
 
+  showCreateRunDialog() {
+    const dialogRef = this.dialog.open(CreateRunDialogComponent, {
+      data: { project: this.project }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      scrollTo(0, 0);
+    });
+  }
 }

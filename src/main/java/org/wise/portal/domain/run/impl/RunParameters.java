@@ -20,13 +20,11 @@
  */
 package org.wise.portal.domain.run.impl;
 
-import java.io.Serializable;
-import java.util.Locale;
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * @author Laurel Williams
@@ -56,6 +54,8 @@ public class RunParameters implements Serializable {
   private Locale locale;
 
   private Boolean enableRealTime = false;
+
+  private Date startTime = Calendar.getInstance().getTime();
 
   /**
    * @return the name of this run
@@ -125,6 +125,14 @@ public class RunParameters implements Serializable {
    */
   public String getManuallyEnteredPeriods(){
     return this.manuallyEnteredPeriods;
+  }
+
+  public Date getStartTime() {
+    return startTime;
+  }
+
+  public void setStartTime(Date startTime) {
+    this.startTime = startTime;
   }
 
   /**

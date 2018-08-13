@@ -7,4 +7,5 @@ export class Project {
   dateArchived: string;
   thumbIconPath: string;
   run: Run;
+  highlighted: boolean;
 }

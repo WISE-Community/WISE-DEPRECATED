@@ -13,6 +13,15 @@ import { DebugElement, DebugNode } from "@angular/core";
 import { By } from "@angular/platform-browser";
 import { TeacherHomeComponent } from "./teacher-home.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { defer } from "rxjs/observable/defer";
+
+/**
+ *  Create async observable that emits-once and completes
+ *  after a JS engine turn
+ */
+export function fakeAsyncResponse<T>(data: T) {
+  return defer(() => Promise.resolve(data));
+}
 
 describe('TeacherHomeComponent', () => {
   let component: TeacherHomeComponent;
@@ -29,7 +38,8 @@ describe('TeacherHomeComponent', () => {
           observer.next(projects);
           observer.complete();
         });
-      }
+      },
+      newProjectSource$: fakeAsyncResponse([{id: 3, name: "Global Climate Change"}])
     };
 
     let userServiceStub = {
