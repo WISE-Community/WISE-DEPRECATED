@@ -13,7 +13,7 @@ export class TeacherService {
   private projectsUrl = 'api/teacher/projects';
   private createRunUrl = 'api/teacher/run/create';
   private newProjectSource = new Subject<Project>();
-  newProjectSource$ = this.newProjectSource.asObservable();
+  public newProjectSource$ = this.newProjectSource.asObservable();
 
   constructor(private http: HttpClient) { }
 

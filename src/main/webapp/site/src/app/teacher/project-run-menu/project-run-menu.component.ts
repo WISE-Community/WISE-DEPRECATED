@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Project } from "../project";
 import { TeacherService } from "../teacher.service";
-import { CreateRunDialogComponent } from "./create-run-dialog.component";
+import { CreateRunDialogComponent } from "../create-run-dialog/create-run-dialog.component";
 
 @Component({
   selector: 'app-project-run-menu',

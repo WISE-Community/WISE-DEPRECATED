@@ -11,11 +11,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MomentModule } from 'angular2-moment';
 import {
   MatButtonModule, MatCardModule, MatCheckboxModule, MatDatepickerModule,
-  MatDividerModule, MatIconModule, MatMenuModule, MatNativeDateModule,
-  MatRadioModule, MatTabsModule
+  MatDialogModule, MatDialog, MatDialogRef, MatDividerModule, MatIconModule,
+  MatMenuModule, MatNativeDateModule, MatRadioModule, MatTabsModule
 } from '@angular/material';
 import { ProjectRunMenuComponent } from './project-run-menu/project-run-menu.component';
-import { CreateRunDialogComponent } from './project-run-menu/create-run-dialog.component';
+import { CreateRunDialogComponent } from './create-run-dialog/create-run-dialog.component';
 import { LibraryModule } from "../modules/library/library.module";
 
 
@@ -24,6 +24,7 @@ const materialModules = [
   MatCardModule,
   MatCheckboxModule,
   MatDatepickerModule,
+  MatDialogModule,
   MatDividerModule,
   MatIconModule,
   MatMenuModule,

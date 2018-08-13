@@ -4,6 +4,9 @@ import { TeacherModule } from "../teacher.module";
 import { Observable } from "rxjs/Observable";
 import { TeacherService } from "../teacher.service";
 import { CreateRunDialogComponent } from "./create-run-dialog.component";
+import { MatDialogRef } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { BrowserAnimationsModule } from "../../../../../../../../node_modules/@angular/platform-browser/animations";
 
 describe('CreateRunDialogComponent', () => {
   let component: CreateRunDialogComponent;
@@ -24,9 +27,13 @@ describe('CreateRunDialogComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [ TeacherModule ],
+      imports: [ TeacherModule, BrowserAnimationsModule ],
       declarations: [ ],
-      providers: [ {provide: TeacherService, useValue: teacherServiceStub}]
+      providers: [
+        {provide: TeacherService, useValue: teacherServiceStub},
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: [] }
+        ]
     })
       .compileComponents();
   }));
