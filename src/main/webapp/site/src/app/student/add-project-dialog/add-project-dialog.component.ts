@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
 import { StudentService } from "../student.service";
+import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-add-project-dialog',
@@ -9,15 +10,17 @@ import { StudentService } from "../student.service";
 })
 export class AddProjectDialogComponent implements OnInit {
 
-  isFormValid: boolean;
-  validRunCode: boolean = false;
+  validRunCodeSyntaxRegEx: any = /^[a-zA-Z]*\d\d\d$/;
   registerRunRunCode: string = '';
   registerRunPeriods: string[] = [];
   selectedPeriod: string = '';
+  runCodeFormControl = new FormControl('', [runCodeValidator(this.validRunCodeSyntaxRegEx)]);
+  addProjectForm: FormGroup = new FormGroup({
+    runCode: this.runCodeFormControl
+  });
 
   constructor(public dialogRef: MatDialogRef<AddProjectDialogComponent>,
       private studentService: StudentService) {
-    this.isFormValid = false;
   }
 
   ngOnInit() {
@@ -55,20 +58,25 @@ export class AddProjectDialogComponent implements OnInit {
     if (this.isValidRunCodeSyntax(runCode)) {
       this.studentService.getRunInfo(runCode).subscribe(runInfo => {
         if (runInfo.error) {
-          this.validRunCode = false;
           this.clearPeriods();
+          this.addProjectForm.controls['runCode'].setErrors({'invalidRunCode': true});
         } else {
-          this.validRunCode = true;
           this.registerRunPeriods = runInfo.periods;
         }
       });
     } else {
-      this.validRunCode = false;
       this.clearPeriods();
     }
   }
 
   isValidRunCodeSyntax(runCode: string) {
-    return /^[a-zA-Z]*\d\d\d/.test(runCode);
+    return this.validRunCodeSyntaxRegEx.test(runCode);
   }
+}
+
+export function runCodeValidator(validRunCodeSyntaxRegEx: any): ValidatorFn {
+  return (control: AbstractControl): {[key: string]: any} | null => {
+    const valid = validRunCodeSyntaxRegEx.test(control.value);
+    return valid ? null : {'invalidRunCodeSyntax': true};
+  };
 }

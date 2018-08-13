@@ -23,11 +23,14 @@ import { StudentRunListComponent } from './student-run-list/student-run-list.com
 import { StudentRunListItemComponent } from './student-run-list-item/student-run-list-item.component';
 import { AuthGuard } from "./auth.guard";
 import { AddProjectDialogComponent } from "./add-project-dialog/add-project-dialog.component";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
   imports: [
     CommonModule,
     FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
     MomentModule,
     materialModules,
     SharedModule,
