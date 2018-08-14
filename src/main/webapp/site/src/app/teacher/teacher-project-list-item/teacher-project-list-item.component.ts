@@ -33,5 +33,10 @@ export class TeacherProjectListItemComponent implements OnInit {
     if (this.project.run != null) {
       this.gradeAndManageLink = `/wise/teacher/run/manage/${ this.project.run.id }`;
     }
+    if (this.project.highlighted) {
+      setTimeout(() => {
+        this.project.highlighted = false;
+      }, 5000)
+    }
   }
 }

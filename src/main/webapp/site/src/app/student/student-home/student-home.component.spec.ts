@@ -10,6 +10,8 @@ import { StudentModule } from "../student.module";
 import { StudentHomeComponent } from "./student-home.component";
 import { RouterTestingModule } from "@angular/router/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ConfigService } from "../../services/config.service";
+import { Config } from "../../domain/config";
 
 export function fakeAsyncResponse<T>(data: T) {
   return defer(() => Promise.resolve(data));
@@ -20,7 +22,7 @@ describe('StudentHomeComponent', () => {
   let fixture: ComponentFixture<StudentHomeComponent>;
 
   beforeEach(async(() => {
-    let studentServiceStub = {
+    const studentServiceStub = {
       isLoggedIn: true,
       getRuns(): Observable<StudentRun[]> {
         let runs : any[] = [
@@ -44,7 +46,7 @@ describe('StudentHomeComponent', () => {
       })
     };
 
-    let userServiceStub = {
+    const userServiceStub = {
       getUser(): Observable<User[]> {
         const user: User = new User();
         user.firstName = 'Demo';
@@ -59,12 +61,23 @@ describe('StudentHomeComponent', () => {
       }
     };
 
+    const configServiceStub = {
+      getConfig(): Observable<Config> {
+        const config : Config = {"context":"vle","logOutURL":"/logout","currentTime":20180730};
+        return Observable.create( observer => {
+          observer.next(config);
+          observer.complete();
+        });
+      }
+    };
+
     TestBed.configureTestingModule({
       declarations: [],
       providers: [
         { provide: StudentService, useValue: studentServiceStub },
         { provide: UserService, useValue: userServiceStub },
-        { provide: MatDialog, useValue: {} }
+        { provide: MatDialog, useValue: {} },
+        { provide: ConfigService, useValue: configServiceStub }
       ],
       imports: [ BrowserAnimationsModule, StudentModule, RouterTestingModule ]
     })

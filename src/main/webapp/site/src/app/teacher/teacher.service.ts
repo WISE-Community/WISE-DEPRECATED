@@ -4,11 +4,16 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, tap } from "rxjs/operators";
 import { of } from "rxjs/observable/of";
 import { Project } from "./project";
+import { Run } from "../domain/run";
+import { Subject } from "rxjs/Subject";
 
 @Injectable()
 export class TeacherService {
 
   private projectsUrl = 'api/teacher/projects';
+  private createRunUrl = 'api/teacher/run/create';
+  private newProjectSource = new Subject<Project>();
+  public newProjectSource$ = this.newProjectSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -40,5 +45,17 @@ export class TeacherService {
     console.log('TeacherService: ' + message);
   }
 
+  createRun(projectId: number, periods: string, studentsPerTeam: number, startDate: number): Observable<Run> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('projectId', projectId + "");
+    body = body.set('periods', periods);
+    body = body.set('studentsPerTeam', studentsPerTeam + "");
+    body = body.set('startDate', startDate + "");
+    return this.http.post<Run>(this.createRunUrl, body, { headers: headers });
+  }
 
+  addNewProject(project: Project) {
+    this.newProjectSource.next(project);
+  }
 }

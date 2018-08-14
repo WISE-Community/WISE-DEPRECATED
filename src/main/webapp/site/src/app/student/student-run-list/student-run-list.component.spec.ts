@@ -7,6 +7,9 @@ import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
 import { StudentModule } from "../student.module";
 import { StudentRunListComponent } from "./student-run-list.component";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ConfigService } from "../../services/config.service";
+import { Config } from "../../domain/config";
 
 export function fakeAsyncResponse<T>(data: T) {
   return defer(() => Promise.resolve(data));
@@ -17,27 +20,36 @@ describe('StudentRunListComponent', () => {
   let fixture: ComponentFixture<StudentRunListComponent>;
 
   beforeEach(async(() => {
-    let studentServiceStub = {
-      isLoggedIn: true,
-      getRuns(): Observable<StudentRun[]> {
-        let runs : any[] = [{id:1,name:"Photosynthesis"},{id:2,name:"Plate Tectonics"}];
+    const studentServiceStub = {
+        isLoggedIn: true,
+        getRuns(): Observable<StudentRun[]> {
+          const runs : any[] = [{id:1,name:"Photosynthesis"},{id:2,name:"Plate Tectonics"}];
+          return Observable.create( observer => {
+              observer.next(runs);
+              observer.complete();
+          });
+    },
+    newRunSource$: fakeAsyncResponse({
+      id: 12345,
+      name: "Test Project",
+      runCode: "Panda123",
+      periodName: "1",
+      startTime: "2018-08-22 00:00:00.0",
+      teacherDisplayName: "Spongebob Squarepants",
+      teacherFirstName: "Spongebob",
+      teacherLastName: "Squarepants",
+      projectThumb: "/wise/curriculum/360/assets/project_thumb.png"
+    })
+    };
+    const configServiceStub = {
+      getConfig(): Observable<Config> {
+        const config : Config = {"context":"vle","logOutURL":"/logout","currentTime":20180730};
         return Observable.create( observer => {
-            observer.next(runs);
-            observer.complete();
+          observer.next(config);
+          observer.complete();
         });
-      },
-      newRunSource$: fakeAsyncResponse({
-        id: 12345,
-        name: "Test Project",
-        runCode: "Panda123",
-        periodName: "1",
-        startTime: "2018-08-22 00:00:00.0",
-        teacherDisplayName: "Spongebob Squarepants",
-        teacherFirstName: "Spongebob",
-        teacherLastName: "Squarepants",
-        projectThumb: "/wise/curriculum/360/assets/project_thumb.png"
-      })
-    }
+      }
+    };
     TestBed.configureTestingModule({
       declarations: [],
       imports: [
@@ -46,7 +58,8 @@ describe('StudentRunListComponent', () => {
       ],
       providers: [
         { provide: StudentService, useValue: studentServiceStub },
-        { provide: MatDialog, useValue: {} }
+        { provide: ConfigService, useValue: configServiceStub },
+    { provide: MatDialog, useValue: {} }
       ]
     })
     .compileComponents();
