@@ -81,10 +81,18 @@ public interface UserService {
   List<User> retrieveUserByEmailAddress(String emailAddress);
 
   /**
-   * Retrieve a list of users whose accounts have been disabled
+   * Retrieve user with the given google user id.
    *
-   * @return <code>Users</code> whose accounts have been disabled
+   * @param googleUserId
+   * @return <code>User</code> with the given google user id.
    */
+  User retrieveUserByGoogleUserId(String googleUserId);
+
+    /**
+     * Retrieve a list of users whose accounts have been disabled
+     *
+     * @return <code>Users</code> whose accounts have been disabled
+     */
   List<User> retrieveDisabledUsers();
 
   /**

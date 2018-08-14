@@ -5,12 +5,14 @@ import { catchError, tap } from "rxjs/operators";
 import { of } from "rxjs/observable/of";
 import { Project } from "./project";
 import { Teacher } from "../domain/teacher";
+import { User } from "../domain/user";
 
 @Injectable()
 export class TeacherService {
 
   private projectsUrl = 'api/teacher/projects';
   private registerUrl = 'api/teacher/register';
+  private checkGoogleUserIdUrl = 'api/teacher/checkGoogleUserId';
 
   constructor(private http: HttpClient) { }
 
@@ -34,6 +36,18 @@ export class TeacherService {
         const userName = response;
         callback(userName);
       });
+  }
+
+  isGoogleIdExists(googleUserId: string) {
+    let params = new HttpParams().set("googleUserId", googleUserId);
+    return this.http.get<User>(this.checkGoogleUserIdUrl, { params: params });
+    /*
+      .pipe(
+        tap((googleIdExists) => {
+          callback(googleIdExists);
+        }),
+        catchError(this.handleError('isGoogleIdExists', googleUserId)));
+        */
   }
 
   /**

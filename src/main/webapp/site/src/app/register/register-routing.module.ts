@@ -6,6 +6,7 @@ import { RegisterTeacherComponent } from "./register-teacher/register-teacher.co
 import { RegisterHomeComponent } from "./register-home/register-home.component";
 import { RegisterTeacherFormComponent } from "./register-teacher-form/register-teacher-form.component";
 import { RegisterTeacherCompleteComponent } from "./register-teacher-complete/register-teacher-complete.component";
+import { RegisterTeacherGoogleUserAlreadyExistsComponent } from "./register-teacher-google-user-already-exists/register-teacher-google-user-already-exists.component";
 
 const registerRoutes: Routes = [
   {
@@ -15,7 +16,8 @@ const registerRoutes: Routes = [
       { path: '', component: RegisterHomeComponent },
       { path: 'join/teacher', component: RegisterTeacherComponent },
       { path: 'join/teacher/complete', component: RegisterTeacherCompleteComponent },
-      { path: 'join/teacher/form', component: RegisterTeacherFormComponent }
+      { path: 'join/teacher/form', component: RegisterTeacherFormComponent },
+      { path: 'join/teacher/googleUserAlreadyExists', component: RegisterTeacherGoogleUserAlreadyExistsComponent }
     ]
   }
 ];

@@ -94,6 +94,12 @@ public class TeacherAPIController {
     return createdUser.getUserDetails().getUsername();
   }
 
+  @ResponseBody
+  @RequestMapping(value = "/checkGoogleUserId", method = RequestMethod.GET)
+  protected boolean isGoogleIdExist(@RequestParam String googleUserId) {
+    return this.userService.retrieveUserByGoogleUserId(googleUserId) != null;
+  }
+
   private JSONObject getProjectJSON(Project project, Run projectRun) throws JSONException {
     JSONObject projectJSON = new JSONObject();
     projectJSON.put("id", project.getId());

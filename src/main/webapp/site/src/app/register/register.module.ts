@@ -13,6 +13,7 @@ import {
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RegisterTeacherFormComponent } from './register-teacher-form/register-teacher-form.component';
 import { RegisterTeacherCompleteComponent } from './register-teacher-complete/register-teacher-complete.component';
+import { RegisterTeacherGoogleUserAlreadyExistsComponent } from './register-teacher-google-user-already-exists/register-teacher-google-user-already-exists.component';
 
 const materialModules = [
   MatButtonModule,
@@ -37,7 +38,8 @@ const materialModules = [
     RegisterHomeComponent,
     RegisterTeacherComponent,
     RegisterTeacherFormComponent,
-    RegisterTeacherCompleteComponent
+    RegisterTeacherCompleteComponent,
+    RegisterTeacherGoogleUserAlreadyExistsComponent
   ],
   exports: [ RegisterComponent ]
 })

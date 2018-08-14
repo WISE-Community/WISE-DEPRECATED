@@ -99,6 +99,11 @@ public class UserServiceImpl implements UserService {
     return this.userDao.retrieveByEmailAddress(emailAddress);
   }
 
+  @Transactional(readOnly = true)
+  public User retrieveUserByGoogleUserId(String googleUserId) {
+    return this.userDao.retrieveByGoogleUserId(googleUserId);
+  }
+
   /**
    * @see UserService#createUser(MutableUserDetails)
    */
