@@ -41,5 +41,10 @@ export class StudentRunListItemComponent implements OnInit {
         }
       }
     });
+    if (this.run.isHighlighted) {
+      setTimeout(() => {
+        this.run.isHighlighted = false;
+      }, 5000)
+    }
   }
 }

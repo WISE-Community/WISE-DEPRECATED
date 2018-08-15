@@ -10,14 +10,14 @@
         <mat-option *ngFor="let period of registerRunPeriods" value="{{ period }}">{{ period }}</mat-option>
       </mat-select>
     </mat-form-field>
-    <button mat-raised-button (click)="addRun()"
+    <button mat-raised-button (click)="submit()"
             [disabled]="registerRunRunCode == '' || selectedPeriod == ''"
             aria-label="Submit add project"
             color="accent"
             class="add-run-input">
       Submit
     </button>
-    <button mat-raised-button (click)="cancelAddRun()"
+    <button mat-raised-button (click)="cancel()"
             aria-label="Cancel add project"
             color="accent"
             class="add-run-input">
