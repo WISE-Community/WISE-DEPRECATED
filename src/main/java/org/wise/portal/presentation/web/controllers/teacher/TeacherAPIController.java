@@ -20,6 +20,7 @@ import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -142,5 +143,49 @@ public class TeacherAPIController {
       numStudents += members.size();
     }
     return numStudents;
+  }
+
+  @RequestMapping(value = "/run/create", method = RequestMethod.POST)
+  protected String createRun(HttpServletRequest request,
+                             @RequestParam("projectId") String projectId,
+                             @RequestParam("periods") String periods,
+                             @RequestParam("studentsPerTeam") String studentsPerTeam,
+                             @RequestParam("startDate") String startDate) throws Exception {
+    User user = ControllerUtil.getSignedInUser();
+    Locale locale = request.getLocale();
+    Set<String> periodNames = createPeriodNamesSet(periods);
+    Run run = runService.createRun(Integer.parseInt(projectId), user, periodNames, Integer.parseInt(studentsPerTeam),
+        Long.parseLong(startDate), locale);
+    JSONObject createRunResponse = generateCreateRunResponse(run);
+    return createRunResponse.toString();
+  }
+
+  Set<String> createPeriodNamesSet(String periodsString) {
+    Set<String> periods = new TreeSet<String>();
+    String[] periodsSplit = periodsString.split(",");
+    for (String period : periodsSplit) {
+      periods.add(period.trim());
+    }
+    return periods;
+  }
+
+  JSONArray createPeriodNamesArray(Set<Group> periods) {
+    JSONArray periodsArray = new JSONArray();
+    for (Group period : periods) {
+      periodsArray.put(period.getName());
+    }
+    return periodsArray;
+  }
+
+  JSONObject generateCreateRunResponse(Run run) throws Exception {
+    JSONObject runJSON = new JSONObject();
+    runJSON.put("id", run.getId());
+    runJSON.put("projectId", run.getProject().getId());
+    runJSON.put("accessCode", run.getRuncode());
+    runJSON.put("name", run.getName());
+    runJSON.put("periods", createPeriodNamesArray(run.getPeriods()));
+    runJSON.put("startTime", run.getStarttime().getTime());
+    runJSON.put("numStudents", 0);
+    return runJSON;
   }
 }

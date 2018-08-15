@@ -6,13 +6,23 @@ import { Observable } from "rxjs/Observable";
 import { Project } from "../project";
 import { TeacherModule } from "../teacher.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { defer } from "rxjs/observable/defer";
+
+/**
+ *  Create async observable that emits-once and completes
+ *  after a JS engine turn
+ */
+export function fakeAsyncResponse<T>(data: T) {
+  return defer(() => Promise.resolve(data));
+}
 
 describe('TeacherProjectListComponent', () => {
   let component: TeacherProjectListComponent;
   let fixture: ComponentFixture<TeacherProjectListComponent>;
 
   beforeEach(async(() => {
-    let teacherServiceStub = {
+
+    const teacherServiceStub = {
       isLoggedIn: true,
       getProjects(): Observable<Project[]> {
         let projects : any[] = [
@@ -22,7 +32,8 @@ describe('TeacherProjectListComponent', () => {
           observer.next(projects);
           observer.complete();
         });
-      }
+      },
+      newProjectSource$: fakeAsyncResponse([{id: 3, name: "Global Climate Change"}])
     };
 
     TestBed.configureTestingModule({

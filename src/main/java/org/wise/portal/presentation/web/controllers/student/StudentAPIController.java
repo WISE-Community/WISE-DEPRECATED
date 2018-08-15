@@ -51,6 +51,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -277,6 +278,7 @@ public class StudentAPIController {
     String wiseBaseURL = (String) wiseProperties.get("wiseBaseURL");
     configJSON.put("wiseBaseURL", wiseBaseURL);
     configJSON.put("logOutURL", wiseBaseURL + "/logout");
+    configJSON.put("currentTime", new Timestamp(System.currentTimeMillis()));
     return configJSON.toString();
   }
 

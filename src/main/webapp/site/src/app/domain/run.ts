@@ -7,4 +7,5 @@ export class Run {
   projectThumb: string;
   startTime: number;
   numStudents: number;
+  periods: string[];
 }
