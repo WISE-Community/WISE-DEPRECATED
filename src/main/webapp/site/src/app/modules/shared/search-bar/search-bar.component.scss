@@ -42,10 +42,12 @@
     top: -1.4375em;
   }
 
-  .mat-form-field-suffix, .mat-form-field-prefix {
-    .mat-icon-button, .mat-icon {
-      vertical-align: middle;
-      line-height: 1em;
+  &.mat-form-field-appearance-legacy {
+    .mat-form-field-suffix, .mat-form-field-prefix {
+      .mat-icon-button, .mat-icon {
+        vertical-align: middle;
+        line-height: 1.125em;
+      }
     }
   }
 
@@ -55,7 +57,7 @@
 
 
   .mat-form-field-underline {
-    height: 0;
+    max-height: 0;
 
     .mat-form-field-ripple {
       top: -2px;
