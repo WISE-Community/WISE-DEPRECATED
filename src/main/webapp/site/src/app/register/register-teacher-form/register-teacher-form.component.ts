@@ -19,7 +19,7 @@ export class RegisterTeacherFormComponent implements OnInit {
     password: ['', [Validators.required]],
     confirmPassword: ['', [Validators.required]]
   }, { validator: this.passwordMatchValidator });
-  createTeacherAccountForm: FormGroup = this.fb.group({
+  createTeacherAccountFormGroup: FormGroup = this.fb.group({
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required]),
@@ -38,16 +38,24 @@ export class RegisterTeacherFormComponent implements OnInit {
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.teacherUser.googleUserId = params['gID'];
-      if (this.teacherUser.googleUserId == null) {
-        this.createTeacherAccountForm.addControl('passwords', this.passwordsFormGroup);
+      if (!this.isUsingGoogleId()) {
+        this.createTeacherAccountFormGroup.addControl('passwords', this.passwordsFormGroup);
       }
       const name = params['name'];
       if (name != null) {
-        this.createTeacherAccountForm.controls['firstName'].patchValue(this.getFirstName(name));
-        this.createTeacherAccountForm.controls['lastName'].patchValue(this.getLastName(name));
+        this.setControlFieldValue('firstName', this.getFirstName(name));
+        this.setControlFieldValue('lastName', this.getLastName(name));
       }
-      this.createTeacherAccountForm.controls['email'].patchValue(params['email']);
+      this.setControlFieldValue('email', params['email']);
     });
+  }
+
+  isUsingGoogleId() {
+    return this.teacherUser.googleUserId != null;
+  }
+
+  setControlFieldValue(name: string, value: string) {
+    this.createTeacherAccountFormGroup.controls[name].setValue(value);
   }
 
   getFirstName(fullName: string) {
@@ -68,14 +76,18 @@ export class RegisterTeacherFormComponent implements OnInit {
   }
 
   populateTeacherUser() {
-    for (let key of Object.keys(this.createTeacherAccountForm.controls)) {
-      this.teacherUser[key] = this.createTeacherAccountForm.controls[key].value;
+    for (let key of Object.keys(this.createTeacherAccountFormGroup.controls)) {
+      this.teacherUser[key] = this.createTeacherAccountFormGroup.get(key).value;
     }
-    if (this.teacherUser['googleUserId'] == "") {
-      this.teacherUser['password'] = (<FormGroup> this.createTeacherAccountForm.controls['passwords']).controls['password'].value;
+    if (!this.isUsingGoogleId()) {
+      this.teacherUser['password'] = this.getPassword();
       delete this.teacherUser['passwords'];
       delete this.teacherUser['googleUserId'];
     }
+  }
+
+  getPassword() {
+    return this.passwordsFormGroup.controls['password'].value;
   }
 
   passwordMatchValidator(passwordsFormGroup: FormGroup) {
@@ -84,16 +96,18 @@ export class RegisterTeacherFormComponent implements OnInit {
     if (password == confirmPassword) {
       return null;
     } else {
-      passwordsFormGroup.controls['confirmPassword'].setErrors({'passwordDoesNotMatch': true});
-      return { 'passwordDoesNotMatch': true };
+      const error = { 'passwordDoesNotMatch': true };
+      passwordsFormGroup.controls['confirmPassword'].setErrors(error);
+      return error;
     }
   }
 
-  agreeCheckboxValidator(createTeacherAccountForm: FormGroup) {
-    const agree = createTeacherAccountForm.controls['agree'].value;
+  agreeCheckboxValidator(createTeacherAccountFormGroup: FormGroup) {
+    const agree = createTeacherAccountFormGroup.get('agree').value;
     if (!agree) {
-      createTeacherAccountForm.setErrors({ 'agreeNotChecked': true });
-      return { 'agreeNotChecked': true };
+      const error = { 'agreeNotChecked': true };
+      createTeacherAccountFormGroup.setErrors(error);
+      return error;
     }
     return null;
   }
