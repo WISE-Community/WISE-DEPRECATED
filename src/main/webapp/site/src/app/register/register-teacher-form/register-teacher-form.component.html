@@ -112,7 +112,7 @@
                    formControlName="howDidYouHearAboutUs" />
           </mat-form-field>
         </p>
-        <div formGroupName="passwords">
+        <div *ngIf="teacherUser.googleUserId == null" formGroupName="passwords">
           <p>
             <mat-form-field fxFlex>
               <input matInput

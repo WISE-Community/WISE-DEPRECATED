@@ -2,7 +2,7 @@ import { User } from "./user";
 
 export class Teacher extends User {
   email: string;
-  googleUserId: number;
+  googleUserId: string;
   city: string;
   state: string;
   country: string;

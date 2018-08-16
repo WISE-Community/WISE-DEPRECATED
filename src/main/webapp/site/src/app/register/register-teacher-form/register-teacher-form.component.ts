@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Teacher } from "../../domain/teacher";
 import { TeacherService } from "../../teacher/teacher.service";
-import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
+import { FormControl, FormGroup, Validators, FormBuilder, ValidatorFn,
+  AbstractControl } from "@angular/forms";
 
 @Component({
   selector: 'app-register-teacher-form',
@@ -28,7 +29,6 @@ export class RegisterTeacherFormComponent implements OnInit {
     schoolName: new FormControl('', [Validators.required]),
     schoolLevel: new FormControl('', [Validators.required]),
     howDidYouHearAboutUs: new FormControl(''),
-    passwords: this.passwordsFormGroup,
     agree: new FormControl('')
   }, { validator: this.agreeCheckboxValidator });
 
@@ -38,6 +38,9 @@ export class RegisterTeacherFormComponent implements OnInit {
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.teacherUser.googleUserId = params['gID'];
+      if (this.teacherUser.googleUserId == null) {
+        this.createTeacherAccountForm.addControl('passwords', this.passwordsFormGroup);
+      }
       const name = params['name'];
       if (name != null) {
         this.createTeacherAccountForm.controls['firstName'].patchValue(this.getFirstName(name));
@@ -68,9 +71,9 @@ export class RegisterTeacherFormComponent implements OnInit {
     for (let key of Object.keys(this.createTeacherAccountForm.controls)) {
       this.teacherUser[key] = this.createTeacherAccountForm.controls[key].value;
     }
-    this.teacherUser['password'] = this.createTeacherAccountForm.controls['passwords'].controls['password'].value;
-    delete this.teacherUser['passwords'];
     if (this.teacherUser['googleUserId'] == "") {
+      this.teacherUser['password'] = (<FormGroup> this.createTeacherAccountForm.controls['passwords']).controls['password'].value;
+      delete this.teacherUser['passwords'];
       delete this.teacherUser['googleUserId'];
     }
   }
@@ -87,15 +90,10 @@ export class RegisterTeacherFormComponent implements OnInit {
   }
 
   agreeCheckboxValidator(createTeacherAccountForm: FormGroup) {
-    const isBothPasswordsFilled =
-        (<FormGroup> createTeacherAccountForm.controls['passwords']).controls['password'].value != "" &&
-        (<FormGroup> createTeacherAccountForm.controls['passwords']).controls['confirmPassword'].value != "";
-    if (isBothPasswordsFilled) {
-      const agree = createTeacherAccountForm.controls['agree'].value;
-      if (!agree) {
-        createTeacherAccountForm.setErrors({ 'agreeNotChecked': true });
-        return { 'agreeNotChecked': true };
-      }
+    const agree = createTeacherAccountForm.controls['agree'].value;
+    if (!agree) {
+      createTeacherAccountForm.setErrors({ 'agreeNotChecked': true });
+      return { 'agreeNotChecked': true };
     }
     return null;
   }
