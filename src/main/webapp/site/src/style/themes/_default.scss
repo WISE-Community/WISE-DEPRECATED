@@ -97,7 +97,7 @@ $default: mat-light-theme(
 $default-mat-light-theme-background: (
   status-bar: map_get($mat-grey, 400),
   app-bar:    map_get($mat-grey, 300),
-  background: map_get($mat-grey, 200),
+  background: map_get($mat-grey, 100),
   hover:      rgba(black, 0.04), // TODO(kara): check style with Material Design UX
   card:       white,
   dialog:     white,
