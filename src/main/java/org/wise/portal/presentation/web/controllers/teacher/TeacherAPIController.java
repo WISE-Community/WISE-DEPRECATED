@@ -1,7 +1,6 @@
 package org.wise.portal.presentation.web.controllers.teacher;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,6 +84,8 @@ public class TeacherAPIController {
     if (teacherFields.containsKey("googleUserId")) {
       teacherUserDetails.setGoogleUserId(teacherFields.get("googleUserId"));
       teacherUserDetails.setPassword(RandomStringUtils.random(10, true, true));
+    } else {
+      teacherUserDetails.setPassword(teacherFields.get("password"));
     }
     teacherUserDetails.setDisplayname(teacherUserDetails.getFirstname() + " " + teacherUserDetails.getLastname());
     teacherUserDetails.setEmailValid(true);

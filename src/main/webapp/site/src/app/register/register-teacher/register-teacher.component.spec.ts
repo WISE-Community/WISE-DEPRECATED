@@ -14,6 +14,18 @@ describe('RegisterTeacherComponent', () => {
   let fixture: ComponentFixture<RegisterTeacherComponent>;
 
   beforeEach(async(() => {
+    const teacherServiceStub = {
+      isLoggedIn: true,
+      getProjects(): Observable<Project[]> {
+        let projects : any[] = [
+          {id: 1, name: "Photosynthesis"}, {id: 2, name: "Plate Tectonics"}
+        ];
+        return Observable.create( observer => {
+          observer.next(projects);
+          observer.complete();
+        });
+      }
+    };
     const authServiceStub = {
       signIn(): any {
       }
@@ -22,7 +34,8 @@ describe('RegisterTeacherComponent', () => {
       declarations: [ ],
       imports: [ BrowserAnimationsModule, RegisterModule, RouterTestingModule ],
       providers: [
-        { provide: AuthService, useValue: authServiceStub }
+        { provide: AuthService, useValue: authServiceStub },
+        { provide: TeacherService, useValue: teacherServiceStub }
       ]
     })
     .compileComponents();

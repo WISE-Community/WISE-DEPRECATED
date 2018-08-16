@@ -10,7 +10,7 @@ import { TeacherService } from "../../teacher/teacher.service";
 })
 export class RegisterTeacherComponent implements OnInit {
 
-  email: string;
+  email: string = "";
 
   constructor(private socialAuthService: AuthService,
       private teacherService: TeacherService, private router: Router) {}
