@@ -8,7 +8,7 @@ import { AuthGuard } from "./auth.guard";
 import { TeacherProjectListComponent } from './teacher-project-list/teacher-project-list.component';
 import { TeacherProjectListItemComponent } from './teacher-project-list-item/teacher-project-list-item.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MomentModule } from 'angular2-moment';
+import { MomentModule } from 'ngx-moment';
 import {
   MatButtonModule,
   MatCardModule, MatDividerModule,
