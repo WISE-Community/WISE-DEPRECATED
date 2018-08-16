@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from "@angular/material/dialog";
 import { StudentService } from "../student.service";
-import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
+import { AbstractControl, FormControl, FormGroup, ValidatorFn } from "@angular/forms";
 
 @Component({
   selector: 'app-add-project-dialog',
@@ -27,25 +27,23 @@ export class AddProjectDialogComponent implements OnInit {
   ngOnInit() {
   }
 
-  addRun() {
+  submit() {
     this.studentService.addRun(this.registerRunRunCode, this.selectedPeriod).subscribe((studentRun) => {
       if (studentRun.error) {
         this.alreadyAddedRun = true;
       } else {
         this.studentService.addNewProject(studentRun);
-        this.endAddRun();
-        this.dialogRef.close();
+        this.closeDialog();
       }
     });
   }
 
-  endAddRun() {
-    this.clearPeriods();
-    this.dialogRef.close();
+  cancel() {
+    this.closeDialog();
   }
 
-  cancelAddRun() {
-    this.endAddRun();
+  closeDialog() {
+    this.dialogRef.close();
   }
 
   clearPeriods() {

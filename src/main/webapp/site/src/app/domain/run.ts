@@ -8,4 +8,5 @@ export class Run {
   startTime: number;
   numStudents: number;
   periods: string[];
+  isHighlighted: boolean;
 }

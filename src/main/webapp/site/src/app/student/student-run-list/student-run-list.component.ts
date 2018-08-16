@@ -27,6 +27,7 @@ export class StudentRunListComponent implements OnInit {
 
   constructor(private studentService: StudentService, public dialog: MatDialog) {
     studentService.newRunSource$.subscribe(run => {
+      run.isHighlighted = true;
       this.runs.unshift(run);
     });
   }
