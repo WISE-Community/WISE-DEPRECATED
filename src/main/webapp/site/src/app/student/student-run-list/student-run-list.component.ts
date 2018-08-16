@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
+import { AddProjectDialogComponent } from "../add-project-dialog/add-project-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-student-run-list',
@@ -22,12 +24,13 @@ export class StudentRunListComponent implements OnInit {
   ];
   sortValue: string = 'startTimeDesc';
   loaded: boolean = false; // whether array of runs has been retrieved from server
-  isAddingRun: boolean = false;
-  registerRunRunCode: string = '';
-  registerRunPeriods: string[] = [];
-  selectedPeriod: string = '';
 
-  constructor(private studentService: StudentService) { }
+  constructor(private studentService: StudentService, public dialog: MatDialog) {
+    studentService.newRunSource$.subscribe(run => {
+      run.isHighlighted = true;
+      this.runs.unshift(run);
+    });
+  }
 
   ngOnInit() {
     this.getRuns();
@@ -117,51 +120,10 @@ export class StudentRunListComponent implements OnInit {
   }
 
   showAddRun() {
-    this.isAddingRun = true;
-  }
+    const dialogRef = this.dialog.open(AddProjectDialogComponent);
 
-  addRun() {
-    this.studentService.addRun(this.registerRunRunCode, this.selectedPeriod).subscribe((studentRun) => {
-      if (studentRun.error) {
-        alert(studentRun.error);
-      } else {
-        this.runs.unshift(studentRun);
-        this.endAddRun();
-      }
+    dialogRef.afterClosed().subscribe(result => {
+      scrollTo(0, 0);
     });
-  }
-
-  endAddRun() {
-    this.isAddingRun = false;
-    this.clearPeriods();
-  }
-
-  cancelAddRun() {
-    this.endAddRun();
-  }
-
-  clearPeriods() {
-    this.selectedPeriod = '';
-    this.registerRunPeriods = [];
-  }
-
-  checkRunCode(event: KeyboardEvent) {
-    const runCode = (<HTMLInputElement>event.target).value;
-    this.registerRunRunCode = runCode;
-    if (this.isValidRunCodeSyntax(runCode)) {
-      this.studentService.getRunInfo(runCode).subscribe(runInfo => {
-        if (runInfo.error) {
-          this.clearPeriods();
-        } else {
-          this.registerRunPeriods = runInfo.periods;
-        }
-      });
-    } else {
-      this.clearPeriods();
-    }
-  }
-
-  isValidRunCodeSyntax(runCode: string) {
-    return /^[a-zA-Z]*\d\d\d/.test(runCode);
   }
 }
