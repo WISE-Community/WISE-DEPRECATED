@@ -4,6 +4,8 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, tap } from "rxjs/operators";
 import { of } from "rxjs/observable/of";
 import { Project } from "./project";
+import { Teacher } from "../domain/teacher";
+import { User } from "../domain/user";
 import { Run } from "../domain/run";
 import { Subject } from "rxjs/Subject";
 
@@ -11,6 +13,8 @@ import { Subject } from "rxjs/Subject";
 export class TeacherService {
 
   private projectsUrl = 'api/teacher/projects';
+  private registerUrl = 'api/teacher/register';
+  private checkGoogleUserIdUrl = 'api/teacher/checkGoogleUserId';
   private createRunUrl = 'api/teacher/run/create';
   private newProjectSource = new Subject<Project>();
   public newProjectSource$ = this.newProjectSource.asObservable();
@@ -24,6 +28,31 @@ export class TeacherService {
         tap(runs => this.log(`fetched projects`)),
         catchError(this.handleError('getProjects', []))
       );
+  }
+
+  registerTeacherAccount(teacherUser: Teacher, callback: any) {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    this.http.post(this.registerUrl,
+      teacherUser,
+      { headers: headers, responseType: "text" })
+      .subscribe(response => {
+        const userName = response;
+        callback(userName);
+      });
+  }
+
+  isGoogleIdExists(googleUserId: string) {
+    let params = new HttpParams().set("googleUserId", googleUserId);
+    return this.http.get<User>(this.checkGoogleUserIdUrl, { params: params });
+    /*
+      .pipe(
+        tap((googleIdExists) => {
+          callback(googleIdExists);
+        }),
+        catchError(this.handleError('isGoogleIdExists', googleUserId)));
+        */
   }
 
   /**

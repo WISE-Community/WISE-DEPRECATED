@@ -79,6 +79,7 @@ public class UserAPIController {
   @RequestMapping(value = "/config", method = RequestMethod.GET)
   protected String getConfig(ModelMap modelMap) throws JSONException {
     JSONObject configJSON = new JSONObject();
+    configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
     configJSON.put("logOutURL", wiseProperties.get("wiseBaseURL") + "/logout");
     return configJSON.toString();
   }

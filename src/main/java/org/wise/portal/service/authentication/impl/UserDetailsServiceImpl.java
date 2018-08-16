@@ -60,6 +60,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return userDetails;
   }
 
+  public UserDetails loadUserByGoogleUserId(String googleUserId) {
+    return this.userDetailsDao.retrieveByGoogleUserId(googleUserId);
+  }
+
   /**
    * @see net.sf.sail.webapp.service.authentication.UserDetailsService#createGrantedAuthority(net.sf.sail.webapp.domain.authentication.MutableGrantedAuthority)
    */

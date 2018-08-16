@@ -147,6 +147,17 @@ public class PersistentUserDetails implements MutableUserDetails {
   @Column(name = PersistentUserDetails.COLUMN_NAME_LANGUAGE, nullable = true)
   private String language = null;
 
+  @Column(name = "googleUserId")
+  private String googleUserId;
+
+  public String getGoogleUserId() {
+    return googleUserId;
+  }
+
+  public void setGoogleUserId(String googleUserId) {
+    this.googleUserId = googleUserId;
+  }
+
   public Long getId() {
     return id;
   }

@@ -99,6 +99,11 @@ public class UserServiceImpl implements UserService {
     return this.userDao.retrieveByEmailAddress(emailAddress);
   }
 
+  @Transactional(readOnly = true)
+  public User retrieveUserByGoogleUserId(String googleUserId) {
+    return this.userDao.retrieveByGoogleUserId(googleUserId);
+  }
+
   /**
    * @see UserService#createUser(MutableUserDetails)
    */
@@ -153,7 +158,7 @@ public class UserServiceImpl implements UserService {
         this.saltSource.getSalt(userDetails)));
   }
 
-  protected void assignRole(MutableUserDetails userDetails, final String role) {
+  public void assignRole(MutableUserDetails userDetails, final String role) {
     GrantedAuthority authority = this.grantedAuthorityDao.retrieveByName(role);
     userDetails.addAuthority(authority);
   }
