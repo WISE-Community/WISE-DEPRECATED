@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -8,8 +8,6 @@ import { FormControl } from '@angular/forms';
   encapsulation: ViewEncapsulation.None
 })
 export class SelectMenuComponent implements OnInit {
-
-  selectMenu = new FormControl();
 
   @Input()
   disable: boolean = false; // whether select is disabled
@@ -38,24 +36,32 @@ export class SelectMenuComponent implements OnInit {
   @Output('update')
   change: EventEmitter<string> = new EventEmitter<string>(); // change event emitter
 
+  selectField = new FormControl(""); // form control for the search input
+
   constructor() {
   }
 
   ngOnInit() {
+    this.selectField = new FormControl({
+      value: this.value,
+      disabled: this.disable
+    });
+    // this.selectField.setValue(this.value);
+    this.selectField.valueChanges
+      .subscribe(value => {
+        this.change.emit(this.selectField.value);
+      });
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.disable) {
-      let disable = changes.disable.currentValue;
-      if (disable) {
-        this.selectMenu.disable();
-      } else {
-        this.selectMenu.enable();
-      }
+    if (changes.value) {
+      this.value = changes.value.currentValue;
+      this.selectField.setValue(this.value);
     }
-  }
 
-  changed() {
-    this.change.emit(this.value);
+    if (changes.disable) {
+      this.disable = changes.disable.currentValue;
+      this.disable ? this.selectField.disable() : this.selectField.enable();
+    }
   }
 }

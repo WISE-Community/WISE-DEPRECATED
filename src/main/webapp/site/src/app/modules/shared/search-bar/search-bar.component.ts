@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs/operators';
 import { distinctUntilChanged } from 'rxjs/operators';
@@ -35,7 +35,10 @@ export class SearchBarComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.searchField = new FormControl({value: this.value, disabled: this.disable});
+    this.searchField = new FormControl({
+      value: this.value,
+      disabled: this.disable
+    });
     this.searchField.valueChanges
       .pipe(debounceTime(this.debounce)) // wait specified interval for any changes
       .pipe(distinctUntilChanged()) // only emit event if search string has changed
@@ -44,7 +47,7 @@ export class SearchBarComponent implements OnInit {
       });
   }
 
-  ngOnChanges(changes) {
+  ngOnChanges(changes: SimpleChanges) {
     if (changes.value) {
       this.value = changes.value.currentValue;
       this.searchField.setValue(this.value);

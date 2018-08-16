@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { LibraryComponent } from './library.component';
 import { LibraryGroupThumbsComponent } from './library-group-thumbs/library-group-thumbs.component';
@@ -40,7 +40,6 @@ const materialModules = [
   imports: [
     CommonModule,
     FlexLayoutModule,
-    FormsModule,
     ReactiveFormsModule,
     RouterModule,
     materialModules,
@@ -56,7 +55,6 @@ const materialModules = [
   entryComponents: [ LibraryProjectDetailsComponent ],
   exports: [
     LibraryComponent,
-    FormsModule,
     ReactiveFormsModule,
     materialModules
   ],
