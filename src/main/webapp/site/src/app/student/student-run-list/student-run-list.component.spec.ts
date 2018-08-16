@@ -7,7 +7,6 @@ import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
 import { StudentModule } from "../student.module";
 import { StudentRunListComponent } from "./student-run-list.component";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ConfigService } from "../../services/config.service";
 import { Config } from "../../domain/config";
 
