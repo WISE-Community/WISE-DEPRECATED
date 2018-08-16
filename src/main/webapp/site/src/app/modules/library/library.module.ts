@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from "../shared/shared.module";
 
 import {
+  MatBadgeModule,
   MatButtonModule,
   MatCardModule,
   MatDialogModule,
@@ -23,6 +24,7 @@ import {
   MatTooltipModule} from '@angular/material';
 
 const materialModules = [
+  MatBadgeModule,
   MatButtonModule,
   MatCardModule,
   MatDialogModule,

@@ -25,6 +25,7 @@ export class LibraryComponent implements OnInit {
   disciplineValue = [];
   peOptions: Standard[] = [];
   peValue = [];
+  showFilters: boolean = false;
 
   constructor(private libraryService: LibraryService) { }
 

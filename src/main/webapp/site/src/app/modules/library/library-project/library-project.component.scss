@@ -7,7 +7,11 @@
 $config: mat-typography-config();
 
 .library-project {
-  margin: 8px;
+  margin: 4px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    margin: 8px;
+  }
 
   &.mat-card {
     padding: 0;
@@ -54,12 +58,15 @@ $config: mat-typography-config();
   left: 0;
   right: 0;
   font-weight: 500;
-  padding: 10px 12px;
+  padding: 6px 8px;
   border-radius: 2px;
   color: #ffffff;
+  overflow: hidden;
+  line-height: 1.25;
 
-  @media (min-width: breakpoint('md.min')) {
+  @media (min-width: breakpoint('sm.min')) {
     font-size: mat-font-size($config, body-1);
+    padding: 10px 12px;
   }
 
   @media (min-width: breakpoint('lg.min')) {

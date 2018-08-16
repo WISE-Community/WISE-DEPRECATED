@@ -45,7 +45,29 @@
   }
 }
 
-.library-filter {
+.library__filters {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .25s ease;
+
+  &.expand {
+    max-height: 1000px;
+  }
+
+  @media (min-width: breakpoint('md.min')) {
+    max-height: 1000px;
+  }
+}
+
+.library__filter-toggle {
+  margin-left: 4px;
+
+  @media (min-width: breakpoint('md.min')) {
+    display: none;
+  }
+}
+
+.library__filter {
   margin: 0 4px;
 }
 

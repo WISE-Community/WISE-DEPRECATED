@@ -5,45 +5,66 @@
       <p class="info-block center">
         Explore suggested WISE curricula for the given grade levels or search for specific units that address your needs.
       </p>
-      <div fxLayout="column" fxLayout.sm="row wrap">
-        <div *ngIf="disciplineOptions.length > 0"
-             class="library-filter">
-          <app-select-menu [options]="disciplineOptions"
-                           [placeholderText]="'Discipline'"
-                           [value]="disciplineValue"
-                           (update)="filterUpdated($event, 'discipline')"
-                           [valueProp]="'id'"
-                           [viewValueProp]="'name'"
-                           [multiple]="true">
-          </app-select-menu>
-        </div>
-        <div *ngIf="dciArrangementOptions.length > 0" class="library-filter"
-             fxFlex fxFlex.xs="100%">
-          <app-select-menu [options]="dciArrangementOptions"
-                           [placeholderText]="'DCI Arrangement'"
-                           [value]="dciArrangementValue"
-                           (update)="filterUpdated($event, 'dci')"
-                           [valueProp]="'id'"
-                           [viewValueProp]="'name'"
-                           [multiple]="true">
-          </app-select-menu>
-        </div>
-        <div *ngIf="peOptions.length > 0" class="library-filter" fxFlex
-             fxFlex.xs="100%">
-          <app-select-menu [options]="peOptions"
-                           [placeholderText]="'Performance Expectation'"
-                           [value]="peValue"
-                           (update)="filterUpdated($event, 'pe')"
-                           [valueProp]="'id'"
-                           [viewValueProp]="'name'"
-                           [multiple]="true">
-          </app-select-menu>
-        </div>
-        <div class="library-filter" fxFlex fxFlex.xs="100%">
+      <div class="library__filter">
+        <div fxLayout="row" fxLayoutAlign="center center">
           <app-search-bar [placeholderText]="'Keyword search'"
                           [value]="searchValue"
-                          (update)="searchUpdated($event)">
+                          (update)="searchUpdated($event)"
+                          [disable]="searchDisabled"
+                          fxFlex>
           </app-search-bar>
+          <button class="library__filter-toggle"
+                  mat-icon-button
+                  (click)="showFilters = !showFilters">
+            <mat-icon matBadge="+"
+                      matBadgeDescription="Filters applied"
+                      matBadgeOverlap="true"
+                      matBadgeSize="small"
+                      [matBadgeHidden]="!hasFilters()">filter_list</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="library__filters" [class.expand]="showFilters">
+        <div fxLayout="column" fxLayout.md="row wrap">
+          <div *ngIf="disciplineOptions.length > 0"
+               class="library__filter"
+               fxFlex
+               fxFlex.xs="100">
+            <app-select-menu [options]="disciplineOptions"
+                             [placeholderText]="'Discipline'"
+                             [value]="disciplineValue"
+                             (update)="filterUpdated($event, 'discipline')"
+                             [valueProp]="'id'"
+                             [viewValueProp]="'name'"
+                             [multiple]="true">
+            </app-select-menu>
+          </div>
+          <div *ngIf="dciArrangementOptions.length > 0"
+               class="library__filter"
+               fxFlex
+               fxFlex.xs="100">
+            <app-select-menu [options]="dciArrangementOptions"
+                             [placeholderText]="'DCI Arrangement'"
+                             [value]="dciArrangementValue"
+                             (update)="filterUpdated($event, 'dci')"
+                             [valueProp]="'id'"
+                             [viewValueProp]="'name'"
+                             [multiple]="true">
+            </app-select-menu>
+          </div>
+          <div *ngIf="peOptions.length > 0"
+               class="library__filter"
+               fxFlex
+               fxFlex.xs="100">
+            <app-select-menu [options]="peOptions"
+                             [placeholderText]="'Performance Expectation'"
+                             [value]="peValue"
+                             (update)="filterUpdated($event, 'pe')"
+                             [valueProp]="'id'"
+                             [viewValueProp]="'name'"
+                             [multiple]="true">
+            </app-select-menu>
+          </div>
         </div>
       </div>
     </div>
