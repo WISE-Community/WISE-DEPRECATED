@@ -29,5 +29,10 @@ package org.wise.portal.domain;
  * @author Anthony Perritano
  */
 public enum AccountQuestion {
-  QUESTION_FOUR, QUESTION_TWO, QUESTION_THREE;
+  QUESTION_ONE,
+  QUESTION_TWO,
+  QUESTION_THREE,
+  QUESTION_FOUR,
+  QUESTION_FIVE,
+  QUESTION_SIX;
 }

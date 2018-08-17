@@ -14,6 +14,8 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RegisterTeacherFormComponent } from './register-teacher-form/register-teacher-form.component';
 import { RegisterTeacherCompleteComponent } from './register-teacher-complete/register-teacher-complete.component';
 import { RegisterTeacherGoogleUserAlreadyExistsComponent } from './register-teacher-google-user-already-exists/register-teacher-google-user-already-exists.component';
+import { RegisterStudentFormComponent } from './register-student-form/register-student-form.component';
+import { RegisterStudentCompleteComponent } from './register-student-complete/register-student-complete.component';
 
 const materialModules = [
   MatButtonModule,
@@ -39,7 +41,9 @@ const materialModules = [
     RegisterTeacherComponent,
     RegisterTeacherFormComponent,
     RegisterTeacherCompleteComponent,
-    RegisterTeacherGoogleUserAlreadyExistsComponent
+    RegisterTeacherGoogleUserAlreadyExistsComponent,
+    RegisterStudentFormComponent,
+    RegisterStudentCompleteComponent
   ],
   exports: [ RegisterComponent ]
 })
