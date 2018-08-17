@@ -6,6 +6,7 @@ import { of } from 'rxjs/observable/of';
 
 import { RunInfo } from './run-info';
 import { StudentRun } from './student-run';
+import { Student } from "../domain/student";
 
 @Injectable()
 export class StudentService {
@@ -13,6 +14,8 @@ export class StudentService {
   private runsUrl = 'api/student/runs';
   private runInfoUrl = 'api/student/run/info';
   private addRunUrl = 'api/student/run/register';
+  private registerUrl = 'api/student/register';
+  private securityQuestionsUrl = 'api/student/register/questions';
 
   constructor(private http: HttpClient) { }
 
@@ -60,5 +63,22 @@ export class StudentService {
 
   private log(message: string) {
     console.log('StudentService: ' + message);
+  }
+
+  registerStudentAccount(studentUser: Student, callback: any): void {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    this.http.post(this.registerUrl,
+      studentUser,
+      { headers: headers, responseType: "text" })
+      .subscribe(response => {
+        const userName = response;
+        callback(userName);
+      });
+  }
+
+  retrieveSecurityQuestions(): Observable<Object> {
+    return this.http.get(this.securityQuestionsUrl);
   }
 }
