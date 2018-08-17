@@ -24,7 +24,7 @@ describe('RegisterStudentFormComponent', () => {
       },
       retrieveSecurityQuestions(): Observable<Object> {
         return Observable.create(observer => {
-          const securityQuestions: object[] = [];
+          const securityQuestions: object[] = [{"value":"What is your middle name?","key":"QUESTION_ONE"},{"value":"What is your mother's first name?","key":"QUESTION_TWO"},{"value":"What is your grandmother's first name?","key":"QUESTION_THREE"},{"value":"What is your favorite animal?","key":"QUESTION_FOUR"},{"value":"What was the last name of your first grade teacher?","key":"QUESTION_FIVE"},{"value":"What is your favorite color?","key":"QUESTION_SIX"}];
           observer.next(securityQuestions);
           observer.complete();
         });

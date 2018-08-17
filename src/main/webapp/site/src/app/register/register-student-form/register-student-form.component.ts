@@ -62,7 +62,6 @@ export class RegisterStudentFormComponent implements OnInit {
     "31"
   ];
   securityQuestions: object;
-  private sub: any;
   passwordsFormGroup = this.fb.group({
     password: ['', [Validators.required]],
     confirmPassword: ['', [Validators.required]]
