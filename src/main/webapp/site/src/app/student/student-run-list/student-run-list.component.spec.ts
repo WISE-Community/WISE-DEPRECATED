@@ -1,12 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { defer } from "rxjs/observable/defer";
+import { MatDialog } from "@angular/material/dialog";
 import { Observable } from "rxjs/Observable";
 import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
 import { StudentModule } from "../student.module";
 import { StudentRunListComponent } from "./student-run-list.component";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ConfigService } from "../../services/config.service";
 import { Config } from "../../domain/config";
+
+export function fakeAsyncResponse<T>(data: T) {
+  return defer(() => Promise.resolve(data));
+}
 
 describe('StudentRunListComponent', () => {
   let component: StudentRunListComponent;
@@ -20,7 +26,19 @@ describe('StudentRunListComponent', () => {
           return Observable.create( observer => {
               observer.next(runs);
               observer.complete();
-          });}
+          });
+    },
+    newRunSource$: fakeAsyncResponse({
+      id: 12345,
+      name: "Test Project",
+      runCode: "Panda123",
+      periodName: "1",
+      startTime: "2018-08-22 00:00:00.0",
+      teacherDisplayName: "Spongebob Squarepants",
+      teacherFirstName: "Spongebob",
+      teacherLastName: "Squarepants",
+      projectThumb: "/wise/curriculum/360/assets/project_thumb.png"
+    })
     };
     const configServiceStub = {
       getConfig(): Observable<Config> {
@@ -40,6 +58,7 @@ describe('StudentRunListComponent', () => {
       providers: [
         { provide: StudentService, useValue: studentServiceStub },
         { provide: ConfigService, useValue: configServiceStub },
+    { provide: MatDialog, useValue: {} }
       ]
     })
     .compileComponents();
@@ -58,15 +77,5 @@ describe('StudentRunListComponent', () => {
   it('should show runs', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('#studentRuns').textContent).toContain('Photosynthesis');
-  })
-
-  it ('should detect valid project code', () => {
-    const projectCode = 'Cat123';
-    expect(component.isValidRunCodeSyntax(projectCode)).toEqual(true);
-  })
-
-  it ('should detect invalid project code', () => {
-    const projectCode = 'Cat12';
-    expect(component.isValidRunCodeSyntax(projectCode)).toEqual(false);
   })
 });
