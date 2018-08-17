@@ -98,7 +98,7 @@ export class RegisterStudentFormComponent implements OnInit {
 
   populateStudentUser() {
     for (let key of Object.keys(this.createStudentAccountFormGroup.controls)) {
-      if (key == 'birthMonth') {
+      if (key == 'birthMonth' || key == 'birthDay') {
         this.studentUser[key] = parseInt(this.createStudentAccountFormGroup.get(key).value);
       } else {
         this.studentUser[key] = this.createStudentAccountFormGroup.get(key).value;
@@ -106,8 +106,6 @@ export class RegisterStudentFormComponent implements OnInit {
     }
     this.studentUser['password'] = this.getPassword();
     delete this.studentUser['passwords'];
-    this.studentUser['birthMonth'] = this.studentUser['birthMonth'];
-    this.studentUser['birthDay'] = this.studentUser['birthDay'];
   }
 
   getPassword() {
