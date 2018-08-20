@@ -3,8 +3,11 @@ import { Observable ,  of } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
+import { Run } from "../domain/run";
 import { RunInfo } from './run-info';
+import { Student } from "../domain/student";
 import { StudentRun } from './student-run';
+import { Subject } from "rxjs";
 
 @Injectable()
 export class StudentService {
@@ -12,6 +15,11 @@ export class StudentService {
   private runsUrl = 'api/student/runs';
   private runInfoUrl = 'api/student/run/info';
   private addRunUrl = 'api/student/run/register';
+  private registerUrl = 'api/student/register';
+  private securityQuestionsUrl = 'api/student/register/questions';
+
+  private newRunSource = new Subject<StudentRun>();
+  newRunSource$ = this.newRunSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -59,5 +67,26 @@ export class StudentService {
 
   private log(message: string) {
     console.log('StudentService: ' + message);
+  }
+
+  addNewProject(run: StudentRun) {
+    this.newRunSource.next(run);
+  }
+
+  registerStudentAccount(studentUser: Student, callback: any): void {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    this.http.post(this.registerUrl,
+      studentUser,
+      { headers: headers, responseType: "text" })
+      .subscribe(response => {
+        const userName = response;
+        callback(userName);
+      });
+  }
+
+  retrieveSecurityQuestions(): Observable<Object> {
+    return this.http.get(this.securityQuestionsUrl);
   }
 }

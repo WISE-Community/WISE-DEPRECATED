@@ -23,14 +23,6 @@
  */
 package org.wise.portal.service.project.impl;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +46,9 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
+import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
 import org.wise.portal.domain.project.impl.ProjectParameters;
+import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
@@ -62,11 +56,15 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
-import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.premadecomment.PremadeCommentService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.tag.TagService;
 import org.wise.portal.service.user.UserService;
+import org.wise.vle.utils.FileManager;
+
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * @author Patrick Lawler
@@ -582,5 +580,28 @@ public class ProjectServiceImpl implements ProjectService {
         return this.identifyRootProjectId(this.getById(parentProjectId));
       }
     }
+  }
+
+  public Project copyProject(Integer projectId, User user) throws Exception {
+    Project parentProject = getById(projectId);
+    String projectFolderPath = FileManager.getProjectFolderPath(parentProject);
+    String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+    String newProjectDirname = FileManager.copyProject(curriculumBaseDir, projectFolderPath);
+    String newProjectPath = "/" + newProjectDirname + "/project.json";
+    String newProjectName = parentProject.getName();
+    Long parentProjectId = (Long) parentProject.getId();
+    ProjectParameters pParams = new ProjectParameters();
+    pParams.setModulePath(newProjectPath);
+    pParams.setOwner(user);
+    pParams.setProjectname(newProjectName);
+    pParams.setProjectType(ProjectType.LD);
+    pParams.setWiseVersion(5);
+    pParams.setParentProjectId(parentProjectId);
+    ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
+    if (parentProjectMetadata != null) {
+      ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
+      pParams.setMetadata(newProjectMetadata);
+    }
+    return createProject(pParams);
   }
 }

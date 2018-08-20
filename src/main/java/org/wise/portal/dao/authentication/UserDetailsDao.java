@@ -69,4 +69,11 @@ public interface UserDetailsDao<T extends MutableUserDetails> extends SimpleDao<
    * @return A new instance of a data object.
    */
   List<String> retrieveAll(String className, String field);
+
+  /**
+   * Returns the User with the specified Google User Id.
+   * @param googleUserId
+   * @return
+   */
+  T retrieveByGoogleUserId(String googleUserId);
 }

@@ -28,6 +28,7 @@ import java.util.Vector;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -103,6 +104,19 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
       .findByNamedParam(
         "from UserImpl as user where user.userDetails.emailAddress = :emailAddress",
         "emailAddress", emailAddress);
+  }
+
+  @Override
+  public User retrieveByGoogleUserId(String googleUserId) {
+    List<User> users = (List<User>) this
+        .getHibernateTemplate()
+        .findByNamedParam(
+          "from UserImpl as user where user.userDetails.googleUserId = :googleUserId",
+          "googleUserId", googleUserId);
+    if (users != null & users.size() > 0) {
+      return users.get(0);
+    }
+    return null;
   }
 
   /**

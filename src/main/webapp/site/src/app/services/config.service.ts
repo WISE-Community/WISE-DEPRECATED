@@ -65,4 +65,8 @@ export class ConfigService {
   private log(message: string) {
     console.log('ConfigService: ' + message);
   }
+
+  getGoogleClientId() {
+    return this.config$.getValue().googleClientId;
+  }
 }

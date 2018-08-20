@@ -23,6 +23,7 @@
  */
 package org.wise.portal.presentation.web.controllers.student;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -85,11 +86,9 @@ public class StartProjectController {
   private static final String TEAM_SIGN_IN_URL = "student/teamsignin";
 
   @RequestMapping("/student/startproject")
-  protected synchronized ModelAndView handleRequestInternal(
-    HttpServletRequest request,
-    HttpServletResponse response) throws Exception {
+  protected synchronized ModelAndView startProject(HttpServletRequest request,
+      HttpServletResponse response) throws Exception {
     User user = ControllerUtil.getSignedInUser();
-
     String projectIdStr = request.getParameter("projectId");
     String runIdStr = request.getParameter("runId");
     Long runId = null;
@@ -123,14 +122,16 @@ public class StartProjectController {
     }
 
     Run run = runService.retrieveById(runId);
+    if (run.getStarttime().after(new Timestamp(System.currentTimeMillis()))) {
+      return new ModelAndView("errors/friendlyerror");
+    }
 
     Group period = run.getPeriodOfStudent(user);
-
     List<Workgroup> workgroups = workgroupService.getWorkgroupListByRunAndUser(run, user);
     assert(workgroups.size() <= 1);
 
     Workgroup workgroup = null;
-    if (workgroups.size() == 0) {   // student is not yet in a workgroup
+    if (workgroups.size() == 0) {  // student is not yet in a workgroup
       if (bymyself) {
         // if bymyself=true was passed in as request
         // create new workgroup with this student in it
@@ -139,7 +140,6 @@ public class StartProjectController {
         members.add(user);
         workgroup = workgroupService.createWorkgroup(name, members, run, period);
 
-        // update run statistics
         int maxLoop = 30;  // to ensure that the following while loop gets run at most this many times.
         int currentLoopIndex = 0;
         while(currentLoopIndex < maxLoop) {
@@ -158,18 +158,12 @@ public class StartProjectController {
           break;
         }
 
-        // update servlet session
         notifyServletSession(request, run);
-
-        // get the values for the student attendance
         Long workgroupId = workgroup.getId();
         JSONArray presentUserIds = new JSONArray();
         JSONArray absentUserIds = new JSONArray();
         presentUserIds.put(user.getId());
-
-        // create a student attendance entry
         addStudentAttendanceEntry(workgroupId, runId, presentUserIds, absentUserIds);
-
         return projectService.launchProject(workgroup);
       } else {
         // need to create a workgroup for this user, take them to create workgroup wizard
@@ -208,16 +202,11 @@ public class StartProjectController {
           break;
         }
 
-        // get the value for the student attendance
         Long workgroupId = workgroup.getId();
         JSONArray presentUserIds = new JSONArray();
         JSONArray absentUserIds = new JSONArray();
         presentUserIds.put(user.getId());
-
-        // create a student attendance entry
         addStudentAttendanceEntry(workgroupId, runId, presentUserIds, absentUserIds);
-
-        // update servlet session
         notifyServletSession(request, run);
         return projectService.launchProject(workgroup);
       } else {
@@ -253,16 +242,11 @@ public class StartProjectController {
           break;
         }
 
-        // get the value for the student attendance
         Long workgroupId = workgroup.getId();
         JSONArray presentUserIds = new JSONArray();
         JSONArray absentUserIds = new JSONArray();
         presentUserIds.put(user.getId());
-
-        // create a student attendance entry
         addStudentAttendanceEntry(workgroupId, runId, presentUserIds, absentUserIds);
-
-        // update servlet session
         notifyServletSession(request, run);
         return projectService.launchProject(workgroup);
       } else {
@@ -271,7 +255,6 @@ public class StartProjectController {
         return modelAndView;
       }
     }
-
   }
 
   /**
@@ -281,15 +264,13 @@ public class StartProjectController {
    */
   public static void notifyServletSession(HttpServletRequest request, Run run) {
     HttpSession session = request.getSession();
-
-    // add new session in a allLoggedInUsers servletcontext HashMap variable
     String sessionId = session.getId();
-    HashMap<String, Long> studentToRunIds = (HashMap<String, Long>) session.getServletContext().getAttribute("studentsToRunIds");
+    HashMap<String, Long> studentToRunIds =
+        (HashMap<String, Long>) session.getServletContext().getAttribute("studentsToRunIds");
     if (studentToRunIds == null) {
       studentToRunIds = new HashMap<String, Long>();
       session.getServletContext().setAttribute("studentsToRunIds", studentToRunIds);
     }
-
     studentToRunIds.put(sessionId, run.getId());
   }
 
@@ -300,11 +281,10 @@ public class StartProjectController {
    * @param presentUserIds the
    * @param absentUserIds
    */
-  private void addStudentAttendanceEntry(Long workgroupId, Long runId, JSONArray presentUserIds, JSONArray absentUserIds) {
-
-    Date loginTimestamp = new Date(); // get the current time
-
-    // add a student attendance entry
-    this.studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp, presentUserIds.toString(), absentUserIds.toString());
+  private void addStudentAttendanceEntry(Long workgroupId, Long runId, JSONArray presentUserIds,
+      JSONArray absentUserIds) {
+    Date loginTimestamp = new Date();
+    this.studentAttendanceService.addStudentAttendanceEntry(
+        workgroupId, runId, loginTimestamp, presentUserIds.toString(), absentUserIds.toString());
   }
 }

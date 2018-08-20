@@ -81,10 +81,18 @@ public interface UserService {
   List<User> retrieveUserByEmailAddress(String emailAddress);
 
   /**
-   * Retrieve a list of users whose accounts have been disabled
+   * Retrieve user with the given google user id.
    *
-   * @return <code>Users</code> whose accounts have been disabled
+   * @param googleUserId
+   * @return <code>User</code> with the given google user id.
    */
+  User retrieveUserByGoogleUserId(String googleUserId);
+
+    /**
+     * Retrieve a list of users whose accounts have been disabled
+     *
+     * @return <code>Users</code> whose accounts have been disabled
+     */
   List<User> retrieveDisabledUsers();
 
   /**
@@ -156,4 +164,12 @@ public interface UserService {
    * @return a User object or null if there is no user with the given reset password key
    */
   User retrieveByResetPasswordKey(String resetPasswordKey);
+
+  /**
+   * Assigns the specified role to the user. Does not save to database
+   * @param userDetails
+   * @param role
+   */
+  void assignRole(MutableUserDetails userDetails, final String role);
+
 }

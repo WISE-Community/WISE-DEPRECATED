@@ -1,0 +1,19 @@
+<p>Create WISE Teacher Account</p>
+<mat-form-field fxFlex>
+  <input matInput
+         id="email"
+         name="email"
+         placeholder="Email"
+         [(ngModel)]="email"
+         autofocus />
+</mat-form-field>
+
+<button fxFlex mat-raised-button color="primary" type="submit" (click)="signUp()">
+  Sign Up
+</button>
+
+OR
+
+<button fxFlex mat-raised-button color="primary" type="submit" (click)="socialSignIn('google')">
+  Sign Up With Google
+</button>

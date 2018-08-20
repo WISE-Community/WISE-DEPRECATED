@@ -23,6 +23,7 @@ package org.wise.portal.service.authentication;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.wise.portal.domain.authentication.MutableGrantedAuthority;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 
@@ -34,6 +35,8 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
  */
 public interface UserDetailsService extends
     org.springframework.security.core.userdetails.UserDetailsService {
+
+  String ANONYMOUS_ROLE = "ROLE_ANONYMOUS";
 
   String USER_ROLE = "ROLE_USER";
 
@@ -65,23 +68,20 @@ public interface UserDetailsService extends
    * Given an object representing a role, created the granted authority record
    * in the data store.
    *
-   * @param mutableGrantedAuthority
-   *            to create in the data store
+   * @param mutableGrantedAuthority to create in the data store
    * @return the <code>MutableGrantedAuthority</code> object after it has
-   *         been saved in the data store
-   * @throws DuplicateAuthorityException
-   *             if authority is not unique.
+   * been saved in the data store
+   * @throws DuplicateAuthorityException if authority is not unique.
    */
   MutableGrantedAuthority createGrantedAuthority(MutableGrantedAuthority mutableGrantedAuthority)
-      throws DuplicateAuthorityException;
+    throws DuplicateAuthorityException;
 
   /**
    * Given an authority string, loads an authority from the data store.
    *
    * @param authority
    * @return A MutableGrantedAuthority object
-   * @throws AuthorityNotFoundException
-   *             If authority is not in data store.
+   * @throws AuthorityNotFoundException If authority is not in data store.
    */
   GrantedAuthority loadAuthorityByName(String authority)
     throws AuthorityNotFoundException;
@@ -95,6 +95,7 @@ public interface UserDetailsService extends
 
   /**
    * Given a MutableUserDetails, updates the data of that object in the database
+   *
    * @param userDetails
    */
   void updateUserDetails(final MutableUserDetails userDetails);
@@ -104,4 +105,5 @@ public interface UserDetailsService extends
 
   List<String> retrieveAllUsernames(String userDetailsClassName);
 
+  UserDetails loadUserByGoogleUserId(String googleUserId);
 }

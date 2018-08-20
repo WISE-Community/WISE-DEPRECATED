@@ -30,13 +30,12 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateOptimisticLockingFailureException;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.AccountQuestion;
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
+import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
@@ -48,9 +47,12 @@ import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
+import org.wise.portal.service.user.UserService;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -72,6 +74,12 @@ public class StudentAPIController {
 
   @Autowired
   private Properties wiseProperties;
+
+  @Autowired
+  private UserService userService;
+
+  @Autowired
+  private Properties i18nProperties;
 
   // path to project thumbnail image relative to project folder
   // TODO: make this dynamic, part of project metadata?
@@ -277,6 +285,7 @@ public class StudentAPIController {
     String wiseBaseURL = (String) wiseProperties.get("wiseBaseURL");
     configJSON.put("wiseBaseURL", wiseBaseURL);
     configJSON.put("logOutURL", wiseBaseURL + "/logout");
+    configJSON.put("currentTime", new Timestamp(System.currentTimeMillis()));
     return configJSON.toString();
   }
 
@@ -292,5 +301,60 @@ public class StudentAPIController {
       }
     }
     return lastLoginTime;
+  }
+
+  @ResponseBody
+  @RequestMapping(value = "/register", method = RequestMethod.POST)
+  protected String createStudentAccount(@RequestBody Map<String, String> studentFields)
+      throws DuplicateUsernameException {
+    StudentUserDetails studentUserDetails = new StudentUserDetails();
+    studentUserDetails.setFirstname(studentFields.get("firstName"));
+    studentUserDetails.setLastname(studentFields.get("lastName"));
+    studentUserDetails.setGender(getGender(studentFields.get("gender")));
+    studentUserDetails.setAccountQuestion(studentFields.get("securityQuestion"));
+    studentUserDetails.setAccountAnswer(studentFields.get("securityQuestionAnswer"));
+    studentUserDetails.setPassword(studentFields.get("password"));
+    studentUserDetails.setBirthday(getBirthDate(studentFields.get("birthMonth"), studentFields.get("birthDay")));
+    studentUserDetails.setSignupdate(Calendar.getInstance().getTime());
+    User createdUser = this.userService.createUser(studentUserDetails);
+    return createdUser.getUserDetails().getUsername();
+  }
+
+  private Gender getGender(String gender) {
+    if (gender.equals("MALE")) {
+      return Gender.MALE;
+    } else if (gender.equals("FEMALE")) {
+      return Gender.FEMALE;
+    } else {
+      return Gender.UNSPECIFIED;
+    }
+  }
+
+  private Date getBirthDate(String birthMonthStr, String birthDayStr) {
+    Integer birthMonth = Integer.parseInt(birthMonthStr);
+    Integer birthDay = Integer.parseInt(birthDayStr);
+    Calendar birthday = Calendar.getInstance();
+    birthday.set(Calendar.MONTH, birthMonth - 1); // month is 0 indexed
+    birthday.set(Calendar.DATE, birthDay);
+    return birthday.getTime();
+  }
+
+  @ResponseBody
+  @RequestMapping(value = "/register/questions", method = RequestMethod.GET)
+  protected String getSecurityQuestions() throws JSONException {
+    JSONArray questions = new JSONArray();
+    AccountQuestion[] accountQuestionKeys = AccountQuestion.class.getEnumConstants();
+    for (AccountQuestion accountQuestionKey: accountQuestionKeys) {
+      questions.put(getSecurityQuestionJSONObject(accountQuestionKey));
+    }
+    return questions.toString();
+  }
+
+  protected JSONObject getSecurityQuestionJSONObject(AccountQuestion accountQuestionKey) throws JSONException {
+    String accountQuestion = i18nProperties.getProperty("accountquestions." + accountQuestionKey);
+    JSONObject accountQuestionObject = new JSONObject();
+    accountQuestionObject.put("key", accountQuestionKey);
+    accountQuestionObject.put("value", accountQuestion);
+    return accountQuestionObject;
   }
 }
