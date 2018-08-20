@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService, GoogleLoginProvider } from "angular5-social-login";
+import { AuthService, GoogleLoginProvider } from "angularx-social-login";
 import { Router } from "@angular/router";
 import { TeacherService } from "../../teacher/teacher.service";
 

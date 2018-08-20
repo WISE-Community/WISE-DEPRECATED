@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MomentModule } from 'angular2-moment';
+import { MomentModule } from 'ngx-moment';
 import {
   MatButtonModule,
   MatCardModule,

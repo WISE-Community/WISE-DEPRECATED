@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable } from "rxjs/Observable";
+import { Observable ,  of } from "rxjs";
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, tap } from "rxjs/operators";
-import { of } from "rxjs/observable/of";
 import { Project } from "./project";
 import { Teacher } from "../domain/teacher";
 import { User } from "../domain/user";
 import { Run } from "../domain/run";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
 
 @Injectable()
 export class TeacherService {

@@ -1,12 +1,45 @@
-@import '~style/abstracts/mixins';
+@import
+  '~@angular/material/theming',
+  '~style/abstracts/mixins',
+  '~style/abstracts/variables';
 
 .cta {
-  border-radius: 4px;
-  padding: 16px;
+  padding: 0;
   display: block;
+  overflow: hidden;
   text-align: center;
   text-transform: none;
   white-space: normal;
+  @include mat-elevation-transition;
+  @include mat-elevation(4);
+
+  &:not([disabled]):active:not([class*=mat-elevation-z]) {
+    @include mat-elevation(8);
+  }
+
+  &:hover, &:focus {
+    .cta__headline .mat-icon {
+      transform: rotate(360deg);
+      transition: all 0.5s ease-in-out;
+    }
+  }
+}
+
+.cta__wrap {
+  padding: 16px;
+  display: block !important;
+}
+
+.cta__headline {
+  margin: -16px -16px 16px;
+  padding: 4px 12px;
+  border-bottom: 1px solid;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+
+  .mat-icon {
+    transition: all 0s;
+  }
 }
 
 .cta__icon {
@@ -15,5 +48,12 @@
 }
 
 .cta__tagline {
-  margin-bottom: 0;
+  line-height: 1.4em;
 }
+
+.cta__divider {
+  margin: 0;
+  border: 0 none;
+  height: 8px;
+}
+

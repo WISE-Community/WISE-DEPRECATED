@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { StudentRun } from '../student-run';
 import { StudentRunListItemComponent } from './student-run-list-item.component';
 import { StudentModule } from "../student.module";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { Config } from "../../domain/config";
 import { ConfigService } from "../../services/config.service";
 

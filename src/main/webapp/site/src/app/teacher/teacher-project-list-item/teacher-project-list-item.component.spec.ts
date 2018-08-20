@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TeacherProjectListItemComponent } from './teacher-project-list-item.component';
 import { TeacherModule } from "../teacher.module";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { Project } from "../project";
 import { TeacherService } from "../teacher.service";
 

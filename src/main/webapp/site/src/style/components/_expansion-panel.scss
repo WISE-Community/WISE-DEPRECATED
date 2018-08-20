@@ -1,13 +1,27 @@
+@import
+  '~style/abstracts/variables';
+
 .mat-expansion-panel {
-  border-radius: 3px;
+  border-radius: $card-border-radius;
 
   &.mat-expanded {
     .mat-expansion-panel-header {
       &:hover, &:focus {
-        border-radius: 3px;
+        border-top-left-radius: $card-border-radius;
+        border-top-right-radius: $card-border-radius;
       }
     }
   }
+
+  &:not(.mat-expanded) {
+    .mat-expansion-panel-header {
+      border-radius: $card-border-radius;
+    }
+  }
+}
+
+.mat-expansion-panel-header--lg {
+  height: 64px !important;
 }
 
 .mat-accordion {
@@ -19,12 +33,6 @@
 }
 
 .mat-expansion-panel-body {
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: $card-border-radius;
+  border-bottom-right-radius: $card-border-radius;
 }
-
-.mat-expansion-panel-header--lg {
-  height: 64px !important;
-}
-
-

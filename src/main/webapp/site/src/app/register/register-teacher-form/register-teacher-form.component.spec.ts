@@ -4,7 +4,7 @@ import { RegisterTeacherFormComponent } from './register-teacher-form.component'
 import { RegisterModule } from "../register.module";
 import { RouterTestingModule } from "@angular/router/testing";
 import { TeacherService } from "../../teacher/teacher.service";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { StudentRun } from "../../student/student-run";
 import { Project } from "../../teacher/project";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";

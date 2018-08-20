@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { Subject } from "rxjs/Subject";
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-bar',
@@ -29,31 +29,37 @@ export class SearchBarComponent implements OnInit {
   @Output('update')
   change: EventEmitter<string> = new EventEmitter<string>(); // change event emitter
 
-  private searchUpdate: Subject<string> = new Subject<string>(); // temporary changed search string
+  searchField = new FormControl(""); // form control for the search input
 
   constructor() {
-    this.change = <any>this.searchUpdate.asObservable()
-      .debounceTime(this.debounce) // wait specified interval for any changes
-      .distinctUntilChanged(); // only emit event if search string has changed
   }
 
   ngOnInit() {
+    this.searchField = new FormControl({
+      value: this.value,
+      disabled: this.disable
+    });
+    this.searchField.valueChanges
+      .pipe(debounceTime(this.debounce)) // wait specified interval for any changes
+      .pipe(distinctUntilChanged()) // only emit event if search string has changed
+      .subscribe(value => {
+        this.change.emit(this.searchField.value);
+      });
   }
 
-  ngOnChanges(changes) {
+  ngOnChanges(changes: SimpleChanges) {
     if (changes.value) {
       this.value = changes.value.currentValue;
-      this.changed();
+      this.searchField.setValue(this.value);
+    }
+
+    if (changes.disable) {
+      this.disable = changes.disable.currentValue;
+      this.disable ? this.searchField.disable() : this.searchField.enable();
     }
   }
 
   clear() {
-    this.value = '';
-    this.changed();
+    this.searchField.setValue('');
   }
-
-  changed() {
-    this.searchUpdate.next(this.value);
-  }
-
 }

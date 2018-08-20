@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { defer } from "rxjs/observable/defer";
+import { defer, Observable } from "rxjs";
 import { MatDialog } from "@angular/material/dialog";
-import { Observable } from "rxjs/Observable";
 import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
 import { User } from "../../domain/user";

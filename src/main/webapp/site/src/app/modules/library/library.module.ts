@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { LibraryComponent } from './library.component';
 import { LibraryGroupThumbsComponent } from './library-group-thumbs/library-group-thumbs.component';
@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from "../shared/shared.module";
 
 import {
+  MatBadgeModule,
   MatButtonModule,
   MatCardModule,
   MatDialogModule,
@@ -23,6 +24,7 @@ import {
   MatTooltipModule} from '@angular/material';
 
 const materialModules = [
+  MatBadgeModule,
   MatButtonModule,
   MatCardModule,
   MatDialogModule,
@@ -38,7 +40,6 @@ const materialModules = [
   imports: [
     CommonModule,
     FlexLayoutModule,
-    FormsModule,
     ReactiveFormsModule,
     RouterModule,
     materialModules,
@@ -54,7 +55,6 @@ const materialModules = [
   entryComponents: [ LibraryProjectDetailsComponent ],
   exports: [
     LibraryComponent,
-    FormsModule,
     ReactiveFormsModule,
     materialModules
   ],

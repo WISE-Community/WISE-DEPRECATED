@@ -8,7 +8,7 @@ import { FeaturesComponent } from './features/features.component';
 import { HomeModule } from "./home/home.module";
 import { LoginModule } from "./login/login.module";
 import { NewsComponent } from "./news/news.component";
-import { RegisterModule } from "app/register/register.module";
+import { RegisterModule } from "./register/register.module";
 
 const routes: Routes = [
   // https://github.com/angular/angular-cli/issues/9825

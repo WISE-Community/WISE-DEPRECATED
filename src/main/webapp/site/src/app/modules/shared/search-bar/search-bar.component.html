@@ -1,7 +1,15 @@
 <mat-form-field class="search-bar" [floatLabel]="floatLabel">
-  <input matInput type="text" placeholder="{{ placeholderText }}"  [(ngModel)]="value" [disabled]="disable"
-    (ngModelChange)="changed($event)"/>
-  <button mat-button matSuffix mat-icon-button [ngClass]="{'invisible': !value}" aria-label="Clear" (click)="clear()" >
+  <mat-icon matPrefix>search</mat-icon>
+  <input matInput type="search"
+         [formControl]="searchField"
+         placeholder="{{ placeholderText }}"/>
+  <button mat-button
+          matSuffix
+          mat-icon-button
+          [disabled]="disable"
+          [ngClass]="{'invisible': !value}"
+          aria-label="Clear"
+          (click)="clear()" >
     <mat-icon>close</mat-icon>
   </button>
 </mat-form-field>

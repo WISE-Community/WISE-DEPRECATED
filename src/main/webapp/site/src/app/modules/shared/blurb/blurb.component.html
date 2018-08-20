@@ -1,14 +1,17 @@
-<div class="blurb">
+<div class="blurb mat-elevation-z4">
   <img *ngIf="imgSrc"
        class="blurb__image"
        src="{{ imgSrc }}"
        alt="{{ imgDescription }}" />
-  <ng-template #defaultHeadline>{{ headline }}</ng-template>
-  <h2 *ngIf="headline || headlineRef">
-    <ng-container *ngTemplateOutlet="headlineRef ? headlineRef: defaultHeadline"></ng-container>
-  </h2>
-  <ng-template #defaultContent>{{ content }}</ng-template>
-  <p *ngIf="content || contentRef" class="accent-1 mat-subheading-2">
-    <ng-container *ngTemplateOutlet="contentRef ? contentRef: defaultContent"></ng-container>
-  </p>
+  <hr class="blurb__divider accent-2-bg" />
+  <div class="blurb__content">
+    <ng-template #defaultHeadline>{{ headline }}</ng-template>
+    <h2 *ngIf="headline || headlineRef" class="accent">
+      <ng-container *ngTemplateOutlet="headlineRef ? headlineRef: defaultHeadline"></ng-container>
+    </h2>
+    <ng-template #defaultContent>{{ content }}</ng-template>
+    <p *ngIf="content || contentRef" class="accent-1 mat-subheading-2">
+      <ng-container *ngTemplateOutlet="contentRef ? contentRef: defaultContent"></ng-container>
+    </p>
+  </div>
 </div>

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Project } from "../project";
 import { TeacherModule } from "../teacher.module";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { TeacherService } from "../teacher.service";
 import { CreateRunDialogComponent } from "./create-run-dialog.component";
 import { MatDialogRef } from "@angular/material/dialog";

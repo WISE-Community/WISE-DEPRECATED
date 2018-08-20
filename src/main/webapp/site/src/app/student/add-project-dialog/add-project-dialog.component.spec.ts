@@ -3,7 +3,7 @@ import { AddProjectDialogComponent } from './add-project-dialog.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { StudentModule } from "../student.module";
 import { MatDialogRef } from "@angular/material/dialog";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { StudentService } from "../student.service";
 import { StudentRun } from "../student-run";
 
