@@ -38,7 +38,18 @@
   }
 
   .cta {
-    box-shadow: 0 0 2px map-get($colors, disabled-text);
+    &:hover, &:focus {
+      //background-color: map-get($colors, btn-bg);
+    }
+
+    .mat-button-focus-overlay {
+      display: none;
+    }
+  }
+
+  .cta__headline {
+    background-color: map-get($background, card);
+    border-color: map-get($colors, notice-bg);
   }
 
   .select-menu {

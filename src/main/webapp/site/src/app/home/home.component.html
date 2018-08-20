@@ -27,18 +27,20 @@
         </h1>
         <div fxLayout="row"
              fxLayout.xs="column"
-             fxLayoutAlign="center start"
-             fxLayoutGap="32px"
-             fxLayoutGap.sm="16px">
-          <app-blurb fxFlex.gt-sm="33%"
+             fxLayoutAlign="center stretch"
+             fxLayoutWrap>
+          <app-blurb fxFlex
+                     fxFlex.gt-xs="33"
                      imgSrc="assets/img/wise-students-building.jpg"
                      imgDescription="WISE students building"
-                     content="Free, standards-aligned, and research-based inquiry science curricula that address NGSS 3D proficiency"></app-blurb>
-          <app-blurb fxFlex.gt-sm="33%"
+                     content="Free, standards-aligned, and research-based inquiry curricula that address NGSS 3D proficiency"></app-blurb>
+          <app-blurb fxFlex
+                     fxFlex.gt-xs="33"
                      imgSrc="assets/img/wise-project-view.jpg"
                      imgDescription="WISE project on laptop"
-                     content="Interactive scientific models combined with hands-on activities, personalized guidance, and rich embedded assessments"></app-blurb>
-          <app-blurb fxFlex.gt-sm="33%"
+                     content="Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments"></app-blurb>
+          <app-blurb fxFlex
+                     fxFlex.gt-xs="33"
                      imgSrc="assets/img/wise-students-and-teacher.jpg"
                      imgDescription="WISE students and teacher"
                      content="Robust teacher grading and management tools supporting individualized and customized learning"></app-blurb>
@@ -92,23 +94,25 @@
         <div fxLayout="row"
              fxLayout.xs="column"
              fxLayoutAlign="center stretch"
-             fxLayoutGap="32px"
-             fxLayoutGap.sm="16px">
-          <app-call-to-action fxFlex="100%"
-                              fxFlex.gt-sm="33%"
+             fxLayoutWrap>
+          <app-call-to-action fxFlex
+                              fxFlex.gt-xs="33"
                               icon="record_voice_over"
+                              iconColor="accent-1"
                               headline="News"
                               content="Learn what's new in the WISE community."
                               destination="/news"></app-call-to-action>
-          <app-call-to-action fxFlex="100%"
-                              fxFlex.gt-sm="33%"
+          <app-call-to-action fxFlex
+                              fxFlex.gt-xs="33"
                               icon="live_help"
+                              iconColor="accent-2"
                               headline="Help + FAQs"
                               content="View tutorials and common questions."
                               destination="/help"></app-call-to-action>
-          <app-call-to-action fxFlex="100%"
-                              fxFlex.gt-sm="33%"
+          <app-call-to-action fxFlex
+                              fxFlex.gt-xs="33"
                               icon="contact_mail"
+                              iconColor="accent"
                               headline="Contact Us"
                               content="Want to get in touch? Send us a message."
                               destination="/contact"></app-call-to-action>
