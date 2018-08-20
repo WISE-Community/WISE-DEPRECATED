@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegisterTeacherComponent } from './register-teacher.component';
 import { RegisterModule } from "../register.module";
 import { TeacherService } from "../../teacher/teacher.service";
-import { AuthService } from "angular5-social-login";
+import { AuthService } from "angularx-social-login";
 import { Observable } from "rxjs";
 import { Project } from "../../teacher/project";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";

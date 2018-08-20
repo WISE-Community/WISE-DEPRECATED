@@ -6,7 +6,7 @@ import { Project } from "./project";
 import { Teacher } from "../domain/teacher";
 import { User } from "../domain/user";
 import { Run } from "../domain/run";
-import { Subject } from "rxjs/Subject";
+import { Subject } from "rxjs";
 
 @Injectable()
 export class TeacherService {

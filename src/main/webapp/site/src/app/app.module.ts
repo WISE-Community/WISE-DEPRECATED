@@ -23,7 +23,7 @@ import {
   SocialLoginModule,
   AuthServiceConfig,
   GoogleLoginProvider,
-} from "angular5-social-login";
+} from "angularx-social-login";
 
 export function getAuthServiceConfigs(configService: ConfigService) {
   let config = new AuthServiceConfig(
