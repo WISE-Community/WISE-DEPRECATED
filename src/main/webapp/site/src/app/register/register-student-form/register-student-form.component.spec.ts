@@ -5,7 +5,7 @@ import { RegisterModule } from "../register.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
 import { StudentRun } from "../../student/student-run";
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { StudentService } from "../../student/student.service";
 
 describe('RegisterStudentFormComponent', () => {
