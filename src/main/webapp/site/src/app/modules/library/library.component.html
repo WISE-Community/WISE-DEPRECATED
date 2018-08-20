@@ -6,12 +6,11 @@
         Explore suggested WISE curricula for the given grade levels or search for specific units that address your needs.
       </p>
       <div class="library__filter">
-        <div fxLayout="row" fxLayoutAlign="center center">
+        <div fxLayout="row" fxLayoutAlign="stretch center">
           <app-search-bar [placeholderText]="'Keyword search'"
                           [value]="searchValue"
                           (update)="searchUpdated($event)"
-                          [disable]="searchDisabled"
-                          fxFlex>
+                          [disable]="searchDisabled">
           </app-search-bar>
           <button class="library__filter-toggle"
                   mat-icon-button
@@ -77,14 +76,6 @@
         </p>
       </div>
       <div fxLayout="row" fxLayoutAlign="start center">
-        <div [ngClass]="{ 'active': searchValue || hasFilters() }"
-             class="notice notice--inline inactive"
-             fxHide
-             fxShow.gt-xs>
-          Projects found: {{ countVisibleProjects(projects, implementationModelValue) }}.
-          <a href="#" (click)="!!reset()">Reset</a>
-        </div>
-        <span fxFlex fxHide fxShow.gt-xs></span>
         <div fxLayout="row" fxLayoutAlign="start center">
           <app-select-menu [options]="implementationModelOptions"
                            [placeholderText]="'CA NGSS Implementation Model'"
@@ -101,6 +92,14 @@
                   matTooltipPosition="after">
             <mat-icon> info </mat-icon>
           </button>
+        </div>
+        <span fxFlex fxHide fxShow.gt-xs></span>
+        <div [ngClass]="{ 'active': searchValue || hasFilters() }"
+             class="notice notice--inline inactive"
+             fxHide
+             fxShow.gt-xs>
+          Projects found: {{ countVisibleProjects(projects, implementationModelValue) }}.
+          <a href="#" (click)="!!reset()">Reset</a>
         </div>
       </div>
       <ng-container id="libraryGroups" *ngFor="let group of libraryGroups">

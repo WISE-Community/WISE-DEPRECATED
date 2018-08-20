@@ -124,12 +124,14 @@ $background: map-get($dark-theme, background);
 // create colors object (including additional colors)
 $dark-colors: (
   'accent': mat-color($accent),
+  'accent-1': #795C3A,
+  'accent-2': #1c8ca8,
   'btn-bg': rgba(white, 0.02),
   'control-bg': rgba(white, 0.12),
   'control-bg-active': rgba(white, 0.24),
   'disabled-text': mat-color($foreground, disabled-text),
   'info': #ef6c00,
-  'notice-bg': rgba(black, 0.87),
+  'notice-bg': rgba(white, 0.06),
   'primary': mat-color($primary),
   'score': #FFC107,
   'secondary-text': mat-color($foreground, secondary-text),

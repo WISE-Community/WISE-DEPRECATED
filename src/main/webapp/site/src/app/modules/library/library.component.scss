@@ -17,6 +17,10 @@
       margin-right: 8px;
     }
   }
+
+  app-search-bar {
+    width: 100%;
+  }
 }
 
 .library__header {
@@ -68,7 +72,7 @@
 }
 
 .library__filter {
-  margin: 0 4px;
+  margin: 0;
 }
 
 .library__groups {
