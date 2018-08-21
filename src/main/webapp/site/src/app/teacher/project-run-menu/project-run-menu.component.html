@@ -3,6 +3,10 @@
 </button>
 <mat-menu #projectRunMenu="matMenu" yPosition="below" xPosition="after">
   <div class="header-account-menu">
+    <a *ngIf="project.run" mat-menu-item (click)="shareRun()">
+      <mat-icon>share</mat-icon>
+      <span>Share</span>
+    </a>
     <a mat-menu-item href="{{ previewLink }}" target="_blank">
       <mat-icon>tv</mat-icon>
       <span>Preview</span>

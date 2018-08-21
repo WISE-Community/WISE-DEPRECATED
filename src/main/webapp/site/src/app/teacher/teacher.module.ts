@@ -13,14 +13,16 @@ import { FormsModule } from '@angular/forms';
 import {
   MatButtonModule, MatCardModule, MatCheckboxModule, MatDatepickerModule,
   MatDialogModule, MatDialog, MatDialogRef, MatDividerModule, MatIconModule,
-  MatMenuModule, MatNativeDateModule, MatRadioModule, MatTabsModule
+  MatMenuModule, MatNativeDateModule, MatRadioModule, MatTabsModule,
+  MatAutocompleteModule
 } from '@angular/material';
 import { ProjectRunMenuComponent } from './project-run-menu/project-run-menu.component';
 import { CreateRunDialogComponent } from './create-run-dialog/create-run-dialog.component';
 import { LibraryModule } from "../modules/library/library.module";
-
+import { ShareRunDialogComponent } from './share-run-dialog/share-run-dialog.component';
 
 const materialModules = [
+  MatAutocompleteModule,
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
@@ -50,10 +52,12 @@ const materialModules = [
     TeacherHomeComponent,
     TeacherProjectListComponent,
     TeacherProjectListItemComponent,
-    ProjectRunMenuComponent
+    ProjectRunMenuComponent,
+    ShareRunDialogComponent
   ],
   entryComponents: [
-    CreateRunDialogComponent
+    CreateRunDialogComponent,
+    ShareRunDialogComponent
   ],
   providers: [
     AuthGuard

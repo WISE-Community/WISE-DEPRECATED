@@ -33,6 +33,8 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithRunException;
+import org.wise.portal.presentation.web.response.SharedOwner;
 
 import java.util.List;
 import java.util.Locale;
@@ -165,16 +167,31 @@ public interface RunService {
   void updateSharedTeacherForRun(AddSharedTeacherParameters addSharedTeacherParameters)
       throws ObjectNotFoundException;
 
+  @Secured( {"ROLE_TEACHER"} )
+  @Transactional()
+  SharedOwner addSharedTeacherToRun(Long runId, String teacherUsername)
+      throws ObjectNotFoundException, TeacherAlreadySharedWithRunException;
+
+  @Secured( {"ROLE_TEACHER"} )
+  @Transactional()
+  void addSharedTeacherPermissionForRun(Long runId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException;
+
+  @Secured( {"ROLE_TEACHER"} )
+  @Transactional()
+  void removeSharedTeacherPermissionFromRun(Long runId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException;
+
   /**
-   * Removes specified teacher user from specified run. Also removes any
-   * shared permission on the project of the run.
-   *
-   * If user or run does not exist, ignore.
-   *
-   * @param username
-   * @param runId
-   * @throws ObjectNotFoundException
-   */
+     * Removes specified teacher user from specified run. Also removes any
+     * shared permission on the project of the run.
+     *
+     * If user or run does not exist, ignore.
+     *
+     * @param username
+     * @param runId
+     * @throws ObjectNotFoundException
+     */
   @Secured( {"ROLE_TEACHER"} )
   @Transactional()
   void removeSharedTeacherFromRun(String username, Long runId) throws ObjectNotFoundException;
@@ -192,15 +209,27 @@ public interface RunService {
   String getSharedTeacherRole(Run run, User user);
 
   /**
-   * Retrieves the Run domain object using the unique runcode
+   * Returns all the permission that the specified user has on the specified run
    *
-   * @param runcode
-   *          The <code>String</code> runcode to use for lookup
-   * @return <code>Run</code>
-   *          The Run object with the runcode
-   * @throws <code>RunNotFoundException</code> when runcode cannot be used
-   *          to find an existing run
+   * @param run The <code>Run</code> that is shared.
+   * @param user The <code>sharedTeacher</code> that shares the <code>Run</code>
+   * @return A <code>String</code> containing the permission that
+   *     the user has on the run. If the user does not have permission on the run,
+   *     null is returned.
    */
+  @Transactional(readOnly = true)
+  List<Permission> getSharedTeacherPermissions(Run run, User sharedTeacher);
+
+    /**
+     * Retrieves the Run domain object using the unique runcode
+     *
+     * @param runcode
+     *          The <code>String</code> runcode to use for lookup
+     * @return <code>Run</code>
+     *          The Run object with the runcode
+     * @throws <code>RunNotFoundException</code> when runcode cannot be used
+     *          to find an existing run
+     */
   Run retrieveRunByRuncode(String runcode) throws ObjectNotFoundException;
 
   /**

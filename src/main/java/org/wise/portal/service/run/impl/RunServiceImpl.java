@@ -42,8 +42,11 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.run.impl.RunParameters;
+import org.wise.portal.domain.run.impl.RunPermission;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithRunException;
+import org.wise.portal.presentation.web.response.SharedOwner;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.portal.PortalService;
@@ -315,9 +318,48 @@ public class RunServiceImpl implements RunService {
     }
   }
 
-  /**
-   * @see RunService#removeSharedTeacherFromRun(String, Long)
-   */
+  public SharedOwner addSharedTeacherToRun(Long runId, String teacherUsername)
+      throws ObjectNotFoundException, TeacherAlreadySharedWithRunException {
+    User user = userDao.retrieveByUsername(teacherUsername);
+    Run run = this.retrieveById(runId);
+    if (!run.getSharedowners().contains(user)) {
+      run.getSharedowners().add(user);
+      this.runDao.save(run);
+
+      Project project = run.getProject();
+      project.getSharedowners().add(user);
+      this.projectDao.save(project);
+
+      this.aclService.addPermission(run, RunPermission.VIEW_STUDENT_WORK, user);
+      List<Integer> newPermissions = new ArrayList<>();
+      newPermissions.add(RunPermission.VIEW_STUDENT_WORK.getMask());
+      return new SharedOwner(user.getId(), user.getUserDetails().getUsername(),
+        user.getUserDetails().getFirstname(), user.getUserDetails().getLastname(), newPermissions);
+    } else {
+      throw new TeacherAlreadySharedWithRunException(teacherUsername + " is already shared with this run");
+    }
+  }
+
+  public void addSharedTeacherPermissionForRun(Long runId, Long userId, Integer permissionId) throws ObjectNotFoundException {
+    User user = userDao.getById(userId);
+    Run run = this.retrieveById(runId);
+    if (run.getSharedowners().contains(user)) {
+      this.aclService.addPermission(run, new RunPermission(permissionId), user);
+    }
+  }
+
+  public void removeSharedTeacherPermissionFromRun(Long runId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException {
+    User user = userDao.getById(userId);
+    Run run = this.retrieveById(runId);
+    if (run.getSharedowners().contains(user)) {
+      this.aclService.removePermission(run, new RunPermission(permissionId), user);
+    }
+  }
+
+    /**
+     * @see RunService#removeSharedTeacherFromRun(String, Long)
+     */
   public void removeSharedTeacherFromRun(String username, Long runId)
     throws ObjectNotFoundException {
     Run run = this.retrieveById(runId);
@@ -365,6 +407,10 @@ public class RunServiceImpl implements RunService {
       }
     }
     return null;
+  }
+
+  public List<Permission> getSharedTeacherPermissions(Run run, User sharedTeacher) {
+    return this.aclService.getPermissions(run, sharedTeacher);
   }
 
   private String generateUniqueRunCode(Locale locale) {

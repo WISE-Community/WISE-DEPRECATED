@@ -1,0 +1,48 @@
+<h2>Share Run</h2>
+Name: {{project.name}} <br/>
+Run ID: {{project.run.id}}<br/>
+Lesson ID: {{project.id}}
+<div style="display:flex">
+  <div>Find Teacher:</div>
+  <div>
+    <mat-form-field>
+      <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <div>
+    <button mat-raised-button (click)="addSharedOwner()"
+            [disabled]="myControl.value == ''"
+            aria-label="Add new shared owner"
+            color="accent"
+            class="add-run-input">
+      Share
+    </button>
+  </div>
+</div>
+
+<table>
+  <tr><th>Teacher Name</th><th>Permissions</th></tr>
+  <tr><td>{{project.run.teacherFirstName}} {{project.run.teacherLastName}}</td><td>Owner. Full Permissions</td></tr>
+  <tr *ngFor="let sharedOwner of project.run.sharedOwners">
+      <td>
+        {{sharedOwner.firstName}} {{sharedOwner.lastName}}
+        <button mat-raised-button (click)="removeSharedOwner(sharedOwner)"
+                aria-label="Removed shared owner"
+                color="accent"
+                class="add-run-input">
+          Revoke
+        </button>
+      </td>
+      <td>
+        <mat-checkbox [(ngModel)]="sharedOwner.permissionsObj[1]" disabled="true">View Student Work</mat-checkbox><br/>
+        <mat-checkbox [(ngModel)]="sharedOwner.permissionsObj[2]" (change)="permissionChanged(sharedOwner.id, 2, sharedOwner.permissionsObj[2])">View Student Names</mat-checkbox><br/>
+        <mat-checkbox [(ngModel)]="sharedOwner.permissionsObj[3]" (change)="permissionChanged(sharedOwner.id, 3, sharedOwner.permissionsObj[3])">Grade and Manage Run</mat-checkbox><br/>
+        <mat-checkbox>Edit Lesson Content</mat-checkbox>
+      </td>
+  </tr>
+</table>
