@@ -16,11 +16,7 @@ export class LibraryService {
   getLibraryGroups(): Observable<LibraryGroup[]> {
     return this.libraryGroups
       ? this.libraryGroups
-      : this.http.get<LibraryGroup[]>(this.libraryGroupsUrl)
-        .pipe(
-          tap(libraryGroups => this.log(`fetched project library groups`)),
-          catchError(this.handleError('getLibraryGroups', new Array<LibraryGroup>()))
-        );
+      : this.http.get<LibraryGroup[]>(this.libraryGroupsUrl);
   }
 
   /**
