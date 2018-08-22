@@ -100,37 +100,37 @@ export class TeacherService {
     this.newProjectSource.next(project);
   }
 
-  addSharedOwner(runId: string, teacherUsername: string) {
+  addSharedOwner(runId: number, teacherUsername: string) {
     const url = this.runPermissionUrl + "/" + runId + "/" + teacherUsername;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.put<Object>(url, null, {headers: headers});
   }
 
-  removeSharedOwner(runId: string, username: string) {
+  removeSharedOwner(runId: number, username: string) {
     const url = this.runPermissionUrl + "/" + runId + "/" + username;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.delete<Object>(url, {headers: headers});
   }
 
-  addSharedOwnerRunPermission(runId: number, userId: string, permissionId: string) {
+  addSharedOwnerRunPermission(runId: number, userId: string, permissionId: number) {
     const url = this.runPermissionUrl + "/" + runId + "/" + userId + "/" + permissionId;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.put<any>(url, null, {headers: headers});
   }
 
-  removeSharedOwnerRunPermission(runId: number, userId: string, permissionId: string) {
+  removeSharedOwnerRunPermission(runId: number, userId: string, permissionId: number) {
     const url = this.runPermissionUrl + "/" + runId + "/" + userId + "/" + permissionId;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.delete<any>(url, {headers: headers});
   }
 
-  addSharedOwnerProjectPermission(projectId: number, userId: string, permissionId: string) {
+  addSharedOwnerProjectPermission(projectId: number, userId: string, permissionId: number) {
     const url = this.projectPermissionUrl + "/" + projectId + "/" + userId + "/" + permissionId;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.put<Object>(url, { headers: headers });
   }
 
-  removeSharedOwnerProjectPermission(projectId: number, userId: string, permissionId: string) {
+  removeSharedOwnerProjectPermission(projectId: number, userId: string, permissionId: number) {
     const url = this.projectPermissionUrl + "/" + projectId + "/" + userId + "/" + permissionId;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.delete<Object>(url, { headers: headers });

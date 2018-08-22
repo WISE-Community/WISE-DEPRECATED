@@ -20,7 +20,7 @@ export class ShareRunDialogComponent implements OnInit {
   teacherSearchControl = new FormControl();
   options: string[] = [];
   filteredOptions: Observable<string[]>;
-  sharedOwners: object[] = [];
+  sharedOwners: any[] = [];
 
   constructor(public dialogRef: MatDialogRef<ShareRunDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
@@ -102,14 +102,14 @@ export class ShareRunDialogComponent implements OnInit {
   runPermissionChanged(sharedOwnerId, permissionId, isAddingPermission) {
     if (isAddingPermission) {
       this.teacherService.addSharedOwnerRunPermission(this.runId, sharedOwnerId, permissionId)
-          .subscribe((response) => {
+          .subscribe((response: any) => {
             if (response.status == "success") {
               this.addRunPermissionToSharedOwner(sharedOwnerId, permissionId);
             }
       })
     } else {
       this.teacherService.removeSharedOwnerRunPermission(this.runId, sharedOwnerId, permissionId)
-        .subscribe((response) => {
+        .subscribe((response: any) => {
           if (response.status == "success") {
             this.removeRunPermissionFromSharedOwner(sharedOwnerId, permissionId);
           }
@@ -130,14 +130,14 @@ export class ShareRunDialogComponent implements OnInit {
   projectPermissionChanged(sharedOwnerId, permissionId, isAddingPermission) {
     if (isAddingPermission) {
       this.teacherService.addSharedOwnerProjectPermission(this.project.id, sharedOwnerId, permissionId)
-        .subscribe((response) => {
+        .subscribe((response: any) => {
           if (response.status == "success") {
             this.addProjectPermissionToSharedOwner(sharedOwnerId, permissionId);
           }
         })
     } else {
       this.teacherService.removeSharedOwnerProjectPermission(this.project.id, sharedOwnerId, permissionId)
-        .subscribe((response) => {
+        .subscribe((response: any) => {
           if (response.status == "success") {
             this.removeProjectPermissionFromSharedOwner(sharedOwnerId, permissionId);
           }
@@ -155,7 +155,7 @@ export class ShareRunDialogComponent implements OnInit {
     sharedOwner.projectPermissions[permissionId] = false;
   }
 
-  getSharedOwner(sharedOwnerId) {
+  getSharedOwner(sharedOwnerId): any {
     for (let sharedOwner of this.sharedOwners) {
       if (sharedOwner.id == sharedOwnerId) {
         return sharedOwner;

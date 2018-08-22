@@ -371,9 +371,9 @@ public class RunServiceImpl implements RunService {
     if (run.getSharedowners().contains(user)) {
       run.getSharedowners().remove(user);
       this.runDao.save(run);
-      Project runProject = run.getProject();
-      runProject.getSharedowners().remove(user);
-      this.projectDao.save(runProject);
+      Project project = run.getProject();
+      project.getSharedowners().remove(user);
+      this.projectDao.save(project);
 
       try {
         List<Permission> runPermissions =
@@ -381,9 +381,9 @@ public class RunServiceImpl implements RunService {
         for (Permission runPermission : runPermissions) {
           this.aclService.removePermission(run, runPermission, user);
         }
-        List<Permission> projectPermissions = this.aclService.getPermissions(runProject, user);
+        List<Permission> projectPermissions = this.aclService.getPermissions(project, user);
         for (Permission projectPermission : projectPermissions) {
-          this.aclService.removePermission(run, projectPermission, user);
+          this.aclService.removePermission(project, projectPermission, user);
         }
       } catch (Exception e) {
         // do nothing. permissions might get be deleted if
