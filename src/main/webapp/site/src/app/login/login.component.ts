@@ -16,18 +16,21 @@ export class LoginComponent implements OnInit {
 
   credentials: any = {username: '', password: ''};
   error: boolean = false;
+  processing: boolean = false;
 
   constructor(private userService: UserService, private http: HttpClient,
       private router: Router) {
   }
 
   login(): boolean {
+    this.processing = true;
     this.error = false;
     this.userService.authenticate(this.credentials, () => {
       if (this.userService.isAuthenticated) {
         this.router.navigateByUrl(this.userService.getRedirectUrl());
       } else {
         this.error = true;
+        this.processing = false;
       }
     });
     return false;

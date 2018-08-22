@@ -1,0 +1,27 @@
+.mat-form-field-appearance-fill {
+  .mat-form-field-flex {
+    border-radius: $card-border-radius !important;
+  }
+
+  .mat-form-field-underline {
+    &::before {
+      max-height: 0;
+    }
+  }
+
+  .mat-form-field-ripple {
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
+    max-height: 0;
+  }
+
+  &.mat-focused {
+    .mat-form-field-ripple {
+      max-height: 2px;
+    }
+  }
+}
+
+.mat-icon-button.input-control--appearance-fill {
+  margin: 6px 0 6px 4px;
+}
