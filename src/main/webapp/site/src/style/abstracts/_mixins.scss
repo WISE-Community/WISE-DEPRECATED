@@ -17,6 +17,10 @@
     color: map-get($colors, primary);
   }
 
+  .app-background {
+    background-color: map-get($colors, control-bg);
+  }
+
   .content-block {
     background-color: map-get($background, background);
   }
