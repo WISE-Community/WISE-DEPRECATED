@@ -15,30 +15,33 @@ export class ShareRunDialogComponent implements OnInit {
 
   @Input()
   project: Project;
-  teacherName: string;
-  ownerName: string;
-  myControl = new FormControl();
+  projectId: number;
+  runId: number;
+  teacherSearchControl = new FormControl();
   options: string[] = [];
   filteredOptions: Observable<string[]>;
+  sharedOwners: object[] = [];
 
   constructor(public dialogRef: MatDialogRef<ShareRunDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any, private teacherService: TeacherService) {
-    this.project = data.project;
-    this.ownerName = data.owner
-    for (let sharedOwner of this.project.run.sharedOwners) {
-      this.populatePermissionsObj(sharedOwner);
-    }
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        private teacherService: TeacherService) {
+    this.projectId = data.project.id;
+    this.runId = data.project.run.id;
+
+    this.teacherService.getRun(this.runId).subscribe((project: any) => {
+      this.project = project;
+      this.populateSharedOwners(project.run.sharedOwners);
+    });
     this.teacherService.retrieveAllTeacherUsernames().subscribe((teacherUsernames) => {
       this.options = teacherUsernames;
     })
   }
 
   ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges
-      .pipe(
-        debounceTime(1000),
-        map(value => this._filter(value))
-      );
+    this.filteredOptions = this.teacherSearchControl.valueChanges.pipe(
+      debounceTime(1000),
+      map(value => this._filter(value))
+    );
   }
 
   private _filter(value: string): string[] {
@@ -49,38 +52,111 @@ export class ShareRunDialogComponent implements OnInit {
     return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
-  permissionChanged(sharedOwnerId, permissionId, isAddingPermission) {
-    console.log(sharedOwnerId, permissionId, isAddingPermission);
+  populateSharedOwners(sharedOwners) {
+    for (let sharedOwner of sharedOwners) {
+      const localSharedOwner = JSON.parse(JSON.stringify(sharedOwner));
+      this.populatePermissions(localSharedOwner);
+      delete localSharedOwner.permissions;
+      this.sharedOwners.push(localSharedOwner);
+    }
+  }
+
+  populatePermissions(sharedOwner) {
+    this.addRunPermissions(sharedOwner);
+    this.addProjectPermissions(sharedOwner);
+  }
+
+  addRunPermissions(sharedOwner) {
+    sharedOwner.runPermissions = {
+      1: true,  // View student work
+      2: false,  // Grade and manage run
+      3: false,  // View student names
+      16: false  // Admin (read, write, share)
+    };
+    for (let permission of sharedOwner.permissions) {
+      sharedOwner.runPermissions[permission] = true;
+    }
+  }
+
+  addProjectPermissions(sharedOwner) {
+    sharedOwner.projectPermissions = {
+      1: false,  // View the project
+      2: false,  // View and edit the project
+      16: false  // Admin (read, write, share)
+    };
+    const sharedProjectOwner = this.getSharedProjectOwner(sharedOwner.id);
+    for (let permission of sharedProjectOwner.permissions) {
+      sharedOwner.projectPermissions[permission] = true;
+    }
+  }
+
+  getSharedProjectOwner(userId) {
+    for (let sharedOwner of this.project.sharedOwners) {
+      if (sharedOwner.id == userId) {
+        return sharedOwner;
+      }
+    }
+    return { permissions: [] };
+  }
+
+  runPermissionChanged(sharedOwnerId, permissionId, isAddingPermission) {
     if (isAddingPermission) {
-      this.teacherService.addSharedPermissionToRun(this.project.run.id, sharedOwnerId, permissionId)
+      this.teacherService.addSharedOwnerRunPermission(this.runId, sharedOwnerId, permissionId)
           .subscribe((response) => {
             if (response.status == "success") {
-              this.addPermissionToSharedOwner(sharedOwnerId, permissionId);
+              this.addRunPermissionToSharedOwner(sharedOwnerId, permissionId);
             }
       })
     } else {
-      this.teacherService.removeSharedPermissionFromRun(this.project.run.id, sharedOwnerId, permissionId)
+      this.teacherService.removeSharedOwnerRunPermission(this.runId, sharedOwnerId, permissionId)
         .subscribe((response) => {
           if (response.status == "success") {
-            this.removePermissionFromSharedOwner(sharedOwnerId, permissionId);
+            this.removeRunPermissionFromSharedOwner(sharedOwnerId, permissionId);
           }
       })
     }
   }
 
-  addPermissionToSharedOwner(sharedOwnerId, permissionId) {
+  addRunPermissionToSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
-    sharedOwner.permissions.push(permissionId);
+    sharedOwner.runPermissions[permissionId] = true;
   }
 
-  removePermissionFromSharedOwner(sharedOwnerId, permissionId) {
+  removeRunPermissionFromSharedOwner(sharedOwnerId, permissionId) {
     const sharedOwner = this.getSharedOwner(sharedOwnerId);
-    const indexOfPermission = sharedOwner.permissions.indexOf(permissionId);
-    sharedOwner.permissions.splice(indexOfPermission, 1);
+    sharedOwner.runPermissions[permissionId] = false;
+  }
+
+  projectPermissionChanged(sharedOwnerId, permissionId, isAddingPermission) {
+    if (isAddingPermission) {
+      this.teacherService.addSharedOwnerProjectPermission(this.project.id, sharedOwnerId, permissionId)
+        .subscribe((response) => {
+          if (response.status == "success") {
+            this.addProjectPermissionToSharedOwner(sharedOwnerId, permissionId);
+          }
+        })
+    } else {
+      this.teacherService.removeSharedOwnerProjectPermission(this.project.id, sharedOwnerId, permissionId)
+        .subscribe((response) => {
+          if (response.status == "success") {
+            this.removeProjectPermissionFromSharedOwner(sharedOwnerId, permissionId);
+          }
+        })
+    }
+  }
+
+  addProjectPermissionToSharedOwner(sharedOwnerId, permissionId) {
+    const sharedOwner = this.getSharedOwner(sharedOwnerId);
+    sharedOwner.projectPermissions[permissionId] = true;
+  }
+
+  removeProjectPermissionFromSharedOwner(sharedOwnerId, permissionId) {
+    const sharedOwner = this.getSharedOwner(sharedOwnerId);
+    sharedOwner.projectPermissions[permissionId] = false;
   }
 
   getSharedOwner(sharedOwnerId) {
-    for (let sharedOwner of this.project.run.sharedOwners) {
+    for (let sharedOwner of this.sharedOwners) {
       if (sharedOwner.id == sharedOwnerId) {
         return sharedOwner;
       }
@@ -88,15 +164,15 @@ export class ShareRunDialogComponent implements OnInit {
     return { permissions: [] };
   }
 
-  addSharedOwner() {
-    const sharedOwnerUsername = this.myControl.value;
+  shareRun() {
+    const sharedOwnerUsername = this.teacherSearchControl.value;
     if (this.options.includes(sharedOwnerUsername) && !this.isSharedOwner(sharedOwnerUsername)) {
-      this.teacherService.addSharedOwner(this.project.run.id, sharedOwnerUsername)
+      this.teacherService.addSharedOwner(this.runId, sharedOwnerUsername)
           .subscribe((newSharedOwner) => {
         if (newSharedOwner != null) {
-          this.populatePermissionsObj(newSharedOwner);
-          this.project.run.sharedOwners.push(newSharedOwner);
-          this.myControl.value = '';
+          this.populatePermissions(newSharedOwner);
+          this.sharedOwners.push(newSharedOwner);
+          this.teacherSearchControl.setValue('');
         }
       });
     } else {
@@ -113,35 +189,20 @@ export class ShareRunDialogComponent implements OnInit {
     return false;
   }
 
-  removeSharedOwner(sharedOwner) {
-    this.teacherService.removeSharedOwner(this.project.run.id, sharedOwner.username)
+  unshareRun(sharedOwner) {
+    this.teacherService.removeSharedOwner(this.runId, sharedOwner.username)
         .subscribe((response) => {
-      this.removeSharedOwnerLocally(sharedOwner);
+      this.removeSharedOwner(sharedOwner);
     });
   }
 
-  removeSharedOwnerLocally(sharedOwner) {
-    for (let i = 0; i < this.project.run.sharedOwners.length; i ++) {
-      if (this.project.run.sharedOwners[i].id == sharedOwner.id) {
-        this.project.run.sharedOwners.splice(i, 1);
+  removeSharedOwner(sharedOwner) {
+    for (let i = 0; i < this.sharedOwners.length; i ++) {
+      if (this.sharedOwners[i].id == sharedOwner.id) {
+        this.sharedOwners.splice(i, 1);
         return;
       }
     }
-  }
-
-  populatePermissionsObj(sharedOwner) {
-    sharedOwner.permissionsObj = {
-      1: true,  // View student work
-      2: false,  // Grade and manage run
-      3: false,  // View student names
-      16: false  // Admin (read, write, share)
-    }
-    for (let permission of sharedOwner.permissions) {
-      sharedOwner.permissionsObj[permission] = true;
-    }
-  }
-
-  teacherNameChanged() {
   }
 
 }

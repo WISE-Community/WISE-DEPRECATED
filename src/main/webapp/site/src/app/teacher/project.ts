@@ -8,4 +8,5 @@ export class Project {
   thumbIconPath: string;
   run: Run;
   highlighted: boolean;
+  sharedOwners;
 }

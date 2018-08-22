@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
@@ -75,6 +76,15 @@ public class TeacherAPIController {
   }
 
   @ResponseBody
+  @RequestMapping(value = "/run/{runId}", method = RequestMethod.GET)
+  protected String getRun(@PathVariable Long runId)
+      throws ObjectNotFoundException, JSONException {
+    Run run = runService.retrieveById(runId);
+    Project project = run.getProject();
+    return getProjectJSON(project, run).toString();
+  }
+
+  @ResponseBody
   @RequestMapping(value = "/usernames", method = RequestMethod.GET)
   protected List<String> getAllTeacherUsernames() {
     return userDetailsService.retrieveAllUsernames("TeacherUserDetails");
@@ -120,11 +130,35 @@ public class TeacherAPIController {
     projectJSON.put("dateCreated", project.getDateCreated());
     projectJSON.put("dateArchived", project.getDateDeleted());
     projectJSON.put("thumbIconPath", getProjectThumbIconPath(project));
+    projectJSON.put("sharedOwners", getProjectSharedOwners(project));
     if (projectRun != null) {
       JSONObject runJSON = getRunJSON(projectRun);
       projectJSON.put("run", runJSON);
     }
     return projectJSON;
+  }
+
+  private JSONArray getProjectSharedOwners(Project project) throws JSONException {
+    JSONArray sharedOwners = new JSONArray();
+    for (User sharedOwner : project.getSharedowners()) {
+      JSONObject sharedOwnerJSON = new JSONObject();
+      sharedOwnerJSON.put("id", sharedOwner.getId());
+      sharedOwnerJSON.put("username", sharedOwner.getUserDetails().getUsername());
+      sharedOwnerJSON.put("firstName", sharedOwner.getUserDetails().getFirstname());
+      sharedOwnerJSON.put("lastName", sharedOwner.getUserDetails().getLastname());
+      sharedOwnerJSON.put("permissions", getSharedOwnerPermissions(project, sharedOwner));
+      sharedOwners.put(sharedOwnerJSON);
+    }
+    return sharedOwners;
+  }
+
+  private JSONArray getSharedOwnerPermissions(Project project, User sharedOwner) {
+    JSONArray sharedOwnerPermissions = new JSONArray();
+    List<Permission> sharedTeacherPermissions = projectService.getSharedTeacherPermissions(project, sharedOwner);
+    for (Permission permission : sharedTeacherPermissions) {
+      sharedOwnerPermissions.put(permission.getMask());
+    }
+    return sharedOwnerPermissions;
   }
 
   private JSONObject getRunJSON(Run projectRun) throws JSONException {
@@ -143,15 +177,15 @@ public class TeacherAPIController {
     return runJSON;
   }
 
-  private JSONArray getRunSharedOwners(Run projectRun) throws JSONException {
+  private JSONArray getRunSharedOwners(Run run) throws JSONException {
     JSONArray sharedOwners = new JSONArray();
-    for (User sharedOwner : projectRun.getSharedowners()) {
+    for (User sharedOwner : run.getSharedowners()) {
       JSONObject sharedOwnerJSON = new JSONObject();
       sharedOwnerJSON.put("id", sharedOwner.getId());
       sharedOwnerJSON.put("username", sharedOwner.getUserDetails().getUsername());
       sharedOwnerJSON.put("firstName", sharedOwner.getUserDetails().getFirstname());
       sharedOwnerJSON.put("lastName", sharedOwner.getUserDetails().getLastname());
-      sharedOwnerJSON.put("permissions", getSharedOwnerPermissions(projectRun, sharedOwner));
+      sharedOwnerJSON.put("permissions", getSharedOwnerPermissions(run, sharedOwner));
       sharedOwners.put(sharedOwnerJSON);
     }
     return sharedOwners;

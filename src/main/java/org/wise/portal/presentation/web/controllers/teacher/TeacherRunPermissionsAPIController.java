@@ -1,7 +1,5 @@
 package org.wise.portal.presentation.web.controllers.teacher;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -17,8 +15,8 @@ import org.wise.portal.service.run.RunService;
  * @author Geoffrey Kwan
  */
 @RestController
-@RequestMapping("/site/api/teacher/permission")
-public class TeacherPermissionsAPIController {
+@RequestMapping("/site/api/teacher/run/permission")
+public class TeacherRunPermissionsAPIController {
 
   @Autowired
   private RunService runService;
@@ -26,9 +24,9 @@ public class TeacherPermissionsAPIController {
   @ResponseBody
   @RequestMapping(value = "/{runId}/{teacherUsername}", method = RequestMethod.PUT)
   protected SharedOwner addSharedOwner(@PathVariable Long runId,
-      @PathVariable String teacherUsername) throws JSONException {
+                                       @PathVariable String teacherUsername) {
     try {
-      return runService.addSharedTeacherToRun(runId, teacherUsername);
+      return runService.addSharedTeacher(runId, teacherUsername);
     } catch (ObjectNotFoundException e) {
       return null;
     } catch (TeacherAlreadySharedWithRunException e2) {
@@ -38,10 +36,10 @@ public class TeacherPermissionsAPIController {
 
   @ResponseBody
   @RequestMapping(value = "/{runId}/{username}", method = RequestMethod.DELETE)
-  protected SimpleResponse removeSharedOwner(@PathVariable Long runId, @PathVariable String username)
-      throws JSONException {
+  protected SimpleResponse removeSharedOwner(@PathVariable Long runId,
+                                             @PathVariable String username) {
     try {
-      runService.removeSharedTeacherFromRun(username, runId);
+      runService.removeSharedTeacher(username, runId);
       return new SimpleResponse("success", "successfully removed shared owner");
     } catch (ObjectNotFoundException e) {
       return new SimpleResponse("error", "user or run was not found");
@@ -50,11 +48,12 @@ public class TeacherPermissionsAPIController {
 
   @ResponseBody
   @RequestMapping(value = "/{runId}/{userId}/{permissionId}", method = RequestMethod.PUT)
-  protected SimpleResponse addNewPermission(@PathVariable Long runId,
-      @PathVariable Long userId, @PathVariable Integer permissionId) throws JSONException {
+  protected SimpleResponse addPermission(@PathVariable Long runId,
+                                         @PathVariable Long userId,
+                                         @PathVariable Integer permissionId) {
     try {
-      runService.addSharedTeacherPermissionForRun(runId, userId, permissionId);
-      return new SimpleResponse("success", "successfully added new permission");
+      runService.addSharedTeacherPermission(runId, userId, permissionId);
+      return new SimpleResponse("success", "successfully added run permission");
     } catch (ObjectNotFoundException e) {
       return new SimpleResponse("error", "user or run was not found");
     }
@@ -63,10 +62,11 @@ public class TeacherPermissionsAPIController {
   @ResponseBody
   @RequestMapping(value = "/{runId}/{userId}/{permissionId}", method = RequestMethod.DELETE)
   protected SimpleResponse deletePermission(@PathVariable Long runId,
-      @PathVariable Long userId, @PathVariable Integer permissionId) {
+                                            @PathVariable Long userId,
+                                            @PathVariable Integer permissionId) {
     try {
-      runService.removeSharedTeacherPermissionFromRun(runId, userId, permissionId);
-      return new SimpleResponse("success", "successfully removed permission");
+      runService.removeSharedTeacherPermission(runId, userId, permissionId);
+      return new SimpleResponse("success", "successfully removed run permission");
     } catch (ObjectNotFoundException e) {
       return new SimpleResponse("error", "user or run was not found");
     }

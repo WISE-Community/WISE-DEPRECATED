@@ -265,9 +265,9 @@ public class RunServiceImpl implements RunService {
   }
 
   /**
-   * @see RunService#addSharedTeacherToRun(AddSharedTeacherParameters)
+   * @see RunService#addSharedTeacher(AddSharedTeacherParameters)
    */
-  public void addSharedTeacherToRun(
+  public void addSharedTeacher(
     AddSharedTeacherParameters addSharedTeacherParameters) {
     Run run = addSharedTeacherParameters.getRun();
     String sharedOwnerUsername = addSharedTeacherParameters.getSharedOwnerUsername();
@@ -318,7 +318,7 @@ public class RunServiceImpl implements RunService {
     }
   }
 
-  public SharedOwner addSharedTeacherToRun(Long runId, String teacherUsername)
+  public SharedOwner addSharedTeacher(Long runId, String teacherUsername)
       throws ObjectNotFoundException, TeacherAlreadySharedWithRunException {
     User user = userDao.retrieveByUsername(teacherUsername);
     Run run = this.retrieveById(runId);
@@ -340,7 +340,7 @@ public class RunServiceImpl implements RunService {
     }
   }
 
-  public void addSharedTeacherPermissionForRun(Long runId, Long userId, Integer permissionId) throws ObjectNotFoundException {
+  public void addSharedTeacherPermission(Long runId, Long userId, Integer permissionId) throws ObjectNotFoundException {
     User user = userDao.getById(userId);
     Run run = this.retrieveById(runId);
     if (run.getSharedowners().contains(user)) {
@@ -348,7 +348,7 @@ public class RunServiceImpl implements RunService {
     }
   }
 
-  public void removeSharedTeacherPermissionFromRun(Long runId, Long userId, Integer permissionId)
+  public void removeSharedTeacherPermission(Long runId, Long userId, Integer permissionId)
       throws ObjectNotFoundException {
     User user = userDao.getById(userId);
     Run run = this.retrieveById(runId);
@@ -358,9 +358,9 @@ public class RunServiceImpl implements RunService {
   }
 
     /**
-     * @see RunService#removeSharedTeacherFromRun(String, Long)
+     * @see RunService#removeSharedTeacher(String, Long)
      */
-  public void removeSharedTeacherFromRun(String username, Long runId)
+  public void removeSharedTeacher(String username, Long runId)
     throws ObjectNotFoundException {
     Run run = this.retrieveById(runId);
     User user = userDao.retrieveByUsername(username);

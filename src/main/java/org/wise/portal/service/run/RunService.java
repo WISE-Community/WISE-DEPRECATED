@@ -138,7 +138,7 @@ public interface RunService {
    */
   @Secured( {"ROLE_TEACHER"} )
   @Transactional()
-  void addSharedTeacherToRun(AddSharedTeacherParameters addSharedTeacherParameters)
+  void addSharedTeacher(AddSharedTeacherParameters addSharedTeacherParameters)
       throws ObjectNotFoundException;
 
   /**
@@ -169,17 +169,17 @@ public interface RunService {
 
   @Secured( {"ROLE_TEACHER"} )
   @Transactional()
-  SharedOwner addSharedTeacherToRun(Long runId, String teacherUsername)
+  SharedOwner addSharedTeacher(Long runId, String teacherUsername)
       throws ObjectNotFoundException, TeacherAlreadySharedWithRunException;
 
   @Secured( {"ROLE_TEACHER"} )
   @Transactional()
-  void addSharedTeacherPermissionForRun(Long runId, Long userId, Integer permissionId)
+  void addSharedTeacherPermission(Long runId, Long userId, Integer permissionId)
       throws ObjectNotFoundException;
 
   @Secured( {"ROLE_TEACHER"} )
   @Transactional()
-  void removeSharedTeacherPermissionFromRun(Long runId, Long userId, Integer permissionId)
+  void removeSharedTeacherPermission(Long runId, Long userId, Integer permissionId)
       throws ObjectNotFoundException;
 
   /**
@@ -194,7 +194,7 @@ public interface RunService {
      */
   @Secured( {"ROLE_TEACHER"} )
   @Transactional()
-  void removeSharedTeacherFromRun(String username, Long runId) throws ObjectNotFoundException;
+  void removeSharedTeacher(String username, Long runId) throws ObjectNotFoundException;
 
   /**
    * Returns the permission that the specified user has on the specified run
