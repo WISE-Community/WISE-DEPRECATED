@@ -15,9 +15,6 @@ export class SearchBarComponent implements OnInit {
   placeholderText: string = 'Search'; // placeholder text
 
   @Input()
-  floatLabel: string = 'auto'; // when to show the floating label ('always', 'auto' or 'never')
-
-  @Input()
   disable: boolean = false; // whether input is disabled
 
   @Input()

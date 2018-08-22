@@ -4,37 +4,4 @@
 
 .select-menu {
   width: 100%;
-
-  .mat-form-field-infix {
-    border: 0;
-    margin-top: 1.4375em;
-    padding: 0.875em 0.656em;
-    border-radius: $card-border-radius;
-  }
-
-  .mat-form-field-label {
-    top: 1.725em;
-    left: .656em;
-  }
-
-  &.mat-form-field-should-float {
-    .mat-form-field-label-wrapper {
-      top: -1.4375em;
-      padding-top: 1.4375em;
-    }
-
-    .mat-form-field-label {
-      top: 1.4375em;
-    }
-  }
-
-  .mat-form-field-underline {
-    max-height: 0;
-
-    .mat-form-field-ripple {
-      top: -2px;
-      border-bottom-left-radius: $card-border-radius;
-      border-bottom-right-radius: $card-border-radius;
-    }
-  }
 }
