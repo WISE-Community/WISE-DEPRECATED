@@ -1,0 +1,27 @@
+<p>Create WISE Student Account</p>
+<mat-form-field fxFlex>
+  <input matInput
+         id="firstName"
+         name="firstName"
+         placeholder="First Name"
+         [(ngModel)]="firstName"
+         autofocus />
+</mat-form-field>
+<mat-form-field fxFlex>
+  <input matInput
+         id="lastName"
+         name="lastName"
+         placeholder="Last Name"
+         [(ngModel)]="lastName"
+         autofocus />
+</mat-form-field>
+
+<button fxFlex mat-raised-button color="primary" type="submit" (click)="signUp()">
+  Sign Up
+</button>
+
+OR
+
+<button fxFlex mat-raised-button color="primary" type="submit" (click)="socialSignIn('google')">
+  Sign Up With Google
+</button>

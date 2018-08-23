@@ -1,18 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RegisterStudentFormComponent } from './register-student-form.component';
+import { RegisterStudentComponent } from './register-student.component';
 import { RegisterModule } from "../register.module";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { RouterTestingModule } from "@angular/router/testing";
-import { StudentRun } from "../../student/student-run";
 import { Observable } from "rxjs";
-import { StudentService } from "../../student/student.service";
+import { StudentRun } from "../../student/student-run";
 import { User } from "../../domain/user";
-import { UserService } from '../../services/user.service';
+import { StudentService } from "../../student/student.service";
+import { UserService } from "../../services/user.service";
+import { AuthService } from "angularx-social-login";
+import { RouterTestingModule } from "../../../../../../../../node_modules/@angular/router/testing";
+import { BrowserAnimationsModule } from "../../../../../../../../node_modules/@angular/platform-browser/animations";
 
-describe('RegisterStudentFormComponent', () => {
-  let component: RegisterStudentFormComponent;
-  let fixture: ComponentFixture<RegisterStudentFormComponent>;
+describe('RegisterStudentComponent', () => {
+  let component: RegisterStudentComponent;
+  let fixture: ComponentFixture<RegisterStudentComponent>;
 
   beforeEach(async(() => {
     const studentServiceStub = {
@@ -46,19 +47,24 @@ describe('RegisterStudentFormComponent', () => {
         });
       }
     };
+    const authServiceStub = {
+      signIn(): any {
+      }
+    };
     TestBed.configureTestingModule({
       declarations: [ ],
       imports: [ BrowserAnimationsModule, RegisterModule, RouterTestingModule ],
       providers: [
         { provide: StudentService, useValue: studentServiceStub },
-        { provide: UserService, useValue: userServiceStub }
+        { provide: UserService, useValue: userServiceStub },
+        { provide: AuthService, useValue: authServiceStub }
       ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RegisterStudentFormComponent);
+    fixture = TestBed.createComponent(RegisterStudentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -16,6 +16,8 @@ import { RegisterTeacherCompleteComponent } from './register-teacher-complete/re
 import { RegisterTeacherGoogleUserAlreadyExistsComponent } from './register-teacher-google-user-already-exists/register-teacher-google-user-already-exists.component';
 import { RegisterStudentFormComponent } from './register-student-form/register-student-form.component';
 import { RegisterStudentCompleteComponent } from './register-student-complete/register-student-complete.component';
+import { RegisterStudentComponent } from './register-student/register-student.component';
+import { RegisterGoogleUserAlreadyExistsComponent } from './register-google-user-already-exists/register-google-user-already-exists.component';
 
 const materialModules = [
   MatButtonModule,
@@ -43,7 +45,9 @@ const materialModules = [
     RegisterTeacherCompleteComponent,
     RegisterTeacherGoogleUserAlreadyExistsComponent,
     RegisterStudentFormComponent,
-    RegisterStudentCompleteComponent
+    RegisterStudentCompleteComponent,
+    RegisterStudentComponent,
+    RegisterGoogleUserAlreadyExistsComponent
   ],
   exports: [ RegisterComponent ]
 })

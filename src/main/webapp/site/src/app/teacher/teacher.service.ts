@@ -13,7 +13,6 @@ export class TeacherService {
 
   private projectsUrl = 'api/teacher/projects';
   private registerUrl = 'api/teacher/register';
-  private checkGoogleUserIdUrl = 'api/teacher/checkGoogleUserId';
   private createRunUrl = 'api/teacher/run/create';
   private newProjectSource = new Subject<Project>();
   public newProjectSource$ = this.newProjectSource.asObservable();
@@ -40,18 +39,6 @@ export class TeacherService {
         const userName = response;
         callback(userName);
       });
-  }
-
-  isGoogleIdExists(googleUserId: string) {
-    let params = new HttpParams().set("googleUserId", googleUserId);
-    return this.http.get<User>(this.checkGoogleUserIdUrl, { params: params });
-    /*
-      .pipe(
-        tap((googleIdExists) => {
-          callback(googleIdExists);
-        }),
-        catchError(this.handleError('isGoogleIdExists', googleUserId)));
-        */
   }
 
   /**

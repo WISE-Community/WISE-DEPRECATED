@@ -9,6 +9,8 @@ import { RegisterTeacherComponent } from "./register-teacher/register-teacher.co
 import { RegisterTeacherFormComponent } from "./register-teacher-form/register-teacher-form.component";
 import { RegisterTeacherCompleteComponent } from "./register-teacher-complete/register-teacher-complete.component";
 import { RegisterTeacherGoogleUserAlreadyExistsComponent } from "./register-teacher-google-user-already-exists/register-teacher-google-user-already-exists.component";
+import { RegisterStudentComponent } from './register-student/register-student.component';
+import { RegisterGoogleUserAlreadyExistsComponent } from './register-google-user-already-exists/register-google-user-already-exists.component';
 
 const registerRoutes: Routes = [
   {
@@ -16,12 +18,14 @@ const registerRoutes: Routes = [
     component: RegisterComponent,
     children: [
       { path: '', component: RegisterHomeComponent },
+      { path: 'join/student', component: RegisterStudentComponent },
       { path: 'join/student/form', component: RegisterStudentFormComponent },
       { path: 'join/student/complete', component: RegisterStudentCompleteComponent },
       { path: 'join/teacher', component: RegisterTeacherComponent },
       { path: 'join/teacher/complete', component: RegisterTeacherCompleteComponent },
       { path: 'join/teacher/form', component: RegisterTeacherFormComponent },
-      { path: 'join/teacher/googleUserAlreadyExists', component: RegisterTeacherGoogleUserAlreadyExistsComponent }
+      { path: 'join/teacher/googleUserAlreadyExists', component: RegisterTeacherGoogleUserAlreadyExistsComponent },
+      { path: 'join/googleUserAlreadyExists', component: RegisterGoogleUserAlreadyExistsComponent }
     ]
   }
 ];
