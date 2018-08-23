@@ -56,14 +56,14 @@ public class TeacherAPIController {
   protected String getRuns() throws JSONException {
     User user = ControllerUtil.getSignedInUser();
     List<Run> runs = runService.getRunListByOwner(user);
-    JSONArray projectsArray = new JSONArray();
+    JSONArray runsJSONArray = new JSONArray();
     for (Run run : runs) {
       JSONObject runJSON = getRunJSON(run);
       JSONObject projectJSON = getProjectJSON(run.getProject());
       runJSON.put("project", projectJSON);
-      projectsArray.put(runJSON);
+      runsJSONArray.put(runJSON);
     }
-    return projectsArray.toString();
+    return runsJSONArray.toString();
   }
 
   private JSONObject getRunJSON(Run run) throws JSONException {

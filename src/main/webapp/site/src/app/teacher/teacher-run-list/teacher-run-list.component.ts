@@ -11,8 +11,6 @@ export class TeacherRunListComponent implements OnInit {
 
   runs: Run[] = [];
   filteredRuns: Run[] = [];
-  // projects: Project[] = [];
-  // filteredProjects: Project[] = [];
   loaded: boolean = false; // whether array of runs has been retrieved from server
   searchValue: string = '';
   filterOptions: any[] = [
@@ -31,7 +29,6 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   ngOnInit() {
-    //this.getProjects();
     this.getRuns();
   }
 
@@ -44,16 +41,6 @@ export class TeacherRunListComponent implements OnInit {
         this.loaded = true;
       });
   }
-
-  // getProjects() {
-  //   this.teacherService.getProjects()
-  //     .subscribe(projects => {
-  //       this.projects = projects;
-  //       this.filteredProjects = projects;
-  //       this.performSearchAndFilter();
-  //       this.loaded = true;
-  //     });
-  // }
 
   performSearchAndFilter() {
     this.filteredRuns = this.searchValue ? this.performSearch(this.searchValue) : this.runs;
@@ -86,12 +73,6 @@ export class TeacherRunListComponent implements OnInit {
       }
     }
   }
-
-  // hideArchivedItems() {
-  //   this.filteredRuns = this.filteredRuns.filter((project: Project) => {
-  //     return project.dateArchived == null && (project.run == null || (project.run != null && project.run.endTime == null));
-  //   });
-  // }
 
   performSearch(searchValue: string) {
     searchValue = searchValue.toLocaleLowerCase();
