@@ -23,21 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher.run;
 
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +46,12 @@ import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
+
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Controller for sharing runs between teachers and
@@ -246,7 +237,7 @@ public class ShareProjectRunController {
       try {
         String removeUserFromRun = request.getParameter("removeUserFromRun");
         if (removeUserFromRun != null && Boolean.valueOf(removeUserFromRun)) {
-          runService.removeSharedTeacherFromRun(params.getSharedOwnerUsername(), run.getId());
+          runService.removeSharedTeacher(params.getSharedOwnerUsername(), run.getId());
         } else {
           // we're either adding a new shared teacher or changing her permissions
           if (run.getSharedowners().contains(shareWithUser)) {
@@ -254,7 +245,7 @@ public class ShareProjectRunController {
             runService.updateSharedTeacherForRun(params);
           } else {
             // the user is not a shared owner yet so we will add them as a shared teacher
-            runService.addSharedTeacherToRun(params);
+            runService.addSharedTeacher(params);
 
             // make a workgroup for this shared teacher for this run
             String sharedOwnerUsername = params.getSharedOwnerUsername();
@@ -302,7 +293,7 @@ public class ShareProjectRunController {
     HttpServletResponse response) throws Exception {
     Long runIdToRemove = new Long(runId);
     String usernameToRemove = ControllerUtil.getSignedInUser().getUserDetails().getUsername();
-    runService.removeSharedTeacherFromRun(usernameToRemove, runIdToRemove);
+    runService.removeSharedTeacher(usernameToRemove, runIdToRemove);
     response.getWriter().write("success");
     return null;
   }
