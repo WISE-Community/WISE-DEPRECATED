@@ -7,5 +7,6 @@ export class Project {
   dateArchived: string;
   thumbIconPath: string;
   isHighlighted: boolean;
-  run: Run;
+  sharedOwners;
+ run: Run;
 }

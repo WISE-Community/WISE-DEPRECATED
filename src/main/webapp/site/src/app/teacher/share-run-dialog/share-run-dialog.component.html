@@ -1,0 +1,48 @@
+<div style="display: flex;"><div style="width: 30%"><h2>Share Run</h2></div><div style="width: 40%"></div><div style="width: 10%"><button mat-button [mat-dialog-close]="true">X</button></div></div>
+Name: {{run.name}} <br/>
+Run ID: {{run.id}}<br/>
+Lesson ID: {{run.project.id}}
+<div style="display:flex">
+  <div>Find Teacher:</div>
+  <div>
+    <mat-form-field>
+      <input type="text" placeholder="Enter Teacher Name" aria-label="Number" matInput [formControl]="teacherSearchControl" [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <div>
+    <button mat-raised-button (click)="shareRun()"
+            [disabled]="teacherSearchControl.value == ''"
+            aria-label="Add new shared owner"
+            color="accent"
+            class="add-run-input">
+      Share
+    </button>
+  </div>
+</div>
+
+<table>
+  <tr><th>Teacher Name</th><th>Permissions</th></tr>
+  <tr><td>{{run.teacherFirstName}} {{run.teacherLastName}}</td><td>Owner. Full Permissions</td></tr>
+  <tr *ngFor="let sharedOwner of sharedOwners">
+      <td>
+        {{sharedOwner.firstName}} {{sharedOwner.lastName}}
+        <button mat-raised-button (click)="unshareRun(sharedOwner)"
+                aria-label="Removed shared owner"
+                color="accent"
+                class="add-run-input">
+          Revoke
+        </button>
+      </td>
+      <td>
+        <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[1]" disabled="true">View Student Work</mat-checkbox><br/>
+        <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[3]" (change)="runPermissionChanged(sharedOwner.id, 3, sharedOwner.runPermissions[3])">View Student Names</mat-checkbox><br/>
+        <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[2]" (change)="runPermissionChanged(sharedOwner.id, 2, sharedOwner.runPermissions[2])">Grade and Manage Run</mat-checkbox><br/>
+        <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[2]" (change)="projectPermissionChanged(sharedOwner.id, 2, sharedOwner.projectPermissions[2])">Edit Lesson Content</mat-checkbox>
+      </td>
+  </tr>
+</table>

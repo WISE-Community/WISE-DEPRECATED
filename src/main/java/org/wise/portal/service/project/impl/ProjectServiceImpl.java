@@ -45,15 +45,14 @@ import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.Tag;
-import org.wise.portal.domain.project.impl.PreviewProjectParameters;
-import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
-import org.wise.portal.domain.project.impl.ProjectParameters;
-import org.wise.portal.domain.project.impl.ProjectType;
+import org.wise.portal.domain.project.impl.*;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithProjectException;
+import org.wise.portal.presentation.web.response.SharedOwner;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.premadecomment.PremadeCommentService;
@@ -603,5 +602,58 @@ public class ProjectServiceImpl implements ProjectService {
       pParams.setMetadata(newProjectMetadata);
     }
     return createProject(pParams);
+  }
+
+  public List<Permission> getSharedTeacherPermissions(Project project, User sharedTeacher) {
+    return this.aclService.getPermissions(project, sharedTeacher);
+  }
+
+  public SharedOwner addSharedTeacher(Long projectId, String username)
+      throws ObjectNotFoundException, TeacherAlreadySharedWithProjectException {
+    User user = userService.retrieveUserByUsername(username);
+    Project project = this.getById(projectId);
+    if (project.getSharedowners().contains(user)) {
+      AddSharedTeacherParameters addSharedTeacherParameters = new AddSharedTeacherParameters();
+      addSharedTeacherParameters.setProject(getById(projectId));
+      addSharedTeacherParameters.setSharedOwnerUsername(username);
+      addSharedTeacherToProject(addSharedTeacherParameters);
+      return createNewSharedOwner(username);
+    } else {
+      throw new TeacherAlreadySharedWithProjectException(username + " is already shared with this project");
+    }
+  }
+
+  SharedOwner createNewSharedOwner(String username) {
+    User user = userService.retrieveUserByUsername(username);
+    MutableUserDetails userDetails = user.getUserDetails();
+    Long userId = user.getId();
+    String firstName = userDetails.getFirstname();
+    String lastName = userDetails.getLastname();
+    List<Integer> permissions = new ArrayList<>();
+    permissions.add(ProjectPermission.EDIT_PROJECT.getMask());
+    return new SharedOwner(userId, username, firstName, lastName, permissions);
+  }
+
+  public void removeSharedTeacher(Long projectId, String username)
+      throws ObjectNotFoundException {
+    removeSharedTeacherFromProject(username, getById(projectId));
+  }
+
+  public void addSharedTeacherPermission(Long projectId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException {
+    User user = userService.retrieveById(userId);
+    Project project = getById(projectId);
+    if (project.getSharedowners().contains(user)) {
+      this.aclService.addPermission(project, new ProjectPermission(permissionId), user);
+    }
+  }
+
+  public void removeSharedTeacherPermission(Long projectId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException {
+    User user = userService.retrieveById(userId);
+    Project project = getById(projectId);
+    if (project.getSharedowners().contains(user)) {
+      this.aclService.removePermission(project, new ProjectPermission(permissionId), user);
+    }
   }
 }

@@ -23,6 +23,7 @@
  */
 package org.wise.portal.service.run.impl;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
@@ -42,8 +43,11 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.run.impl.RunParameters;
+import org.wise.portal.domain.run.impl.RunPermission;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithRunException;
+import org.wise.portal.presentation.web.response.SharedOwner;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.portal.PortalService;
@@ -262,9 +266,9 @@ public class RunServiceImpl implements RunService {
   }
 
   /**
-   * @see RunService#addSharedTeacherToRun(AddSharedTeacherParameters)
+   * @see RunService#addSharedTeacher(AddSharedTeacherParameters)
    */
-  public void addSharedTeacherToRun(
+  public void addSharedTeacher(
     AddSharedTeacherParameters addSharedTeacherParameters) {
     Run run = addSharedTeacherParameters.getRun();
     String sharedOwnerUsername = addSharedTeacherParameters.getSharedOwnerUsername();
@@ -315,10 +319,49 @@ public class RunServiceImpl implements RunService {
     }
   }
 
-  /**
-   * @see RunService#removeSharedTeacherFromRun(String, Long)
-   */
-  public void removeSharedTeacherFromRun(String username, Long runId)
+  public SharedOwner addSharedTeacher(Long runId, String teacherUsername)
+      throws ObjectNotFoundException, TeacherAlreadySharedWithRunException {
+    User user = userDao.retrieveByUsername(teacherUsername);
+    Run run = this.retrieveById(runId);
+    if (!run.getSharedowners().contains(user)) {
+      run.getSharedowners().add(user);
+      this.runDao.save(run);
+
+      Project project = run.getProject();
+      project.getSharedowners().add(user);
+      this.projectDao.save(project);
+
+      this.aclService.addPermission(run, RunPermission.VIEW_STUDENT_WORK, user);
+      List<Integer> newPermissions = new ArrayList<>();
+      newPermissions.add(RunPermission.VIEW_STUDENT_WORK.getMask());
+      return new SharedOwner(user.getId(), user.getUserDetails().getUsername(),
+        user.getUserDetails().getFirstname(), user.getUserDetails().getLastname(), newPermissions);
+    } else {
+      throw new TeacherAlreadySharedWithRunException(teacherUsername + " is already shared with this run");
+    }
+  }
+
+  public void addSharedTeacherPermission(Long runId, Long userId, Integer permissionId) throws ObjectNotFoundException {
+    User user = userDao.getById(userId);
+    Run run = this.retrieveById(runId);
+    if (run.getSharedowners().contains(user)) {
+      this.aclService.addPermission(run, new RunPermission(permissionId), user);
+    }
+  }
+
+  public void removeSharedTeacherPermission(Long runId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException {
+    User user = userDao.getById(userId);
+    Run run = this.retrieveById(runId);
+    if (run.getSharedowners().contains(user)) {
+      this.aclService.removePermission(run, new RunPermission(permissionId), user);
+    }
+  }
+
+    /**
+     * @see RunService#removeSharedTeacher(String, Long)
+     */
+  public void removeSharedTeacher(String username, Long runId)
     throws ObjectNotFoundException {
     Run run = this.retrieveById(runId);
     User user = userDao.retrieveByUsername(username);
@@ -329,9 +372,9 @@ public class RunServiceImpl implements RunService {
     if (run.getSharedowners().contains(user)) {
       run.getSharedowners().remove(user);
       this.runDao.save(run);
-      Project runProject = run.getProject();
-      runProject.getSharedowners().remove(user);
-      this.projectDao.save(runProject);
+      Project project = (Project) Hibernate.unproxy(run.getProject());
+      project.getSharedowners().remove(user);
+      this.projectDao.save(project);
 
       try {
         List<Permission> runPermissions =
@@ -339,9 +382,9 @@ public class RunServiceImpl implements RunService {
         for (Permission runPermission : runPermissions) {
           this.aclService.removePermission(run, runPermission, user);
         }
-        List<Permission> projectPermissions = this.aclService.getPermissions(runProject, user);
+        List<Permission> projectPermissions = this.aclService.getPermissions(project, user);
         for (Permission projectPermission : projectPermissions) {
-          this.aclService.removePermission(run, projectPermission, user);
+          this.aclService.removePermission(project, projectPermission, user);
         }
       } catch (Exception e) {
         // do nothing. permissions might get be deleted if
@@ -365,6 +408,10 @@ public class RunServiceImpl implements RunService {
       }
     }
     return null;
+  }
+
+  public List<Permission> getSharedTeacherPermissions(Run run, User sharedTeacher) {
+    return this.aclService.getPermissions(run, sharedTeacher);
   }
 
   private String generateUniqueRunCode(Locale locale) {

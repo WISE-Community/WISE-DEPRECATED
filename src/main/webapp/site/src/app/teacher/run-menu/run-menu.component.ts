@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material';
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
 import { CreateRunDialogComponent } from "../create-run-dialog/create-run-dialog.component";
+import { ShareRunDialogComponent } from "../share-run-dialog/share-run-dialog.component";
 
 @Component({
   selector: 'app-run-menu',
@@ -22,6 +23,12 @@ export class RunMenuComponent implements OnInit {
   ngOnInit() {
     this.editLink = `/wise/author/authorproject.html?projectId=${ this.run.project.id }`;
     this.previewLink = `/wise/previewproject.html?projectId=${ this.run.project.id }`;
+  }
+
+  shareRun() {
+    this.dialog.open(ShareRunDialogComponent, {
+      data: { run: this.run }
+    });
   }
 
   showCreateRunDialog() {
