@@ -1,20 +1,20 @@
 .main {
-  margin: 96px 0 32px;
-  padding: 16px;
+  padding: 112px 16px 48px;
   flex: 1 0 auto;
 
   @media (min-width: breakpoint('sm.min')) {
-    padding: 32px;
+    padding: 144px 48px 84px;
   }
 
   @media (min-width: breakpoint('md.min')) {
-    margin-top: 112px;
+    padding-top: 128px;
+  }
+
+  @media (min-width: breakpoint('lg.min')) {
+    padding-top: 144px;
   }
 }
 
 .main--fullwidth {
-  padding: 0;
-  padding: 0;
-  margin-top: 80px;
-  margin-bottom: 0;
+  padding: 80px 0 0;
 }

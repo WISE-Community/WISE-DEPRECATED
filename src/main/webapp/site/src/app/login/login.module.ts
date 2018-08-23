@@ -9,7 +9,7 @@ import { LoginRoutingModule } from "./login-routing.module";
 import {
   MatButtonModule,
   MatCardModule,
-  MatDialogModule,
+  MatDividerModule,
   MatFormFieldModule,
   MatInputModule
  } from '@angular/material';
@@ -17,7 +17,7 @@ import {
 const materialModules = [
   MatButtonModule,
   MatCardModule,
-  MatDialogModule,
+  MatDividerModule,
   MatFormFieldModule,
   MatInputModule
 ];

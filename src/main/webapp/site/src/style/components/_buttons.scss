@@ -16,3 +16,23 @@
     @include mat-elevation(8);
   }
 }
+
+.button--social-login {
+  .mat-button-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  img {
+    width: 18px;
+    height: auto;
+    margin: 0 18px 0 -14px;
+    padding: 7px;
+    background-color: #fff;
+    border-radius: 2px;
+  }
+}
+
+.button--google {
+  background-color: #ea4335 !important;
+}

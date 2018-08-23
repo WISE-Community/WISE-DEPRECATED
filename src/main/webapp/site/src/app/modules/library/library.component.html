@@ -6,13 +6,13 @@
         Explore suggested WISE curricula for the given grade levels or search for specific units that address your needs.
       </p>
       <div class="library__filter">
-        <div fxLayout="row" fxLayoutAlign="stretch center">
+        <div fxLayout="row" fxLayoutAlign="start start">
           <app-search-bar [placeholderText]="'Keyword search'"
                           [value]="searchValue"
                           (update)="searchUpdated($event)"
                           [disable]="searchDisabled">
           </app-search-bar>
-          <button class="library__filter-toggle"
+          <button class="library__filter-toggle input-control--appearance-fill"
                   mat-icon-button
                   (click)="showFilters = !showFilters">
             <mat-icon matBadge="+"
@@ -75,8 +75,8 @@
           <a href="#" (click)="!!reset()">Reset</a>
         </p>
       </div>
-      <div fxLayout="row" fxLayoutAlign="start center">
-        <div fxLayout="row" fxLayoutAlign="start center">
+      <div fxLayout="row" fxLayoutAlign="start start">
+        <div fxLayout="row" fxLayoutAlign="start start">
           <app-select-menu [options]="implementationModelOptions"
                            [placeholderText]="'CA NGSS Implementation Model'"
                            [value]="implementationModelValue"
@@ -87,6 +87,7 @@
           <button mat-button
                   mat-icon-button
                   color="primary"
+                  class="input-control--appearance-fill"
                   aria-label="Implementation model select explanation"
                   matTooltip="California has defined two NGSS course arrangements for grades 6-8. Select one to see WISE projects organized by grade level for that implementation model."
                   matTooltipPosition="after">

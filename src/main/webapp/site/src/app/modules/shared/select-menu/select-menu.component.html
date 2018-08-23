@@ -1,4 +1,5 @@
-<mat-form-field class="select-menu" [floatLabel]="floatLabel">
+<mat-form-field class="select-menu" appearance="fill">
+  <mat-label>{{ placeholderText }}</mat-label>
   <mat-select [formControl]="selectField"
               [placeholder]="placeholderText"
               [(value)]="value"

@@ -13,9 +13,6 @@ export class SelectMenuComponent implements OnInit {
   disable: boolean = false; // whether select is disabled
 
   @Input()
-  floatLabel: string = 'auto'; // when to show the floating label ('always', 'auto' or 'never')
-
-  @Input()
   multiple: boolean = false; // whether multiple selections are supported
 
   @Input()
