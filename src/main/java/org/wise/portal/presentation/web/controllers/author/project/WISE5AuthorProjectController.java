@@ -549,11 +549,7 @@ public class WISE5AuthorProjectController {
       User user = ControllerUtil.getSignedInUser();
       if (projectService.canAuthorProject(project, user)) {
         String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
-        File projectAssetsDir = new File(projectAssetsDirPath);
-        JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDir);
-        PrintWriter writer = response.getWriter();
-        writer.write(projectAssetsJSONObject.toString());
-        writer.close();
+        writeAssetsToResponse(response, projectAssetsDirPath);
       }
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();
@@ -589,75 +585,82 @@ public class WISE5AuthorProjectController {
 
   /**
    * Saves POSTed file into the project's asset folder
-   * TODO refactor too many nesting
+   * Writes updated project assets directory to response
    */
   @RequestMapping(method = RequestMethod.POST, value = "/project/asset/{projectId}")
   protected void saveProjectAsset(@PathVariable Long projectId, HttpServletRequest request,
-      String assetFileName, HttpServletResponse response) throws ServletException, IOException {
-    try {
-      Project project = projectService.getById(projectId);
-      User user = ControllerUtil.getSignedInUser();
-      if (projectService.canAuthorProject(project, user)) {
-        String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
-        File projectAssetsDir = new File(projectAssetsDirPath);
+      String assetFileName, HttpServletResponse response) throws ServletException, IOException,
+      ObjectNotFoundException, JSONException {
+    Project project = projectService.getById(projectId);
+    User user = ControllerUtil.getSignedInUser();
+    if (projectService.canAuthorProject(project, user)) {
+      String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
+      File projectAssetsDir = new File(projectAssetsDirPath);
 
-        if (assetFileName != null) {
-          // user wants to delete an existing asset
-          File asset = new File(projectAssetsDir, assetFileName);
-          if (asset.exists()) {
-            asset.delete();
-          }
-        } else {
-          // user wants to add a new asset
-          Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
-          if (projectMaxTotalAssetsSize == null) {
-            projectMaxTotalAssetsSize = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
-          }
-          long sizeOfAssetsDirectory = FileUtils.sizeOfDirectory(projectAssetsDir);
-
-          DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
-          Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
-          if (fileMap != null && fileMap.size() > 0) {
-            for (String key : fileMap.keySet()) {
-              MultipartFile file = fileMap.get(key);
-              if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
-                // Adding this asset will exceed the maximum allowed for the project, so don't add it
-                // Show a message to the user
-                PrintWriter writer = response.getWriter();
-                writer.write("Error: Exceeded project max asset size.\nPlease delete unused assets.\n\nContact WISE if your project needs more disk space.");
-                writer.close();
-                return;
-              } else if (!isUserAllowedToUpload(user, file)) {
-                PrintWriter writer = response.getWriter();
-                writer.write("Error: Upload file \"" + file.getOriginalFilename() + "\" not allowed.\n");
-                writer.close();
-                return;
-              } else {
-                String filename = file.getOriginalFilename();
-                File asset = new File(projectAssetsDir, filename);
-                if (!asset.exists()) {
-                  asset.createNewFile();
-                }
-                byte[] fileContent = file.getBytes();
-                FileOutputStream fos = new FileOutputStream(asset);
-                fos.write(fileContent);
-                fos.flush();
-                fos.close();
-              }
-            }
-          }
+      if (assetFileName != null) {
+        deleteExistingAsset(assetFileName, projectAssetsDir);
+      } else {
+        if (addNewAsset((DefaultMultipartHttpServletRequest) request, response, project,
+            user, projectAssetsDir)) {
+          return;
         }
-
-        File projectAssetsDirectory = new File(projectAssetsDirPath);
-        JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDirectory);
-        PrintWriter writer = response.getWriter();
-        writer.write(projectAssetsJSONObject.toString());
-        writer.close();
       }
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    } catch (JSONException je) {
-      je.printStackTrace();
+      writeAssetsToResponse(response, projectAssetsDirPath);
+    }
+  }
+
+  private void writeAssetsToResponse(HttpServletResponse response, String projectAssetsDirPath) throws JSONException, IOException {
+    File projectAssetsDirectory = new File(projectAssetsDirPath);
+    JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDirectory);
+    PrintWriter writer = response.getWriter();
+    writer.write(projectAssetsJSONObject.toString());
+    writer.close();
+  }
+
+  private boolean addNewAsset(DefaultMultipartHttpServletRequest request, HttpServletResponse response,
+      Project project, User user, File projectAssetsDir) throws IOException {
+    Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
+    if (projectMaxTotalAssetsSize == null) {
+      projectMaxTotalAssetsSize = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
+    }
+    long sizeOfAssetsDirectory = FileUtils.sizeOfDirectory(projectAssetsDir);
+
+    DefaultMultipartHttpServletRequest multiRequest = request;
+    Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
+    if (fileMap != null && fileMap.size() > 0) {
+      for (String key : fileMap.keySet()) {
+        MultipartFile file = fileMap.get(key);
+        if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
+          PrintWriter writer = response.getWriter();
+          writer.write("Error: Exceeded project max asset size.\nPlease delete unused assets.\n\nContact WISE if your project needs more disk space.");
+          writer.close();
+          return true;
+        } else if (!isUserAllowedToUpload(user, file)) {
+          PrintWriter writer = response.getWriter();
+          writer.write("Error: Upload file \"" + file.getOriginalFilename() + "\" not allowed.\n");
+          writer.close();
+          return true;
+        } else {
+          String filename = file.getOriginalFilename();
+          File asset = new File(projectAssetsDir, filename);
+          if (!asset.exists()) {
+            asset.createNewFile();
+          }
+          byte[] fileContent = file.getBytes();
+          FileOutputStream fos = new FileOutputStream(asset);
+          fos.write(fileContent);
+          fos.flush();
+          fos.close();
+        }
+      }
+    }
+    return false;
+  }
+
+  private void deleteExistingAsset(String assetFileName, File projectAssetsDir) {
+    File asset = new File(projectAssetsDir, assetFileName);
+    if (asset.exists()) {
+      asset.delete();
     }
   }
 
