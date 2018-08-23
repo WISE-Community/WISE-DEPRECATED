@@ -1,4 +1,11 @@
 <p>
   Registration was successful! Your new username is: {{username}}
 </p>
-<a href="/wise/site/teacher">Click here to sign in.</a>
+
+<a *ngIf="!isUsingGoogleId" href="/wise/site/login?username={{username}}">Sign in with my account</a>
+<a *ngIf="isUsingGoogleId" class="button--social-login button--google"
+        href="/wise/google-login"
+        color="accent"
+        mat-raised-button>
+  <img src="assets/img/icons/g-logo.png" alt="Google logo" />Sign in with Google
+</a>

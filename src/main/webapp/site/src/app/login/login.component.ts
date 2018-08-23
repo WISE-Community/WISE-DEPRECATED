@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { UserService } from '../services/user.service';
 
@@ -12,14 +12,21 @@ import { UserService } from '../services/user.service';
 export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['username'] != null) {
+        this.credentials.username = params['username'];
+        this.isShowGoogleLogin = false;
+      }
+    });
   }
 
   credentials: any = {username: '', password: ''};
   error: boolean = false;
   processing: boolean = false;
+  isShowGoogleLogin: boolean = true;
 
   constructor(private userService: UserService, private http: HttpClient,
-      private router: Router) {
+      private router: Router, private route: ActivatedRoute,) {
   }
 
   login(): boolean {
@@ -34,9 +41,5 @@ export class LoginComponent implements OnInit {
       }
     });
     return false;
-  }
-
-  public socialSignIn(socialPlatform : string) {
-    window.location.href = "/wise/google-login";
   }
 }

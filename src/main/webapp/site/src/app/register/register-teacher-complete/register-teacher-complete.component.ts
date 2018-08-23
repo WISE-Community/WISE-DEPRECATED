@@ -11,12 +11,13 @@ export class RegisterTeacherCompleteComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute) { }
 
   username: string;
+  isUsingGoogleId: boolean;
   private sub: any;
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.username = params['username'];
+      this.isUsingGoogleId = params['isUsingGoogleId'];
     });
   }
-
 }
