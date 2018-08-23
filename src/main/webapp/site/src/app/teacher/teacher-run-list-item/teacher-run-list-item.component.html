@@ -1,0 +1,43 @@
+<mat-card [ngClass]="{ 'highlighted': run.isHighlighted }">
+  <mat-card-content fxLayout="row">
+    <div mat-card-avatar [style.background-image]="thumbStyle"></div>
+    <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
+      <div fxLayout="column">
+        <mat-card-title>{{ run.project.name }}</mat-card-title>
+        <mat-card-subtitle>
+          <div class="mat-body-2 mat-card-title success" fxShow fxHide.gt-xs>
+            <span *ngIf="run.startTime">Started: {{ run.startTime | amDateFormat:'ll' }}</span>
+            <span *ngIf="run.endTime">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
+          </div>
+          <div *ngIf="run">
+            Code: {{ run.runCode }}
+            &nbsp;&bull;&nbsp;
+            {{run.numStudents}}
+            <span [ngPlural]="run.numStudents">
+              <ng-template ngPluralCase="=0">students</ng-template>
+              <ng-template ngPluralCase="=1">student</ng-template>
+              <ng-template ngPluralCase="other">students</ng-template>
+            </span>
+          </div>
+          <div>
+            <span>
+              Run ID: {{ run.id }}
+              &nbsp;&bull;&nbsp;
+            </span>
+            Project ID: {{ run.project.id }}
+          </div>
+        </mat-card-subtitle>
+      </div>
+      <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
+      <div fxFlex="0 1 auto" fxHide fxShow.gt-xs fxLayout="column" fxLayoutAlign="start end">
+        <span *ngIf="run.startTime" class="mat-card-title success">Started: {{ run.startTime | amDateFormat:'ll' }}</span>
+        <span *ngIf="run.endTime" class="mat-card-title warn">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions fxLayout="row" fxLayoutAlign="end center">
+    <span fxFlex="1 1 auto"></span>
+    <a mat-raised-button href="{{ gradeAndManageLink }}" color="primary">Grade & Manage</a>
+    <app-run-menu [run]="run"></app-run-menu>
+  </mat-card-actions>
+</mat-card>

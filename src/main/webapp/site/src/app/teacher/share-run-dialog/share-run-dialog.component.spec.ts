@@ -8,6 +8,7 @@ import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { Project } from "../project";
 import { TeacherService } from "../teacher.service";
 import { BrowserAnimationsModule } from "../../../../../../../../node_modules/@angular/platform-browser/animations";
+import { Run } from "../../domain/run";
 
 
 describe('ShareRunDialogComponent', () => {
@@ -63,11 +64,10 @@ describe('ShareRunDialogComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ShareRunDialogComponent);
     component = fixture.componentInstance;
-    const project: Project = new Project();
-    project.id = 1;
-    project.name = "Photosynthesis";
-    project.thumbIconPath = "photo.png";
-    component.project = project;
+    const run: Run = new Run();
+    run.id = 1;
+    run.name = "Photosynthesis";
+    component.run = run;
     fixture.detectChanges();
   });
 

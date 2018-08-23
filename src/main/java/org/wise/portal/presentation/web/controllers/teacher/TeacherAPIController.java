@@ -58,21 +58,45 @@ public class TeacherAPIController {
     return configJSON.toString();
   }
 
-  @RequestMapping(value = "/projects", method = RequestMethod.GET)
-  protected String getProjects(ModelMap modelMap) throws JSONException {
+  @RequestMapping(value = "/runs", method = RequestMethod.GET)
+  protected String getRuns() throws JSONException {
     User user = ControllerUtil.getSignedInUser();
     List<Run> runs = runService.getRunListByOwner(user);
-    HashMap<Long, Run> runMap = new HashMap<>();
+    JSONArray runsJSONArray = new JSONArray();
     for (Run run : runs) {
-      runMap.put((Long) run.getProject().getId(), run);
+      JSONObject runJSON = getRunJSON(run);
+      JSONObject projectJSON = getProjectJSON(run.getProject());
+      runJSON.put("project", projectJSON);
+      runsJSONArray.put(runJSON);
     }
-    List<Project> projects = projectService.getProjectList(user);
-    JSONArray projectsArray = new JSONArray();
-    for (Project project : projects) {
-      Run projectRun = runMap.get(project.getId());
-      projectsArray.put(getProjectJSON(project, projectRun));
-    }
-    return projectsArray.toString();
+    return runsJSONArray.toString();
+  }
+
+  private JSONObject getRunJSON(Run run) throws JSONException {
+    JSONObject runJSON = new JSONObject();
+    runJSON.put("id", run.getId());
+    runJSON.put("name", run.getName());
+    runJSON.put("runCode", run.getRuncode());
+    runJSON.put("startTime", run.getStarttime());
+    runJSON.put("endTime", run.getEndtime());
+    runJSON.put("numStudents", getNumStudentsInRun(run));
+    runJSON.put("teacherFirstName", run.getOwner().getUserDetails().getFirstname());
+    runJSON.put("teacherLastName", run.getOwner().getUserDetails().getLastname());
+    runJSON.put("teacherDisplayName",
+        ((TeacherUserDetails) run.getOwner().getUserDetails()).getDisplayname());
+    runJSON.put("sharedOwners", getRunSharedOwners(run));
+    return runJSON;
+  }
+
+  private JSONObject getProjectJSON(Project project) throws JSONException {
+    JSONObject projectJSON = new JSONObject();
+    projectJSON.put("id", project.getId());
+    projectJSON.put("name", project.getName());
+    projectJSON.put("dateCreated", project.getDateCreated());
+    projectJSON.put("dateArchived", project.getDateDeleted());
+    projectJSON.put("thumbIconPath", getProjectThumbIconPath(project));
+    projectJSON.put("sharedOwners", getProjectSharedOwners(project));
+    return projectJSON;
   }
 
   @ResponseBody
@@ -80,8 +104,10 @@ public class TeacherAPIController {
   protected String getRun(@PathVariable Long runId)
       throws ObjectNotFoundException, JSONException {
     Run run = runService.retrieveById(runId);
-    Project project = run.getProject();
-    return getProjectJSON(project, run).toString();
+    JSONObject runJSON = getRunJSON(run);
+    JSONObject projectJSON = getProjectJSON(run.getProject());
+    runJSON.put("project", projectJSON);
+    return runJSON.toString();
   }
 
   @ResponseBody
@@ -123,33 +149,22 @@ public class TeacherAPIController {
     return this.userService.retrieveUserByGoogleUserId(googleUserId) != null;
   }
 
-  private JSONObject getProjectJSON(Project project, Run projectRun) throws JSONException {
-    JSONObject projectJSON = new JSONObject();
-    projectJSON.put("id", project.getId());
-    projectJSON.put("name", project.getName());
-    projectJSON.put("dateCreated", project.getDateCreated());
-    projectJSON.put("dateArchived", project.getDateDeleted());
-    projectJSON.put("thumbIconPath", getProjectThumbIconPath(project));
-    projectJSON.put("sharedOwners", getProjectSharedOwners(project));
-    if (projectRun != null) {
-      JSONObject runJSON = getRunJSON(projectRun);
-      projectJSON.put("run", runJSON);
-    }
-    return projectJSON;
-  }
-
   private JSONArray getProjectSharedOwners(Project project) throws JSONException {
     JSONArray sharedOwners = new JSONArray();
     for (User sharedOwner : project.getSharedowners()) {
-      JSONObject sharedOwnerJSON = new JSONObject();
-      sharedOwnerJSON.put("id", sharedOwner.getId());
-      sharedOwnerJSON.put("username", sharedOwner.getUserDetails().getUsername());
-      sharedOwnerJSON.put("firstName", sharedOwner.getUserDetails().getFirstname());
-      sharedOwnerJSON.put("lastName", sharedOwner.getUserDetails().getLastname());
-      sharedOwnerJSON.put("permissions", getSharedOwnerPermissions(project, sharedOwner));
-      sharedOwners.put(sharedOwnerJSON);
+      sharedOwners.put(getSharedOwnerJSON(sharedOwner, project));
     }
     return sharedOwners;
+  }
+
+  private JSONObject getSharedOwnerJSON(User sharedOwner, Project project) throws JSONException {
+    JSONObject sharedOwnerJSON = new JSONObject();
+    sharedOwnerJSON.put("id", sharedOwner.getId());
+    sharedOwnerJSON.put("username", sharedOwner.getUserDetails().getUsername());
+    sharedOwnerJSON.put("firstName", sharedOwner.getUserDetails().getFirstname());
+    sharedOwnerJSON.put("lastName", sharedOwner.getUserDetails().getLastname());
+    sharedOwnerJSON.put("permissions", getSharedOwnerPermissions(project, sharedOwner));
+    return sharedOwnerJSON;
   }
 
   private JSONArray getSharedOwnerPermissions(Project project, User sharedOwner) {
@@ -161,34 +176,23 @@ public class TeacherAPIController {
     return sharedOwnerPermissions;
   }
 
-  private JSONObject getRunJSON(Run projectRun) throws JSONException {
-    JSONObject runJSON = new JSONObject();
-    runJSON.put("id", projectRun.getId());
-    runJSON.put("name", projectRun.getName());
-    runJSON.put("runCode", projectRun.getRuncode());
-    runJSON.put("startTime", projectRun.getStarttime());
-    runJSON.put("endTime", projectRun.getEndtime());
-    runJSON.put("numStudents", getNumStudentsInRun(projectRun));
-    runJSON.put("teacherFirstName", projectRun.getOwner().getUserDetails().getFirstname());
-    runJSON.put("teacherLastName", projectRun.getOwner().getUserDetails().getLastname());
-    runJSON.put("teacherDisplayName",
-      ((TeacherUserDetails) projectRun.getOwner().getUserDetails()).getDisplayname());
-    runJSON.put("sharedOwners", getRunSharedOwners(projectRun));
-    return runJSON;
-  }
-
   private JSONArray getRunSharedOwners(Run run) throws JSONException {
     JSONArray sharedOwners = new JSONArray();
     for (User sharedOwner : run.getSharedowners()) {
-      JSONObject sharedOwnerJSON = new JSONObject();
-      sharedOwnerJSON.put("id", sharedOwner.getId());
-      sharedOwnerJSON.put("username", sharedOwner.getUserDetails().getUsername());
-      sharedOwnerJSON.put("firstName", sharedOwner.getUserDetails().getFirstname());
-      sharedOwnerJSON.put("lastName", sharedOwner.getUserDetails().getLastname());
-      sharedOwnerJSON.put("permissions", getSharedOwnerPermissions(run, sharedOwner));
+      JSONObject sharedOwnerJSON = getSharedOwnerJSON(sharedOwner, run);
       sharedOwners.put(sharedOwnerJSON);
     }
     return sharedOwners;
+  }
+
+  private JSONObject getSharedOwnerJSON(User sharedOwner, Run run) throws JSONException {
+    JSONObject sharedOwnerJSON = new JSONObject();
+    sharedOwnerJSON.put("id", sharedOwner.getId());
+    sharedOwnerJSON.put("username", sharedOwner.getUserDetails().getUsername());
+    sharedOwnerJSON.put("firstName", sharedOwner.getUserDetails().getFirstname());
+    sharedOwnerJSON.put("lastName", sharedOwner.getUserDetails().getLastname());
+    sharedOwnerJSON.put("permissions", getSharedOwnerPermissions(run, sharedOwner));
+    return sharedOwnerJSON;
   }
 
   private JSONArray getSharedOwnerPermissions(Run projectRun, User sharedOwner) {

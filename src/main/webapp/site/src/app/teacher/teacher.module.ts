@@ -5,8 +5,8 @@ import { TeacherRoutingModule } from './teacher-routing.module';
 import { TeacherComponent } from './teacher.component';
 import { TeacherHomeComponent } from "./teacher-home/teacher-home.component";
 import { AuthGuard } from "./auth.guard";
-import { TeacherProjectListComponent } from './teacher-project-list/teacher-project-list.component';
-import { TeacherProjectListItemComponent } from './teacher-project-list-item/teacher-project-list-item.component';
+import { TeacherRunListComponent } from './teacher-run-list/teacher-run-list.component';
+import { TeacherRunListItemComponent } from './teacher-run-list-item/teacher-run-list-item.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MomentModule } from 'ngx-moment';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ import {
   MatMenuModule, MatNativeDateModule, MatRadioModule, MatTabsModule,
   MatAutocompleteModule
 } from '@angular/material';
-import { ProjectRunMenuComponent } from './project-run-menu/project-run-menu.component';
+import { RunMenuComponent } from './run-menu/run-menu.component';
 import { CreateRunDialogComponent } from './create-run-dialog/create-run-dialog.component';
 import { LibraryModule } from "../modules/library/library.module";
 import { ShareRunDialogComponent } from './share-run-dialog/share-run-dialog.component';
@@ -50,9 +50,9 @@ const materialModules = [
     CreateRunDialogComponent,
     TeacherComponent,
     TeacherHomeComponent,
-    TeacherProjectListComponent,
-    TeacherProjectListItemComponent,
-    ProjectRunMenuComponent,
+  TeacherRunListComponent,
+  TeacherRunListItemComponent,
+  RunMenuComponent,
     ShareRunDialogComponent
   ],
   entryComponents: [

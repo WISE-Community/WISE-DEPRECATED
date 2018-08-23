@@ -11,7 +11,7 @@ import { Subject } from "rxjs";
 @Injectable()
 export class TeacherService {
 
-  private projectsUrl = 'api/teacher/projects';
+  private runsUrl = 'api/teacher/runs';
   private registerUrl = 'api/teacher/register';
   private runPermissionUrl = 'api/teacher/run/permission';
   private projectPermissionUrl = 'api/teacher/project/permission';
@@ -21,20 +21,18 @@ export class TeacherService {
   private runUrl = 'api/teacher/run';
   private newProjectSource = new Subject<Project>();
   public newProjectSource$ = this.newProjectSource.asObservable();
+  private newRunSource = new Subject<Run>();
+  public newRunSource$ = this.newRunSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
-  getProjects(): Observable<Project[]> {
+  getRuns(): Observable<Run[]> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
-    return this.http.get<Project[]>(this.projectsUrl, { headers: headers })
-      .pipe(
-        tap(runs => this.log(`fetched projects`)),
-        catchError(this.handleError('getProjects', []))
-      );
+    return this.http.get<Run[]>(this.runsUrl, { headers: headers });
   }
 
-  getRun(runId: number): Observable<Run[]> {
-    return this.http.get<Run[]>(this.runUrl + "/" + runId);
+  getRun(runId: number): Observable<Run> {
+    return this.http.get<Run>(this.runUrl + "/" + runId);
   }
 
   registerTeacherAccount(teacherUser: Teacher, callback: any) {
@@ -122,5 +120,9 @@ export class TeacherService {
     const url = this.projectPermissionUrl + "/" + projectId + "/" + userId + "/" + permissionId;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.delete<Object>(url, { headers: headers });
+  }
+
+  addNewRun(run: Run) {
+    this.newRunSource.next(run);
   }
 }

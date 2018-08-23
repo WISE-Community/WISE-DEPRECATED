@@ -1,3 +1,5 @@
+import { Project } from "../teacher/project";
+
 export class Run {
   accessCode: string;
   endTime: number;
@@ -13,4 +15,5 @@ export class Run {
   teacherLastName: string;
   teacherDisplayName: string;
   sharedOwners: any[] = [];
+  project: Project;
 }
