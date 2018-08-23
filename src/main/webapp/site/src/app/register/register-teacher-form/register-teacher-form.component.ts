@@ -4,6 +4,7 @@ import { Teacher } from "../../domain/teacher";
 import { TeacherService } from "../../teacher/teacher.service";
 import { FormControl, FormGroup, Validators, FormBuilder, ValidatorFn,
   AbstractControl } from "@angular/forms";
+import { UtilService } from '../../services/util.service';
 
 @Component({
   selector: 'app-register-teacher-form',
@@ -14,7 +15,6 @@ export class RegisterTeacherFormComponent implements OnInit {
 
   teacherUser: Teacher = new Teacher();
   schoolLevels: string[] = ["ELEMENTARY_SCHOOL", "MIDDLE_SCHOOL", "HIGH_SCHOOL", "COLLEGE", "OTHER"];
-  private sub: any;
   passwordsFormGroup = this.fb.group({
     password: ['', [Validators.required]],
     confirmPassword: ['', [Validators.required]]
@@ -33,18 +33,20 @@ export class RegisterTeacherFormComponent implements OnInit {
   }, { validator: this.agreeCheckboxValidator });
 
   constructor(private router: Router, private route: ActivatedRoute,
-              private teacherService: TeacherService, private fb: FormBuilder) { }
+              private teacherService: TeacherService,
+              private utilService: UtilService,
+              private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
+    this.route.params.subscribe(params => {
       this.teacherUser.googleUserId = params['gID'];
       if (!this.isUsingGoogleId()) {
         this.createTeacherAccountFormGroup.addControl('passwords', this.passwordsFormGroup);
       }
       const name = params['name'];
       if (name != null) {
-        this.setControlFieldValue('firstName', this.getFirstName(name));
-        this.setControlFieldValue('lastName', this.getLastName(name));
+        this.setControlFieldValue('firstName', this.utilService.getFirstName(name));
+        this.setControlFieldValue('lastName', this.utilService.getLastName(name));
       }
       this.setControlFieldValue('email', params['email']);
     });
@@ -56,14 +58,6 @@ export class RegisterTeacherFormComponent implements OnInit {
 
   setControlFieldValue(name: string, value: string) {
     this.createTeacherAccountFormGroup.controls[name].setValue(value);
-  }
-
-  getFirstName(fullName: string) {
-    return fullName.substring(0, fullName.indexOf(" "));
-  }
-
-  getLastName(fullName: string) {
-    return fullName.substring(fullName.indexOf(" ") + 1);
   }
 
   createAccount() {

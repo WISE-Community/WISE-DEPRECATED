@@ -68,7 +68,7 @@
             <mat-error *ngIf="createStudentAccountFormGroup.controls['birthDay'].hasError('required')">Day Required</mat-error>
           </mat-form-field>
         </p>
-        <p>
+        <p *ngIf="studentUser.googleUserId == null" >
           <mat-form-field fxFlex>
             <mat-select placeholder="Security Question"
                         formControlName="securityQuestion"
@@ -80,7 +80,7 @@
             <mat-error *ngIf="createStudentAccountFormGroup.controls['securityQuestion'].hasError('required')">Security Question Required</mat-error>
           </mat-form-field>
         </p>
-        <p>
+        <p *ngIf="studentUser.googleUserId == null" >
           <mat-form-field fxFlex>
             <input matInput
                    placeholder="Security Question Answer"
@@ -89,7 +89,7 @@
             <mat-error *ngIf="createStudentAccountFormGroup.controls['securityQuestionAnswer'].hasError('required')">Security Question Answer Required</mat-error>
           </mat-form-field>
         </p>
-        <div formGroupName="passwords">
+        <div *ngIf="studentUser.googleUserId == null" formGroupName="passwords">
           <p>
             <mat-form-field fxFlex>
               <input matInput

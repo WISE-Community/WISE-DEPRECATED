@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable ,  of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, finalize, tap, map } from 'rxjs/operators';
 import { User } from '../domain/user';
+import { HttpParams } from "../../../../../../../node_modules/@angular/common/http";
 
 @Injectable()
 export class UserService {
@@ -10,6 +11,7 @@ export class UserService {
   private userUrl = 'api/user/user';
   private user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   private logInURL = '/wise/j_acegi_security_check';
+  private checkGoogleUserIdUrl = 'api/teacher/checkGoogleUserId';
   isAuthenticated = false;
   redirectUrl: string; // redirect here after logging in
 
@@ -100,6 +102,10 @@ export class UserService {
     }
   }
 
+  isGoogleIdExists(googleUserId: string) {
+    let params = new HttpParams().set("googleUserId", googleUserId);
+    return this.http.get<User>(this.checkGoogleUserIdUrl, { params: params });
+  }
 
   private log(message: string) {
     console.log('UserService: ' + message);

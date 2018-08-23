@@ -1,8 +1,8 @@
-<mat-form-field class="search-bar" [floatLabel]="floatLabel">
+<mat-form-field class="search-bar" appearance="fill">
+  <mat-label>{{ placeholderText }}</mat-label>
   <mat-icon matPrefix>search</mat-icon>
   <input matInput type="search"
-         [formControl]="searchField"
-         placeholder="{{ placeholderText }}"/>
+         [formControl]="searchField"/>
   <button mat-button
           matSuffix
           mat-icon-button

@@ -12,25 +12,12 @@ describe('AddProjectDialogComponent', () => {
   let fixture: ComponentFixture<AddProjectDialogComponent>;
 
   beforeEach(async(() => {
-    let studentServiceStub = {
-      isLoggedIn: true,
-      getRuns(): Observable<StudentRun[]> {
-        let runs : any[] = [
-          {id: 1, name: "Photosynthesis"}, {id: 2, name: "Plate Tectonics"}
-        ];
-        return Observable.create( observer => {
-          observer.next(runs);
-          observer.complete();
-        });
-      }
-    };
-
     TestBed.configureTestingModule({
       declarations: [],
       imports: [ StudentModule, BrowserAnimationsModule ],
       providers: [
         { provide: MatDialogRef, useValue: {} },
-        { provide: StudentService, useValue: studentServiceStub }
+        { provide: StudentService }
       ]
     })
     .compileComponents();

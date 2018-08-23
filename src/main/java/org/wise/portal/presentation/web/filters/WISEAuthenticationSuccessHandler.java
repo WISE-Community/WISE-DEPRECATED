@@ -69,6 +69,12 @@ public class WISEAuthenticationSuccessHandler
     MutableUserDetails userDetails = (MutableUserDetails) authentication.getPrincipal();
     boolean userIsAdmin = false;
     if (userDetails instanceof StudentUserDetails) {
+      if (request.getServletPath().contains("google-login")) {
+        // google login is only allowed for angular apps
+        String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/site/student");
+        return;
+      }
       // pLT= previous login time (not this time, but last time)
       Date lastLoginTime = ((StudentUserDetails) userDetails).getLastLoginTime();
       long pLT = 0L; // previous last log in time

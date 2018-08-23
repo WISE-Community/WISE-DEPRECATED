@@ -17,6 +17,10 @@
     color: map-get($colors, primary);
   }
 
+  .app-background {
+    background-color: map-get($colors, control-bg);
+  }
+
   .content-block {
     background-color: map-get($background, background);
   }
@@ -25,23 +29,7 @@
     background-color: map-get($colors, notice-bg);
   }
 
-  .search-bar {
-    .mat-form-field-flex {
-      background-color: map-get($colors, control-bg);
-    }
-
-    &.mat-focused {
-      .mat-form-field-flex {
-        background-color: map-get($colors, control-bg-active);
-      }
-    }
-  }
-
   .cta {
-    &:hover, &:focus {
-      //background-color: map-get($colors, btn-bg);
-    }
-
     .mat-button-focus-overlay {
       display: none;
     }
@@ -50,18 +38,6 @@
   .cta__headline {
     background-color: map-get($background, card);
     border-color: map-get($colors, notice-bg);
-  }
-
-  .select-menu {
-    .mat-form-field-infix {
-      background-color: map-get($colors, control-bg);
-    }
-
-    &.mat-focused {
-      .mat-form-field-infix {
-        background-color: map-get($colors, control-bg-active);
-      }
-    }
   }
 
   .mat-button {

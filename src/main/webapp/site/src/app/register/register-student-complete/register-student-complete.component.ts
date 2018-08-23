@@ -9,12 +9,11 @@ import { ActivatedRoute, Router } from "@angular/router";
 export class RegisterStudentCompleteComponent implements OnInit {
 
   username: string;
-  private sub: any;
 
   constructor(private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
+    this.route.params.subscribe(params => {
       this.username = params['username'];
     });
   }

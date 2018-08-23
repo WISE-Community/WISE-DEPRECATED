@@ -8,34 +8,21 @@ import { Observable } from "rxjs";
 import { Project } from "../../teacher/project";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
+import { User } from "../../domain/user";
+import { UserService } from "../../services/user.service";
 
 describe('RegisterTeacherComponent', () => {
   let component: RegisterTeacherComponent;
   let fixture: ComponentFixture<RegisterTeacherComponent>;
 
   beforeEach(async(() => {
-    const teacherServiceStub = {
-      isLoggedIn: true,
-      getProjects(): Observable<Project[]> {
-        let projects : any[] = [
-          {id: 1, name: "Photosynthesis"}, {id: 2, name: "Plate Tectonics"}
-        ];
-        return Observable.create( observer => {
-          observer.next(projects);
-          observer.complete();
-        });
-      }
-    };
-    const authServiceStub = {
-      signIn(): any {
-      }
-    };
     TestBed.configureTestingModule({
       declarations: [ ],
       imports: [ BrowserAnimationsModule, RegisterModule, RouterTestingModule ],
       providers: [
-        { provide: AuthService, useValue: authServiceStub },
-        { provide: TeacherService, useValue: teacherServiceStub }
+        { provide: AuthService },
+        { provide: TeacherService },
+        { provide: UserService }
       ]
     })
     .compileComponents();

@@ -50,18 +50,6 @@ export class TeacherService {
       });
   }
 
-  isGoogleIdExists(googleUserId: string) {
-    let params = new HttpParams().set("googleUserId", googleUserId);
-    return this.http.get<User>(this.checkGoogleUserIdUrl, { params: params });
-    /*
-      .pipe(
-        tap((googleIdExists) => {
-          callback(googleIdExists);
-        }),
-        catchError(this.handleError('isGoogleIdExists', googleUserId)));
-        */
-  }
-
   /**
    * Handle Http operation that failed.
    * Let the app continue.
