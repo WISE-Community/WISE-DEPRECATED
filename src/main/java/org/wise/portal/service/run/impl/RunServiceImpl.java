@@ -23,6 +23,7 @@
  */
 package org.wise.portal.service.run.impl;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
@@ -371,7 +372,7 @@ public class RunServiceImpl implements RunService {
     if (run.getSharedowners().contains(user)) {
       run.getSharedowners().remove(user);
       this.runDao.save(run);
-      Project project = run.getProject();
+      Project project = (Project) Hibernate.unproxy(run.getProject());
       project.getSharedowners().remove(user);
       this.projectDao.save(project);
 
