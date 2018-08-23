@@ -1,3 +1,5 @@
+import { Project } from "../teacher/project";
+
 export class Run {
   accessCode: string;
   endTime: number;
@@ -9,4 +11,5 @@ export class Run {
   numStudents: number;
   periods: string[];
   isHighlighted: boolean;
+  project: Project;
 }

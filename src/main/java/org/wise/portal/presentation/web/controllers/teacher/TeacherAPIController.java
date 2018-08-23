@@ -52,21 +52,43 @@ public class TeacherAPIController {
     return configJSON.toString();
   }
 
-  @RequestMapping(value = "/projects", method = RequestMethod.GET)
-  protected String getProjects(ModelMap modelMap) throws JSONException {
+  @RequestMapping(value = "/runs", method = RequestMethod.GET)
+  protected String getRuns() throws JSONException {
     User user = ControllerUtil.getSignedInUser();
     List<Run> runs = runService.getRunListByOwner(user);
-    HashMap<Long, Run> runMap = new HashMap<>();
-    for (Run run : runs) {
-      runMap.put((Long) run.getProject().getId(), run);
-    }
-    List<Project> projects = projectService.getProjectList(user);
     JSONArray projectsArray = new JSONArray();
-    for (Project project : projects) {
-      Run projectRun = runMap.get(project.getId());
-      projectsArray.put(getProjectJSON(project, projectRun));
+    for (Run run : runs) {
+      JSONObject runJSON = getRunJSON(run);
+      JSONObject projectJSON = getProjectJSON(run.getProject());
+      runJSON.put("project", projectJSON);
+      projectsArray.put(runJSON);
     }
     return projectsArray.toString();
+  }
+
+  private JSONObject getRunJSON(Run run) throws JSONException {
+    JSONObject runJSON = new JSONObject();
+    runJSON.put("id", run.getId());
+    runJSON.put("name", run.getName());
+    runJSON.put("runCode", run.getRuncode());
+    runJSON.put("startTime", run.getStarttime());
+    runJSON.put("endTime", run.getEndtime());
+    runJSON.put("numStudents", getNumStudentsInRun(run));
+    runJSON.put("teacherFirstName", run.getOwner().getUserDetails().getFirstname());
+    runJSON.put("teacherLastName", run.getOwner().getUserDetails().getLastname());
+    runJSON.put("teacherDisplayName",
+        ((TeacherUserDetails) run.getOwner().getUserDetails()).getDisplayname());
+    return runJSON;
+  }
+
+  private JSONObject getProjectJSON(Project project) throws JSONException {
+    JSONObject projectJSON = new JSONObject();
+    projectJSON.put("id", project.getId());
+    projectJSON.put("name", project.getName());
+    projectJSON.put("dateCreated", project.getDateCreated());
+    projectJSON.put("dateArchived", project.getDateDeleted());
+    projectJSON.put("thumbIconPath", getProjectThumbIconPath(project));
+    return projectJSON;
   }
 
   @ResponseBody
@@ -100,30 +122,6 @@ public class TeacherAPIController {
   @RequestMapping(value = "/checkGoogleUserId", method = RequestMethod.GET)
   protected boolean isGoogleIdExist(@RequestParam String googleUserId) {
     return this.userService.retrieveUserByGoogleUserId(googleUserId) != null;
-  }
-
-  private JSONObject getProjectJSON(Project project, Run projectRun) throws JSONException {
-    JSONObject projectJSON = new JSONObject();
-    projectJSON.put("id", project.getId());
-    projectJSON.put("name", project.getName());
-    projectJSON.put("dateCreated", project.getDateCreated());
-    projectJSON.put("dateArchived", project.getDateDeleted());
-    projectJSON.put("thumbIconPath", getProjectThumbIconPath(project));
-    if (projectRun != null) {
-      JSONObject runJSON = new JSONObject();
-      runJSON.put("id", projectRun.getId());
-      runJSON.put("name", projectRun.getName());
-      runJSON.put("runCode", projectRun.getRuncode());
-      runJSON.put("startTime", projectRun.getStarttime());
-      runJSON.put("endTime", projectRun.getEndtime());
-      runJSON.put("numStudents", getNumStudentsInRun(projectRun));
-      runJSON.put("teacherFirstName", projectRun.getOwner().getUserDetails().getFirstname());
-      runJSON.put("teacherLastName", projectRun.getOwner().getUserDetails().getLastname());
-      runJSON.put("teacherDisplayName",
-        ((TeacherUserDetails) projectRun.getOwner().getUserDetails()).getDisplayname());
-      projectJSON.put("run", runJSON);
-    }
-    return projectJSON;
   }
 
   private String getProjectThumbIconPath(Project project) {

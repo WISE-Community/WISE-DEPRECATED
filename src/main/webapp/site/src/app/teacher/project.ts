@@ -6,6 +6,6 @@ export class Project {
   dateCreated: string;
   dateArchived: string;
   thumbIconPath: string;
+  isHighlighted: boolean;
   run: Run;
-  highlighted: boolean;
 }

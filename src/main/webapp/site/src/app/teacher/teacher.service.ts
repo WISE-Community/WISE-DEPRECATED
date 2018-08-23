@@ -11,21 +11,19 @@ import { Subject } from "rxjs";
 @Injectable()
 export class TeacherService {
 
-  private projectsUrl = 'api/teacher/projects';
+  private runsUrl = 'api/teacher/runs';
   private registerUrl = 'api/teacher/register';
   private createRunUrl = 'api/teacher/run/create';
   private newProjectSource = new Subject<Project>();
   public newProjectSource$ = this.newProjectSource.asObservable();
+  private newRunSource = new Subject<Run>();
+  public newRunSource$ = this.newRunSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
-  getProjects(): Observable<Project[]> {
+  getRuns(): Observable<Run[]> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
-    return this.http.get<Project[]>(this.projectsUrl, { headers: headers })
-      .pipe(
-        tap(runs => this.log(`fetched projects`)),
-        catchError(this.handleError('getProjects', []))
-      );
+    return this.http.get<Run[]>(this.runsUrl, { headers: headers });
   }
 
   registerTeacherAccount(teacherUser: Teacher, callback: any) {
@@ -72,5 +70,9 @@ export class TeacherService {
 
   addNewProject(project: Project) {
     this.newProjectSource.next(project);
+  }
+
+  addNewRun(run: Run) {
+    this.newRunSource.next(run);
   }
 }
