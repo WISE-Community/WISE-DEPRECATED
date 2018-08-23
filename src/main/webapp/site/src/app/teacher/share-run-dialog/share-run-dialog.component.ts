@@ -181,7 +181,7 @@ export class ShareRunDialogComponent implements OnInit {
   }
 
   isSharedOwner(username) {
-    for (let sharedOwner of this.project.run.sharedOwners) {
+    for (let sharedOwner of this.sharedOwners) {
       if (sharedOwner.username == username) {
         return true;
       }
