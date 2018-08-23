@@ -1,26 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService, GoogleLoginProvider } from "angularx-social-login";
-import { Router } from "@angular/router";
 import { TeacherService } from "../../teacher/teacher.service";
+import { Router } from "@angular/router";
+import { StudentService } from '../../student/student.service';
 import { UserService } from '../../services/user.service';
 
 @Component({
-  selector: 'app-register-teacher',
-  templateUrl: './register-teacher.component.html',
-  styleUrls: ['./register-teacher.component.scss']
+  selector: 'app-register-student',
+  templateUrl: './register-student.component.html',
+  styleUrls: ['./register-student.component.scss']
 })
-export class RegisterTeacherComponent implements OnInit {
+export class RegisterStudentComponent implements OnInit {
 
-  email: string = "";
+  firstName: string = "";
+  lastName: string = "";
 
   constructor(private socialAuthService: AuthService,
-      private teacherService: TeacherService, private userService: UserService, private router: Router) {}
+              private studentService: StudentService, private userService: UserService,
+              private router: Router) {}
 
   ngOnInit() {
   }
 
   public signUp() {
-    this.router.navigate(['join/teacher/form', { email: this.email} ]);
+    this.router.navigate(['join/student/form', { firstName: this.firstName, lastName: this.lastName } ]);
   }
 
   public socialSignIn(socialPlatform : string) {
@@ -36,10 +39,9 @@ export class RegisterTeacherComponent implements OnInit {
           if (isExists) {
             this.router.navigate(['join/googleUserAlreadyExists']);
           } else {
-            this.router.navigate(['join/teacher/form',
+            this.router.navigate(['join/student/form',
               { gID: googleUserID,
-                name: userData.name,
-                email: userData.email
+                name: userData.name
               }
             ]);
 
@@ -48,4 +50,5 @@ export class RegisterTeacherComponent implements OnInit {
       }
     );
   }
+
 }

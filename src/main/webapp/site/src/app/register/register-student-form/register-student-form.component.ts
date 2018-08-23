@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Student } from "../../domain/student";
 import { StudentService } from "../../student/student.service";
 import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
+import { UtilService } from "../../services/util.service";
 
 @Component({
   selector: 'app-register-student-form',
@@ -45,7 +46,6 @@ export class RegisterStudentFormComponent implements OnInit {
     "15",
     "16",
     "17",
-    "17",
     "18",
     "19",
     "20",
@@ -71,20 +71,39 @@ export class RegisterStudentFormComponent implements OnInit {
     lastName: new FormControl('', [Validators.required]),
     gender: new FormControl('', [Validators.required]),
     birthMonth: new FormControl('', [Validators.required]),
-    birthDay: new FormControl('', [Validators.required]),
-    securityQuestion: new FormControl('', [Validators.required]),
-    securityQuestionAnswer: new FormControl('', [Validators.required]),
-    passwords: this.passwordsFormGroup
+    birthDay: new FormControl('', [Validators.required])
   });
 
   constructor(private router: Router, private route: ActivatedRoute,
-              private studentService: StudentService, private fb: FormBuilder) {
+              private studentService: StudentService,
+              private utilService: UtilService,
+              private fb: FormBuilder) {
     this.studentService.retrieveSecurityQuestions().subscribe(response => {
       this.securityQuestions = response;
     });
   }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.studentUser.googleUserId = params['gID'];
+      if (!this.isUsingGoogleId()) {
+        this.createStudentAccountFormGroup.addControl('passwords', this.passwordsFormGroup);
+        this.createStudentAccountFormGroup.addControl('securityQuestion', new FormControl('', [Validators.required]));
+        this.createStudentAccountFormGroup.addControl('securityQuestionAnswer', new FormControl('', [Validators.required]));
+      }
+      const name = params['name'];
+      if (name != null) {
+        this.setControlFieldValue('firstName', this.utilService.getFirstName(name));
+        this.setControlFieldValue('lastName', this.utilService.getLastName(name));
+      } else {
+        this.setControlFieldValue("firstName", params['firstName']);
+        this.setControlFieldValue("lastName", params['lastName']);
+      }
+    });
+  }
+
+  isUsingGoogleId() {
+    return this.studentUser.googleUserId != null;
   }
 
   createAccount() {
@@ -122,5 +141,9 @@ export class RegisterStudentFormComponent implements OnInit {
       passwordsFormGroup.controls['confirmPassword'].setErrors(error);
       return error;
     }
+  }
+
+  setControlFieldValue(name: string, value: string) {
+    this.createStudentAccountFormGroup.controls[name].setValue(value);
   }
 }

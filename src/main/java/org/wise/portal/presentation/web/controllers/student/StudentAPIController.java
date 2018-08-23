@@ -23,6 +23,7 @@
  */
 package org.wise.portal.presentation.web.controllers.student;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.StaleObjectStateException;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -313,9 +314,14 @@ public class StudentAPIController {
     studentUserDetails.setGender(getGender(studentFields.get("gender")));
     studentUserDetails.setAccountQuestion(studentFields.get("securityQuestion"));
     studentUserDetails.setAccountAnswer(studentFields.get("securityQuestionAnswer"));
-    studentUserDetails.setPassword(studentFields.get("password"));
     studentUserDetails.setBirthday(getBirthDate(studentFields.get("birthMonth"), studentFields.get("birthDay")));
     studentUserDetails.setSignupdate(Calendar.getInstance().getTime());
+    if (studentFields.containsKey("googleUserId")) {
+      studentUserDetails.setGoogleUserId(studentFields.get("googleUserId"));
+      studentUserDetails.setPassword(RandomStringUtils.random(10, true, true));
+    } else {
+      studentUserDetails.setPassword(studentFields.get("password"));
+    }
     User createdUser = this.userService.createUser(studentUserDetails);
     return createdUser.getUserDetails().getUsername();
   }
