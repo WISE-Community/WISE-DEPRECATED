@@ -88,6 +88,7 @@
     "lockStudentScreens": "Lock Student Screens",
     "mainMenu": "Main Menu",
     "matchCorrectnessColumnKey": "Correctness column key: 0 = Incorrect, 1 = Correct, 2 = Correct bucket but wrong position",
+    "manageStudents": "Manage Students",
     "meanScore": "mean score",
     "milestoneDescriptionPlaceholder": "example \"Finish the first activity\"",
     "milestoneNamePlaceholder": "example \"Milestone 1\"",
