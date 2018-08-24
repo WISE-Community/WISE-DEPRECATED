@@ -37,6 +37,7 @@ import HTMLComponentModule from '../components/html/htmlComponentModule';
 import HttpInterceptor from '../services/httpInterceptor';
 import LabelComponentModule from '../components/label/labelComponentModule';
 import MatchComponentModule from '../components/match/matchComponentModule';
+import ManageStudentsController from './manageStudents/manageStudentsController';
 import MilestonesController from './milestones/milestonesController';
 import MultipleChoiceComponentModule from '../components/multipleChoice/multipleChoiceComponentModule';
 import NodeGradingController from './nodeGrading/nodeGradingController';
@@ -115,6 +116,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
     .service(UtilService.name, UtilService)
     .controller(ClassroomMonitorController.name, ClassroomMonitorController)
     .controller(DataExportController.name, DataExportController)
+    .controller(ManageStudentsController.name, ManageStudentsController)
     .controller(MilestonesController.name, MilestonesController)
     .controller(NodeGradingController.name, NodeGradingController)
     .controller(NodeProgressController.name, NodeProgressController)
@@ -209,6 +211,12 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                             controllerAs: 'nodeGradingController'
                         }
                     }
+                })
+                .state('root.manageStudents', {
+                    url: '/manageStudents',
+                    templateUrl: 'wise5/classroomMonitor/manageStudents/manageStudents.html',
+                    controller: 'ManageStudentsController',
+                    controllerAs: 'manageStudentsController'
                 })
                 .state('root.dashboard', {
                     url: '/dashboard',
