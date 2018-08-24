@@ -34,12 +34,4 @@ describe('StudentComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-/*
-  it('should navigate', () => {
-    let navigateSpy = spyOn(router, 'navigate');
-    component.showHome();
-    expect(navigateSpy).toHaveBeenCalledWith(['/student']);
-  })
-  */
 });

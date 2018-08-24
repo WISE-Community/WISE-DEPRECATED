@@ -32,9 +32,7 @@ describe('TeacherComponent', () => {
     router = TestBed.get(Router);
   });
 
-  /*
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  */
 });

@@ -35,6 +35,7 @@ describe('TeacherHomeComponent', () => {
         const run1 = new Run();
         run1.id = 1;
         run1.name = "Photosynthesis";
+        run1.numStudents = 12;
         const project1 = new Project();
         project1.id = 1;
         project1.name = "Photosynthesis";
@@ -43,6 +44,7 @@ describe('TeacherHomeComponent', () => {
         const run2 = new Run();
         run2.id = 2;
         run2.name = "Plate Tectonics";
+        run2.numStudents = 21;
         const project2 = new Project();
         project2.id = 1;
         project2.name = "Photosynthesis";
@@ -96,20 +98,20 @@ describe('TeacherHomeComponent', () => {
     fixture.detectChanges();
   });
 
-  // it('should create', () => {
-  //   expect(component).toBeTruthy();
-  // });
-  //
-  // it('should show two tabs', () => {
-  //   const bannerDe: DebugElement = fixture.debugElement;
-  //   const tabGroupDe = bannerDe.query(By.css('mat-tab-group'));
-  //   const tabs: DebugElement[] = tabGroupDe.children;
-  //   expect(tabs.length).toEqual(2);
-  // });
-  //
-  // it('should show teacher name and avatar', () => {
-  //   const compiled = fixture.debugElement.nativeElement;
-  //   expect(compiled.querySelector('#teacherName').textContent)
-  //     .toContain('Demo Teacher');
-  // });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should show two tabs', () => {
+    const bannerDe: DebugElement = fixture.debugElement;
+    const tabGroupDe = bannerDe.query(By.css('mat-tab-group'));
+    const tabs: DebugElement[] = tabGroupDe.children;
+    expect(tabs.length).toEqual(2);
+  });
+
+  it('should show teacher name and avatar', () => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('#teacherName').textContent)
+      .toContain('Demo Teacher');
+  });
 });

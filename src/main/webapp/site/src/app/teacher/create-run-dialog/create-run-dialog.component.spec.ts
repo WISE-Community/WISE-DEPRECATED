@@ -39,10 +39,25 @@ describe('CreateRunDialogComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-/*
+
   it('should show run info', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.textContent).toContain('Photosynthesis');
   });
-*/
+
+  it('should getPeriodsString', () => {
+    component.periods[1] = true;
+    component.periods[3] = true;
+    component.periods[5] = true;
+    component.customPeriods = "hello"
+    expect(component.getPeriodsString()).toEqual("1,3,5,hello");
+  });
+
+  it('should invalidate form when period change', () => {
+    expect(component.isFormValid).toBeFalsy();
+    component.periods[1] = true;
+    component.periodChanged();
+    expect(component.isFormValid).toBeTruthy();
+  });
+
 });

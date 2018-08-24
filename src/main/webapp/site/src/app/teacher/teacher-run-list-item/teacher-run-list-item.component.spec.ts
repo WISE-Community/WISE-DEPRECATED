@@ -12,38 +12,10 @@ describe('TeacherProjectListItemComponent', () => {
   let fixture: ComponentFixture<TeacherRunListItemComponent>;
 
   beforeEach(async(() => {
-    const teacherServiceStub = {
-      isLoggedIn: true,
-      getRuns(): Observable<Run[]> {
-        const runs : Run[] = [];
-        const run1 = new Run();
-        run1.id = 1;
-        run1.name = "Photosynthesis";
-        const project1 = new Project();
-        project1.id = 1;
-        project1.name = "Photosynthesis";
-        project1.thumbIconPath = "";
-        run1.project = project1;
-        const run2 = new Run();
-        run2.id = 2;
-        run2.name = "Plate Tectonics";
-        const project2 = new Project();
-        project2.id = 1;
-        project2.name = "Photosynthesis";
-        project2.thumbIconPath = "";
-        run2.project = project2;
-        runs.push(run1);
-        runs.push(run2);
-        return Observable.create( observer => {
-          observer.next(runs);
-          observer.complete();
-        });
-      }
-    };
     TestBed.configureTestingModule({
       declarations: [],
       imports: [ TeacherModule ],
-      providers: [ {provide: TeacherService, useValue: teacherServiceStub}]
+      providers: [ { provide: TeacherService }]
     })
     .compileComponents();
   }));
@@ -51,11 +23,28 @@ describe('TeacherProjectListItemComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TeacherRunListItemComponent);
     component = fixture.componentInstance;
+    const run = new Run();
+    run.id = 1;
+    run.name = "Photosynthesis";
+    run.startTime = 123;
+    run.endTime = 150;
+    run.numStudents = 30;
+    const project = new Project();
+    project.id = 1;
+    project.name = "Photosynthesis";
+    project.thumbIconPath = "";
+    run.project = project;
+    component.run = run;
     fixture.detectChanges();
   });
-/*
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  */
+
+  it('should show run info', () => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.textContent).toContain('Photosynthesis');
+  });
+
 });
