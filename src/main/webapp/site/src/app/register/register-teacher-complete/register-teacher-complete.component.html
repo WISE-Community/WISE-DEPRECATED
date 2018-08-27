@@ -1,4 +1,16 @@
-<p>
-  Registration was successful! Your new username is: {{username}}
-</p>
-<a href="/wise/site/teacher">Click here to sign in.</a>
+<mat-card class="standalone__content standalone__content--sm mat-elevation-z4 center">
+  <mat-card-content>
+    <h2 class="standalone__title accent">Welcome to WISE!</h2>
+    <p class="mat-body-2">
+      Your new username is: <span class="mat-title">{{username}}</span>.
+    </p>
+    <p>
+      You should also receive an email with your account details.
+    </p>
+    <mat-card-actions>
+      <a mat-raised-button color="primary" routerLink="/login">
+        Sign In to Get Started
+      </a>
+    </mat-card-actions>
+  </mat-card-content>
+</mat-card>

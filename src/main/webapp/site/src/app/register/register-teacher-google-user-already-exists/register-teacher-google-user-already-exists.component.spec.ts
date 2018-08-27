@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RegisterTeacherGoogleUserAlreadyExistsComponent } from './register-teacher-google-user-already-exists.component';
+import { RegisterTeacherGoogleUserAlreadyExistsComponent } from './register-teacher-google-user-already-exists.component'
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";;
+import { RegisterModule } from "../register.module";
 
 describe('RegisterTeacherGoogleUserAlreadyExistsComponent', () => {
   let component: RegisterTeacherGoogleUserAlreadyExistsComponent;
@@ -8,7 +10,8 @@ describe('RegisterTeacherGoogleUserAlreadyExistsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RegisterTeacherGoogleUserAlreadyExistsComponent ]
+      declarations: [ ],
+      imports: [ BrowserAnimationsModule, RegisterModule ]
     })
     .compileComponents();
   }));
