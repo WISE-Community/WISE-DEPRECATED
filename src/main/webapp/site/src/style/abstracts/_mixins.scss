@@ -36,8 +36,11 @@
   }
 
   .cta__headline {
-    background-color: map-get($background, card);
     border-color: map-get($colors, notice-bg);
+  }
+
+  .cta__wrap, .blurb {
+    background-color: map-get($background, card);
   }
 
   .mat-button {

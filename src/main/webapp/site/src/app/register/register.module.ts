@@ -18,6 +18,7 @@ import { RegisterStudentFormComponent } from './register-student-form/register-s
 import { RegisterStudentCompleteComponent } from './register-student-complete/register-student-complete.component';
 import { RegisterStudentComponent } from './register-student/register-student.component';
 import { RegisterGoogleUserAlreadyExistsComponent } from './register-google-user-already-exists/register-google-user-already-exists.component';
+import { SharedModule } from "../modules/shared/shared.module";
 
 const materialModules = [
   MatButtonModule,
@@ -33,6 +34,7 @@ const materialModules = [
   imports: [
     CommonModule,
     FormsModule,
+    SharedModule,
     RegisterRoutingModule,
     ReactiveFormsModule,
     materialModules
