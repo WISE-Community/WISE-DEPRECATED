@@ -41,7 +41,7 @@
     "babel-core": "6.24.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "6.14.0",
-    "browser-sync": "^2.11.1",
+    "browser-sync": "^2.24.7",
     "codelyzer": "^4.4.4",
     "concurrently": "^3.4.0",
     "connect-history-api-fallback": "^1.1.0",
