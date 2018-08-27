@@ -3,15 +3,16 @@ package org.wise.portal.presentation.web.controllers.user;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.dao.SystemWideSaltSource;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.service.user.UserService;
 
 import java.util.Properties;
 
@@ -28,6 +29,12 @@ public class UserAPIController {
 
   @Autowired
   private Properties wiseProperties;
+
+  @Autowired
+  protected UserService userService;
+
+  @Autowired
+  private SystemWideSaltSource systemSaltSource;
 
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   protected String handleGET(ModelMap modelMap,
@@ -82,5 +89,28 @@ public class UserAPIController {
     configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
     configJSON.put("logOutURL", wiseProperties.get("wiseBaseURL") + "/logout");
     return configJSON.toString();
+  }
+
+  @ResponseBody
+  @RequestMapping(value = "/password", method = RequestMethod.POST)
+  protected String changePassword(@RequestParam("username") String username,
+                                  @RequestParam("oldPassword") String oldPassword,
+                                  @RequestParam("newPassword") String newPassword) throws NotAuthorizedException, JSONException {
+    User user = ControllerUtil.getSignedInUser();
+    if (user.getUserDetails().getUsername().equals(username)) {
+      Md5PasswordEncoder encoder = new Md5PasswordEncoder();
+      String encodedOldPassword = encoder.encodePassword(oldPassword, systemSaltSource.getSystemWideSalt());
+
+      if (user.getUserDetails().getPassword().equals(encodedOldPassword)) {
+        System.out.println("username=" + username);
+        System.out.println("password=" + oldPassword);
+        System.out.println("newPassword=" + newPassword);
+        userService.updateUserPassword(user, newPassword);
+        return "success";
+      }
+    } else {
+      throw new NotAuthorizedException("username is not the same as signed in user");
+    }
+    return "error";
   }
 }

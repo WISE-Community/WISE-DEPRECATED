@@ -20,6 +20,9 @@ import { RunMenuComponent } from './run-menu/run-menu.component';
 import { CreateRunDialogComponent } from './create-run-dialog/create-run-dialog.component';
 import { LibraryModule } from "../modules/library/library.module";
 import { ShareRunDialogComponent } from './share-run-dialog/share-run-dialog.component';
+import { EditComponent } from './account/edit/edit.component';
+import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
+import { EditPasswordComponent } from './account/edit-password/edit-password.component';
 
 const materialModules = [
   MatAutocompleteModule,
@@ -53,7 +56,10 @@ const materialModules = [
   TeacherRunListComponent,
   TeacherRunListItemComponent,
   RunMenuComponent,
-    ShareRunDialogComponent
+    ShareRunDialogComponent,
+    EditComponent,
+    EditProfileComponent,
+    EditPasswordComponent
   ],
   entryComponents: [
     CreateRunDialogComponent,
