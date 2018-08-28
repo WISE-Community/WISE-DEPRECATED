@@ -1,6 +1,7 @@
 import { User } from "./user";
 
 export class Teacher extends User {
+  displayName: string;
   email: string;
   googleUserId: string;
   city: string;

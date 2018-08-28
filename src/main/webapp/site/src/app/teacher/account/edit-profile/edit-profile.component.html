@@ -1,7 +1,7 @@
 <div class="login mat-app-background" fxLayout="column" fxLayoutAlign="start center">
   <mat-card class="login__form">
     <mat-card-content>
-      <form role="form" (submit)="saveChanges()" [formGroup]="editProfileFormGroup">
+      <form role="form" style="flex-direction: column" (submit)="saveChanges()" [formGroup]="editProfileFormGroup">
         <h2 class="accent center">Edit Profile</h2>
         <p>
           <mat-form-field fxFlex>
@@ -9,9 +9,7 @@
                    id="firstName"
                    name="firstName"
                    placeholder="First Name"
-                   formControlName="firstName"
-                   autofocus
-                   required />
+                   formControlName="firstName" />
             <mat-error *ngIf="editProfileFormGroup.controls['firstName'].hasError('required')">First Name Required</mat-error>
           </mat-form-field>
         </p>
@@ -21,8 +19,7 @@
                    id="lastName"
                    name="lastName"
                    placeholder="Last Name"
-                   formControlName="lastName"
-                   required />
+                   formControlName="lastName" />
             <mat-error *ngIf="editProfileFormGroup.controls['lastName'].hasError('required')">Last Name Required</mat-error>
           </mat-form-field>
         </p>
@@ -32,8 +29,7 @@
                    id="displayName"
                    name="displayName"
                    placeholder="Display Name"
-                   formControlName="displayName"
-                   required />
+                   formControlName="displayName" />
             <mat-error *ngIf="editProfileFormGroup.controls['lastName'].hasError('required')">Display Name Required</mat-error>
           </mat-form-field>
         </p>
@@ -43,13 +39,9 @@
                    id="email"
                    name="email"
                    placeholder="Email"
-                   formControlName="email"
-                   required />
+                   formControlName="email" />
             <mat-error *ngIf="editProfileFormGroup.controls['email'].hasError('required')">Email Required</mat-error>
           </mat-form-field>
-        </p>
-        <p>
-          We’ll occasionally send updates about your account to this inbox. We’ll never share your email address or personal information with anyone without your consent.
         </p>
         <p>
           <mat-form-field fxFlex>
@@ -57,8 +49,7 @@
                    id="city"
                    name="city"
                    placeholder="City"
-                   formControlName="city"
-                   required />
+                   formControlName="city" />
             <mat-error *ngIf="editProfileFormGroup.controls['city'].hasError('required')">City Required</mat-error>
           </mat-form-field>
         </p>
@@ -68,8 +59,7 @@
                    id="state"
                    name="state"
                    placeholder="State"
-                   formControlName="state"
-                   required />
+                   formControlName="state" />
             <mat-error *ngIf="editProfileFormGroup.controls['state'].hasError('required')">State Required</mat-error>
           </mat-form-field>
         </p>
@@ -79,8 +69,7 @@
                    id="country"
                    name="country"
                    placeholder="Country"
-                   formControlName="country"
-                   required />
+                   formControlName="country" />
             <mat-error *ngIf="editProfileFormGroup.controls['country'].hasError('required')">Country Required</mat-error>
           </mat-form-field>
         </p>
@@ -90,16 +79,14 @@
                    id="schoolName"
                    name="schoolName"
                    placeholder="School Name"
-                   formControlName="schoolName"
-                   required />
+                   formControlName="schoolName" />
             <mat-error *ngIf="editProfileFormGroup.controls['schoolName'].hasError('required')">School Name Required</mat-error>
           </mat-form-field>
         </p>
         <p>
           <mat-form-field fxFlex>
             <mat-select placeholder="School Level"
-                        formControlName="schoolLevel"
-                        required>
+                        formControlName="schoolLevel">
               <mat-option *ngFor="let schoolLevel of schoolLevels" [value]="schoolLevel">
                 {{schoolLevel}}
               </mat-option>
@@ -111,6 +98,7 @@
                 [disabled]="!editProfileFormGroup.valid">
           Save Changes
         </button>
+        <div>{{ message }}</div>
       </form>
     </mat-card-content>
   </mat-card>

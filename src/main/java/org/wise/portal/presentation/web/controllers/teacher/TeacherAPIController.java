@@ -16,6 +16,7 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.project.ProjectService;
@@ -266,5 +267,34 @@ public class TeacherAPIController {
     runJSON.put("startTime", run.getStarttime().getTime());
     runJSON.put("numStudents", 0);
     return runJSON;
+  }
+
+  @RequestMapping(value = "/profile/update", method = RequestMethod.POST)
+  protected String updateProfile(HttpServletRequest request,
+                                 @RequestParam("displayName") String displayName,
+                                 @RequestParam("email") String email,
+                                 @RequestParam("city") String city,
+                                 @RequestParam("state") String state,
+                                 @RequestParam("country") String country,
+                                 @RequestParam("schoolName") String schoolName,
+                                 @RequestParam("schoolLevel") String schoolLevel,
+                                 @RequestParam("username") String username) throws NotAuthorizedException, JSONException {
+    User user = ControllerUtil.getSignedInUser();
+    if (user.getUserDetails().getUsername().equals(username)) {
+      TeacherUserDetails teacherUserDetails = (TeacherUserDetails) user.getUserDetails();
+      teacherUserDetails.setEmailAddress(email);
+      teacherUserDetails.setDisplayname(displayName);
+      teacherUserDetails.setCity(city);
+      teacherUserDetails.setState(state);
+      teacherUserDetails.setCountry(country);
+      teacherUserDetails.setSchoolname(schoolName);
+      teacherUserDetails.setSchoollevel(Schoollevel.valueOf(schoolLevel));
+      userService.updateUser(user);
+      JSONObject response = new JSONObject();
+      response.put("message", "success");
+      return response.toString();
+    } else {
+      throw new NotAuthorizedException("username is not the same as signed in user");
+    }
   }
 }

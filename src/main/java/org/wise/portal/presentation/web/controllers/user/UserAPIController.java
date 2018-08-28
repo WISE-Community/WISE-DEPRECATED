@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
@@ -70,6 +71,18 @@ public class UserAPIController {
         userJSON.put("role", "researcher");
       } else if (isTeacher) {
         userJSON.put("role", "teacher");
+      }
+
+      if (!isStudent) {
+        TeacherUserDetails teacherUserDetails = (TeacherUserDetails) userDetails;
+        userJSON.put("displayName", teacherUserDetails.getDisplayname());
+        userJSON.put("email", teacherUserDetails.getEmailAddress());
+        userJSON.put("city", teacherUserDetails.getCity());
+        userJSON.put("state", teacherUserDetails.getState());
+        userJSON.put("country", teacherUserDetails.getCountry());
+        userJSON.put("schoolName", teacherUserDetails.getSchoolname());
+        userJSON.put("schoolLevel", teacherUserDetails.getSchoollevel());
+        userJSON.put("language", teacherUserDetails.getLanguage());
       }
       return userJSON.toString();
     } else {

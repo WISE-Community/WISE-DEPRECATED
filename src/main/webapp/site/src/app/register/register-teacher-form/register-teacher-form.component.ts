@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Teacher } from "../../domain/teacher";
 import { TeacherService } from "../../teacher/teacher.service";
-import { FormControl, FormGroup, Validators, FormBuilder, ValidatorFn,
-  AbstractControl } from "@angular/forms";
+import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { UtilService } from '../../services/util.service';
 
 @Component({

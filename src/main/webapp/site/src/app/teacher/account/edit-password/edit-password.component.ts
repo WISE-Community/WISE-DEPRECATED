@@ -11,6 +11,7 @@ import { ConfigService } from "../../../services/config.service";
 export class EditPasswordComponent implements OnInit {
 
   @ViewChild('changePasswordForm') changePasswordForm;
+  message: string = '';
 
   newPasswordFormGroup: FormGroup = this.fb.group({
     newPassword: new FormControl('', [Validators.required]),
@@ -21,8 +22,6 @@ export class EditPasswordComponent implements OnInit {
     oldPassword: new FormControl('', [Validators.required]),
     newPasswordFormGroup: this.newPasswordFormGroup
   });
-
-  message: string = '';
 
   constructor(private fb: FormBuilder,
       private configService: ConfigService,
