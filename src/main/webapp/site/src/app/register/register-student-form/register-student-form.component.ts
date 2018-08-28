@@ -143,7 +143,11 @@ export class RegisterStudentFormComponent implements OnInit {
     }
     this.days = [];
     for (let i = 0; i < days; i++) {
-      this.days.push((i + 1).toString());
+      let day = (i + 1).toString();
+      if (i < 9) {
+        day = '0' + day;
+      }
+      this.days.push(day);
     }
     if (days < this.createStudentAccountFormGroup.get('birthDay').value) {
       this.createStudentAccountFormGroup.controls['birthDay'].reset();
