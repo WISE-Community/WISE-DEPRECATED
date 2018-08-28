@@ -1,130 +1,117 @@
-<div class="login mat-app-background" fxLayout="column"
-     fxLayoutAlign="start center">
-  <div class="login__logo">
-    <a routerLink="/">
-      <img src="assets/img/wise-web-logo-full.png" alt="WISE logo" />
-    </a>
-  </div>
-  <mat-card class="login__form">
-    <mat-card-content>
-      <form role="form" (submit)="createAccount()" [formGroup]="createStudentAccountFormGroup">
-        <h2 class="accent center">Create Student Account</h2>
+<mat-card class="standalone__content mat-elevation-z4 center">
+  <mat-card-content>
+    <form role="form"
+          fxLayout="column"
+          (submit)="createAccount()"
+          [formGroup]="createStudentAccountFormGroup">
+      <h2 class="standalone__title accent">Create Student Account</h2>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label>First Name</mat-label>
+          <input matInput
+                 id="firstName"
+                 name="firstName"
+                 formControlName="firstName"
+                 autofocus
+                 required />
+          <mat-error *ngIf="createStudentAccountFormGroup.controls['firstName'].hasError('required')">First Name Required</mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label>Last Name</mat-label>
+          <input matInput
+                 id="lastName"
+                 name="lastName"
+                 formControlName="lastName"
+                 required />
+          <mat-error *ngIf="createStudentAccountFormGroup.controls['lastName'].hasError('required')">Last Name Required</mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label>Gender</mat-label>
+          <mat-select formControlName="gender" required>
+            <mat-option *ngFor="let gender of genders" [value]="gender.code">
+              {{gender.label}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="createStudentAccountFormGroup.controls['gender'].hasError('required')">Gender Required</mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label>Birthday (Month)</mat-label>
+          <mat-select formControlName="birthMonth" required>
+            <mat-option *ngFor="let month of months" [value]="month">
+              {{month}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="createStudentAccountFormGroup.controls['birthMonth'].hasError('required')">Month Required</mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label>Birthday (Day)</mat-label>
+          <mat-select formControlName="birthDay" required>
+            <mat-option *ngFor="let day of days" [value]="day">
+              {{day}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="createStudentAccountFormGroup.controls['birthDay'].hasError('required')">Day Required</mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label>Security Question</mat-label>
+          <mat-select formControlName="securityQuestion" required>
+            <mat-option *ngFor="let securityQuestion of securityQuestions" [value]="securityQuestion.key">
+              {{securityQuestion.value}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="createStudentAccountFormGroup.controls['securityQuestion'].hasError('required')">Security Question Required</mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field appearance="fill" fxFlex>
+          <mat-label>Security Question Answer</mat-label>
+          <input matInput formControlName="securityQuestionAnswer" required />
+          <mat-error *ngIf="createStudentAccountFormGroup.controls['securityQuestionAnswer'].hasError('required')">Security Question Answer Required</mat-error>
+        </mat-form-field>
+      </p>
+      <div *ngIf="studentUser.googleUserId == null" formGroupName="passwords">
         <p>
-          <mat-form-field fxFlex>
+          <mat-form-field appearance="fill" fxFlex>
+            <mat-label>Password</mat-label>
             <input matInput
-                   id="firstName"
-                   name="firstName"
-                   placeholder="First Name"
-                   formControlName="firstName"
-                   autofocus
+                   id="password"
+                   type="password"
+                   name="password"
+                   formControlName="password"
                    required />
-            <mat-error *ngIf="createStudentAccountFormGroup.controls['firstName'].hasError('required')">First Name Required</mat-error>
+            <mat-error *ngIf="passwordsFormGroup.controls['password'].hasError('required')">Password Required</mat-error>
           </mat-form-field>
         </p>
         <p>
-          <mat-form-field fxFlex>
+          <mat-form-field appearance="fill" fxFlex>
+            <mat-label>Confirm Password</mat-label>
             <input matInput
-                   id="lastName"
-                   name="lastName"
-                   placeholder="Last Name"
-                   formControlName="lastName"
+                   id="confirmPassword"
+                   type="password"
+                   name="confirmPassword"
+                   formControlName="confirmPassword"
                    required />
-            <mat-error *ngIf="createStudentAccountFormGroup.controls['lastName'].hasError('required')">Last Name Required</mat-error>
+            <mat-error *ngIf="passwordsFormGroup.controls['confirmPassword'].hasError('required')">Confirm Password Required</mat-error>
+            <mat-error *ngIf="passwordsFormGroup.hasError('passwordDoesNotMatch')">Password does not match</mat-error>
           </mat-form-field>
         </p>
-        <p>
-          <mat-form-field fxFlex>
-            <mat-select placeholder="Gender"
-                        formControlName="gender"
-                        required>
-              <mat-option *ngFor="let gender of genders" [value]="gender">
-                {{gender}}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="createStudentAccountFormGroup.controls['gender'].hasError('required')">Gender Required</mat-error>
-          </mat-form-field>
-        </p>
-        <p>
-          <mat-form-field fxFlex>
-            <mat-select placeholder="Birthday (Month)"
-                        formControlName="birthMonth"
-                        required>
-              <mat-option *ngFor="let month of months" [value]="month">
-                {{month}}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="createStudentAccountFormGroup.controls['birthMonth'].hasError('required')">Month Required</mat-error>
-          </mat-form-field>
-        </p>
-        <p>
-          <mat-form-field fxFlex>
-            <mat-select placeholder="Birthday (Day)"
-                        formControlName="birthDay"
-                        required>
-              <mat-option *ngFor="let day of days" [value]="day">
-                {{day}}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="createStudentAccountFormGroup.controls['birthDay'].hasError('required')">Day Required</mat-error>
-          </mat-form-field>
-        </p>
-        <p *ngIf="studentUser.googleUserId == null" >
-          <mat-form-field fxFlex>
-            <mat-select placeholder="Security Question"
-                        formControlName="securityQuestion"
-                        required>
-              <mat-option *ngFor="let securityQuestion of securityQuestions" [value]="securityQuestion.key">
-                {{securityQuestion.value}}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="createStudentAccountFormGroup.controls['securityQuestion'].hasError('required')">Security Question Required</mat-error>
-          </mat-form-field>
-        </p>
-        <p *ngIf="studentUser.googleUserId == null" >
-          <mat-form-field fxFlex>
-            <input matInput
-                   placeholder="Security Question Answer"
-                   formControlName="securityQuestionAnswer"
-                   required />
-            <mat-error *ngIf="createStudentAccountFormGroup.controls['securityQuestionAnswer'].hasError('required')">Security Question Answer Required</mat-error>
-          </mat-form-field>
-        </p>
-        <div *ngIf="studentUser.googleUserId == null" formGroupName="passwords">
-          <p>
-            <mat-form-field fxFlex>
-              <input matInput
-                     id="password"
-                     type="password"
-                     name="password"
-                     placeholder="Password"
-                     formControlName="password"
-                     required />
-              <mat-error *ngIf="passwordsFormGroup.controls['password'].hasError('required')">Password Required</mat-error>
-            </mat-form-field>
-          </p>
-          <p>
-            <mat-form-field fxFlex>
-              <input matInput
-                     id="confirmPassword"
-                     type="password"
-                     name="confirmPassword"
-                     placeholder="Confirm Password"
-                     formControlName="confirmPassword"
-                     required />
-              <mat-error *ngIf="passwordsFormGroup.controls['confirmPassword'].hasError('required')">Confirm Password Required</mat-error>
-              <mat-error *ngIf="passwordsFormGroup.hasError('passwordDoesNotMatch')">Password does not match</mat-error>
-            </mat-form-field>
-          </p>
-        </div>
-        <p>
-          By clicking "Create Account", you agree to our <a href="/pages/privacy-terms.html" target="_blank">Privacy Policy & Terms of Use</a>
-        </p>
-        <button fxFlex mat-raised-button color="primary" type="submit"
-                [disabled]="!createStudentAccountFormGroup.valid">
-          Create Account
-        </button>
-      </form>
-    </mat-card-content>
-  </mat-card>
-</div>
-
+      </div>
+      <p>
+        By clicking "Create Account", you agree to our <a href="/pages/privacy-terms.html" target="_blank">Privacy Policy & Terms of Use</a>
+      </p>
+      <button mat-raised-button color="primary" type="submit">
+        Create Account
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>
