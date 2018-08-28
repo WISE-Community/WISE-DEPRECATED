@@ -24,7 +24,6 @@ const registerRoutes: Routes = [
       { path: 'join/teacher', component: RegisterTeacherComponent },
       { path: 'join/teacher/complete', component: RegisterTeacherCompleteComponent },
       { path: 'join/teacher/form', component: RegisterTeacherFormComponent },
-      { path: 'join/teacher/googleUserAlreadyExists', component: RegisterTeacherGoogleUserAlreadyExistsComponent },
       { path: 'join/googleUserAlreadyExists', component: RegisterGoogleUserAlreadyExistsComponent }
     ]
   }
