@@ -3,8 +3,6 @@ package org.wise.portal.presentation.web.controllers.user;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.dao.SystemWideSaltSource;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -96,11 +94,13 @@ public class UserAPIController {
     User user = ControllerUtil.getSignedInUser();
     if (user.getUserDetails().getUsername().equals(username)) {
       User result = userService.updateUserPassword(user, oldPassword, newPassword);
+      JSONObject response = new JSONObject();
       if (result != null) {
-        return "success";
+        response.put("message", "success");
       } else {
-        return "error";
+        response.put("message", "error");
       }
+      return response.toString();
     } else {
       throw new NotAuthorizedException("username is not the same as signed in user");
     }
