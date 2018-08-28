@@ -94,6 +94,17 @@
             <mat-error *ngIf="editProfileFormGroup.controls['schoolLevel'].hasError('required')">School Level Required</mat-error>
           </mat-form-field>
         </p>
+        <p>
+          <mat-form-field fxFlex>
+            <mat-select placeholder="Language"
+                        formControlName="language">
+              <mat-option *ngFor="let language of languages" [value]="language.locale">
+                {{language.language}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="editProfileFormGroup.controls['language'].hasError('required')">Language Required</mat-error>
+          </mat-form-field>
+        </p>
         <button fxFlex mat-raised-button color="primary" type="submit"
                 [disabled]="!editProfileFormGroup.valid">
           Save Changes

@@ -271,6 +271,7 @@ public class TeacherAPIController {
 
   @RequestMapping(value = "/profile/update", method = RequestMethod.POST)
   protected String updateProfile(HttpServletRequest request,
+                                 @RequestParam("username") String username,
                                  @RequestParam("displayName") String displayName,
                                  @RequestParam("email") String email,
                                  @RequestParam("city") String city,
@@ -278,7 +279,7 @@ public class TeacherAPIController {
                                  @RequestParam("country") String country,
                                  @RequestParam("schoolName") String schoolName,
                                  @RequestParam("schoolLevel") String schoolLevel,
-                                 @RequestParam("username") String username) throws NotAuthorizedException, JSONException {
+                                 @RequestParam("language") String language) throws NotAuthorizedException, JSONException {
     User user = ControllerUtil.getSignedInUser();
     if (user.getUserDetails().getUsername().equals(username)) {
       TeacherUserDetails teacherUserDetails = (TeacherUserDetails) user.getUserDetails();
@@ -289,6 +290,7 @@ public class TeacherAPIController {
       teacherUserDetails.setCountry(country);
       teacherUserDetails.setSchoolname(schoolName);
       teacherUserDetails.setSchoollevel(Schoollevel.valueOf(schoolLevel));
+      teacherUserDetails.setLanguage(language);
       userService.updateUser(user);
       JSONObject response = new JSONObject();
       response.put("message", "success");

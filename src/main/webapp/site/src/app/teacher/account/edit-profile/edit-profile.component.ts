@@ -14,6 +14,7 @@ export class EditProfileComponent implements OnInit {
   user: Teacher;
   schoolLevels: string[] = ["ELEMENTARY_SCHOOL", "MIDDLE_SCHOOL", "HIGH_SCHOOL", "COLLEGE", "OTHER"];
   message: string = '';
+  languages: object[];
 
   editProfileFormGroup: FormGroup = this.fb.group({
     firstName: new FormControl({ value: '', disabled: true }, [Validators.required]),
@@ -24,7 +25,8 @@ export class EditProfileComponent implements OnInit {
     state: new FormControl('', [Validators.required]),
     country: new FormControl('', [Validators.required]),
     schoolName: new FormControl('', [Validators.required]),
-    schoolLevel: new FormControl('', [Validators.required])
+    schoolLevel: new FormControl('', [Validators.required]),
+    language: new FormControl('', [Validators.required])
   });
 
   constructor(private fb: FormBuilder,
@@ -40,6 +42,10 @@ export class EditProfileComponent implements OnInit {
     this.setControlFieldValue('country', this.user.country);
     this.setControlFieldValue('schoolName', this.user.schoolName);
     this.setControlFieldValue('schoolLevel', this.user.schoolLevel);
+    this.setControlFieldValue('language', this.user.language);
+    this.userService.getLanguages().subscribe((response) => {
+      this.languages = <object[]>response;
+    });
   }
 
   getUser() {
@@ -61,8 +67,9 @@ export class EditProfileComponent implements OnInit {
     const country: string = this.getControlFieldValue('country');
     const schoolName: string = this.getControlFieldValue('schoolName');
     const schoolLevel: string = this.getControlFieldValue('schoolLevel');
+    const language: string = this.getControlFieldValue('language');
     const username = this.user.userName;
-    this.teacherService.updateProfile(username, displayName, email, city, state, country, schoolName, schoolLevel)
+    this.teacherService.updateProfile(username, displayName, email, city, state, country, schoolName, schoolLevel, language)
         .subscribe((response) => {
       this.handleUpdateProfileResponse(response);
     })
@@ -74,9 +81,9 @@ export class EditProfileComponent implements OnInit {
 
   handleUpdateProfileResponse(response) {
     if (response.message == 'success') {
-      this.displayMessage("Successfully changed password");
+      this.displayMessage("Successfully updated profile");
     } else {
-      this.displayMessage("Failed to change password");
+      this.displayMessage("Failed to update profile");
     }
   }
 

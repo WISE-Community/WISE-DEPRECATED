@@ -62,9 +62,9 @@ export class EditProfileComponent implements OnInit {
 
   handleUpdateProfileResponse(response) {
     if (response.message == 'success') {
-      this.displayMessage("Successfully changed password");
+      this.displayMessage("Successfully updated profile");
     } else {
-      this.displayMessage("Failed to change password");
+      this.displayMessage("Failed to update profile");
     }
   }
 
