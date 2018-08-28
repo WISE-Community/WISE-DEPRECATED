@@ -105,6 +105,8 @@ public interface UserService {
    */
   User updateUserPassword(final User user, String newPassword);
 
+  User updateUserPassword(User user, String oldPassword, String newPassword);
+
   /**
    * Gets all users from persistent data store.
    *

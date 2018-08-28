@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService {
   @Autowired
   private SaltSource saltSource;
 
+
   /**
    * @see UserService#retrieveUser(UserDetails)
    */
@@ -188,6 +189,18 @@ public class UserServiceImpl implements UserService {
     this.encodePassword(userDetails);
     this.userDao.save(user);
     return user;
+  }
+
+  @Override
+  public User updateUserPassword(User user, String oldPassword, String newPassword) {
+    Md5PasswordEncoder encoder = new Md5PasswordEncoder();
+    String encodedOldPassword =
+        this.passwordEncoder.encodePassword(oldPassword, this.saltSource.getSalt(user.getUserDetails()));
+
+    if (user.getUserDetails().getPassword().equals(encodedOldPassword)) {
+      return this.updateUserPassword(user, newPassword);
+    }
+    return null;
   }
 
   public List<User> retrieveAllUsers() {

@@ -33,9 +33,6 @@ public class UserAPIController {
   @Autowired
   protected UserService userService;
 
-  @Autowired
-  private SystemWideSaltSource systemSaltSource;
-
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   protected String handleGET(ModelMap modelMap,
       @RequestParam(value = "pLT", required = false) String previousLoginTime) throws Exception {
@@ -94,23 +91,18 @@ public class UserAPIController {
   @ResponseBody
   @RequestMapping(value = "/password", method = RequestMethod.POST)
   protected String changePassword(@RequestParam("username") String username,
-                                  @RequestParam("oldPassword") String oldPassword,
-                                  @RequestParam("newPassword") String newPassword) throws NotAuthorizedException, JSONException {
+      @RequestParam("oldPassword") String oldPassword,
+      @RequestParam("newPassword") String newPassword) throws NotAuthorizedException, JSONException {
     User user = ControllerUtil.getSignedInUser();
     if (user.getUserDetails().getUsername().equals(username)) {
-      Md5PasswordEncoder encoder = new Md5PasswordEncoder();
-      String encodedOldPassword = encoder.encodePassword(oldPassword, systemSaltSource.getSystemWideSalt());
-
-      if (user.getUserDetails().getPassword().equals(encodedOldPassword)) {
-        System.out.println("username=" + username);
-        System.out.println("password=" + oldPassword);
-        System.out.println("newPassword=" + newPassword);
-        userService.updateUserPassword(user, newPassword);
+      User result = userService.updateUserPassword(user, oldPassword, newPassword);
+      if (result != null) {
         return "success";
+      } else {
+        return "error";
       }
     } else {
       throw new NotAuthorizedException("username is not the same as signed in user");
     }
-    return "error";
   }
 }
