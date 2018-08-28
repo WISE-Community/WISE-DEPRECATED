@@ -8,7 +8,6 @@ import { RegisterStudentCompleteComponent } from "./register-student-complete/re
 import { RegisterTeacherComponent } from "./register-teacher/register-teacher.component";
 import { RegisterTeacherFormComponent } from "./register-teacher-form/register-teacher-form.component";
 import { RegisterTeacherCompleteComponent } from "./register-teacher-complete/register-teacher-complete.component";
-import { RegisterTeacherGoogleUserAlreadyExistsComponent } from "./register-teacher-google-user-already-exists/register-teacher-google-user-already-exists.component";
 import { RegisterStudentComponent } from './register-student/register-student.component';
 import { RegisterGoogleUserAlreadyExistsComponent } from './register-google-user-already-exists/register-google-user-already-exists.component';
 
