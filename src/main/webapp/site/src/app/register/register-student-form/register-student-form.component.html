@@ -61,25 +61,25 @@
           <mat-error *ngIf="createStudentAccountFormGroup.controls['birthDay'].hasError('required')">Day Required</mat-error>
         </mat-form-field>
       </p>
-      <p>
-        <mat-form-field appearance="fill" fxFlex>
-          <mat-label>Security Question</mat-label>
-          <mat-select formControlName="securityQuestion" required>
-            <mat-option *ngFor="let securityQuestion of securityQuestions" [value]="securityQuestion.key">
-              {{securityQuestion.value}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="createStudentAccountFormGroup.controls['securityQuestion'].hasError('required')">Security Question Required</mat-error>
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field appearance="fill" fxFlex>
-          <mat-label>Security Question Answer</mat-label>
-          <input matInput formControlName="securityQuestionAnswer" required />
-          <mat-error *ngIf="createStudentAccountFormGroup.controls['securityQuestionAnswer'].hasError('required')">Security Question Answer Required</mat-error>
-        </mat-form-field>
-      </p>
-      <div *ngIf="studentUser.googleUserId == null" formGroupName="passwords">
+      <div *ngIf="studentUser.googleUserId == null">
+        <p>
+          <mat-form-field appearance="fill" fxFlex>
+            <mat-label>Security Question</mat-label>
+            <mat-select formControlName="securityQuestion" required>
+              <mat-option *ngFor="let securityQuestion of securityQuestions" [value]="securityQuestion.key">
+                {{securityQuestion.value}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="createStudentAccountFormGroup.controls['securityQuestion'].hasError('required')">Security Question Required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field appearance="fill" fxFlex>
+            <mat-label>Security Question Answer</mat-label>
+            <input matInput formControlName="securityQuestionAnswer" required />
+            <mat-error *ngIf="createStudentAccountFormGroup.controls['securityQuestionAnswer'].hasError('required')">Security Question Answer Required</mat-error>
+          </mat-form-field>
+        </p>
         <p>
           <mat-form-field appearance="fill" fxFlex>
             <mat-label>Password</mat-label>
