@@ -1,5 +1,6 @@
 package org.wise.portal.presentation.web.controllers.user;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.user.UserService;
 
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -82,8 +84,9 @@ public class UserAPIController {
         userJSON.put("country", teacherUserDetails.getCountry());
         userJSON.put("schoolName", teacherUserDetails.getSchoolname());
         userJSON.put("schoolLevel", teacherUserDetails.getSchoollevel());
-        userJSON.put("language", teacherUserDetails.getLanguage());
       }
+      userJSON.put("language", userDetails.getLanguage());
+
       return userJSON.toString();
     } else {
       JSONObject userJSON = new JSONObject();
@@ -116,6 +119,33 @@ public class UserAPIController {
       return response.toString();
     } else {
       throw new NotAuthorizedException("username is not the same as signed in user");
+    }
+  }
+
+  @ResponseBody
+  @RequestMapping(value = "/languages", method = RequestMethod.GET)
+  protected String getSupportedLanguages() throws JSONException {
+    String supportedLocales = wiseProperties.getProperty("supportedLocales");
+    String[] supportedLocalesArray = supportedLocales.split(",");
+    JSONArray supportedLocalesJSONArray = new JSONArray();
+    for (String localeString: supportedLocalesArray) {
+      String language = getLanguageName(localeString);
+      JSONObject localeAndLanguage = new JSONObject();
+      localeAndLanguage.put("locale", localeString);
+      localeAndLanguage.put("language", language);
+      supportedLocalesJSONArray.put(localeAndLanguage);
+    }
+    return supportedLocalesJSONArray.toString();
+  }
+
+  protected String getLanguageName(String localeString) {
+    if (localeString.toLowerCase().equals("zh_tw")) {
+      return "Chinese (Traditional)";
+    } else if (localeString.toLowerCase().equals("zh_cn")) {
+      return "Chinese (Simplified)";
+    } else {
+      Locale locale = new Locale(localeString);
+      return locale.getDisplayLanguage();
     }
   }
 }

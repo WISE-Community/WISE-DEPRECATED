@@ -13,6 +13,7 @@ export class UserService {
   private logInURL = '/wise/j_acegi_security_check';
   private checkGoogleUserIdUrl = 'api/teacher/checkGoogleUserId';
   private changePasswordUrl = 'api/user/password';
+  private languagesUrl = 'api/user/languages';
   isAuthenticated = false;
   redirectUrl: string; // redirect here after logging in
 
@@ -119,5 +120,10 @@ export class UserService {
     body = body.set('oldPassword', oldPassword);
     body = body.set('newPassword', newPassword);
     return this.http.post<any>(this.changePasswordUrl, body, { headers: headers });
+  }
+
+  getLanguages() {
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    return this.http.get<any>(this.languagesUrl, { headers: headers });
   }
 }

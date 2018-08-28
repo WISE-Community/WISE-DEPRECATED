@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { StudentComponent } from './student.component';
 import { StudentHomeComponent } from './student-home/student-home.component';
-import { StudentEditProfileComponent } from './student-edit-profile/student-edit-profile.component';
 import { AuthGuard } from "./auth.guard";
+import { EditComponent } from "./account/edit/edit.component";
 
 const studentRoutes: Routes = [
   {
@@ -14,7 +14,7 @@ const studentRoutes: Routes = [
     children: [
       { path: '', component: StudentHomeComponent },
       { path: 'profile', redirectTo: '', pathMatch: 'full' },
-      { path: 'profile/edit', component: StudentEditProfileComponent }
+      { path: 'profile/edit', component: EditComponent }
     ]
   }
 ];
