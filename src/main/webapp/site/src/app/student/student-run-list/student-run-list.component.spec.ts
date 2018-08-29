@@ -8,6 +8,8 @@ import { StudentModule } from "../student.module";
 import { StudentRunListComponent } from "./student-run-list.component";
 import { ConfigService } from "../../services/config.service";
 import { Config } from "../../domain/config";
+import { MatIconModule } from "@angular/material";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 export function fakeAsyncResponse<T>(data: T) {
   return defer(() => Promise.resolve(data));
@@ -21,7 +23,7 @@ describe('StudentRunListComponent', () => {
     const studentServiceStub = {
         isLoggedIn: true,
         getRuns(): Observable<StudentRun[]> {
-          const runs : any[] = [{id:1,name:"Photosynthesis"},{id:2,name:"Plate Tectonics"}];
+          const runs : any[] = [{id:1,name:"Photosynthesis"},{id:2,name:"Plate Tectonics"},{id:3,name:"Chemical Reactions"}];
           return Observable.create( observer => {
               observer.next(runs);
               observer.complete();
@@ -49,16 +51,16 @@ describe('StudentRunListComponent', () => {
       }
     };
     TestBed.configureTestingModule({
-      declarations: [],
+      declarations: [ StudentRunListComponent ],
       imports: [
-        BrowserAnimationsModule,
-        StudentModule
+        BrowserAnimationsModule, MatIconModule
       ],
       providers: [
         { provide: StudentService, useValue: studentServiceStub },
         { provide: ConfigService, useValue: configServiceStub },
     { provide: MatDialog, useValue: {} }
-      ]
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
@@ -73,8 +75,8 @@ describe('StudentRunListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show runs', () => {
+  it('should show number of runs', () => {
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('#studentRuns').textContent).toContain('Photosynthesis');
+    expect(compiled.querySelector('#myProjectCount').textContent).toContain('My Projects (3)');
   })
 });

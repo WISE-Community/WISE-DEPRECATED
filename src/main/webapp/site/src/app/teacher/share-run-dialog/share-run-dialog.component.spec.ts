@@ -9,7 +9,8 @@ import { Project } from "../project";
 import { TeacherService } from "../teacher.service";
 import { BrowserAnimationsModule } from "../../../../../../../../node_modules/@angular/platform-browser/animations";
 import { Run } from "../../domain/run";
-
+import { MatAutocompleteModule, MatButtonModule } from "@angular/material";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('ShareRunDialogComponent', () => {
   let component: ShareRunDialogComponent;
@@ -36,27 +37,46 @@ describe('ShareRunDialogComponent', () => {
           observer.next(usernames);
           observer.complete();
         });
+      },
+      getRun(runId: string): Observable<Run> {
+        return Observable.create( observer => {
+          const run: any = runObj;
+          observer.next(run);
+          observer.complete();
+        });
       }
     };
-
+    const runObj = {
+      id: 1,
+      name: "Photosynthesis",
+      sharedOwners: [{
+        id:4,
+        firstName: "spongebob",
+        lastName: "squarepants",
+        permissions: [1,3]
+      }],
+      project: {
+        id: 9,
+        sharedOwners: [{
+          id:4,
+          firstName: "spongebob",
+          lastName: "squarepants",
+          permissions: [2]
+        }]
+      }
+    };
     TestBed.configureTestingModule({
-      declarations: [ ],
-      imports: [ TeacherModule, BrowserAnimationsModule ],
+      declarations: [ ShareRunDialogComponent ],
+      imports: [ BrowserAnimationsModule, MatAutocompleteModule ],
       providers: [
         { provide: TeacherService, useValue: teacherServiceStub },
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {
-            project: {
-              id: 1,
-              name: "Photosynthesis",
-              run: {
-                id: 1,
-                sharedOwners: []
-              }
-            }
+            run: runObj
           }
         }
-      ]
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
@@ -64,14 +84,10 @@ describe('ShareRunDialogComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ShareRunDialogComponent);
     component = fixture.componentInstance;
-    const run: Run = new Run();
-    run.id = 1;
-    run.name = "Photosynthesis";
-    component.run = run;
     fixture.detectChanges();
   });
 
-  // it('should create', () => {
-  //   expect(component).toBeTruthy();
-  // });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

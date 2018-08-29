@@ -1,14 +1,14 @@
-<section class="login">
-  <div class="login__logo">
+<div class="standalone">
+  <div class="standalone__logo">
     <a routerLink="/">
       <img src="assets/img/wise-web-logo-full.png" alt="WISE logo" />
     </a>
   </div>
-  <mat-card class="login__form mat-elevation-z4">
+  <mat-card class="standalone__content standalone__content--sm mat-elevation-z4">
     <mat-card-content>
       <form role="form" (submit)="login()">
-        <h2 class="accent center">Sign in to WISE</h2>
-        <p class="warn center login__error inactive"
+        <h2 class="standalone__title accent">Sign in to WISE</h2>
+        <p class="warn center standalone__error inactive"
            [ngClass]="{'active': error}">
           Username and password not recognized. Please try again.
         </p>
@@ -61,4 +61,4 @@
       <p>New to WISE? <a routerLink="/join">Join for free!</a></p>
     </mat-card-actions>
   </mat-card>
-</section>
+</div>

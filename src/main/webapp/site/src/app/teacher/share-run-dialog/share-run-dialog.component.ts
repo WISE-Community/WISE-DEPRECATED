@@ -13,7 +13,6 @@ import { map, startWith, debounce, debounceTime } from 'rxjs/operators';
 })
 export class ShareRunDialogComponent implements OnInit {
 
-  @Input()
   run: Run;
   projectId: number;
   runId: number;
@@ -25,11 +24,11 @@ export class ShareRunDialogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<ShareRunDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         private teacherService: TeacherService) {
-    this.projectId = data.run.project.id;
     this.runId = data.run.id;
 
     this.teacherService.getRun(this.runId).subscribe((run: Run) => {
       this.run = run;
+      this.projectId = run.project.id;
       this.populateSharedOwners(run.sharedOwners);
     });
     this.teacherService.retrieveAllTeacherUsernames().subscribe((teacherUsernames) => {

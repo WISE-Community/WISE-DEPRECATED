@@ -8,6 +8,12 @@ import { HttpClient, HttpHandler } from "@angular/common/http";
 import { LoginModule } from "./login.module";
 import { RouterTestingModule } from "@angular/router/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {
+  MatCardModule,
+  MatDividerModule,
+  MatFormFieldModule, MatInputModule
+} from "@angular/material";
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -31,11 +37,15 @@ describe('LoginComponent', () => {
       }
     }
     TestBed.configureTestingModule({
-      declarations: [],
+      declarations: [ LoginComponent ],
       imports: [
         BrowserAnimationsModule,
-        LoginModule,
-        RouterTestingModule.withRoutes([])
+        RouterTestingModule.withRoutes([]),
+        FormsModule,
+        MatFormFieldModule,
+        MatCardModule,
+        MatDividerModule,
+        MatInputModule
       ],
       providers: [
         HttpClient,

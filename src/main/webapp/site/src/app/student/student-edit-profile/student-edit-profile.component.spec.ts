@@ -9,8 +9,8 @@ describe('StudentEditProfileComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ StudentModule ]
+      declarations: [ StudentEditProfileComponent ],
+      imports: [ ]
     })
     .compileComponents();
   }));

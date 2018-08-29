@@ -8,8 +8,8 @@ describe('BlurbComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ SharedModule ]
+      declarations: [ BlurbComponent ],
+      imports: [ ]
     })
     .compileComponents();
   }));

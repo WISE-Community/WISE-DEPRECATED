@@ -2,20 +2,18 @@
         '~style/abstracts/mixins',
         '~style/abstracts/functions';
 
-.mat-icon {
-  @include mat-icon-size(32px);
-}
-
-app-blurb, app-call-to-action {
-  padding: 0 8px;
-  margin-bottom: 32px;
-
-  @media (min-width: breakpoint('sm.min')) {
-    padding: 0 16px;
-    margin-bottom: 0;
+.home {
+  .mat-icon {
+    @include mat-icon-size(32px);
   }
 
-  @media (min-width: breakpoint('md.min')) {
-    padding: 0 24px;
+
+  app-blurb, app-call-to-action {
+    width: 360px;
+    max-width: 100%;
+  }
+
+  .cta, .cta__wrap, .cta .mat-button-wrapper, .blurb {
+    height: 100%;
   }
 }

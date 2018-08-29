@@ -10,8 +10,8 @@ describe('LibraryGroupThumbsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ LibraryModule ],
-      declarations: []
+      imports: [ ],
+      declarations: [ LibraryGroupThumbsComponent ]
     })
     .compileComponents();
   }));

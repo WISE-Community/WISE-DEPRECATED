@@ -31,7 +31,7 @@ export class CreateRunDialogComponent {
   }
 
   periodChanged() {
-    const combinedPeriods = this.getPeriodsString(this.periods, this.customPeriods);
+    const combinedPeriods = this.getPeriodsString();
     if (combinedPeriods == "") {
       this.isFormValid = false;
     } else {
@@ -40,7 +40,7 @@ export class CreateRunDialogComponent {
   }
 
   create() {
-    const combinedPeriods = this.getPeriodsString(this.periods, this.customPeriods);
+    const combinedPeriods = this.getPeriodsString();
     if (combinedPeriods == "") {
       alert("Error: You must select at least one period");
     } else {
@@ -58,7 +58,7 @@ export class CreateRunDialogComponent {
     }
   }
 
-  getPeriodsString(periods, customPeriods) {
+  getPeriodsString() {
     let allPeriods = "";
     for (let period of [1, 2, 3, 4, 5, 6, 7, 8]) {
       if (this.periods[period]) {
@@ -68,8 +68,8 @@ export class CreateRunDialogComponent {
         allPeriods += period;
       }
     }
-    if (customPeriods != "") {
-      allPeriods += "," + customPeriods;
+    if (this.customPeriods != "") {
+      allPeriods += "," + this.customPeriods;
     }
     return allPeriods;
   }

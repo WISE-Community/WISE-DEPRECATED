@@ -4,6 +4,11 @@ import { HeaderLinksComponent } from './header-links.component';
 import { User } from "../../../domain/user";
 import { HeaderModule } from "../header.module";
 import { APP_BASE_HREF } from "@angular/common";
+import { RouterTestingModule } from "@angular/router/testing";
+import { Component } from "@angular/core";
+
+@Component({selector: 'app-header-signin', template: ''})
+class HeaderSignInStubComponent {}
 
 describe('HeaderLinksComponent', () => {
   let component: HeaderLinksComponent;
@@ -14,8 +19,8 @@ describe('HeaderLinksComponent', () => {
       providers: [
         { provide: APP_BASE_HREF, useValue : '/' }
       ],
-      declarations: [],
-      imports: [ HeaderModule ]
+      declarations: [ HeaderLinksComponent, HeaderSignInStubComponent ],
+      imports: [ RouterTestingModule ]
     })
     .compileComponents();
   }));

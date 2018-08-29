@@ -25,3 +25,15 @@
 .mat-icon-button.input-control--appearance-fill {
   margin: 6px 0 6px 4px;
 }
+
+.mat-form-field--extra-sub {
+  margin-bottom: 12px;
+}
+
+.mat-checkbox--inline {
+  .mat-checkbox-layout {
+    display: inline;
+    white-space: normal;
+  }
+}
+

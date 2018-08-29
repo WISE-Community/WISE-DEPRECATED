@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { RegisterHomeComponent } from './register-home.component';
+import { SharedModule } from "../../modules/shared/shared.module";
 
 describe('RegisterHomeComponent', () => {
   let component: RegisterHomeComponent;
@@ -8,7 +10,8 @@ describe('RegisterHomeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RegisterHomeComponent ]
+      declarations: [ RegisterHomeComponent ],
+      imports: [ SharedModule, RouterTestingModule ]
     })
     .compileComponents();
   }));

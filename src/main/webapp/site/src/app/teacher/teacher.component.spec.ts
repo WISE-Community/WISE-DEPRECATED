@@ -4,7 +4,6 @@ import { TeacherComponent } from './teacher.component';
 import { RouterTestingModule } from "@angular/router/testing";
 import { Router } from '@angular/router';
 import { APP_BASE_HREF } from "@angular/common";
-import { TeacherModule } from "./teacher.module";
 
 describe('TeacherComponent', () => {
   let component: TeacherComponent;
@@ -14,13 +13,12 @@ describe('TeacherComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        TeacherModule,
         RouterTestingModule.withRoutes([])
       ],
       providers: [
         { provide: APP_BASE_HREF, useValue : '/' }
       ],
-      declarations: [ ]
+      declarations: [ TeacherComponent ]
     })
     .compileComponents();
   }));
@@ -32,9 +30,7 @@ describe('TeacherComponent', () => {
     router = TestBed.get(Router);
   });
 
-  /*
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  */
 });
