@@ -66,6 +66,8 @@ export class EditPasswordComponent implements OnInit {
   handleChangePasswordResponse(response) {
     if (response.message == 'success') {
       this.displayMessage("Successfully changed password");
+    } else if (response.message == 'incorrect password') {
+      this.displayMessage("Failed to change password");
     } else {
       this.displayMessage("Failed to change password");
     }

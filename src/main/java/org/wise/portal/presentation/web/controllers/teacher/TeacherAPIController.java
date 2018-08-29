@@ -17,6 +17,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.project.ProjectService;
@@ -270,7 +271,7 @@ public class TeacherAPIController {
   }
 
   @RequestMapping(value = "/profile/update", method = RequestMethod.POST)
-  protected String updateProfile(HttpServletRequest request,
+  protected SimpleResponse updateProfile(HttpServletRequest request,
                                  @RequestParam("username") String username,
                                  @RequestParam("displayName") String displayName,
                                  @RequestParam("email") String email,
@@ -292,9 +293,7 @@ public class TeacherAPIController {
       teacherUserDetails.setSchoollevel(Schoollevel.valueOf(schoolLevel));
       teacherUserDetails.setLanguage(language);
       userService.updateUser(user);
-      JSONObject response = new JSONObject();
-      response.put("message", "success");
-      return response.toString();
+      return new SimpleResponse("message", "success");
     } else {
       throw new NotAuthorizedException("username is not the same as signed in user");
     }

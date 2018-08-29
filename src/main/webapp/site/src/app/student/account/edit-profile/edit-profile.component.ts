@@ -11,7 +11,6 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 })
 export class EditProfileComponent implements OnInit {
 
-
   user: Student;
   message: string = '';
   languages: object[];

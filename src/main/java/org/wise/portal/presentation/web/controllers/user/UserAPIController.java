@@ -11,7 +11,9 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.user.UserService;
 
 import java.util.Locale;
@@ -35,7 +37,7 @@ public class UserAPIController {
   protected UserService userService;
 
   @RequestMapping(value = "/user", method = RequestMethod.GET)
-  protected String handleGET(ModelMap modelMap,
+  protected String getUserInfo(ModelMap modelMap,
       @RequestParam(value = "pLT", required = false) String previousLoginTime) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     if (user != null) {
@@ -104,19 +106,17 @@ public class UserAPIController {
 
   @ResponseBody
   @RequestMapping(value = "/password", method = RequestMethod.POST)
-  protected String changePassword(@RequestParam("username") String username,
+  protected SimpleResponse changePassword(@RequestParam("username") String username,
       @RequestParam("oldPassword") String oldPassword,
       @RequestParam("newPassword") String newPassword) throws NotAuthorizedException, JSONException {
     User user = ControllerUtil.getSignedInUser();
     if (user.getUserDetails().getUsername().equals(username)) {
-      User result = userService.updateUserPassword(user, oldPassword, newPassword);
-      JSONObject response = new JSONObject();
-      if (result != null) {
-        response.put("message", "success");
-      } else {
-        response.put("message", "error");
+      try {
+        User result = userService.updateUserPassword(user, oldPassword, newPassword);
+        return new SimpleResponse("message", "success");
+      } catch(IncorrectPasswordException e) {
+        return new SimpleResponse("message", "incorrect password");
       }
-      return response.toString();
     } else {
       throw new NotAuthorizedException("username is not the same as signed in user");
     }

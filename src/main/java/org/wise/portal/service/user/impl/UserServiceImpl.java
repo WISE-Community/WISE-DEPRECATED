@@ -20,9 +20,6 @@
  */
 package org.wise.portal.service.user.impl;
 
-import java.util.Calendar;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.dao.SaltSource;
@@ -41,9 +38,13 @@ import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
+import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.user.UserService;
+
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Implementation class that uses daos to interact with the data store.
@@ -192,15 +193,16 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User updateUserPassword(User user, String oldPassword, String newPassword) {
+  public User updateUserPassword(User user, String oldPassword, String newPassword) throws IncorrectPasswordException {
     Md5PasswordEncoder encoder = new Md5PasswordEncoder();
     String encodedOldPassword =
         this.passwordEncoder.encodePassword(oldPassword, this.saltSource.getSalt(user.getUserDetails()));
 
     if (user.getUserDetails().getPassword().equals(encodedOldPassword)) {
       return this.updateUserPassword(user, newPassword);
+    } else {
+      throw new IncorrectPasswordException();
     }
-    return null;
   }
 
   public List<User> retrieveAllUsers() {
