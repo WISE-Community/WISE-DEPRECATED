@@ -4,7 +4,6 @@ import { TeacherComponent } from './teacher.component';
 import { RouterTestingModule } from "@angular/router/testing";
 import { Router } from '@angular/router';
 import { APP_BASE_HREF } from "@angular/common";
-import { TeacherModule } from "./teacher.module";
 
 describe('TeacherComponent', () => {
   let component: TeacherComponent;
