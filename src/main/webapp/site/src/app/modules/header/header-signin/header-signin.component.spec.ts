@@ -10,8 +10,8 @@ describe('HeaderSigninComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ HeaderModule ],
+      declarations: [ HeaderSigninComponent ],
+      imports: [ ],
       providers: [
         { provide: APP_BASE_HREF, useValue : '/' }
       ]

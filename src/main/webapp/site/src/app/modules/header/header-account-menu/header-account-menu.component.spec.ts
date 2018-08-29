@@ -5,6 +5,15 @@ import { User } from "../../../domain/user";
 import { HttpClient, HttpHandler } from "@angular/common/http";
 import { HeaderModule } from "../header.module";
 import { APP_BASE_HREF } from "@angular/common";
+import {
+  MatDividerModule,
+  MatFormFieldModule,
+  MatIconModule,
+  MatMenuModule
+} from "@angular/material";
+import { FormsModule } from "@angular/forms";
+import { ConfigService } from "../../../services/config.service";
+import { UserService } from "../../../services/user.service";
 
 describe('HeaderAccountMenuComponent', () => {
   let component: HeaderAccountMenuComponent;
@@ -12,10 +21,12 @@ describe('HeaderAccountMenuComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ HeaderModule ],
+      declarations: [ HeaderAccountMenuComponent ],
+      imports: [ MatFormFieldModule, FormsModule, MatIconModule, MatMenuModule, MatDividerModule ],
       providers: [
         { provide: APP_BASE_HREF, useValue : '/' },
+        ConfigService,
+        UserService,
         HttpClient,
         HttpHandler
       ]

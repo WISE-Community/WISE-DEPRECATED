@@ -8,8 +8,8 @@ describe('HeroSectionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ SharedModule ]
+      declarations: [ HeroSectionComponent ],
+      imports: [ ]
     })
     .compileComponents();
   }));

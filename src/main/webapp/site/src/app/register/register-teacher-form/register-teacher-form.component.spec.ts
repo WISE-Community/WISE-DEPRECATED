@@ -10,6 +10,13 @@ import { Project } from "../../teacher/project";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { User } from "../../domain/user";
 import { UserService } from '../../services/user.service';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {
+  MatCardModule,
+  MatCheckboxModule,
+  MatFormFieldModule, MatInputModule,
+  MatSelectModule
+} from "@angular/material";
 
 describe('RegisterTeacherFormComponent', () => {
   let component: RegisterTeacherFormComponent;
@@ -43,8 +50,17 @@ describe('RegisterTeacherFormComponent', () => {
       }
     };
     TestBed.configureTestingModule({
-      declarations: [ ],
-      imports: [ BrowserAnimationsModule, RegisterModule, RouterTestingModule ],
+      declarations: [ RegisterTeacherFormComponent ],
+      imports: [
+        BrowserAnimationsModule,
+        RouterTestingModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        MatCardModule,
+        MatInputModule
+      ],
       providers: [
         { provide: TeacherService, useValue: teacherServiceStub },
         { provide: UserService, useValue: userServiceStub }
@@ -58,6 +74,7 @@ describe('RegisterTeacherFormComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+
 
   it('should create', () => {
     expect(component).toBeTruthy();

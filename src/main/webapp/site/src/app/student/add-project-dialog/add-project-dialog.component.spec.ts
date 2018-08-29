@@ -6,6 +6,12 @@ import { MatDialogRef } from "@angular/material/dialog";
 import { Observable } from "rxjs";
 import { StudentService } from "../student.service";
 import { StudentRun } from "../student-run";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {
+  MatError,
+  MatFormFieldModule, MatInputModule,
+  MatSelectModule
+} from "@angular/material";
 
 describe('AddProjectDialogComponent', () => {
   let component: AddProjectDialogComponent;
@@ -13,8 +19,8 @@ describe('AddProjectDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ StudentModule, BrowserAnimationsModule ],
+      declarations: [ AddProjectDialogComponent ],
+      imports: [ BrowserAnimationsModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatInputModule ],
       providers: [
         { provide: MatDialogRef, useValue: {} },
         { provide: StudentService }
@@ -42,4 +48,5 @@ describe('AddProjectDialogComponent', () => {
     const projectCode = 'Cat12';
     expect(component.isValidRunCodeSyntax(projectCode)).toEqual(false);
   })
+
 });

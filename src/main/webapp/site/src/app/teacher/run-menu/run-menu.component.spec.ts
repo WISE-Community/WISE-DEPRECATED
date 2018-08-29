@@ -4,6 +4,13 @@ import { RunMenuComponent } from "./run-menu.component";
 import { TeacherService } from "../teacher.service";
 import { Run } from "../../domain/run";
 import { Project } from "../project";
+import { FormsModule } from "@angular/forms";
+import {
+  MatDialog,
+  MatFormFieldModule,
+  MatIconModule,
+  MatMenuModule
+} from "@angular/material";
 
 describe('RunMenuComponent', () => {
   let component: RunMenuComponent;
@@ -11,9 +18,9 @@ describe('RunMenuComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ TeacherModule ],
-      declarations: [ ],
-      providers: [ {provide: TeacherService }]
+      imports: [ FormsModule, MatFormFieldModule, MatMenuModule, MatIconModule ],
+      declarations: [ RunMenuComponent ],
+      providers: [ { provide: TeacherService }, { provide: MatDialog }]
     })
     .compileComponents();
   }));
