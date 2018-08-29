@@ -11,7 +11,7 @@ import { AuthService } from "angularx-social-login";
 import { RouterTestingModule } from "../../../../../../../../node_modules/@angular/router/testing";
 import { BrowserAnimationsModule } from "../../../../../../../../node_modules/@angular/platform-browser/animations";
 import { FormsModule } from "@angular/forms";
-import { MatFormFieldModule, MatInputModule } from "@angular/material";
+import { MatCardModule, MatFormFieldModule, MatInputModule } from "@angular/material";
 
 describe('RegisterStudentComponent', () => {
   let component: RegisterStudentComponent;
@@ -55,7 +55,7 @@ describe('RegisterStudentComponent', () => {
     };
     TestBed.configureTestingModule({
       declarations: [ RegisterStudentComponent ],
-      imports: [ BrowserAnimationsModule, RouterTestingModule, FormsModule, MatFormFieldModule, MatInputModule ],
+      imports: [ BrowserAnimationsModule, RouterTestingModule, FormsModule, MatCardModule, MatFormFieldModule, MatInputModule ],
       providers: [
         { provide: StudentService, useValue: studentServiceStub },
         { provide: UserService, useValue: userServiceStub },
