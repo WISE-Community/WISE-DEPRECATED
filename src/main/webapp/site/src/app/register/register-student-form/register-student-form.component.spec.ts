@@ -9,6 +9,13 @@ import { Observable } from "rxjs";
 import { StudentService } from "../../student/student.service";
 import { User } from "../../domain/user";
 import { UserService } from '../../services/user.service';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {
+  MatCardModule,
+  MatFormFieldModule, MatInputModule,
+  MatOptionModule,
+  MatSelectModule
+} from "@angular/material";
 
 describe('RegisterStudentFormComponent', () => {
   let component: RegisterStudentFormComponent;
@@ -47,8 +54,16 @@ describe('RegisterStudentFormComponent', () => {
       }
     };
     TestBed.configureTestingModule({
-      declarations: [ ],
-      imports: [ BrowserAnimationsModule, RegisterModule, RouterTestingModule ],
+      declarations: [ RegisterStudentFormComponent ],
+      imports: [
+        BrowserAnimationsModule,
+        RouterTestingModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatOptionModule,
+        MatSelectModule,
+        MatCardModule,
+        MatInputModule ],
       providers: [
         { provide: StudentService, useValue: studentServiceStub },
         { provide: UserService, useValue: userServiceStub }

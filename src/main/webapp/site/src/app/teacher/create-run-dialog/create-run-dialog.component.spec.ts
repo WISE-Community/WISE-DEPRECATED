@@ -1,21 +1,26 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Project } from "../project";
-import { TeacherModule } from "../teacher.module";
 import { Observable } from "rxjs";
 import { TeacherService } from "../teacher.service";
 import { CreateRunDialogComponent } from "./create-run-dialog.component";
 import { MatDialogRef } from "@angular/material/dialog";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { BrowserAnimationsModule } from "../../../../../../../../node_modules/@angular/platform-browser/animations";
+import {
+  MatCheckboxModule,
+  MatDatepickerModule, MatNativeDateModule,
+  MatRadioModule
+} from "@angular/material";
+import { SharedModule } from "../../modules/shared/shared.module";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 describe('CreateRunDialogComponent', () => {
   let component: CreateRunDialogComponent;
   let fixture: ComponentFixture<CreateRunDialogComponent>;
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ TeacherModule, BrowserAnimationsModule ],
-      declarations: [ ],
+      imports: [ SharedModule, FormsModule, MatCheckboxModule, MatRadioModule, MatDatepickerModule, MatNativeDateModule, NoopAnimationsModule ],
+      declarations: [ CreateRunDialogComponent ],
       providers: [
         {provide: TeacherService},
         { provide: MatDialogRef, useValue: {} },

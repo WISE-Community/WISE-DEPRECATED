@@ -14,13 +14,12 @@ describe('TeacherComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        TeacherModule,
         RouterTestingModule.withRoutes([])
       ],
       providers: [
         { provide: APP_BASE_HREF, useValue : '/' }
       ],
-      declarations: [ ]
+      declarations: [ TeacherComponent ]
     })
     .compileComponents();
   }));

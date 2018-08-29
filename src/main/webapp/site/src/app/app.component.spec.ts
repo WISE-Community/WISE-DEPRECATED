@@ -5,21 +5,25 @@ import { AppRoutingModule } from "./app-routing.module";
 import { HeaderModule } from "./modules/header/header.module";
 import { FooterModule } from "./modules/footer/footer.module";
 import { UserService } from "./services/user.service";
+import { Component } from "@angular/core";
+
+@Component({selector: 'app-header', template: ''})
+class HeaderStubComponent {}
+
+@Component({selector: 'app-footer', template: ''})
+class FooterStubComponent {}
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       providers: [
-        { provide: APP_BASE_HREF, useValue : '/' },
-        { provide: UserService }
+        { provide: APP_BASE_HREF, useValue : '/' }
       ],
       declarations: [
-        AppComponent
+        AppComponent, HeaderStubComponent, FooterStubComponent
       ],
       imports: [
-        AppRoutingModule,
-        HeaderModule,
-        FooterModule
+        AppRoutingModule
       ]
     }).compileComponents();
   }));

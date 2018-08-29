@@ -9,7 +9,8 @@ import { Project } from "../project";
 import { TeacherService } from "../teacher.service";
 import { BrowserAnimationsModule } from "../../../../../../../../node_modules/@angular/platform-browser/animations";
 import { Run } from "../../domain/run";
-
+import { MatAutocompleteModule, MatButtonModule } from "@angular/material";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('ShareRunDialogComponent', () => {
   let component: ShareRunDialogComponent;
@@ -65,8 +66,8 @@ describe('ShareRunDialogComponent', () => {
       }
     };
     TestBed.configureTestingModule({
-      declarations: [ ],
-      imports: [ TeacherModule, BrowserAnimationsModule ],
+      declarations: [ ShareRunDialogComponent ],
+      imports: [ BrowserAnimationsModule, MatAutocompleteModule ],
       providers: [
         { provide: TeacherService, useValue: teacherServiceStub },
         { provide: MatDialogRef, useValue: {} },
@@ -74,7 +75,8 @@ describe('ShareRunDialogComponent', () => {
             run: runObj
           }
         }
-      ]
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

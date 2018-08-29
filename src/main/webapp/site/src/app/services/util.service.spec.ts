@@ -5,7 +5,7 @@ import { UtilService } from './util.service';
 describe('UtilService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [UtilService]
+      providers: [ UtilService ]
     });
   });
 
@@ -20,4 +20,5 @@ describe('UtilService', () => {
   it('should get the lastname', inject([UtilService], (service: UtilService) => {
     expect(service.getLastName("Spongebob Squarepants")).toEqual("Squarepants");
   }));
+
 });

@@ -9,6 +9,20 @@ import { LibraryModule } from "../modules/library/library.module";
 import { LibraryService } from "../services/library.service";
 import { SharedModule } from "../modules/shared/shared.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { Component } from "@angular/core";
+import { MatIconModule } from "@angular/material";
+
+@Component({selector: 'app-hero-section', template: ''})
+class HeroStubComponent {}
+
+@Component({selector: 'app-blurb', template: ''})
+class BlurbStubComponent {}
+
+@Component({selector: 'app-call-to-action', template: ''})
+class CallToActionStubComponent {}
+
+@Component({selector: 'app-library', template: ''})
+class LibraryStubComponent {}
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -16,14 +30,13 @@ describe('HomeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HomeComponent ],
+      declarations: [ HomeComponent, HeroStubComponent, BlurbStubComponent, CallToActionStubComponent, LibraryStubComponent ],
       imports: [
         BrowserAnimationsModule,
         FlexLayoutModule,
         FormsModule,
-        LibraryModule,
         RouterTestingModule,
-        SharedModule
+        MatIconModule
       ],
       providers: [
         HttpClient,

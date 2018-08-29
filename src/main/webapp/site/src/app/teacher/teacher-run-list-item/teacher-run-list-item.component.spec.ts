@@ -6,6 +6,16 @@ import { Observable } from "rxjs";
 import { Project } from "../project";
 import { TeacherService } from "../teacher.service";
 import { Run } from "../../domain/run";
+import { MatCardModule } from "@angular/material";
+import { MomentModule } from "ngx-moment";
+import { Component, Input, OnInit } from "@angular/core";
+
+@Component({ selector: 'app-run-menu', template: '' })
+export class RunMenuStubComponent {
+
+  @Input()
+  run: Run;
+}
 
 describe('TeacherProjectListItemComponent', () => {
   let component: TeacherRunListItemComponent;
@@ -13,8 +23,8 @@ describe('TeacherProjectListItemComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ TeacherModule ],
+      declarations: [ TeacherRunListItemComponent, RunMenuStubComponent ],
+      imports: [ MatCardModule, MomentModule ],
       providers: [ { provide: TeacherService }]
     })
     .compileComponents();

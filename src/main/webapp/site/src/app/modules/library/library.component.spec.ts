@@ -1,8 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClient, HttpHandler } from "@angular/common/http";
 import { LibraryComponent } from './library.component';
-import { LibraryModule } from "./library.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { SharedModule } from "../shared/shared.module";
+import { MatIconModule } from "@angular/material";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { LibraryService } from "../../services/library.service";
 
 describe('LibraryComponent', () => {
   let component: LibraryComponent;
@@ -10,12 +13,14 @@ describe('LibraryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ BrowserAnimationsModule, LibraryModule ],
-      declarations: [],
+      imports: [ BrowserAnimationsModule, SharedModule, MatIconModule ],
+      declarations: [ LibraryComponent ],
       providers: [
         HttpClient,
-        HttpHandler
-      ]
+        HttpHandler,
+        LibraryService
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

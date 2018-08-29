@@ -9,8 +9,8 @@ describe('FooterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ FooterModule ]
+      declarations: [ FooterComponent ],
+      imports: [ ]
     })
     .compileComponents();
   }));

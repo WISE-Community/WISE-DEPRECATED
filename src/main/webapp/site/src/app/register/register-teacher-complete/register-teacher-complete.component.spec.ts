@@ -11,8 +11,8 @@ describe('RegisterTeacherCompleteComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ],
-      imports: [ BrowserAnimationsModule, RegisterModule, RouterTestingModule ]
+      declarations: [ RegisterTeacherCompleteComponent ],
+      imports: [ BrowserAnimationsModule, RouterTestingModule ]
     })
     .compileComponents();
   }));

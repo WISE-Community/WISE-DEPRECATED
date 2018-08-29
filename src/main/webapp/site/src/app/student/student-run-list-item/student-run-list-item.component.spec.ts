@@ -6,6 +6,9 @@ import { StudentModule } from "../student.module";
 import { Observable } from "rxjs";
 import { Config } from "../../domain/config";
 import { ConfigService } from "../../services/config.service";
+import { SharedModule } from "../../modules/shared/shared.module";
+import { MomentModule } from "ngx-moment";
+import { MatCardModule } from "@angular/material";
 
 describe('StudentRunListItemComponent', () => {
   let component: StudentRunListItemComponent;
@@ -22,8 +25,8 @@ describe('StudentRunListItemComponent', () => {
       }
     };
     TestBed.configureTestingModule({
-      declarations: [ ],
-      imports: [ StudentModule ],
+      imports: [ MatCardModule, MomentModule ],
+      declarations: [ StudentRunListItemComponent ],
       providers: [ { provide: ConfigService, useValue: configServiceStub } ]
     })
     .compileComponents();

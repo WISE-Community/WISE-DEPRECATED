@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { LoginModule } from "../login/login.module";
 import { RouterTestingModule } from "@angular/router/testing";
 import { RegisterRoutingModule } from "./register-routing.module";
-import { RegisterModule } from "./register.module";
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -13,9 +12,9 @@ describe('RegisterComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ],
+      declarations: [ RegisterComponent ],
       imports: [
-        BrowserAnimationsModule, RegisterModule, RouterTestingModule
+        BrowserAnimationsModule, RouterTestingModule
       ]
     })
     .compileComponents();

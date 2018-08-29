@@ -9,11 +9,12 @@ import { Project } from "../project";
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClient, HttpHandler } from "@angular/common/http";
 import { TeacherModule } from "../teacher.module";
-import { DebugElement, DebugNode } from "@angular/core";
+import { DebugElement, DebugNode, NO_ERRORS_SCHEMA } from "@angular/core";
 import { By } from "@angular/platform-browser";
 import { TeacherHomeComponent } from "./teacher-home.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { Run } from "../../domain/run";
+import { MatIconModule } from "@angular/material";
 
 /**
  *  Create async observable that emits-once and completes
@@ -76,7 +77,7 @@ describe('TeacherHomeComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [],
+      declarations: [ TeacherHomeComponent ],
       providers: [
         { provide: TeacherService, useValue: teacherServiceStub },
         { provide: UserService, useValue: userServiceStub },
@@ -85,9 +86,9 @@ describe('TeacherHomeComponent', () => {
       ],
       imports: [
         BrowserAnimationsModule,
-        TeacherModule,
         RouterTestingModule
-      ]
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

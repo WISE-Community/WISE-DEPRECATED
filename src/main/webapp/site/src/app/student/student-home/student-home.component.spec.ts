@@ -11,10 +11,15 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ConfigService } from "../../services/config.service";
 import { Config } from "../../domain/config";
+import { MatIconModule } from "@angular/material";
+import { Component } from "@angular/core";
 
 export function fakeAsyncResponse<T>(data: T) {
   return defer(() => Promise.resolve(data));
 }
+
+@Component({selector: 'app-student-run-list', template: ''})
+class StudentRunListStubComponent {}
 
 describe('StudentHomeComponent', () => {
   let component: StudentHomeComponent;
@@ -71,14 +76,14 @@ describe('StudentHomeComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [],
+      declarations: [ StudentHomeComponent, StudentRunListStubComponent ],
       providers: [
         { provide: StudentService, useValue: studentServiceStub },
         { provide: UserService, useValue: userServiceStub },
         { provide: MatDialog, useValue: {} },
         { provide: ConfigService, useValue: configServiceStub }
       ],
-      imports: [ BrowserAnimationsModule, StudentModule, RouterTestingModule ]
+      imports: [ BrowserAnimationsModule, RouterTestingModule, MatIconModule ]
     })
     .compileComponents();
   }));

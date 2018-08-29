@@ -1,6 +1,6 @@
 <div class="content-block">
   <div class="content-block__header" fxLayout="row" fxLayoutAlign="start center">
-    <h2 class="accent-1">My Projects <span *ngIf="loaded">({{ runs.length }})</span></h2>
+    <h2 class="accent-1" id="myProjectCount">My Projects <span *ngIf="loaded">({{ runs.length }})</span></h2>
     <span fxFlex="1 1 auto"></span>
     <button mat-raised-button (click)="showAddRun()" aria-label="Add project" color="accent">
       <mat-icon fxShow fxHide.gt-xs>add</mat-icon>

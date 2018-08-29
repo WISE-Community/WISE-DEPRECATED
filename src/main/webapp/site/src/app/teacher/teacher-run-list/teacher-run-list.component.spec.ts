@@ -7,8 +7,20 @@ import { Project } from "../project";
 import { TeacherModule } from "../teacher.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { Run } from "../../domain/run";
-import { DebugElement } from "@angular/core";
+import {
+  Component,
+  DebugElement, EventEmitter,
+  Input,
+  NO_ERRORS_SCHEMA, OnInit, Output
+} from "@angular/core";
 import { By } from "@angular/platform-browser";
+import { SharedModule } from "../../modules/shared/shared.module";
+
+@Component({selector: 'app-teacher-run-list-item', template: ''})
+class TeacherRunListItemStubComponent {
+  @Input()
+  run: Run = new Run();
+}
 
 /**
  *  Create async observable that emits-once and completes
@@ -57,12 +69,15 @@ describe('TeacherRunListComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [],
-      imports: [
-        BrowserAnimationsModule,
-        TeacherModule
+      declarations: [
+        TeacherRunListItemStubComponent,
+        TeacherRunListComponent
       ],
-      providers: [ {provide: TeacherService, useValue: teacherServiceStub}]
+      imports: [
+        BrowserAnimationsModule
+      ],
+      providers: [ {provide: TeacherService, useValue: teacherServiceStub}],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
