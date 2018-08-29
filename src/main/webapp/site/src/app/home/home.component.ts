@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   bounceIn,
   flipInX,
@@ -12,6 +12,7 @@ import {
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   animations: [
     bounceIn,
     flipInX,

@@ -10,7 +10,7 @@
       <ng-container *ngTemplateOutlet="headlineRef ? headlineRef: defaultHeadline"></ng-container>
     </h2>
     <ng-template #defaultContent>{{ content }}</ng-template>
-    <p *ngIf="content || contentRef" class="accent-1 mat-subheading-2">
+    <p *ngIf="content || contentRef" class="mat-subheading-2">
       <ng-container *ngTemplateOutlet="contentRef ? contentRef: defaultContent"></ng-container>
     </p>
   </div>

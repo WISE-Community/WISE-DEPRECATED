@@ -27,9 +27,7 @@
 <a *ngIf="isOutsideLink"
    mat-button
    class="cta">
-  <div class="cta__wrap"
-       fxFlexLayout="column"
-       fxLayoutAlign="center stretch">
+  <div class="cta__wrap">
     <ng-container *ngTemplateOutlet="linkContent"></ng-container>
   </div>
 </a>
@@ -38,9 +36,7 @@
    mat-button
    class="cta"
    routerLink="{{ destination }}">
-  <div class="cta__wrap"
-       fxFlexLayout="column"
-       fxLayoutAlign="center stretch">
+  <div class="cta__wrap">
     <ng-container *ngTemplateOutlet="linkContent"></ng-container>
   </div>
 </a>

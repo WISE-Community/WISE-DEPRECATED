@@ -1,4 +1,4 @@
-<div class="main main--fullwidth app-background">
+<div class="main main--fullwidth home">
   <app-hero-section imgSrc="assets/img/wise-students-hero.jpg">
     <ng-template #headlineTemplate>
       <div class="accent-2">
@@ -19,7 +19,7 @@
     </ng-template>
   </app-hero-section>
   <section class="section">
-    <div class="section--fullwidth section--slant">
+    <div class="section--fullwidth section--slant mat-app-background">
       <div class="content">
         <h1 class="accent section__header" ngClass="mat-display-1"
             [ngClass.xs]="{ 'mat-display-1': false }">
@@ -28,7 +28,10 @@
         <div fxLayout="row"
              fxLayout.xs="column"
              fxLayoutAlign="center stretch"
-             fxLayoutWrap>
+             fxLayoutAlign.xs="center center"
+             fxLayoutGap="32px"
+             fxLayoutGap.sm="24px"
+             fxLayoutGap.gt-sm="32px">
           <app-blurb fxFlex
                      fxFlex.gt-xs="33"
                      imgSrc="assets/img/wise-students-building.jpg"
@@ -49,7 +52,7 @@
     </div>
   </section>
   <section class="section">
-    <div class="section--fullwidth section--slant section--slant--rtl mat-app-background">
+    <div class="section--fullwidth section--slant section--slant--rtl app-background">
       <div class="content">
         <h1 class="accent section__header" ngClass="mat-display-1"
             [ngClass.xs]="{ 'mat-display-1': false }">
@@ -73,7 +76,7 @@
     </div>
   </section>
   <section class="section">
-    <div class="section--fullwidth section--slant">
+    <div class="section--fullwidth section--slant mat-app-background">
       <div class="content">
         <h1 class="accent section__header"
             ngClass="mat-display-1"
@@ -94,7 +97,10 @@
         <div fxLayout="row"
              fxLayout.xs="column"
              fxLayoutAlign="center stretch"
-             fxLayoutWrap>
+             fxLayoutAlign.xs="center center"
+             fxLayoutGap="32px"
+             fxLayoutGap.sm="24px"
+             fxLayoutGap.gt-sm="32px">
           <app-call-to-action fxFlex
                               fxFlex.gt-xs="33"
                               icon="record_voice_over"

@@ -13,7 +13,11 @@ import { UtilService } from "../../services/util.service";
 export class RegisterStudentFormComponent implements OnInit {
 
   studentUser: Student = new Student();
-  genders: string[] = ["MALE", "FEMALE", "NO ANSWER"];
+  genders: any[] = [
+    { code: "FEMALE", label: 'Female' },
+    { code: "MALE", label: 'Male' },
+    { code: "NO_ANSWER", label: 'No Answer/Other' }
+  ];
   months: string[] = [
     "01 (Jan)",
     "02 (Feb)",
@@ -28,39 +32,7 @@ export class RegisterStudentFormComponent implements OnInit {
     "11 (Nov)",
     "12 (Dec)"
   ];
-  days: string[] = [
-    "01",
-    "02",
-    "03",
-    "04",
-    "05",
-    "06",
-    "07",
-    "08",
-    "09",
-    "10",
-    "11",
-    "12",
-    "13",
-    "14",
-    "15",
-    "16",
-    "17",
-    "18",
-    "19",
-    "20",
-    "21",
-    "22",
-    "23",
-    "24",
-    "25",
-    "26",
-    "27",
-    "28",
-    "29",
-    "30",
-    "31"
-  ];
+  days: string[] = [];
   securityQuestions: object;
   passwordsFormGroup = this.fb.group({
     password: ['', [Validators.required]],
@@ -71,7 +43,7 @@ export class RegisterStudentFormComponent implements OnInit {
     lastName: new FormControl('', [Validators.required]),
     gender: new FormControl('', [Validators.required]),
     birthMonth: new FormControl('', [Validators.required]),
-    birthDay: new FormControl('', [Validators.required])
+    birthDay: new FormControl({value: '', disabled: true}, [Validators.required])
   });
 
   constructor(private router: Router, private route: ActivatedRoute,
@@ -100,6 +72,10 @@ export class RegisterStudentFormComponent implements OnInit {
         this.setControlFieldValue("lastName", params['lastName']);
       }
     });
+
+    this.createStudentAccountFormGroup.controls['birthMonth'].valueChanges.subscribe(value => {
+      this.setBirthDayOptions();
+    });
   }
 
   isUsingGoogleId() {
@@ -107,12 +83,14 @@ export class RegisterStudentFormComponent implements OnInit {
   }
 
   createAccount() {
-    this.populateStudentUser();
-    this.studentService.registerStudentAccount(this.studentUser, (userName) => {
-      this.router.navigate(['join/student/complete',
-        { username: userName }
-      ]);
-    });
+    if (this.createStudentAccountFormGroup.valid) {
+      this.populateStudentUser();
+      this.studentService.registerStudentAccount(this.studentUser, (userName) => {
+        this.router.navigate(['join/student/complete',
+          { username: userName }
+        ]);
+      });
+    }
   }
 
   populateStudentUser() {
@@ -145,5 +123,35 @@ export class RegisterStudentFormComponent implements OnInit {
 
   setControlFieldValue(name: string, value: string) {
     this.createStudentAccountFormGroup.controls[name].setValue(value);
+  }
+
+  setBirthDayOptions() {
+    const month = this.createStudentAccountFormGroup.get('birthMonth').value;
+    let days = 0;
+    switch (month) {
+      case '02 (Feb)':
+        days = 29;
+        break;
+      case '04 (Apr)':
+      case '06 (Jun)':
+      case '09 (Sep)':
+      case '11 (Nov)':
+        days = 30;
+        break;
+      default:
+        days = 31;
+    }
+    this.days = [];
+    for (let i = 0; i < days; i++) {
+      let day = (i + 1).toString();
+      if (i < 9) {
+        day = '0' + day;
+      }
+      this.days.push(day);
+    }
+    if (days < this.createStudentAccountFormGroup.get('birthDay').value) {
+      this.createStudentAccountFormGroup.controls['birthDay'].reset();
+    }
+    this.createStudentAccountFormGroup.controls['birthDay'].enable();
   }
 }

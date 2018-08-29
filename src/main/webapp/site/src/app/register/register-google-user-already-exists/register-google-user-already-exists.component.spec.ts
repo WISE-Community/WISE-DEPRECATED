@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RegisterGoogleUserAlreadyExistsComponent } from './register-google-user-already-exists.component';
+import { RegisterModule } from "../register.module";
 
 describe('RegisterGoogleUserAlreadyExistsComponent', () => {
   let component: RegisterGoogleUserAlreadyExistsComponent;
@@ -8,7 +9,8 @@ describe('RegisterGoogleUserAlreadyExistsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RegisterGoogleUserAlreadyExistsComponent ]
+      declarations: [ ],
+      imports: [ RegisterModule ]
     })
     .compileComponents();
   }));

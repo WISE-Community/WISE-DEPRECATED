@@ -14,7 +14,13 @@ import { UtilService } from '../../services/util.service';
 export class RegisterTeacherFormComponent implements OnInit {
 
   teacherUser: Teacher = new Teacher();
-  schoolLevels: string[] = ["ELEMENTARY_SCHOOL", "MIDDLE_SCHOOL", "HIGH_SCHOOL", "COLLEGE", "OTHER"];
+  schoolLevels: any[] = [
+    { code: "ELEMENTARY_SCHOOL", label: 'Elementary School' },
+    { code: "MIDDLE_SCHOOL", label: 'Middle School' },
+    { code: "HIGH_SCHOOL", label: 'High School' },
+    { code: "COLLEGE", label: 'College' },
+    { code: "OTHER", label: 'Other' }
+  ];
   passwordsFormGroup = this.fb.group({
     password: ['', [Validators.required]],
     confirmPassword: ['', [Validators.required]]
@@ -22,7 +28,7 @@ export class RegisterTeacherFormComponent implements OnInit {
   createTeacherAccountFormGroup: FormGroup = this.fb.group({
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
     city: new FormControl('', [Validators.required]),
     state: new FormControl('', [Validators.required]),
     country: new FormControl('', [Validators.required]),
@@ -31,6 +37,7 @@ export class RegisterTeacherFormComponent implements OnInit {
     howDidYouHearAboutUs: new FormControl(''),
     agree: new FormControl('')
   }, { validator: this.agreeCheckboxValidator });
+  isSubmitted = false;
 
   constructor(private router: Router, private route: ActivatedRoute,
               private teacherService: TeacherService,
@@ -61,12 +68,15 @@ export class RegisterTeacherFormComponent implements OnInit {
   }
 
   createAccount() {
-    this.populateTeacherUser();
-    this.teacherService.registerTeacherAccount(this.teacherUser, (userName) => {
-      this.router.navigate(['join/teacher/complete',
-        { username: userName }
-      ]);
-    });
+    this.isSubmitted = true;
+    if (this.createTeacherAccountFormGroup.valid) {
+      this.populateTeacherUser();
+      this.teacherService.registerTeacherAccount(this.teacherUser, (userName) => {
+        this.router.navigate(['join/teacher/complete',
+          { username: userName }
+        ]);
+      });
+    }
   }
 
   populateTeacherUser() {
