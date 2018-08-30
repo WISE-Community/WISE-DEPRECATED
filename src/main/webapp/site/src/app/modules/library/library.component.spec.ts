@@ -27,6 +27,12 @@ class LibraryProjectStubComponent {
   project: LibraryProject = new LibraryProject();
 }
 
+@Component({selector: 'app-library-filters', template: ''})
+class LibraryFiltersComponent {
+  @Input()
+  projects: LibraryProject[] = [];
+}
+
 describe('LibraryComponent', () => {
   let component: LibraryComponent;
   let fixture: ComponentFixture<LibraryComponent>;
@@ -38,13 +44,22 @@ describe('LibraryComponent', () => {
         observer.complete();
       });
     }
-
-
   }
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ BrowserAnimationsModule, SharedModule, MatIconModule, MatBadgeModule, MatExpansionModule ],
-      declarations: [ LibraryComponent, LibraryGroupThumbsStubComponent, LibraryProjectStubComponent ],
+      imports: [
+        BrowserAnimationsModule,
+        SharedModule,
+        MatIconModule,
+        MatBadgeModule,
+        MatExpansionModule
+      ],
+      declarations: [
+        LibraryComponent,
+        LibraryGroupThumbsStubComponent,
+        LibraryProjectStubComponent,
+        LibraryFiltersComponent
+      ],
       providers: [
         HttpClient,
         HttpHandler,

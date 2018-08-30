@@ -41,14 +41,15 @@ export class LibraryComponent implements OnInit {
     this.libraryService.getLibraryGroups()
       .subscribe(libraryGroups => {
         this.libraryGroups = libraryGroups;
+        const projects: LibraryProject[] = [];
         for (let group of this.libraryGroups) {
           if (!this.implementationModelValue) {
             this.implementationModelValue = group.id;
           }
           this.implementationModelOptions.push(group);
-          this.populateProjects(group, group.id);
+          this.populateProjects(group, group.id, projects);
         }
-        this.populateFilterOptions();
+        this.projects = projects;
       });
   }
 
@@ -57,15 +58,15 @@ export class LibraryComponent implements OnInit {
    * @param item
    * @param {string} implementationModel
    */
-  populateProjects(item: any, implementationModel: string): void {
+  populateProjects(item: any, implementationModel: string, projects: LibraryProject[]): void {
     if (item.type === 'project') {
       item.visible = true;
       item.implementationModel = implementationModel;
-      this.projects.push(item);
+      projects.push(item);
     } else if (item.type === 'group') {
       let children = item.children;
       for (let child of children) {
-        this.populateProjects(child, implementationModel);
+        this.populateProjects(child, implementationModel, projects);
       }
     }
   }

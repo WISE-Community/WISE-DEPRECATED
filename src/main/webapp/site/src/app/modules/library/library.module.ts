@@ -22,6 +22,7 @@ import {
   MatOptionModule,
   MatSelectModule,
   MatTooltipModule} from '@angular/material';
+import { LibraryFiltersComponent } from './library-filters/library-filters.component';
 
 const materialModules = [
   MatBadgeModule,
@@ -50,7 +51,8 @@ const materialModules = [
     LibraryGroupThumbsComponent,
     LibraryProjectComponent,
     LibraryProjectDetailsComponent,
-    LibraryProjectDisciplineIconComponent
+    LibraryProjectDisciplineIconComponent,
+    LibraryFiltersComponent
   ],
   entryComponents: [ LibraryProjectDetailsComponent ],
   exports: [

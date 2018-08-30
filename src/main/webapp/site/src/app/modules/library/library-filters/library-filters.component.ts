@@ -1,0 +1,137 @@
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { LibraryProject } from "../libraryProject";
+import { LibraryService } from "../../../services/library.service";
+import { NGSSStandards } from "../ngssStandards";
+import { Standard } from "../standard";
+
+@Component({
+  selector: 'app-library-filters',
+  templateUrl: './library-filters.component.html',
+  styleUrls: ['./library-filters.component.scss']
+})
+export class LibraryFiltersComponent implements OnInit {
+
+  @Input()
+  projects: LibraryProject[];
+
+  searchValue: string = '';
+  dciArrangementOptions: Standard[] = [];
+  dciArrangementValue = [];
+  disciplineOptions: Standard[] = [];
+  disciplineValue = [];
+  peOptions: Standard[] = [];
+  peValue = [];
+  showFilters: boolean = false;
+
+  constructor() {
+  }
+
+  ngOnInit() {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.projects) {
+      this.populateFilterOptions();
+    }
+  }
+
+  /**
+   * Iterate through list of projects to populate metadata filter options
+   */
+  populateFilterOptions(): void {
+    for (let project of this.projects) {
+      const standardsAddressed = project.metadata.standardsAddressed;
+      if (standardsAddressed && standardsAddressed.ngss) {
+        const ngss: NGSSStandards = standardsAddressed.ngss;
+        const dciArrangements = ngss.dciArrangements;
+        for (let dciStandard of dciArrangements) {
+          this.dciArrangementOptions.push(this.createDCIStandard(dciStandard));
+          if (dciStandard.children) {
+            for (let peStandard of dciStandard.children) {
+              this.peOptions.push(this.createPEStandard(peStandard));
+            }
+          }
+        }
+
+        const disciplines = ngss.disciplines;
+        if (disciplines) {
+          for (let discipline of disciplines) {
+            this.disciplineOptions.push(this.createDisciplineStandard(discipline));
+          }
+        }
+      }
+    }
+    this.removeDuplicatesAndSortAlphabetically();
+  }
+
+  createDCIStandard(standardIn: any) {
+    const dciStandard: Standard = new Standard();
+    dciStandard.id = standardIn.id;
+    dciStandard.name = `${standardIn.id} ${standardIn.name}`;
+    return dciStandard;
+  }
+
+  createPEStandard(standardIn: any) {
+    const peStandard: Standard = new Standard();
+    peStandard.id = standardIn.id;
+    peStandard.name = `${standardIn.id}: ${standardIn.name}`;
+    return peStandard;
+  }
+
+  createDisciplineStandard(standardIn: any) {
+    const standard: Standard = new Standard();
+    standard.id = standardIn.id;
+    standard.name = standardIn.name;
+    return standard;
+  }
+
+  removeDuplicatesAndSortAlphabetically() {
+    this.dciArrangementOptions = this.removeDuplicates(this.dciArrangementOptions, 'id');
+    this.sortOptions(this.dciArrangementOptions, 'id');
+    this.disciplineOptions = this.removeDuplicates(this.disciplineOptions, 'id');
+    this.sortOptions(this.disciplineOptions, 'name');
+    this.peOptions = this.removeDuplicates(this.peOptions, 'id');
+    this.sortOptions(this.peOptions, 'id');
+  }
+
+  /**
+   * Remove duplicates from an object array by property
+   * TODO: extract to util function
+   * @param {any[]} array
+   * @param {string} prop
+   * @return {any[]}
+   */
+  removeDuplicates(array: any[], prop: string): any[] {
+    return array.filter((obj, pos, arr) => {
+      return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos;
+    });
+  }
+
+  /**
+   * Sort an object array alphabetically A-Z by property
+   * TODO: extract to util function
+   * @param {any[]} array
+   * @param {string} prop
+   */
+  sortOptions(array: any[], prop: string): void {
+    array.sort( (a: Standard, b: Standard) => {
+      const valA = a[prop].toLocaleLowerCase(); // ignore case
+      const valB = b[prop].toLocaleLowerCase(); // ignore case
+      if (valA < valB) {
+        return -1;
+      }
+      if (valA > valB) {
+        return 1;
+      }
+      return 0;
+    });
+  }
+
+  /**
+   * Check and return whether there are any active filters
+   * @return {boolean}
+   */
+  hasFilters(): boolean {
+    return this.dciArrangementValue.length > 0 || this.peValue.length > 0 || this.disciplineValue.length > 0;
+  }
+}
