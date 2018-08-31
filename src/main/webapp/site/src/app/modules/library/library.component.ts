@@ -13,11 +13,12 @@ import { Standard } from "./standard";
 })
 
 export class LibraryComponent implements OnInit {
+
+  projects: LibraryProject[] = [];
   libraryGroups: LibraryGroup[] = [];
   expandedGroups: object = {};
   implementationModelValue: string = '';
   implementationModelOptions: LibraryGroup[] = [];
-  projects: LibraryProject[] = [];
   searchValue: string = '';
   dciArrangementOptions: Standard[] = [];
   dciArrangementValue = [];
@@ -27,10 +28,12 @@ export class LibraryComponent implements OnInit {
   peValue = [];
   showFilters: boolean = false;
 
-  constructor(private libraryService: LibraryService) { }
+  constructor(private libraryService: LibraryService) {
+    this.getLibraryGroups();
+  }
 
   ngOnInit() {
-    this.getLibraryGroups();
+
   }
 
   /**

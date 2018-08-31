@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 import { NGSSStandards } from "../ngssStandards";
@@ -13,6 +13,9 @@ export class LibraryFiltersComponent implements OnInit {
 
   @Input()
   projects: LibraryProject[];
+
+  @Output('update')
+  change: EventEmitter<string> = new EventEmitter<string>(); // change event emitter
 
   searchValue: string = '';
   dciArrangementOptions: Standard[] = [];
@@ -133,5 +136,13 @@ export class LibraryFiltersComponent implements OnInit {
    */
   hasFilters(): boolean {
     return this.dciArrangementValue.length > 0 || this.peValue.length > 0 || this.disciplineValue.length > 0;
+  }
+
+  /**
+   * Given new search string, filter for visible projects
+   * @param {string} value
+   */
+  searchUpdated(value: string): void {
+    this.searchValue = value.toLocaleLowerCase();
   }
 }
