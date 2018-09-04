@@ -4,6 +4,7 @@ import { LibraryGroup } from "./libraryGroup";
 import { LibraryProject } from "./libraryProject";
 import { NGSSStandards } from "./ngssStandards";
 import { Standard } from "./standard";
+import { ProjectFilterOptions } from "../../domain/projectFilterOptions";
 
 @Component({
   selector: 'app-library',
@@ -134,49 +135,26 @@ export class LibraryComponent implements OnInit {
   }
 
   /**
-   * Given new search string, filter for visible projects
-   * @param {string} value
-   */
-  searchUpdated(value: string): void {
-    this.searchValue = value.toLocaleLowerCase();
-    this.filterUpdated();
-  }
-
-  /**
    * Filter options or search string have changed, so update visible projects
-   * @param {string[]} value
+   * @param {ProjectFilterOptions} filterOptions
    * @param {string} context
    */
-  filterUpdated(value: string[] = [], context: string = ''): void {
-    switch(context) {
-      case 'discipline':
-        this.disciplineValue = value;
-        break;
-      case 'dci':
-        this.dciArrangementValue = value;
-        break;
-      case 'pe':
-        this.peValue = value;
-        break;
-    }
-
+  filterUpdated(filterOptions: ProjectFilterOptions, context): void {
+    this.searchValue = filterOptions.searchValue;
+    this.disciplineValue = filterOptions.disciplineValue;
+    this.dciArrangementValue = filterOptions.dciArrangementValue;
+    this.peValue = filterOptions.peValue;
     for (let project of this.projects) {
       let searchMatch = false;
       let filterMatch = false;
-
-      // if there is a search string, check for search match
       if (this.searchValue) {
         searchMatch = this.isSearchMatch(project, this.searchValue);
       }
       if (!searchMatch && this.hasFilters()) {
-        // there is no search string or project doesn't match the search text, so check for filter matches
         filterMatch = this.isFilterMatch(project);
       } else if (!this.searchValue) {
-        // there is no search string and no filters selected, so project should be visible
         filterMatch = true;
       }
-
-      // set project to visible if there is either a search or filter match
       project.visible = searchMatch || filterMatch;
     }
   }
@@ -298,7 +276,9 @@ export class LibraryComponent implements OnInit {
    * Reset the filters and search string
    */
   reset(): void {
-    this.dciArrangementValue = this.disciplineValue = this.peValue = [];
+    this.dciArrangementValue = [];
+    this.disciplineValue = [];
+    this.peValue = [];
     this.searchValue = '';
     this.filterUpdated();
   }

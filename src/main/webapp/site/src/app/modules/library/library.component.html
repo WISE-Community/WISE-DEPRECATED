@@ -1,6 +1,7 @@
 <div class="library notice-bg-bg">
   <div fxLayout="column" fxLayout.gt-sm="row">
-    <app-library-filters [projects]="projects"></app-library-filters>
+    <app-library-filters [projects]="projects"
+                         (update)="filterUpdated($event)"></app-library-filters>
     <div class="library__content content-block"
          fxFlex.gt-sm="67">
       <div *ngIf="searchValue || hasFilters()" class="notice" fxShow fxHide.gt-xs>

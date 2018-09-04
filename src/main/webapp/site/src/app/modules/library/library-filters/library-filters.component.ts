@@ -3,6 +3,7 @@ import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 import { NGSSStandards } from "../ngssStandards";
 import { Standard } from "../standard";
+import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
 
 @Component({
   selector: 'app-library-filters',
@@ -14,8 +15,8 @@ export class LibraryFiltersComponent implements OnInit {
   @Input()
   projects: LibraryProject[];
 
-  @Output('update')
-  change: EventEmitter<string> = new EventEmitter<string>(); // change event emitter
+  @Output()
+  update: EventEmitter<object> = new EventEmitter<object>();
 
   searchValue: string = '';
   dciArrangementOptions: Standard[] = [];
@@ -144,6 +145,7 @@ export class LibraryFiltersComponent implements OnInit {
    */
   searchUpdated(value: string): void {
     this.searchValue = value.toLocaleLowerCase();
+    this.emitFilterValues();
   }
 
   /**
@@ -152,7 +154,6 @@ export class LibraryFiltersComponent implements OnInit {
    * @param {string} context
    */
   filterUpdated(value: string[] = [], context: string = ''): void {
-    console.log('filterUpdated');
     switch(context) {
       case 'discipline':
         this.disciplineValue = value;
@@ -164,5 +165,16 @@ export class LibraryFiltersComponent implements OnInit {
         this.peValue = value;
         break;
     }
+    this.emitFilterValues();
+  }
+
+  emitFilterValues() {
+    const filterOptions: ProjectFilterOptions = {
+      searchValue: this.searchValue,
+      disciplineValue: this.disciplineValue,
+      dciArrangementValue: this.dciArrangementValue,
+      peValue: this.peValue
+    };
+    this.update.emit(filterOptions);
   }
 }
