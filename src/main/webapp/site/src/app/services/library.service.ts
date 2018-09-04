@@ -4,21 +4,58 @@ import { HttpClient } from '@angular/common/http';
 
 import { LibraryGroup } from "../modules/library/libraryGroup";
 import { ProjectFilterOptions } from "../domain/projectFilterOptions";
+import { LibraryProject } from "../modules/library/libraryProject";
 
 @Injectable()
 export class LibraryService {
 
   private libraryGroupsUrl = 'api/project/library';
-  private libraryGroups: Observable<LibraryGroup[]>;
+  public libraryGroups: LibraryGroup[];
+  private libraryGroupsSource = new Subject<LibraryGroup[]>();
+  public libraryGroupsSource$ = this.libraryGroupsSource.asObservable();
+  private officialLibraryProjectsSource = new Subject<LibraryProject[]>();
+  public officialLibraryProjectsSource$ = this.officialLibraryProjectsSource.asObservable();
   private projectFilterOptionsSource = new Subject<ProjectFilterOptions>();
   public projectFilterOptionsSource$ = this.projectFilterOptionsSource.asObservable();
 
+  implementationModelValue: string = '';
+  implementationModelOptions: LibraryGroup[] = [];
+
   constructor(private http: HttpClient) { }
 
-  getLibraryGroups(): Observable<LibraryGroup[]> {
-    return this.libraryGroups
-      ? this.libraryGroups
-      : this.http.get<LibraryGroup[]>(this.libraryGroupsUrl);
+  getOfficialLibraryProjects() {
+    this.http.get<LibraryGroup[]>(this.libraryGroupsUrl).subscribe((libraryGroups) => {
+      this.libraryGroups = libraryGroups;
+      this.libraryGroupsSource.next(libraryGroups);
+      const projects: LibraryProject[] = [];
+      for (let group of this.libraryGroups) {
+        if (!this.implementationModelValue) {
+          this.implementationModelValue = group.id;
+        }
+        this.implementationModelOptions.push(group);
+
+        this.populateProjects(group, group.id, projects);
+      }
+      this.officialLibraryProjectsSource.next(projects);
+    });
+  }
+
+  /**
+   * Add given project or all child projects from a given group to the list of projects
+   * @param item
+   * @param {string} implementationModel
+   */
+  populateProjects(item: any, implementationModel: string, projects: LibraryProject[]): void {
+    if (item.type === 'project') {
+      item.visible = true;
+      item.implementationModel = implementationModel;
+      projects.push(item);
+    } else if (item.type === 'group') {
+      let children = item.children;
+      for (let child of children) {
+        this.populateProjects(child, implementationModel, projects);
+      }
+    }
   }
 
   /**

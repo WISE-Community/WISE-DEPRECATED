@@ -28,6 +28,10 @@ export class LibraryFiltersComponent implements OnInit {
   showFilters: boolean = false;
 
   constructor(private libraryService: LibraryService) {
+    libraryService.officialLibraryProjectsSource$.subscribe((libraryProjects) => {
+      this.projects = libraryProjects;
+      this.populateFilterOptions();
+    });
   }
 
   ngOnInit() {

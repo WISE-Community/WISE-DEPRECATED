@@ -1,21 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, Input } from "@angular/core";
-import { TeacherProjectLibraryComponent } from './teacher-project-library.component';
+
+import { OfficialLibraryComponent } from './official-library.component';
 import { LibraryGroup } from "../libraryGroup";
 import { LibraryProject } from "../libraryProject";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { OfficialLibraryComponent } from "../official-library/official-library.component";
+import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
+import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
 import { SharedModule } from "../../shared/shared.module";
+import { LibraryService } from "../../../services/library.service";
+import { Component, Input } from "@angular/core";
+import { Observable } from "rxjs";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { HttpClient, HttpHandler } from "@angular/common/http";
 import {
   MatBadgeModule,
   MatExpansionModule,
   MatIconModule,
   MatTabsModule
 } from "@angular/material";
-import { LibraryService } from "../../../services/library.service";
-import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
-import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
-import { Observable } from "rxjs";
 
 @Component({selector: 'app-library-group-thumbs', template: ''})
 class LibraryGroupThumbsStubComponent {
@@ -35,9 +36,9 @@ class LibraryFiltersComponent {
   projects: LibraryProject[] = [];
 }
 
-describe('TeacherProjectLibraryComponent', () => {
-  let component: TeacherProjectLibraryComponent;
-  let fixture: ComponentFixture<TeacherProjectLibraryComponent>;
+describe('OfficialLibraryComponent', () => {
+  let component: OfficialLibraryComponent;
+  let fixture: ComponentFixture<OfficialLibraryComponent>;
   const libraryServiceStub = {
     getLibraryGroups(): Observable<LibraryGroup[]> {
       const libraryGroup: LibraryGroup[] = [];
@@ -58,8 +59,7 @@ describe('TeacherProjectLibraryComponent', () => {
       dciArrangementValue: [],
       peValue: []
     })
-  };
-
+  }
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -72,20 +72,21 @@ describe('TeacherProjectLibraryComponent', () => {
       ],
       declarations: [
         OfficialLibraryComponent,
-        TeacherProjectLibraryComponent,
         LibraryGroupThumbsStubComponent,
         LibraryProjectStubComponent,
         LibraryFiltersComponent
       ],
       providers: [
+        HttpClient,
+        HttpHandler,
         { provide: LibraryService, useValue: libraryServiceStub }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TeacherProjectLibraryComponent);
+    fixture = TestBed.createComponent(OfficialLibraryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

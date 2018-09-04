@@ -6,8 +6,7 @@ import { SharedModule } from "../../shared/shared.module";
 import {
   MatBadgeModule,
   MatExpansionModule,
-  MatIconModule,
-  MatTabsModule
+  MatIconModule
 } from "@angular/material";
 import { Component, Input } from "@angular/core";
 import { LibraryService } from "../../../services/library.service";
@@ -16,6 +15,7 @@ import { LibraryProject } from "../libraryProject";
 import { Observable } from "rxjs";
 import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
 import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
+import { OfficialLibraryComponent } from "../official-library/official-library.component";
 
 
 @Component({selector: 'app-library-group-thumbs', template: ''})
@@ -59,7 +59,7 @@ describe('HomePageProjectLibraryComponent', () => {
       dciArrangementValue: [],
       peValue: []
     })
-  }
+  };
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -67,10 +67,10 @@ describe('HomePageProjectLibraryComponent', () => {
         SharedModule,
         MatIconModule,
         MatBadgeModule,
-        MatExpansionModule,
-        MatTabsModule
+        MatExpansionModule
       ],
       declarations: [
+        OfficialLibraryComponent,
         HomePageProjectLibraryComponent,
         LibraryGroupThumbsStubComponent,
         LibraryProjectStubComponent,

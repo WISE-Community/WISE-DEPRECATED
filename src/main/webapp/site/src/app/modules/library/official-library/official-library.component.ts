@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LibraryGroup } from "../libraryGroup";
 import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
 import { LibraryProject } from "../libraryProject";
@@ -7,12 +7,11 @@ import { LibraryService } from "../../../services/library.service";
 import { NGSSStandards } from "../ngssStandards";
 
 @Component({
-  selector: 'app-home-page-project-library',
-  templateUrl: './home-page-project-library.component.html',
-  styleUrls: ['./home-page-project-library.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  selector: 'app-official-library',
+  templateUrl: './official-library.component.html',
+  styleUrls: ['./official-library.component.scss']
 })
-export class HomePageProjectLibraryComponent implements OnInit {
+export class OfficialLibraryComponent implements OnInit {
 
   projects: LibraryProject[] = [];
   libraryGroups: LibraryGroup[] = [];
@@ -32,15 +31,11 @@ export class HomePageProjectLibraryComponent implements OnInit {
     libraryService.getOfficialLibraryProjects();
     libraryService.libraryGroupsSource$.subscribe((libraryGroups) => {
       this.libraryGroups = libraryGroups;
-      const projects: LibraryProject[] = [];
-      for (let group of this.libraryGroups) {
-        if (!this.implementationModelValue) {
-          this.implementationModelValue = group.id;
-        }
-        this.implementationModelOptions.push(group);
-        this.populateProjects(group, group.id, projects);
-      }
-      this.projects = projects;
+    });
+    libraryService.officialLibraryProjectsSource$.subscribe((libraryProjects) => {
+      this.projects = libraryProjects;
+      this.implementationModelOptions = libraryService.implementationModelOptions;
+      this.implementationModelValue = libraryService.implementationModelValue;
     });
     libraryService.projectFilterOptionsSource$.subscribe((projectFilterOptions) => {
       this.filterUpdated(projectFilterOptions);
