@@ -27,7 +27,8 @@
            class="library__filter"
            fxFlex
            fxFlex.xs="100">
-        <app-select-menu [options]="disciplineOptions"
+        <app-select-menu id="disciplineSelectMenu"
+                         [options]="disciplineOptions"
                          [placeholderText]="'Discipline'"
                          [value]="disciplineValue"
                          (update)="filterUpdated($event, 'discipline')"
@@ -40,7 +41,8 @@
            class="library__filter"
            fxFlex
            fxFlex.xs="100">
-        <app-select-menu [options]="dciArrangementOptions"
+        <app-select-menu id="dciArrangementSelectMenu"
+                         [options]="dciArrangementOptions"
                          [placeholderText]="'DCI Arrangement'"
                          [value]="dciArrangementValue"
                          (update)="filterUpdated($event, 'dci')"
@@ -53,7 +55,8 @@
            class="library__filter"
            fxFlex
            fxFlex.xs="100">
-        <app-select-menu [options]="peOptions"
+        <app-select-menu id="performanceExpectationSelectMenu"
+                         [options]="peOptions"
                          [placeholderText]="'Performance Expectation'"
                          [value]="peValue"
                          (update)="filterUpdated($event, 'pe')"

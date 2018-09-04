@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 
 import { LibraryFiltersComponent } from './library-filters.component';
 import { of } from "rxjs";
@@ -15,6 +15,8 @@ import { Component, DebugElement, SimpleChange } from '@angular/core';
 import { LibraryProject } from "../libraryProject";
 import { SearchBarComponent } from "../../shared/search-bar/search-bar.component";
 import { By } from '@angular/platform-browser';
+import { SelectMenuComponent } from "../../shared/select-menu/select-menu.component";
+import { SelectMenuTestHelper } from '../select-menu-test.helper';
 
 describe('LibraryFiltersComponent', () => {
   let component: LibraryFiltersComponent;
@@ -42,7 +44,8 @@ describe('LibraryFiltersComponent', () => {
 
     fixture = TestBed.createComponent(LibraryFiltersComponent);
     component = fixture.componentInstance;
-
+    component.projects = projects;
+    component.ngOnChanges({projects: new SimpleChange(null, projects, true)});
     fixture.detectChanges();
   });
 
@@ -50,10 +53,7 @@ describe('LibraryFiltersComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set the projects and populate the filter options', () => {
-    component.projects = projects;
-    component.ngOnChanges({projects: new SimpleChange(null, projects, true)});
-    fixture.detectChanges();
+  it('should populate the filter options', () => {
     expect(component.projects.length).toBe(2);
     expect(component.dciArrangementOptions.length).toBe(1);
     expect(component.disciplineOptions.length).toBe(2);
@@ -68,6 +68,21 @@ describe('LibraryFiltersComponent', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(component.searchValue).toEqual(searchString);
+    });
+  }));
+
+  it('should change the dci arrangement value when the user selects an option in the drop down', fakeAsync(() => {
+    const dciArrangementValue = ['LS'];
+    const dciArrangementSelectMenu = fixture.debugElement.query(By.css('#dciArrangementSelectMenu'));
+    dciArrangementSelectMenu.nativeElement.value = dciArrangementValue;
+    let selectMenu: SelectMenuTestHelper = new SelectMenuTestHelper(fixture);
+    selectMenu.triggerMenu();
+    const options = selectMenu.getOptions();
+    selectMenu.selectOption(options[0]);
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(component.disciplineValue).toEqual(dciArrangementValue);
     });
   }));
 

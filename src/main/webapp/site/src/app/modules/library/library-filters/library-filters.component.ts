@@ -145,4 +145,24 @@ export class LibraryFiltersComponent implements OnInit {
   searchUpdated(value: string): void {
     this.searchValue = value.toLocaleLowerCase();
   }
+
+  /**
+   * Filter options or search string have changed, so update visible projects
+   * @param {string[]} value
+   * @param {string} context
+   */
+  filterUpdated(value: string[] = [], context: string = ''): void {
+    console.log('filterUpdated');
+    switch(context) {
+      case 'discipline':
+        this.disciplineValue = value;
+        break;
+      case 'dci':
+        this.dciArrangementValue = value;
+        break;
+      case 'pe':
+        this.peValue = value;
+        break;
+    }
+  }
 }
