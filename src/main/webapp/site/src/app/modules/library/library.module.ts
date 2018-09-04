@@ -21,8 +21,11 @@ import {
   MatIconModule,
   MatOptionModule,
   MatSelectModule,
+  MatTabsModule,
   MatTooltipModule} from '@angular/material';
 import { LibraryFiltersComponent } from './library-filters/library-filters.component';
+import { HomePageProjectLibraryComponent } from './home-page-project-library/home-page-project-library.component';
+import { TeacherProjectLibraryComponent } from './teacher-project-library/teacher-project-library.component';
 
 const materialModules = [
   MatBadgeModule,
@@ -34,6 +37,7 @@ const materialModules = [
   MatIconModule,
   MatOptionModule,
   MatSelectModule,
+  MatTabsModule,
   MatTooltipModule
 ];
 
@@ -52,12 +56,16 @@ const materialModules = [
     LibraryProjectComponent,
     LibraryProjectDetailsComponent,
     LibraryProjectDisciplineIconComponent,
-    LibraryFiltersComponent
+    LibraryFiltersComponent,
+    HomePageProjectLibraryComponent,
+    TeacherProjectLibraryComponent
   ],
   entryComponents: [ LibraryProjectDetailsComponent ],
   exports: [
+    HomePageProjectLibraryComponent,
     LibraryComponent,
     ReactiveFormsModule,
+    TeacherProjectLibraryComponent,
     materialModules
   ],
   providers: [

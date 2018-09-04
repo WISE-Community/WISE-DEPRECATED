@@ -1,0 +1,76 @@
+<div class="library notice-bg-bg">
+  <div fxLayout="column" fxLayout.gt-sm="row">
+    <app-library-filters [projects]="projects"
+                         (update)="filterUpdated($event)"></app-library-filters>
+    <div class="library__content content-block"
+         fxFlex.gt-sm="67">
+      <div *ngIf="searchValue || hasFilters()" class="notice" fxShow fxHide.gt-xs>
+        <p>
+          Projects found: {{ countVisibleProjects(projects, implementationModelValue) }}
+        </p>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start start">
+        <div fxLayout="row" fxLayoutAlign="start start">
+          <app-select-menu [options]="implementationModelOptions"
+                           [placeholderText]="'CA NGSS Implementation Model'"
+                           [value]="implementationModelValue"
+                           (update)="implementationModelUpdated($event)"
+                           [valueProp]="'id'"
+                           [viewValueProp]="'name'">
+          </app-select-menu>
+          <button mat-button
+                  mat-icon-button
+                  color="primary"
+                  class="input-control--appearance-fill"
+                  aria-label="Implementation model select explanation"
+                  matTooltip="California has defined two NGSS course arrangements for grades 6-8. Select one to see WISE projects organized by grade level for that implementation model."
+                  matTooltipPosition="after">
+            <mat-icon> info </mat-icon>
+          </button>
+        </div>
+        <span fxFlex fxHide fxShow.gt-xs></span>
+        <div [ngClass]="{ 'active': searchValue || hasFilters() }"
+             class="notice notice--inline inactive"
+             fxHide
+             fxShow.gt-xs>
+          Projects found: {{ countVisibleProjects(projects, implementationModelValue) }}
+        </div>
+      </div>
+      <ng-container id="libraryGroups" *ngFor="let group of libraryGroups">
+        <mat-accordion class="library__groups"
+                       multi="true"
+                       *ngIf="implementationModelValue === group.id">
+          <ng-container *ngFor="let child of group.children; let i = index">
+            <mat-expansion-panel *ngIf="child.type === 'group'"
+                                 class="library-group"
+                                 (opened)="expandedGroups[child.id] = true"
+                                 (closed)="expandedGroups[child.id] = false"
+                                 [expanded]="expandedGroups[child.id] && countVisibleProjects(child.children, implementationModelValue) > 0"
+                                 [disabled]="countVisibleProjects(child.children, implementationModelValue) < 1">
+              <mat-expansion-panel-header class="mat-expansion-panel-header--lg">
+                <div fxLayout="column" class="library-group__title">
+                  <div>{{ child.name }}</div>
+                  <div class="mat-caption">
+                    {{ countVisibleProjects(child.children, implementationModelValue) }} project(s)
+                  </div>
+                </div>
+                <app-library-group-thumbs [group]="child"
+                                          [ngClass]="{ 'hide': expandedGroups[child.id] }">
+                </app-library-group-thumbs>
+              </mat-expansion-panel-header>
+              <div fxLayout="row wrap">
+                <ng-container *ngFor="let project of child.children">
+                  <div *ngIf="project.visible"
+                       fxFlex="50"
+                       fxFlex.gt-xs="33">
+                    <app-library-project [project]="project" ></app-library-project>
+                  </div>
+                </ng-container>
+              </div>
+            </mat-expansion-panel>
+          </ng-container>
+        </mat-accordion>
+      </ng-container>
+    </div>
+  </div>
+</div>
