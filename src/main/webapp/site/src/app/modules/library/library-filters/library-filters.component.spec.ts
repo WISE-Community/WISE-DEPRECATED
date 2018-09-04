@@ -23,8 +23,15 @@ describe('LibraryFiltersComponent', () => {
   let fixture: ComponentFixture<LibraryFiltersComponent>;
   let projects: LibraryProject[];
 
-  const libraryService = jasmine.createSpyObj('LibraryService', ['getLibraryGroups']);
+  const libraryService = jasmine.createSpyObj('LibraryService',
+      ['getLibraryGroups', 'filterOptions']);
   libraryService.getLibraryGroups.and.returnValue(of(sampleLibraryGroups));
+  libraryService.filterOptions.and.returnValue(of({
+    searchValue: "",
+    disciplineValue: [],
+    dciArrangementValue: [],
+    peValue: []
+  }));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

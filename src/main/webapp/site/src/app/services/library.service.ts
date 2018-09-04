@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Observable ,  of } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Observable ,  of, Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 import { LibraryGroup } from "../modules/library/libraryGroup";
+import { ProjectFilterOptions } from "../domain/projectFilterOptions";
 
 @Injectable()
 export class LibraryService {
 
   private libraryGroupsUrl = 'api/project/library';
   private libraryGroups: Observable<LibraryGroup[]>;
+  private projectFilterOptionsSource = new Subject<ProjectFilterOptions>();
+  public projectFilterOptionsSource$ = this.projectFilterOptionsSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -41,5 +43,9 @@ export class LibraryService {
 
   private log(message: string) {
     console.log('LibraryService: ' + message);
+  }
+
+  filterOptions(projectFilterOptions: ProjectFilterOptions) {
+    this.projectFilterOptionsSource.next(projectFilterOptions);
   }
 }

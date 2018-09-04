@@ -6,8 +6,7 @@
          fxFlex.gt-sm="67">
       <div *ngIf="searchValue || hasFilters()" class="notice" fxShow fxHide.gt-xs>
         <p>
-          Projects found: {{ countVisibleProjects(projects, implementationModelValue) }}.
-          <a href="#" (click)="!!reset()">Reset</a>
+          Projects found: {{ countVisibleProjects(projects, implementationModelValue) }}
         </p>
       </div>
       <div fxLayout="row" fxLayoutAlign="start start">
@@ -34,8 +33,7 @@
              class="notice notice--inline inactive"
              fxHide
              fxShow.gt-xs>
-          Projects found: {{ countVisibleProjects(projects, implementationModelValue) }}.
-          <a href="#" (click)="!!reset()">Reset</a>
+          Projects found: {{ countVisibleProjects(projects, implementationModelValue) }}
         </div>
       </div>
       <ng-container id="libraryGroups" *ngFor="let group of libraryGroups">

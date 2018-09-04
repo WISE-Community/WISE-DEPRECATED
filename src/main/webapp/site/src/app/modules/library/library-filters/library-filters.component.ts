@@ -27,7 +27,7 @@ export class LibraryFiltersComponent implements OnInit {
   peValue = [];
   showFilters: boolean = false;
 
-  constructor() {
+  constructor(private libraryService: LibraryService) {
   }
 
   ngOnInit() {
@@ -175,6 +175,18 @@ export class LibraryFiltersComponent implements OnInit {
       dciArrangementValue: this.dciArrangementValue,
       peValue: this.peValue
     };
-    this.update.emit(filterOptions);
+    this.libraryService.filterOptions(filterOptions);
+  }
+
+  reset() {
+    this.resetFilterOptions();
+    this.emitFilterValues();
+  }
+
+  resetFilterOptions() {
+    this.searchValue = '';
+    this.dciArrangementValue = [];
+    this.disciplineValue = [];
+    this.peValue = [];
   }
 }

@@ -31,6 +31,9 @@ export class LibraryComponent implements OnInit {
 
   constructor(private libraryService: LibraryService) {
     this.getLibraryGroups();
+    libraryService.projectFilterOptionsSource$.subscribe((projectFilterOptions) => {
+      this.filterUpdated(projectFilterOptions);
+    });
   }
 
   ngOnInit() {
@@ -137,9 +140,8 @@ export class LibraryComponent implements OnInit {
   /**
    * Filter options or search string have changed, so update visible projects
    * @param {ProjectFilterOptions} filterOptions
-   * @param {string} context
    */
-  filterUpdated(filterOptions: ProjectFilterOptions, context): void {
+  filterUpdated(filterOptions: ProjectFilterOptions): void {
     this.searchValue = filterOptions.searchValue;
     this.disciplineValue = filterOptions.disciplineValue;
     this.dciArrangementValue = filterOptions.dciArrangementValue;
@@ -270,17 +272,6 @@ export class LibraryComponent implements OnInit {
       }
     }
     return false;
-  }
-
-  /**
-   * Reset the filters and search string
-   */
-  reset(): void {
-    this.dciArrangementValue = [];
-    this.disciplineValue = [];
-    this.peValue = [];
-    this.searchValue = '';
-    this.filterUpdated();
   }
 
   /**

@@ -13,7 +13,8 @@ import { LibraryService } from "../../services/library.service";
 import { LibraryGroup } from "./libraryGroup";
 import { LibraryProject } from "./libraryProject";
 import { Observable } from "rxjs";
-import { User } from "../../domain/user";
+import { ProjectFilterOptions } from "../../domain/projectFilterOptions";
+import { fakeAsyncResponse } from "../../student/student-run-list/student-run-list.component.spec";
 
 @Component({selector: 'app-library-group-thumbs', template: ''})
 class LibraryGroupThumbsStubComponent {
@@ -43,7 +44,19 @@ describe('LibraryComponent', () => {
         observer.next(libraryGroup);
         observer.complete();
       });
-    }
+    },
+    filterOptions(projectFilterOptions: ProjectFilterOptions): Observable<ProjectFilterOptions> {
+      return Observable.create(observer => {
+        observer.next(projectFilterOptions);
+        observer.complete();
+      });
+    },
+    projectFilterOptionsSource$: fakeAsyncResponse({
+      searchValue: "",
+      disciplineValue: [],
+      dciArrangementValue: [],
+      peValue: []
+    })
   }
   beforeEach(async(() => {
     TestBed.configureTestingModule({
