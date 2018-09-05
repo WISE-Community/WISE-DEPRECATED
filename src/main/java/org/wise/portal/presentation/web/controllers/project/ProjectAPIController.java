@@ -10,6 +10,8 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 
@@ -65,13 +67,28 @@ public class ProjectAPIController {
   @RequestMapping(value = "/community", method = RequestMethod.GET)
   protected String getCommunityLibrayProjects(ModelMap modelMap) throws JSONException {
     List<Project> teacherSharedProjects = projectService.getTeacherSharedProjectList();
-    JSONArray teacherSharedProjectsJSON = new JSONArray();
-    for (Project teacherSharedProject : teacherSharedProjects) {
+    JSONArray projectsJSON = getProjectsJSON(teacherSharedProjects);
+    return projectsJSON.toString();
+  }
+
+  @RequestMapping(value = "/personal", method = RequestMethod.GET)
+  protected String getPersonalLibrayProjects(ModelMap modelMap) throws JSONException {
+    User signedInUser = ControllerUtil.getSignedInUser();
+    List<Project> projectsWithoutRuns = projectService.getProjectsWithoutRuns(signedInUser);
+    JSONArray projectsJSON = getProjectsJSON(projectsWithoutRuns);
+    return projectsJSON.toString();
+  }
+
+  private JSONArray getProjectsJSON(List<Project> projectList) throws JSONException {
+    JSONArray projectsJSON = new JSONArray();
+    for (Project teacherSharedProject : projectList) {
       JSONObject projectJSON = new JSONObject();
+      projectJSON.put("id", teacherSharedProject.getId());
+      projectJSON.put("name", teacherSharedProject.getName());
       projectJSON.put("metadata", teacherSharedProject.getMetadata().toJSONObject());
-      teacherSharedProjectsJSON.put(projectJSON);
+      projectsJSON.put(projectJSON);
     }
-    return teacherSharedProjectsJSON.toString();
+    return projectsJSON;
   }
 
   private void populateProjectMetadata(JSONObject projectLibraryGroup) throws JSONException {

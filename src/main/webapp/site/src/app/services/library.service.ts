@@ -11,6 +11,7 @@ export class LibraryService {
 
   private libraryGroupsUrl = 'api/project/library';
   private communityProjectsUrl = 'api/project/community';
+  private personalProjectsUrl = 'api/project/personal';
   public libraryGroups: LibraryGroup[];
   private libraryGroupsSource = new Subject<LibraryGroup[]>();
   public libraryGroupsSource$ = this.libraryGroupsSource.asObservable();
@@ -18,6 +19,9 @@ export class LibraryService {
   public officialLibraryProjectsSource$ = this.officialLibraryProjectsSource.asObservable();
   private communityLibraryProjectsSource = new Subject<LibraryProject[]>();
   public communityLibraryProjectsSource$ = this.communityLibraryProjectsSource.asObservable();
+
+  private personalLibraryProjectsSource = new Subject<LibraryProject[]>();
+  public personalLibraryProjectsSource$ = this.personalLibraryProjectsSource.asObservable();
 
   private projectFilterOptionsSource = new Subject<ProjectFilterOptions>();
   public projectFilterOptionsSource$ = this.projectFilterOptionsSource.asObservable();
@@ -47,6 +51,12 @@ export class LibraryService {
   getCommunityLibraryProjects() {
     this.http.get<LibraryProject[]>(this.communityProjectsUrl).subscribe((projects) => {
       this.communityLibraryProjectsSource.next(projects);
+    });
+  }
+
+  getPersonalLibraryProjects() {
+    this.http.get<LibraryProject[]>(this.personalProjectsUrl).subscribe((projects) => {
+      this.personalLibraryProjectsSource.next(projects);
     });
   }
 

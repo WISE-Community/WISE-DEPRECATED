@@ -664,4 +664,8 @@ public class ProjectServiceImpl implements ProjectService {
       this.aclService.removePermission(project, new ProjectPermission(permissionId), user);
     }
   }
+
+  public List<Project> getProjectsWithoutRuns(User user) {
+    return projectDao.getProjectsWithoutRuns(user);
+  }
 }

@@ -28,6 +28,7 @@ import { TeacherProjectLibraryComponent } from './teacher-project-library/teache
 import { OfficialLibraryComponent } from './official-library/official-library.component';
 import { CommunityLibraryComponent } from './community-library/community-library.component';
 import { LibraryComponent } from './library/library.component';
+import { PersonalLibraryComponent } from './personal-library/personal-library.component';
 
 const materialModules = [
   MatBadgeModule,
@@ -62,12 +63,12 @@ const materialModules = [
     TeacherProjectLibraryComponent,
     OfficialLibraryComponent,
     CommunityLibraryComponent,
+    PersonalLibraryComponent,
     LibraryComponent
   ],
   entryComponents: [ LibraryProjectDetailsComponent ],
   exports: [
     HomePageProjectLibraryComponent,
-    OfficialLibraryComponent,
     ReactiveFormsModule,
     TeacherProjectLibraryComponent,
     materialModules

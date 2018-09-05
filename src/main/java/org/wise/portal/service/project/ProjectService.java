@@ -338,4 +338,6 @@ public interface ProjectService {
   void addSharedTeacherPermission(Long projectId, Long userId, Integer permissionId) throws ObjectNotFoundException;
 
   void removeSharedTeacherPermission(Long projectId, Long userId, Integer permissionId) throws ObjectNotFoundException;
+
+  List<Project> getProjectsWithoutRuns(User user);
 }
