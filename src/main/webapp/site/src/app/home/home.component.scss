@@ -3,11 +3,6 @@
         '~style/abstracts/functions';
 
 .home {
-  .mat-icon {
-    @include mat-icon-size(32px);
-  }
-
-
   app-blurb, app-call-to-action {
     width: 360px;
     max-width: 100%;
