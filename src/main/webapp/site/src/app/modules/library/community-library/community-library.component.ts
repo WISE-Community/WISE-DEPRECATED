@@ -20,6 +20,7 @@ export class CommunityLibraryComponent extends LibraryComponent {
         communityProject.visible = true;
       }
       this.projects = communityProjects;
+      this.emitNumberOfProjectsVisible(this.projects.length);
     });
     libraryService.projectFilterOptionsSource$.subscribe((projectFilterOptions) => {
       this.filterUpdated(projectFilterOptions);

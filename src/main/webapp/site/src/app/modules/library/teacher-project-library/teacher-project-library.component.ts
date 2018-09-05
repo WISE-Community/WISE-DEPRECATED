@@ -9,10 +9,25 @@ import { LibraryProject } from "../libraryProject";
 export class TeacherProjectLibraryComponent implements OnInit {
 
   projects: LibraryProject[] = [];
+  numberOfOfficialProjectsVisible;
+  numberOfCommunityProjectsVisible;
+  numberOfPersonalProjectsVisible;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  updateNumberOfOfficialProjectsVisible(count) {
+    this.numberOfOfficialProjectsVisible = count;
+  }
+
+  updateNumberOfCommunityProjectsVisible(count) {
+    this.numberOfCommunityProjectsVisible = count;
+  }
+
+  updateNumberOfPersonalProjectsVisible(count) {
+    this.numberOfPersonalProjectsVisible = count;
   }
 
 }

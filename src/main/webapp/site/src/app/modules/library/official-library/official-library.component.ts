@@ -34,6 +34,7 @@ export abstract class OfficialLibraryComponent extends LibraryComponent {
     });
     libraryService.officialLibraryProjectsSource$.subscribe((libraryProjects) => {
       this.projects = libraryProjects;
+      this.emitNumberOfProjectsVisible(this.projects.length);
       this.implementationModelOptions = libraryService.implementationModelOptions;
       this.implementationModelValue = libraryService.implementationModelValue;
     });

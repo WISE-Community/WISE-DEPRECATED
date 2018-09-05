@@ -20,6 +20,7 @@ export class PersonalLibraryComponent extends LibraryComponent {
         personalProject.visible = true;
       }
       this.projects = personalProjects;
+      this.emitNumberOfProjectsVisible(this.projects.length);
     });
     libraryService.projectFilterOptionsSource$.subscribe((projectFilterOptions) => {
       this.filterUpdated(projectFilterOptions);

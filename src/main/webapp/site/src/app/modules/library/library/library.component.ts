@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { LibraryGroup } from "../libraryGroup";
 import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
 import { NGSSStandards } from "../ngssStandards";
@@ -26,6 +26,9 @@ export class LibraryComponent implements OnInit {
   peOptions: Standard[] = [];
   peValue = [];
   showFilters: boolean = false;
+
+  @Output('update')
+  update: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private libraryService: LibraryService) {
   }
@@ -115,6 +118,7 @@ export class LibraryComponent implements OnInit {
    * @param {ProjectFilterOptions} filterOptions
    */
   filterUpdated(filterOptions: ProjectFilterOptions): void {
+    let numProjectsVisible = 0;
     this.searchValue = filterOptions.searchValue;
     this.disciplineValue = filterOptions.disciplineValue;
     this.dciArrangementValue = filterOptions.dciArrangementValue;
@@ -131,7 +135,15 @@ export class LibraryComponent implements OnInit {
         filterMatch = true;
       }
       project.visible = searchMatch || filterMatch;
+      if (project.visible) {
+        numProjectsVisible += 1;
+      }
     }
+    this.emitNumberOfProjectsVisible(numProjectsVisible);
+  }
+
+  emitNumberOfProjectsVisible(numProjectsVisible) {
+    this.update.emit(numProjectsVisible);
   }
 
   /**
