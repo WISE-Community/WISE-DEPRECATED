@@ -113,6 +113,6 @@ describe('TeacherHomeComponent', () => {
   it('should show teacher name and avatar', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.querySelector('#teacherName').textContent)
-      .toContain('Demo Teacher');
+      .toContain('Demo');
   });
 });
