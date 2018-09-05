@@ -22,6 +22,7 @@ import {
   MatOptionModule,
   MatSelectModule,
   MatTooltipModule} from '@angular/material';
+import { TimelineModule } from "../timeline/timeline.module";
 
 const materialModules = [
   MatBadgeModule,
@@ -43,7 +44,8 @@ const materialModules = [
     ReactiveFormsModule,
     RouterModule,
     materialModules,
-    SharedModule
+    SharedModule,
+    TimelineModule
   ],
   declarations: [
     LibraryComponent,

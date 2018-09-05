@@ -1,20 +1,17 @@
+import {
+  Component,
+  Input,
+  NO_ERRORS_SCHEMA
+} from "@angular/core";
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { defer, Observable } from "rxjs";
+import { MomentModule } from 'ngx-moment';
 
 import { TeacherRunListComponent } from './teacher-run-list.component';
 import { TeacherService } from "../teacher.service";
-import { defer, Observable } from "rxjs";
 import { Project } from "../project";
-import { TeacherModule } from "../teacher.module";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { Run } from "../../domain/run";
-import {
-  Component,
-  DebugElement, EventEmitter,
-  Input,
-  NO_ERRORS_SCHEMA, OnInit, Output
-} from "@angular/core";
-import { By } from "@angular/platform-browser";
-import { SharedModule } from "../../modules/shared/shared.module";
 
 @Component({selector: 'app-teacher-run-list-item', template: ''})
 class TeacherRunListItemStubComponent {
@@ -74,7 +71,7 @@ describe('TeacherRunListComponent', () => {
         TeacherRunListComponent
       ],
       imports: [
-        BrowserAnimationsModule
+        BrowserAnimationsModule, MomentModule
       ],
       providers: [ {provide: TeacherService, useValue: teacherServiceStub}],
       schemas: [ NO_ERRORS_SCHEMA ]

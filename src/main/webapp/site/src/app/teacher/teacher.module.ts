@@ -12,14 +12,14 @@ import { MomentModule } from 'ngx-moment';
 import { FormsModule } from '@angular/forms';
 import {
   MatButtonModule, MatCardModule, MatCheckboxModule, MatDatepickerModule,
-  MatDialogModule, MatDialog, MatDialogRef, MatDividerModule, MatIconModule,
-  MatMenuModule, MatNativeDateModule, MatRadioModule, MatTabsModule,
-  MatAutocompleteModule
+  MatDialogModule, MatDividerModule, MatIconModule, MatMenuModule,
+  MatNativeDateModule, MatRadioModule, MatTabsModule, MatAutocompleteModule
 } from '@angular/material';
 import { RunMenuComponent } from './run-menu/run-menu.component';
 import { CreateRunDialogComponent } from './create-run-dialog/create-run-dialog.component';
 import { LibraryModule } from "../modules/library/library.module";
 import { ShareRunDialogComponent } from './share-run-dialog/share-run-dialog.component';
+import { TimelineModule } from "../modules/timeline/timeline.module";
 
 const materialModules = [
   MatAutocompleteModule,
@@ -44,15 +44,16 @@ const materialModules = [
     materialModules,
     MomentModule,
     SharedModule,
-    TeacherRoutingModule
+    TeacherRoutingModule,
+    TimelineModule
   ],
   declarations: [
     CreateRunDialogComponent,
     TeacherComponent,
     TeacherHomeComponent,
-  TeacherRunListComponent,
-  TeacherRunListItemComponent,
-  RunMenuComponent,
+    TeacherRunListComponent,
+    TeacherRunListItemComponent,
+    RunMenuComponent,
     ShareRunDialogComponent
   ],
   entryComponents: [

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DateFormatPipe } from 'ngx-moment';
 import { TeacherService } from "../teacher.service";
 import { Run } from "../../domain/run";
 
@@ -40,6 +41,24 @@ export class TeacherRunListComponent implements OnInit {
         this.performSearchAndFilter();
         this.loaded = true;
       });
+  }
+
+  runSpansYears(run: Run) {
+    const startYear = (new DateFormatPipe()).transform(run.startTime, 'Y');
+    const endYear = (new DateFormatPipe()).transform(run.endTime, 'Y');
+    return startYear != endYear;
+  }
+
+  runSpansMonths(run: Run) {
+    const startMonth = (new DateFormatPipe()).transform(run.startTime, 'M');
+    const endMonth = (new DateFormatPipe()).transform(run.endTime, 'M');
+    return startMonth != endMonth;
+  }
+
+  runSpansDays(run: Run) {
+    const startDay = (new DateFormatPipe()).transform(run.startTime, 'D');
+    const endDay = (new DateFormatPipe()).transform(run.endTime, 'D');
+    return startDay != endDay;
   }
 
   performSearchAndFilter() {
