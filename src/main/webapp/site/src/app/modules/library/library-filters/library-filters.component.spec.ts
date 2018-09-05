@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 
 import { LibraryFiltersComponent } from './library-filters.component';
-import { of } from "rxjs";
+import { of, Subject } from "rxjs";
 import { LibraryService } from "../../../services/library.service";
 import sampleLibraryGroups from "../sampleLibraryGroups";
 import sampleLibraryProjects from "../sampleLibraryProjects";
@@ -11,13 +11,13 @@ import {
   MatBadgeModule,
   MatIconModule
 } from "@angular/material";
-import { Component, DebugElement, SimpleChange } from '@angular/core';
+import { SimpleChange } from '@angular/core';
 import { LibraryProject } from "../libraryProject";
-import { SearchBarComponent } from "../../shared/search-bar/search-bar.component";
+
 import { By } from '@angular/platform-browser';
-import { SelectMenuComponent } from "../../shared/select-menu/select-menu.component";
+
 import { SelectMenuTestHelper } from '../select-menu-test.helper';
-import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
+
 
 describe('LibraryFiltersComponent', () => {
   let component: LibraryFiltersComponent;
@@ -33,9 +33,10 @@ describe('LibraryFiltersComponent', () => {
     dciArrangementValue: [],
     peValue: []
   }));
-  libraryService.officialLibraryProjectsSource$ = fakeAsyncResponse({
-
-  });
+  libraryService.officialLibraryProjectsSource = new Subject<LibraryProject[]>();
+  libraryService.officialLibraryProjectsSource$ = libraryService.officialLibraryProjectsSource.asObservable();
+  libraryService.communityLibraryProjectsSource = new Subject<LibraryProject[]>();
+  libraryService.communityLibraryProjectsSource$ = libraryService.communityLibraryProjectsSource.asObservable();
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ BrowserAnimationsModule, SharedModule, MatIconModule, MatBadgeModule ],
@@ -54,7 +55,7 @@ describe('LibraryFiltersComponent', () => {
 
     fixture = TestBed.createComponent(LibraryFiltersComponent);
     component = fixture.componentInstance;
-    component.projects = projects;
+    component.libraryProjects = projects;
     component.ngOnChanges({projects: new SimpleChange(null, projects, true)});
     fixture.detectChanges();
   });
@@ -64,7 +65,7 @@ describe('LibraryFiltersComponent', () => {
   });
 
   it('should populate the filter options', () => {
-    expect(component.projects.length).toBe(2);
+    expect(component.libraryProjects.length).toBe(2);
     expect(component.dciArrangementOptions.length).toBe(1);
     expect(component.disciplineOptions.length).toBe(2);
     expect(component.peOptions.length).toBe(3);

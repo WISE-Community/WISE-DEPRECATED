@@ -12,8 +12,9 @@ import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
 })
 export class LibraryFiltersComponent implements OnInit {
 
-  @Input()
-  projects: LibraryProject[];
+  allProjects: LibraryProject[] = [];
+  libraryProjects: LibraryProject[] = [];
+  communityProjects: LibraryProject[] = [];
 
   @Output()
   update: EventEmitter<object> = new EventEmitter<object>();
@@ -29,7 +30,12 @@ export class LibraryFiltersComponent implements OnInit {
 
   constructor(private libraryService: LibraryService) {
     libraryService.officialLibraryProjectsSource$.subscribe((libraryProjects) => {
-      this.projects = libraryProjects;
+      console.log(libraryProjects);
+      this.libraryProjects = libraryProjects;
+      this.populateFilterOptions();
+    });
+    libraryService.communityLibraryProjectsSource$.subscribe((communityProjects) => {
+      this.communityProjects = communityProjects;
       this.populateFilterOptions();
     });
   }
@@ -47,7 +53,8 @@ export class LibraryFiltersComponent implements OnInit {
    * Iterate through list of projects to populate metadata filter options
    */
   populateFilterOptions(): void {
-    for (let project of this.projects) {
+    this.allProjects = this.getAllProjects();
+    for (let project of this.allProjects) {
       const standardsAddressed = project.metadata.standardsAddressed;
       if (standardsAddressed && standardsAddressed.ngss) {
         const ngss: NGSSStandards = standardsAddressed.ngss;
@@ -70,6 +77,10 @@ export class LibraryFiltersComponent implements OnInit {
       }
     }
     this.removeDuplicatesAndSortAlphabetically();
+  }
+
+  getAllProjects() {
+    return this.libraryProjects.concat(this.communityProjects);
   }
 
   createDCIStandard(standardIn: any) {

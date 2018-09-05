@@ -27,6 +27,7 @@ import { HomePageProjectLibraryComponent } from './home-page-project-library/hom
 import { TeacherProjectLibraryComponent } from './teacher-project-library/teacher-project-library.component';
 import { OfficialLibraryComponent } from './official-library/official-library.component';
 import { CommunityLibraryComponent } from './community-library/community-library.component';
+import { LibraryComponent } from './library/library.component';
 
 const materialModules = [
   MatBadgeModule,
@@ -60,7 +61,8 @@ const materialModules = [
     HomePageProjectLibraryComponent,
     TeacherProjectLibraryComponent,
     OfficialLibraryComponent,
-    CommunityLibraryComponent
+    CommunityLibraryComponent,
+    LibraryComponent
   ],
   entryComponents: [ LibraryProjectDetailsComponent ],
   exports: [
