@@ -1,2 +1,7 @@
-<app-library-project *ngFor="let project of projects"
-                     [project]="project"></app-library-project>
+<div class="library__content content-block"
+     fxFlex.gt-sm="67">
+  <p>Lessons built and shared by WISE community members</p>
+  <app-library-project *ngFor="let project of projects"
+                       [project]="project"></app-library-project>
+</div>
+
