@@ -10,11 +10,15 @@ import { LibraryProject } from "../modules/library/libraryProject";
 export class LibraryService {
 
   private libraryGroupsUrl = 'api/project/library';
+  private communityProjectsUrl = 'api/project/community';
   public libraryGroups: LibraryGroup[];
   private libraryGroupsSource = new Subject<LibraryGroup[]>();
   public libraryGroupsSource$ = this.libraryGroupsSource.asObservable();
   private officialLibraryProjectsSource = new Subject<LibraryProject[]>();
   public officialLibraryProjectsSource$ = this.officialLibraryProjectsSource.asObservable();
+  private communityLibraryProjectsSource = new Subject<LibraryProject[]>();
+  public communityLibraryProjectsSource$ = this.communityLibraryProjectsSource.asObservable();
+
   private projectFilterOptionsSource = new Subject<ProjectFilterOptions>();
   public projectFilterOptionsSource$ = this.projectFilterOptionsSource.asObservable();
 
@@ -37,6 +41,12 @@ export class LibraryService {
         this.populateProjects(group, group.id, projects);
       }
       this.officialLibraryProjectsSource.next(projects);
+    });
+  }
+
+  getCommunityLibraryProjects() {
+    this.http.get<LibraryProject[]>(this.communityProjectsUrl).subscribe((projects) => {
+      this.communityLibraryProjectsSource.next(projects);
     });
   }
 

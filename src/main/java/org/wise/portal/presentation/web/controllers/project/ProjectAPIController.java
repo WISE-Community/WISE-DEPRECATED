@@ -13,6 +13,7 @@ import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -59,6 +60,18 @@ public class ProjectAPIController {
       e.printStackTrace();
     }
     return projectLibraryGroups;
+  }
+
+  @RequestMapping(value = "/community", method = RequestMethod.GET)
+  protected String getCommunityLibrayProjects(ModelMap modelMap) throws JSONException {
+    List<Project> teacherSharedProjects = projectService.getTeacherSharedProjectList();
+    JSONArray teacherSharedProjectsJSON = new JSONArray();
+    for (Project teacherSharedProject : teacherSharedProjects) {
+      JSONObject projectJSON = new JSONObject();
+      projectJSON.put("metadata", teacherSharedProject.getMetadata().toJSONObject());
+      teacherSharedProjectsJSON.put(projectJSON);
+    }
+    return teacherSharedProjectsJSON.toString();
   }
 
   private void populateProjectMetadata(JSONObject projectLibraryGroup) throws JSONException {

@@ -537,6 +537,14 @@ public class ProjectServiceImpl implements ProjectService {
     return getProjectListByTagNames(tagNames);
   }
 
+  @Transactional
+  public List<Project> getTeacherSharedProjectList() {
+    Set<String> tagNames = new TreeSet<String>();
+    tagNames.add("teachershared");
+    tagNames.add("public");
+    return getProjectListByTagNames(tagNames);
+  }
+
   /**
    * @see ProjectService#getProjectListByTagNames(java.util.Set)
    */

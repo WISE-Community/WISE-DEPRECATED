@@ -222,6 +222,8 @@ public interface ProjectService {
    */
   List<Project> getPublicLibraryProjectList();
 
+  List<Project> getTeacherSharedProjectList();
+
   /**
    * Returns a <code>List<Project></code> list of library projects.
    * Library projects show up in "Browse Library" page but not on the homepage.
