@@ -43,7 +43,6 @@ export class OfficialLibraryComponent implements OnInit {
   }
 
   ngOnInit() {
-
   }
 
   /**
@@ -260,21 +259,11 @@ export class OfficialLibraryComponent implements OnInit {
     return false;
   }
 
-  /**
-   * Count and return number of visible projects in a LibraryProject array
-   * @param {LibraryProject[]} set
-   * @param {string} implementationModel
-   * @return {number}
-   */
   countVisibleProjects(set: LibraryProject[], implementationModel: string): number {
     return set.filter((project) => 'project' && project.visible &&
       project.implementationModel === implementationModel).length;
   }
 
-  /**
-   * Selected implementation model has changed
-   * @param {string} value
-   */
   implementationModelUpdated(value: string): void {
     this.implementationModelValue = value;
   }

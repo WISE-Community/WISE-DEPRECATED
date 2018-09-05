@@ -52,6 +52,15 @@ describe('TeacherProjectLibraryComponent', () => {
         observer.complete();
       });
     },
+    getOfficialLibraryProjects() {
+
+    },
+    libraryGroupsSource$: fakeAsyncResponse({
+
+    }),
+    officialLibraryProjectsSource$: fakeAsyncResponse({
+
+    }),
     projectFilterOptionsSource$: fakeAsyncResponse({
       searchValue: "",
       disciplineValue: [],

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { LibraryComponent } from './library.component';
 import { LibraryGroupThumbsComponent } from './library-group-thumbs/library-group-thumbs.component';
 import { LibraryProjectComponent, LibraryProjectDetailsComponent } from './library-project/library-project.component';
 import { LibraryProjectDisciplineIconComponent } from './library-project-discipline-icon/library-project-discipline-icon.component';
@@ -52,7 +51,6 @@ const materialModules = [
     SharedModule
   ],
   declarations: [
-    LibraryComponent,
     LibraryGroupThumbsComponent,
     LibraryProjectComponent,
     LibraryProjectDetailsComponent,
@@ -65,7 +63,6 @@ const materialModules = [
   entryComponents: [ LibraryProjectDetailsComponent ],
   exports: [
     HomePageProjectLibraryComponent,
-    LibraryComponent,
     OfficialLibraryComponent,
     ReactiveFormsModule,
     TeacherProjectLibraryComponent,

@@ -17,6 +17,7 @@ import { SearchBarComponent } from "../../shared/search-bar/search-bar.component
 import { By } from '@angular/platform-browser';
 import { SelectMenuComponent } from "../../shared/select-menu/select-menu.component";
 import { SelectMenuTestHelper } from '../select-menu-test.helper';
+import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
 
 describe('LibraryFiltersComponent', () => {
   let component: LibraryFiltersComponent;
@@ -32,7 +33,9 @@ describe('LibraryFiltersComponent', () => {
     dciArrangementValue: [],
     peValue: []
   }));
+  libraryService.officialLibraryProjectsSource$ = fakeAsyncResponse({
 
+  });
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ BrowserAnimationsModule, SharedModule, MatIconModule, MatBadgeModule ],
