@@ -10,7 +10,7 @@ import { LibraryComponent } from "../library/library.component";
   templateUrl: './official-library.component.html',
   styleUrls: ['./official-library.component.scss']
 })
-export abstract class OfficialLibraryComponent extends LibraryComponent {
+export class OfficialLibraryComponent extends LibraryComponent {
 
   projects: LibraryProject[] = [];
   libraryGroups: LibraryGroup[] = [];

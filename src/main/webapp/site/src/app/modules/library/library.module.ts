@@ -63,8 +63,7 @@ const materialModules = [
     TeacherProjectLibraryComponent,
     OfficialLibraryComponent,
     CommunityLibraryComponent,
-    PersonalLibraryComponent,
-    LibraryComponent
+    PersonalLibraryComponent
   ],
   entryComponents: [ LibraryProjectDetailsComponent ],
   exports: [

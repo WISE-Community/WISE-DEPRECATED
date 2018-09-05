@@ -30,7 +30,6 @@ export class LibraryFiltersComponent implements OnInit {
 
   constructor(private libraryService: LibraryService) {
     libraryService.officialLibraryProjectsSource$.subscribe((libraryProjects) => {
-      console.log(libraryProjects);
       this.libraryProjects = libraryProjects;
       this.populateFilterOptions();
     });

@@ -11,7 +11,7 @@ import { LibraryProject } from "../libraryProject";
   templateUrl: './library.component.html',
   styleUrls: ['./library.component.scss']
 })
-export class LibraryComponent implements OnInit {
+export abstract class LibraryComponent implements OnInit {
 
   projects: LibraryProject[] = [];
   libraryGroups: LibraryGroup[] = [];
