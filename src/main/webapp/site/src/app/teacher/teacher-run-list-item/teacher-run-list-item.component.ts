@@ -32,11 +32,11 @@ export class TeacherRunListItemComponent implements OnInit {
     this.editLink = `/wise/author/authorproject.html?projectId=${ this.run.project.id }`;
     if (this.run != null) {
       this.gradeAndManageLink = `/wise/teacher/run/manage/${ this.run.id }`;
-    }
-    if (this.run.isHighlighted) {
-      setTimeout(() => {
-        this.run.isHighlighted = false;
-      }, 5000)
+      if (this.run.isHighlighted) {
+        setTimeout(() => {
+          this.run.isHighlighted = false;
+        }, 5000)
+      }
     }
   }
 }

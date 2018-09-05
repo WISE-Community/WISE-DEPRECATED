@@ -39,6 +39,7 @@ describe('TeacherProjectListItemComponent', () => {
     run.startTime = 123;
     run.endTime = 150;
     run.numStudents = 30;
+    run.periods = ['1', '2'];
     const project = new Project();
     project.id = 1;
     project.name = "Photosynthesis";

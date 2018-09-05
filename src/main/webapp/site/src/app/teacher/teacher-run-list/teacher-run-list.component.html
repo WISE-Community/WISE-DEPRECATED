@@ -50,19 +50,6 @@
             <span class="secondary-text"> {{ run.startTime | amDateFormat:'Y' }}</span>
           </ng-container>
         </app-timeline-item-label>
-        <!--<app-timeline-item-label fxHide fxShow.gt-sm>-->
-          <!--<div class="mat-body-2">-->
-            <!--{{ run.startTime | amDateFormat:'MMM D' }}-->
-            <!--<ng-container *ngIf="run.endTime && runSpansDays(run)"> - -->
-              <!--<span class="mat-body-2" *ngIf="runSpansMonths(run) || runSpansYears(run)"> {{ run.endTime | amDateFormat:'MMM D' }}</span>-->
-              <!--<span class="mat-body-2" *ngIf="!runSpansMonths(run) && !runSpansYears(run)"> {{ run.endTime | amDateFormat:'D' }}</span>-->
-            <!--</ng-container>-->
-          <!--</div>-->
-          <!--<div class="secondary-text">-->
-            <!--{{ run.startTime | amDateFormat:'Y' }}-->
-            <!--<ng-container *ngIf="run.endTime && runSpansYears(run)"> - {{ run.endTime | amDateFormat:'Y' }}</ng-container>-->
-          <!--</div>-->
-        <!--</app-timeline-item-label>-->
         <app-timeline-item-content>
           <app-teacher-run-list-item [run]="run" *ngIf="i < 10 || showAll"></app-teacher-run-list-item>
         </app-timeline-item-content>

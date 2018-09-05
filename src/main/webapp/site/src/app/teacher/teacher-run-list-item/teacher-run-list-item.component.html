@@ -3,41 +3,58 @@
     <div mat-card-avatar [style.background-image]="thumbStyle"></div>
     <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
       <div fxLayout="column">
-        <mat-card-title>{{ run.project.name }}</mat-card-title>
-        <mat-card-subtitle>
-          <div class="mat-body-2 mat-card-title success" fxShow fxHide.gt-xs>
-            <span *ngIf="run.startTime">Started: {{ run.startTime | amDateFormat:'ll' }}</span>
-            <span *ngIf="run.endTime">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
-          </div>
-          <div *ngIf="run">
-            Code: {{ run.runCode }}
-            &nbsp;&bull;&nbsp;
-            {{run.numStudents}}
+        <mat-card-title>{{ run.project.name }} <span class="mat-caption">(Run #{{ run.id }})</span></mat-card-title>
+        <mat-card-subtitle fxHide fxShow.gt-xs>
+          <div>
+            {{run.periods.length}}
+            <span [ngPlural]="run.periods.length">
+              <ng-template ngPluralCase="=0">periods</ng-template>
+              <ng-template ngPluralCase="=1">period</ng-template>
+              <ng-template ngPluralCase="other">periods</ng-template>
+            </span> &bull; {{run.numStudents}}
             <span [ngPlural]="run.numStudents">
               <ng-template ngPluralCase="=0">students</ng-template>
               <ng-template ngPluralCase="=1">student</ng-template>
               <ng-template ngPluralCase="other">students</ng-template>
             </span>
           </div>
-          <div>
-            <span>
-              Run ID: {{ run.id }}
-              &nbsp;&bull;&nbsp;
-            </span>
-            Project ID: {{ run.project.id }}
-          </div>
+          <div>Access Code: {{ run.runCode }}</div>
         </mat-card-subtitle>
       </div>
-      <span fxFlex="1 1 auto" fxHide fxShow.gt-xs></span>
-      <div fxFlex="0 1 auto" fxHide fxShow.gt-xs fxLayout="column" fxLayoutAlign="start end">
-        <span *ngIf="run.startTime" class="mat-card-title success">Started: {{ run.startTime | amDateFormat:'ll' }}</span>
-        <span *ngIf="run.endTime" class="mat-card-title warn">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
-      </div>
+      <span fxFlex="1 1 auto"></span>
+      <app-run-menu [run]="run"></app-run-menu>
     </div>
+  </mat-card-content>
+  <mat-card-content fxHide fxShow.xs>
+    <mat-card-subtitle>
+      <div>
+        {{run.periods.length}}
+        <span [ngPlural]="run.periods.length">
+          <ng-template ngPluralCase="=0">periods</ng-template>
+          <ng-template ngPluralCase="=1">period</ng-template>
+          <ng-template ngPluralCase="other">periods</ng-template>
+        </span> &bull; {{run.numStudents}}
+        <span [ngPlural]="run.numStudents">
+          <ng-template ngPluralCase="=0">students</ng-template>
+          <ng-template ngPluralCase="=1">student</ng-template>
+          <ng-template ngPluralCase="other">students</ng-template>
+        </span>
+      </div>
+      <div>Access Code: {{ run.runCode }}</div>
+    </mat-card-subtitle>
   </mat-card-content>
   <mat-card-actions fxLayout="row" fxLayoutAlign="end center">
     <span fxFlex="1 1 auto"></span>
-    <a mat-raised-button href="{{ gradeAndManageLink }}" color="primary">Grade & Manage</a>
-    <app-run-menu [run]="run"></app-run-menu>
+    <a *ngIf="run.startTime && !run.endTime"
+       mat-raised-button
+       href="{{ gradeAndManageLink }}"
+       color="accent">
+      Teacher Tools
+    </a>
+    <a *ngIf="run.endTime"
+       mat-button
+       href="{{ gradeAndManageLink }}">
+      Review Work
+    </a>
   </mat-card-actions>
 </mat-card>
