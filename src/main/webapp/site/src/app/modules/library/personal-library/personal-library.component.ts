@@ -28,6 +28,7 @@ export class PersonalLibraryComponent extends LibraryComponent {
 
     libraryService.newProjectSource$.subscribe(project => {
       this.projects.unshift(project);
+      this.emitNumberOfProjectsVisible(this.projects.length);
       this.libraryService.setTabIndex(2);
     });
   }
