@@ -3,6 +3,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { LibraryProject } from "../libraryProject";
 import { NGSSStandards } from "../ngssStandards";
+import { LibraryService } from "../../../services/library.service";
+import { CreateRunDialogComponent } from "../../../teacher/create-run-dialog/create-run-dialog.component";
 
 @Component({
   selector: 'app-library-project',
@@ -81,8 +83,10 @@ export class LibraryProjectComponent implements OnInit {
 
 export class LibraryProjectDetailsComponent implements OnInit {
 
-  constructor(public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(public dialog: MatDialog,
+              public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              private libraryService: LibraryService) {
   }
 
   ngOnInit() {
@@ -90,5 +94,17 @@ export class LibraryProjectDetailsComponent implements OnInit {
 
   onClose(): void {
     this.dialogRef.close();
+  }
+
+  copyProject() {
+    this.libraryService.copyProject(this.data.project.id).subscribe((newProjectId) => {
+      console.log(newProjectId);
+    });
+  }
+
+  runProject() {
+    this.dialog.open(CreateRunDialogComponent, {
+      data: this.data
+    });
   }
 }

@@ -23,6 +23,8 @@ export class TeacherService {
   public newProjectSource$ = this.newProjectSource.asObservable();
   private newRunSource = new Subject<Run>();
   public newRunSource$ = this.newRunSource.asObservable();
+  private tabIndexSource = new Subject<number>();
+  public tabIndexSource$ = this.tabIndexSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -82,10 +84,6 @@ export class TeacherService {
     return this.http.get<string[]>(this.usernamesUrl, { headers: headers })
   }
 
-  addNewProject(project: Project) {
-    this.newProjectSource.next(project);
-  }
-
   addSharedOwner(runId: number, teacherUsername: string) {
     const url = this.runPermissionUrl + "/" + runId + "/" + teacherUsername;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
@@ -124,5 +122,9 @@ export class TeacherService {
 
   addNewRun(run: Run) {
     this.newRunSource.next(run);
+  }
+
+  setTabIndex(index) {
+    this.tabIndexSource.next(index);
   }
 }

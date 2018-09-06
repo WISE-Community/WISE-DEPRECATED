@@ -41,6 +41,12 @@
 <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end none">
   <button mat-button (click)="onClose()">Close</button>
   <!-- TODO: get preview url using config -->
+  <button mat-raised-button color="primary" (click)="copyProject(data.project.id)">
+    <mat-icon>content_copy</mat-icon> Copy
+  </button>
+  <a mat-raised-button color="primary" (click)="runProject(data.project.id)">
+    <mat-icon>directions_run</mat-icon> Run with Class
+  </a>
   <a mat-raised-button color="primary" href="/wise/previewproject.html?projectId={{ data.project.id }}" target="_blank">
     <mat-icon>visibility</mat-icon> Preview
   </a>

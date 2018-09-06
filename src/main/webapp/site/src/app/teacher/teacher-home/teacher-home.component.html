@@ -8,7 +8,7 @@
 </header>
 
 <section>
-  <mat-tab-group>
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex">
     <mat-tab label="My Runs">
       <app-teacher-run-list></app-teacher-run-list>
     </mat-tab>

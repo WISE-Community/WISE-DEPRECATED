@@ -27,9 +27,9 @@
   <h3>2. Choose Students Per Team</h3>
   <p>How many students per computer during the lesson?</p>
   <mat-radio-group [(ngModel)]="studentsPerTeam">
-    <mat-radio-button value="1">Only 1 student</mat-radio-button>
+    <mat-radio-button [value]="1">Only 1 student</mat-radio-button>
     <br/>
-    <mat-radio-button value="3">1-3 students</mat-radio-button>
+    <mat-radio-button [value]="3">1-3 students</mat-radio-button>
   </mat-radio-group>
 </div>
 <br/>
