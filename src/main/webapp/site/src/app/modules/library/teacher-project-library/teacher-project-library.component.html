@@ -3,7 +3,7 @@
     <app-library-filters (update)="filterUpdated($event)"></app-library-filters>
     <div class="library__content content-block"
          fxFlex.gt-sm="67">
-      <mat-tab-group>
+      <mat-tab-group [(selectedIndex)]="selectedTabIndex">
         <mat-tab label="WISE Tested ({{numberOfOfficialProjectsVisible}})">
           <app-official-library (update)="updateNumberOfOfficialProjectsVisible($event)"></app-official-library>
         </mat-tab>

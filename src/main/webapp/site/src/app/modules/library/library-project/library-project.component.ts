@@ -7,6 +7,7 @@ import { LibraryService } from "../../../services/library.service";
 import { CreateRunDialogComponent } from "../../../teacher/create-run-dialog/create-run-dialog.component";
 import { UserService } from "../../../services/user.service";
 import { User } from "../../../domain/user";
+import { Project } from "../../../teacher/project";
 
 @Component({
   selector: 'app-library-project',
@@ -103,8 +104,17 @@ export class LibraryProjectDetailsComponent implements OnInit {
   }
 
   copyProject() {
-    this.libraryService.copyProject(this.data.project.id).subscribe((newProjectId) => {
-      console.log(newProjectId);
+    this.libraryService.copyProject(this.data.project.id).subscribe((newProject: Project) => {
+      const newLibraryProject: LibraryProject = new LibraryProject();
+      newLibraryProject.id = newProject.id;
+      newLibraryProject.name = newProject.name;
+      newLibraryProject.metadata = newProject.metadata;
+      newLibraryProject.visible = true;
+      this.libraryService.addPersonalLibraryProject(newLibraryProject);
+      this.dialogRef.afterClosed().subscribe(() => {
+        scrollTo(0, 0);
+      });
+      this.dialog.closeAll();
     });
   }
 

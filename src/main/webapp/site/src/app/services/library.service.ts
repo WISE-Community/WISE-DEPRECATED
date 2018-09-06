@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable ,  of, Subject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { LibraryGroup } from "../modules/library/libraryGroup";
 import { ProjectFilterOptions } from "../domain/projectFilterOptions";
 import { LibraryProject } from "../modules/library/libraryProject";
+import { Project } from "../teacher/project";
 
 @Injectable()
 export class LibraryService {
@@ -12,6 +13,7 @@ export class LibraryService {
   private libraryGroupsUrl = 'api/project/library';
   private communityProjectsUrl = 'api/project/community';
   private personalProjectsUrl = 'api/project/personal';
+  private copyProjectUrl = 'api/project/copy';
   public libraryGroups: LibraryGroup[];
   private libraryGroupsSource = new Subject<LibraryGroup[]>();
   public libraryGroupsSource$ = this.libraryGroupsSource.asObservable();
@@ -25,6 +27,12 @@ export class LibraryService {
 
   private projectFilterOptionsSource = new Subject<ProjectFilterOptions>();
   public projectFilterOptionsSource$ = this.projectFilterOptionsSource.asObservable();
+
+  private newProjectSource = new Subject<LibraryProject>();
+  public newProjectSource$ = this.newProjectSource.asObservable();
+
+  private tabIndexSource = new Subject<number>();
+  public tabIndexSource$ = this.tabIndexSource.asObservable();
 
   implementationModelValue: string = '';
   implementationModelOptions: LibraryGroup[] = [];
@@ -78,6 +86,13 @@ export class LibraryService {
     }
   }
 
+  copyProject(projectId) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('projectId', projectId + "");
+    return this.http.post(this.copyProjectUrl, body, { headers: headers });
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.
@@ -104,5 +119,13 @@ export class LibraryService {
 
   filterOptions(projectFilterOptions: ProjectFilterOptions) {
     this.projectFilterOptionsSource.next(projectFilterOptions);
+  }
+
+  setTabIndex(index: number) {
+    this.tabIndexSource.next(index);
+  }
+
+  addPersonalLibraryProject(project: LibraryProject) {
+    this.newProjectSource.next(project);
   }
 }

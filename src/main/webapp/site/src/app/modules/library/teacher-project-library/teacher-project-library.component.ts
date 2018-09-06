@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LibraryProject } from "../libraryProject";
+import { LibraryService } from "../../../services/library.service";
 
 @Component({
   selector: 'app-teacher-project-library',
@@ -9,11 +10,16 @@ import { LibraryProject } from "../libraryProject";
 export class TeacherProjectLibraryComponent implements OnInit {
 
   projects: LibraryProject[] = [];
+  selectedTabIndex: number = 0;
   numberOfOfficialProjectsVisible;
   numberOfCommunityProjectsVisible;
   numberOfPersonalProjectsVisible;
 
-  constructor() { }
+  constructor(private libraryService: LibraryService) {
+    libraryService.tabIndexSource$.subscribe((tabIndex) => {
+      this.selectedTabIndex = tabIndex;
+    })
+  }
 
   ngOnInit() {
   }

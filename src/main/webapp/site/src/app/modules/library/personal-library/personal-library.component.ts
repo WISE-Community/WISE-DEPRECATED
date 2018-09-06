@@ -25,6 +25,11 @@ export class PersonalLibraryComponent extends LibraryComponent {
     libraryService.projectFilterOptionsSource$.subscribe((projectFilterOptions) => {
       this.filterUpdated(projectFilterOptions);
     });
+
+    libraryService.newProjectSource$.subscribe(project => {
+      this.projects.unshift(project);
+      this.libraryService.setTabIndex(2);
+    });
   }
 
   ngOnInit() {

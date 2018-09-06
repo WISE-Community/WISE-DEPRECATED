@@ -747,7 +747,7 @@ public class WISE5AuthorProjectController {
    * @return boolean true iff the given <code>User</code> user has sufficient permissions
    * to create a project
    */
-  private boolean hasAuthorPermissions(User user) {
+  public static boolean hasAuthorPermissions(User user) {
     return user.getUserDetails().hasGrantedAuthority(UserDetailsService.AUTHOR_ROLE) ||
         user.getUserDetails().hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
   }

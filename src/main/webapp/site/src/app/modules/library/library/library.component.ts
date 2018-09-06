@@ -30,7 +30,7 @@ export abstract class LibraryComponent implements OnInit {
   @Output('update')
   update: EventEmitter<number> = new EventEmitter<number>();
 
-  constructor(private libraryService: LibraryService) {
+  constructor(protected libraryService: LibraryService) {
   }
 
   ngOnInit() {

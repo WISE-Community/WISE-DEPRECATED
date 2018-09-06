@@ -5,18 +5,30 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
+import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
+import org.wise.portal.domain.project.impl.ProjectParameters;
+import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.controllers.author.project.WISE5AuthorProjectController;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Controller for Project REST API
@@ -82,13 +94,17 @@ public class ProjectAPIController {
   private JSONArray getProjectsJSON(List<Project> projectList) throws JSONException {
     JSONArray projectsJSON = new JSONArray();
     for (Project teacherSharedProject : projectList) {
-      JSONObject projectJSON = new JSONObject();
-      projectJSON.put("id", teacherSharedProject.getId());
-      projectJSON.put("name", teacherSharedProject.getName());
-      projectJSON.put("metadata", teacherSharedProject.getMetadata().toJSONObject());
-      projectsJSON.put(projectJSON);
+      projectsJSON.put(getProjectJSON(teacherSharedProject));
     }
     return projectsJSON;
+  }
+
+  private JSONObject getProjectJSON(Project project) throws JSONException {
+    JSONObject projectJSON = new JSONObject();
+    projectJSON.put("id", project.getId());
+    projectJSON.put("name", project.getName());
+    projectJSON.put("metadata", project.getMetadata().toJSONObject());
+    return projectJSON;
   }
 
   private void populateProjectMetadata(JSONObject projectLibraryGroup) throws JSONException {
@@ -120,5 +136,54 @@ public class ProjectAPIController {
         e.printStackTrace();
       }
     }
+  }
+
+  /**
+   * Handle user's request to register a new WISE5 project.
+   * Registers the new project in DB and returns the new project ID
+   * If the parentProjectId is specified, the user is requesting to copy that project
+   */
+  @RequestMapping(value = "/copy", method = RequestMethod.POST)
+  protected String copyProject(HttpServletRequest request,
+                             @RequestParam("projectId") String projectId) throws
+      ObjectNotFoundException, IOException, JSONException {
+    User user = ControllerUtil.getSignedInUser();
+    if (!WISE5AuthorProjectController.hasAuthorPermissions(user)) {
+      return "";
+    }
+    Project parentProject = projectService.getById(Long.parseLong(projectId));
+    Set<String> tagNames = new TreeSet<String>();
+    tagNames.add("library");
+    if (parentProject != null && (this.projectService.canAuthorProject(parentProject, user) || parentProject.hasTags(tagNames))) {
+      String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
+      String parentProjectJSONAbsolutePath = curriculumBaseDir + parentProject.getModulePath();
+      File parentProjectJSONFile = new File(parentProjectJSONAbsolutePath);
+      File parentProjectDir = parentProjectJSONFile.getParentFile();
+
+      String newProjectDirectoryPath = WISE5AuthorProjectController.copyProjectDirectory(parentProjectDir);
+      String modulePath = "/" + newProjectDirectoryPath + "/project.json";
+
+      ProjectParameters pParams = new ProjectParameters();
+      pParams.setModulePath(modulePath);
+      pParams.setOwner(user);
+      pParams.setProjectname(parentProject.getName());
+      pParams.setProjectType(ProjectType.LD);
+      pParams.setWiseVersion(new Integer(5));
+      pParams.setParentProjectId(Long.valueOf(projectId));
+
+      ProjectMetadata parentProjectMetadata = parentProject.getMetadata(); // get the parent project's metadata
+      if (parentProjectMetadata != null) {
+        ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
+        pParams.setMetadata(newProjectMetadata);
+      } else {
+        ProjectMetadata metadata = new ProjectMetadataImpl();
+        metadata.setTitle(parentProject.getName());
+        pParams.setMetadata(metadata);
+      }
+
+      Project project = projectService.createProject(pParams);
+      return getProjectJSON(project).toString();
+    }
+    return "";
   }
 }

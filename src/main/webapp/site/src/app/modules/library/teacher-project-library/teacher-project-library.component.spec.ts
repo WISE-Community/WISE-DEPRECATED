@@ -63,24 +63,18 @@ describe('TeacherProjectLibraryComponent', () => {
     getPersonalLibraryProjects() {
 
     },
-    libraryGroupsSource$: fakeAsyncResponse({
-
-    }),
-    officialLibraryProjectsSource$: fakeAsyncResponse({
-
-    }),
-    communityLibraryProjectsSource$: fakeAsyncResponse({
-
-    }),
-    personalLibraryProjectsSource$: fakeAsyncResponse({
-
-    }),
+    libraryGroupsSource$: fakeAsyncResponse({}),
+    officialLibraryProjectsSource$: fakeAsyncResponse({}),
+    communityLibraryProjectsSource$: fakeAsyncResponse({}),
+    personalLibraryProjectsSource$: fakeAsyncResponse({}),
     projectFilterOptionsSource$: fakeAsyncResponse({
       searchValue: "",
       disciplineValue: [],
       dciArrangementValue: [],
       peValue: []
-    })
+    }),
+    tabIndexSource$: fakeAsyncResponse({}),
+    newProjectSource$: fakeAsyncResponse({})
   };
 
   beforeEach(async(() => {

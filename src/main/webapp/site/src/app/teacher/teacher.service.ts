@@ -124,7 +124,7 @@ export class TeacherService {
     this.newRunSource.next(run);
   }
 
-  setTabIndex(index) {
+  setTabIndex(index: number) {
     this.tabIndexSource.next(index);
   }
 }
