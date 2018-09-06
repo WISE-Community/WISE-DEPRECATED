@@ -6,6 +6,18 @@
   &:hover, &:focus {
     text-decoration: none;
   }
+
+  &:not(.mat-icon-button) {
+    border-radius: $card-border-radius;
+  }
+}
+
+.mat-raised-button {
+  &:not(.mat-icon-button) {
+    &:not([class*=mat-elevation-z]) {
+      @include mat-elevation(3);
+    }
+  }
 }
 
 .button--card {
