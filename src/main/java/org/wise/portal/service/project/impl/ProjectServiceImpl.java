@@ -536,6 +536,14 @@ public class ProjectServiceImpl implements ProjectService {
     return getProjectListByTagNames(tagNames);
   }
 
+  @Transactional
+  public List<Project> getTeacherSharedProjectList() {
+    Set<String> tagNames = new TreeSet<String>();
+    tagNames.add("teachershared");
+    tagNames.add("public");
+    return getProjectListByTagNames(tagNames);
+  }
+
   /**
    * @see ProjectService#getProjectListByTagNames(java.util.Set)
    */
@@ -654,5 +662,9 @@ public class ProjectServiceImpl implements ProjectService {
     if (project.getSharedowners().contains(user)) {
       this.aclService.removePermission(project, new ProjectPermission(permissionId), user);
     }
+  }
+
+  public List<Project> getProjectsWithoutRuns(User user) {
+    return projectDao.getProjectsWithoutRuns(user);
   }
 }

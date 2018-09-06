@@ -1,4 +1,4 @@
-<mat-card class="library-project button--card mat-elevation-z2" (click)="showDetails()" (keyup.enter)="showDetails()"
+<mat-card *ngIf="project.visible" class="library-project button--card mat-elevation-z2" (click)="showDetails()" (keyup.enter)="showDetails()"
   role="button" tabindex="0" aria-label="Show project details">
   <div class="library-project__cover" [style.background-image]="project.thumbStyle"></div>
   <div class="library-project__discipline">

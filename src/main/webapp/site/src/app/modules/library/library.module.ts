@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { LibraryComponent } from './library.component';
 import { LibraryGroupThumbsComponent } from './library-group-thumbs/library-group-thumbs.component';
 import { LibraryProjectComponent, LibraryProjectDetailsComponent } from './library-project/library-project.component';
 import { LibraryProjectDisciplineIconComponent } from './library-project-discipline-icon/library-project-discipline-icon.component';
@@ -21,7 +20,15 @@ import {
   MatIconModule,
   MatOptionModule,
   MatSelectModule,
+  MatTabsModule,
   MatTooltipModule} from '@angular/material';
+import { LibraryFiltersComponent } from './library-filters/library-filters.component';
+import { HomePageProjectLibraryComponent } from './home-page-project-library/home-page-project-library.component';
+import { TeacherProjectLibraryComponent } from './teacher-project-library/teacher-project-library.component';
+import { OfficialLibraryComponent } from './official-library/official-library.component';
+import { CommunityLibraryComponent } from './community-library/community-library.component';
+import { LibraryComponent } from './library/library.component';
+import { PersonalLibraryComponent } from './personal-library/personal-library.component';
 
 const materialModules = [
   MatBadgeModule,
@@ -33,6 +40,7 @@ const materialModules = [
   MatIconModule,
   MatOptionModule,
   MatSelectModule,
+  MatTabsModule,
   MatTooltipModule
 ];
 
@@ -46,16 +54,22 @@ const materialModules = [
     SharedModule
   ],
   declarations: [
-    LibraryComponent,
     LibraryGroupThumbsComponent,
     LibraryProjectComponent,
     LibraryProjectDetailsComponent,
-    LibraryProjectDisciplineIconComponent
+    LibraryProjectDisciplineIconComponent,
+    LibraryFiltersComponent,
+    HomePageProjectLibraryComponent,
+    TeacherProjectLibraryComponent,
+    OfficialLibraryComponent,
+    CommunityLibraryComponent,
+    PersonalLibraryComponent
   ],
   entryComponents: [ LibraryProjectDetailsComponent ],
   exports: [
-    LibraryComponent,
+    HomePageProjectLibraryComponent,
     ReactiveFormsModule,
+    TeacherProjectLibraryComponent,
     materialModules
   ],
   providers: [

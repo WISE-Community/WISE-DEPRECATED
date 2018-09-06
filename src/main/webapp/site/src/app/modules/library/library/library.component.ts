@@ -1,23 +1,23 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { LibraryService } from "../../services/library.service";
-import { LibraryGroup } from "./libraryGroup";
-import { LibraryProject } from "./libraryProject";
-import { NGSSStandards } from "./ngssStandards";
-import { Standard } from "./standard";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { LibraryGroup } from "../libraryGroup";
+import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
+import { NGSSStandards } from "../ngssStandards";
+import { LibraryService } from "../../../services/library.service";
+import { Standard } from "../standard";
+import { LibraryProject } from "../libraryProject";
 
 @Component({
   selector: 'app-library',
   templateUrl: './library.component.html',
-  styleUrls: ['./library.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./library.component.scss']
 })
+export abstract class LibraryComponent implements OnInit {
 
-export class LibraryComponent implements OnInit {
+  projects: LibraryProject[] = [];
   libraryGroups: LibraryGroup[] = [];
   expandedGroups: object = {};
   implementationModelValue: string = '';
   implementationModelOptions: LibraryGroup[] = [];
-  projects: LibraryProject[] = [];
   searchValue: string = '';
   dciArrangementOptions: Standard[] = [];
   dciArrangementValue = [];
@@ -27,29 +27,13 @@ export class LibraryComponent implements OnInit {
   peValue = [];
   showFilters: boolean = false;
 
-  constructor(private libraryService: LibraryService) { }
+  @Output('update')
+  update: EventEmitter<number> = new EventEmitter<number>();
 
-  ngOnInit() {
-    this.getLibraryGroups();
+  constructor(protected libraryService: LibraryService) {
   }
 
-  /**
-   * Get library project groups from LibraryService and populate list of
-   * projects and filter options
-   */
-  getLibraryGroups(): void {
-    this.libraryService.getLibraryGroups()
-      .subscribe(libraryGroups => {
-        this.libraryGroups = libraryGroups;
-        for (let group of this.libraryGroups) {
-          if (!this.implementationModelValue) {
-            this.implementationModelValue = group.id;
-          }
-          this.implementationModelOptions.push(group);
-          this.populateProjects(group, group.id);
-        }
-        this.populateFilterOptions();
-      });
+  ngOnInit() {
   }
 
   /**
@@ -57,15 +41,15 @@ export class LibraryComponent implements OnInit {
    * @param item
    * @param {string} implementationModel
    */
-  populateProjects(item: any, implementationModel: string): void {
+  populateProjects(item: any, implementationModel: string, projects: LibraryProject[]): void {
     if (item.type === 'project') {
       item.visible = true;
       item.implementationModel = implementationModel;
-      this.projects.push(item);
+      projects.push(item);
     } else if (item.type === 'group') {
       let children = item.children;
       for (let child of children) {
-        this.populateProjects(child, implementationModel);
+        this.populateProjects(child, implementationModel, projects);
       }
     }
   }
@@ -130,51 +114,36 @@ export class LibraryComponent implements OnInit {
   }
 
   /**
-   * Given new search string, filter for visible projects
-   * @param {string} value
-   */
-  searchUpdated(value: string): void {
-    this.searchValue = value.toLocaleLowerCase();
-    this.filterUpdated();
-  }
-
-  /**
    * Filter options or search string have changed, so update visible projects
-   * @param {string[]} value
-   * @param {string} context
+   * @param {ProjectFilterOptions} filterOptions
    */
-  filterUpdated(value: string[] = [], context: string = ''): void {
-    switch(context) {
-      case 'discipline':
-        this.disciplineValue = value;
-        break;
-      case 'dci':
-        this.dciArrangementValue = value;
-        break;
-      case 'pe':
-        this.peValue = value;
-        break;
-    }
-
+  filterUpdated(filterOptions: ProjectFilterOptions): void {
+    let numProjectsVisible = 0;
+    this.searchValue = filterOptions.searchValue;
+    this.disciplineValue = filterOptions.disciplineValue;
+    this.dciArrangementValue = filterOptions.dciArrangementValue;
+    this.peValue = filterOptions.peValue;
     for (let project of this.projects) {
       let searchMatch = false;
       let filterMatch = false;
-
-      // if there is a search string, check for search match
       if (this.searchValue) {
         searchMatch = this.isSearchMatch(project, this.searchValue);
       }
       if (!searchMatch && this.hasFilters()) {
-        // there is no search string or project doesn't match the search text, so check for filter matches
         filterMatch = this.isFilterMatch(project);
       } else if (!this.searchValue) {
-        // there is no search string and no filters selected, so project should be visible
         filterMatch = true;
       }
-
-      // set project to visible if there is either a search or filter match
       project.visible = searchMatch || filterMatch;
+      if (project.visible) {
+        numProjectsVisible += 1;
+      }
     }
+    this.emitNumberOfProjectsVisible(numProjectsVisible);
+  }
+
+  emitNumberOfProjectsVisible(numProjectsVisible) {
+    this.update.emit(numProjectsVisible);
   }
 
   /**
@@ -229,7 +198,7 @@ export class LibraryComponent implements OnInit {
     return Object.keys(metadata).some(prop => {
       // only check for match in specific metadata fields
       if (prop != 'title' && prop != 'summary' && prop != 'keywords' &&
-          prop != 'features' &&  prop != 'standardsAddressed') {
+        prop != 'features' &&  prop != 'standardsAddressed') {
         return false;
       } else {
         let value = metadata[prop];
@@ -290,30 +259,11 @@ export class LibraryComponent implements OnInit {
     return false;
   }
 
-  /**
-   * Reset the filters and search string
-   */
-  reset(): void {
-    this.dciArrangementValue = this.disciplineValue = this.peValue = [];
-    this.searchValue = '';
-    this.filterUpdated();
-  }
-
-  /**
-   * Count and return number of visible projects in a LibraryProject array
-   * @param {LibraryProject[]} set
-   * @param {string} implementationModel
-   * @return {number}
-   */
   countVisibleProjects(set: LibraryProject[], implementationModel: string): number {
     return set.filter((project) => 'project' && project.visible &&
-        project.implementationModel === implementationModel).length;
+      project.implementationModel === implementationModel).length;
   }
 
-  /**
-   * Selected implementation model has changed
-   * @param {string} value
-   */
   implementationModelUpdated(value: string): void {
     this.implementationModelValue = value;
   }

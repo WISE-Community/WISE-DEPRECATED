@@ -227,6 +227,8 @@ public interface ProjectService {
    */
   List<Project> getPublicLibraryProjectList();
 
+  List<Project> getTeacherSharedProjectList();
+
   /**
    * Returns a <code>List<Project></code> list of library projects.
    * Library projects show up in "Browse Library" page but not on the homepage.
@@ -341,4 +343,6 @@ public interface ProjectService {
   void addSharedTeacherPermission(Long projectId, Long userId, Integer permissionId) throws ObjectNotFoundException;
 
   void removeSharedTeacherPermission(Long projectId, Long userId, Integer permissionId) throws ObjectNotFoundException;
+
+  List<Project> getProjectsWithoutRuns(User user);
 }
