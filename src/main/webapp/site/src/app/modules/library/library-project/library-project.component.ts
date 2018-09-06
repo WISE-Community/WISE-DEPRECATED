@@ -5,6 +5,8 @@ import { LibraryProject } from "../libraryProject";
 import { NGSSStandards } from "../ngssStandards";
 import { LibraryService } from "../../../services/library.service";
 import { CreateRunDialogComponent } from "../../../teacher/create-run-dialog/create-run-dialog.component";
+import { UserService } from "../../../services/user.service";
+import { User } from "../../../domain/user";
 
 @Component({
   selector: 'app-library-project',
@@ -83,10 +85,14 @@ export class LibraryProjectComponent implements OnInit {
 
 export class LibraryProjectDetailsComponent implements OnInit {
 
+  isTeacher: boolean = false;
+
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
-              private libraryService: LibraryService) {
+              private libraryService: LibraryService,
+              private userService: UserService) {
+    this.isTeacher = userService.isTeacher();
   }
 
   ngOnInit() {
