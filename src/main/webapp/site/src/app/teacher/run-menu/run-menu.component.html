@@ -1,15 +1,19 @@
 <button mat-icon-button [matMenuTriggerFor]="runMenu">
   <mat-icon aria-label="Run Menu">more_vert</mat-icon>
 </button>
-<mat-menu #runMenu="matMenu" yPosition="below" xPosition="after">
+<mat-menu #runMenu="matMenu" xPosition="before">
   <div class="header-account-menu">
     <a mat-menu-item href="{{ previewLink }}" target="_blank">
       <mat-icon>tv</mat-icon>
       <span>Preview</span>
     </a>
     <a mat-menu-item href="{{ editLink }}">
+      <mat-icon>info</mat-icon>
+      <span>Unit Info</span>
+    </a>
+    <a mat-menu-item href="{{ editLink }}">
       <mat-icon>edit</mat-icon>
-      <span>Edit Project Content</span>
+      <span>Edit Content</span>
     </a>
     <a mat-menu-item (click)="shareRun()">
       <mat-icon>share</mat-icon>
@@ -17,15 +21,7 @@
     </a>
     <a mat-menu-item>
       <mat-icon>refresh</mat-icon>
-      <span>Run Again</span>
-    </a>
-    <a class="warn" mat-menu-item>
-      <mat-icon color="warn">stop</mat-icon>
-      <span>End Run</span>
-    </a>
-    <a class="success" *ngIf="run.endTime" mat-menu-item>
-      <mat-icon color="success">play_arrow</mat-icon>
-      <span>Restart Run</span>
+      <span>Use Again</span>
     </a>
   </div>
 </mat-menu>

@@ -15,6 +15,7 @@ export class TeacherRunListItemComponent implements OnInit {
 
   editLink: string = '';
   gradeAndManageLink: string = '';
+  manageStudentsLink: string = '';
   thumbStyle: SafeStyle;
 
   constructor(private sanitizer: DomSanitizer) {
@@ -32,6 +33,7 @@ export class TeacherRunListItemComponent implements OnInit {
     this.editLink = `/wise/author/authorproject.html?projectId=${ this.run.project.id }`;
     if (this.run != null) {
       this.gradeAndManageLink = `/wise/teacher/run/manage/${ this.run.id }`;
+      this.manageStudentsLink = `/wise/teacher/run/manage/${ this.run.id }/#/manageStudents`;
       if (this.run.isHighlighted) {
         setTimeout(() => {
           this.run.isHighlighted = false;
