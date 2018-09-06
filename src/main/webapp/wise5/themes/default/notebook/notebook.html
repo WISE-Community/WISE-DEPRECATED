@@ -10,16 +10,6 @@
                        workgroup-id="notebookController.workgroupId"
                        flex="100" flex-sm="50" flex-md="33" flex-gt-md="33"></notebook-item>
     </div>
-
-    <!--<div ng-if="notebookController.filter === 'question'" layout="row" layout-wrap layout-align="start start">
-        <notebook-item ng-repeat="(localNotebookItemId, notebookItems) in notebookController.notebook.items"
-                       ng-if="(notebookController.filter === 'question') && notebookItems.last().type == 'question'"
-                       item-id="localNotebookItemId"
-                       is-edit-allowed="true"
-                       on-select="notebookController.editItem($ev, $itemId)"
-                       flex="100" flex-sm="50" flex-md="33" flex-gt-md="33"></notebook-item>
-    </div>-->
-
     <div ng-if="notebookController.filter === 'report'">
         <!-- assume only one report for now -->
         <notebookitemreport report-id="notebookController.notebookConfig.itemTypes.report.notes[0].reportId"
@@ -27,7 +17,6 @@
                             template-url="notebookController.themePath + '/notebook/notebookItemReport.html'"
                             workgroup-id="notebookController.workgroupId"></notebookitemreport>
     </div>
-
     <div ng-if="notebookController.filter === 'trash'" >
         <div layout="row" layout-wrap layout-align="start start">
             <p class="center flex md-heading" ng-if="notebookController.getNotebook().deletedItems.length < 1" translate="noDeletedNotes"></p>

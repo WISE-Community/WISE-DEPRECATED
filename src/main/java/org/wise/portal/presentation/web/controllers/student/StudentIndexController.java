@@ -42,7 +42,6 @@ import org.wise.portal.service.student.StudentService;
 
 /**
  * Controller for Student's index page
- *
  * @author Hiroki Terashima
  */
 @Controller
@@ -57,7 +56,7 @@ public class StudentIndexController {
 
   @RequestMapping(method = RequestMethod.GET)
   protected String handleGET(ModelMap modelMap,
-      @RequestParam(value = "pLT", required = false) String previousLoginTime) throws Exception {
+      @RequestParam(value = "pLT", required = false) String previousLoginTime) {
     User user = ControllerUtil.getSignedInUser();
     List<Run> runlist = runService.getRunList(user);
     List<StudentRunInfo> current_run_list = new ArrayList<StudentRunInfo>();

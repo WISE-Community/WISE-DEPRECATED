@@ -9,8 +9,9 @@ before_install:
 before_script:
 script:
 - mvn test
-- ./wise.sh run &
-- sleep 300
+- touch output.txt
+- ./wise.sh run > output.txt &
+- while ! grep "initialization completed" output.txt >/dev/null; do sleep 2; echo "polling for WISE server..."; done
 - npm test
 - npm run test-angular-portal
 - npm run test-e2e

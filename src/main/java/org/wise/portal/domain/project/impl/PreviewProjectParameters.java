@@ -25,6 +25,8 @@ package org.wise.portal.domain.project.impl;
 
 import javax.servlet.http.HttpServletRequest;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
 
@@ -32,6 +34,8 @@ import org.wise.portal.domain.user.User;
  * Parameters required to preview a project
  * @author Hiroki Terashima
  */
+@Getter
+@Setter
 public class PreviewProjectParameters {
 
   private HttpServletRequest httpServletRequest;
@@ -49,116 +53,4 @@ public class PreviewProjectParameters {
   private String workgroupId;
 
   private boolean isConstraintsDisabled = false;
-
-  /**
-   * @return the httpServletRequest
-   */
-  public HttpServletRequest getHttpServletRequest() {
-    return httpServletRequest;
-  }
-
-  /**
-   * @param httpServletRequest the httpServletRequest to set
-   */
-  public void setHttpServletRequest(HttpServletRequest httpServletRequest) {
-    this.httpServletRequest = httpServletRequest;
-  }
-
-  /**
-   * @return the user
-   */
-  public User getUser() {
-    return user;
-  }
-
-  /**
-   * @param user the user to set
-   */
-  public void setUser(User user) {
-    this.user = user;
-  }
-
-  /**
-   * @return the project
-   */
-  public Project getProject() {
-    return project;
-  }
-
-  /**
-   * @param project the project to set
-   */
-  public void setProject(Project project) {
-    this.project = project;
-  }
-
-  /**
-   * @return the versionId
-   */
-  public String getVersionId() {
-    return versionId;
-  }
-
-  /**
-   * @param versionId the versionId to set
-   */
-  public void setVersionId(String versionId) {
-    this.versionId = versionId;
-  }
-
-  /**
-   * @return the lang
-   */
-  public String getLang() {
-    return lang;
-  }
-
-  /**
-   * @param lang the lang to set
-   */
-  public void setLang(String lang) {
-    this.lang = lang;
-  }
-
-  /**
-   * @return the step
-   */
-  public String getStep() {
-    return step;
-  }
-
-  /**
-   * @param step the step to set
-   */
-  public void setStep(String step) {
-    this.step = step;
-  }
-
-  /**
-   * @return the workgroup id
-   */
-  public String getWorkgroupId() {
-    return workgroupId;
-  }
-
-  /**
-   * @param workgroupId the workgroup id to set
-   */
-  public void setWorkgroupId(String workgroupId) {
-    this.workgroupId = workgroupId;
-  }
-
-  /**
-   * @return the isConstraintsDisabled
-   */
-  public boolean isConstraintsDisabled() {
-    return isConstraintsDisabled;
-  }
-
-  /**
-   * @param isConstraintsDisabled the isConstraintsDisabled to set
-   */
-  public void setConstraintsDisabled(boolean isConstraintsDisabled) {
-    this.isConstraintsDisabled = isConstraintsDisabled;
-  }
 }

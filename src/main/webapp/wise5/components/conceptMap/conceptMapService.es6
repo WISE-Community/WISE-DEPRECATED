@@ -1,45 +1,32 @@
-import NodeService from '../../services/nodeService';
+import ComponentService from '../componentService';
 
-class ConceptMapService extends NodeService {
-  constructor($filter,
+class ConceptMapService extends ComponentService {
+  constructor(
+      $anchorScroll,
+      $filter,
+      $location,
       $q,
       $timeout,
       ConfigService,
       StudentAssetService,
       StudentDataService,
       UtilService) {
-    super();
-    this.$filter = $filter;
+    super($filter, StudentDataService, UtilService);
+    this.$anchorScroll = $anchorScroll;
+    this.$location = $location;
     this.$q = $q;
     this.$timeout = $timeout;
     this.ConfigService = ConfigService;
     this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-    this.$translate = this.$filter('translate');
   }
 
-  /**
-   * Get the component type label
-   * example
-   * "Concept Map"
-   */
   getComponentTypeLabel() {
     return this.$translate('conceptMap.componentTypeLabel');
   }
 
-  /**
-   * Create a ConceptMap component object
-   * @returns a new ConceptMap component object
-   */
   createComponent() {
-    var component = {};
-    component.id = this.UtilService.generateKey();
+    const component = super.createComponent();
     component.type = 'ConceptMap';
-    component.prompt = '';
-    component.showSaveButton = false;
-    component.showSubmitButton = false;
-    component.isStudentAttachmentEnabled = false;
     component.width = 800;
     component.height = 600;
     component.background = null;
@@ -52,65 +39,10 @@ class ConceptMapService extends NodeService {
     component.customRuleEvaluator = '';
     component.showAutoScore = false;
     component.showAutoFeedback = false;
+    component.showNodeLabels = true;
     return component;
   }
 
-  /**
-   * Copies a ConceptMap component object
-   * @returns a copied ConceptMap component object
-   */
-  copyComponent(componentToCopy) {
-    var component = this.createComponent();
-    component.prompt = componentToCopy.prompt;
-    component.showSaveButton = componentToCopy.showSaveButton;
-    component.showSubmitButton = componentToCopy.showSubmitButton;
-    component.starterSentence = componentToCopy.starterSentence;
-    component.isStudentAttachmentEnabled = componentToCopy.isStudentAttachmentEnabled;
-    return component;
-  }
-  /**
-   * Populate a component state with the data from another component state
-   * @param componentStateFromOtherComponent the component state to obtain the data from
-   * @return a new component state that contains the student data from the other
-   * component state
-   */
-  populateComponentState(componentStateFromOtherComponent) {
-    var componentState = null;
-
-    if (componentStateFromOtherComponent != null) {
-
-      // create an empty component state
-      componentState = this.StudentDataService.createComponentState();
-
-      // get the component type of the other component state
-      var otherComponentType = componentStateFromOtherComponent.componentType;
-
-      if (otherComponentType === 'ConceptMap') {
-        // the other component is an ConceptMap component
-
-        // get the student data from the other component state
-        var studentData = componentStateFromOtherComponent.studentData;
-
-        // create a copy of the student data
-        var studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
-
-        // set the student data into the new component state
-        componentState.studentData = studentDataCopy;
-      }
-    }
-
-    return componentState;
-  };
-
-  /**
-   * Check if the component was completed
-   * @param component the component object
-   * @param componentStates the component states for the specific component
-   * @param componentEvents the events for the specific component
-   * @param nodeEvents the events for the parent node of the component
-   * @param node parent node of the component
-   * @returns whether the component was completed
-   */
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     let result = false;
 
@@ -159,10 +91,11 @@ class ConceptMapService extends NodeService {
    * @param y the y coordinate
    * @param width the width of the image
    * @param height the height of the image
+   * @param showLabel whether to show the label
    * @param a ConceptMapNode
    */
-  newConceptMapNode(draw, id, originalId, filePath, label, x, y, width, height) {
-    return new ConceptMapNode(this, draw, id, originalId, filePath, label, x, y, width, height);
+  newConceptMapNode(draw, id, originalId, filePath, label, x, y, width, height, showLabel) {
+    return new ConceptMapNode(this, draw, id, originalId, filePath, label, x, y, width, height, showLabel);
   }
 
   /**
@@ -795,40 +728,12 @@ class ConceptMapService extends NodeService {
   }
 
   /**
-   * Whether this component generates student work
-   * @param component (optional) the component object. if the component object
-   * is not provided, we will use the default value of whether the
-   * component type usually has work.
-   * @return whether this component generates student work
-   */
-  componentHasWork(component) {
-    return true;
-  }
-
-  /**
-   * Whether this component uses a save button
-   * @return whether this component uses a save button
-   */
-  componentUsesSaveButton() {
-    return true;
-  }
-
-  /**
-   * Whether this component uses a submit button
-   * @return whether this component uses a submit button
-   */
-  componentUsesSubmitButton() {
-    return true;
-  }
-
-  /**
    * Populate the concept map data into the component
    * @param draw the SVG draw div
    * @param conceptMapData the concept map data which contains an array
    * of nodes and an array of links
    */
   populateConceptMapData(draw, conceptMapData) {
-
     if (conceptMapData != null) {
 
       // get the JSON nodes
@@ -850,10 +755,12 @@ class ConceptMapService extends NodeService {
           var x = node.x;
           var y = node.y;
           var width = node.width;
-          var height = node.height
+          var height = node.height;
+          var showLabel = true;
 
           // create a ConceptMapNode
-          var conceptMapNode = this.newConceptMapNode(draw, instanceId, originalId, filePath, label, x, y, width, height);
+          var conceptMapNode = this.newConceptMapNode(
+              draw, instanceId, originalId, filePath, label, x, y, width, height, showLabel);
 
           conceptMapNodes.push(conceptMapNode);
         }
@@ -1463,6 +1370,96 @@ class ConceptMapService extends NodeService {
 
     return false;
   }
+
+  /**
+   * The component state has been rendered in a <component></component> element
+   * and now we want to take a snapshot of the work.
+   * @param componentState The component state that has been rendered.
+   * @return A promise that will return an image object.
+   */
+  generateImageFromRenderedComponentState(componentState) {
+    let deferred = this.$q.defer();
+
+    // get the svg element. this will obtain an array.
+    let svgElement = angular.element('#svg_' + componentState.nodeId + '_' + componentState.componentId);
+
+    if (svgElement != null && svgElement.length > 0) {
+      // get the svg element
+      svgElement = svgElement[0];
+
+      // get the svg element as a string
+      let serializer = new XMLSerializer();
+      let svgString = serializer.serializeToString(svgElement);
+
+      // find all the images in the svg and replace them with Base64 images
+      this.getHrefToBase64ImageReplacements(svgString).then((images) => {
+
+        /*
+         * Loop through all the image objects. Each object contains
+         * an image href and a Base64 image.
+         */
+        for (let i = 0; i < images.length; i++) {
+
+          // get an image object
+          let imagePair = images[i];
+
+          // get the image href e.g. /wise/curriculum/25/assets/Sun.png
+          let imageHref = imagePair.imageHref;
+
+          // get the Base64 image
+          let base64Image = imagePair.base64Image;
+
+          // create a regex to match the image href
+          let imageRegEx = new RegExp(imageHref, 'g');
+
+          /*
+           * replace all the instances of the image href with the
+           * Base64 image
+           */
+          svgString = svgString.replace(imageRegEx, base64Image);
+        }
+
+        // create a canvas to draw the image on
+        let myCanvas = document.createElement('canvas');
+        let ctx = myCanvas.getContext('2d');
+
+        // create an svg blob
+        let svg = new Blob([svgString], {type:'image/svg+xml;charset=utf-8'});
+        let domURL = self.URL || self.webkitURL || self;
+        let url = domURL.createObjectURL(svg);
+        let image = new Image();
+
+        // the function that is called after the image is fully loaded
+        image.onload = (event) => {
+
+          // get the image that was loaded
+          let image = event.target;
+
+          // set the dimensions of the canvas
+          myCanvas.width = image.width;
+          myCanvas.height = image.height;
+          ctx.drawImage(image, 0, 0);
+
+          // get the canvas as a Base64 string
+          let base64Image = myCanvas.toDataURL('image/png');
+
+          // get the image object
+          let imageObject = this.UtilService.getImageObjectFromBase64String(base64Image, false);
+
+          // add the image to the student assets
+          this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
+            deferred.resolve(asset);
+          });
+        };
+
+        // set the src of the image so that the image gets loaded
+        image.src = url;
+      });
+    }
+    return deferred.promise;
+  }
+
+  // end of ConceptMapService class
 }
 
 
@@ -1481,8 +1478,9 @@ class ConceptMapNode {
    * @param y the y position of the node
    * @param width the the width of the node
    * @param height the height of the node
+   * @param showLabel whether to show the label
    */
-  constructor(ConceptMapService, draw, id, originalId, filePath, label, x, y, width, height) {
+  constructor(ConceptMapService, draw, id, originalId, filePath, label, x, y, width, height, showLabel) {
 
     // remember the ConceptMapService
     this.ConceptMapService = ConceptMapService;
@@ -1506,6 +1504,7 @@ class ConceptMapNode {
 
     // remember the label
     this.label = label;
+    this.showLabel = showLabel;
 
     // create the svg image object
     this.image = this.draw.image(this.filePath, width, height);
@@ -1531,9 +1530,6 @@ class ConceptMapNode {
     // create the delete button
     this.deleteButtonGroup = this.createDeleteButtonGroup();
 
-    // create the text group
-    this.textGroup = this.createTextGroup();
-
     /*
      * create the border that displays when the node is highighted or
      * moused over
@@ -1553,7 +1549,10 @@ class ConceptMapNode {
     this.group.add(this.image);
     this.group.add(this.connector);
     this.group.add(this.deleteButtonGroup);
-    this.group.add(this.textGroup);
+    if (showLabel) {
+      this.textGroup = this.createTextGroup();
+      this.group.add(this.textGroup);
+    }
 
     // hide the border and delete button
     this.border.hide();
@@ -2579,6 +2578,8 @@ class ConceptMapNode {
 
     return width;
   }
+
+  // end of ConceptMapNode class
 }
 
 /**
@@ -3773,11 +3774,15 @@ class ConceptMapLink {
 
     return width;
   }
+
+  // end of ConceptMapLink class
 }
 
 
 ConceptMapService.$inject = [
+  '$anchorScroll',
   '$filter',
+  '$location',
   '$q',
   '$timeout',
   'ConfigService',

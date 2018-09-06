@@ -10,390 +10,213 @@ require('svg.js');
 
 require('svg.draggable.js');
 
+var _componentController = require('../componentController');
+
+var _componentController2 = _interopRequireDefault(_componentController);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ConceptMapController = function () {
-  function ConceptMapController($anchorScroll, $filter, $injector, $location, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConceptMapService, ConfigService, CRaterService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
-    var _this = this;
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ConceptMapController = function (_ComponentController) {
+  _inherits(ConceptMapController, _ComponentController);
+
+  function ConceptMapController($anchorScroll, $filter, $location, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConceptMapService, ConfigService, CRaterService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, ConceptMapController);
 
-    this.$anchorScroll = $anchorScroll;
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$location = $location;
-    this.$mdDialog = $mdDialog;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.$timeout = $timeout;
-    this.AnnotationService = AnnotationService;
-    this.ConceptMapService = ConceptMapService;
-    this.ConfigService = ConfigService;
-    this.CRaterService = CRaterService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-    this.idToOrder = this.ProjectService.idToOrder;
+    var _this = _possibleConstructorReturn(this, (ConceptMapController.__proto__ || Object.getPrototypeOf(ConceptMapController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
 
-    this.$translate = this.$filter('translate');
-
-    // the node id of the current node
-    this.nodeId = null;
-
-    // the component id
-    this.componentId = null;
-
-    // field that will hold the component content
-    this.componentContent = null;
-
-    // field that will hold the authoring component content
-    this.authoringComponentContent = null;
+    _this.$anchorScroll = $anchorScroll;
+    _this.$location = $location;
+    _this.$q = $q;
+    _this.$timeout = $timeout;
+    _this.ConceptMapService = ConceptMapService;
+    _this.CRaterService = CRaterService;
 
     // holds the text that the student has typed
-    this.studentResponse = '';
+    _this.studentResponse = '';
 
     // holds student attachments like assets
-    this.attachments = [];
-
-    // whether the step should be disabled
-    this.isDisabled = false;
-
-    // whether the student work is dirty and needs saving
-    this.isDirty = false;
-
-    // whether the student work has changed since last submit
-    this.isSubmitDirty = false;
-
-    // message to show next to save/submit buttons
-    this.saveMessage = {
-      text: '',
-      time: ''
-    };
-
-    // whether this component is showing previous work
-    this.isShowPreviousWork = false;
-
-    // whether the student work is for a submit
-    this.isSubmit = false;
-
-    // whether rich text editing is enabled
-    this.isRichTextEnabled = false;
-
-    // whether students can attach files to their work
-    this.isStudentAttachmentEnabled = false;
-
-    // whether the prompt is shown or not
-    this.isPromptVisible = true;
-
-    // whether the save button is shown or not
-    this.isSaveButtonVisible = false;
-
-    // whether the submit button is shown or not
-    this.isSubmitButtonVisible = false;
-
-    // whether the submit button is disabled
-    this.isSubmitButtonDisabled = false;
-
-    // whether the snip table button is shown or not
-    this.isSnipButtonVisible = true;
-
-    // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
+    _this.attachments = [];
 
     // the latest annotations
-    this.latestAnnotations = null;
+    _this.latestAnnotations = null;
 
     // used to hold a message dialog if we need to use one
-    this.messageDialog = null;
+    _this.messageDialog = null;
 
     // default width and height for the svg
-    this.width = 800;
-    this.height = 600;
+    _this.width = 800;
+    _this.height = 600;
 
     // the available nodes the students can choose
-    this.availableNodes = [];
+    _this.availableNodes = [];
 
     // the available links the students can choose
-    this.availableLinks = [];
+    _this.availableLinks = [];
 
     // the node instances the students create
-    this.nodes = [];
+    _this.nodes = [];
 
     // the link instances the students create
-    this.links = [];
+    _this.links = [];
 
     // flag to display the link type chooser
-    this.displayLinkTypeChooser = false;
+    _this.displayLinkTypeChooser = false;
 
     // flag to display the modal overlay for the link type chooser
-    this.displayLinkTypeChooserModalOverlay = false;
+    _this.displayLinkTypeChooserModalOverlay = false;
 
     // the selected link type
-    this.selectedLinkType = null;
+    _this.selectedLinkType = null;
 
     // flag for whether we have initialized the link type modal overlay
-    this.initializedDisplayLinkTypeChooserModalOverlay = false;
+    _this.initializedDisplayLinkTypeChooserModalOverlay = false;
 
     // default values for the modal width and height
-    this.modalWidth = 800;
-    this.modalHeight = 600;
+    _this.modalWidth = 800;
+    _this.modalHeight = 600;
 
     /*
      * used to remember the node the student has started dragging to create
      * so that we know what node to create once they let go off the mouse
      * on the svg element
      */
-    this.selectedNode = null;
+    _this.selectedNode = null;
 
     /*
      * used to remember the offset of the mouse relative to the upper left
      * of the node image the student started dragging to create a new node
      * instance
      */
-    this.tempOffsetX = 0;
-    this.tempOffsetY = 0;
+    _this.tempOffsetX = 0;
+    _this.tempOffsetY = 0;
 
-    var themePath = this.ProjectService.getThemePath();
-
-    // the options for when to update this component from a connected component
-    this.connectedComponentUpdateOnOptions = [{
-      value: 'change',
-      text: 'Change'
-    }, {
-      value: 'submit',
-      text: 'Submit'
-    }];
-
-    // the component types we are allowed to connect to
-    this.allowedConnectedComponentTypes = [{
-      type: 'ConceptMap'
-    }];
-
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
-
-    // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
-
-    // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
-
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    this.originalComponentContent = this.$scope.originalComponentContent;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    this.mode = this.$scope.mode;
-
-    this.workgroupId = this.$scope.workgroupId;
-    this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
-
-    // the options for authoring the should or should not value in rules
-    this.shouldOptions = [{
-      value: false, label: this.$translate('conceptMap.should')
-    }, {
-      value: true, label: this.$translate('conceptMap.shouldNot')
-    }];
+    var themePath = _this.ProjectService.getThemePath();
 
     // the auto feedback string
-    this.autoFeedbackString = '';
+    _this.autoFeedbackString = '';
 
-    // counter to keep track of the number of submits
-    this.submitCounter = 0;
+    _this.setBackgroundImage(_this.componentContent.background, _this.componentContent.stretchBackground);
 
-    if (this.componentContent != null) {
+    // set the id of the svg and other display elements
+    _this.svgId = 'svg_' + _this.$scope.nodeId + '_' + _this.componentId;
+    _this.conceptMapContainerId = 'conceptMapContainer_' + _this.$scope.nodeId + '_' + _this.componentId;
+    _this.selectNodeBarId = 'selectNodeBar_' + _this.$scope.nodeId + '_' + _this.componentId;
+    _this.feedbackContainerId = 'feedbackContainer_' + _this.$scope.nodeId + '_' + _this.componentId;
 
-      // get the component id
-      this.componentId = this.componentContent.id;
-      this.setBackgroundImage(this.componentContent.background, this.componentContent.stretchBackground);
-
-      // set the id of the svg and other display elements
-      this.svgId = 'svg_' + this.nodeId + '_' + this.componentId;
-      this.conceptMapContainerId = 'conceptMapContainer_' + this.nodeId + '_' + this.componentId;
-      this.selectNodeBarId = 'selectNodeBar_' + this.nodeId + '_' + this.componentId;
-      this.feedbackContainerId = 'feedbackContainer_' + this.nodeId + '_' + this.componentId;
-
-      if (this.componentContent.width != null) {
-        this.width = this.componentContent.width;
-      }
-
-      if (this.componentContent.height != null) {
-        this.height = this.componentContent.height;
-      }
-
-      if (this.mode === 'student') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        this.availableNodes = this.componentContent.nodes;
-        this.availableLinks = this.componentContent.links;
-
-        // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-
-        // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-
-        var _componentState = this.$scope.componentState;
-
-        if (_componentState) {
-          // set ids for the svg and other display elements using the componentStateId (so we have unique ids when showing revisions)
-          /*
-           * the student has work for this component so we will use
-           * the node id, component id, and workgroup id, and
-           * componentStateId for the svg id
-           */
-          var idInfo = this.nodeId + '_' + this.componentId + '_' + this.workgroupId + '_' + _componentState.id;
-          if (this.mode === 'gradingRevision') {
-            idInfo = '_gradingRevision_' + idInfo;
-            this.svgId = 'svg_' + idInfo;
-            this.conceptMapContainerId = 'conceptMapContainer_' + idInfo;
-            this.selectNodeBarId = 'selectNodeBar_' + idInfo;
-            this.feedbackContainerId = 'feedbackContainer_' + idInfo;
-          } else {
-            this.svgId = 'svg_' + idInfo;
-            this.conceptMapContainerId = 'conceptMapContainer_' + idInfo;
-            this.selectNodeBarId = 'selectNodeBar_' + idInfo;
-            this.feedbackContainerId = 'feedbackContainer_' + idInfo;
-          }
-        } else {
-          /*
-           * the student does not have any work for this component so
-           * we will use the node id, component id, and workgroup id
-           * for the svg id
-           */
-          var _idInfo = this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
-          this.svgId = 'svg_' + _idInfo;
-          this.conceptMapContainerId = 'conceptMapContainer_' + _idInfo;
-          this.selectNodeBarId = 'selectNodeBar_' + _idInfo;
-          this.feedbackContainerId = 'feedbackContainer_' + _idInfo;
-        }
-      } else if (this.mode === 'onlyShowWork') {
-        this.isPromptVisible = false;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isSnipButtonVisible = false;
-        this.isDisabled = true;
-
-        var componentState = this.$scope.componentState;
-
-        if (componentState == null) {
-          /*
-           * the student does not have any work for this component so
-           * we will use the node id, component id, and workgroup id
-           * for the svg id
-           */
-          this.svgId = 'svgOnlyShowWork_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
-        } else {
-          /*
-           * the student has work for this component so we will use
-           * the node id, component id, and component state id
-           * for the svg id
-           */
-          this.svgId = 'svgOnlyShowWork_' + this.nodeId + '_' + this.componentId + '_' + componentState.id;
-        }
-      } else if (this.mode === 'showPreviousWork') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isSnipButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'authoring') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        this.availableNodes = this.componentContent.nodes;
-        this.availableLinks = this.componentContent.links;
-
-        // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-
-        // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return this.authoringComponentContent;
-        }.bind(this), function (newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-          this.availableNodes = this.componentContent.nodes;
-          this.availableLinks = this.componentContent.links;
-          this.width = this.componentContent.width;
-          this.height = this.componentContent.height;
-          this.setBackgroundImage(this.componentContent.background, this.componentContent.stretchBackground);
-
-          /*
-           * make sure the SVG element can be accessed. we need to
-           * perform this check because this watch is getting fired
-           * before angular sets the svgId on the svg element. if
-           * setupSVG() is called before the svgId is set on the svg
-           * element, we will get an error.
-           */
-          if (document.getElementById(this.svgId) != null) {
-            this.setupSVG();
-          }
-        }.bind(this), true);
-      }
-
-      /*
-       * Call the initializeSVG() after a timeout so that angular has a
-       * chance to set the svg element id before we start using it. If we
-       * don't wait for the timeout, the svg id won't be set when we try
-       * to start referencing the svg element.
-       */
-      this.$timeout(angular.bind(this, this.initializeSVG));
+    if (_this.componentContent.width != null) {
+      _this.width = _this.componentContent.width;
     }
+
+    if (_this.componentContent.height != null) {
+      _this.height = _this.componentContent.height;
+    }
+
+    if (_this.componentContent.showNodeLabels == null) {
+      _this.componentContent.showNodeLabels = true;
+    }
+
+    if (_this.mode === 'student') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+      _this.availableNodes = _this.componentContent.nodes;
+      _this.availableLinks = _this.componentContent.links;
+
+      // get the latest annotations
+      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+    } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isDisabled = true;
+
+      // get the latest annotations
+      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+
+      var _componentState = _this.$scope.componentState;
+
+      if (_componentState) {
+        // set ids for the svg and other display elements using the componentStateId (so we have unique ids when showing revisions)
+        /*
+         * the student has work for this component so we will use
+         * the node id, component id, and workgroup id, and
+         * componentStateId for the svg id
+         */
+        var idInfo = _this.nodeId + '_' + _this.componentId + '_' + _this.workgroupId + '_' + _componentState.id;
+        if (_this.mode === 'gradingRevision') {
+          idInfo = '_gradingRevision_' + idInfo;
+          _this.svgId = 'svg_' + idInfo;
+          _this.conceptMapContainerId = 'conceptMapContainer_' + idInfo;
+          _this.selectNodeBarId = 'selectNodeBar_' + idInfo;
+          _this.feedbackContainerId = 'feedbackContainer_' + idInfo;
+        } else {
+          _this.svgId = 'svg_' + idInfo;
+          _this.conceptMapContainerId = 'conceptMapContainer_' + idInfo;
+          _this.selectNodeBarId = 'selectNodeBar_' + idInfo;
+          _this.feedbackContainerId = 'feedbackContainer_' + idInfo;
+        }
+      } else {
+        /*
+         * the student does not have any work for this component so
+         * we will use the node id, component id, and workgroup id
+         * for the svg id
+         */
+        var _idInfo = _this.nodeId + '_' + _this.componentId + '_' + _this.workgroupId;
+        _this.svgId = 'svg_' + _idInfo;
+        _this.conceptMapContainerId = 'conceptMapContainer_' + _idInfo;
+        _this.selectNodeBarId = 'selectNodeBar_' + _idInfo;
+        _this.feedbackContainerId = 'feedbackContainer_' + _idInfo;
+      }
+    } else if (_this.mode === 'onlyShowWork') {
+      _this.isPromptVisible = false;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isDisabled = true;
+
+      var componentState = _this.$scope.componentState;
+
+      if (componentState == null) {
+        /*
+         * the student does not have any work for this component so
+         * we will use the node id, component id, and workgroup id
+         * for the svg id
+         */
+        _this.svgId = 'svgOnlyShowWork_' + _this.nodeId + '_' + _this.componentId + '_' + _this.workgroupId;
+      } else {
+        /*
+         * the student has work for this component so we will use
+         * the node id, component id, and component state id
+         * for the svg id
+         */
+        _this.svgId = 'svgOnlyShowWork_' + _this.nodeId + '_' + _this.componentId + '_' + componentState.id;
+      }
+    } else if (_this.mode === 'showPreviousWork') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isDisabled = true;
+    }
+
+    /*
+     * Call the initializeSVG() after a timeout so that angular has a
+     * chance to set the svg element id before we start using it. If we
+     * don't wait for the timeout, the svg id won't be set when we try
+     * to start referencing the svg element.
+     */
+    _this.$timeout(angular.bind(_this, _this.initializeSVG));
 
     /**
      * Returns true iff there is student work that hasn't been saved yet
      */
-    this.$scope.isDirty = function () {
+    _this.$scope.isDirty = function () {
       return this.$scope.conceptMapController.isDirty;
-    }.bind(this);
+    }.bind(_this);
 
     /**
      * Get the component state from this component. The parent node will
@@ -403,7 +226,7 @@ var ConceptMapController = function () {
      * action (optional; default is false)
      * @return a promise of a component state containing the student data
      */
-    this.$scope.getComponentState = function (isSubmit) {
+    _this.$scope.getComponentState = function (isSubmit) {
       var deferred = this.$q.defer();
       var getState = false;
       var action = 'change';
@@ -435,206 +258,28 @@ var ConceptMapController = function () {
       }
 
       return deferred.promise;
-    }.bind(this);
-
-    /**
-     * The parent node submit button was clicked
-     */
-    this.$scope.$on('nodeSubmitClicked', function (event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-
-        // trigger the submit
-        var submitTriggeredBy = 'nodeSubmitButton';
-        this.submit(submitTriggeredBy);
-      }
-    }.bind(this));
-
-    /**
-     * Listen for the 'studentWorkSavedToServer' event which is fired when
-     * we receive the response from saving a component state to the server
-     */
-    this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function (event, args) {
-
-      var componentState = args.studentWork;
-
-      // check that the component state is for this component
-      if (componentState && this.nodeId === componentState.nodeId && this.componentId === componentState.componentId) {
-
-        // set isDirty to false because the component state was just saved and notify node
-        this.isDirty = false;
-        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
-
-        var isAutoSave = componentState.isAutoSave;
-        var isSubmit = componentState.isSubmit;
-        var clientSaveTime = componentState.clientSaveTime;
-
-        // set save message
-        if (isSubmit) {
-          this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
-
-          this.lockIfNecessary();
-
-          // set isSubmitDirty to false because the component state was just submitted and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-        } else if (isAutoSave) {
-          this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
-        } else {
-          this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
-        }
-      }
-    }));
-
-    /**
-     * Listen for the 'annotationSavedToServer' event which is fired when
-     * we receive the response from saving an annotation to the server
-     */
-    this.$scope.$on('annotationSavedToServer', function (event, args) {
-
-      if (args != null) {
-
-        // get the annotation that was saved to the server
-        var annotation = args.annotation;
-
-        if (annotation != null) {
-
-          // get the node id and component id of the annotation
-          var annotationNodeId = annotation.nodeId;
-          var annotationComponentId = annotation.componentId;
-
-          // make sure the annotation was for this component
-          if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
-
-            // get latest score and comment annotations for this component
-            _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-          }
-        }
-      }
-    });
+    }.bind(_this);
 
     /**
      * Listen for the 'exitNode' event which is fired when the student
      * exits the parent node. This will perform any necessary cleanup
      * when the student exits the parent node.
      */
-    this.$scope.$on('exitNode', function (event, args) {}.bind(this));
-
-    /*
-     * Listen for the assetSelected event which occurs when the user
-     * selects an asset from the choose asset popup
-     */
-    this.$scope.$on('assetSelected', function (event, args) {
-
-      if (args != null) {
-
-        // make sure the event was fired for this component
-        if (args.nodeId == _this.nodeId && args.componentId == _this.componentId) {
-          // the asset was selected for this component
-          var assetItem = args.assetItem;
-
-          if (assetItem != null) {
-            var fileName = assetItem.fileName;
-
-            if (fileName != null) {
-              /*
-               * get the assets directory path
-               * e.g.
-               * /wise/curriculum/3/
-               */
-              var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
-              var fullAssetPath = assetsDirectoryPath + '/' + fileName;
-
-              var summernoteId = '';
-
-              if (args.target == 'prompt') {
-                // the target is the summernote prompt element
-                summernoteId = 'summernotePrompt_' + _this.nodeId + '_' + _this.componentId;
-              } else if (args.target == 'rubric') {
-                // the target is the summernote rubric element
-                summernoteId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
-              } else if (args.target == 'background') {
-                // the target is the background image
-
-                // set the background file name
-                _this.authoringComponentContent.background = fileName;
-
-                // the authoring component content has changed so we will save the project
-                _this.authoringViewComponentChanged();
-              } else if (args.target != null && args.target.indexOf('node') == 0) {
-                // the target is a node image
-
-                // get the concept map node
-                var node = _this.authoringViewGetNodeById(args.target);
-
-                if (node != null) {
-                  // set the file name of the node
-                  node.fileName = fileName;
-                }
-
-                // the authoring component content has changed so we will save the project
-                _this.authoringViewComponentChanged();
-              }
-
-              if (summernoteId != '') {
-                if (_this.UtilService.isImage(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // add the image html
-                  $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                } else if (_this.UtilService.isVideo(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // insert the video element
-                  var videoElement = document.createElement('video');
-                  videoElement.controls = 'true';
-                  videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                  $('#' + summernoteId).summernote('insertNode', videoElement);
-                }
-              }
-            }
-          }
-        }
-      }
-
-      // close the popup
-      _this.$mdDialog.hide();
-    });
-
-    /*
-     * The advanced button for a component was clicked. If the button was
-     * for this component, we will show the advanced authoring.
-     */
-    this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
-      if (args != null) {
-        var componentId = args.componentId;
-        if (_this.componentId === componentId) {
-          _this.showAdvancedAuthoring = !_this.showAdvancedAuthoring;
-        }
-      }
-    });
+    _this.$scope.$on('exitNode', function (event, args) {}.bind(_this));
+    return _this;
   }
 
-  /**
-   * Initialize the SVG
-   */
-
-
   _createClass(ConceptMapController, [{
+    key: 'handleNodeSubmit',
+    value: function handleNodeSubmit() {
+      this.submit('nodeSubmitButton');
+    }
+
+    /**
+     * Initialize the SVG
+     */
+
+  }, {
     key: 'initializeSVG',
     value: function initializeSVG() {
 
@@ -642,9 +287,6 @@ var ConceptMapController = function () {
       this.setupSVG();
 
       var componentState = null;
-
-      // set whether rich text is enabled
-      this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
 
       // set whether studentAttachment is enabled
       this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
@@ -681,31 +323,7 @@ var ConceptMapController = function () {
            * only import work if the student does not already have
            * work for this component
            */
-
-          // check if we need to import work
-          var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-          var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-
-          if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-            /*
-             * check if the node id is in the field that we used to store
-             * the import previous work node id in
-             */
-            importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-          }
-
-          if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-            /*
-             * check if the component id is in the field that we used to store
-             * the import previous work component id in
-             */
-            importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-          }
-
-          if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-            // import the work from the other component
-            this.importWork();
-          } else if (this.componentContent.starterConceptMap != null) {
+          if (this.componentContent.starterConceptMap != null) {
             /*
              * the student has not done any work and there is a starter
              * concept map so we will populate the concept map with
@@ -720,18 +338,22 @@ var ConceptMapController = function () {
           }
         }
       } else {
-        /*
-         * inject the asset path so that the file name is changed to
-         * a relative path
-         * e.g.
-         * 'Sun.png'
-         * will be changed to
-         * '/wise/curriculum/108/assets/Sun.png'
-         */
-        componentState = this.ProjectService.injectAssetPaths(componentState);
+        if (componentState == null) {
+          this.populateStarterConceptMap();
+        } else {
+          /*
+           * inject the asset path so that the file name is changed to
+           * a relative path
+           * e.g.
+           * 'Sun.png'
+           * will be changed to
+           * '/wise/curriculum/108/assets/Sun.png'
+           */
+          componentState = this.ProjectService.injectAssetPaths(componentState);
 
-        // populate the student work into this component
-        this.setStudentWork(componentState);
+          // populate the student work into this component
+          this.setStudentWork(componentState);
+        }
       }
 
       // check if the student has used up all of their submits
@@ -798,13 +420,14 @@ var ConceptMapController = function () {
       // make the nodes draggable
       this.enableNodeDragging();
 
-      // check if we need to lock this component
-      this.calculateDisabled();
+      this.disableComponentIfNecessary();
 
       if (this.$scope.$parent.nodeController != null) {
         // register this component with the parent node
         this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
       }
+
+      this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
     }
 
     /**
@@ -880,7 +503,7 @@ var ConceptMapController = function () {
             var height = node.height;
 
             // create a ConceptMapNode
-            var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, instanceId, originalId, filePath, label, x, y, width, height);
+            var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, instanceId, originalId, filePath, label, x, y, width, height, this.componentContent.showNodeLabels);
 
             // add the node to our array of nodes
             this.addNode(conceptMapNode);
@@ -967,22 +590,34 @@ var ConceptMapController = function () {
   }, {
     key: 'refreshLinkLabels',
     value: function refreshLinkLabels() {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-      if (this.nodes != null) {
+      try {
+        for (var _iterator = this.nodes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var node = _step.value;
 
-        // loop through all the nodes
-        for (var n = 0; n < this.nodes.length; n++) {
-          var node = this.nodes[n];
-
-          if (node != null) {
-            // get the label from the node
+          if (node.showLabel) {
             var label = node.getLabel();
-
             /*
              * set the label back into the node so that the rectangle
              * around the text label is resized to the text
              */
             node.setLabel(label);
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
           }
         }
       }
@@ -1021,50 +656,14 @@ var ConceptMapController = function () {
           // latest state is a submission, so set isSubmitDirty to false and notify node
           this.isSubmitDirty = false;
           this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          // set save message
-          this.setSaveMessage(this.$translate('LAST_SUBMITTED'), latestState.clientSaveTime);
+          this.setSubmittedMessage(latestState.clientSaveTime);
         } else {
           // latest state is not a submission, so set isSubmitDirty to true and notify node
           this.isSubmitDirty = true;
           this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          // set save message
-          this.setSaveMessage(this.$translate('LAST_SAVED'), latestState.clientSaveTime);
+          this.setSavedMessage(latestState.clientSaveTime);
         }
       }
-    }
-  }, {
-    key: 'saveButtonClicked',
-
-
-    /**
-     * Called when the student clicks the save button
-     */
-    value: function saveButtonClicked() {
-      this.isSubmit = false;
-
-      if (this.mode === 'authoring') {
-        /*
-         * we are in authoring mode so we will set isDirty to false here
-         * because the 'componentSaveTriggered' event won't work in
-         * authoring mode
-         */
-        this.isDirty = false;
-      }
-
-      // tell the parent node that this component wants to save
-      this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-    }
-  }, {
-    key: 'submitButtonClicked',
-
-
-    /**
-     * Called when the student clicks the submit button
-     */
-    value: function submitButtonClicked() {
-      // trigger the submit
-      var submitTriggeredBy = 'componentSubmitButton';
-      this.submit(submitTriggeredBy);
     }
   }, {
     key: 'submit',
@@ -1108,8 +707,7 @@ var ConceptMapController = function () {
         }
 
         if (performSubmit) {
-          // increment the submit counter
-          this.submitCounter++;
+          this.incrementSubmitCounter();
 
           // check if the student has used up all of their submits
           if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
@@ -1211,17 +809,6 @@ var ConceptMapController = function () {
 
           this.isSubmit = true;
 
-          if (this.mode === 'authoring') {
-            /*
-             * we are in the authoring view so we will set the
-             * latest score and comment annotations manually
-             */
-
-            this.isDirty = false;
-            this.isSubmitDirty = false;
-            this.createComponentState('submit');
-          }
-
           // tell the parent node that this component wants to submit
           this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
         } else {
@@ -1232,53 +819,6 @@ var ConceptMapController = function () {
           this.isSubmit = false;
         }
       }
-    }
-  }, {
-    key: 'lockIfNecessary',
-    value: function lockIfNecessary() {
-      // check if we need to lock the component after the student submits
-      if (this.isLockAfterSubmit()) {
-        this.isDisabled = true;
-      }
-    }
-  }, {
-    key: 'studentDataChanged',
-
-
-    /**
-     * Called when the student changes their work
-     */
-    value: function studentDataChanged() {
-      var _this3 = this;
-
-      /*
-       * set the dirty flags so we will know we need to save or submit the
-       * student work later
-       */
-      this.isDirty = true;
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
-
-      this.isSubmitDirty = true;
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-
-      // clear out the save message
-      this.setSaveMessage('', null);
-
-      // get this part id
-      var componentId = this.getComponentId();
-
-      /*
-       * the student work in this component has changed so we will tell
-       * the parent node that the student data will need to be saved.
-       * this will also notify connected parts that this component's student
-       * data has changed.
-       */
-      var action = 'change';
-
-      // create a component state populated with the student data
-      this.createComponentState(action).then(function (componentState) {
-        _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: componentId, componentState: componentState });
-      });
     }
   }, {
     key: 'getStudentResponse',
@@ -1477,28 +1017,6 @@ var ConceptMapController = function () {
     }
 
     /**
-     * Perform any additional processing that is required before returning the
-     * component state
-     * Note: this function must call deferred.resolve() otherwise student work
-     * will not be saved
-     * @param deferred a deferred object
-     * @param componentState the component state
-     * @param action the action that we are creating the component state for
-     * e.g. 'submit', 'save', 'change'
-     */
-
-  }, {
-    key: 'createComponentStateAdditionalProcessing',
-    value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
-
-      /*
-       * we don't need to perform any additional processing so we can resolve
-       * the promise immediately
-       */
-      deferred.resolve(componentState);
-    }
-
-    /**
      * Create an auto score annotation
      * @param runId the run id
      * @param periodId the period id
@@ -1551,67 +1069,12 @@ var ConceptMapController = function () {
 
       return annotation;
     }
-
-    /**
-     * Check if we need to lock the component
-     */
-
-  }, {
-    key: 'calculateDisabled',
-    value: function calculateDisabled() {
-
-      // get the component content
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // check if the parent has set this component to disabled
-        if (componentContent.isDisabled) {
-          this.isDisabled = true;
-        } else if (componentContent.lockAfterSubmit) {
-          // we need to lock the component after the student has submitted
-
-          // get the component states for this component
-          var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          // check if any of the component states were submitted
-          var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-          if (isSubmitted) {
-            // the student has submitted work for this component
-            this.isDisabled = true;
-          }
-        }
-      }
-    }
-  }, {
-    key: 'isLockAfterSubmit',
-
-
-    /**
-     * Check whether we need to lock the component after the student
-     * submits an answer.
-     */
-    value: function isLockAfterSubmit() {
-      var result = false;
-
-      if (this.componentContent != null) {
-
-        // check the lockAfterSubmit field in the component content
-        if (this.componentContent.lockAfterSubmit) {
-          result = true;
-        }
-      }
-
-      return result;
-    }
   }, {
     key: 'removeAttachment',
     value: function removeAttachment(attachment) {
       if (this.attachments.indexOf(attachment) != -1) {
         this.attachments.splice(this.attachments.indexOf(attachment), 1);
         this.studentDataChanged();
-        // YOU ARE NOW FREEEEEEEEE!
       }
     }
   }, {
@@ -1623,7 +1086,7 @@ var ConceptMapController = function () {
      * @param studentAsset
      */
     value: function attachStudentAsset(studentAsset) {
-      var _this4 = this;
+      var _this3 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -1633,69 +1096,11 @@ var ConceptMapController = function () {
               iconURL: copiedAsset.iconURL
             };
 
-            _this4.attachments.push(attachment);
-            _this4.studentDataChanged();
+            _this3.attachments.push(attachment);
+            _this3.studentDataChanged();
           }
         });
       }
-    }
-  }, {
-    key: 'getPrompt',
-
-
-    /**
-     * Get the prompt to show to the student
-     */
-    value: function getPrompt() {
-      var prompt = null;
-
-      if (this.originalComponentContent != null) {
-        // this is a show previous work component
-
-        if (this.originalComponentContent.showPreviousWorkPrompt) {
-          // show the prompt from the previous work component
-          prompt = this.componentContent.prompt;
-        } else {
-          // show the prompt from the original component
-          prompt = this.originalComponentContent.prompt;
-        }
-      } else if (this.componentContent != null) {
-        prompt = this.componentContent.prompt;
-      }
-
-      return prompt;
-    }
-  }, {
-    key: 'getNumRows',
-
-
-    /**
-     * Get the number of rows for the textarea
-     */
-    value: function getNumRows() {
-      var numRows = null;
-
-      if (this.componentContent != null) {
-        numRows = this.componentContent.numRows;
-      }
-
-      return numRows;
-    }
-  }, {
-    key: 'getNumColumns',
-
-
-    /**
-     * Get the number of columns for the textarea
-     */
-    value: function getNumColumns() {
-      var numColumns = null;
-
-      if (this.componentContent != null) {
-        numColumns = this.componentContent.numColumns;
-      }
-
-      return numColumns;
     }
   }, {
     key: 'getResponse',
@@ -1712,1010 +1117,6 @@ var ConceptMapController = function () {
       }
 
       return response;
-    }
-  }, {
-    key: 'importWork',
-
-
-    /**
-     * Import work from another component
-     */
-    value: function importWork() {
-
-      // get the component content
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // get the import previous work node id and component id
-        var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
-        var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-
-        if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-
-          /*
-           * check if the node id is in the field that we used to store
-           * the import previous work node id in
-           */
-          if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
-            importPreviousWorkNodeId = componentContent.importWorkNodeId;
-          }
-        }
-
-        if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-
-          /*
-           * check if the component id is in the field that we used to store
-           * the import previous work component id in
-           */
-          if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
-            importPreviousWorkComponentId = componentContent.importWorkComponentId;
-          }
-        }
-
-        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-
-          // get the latest component state for this component
-          var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          /*
-           * we will only import work into this component if the student
-           * has not done any work for this component
-           */
-          if (componentState == null) {
-            // the student has not done any work for this component
-
-            // get the latest component state from the component we are importing from
-            var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
-
-            if (importWorkComponentState != null) {
-              /*
-               * populate a new component state with the work from the
-               * imported component state
-               */
-              var populatedComponentState = this.ConceptMapService.populateComponentState(importWorkComponentState);
-
-              /*
-               * inject the asset paths so that the node file names change from
-               * 'Sun.png' to '/wise/curriculum/129/assets/Sun.png'
-               */
-              populatedComponentState = this.ProjectService.injectAssetPaths(populatedComponentState);
-
-              // populate the component state into this component
-              this.setStudentWork(populatedComponentState);
-
-              // make the work dirty so that it gets saved
-              this.studentDataChanged();
-            }
-          }
-        }
-      }
-    }
-  }, {
-    key: 'getComponentId',
-
-
-    /**
-     * Get the component id
-     * @return the component id
-     */
-    value: function getComponentId() {
-      return this.componentContent.id;
-    }
-  }, {
-    key: 'authoringViewComponentChanged',
-
-
-    /**
-     * The component has changed in the regular authoring view so we will save the project
-     */
-    value: function authoringViewComponentChanged() {
-
-      // update the JSON string in the advanced authoring view textarea
-      this.updateAdvancedAuthoringView();
-
-      /*
-       * notify the parent node that the content has changed which will save
-       * the project to the server
-       */
-      this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-    }
-  }, {
-    key: 'advancedAuthoringViewComponentChanged',
-
-
-    /**
-     * The component has changed in the advanced authoring view so we will update
-     * the component and save the project.
-     */
-    value: function advancedAuthoringViewComponentChanged() {
-
-      try {
-        /*
-         * create a new component by converting the JSON string in the advanced
-         * authoring view into a JSON object
-         */
-        var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
-
-        // replace the component in the project
-        this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
-
-        // set the new component into the controller
-        this.componentContent = editedComponentContent;
-
-        /*
-         * notify the parent node that the content has changed which will save
-         * the project to the server
-         */
-        this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-      } catch (e) {
-        this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
-      }
-    }
-  }, {
-    key: 'authoringShowPreviousWorkClicked',
-
-
-    /**
-     * The show previous work checkbox was clicked
-     */
-    value: function authoringShowPreviousWorkClicked() {
-
-      if (!this.authoringComponentContent.showPreviousWork) {
-        /*
-         * show previous work has been turned off so we will clear the
-         * show previous work node id, show previous work component id, and
-         * show previous work prompt values
-         */
-        this.authoringComponentContent.showPreviousWorkNodeId = null;
-        this.authoringComponentContent.showPreviousWorkComponentId = null;
-        this.authoringComponentContent.showPreviousWorkPrompt = null;
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The show previous work node id has changed
-     */
-
-  }, {
-    key: 'authoringShowPreviousWorkNodeIdChanged',
-    value: function authoringShowPreviousWorkNodeIdChanged() {
-
-      if (this.authoringComponentContent.showPreviousWorkNodeId == null || this.authoringComponentContent.showPreviousWorkNodeId == '') {
-
-        /*
-         * the show previous work node id is null so we will also set the
-         * show previous component id to null
-         */
-        this.authoringComponentContent.showPreviousWorkComponentId = '';
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The show previous work component id has changed
-     */
-
-  }, {
-    key: 'authoringShowPreviousWorkComponentIdChanged',
-    value: function authoringShowPreviousWorkComponentIdChanged() {
-
-      // get the show previous work node id
-      var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-
-      // get the show previous work prompt boolean value
-      var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-
-      // get the old show previous work component id
-      var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-
-      // get the new show previous work component id
-      var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-
-      // get the new show previous work component
-      var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-
-      if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
-        // the new show previous work component is empty
-
-        // save the component
-        this.authoringViewComponentChanged();
-      } else if (newShowPreviousWorkComponent != null) {
-
-        // get the current component type
-        var currentComponentType = this.componentContent.type;
-
-        // get the new component type
-        var newComponentType = newShowPreviousWorkComponent.type;
-
-        // check if the component types are different
-        if (newComponentType != currentComponentType) {
-          /*
-           * the component types are different so we will need to change
-           * the whole component
-           */
-
-          // make sure the author really wants to change the component type
-          var answer = confirm(this.$translate('ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE'));
-
-          if (answer) {
-            // the author wants to change the component type
-
-            /*
-             * get the component service so we can make a new instance
-             * of the component
-             */
-            var componentService = this.$injector.get(newComponentType + 'Service');
-
-            if (componentService != null) {
-
-              // create a new component
-              var newComponent = componentService.createComponent();
-
-              // set move over the values we need to keep
-              newComponent.id = this.authoringComponentContent.id;
-              newComponent.showPreviousWork = true;
-              newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
-              newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
-              newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-
-              /*
-               * update the authoring component content JSON string to
-               * change the component
-               */
-              this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-
-              // update the component in the project and save the project
-              this.advancedAuthoringViewComponentChanged();
-            }
-          } else {
-            /*
-             * the author does not want to change the component type so
-             * we will rollback the showPreviousWorkComponentId value
-             */
-            this.authoringComponentContent.showPreviousWorkComponentId = oldShowPreviousWorkComponentId;
-          }
-        } else {
-          /*
-           * the component types are the same so we do not need to change
-           * the component type and can just save
-           */
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
-
-    /**
-     * A node up button was clicked in the authoring tool so we will move the
-     * node up
-     * @param index the index of the node that we will move
-     */
-
-  }, {
-    key: 'authoringViewNodeUpButtonClicked',
-    value: function authoringViewNodeUpButtonClicked(index) {
-
-      // check if the node is at the top
-      if (index != 0) {
-        // the node is not at the top so we can move it up
-
-        // get the nodes
-        var nodes = this.authoringComponentContent.nodes;
-
-        if (nodes != null) {
-
-          // get the node at the given index
-          var node = nodes[index];
-
-          // remove the node
-          nodes.splice(index, 1);
-
-          // insert the node back in one index back
-          nodes.splice(index - 1, 0, node);
-
-          /*
-           * the author has made changes so we will save the component
-           * content
-           */
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
-
-    /**
-     * A node down button was clicked in the authoring tool so we will move the
-     * node down
-     * @param index the index of the node that we will move
-     */
-
-  }, {
-    key: 'authoringViewNodeDownButtonClicked',
-    value: function authoringViewNodeDownButtonClicked(index) {
-
-      // get the nodes
-      var nodes = this.authoringComponentContent.nodes;
-
-      // check if the node is at the bottom
-      if (nodes != null && index != nodes.length - 1) {
-        // the node is not at the bottom so we can move it down
-
-        // get the node at the given index
-        var node = nodes[index];
-
-        // remove the node
-        nodes.splice(index, 1);
-
-        // insert the node back in one index ahead
-        nodes.splice(index + 1, 0, node);
-
-        /*
-         * the author has made changes so we will save the component
-         * content
-         */
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * A node delete button was clicked in the authoring tool so we will remove
-     * the node
-     * @param index the index of the node that we will delete
-     */
-
-  }, {
-    key: 'authoringViewNodeDeleteButtonClicked',
-    value: function authoringViewNodeDeleteButtonClicked(index) {
-
-      // get the nodes
-      var nodes = this.authoringComponentContent.nodes;
-
-      if (nodes != null) {
-
-        // get the node
-        var node = nodes[index];
-
-        if (node != null) {
-
-          // get the file name and label
-          var nodeFileName = node.fileName;
-          var nodeLabel = node.label;
-
-          // confirm with the author that they really want to delete the node
-          var answer = confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteThisNode', { nodeFileName: nodeFileName, nodeLabel: nodeLabel }));
-
-          if (answer) {
-            /*
-             * the author is sure they want to delete the node so we
-             * will remove it from the array
-             */
-            nodes.splice(index, 1);
-
-            /*
-             * the author has made changes so we will save the component
-             * content
-             */
-            this.authoringViewComponentChanged();
-          }
-        }
-      }
-    }
-
-    /**
-     * A link up button was clicked in the authoring tool so we will move the
-     * link up
-     * @param index the index of the link
-     */
-
-  }, {
-    key: 'authoringViewLinkUpButtonClicked',
-    value: function authoringViewLinkUpButtonClicked(index) {
-
-      // check if the link is at the top
-      if (index != 0) {
-
-        // get the links
-        var links = this.authoringComponentContent.links;
-
-        if (links != null) {
-
-          // get a link
-          var link = links[index];
-
-          if (link != null) {
-
-            // remove the link
-            links.splice(index, 1);
-
-            // add the link back in one index back
-            links.splice(index - 1, 0, link);
-
-            /*
-             * the author has made changes so we will save the component
-             * content
-             */
-            this.authoringViewComponentChanged();
-          }
-        }
-      }
-    }
-
-    /**
-     * A link down button was clicked in the authoring tool so we will move the
-     * link down
-     * @param index the index of the link
-     */
-
-  }, {
-    key: 'authoringViewLinkDownButtonClicked',
-    value: function authoringViewLinkDownButtonClicked(index) {
-
-      // get the links
-      var links = this.authoringComponentContent.links;
-
-      // check if the link is at the bottom
-      if (links != null && index != links.length - 1) {
-        // the node is not at the bottom so we can move it down
-
-        if (links != null) {
-
-          // get the link
-          var link = links[index];
-
-          if (link != null) {
-
-            // remove the link
-            links.splice(index, 1);
-
-            // add the link back in one index ahead
-            links.splice(index + 1, 0, link);
-
-            /*
-             * the author has made changes so we will save the component
-             * content
-             */
-            this.authoringViewComponentChanged();
-          }
-        }
-      }
-    }
-
-    /**
-     * A link delete button was clicked in the authoring tool so we remove the
-     * link
-     * @param index the index of the link
-     */
-
-  }, {
-    key: 'authoringViewLinkDeleteButtonClicked',
-    value: function authoringViewLinkDeleteButtonClicked(index) {
-
-      // get the links
-      var links = this.authoringComponentContent.links;
-
-      if (links != null) {
-
-        // get a link
-        var link = links[index];
-
-        if (link != null) {
-
-          // get the link label
-          var linkLabel = link.label;
-
-          // confirm with the author that they really want to delete the link
-          var answer = confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteThisLink', { linkLabel: linkLabel }));
-
-          if (answer) {
-            /*
-             * the author is sure they want to delete the link so we
-             * will remove it from the array
-             */
-            links.splice(index, 1);
-
-            /*
-             * the author has made changes so we will save the component
-             * content
-             */
-            this.authoringViewComponentChanged();
-          }
-        }
-      }
-    }
-
-    /**
-     * Add a node in the authoring tool
-     */
-
-  }, {
-    key: 'authoringViewAddNode',
-    value: function authoringViewAddNode() {
-
-      // get a new node id
-      var id = this.authoringGetNewConceptMapNodeId();
-
-      // create the new node
-      var newNode = {};
-      newNode.id = id;
-      newNode.label = '';
-      newNode.fileName = '';
-      newNode.width = 100;
-      newNode.height = 100;
-
-      // get the nodes
-      var nodes = this.authoringComponentContent.nodes;
-
-      // add the new node
-      nodes.push(newNode);
-
-      /*
-       * the author has made changes so we will save the component
-       * content
-       */
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Get the concept map node with the given id
-     * @param nodeId the concept map node id
-     * @return the concept map node with the given node id
-     */
-
-  }, {
-    key: 'authoringViewGetNodeById',
-    value: function authoringViewGetNodeById(nodeId) {
-
-      if (nodeId != null && this.authoringComponentContent != null && this.authoringComponentContent.nodes != null) {
-
-        // loop through all the concept map nodes
-        for (var n = 0; n < this.authoringComponentContent.nodes.length; n++) {
-          var node = this.authoringComponentContent.nodes[n];
-
-          if (node != null) {
-            if (nodeId === node.id) {
-              // we have found the concept map node that we want
-              return node;
-            }
-          }
-        }
-      }
-
-      return null;
-    }
-
-    /**
-     * Add a link in the authoring tool
-     */
-
-  }, {
-    key: 'authoringViewAddLink',
-    value: function authoringViewAddLink() {
-
-      // get a new link id
-      var id = this.authoringGetNewConceptMapLinkId();
-
-      // create a new link
-      var newLink = {};
-      newLink.id = id;
-      newLink.label = '';
-      newLink.color = '';
-
-      // get the links
-      var links = this.authoringComponentContent.links;
-
-      // add the new link
-      links.push(newLink);
-
-      /*
-       * the author has made changes so we will save the component
-       * content
-       */
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Get a new ConceptMapNode id that isn't being used
-     * @returns a new ConceptMapNode id e.g. 'node3'
-     */
-
-  }, {
-    key: 'authoringGetNewConceptMapNodeId',
-    value: function authoringGetNewConceptMapNodeId() {
-
-      var nextAvailableNodeIdNumber = 1;
-
-      // array to remember the numbers that have been used in node ids already
-      var usedNumbers = [];
-
-      // loop through all the nodes
-      for (var x = 0; x < this.authoringComponentContent.nodes.length; x++) {
-        var node = this.authoringComponentContent.nodes[x];
-
-        if (node != null) {
-
-          // get the node id
-          var nodeId = node.id;
-
-          if (nodeId != null) {
-
-            // get the number from the node id
-            var nodeIdNumber = parseInt(nodeId.replace('node', ''));
-
-            if (nodeIdNumber != null) {
-              // add the number to the array of used numbers
-              usedNumbers.push(nodeIdNumber);
-            }
-          }
-        }
-      }
-
-      if (usedNumbers.length > 0) {
-        // get the max number used
-        var maxNumberUsed = Math.max.apply(Math, usedNumbers);
-
-        if (!isNaN(maxNumberUsed)) {
-          // increment the number by 1 to get the next available number
-          nextAvailableNodeIdNumber = maxNumberUsed + 1;
-        }
-      }
-
-      var newId = 'node' + nextAvailableNodeIdNumber;
-
-      return newId;
-    }
-
-    /**
-     * Get a new ConceptMapLink id that isn't being used
-     * @returns a new ConceptMapLink id e.g. 'link3'
-     */
-
-  }, {
-    key: 'authoringGetNewConceptMapLinkId',
-    value: function authoringGetNewConceptMapLinkId() {
-
-      var nextAvailableLinkIdNumber = 1;
-
-      // array to remember the numbers that have been used in link ids already
-      var usedNumbers = [];
-
-      // loop through all the nodes
-      for (var x = 0; x < this.authoringComponentContent.links.length; x++) {
-        var link = this.authoringComponentContent.links[x];
-
-        if (link != null) {
-
-          // get the node id
-          var nodeId = link.id;
-
-          if (nodeId != null) {
-
-            // get the number from the node id
-            var nodeIdNumber = parseInt(nodeId.replace('link', ''));
-
-            if (nodeIdNumber != null) {
-              // add the number to the array of used numbers
-              usedNumbers.push(nodeIdNumber);
-            }
-          }
-        }
-      }
-
-      if (usedNumbers.length > 0) {
-        // get the max number used
-        var maxNumberUsed = Math.max.apply(Math, usedNumbers);
-
-        if (!isNaN(maxNumberUsed)) {
-          // increment the number by 1 to get the next available number
-          nextAvailableLinkIdNumber = maxNumberUsed + 1;
-        }
-      }
-
-      var newId = 'link' + nextAvailableLinkIdNumber;
-
-      return newId;
-    }
-
-    /**
-     * A "with link" checkbox was checked
-     * @param ruleIndex the index of the rule
-     */
-
-  }, {
-    key: 'authoringRuleLinkCheckboxClicked',
-    value: function authoringRuleLinkCheckboxClicked(ruleIndex) {
-
-      // get the rule that was checked
-      var rule = this.authoringComponentContent.rules[ruleIndex];
-
-      if (rule != null) {
-        if (rule.type == 'node') {
-          /*
-           * the rule has been set to 'node' instead of 'link' so we
-           * will remove the link label and other node label
-           */
-
-          delete rule.linkLabel;
-          delete rule.otherNodeLabel;
-        }
-      }
-
-      // perform updating and saving
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Add a new rule
-     */
-
-  }, {
-    key: 'authoringAddRule',
-    value: function authoringAddRule() {
-
-      // create the new rule
-      var newRule = {};
-      newRule.name = '';
-      newRule.type = 'node';
-      newRule.categories = [];
-      newRule.nodeLabel = '';
-      newRule.comparison = 'exactly';
-      newRule.number = 1;
-      newRule.not = false;
-
-      // add the rule to the array of rules
-      this.authoringComponentContent.rules.push(newRule);
-
-      var showSubmitButton = false;
-
-      if (this.authoringComponentContent.rules.length > 0) {
-        // there are scoring rules so we will show the submit button
-        showSubmitButton = true;
-      }
-
-      // set the value of the showSubmitButton field
-      this.setShowSubmitButtonValue(showSubmitButton);
-
-      // perform updating and saving
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Move a rule up
-     * @param index the index of the rule
-     */
-
-  }, {
-    key: 'authoringViewRuleUpButtonClicked',
-    value: function authoringViewRuleUpButtonClicked(index) {
-
-      // check if the rule is at the top
-      if (index != 0) {
-        // the rule is not at the top so we can move it up
-
-        // get the rules
-        var rules = this.authoringComponentContent.rules;
-
-        if (rules != null) {
-
-          // get the rule at the given index
-          var rule = rules[index];
-
-          // remove the rule
-          rules.splice(index, 1);
-
-          // insert the rule back in one index back
-          rules.splice(index - 1, 0, rule);
-
-          /*
-           * the author has made changes so we will save the component
-           * content
-           */
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
-
-    /**
-     * Move a rule down
-     * @param index the index of the rule
-     */
-
-  }, {
-    key: 'authoringViewRuleDownButtonClicked',
-    value: function authoringViewRuleDownButtonClicked(index) {
-
-      // get the rules
-      var rules = this.authoringComponentContent.rules;
-
-      // check if the rule is at the bottom
-      if (rules != null && index != rules.length - 1) {
-        // the rule is not at the bottom so we can move it down
-
-        // get the rule at the given index
-        var rule = rules[index];
-
-        // remove the rule
-        rules.splice(index, 1);
-
-        // insert the rule back in one index ahead
-        rules.splice(index + 1, 0, rule);
-
-        /*
-         * the author has made changes so we will save the component
-         * content
-         */
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /*
-     * Delete a rule
-     * @param index the index of the rule to delete
-     */
-
-  }, {
-    key: 'authoringViewRuleDeleteButtonClicked',
-    value: function authoringViewRuleDeleteButtonClicked(index) {
-
-      // get the rule
-      var rule = this.authoringComponentContent.rules[index];
-
-      if (rule != null) {
-
-        // get the rule name
-        var ruleName = rule.name;
-
-        // confirm with the author that they really want to delete the rule
-        var answer = confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteThisRule', { ruleName: ruleName }));
-
-        if (answer) {
-          // remove the rule at the given index
-          this.authoringComponentContent.rules.splice(index, 1);
-
-          // perform updating and saving
-          this.authoringViewComponentChanged();
-        }
-      }
-
-      var showSubmitButton = false;
-
-      if (this.authoringComponentContent.rules.length > 0) {
-        // there are scoring rules so we will show the submit button
-        showSubmitButton = true;
-      }
-
-      // set the value of the showSubmitButton field
-      this.setShowSubmitButtonValue(showSubmitButton);
-    }
-
-    /**
-     * Add a category to a rule
-     * @param rule the rule
-     */
-
-  }, {
-    key: 'authoringViewAddCategoryClicked',
-    value: function authoringViewAddCategoryClicked(rule) {
-
-      if (rule != null) {
-        // add an empty category name
-        rule.categories.push('');
-      }
-
-      // perform updating and saving
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Delete a category from a rule
-     * @param rule delete a category from this rule
-     * @param index the index of the category
-     */
-
-  }, {
-    key: 'authoringViewDeleteCategoryClicked',
-    value: function authoringViewDeleteCategoryClicked(rule, index) {
-
-      if (rule != null) {
-
-        // get the rule name
-        var ruleName = rule.name;
-
-        // get the category name
-        var categoryName = rule.categories[index];
-
-        // confirm with the author that they really want to delete the category from the rule
-        var answer = confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteTheCategory', { ruleName: ruleName, categoryName: categoryName }));
-
-        if (answer) {
-          // remove the category at the index
-          rule.categories.splice(index, 1);
-
-          // perform updating and saving
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
-
-    /**
-     * Get all the step node ids in the project
-     * @returns all the step node ids
-     */
-
-  }, {
-    key: 'getStepNodeIds',
-    value: function getStepNodeIds() {
-      var stepNodeIds = this.ProjectService.getNodeIds();
-
-      return stepNodeIds;
-    }
-
-    /**
-     * Get the step number and title
-     * @param nodeId get the step number and title for this node
-     * @returns the step number and title
-     */
-
-  }, {
-    key: 'getNodePositionAndTitleByNodeId',
-    value: function getNodePositionAndTitleByNodeId(nodeId) {
-      var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-
-      return nodePositionAndTitle;
-    }
-
-    /**
-     * Get the components in a step
-     * @param nodeId get the components in the step
-     * @returns the components in the step
-     */
-
-  }, {
-    key: 'getComponentsByNodeId',
-    value: function getComponentsByNodeId(nodeId) {
-      var components = this.ProjectService.getComponentsByNodeId(nodeId);
-
-      return components;
-    }
-
-    /**
-     * Check if a node is a step node
-     * @param nodeId the node id to check
-     * @returns whether the node is an application node
-     */
-
-  }, {
-    key: 'isApplicationNode',
-    value: function isApplicationNode(nodeId) {
-      var result = this.ProjectService.isApplicationNode(nodeId);
-
-      return result;
-    }
-
-    /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-
-  }, {
-    key: 'updateAdvancedAuthoringView',
-    value: function updateAdvancedAuthoringView() {
-      this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-    }
-  }, {
-    key: 'setSaveMessage',
-
-
-    /**
-     * Set the message next to the save button
-     * @param message the message to display
-     * @param time the time to display
-     */
-    value: function setSaveMessage(message, time) {
-      this.saveMessage.text = message;
-      this.saveMessage.time = time;
     }
   }, {
     key: 'isCRaterEnabled',
@@ -2804,28 +1205,12 @@ var ConceptMapController = function () {
     }
 
     /**
-     * Register the the listener that will listen for the exit event
-     * so that we can perform saving before exiting.
-     */
-
-  }, {
-    key: 'registerExitListener',
-    value: function registerExitListener() {
-
-      /*
-       * Listen for the 'exit' event which is fired when the student exits
-       * the VLE. This will perform saving before the VLE exits.
-       */
-      exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
-    }
-  }, {
-    key: 'linkTypeSelected',
-
-
-    /**
      * A link type was selected in the link type chooser popup
      * @param linkType the authored link object that was selected
      */
+
+  }, {
+    key: 'linkTypeSelected',
     value: function linkTypeSelected(selectedLink) {
 
       if (this.highlightedElement != null && this.highlightedElement.constructor.name == 'ConceptMapLink') {
@@ -2847,13 +1232,8 @@ var ConceptMapController = function () {
         link.setOriginalId(originalId);
       }
 
-      // hide the link type chooser
-      this.hideLinkTypeChooser();
-
       // make the link not highlighted
       this.clearHighlightedElement();
-
-      // handle the student data changing
       this.studentDataChanged();
     }
 
@@ -2927,7 +1307,7 @@ var ConceptMapController = function () {
   }, {
     key: 'setupSVG',
     value: function setupSVG() {
-      var _this5 = this;
+      var _this4 = this;
 
       // get the svg element in the svg.js world
       this.draw = SVG(this.svgId);
@@ -2942,17 +1322,17 @@ var ConceptMapController = function () {
 
       // set the mouse down listener
       this.draw.mousedown(function (event) {
-        _this5.svgMouseDown(event);
+        _this4.svgMouseDown(event);
       });
 
       // set the mouse up listener
       this.draw.mouseup(function (event) {
-        _this5.svgMouseUp(event);
+        _this4.svgMouseUp(event);
       });
 
       // set the mouse move listener
       this.draw.mousemove(function (event) {
-        _this5.svgMouseMove(event);
+        _this4.svgMouseMove(event);
       });
 
       // get the svg element in the angular world
@@ -2996,7 +1376,7 @@ var ConceptMapController = function () {
            * the user has dropped a new node onto the svg to create a
            * new instance of a node
            */
-          _this5.newNodeDropped(event);
+          _this4.newNodeDropped(event);
         });
 
         this.addedDropListener = true;
@@ -3570,7 +1950,7 @@ var ConceptMapController = function () {
         var newConceptMapNodeId = this.getNewConceptMapNodeId();
 
         // create a ConceptMapNode
-        var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, newConceptMapNodeId, originalId, filePath, label, x, y, width, height);
+        var conceptMapNode = this.ConceptMapService.newConceptMapNode(this.draw, newConceptMapNodeId, originalId, filePath, label, x, y, width, height, this.componentContent.showNodeLabels);
 
         // add the node to our array of nodes
         this.addNode(conceptMapNode);
@@ -3580,8 +1960,6 @@ var ConceptMapController = function () {
 
         // make the node highlighted
         this.setHighlightedElement(conceptMapNode);
-
-        // handle the student data changing
         this.studentDataChanged();
       }
 
@@ -3699,52 +2077,52 @@ var ConceptMapController = function () {
   }, {
     key: 'setNodeMouseEvents',
     value: function setNodeMouseEvents(conceptMapNode) {
-      var _this6 = this;
+      var _this5 = this;
 
       // set the node mouse over event
       conceptMapNode.setNodeMouseOver(function (event) {
-        _this6.nodeMouseOver(event);
+        _this5.nodeMouseOver(event);
       });
 
       // set the node mouse out event
       conceptMapNode.setNodeMouseOut(function (event) {
-        _this6.nodeMouseOut(event);
+        _this5.nodeMouseOut(event);
       });
 
       // set the connector mouse down event
       conceptMapNode.setConnectorMouseDown(function (event) {
-        _this6.disableNodeDragging();
-        _this6.connectorMouseDown(event);
+        _this5.disableNodeDragging();
+        _this5.connectorMouseDown(event);
       });
 
       // set the node mouse down event
       conceptMapNode.setNodeMouseDown(function (event) {
-        _this6.nodeMouseDown(event);
+        _this5.nodeMouseDown(event);
       });
 
       // set the node mouse up event
       conceptMapNode.setNodeMouseUp(function (event) {
-        _this6.nodeMouseUp(event);
+        _this5.nodeMouseUp(event);
       });
 
       // set the delete button mouse down event
       conceptMapNode.setDeleteButtonMouseDown(function (event) {
-        _this6.nodeDeleteButtonMouseDown(event);
+        _this5.nodeDeleteButtonMouseDown(event);
       });
 
       // set the delete button mouse over event
       conceptMapNode.setDeleteButtonMouseOver(function (event) {
-        _this6.nodeDeleteButtonMouseOver(event);
+        _this5.nodeDeleteButtonMouseOver(event);
       });
 
       // set the delete button mouse out event
       conceptMapNode.setDeleteButtonMouseOut(function (event) {
-        _this6.nodeDeleteButtonMouseOut(event);
+        _this5.nodeDeleteButtonMouseOut(event);
       });
 
       // set node drag move event
       conceptMapNode.setDragMove(function (event) {
-        _this6.nodeDragMove(event);
+        _this5.nodeDragMove(event);
       });
     }
 
@@ -4510,31 +2888,31 @@ var ConceptMapController = function () {
   }, {
     key: 'setLinkMouseEvents',
     value: function setLinkMouseEvents(link) {
-      var _this7 = this;
+      var _this6 = this;
 
       // set the link mouse down listener
       link.setLinkMouseDown(function (event) {
-        _this7.linkMouseDown(event);
+        _this6.linkMouseDown(event);
       });
 
       // set the link text mouse down listener
       link.setLinkTextMouseDown(function (event) {
-        _this7.linkTextMouseDown(event);
+        _this6.linkTextMouseDown(event);
       });
 
       // set the link mouse over listener
       link.setLinkMouseOver(function (event) {
-        _this7.linkMouseOver(event);
+        _this6.linkMouseOver(event);
       });
 
       // set the link mouse out listener
       link.setLinkMouseOut(function (event) {
-        _this7.linkMouseOut(event);
+        _this6.linkMouseOut(event);
       });
 
       // set the delete button clicked event for the link
       link.setDeleteButtonClicked(function (event) {
-        _this7.linkDeleteButtonClicked(event, link);
+        _this6.linkDeleteButtonClicked(event, link);
       });
     }
 
@@ -4784,54 +3162,11 @@ var ConceptMapController = function () {
 
       return groupId;
     }
-
-    /**
-     * Save the starter concept map
-     */
-
   }, {
-    key: 'saveStarterConceptMap',
-    value: function saveStarterConceptMap() {
-
-      var answer = confirm(this.$translate('conceptMap.areYouSureYouWantToSaveTheStarterConceptMap'));
-
-      if (answer) {
-        // get the concept map data
-        var conceptMapData = this.getConceptMapData();
-
-        // set the starter concept map data
-        this.authoringComponentContent.starterConceptMap = conceptMapData;
-
-        /*
-         * the author has made changes so we will save the component
-         * content
-         */
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * Delete the starter concept map
-     */
-
-  }, {
-    key: 'deleteStarterConceptMap',
-    value: function deleteStarterConceptMap() {
-
-      var answer = confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteTheStarterConceptMap'));
-
-      if (answer) {
-        // set the starter concept map data
-        this.authoringComponentContent.starterConceptMap = null;
-
-        // clear the concept map
-        this.clearConceptMap();
-
-        /*
-         * the author has made changes so we will save the component
-         * content
-         */
-        this.authoringViewComponentChanged();
+    key: 'populateStarterConceptMap',
+    value: function populateStarterConceptMap() {
+      if (this.componentContent.starterConceptMap != null) {
+        this.populateConceptMapData(this.componentContent.starterConceptMap);
       }
     }
 
@@ -4897,197 +3232,6 @@ var ConceptMapController = function () {
     }
 
     /**
-     * Check if a component generates student work
-     * @param component the component
-     * @return whether the component generates student work
-     */
-
-  }, {
-    key: 'componentHasWork',
-    value: function componentHasWork(component) {
-      var result = true;
-
-      if (component != null) {
-        result = this.ProjectService.componentHasWork(component);
-      }
-
-      return result;
-    }
-
-    /**
-     * The import previous work checkbox was clicked
-     */
-
-  }, {
-    key: 'authoringImportPreviousWorkClicked',
-    value: function authoringImportPreviousWorkClicked() {
-
-      if (!this.authoringComponentContent.importPreviousWork) {
-        /*
-         * import previous work has been turned off so we will clear the
-         * import previous work node id, and import previous work
-         * component id
-         */
-        this.authoringComponentContent.importPreviousWorkNodeId = null;
-        this.authoringComponentContent.importPreviousWorkComponentId = null;
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The import previous work node id has changed
-     */
-
-  }, {
-    key: 'authoringImportPreviousWorkNodeIdChanged',
-    value: function authoringImportPreviousWorkNodeIdChanged() {
-
-      if (this.authoringComponentContent.importPreviousWorkNodeId == null || this.authoringComponentContent.importPreviousWorkNodeId == '') {
-
-        /*
-         * the import previous work node id is null so we will also set the
-         * import previous component id to null
-         */
-        this.authoringComponentContent.importPreviousWorkComponentId = '';
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The import previous work component id has changed
-     */
-
-  }, {
-    key: 'authoringImportPreviousWorkComponentIdChanged',
-    value: function authoringImportPreviousWorkComponentIdChanged() {
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The authoring view show save button checkbox was clicked
-     */
-
-  }, {
-    key: 'authoringViewShowSaveButtonClicked',
-    value: function authoringViewShowSaveButtonClicked() {
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The authoring view show submit button checkbox was clicked
-     */
-
-  }, {
-    key: 'authoringViewShowSubmitButtonClicked',
-    value: function authoringViewShowSubmitButtonClicked() {
-
-      if (!this.authoringComponentContent.showSubmitButton) {
-        /*
-         * we are not showing the submit button to the student so
-         * we will clear the max submit count
-         */
-        this.authoringComponentContent.maxSubmitCount = null;
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The author has changed the rubric
-     */
-
-  }, {
-    key: 'summernoteRubricHTMLChanged',
-    value: function summernoteRubricHTMLChanged() {
-
-      // get the summernote rubric html
-      var html = this.summernoteRubricHTML;
-
-      /*
-       * remove the absolute asset paths
-       * e.g.
-       * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
-       * will be changed to
-       * <img src='sun.png'/>
-       */
-      html = this.ConfigService.removeAbsoluteAssetPaths(html);
-
-      /*
-       * replace <a> and <button> elements with <wiselink> elements when
-       * applicable
-       */
-      html = this.UtilService.insertWISELinks(html);
-
-      // update the component rubric
-      this.authoringComponentContent.rubric = html;
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Show the asset popup to allow the author to choose the background image
-     */
-
-  }, {
-    key: 'chooseBackgroundImage',
-    value: function chooseBackgroundImage() {
-
-      // generate the parameters
-      var params = {};
-      params.isPopup = true;
-      params.nodeId = this.nodeId;
-      params.componentId = this.componentId;
-      params.target = 'background';
-
-      // display the asset chooser
-      this.$rootScope.$broadcast('openAssetChooser', params);
-    }
-
-    /**
-     * Show the asset popup to allow the author to choose an image for the node
-     * @param conceptMapNodeId the id of the node in the concept map
-     */
-
-  }, {
-    key: 'chooseNodeImage',
-    value: function chooseNodeImage(conceptMapNodeId) {
-      // generate the parameters
-      var params = {};
-      params.isPopup = true;
-      params.nodeId = this.nodeId;
-      params.componentId = this.componentId;
-      params.target = conceptMapNodeId;
-
-      // display the asset chooser
-      this.$rootScope.$broadcast('openAssetChooser', params);
-    }
-
-    /**
-     * Check whether we need to show the snip button
-     * @return whether to show the snip button
-     */
-
-  }, {
-    key: 'showSnipButton',
-    value: function showSnipButton() {
-      if (this.NotebookService.isNotebookEnabled() && this.isSnipButtonVisible) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    /**
      * Snip the concept map by converting it to an image
      * @param $event the click event
      */
@@ -5095,20 +3239,12 @@ var ConceptMapController = function () {
   }, {
     key: 'snip',
     value: function snip($event) {
-      var _this8 = this;
+      var _this7 = this;
 
       // get the svg element. this will obtain an array.
       var svgElement = angular.element('#svg_' + this.nodeId + '_' + this.componentId);
 
       if (svgElement != null && svgElement.length > 0) {
-
-        // hide all the iframes otherwise html2canvas may cut off the table
-        this.UtilService.hideIFrames();
-
-        // scroll to the component so html2canvas doesn't cut off the table
-        this.$location.hash(this.componentId);
-        this.$anchorScroll();
-
         // get the svg element
         svgElement = svgElement[0];
 
@@ -5158,7 +3294,7 @@ var ConceptMapController = function () {
            * set the UtilService in a local variable so we can access it
            * in the onload callback function
            */
-          var thisUtilService = _this8.UtilService;
+          var thisUtilService = _this7.UtilService;
 
           // the function that is called after the image is fully loaded
           image.onload = function (event) {
@@ -5178,268 +3314,12 @@ var ConceptMapController = function () {
             var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image, false);
 
             // create a notebook item with the image populated into it
-            _this8.NotebookService.addNewItem($event, imageObject);
-
-            // we are done capturing the table so we will show the iframes again
-            _this8.UtilService.showIFrames();
-
-            /*
-             * scroll to the component in case the view has shifted after
-             * showing the iframe
-             */
-            _this8.$location.hash(_this8.componentId);
-            _this8.$anchorScroll();
+            _this7.NotebookService.addNote($event, imageObject);
           };
 
           // set the src of the image so that the image gets loaded
           image.src = url;
         });
-      }
-    }
-
-    /**
-     * Add a connected component
-     */
-
-  }, {
-    key: 'addConnectedComponent',
-    value: function addConnectedComponent() {
-
-      /*
-       * create the new connected component object that will contain a
-       * node id and component id
-       */
-      var newConnectedComponent = {};
-      newConnectedComponent.nodeId = this.nodeId;
-      newConnectedComponent.componentId = null;
-      newConnectedComponent.updateOn = 'change';
-
-      // initialize the array of connected components if it does not exist yet
-      if (this.authoringComponentContent.connectedComponents == null) {
-        this.authoringComponentContent.connectedComponents = [];
-      }
-
-      // add the connected component
-      this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Delete a connected component
-     * @param index the index of the component to delete
-     */
-
-  }, {
-    key: 'deleteConnectedComponent',
-    value: function deleteConnectedComponent(index) {
-
-      if (this.authoringComponentContent.connectedComponents != null) {
-        this.authoringComponentContent.connectedComponents.splice(index, 1);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Set the show submit button value
-     * @param show whether to show the submit button
-     */
-
-  }, {
-    key: 'setShowSubmitButtonValue',
-    value: function setShowSubmitButtonValue(show) {
-
-      if (show == null || show == false) {
-        // we are hiding the submit button
-        this.authoringComponentContent.showSaveButton = false;
-        this.authoringComponentContent.showSubmitButton = false;
-      } else {
-        // we are showing the submit button
-        this.authoringComponentContent.showSaveButton = true;
-        this.authoringComponentContent.showSubmitButton = true;
-      }
-
-      /*
-       * notify the parent node that this component is changing its
-       * showSubmitButton value so that it can show save buttons on the
-       * step or sibling components accordingly
-       */
-      this.$scope.$emit('componentShowSubmitButtonValueChanged', { nodeId: this.nodeId, componentId: this.componentId, showSubmitButton: show });
-    }
-
-    /**
-     * The showSubmitButton value has changed
-     */
-
-  }, {
-    key: 'showSubmitButtonValueChanged',
-    value: function showSubmitButtonValueChanged() {
-
-      /*
-       * perform additional processing for when we change the showSubmitButton
-       * value
-       */
-      this.setShowSubmitButtonValue(this.authoringComponentContent.showSubmitButton);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Add a tag
-     */
-
-  }, {
-    key: 'addTag',
-    value: function addTag() {
-
-      if (this.authoringComponentContent.tags == null) {
-        // initialize the tags array
-        this.authoringComponentContent.tags = [];
-      }
-
-      // add a tag
-      this.authoringComponentContent.tags.push('');
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Move a tag up
-     * @param index the index of the tag to move up
-     */
-
-  }, {
-    key: 'moveTagUp',
-    value: function moveTagUp(index) {
-
-      if (index > 0) {
-        // the index is not at the top so we can move it up
-
-        // remember the tag
-        var tag = this.authoringComponentContent.tags[index];
-
-        // remove the tag
-        this.authoringComponentContent.tags.splice(index, 1);
-
-        // insert the tag one index back
-        this.authoringComponentContent.tags.splice(index - 1, 0, tag);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Move a tag down
-     * @param index the index of the tag to move down
-     */
-
-  }, {
-    key: 'moveTagDown',
-    value: function moveTagDown(index) {
-
-      if (index < this.authoringComponentContent.tags.length - 1) {
-        // the index is not at the bottom so we can move it down
-
-        // remember the tag
-        var tag = this.authoringComponentContent.tags[index];
-
-        // remove the tag
-        this.authoringComponentContent.tags.splice(index, 1);
-
-        // insert the tag one index forward
-        this.authoringComponentContent.tags.splice(index + 1, 0, tag);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Delete a tag
-     * @param index the index of the tag to delete
-     */
-
-  }, {
-    key: 'deleteTag',
-    value: function deleteTag(index) {
-
-      // ask the author if they are sure they want to delete the tag
-      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisTag'));
-
-      if (answer) {
-        // the author answered yes to delete the tag
-
-        // remove the tag
-        this.authoringComponentContent.tags.splice(index, 1);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Import any work we need from connected components
-     */
-
-  }, {
-    key: 'handleConnectedComponents',
-    value: function handleConnectedComponents() {
-
-      // get the connected components
-      var connectedComponents = this.componentContent.connectedComponents;
-
-      if (connectedComponents != null) {
-
-        var componentStates = [];
-
-        // loop through all the connected components
-        for (var c = 0; c < connectedComponents.length; c++) {
-          var connectedComponent = connectedComponents[c];
-
-          if (connectedComponent != null) {
-            var nodeId = connectedComponent.nodeId;
-            var componentId = connectedComponent.componentId;
-            var type = connectedComponent.type;
-
-            if (type == 'showWork') {
-              // we are getting the work from this student
-
-              // get the latest component state from the component
-              var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-              if (componentState != null) {
-                componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-              }
-
-              // we are showing work so we will not allow the student to edit it
-              this.isDisabled = true;
-            } else if (type == 'importWork' || type == null) {
-              // we are getting the work from this student
-
-              // get the latest component state from the component
-              var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-              if (componentState != null) {
-                componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-              }
-            }
-          }
-        }
-
-        // merge the student responses from all the component states
-        var mergedComponentState = this.createMergedComponentState(componentStates);
-
-        // set the student work into the component
-        this.setStudentWork(mergedComponentState);
-
-        // make the work dirty so that it gets saved
-        this.studentDataChanged();
       }
     }
 
@@ -5467,7 +3347,7 @@ var ConceptMapController = function () {
         for (var c = 0; c < componentStates.length; c++) {
           var componentState = componentStates[c];
 
-          if (componentState != null) {
+          if (componentState.componentType == 'ConceptMap') {
             var studentData = componentState.studentData;
 
             if (studentData != null) {
@@ -5490,6 +3370,11 @@ var ConceptMapController = function () {
                   stretchBackground = conceptMapData.stretchBackground;
                 }
               }
+            }
+          } else if (componentState.componentType == 'Draw' || componentState.componentType == 'Embedded' || componentState.componentType == 'Graph' || componentState.componentType == 'Label' || componentState.componentType == 'Table') {
+            var connectedComponent = this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
+            if (connectedComponent.importWorkAsBackground === true) {
+              this.setComponentStateAsBackgroundImage(componentState);
             }
           }
         }
@@ -5527,237 +3412,18 @@ var ConceptMapController = function () {
     }
 
     /**
-     * Add a connected component
+     * Create an image from a component state and set the image as the background.
+     * @param componentState A component state.
      */
 
   }, {
-    key: 'authoringAddConnectedComponent',
-    value: function authoringAddConnectedComponent() {
+    key: 'setComponentStateAsBackgroundImage',
+    value: function setComponentStateAsBackgroundImage(componentState) {
+      var _this8 = this;
 
-      /*
-       * create the new connected component object that will contain a
-       * node id and component id
-       */
-      var newConnectedComponent = {};
-      newConnectedComponent.nodeId = this.nodeId;
-      newConnectedComponent.componentId = null;
-      newConnectedComponent.type = null;
-      this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(newConnectedComponent);
-
-      // initialize the array of connected components if it does not exist yet
-      if (this.authoringComponentContent.connectedComponents == null) {
-        this.authoringComponentContent.connectedComponents = [];
-      }
-
-      // add the connected component
-      this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Automatically set the component id for the connected component if there
-     * is only one viable option.
-     * @param connectedComponent the connected component object we are authoring
-     */
-
-  }, {
-    key: 'authoringAutomaticallySetConnectedComponentComponentIdIfPossible',
-    value: function authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-      if (connectedComponent != null) {
-        var components = this.getComponentsByNodeId(connectedComponent.nodeId);
-        if (components != null) {
-          var numberOfAllowedComponents = 0;
-          var allowedComponent = null;
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
-
-          try {
-            for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var component = _step.value;
-
-              if (component != null) {
-                if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
-                  // we have found a viable component we can connect to
-                  numberOfAllowedComponents += 1;
-                  allowedComponent = component;
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-              }
-            } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
-              }
-            }
-          }
-
-          if (numberOfAllowedComponents == 1) {
-            /*
-             * there is only one viable component to connect to so we
-             * will use it
-             */
-            connectedComponent.componentId = allowedComponent.id;
-            connectedComponent.type = 'importWork';
-          }
-        }
-      }
-    }
-
-    /**
-     * Delete a connected component
-     * @param index the index of the component to delete
-     */
-
-  }, {
-    key: 'authoringDeleteConnectedComponent',
-    value: function authoringDeleteConnectedComponent(index) {
-
-      // ask the author if they are sure they want to delete the connected component
-      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
-
-      if (answer) {
-        // the author answered yes to delete
-
-        if (this.authoringComponentContent.connectedComponents != null) {
-          this.authoringComponentContent.connectedComponents.splice(index, 1);
-        }
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * Get the connected component type
-     * @param connectedComponent get the component type of this connected component
-     * @return the connected component type
-     */
-
-  }, {
-    key: 'authoringGetConnectedComponentType',
-    value: function authoringGetConnectedComponentType(connectedComponent) {
-
-      var connectedComponentType = null;
-
-      if (connectedComponent != null) {
-
-        // get the node id and component id of the connected component
-        var nodeId = connectedComponent.nodeId;
-        var componentId = connectedComponent.componentId;
-
-        // get the component
-        var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
-        if (component != null) {
-          // get the component type
-          connectedComponentType = component.type;
-        }
-      }
-
-      return connectedComponentType;
-    }
-
-    /**
-     * The connected component node id has changed
-     * @param connectedComponent the connected component that has changed
-     */
-
-  }, {
-    key: 'authoringConnectedComponentNodeIdChanged',
-    value: function authoringConnectedComponentNodeIdChanged(connectedComponent) {
-      if (connectedComponent != null) {
-        connectedComponent.componentId = null;
-        connectedComponent.type = null;
-        this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The connected component component id has changed
-     * @param connectedComponent the connected component that has changed
-     */
-
-  }, {
-    key: 'authoringConnectedComponentComponentIdChanged',
-    value: function authoringConnectedComponentComponentIdChanged(connectedComponent) {
-
-      if (connectedComponent != null) {
-
-        // default the type to import work
-        connectedComponent.type = 'importWork';
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The connected component type has changed
-     * @param connectedComponent the connected component that changed
-     */
-
-  }, {
-    key: 'authoringConnectedComponentTypeChanged',
-    value: function authoringConnectedComponentTypeChanged(connectedComponent) {
-
-      if (connectedComponent != null) {
-
-        if (connectedComponent.type == 'importWork') {
-          /*
-           * the type has changed to import work
-           */
-        } else if (connectedComponent.type == 'showWork') {}
-        /*
-         * the type has changed to show work
-         */
-
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * Check if we are allowed to connect to this component type
-     * @param componentType the component type
-     * @return whether we can connect to the component type
-     */
-
-  }, {
-    key: 'isConnectedComponentTypeAllowed',
-    value: function isConnectedComponentTypeAllowed(componentType) {
-
-      if (componentType != null) {
-
-        var allowedConnectedComponentTypes = this.allowedConnectedComponentTypes;
-
-        // loop through the allowed connected component types
-        for (var a = 0; a < allowedConnectedComponentTypes.length; a++) {
-          var allowedConnectedComponentType = allowedConnectedComponentTypes[a];
-
-          if (allowedConnectedComponentType != null) {
-            if (componentType == allowedConnectedComponentType.type) {
-              // the component type is allowed
-              return true;
-            }
-          }
-        }
-      }
-
-      return false;
+      this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
+        _this8.setBackgroundImage(image.url);
+      });
     }
 
     /**
@@ -5781,48 +3447,12 @@ var ConceptMapController = function () {
         this.backgroundSize = '';
       }
     }
-
-    /**
-     * The show JSON button was clicked to show or hide the JSON authoring
-     */
-
-  }, {
-    key: 'showJSONButtonClicked',
-    value: function showJSONButtonClicked() {
-      // toggle the JSON authoring textarea
-      this.showJSONAuthoring = !this.showJSONAuthoring;
-
-      if (this.jsonStringChanged && !this.showJSONAuthoring) {
-        /*
-         * the author has changed the JSON and has just closed the JSON
-         * authoring view so we will save the component
-         */
-        this.advancedAuthoringViewComponentChanged();
-
-        // scroll to the top of the component
-        this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
-
-        this.jsonStringChanged = false;
-      }
-    }
-
-    /**
-     * The author has changed the JSON manually in the advanced view
-     */
-
-  }, {
-    key: 'authoringJSONChanged',
-    value: function authoringJSONChanged() {
-      this.jsonStringChanged = true;
-    }
   }]);
 
   return ConceptMapController;
-}();
+}(_componentController2.default);
 
-;
-
-ConceptMapController.$inject = ['$anchorScroll', '$filter', '$injector', '$location', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConceptMapService', 'ConfigService', 'CRaterService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+ConceptMapController.$inject = ['$anchorScroll', '$filter', '$location', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConceptMapService', 'ConfigService', 'CRaterService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = ConceptMapController;
 //# sourceMappingURL=conceptMapController.js.map

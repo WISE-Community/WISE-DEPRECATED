@@ -31,6 +31,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.project.Tag;
 
 /**
@@ -38,6 +40,8 @@ import org.wise.portal.domain.project.Tag;
  */
 @Entity
 @Table(name = "tags")
+@Getter
+@Setter
 public class TagImpl implements Tag {
 
   @Transient
@@ -49,32 +53,4 @@ public class TagImpl implements Tag {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id = null;
-
-  /**
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  /**
-   * @return the id
-   */
-  public Integer getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  public void setId(Integer id) {
-    this.id = id;
-  }
 }

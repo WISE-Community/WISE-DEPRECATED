@@ -32,38 +32,28 @@ import org.wise.portal.domain.project.impl.Projectcode;
 
 /**
  * Validator for student's AddProjectParameters
- *
  * @author Hiroki Terashima
  */
 @Component
 public class AddProjectParametersValidator implements Validator {
 
-  /**
-   * @see org.springframework.validation.Validator#supports(java.lang.Class)
-   */
   @SuppressWarnings("unchecked")
   public boolean supports(Class clazz) {
     return AddProjectParameters.class.isAssignableFrom(clazz);
   }
 
-  /**
-   * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
-   */
   public void validate(Object paramsIn, Errors errors) {
     AddProjectParameters params = (AddProjectParameters) paramsIn;
-
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "projectcode",
-      "student.addproject.invalidAccessCode");
+        "student.addproject.invalidAccessCode");
 
     if (errors.getErrorCount() != 0) {
       return;
     }
 
     Projectcode projectcode = new Projectcode(params.getProjectcode());
-
     if (!projectcode.isLegalProjectcode()) {
       errors.rejectValue("projectcode", "student.addproject.invalidAccessCode");
     }
   }
-
 }

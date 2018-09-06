@@ -2226,34 +2226,185 @@ View.prototype.convertMysystem = function(node, nodeContent) {
 }
 
 /**
- * Convert the WISE4 Mysystem2 node into a WISE5 node with an empty
- * embedded component
+ * Convert the WISE4 Mysystem2 node into a WISE5 node with an Concept Map component.
  * @param node the WISE4 node
  * @param nodeContent the WISE4 node content
  * @returns a WISE5 node
  */
 View.prototype.convertMysystem2 = function(node, nodeContent) {
     var wise5Node = this.createWISE5Node();
-
     wise5Node.title = node.title;
-
     wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
     var component = {};
-
     component.id = this.createRandomId();
-    component.type = 'Embedded';
-    component.showSaveButton = false;
-    component.showSubmitButton = false;
+    component.type = 'ConceptMap';
+    component.showSaveButton = true;
+    component.showSubmitButton = true;
+    component.prompt = nodeContent.prompt;
+    component.width = 800;
+    component.height = 600;
+    component.nodes = [];
+    component.links = [];
+    component.rules = [];
+    component.customRuleEvaluator = '';
+    component.showAutoScore = false;
+    component.showAutoFeedback = true;
+    component.linksTitle = 'Energy Type';
+    component.starterConceptMap = null;
+    component.background = nodeContent.backgroundImage;
+    if (nodeContent.backgroundImageScaling === true) {
+      component.stretchBackground = true;
+    } else {
+      component.stretchBackground = false;
+    }
+    this.addNodesToConceptMap(nodeContent, component);
+    this.addLinksToConceptMap(nodeContent, component);
+    this.addRulesToConceptMap(nodeContent, component);
+    this.addCustomRuleEvaluatorToConceptMap(nodeContent, component);
 
     wise5Node.components.push(component);
-
-    // add the WISE5 node to the project
     this.addWISE5Node(wise5Node);
-
     return wise5Node;
+}
+
+/**
+ * Generate the Concept Map nodes and add them to the component.
+ * @param nodeContent the WISE4 node content
+ * @param component the WISE5 Concept Map component
+ */
+View.prototype.addNodesToConceptMap = function(nodeContent, component) {
+  var nodeCounter = 1;
+  var modules = nodeContent.modules;
+  if (modules != null) {
+    for (var n = 0; n < modules.length; n++) {
+      var module = modules[n];
+      var node = {
+        id: 'node' + nodeCounter,
+        label: module.name,
+        fileName: module.image,
+        width: 100,
+        height: 100
+      };
+      component.nodes.push(node);
+      nodeCounter++;
+    }
+  }
+}
+
+/**
+ * Generate the Concept Map links and add them to the component.
+ * @param nodeContent the WISE4 node content
+ * @param component the WISE5 Concept Map component
+ */
+View.prototype.addLinksToConceptMap = function(nodeContent, component) {
+  var linkCounter = 1;
+  var energyTypes = nodeContent.energy_types;
+  if (energyTypes != null) {
+    for (var l = 0; l < energyTypes.length; l++) {
+      var energyType = energyTypes[l];
+      var link = {
+        id: 'link' + linkCounter,
+        label: energyType.label,
+        color: energyType.color
+      };
+      component.links.push(link);
+      linkCounter++;
+    }
+  }
+}
+
+/**
+ * Generate the Concept Map rules and add them to the component.
+ * @param nodeContent the WISE4 node content
+ * @param component the WISE5 Concept Map component
+ */
+View.prototype.addRulesToConceptMap = function(nodeContent, component) {
+  var diagramRules = nodeContent.diagram_rules;
+  if (diagramRules != null) {
+    for (var r = 0; r < diagramRules.length; r++) {
+      var diagramRule = diagramRules[r];
+      var rule = {
+        name: diagramRule.name
+      }
+      rule.nodeLabel = diagramRule.type;
+      if (diagramRule.hasLink) {
+        rule.type = 'link';
+        rule.otherNodeLabel = diagramRule.otherNodeType;
+      } else {
+        rule.type = 'node';
+      }
+      rule.categories = [];
+      rule.comparison = diagramRule.comparison;
+      rule.number = parseInt(diagramRule.number);
+      rule.linkLabel = diagramRule.energyType;
+      if (diagramRule.not === true) {
+        rule.not = true;
+      } else {
+        rule.not = false;
+      }
+      component.rules.push(rule);
+    }
+  }
+}
+
+/**
+ * Generate the Concept Map custom rule evaluator and add them to the component.
+ * @param nodeContent the WISE4 node content
+ * @param component the WISE5 Concept Map component
+ */
+View.prototype.addCustomRuleEvaluatorToConceptMap = function(nodeContent, component) {
+  var feedbackRules = nodeContent.feedbackRules;
+  if (feedbackRules != null) {
+    var updatedFeedbackRules = feedbackRules;
+    /*
+     * Move the MySystemImages/ from the img src to the file name. We need to do this because
+     * of how WISE5 automatically prepends the curriculum folder path to asset file references
+     * in the content. If we didn't do this, WISE5 would try to look up the file at a bad path.
+     *
+     * Bad Path
+     * http://wise.berkeley.edu/MySystemImages/curriculum/290/assets/f_Sun_solar_Surface_miss_ki.png
+     *
+     * Good Path
+     * http://wise.berkeley.edu/curriculum/290/assets/MySystemImages/f_Sun_solar_Surface_miss_ki.png
+     *
+     * Code Before Fix
+     * var f_html_mid = " along the left menu for help.</span><img src='MySystemImages/";
+     * var f_Sun_solar_Surface_miss = f_html_mid + "f_Sun_solar_Surface_miss_ki.png" + f_html_end;
+     *
+     * Code After Fix
+     * var f_html_mid = " along the left menu for help.</span><img src='";
+     * var f_Sun_solar_Surface_miss = f_html_mid + "MySystemImages/f_Sun_solar_Surface_miss_ki.png" + f_html_end;
+     */
+    updatedFeedbackRules = updatedFeedbackRules.replace(/MySystemImages\//g, '');
+    updatedFeedbackRules = updatedFeedbackRules.replace(/"(.*?\.png)"/g,
+      function(group0, group1) {
+        return '"MySystemImages/' + group1 + '"';
+      });
+
+    /*
+     * We only have the functions any() and all() in WISE5 so we will change these function names
+     * to use them.
+     */
+    updatedFeedbackRules = updatedFeedbackRules.replace(/none\(/g, '!any(');
+    updatedFeedbackRules = updatedFeedbackRules.replace(/not_all\(/g, '!all(');
+
+    /*
+     * We display feedback in a different way in WISE5 so we don't need to use the feedback() function.
+     * Change the feedback() call to console.log() for the sake of simplicity.
+     */
+    updatedFeedbackRules = updatedFeedbackRules.replace(/feedback\(/g, 'console.log(');
+
+    // Insert the WISE5 way of handling the score and feedback.
+    updatedFeedbackRules += '\n';
+    updatedFeedbackRules += 'var result = {};\n';
+    updatedFeedbackRules += 'result.score = my_score;\n';
+    updatedFeedbackRules += 'result.feedback = my_feedback;\n';
+    updatedFeedbackRules += 'setResult(result);\n';
+    component.customRuleEvaluator = updatedFeedbackRules;
+  }
 }
 
 /**

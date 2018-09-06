@@ -1,12 +1,17 @@
 package org.wise.portal.presentation.web.filters;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * WISE implementation of SwitchUserFilter
@@ -19,17 +24,21 @@ public class WISESwitchUserFilter extends SwitchUserFilter {
 
   /**
    * Overrides default switch user behavior.
-   * Don't allow anybody to log in as a user with administrator role.
+   * Don't allow non-admins to log in as another admin.
    * @param request
    * @return
    * @throws AuthenticationException
    */
-  protected Authentication attemptSwitchUser(javax.servlet.http.HttpServletRequest request)
+  protected Authentication attemptSwitchUser(HttpServletRequest request)
       throws AuthenticationException {
-    UserDetails userDetails = this.userDetailsService.loadUserByUsername(request.getParameter("username"));
-    for (GrantedAuthority authority : userDetails.getAuthorities()) {
-      if (authority.getAuthority().equals("ROLE_ADMINISTRATOR")) {
-        return null;
+    User signedInUser = ControllerUtil.getSignedInUser();
+    if (!signedInUser.isAdmin()) {
+      UserDetails userDetails =
+          userDetailsService.loadUserByUsername(request.getParameter("username"));
+      for (GrantedAuthority authority : userDetails.getAuthorities()) {
+        if (authority.getAuthority().equals("ROLE_ADMINISTRATOR")) {
+          throw new InsufficientAuthenticationException("Insufficient permissions");
+        }
       }
     }
     return super.attemptSwitchUser(request);

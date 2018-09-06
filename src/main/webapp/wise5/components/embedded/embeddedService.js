@@ -6,9 +6,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nodeService = require('../../services/nodeService');
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _nodeService2 = _interopRequireDefault(_nodeService);
+var _componentService = require('../componentService');
+
+var _componentService2 = _interopRequireDefault(_componentService);
+
+var _html2canvas = require('html2canvas');
+
+var _html2canvas2 = _interopRequireDefault(_html2canvas);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18,74 +24,32 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var EmbeddedService = function (_NodeService) {
-  _inherits(EmbeddedService, _NodeService);
+var EmbeddedService = function (_ComponentService) {
+  _inherits(EmbeddedService, _ComponentService);
 
-  function EmbeddedService($filter, UtilService) {
+  function EmbeddedService($filter, $q, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, EmbeddedService);
 
-    var _this = _possibleConstructorReturn(this, (EmbeddedService.__proto__ || Object.getPrototypeOf(EmbeddedService)).call(this));
+    var _this = _possibleConstructorReturn(this, (EmbeddedService.__proto__ || Object.getPrototypeOf(EmbeddedService)).call(this, $filter, StudentDataService, UtilService));
 
-    _this.$filter = $filter;
-    _this.UtilService = UtilService;
-    _this.$translate = _this.$filter('translate');
+    _this.$q = $q;
+    _this.StudentAssetService = StudentAssetService;
     return _this;
   }
-
-  /**
-   * Get the component type label
-   * example
-   * "Embedded"
-   */
-
 
   _createClass(EmbeddedService, [{
     key: 'getComponentTypeLabel',
     value: function getComponentTypeLabel() {
       return this.$translate('embedded.componentTypeLabel');
     }
-
-    /**
-     * Create an Embedded component object
-     * @returns a new Embedded component object
-     */
-
   }, {
     key: 'createComponent',
     value: function createComponent() {
-      var component = {};
-      component.id = this.UtilService.generateKey();
+      var component = _get(EmbeddedService.prototype.__proto__ || Object.getPrototypeOf(EmbeddedService.prototype), 'createComponent', this).call(this);
       component.type = 'Embedded';
       component.url = '';
-      component.showSaveButton = false;
-      component.showSubmitButton = false;
       return component;
     }
-
-    /**
-     * Copies an existing Embedded component object
-     * @returns a copied Embedded component object
-     */
-
-  }, {
-    key: 'copyComponent',
-    value: function copyComponent(componentToCopy) {
-      var component = this.createComponent();
-      component.url = componentToCopy.url;
-      component.showSaveButton = componentToCopy.showSaveButton;
-      component.showSubmitButton = componentToCopy.showSubmitButton;
-      return component;
-    }
-
-    /**
-     * Check if the component was completed
-     * @param component the component object
-     * @param componentStates the component states for the specific component
-     * @param componentEvents the events for the specific component
-     * @param nodeEvents the events for the parent node of the component
-     * @returns whether the component was completed
-     */
-
   }, {
     key: 'isCompleted',
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
@@ -177,51 +141,9 @@ var EmbeddedService = function (_NodeService) {
     }
   }, {
     key: 'componentHasWork',
-
-
-    /**
-     * Whether this component generates student work
-     * @param component (optional) the component object. if the component object
-     * is not provided, we will use the default value of whether the
-     * component type usually has work.
-     * @return whether this component generates student work
-     */
     value: function componentHasWork(component) {
       return false;
     }
-
-    /**
-     * Whether this component uses a save button
-     * @return whether this component uses a save button
-     */
-
-  }, {
-    key: 'componentUsesSaveButton',
-    value: function componentUsesSaveButton() {
-      return true;
-    }
-
-    /**
-     * Whether this component uses a submit button
-     * @return whether this component uses a submit button
-     */
-
-  }, {
-    key: 'componentUsesSubmitButton',
-    value: function componentUsesSubmitButton() {
-      return true;
-    }
-
-    /**
-     * Check if the component state has student work. Sometimes a component
-     * state may be created if the student visits a component but doesn't
-     * actually perform any work. This is where we will check if the student
-     * actually performed any work.
-     * @param componentState the component state object
-     * @param componentContent the component content
-     * @return whether the component state has any work
-     */
-
   }, {
     key: 'componentStateHasStudentWork',
     value: function componentStateHasStudentWork(componentState, componentContent) {
@@ -233,12 +155,44 @@ var EmbeddedService = function (_NodeService) {
       }
       return false;
     }
+
+    /**
+     * The component state has been rendered in a <component></component> element
+     * and now we want to take a snapshot of the work.
+     * @param componentState The component state that has been rendered.
+     * @return A promise that will return an image object.
+     */
+
+  }, {
+    key: 'generateImageFromRenderedComponentState',
+    value: function generateImageFromRenderedComponentState(componentState) {
+      var _this2 = this;
+
+      var deferred = this.$q.defer();
+      var iframe = $('#componentApp_' + componentState.componentId);
+      if (iframe != null && iframe.length > 0) {
+        var modelElement = iframe.contents().find('html');
+        if (modelElement != null && modelElement.length > 0) {
+          modelElement = modelElement[0];
+          // convert the model element to a canvas element
+          (0, _html2canvas2.default)(modelElement).then(function (canvas) {
+            var img_b64 = canvas.toDataURL('image/png');
+            var imageObject = _this2.UtilService.getImageObjectFromBase64String(img_b64);
+            // add the image to the student assets
+            _this2.StudentAssetService.uploadAsset(imageObject).then(function (asset) {
+              deferred.resolve(asset);
+            });
+          });
+        }
+      }
+      return deferred.promise;
+    }
   }]);
 
   return EmbeddedService;
-}(_nodeService2.default);
+}(_componentService2.default);
 
-EmbeddedService.$inject = ['$filter', 'UtilService'];
+EmbeddedService.$inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = EmbeddedService;
 //# sourceMappingURL=embeddedService.js.map

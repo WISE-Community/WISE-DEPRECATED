@@ -64,5 +64,4 @@ public enum IssueType {
   public String getName() {
     return name();
   }
-
 }

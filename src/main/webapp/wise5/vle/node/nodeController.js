@@ -67,11 +67,10 @@ var NodeController = function () {
       this.nodeContent = this.ProjectService.getNodeById(this.nodeId);
       this.nodeTitle = this.ProjectService.getNodeTitleByNodeId(this.nodeId);
       this.nodeStatus = this.StudentDataService.nodeStatuses[this.nodeId];
-      this.calculateDisabled();
       this.startAutoSaveInterval();
       this.registerExitListener();
 
-      if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('enterNode')) {
+      if (this.NodeService.currentNodeHasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('enterNode')) {
         this.NodeService.evaluateTransitionLogic();
       }
 
@@ -82,9 +81,9 @@ var NodeController = function () {
       if (latestComponentState) {
         var latestClientSaveTime = latestComponentState.clientSaveTime;
         if (latestComponentState.isSubmit) {
-          this.setSaveMessage(this.$translate('LAST_SUBMITTED'), latestClientSaveTime);
+          this.setSubmittedMessage(latestClientSaveTime);
         } else {
-          this.setSaveMessage(this.$translate('LAST_SAVED'), latestClientSaveTime);
+          this.setSavedMessage(latestClientSaveTime);
         }
       }
 
@@ -123,10 +122,6 @@ var NodeController = function () {
 
         if (_nodeId != null && _componentId2 != null) {
           if (_this.nodeId == _nodeId && _this.nodeContainsComponent(_componentId2)) {
-            /*
-             * obtain the component states from the children and save them
-             * to the server
-             */
             var isAutoSave = false;
             _this.createAndSaveComponentData(isAutoSave, _componentId2);
           }
@@ -145,10 +140,6 @@ var NodeController = function () {
 
         if (_nodeId2 != null && _componentId3 != null) {
           if (_this.nodeId == _nodeId2 && _this.nodeContainsComponent(_componentId3)) {
-            /*
-             * obtain the component states from the children and save them
-             * to the server
-             */
             var isAutoSave = false;
             var isSubmit = true;
             _this.createAndSaveComponentData(isAutoSave, _componentId3, isSubmit);
@@ -255,7 +246,6 @@ var NodeController = function () {
        * this node
        */
       if (nodeToExit.id === _this.nodeId) {
-        var saveTriggeredBy = 'exitNode';
         _this.stopAutoSaveInterval();
 
         /*
@@ -263,10 +253,7 @@ var NodeController = function () {
          * everything it needs to do before exiting
          */
         _this.nodeUnloaded(_this.nodeId);
-
-        // check if this node has transition logic that should be run when the student exits the node
-        if (_this.NodeService.hasTransitionLogic() && _this.NodeService.evaluateTransitionLogicOn('exitNode')) {
-          // this node has transition logic
+        if (_this.NodeService.currentNodeHasTransitionLogic() && _this.NodeService.evaluateTransitionLogicOn('exitNode')) {
           _this.NodeService.evaluateTransitionLogic();
         }
       }
@@ -586,13 +573,7 @@ var NodeController = function () {
      */
     value: function saveButtonClicked() {
       this.$rootScope.$broadcast('nodeSaveClicked', { nodeId: this.nodeId });
-
       var isAutoSave = false;
-
-      /*
-       * obtain the component states from the children and save them
-       * to the server
-       */
       this.createAndSaveComponentData(isAutoSave);
     }
   }, {
@@ -608,34 +589,7 @@ var NodeController = function () {
 
       var isAutoSave = false;
       var isSubmit = true;
-
-      /*
-       * obtain the component states from the children and save them
-       * to the server
-       */
       this.createAndSaveComponentData(isAutoSave, null, isSubmit);
-    }
-  }, {
-    key: 'calculateDisabled',
-
-
-    /**
-     * Check if we need to lock the node
-     */
-    value: function calculateDisabled() {
-      var nodeId = this.nodeId;
-      var nodeContent = this.nodeContent;
-
-      if (nodeContent) {
-        var lockAfterSubmit = nodeContent.lockAfterSubmit;
-        if (lockAfterSubmit) {
-          var componentStates = this.StudentDataService.getComponentStatesByNodeId(nodeId);
-          var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-          if (isSubmitted) {
-            this.isDisabled = true;
-          }
-        }
-      }
     }
   }, {
     key: 'getComponents',
@@ -651,7 +605,6 @@ var NodeController = function () {
       if (this.nodeContent != null) {
         components = this.nodeContent.components;
       }
-
       if (components != null && this.isDisabled) {
         var _iteratorNormalCompletion3 = true;
         var _didIteratorError3 = false;
@@ -678,33 +631,6 @@ var NodeController = function () {
           }
         }
       }
-
-      if (components != null && this.nodeContent.lockAfterSubmit) {
-        var _iteratorNormalCompletion4 = true;
-        var _didIteratorError4 = false;
-        var _iteratorError4 = undefined;
-
-        try {
-          for (var _iterator4 = components[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var _component = _step4.value;
-
-            _component.lockAfterSubmit = true;
-          }
-        } catch (err) {
-          _didIteratorError4 = true;
-          _iteratorError4 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-              _iterator4.return();
-            }
-          } finally {
-            if (_didIteratorError4) {
-              throw _iteratorError4;
-            }
-          }
-        }
-      }
       return components;
     }
   }, {
@@ -719,13 +645,13 @@ var NodeController = function () {
     value: function getComponentById(componentId) {
       if (componentId != null) {
         var components = this.getComponents();
-        var _iteratorNormalCompletion5 = true;
-        var _didIteratorError5 = false;
-        var _iteratorError5 = undefined;
+        var _iteratorNormalCompletion4 = true;
+        var _didIteratorError4 = false;
+        var _iteratorError4 = undefined;
 
         try {
-          for (var _iterator5 = components[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-            var tempComponent = _step5.value;
+          for (var _iterator4 = components[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var tempComponent = _step4.value;
 
             if (tempComponent != null) {
               var tempComponentId = tempComponent.id;
@@ -735,16 +661,16 @@ var NodeController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError5 = true;
-          _iteratorError5 = err;
+          _didIteratorError4 = true;
+          _iteratorError4 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion5 && _iterator5.return) {
-              _iterator5.return();
+            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+              _iterator4.return();
             }
           } finally {
-            if (_didIteratorError5) {
-              throw _iteratorError5;
+            if (_didIteratorError4) {
+              throw _iteratorError4;
             }
           }
         }
@@ -763,13 +689,13 @@ var NodeController = function () {
     value: function nodeContainsComponent(componentId) {
       if (componentId != null) {
         var components = this.getComponents();
-        var _iteratorNormalCompletion6 = true;
-        var _didIteratorError6 = false;
-        var _iteratorError6 = undefined;
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
 
         try {
-          for (var _iterator6 = components[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-            var tempComponent = _step6.value;
+          for (var _iterator5 = components[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var tempComponent = _step5.value;
 
             if (tempComponent != null) {
               var tempComponentId = tempComponent.id;
@@ -779,16 +705,16 @@ var NodeController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError6 = true;
-          _iteratorError6 = err;
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-              _iterator6.return();
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
             }
           } finally {
-            if (_didIteratorError6) {
-              throw _iteratorError6;
+            if (_didIteratorError5) {
+              throw _iteratorError5;
             }
           }
         }
@@ -830,47 +756,51 @@ var NodeController = function () {
       return this.nodeContent != null && this.nodeContent.showSubmitButton;
     }
   }, {
-    key: 'isLockAfterSubmit',
-
-
-    /**
-     * Check whether we need to lock the component after the student
-     * submits an answer.
-     */
-    value: function isLockAfterSubmit() {
-      return this.componentContent != null && this.componentContent.lockAfterSubmit;
+    key: 'setSavedMessage',
+    value: function setSavedMessage(time) {
+      this.setSaveText(this.$translate('SAVED'), time);
     }
   }, {
-    key: 'setSaveMessage',
-
+    key: 'setAutoSavedMessage',
+    value: function setAutoSavedMessage(time) {
+      this.setSaveText(this.$translate('AUTO_SAVED'), time);
+    }
+  }, {
+    key: 'setSubmittedMessage',
+    value: function setSubmittedMessage(time) {
+      this.setSaveText(this.$translate('SUBMITTED'), time);
+    }
 
     /**
      * Set the message next to the save button
      * @param message the message to display
      * @param time the time to display
      */
-    value: function setSaveMessage(message, time) {
+
+  }, {
+    key: 'setSaveText',
+    value: function setSaveText(message, time) {
       this.saveMessage.text = message;
       this.saveMessage.time = time;
     }
   }, {
-    key: 'startAutoSaveInterval',
-
+    key: 'clearSaveText',
+    value: function clearSaveText() {
+      this.setSaveText('', null);
+    }
 
     /**
      * Start the auto save interval for this node
      */
+
+  }, {
+    key: 'startAutoSaveInterval',
     value: function startAutoSaveInterval() {
       var _this2 = this;
 
       this.autoSaveIntervalId = setInterval(function () {
         if (_this2.dirtyComponentIds.length) {
           var isAutoSave = true;
-
-          /*
-           * obtain the component states from the children and save them
-           * to the server
-           */
           _this2.createAndSaveComponentData(isAutoSave);
         }
       }, this.autoSaveInterval);
@@ -895,121 +825,109 @@ var NodeController = function () {
      * @param isAutoSave whether the component states were auto saved
      * @param componentId (optional) the component id of the component
      * that triggered the save
-     * @param isSubmit (optional) whether this is a sumission or not
+     * @param isSubmit (optional) whether this is a submit or not
      * @returns a promise that will save all the component states for the step
-     * that need saving
+     * that needs saving
      */
     value: function createAndSaveComponentData(isAutoSave, componentId, isSubmit) {
       var _this3 = this;
 
       return this.createComponentStates(isAutoSave, componentId, isSubmit).then(function (componentStates) {
         var componentAnnotations = [];
-        var componentEvents = null;
-        var nodeStates = null;
-
-        if (componentStates != null && _this3.UtilService.arrayHasNonNullElement(componentStates) || componentAnnotations != null && componentAnnotations.length || componentEvents != null && componentEvents.length) {
-          var _iteratorNormalCompletion7 = true;
-          var _didIteratorError7 = false;
-          var _iteratorError7 = undefined;
+        var componentEvents = [];
+        var nodeStates = [];
+        if (_this3.UtilService.arrayHasNonNullElement(componentStates)) {
+          var _iteratorNormalCompletion6 = true;
+          var _didIteratorError6 = false;
+          var _iteratorError6 = undefined;
 
           try {
-            for (var _iterator7 = componentStates[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-              var componentState = _step7.value;
+            for (var _iterator6 = componentStates[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+              var componentState = _step6.value;
 
               if (componentState != null) {
                 var annotations = componentState.annotations;
                 if (annotations != null) {
-                  /*
-                   * add the annotations to our array of annotations that will
-                   * be saved to the server
-                   */
                   componentAnnotations = componentAnnotations.concat(annotations);
                 }
                 delete componentState.annotations;
               }
             }
           } catch (err) {
-            _didIteratorError7 = true;
-            _iteratorError7 = err;
+            _didIteratorError6 = true;
+            _iteratorError6 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                _iterator7.return();
+              if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                _iterator6.return();
               }
             } finally {
-              if (_didIteratorError7) {
-                throw _iteratorError7;
+              if (_didIteratorError6) {
+                throw _iteratorError6;
               }
             }
           }
 
           return _this3.StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations).then(function (savedStudentDataResponse) {
             if (savedStudentDataResponse) {
-              // check if this node has transition logic that should be run when the student data changes
-              if (_this3.NodeService.hasTransitionLogic() && _this3.NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
-                // this node has transition logic
-                _this3.NodeService.evaluateTransitionLogic();
-              }
+              if (_this3.NodeService.currentNodeHasTransitionLogic()) {
+                if (_this3.NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
+                  _this3.NodeService.evaluateTransitionLogic();
+                }
+                if (_this3.NodeService.evaluateTransitionLogicOn('scoreChanged')) {
+                  if (componentAnnotations != null && componentAnnotations.length > 0) {
+                    var evaluateTransitionLogic = false;
+                    var _iteratorNormalCompletion7 = true;
+                    var _didIteratorError7 = false;
+                    var _iteratorError7 = undefined;
 
-              // check if this node has transition logic that should be run when the student score changes
-              if (_this3.NodeService.hasTransitionLogic() && _this3.NodeService.evaluateTransitionLogicOn('scoreChanged')) {
-                if (componentAnnotations != null && componentAnnotations.length > 0) {
-                  var evaluateTransitionLogic = false;
-                  var _iteratorNormalCompletion8 = true;
-                  var _didIteratorError8 = false;
-                  var _iteratorError8 = undefined;
+                    try {
+                      for (var _iterator7 = componentAnnotations[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                        var componentAnnotation = _step7.value;
 
-                  try {
-                    for (var _iterator8 = componentAnnotations[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                      var componentAnnotation = _step8.value;
-
-                      if (componentAnnotation != null) {
-                        if (componentAnnotation.type === 'autoScore') {
-                          evaluateTransitionLogic = true;
+                        if (componentAnnotation != null) {
+                          if (componentAnnotation.type === 'autoScore') {
+                            evaluateTransitionLogic = true;
+                          }
+                        }
+                      }
+                    } catch (err) {
+                      _didIteratorError7 = true;
+                      _iteratorError7 = err;
+                    } finally {
+                      try {
+                        if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                          _iterator7.return();
+                        }
+                      } finally {
+                        if (_didIteratorError7) {
+                          throw _iteratorError7;
                         }
                       }
                     }
-                  } catch (err) {
-                    _didIteratorError8 = true;
-                    _iteratorError8 = err;
-                  } finally {
-                    try {
-                      if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                        _iterator8.return();
-                      }
-                    } finally {
-                      if (_didIteratorError8) {
-                        throw _iteratorError8;
-                      }
-                    }
-                  }
 
-                  if (evaluateTransitionLogic) {
-                    // the student score has changed so we will evaluate the transition logic
-                    _this3.NodeService.evaluateTransitionLogic();
+                    if (evaluateTransitionLogic) {
+                      _this3.NodeService.evaluateTransitionLogic();
+                    }
                   }
                 }
               }
-
               var studentWorkList = savedStudentDataResponse.studentWorkList;
               if (!componentId && studentWorkList && studentWorkList.length) {
-                // this was a step save or submission and student work was saved, so set save message
                 var latestStudentWork = studentWorkList[studentWorkList.length - 1];
                 var serverSaveTime = latestStudentWork.serverSaveTime;
                 var clientSaveTime = _this3.ConfigService.convertToClientTimestamp(serverSaveTime);
-
                 if (isAutoSave) {
-                  _this3.setSaveMessage(_this3.$translate('AUTO_SAVED'), clientSaveTime);
+                  _this3.setAutoSavedMessage(clientSaveTime);
                 } else if (isSubmit) {
-                  _this3.setSaveMessage(_this3.$translate('SUBMITTED'), clientSaveTime);
+                  _this3.setSubmittedMessage(clientSaveTime);
                 } else {
-                  _this3.setSaveMessage(_this3.$translate('SAVED'), clientSaveTime);
+                  _this3.setSavedMessage(clientSaveTime);
                 }
               } else {
-                _this3.setSaveMessage('', null);
+                _this3.clearSaveText();
               }
             }
-
             return savedStudentDataResponse;
           });
         }
@@ -1046,17 +964,17 @@ var NodeController = function () {
         var workgroupId = this.ConfigService.getWorkgroupId();
         var nodeId = this.nodeId;
 
-        var _iteratorNormalCompletion9 = true;
-        var _didIteratorError9 = false;
-        var _iteratorError9 = undefined;
+        var _iteratorNormalCompletion8 = true;
+        var _didIteratorError8 = false;
+        var _iteratorError8 = undefined;
 
         try {
-          for (var _iterator9 = components[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-            var _component2 = _step9.value;
+          for (var _iterator8 = components[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+            var _component = _step8.value;
 
-            if (_component2 != null) {
-              var tempComponentId = _component2.id;
-              var componentType = _component2.type;
+            if (_component != null) {
+              var tempComponentId = _component.id;
+              var componentType = _component.type;
 
               var childScope = this.componentToScope[tempComponentId];
               if (childScope != null) {
@@ -1068,16 +986,16 @@ var NodeController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError9 = true;
-          _iteratorError9 = err;
+          _didIteratorError8 = true;
+          _iteratorError8 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion9 && _iterator9.return) {
-              _iterator9.return();
+            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+              _iterator8.return();
             }
           } finally {
-            if (_didIteratorError9) {
-              throw _iteratorError9;
+            if (_didIteratorError8) {
+              throw _iteratorError8;
             }
           }
         }
@@ -1201,13 +1119,13 @@ var NodeController = function () {
            * only notify components that are listening for changes
            * from the specific component id.
            */
-          var _iteratorNormalCompletion10 = true;
-          var _didIteratorError10 = false;
-          var _iteratorError10 = undefined;
+          var _iteratorNormalCompletion9 = true;
+          var _didIteratorError9 = false;
+          var _iteratorError9 = undefined;
 
           try {
-            for (var _iterator10 = components[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-              var tempComponent = _step10.value;
+            for (var _iterator9 = components[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+              var tempComponent = _step9.value;
 
               if (tempComponent != null) {
                 var tempComponentId = tempComponent.id;
@@ -1217,13 +1135,13 @@ var NodeController = function () {
                  */
                 var connectedComponents = tempComponent.connectedComponents;
                 if (connectedComponents != null) {
-                  var _iteratorNormalCompletion11 = true;
-                  var _didIteratorError11 = false;
-                  var _iteratorError11 = undefined;
+                  var _iteratorNormalCompletion10 = true;
+                  var _didIteratorError10 = false;
+                  var _iteratorError10 = undefined;
 
                   try {
-                    for (var _iterator11 = connectedComponents[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-                      var connectedComponentParams = _step11.value;
+                    for (var _iterator10 = connectedComponents[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                      var connectedComponentParams = _step10.value;
 
                       if (connectedComponentParams != null) {
                         var nodeId = connectedComponentParams.nodeId;
@@ -1278,16 +1196,16 @@ var NodeController = function () {
                       }
                     }
                   } catch (err) {
-                    _didIteratorError11 = true;
-                    _iteratorError11 = err;
+                    _didIteratorError10 = true;
+                    _iteratorError10 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                        _iterator11.return();
+                      if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                        _iterator10.return();
                       }
                     } finally {
-                      if (_didIteratorError11) {
-                        throw _iteratorError11;
+                      if (_didIteratorError10) {
+                        throw _iteratorError10;
                       }
                     }
                   }
@@ -1295,16 +1213,16 @@ var NodeController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError10 = true;
-            _iteratorError10 = err;
+            _didIteratorError9 = true;
+            _iteratorError9 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion10 && _iterator10.return) {
-                _iterator10.return();
+              if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                _iterator9.return();
               }
             } finally {
-              if (_didIteratorError10) {
-                throw _iteratorError10;
+              if (_didIteratorError9) {
+                throw _iteratorError9;
               }
             }
           }
@@ -1367,13 +1285,13 @@ var NodeController = function () {
     value: function getSubmitDirty() {
       var components = this.getComponents();
       if (components != null) {
-        var _iteratorNormalCompletion12 = true;
-        var _didIteratorError12 = false;
-        var _iteratorError12 = undefined;
+        var _iteratorNormalCompletion11 = true;
+        var _didIteratorError11 = false;
+        var _iteratorError11 = undefined;
 
         try {
-          for (var _iterator12 = components[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-            var component = _step12.value;
+          for (var _iterator11 = components[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+            var component = _step11.value;
 
             var componentId = component.id;
             var latestState = this.getComponentStateByComponentId(componentId);
@@ -1382,16 +1300,16 @@ var NodeController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError12 = true;
-          _iteratorError12 = err;
+          _didIteratorError11 = true;
+          _iteratorError11 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion12 && _iterator12.return) {
-              _iterator12.return();
+            if (!_iteratorNormalCompletion11 && _iterator11.return) {
+              _iterator11.return();
             }
           } finally {
-            if (_didIteratorError12) {
-              throw _iteratorError12;
+            if (_didIteratorError11) {
+              throw _iteratorError11;
             }
           }
         }

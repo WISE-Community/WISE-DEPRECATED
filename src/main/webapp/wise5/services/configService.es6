@@ -102,10 +102,6 @@ class ConfigService {
     return this.getConfigParam('projectId');
   };
 
-  getOpenCPUURL() {
-    return this.getConfigParam('openCPUURL');
-  };
-
   getSessionLogOutURL() {
     return this.getConfigParam('sessionLogOutURL');
   };
@@ -135,7 +131,8 @@ class ConfigService {
   };
 
   getWebSocketURL() {
-    return this.getConfigParam('webSocketURL');
+    return window.location.protocol.replace("http", "ws") + "//" + window.location.host +
+        this.getContextPath() + "/websocket";
   };
 
   getWISEBaseURL() {
@@ -149,6 +146,10 @@ class ConfigService {
   getMode() {
     return this.getConfigParam('mode');
   };
+
+  getContextPath() {
+    return this.getConfigParam('contextPath');
+  }
 
   /**
    * Returns the period id of the logged-in user.

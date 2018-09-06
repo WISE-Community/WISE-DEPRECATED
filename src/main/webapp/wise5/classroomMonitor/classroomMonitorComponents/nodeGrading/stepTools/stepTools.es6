@@ -85,15 +85,16 @@ const StepTools = {
     },
     template:
         `<div layout="row" layout-align="center center">
-            <md-button aria-label="{{ 'previousStep' | translate }}"
+            <md-button aria-label="{{ 'PREVIOUS_STEP' | translate }}"
                        class="md-icon-button toolbar__nav"
                        ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevNode()">
                 <md-icon> chevron_left </md-icon>
-                <md-tooltip md-direction="bottom">{{ 'previousStep' | translate }}</md-tooltip>
+                <md-tooltip md-direction="bottom">{{ 'PREVIOUS_STEP' | translate }}</md-tooltip>
             </md-button>
             <node-icon node-id="$ctrl.nodeId" size="18"></node-icon>&nbsp;
             <md-select id="stepSelectMenu" md-theme="default"
                        class="md-button md-no-underline toolbar__select toolbar__select--fixedwidth"
+                       md-container-class="stepSelectMenuContainer"
                        aria-label="{{ 'selectAStep' | translate }}"
                        ng-model="$ctrl.toNodeId"
                        ng-change="$ctrl.toNodeIdChanged()"
@@ -108,11 +109,11 @@ const StepTools = {
                     </div>
                 </md-option>
             </md-select>
-            <md-button aria-label="{{ 'nextStep' | translate }}"
+            <md-button aria-label="{{ 'NEXT_STEP' | translate }}"
                        class="md-icon-button toolbar__nav"
                        ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextNode()">
                 <md-icon> chevron_right </md-icon>
-                <md-tooltip md-direction="bottom">{{ 'nextStep' | translate }}</md-tooltip>
+                <md-tooltip md-direction="bottom">{{ 'NEXT_STEP' | translate }}</md-tooltip>
             </md-button>
         </div>`,
     controller: StepToolsController

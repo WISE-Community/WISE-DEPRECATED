@@ -6,1864 +6,1271 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _componentController = require('../componentController');
+
+var _componentController2 = _interopRequireDefault(_componentController);
+
 require('svg.js');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var AnimationController = function () {
-  function AnimationController($filter, $injector, $mdDialog, $q, $rootScope, $scope, $timeout, AnimationService, AnnotationService, ConfigService, CRaterService, NodeService, NotificationService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
-    var _this = this;
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AnimationController = function (_ComponentController) {
+  _inherits(AnimationController, _ComponentController);
+
+  function AnimationController($filter, $mdDialog, $q, $rootScope, $scope, $timeout, AnimationService, AnnotationService, ConfigService, NodeService, NotebookService, NotificationService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, AnimationController);
 
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.$timeout = $timeout;
-    this.AnimationService = AnimationService;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
-    this.CRaterService = CRaterService;
-    this.NodeService = NodeService;
-    this.NotificationService = NotificationService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-
-    this.$translate = this.$filter('translate');
-
-    this.idToOrder = this.ProjectService.idToOrder;
-
-    // the node id of the current node
-    this.nodeId = null;
-
-    // the component id
-    this.componentId = null;
-
-    // field that will hold the component content
-    this.componentContent = null;
-
-    // field that will hold the authoring component content
-    this.authoringComponentContent = null;
-
-    // holds the text that the student has typed
-    this.studentResponse = '';
-
-    // holds student attachments like assets
-    this.attachments = [];
-
-    // whether the step should be disabled
-    this.isDisabled = false;
-
-    // whether the student work is dirty and needs saving
-    this.isDirty = false;
-
-    // whether the student work has changed since last submit
-    this.isSubmitDirty = false;
-
-    // message to show next to save/submit buttons
-    this.saveMessage = {
-      text: '',
-      time: ''
-    };
-
-    // whether this component is showing previous work
-    this.isShowPreviousWork = false;
-
-    // whether the student work is for a submit
-    this.isSubmit = false;
-
-    // whether rich text editing is enabled
-    this.isRichTextEnabled = false;
-
-    // whether students can attach files to their work
-    this.isStudentAttachmentEnabled = false;
-
-    // whether the prompt is shown or not
-    this.isPromptVisible = true;
-
-    // whether the save button is shown or not
-    this.isSaveButtonVisible = false;
-
-    // whether the submit button is shown or not
-    this.isSubmitButtonVisible = false;
-
-    // whether the submit button is disabled
-    this.isSubmitButtonDisabled = false;
-
-    // whether we're only showing the student work
-    this.onlyShowWork = false;
-
-    // the latest annotations
-    this.latestAnnotations = null;
-
-    // used to hold a message dialog if we need to use one
-    this.messageDialog = null;
-
-    // counter to keep track of the number of submits
-    this.submitCounter = 0;
-
-    // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
-
-    // mapping from object id to svg object
-    this.idToSVGObject = {};
-
-    //var scope = this;
-    var themePath = this.ProjectService.getThemePath();
-
-    // TODO: make toolbar items and plugins customizable by authors (OR strip down to only special characters, support for equations)
-    // Rich text editor options
-    this.tinymceOptions = {
-      //onChange: function(e) {
-      //scope.studentDataChanged();
-      //},
-      menubar: false,
-      plugins: 'link image media autoresize', //imagetools
-      toolbar: 'undo redo | bold italic | superscript subscript | bullist numlist | alignleft aligncenter alignright | link image media',
-      autoresize_bottom_margin: '0',
-      autoresize_min_height: '100',
-      image_advtab: true,
-      content_css: themePath + '/style/tinymce.css',
-      setup: function setup(ed) {
-        ed.on('focus', function (e) {
-          $(e.target.editorContainer).addClass('input--focused').parent().addClass('input-wrapper--focused');
-          $('label[for="' + e.target.id + '"]').addClass('input-label--focused');
-        });
-
-        ed.on('blur', function (e) {
-          $(e.target.editorContainer).removeClass('input--focused').parent().removeClass('input-wrapper--focused');
-          $('label[for="' + e.target.id + '"]').removeClass('input-label--focused');
-        });
-      }
-    };
-
-    // the options for when to update this component from a connected component
-    this.connectedComponentUpdateOnOptions = [{
-      value: 'change',
-      text: 'Change'
-    }, {
-      value: 'submit',
-      text: 'Submit'
-    }];
-
-    // the component types we are allowed to connect to
-    this.allowedConnectedComponentTypes = [{
-      type: 'Animation'
-    }, {
-      type: 'Graph'
-    }];
-
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
-
-    // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
-
-    // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
-
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    this.originalComponentContent = this.$scope.originalComponentContent;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    this.mode = this.$scope.mode;
-
-    this.workgroupId = this.$scope.workgroupId;
-    this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
-
-    // the default width and height
-    this.width = 800;
-    this.height = 600;
-
-    // the default pixels per unit
-    this.pixelsPerXUnit = 1;
-    this.pixelsPerYUnit = 1;
-
-    // the default data origin in pixels
-    this.dataXOriginInPixels = 0;
-    this.dataYOriginInPixels = 0;
-
-    // the current state of the animation ('playing', 'paused', or 'stopped')
-    this.animationState = 'stopped';
-
-    // the coordinate system to use ('screen' or 'cartesian')
-    this.coordinateSystem = 'screen';
-
-    // mapping from id to whether the object is animating
-    this.idToAnimationState = {};
-
-    /*
-     * milliseconds per data time
-     * example
-     * The data time can be labelled with any unit of time such as seconds,
-     * minutes, hours, days, years, etc.
-     * If realTimePerDataTime is 100, that means for 1 data time, 100
-     * milliseconds will pass in real time.
-     */
-    this.realTimePerDataTime = 100;
-
-    // the speed slider value
-    this.speedSliderValue = 3;
-
-    // get the component state from the scope
-    var componentState = this.$scope.componentState;
-
-    if (this.componentContent != null) {
-
-      // get the component id
-      this.componentId = this.componentContent.id;
-
-      // get the svg id
-      this.svgId = 'svg_' + this.nodeId + '_' + this.componentId;
-
-      // initialize all the coordinates
-      this.initializeCoordinates();
-
-      if (this.mode === 'student') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-        // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      } else if (this.mode === 'grading') {
-
-        // get the svg id
-        if (componentState != null) {
-          this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + componentState.id;
-        } else {
-
-          this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
-        }
-
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'onlyShowWork') {
-        this.onlyShowWork = true;
-        this.isPromptVisible = false;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'showPreviousWork') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'authoring') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-        // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-
-        // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return this.authoringComponentContent;
-        }.bind(this), function (newValue, oldValue) {
-          // inject the asset paths into the new component content
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
-          /*
-           * reset the values so that the preview is refreshed with
-           * the new content
-           */
-          this.submitCounter = 0;
-          this.studentResponse = '';
-          this.latestAnnotations = null;
-          this.isDirty = false;
-          this.isSubmitDirty = false;
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-          if (this.componentContent.starterSentence != null) {
-            /*
-             * the student has not done any work and there is a starter sentence
-             * so we will populate the textarea with the starter sentence
-             */
-            this.studentResponse = this.componentContent.starterSentence;
-          }
-
-          // remove all the old objects
-          this.removeAllObjects();
-
-          // initialize all the coordinates
-          this.initializeCoordinates();
-
-          // re-render the svg div
-          this.setup();
-        }.bind(this), true);
-      }
-
-      // set whether rich text is enabled
-      this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
-
-      // set whether studentAttachment is enabled
-      this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-      if (this.mode == 'student') {
-        if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-          // we will show work from another component
-          this.handleConnectedComponents();
-        } else if (this.AnimationService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          /*
-           * the student has work so we will populate the work into this
-           * component
-           */
-          this.setStudentWork(componentState);
-        } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // we will import work from another component
-          this.handleConnectedComponents();
-        }
+    var _this = _possibleConstructorReturn(this, (AnimationController.__proto__ || Object.getPrototypeOf(AnimationController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
+
+    _this.$q = $q;
+    _this.$timeout = $timeout;
+    _this.AnimationService = AnimationService;
+    _this.NotificationService = NotificationService;
+
+    _this.latestAnnotations = null;
+    _this.width = 800;
+    _this.height = 600;
+    _this.pixelsPerXUnit = 1;
+    _this.pixelsPerYUnit = 1;
+    _this.dataXOriginInPixels = 0;
+    _this.dataYOriginInPixels = 0;
+    _this.idToSVGObject = {};
+    _this.idToWhetherAuthoredObjectIsAnimating = {};
+    var componentState = _this.$scope.componentState;
+    _this.svgId = 'svg_' + _this.nodeId + '_' + _this.componentId;
+    _this.setAnimationStateToStopped();
+    _this.setCoordinateSystemToScreen();
+    _this.setSpeed(3);
+    _this.initializeCoordinates();
+
+    if (_this.isStudentMode()) {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
+      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+    } else if (_this.isGradingMode()) {
+      if (componentState != null) {
+        _this.svgId = 'svg_' + _this.nodeId + '_' + _this.componentId + '_' + componentState.id;
       } else {
-        // populate the student work into this component
-        this.setStudentWork(componentState);
+        _this.svgId = 'svg_' + _this.nodeId + '_' + _this.componentId + '_' + _this.workgroupId;
       }
 
-      // check if the student has used up all of their submits
-      if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-        /*
-         * the student has used up all of their chances to submit so we
-         * will disable the submit button
-         */
-        this.isSubmitButtonDisabled = true;
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isDisabled = true;
+    }
+
+    if (_this.isStudentMode()) {
+      if (_this.UtilService.hasShowWorkConnectedComponent(_this.componentContent)) {
+        _this.handleConnectedComponents();
+      } else if (_this.AnimationService.componentStateHasStudentWork(componentState, _this.componentContent)) {
+        _this.setStudentWork(componentState);
+      } else if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
+        _this.handleConnectedComponents();
       }
-
-      // check if we need to lock this component
-      this.calculateDisabled();
-
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+    } else {
+      if (componentState != null) {
+        _this.setStudentWork(componentState);
       }
     }
 
+    if (_this.hasStudentUsedAllSubmits()) {
+      _this.disableSubmitButton();
+    }
+
+    _this.disableComponentIfNecessary();
+
+    if (_this.$scope.$parent.nodeController != null) {
+      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
+    }
+
+    _this.setupSVGAfterTimeout();
+
+    _this.$scope.isDirty = function () {
+      return _this.$scope.animationController.isDirty;
+    };
+
     /*
-     * Call the setup() function after a timeout so that angular has a
-     * chance to set the svg element id before we start using it. If we
-     * don't wait for the timeout, the svg id won't be set when we try
-     * to start referencing the svg element.
-     */
-    this.$timeout(angular.bind(this, this.setup));
-
-    /**
-     * Returns true iff there is student work that hasn't been saved yet
-     */
-    this.$scope.isDirty = function () {
-      return this.$scope.animationController.isDirty;
-    }.bind(this);
-
-    /**
      * Get the component state from this component. The parent node will
      * call this function to obtain the component state when it needs to
      * save student data.
-     * @param isSubmit boolean whether the request is coming from a submit
+     * @param {boolean} isSubmit boolean whether the request is coming from a submit
      * action (optional; default is false)
-     * @return a promise of a component state containing the student data
+     * @return {promise} a promise of a component state containing the student data
      */
-    this.$scope.getComponentState = function (isSubmit) {
-      var deferred = this.$q.defer();
-      var getState = false;
-      var action = 'change';
-
-      if (isSubmit) {
-        if (this.$scope.animationController.isSubmitDirty) {
-          getState = true;
-          action = 'submit';
-        }
-      } else {
-        if (this.$scope.animationController.isDirty) {
-          getState = true;
-          action = 'save';
-        }
-      }
-
-      if (getState) {
-        // create a component state populated with the student data
-        this.$scope.animationController.createComponentState(action).then(function (componentState) {
+    _this.$scope.getComponentState = function (isSubmit) {
+      var deferred = _this.$q.defer();
+      if (_this.hasDirtyWorkToSendToParent(isSubmit)) {
+        var action = _this.getDirtyWorkToSendToParentAction(isSubmit);
+        _this.$scope.animationController.createComponentState(action).then(function (componentState) {
           deferred.resolve(componentState);
         });
       } else {
-        /*
-         * the student does not have any unsaved changes in this component
-         * so we don't need to save a component state for this component.
-         * we will immediately resolve the promise here.
-         */
         deferred.resolve();
       }
-
       return deferred.promise;
-    }.bind(this);
-
-    /**
-     * The parent node submit button was clicked
-     */
-    this.$scope.$on('nodeSubmitClicked', function (event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-
-        // trigger the submit
-        var submitTriggeredBy = 'nodeSubmitButton';
-        this.submit(submitTriggeredBy);
-      }
-    }.bind(this));
-
-    /**
-     * Listen for the 'studentWorkSavedToServer' event which is fired when
-     * we receive the response from saving a component state to the server
-     */
-    this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function (event, args) {
-
-      var componentState = args.studentWork;
-
-      // check that the component state is for this component
-      if (componentState && this.nodeId === componentState.nodeId && this.componentId === componentState.componentId) {
-
-        // set isDirty to false because the component state was just saved and notify node
-        this.isDirty = false;
-        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
-
-        var isAutoSave = componentState.isAutoSave;
-        var isSubmit = componentState.isSubmit;
-        var serverSaveTime = componentState.serverSaveTime;
-        var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-        // set save message
-        if (isSubmit) {
-          this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
-
-          this.lockIfNecessary();
-
-          // set isSubmitDirty to false because the component state was just submitted and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-        } else if (isAutoSave) {
-          this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
-        } else {
-          this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
-        }
-      }
-    }));
-
-    /**
-     * Listen for the 'annotationSavedToServer' event which is fired when
-     * we receive the response from saving an annotation to the server
-     */
-    this.$scope.$on('annotationSavedToServer', function (event, args) {
-
-      if (args != null) {
-
-        // get the annotation that was saved to the server
-        var annotation = args.annotation;
-
-        if (annotation != null) {
-
-          // get the node id and component id of the annotation
-          var annotationNodeId = annotation.nodeId;
-          var annotationComponentId = annotation.componentId;
-
-          // make sure the annotation was for this component
-          if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
-
-            // get latest score and comment annotations for this component
-            _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-          }
-        }
-      }
-    });
-
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    this.$scope.$on('exitNode', function (event, args) {}.bind(this));
-
-    /*
-     * Listen for the assetSelected event which occurs when the user
-     * selects an asset from the choose asset popup
-     */
-    this.$scope.$on('assetSelected', function (event, args) {
-
-      if (args != null) {
-
-        // make sure the event was fired for this component
-        if (args.nodeId == _this.nodeId && args.componentId == _this.componentId) {
-          // the asset was selected for this component
-          var assetItem = args.assetItem;
-
-          if (assetItem != null) {
-            var fileName = assetItem.fileName;
-
-            if (fileName != null) {
-              /*
-               * get the assets directory path
-               * e.g.
-               * /wise/curriculum/3/
-               */
-              var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
-              var fullAssetPath = assetsDirectoryPath + '/' + fileName;
-
-              var summernoteId = '';
-
-              if (args.target == 'prompt') {
-                // the target is the summernote prompt element
-                summernoteId = 'summernotePrompt_' + _this.nodeId + '_' + _this.componentId;
-              } else if (args.target == 'rubric') {
-                // the target is the summernote rubric element
-                summernoteId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
-              } else if (args.target == 'image') {
-                // the target is the image
-                if (args.targetObject != null) {
-                  args.targetObject.image = fileName;
-                }
-              } else if (args.target == 'imageMovingLeft') {
-                // the target is the image moving left
-                if (args.targetObject != null) {
-                  args.targetObject.imageMovingLeft = fileName;
-                }
-              } else if (args.target == 'imageMovingRight') {
-                // the target is the image moving right
-                if (args.targetObject != null) {
-                  args.targetObject.imageMovingRight = fileName;
-                }
-              }
-
-              if (summernoteId != '') {
-                if (_this.UtilService.isImage(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // add the image html
-                  $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                } else if (_this.UtilService.isVideo(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // insert the video element
-                  var videoElement = document.createElement('video');
-                  videoElement.controls = 'true';
-                  videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                  $('#' + summernoteId).summernote('insertNode', videoElement);
-                }
-              }
-            }
-          }
-        }
-      }
-
-      // the authoring component content has changed so we will save the project
-      _this.authoringViewComponentChanged();
-
-      // close the popup
-      _this.$mdDialog.hide();
-    });
+    };
 
     /**
      * A connected component has changed its student data so we will
-     * perform any necessary changes to this component
-     * @param connectedComponent the connected component
-     * @param connectedComponentParams the connected component params
-     * @param componentState the student data from the connected
-     * component that has changed
+     * perform any necessary changes to this component.
+     * @param {object} connectedComponent The connected component content.
+     * @param {object} connectedComponentParams The params to determine what to
+     * do with the connected component data such as 'importWork' or 'showWork'.
+     * @param {object} componentState The student data from the connected
+     * component that has changed.
      */
-    this.$scope.handleConnectedComponentStudentDataChanged = function (connectedComponent, connectedComponentParams, componentState) {
-
-      if (connectedComponent != null && componentState != null) {
-
-        // get the component type that has changed
-        var componentType = connectedComponent.type;
-
-        if (componentType === 'Graph') {
-
-          // update the object datas
-          _this.updateObjectDatasFromDataSources(componentState);
-        }
+    _this.$scope.handleConnectedComponentStudentDataChanged = function (connectedComponent, connectedComponentParams, componentState) {
+      if (connectedComponent.type === 'Graph') {
+        _this.updateObjectDatasFromDataSourceComponentState(componentState);
       }
     };
 
-    /*
-     * The advanced button for a component was clicked. If the button was
-     * for this component, we will show the advanced authoring.
-     */
-    this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
-      if (args != null) {
-        var componentId = args.componentId;
-        if (_this.componentId === componentId) {
-          _this.showAdvancedAuthoring = !_this.showAdvancedAuthoring;
-        }
-      }
-    });
-
-    // load script for this component, if any
-    var script = this.componentContent.script;
-    if (script != null) {
-      this.ProjectService.retrieveScript(script).then(function (script) {
-        new Function(script).call(_this);
-      });
-    }
+    _this.broadcastDoneRenderingComponent();
+    return _this;
   }
 
-  /**
-   * Initialize the coordinates of the svg div
-   */
-
-
   _createClass(AnimationController, [{
+    key: 'setAnimationState',
+    value: function setAnimationState(state) {
+      this.animationState = state;
+    }
+  }, {
+    key: 'setAnimationStateToPlaying',
+    value: function setAnimationStateToPlaying() {
+      this.setAnimationState('playing');
+    }
+  }, {
+    key: 'setAnimationStateToPaused',
+    value: function setAnimationStateToPaused() {
+      this.setAnimationState('paused');
+    }
+  }, {
+    key: 'setAnimationStateToStopped',
+    value: function setAnimationStateToStopped() {
+      this.setAnimationState('stopped');
+    }
+  }, {
+    key: 'setCoordinateSystem',
+    value: function setCoordinateSystem(coordinateSystem) {
+      this.coordinateSystem = coordinateSystem;
+    }
+  }, {
+    key: 'setCoordinateSystemToScreen',
+    value: function setCoordinateSystemToScreen() {
+      this.setCoordinateSystem('screen');
+    }
+  }, {
+    key: 'setCoordinateSystemToCartesian',
+    value: function setCoordinateSystemToCartesian() {
+      this.setCoordinateSystem('cartesian');
+    }
+  }, {
+    key: 'hasStudentUsedAllSubmits',
+    value: function hasStudentUsedAllSubmits() {
+      return this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount;
+    }
+  }, {
+    key: 'disableSubmitButton',
+    value: function disableSubmitButton() {
+      this.isSubmitButtonDisabled = true;
+    }
+  }, {
+    key: 'hasDirtyWorkToSendToParent',
+    value: function hasDirtyWorkToSendToParent(isSubmit) {
+      return isSubmit && this.$scope.animationController.isSubmitDirty || this.$scope.animationController.isDirty;
+    }
+  }, {
+    key: 'getDirtyWorkToSendToParentAction',
+    value: function getDirtyWorkToSendToParentAction(isSubmit) {
+      var action = 'change';
+      if (isSubmit && this.$scope.animationController.isSubmitDirty) {
+        action = 'submit';
+      } else if (this.$scope.animationController.isDirty) {
+        action = 'save';
+      }
+      return action;
+    }
+  }, {
+    key: 'handleNodeSubmit',
+    value: function handleNodeSubmit() {
+      this.submit('nodeSubmitButton');
+    }
+  }, {
     key: 'initializeCoordinates',
     value: function initializeCoordinates() {
-
       if (this.componentContent.widthInPixels != null && this.componentContent.widthInPixels != '') {
-        // get the width of the canvas in pixels
         this.width = this.componentContent.widthInPixels;
-
-        // get the ratio of pixels per x unit
         this.pixelsPerXUnit = this.componentContent.widthInPixels / this.componentContent.widthInUnits;
       }
 
       if (this.componentContent.heightInPixels != null && this.componentContent.heightInPixels != '') {
-        // get the height of the canvas in pixels
         this.height = this.componentContent.heightInPixels;
-
-        // get the ratio of pixels per y unit
         this.pixelsPerYUnit = this.componentContent.heightInPixels / this.componentContent.heightInUnits;
       }
 
       if (this.componentContent.dataXOriginInPixels != null && this.componentContent.dataXOriginInPixels != '') {
-        // get the data x origin in pixels
         this.dataXOriginInPixels = this.componentContent.dataXOriginInPixels;
       }
 
       if (this.componentContent.dataYOriginInPixels != null && this.componentContent.dataYOriginInPixels != '') {
-        // get the data y origin in pixels
         this.dataYOriginInPixels = this.componentContent.dataYOriginInPixels;
       }
 
       if (this.componentContent.coordinateSystem != null && this.componentContent.coordinateSystem != '') {
-        // get the coordinate system
         this.coordinateSystem = this.componentContent.coordinateSystem;
       }
     }
 
-    /**
-     * Setup the objects
+    /*
+     * Call the setupSVG() function after a timeout so that angular has a
+     * chance to set the svg element id before we start using it. If we
+     * don't wait for the timeout, the svg id won't be set when we try
+     * to start referencing the svg element.
      */
 
   }, {
-    key: 'setup',
-    value: function setup() {
-      // get the svg.js draw handle
+    key: 'setupSVGAfterTimeout',
+    value: function setupSVGAfterTimeout() {
+      var _this2 = this;
+
+      this.$timeout(function () {
+        _this2.setupSVG();
+      });
+    }
+  }, {
+    key: 'setupSVG',
+    value: function setupSVG() {
       this.draw = SVG(this.svgId);
-
-      // create the objects
-      this.createObjects();
-
-      // if an object uses data from another data source, update its data
+      this.createSVGObjects();
       this.updateObjectDatasFromDataSources();
     }
-
-    /**
-     * Create the objects in the svg world
-     */
-
   }, {
-    key: 'createObjects',
-    value: function createObjects() {
+    key: 'createSVGObjects',
+    value: function createSVGObjects() {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-      if (this.componentContent != null) {
+      try {
+        for (var _iterator = this.componentContent.objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var object = _step.value;
 
-        // get the objects
-        var objects = this.componentContent.objects;
+          var id = object.id;
+          var type = object.type;
+          var svgObject = null;
 
-        if (objects != null) {
+          if (type == 'image') {
+            svgObject = this.createSVGImage(object.image, object.width, object.height);
+          } else if (type == 'text') {
+            svgObject = this.createSVGText(object.text);
+          }
 
-          // loop through all the objects
-          for (var o = 0; o < objects.length; o++) {
-            var object = objects[o];
-
-            if (object != null) {
-              var id = object.id;
-              var type = object.type;
-              var label = object.label;
-
-              var svgObject = null;
-
-              if (type == 'image') {
-                // get the image file name
-                var image = object.image;
-
-                // get the width and the height
-                var width = object.width;
-                var height = object.height;
-
-                // create the image in the svg world
-                svgObject = this.draw.image(image, width, height);
-              } else if (type == 'text') {
-
-                /*
-                 * if the text field is null, change it to an empty
-                 * string otherwise this.draw.text(null) will return
-                 * an empty string and cause problems later
-                 */
-                if (object.text == null) {
-                  object.text = '';
-                }
-
-                // get the text
-                var text = object.text;
-
-                // create the text object in the svg world
-                svgObject = this.draw.text(text);
-              }
-
-              // add an entry in our id to svg object mapping
-              this.idToSVGObject[id] = svgObject;
-
-              // add an entry in our id to animation state mapping
-              this.idToAnimationState[id] = false;
-
-              // initialize the svg object position
-              this.initializeObjectPosition(object);
-            }
+          this.addIdToSVGObject(id, svgObject);
+          this.addIdToWhetherAuthoredObjectIsAnimating(id, false);
+          this.initializeObjectPosition(object);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
           }
         }
       }
     }
-
-    /**
-     * Initialize the object images
-     */
-
+  }, {
+    key: 'createSVGImage',
+    value: function createSVGImage(image, width, height) {
+      return this.draw.image(image, width, height);
+    }
+  }, {
+    key: 'createSVGText',
+    value: function createSVGText(text) {
+      if (text == null) {
+        text = '';
+      }
+      return this.draw.text(text);
+    }
+  }, {
+    key: 'addIdToSVGObject',
+    value: function addIdToSVGObject(id, svgObject) {
+      this.idToSVGObject[id] = svgObject;
+    }
+  }, {
+    key: 'addIdToWhetherAuthoredObjectIsAnimating',
+    value: function addIdToWhetherAuthoredObjectIsAnimating(id, isAnimating) {
+      this.idToWhetherAuthoredObjectIsAnimating[id] = isAnimating;
+    }
   }, {
     key: 'initializeObjectImages',
     value: function initializeObjectImages() {
-      if (this.componentContent != null) {
+      var objects = this.componentContent.objects;
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
-        // get the objects
-        var objects = this.componentContent.objects;
+      try {
+        for (var _iterator2 = objects[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var object = _step2.value;
 
-        if (objects != null) {
-
-          // loop through all the objects
-          for (var o = 0; o < objects.length; o++) {
-            var object = objects[o];
-
-            var id = object.id;
-            var type = object.type;
-
-            // get the image file name
-            var image = object.image;
-
-            if (type == 'image') {
-              // the object is an image
-
-              // get the svg object
-              var svgObject = this.idToSVGObject[id];
-
-              // load the image into the svg object
-              svgObject.load(image);
-            }
+          if (object.type == 'image') {
+            var svgObject = this.idToSVGObject[object.id];
+            svgObject.load(object.image);
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
           }
         }
       }
     }
-
-    /**
-     * Initialize the object positions
-     */
-
   }, {
     key: 'initializeObjectPositions',
     value: function initializeObjectPositions() {
-      if (this.componentContent != null) {
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
 
-        // get the objects
-        var objects = this.componentContent.objects;
+      try {
+        for (var _iterator3 = this.componentContent.objects[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var object = _step3.value;
 
-        if (objects != null) {
-
-          // loop through all the objects
-          for (var o = 0; o < objects.length; o++) {
-            var object = objects[o];
-
-            // initialize the object position
-            this.initializeObjectPosition(object);
+          this.initializeObjectPosition(object);
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
           }
         }
       }
     }
 
     /**
-     * Convert a data x value to a pixel x value
-     * @param x an x value in data units
-     * @return the x value converted to a pixel coordinate
+     * Convert a data x value to a pixel x value.
+     * @param {integer} x An x value in data units.
+     * @return {integer} The x value converted to a pixel coordinate.
      */
 
   }, {
     key: 'dataXToPixelX',
     value: function dataXToPixelX(x) {
-
-      // default the pixel x to start at the data x origin
-      var pixelX = this.dataXOriginInPixels;
-
-      if (x != null) {
-
-        // convert the x value to pixels and shift it by the x origin
-        pixelX += x * this.pixelsPerXUnit;
+      if (x == null) {
+        return this.dataXOriginInPixels;
+      } else {
+        return this.dataXOriginInPixels + x * this.pixelsPerXUnit;
       }
-
-      return pixelX;
     }
 
     /**
-     * Convert a data y value to a pixel y value
-     * @param y an y value in data units
-     * @return the y value converted to a pixel coordinate
+     * Convert a data y value to a pixel y value.
+     * @param {integer} y A y value in data units.
+     * @return {integer} The y value converted to a pixel coordinate.
      */
 
   }, {
     key: 'dataYToPixelY',
     value: function dataYToPixelY(y) {
-
-      // default the pixel y to start at the data y origin
-      var pixelY = this.dataYOriginInPixels;
-
-      if (y != null) {
-        // convert the y value to pixels and shift it by the y origin
-        pixelY += y * this.pixelsPerYUnit;
+      if (y == null) {
+        return this.dataYOriginInPixels;
+      } else {
+        return this.dataYOriginInPixels + y * this.pixelsPerYUnit;
       }
-
-      return pixelY;
     }
-
-    /**
-     * Initialize the object position in the svg world
-     * @param object the authored object
-     */
-
   }, {
     key: 'initializeObjectPosition',
-    value: function initializeObjectPosition(object) {
-      var id = object.id;
-      var label = object.label;
-      var data = object.data;
-      var dataX = object.dataX;
-      var dataY = object.dataY;
-      var pixelX = object.pixelX;
-      var pixelY = object.pixelY;
-
-      var x = 0;
-      var y = 0;
-
-      if (dataX != null) {
-        // the dataX position was provided
-
-        // convert the data x value to a pixel x value
-        x = this.dataXToPixelX(dataX);
-      } else if (pixelX != null) {
-        // the pixelX position was provided
-        x = pixelX;
-      }
-
-      if (dataY != null) {
-        // the dataY position was provided
-
-        // convert the data y value to a pixel y value
-        y = this.dataYToPixelY(dataY);
-      } else if (pixelY != null) {
-        // the pixelY position was provided
-        y = pixelY;
-      }
+    value: function initializeObjectPosition(authoredObject) {
+      var x = this.getPixelXForAuthoredObject(authoredObject);
+      var y = this.getPixelYForAuthoredObject(authoredObject);
 
       if (this.isUsingCartesianCoordinateSystem()) {
-        /*
-         * we are using the cartesian coordinate system so we need to modify
-         * the y value
-         */
         y = this.convertToCartesianCoordinateSystem(y);
       }
 
-      // get the svg object
-      var svgObject = this.idToSVGObject[id];
+      var id = authoredObject.id;
+      var svgObject = this.getSVGObject(id);
+      this.setPositionOfSVGObject(svgObject, x, y);
 
-      if (svgObject != null) {
+      if (this.authoredObjectHasData(authoredObject)) {
+        var data = authoredObject.data;
 
-        // set the x and y pixel position
-        svgObject.attr({ x: x, y: y });
-
-        if (data != null && data.length > 0) {
-          // there is data for this object
-
-          // get the first data point
+        if (this.hasDataPointAtTimeZero(data)) {
           var firstDataPoint = data[0];
-
-          if (firstDataPoint != null) {
-
-            var firstDataPointT = firstDataPoint.t;
-            var firstDataPointX = firstDataPoint.x;
-            var firstDataPointY = firstDataPoint.y;
-
-            if (firstDataPointT === 0) {
-              /*
-               * there is a first data point with t == 0 so we will
-               * use it as the starting position
-               */
-
-              if (firstDataPointX != null && firstDataPointX != '' && typeof firstDataPointX != 'undefined') {
-                // convert the data x value to a pixel x value
-                var firstDataPointXInPixels = this.dataXToPixelX(firstDataPointX);
-                svgObject.attr('x', firstDataPointXInPixels);
-              }
-
-              if (firstDataPointY != null && firstDataPointY != '' && typeof firstDataPointY != 'undefined') {
-                // convert the data y value to a pixel y value
-                var firstDataPointYInPixels = this.dataYToPixelY(firstDataPointY);
-
-                if (this.isUsingCartesianCoordinateSystem()) {
-                  /*
-                   * we are using the cartesian coordinate system so we need to modify
-                   * the y value
-                   */
-                  firstDataPointYInPixels = this.convertToCartesianCoordinateSystem(firstDataPointYInPixels);
-                }
-
-                svgObject.attr('y', firstDataPointYInPixels);
-              }
-            }
-          }
+          this.setPositionFromDataPoint(svgObject, firstDataPoint);
         }
       }
     }
+  }, {
+    key: 'getPixelXForAuthoredObject',
+    value: function getPixelXForAuthoredObject(authoredObject) {
+      var dataX = authoredObject.dataX;
+      var pixelX = authoredObject.pixelX;
+      var x = 0;
+      if (dataX != null) {
+        x = this.dataXToPixelX(dataX);
+      } else if (pixelX != null) {
+        x = pixelX;
+      }
+      return x;
+    }
+  }, {
+    key: 'getPixelYForAuthoredObject',
+    value: function getPixelYForAuthoredObject(authoredObject) {
+      var dataY = authoredObject.dataY;
+      var pixelY = authoredObject.pixelY;
+      var y = 0;
+      if (dataY != null) {
+        y = this.dataYToPixelY(dataY);
+      } else if (pixelY != null) {
+        y = pixelY;
+      }
+      return y;
+    }
+  }, {
+    key: 'getSVGObject',
+    value: function getSVGObject(id) {
+      return this.idToSVGObject[id];
+    }
+  }, {
+    key: 'hasDataPointAtTimeZero',
+    value: function hasDataPointAtTimeZero(data) {
+      var firstDataPoint = data[0];
+      if (firstDataPoint != null && firstDataPoint.t === 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }, {
+    key: 'setPositionFromDataPoint',
+    value: function setPositionFromDataPoint(svgObject, dataPoint) {
+      var dataPointX = dataPoint.x;
+      var dataPointY = dataPoint.y;
+      if (dataPointX != null && dataPointX != '' && typeof dataPointX != 'undefined') {
+        var dataPointXInPixels = this.dataXToPixelX(dataPointX);
+        this.setXPositionOfSVGObject(svgObject, dataPointXInPixels);
+      }
 
-    /**
-     * Start the animation
-     */
+      if (dataPointY != null && dataPointY != '' && typeof dataPointY != 'undefined') {
+        var dataPointYInPixels = this.dataYToPixelY(dataPointY);
 
+        if (this.isUsingCartesianCoordinateSystem()) {
+          dataPointYInPixels = this.convertToCartesianCoordinateSystem(dataPointYInPixels);
+        }
+
+        this.setYPositionOfSVGObject(svgObject, dataPointYInPixels);
+      }
+    }
+  }, {
+    key: 'setPositionOfSVGObject',
+    value: function setPositionOfSVGObject(svgObject, x, y) {
+      svgObject.attr({ x: x, y: y });
+    }
+  }, {
+    key: 'setXPositionOfSVGObject',
+    value: function setXPositionOfSVGObject(svgObject, x) {
+      svgObject.attr('x', x);
+    }
+  }, {
+    key: 'setYPositionOfSVGObject',
+    value: function setYPositionOfSVGObject(svgObject, y) {
+      svgObject.attr('y', y);
+    }
   }, {
     key: 'startAnimation',
     value: function startAnimation() {
-
-      // set the images back to their starting images in case they have changed
       this.initializeObjectImages();
-
-      // put the objects in their starting positions
       this.initializeObjectPositions();
+      var _iteratorNormalCompletion4 = true;
+      var _didIteratorError4 = false;
+      var _iteratorError4 = undefined;
 
-      if (this.componentContent != null) {
+      try {
+        for (var _iterator4 = this.componentContent.objects[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+          var authoredObject = _step4.value;
 
-        var objects = this.componentContent.objects;
-
-        if (objects != null) {
-
-          // loop through all the objects
-          for (var o = 0; o < objects.length; o++) {
-            var object = objects[o];
-
-            if (object != null) {
-
-              // animate the object
-              this.animateObject(object);
-            }
+          this.animateObject(authoredObject);
+        }
+      } catch (err) {
+        _didIteratorError4 = true;
+        _iteratorError4 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion4 && _iterator4.return) {
+            _iterator4.return();
+          }
+        } finally {
+          if (_didIteratorError4) {
+            throw _iteratorError4;
           }
         }
       }
     }
 
     /**
-     * Show the time on the svg div
-     * @param t the time
+     * @param {integer} time
      */
 
   }, {
-    key: 'showTime',
-    value: function showTime(t) {
-
+    key: 'showTimeInSVG',
+    value: function showTimeInSVG(time) {
       if (this.timerText == null) {
-        // initialize the timer text
-        this.timerText = this.draw.text('0').attr({ fill: '#f03' });
+        this.initializeTimerText();
       }
 
-      // get the width of the svg div
+      this.setTimerText(time + '');
+
+      var x = this.getTimerTextX(time);
+      var y = 0;
+      this.setTimerPosition(x, y);
+    }
+  }, {
+    key: 'initializeTimerText',
+    value: function initializeTimerText() {
+      this.timerText = this.draw.text('0').attr({ fill: '#f03' });
+    }
+
+    /**
+     * Get the x pixel coordinate based upon the number of digits of the time.
+     * @param {number} time The time in seconds.
+     * @returns {number} The x pixel coordinate.
+     */
+
+  }, {
+    key: 'getTimerTextX',
+    value: function getTimerTextX(time) {
       var width = this.width;
 
       // set the x position near the top right of the svg div
       var x = width - 30;
-      var y = 0;
 
-      // set the text that the student will see
-      this.timerText.text(t + '');
-
-      if (t >= 10) {
-        // shift the text to the left if there are two digits
+      if (time >= 10) {
+        // shift the text a little to the left if there are two digits
         x = width - 38;
-      } else if (t >= 100) {
-        // shift the text to the left more if there are three digits
+      } else if (time >= 100) {
+        // shift the text a little more to the left if there are three digits
         x = width - 46;
       }
+      return x;
+    }
+  }, {
+    key: 'setTimerText',
+    value: function setTimerText(text) {
+      this.timerText.text(text);
+    }
 
-      // set the position of the text
+    /**
+     * @param {integer} x The x pixel coordinate.
+     * @param {integer} y The y pixel coordinate.
+     */
+
+  }, {
+    key: 'setTimerPosition',
+    value: function setTimerPosition(x, y) {
       this.timerText.attr({ x: x, y: y });
     }
-
-    /**
-     * Update the object data from their data source
-     * @param componentState (optional) a component state which may be the
-     * data source for one of the objects
-     */
-
   }, {
     key: 'updateObjectDatasFromDataSources',
-    value: function updateObjectDatasFromDataSources(componentState) {
+    value: function updateObjectDatasFromDataSources() {
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
 
-      if (this.componentContent != null) {
+      try {
+        for (var _iterator5 = this.componentContent.objects[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var object = _step5.value;
 
-        var objects = this.componentContent.objects;
-
-        if (objects != null) {
-
-          // loop through all the objects
-          for (var o = 0; o < objects.length; o++) {
-            var object = objects[o];
-
-            if (object != null) {
-
-              if (object.dataSource != null) {
-                // the object gets its data from a data source
-                this.updateObjectDataFromDataSource(object, componentState);
-              }
-            }
+          if (this.authoredObjectHasDataSource(object)) {
+            this.updateObjectDataFromDataSource(object);
+          }
+        }
+      } catch (err) {
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion5 && _iterator5.return) {
+            _iterator5.return();
+          }
+        } finally {
+          if (_didIteratorError5) {
+            throw _iteratorError5;
           }
         }
       }
     }
-
-    /**
-     * Update the data from its data source
-     * @param object update the data for this object
-     * @param componentState (optional) The component state to get the data
-     * from. If this is not provided, we will look up the latest component
-     * state.
-     */
-
   }, {
     key: 'updateObjectDataFromDataSource',
-    value: function updateObjectDataFromDataSource(object, componentState) {
+    value: function updateObjectDataFromDataSource(object) {
+      var dataSource = object.dataSource;
+      var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(dataSource.nodeId, dataSource.componentId);
 
-      if (object != null) {
+      if (componentState != null) {
+        if (componentState.componentType == 'Graph') {
+          this.setDataFromGraphComponentState(object, componentState);
+        } else if (componentState.componentType == 'Table') {
+          this.setDataFromTableComponentState(object, componentState);
+        }
+      }
+    }
+  }, {
+    key: 'updateObjectDatasFromDataSourceComponentState',
+    value: function updateObjectDatasFromDataSourceComponentState(componentState) {
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
 
-        // get the data source details
-        var dataSource = object.dataSource;
+      try {
+        for (var _iterator6 = this.componentContent.objects[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var object = _step6.value;
 
-        if (dataSource != null) {
-          var nodeId = dataSource.nodeId;
-          var componentId = dataSource.componentId;
-
-          if (componentState == null) {
-            // the component state was not passed in so we will get it
-            componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+          if (this.authoredObjectHasDataSource(object) && this.isComponentStateFromDataSource(componentState, object.dataSource)) {
+            this.updateObjectDataFromDataSourceComponentState(object, componentState);
           }
-
-          if (componentState != null && nodeId == componentState.nodeId && componentId == componentState.componentId) {
-            // the component state matches the data source
-
-            if (componentState.componentType == 'Graph') {
-              this.setDataFromGraphComponentState(object, componentState);
-            } else if (componentState.componentType == 'Table') {
-              this.setDataFromTableComponentState(object, componentState);
-            }
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
           }
         }
       }
     }
-
-    /**
-     * Get the data from the graph component state
-     * @param object set the data into this object
-     * @param componentState
-     */
-
+  }, {
+    key: 'isComponentStateFromDataSource',
+    value: function isComponentStateFromDataSource(componentState, dataSource) {
+      if (dataSource != null && dataSource.nodeId == componentState.nodeId && dataSource.componentId == componentState.componentId) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }, {
+    key: 'updateObjectDataFromDataSourceComponentState',
+    value: function updateObjectDataFromDataSourceComponentState(object, componentState) {
+      if (componentState.componentType == 'Graph') {
+        this.setDataFromGraphComponentState(object, componentState);
+      }
+    }
   }, {
     key: 'setDataFromGraphComponentState',
     value: function setDataFromGraphComponentState(object, componentState) {
-      if (object != null) {
+      object.data = this.getDataFromDataSourceComponentState(object.dataSource, componentState);
+    }
+  }, {
+    key: 'getDataFromDataSourceComponentState',
+    value: function getDataFromDataSourceComponentState(dataSource, componentState) {
+      var trialIndex = dataSource.trialIndex;
+      var seriesIndex = dataSource.seriesIndex;
+      var tColumnIndex = dataSource.tColumnIndex;
+      var xColumnIndex = dataSource.xColumnIndex;
+      var yColumnIndex = dataSource.yColumnIndex;
 
-        // get the data source specification
-        var dataSource = object.dataSource;
+      var trial = this.getTrialFromComponentState(componentState, trialIndex);
+      var singleSeries = this.getSeriesFromTrial(trial, seriesIndex);
+      var seriesData = this.getDataFromSeries(singleSeries);
+      return this.convertSeriesDataToAnimationData(seriesData, tColumnIndex, xColumnIndex, yColumnIndex);
+    }
+  }, {
+    key: 'getTrialFromComponentState',
+    value: function getTrialFromComponentState(componentState, trialIndex) {
+      var trial = null;
+      var studentData = componentState.studentData;
+      if (studentData.trials != null) {
+        trial = studentData.trials[trialIndex];
+      }
+      return trial;
+    }
+  }, {
+    key: 'getSeriesFromTrial',
+    value: function getSeriesFromTrial(trial, seriesIndex) {
+      return trial.series[seriesIndex];
+    }
+  }, {
+    key: 'getDataFromSeries',
+    value: function getDataFromSeries(series) {
+      return series.data;
+    }
+  }, {
+    key: 'convertSeriesDataToAnimationData',
+    value: function convertSeriesDataToAnimationData(seriesData, tColumnIndex, xColumnIndex, yColumnIndex) {
+      var data = [];
 
-        if (dataSource != null) {
-          var nodeId = dataSource.nodeId;
-          var componentId = dataSource.componentId;
-          var trialIndex = dataSource.trialIndex;
-          var seriesIndex = dataSource.seriesIndex;
-          var tColumnIndex = dataSource.tColumnIndex;
-          var xColumnIndex = dataSource.xColumnIndex;
-          var yColumnIndex = dataSource.yColumnIndex;
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
 
-          if (componentState != null && nodeId == componentState.nodeId && componentId == componentState.componentId) {
-            // the component state matches the data source
+      try {
+        for (var _iterator7 = seriesData[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var seriesDataPoint = _step7.value;
 
-            var studentData = componentState.studentData;
+          var animationDataPoint = {};
 
-            if (studentData != null) {
-              var trials = studentData.trials;
+          if (tColumnIndex != null) {
+            animationDataPoint.t = seriesDataPoint[tColumnIndex];
+          }
 
-              if (trials != null) {
+          if (xColumnIndex != null) {
+            animationDataPoint.x = seriesDataPoint[xColumnIndex];
+          }
 
-                // get the trial we ant
-                var trial = trials[trialIndex];
+          if (yColumnIndex != null) {
+            animationDataPoint.y = seriesDataPoint[yColumnIndex];
+          }
 
-                if (trial != null) {
-                  var series = trial.series;
+          data.push(animationDataPoint);
+        }
+      } catch (err) {
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion7 && _iterator7.return) {
+            _iterator7.return();
+          }
+        } finally {
+          if (_didIteratorError7) {
+            throw _iteratorError7;
+          }
+        }
+      }
 
-                  if (series != null) {
+      return data;
+    }
+  }, {
+    key: 'animateObject',
+    value: function animateObject(authoredObject) {
+      if (this.authoredObjectHasData(authoredObject)) {
+        var id = authoredObject.id;
+        var data = authoredObject.data;
+        var svgObject = this.idToSVGObject[id];
+        var animateObject = null;
 
-                    // get the series we want
-                    var singleSeries = series[seriesIndex];
+        for (var d = 0; d < data.length; d++) {
+          var currentDataPoint = data[d];
+          var nextDataPoint = data[d + 1];
+          var image = currentDataPoint.image;
+          var t = currentDataPoint.t;
+          var xPixel = this.dataXToPixelX(currentDataPoint.x);
+          var yPixel = this.dataYToPixelY(currentDataPoint.y);
+          if (this.isUsingCartesianCoordinateSystem()) {
+            yPixel = this.convertToCartesianCoordinateSystem(yPixel);
+          }
+          this.idToWhetherAuthoredObjectIsAnimating[id] = true;
 
-                    if (singleSeries != null) {
-                      var seriesData = singleSeries.data;
+          if (this.isFirstDataPoint(d)) {
+            animateObject = this.setInitialPositionOfSVGObject(t, svgObject, xPixel, yPixel);
+          }
 
-                      if (seriesData != null) {
+          animateObject = this.updateImageOfSVGObject(image, animateObject, svgObject, authoredObject, currentDataPoint, nextDataPoint);
 
-                        // array to store our animation data
-                        var data = [];
+          if (!this.isLastDataPoint(data, d)) {
+            var nextT = null;
+            var nextXPixel = null;
+            var nextYPixel = null;
 
-                        // loop through all the points in the series
-                        for (var d = 0; d < seriesData.length; d++) {
-                          var seriesDataPoint = seriesData[d];
-
-                          // create a data point
-                          var animationDataPoint = {};
-
-                          if (tColumnIndex != null) {
-                            // get the t value
-                            animationDataPoint.t = seriesDataPoint[tColumnIndex];
-                          }
-
-                          if (xColumnIndex != null) {
-                            // get the x value
-                            animationDataPoint.x = seriesDataPoint[xColumnIndex];
-                          }
-
-                          if (yColumnIndex != null) {
-                            // get the y value
-                            animationDataPoint.y = seriesDataPoint[yColumnIndex];
-                          }
-
-                          // add the data point to the array
-                          data.push(animationDataPoint);
-                        }
-
-                        // set the data into the object
-                        object.data = data;
-                      }
-                    }
-                  }
-                }
-              }
+            if (nextDataPoint != null) {
+              nextT = nextDataPoint.t;
+              nextXPixel = this.dataXToPixelX(nextDataPoint.x);
+              nextYPixel = this.dataYToPixelY(nextDataPoint.y);
             }
+            if (this.isUsingCartesianCoordinateSystem()) {
+              nextYPixel = this.convertToCartesianCoordinateSystem(nextYPixel);
+            }
+
+            var tDiff = this.calculateTimeDiff(t, nextT);
+            animateObject = this.updatePositionOfSVGObject(svgObject, animateObject, t, tDiff, nextXPixel, nextYPixel);
+          } else {
+            this.animationCompletedPostProcessing(id, animateObject);
           }
         }
       }
     }
   }, {
-    key: 'setDataFromTableComponentState',
-    value: function setDataFromTableComponentState() {}
+    key: 'setInitialPositionOfSVGObject',
+    value: function setInitialPositionOfSVGObject(t, svgObject, xPixel, yPixel) {
+      var animateObject = null;
 
-    /**
-     * Move the object
-     * @param object the authored object
-     */
-
-  }, {
-    key: 'animateObject',
-    value: function animateObject(object) {
-      var _this2 = this;
-
-      if (object != null) {
-        (function () {
-          var id = object.id;
-          var data = object.data;
-
-          if (data != null) {
-
-            // get the svg object
-            var svgObject = _this2.idToSVGObject[id];
-
-            if (svgObject != null) {
-              (function () {
-
-                /*
-                 * this will hold SVG.FX object that is returned from
-                 * calling animate()
-                 */
-                var animateObject = null;
-
-                var thisAnimationController = _this2;
-
-                // loop through all the data
-
-                var _loop = function _loop(d) {
-
-                  // get the current point
-                  var currentDataPoint = data[d];
-                  var t = currentDataPoint.t;
-                  var x = currentDataPoint.x;
-                  var y = currentDataPoint.y;
-                  var image = currentDataPoint.image;
-
-                  // convert the data values to pixels
-                  var xPixel = _this2.dataXToPixelX(x);
-                  var yPixel = _this2.dataYToPixelY(y);
-
-                  // get the next point
-                  var nextDataPoint = data[d + 1];
-                  var nextT = null;
-                  var nextX = null;
-                  var nextY = null;
-                  var nextXPixel = null;
-                  var nextYPixel = null;
-
-                  if (nextDataPoint != null) {
-                    nextT = nextDataPoint.t;
-                    nextX = nextDataPoint.x;
-                    nextY = nextDataPoint.y;
-
-                    // convert the data values to pixels
-                    nextXPixel = _this2.dataXToPixelX(nextX);
-                    nextYPixel = _this2.dataYToPixelY(nextY);
-                  }
-
-                  if (_this2.isUsingCartesianCoordinateSystem()) {
-                    /*
-                     * we are using the cartesian coordinate system so we need to modify
-                     * the y value
-                     */
-                    yPixel = _this2.convertToCartesianCoordinateSystem(yPixel);
-                    nextYPixel = _this2.convertToCartesianCoordinateSystem(nextYPixel);
-                  }
-
-                  // set the animation state to true for the object
-                  _this2.idToAnimationState[id] = true;
-
-                  var tDiff = 0;
-
-                  if (nextT != null && nextT != '') {
-                    /*
-                     * calculate the time difference so we know how long we should make
-                     * it take to move to the new position
-                     */
-                    tDiff = nextT - t;
-                  }
-
-                  if (d == 0) {
-                    // this is the first data point
-
-                    if (t == 0) {
-                      /*
-                       * immediately set the position since we are at
-                       * time 0
-                       */
-
-                      // set the position
-                      svgObject.attr({ x: xPixel, y: yPixel });
-                    } else {
-                      /*
-                       * the first data point is not at time 0 so we will
-                       * need to wait until time t before we set the
-                       * position of the object
-                       */
-                      animateObject = svgObject.animate(t * _this2.realTimePerDataTime).during(function (pos, morph, eased, situation) {
-
-                        // calculate the amount of time that has elapsed
-                        var elapsedTime = t * pos;
-
-                        // display and broadcast the elapsed time
-                        thisAnimationController.displayAndBroadcastTime(elapsedTime);
-                      }).after(function () {
-                        // set the position
-                        this.attr({ x: xPixel, y: yPixel });
-                      });
-                    }
-                  }
-
-                  if (image != null && image != '') {
-                    /*
-                     * there is an image specified for this data point
-                     * so we will change to that image
-                     */
-
-                    if (animateObject == null) {
-                      /*
-                       * there is no animateObject yet so we will
-                       * change the image immediately
-                       */
-                      svgObject.load(image);
-                    } else {
-                      /*
-                       * change the image after all the existing
-                       * animations
-                       */
-                      animateObject = animateObject.after(function () {
-                        this.load(image);
-                      });
-                    }
-                  } else if (nextDataPoint != null) {
-                    /*
-                     * there is a next data point so we will see if we
-                     * can determine what image to show based upon the
-                     * movement of the object
-                     */
-
-                    // get the image to show based upon the movement
-                    var dynamicallyCalculatedImage = _this2.getImageBasedOnMovement(object, currentDataPoint, nextDataPoint);
-
-                    if (dynamicallyCalculatedImage != null) {
-                      if (animateObject == null) {
-                        /*
-                         * there is no animateObject yet so we will
-                         * change the image immediately
-                         */
-                        svgObject.load(dynamicallyCalculatedImage);
-                      } else {
-                        /*
-                         * change the image after all the existing
-                         * animations
-                         */
-                        animateObject = animateObject.after(function () {
-                          this.load(dynamicallyCalculatedImage);
-                        });
-                      }
-                    }
-                  }
-
-                  if (d != data.length - 1) {
-                    // this is a data point that is not the last
-
-                    // move the image to the next position
-                    animateObject = svgObject.animate(tDiff * _this2.realTimePerDataTime).move(nextXPixel, nextYPixel).during(function (pos, morph, eased, situation) {
-
-                      // calculate the elapsed time
-                      var elapsedTime = t + tDiff * pos;
-
-                      // display and broadcast the elapsed time
-                      thisAnimationController.displayAndBroadcastTime(elapsedTime);
-                    });
-                  }
-
-                  if (d == data.length - 1) {
-                    // this is the last data point
-
-                    // after all the animations are done on the object we will perform some processing
-                    animateObject = animateObject.afterAll(function () {
-
-                      /*
-                       * we are done animating this object so we will
-                       * set the animation state to false for the
-                       * object
-                       */
-                      _this2.idToAnimationState[id] = false;
-
-                      // check if all svg objects are done animating
-                      _this2.checkIfAllAnimatingIsDone();
-                    });
-                  }
-                };
-
-                for (var d = 0; d < data.length; d++) {
-                  _loop(d);
-                }
-              })();
-            }
-          }
-        })();
+      if (t == 0) {
+        svgObject.attr({ x: xPixel, y: yPixel });
+      } else {
+        /*
+         * The first data point is not at time 0 so we will need to wait some time
+         * before we set the position of the object.
+         */
+        var thisAnimationController = this;
+        animateObject = svgObject.animate(t * this.millisecondsPerDataTime).during(function (pos, morph, eased, situation) {
+          var totalElapsedTime = t * pos;
+          thisAnimationController.displayAndBroadcastTime(totalElapsedTime);
+        }).after(function () {
+          this.attr({ x: xPixel, y: yPixel });
+        });
       }
+
+      return animateObject;
+    }
+  }, {
+    key: 'updatePositionOfSVGObject',
+    value: function updatePositionOfSVGObject(svgObject, animateObject, t, tDiff, nextXPixel, nextYPixel) {
+      // move the image to the next position in the given amount of time
+      var thisAnimationController = this;
+      return svgObject.animate(tDiff * this.millisecondsPerDataTime).move(nextXPixel, nextYPixel).during(function (pos, morph, eased, situation) {
+        var totalElapsedTime = t + tDiff * pos;
+        thisAnimationController.displayAndBroadcastTime(totalElapsedTime);
+      });
+    }
+  }, {
+    key: 'animationCompletedPostProcessing',
+    value: function animationCompletedPostProcessing(id, animateObject) {
+      var _this3 = this;
+
+      animateObject.afterAll(function () {
+        _this3.idToWhetherAuthoredObjectIsAnimating[id] = false;
+        _this3.checkIfAllAnimatingIsDone();
+      });
+    }
+  }, {
+    key: 'updateImageOfSVGObject',
+    value: function updateImageOfSVGObject(image, animateObject, svgObject, authoredObject, currentDataPoint, nextDataPoint) {
+      if (image != null && image != '') {
+        this.updateSVGObjectImage(image, svgObject, animateObject);
+      } else if (nextDataPoint != null) {
+        /*
+         * There is a next data point so we will see if we can determine what
+         * image to show based upon the movement of the object.
+         */
+        var dynamicallyCalculatedImage = this.getImageBasedOnMovement(authoredObject, currentDataPoint, nextDataPoint);
+        if (dynamicallyCalculatedImage != null) {
+          this.updateSVGObjectImage(dynamicallyCalculatedImage, svgObject, animateObject);
+        }
+      }
+      return animateObject;
+    }
+  }, {
+    key: 'updateSVGObjectImage',
+    value: function updateSVGObjectImage(image, svgObject, animateObject) {
+      if (animateObject == null) {
+        // change the image immediately
+        svgObject.load(image);
+      } else {
+        // change the image after all the existing animations
+        animateObject = animateObject.after(function () {
+          this.load(image);
+        });
+      }
+      return animateObject;
+    }
+  }, {
+    key: 'calculateTimeDiff',
+    value: function calculateTimeDiff(currentTime, futureTime) {
+      if (futureTime == null) {
+        return 0;
+      } else {
+        return futureTime - currentTime;
+      }
+    }
+  }, {
+    key: 'isFirstDataPoint',
+    value: function isFirstDataPoint(d) {
+      return d == 0;
+    }
+  }, {
+    key: 'isLastDataPoint',
+    value: function isLastDataPoint(data, d) {
+      return d == data.length - 1;
     }
 
     /**
-     * Display and broadcast the time
-     * @param t the time
+     * @param {number} t The time in seconds.
      */
 
   }, {
     key: 'displayAndBroadcastTime',
     value: function displayAndBroadcastTime(t) {
+      var displayTime = this.truncateToOneDecimalPlace(t);
+      this.showTimeInSVG(displayTime);
 
-      var currentTime = new Date().getTime();
+      if (this.isPerformBroadcast()) {
+        this.broadcastTime(t);
+      }
 
       if (this.lastBroadcastTime == null) {
         this.lastBroadcastTime = currentTime;
       }
-
-      if (currentTime - this.lastBroadcastTime > 100) {
-        /*
-         * Remove the digits after the first decimal place.
-         * example
-         * 12.817 will be changed to 12.8
-         */
-        var displayTime = parseInt(t * 10) / 10;
-
-        // show the time on the svg div
-        this.showTime(displayTime);
-
-        // create a component state with the time in it
-        var componentState = {};
-        componentState.t = t;
-
-        /*
-         * broadcast the component state with the time in it
-         * so other components can know the elapsed time
-         */
-        this.$scope.$emit('componentStudentDataChanged', { nodeId: this.nodeId, componentId: this.componentId, componentState: componentState });
-
-        this.lastBroadcastTime = currentTime;
-      }
     }
 
     /**
-     * Get the image based upon the movement of the object
-     * @param object the object that is being moved
-     * @param currentDataPoint the current data point
-     * @param nextDataPoint the next data point
+     * @param {number} timeInSeconds
+     */
+
+  }, {
+    key: 'truncateToOneDecimalPlace',
+    value: function truncateToOneDecimalPlace(timeInSeconds) {
+      return parseInt(timeInSeconds * 10) / 10;
+    }
+
+    /**
+     * Check if we want to broadcast the time. We want to make sure we don't
+     * broadcast the time too frequently because that may slow down the student's
+     * computer significantly. We will wait 100 milliseconds before each
+     * broadcast.
+     * @returns {boolean}
+     */
+
+  }, {
+    key: 'isPerformBroadcast',
+    value: function isPerformBroadcast() {
+      var currentTime = new Date().getTime();
+
+      if (this.lastBroadcastTime == null || currentTime - this.lastBroadcastTime > 100) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }, {
+    key: 'broadcastTime',
+    value: function broadcastTime(t) {
+      var componentState = {
+        t: t
+      };
+
+      this.$scope.$emit('componentStudentDataChanged', { nodeId: this.nodeId, componentId: this.componentId, componentState: componentState });
+      this.lastBroadcastTime = new Date().getTime();
+    }
+
+    /**
+     * Get the image based upon the movement of the object.
+     * @param {object} authoredObject The object that is being moved.
+     * @param {object} currentDataPoint Contains x and y fields.
+     * @param {object} extDataPoint Contains x and y fields.
      */
 
   }, {
     key: 'getImageBasedOnMovement',
-    value: function getImageBasedOnMovement(object, currentDataPoint, nextDataPoint) {
-
-      var image = null;
-
-      if (currentDataPoint != null && nextDataPoint != null) {
-
-        var currentX = currentDataPoint.x;
-        var currentY = currentDataPoint.y;
-
-        var _nextX = nextDataPoint.x;
-        var _nextY = nextDataPoint.y;
-
-        if (currentY == _nextY) {
-          // there is no change in y
-
-          if (currentX == _nextX) {
-            // there is no change in x
-
-            // the image is staying in place
-          } else if (currentX < _nextX) {
-            // x is moving to the right
-            if (object.imageMovingRight != null && object.imageMovingRight != '') {
-              image = object.imageMovingRight;
-            }
-          } else if (currentX > _nextX) {
-            // x is moving to the left
-            if (object.imageMovingLeft != null && object.imageMovingLeft != '') {
-              image = object.imageMovingLeft;
-            }
-          }
-        } else if (currentX == _nextX) {
-          // there is no change in x
-
-          if (currentY == _nextY) {
-            // there is no change in y
-
-            // the image is staying in place
-          } else if (currentY < _nextY) {
-            // y is getting larger
-
-            if (this.isUsingCartesianCoordinateSystem()) {
-              // y is moving up
-              if (object.imageMovingUp != null && object.imageMovingUp != '') {
-                image = object.imageMovingUp;
-              }
-            } else {
-              // y is moving down
-              if (object.imageMovingDown != null && object.imageMovingDown != '') {
-                image = object.imageMovingDown;
-              }
-            }
-          } else if (currentY > _nextY) {
-            // y is getting smaller
-
-            if (this.isUsingCartesianCoordinateSystem()) {
-              // y is moving down
-              if (object.imageMovingDown != null && object.imageMovingDown != '') {
-                image = object.imageMovingDown;
-              }
-            } else {
-              // y is moving up
-              if (object.imageMovingUp != null && object.imageMovingUp != '') {
-                image = object.imageMovingUp;
-              }
-            }
-          }
+    value: function getImageBasedOnMovement(authoredObject, currentDataPoint, nextDataPoint) {
+      if (this.isYDataPointSame(currentDataPoint, nextDataPoint) && !this.isXDataPointSame(currentDataPoint, nextDataPoint)) {
+        return this.getImageMovingInX(authoredObject, currentDataPoint, nextDataPoint);
+      } else if (this.isXDataPointSame(currentDataPoint, nextDataPoint) && !this.isYDataPointSame(currentDataPoint, nextDataPoint)) {
+        return this.getImageMovingInY(authoredObject, currentDataPoint, nextDataPoint);
+      }
+      return null;
+    }
+  }, {
+    key: 'isXDataPointSame',
+    value: function isXDataPointSame(currentDataPoint, nextDataPoint) {
+      return currentDataPoint.x == nextDataPoint.x;
+    }
+  }, {
+    key: 'isYDataPointSame',
+    value: function isYDataPointSame(currentDataPoint, nextDataPoint) {
+      return currentDataPoint.y == nextDataPoint.y;
+    }
+  }, {
+    key: 'getImageMovingInX',
+    value: function getImageMovingInX(authoredObject, currentDataPoint, nextDataPoint) {
+      if (currentDataPoint.x < nextDataPoint.x) {
+        return this.getImageMovingRight(authoredObject);
+      } else if (currentDataPoint.x > nextDataPoint.x) {
+        return this.getImageMovingLeft(authoredObject);
+      }
+      return null;
+    }
+  }, {
+    key: 'getImageMovingInY',
+    value: function getImageMovingInY(authoredObject, currentDataPoint, nextDataPoint) {
+      if (currentDataPoint.y < nextDataPoint.y) {
+        if (this.isUsingCartesianCoordinateSystem()) {
+          return this.getImageMovingUp(authoredObject);
         } else {
-          // there is a change in x and y
-
-          // TODO: fill out these if/else cases by setting the appropriate image
-
-          if (currentX < _nextX && currentY < _nextY) {
-            // x is getting larger and y is getting larger
-
-            if (this.isUsingCartesianCoordinateSystem()) {
-              // the image is moving up to the right
-            } else {
-                // the image is moving down to the right
-              }
-          } else if (currentX < _nextX && currentY > _nextY) {
-            // x is getting larger and y is getting smaller
-
-            if (this.isUsingCartesianCoordinateSystem()) {
-              // the image is moving down to the right
-            } else {
-                // the image is moving up to the right
-              }
-          } else if (currentX > _nextX && currentY > _nextY) {
-            // x is getting smaller and y is getting smaller
-
-            if (this.isUsingCartesianCoordinateSystem()) {
-              // the image is moving down to the left
-            } else {
-                // the image is moving up to the left
-              }
-          } else if (currentX > _nextX && currentY < _nextY) {
-            // x is getting smaller and y is getting larger
-
-            if (this.isUsingCartesianCoordinateSystem()) {
-              // the image is moving up to the right
-            } else {
-                // the image is moving down to the right
-              }
-          }
+          return this.getImageMovingDown(authoredObject);
+        }
+      } else if (currentDataPoint.y > nextDataPoint.y) {
+        if (this.isUsingCartesianCoordinateSystem()) {
+          return this.getImageMovingDown(authoredObject);
+        } else {
+          return this.getImageMovingUp(authoredObject);
         }
       }
-
-      return image;
+      return null;
+    }
+  }, {
+    key: 'getImageMovingUp',
+    value: function getImageMovingUp(authoredObject) {
+      if (authoredObject.imageMovingUp != null && authoredObject.imageMovingUp != '') {
+        return authoredObject.imageMovingUp;
+      } else {
+        return null;
+      }
+    }
+  }, {
+    key: 'getImageMovingDown',
+    value: function getImageMovingDown(authoredObject) {
+      if (authoredObject.imageMovingDown != null && authoredObject.imageMovingDown != '') {
+        return authoredObject.imageMovingDown;
+      } else {
+        return null;
+      }
+    }
+  }, {
+    key: 'getImageMovingLeft',
+    value: function getImageMovingLeft(authoredObject) {
+      if (authoredObject.imageMovingLeft != null && authoredObject.imageMovingLeft != '') {
+        return authoredObject.imageMovingLeft;
+      } else {
+        return null;
+      }
+    }
+  }, {
+    key: 'getImageMovingRight',
+    value: function getImageMovingRight(authoredObject) {
+      if (authoredObject.imageMovingRight != null && authoredObject.imageMovingRight != '') {
+        return authoredObject.imageMovingRight;
+      } else {
+        return null;
+      }
     }
 
     /**
-     * Check if all svg objects are done animating. If there are not svg objects
+     * Check if all svg objects are done animating. If there are no svg objects
      * animating, we will set the animationState to 'stopped'.
      */
 
   }, {
     key: 'checkIfAllAnimatingIsDone',
     value: function checkIfAllAnimatingIsDone() {
-      var _this3 = this;
+      var _this4 = this;
 
-      // check if there are any other objects that are still animating
       if (!this.areAnyObjectsAnimating()) {
-        // there are no objects animating
-
-        // set the animation state to 'stopped'
-        this.animationState = 'stopped';
+        this.setAnimationStateToStopped();
 
         // perform a digest after a timeout so that the buttons update
         this.$timeout(function () {
-          _this3.$scope.$digest();
+          _this4.$scope.$digest();
         });
       }
     }
+  }, {
+    key: 'areAnyObjectsAnimating',
+    value: function areAnyObjectsAnimating() {
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
+
+      try {
+        for (var _iterator8 = this.componentContent.objects[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var object = _step8.value;
+
+          if (this.idToWhetherAuthoredObjectIsAnimating[object.id]) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
+          }
+        } finally {
+          if (_didIteratorError8) {
+            throw _iteratorError8;
+          }
+        }
+      }
+
+      return false;
+    }
 
     /**
-     * Populate the student work into the component
-     * @param componentState the component state to populate into the component
+     * Populate the student work into the component.
+     * @param {object} componentState The component state to populate into the component.
      */
 
   }, {
     key: 'setStudentWork',
     value: function setStudentWork(componentState) {
-
-      if (componentState != null) {
-        var studentData = componentState.studentData;
-
-        if (studentData != null) {
-          var response = studentData.response;
-
-          if (response != null) {
-            // populate the text the student previously typed
-            this.studentResponse = response;
-          }
-
-          var submitCounter = studentData.submitCounter;
-
-          if (submitCounter != null) {
-            // populate the submit counter
-            this.submitCounter = submitCounter;
-          }
-
-          var attachments = studentData.attachments;
-
-          if (attachments != null) {
-            this.attachments = attachments;
-          }
-
-          this.processLatestSubmit();
+      var studentData = componentState.studentData;
+      if (studentData != null) {
+        var submitCounter = studentData.submitCounter;
+        if (submitCounter != null) {
+          this.submitCounter = submitCounter;
         }
+        this.processLatestSubmit();
       }
     }
+
+    /**
+     * Check if latest component state is a submission and set isSubmitDirty accordingly.
+     */
+
   }, {
     key: 'processLatestSubmit',
-
-
-    /**
-     * Check if latest component state is a submission and set isSubmitDirty accordingly
-     */
     value: function processLatestSubmit() {
-      var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+      var latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
-      if (latestState) {
-        var serverSaveTime = latestState.serverSaveTime;
+      if (latestComponentState) {
+        var serverSaveTime = latestComponentState.serverSaveTime;
         var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-        if (latestState.isSubmit) {
-          // latest state is a submission, so set isSubmitDirty to false and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          // set save message
-          this.setSaveMessage(this.$translate('LAST_SUBMITTED'), clientSaveTime);
+        if (latestComponentState.isSubmit) {
+          this.setIsSubmitDirtyFalse();
+          this.emitComponentSubmitDirty(false);
+          this.setSubmittedMessage(clientSaveTime);
         } else {
-          // latest state is not a submission, so set isSubmitDirty to true and notify node
-          this.isSubmitDirty = true;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          // set save message
-          this.setSaveMessage(this.$translate('LAST_SAVED'), clientSaveTime);
+          this.setIsSubmitDirtyTrue();
+          this.emitComponentSubmitDirty(true);
+          this.setSavedMessage(clientSaveTime);
         }
       }
     }
   }, {
-    key: 'saveButtonClicked',
-
-
-    /**
-     * Called when the student clicks the save button
-     */
-    value: function saveButtonClicked() {
-      this.isSubmit = false;
-
-      if (this.mode === 'authoring') {
-        /*
-         * we are in authoring mode so we will set isDirty to false here
-         * because the 'componentSaveTriggered' event won't work in
-         * authoring mode
-         */
-        this.isDirty = false;
-      }
-
-      // tell the parent node that this component wants to save
-      this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+    key: 'setIsSubmitDirtyTrue',
+    value: function setIsSubmitDirtyTrue() {
+      this.setIsSubmitDirty(true);
     }
   }, {
-    key: 'submitButtonClicked',
-
-
-    /**
-     * Called when the student clicks the submit button
-     */
-    value: function submitButtonClicked() {
-      // trigger the submit
-      var submitTriggeredBy = 'componentSubmitButton';
-      this.submit(submitTriggeredBy);
+    key: 'setIsSubmitDirtyFalse',
+    value: function setIsSubmitDirtyFalse() {
+      this.setIsSubmitDirty(false);
     }
   }, {
-    key: 'submit',
-
+    key: 'setIsSubmitDirty',
+    value: function setIsSubmitDirty(isDirty) {
+      this.isSubmitDirty = isDirty;
+    }
+  }, {
+    key: 'getIsSubmitDirty',
+    value: function getIsSubmitDirty() {
+      return this.isSubmitDirty;
+    }
+  }, {
+    key: 'emitComponentDirty',
+    value: function emitComponentDirty(isDirty) {
+      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: isDirty });
+    }
+  }, {
+    key: 'emitComponentSubmitDirty',
+    value: function emitComponentSubmitDirty(isDirty) {
+      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
+    }
 
     /**
-     * A submit was triggered by the component submit button or node submit button
-     * @param submitTriggeredBy what triggered the submit
+     * A submit was triggered by the component submit button or node submit button.
+     * @param {string} submitTriggeredBy What triggered the submit.
      * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
      */
+
+  }, {
+    key: 'submit',
     value: function submit(submitTriggeredBy) {
-
-      if (this.isSubmitDirty) {
-        // the student has unsubmitted work
-
+      if (this.getIsSubmitDirty()) {
         var performSubmit = true;
 
-        if (this.componentContent.maxSubmitCount != null) {
-          // there is a max submit count
-
-          // calculate the number of submits this student has left
-          var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
-
-          var message = '';
-
-          if (numberOfSubmitsLeft <= 0) {
-
-            // the student does not have any more chances to submit
-            alert(this.$translate('animation.youHaveNoMoreChances'));
-            performSubmit = false;
-          } else if (numberOfSubmitsLeft == 1) {
-
-            // ask the student if they are sure they want to submit
-            message = this.$translate('animation.youHaveOneChance', { numberOfSubmitsLeft: numberOfSubmitsLeft });
-            //message = 'You have ' + numberOfSubmitsLeft + ' chance to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
-            performSubmit = confirm(message);
-          } else if (numberOfSubmitsLeft > 1) {
-
-            // ask the student if they are sure they want to submit
-            message = this.$translate('animation.youHaveMultipleChances', { numberOfSubmitsLeft: numberOfSubmitsLeft });
-            //message = 'You have ' + numberOfSubmitsLeft + ' chances to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
-            performSubmit = confirm(message);
-          }
+        if (this.hasMaxSubmitCount()) {
+          var numberOfSubmitsLeft = this.getNumberOfSubmitsLeft();
+          performSubmit = this.confirmSubmit(numberOfSubmitsLeft);
         }
 
         if (performSubmit) {
-
-          /*
-           * set isSubmit to true so that when the component state is
-           * created, it will know that is a submit component state
-           * instead of just a save component state
-           */
-          this.isSubmit = true;
-
-          // increment the submit counter
+          this.setIsSubmitTrue();
           this.incrementSubmitCounter();
 
-          // check if the student has used up all of their submits
-          if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-            /*
-             * the student has used up all of their submits so we will
-             * disable the submit button
-             */
+          if (this.hasSubmitsLeft()) {
             this.isSubmitButtonDisabled = true;
           }
 
-          if (this.mode === 'authoring') {
+          if (this.isAuthoringMode()) {
             /*
-             * we are in authoring mode so we will set values appropriately
+             * We are in authoring mode so we will set values appropriately
              * here because the 'componentSubmitTriggered' event won't
-             * work in authoring mode
+             * work in authoring mode.
              */
             this.isDirty = false;
-            this.isSubmitDirty = false;
+            this.setIsSubmitDirty(false);
             this.createComponentState('submit');
-          }
-
-          if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
-            // tell the parent node that this component wants to submit
-            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-          } else if (submitTriggeredBy === 'nodeSubmitButton') {
-            // nothing extra needs to be performed
+          } else {
+            if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
+              this.emitComponentSubmitTriggered();
+            }
           }
         } else {
-          /*
-           * the student has cancelled the submit so if a component state
-           * is created, it will just be a regular save and not submit
-           */
-          this.isSubmit = false;
+          this.setIsSubmitFalse();
         }
       }
     }
-
-    /**
-     * Increment the submit counter
-     */
-
   }, {
-    key: 'incrementSubmitCounter',
-    value: function incrementSubmitCounter() {
-      this.submitCounter++;
+    key: 'confirmSubmit',
+    value: function confirmSubmit(numberOfSubmitsLeft) {
+      var isPerformSubmit = false;
+
+      if (numberOfSubmitsLeft <= 0) {
+        alert(this.$translate('animation.youHaveNoMoreChances'));
+      } else if (numberOfSubmitsLeft == 1) {
+        isPerformSubmit = confirm(this.$translate('animation.youHaveOneChance', { numberOfSubmitsLeft: numberOfSubmitsLeft }));
+      } else if (numberOfSubmitsLeft > 1) {
+        isPerformSubmit = confirm(this.$translate('animation.youHaveMultipleChances', { numberOfSubmitsLeft: numberOfSubmitsLeft }));
+      }
+
+      return isPerformSubmit;
     }
   }, {
-    key: 'lockIfNecessary',
-    value: function lockIfNecessary() {
-      // check if we need to lock the component after the student submits
-      if (this.isLockAfterSubmit()) {
-        this.isDisabled = true;
-      }
+    key: 'emitComponentSubmitTriggered',
+    value: function emitComponentSubmitTriggered() {
+      this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
     }
   }, {
     key: 'studentDataChanged',
-
-
-    /**
-     * Called when the student changes their work
-     */
     value: function studentDataChanged() {
-      var _this4 = this;
+      var _this5 = this;
 
-      /*
-       * set the dirty flags so we will know we need to save or submit the
-       * student work later
-       */
-      this.isDirty = true;
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
+      this.setIsDirty(true);
+      this.emitComponentDirty(true);
 
-      this.isSubmitDirty = true;
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
+      this.setIsSubmitDirty(true);
+      this.emitComponentSubmitDirty(true);
 
-      // clear out the save message
-      this.setSaveMessage('', null);
+      this.clearSaveText();
 
-      // get this part id
-      var componentId = this.getComponentId();
-
-      /*
-       * the student work in this component has changed so we will tell
-       * the parent node that the student data will need to be saved.
-       * this will also notify connected parts that this component's student
-       * data has changed.
-       */
-      var action = 'change';
-
-      // create a component state populated with the student data
-      this.createComponentState(action).then(function (componentState) {
-        _this4.$scope.$emit('componentStudentDataChanged', { nodeId: _this4.nodeId, componentId: componentId, componentState: componentState });
+      this.createComponentState('change').then(function (componentState) {
+        _this5.$scope.$emit('componentStudentDataChanged', { nodeId: _this5.nodeId, componentId: _this5.componentId, componentState: componentState });
       });
     }
   }, {
@@ -1871,1903 +1278,221 @@ var AnimationController = function () {
 
 
     /**
-     * Create a new component state populated with the student data
-     * @param action the action that is triggering creating of this component state
-     * e.g. 'submit', 'save', 'change'
-     * @return a promise that will return a component state
+     * Create a new component state populated with the student data.
+     * @param {string} action The action that is triggering creating of this component state
+     * e.g. 'submit', 'save', 'change'.
+     * @return {promise} A promise that will return a component state.
      */
     value: function createComponentState(action) {
-
       var deferred = this.$q.defer();
-
-      // create a new component state
       var componentState = this.NodeService.createNewComponentState();
-
-      // set the response into the component state
-      var studentData = {};
-
-      studentData.attachments = angular.copy(this.attachments); // create a copy without reference to original array
-
-      // set the submit counter
-      studentData.submitCounter = this.submitCounter;
-
-      // set the flag for whether the student submitted this work
-      componentState.isSubmit = this.isSubmit;
-
-      // set the student data into the component state
+      var studentData = {
+        submitCounter: this.submitCounter
+      };
       componentState.studentData = studentData;
+      componentState.isSubmit = this.getIsSubmit();
 
       /*
-       * reset the isSubmit value so that the next component state
-       * doesn't maintain the same value
+       * Reset the isSubmit value so that the next component state
+       * doesn't maintain the same value.
        */
-      this.isSubmit = false;
+      this.setIsSubmitFalse();
 
       /*
-       * perform any additional processing that is required before returning
-       * the component state
+       * Perform any additional processing that is required before returning
+       * the component state.
        */
       this.createComponentStateAdditionalProcessing(deferred, componentState, action);
 
       return deferred.promise;
     }
   }, {
-    key: 'createComponentStateAdditionalProcessing',
-
-
-    /**
-     * Perform any additional processing that is required before returning the
-     * component state
-     * Note: this function must call deferred.resolve() otherwise student work
-     * will not be saved
-     * @param deferred a deferred object
-     * @param componentState the component state
-     * @param action the action that we are creating the component state for
-     * e.g. 'submit', 'save', 'change'
-     */
-    value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
-      var _this5 = this;
-
-      var performCRaterScoring = false;
-
-      // determine if we need to perform CRater scoring
-      if (action == 'submit' && componentState.isSubmit) {
-        if (this.isCRaterScoreOnSubmit(this.componentContent)) {
-          performCRaterScoring = true;
-        }
-      } else if (action == 'save') {
-        if (this.isCRaterScoreOnSave(this.componentContent)) {
-          performCRaterScoring = true;
-        }
-      } else if (action == 'change' || action == null) {
-        if (this.isCRaterScoreOnChange(this.componentContent)) {
-          performCRaterScoring = true;
-        }
-      }
-
-      if (performCRaterScoring) {
-        // we need to perform CRater scoring
-
-        var cRaterItemType = this.CRaterService.getCRaterItemType(this.componentContent);
-        var cRaterItemId = this.CRaterService.getCRaterItemId(this.componentContent);
-        var cRaterRequestType = 'scoring';
-        var cRaterResponseId = new Date().getTime();
-        var studentData = this.studentResponse;
-
-        /*
-         * display a dialog message while the student waits for their work
-         * to be scored by CRater
-         */
-        this.$mdDialog.show({
-          template: '<md-dialog aria-label="' + this.$translate('animation.pleaseWait') + '"><md-dialog-content><div class="md-dialog-content">' + this.$translate('animation.pleaseWaitWeAreScoringYourWork') + '</div></md-dialog-content></md-dialog>',
-          escapeToClose: false
-        });
-
-        // make the CRater request to score the student data
-        this.CRaterService.makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData).then(function (result) {
-
-          if (result != null) {
-
-            // get the CRater response
-            var data = result.data;
-
-            if (data != null) {
-
-              /*
-               * annotations we put in the component state will be
-               * removed from the component state and saved separately
-               */
-              componentState.annotations = [];
-
-              // get the CRater score
-              var score = data.score;
-              var concepts = data.concepts;
-              var previousScore = null;
-
-              if (score != null) {
-
-                // create the auto score annotation
-                var autoScoreAnnotationData = {};
-                autoScoreAnnotationData.value = score;
-                autoScoreAnnotationData.maxAutoScore = _this5.ProjectService.getMaxScoreForComponent(_this5.nodeId, _this5.componentId);
-                autoScoreAnnotationData.concepts = concepts;
-                autoScoreAnnotationData.autoGrader = 'cRater';
-
-                var autoScoreAnnotation = _this5.createAutoScoreAnnotation(autoScoreAnnotationData);
-
-                var annotationGroupForScore = null;
-
-                if (_this5.$scope.$parent.nodeController != null) {
-                  // get the previous score and comment annotations
-                  var latestAnnotations = _this5.$scope.$parent.nodeController.getLatestComponentAnnotations(_this5.componentId);
-
-                  if (latestAnnotations != null && latestAnnotations.score != null && latestAnnotations.score.data != null) {
-
-                    // get the previous score annotation value
-                    previousScore = latestAnnotations.score.data.value;
-                  }
-
-                  if (_this5.componentContent.enableGlobalAnnotations && _this5.componentContent.globalAnnotationSettings != null) {
-
-                    var globalAnnotationMaxCount = 0;
-                    if (_this5.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
-                      globalAnnotationMaxCount = _this5.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
-                    }
-                    // get the annotation properties for the score that the student got.
-                    annotationGroupForScore = _this5.ProjectService.getGlobalAnnotationGroupByScore(_this5.componentContent, previousScore, score);
-
-                    // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
-                    if (annotationGroupForScore != null) {
-                      var globalAnnotationGroupsByNodeIdAndComponentId = _this5.AnnotationService.getAllGlobalAnnotationGroups(_this5.nodeId, _this5.componentId);
-                      annotationGroupForScore.annotationGroupCreatedTime = autoScoreAnnotation.clientSaveTime; // save annotation creation time
-
-                      if (globalAnnotationGroupsByNodeIdAndComponentId.length >= globalAnnotationMaxCount) {
-                        // we've already applied this annotation properties to maxCount annotations, so we don't need to apply it any more.
-                        annotationGroupForScore = null;
-                      }
-                    }
-
-                    if (annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.unGlobalizeCriteria != null) {
-                      // check if this annotation is global and what criteria needs to be met to un-globalize.
-                      annotationGroupForScore.unGlobalizeCriteria.map(function (unGlobalizeCriteria) {
-                        // if the un-globalize criteria is time-based (e.g. isVisitedAfter, isRevisedAfter, isVisitedAndRevisedAfter, etc), store the timestamp of this annotation in the criteria
-                        // so we can compare it when we check for criteria satisfaction.
-                        if (unGlobalizeCriteria.params != null) {
-                          unGlobalizeCriteria.params.criteriaCreatedTimestamp = autoScoreAnnotation.clientSaveTime; // save annotation creation time to criteria
-                        }
-                      });
-                    }
-
-                    if (annotationGroupForScore != null) {
-                      // copy over the annotation properties into the autoScoreAnnotation's data
-                      angular.merge(autoScoreAnnotation.data, annotationGroupForScore);
-                    }
-                  }
-                }
-
-                componentState.annotations.push(autoScoreAnnotation);
-
-                if (_this5.mode === 'authoring') {
-                  if (_this5.latestAnnotations == null) {
-                    _this5.latestAnnotations = {};
-                  }
-
-                  /*
-                   * we are in the authoring view so we will set the
-                   * latest score annotation manually
-                   */
-                  _this5.latestAnnotations.score = autoScoreAnnotation;
-                }
-
-                var autoComment = null;
-
-                // get the submit counter
-                var submitCounter = _this5.submitCounter;
-
-                if (_this5.componentContent.cRater.enableMultipleAttemptScoringRules && submitCounter > 1) {
-                  /*
-                   * this step has multiple attempt scoring rules and this is
-                   * a subsequent submit
-                   */
-                  // get the feedback based upon the previous score and current score
-                  autoComment = _this5.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(_this5.componentContent, previousScore, score);
-                } else {
-                  // get the feedback text
-                  autoComment = _this5.CRaterService.getCRaterFeedbackTextByScore(_this5.componentContent, score);
-                }
-
-                if (autoComment != null) {
-                  // create the auto comment annotation
-                  var autoCommentAnnotationData = {};
-                  autoCommentAnnotationData.value = autoComment;
-                  autoCommentAnnotationData.concepts = concepts;
-                  autoCommentAnnotationData.autoGrader = 'cRater';
-
-                  var autoCommentAnnotation = _this5.createAutoCommentAnnotation(autoCommentAnnotationData);
-
-                  if (_this5.componentContent.enableGlobalAnnotations) {
-                    if (annotationGroupForScore != null) {
-                      // copy over the annotation properties into the autoCommentAnnotation's data
-                      angular.merge(autoCommentAnnotation.data, annotationGroupForScore);
-                    }
-                  }
-                  componentState.annotations.push(autoCommentAnnotation);
-
-                  if (_this5.mode === 'authoring') {
-                    if (_this5.latestAnnotations == null) {
-                      _this5.latestAnnotations = {};
-                    }
-
-                    /*
-                     * we are in the authoring view so we will set the
-                     * latest comment annotation manually
-                     */
-                    _this5.latestAnnotations.comment = autoCommentAnnotation;
-                  }
-                }
-                if (_this5.componentContent.enableNotifications) {
-                  // get the notification properties for the score that the student got.
-                  var notificationForScore = _this5.ProjectService.getNotificationByScore(_this5.componentContent, previousScore, score);
-
-                  if (notificationForScore != null) {
-                    notificationForScore.score = score;
-                    notificationForScore.nodeId = _this5.nodeId;
-                    notificationForScore.componentId = _this5.componentId;
-                    _this5.NotificationService.sendNotificationForScore(notificationForScore);
-                  }
-                }
-
-                // display global annotations dialog if needed
-                if (_this5.componentContent.enableGlobalAnnotations && annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.isPopup) {
-                  _this5.$scope.$emit('displayGlobalAnnotations');
-                }
-              }
-            }
-          }
-
-          /*
-           * hide the dialog that tells the student to wait since
-           * the work has been scored.
-           */
-          _this5.$mdDialog.hide();
-
-          // resolve the promise now that we are done performing additional processing
-          deferred.resolve(componentState);
-        });
-      } else if (this.ProjectService.hasAdditionalProcessingFunctions(this.nodeId, this.componentId)) {
-        // if there are any additionalProcessingFunctions for this node and component, call all of them
-        var additionalProcessingFunctions = this.ProjectService.getAdditionalProcessingFunctions(this.nodeId, this.componentId);
-        var allPromises = [];
-        for (var i = 0; i < additionalProcessingFunctions.length; i++) {
-          var additionalProcessingFunction = additionalProcessingFunctions[i];
-          var defer = this.$q.defer();
-          var promise = defer.promise;
-          allPromises.push(promise);
-          additionalProcessingFunction(defer, componentState, action);
-        }
-        this.$q.all(allPromises).then(function () {
-          deferred.resolve(componentState);
-        });
-      } else {
-        /*
-         * we don't need to perform any additional processing so we can resolve
-         * the promise immediately
-         */
-        deferred.resolve(componentState);
-      }
-    }
-
-    /**
-     * Create an auto score annotation
-     * @param runId the run id
-     * @param periodId the period id
-     * @param nodeId the node id
-     * @param componentId the component id
-     * @param toWorkgroupId the student workgroup id
-     * @param data the annotation data
-     * @returns the auto score annotation
-     */
-
-  }, {
     key: 'createAutoScoreAnnotation',
-    value: function createAutoScoreAnnotation(data) {
 
+
+    /**
+     * @param {object} data The annotation data.
+     * @returns {object} The auto score annotation.
+     */
+    value: function createAutoScoreAnnotation(data) {
       var runId = this.ConfigService.getRunId();
       var periodId = this.ConfigService.getPeriodId();
       var nodeId = this.nodeId;
       var componentId = this.componentId;
       var toWorkgroupId = this.ConfigService.getWorkgroupId();
-
-      // create the auto score annotation
-      var annotation = this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
-
-      return annotation;
+      return this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
     }
 
     /**
-     * Create an auto comment annotation
-     * @param runId the run id
-     * @param periodId the period id
-     * @param nodeId the node id
-     * @param componentId the component id
-     * @param toWorkgroupId the student workgroup id
-     * @param data the annotation data
-     * @returns the auto comment annotation
+     * @param {object} data The annotation data.
+     * @returns {object} The auto comment annotation.
      */
 
   }, {
     key: 'createAutoCommentAnnotation',
     value: function createAutoCommentAnnotation(data) {
-
       var runId = this.ConfigService.getRunId();
       var periodId = this.ConfigService.getPeriodId();
       var nodeId = this.nodeId;
       var componentId = this.componentId;
       var toWorkgroupId = this.ConfigService.getWorkgroupId();
-
-      // create the auto comment annotation
-      var annotation = this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
-
-      return annotation;
+      return this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
     }
-
-    /**
-     * Check if we need to lock the component
-     */
-
-  }, {
-    key: 'calculateDisabled',
-    value: function calculateDisabled() {
-
-      // get the component content
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // check if the parent has set this component to disabled
-        if (componentContent.isDisabled) {
-          this.isDisabled = true;
-        } else if (componentContent.lockAfterSubmit) {
-          // we need to lock the component after the student has submitted
-
-          // get the component states for this component
-          var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          // check if any of the component states were submitted
-          var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-          if (isSubmitted) {
-            // the student has submitted work for this component
-            this.isDisabled = true;
-          }
-        }
-      }
-    }
-  }, {
-    key: 'isLockAfterSubmit',
-
-
-    /**
-     * Check whether we need to lock the component after the student
-     * submits an answer.
-     */
-    value: function isLockAfterSubmit() {
-      var result = false;
-
-      if (this.componentContent != null) {
-
-        // check the lockAfterSubmit field in the component content
-        if (this.componentContent.lockAfterSubmit) {
-          result = true;
-        }
-      }
-
-      return result;
-    }
-  }, {
-    key: 'removeAttachment',
-    value: function removeAttachment(attachment) {
-      if (this.attachments.indexOf(attachment) != -1) {
-        this.attachments.splice(this.attachments.indexOf(attachment), 1);
-        this.studentDataChanged();
-        // YOU ARE NOW FREEEEEEEEE!
-      }
-    }
-  }, {
-    key: 'attachStudentAsset',
-
-
-    /**
-     * Attach student asset to this Component's attachments
-     * @param studentAsset
-     */
-    value: function attachStudentAsset(studentAsset) {
-      var _this6 = this;
-
-      if (studentAsset != null) {
-        this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
-          if (copiedAsset != null) {
-            var attachment = {
-              studentAssetId: copiedAsset.id,
-              iconURL: copiedAsset.iconURL
-            };
-
-            _this6.attachments.push(attachment);
-            _this6.studentDataChanged();
-          }
-        });
-      }
-    }
-  }, {
-    key: 'getPrompt',
-
-
-    /**
-     * Get the prompt to show to the student
-     */
-    value: function getPrompt() {
-      var prompt = null;
-
-      if (this.originalComponentContent != null) {
-        // this is a show previous work component
-
-        if (this.originalComponentContent.showPreviousWorkPrompt) {
-          // show the prompt from the previous work component
-          prompt = this.componentContent.prompt;
-        } else {
-          // show the prompt from the original component
-          prompt = this.originalComponentContent.prompt;
-        }
-      } else if (this.componentContent != null) {
-        prompt = this.componentContent.prompt;
-      }
-
-      return prompt;
-    }
-  }, {
-    key: 'getNumRows',
-
-
-    /**
-     * Get the number of rows for the textarea
-     */
-    value: function getNumRows() {
-      var numRows = null;
-
-      if (this.componentContent != null) {
-        numRows = this.componentContent.numRows;
-      }
-
-      return numRows;
-    }
-  }, {
-    key: 'getNumColumns',
-
-
-    /**
-     * Get the number of columns for the textarea
-     */
-    value: function getNumColumns() {
-      var numColumns = null;
-
-      if (this.componentContent != null) {
-        numColumns = this.componentContent.numColumns;
-      }
-
-      return numColumns;
-    }
-  }, {
-    key: 'getResponse',
-
-
-    /**
-     * Get the text the student typed
-     */
-    value: function getResponse() {
-      var response = null;
-
-      if (this.studentResponse != null) {
-        response = this.studentResponse;
-      }
-
-      return response;
-    }
-  }, {
-    key: 'importWork',
-
-
-    /**
-     * Import work from another component
-     */
-    value: function importWork() {
-
-      // get the component content
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // get the import previous work node id and component id
-        var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
-        var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-
-        if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-
-          /*
-           * check if the node id is in the field that we used to store
-           * the import previous work node id in
-           */
-          if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
-            importPreviousWorkNodeId = componentContent.importWorkNodeId;
-          }
-        }
-
-        if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-
-          /*
-           * check if the component id is in the field that we used to store
-           * the import previous work component id in
-           */
-          if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
-            importPreviousWorkComponentId = componentContent.importWorkComponentId;
-          }
-        }
-
-        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-
-          // get the latest component state for this component
-          var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          /*
-           * we will only import work into this component if the student
-           * has not done any work for this component
-           */
-          if (componentState == null) {
-            // the student has not done any work for this component
-
-            // get the latest component state from the component we are importing from
-            var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
-
-            if (importWorkComponentState != null) {
-              /*
-               * populate a new component state with the work from the
-               * imported component state
-               */
-              var populatedComponentState = this.AnimationService.populateComponentState(importWorkComponentState);
-
-              // populate the component state into this component
-              this.setStudentWork(populatedComponentState);
-
-              // make the work dirty so that it gets saved
-              this.studentDataChanged();
-            }
-          }
-        }
-      }
-    }
-  }, {
-    key: 'getComponentId',
-
-
-    /**
-     * Get the component id
-     * @return the component id
-     */
-    value: function getComponentId() {
-      return this.componentContent.id;
-    }
-  }, {
-    key: 'authoringViewComponentChanged',
-
-
-    /**
-     * The component has changed in the regular authoring view so we will save the project
-     */
-    value: function authoringViewComponentChanged() {
-
-      // update the JSON string in the advanced authoring view textarea
-      this.updateAdvancedAuthoringView();
-
-      /*
-       * notify the parent node that the content has changed which will save
-       * the project to the server
-       */
-      this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-    }
-  }, {
-    key: 'advancedAuthoringViewComponentChanged',
-
-
-    /**
-     * The component has changed in the advanced authoring view so we will update
-     * the component and save the project.
-     */
-    value: function advancedAuthoringViewComponentChanged() {
-
-      try {
-        /*
-         * create a new component by converting the JSON string in the advanced
-         * authoring view into a JSON object
-         */
-        var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
-
-        // replace the component in the project
-        this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
-
-        // set the new component into the controller
-        this.componentContent = editedComponentContent;
-
-        /*
-         * notify the parent node that the content has changed which will save
-         * the project to the server
-         */
-        this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-      } catch (e) {
-        this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
-      }
-    }
-  }, {
-    key: 'authoringShowPreviousWorkClicked',
-
-
-    /**
-     * The show previous work checkbox was clicked
-     */
-    value: function authoringShowPreviousWorkClicked() {
-
-      if (!this.authoringComponentContent.showPreviousWork) {
-        /*
-         * show previous work has been turned off so we will clear the
-         * show previous work node id, show previous work component id, and
-         * show previous work prompt values
-         */
-        this.authoringComponentContent.showPreviousWorkNodeId = null;
-        this.authoringComponentContent.showPreviousWorkComponentId = null;
-        this.authoringComponentContent.showPreviousWorkPrompt = null;
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The show previous work node id has changed
-     */
-
-  }, {
-    key: 'authoringShowPreviousWorkNodeIdChanged',
-    value: function authoringShowPreviousWorkNodeIdChanged() {
-
-      if (this.authoringComponentContent.showPreviousWorkNodeId == null || this.authoringComponentContent.showPreviousWorkNodeId == '') {
-
-        /*
-         * the show previous work node id is null so we will also set the
-         * show previous component id to null
-         */
-        this.authoringComponentContent.showPreviousWorkComponentId = '';
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The show previous work component id has changed
-     */
-
-  }, {
-    key: 'authoringShowPreviousWorkComponentIdChanged',
-    value: function authoringShowPreviousWorkComponentIdChanged() {
-
-      // get the show previous work node id
-      var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-
-      // get the show previous work prompt boolean value
-      var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-
-      // get the old show previous work component id
-      var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-
-      // get the new show previous work component id
-      var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-
-      // get the new show previous work component
-      var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-
-      if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
-        // the new show previous work component is empty
-
-        // save the component
-        this.authoringViewComponentChanged();
-      } else if (newShowPreviousWorkComponent != null) {
-
-        // get the current component type
-        var currentComponentType = this.componentContent.type;
-
-        // get the new component type
-        var newComponentType = newShowPreviousWorkComponent.type;
-
-        // check if the component types are different
-        if (newComponentType != currentComponentType) {
-          /*
-           * the component types are different so we will need to change
-           * the whole component
-           */
-
-          // make sure the author really wants to change the component type
-          var answer = confirm(this.$translate('ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE'));
-
-          if (answer) {
-            // the author wants to change the component type
-
-            /*
-             * get the component service so we can make a new instance
-             * of the component
-             */
-            var componentService = this.$injector.get(newComponentType + 'Service');
-
-            if (componentService != null) {
-
-              // create a new component
-              var newComponent = componentService.createComponent();
-
-              // set move over the values we need to keep
-              newComponent.id = this.authoringComponentContent.id;
-              newComponent.showPreviousWork = true;
-              newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
-              newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
-              newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-
-              /*
-               * update the authoring component content JSON string to
-               * change the component
-               */
-              this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-
-              // update the component in the project and save the project
-              this.advancedAuthoringViewComponentChanged();
-            }
-          } else {
-            /*
-             * the author does not want to change the component type so
-             * we will rollback the showPreviousWorkComponentId value
-             */
-            this.authoringComponentContent.showPreviousWorkComponentId = oldShowPreviousWorkComponentId;
-          }
-        } else {
-          /*
-           * the component types are the same so we do not need to change
-           * the component type and can just save
-           */
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
-
-    /**
-     * Get all the step node ids in the project
-     * @returns all the step node ids
-     */
-
-  }, {
-    key: 'getStepNodeIds',
-    value: function getStepNodeIds() {
-      var stepNodeIds = this.ProjectService.getNodeIds();
-
-      return stepNodeIds;
-    }
-
-    /**
-     * Get the step number and title
-     * @param nodeId get the step number and title for this node
-     * @returns the step number and title
-     */
-
-  }, {
-    key: 'getNodePositionAndTitleByNodeId',
-    value: function getNodePositionAndTitleByNodeId(nodeId) {
-      var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-
-      return nodePositionAndTitle;
-    }
-
-    /**
-     * Get the components in a step
-     * @param nodeId get the components in the step
-     * @returns the components in the step
-     */
-
-  }, {
-    key: 'getComponentsByNodeId',
-    value: function getComponentsByNodeId(nodeId) {
-      var components = this.ProjectService.getComponentsByNodeId(nodeId);
-
-      return components;
-    }
-
-    /**
-     * Check if a node is a step node
-     * @param nodeId the node id to check
-     * @returns whether the node is an application node
-     */
-
-  }, {
-    key: 'isApplicationNode',
-    value: function isApplicationNode(nodeId) {
-      var result = this.ProjectService.isApplicationNode(nodeId);
-
-      return result;
-    }
-
-    /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-
-  }, {
-    key: 'updateAdvancedAuthoringView',
-    value: function updateAdvancedAuthoringView() {
-      this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-    }
-  }, {
-    key: 'setSaveMessage',
-
-
-    /**
-     * Set the message next to the save button
-     * @param message the message to display
-     * @param time the time to display
-     */
-    value: function setSaveMessage(message, time) {
-      this.saveMessage.text = message;
-      this.saveMessage.time = time;
-    }
-  }, {
-    key: 'isCRaterEnabled',
-
-
-    /**
-     * Check if CRater is enabled for this component
-     * @returns whether CRater is enabled for this component
-     */
-    value: function isCRaterEnabled() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterEnabled(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
-    }
-
-    /**
-     * Check if CRater is set to score on save
-     * @returns whether CRater is set to score on save
-     */
-
-  }, {
-    key: 'isCRaterScoreOnSave',
-    value: function isCRaterScoreOnSave() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterScoreOnSave(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
-    }
-
-    /**
-     * Check if CRater is set to score on submit
-     * @returns whether CRater is set to score on submit
-     */
-
-  }, {
-    key: 'isCRaterScoreOnSubmit',
-    value: function isCRaterScoreOnSubmit() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterScoreOnSubmit(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
-    }
-
-    /**
-     * Check if CRater is set to score on change
-     * @returns whether CRater is set to score on change
-     */
-
-  }, {
-    key: 'isCRaterScoreOnChange',
-    value: function isCRaterScoreOnChange() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterScoreOnChange(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
-    }
-
-    /**
-     * Check if CRater is set to score when the student exits the step
-     * @returns whether CRater is set to score when the student exits the step
-     */
-
-  }, {
-    key: 'isCRaterScoreOnExit',
-    value: function isCRaterScoreOnExit() {
-      var result = false;
-
-      if (this.CRaterService.isCRaterScoreOnExit(this.componentContent)) {
-        result = true;
-      }
-
-      return result;
-    }
-
-    /**
-     * Register the the listener that will listen for the exit event
-     * so that we can perform saving before exiting.
-     */
-
-  }, {
-    key: 'registerExitListener',
-    value: function registerExitListener() {
-
-      /*
-       * Listen for the 'exit' event which is fired when the student exits
-       * the VLE. This will perform saving before the VLE exits.
-       */
-      this.exitListener = this.$scope.$on('exit', function (event, args) {});
-    }
-  }, {
-    key: 'authoringAddScoringRule',
-
-
-    /**
-     * Add a scoring rule
-     */
-    value: function authoringAddScoringRule() {
-
-      if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.scoringRules != null) {
-
-        // create a scoring rule object
-        var newScoringRule = {};
-        newScoringRule.score = '';
-        newScoringRule.feedbackText = '';
-
-        // add the new scoring rule object
-        this.authoringComponentContent.cRater.scoringRules.push(newScoringRule);
-
-        /*
-         * the author has made changes so we will save the component
-         * content
-         */
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * Move a scoring rule up
-     * @param index the index of the scoring rule
-     */
-
-  }, {
-    key: 'authoringViewScoringRuleUpClicked',
-    value: function authoringViewScoringRuleUpClicked(index) {
-
-      if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.scoringRules != null) {
-
-        // make sure the scoring rule is not already at the top
-        if (index != 0) {
-          // the scoring rule is not at the top so we can move it up
-
-          // get the scoring rule
-          var scoringRule = this.authoringComponentContent.cRater.scoringRules[index];
-
-          // remove the scoring rule
-          this.authoringComponentContent.cRater.scoringRules.splice(index, 1);
-
-          // add the scoring rule back at the position one index back
-          this.authoringComponentContent.cRater.scoringRules.splice(index - 1, 0, scoringRule);
-
-          /*
-           * the author has made changes so we will save the component
-           * content
-           */
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
-
-    /**
-     * Move a scoring rule down
-     * @param index the index of the scoring rule
-     */
-
-  }, {
-    key: 'authoringViewScoringRuleDownClicked',
-    value: function authoringViewScoringRuleDownClicked(index) {
-
-      if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.scoringRules != null) {
-
-        // make sure the scoring rule is not already at the end
-        if (index != this.authoringComponentContent.cRater.scoringRules.length - 1) {
-
-          // get the scoring rule
-          var scoringRule = this.authoringComponentContent.cRater.scoringRules[index];
-
-          // remove the scoring rule
-          this.authoringComponentContent.cRater.scoringRules.splice(index, 1);
-
-          // add the scoring rule back at the position one index forward
-          this.authoringComponentContent.cRater.scoringRules.splice(index + 1, 0, scoringRule);
-
-          /*
-           * the author has made changes so we will save the component
-           * content
-           */
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
-
-    /**
-     * Delete a scoring rule
-     * @param index the index of the scoring rule
-     */
-
-  }, {
-    key: 'authoringViewScoringRuleDeleteClicked',
-    value: function authoringViewScoringRuleDeleteClicked(index) {
-
-      if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.scoringRules != null) {
-
-        // get the scoring rule
-        var scoringRule = this.authoringComponentContent.cRater.scoringRules[index];
-
-        if (scoringRule != null) {
-
-          // get the score and feedback text
-          var score = scoringRule.score;
-          var feedbackText = scoringRule.feedbackText;
-
-          // make sure the author really wants to delete the scoring rule
-          //var answer = confirm('Are you sure you want to delete this scoring rule?\n\nScore: ' + score + '\n\n' + 'Feedback Text: ' + feedbackText);
-          var answer = confirm(this.$translate('animation.areYouSureYouWantToDeleteThisScoringRule', { score: score, feedbackText: feedbackText }));
-
-          if (answer) {
-            // the author answered yes to delete the scoring rule
-            this.authoringComponentContent.cRater.scoringRules.splice(index, 1);
-
-            /*
-             * the author has made changes so we will save the component
-             * content
-             */
-            this.authoringViewComponentChanged();
-          }
-        }
-      }
-    }
-
-    /**
-     * Add a new notification. Currently assumes this is a notification based on CRaterResult, but
-     * we can add different types in the future.
-     */
-
-  }, {
-    key: 'authoringAddNotification',
-    value: function authoringAddNotification() {
-
-      if (this.authoringComponentContent.notificationSettings != null && this.authoringComponentContent.notificationSettings.notifications != null) {
-
-        // create a new notification
-        var newNotification = {
-          notificationType: 'CRaterResult',
-          enableCriteria: {
-            scoreSequence: ['', '']
-          },
-          isAmbient: false,
-          dismissCode: 'apple',
-          isNotifyTeacher: true,
-          isNotifyStudent: true,
-          notificationMessageToStudent: '{{username}}, ' + this.$translate('animation.youGotAScoreOf') + ' {{score}}. ' + this.$translate('animation.pleaseTalkToYourTeacher') + '.',
-          notificationMessageToTeacher: '{{username}} ' + this.$translate('animation.gotAScoreOf') + ' {{score}}.'
-        };
-
-        // add the new notification
-        this.authoringComponentContent.notificationSettings.notifications.push(newNotification);
-
-        // the author has made changes so we will save the component content
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * Add a multiple attempt scoring rule
-     */
-
-  }, {
-    key: 'authoringAddMultipleAttemptScoringRule',
-    value: function authoringAddMultipleAttemptScoringRule() {
-
-      if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.multipleAttemptScoringRules != null) {
-
-        // create a new multiple attempt scoring rule
-        var newMultipleAttemptScoringRule = {};
-        newMultipleAttemptScoringRule.scoreSequence = ['', ''];
-        newMultipleAttemptScoringRule.feedbackText = '';
-
-        // add the new multiple attempt scoring rule
-        this.authoringComponentContent.cRater.multipleAttemptScoringRules.push(newMultipleAttemptScoringRule);
-
-        /*
-         * the author has made changes so we will save the component
-         * content
-         */
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * Move a multiple attempt scoring rule up
-     * @param index
-     */
-
-  }, {
-    key: 'authoringViewMultipleAttemptScoringRuleUpClicked',
-    value: function authoringViewMultipleAttemptScoringRuleUpClicked(index) {
-
-      if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.multipleAttemptScoringRules != null) {
-
-        // make sure the multiple attempt scoring rule is not already at the top
-        if (index != 0) {
-          // the multiple attempt scoring rule is not at the top
-
-          // get the multiple attempt scoring rule
-          var multipleAttemptScoringRule = this.authoringComponentContent.cRater.multipleAttemptScoringRules[index];
-
-          // remove the multiple attempt scoring rule
-          this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index, 1);
-
-          // add the multiple attempt scoring rule back at the position one index back
-          this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index - 1, 0, multipleAttemptScoringRule);
-
-          /*
-           * the author has made changes so we will save the component
-           * content
-           */
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
-
-    /**
-     * Move a multiple attempt scoring rule down
-     * @param index the index of the multiple attempt scoring rule
-     */
-
-  }, {
-    key: 'authoringViewMultipleAttemptScoringRuleDownClicked',
-    value: function authoringViewMultipleAttemptScoringRuleDownClicked(index) {
-
-      if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.multipleAttemptScoringRules != null) {
-
-        // make sure the multiple attempt scoring rule is not at the end
-        if (index != this.authoringComponentContent.cRater.multipleAttemptScoringRules.length - 1) {
-          // the multiple attempt scoring rule is not at the end
-
-          // get the multiple attempt scoring rule
-          var multipleAttemptScoringRule = this.authoringComponentContent.cRater.multipleAttemptScoringRules[index];
-
-          // remove the multiple attempt scoring rule
-          this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index, 1);
-
-          // add the multiple attempt scoring rule back at the position one index forward
-          this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index + 1, 0, multipleAttemptScoringRule);
-
-          /*
-           * the author has made changes so we will save the component
-           * content
-           */
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
-
-    /**
-     * Delete a multiple attempt scoring rule
-     * @param index the index of the mulitple attempt scoring rule
-     */
-
-  }, {
-    key: 'authoringViewMultipleAttemptScoringRuleDeleteClicked',
-    value: function authoringViewMultipleAttemptScoringRuleDeleteClicked(index) {
-
-      if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.multipleAttemptScoringRules != null) {
-
-        // get the multiple attempt scoring rule
-        var multipleAttemptScoringRule = this.authoringComponentContent.cRater.multipleAttemptScoringRules[index];
-
-        if (multipleAttemptScoringRule != null) {
-
-          // get the score sequence
-          var scoreSequence = multipleAttemptScoringRule.scoreSequence;
-          var previousScore = '';
-          var currentScore = '';
-
-          if (scoreSequence != null) {
-            previousScore = scoreSequence[0];
-            currentScore = scoreSequence[1];
-          }
-
-          // get the feedback text
-          var feedbackText = multipleAttemptScoringRule.feedbackText;
-
-          // make sure the author really wants to delete the multiple attempt scoring rule
-          var answer = confirm(this.$translate('animation.areYouSureYouWantToDeleteThisMultipleAttemptScoringRule', { previousScore: previousScore, currentScore: currentScore, feedbackText: feedbackText }));
-
-          if (answer) {
-            // the author answered yes to delete the multiple attempt scoring rule
-            this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index, 1);
-
-            /*
-             * the author has made changes so we will save the component
-             * content
-             */
-            this.authoringViewComponentChanged();
-          }
-        }
-      }
-    }
-
-    /**
-     * Move a notification up
-     * @param index of the notification
-     */
-
-  }, {
-    key: 'authoringViewNotificationUpClicked',
-    value: function authoringViewNotificationUpClicked(index) {
-
-      if (this.authoringComponentContent.notificationSettings != null && this.authoringComponentContent.notificationSettings.notifications != null) {
-
-        // make sure the notification is not already at the top
-        if (index != 0) {
-          // the notification is not at the top
-
-          // get the notification
-          var notification = this.authoringComponentContent.notificationSettings.notifications[index];
-
-          // remove the notification
-          this.authoringComponentContent.notificationSettings.notifications.splice(index, 1);
-
-          // add the notification back at the position one index back
-          this.authoringComponentContent.notificationSettings.notifications.splice(index - 1, 0, notification);
-
-          // the author has made changes so we will save the component content
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
-
-    /**
-     * Move a notification down
-     * @param index the index of the notification
-     */
-
-  }, {
-    key: 'authoringViewNotificationDownClicked',
-    value: function authoringViewNotificationDownClicked(index) {
-
-      if (this.authoringComponentContent.notificationSettings != null && this.authoringComponentContent.notificationSettings.notifications != null) {
-
-        // make sure the notification is not at the end
-        if (index != this.authoringComponentContent.notificationSettings.notifications.length - 1) {
-          // the notification is not at the end
-
-          // get the notification
-          var notification = this.authoringComponentContent.notificationSettings.notifications[index];
-
-          // remove the notification
-          this.authoringComponentContent.notificationSettings.notifications.splice(index, 1);
-
-          // add the notification back at the position one index forward
-          this.authoringComponentContent.notificationSettings.notifications.splice(index + 1, 0, notification);
-
-          // the author has made changes so we will save the component content
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
-
-    /**
-     * Delete a notification
-     * @param index the index of the notification
-     */
-
-  }, {
-    key: 'authoringViewNotificationDeleteClicked',
-    value: function authoringViewNotificationDeleteClicked(index) {
-
-      if (this.authoringComponentContent.notificationSettings != null && this.authoringComponentContent.notificationSettings.notifications != null) {
-
-        // get the notification
-        var notification = this.authoringComponentContent.notificationSettings.notifications[index];
-
-        if (notification != null) {
-
-          // get the score sequence
-          var scoreSequence = notification.enableCriteria.scoreSequence;
-          var previousScore = '';
-          var currentScore = '';
-
-          if (scoreSequence != null) {
-            previousScore = scoreSequence[0];
-            currentScore = scoreSequence[1];
-          }
-
-          // make sure the author really wants to delete the notification
-          var answer = confirm(this.$translate('animation.areYouSureYouWantToDeleteThisNotification', { previousScore: previousScore, currentScore: currentScore }));
-
-          if (answer) {
-            // the author answered yes to delete the notification
-            this.authoringComponentContent.notificationSettings.notifications.splice(index, 1);
-
-            // the author has made changes so we will save the component content
-            this.authoringViewComponentChanged();
-          }
-        }
-      }
-    }
-
-    /**
-     * The "Enable CRater" checkbox was clicked
-     */
-
-  }, {
-    key: 'authoringViewEnableCRaterClicked',
-    value: function authoringViewEnableCRaterClicked() {
-
-      if (this.authoringComponentContent.enableCRater) {
-        // CRater was turned on
-
-        if (this.authoringComponentContent.cRater == null) {
-          /*
-           * the cRater object does not exist in the component content
-           * so we will create it
-           */
-
-          // create the cRater object
-          var cRater = {};
-          cRater.itemType = 'CRATER';
-          cRater.itemId = '';
-          cRater.scoreOn = 'submit';
-          cRater.showScore = true;
-          cRater.showFeedback = true;
-          cRater.scoringRules = [];
-          cRater.enableMultipleAttemptScoringRules = false;
-          cRater.multipleAttemptScoringRules = [];
-
-          // set the cRater object into the component content
-          this.authoringComponentContent.cRater = cRater;
-        }
-
-        // turn on the submit button
-        //this.authoringComponentContent.showSubmitButton = true;
-        this.setShowSubmitButtonValue(true);
-      } else {
-        // CRater was turned off
-
-        // turn off the submit button
-        this.setShowSubmitButtonValue(false);
-      }
-
-      /*
-       * the author has made changes so we will save the component
-       * content
-       */
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The "Enable Multiple Attempt Feedback" checkbox was clicked
-     */
-
-  }, {
-    key: 'enableMultipleAttemptScoringRulesClicked',
-    value: function enableMultipleAttemptScoringRulesClicked() {
-
-      // get the cRater object from the component content
-      var cRater = this.authoringComponentContent.cRater;
-
-      if (cRater != null && cRater.multipleAttemptScoringRules == null) {
-        /*
-         * the multiple attempt scoring rules array does not exist so
-         * we will create it
-         */
-        cRater.multipleAttemptScoringRules = [];
-      }
-
-      /*
-       * the author has made changes so we will save the component
-       * content
-       */
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The "Enable Notifications" checkbox was clicked
-     */
-
-  }, {
-    key: 'authoringViewEnableNotificationsClicked',
-    value: function authoringViewEnableNotificationsClicked() {
-
-      if (this.authoringComponentContent.enableNotifications) {
-        // Notifications was turned on
-
-        if (this.authoringComponentContent.notificationSettings == null) {
-          /*
-           * the NotificationSettings object does not exist in the component content
-           * so we will create it
-           */
-          this.authoringComponentContent.notificationSettings = {
-            notifications: []
-          };
-        }
-      }
-
-      /*
-       * the author has made changes so we will save the component
-       * content
-       */
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Check if a component generates student work
-     * @param component the component
-     * @return whether the component generates student work
-     */
-
-  }, {
-    key: 'componentHasWork',
-    value: function componentHasWork(component) {
-      var result = true;
-
-      if (component != null) {
-        result = this.ProjectService.componentHasWork(component);
-      }
-
-      return result;
-    }
-
-    /**
-     * Returns all the revisions made by this user for the specified component
-     */
-
   }, {
     key: 'getRevisions',
     value: function getRevisions() {
-      // get the component states for this component
       return this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
     }
   }, {
-    key: 'authoringImportPreviousWorkClicked',
-
-
-    /**
-     * The import previous work checkbox was clicked
-     */
-    value: function authoringImportPreviousWorkClicked() {
-
-      if (!this.authoringComponentContent.importPreviousWork) {
-        /*
-         * import previous work has been turned off so we will clear the
-         * import previous work node id, and import previous work
-         * component id
-         */
-        this.authoringComponentContent.importPreviousWorkNodeId = null;
-        this.authoringComponentContent.importPreviousWorkComponentId = null;
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The import previous work node id has changed
-     */
-
-  }, {
-    key: 'authoringImportPreviousWorkNodeIdChanged',
-    value: function authoringImportPreviousWorkNodeIdChanged() {
-
-      if (this.authoringComponentContent.importPreviousWorkNodeId == null || this.authoringComponentContent.importPreviousWorkNodeId == '') {
-
-        /*
-         * the import previous work node id is null so we will also set the
-         * import previous component id to null
-         */
-        this.authoringComponentContent.importPreviousWorkComponentId = '';
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The import previous work component id has changed
-     */
-
-  }, {
-    key: 'authoringImportPreviousWorkComponentIdChanged',
-    value: function authoringImportPreviousWorkComponentIdChanged() {
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The author has changed the rubric
-     */
-
-  }, {
-    key: 'summernoteRubricHTMLChanged',
-    value: function summernoteRubricHTMLChanged() {
-
-      // get the summernote rubric html
-      var html = this.summernoteRubricHTML;
-
-      /*
-       * remove the absolute asset paths
-       * e.g.
-       * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
-       * will be changed to
-       * <img src='sun.png'/>
-       */
-      html = this.ConfigService.removeAbsoluteAssetPaths(html);
-
-      /*
-       * replace <a> and <button> elements with <wiselink> elements when
-       * applicable
-       */
-      html = this.UtilService.insertWISELinks(html);
-
-      // update the component rubric
-      this.authoringComponentContent.rubric = html;
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Add a connected component
-     */
-
-  }, {
-    key: 'addConnectedComponent',
-    value: function addConnectedComponent() {
-
-      /*
-       * create the new connected component object that will contain a
-       * node id and component id
-       */
-      var newConnectedComponent = {};
-      newConnectedComponent.nodeId = this.nodeId;
-      newConnectedComponent.componentId = null;
-      newConnectedComponent.updateOn = 'change';
-
-      // initialize the array of connected components if it does not exist yet
-      if (this.authoringComponentContent.connectedComponents == null) {
-        this.authoringComponentContent.connectedComponents = [];
-      }
-
-      // add the connected component
-      this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Delete a connected component
-     * @param index the index of the component to delete
-     */
-
-  }, {
-    key: 'deleteConnectedComponent',
-    value: function deleteConnectedComponent(index) {
-
-      if (this.authoringComponentContent.connectedComponents != null) {
-        this.authoringComponentContent.connectedComponents.splice(index, 1);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Set the show submit button value
-     * @param show whether to show the submit button
-     */
-
-  }, {
-    key: 'setShowSubmitButtonValue',
-    value: function setShowSubmitButtonValue(show) {
-
-      if (show == null || show == false) {
-        // we are hiding the submit button
-        this.authoringComponentContent.showSaveButton = false;
-        this.authoringComponentContent.showSubmitButton = false;
-      } else {
-        // we are showing the submit button
-        this.authoringComponentContent.showSaveButton = true;
-        this.authoringComponentContent.showSubmitButton = true;
-      }
-
-      /*
-       * notify the parent node that this component is changing its
-       * showSubmitButton value so that it can show save buttons on the
-       * step or sibling components accordingly
-       */
-      this.$scope.$emit('componentShowSubmitButtonValueChanged', { nodeId: this.nodeId, componentId: this.componentId, showSubmitButton: show });
-    }
-
-    /**
-     * The showSubmitButton value has changed
-     */
-
-  }, {
-    key: 'showSubmitButtonValueChanged',
-    value: function showSubmitButtonValueChanged() {
-
-      /*
-       * perform additional processing for when we change the showSubmitButton
-       * value
-       */
-      this.setShowSubmitButtonValue(this.authoringComponentContent.showSubmitButton);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The play button was clicked
-     */
-
-  }, {
     key: 'playButtonClicked',
     value: function playButtonClicked() {
-
-      // set the animation state
-      this.animationState = 'playing';
-
-      // start the animation
+      this.setAnimationStateToPlaying();
       this.startAnimation();
     }
-
-    /**
-     * The pause button was clicked
-     */
-
   }, {
     key: 'pauseButtonClicked',
     value: function pauseButtonClicked() {
+      this.setAnimationStateToPaused();
+      var _iteratorNormalCompletion9 = true;
+      var _didIteratorError9 = false;
+      var _iteratorError9 = undefined;
 
-      // set the animation state
-      this.animationState = 'paused';
+      try {
+        for (var _iterator9 = this.componentContent.objects[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+          var object = _step9.value;
 
-      if (this.componentContent != null) {
-
-        // get the objects
-        var objects = this.componentContent.objects;
-
-        if (objects != null) {
-
-          // loop through all the objects
-          for (var o = 0; o < objects.length; o++) {
-            var object = objects[o];
-
-            if (object != null) {
-              var id = object.id;
-
-              // get the svg object
-              var svgObject = this.idToSVGObject[id];
-
-              if (svgObject != null) {
-
-                // pause the object from animating
-                svgObject.pause();
-              }
-            }
+          var id = object.id;
+          var svgObject = this.idToSVGObject[id];
+          svgObject.pause();
+        }
+      } catch (err) {
+        _didIteratorError9 = true;
+        _iteratorError9 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion9 && _iterator9.return) {
+            _iterator9.return();
+          }
+        } finally {
+          if (_didIteratorError9) {
+            throw _iteratorError9;
           }
         }
       }
     }
-
-    /**
-     * The resume button was clicked
-     */
-
   }, {
     key: 'resumeButtonClicked',
     value: function resumeButtonClicked() {
+      this.setAnimationStateToPlaying();
 
-      // set the animation state
-      this.animationState = 'playing';
+      var _iteratorNormalCompletion10 = true;
+      var _didIteratorError10 = false;
+      var _iteratorError10 = undefined;
 
-      if (this.componentContent != null) {
+      try {
+        for (var _iterator10 = this.componentContent.objects[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+          var object = _step10.value;
 
-        // get the objects
-        var objects = this.componentContent.objects;
-
-        if (objects != null) {
-
-          // loop through all the objects
-          for (var o = 0; o < objects.length; o++) {
-            var object = objects[o];
-
-            if (object != null) {
-              var id = object.id;
-
-              // get the svg object
-              var svgObject = this.idToSVGObject[id];
-
-              if (svgObject != null) {
-                /*
-                 * Check if the object still needs to be animated or
-                 * if it has already finished performing all of its
-                 * animation. We only need to play it if it still
-                 * has more animating.
-                 */
-                if (this.idToAnimationState[id]) {
-                  // resume playing the object animation
-                  svgObject.play();
-                }
-              }
-            }
+          var id = object.id;
+          var svgObject = this.idToSVGObject[id];
+          /*
+           * Check if the object still needs to be animated or
+           * if it has already finished performing all of its
+           * animation. We only need to play it if it still
+           * has more animating.
+           */
+          if (this.idToWhetherAuthoredObjectIsAnimating[id]) {
+            svgObject.play();
+          }
+        }
+      } catch (err) {
+        _didIteratorError10 = true;
+        _iteratorError10 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion10 && _iterator10.return) {
+            _iterator10.return();
+          }
+        } finally {
+          if (_didIteratorError10) {
+            throw _iteratorError10;
           }
         }
       }
     }
-
-    /**
-     * The reset button was clicked
-     */
-
   }, {
     key: 'resetButtonClicked',
     value: function resetButtonClicked() {
-      var _this7 = this;
+      var _this6 = this;
 
-      // set the animation state
-      this.animationState = 'stopped';
+      this.setAnimationStateToStopped();
 
-      if (this.componentContent != null) {
+      var _iteratorNormalCompletion11 = true;
+      var _didIteratorError11 = false;
+      var _iteratorError11 = undefined;
 
-        // get the objects
-        var objects = this.componentContent.objects;
+      try {
+        for (var _iterator11 = this.componentContent.objects[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+          var object = _step11.value;
 
-        if (objects != null) {
+          var id = object.id;
+          var svgObject = this.idToSVGObject[id];
+          var jumpToEnd = true;
+          var clearQueue = true;
 
-          // loop through all the objects
-          for (var o = 0; o < objects.length; o++) {
-            var object = objects[o];
+          /*
+           * Check if the object still needs to be animated or
+           * if it has already finished performing all of its
+           * animation. We only need to play it if it still
+           * has more animating.
+           */
+          if (this.idToWhetherAuthoredObjectIsAnimating[id]) {
+            /*
+             * We need to play it in case it is currently paused.
+             * There is a minor bug in the animation library
+             * which is caused if you pause an animation and
+             * then stop the animation. Then if you try to play the
+             * animation, the animation will not play. We avoid
+             * this problem by making sure the object animation
+             * is playing when we stop it.
+             */
+            svgObject.play();
+          }
 
-            if (object != null) {
-              var id = object.id;
-
-              // get the svg object
-              var svgObject = this.idToSVGObject[id];
-
-              if (svgObject != null) {
-
-                var jumpToEnd = true;
-                var clearQueue = true;
-
-                /*
-                 * Check if the object still needs to be animated or
-                 * if it has already finished performing all of its
-                 * animation. We only need to play it if it still
-                 * has more animating.
-                 */
-                if (this.idToAnimationState[id]) {
-                  /*
-                   * We need to play it in case it is currently paused.
-                   * There is a minor bug in the animation library
-                   * which is caused if you pause an animation and
-                   * then stop the animation. Then if you try to play the
-                   * animation, the animation will not play. We avoid
-                   * this problem by making sure the object animation
-                   * is playing when we stop it.
-                   */
-                  svgObject.play();
-                }
-
-                // stop the object from animating
-                svgObject.stop(jumpToEnd, clearQueue);
-              }
-            }
+          // stop the object from animating
+          svgObject.stop(jumpToEnd, clearQueue);
+        }
+      } catch (err) {
+        _didIteratorError11 = true;
+        _iteratorError11 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion11 && _iterator11.return) {
+            _iterator11.return();
+          }
+        } finally {
+          if (_didIteratorError11) {
+            throw _iteratorError11;
           }
         }
       }
 
       this.$timeout(function () {
-        // set the display time to 0
-        _this7.displayAndBroadcastTime(0);
-
-        // set the images back to their starting images in case they have changed
-        _this7.initializeObjectImages();
-
-        // put the objects in their starting positions
-        _this7.initializeObjectPositions();
+        _this6.displayAndBroadcastTime(0);
+        _this6.initializeObjectImages();
+        _this6.initializeObjectPositions();
       }, 100);
     }
-
-    /**
-     * Check if any of the objects are animating
-     * @return whether any of the objects are animating
-     */
-
-  }, {
-    key: 'areAnyObjectsAnimating',
-    value: function areAnyObjectsAnimating() {
-
-      if (this.componentContent != null) {
-
-        // get the objects
-        var objects = this.componentContent.objects;
-
-        if (objects != null) {
-
-          // loop through all the objects
-          for (var o = 0; o < objects.length; o++) {
-            var object = objects[o];
-
-            if (object != null) {
-              var id = object.id;
-
-              /*
-               * check if the object still needs to be animated or if
-               * it has already finished performing all of its
-               * animating
-               */
-              if (this.idToAnimationState[id]) {
-                // an object is animating
-                return true;
-              }
-            }
-          }
-        }
-      }
-
-      return false;
-    }
-
-    /**
-     * Whether we are using the cartesian coordinate system
-     * @return whether we are using the cartesian coordinate system
-     */
-
   }, {
     key: 'isUsingCartesianCoordinateSystem',
     value: function isUsingCartesianCoordinateSystem() {
-
-      if (this.coordinateSystem == 'cartesian') {
-        // we are using the cartesian coordinate system
-        return true;
-      }
-
-      return false;
+      return this.coordinateSystem == 'cartesian';
     }
 
     /**
      * Convert the y value to the cartesian coordinate system
-     * @param y the pixel y value in the screen coordinate system
-     * @return the pixel y value in the cartesian coordinate system
+     * @param {integer} y the pixel y value in the screen coordinate system
+     * @return {integer} the pixel y value in the cartesian coordinate system
      */
 
   }, {
@@ -3775,997 +1500,51 @@ var AnimationController = function () {
     value: function convertToCartesianCoordinateSystem(y) {
       return this.height - y;
     }
-
-    /**
-     * The student changed the speed slider value
-     */
-
   }, {
     key: 'speedSliderChanged',
     value: function speedSliderChanged() {
-
-      if (this.speedSliderValue == 1) {
-        this.realTimePerDataTime = 10000;
-      } else if (this.speedSliderValue == 2) {
-        this.realTimePerDataTime = 1000;
-      } else if (this.speedSliderValue == 3) {
-        this.realTimePerDataTime = 100;
-      } else if (this.speedSliderValue == 4) {
-        this.realTimePerDataTime = 10;
-      } else if (this.speedSliderValue == 5) {
-        this.realTimePerDataTime = 1;
-      }
-
-      // reset the animation
+      this.setSpeed(this.speedSliderValue);
       this.resetButtonClicked();
     }
-
-    /**
-     * Remove all the objects from the svg div
-     */
-
   }, {
-    key: 'removeAllObjects',
-    value: function removeAllObjects() {
-
-      if (this.idToSVGObject != null) {
-
-        // get all the object ids
-        var keys = Object.keys(this.idToSVGObject);
-
-        if (keys != null) {
-
-          // loop through all the keys
-          for (var k = 0; k < keys.length; k++) {
-            var key = keys[k];
-
-            // get the svg object
-            var svgObject = this.idToSVGObject[key];
-
-            if (svgObject != null) {
-              // remove the svg object from the svg div
-              svgObject.remove();
-            }
-          }
-        }
+    key: 'setSpeed',
+    value: function setSpeed(speedSliderValue) {
+      this.speedSliderValue = speedSliderValue;
+      if (speedSliderValue == 1) {
+        this.millisecondsPerDataTime = 10000;
+      } else if (speedSliderValue == 2) {
+        this.millisecondsPerDataTime = 1000;
+      } else if (speedSliderValue == 3) {
+        this.millisecondsPerDataTime = 100;
+      } else if (speedSliderValue == 4) {
+        this.millisecondsPerDataTime = 10;
+      } else if (speedSliderValue == 5) {
+        this.millisecondsPerDataTime = 1;
       }
     }
-
-    /**
-     * Add a new object
-     */
-
-  }, {
-    key: 'authoringAddObjectClicked',
-    value: function authoringAddObjectClicked() {
-
-      // initialize the objects array if necessary
-      if (this.authoringComponentContent.objects == null) {
-        this.authoringComponentContent.objects = [];
-      }
-
-      // create a new object
-      var newObject = {};
-      newObject.id = this.UtilService.generateKey(10);
-      newObject.type = 'image';
-
-      // add the object to our array of objects
-      this.authoringComponentContent.objects.push(newObject);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Add a data point to an object
-     * @param object add a data point to this object
-     */
-
-  }, {
-    key: 'authoringAddDataPointClicked',
-    value: function authoringAddDataPointClicked(object) {
-      if (object != null) {
-
-        if (object.dataSource != null) {
-          // the object already has a data source
-
-          // ask the user if they are sure they want to delete the data source
-          var answer = confirm('You can only have Data Points or a Data Source. If you add a Data Point, the Data Source will be deleted. Are you sure you want to add a Data Point?');
-
-          if (answer) {
-            // the author answered yes to delete the data source
-            delete object.dataSource;
-
-            // initialize the data array if necessary
-            if (object.data == null) {
-              object.data = [];
-            }
-
-            // create a new data point
-            var newDataPoint = {};
-
-            // add the new data point
-            object.data.push(newDataPoint);
-          }
-        } else {
-          // the object does not have a data source so we can add a data point
-
-          // initialize the data array if necessary
-          if (object.data == null) {
-            object.data = [];
-          }
-
-          // create a new data point
-          var newDataPoint = {};
-
-          // add the new data point
-          object.data.push(newDataPoint);
-        }
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Delete a data point from an object
-     * @param object the object to delete a data point from
-     * @param index the index of the data point to delete
-     */
-
-  }, {
-    key: 'authoringDeleteObjectDataPointClicked',
-    value: function authoringDeleteObjectDataPointClicked(object, index) {
-
-      if (object != null && object.data != null) {
-
-        // ask the author if they are sure they want to delete the point
-        var answer = confirm(this.$translate('animation.areYouSureYouWantToDeleteThisDataPoint'));
-
-        if (answer) {
-          // delete the data point at the given index
-          object.data.splice(index, 1);
-
-          // the authoring component content has changed so we will save the project
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
-
-    /**
-     * Move a data point up
-     * @param object the object the data point belongs to
-     * @param index the index of the data point in the object
-     */
-
-  }, {
-    key: 'authoringMoveObjectDataPointUpClicked',
-    value: function authoringMoveObjectDataPointUpClicked(object, index) {
-      if (object != null && object.data != null) {
-
-        if (index > 0) {
-          // the data point is not at the top so we can move it up
-
-          // remember the data point we are moving
-          var dataPoint = object.data[index];
-
-          // remove the data point at the given index
-          object.data.splice(index, 1);
-
-          // insert the data point back in at one index back
-          object.data.splice(index - 1, 0, dataPoint);
-        }
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * Move a data point down
-     * @param object the object the data point belongs to
-     * @param index the index of the data point in the object
-     */
-
-  }, {
-    key: 'authoringMoveObjectDataPointDownClicked',
-    value: function authoringMoveObjectDataPointDownClicked(object, index) {
-      if (object != null && object.data != null) {
-
-        if (index < object.data.length - 1) {
-          // the data point is not at the bottom so we can move it down
-
-          // remember the data point we are moving
-          var dataPoint = object.data[index];
-
-          // remove the data point at the given index
-          object.data.splice(index, 1);
-
-          // insert the data point back in at one index forward
-          object.data.splice(index + 1, 0, dataPoint);
-        }
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * Move an object up
-     * @param index the index of the object
-     */
-
-  }, {
-    key: 'authoringMoveObjectUpClicked',
-    value: function authoringMoveObjectUpClicked(index) {
-
-      if (this.authoringComponentContent != null) {
-
-        var objects = this.authoringComponentContent.objects;
-
-        if (objects != null) {
-
-          if (index > 0) {
-            // the object is not at the top so we can move it up
-
-            // remember the object we are moving
-            var object = objects[index];
-
-            // remove the object
-            objects.splice(index, 1);
-
-            // insert the object back in at one index back
-            objects.splice(index - 1, 0, object);
-          }
-        }
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Move an object down
-     * @param index the index of the object
-     */
-
-  }, {
-    key: 'authoringMoveObjectDownClicked',
-    value: function authoringMoveObjectDownClicked(index) {
-
-      if (this.authoringComponentContent != null) {
-
-        var objects = this.authoringComponentContent.objects;
-
-        if (objects != null) {
-
-          if (index < objects.length - 1) {
-            // the object is not at the bottom so we can move it down
-
-            // remember the object we are moving
-            var object = objects[index];
-
-            // remove the object
-            objects.splice(index, 1);
-
-            // insert the object back in at one index forward
-            objects.splice(index + 1, 0, object);
-          }
-        }
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Delete an object
-     * @param index the index of the object
-     */
-
-  }, {
-    key: 'authoringDeleteObjectClicked',
-    value: function authoringDeleteObjectClicked(index) {
-
-      if (this.authoringComponentContent != null) {
-
-        var answer = confirm(this.$translate('animation.areYouSureYouWantToDeleteThisObject'));
-
-        if (answer) {
-          var objects = this.authoringComponentContent.objects;
-
-          if (objects != null) {
-            // remove the object from the array of objects
-            objects.splice(index, 1);
-          }
-        }
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Get a component
-     * @param nodeId the node id
-     * @param componentId the component id
-     */
-
   }, {
     key: 'getComponentByNodeIdAndComponentId',
     value: function getComponentByNodeIdAndComponentId(nodeId, componentId) {
       return this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
     }
-
-    /**
-     * The add data source button was clicked
-     * @param object the object we will add the data source to
-     */
-
   }, {
-    key: 'authoringAddDataSourceClicked',
-    value: function authoringAddDataSourceClicked(object) {
-
-      if (object != null && object.data != null && object.data.length > 0) {
-        /*
-         * the object has data so we will ask the author if they are sure
-         * they want to add a data source which will remove the data
-         */
-
-        var answer = confirm('You can only have Data Points or a Data Source. If you add a Data Source, the Data Points will be deleted. Are you sure you want to add a Data Source?');
-
-        if (answer) {
-          // the author answered yes to delete the data points
-
-          // delete the data points
-          delete object.data;
-
-          // add the data source
-          object.dataSource = {};
-        }
-      } else {
-        // there are no data points so we can add the data source
-
-        // delete the data points
-        delete object.data;
-
-        // add the data source
-        object.dataSource = {};
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
+    key: 'authoredObjectHasData',
+    value: function authoredObjectHasData(authoredObject) {
+      return authoredObject.data != null && authoredObject.data.length > 0;
     }
-
-    /**
-     * The delete data source button was clicked
-     * @param object the object to delete the data source from
-     */
-
   }, {
-    key: 'authoringDeleteDataSourceClicked',
-    value: function authoringDeleteDataSourceClicked(object) {
-
-      // ask the author if they are sure they want to delete the data source
-      var answer = confirm('Are you sure you want to delete the Data Source?');
-
-      if (answer) {
-        // the author answered yes to delete the data source
-        delete object.dataSource;
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The data source node has changed
-     * @param object the object that has changed
-     */
-
-  }, {
-    key: 'dataSourceNodeChanged',
-    value: function dataSourceNodeChanged(object) {
-
-      if (object != null) {
-
-        // remember the node id
-        var nodeId = object.dataSource.nodeId;
-
-        // clear the dataSource object except for the node id
-        object.dataSource = {
-          nodeId: nodeId
-        };
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The data source component has changed
-     * @param object the object that has changed
-     */
-
-  }, {
-    key: 'dataSourceComponentChanged',
-    value: function dataSourceComponentChanged(object) {
-
-      if (object != null) {
-
-        // remember the node id and component id
-        var nodeId = object.dataSource.nodeId;
-        var componentId = object.dataSource.componentId;
-
-        // get the component
-        var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
-        // clear the dataSource object except for the node id and component id
-        object.dataSource = {
-          nodeId: nodeId,
-          componentId: componentId
-        };
-
-        if (component != null && component.type == 'Graph') {
-          // set the default parameters for a graph data source
-          object.dataSource.trialIndex = 0;
-          object.dataSource.seriesIndex = 0;
-          object.dataSource.tColumnIndex = 0;
-          object.dataSource.xColumnIndex = 1;
-        }
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Show the asset popup to allow the author to choose the image
-     */
-
-  }, {
-    key: 'chooseImage',
-    value: function chooseImage(object) {
-
-      // generate the parameters
-      var params = {};
-      params.isPopup = true;
-      params.nodeId = this.nodeId;
-      params.componentId = this.componentId;
-      params.target = 'image';
-      params.targetObject = object;
-
-      // display the asset chooser
-      this.$rootScope.$broadcast('openAssetChooser', params);
-    }
-
-    /**
-     * Show the asset popup to allow the author to choose the image moving left
-     * @param object the object to set the image moving left
-     */
-
-  }, {
-    key: 'chooseImageMovingLeft',
-    value: function chooseImageMovingLeft(object) {
-
-      // generate the parameters
-      var params = {};
-      params.isPopup = true;
-      params.nodeId = this.nodeId;
-      params.componentId = this.componentId;
-      params.target = 'imageMovingLeft';
-      params.targetObject = object;
-
-      // display the asset chooser
-      this.$rootScope.$broadcast('openAssetChooser', params);
-    }
-
-    /**
-     * Show the asset popup to allow the author to choose the image moving right
-     * @param object the object to set the image moving right
-     */
-
-  }, {
-    key: 'chooseImageMovingRight',
-    value: function chooseImageMovingRight(object) {
-
-      // generate the parameters
-      var params = {};
-      params.isPopup = true;
-      params.nodeId = this.nodeId;
-      params.componentId = this.componentId;
-      params.target = 'imageMovingRight';
-      params.targetObject = object;
-
-      // display the asset chooser
-      this.$rootScope.$broadcast('openAssetChooser', params);
-    }
-
-    /**
-     * The type for an object changed
-     * @param object the object that changed
-     */
-
-  }, {
-    key: 'authoringObjectTypeChanged',
-    value: function authoringObjectTypeChanged(object) {
-
-      if (object != null) {
-        if (object.type == 'image') {
-          // the type changed to an image so we will delete the text field
-          delete object.text;
-        } else if (object.type == 'text') {
-          // the type changed to text so we will delete the image fields
-          delete object.image;
-          delete object.width;
-          delete object.height;
-          delete object.imageMovingLeft;
-          delete object.imageMovingRight;
-          delete object.imageMovingUp;
-          delete object.imageMovingDown;
-        }
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Add a tag
-     */
-
-  }, {
-    key: 'addTag',
-    value: function addTag() {
-
-      if (this.authoringComponentContent.tags == null) {
-        // initialize the tags array
-        this.authoringComponentContent.tags = [];
-      }
-
-      // add a tag
-      this.authoringComponentContent.tags.push('');
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Move a tag up
-     * @param index the index of the tag to move up
-     */
-
-  }, {
-    key: 'moveTagUp',
-    value: function moveTagUp(index) {
-
-      if (index > 0) {
-        // the index is not at the top so we can move it up
-
-        // remember the tag
-        var tag = this.authoringComponentContent.tags[index];
-
-        // remove the tag
-        this.authoringComponentContent.tags.splice(index, 1);
-
-        // insert the tag one index back
-        this.authoringComponentContent.tags.splice(index - 1, 0, tag);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Move a tag down
-     * @param index the index of the tag to move down
-     */
-
-  }, {
-    key: 'moveTagDown',
-    value: function moveTagDown(index) {
-
-      if (index < this.authoringComponentContent.tags.length - 1) {
-        // the index is not at the bottom so we can move it down
-
-        // remember the tag
-        var tag = this.authoringComponentContent.tags[index];
-
-        // remove the tag
-        this.authoringComponentContent.tags.splice(index, 1);
-
-        // insert the tag one index forward
-        this.authoringComponentContent.tags.splice(index + 1, 0, tag);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Delete a tag
-     * @param index the index of the tag to delete
-     */
-
-  }, {
-    key: 'deleteTag',
-    value: function deleteTag(index) {
-
-      // ask the author if they are sure they want to delete the tag
-      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisTag'));
-
-      if (answer) {
-        // the author answered yes to delete the tag
-
-        // remove the tag
-        this.authoringComponentContent.tags.splice(index, 1);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Import any work we need from connected components
-     */
-
-  }, {
-    key: 'handleConnectedComponents',
-    value: function handleConnectedComponents() {
-
-      // get the connected components
-      var connectedComponents = this.componentContent.connectedComponents;
-
-      if (connectedComponents != null) {
-
-        var componentStates = [];
-
-        // loop through all the connected components
-        for (var c = 0; c < connectedComponents.length; c++) {
-          var connectedComponent = connectedComponents[c];
-
-          if (connectedComponent != null) {
-            var nodeId = connectedComponent.nodeId;
-            var componentId = connectedComponent.componentId;
-            var type = connectedComponent.type;
-
-            if (type == 'showWork') {
-              // we are getting the work from this student
-
-              // get the latest component state from the component
-              var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-              if (componentState != null) {
-                componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-              }
-
-              // we are showing work so we will not allow the student to edit it
-              this.isDisabled = true;
-            } else if (type == 'importWork' || type == null) {
-              // we are getting the work from this student
-
-              // get the latest component state from the component
-              var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-              if (componentState != null) {
-                componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-              }
-            }
-          }
-        }
-
-        // merge the student responses from all the component states
-        var mergedComponentState = this.createMergedComponentState(componentStates);
-
-        // set the student work into the component
-        this.setStudentWork(mergedComponentState);
-
-        // make the work dirty so that it gets saved
-        this.studentDataChanged();
-      }
-    }
-
-    /**
-     * Create a component state with the merged student data
-     * @param componentStates an array of component states
-     * @return a component state with the merged student data
-     */
-
-  }, {
-    key: 'createMergedComponentState',
-    value: function createMergedComponentState(componentStates) {
-      var mergedComponentState = this.NodeService.createNewComponentState();
-      if (componentStates != null) {
-        var mergedResponse = '';
-        for (var c = 0; c < componentStates.length; c++) {
-          var componentState = componentStates[c];
-          if (componentState != null) {
-            var studentData = componentState.studentData;
-            if (studentData != null) {}
-          }
-        }
-        if (mergedResponse != null && mergedResponse != '') {
-          mergedComponentState.studentData = {};
-        }
-      }
-      return mergedComponentState;
-    }
-
-    /**
-     * Add a connected component
-     */
-
-  }, {
-    key: 'authoringAddConnectedComponent',
-    value: function authoringAddConnectedComponent() {
-
-      /*
-       * create the new connected component object that will contain a
-       * node id and component id
-       */
-      var newConnectedComponent = {};
-      newConnectedComponent.nodeId = this.nodeId;
-      newConnectedComponent.componentId = null;
-      newConnectedComponent.type = null;
-      this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(newConnectedComponent);
-
-      // initialize the array of connected components if it does not exist yet
-      if (this.authoringComponentContent.connectedComponents == null) {
-        this.authoringComponentContent.connectedComponents = [];
-      }
-
-      // add the connected component
-      this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Automatically set the component id for the connected component if there
-     * is only one viable option.
-     * @param connectedComponent the connected component object we are authoring
-     */
-
-  }, {
-    key: 'authoringAutomaticallySetConnectedComponentComponentIdIfPossible',
-    value: function authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-      if (connectedComponent != null) {
-        var components = this.getComponentsByNodeId(connectedComponent.nodeId);
-        if (components != null) {
-          var numberOfAllowedComponents = 0;
-          var allowedComponent = null;
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
-
-          try {
-            for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var component = _step.value;
-
-              if (component != null) {
-                if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
-                  // we have found a viable component we can connect to
-                  numberOfAllowedComponents += 1;
-                  allowedComponent = component;
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-              }
-            } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
-              }
-            }
-          }
-
-          if (numberOfAllowedComponents == 1) {
-            /*
-             * there is only one viable component to connect to so we
-             * will use it
-             */
-            connectedComponent.componentId = allowedComponent.id;
-            connectedComponent.type = 'importWork';
-          }
-        }
-      }
-    }
-
-    /**
-     * Delete a connected component
-     * @param index the index of the component to delete
-     */
-
-  }, {
-    key: 'authoringDeleteConnectedComponent',
-    value: function authoringDeleteConnectedComponent(index) {
-
-      // ask the author if they are sure they want to delete the connected component
-      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
-
-      if (answer) {
-        // the author answered yes to delete
-
-        if (this.authoringComponentContent.connectedComponents != null) {
-          this.authoringComponentContent.connectedComponents.splice(index, 1);
-        }
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * Get the connected component type
-     * @param connectedComponent get the component type of this connected component
-     * @return the connected component type
-     */
-
-  }, {
-    key: 'authoringGetConnectedComponentType',
-    value: function authoringGetConnectedComponentType(connectedComponent) {
-
-      var connectedComponentType = null;
-
-      if (connectedComponent != null) {
-
-        // get the node id and component id of the connected component
-        var nodeId = connectedComponent.nodeId;
-        var componentId = connectedComponent.componentId;
-
-        // get the component
-        var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
-        if (component != null) {
-          // get the component type
-          connectedComponentType = component.type;
-        }
-      }
-
-      return connectedComponentType;
-    }
-
-    /**
-     * The connected component node id has changed
-     * @param connectedComponent the connected component that has changed
-     */
-
-  }, {
-    key: 'authoringConnectedComponentNodeIdChanged',
-    value: function authoringConnectedComponentNodeIdChanged(connectedComponent) {
-      if (connectedComponent != null) {
-        connectedComponent.componentId = null;
-        connectedComponent.type = null;
-        this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The connected component component id has changed
-     * @param connectedComponent the connected component that has changed
-     */
-
-  }, {
-    key: 'authoringConnectedComponentComponentIdChanged',
-    value: function authoringConnectedComponentComponentIdChanged(connectedComponent) {
-
-      if (connectedComponent != null) {
-
-        // default the type to import work
-        connectedComponent.type = 'importWork';
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The connected component type has changed
-     * @param connectedComponent the connected component that changed
-     */
-
-  }, {
-    key: 'authoringConnectedComponentTypeChanged',
-    value: function authoringConnectedComponentTypeChanged(connectedComponent) {
-
-      if (connectedComponent != null) {
-
-        if (connectedComponent.type == 'importWork') {
-          /*
-           * the type has changed to import work
-           */
-        } else if (connectedComponent.type == 'showWork') {}
-        /*
-         * the type has changed to show work
-         */
-
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * Check if we are allowed to connect to this component type
-     * @param componentType the component type
-     * @return whether we can connect to the component type
-     */
-
-  }, {
-    key: 'isConnectedComponentTypeAllowed',
-    value: function isConnectedComponentTypeAllowed(componentType) {
-
-      if (componentType != null) {
-
-        var allowedConnectedComponentTypes = this.allowedConnectedComponentTypes;
-
-        // loop through the allowed connected component types
-        for (var a = 0; a < allowedConnectedComponentTypes.length; a++) {
-          var allowedConnectedComponentType = allowedConnectedComponentTypes[a];
-
-          if (allowedConnectedComponentType != null) {
-            if (componentType == allowedConnectedComponentType.type) {
-              // the component type is allowed
-              return true;
-            }
-          }
-        }
-      }
-
-      return false;
-    }
-
-    /**
-     * The show JSON button was clicked to show or hide the JSON authoring
-     */
-
-  }, {
-    key: 'showJSONButtonClicked',
-    value: function showJSONButtonClicked() {
-      // toggle the JSON authoring textarea
-      this.showJSONAuthoring = !this.showJSONAuthoring;
-
-      if (this.jsonStringChanged && !this.showJSONAuthoring) {
-        /*
-         * the author has changed the JSON and has just closed the JSON
-         * authoring view so we will save the component
-         */
-        this.advancedAuthoringViewComponentChanged();
-
-        // scroll to the top of the component
-        this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
-
-        this.jsonStringChanged = false;
-      }
-    }
-
-    /**
-     * The author has changed the JSON manually in the advanced view
-     */
-
-  }, {
-    key: 'authoringJSONChanged',
-    value: function authoringJSONChanged() {
-      this.jsonStringChanged = true;
+    key: 'authoredObjectHasDataSource',
+    value: function authoredObjectHasDataSource(authoredObject) {
+      return authoredObject.dataSource != null;
     }
   }]);
 
   return AnimationController;
-}();
+}(_componentController2.default);
 
 ;
 
-AnimationController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnimationService', 'AnnotationService', 'ConfigService', 'CRaterService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+AnimationController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnimationService', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = AnimationController;
 //# sourceMappingURL=animationController.js.map

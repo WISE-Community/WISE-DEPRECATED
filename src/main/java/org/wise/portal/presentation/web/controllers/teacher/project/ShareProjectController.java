@@ -139,8 +139,7 @@ public class ShareProjectController {
    * @throws Exception
    */
   private Map<String, Object> populateModel(Map<String, Object> modelMap, User user, Project project, String message) throws Exception {
-    if (user.isAdmin() || this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user)) {
-      // add the message if it is provided
+    if (user.isAdmin() || aclService.hasPermission(project, BasePermission.ADMINISTRATION, user)) {
       if (message != null) {
         modelMap.put("message", message);
       }
@@ -148,44 +147,25 @@ public class ShareProjectController {
       // get all the teacher user names in WISE in alphabetical order
       List<String> allTeacherUsernames = userDetailsService.retrieveAllUsernames("TeacherUserDetails");
 
-      // remove the owner from the user names
-      allTeacherUsernames.remove(user.getUserDetails().getUsername());
-
-      // get the shared owners of the project
+      allTeacherUsernames.remove(project.getOwner().getUserDetails().getUsername());
       Set<User> sharedowners = project.getSharedowners();
 
-      // loop through all the shared owners
       for (User sharedowner : sharedowners) {
-        //get the permissions of the shared owner for the project
         String sharedTeacherRole = projectService.getSharedTeacherRole(project, sharedowner);
-
-        //get the user name of the shared owner
         String userName = sharedowner.getUserDetails().getUsername();
-
-        //remove the shared owner from the user names
         allTeacherUsernames.remove(userName);
-
-        //create the object that will contain the information for the shared owner
         AddSharedTeacherParameters addSharedTeacherParameters = new AddSharedTeacherParameters();
         addSharedTeacherParameters.setPermission(sharedTeacherRole);
         addSharedTeacherParameters.setProject(project);
         addSharedTeacherParameters.setSharedOwnerUsername(userName);
-
-        // add the shared owner to the model
         modelMap.put(userName, addSharedTeacherParameters);
       }
 
-      //add the project to the model
       modelMap.put("project", project);
-
       AlphabeticalStringComparator alphabeticalStringComparator = new AlphabeticalStringComparator();
       Collections.sort(allTeacherUsernames, alphabeticalStringComparator);
       String allTeacherUsernameString = StringUtils.join(allTeacherUsernames.iterator(), ":");
-
-      //add all the teacher user names to the model
       modelMap.put("teacher_usernames", allTeacherUsernameString);
-
-      //create the params object and add it to the model
       AddSharedTeacherParameters params = new AddSharedTeacherParameters();
       params.setProject(project);
       params.setPermission(UserDetailsService.PROJECT_READ_ROLE);
@@ -193,7 +173,6 @@ public class ShareProjectController {
     } else {
       throw new NotAuthorizedException("You do not have permission to do that.");
     }
-
     return modelMap;
   }
 

@@ -116,6 +116,10 @@ class ProjectInfoController {
     this.metadata[metadataField.key] = this.getMetadataChoiceText(choice);
     this.ProjectService.saveProject();
   }
+
+  save() {
+    this.ProjectService.saveProject();
+  }
 }
 
 ProjectInfoController.$inject = [

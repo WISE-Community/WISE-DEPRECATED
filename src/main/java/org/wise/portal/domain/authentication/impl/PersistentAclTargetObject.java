@@ -29,6 +29,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.authentication.MutableAclTargetObject;
 
 /**
@@ -52,65 +54,21 @@ public class PersistentAclTargetObject implements MutableAclTargetObject {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Getter
+  @Setter
   private Long id;
 
   @Version
   @Column(name = "OPTLOCK")
+  @Getter
+  @Setter
   private Integer version = null;
 
   @Column(name = COLUMN_NAME_CLASSNAME, unique = true, nullable = false)
+  @Getter
+  @Setter
   private String classname;
 
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclTargetObject#getClassname()
-   */
-  public String getClassname() {
-    return classname;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclTargetObject#setClassname(java.lang.String)
-   */
-  public void setClassname(String classname) {
-    this.classname = classname;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.Persistable#getId()
-   */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * @param id
-   *                the id to set
-   */
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the version
-   */
-  @SuppressWarnings("unused")
-  private Integer getVersion() {
-    return version;
-  }
-
-  /**
-   * @param version
-   *                the version to set
-   */
-  @SuppressWarnings("unused")
-  private void setVersion(Integer version) {
-    this.version = version;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclTargetObject#hashCode()
-   */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -120,9 +78,6 @@ public class PersistentAclTargetObject implements MutableAclTargetObject {
     return result;
   }
 
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclTargetObject#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)

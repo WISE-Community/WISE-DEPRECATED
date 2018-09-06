@@ -135,43 +135,25 @@ public class ShareProjectRunController {
    * @throws Exception
    */
   private Map<String, Object> populateModel(Map<String, Object> modelMap, User user, Run run, String message) throws Exception {
-    //check if the user is an admin or is the owner of the run
-    if (user.isAdmin() || this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user)) {
-      //add the message if it is provided
+    if (user.isAdmin() || aclService.hasPermission(run, BasePermission.ADMINISTRATION, user)) {
       if (message != null) {
         modelMap.put("message", message);
       }
       //get all the teacher user names in WISE in alphabetical order
       List<String> allTeacherUsernames = userDetailsService.retrieveAllUsernames("TeacherUserDetails");
-
-      //remove the owner from the user names
-      allTeacherUsernames.remove(user.getUserDetails().getUsername());
-
-      //get the shared owners of the run
+      allTeacherUsernames.remove(run.getOwner().getUserDetails().getUsername());
       Set<User> sharedowners = run.getSharedowners();
 
-      //loop through all the shared owners
       for (User sharedowner : sharedowners) {
-        //get the permissions of the shared owner for the run
         String sharedTeacherRole = runService.getSharedTeacherRole(run, sharedowner);
-
-        //get the user name of the shared owner
         String userName = sharedowner.getUserDetails().getUsername();
-
-        //remove the shared owner from the user names
         allTeacherUsernames.remove(userName);
-
-        //create the object that will contain the information for the shared owner
         AddSharedTeacherParameters addSharedTeacherParameters = new AddSharedTeacherParameters();
         addSharedTeacherParameters.setPermission(sharedTeacherRole);
         addSharedTeacherParameters.setRun(run);
         addSharedTeacherParameters.setSharedOwnerUsername(userName);
-
-        // add the shared owner to the model
         modelMap.put(userName, addSharedTeacherParameters);
       }
-
-      // add the run and run id to the model
       modelMap.put(RUN_PARAM_NAME, run);
       modelMap.put(RUNID_PARAM_NAME, run.getId());
 
@@ -179,10 +161,7 @@ public class ShareProjectRunController {
       Collections.sort(allTeacherUsernames, alphabeticalStringComparator);
       String allTeacherUsernameString = StringUtils.join(allTeacherUsernames.iterator(), ":");
 
-      // add all the teacher user names to the model
       modelMap.put(ALL_TEACHER_USERNAMES, allTeacherUsernameString);
-
-      // create the params object and add it to the model
       AddSharedTeacherParameters params = new AddSharedTeacherParameters();
       params.setRun(run);
       params.setPermission(UserDetailsService.RUN_READ_ROLE);
@@ -190,7 +169,6 @@ public class ShareProjectRunController {
     } else {
       throw new NotAuthorizedException("You do not have permission to share this run.");
     }
-
     return modelMap;
   }
 

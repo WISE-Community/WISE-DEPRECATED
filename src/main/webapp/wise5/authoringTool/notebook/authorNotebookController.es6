@@ -10,6 +10,7 @@ class AuthorNotebookController {
       $scope,
       ConfigService,
       ProjectService,
+      SpaceService,
       UtilService) {
     this.$filter = $filter;
     this.$mdDialog = $mdDialog;
@@ -18,6 +19,7 @@ class AuthorNotebookController {
     this.$scope = $scope;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
+    this.SpaceService = SpaceService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
     this.projectId = this.$stateParams.projectId;
@@ -128,6 +130,8 @@ class AuthorNotebookController {
       }
       this.$mdDialog.hide();
     });
+
+    this.isPublicNotebookEnabled = this.ProjectService.isSpaceExists("public");
   }
 
   /**
@@ -189,6 +193,18 @@ class AuthorNotebookController {
       note.content = summernoteHTML;
     }
   }
+
+  togglePublicNotebook() {
+    if (this.isPublicNotebookEnabled) {
+      this.SpaceService.addSpace("public", "Public");
+    } else {
+      this.SpaceService.removeSpace("public");
+    }
+  }
+
+  disablePublicSpace() {
+    this.SpaceService.removeSpace("public");
+  }
 }
 
 AuthorNotebookController.$inject = [
@@ -199,6 +215,7 @@ AuthorNotebookController.$inject = [
     '$scope',
     'ConfigService',
     'ProjectService',
+    'SpaceService',
     'UtilService'
 ];
 

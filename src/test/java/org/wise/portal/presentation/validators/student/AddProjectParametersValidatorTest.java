@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007 Regents of the University of California (Regents). Created
+ * Copyright (c) 2007-2018 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU Lesser General Public License, v2.
@@ -24,76 +24,80 @@ package org.wise.portal.presentation.validators.student;
 
 import junit.framework.TestCase;
 
+import org.easymock.EasyMockRunner;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.wise.portal.domain.project.impl.AddProjectParameters;
 
 /**
  * @author Hiroki Terashima
- * @version $Id: $
  */
+@RunWith(EasyMockRunner.class)
 public class AddProjectParametersValidatorTest extends TestCase {
 
-	private AddProjectParameters params;
-	
-	private AddProjectParametersValidator validator;
-	
-	private Errors errors;
-	
-	private final String LEGAL_PROJECTCODE = "Owl0896-3";
-	
-	private final String[] ILLEGAL_PROJECTCODES = {"Owl0896", "Owl0896-", "-3", "-"};	
-	
-	private final String EMPTY_PROJECTCODE = "";
-	
-	@Override
-	protected void setUp() {
-		validator = new AddProjectParametersValidator();
-		params = new AddProjectParameters();
-		params.setProjectcode(LEGAL_PROJECTCODE);
-		errors = new BeanPropertyBindingResult(params, "");
-	}
-	
-	public void testNoProblemValidate() {
-		validator.validate(params, errors);
-		
-		assertTrue(!errors.hasErrors());
-	}
-	
-	public void testEmptyProjectcodeValidate() {
-		params.setProjectcode(EMPTY_PROJECTCODE);
-		validator.validate(params, errors);
-		
-		assertTrue(errors.hasErrors());
-		assertEquals(1, errors.getErrorCount());
-		assertNotNull(errors.getFieldError("projectcode"));
-	}
+  private AddProjectParameters params;
 
-	public void testNullProjectcodeValidate() {
-		params.setProjectcode(null);
-		
-		validator.validate(params, errors);
-		
-		assertTrue(errors.hasErrors());
-		assertEquals(1, errors.getErrorCount());
-		assertNotNull(errors.getFieldError("projectcode"));
-	}
-	
-	public void testIllegalProjectcodesValidate() {
-		for (String illegalProjectcode : ILLEGAL_PROJECTCODES) {
-			params.setProjectcode(illegalProjectcode);
-			validator.validate(params, errors);
-			
-			assertTrue(errors.hasErrors());
-			assertEquals(1, errors.getErrorCount());
-			assertNotNull(errors.getFieldError("projectcode"));
-		}
-	}
-	
-	@Override
-	protected void tearDown() {
-		validator = null;
-		params = null;
-		errors = null;
-	}
+  private AddProjectParametersValidator validator;
+
+  private Errors errors;
+
+  private final String LEGAL_PROJECTCODE = "Owl0896-3";
+
+  private final String[] ILLEGAL_PROJECTCODES = {"Owl0896", "Owl0896-", "-3", "-"};
+
+  private final String EMPTY_PROJECTCODE = "";
+
+  @Before
+  public void setUp() {
+    validator = new AddProjectParametersValidator();
+    params = new AddProjectParameters();
+    params.setProjectcode(LEGAL_PROJECTCODE);
+    errors = new BeanPropertyBindingResult(params, "");
+  }
+
+  @Test
+  public void validate_AllCorrectFields_OK() {
+    validator.validate(params, errors);
+    assertTrue(!errors.hasErrors());
+  }
+
+  @Test
+  public void validate_EmptyProjectcode_Error() {
+    params.setProjectcode(EMPTY_PROJECTCODE);
+    validator.validate(params, errors);
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getErrorCount());
+    assertNotNull(errors.getFieldError("projectcode"));
+  }
+
+  @Test
+  public void validate_NullProjectcode_Error() {
+    params.setProjectcode(null);
+    validator.validate(params, errors);
+    assertTrue(errors.hasErrors());
+    assertEquals(1, errors.getErrorCount());
+    assertNotNull(errors.getFieldError("projectcode"));
+  }
+
+  @Test
+  public void validate_IllegalProjectcodes_Error() {
+    for (String illegalProjectcode : ILLEGAL_PROJECTCODES) {
+      params.setProjectcode(illegalProjectcode);
+      validator.validate(params, errors);
+      assertTrue(errors.hasErrors());
+      assertEquals(1, errors.getErrorCount());
+      assertNotNull(errors.getFieldError("projectcode"));
+    }
+  }
+
+  @After
+  public void tearDown() {
+    validator = null;
+    params = null;
+    errors = null;
+  }
 }

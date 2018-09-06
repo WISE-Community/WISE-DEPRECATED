@@ -23,14 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers.forgotaccount.teacher;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +30,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -48,6 +39,13 @@ import org.wise.portal.presentation.validators.TeacherAccountFormValidator;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.mail.MailService;
 import org.wise.portal.service.user.UserService;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.regex.Pattern;
 
 /**
  * Controller for lost password teacher username and email lookup
@@ -171,13 +169,13 @@ public class ForgotAccountTeacherIndexController {
        * e.g.
        * http://wise4.berkeley.edu/wise/forgotaccount/resetpassword.html?k=1234567890abc
        */
-      String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+      String contextPath = request.getContextPath();
       String portalContextURL = "";
-      if (wiseBaseURL.startsWith("http")) {
-        // in case wiseBaseURL is absolute, in the form "http://xyz:8080/wise"
-        portalContextURL = wiseBaseURL;
+      if (contextPath.startsWith("http")) {
+        // in case contextPath is absolute, in the form "http://xyz:8080/wise"
+        portalContextURL = contextPath;
       } else {
-        // in case wiseBaseURL is relative, in the form "/wise"
+        // in case contextPath is relative, in the form "/wise"
         portalContextURL = ControllerUtil.getPortalUrlString(request);
       }
       String passwordResetLink = portalContextURL + "/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;

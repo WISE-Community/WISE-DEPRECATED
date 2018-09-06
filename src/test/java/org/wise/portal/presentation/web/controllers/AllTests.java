@@ -33,7 +33,6 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	org.wise.portal.presentation.web.controllers.teacher.RegisterTeacherControllerTest.class,
     org.wise.portal.presentation.web.controllers.RegisterStudentControllerTest.class,
-    org.wise.portal.presentation.web.controllers.student.AllTests.class,
     org.wise.portal.presentation.web.controllers.teacher.project.AllTests.class,
     org.wise.portal.presentation.web.controllers.teacher.run.AllTests.class,
     org.wise.portal.presentation.web.controllers.teacher.management.AllTests.class,

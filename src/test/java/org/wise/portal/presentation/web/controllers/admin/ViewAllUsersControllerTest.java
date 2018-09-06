@@ -27,94 +27,125 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import junit.framework.TestCase;
 import org.easymock.EasyMock;
+import org.easymock.EasyMockRunner;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.servlet.ModelAndView;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.service.authentication.impl.UserDetailsServiceImpl;
 import org.wise.portal.service.user.UserService;
-
 
 /**
  * @author Sally Ahn
- * @version $Id: $
  */
-public class ViewAllUsersControllerTest extends AbstractModelAndViewTests{
-	
-	private ViewAllUsersController viewAllUsersController;
+@RunWith(EasyMockRunner.class)
+public class ViewAllUsersControllerTest extends TestCase {
 
-	private MockHttpServletRequest request;
+  @TestSubject
+  private ViewAllUsersController controller = new ViewAllUsersController();
 
-	private MockHttpServletResponse response;
-	
-	private ModelMap modelMap;
-	
-	private UserService mockUserService;
-	
-	private List<User> allUsers;
-	
-	private List<User> teachers;
-	
-	private List<User> students;
-	
-	private List<User> admins;
-	
-	private List<User> other;
-	
-	private User user;
+  private MockHttpServletRequest request;
 
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Before
-	public void setUp() throws Exception {
-		super.setUp();
-		this.request = new MockHttpServletRequest();
-		this.response = new MockHttpServletResponse();
-		HttpSession mockSession = new MockHttpSession();
-		this.user = new UserImpl();
-		
-		mockSession.setAttribute(User.CURRENT_USER_SESSION_KEY, this.user);
-		this.request.setSession(mockSession);
+  private ModelMap modelMap = new ModelMap();
 
-		this.mockUserService = EasyMock.createMock(UserService.class);
-		
-		this.viewAllUsersController = new ViewAllUsersController();
-		this.allUsers = new ArrayList<User>();
-		this.teachers = new ArrayList<User>();
-		this.students = new ArrayList<User>();
-		this.admins = new ArrayList<User>();
-		this.other = new ArrayList<User>();
-	}
+  @Mock
+  private UserService userService;
 
-	
-	public void testHandleRequestInternal() throws Exception{
-		
-		EasyMock.expect(mockUserService.retrieveAllUsers()).andReturn(allUsers);
-    	EasyMock.replay(mockUserService);
-    	
-    	String view = 
-    		viewAllUsersController.handleRequestInternal(request, response, modelMap);
+  @Mock
+  private UserDetailsServiceImpl userDetailsService;
 
-    	assertEquals(view, "admin/manageusers");
-    	EasyMock.verify(mockUserService);
-	}
-	
-	/**
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	@After
-	public void tearDown() throws Exception {
-		super.tearDown();
-		this.request = null;
-		this.response = null;
-		this.mockUserService = null;
-	}
+  private List<User> allUsers;
+
+  private List<User> teachers;
+
+  private List<User> students;
+
+  private List<User> admins;
+
+  private List<User> other;
+
+  private User user;
+
+  @Before
+  public void setUp() throws Exception {
+    super.setUp();
+    this.request = new MockHttpServletRequest();
+    HttpSession mockSession = new MockHttpSession();
+    this.user = new UserImpl();
+    mockSession.setAttribute(User.CURRENT_USER_SESSION_KEY, this.user);
+    this.request.setSession(mockSession);
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    super.tearDown();
+    this.request = null;
+    this.userService = null;
+  }
+
+  @Test
+  public void showUsers_onlyTeachers_OK() throws Exception {
+    List<String> allTeacherUsernames = new ArrayList<>();
+    allTeacherUsernames.add("hirokiterashima");
+    allTeacherUsernames.add("geoffreykwan");
+    allTeacherUsernames.add("jonathanlimbreitbart");
+    EasyMock.expect(userDetailsService.retrieveAllUsernames(TeacherUserDetails.class.getName()))
+        .andReturn(allTeacherUsernames);
+    EasyMock.replay(userDetailsService);
+    this.request.setParameter("userType", "teacher");
+    String view = controller.showUsers(request, modelMap);
+    assertEquals(view, "admin/account/manageusers");
+    List<String>  teacherUsernamesResult = (List<String>) modelMap.get("teachers");
+    assertEquals(3, teacherUsernamesResult.size());
+    EasyMock.verify(userDetailsService);
+  }
+
+  @Test
+  public void showUsers_onlyStudents_OK() throws Exception {
+    List<String> allStudentUsernames = new ArrayList<>();
+    allStudentUsernames.add("hirokit0101");
+    allStudentUsernames.add("geoffreyk0102");
+    allStudentUsernames.add("jonathanb0103");
+    EasyMock.expect(userDetailsService.retrieveAllUsernames(StudentUserDetails.class.getName()))
+      .andReturn(allStudentUsernames);
+    EasyMock.replay(userDetailsService);
+    this.request.setParameter("userType", "student");
+    String view = controller.showUsers(request, modelMap);
+    assertEquals(view, "admin/account/manageusers");
+    List<String>  studentUsernamesResult = (List<String>) modelMap.get("students");
+    assertEquals(3, studentUsernamesResult.size());
+    EasyMock.verify(userDetailsService);
+  }
+
+  @Test
+  public void showUsers_allUsers_OK() throws Exception {
+    List<String> allUserUsernames = new ArrayList<>();
+    allUserUsernames.add("hirokiterashima");
+    allUserUsernames.add("geoffreykwan");
+    allUserUsernames.add("jonathanlimbreitbart");
+    allUserUsernames.add("hirokit0101");
+    allUserUsernames.add("geoffreyk0102");
+    allUserUsernames.add("jonathanb0103");
+    EasyMock.expect(userService.retrieveAllUsernames()).andReturn(allUserUsernames);
+    EasyMock.replay(userService);
+    String view = controller.showUsers(request, modelMap);
+    assertEquals(view, "admin/account/manageusers");
+    List<String>  allUserUsernamesResult = (List<String>) modelMap.get("usernames");
+    assertEquals(6, allUserUsernamesResult.size());
+    EasyMock.verify(userService);
+  }
+
+  // TODO: test showUsers_onlyShowUsersWhoLoggedIn_OK
+  // TODO: test showUsers_onlyShowLoggedInUser_OK
 }

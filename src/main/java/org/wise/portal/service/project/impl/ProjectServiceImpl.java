@@ -298,8 +298,8 @@ public class ProjectServiceImpl implements ProjectService {
   /**
    * @see ProjectService#launchProject(Workgroup)
    */
-  public ModelAndView launchProject(Workgroup workgroup) throws Exception {
-    return new ModelAndView(new RedirectView(generateStudentStartProjectUrlString(workgroup)));
+  public ModelAndView launchProject(Workgroup workgroup, String contextPath) throws Exception {
+    return new ModelAndView(new RedirectView(generateStudentStartProjectUrlString(workgroup, contextPath)));
   }
 
   /**
@@ -310,20 +310,20 @@ public class ProjectServiceImpl implements ProjectService {
     if (project.getWiseVersion().equals(4)) {
       return previewProjectWISE4(params, project);
     } else {
-      return previewProjectWISE5(project);
+      return previewProjectWISE5(params, project);
     }
   }
 
-  private ModelAndView previewProjectWISE5(Project project) {
-    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-    String wise5URL = wiseBaseURL + "/project/" + project.getId();
+  private ModelAndView previewProjectWISE5(PreviewProjectParameters params, Project project) {
+    String contextPath = params.getHttpServletRequest().getContextPath();
+    String wise5URL = contextPath + "/project/" + project.getId();
     return new ModelAndView(new RedirectView(wise5URL));
   }
 
   private ModelAndView previewProjectWISE4(PreviewProjectParameters params, Project project) {
-    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+    String contextPath = params.getHttpServletRequest().getContextPath();
     String vleConfigUrl =
-        wiseBaseURL + "/vleconfig" + "?projectId=" + project.getId() + "&mode=preview";
+        contextPath + "/vleconfig" + "?projectId=" + project.getId() + "&mode=preview";
 
     String step = params.getStep();
     if (step != null) {
@@ -345,7 +345,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     ModelAndView modelAndView = new ModelAndView("vle");
-    String vleurl = wiseBaseURL + "/vle/vle.html";
+    String vleurl = contextPath + "/vle/vle.html";
     modelAndView.addObject("vleurl", vleurl);
     modelAndView.addObject("vleConfigUrl", vleConfigUrl);
     String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
@@ -390,15 +390,14 @@ public class ProjectServiceImpl implements ProjectService {
    * @param workgroup Workgroup requesting to launch the project
    * @return url string that, when accessed, will launch the project
    */
-  public String generateStudentStartProjectUrlString(Workgroup workgroup) {
+  public String generateStudentStartProjectUrlString(Workgroup workgroup, String contextPath) {
     Run run = workgroup.getRun();
     Project project = run.getProject();
     Integer wiseVersion = project.getWiseVersion();
-    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
     if (wiseVersion.equals(4)) {
-      return wiseBaseURL + "/student/vle/vle.html?runId=" + run.getId() + "&workgroupId=" + workgroup.getId();
+      return contextPath + "/student/vle/vle.html?runId=" + run.getId() + "&workgroupId=" + workgroup.getId();
     } else if (wiseVersion.equals(5)) {
-      return wiseBaseURL + "/student/run/" + run.getId();
+      return contextPath + "/student/run/" + run.getId();
     }
     return null;
   }

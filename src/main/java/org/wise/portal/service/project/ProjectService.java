@@ -43,6 +43,11 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
+
 /**
  * A Service for Projects
  *
@@ -155,7 +160,7 @@ public interface ProjectService {
    * @return
    * @throws Exception
    */
-  ModelAndView launchProject(Workgroup workgroup) throws Exception;
+  ModelAndView launchProject(Workgroup workgroup, String contextPath) throws Exception;
 
   /**
    * Launches a Preview of the Project.

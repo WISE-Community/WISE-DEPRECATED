@@ -86,6 +86,10 @@ var _classroomMonitorController = require('./classroomMonitorController');
 
 var _classroomMonitorController2 = _interopRequireDefault(_classroomMonitorController);
 
+var _classroomMonitorProjectService = require('./classroomMonitorProjectService');
+
+var _classroomMonitorProjectService2 = _interopRequireDefault(_classroomMonitorProjectService);
+
 var _conceptMapComponentModule = require('../components/conceptMap/conceptMapComponentModule');
 
 var _conceptMapComponentModule2 = _interopRequireDefault(_conceptMapComponentModule);
@@ -101,6 +105,10 @@ var _cRaterService2 = _interopRequireDefault(_cRaterService);
 var _components = require('../directives/components');
 
 var _components2 = _interopRequireDefault(_components);
+
+var _componentService = require('../components/componentService');
+
+var _componentService2 = _interopRequireDefault(_componentService);
 
 var _dashboardController = require('./dashboard/dashboardController');
 
@@ -198,6 +206,10 @@ var _outsideURLComponentModule = require('../components/outsideURL/outsideURLCom
 
 var _outsideURLComponentModule2 = _interopRequireDefault(_outsideURLComponentModule);
 
+var _planningService = require('../services/planningService');
+
+var _planningService2 = _interopRequireDefault(_planningService);
+
 var _projectService = require('../services/projectService');
 
 var _projectService2 = _interopRequireDefault(_projectService);
@@ -252,7 +264,7 @@ var _moment2 = _interopRequireDefault(_moment);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-inview', 'angular-toArrayFilter', 'animationComponentModule', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'classroomMonitor.components', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAnimate', 'ngAria', 'ngFileSaver', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'tableComponentModule', 'ui.router']).service(_achievementService2.default.name, _achievementService2.default).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_classroomMonitorController2.default.name, _classroomMonitorController2.default).controller(_dataExportController2.default.name, _dataExportController2.default).controller(_manageStudentsController2.default.name, _manageStudentsController2.default).controller(_milestonesController2.default.name, _milestonesController2.default).controller(_nodeGradingController2.default.name, _nodeGradingController2.default).controller(_nodeProgressController2.default.name, _nodeProgressController2.default).controller(_notebookGradingController2.default.name, _notebookGradingController2.default).controller(_studentGradingController2.default.name, _studentGradingController2.default).controller(_studentProgressController2.default.name, _studentProgressController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider) {
+var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-inview', 'angular-toArrayFilter', 'animationComponentModule', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'classroomMonitor.components', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAnimate', 'ngAria', 'ngFileSaver', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'tableComponentModule', 'ui.router']).service(_achievementService2.default.name, _achievementService2.default).service(_annotationService2.default.name, _annotationService2.default).service(_componentService2.default.name, _componentService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_planningService2.default.name, _planningService2.default).service(_projectService2.default.name, _classroomMonitorProjectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_classroomMonitorController2.default.name, _classroomMonitorController2.default).controller(_dataExportController2.default.name, _dataExportController2.default).controller(_manageStudentsController2.default.name, _manageStudentsController2.default).controller(_milestonesController2.default.name, _milestonesController2.default).controller(_nodeGradingController2.default.name, _nodeGradingController2.default).controller(_nodeProgressController2.default.name, _nodeProgressController2.default).controller(_notebookGradingController2.default.name, _notebookGradingController2.default).controller(_studentGradingController2.default.name, _studentGradingController2.default).controller(_studentProgressController2.default.name, _studentProgressController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider) {
 
     $urlRouterProvider.otherwise('/project/');
 
@@ -296,6 +308,15 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
             },
             annotations: function annotations(TeacherDataService, config) {
                 return TeacherDataService.retrieveAnnotations();
+            },
+            notebook: function notebook(NotebookService, ConfigService, config, project) {
+                if (NotebookService.isNotebookEnabled()) {
+                    return NotebookService.retrieveNotebookItems().then(function (notebook) {
+                        return notebook;
+                    });
+                } else {
+                    return NotebookService.notebook;
+                }
             }
         }
     }).state('root.teamLanding', {
@@ -346,20 +367,7 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
         url: '/notebook',
         templateUrl: 'wise5/classroomMonitor/notebook/notebook.html',
         controller: 'NotebookGradingController',
-        controllerAs: 'notebookGradingController',
-        resolve: {
-            notebook: function notebook(NotebookService, ConfigService, config, project, StudentAssetService) {
-                if (!ConfigService.isPreview()) {
-                    //StudentAssetService.retrieveAssets().then((studentAssets) => {
-                    return NotebookService.retrieveNotebookItems().then(function (notebook) {
-                        return notebook;
-                    });
-                    //});
-                } else {
-                    return NotebookService.notebook;
-                }
-            }
-        }
+        controllerAs: 'notebookGradingController'
     });
 
     $httpProvider.interceptors.push('HttpInterceptor');

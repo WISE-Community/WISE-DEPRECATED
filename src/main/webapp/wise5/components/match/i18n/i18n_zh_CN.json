@@ -1,9 +1,7 @@
 {
-  "match.addBucket": "添加匹配项",
   "match.addChoice": "添加选项",
   "match.areYouSureYouWantToDeleteThisBucket": "您真的要删除这个匹配项么?",
   "match.areYouSureYouWantToDeleteThisChoice": "您真的要删除这个选项么?",
-  "match.buckets": "匹配项",
   "match.choices": "选项",
   "match.correctBucketButWrongPosition": "匹配正确，但位置不对",
   "match.deleteBucket": "删除匹配项",

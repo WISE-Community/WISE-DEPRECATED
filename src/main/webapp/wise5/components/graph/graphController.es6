@@ -1,8 +1,10 @@
+'use strict';
+
+import ComponentController from "../componentController";
 import html2canvas from 'html2canvas';
 
-class GraphController {
+class GraphController extends ComponentController {
   constructor($filter,
-      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -17,54 +19,13 @@ class GraphController {
       StudentAssetService,
       StudentDataService,
       UtilService) {
-
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
+    super($filter, $mdDialog, $rootScope, $scope,
+        AnnotationService, ConfigService, NodeService,
+        NotebookService, ProjectService, StudentAssetService,
+        StudentDataService, UtilService);
     this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.$timeout = $timeout;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
     this.GraphService = GraphService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-
-    this.$translate = this.$filter('translate');
-
-    this.idToOrder = this.ProjectService.idToOrder;
-
-    // the node id of the current node
-    this.nodeId = null;
-
-    // the component id
-    this.componentId = null;
-
-    // field that will hold the component content
-    this.componentContent = null;
-
-    // field that will hold the authoring component content
-    this.authoringComponentContent = null;
-
-    // whether the component should be disabled
-    this.isDisabled = false;
-
-    // whether the student work is dirty and needs saving
-    this.isDirty = false;
-
-    // whether the student work has changed since last submit
-    this.isSubmitDirty = false;
-
-    // message to show next to save/submit buttons
-    this.saveMessage = {
-      text: '',
-      time: ''
-    };
 
     // the graph type
     this.graphType = null;
@@ -78,38 +39,8 @@ class GraphController {
     // series marker options
     this.seriesMarkers = ['circle', 'square', 'diamond', 'triangle', 'triangle-down', 'circle'];
 
-    // whether this part is showing previous work
-    this.isShowPreviousWork = false;
-
-    // whether the student work is for a submit
-    this.isSubmit = false;
-
-    // whether students can attach files to their work
-    this.isStudentAttachmentEnabled = false;
-
     // will hold the active series
     this.activeSeries = null;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    this.mode = null;
-
-    // whether the prompt is shown or not
-    this.isPromptVisible = true;
-
-    // whether the save button is shown or not
-    this.isSaveButtonVisible = false;
-
-    // whether the submit button is shown or not
-    this.isSubmitButtonVisible = false;
-
-    // counter to keep track of the number of submits
-    this.submitCounter = 0;
-
-    // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
 
     // the latest annotations
     this.latestAnnotations = null;
@@ -119,9 +50,6 @@ class GraphController {
 
     // whether the select series input is shown or not
     this.isSelectSeriesVisible = false;
-
-    // whether the snip drawing button is shown or not
-    this.isSnipDrawingButtonVisible = true;
 
     // the label for the notebook in the project
     this.notebookConfig = this.NotebookService.getNotebookConfig();
@@ -134,170 +62,20 @@ class GraphController {
 
     this.legendEnabled = true;
 
+    this.hasCustomLegendBeenSet = false;
+
     this.showTrialSelect = true;
 
     // the id of the chart element
     this.chartId = 'chart1';
 
-    // the available graph types
-    this.availableGraphTypes = [
-      {
-        value: 'line',
-        text: this.$translate('graph.linePlot')
-      },
-      {
-        value: 'column',
-        text: this.$translate('graph.columnPlot')
-      },
-      {
-        value: 'scatter',
-        text: this.$translate('graph.scatterPlot')
-      }
-    ];
 
-    // the options for rounding data point values
-    this.availableRoundingOptions = [
-      {
-        value: null,
-        text: this.$translate('graph.noRounding')
-      },
-      {
-        value: 'integer',
-        text: this.$translate('graph.roundToInteger')
-      },
-      {
-        value: 'tenth',
-        text: this.$translate('graph.roundToTenth')
-      },
-      {
-        value: 'hundredth',
-        text: this.$translate('graph.roundToHundredth')
-      }
-    ];
-
-    // the options for data point symbols
-    this.availableSymbols = [
-      {
-        value: 'circle',
-        text: this.$translate('graph.circle')
-      },
-      {
-        value: 'square',
-        text: this.$translate('graph.square')
-      },
-      {
-        value: 'triangle',
-        text: this.$translate('graph.triangle')
-      },
-      {
-        value: 'triangle-down',
-        text: this.$translate('graph.triangleDown')
-      },
-      {
-        value: 'diamond',
-        text: this.$translate('graph.diamond')
-      }
-    ];
-
-    // the options for line types
-    this.availableLineTypes = [
-      {
-        value: 'Solid',
-        text: this.$translate('graph.solid')
-      },
-      {
-        value: 'Dash',
-        text: this.$translate('graph.dash')
-      },
-      {
-        value: 'Dot',
-        text: this.$translate('graph.dot')
-      },
-      {
-        value: 'ShortDash',
-        text: this.$translate('graph.shortDash')
-      },
-      {
-        value: 'ShortDot',
-        text: this.$translate('graph.shortDot')
-      }
-    ];
-
-    // the options for the x axis types
-    this.availableXAxisTypes = [
-      {
-        value: 'limits',
-        text: 'Limits'
-      },
-      {
-        value: 'categories',
-        text: 'Categories'
-      }
-    ]
 
     // the width of the graph
     this.width = null;
 
     // the height of the graph
     this.height = null;
-
-    // the options for when to update this component from a connected component
-    this.connectedComponentUpdateOnOptions = [
-      {
-        value: 'change',
-        text: this.$translate('change')
-      },
-      {
-        value: 'save',
-        text: this.$translate('SAVE')
-      },
-      {
-        value: 'submit',
-        text: this.$translate('SUBMIT')
-      }
-    ];
-
-    // the component types we are allowed to connect to
-    this.allowedConnectedComponentTypes = [
-      {
-        type: 'Animation'
-      },
-      {
-        type: 'Embedded'
-      },
-      {
-        type: 'Graph'
-      },
-      {
-        type: 'Table'
-      }
-    ];
-
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
-    }
-
-    // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
-
-    // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
-
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    this.originalComponentContent = this.$scope.originalComponentContent;
-
-    // the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-    this.mode = this.$scope.mode;
-
-    this.workgroupId = this.$scope.workgroupId;
-    this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
     this.trials = [];
     this.activeTrial = null;
@@ -331,223 +109,150 @@ class GraphController {
 
     this.mouseOverPoints = [];
 
-    if (this.componentContent != null) {
 
-      // get the component id
-      this.componentId = this.componentContent.id;
+    // set the chart id
+    this.chartId = 'chart_' + this.componentId;
 
-      // set the chart id
-      this.chartId = 'chart_' + this.componentId;
+    // get the graph type
+    this.graphType = this.componentContent.graphType;
 
-      // get the graph type
-      this.graphType = this.componentContent.graphType;
+    if (this.graphType == null) {
+      // there is no graph type so we will default to line plot
+      this.graphType = 'line';
+    }
 
-      if (this.graphType == null) {
-        // there is no graph type so we will default to line plot
-        this.graphType = 'line';
-      }
+    if (this.componentContent.canCreateNewTrials) {
+      this.canCreateNewTrials = this.componentContent.canCreateNewTrials;
+    }
 
-      if (this.componentContent.canCreateNewTrials) {
-        this.canCreateNewTrials = this.componentContent.canCreateNewTrials;
-      }
+    if (this.componentContent.canDeleteTrials) {
+      this.canDeleteTrials = this.componentContent.canDeleteTrials;
+    }
 
-      if (this.componentContent.canDeleteTrials) {
-        this.canDeleteTrials = this.componentContent.canDeleteTrials;
-      }
+    if (this.componentContent.hideAllTrialsOnNewTrial === false) {
+      this.hideAllTrialsOnNewTrial = false;
+    }
 
-      if (this.componentContent.hideAllTrialsOnNewTrial === false) {
-        this.hideAllTrialsOnNewTrial = false;
-      }
+    if (this.mode === 'student') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+      this.isResetSeriesButtonVisible = true;
+      this.isSelectSeriesVisible = true;
 
-      if (this.mode === 'student') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        this.isResetSeriesButtonVisible = true;
-        this.isSelectSeriesVisible = true;
-
-        // get the latest annotations
-        // TODO: watch for new annotations and update accordingly
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-        this.backgroundImage = this.componentContent.backgroundImage;
-      } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        //this.isResetGraphButtonVisible = false;
-        this.isResetSeriesButtonVisible = false;
-        this.isSelectSeriesVisible = false;
-        this.isDisabled = true;
-        this.isSnipDrawingButtonVisible = false;
-
-        // get the component state from the scope
-        let componentState = this.$scope.componentState;
-
-        if (componentState != null) {
-          // create a unique id for the chart element using this component state
-          this.chartId = 'chart_' + componentState.id;
-          if (this.mode === 'gradingRevision') {
-            this.chartId = 'chart_gradingRevision_' + componentState.id;
-          }
-        }
-
-        if (this.mode === 'grading') {
-          // get the latest annotations
-          this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-        }
-      } else if (this.mode === 'onlyShowWork') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isResetGraphButtonVisible = false;
-        this.isResetSeriesButtonVisible = false;
-        this.isSelectSeriesVisible = false;
-        this.isDisabled = true;
-        this.isSnipDrawingButtonVisible = false;
-        this.backgroundImage = this.componentContent.backgroundImage;
-      } else if (this.mode === 'showPreviousWork') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-        this.backgroundImage = this.componentContent.backgroundImage;
-      } else if (this.mode === 'authoring') {
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        this.isResetSeriesButtonVisible = true;
-        this.isSelectSeriesVisible = true;
-
-        // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-
-        // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
-
-        /*
-         * create the custom button for inserting WISE assets into
-         * summernote
-         */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        this.summernoteRubricOptions = {
-          toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['fontname', ['fontname']],
-            ['fontsize', ['fontsize']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['table', ['table']],
-            ['insert', ['link', 'video']],
-            ['view', ['fullscreen', 'codeview', 'help']],
-            ['customButton', ['insertAssetButton']]
-          ],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        this.backgroundImage = this.componentContent.backgroundImage;
-        this.updateAdvancedAuthoringView()
-
-        $scope.$watch(function() {
-          return this.authoringComponentContent;
-        }.bind(this), function(newValue, oldValue) {
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-          this.series = null;
-          this.xAxis = null;
-          this.yAxis = null;
-          this.submitCounter = 0;
-          this.backgroundImage = this.componentContent.backgroundImage;
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-          this.graphType = this.componentContent.graphType;
-          this.isResetSeriesButtonVisible = true;
-          this.isSelectSeriesVisible = true;
-          this.legendEnabled = !this.componentContent.hideLegend;
-          this.showTrialSelect = !this.componentContent.hideTrialSelect;
-          this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
-          this.setDefaultActiveSeries();
-          this.trials = [];
-          this.newTrial();
-          this.clearPlotLines();
-          this.setupGraph();
-        }.bind(this), true);
-      }
-
-      var componentState = null;
+      // get the latest annotations
+      // TODO: watch for new annotations and update accordingly
+      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+      this.backgroundImage = this.componentContent.backgroundImage;
+    } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      //this.isResetGraphButtonVisible = false;
+      this.isResetSeriesButtonVisible = false;
+      this.isSelectSeriesVisible = false;
+      this.isDisabled = true;
 
       // get the component state from the scope
-      componentState = this.$scope.componentState;
-
-      // set whether studentAttachment is enabled
-      this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-      if (this.mode == 'student') {
-        if (!this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          this.newTrial();
-        }
-        if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // this component has connected components
-          this.handleConnectedComponents();
-        } else if (this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          // this does not have connected components but does have previous work
-          this.setStudentWork(componentState);
-        } else {
-          // this does not have connected components and does not have previous work
-          //this.newTrial();
-        }
-      } else {
-        // populate the student work into this component
-        this.setStudentWork(componentState);
-      }
+      let componentState = this.$scope.componentState;
 
       if (componentState != null) {
-        // there is an initial component state so we will remember it
-        this.initialComponentState = componentState;
+        // create a unique id for the chart element using this component state
+        this.chartId = 'chart_' + componentState.id;
+        if (this.mode === 'gradingRevision') {
+          this.chartId = 'chart_gradingRevision_' + componentState.id;
+        }
+      }
 
+      if (this.mode === 'grading') {
+        // get the latest annotations
+        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+      }
+    } else if (this.mode === 'onlyShowWork') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isResetGraphButtonVisible = false;
+      this.isResetSeriesButtonVisible = false;
+      this.isSelectSeriesVisible = false;
+      this.isDisabled = true;
+      this.backgroundImage = this.componentContent.backgroundImage;
+    } else if (this.mode === 'showPreviousWork') {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = false;
+      this.isSubmitButtonVisible = false;
+      this.isDisabled = true;
+      this.backgroundImage = this.componentContent.backgroundImage;
+    }
+
+    // get the component state from the scope
+    let componentState = this.$scope.componentState;
+
+    // set whether studentAttachment is enabled
+    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+
+    if (this.mode == 'student') {
+      if (!this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
+        this.newTrial();
+      }
+      if (this.UtilService.hasConnectedComponentAlwaysField(this.componentContent)) {
         /*
-         * remember this component state as the previous component
-         * state for undo purposes
+         * This component has a connected component that we always want to look at for
+         * merging student data.
          */
-        this.previousComponentState = componentState;
-      }
-
-      // check if the student has used up all of their submits
-      if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+        this.handleConnectedComponents();
+      } else if (this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
+        // this student has previous work so we will load it
+        this.setStudentWork(componentState);
+      } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
         /*
-         * the student has used up all of their chances to submit so we
-         * will disable the submit button
+         * This student doesn't have any previous work but this component has connected components
+         * so we will get the work from the connected component.
          */
-        this.isSubmitButtonDisabled = true;
+        this.handleConnectedComponents();
       }
+    } else {
+      // populate the student work into this component
+      this.setStudentWork(componentState);
+    }
 
-      if (this.componentContent.hideLegend) {
-        this.legendEnabled = false;
-      }
+    if (componentState != null) {
+      // there is an initial component state so we will remember it
+      this.initialComponentState = componentState;
 
-      if (this.componentContent.hideTrialSelect) {
-        this.showTrialSelect = false;
-      }
+      /*
+       * remember this component state as the previous component
+       * state for undo purposes
+       */
+      this.previousComponentState = componentState;
+    }
 
-      // check if we need to lock this component
-      this.calculateDisabled();
+    // check if the student has used up all of their submits
+    if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+      /*
+       * the student has used up all of their chances to submit so we
+       * will disable the submit button
+       */
+      this.isSubmitButtonDisabled = true;
+    }
 
-      // setup the graph
-      this.setupGraph();
+    if (this.componentContent.hideLegend) {
+      this.legendEnabled = false;
+    }
 
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-      }
+    if (this.componentContent.hideTrialSelect) {
+      this.showTrialSelect = false;
+    }
+
+    this.disableComponentIfNecessary();
+
+    // setup the graph
+    this.setupGraph().then(() => {
+      this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+    });
+
+    if (this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
     }
 
     /**
@@ -643,11 +348,6 @@ class GraphController {
             componentState = this.UtilService.makeCopyOfJSONObject(componentState);
             let studentData = componentState.studentData;
             this.processConnectedComponentStudentData(studentData, connectedComponentParams);
-
-            /*
-             * notify the controller that the student data has
-             * changed so that it will perform any necessary saving
-             */
             this.studentDataChanged();
           }
         } else if (componentType == 'Animation') {
@@ -706,94 +406,11 @@ class GraphController {
       return deferred.promise;
     }.bind(this);
 
-    /**
-     * The parent node submit button was clicked
-     */
-    this.$scope.$on('nodeSubmitClicked', angular.bind(this, function(event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-
-        // trigger the submit
-        var submitTriggeredBy = 'nodeSubmitButton';
-        this.submit(submitTriggeredBy);
-      }
-    }));
-
-    /**
-     * Listen for the 'studentWorkSavedToServer' event which is fired when
-     * we receive the response from saving a component state to the server
-     */
-    this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function(event, args) {
-
-      let componentState = args.studentWork;
-
-      // check that the component state is for this component
-      if (componentState && this.nodeId === componentState.nodeId
-        && this.componentId === componentState.componentId) {
-
-        // set isDirty to false because the component state was just saved and notify node
-        this.isDirty = false;
-        this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: false});
-
-        let isAutoSave = componentState.isAutoSave;
-        let isSubmit = componentState.isSubmit;
-        let serverSaveTime = componentState.serverSaveTime;
-        let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-        // set save message
-        if (isSubmit) {
-          this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
-
-          this.lockIfNecessary();
-
-          // set isSubmitDirty to false because the component state was just submitted and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        } else if (isAutoSave) {
-          this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
-        } else {
-          this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
-        }
-      }
-    }));
-
     /*
      * Handle the delete key pressed event
      */
     this.deleteKeyPressedListenerDestroyer = this.$scope.$on('deleteKeyPressed', () => {
       this.handleDeleteKeyPressed();
-    });
-
-    /**
-     * Listen for the 'annotationSavedToServer' event which is fired when
-     * we receive the response from saving an annotation to the server
-     */
-    this.$scope.$on('annotationSavedToServer', (event, args) => {
-
-      if (args != null ) {
-
-        // get the annotation that was saved to the server
-        var annotation = args.annotation;
-
-        if (annotation != null) {
-
-          // get the node id and component id of the annotation
-          var annotationNodeId = annotation.nodeId;
-          var annotationComponentId = annotation.componentId;
-
-          // make sure the annotation was for this component
-          if (this.nodeId === annotationNodeId &&
-            this.componentId === annotationComponentId) {
-
-            // get latest score and comment annotations for this component
-            this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-          }
-        }
-      }
     });
 
     /**
@@ -858,11 +475,6 @@ class GraphController {
 
             // remember the file name
             this.scope.graphController.setUploadedFileName(this.fileName);
-
-            /*
-             * notify the controller that the student data has
-             * changed so that it will perform any necessary saving
-             */
             this.scope.graphController.studentDataChanged();
           }
 
@@ -890,97 +502,10 @@ class GraphController {
        */
       element.value = null;
     }
+  }
 
-    /*
-     * Listen for the assetSelected event which occurs when the user
-     * selects an asset from the choose asset popup
-     */
-    this.$scope.$on('assetSelected', (event, args) => {
-
-      if (args != null) {
-
-        // make sure the event was fired for this component
-        if (args.nodeId == this.nodeId && args.componentId == this.componentId) {
-          // the asset was selected for this component
-          var assetItem = args.assetItem;
-
-          if (assetItem != null) {
-            var fileName = assetItem.fileName;
-
-            if (fileName != null) {
-              /*
-               * get the assets directory path
-               * e.g.
-               * /wise/curriculum/3/
-               */
-              var assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
-              var fullAssetPath = assetsDirectoryPath + '/' + fileName;
-
-              var summernoteId = '';
-
-              if (args.target == 'prompt') {
-                // the target is the summernote prompt element
-                summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
-              } else if (args.target == 'rubric') {
-                // the target is the summernote rubric element
-                summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-              } else if (args.target == 'background') {
-                // the target is the background image
-
-                // set the background file name
-                this.authoringComponentContent.backgroundImage = fileName;
-
-                // the authoring component content has changed so we will save the project
-                this.authoringViewComponentChanged();
-              }
-
-              if (summernoteId != '') {
-                if (this.UtilService.isImage(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // add the image html
-                  $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                } else if (this.UtilService.isVideo(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // insert the video element
-                  var videoElement = document.createElement('video');
-                  videoElement.controls = 'true';
-                  videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                  $('#' + summernoteId).summernote('insertNode', videoElement);
-                }
-              }
-            }
-          }
-        }
-      }
-
-      // close the popup
-      this.$mdDialog.hide();
-    });
-
-    /*
-     * The advanced button for a component was clicked. If the button was
-     * for this component, we will show the advanced authoring.
-     */
-    this.$scope.$on('componentAdvancedButtonClicked', (event, args) => {
-      if (args != null) {
-        let componentId = args.componentId;
-        if (this.componentId === componentId) {
-          this.showAdvancedAuthoring = !this.showAdvancedAuthoring;
-        }
-      }
-    });
+  handleNodeSubmit() {
+    this.submit('nodeSubmitButton');
   }
 
   /**
@@ -1430,18 +955,9 @@ class GraphController {
           regressionSettings.numberOfPoints = 100;
         }
 
-        if (this.isDisabled) {
-          // disable dragging
-          tempSeries.draggableX = false;
-          tempSeries.draggableY = false;
-          tempSeries.allowPointSelect = false;
-          //tempSeries.enableMouseTracking = false;
-          tempSeries.stickyTracking = false;
-          tempSeries.shared = false;
-          tempSeries.allowPointSelect = false;
-        } else if (tempSeries.canEdit && this.isActiveSeries(tempSeries)) {
+        if (tempSeries.canEdit && this.isActiveSeries(tempSeries)) {
+          // the series is the active one so we will allow the student to interact with it
           // set the fields to allow points to be draggable
-
           if (this.graphType === 'line' || this.graphType === 'scatter') {
             // students can drag points horizontally on line and scatter plots
             tempSeries.draggableX = true;
@@ -1450,23 +966,26 @@ class GraphController {
             tempSeries.draggableX = false;
           }
           tempSeries.draggableY = true;
-          tempSeries.allowPointSelect = true;
           tempSeries.cursor = 'move';
-          tempSeries.enableMouseTracking = true;
           tempSeries.stickyTracking = false;
           tempSeries.shared = false;
           tempSeries.allowPointSelect = true;
-
+          tempSeries.enableMouseTracking = true;
           this.showUndoButton = true;
         } else {
-          // make the series uneditable
+          // the series is not active so we will not allow the student to interact with it
           tempSeries.draggableX = false;
           tempSeries.draggableY = false;
-          tempSeries.allowPointSelect = false;
-          tempSeries.enableMouseTracking = false;
           tempSeries.stickyTracking = false;
           tempSeries.shared = false;
           tempSeries.allowPointSelect = false;
+          tempSeries.enableMouseTracking = false;
+        }
+
+        // a series can be customized to allow mousing over points even when not the active series
+        if (tempSeries.allowPointMouseOver === true) {
+          tempSeries.allowPointSelect = true;
+          tempSeries.enableMouseTracking = true;
         }
 
         if (this.isMousePlotLineOn()) {
@@ -1527,6 +1046,7 @@ class GraphController {
         tooltip: {
           formatter: function(){
             if (this.series != null) {
+              var text = '';
 
               var xText = '';
               var yText = '';
@@ -1553,7 +1073,7 @@ class GraphController {
                 thisGraphController.xAxis.type === '' ||
                 thisGraphController.xAxis.type === 'limits') {
 
-                var text = '';
+
                 var seriesName = this.series.name;
 
                 // get the x and y values
@@ -1604,8 +1124,6 @@ class GraphController {
                   // add the y text
                   text += yText;
                 }
-
-                return text;
               } else if (thisGraphController.xAxis.type === 'categories') {
 
                 var text = '';
@@ -1635,9 +1153,14 @@ class GraphController {
 
                 // add the x and y text
                 text += xText + ' ' + yText;
-
-                return text;
               }
+
+              if (this.point.tooltip != null && this.point.tooltip != '') {
+                // this point has a custom tooltip so we will display it
+                text += '<br/>' + this.point.tooltip;
+              }
+
+              return text;
             }
           }
         },
@@ -1721,8 +1244,6 @@ class GraphController {
                      * undo stack
                      */
                     thisGraphController.addNextComponentStateToUndoStack = true;
-
-                    // notify the controller that the student data has changed
                     thisGraphController.studentDataChanged();
                   } else {
                     if (thisGraphController.isMousePlotLineOn()) {
@@ -1843,8 +1364,6 @@ class GraphController {
                            * undo stack
                            */
                           thisGraphController.addNextComponentStateToUndoStack = true;
-
-                          // tell the controller the student data has changed
                           thisGraphController.studentDataChanged();
                         }
                       }
@@ -1878,8 +1397,85 @@ class GraphController {
       }
     };
 
+    if (this.componentContent.useCustomLegend) {
+      /*
+       * Use a timeout so the graph has a chance to render before we set the
+       * custom legend.
+       */
+      this.$timeout(() => {
+        this.setCustomLegend();
+      });
+    }
+
     return deferred.promise;
   };
+
+  /**
+   * Overwrite the existing legend with the custom authored legend.
+   */
+  setCustomLegend() {
+    if (!this.hasCustomLegendBeenSet) {
+      if ($('.highcharts-legend').length > 0) {
+        // move the legend to the very left by setting the x position to 0
+
+        let userAgent = navigator.userAgent;
+        if (userAgent.indexOf('Firefox') != -1) {
+          let currentTransform = $('.highcharts-legend').attr('transform');
+
+          /*
+           * Regex to split the transform string into three groups. We will use
+           * this to replace the x value of the translate.
+           * Example
+           * "translate(227, 294)"
+           * The regex will create three groups
+           * group 1 = "translate("
+           * group 2 = "227"
+           * group 3 = ", 294)"
+           * The x value of the translate is captured in group 2.
+           */
+          let matrixRegEx = /(translate\()(\d*)(,\s*\d*\))/;
+
+          // run the regex on the current transform
+          let results = matrixRegEx.exec(currentTransform);
+
+          // replace the second group with 0
+          let newTransform = currentTransform.replace(matrixRegEx, '$10$3');
+
+          // update the transform
+          $('.highcharts-legend').attr('transform', newTransform);
+        } else {
+          let currentTransform = $('.highcharts-legend').css('transform');
+
+          /*
+           * Regex to split the transform string into three groups. We will use
+           * this to replace the x value of the matrix.
+           * Example
+           * "matrix(1, 0, 0, 1, 227, 294)"
+           * The regex will create three groups
+           * group 1 = "matrix(1, 0, 0, 1, "
+           * group 2 = "227"
+           * group 3 = ", 294)"
+           * The x value of the matrix is captured in group 2.
+           */
+          let matrixRegEx = /(matrix\(\d*,\s*\d*,\s*\d*,\s*\d*,\s*)(\d*)(,\s*\d*\))/;
+
+          // run the regex on the current transform
+          let results = matrixRegEx.exec(currentTransform);
+
+          // replace the second group with 0
+          let newTransform = currentTransform.replace(matrixRegEx, '$10$3');
+
+          // update the transform
+          $('.highcharts-legend').css('transform', newTransform);
+        }
+
+        // replace the legend with the custom legend
+        $('.highcharts-legend').html(this.componentContent.customLegend);
+      }
+
+      this.hasCustomLegendBeenSet = true;
+    }
+  }
 
   /**
    * Add a point to a series. The point will be inserted into the series
@@ -2057,11 +1653,6 @@ class GraphController {
 
                           // remove the element at the given index
                           data.splice(index, 1);
-
-                          /*
-                           * notify the controller that the student data has changed
-                           * so that the graph will be redrawn
-                           */
                           thisGraphController.studentDataChanged();
                         }
                       }
@@ -2309,11 +1900,6 @@ class GraphController {
      * studentDataChanged() to the undo stack
      */
     this.addNextComponentStateToUndoStack = true;
-
-    /*
-     * notify the controller that the student data has changed
-     * so that the graph will be redrawn
-     */
     this.studentDataChanged();
   };
 
@@ -2378,7 +1964,9 @@ class GraphController {
        * This will actually reset all the series and not just the active
        * one.
        */
-      this.handleConnectedComponents();
+      this.newTrial();
+      const isReset = true;
+      this.handleConnectedComponents(isReset);
     } else {
       // get the index of the active series
       var activeSeriesIndex  = this.getSeriesIndex(this.activeSeries);
@@ -2420,11 +2008,6 @@ class GraphController {
            * studentDataChanged() to the undo stack
            */
           this.addNextComponentStateToUndoStack = true;
-
-          /*
-           * notify the controller that the student data has changed
-           * so that the graph will be redrawn
-           */
           this.studentDataChanged();
         }
       }
@@ -2535,34 +2118,14 @@ class GraphController {
         // latest state is a submission, so set isSubmitDirty to false and notify node
         this.isSubmitDirty = false;
         this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        // set save message
-        this.setSaveMessage(this.$translate('LAST_SUBMITTED'), clientSaveTime);
+        this.setSubmittedMessage(clientSaveTime);
       } else {
         // latest state is not a submission, so set isSubmitDirty to true and notify node
         this.isSubmitDirty = true;
         this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-        // set save message
-        this.setSaveMessage(this.$translate('LAST_SAVED'), clientSaveTime);
+        this.setSavedMessage(clientSaveTime);
       }
     }
-  };
-
-  /**
-   * Called when the student clicks the save button
-   */
-  saveButtonClicked() {
-    // trigger the submit
-    var submitTriggeredBy = 'componentSubmitButton';
-    this.submit(submitTriggeredBy);
-  };
-
-  /**
-   * Called when the student clicks the submit button
-   */
-  submitButtonClicked() {
-    // trigger the submit
-    var submitTriggeredBy = 'componentSubmitButton';
-    this.submit(submitTriggeredBy);
   };
 
   /**
@@ -2609,8 +2172,6 @@ class GraphController {
          * instead of just a save component state
          */
         this.isSubmit = true;
-
-        // increment the submit counter
         this.incrementSubmitCounter();
 
         // check if the student has used up all of their submits
@@ -2664,20 +2225,6 @@ class GraphController {
   };
 
   /**
-   * Increment the submit counter
-   */
-  incrementSubmitCounter() {
-    this.submitCounter++;
-  }
-
-  lockIfNecessary() {
-    // check if we need to lock the component after the student submits
-    if (this.isLockAfterSubmit()) {
-      this.isDisabled = true;
-    }
-  };
-
-  /**
    * Called when the student changes their work
    */
   studentDataChanged(useTimeoutSetupGraph) {
@@ -2690,15 +2237,10 @@ class GraphController {
 
     this.isSubmitDirty = true;
     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-
-    // clear out the save message
-    this.setSaveMessage('', null);
+    this.clearSaveText();
 
     // re-draw the graph
     this.setupGraph(useTimeoutSetupGraph);
-
-    // get this component id
-    var componentId = this.getComponentId();
 
     /*
      * the student work in this component has changed so we will tell
@@ -2749,7 +2291,7 @@ class GraphController {
        * this componentStudentDataChanged event
        */
       this.$timeout(() => {
-        this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
+        this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
       }, 100);
     });
   };
@@ -2910,38 +2452,6 @@ class GraphController {
   }
 
   /**
-   * Check if we need to lock the component
-   */
-  calculateDisabled() {
-
-    var nodeId = this.nodeId;
-
-    // get the component content
-    var componentContent = this.componentContent;
-
-    if (componentContent != null) {
-
-      // check if the parent has set this component to disabled
-      if (componentContent.isDisabled) {
-        this.isDisabled = true;
-      } else if (componentContent.lockAfterSubmit) {
-        // we need to lock the step after the student has submitted
-
-        // get the component states for this component
-        var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-        // check if any of the component states were submitted
-        var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-        if (isSubmitted) {
-          // the student has submitted work for this component
-          this.isDisabled = true;
-        }
-      }
-    }
-  };
-
-  /**
    * Check whether we need to show the prompt
    * @return whether to show the prompt
    */
@@ -2982,48 +2492,6 @@ class GraphController {
 
     return show;
   }
-
-  /**
-   * Check whether we need to lock the component after the student
-   * submits an answer.
-   */
-  isLockAfterSubmit() {
-    var result = false;
-
-    if (this.componentContent != null) {
-
-      // check the lockAfterSubmit field in the component content
-      if (this.componentContent.lockAfterSubmit) {
-        result = true;
-      }
-    }
-
-    return result;
-  };
-
-  /**
-   * Get the prompt to show to the student
-   * @return a string containing the prompt
-   */
-  getPrompt() {
-    var prompt = null;
-
-    if (this.originalComponentContent != null) {
-      // this is a show previous work component
-
-      if (this.originalComponentContent.showPreviousWorkPrompt) {
-        // show the prompt from the previous work component
-        prompt = this.componentContent.prompt;
-      } else {
-        // show the prompt from the original component
-        prompt = this.originalComponentContent.prompt;
-      }
-    } else if (this.componentContent != null) {
-      prompt = this.componentContent.prompt;
-    }
-
-    return prompt;
-  };
 
   /**
    * Get the index of a series
@@ -3093,188 +2561,6 @@ class GraphController {
 
     return null;
   }
-
-  /**
-   * Import work from another component
-   */
-  importWork() {
-
-    // get the component content
-    var componentContent = this.componentContent;
-
-    if (componentContent != null) {
-
-      // get the import previous work node id and component id
-      var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
-      var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-      var importWork = componentContent.importWork;
-
-      if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-
-        /*
-         * check if the node id is in the field that we used to store
-         * the import previous work node id in
-         */
-        if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
-          importPreviousWorkNodeId = componentContent.importWorkNodeId;
-        }
-      }
-
-      if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-
-        /*
-         * check if the component id is in the field that we used to store
-         * the import previous work component id in
-         */
-        if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
-          importPreviousWorkComponentId = componentContent.importWorkComponentId;
-        }
-      }
-
-      if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-
-        // get the latest component state for this component
-        var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-        /*
-         * we will only import work into this component if the student
-         * has not done any work for this component
-         */
-        if(componentState == null || !this.GraphService.componentStateHasStudentWork(componentState)) {
-          // the student has not done any work for this component
-
-          // get the latest component state from the component we are importing from
-          var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
-
-          if (importWorkComponentState != null) {
-            /*
-             * populate a new component state with the work from the
-             * imported component state
-             */
-            var populatedComponentState = this.GraphService.populateComponentState(importWorkComponentState);
-
-            // populate the component state into this component
-            this.setStudentWork(populatedComponentState);
-
-            // make the work dirty so that it gets saved
-            this.studentDataChanged();
-          }
-        }
-      }
-
-      if (importWork != null) {
-        // we are importing work
-
-        var mergedTrials = [];
-
-        /*
-         * This will hold all the promises that will return the trials
-         * that we want. The trials will either be from this student
-         * or from classmates.
-         */
-        var promises = [];
-
-        // get the components to import work from
-        var importWorkComponents = importWork.components;
-
-        // loop through all the import work components
-        for (var c = 0; c < importWorkComponents.length; c++) {
-          var importWorkComponent = importWorkComponents[c];
-
-          if (importWorkComponent != null) {
-
-            // get the node id and component id to import from
-            var nodeId = importWorkComponent.nodeId;
-            var componentId = importWorkComponent.componentId;
-
-            /*
-             * example of the importWork field in a component that
-             * shows classmate work
-             *
-             * "importWork": {
-             *   "components": [
-             *     {
-             *       "nodeId": "node1",
-             *       "componentId": "yppyfy01er",
-             *       "showClassmateWork": true,
-             *       "showClassmateWorkSource": "period"
-             *     }
-             *   ]
-             * }
-             */
-
-            // whether we are showing classmate work
-            var showClassmateWork = importWorkComponent.showClassmateWork;
-
-            if (showClassmateWork) {
-              // we are showing classmate work
-
-              /*
-               * showClassmateWorkSource determines whether to get
-               * work from the period or the whole class (all periods)
-               */
-              var showClassmateWorkSource = importWorkComponent.showClassmateWorkSource;
-
-              // get the trials from the classmates
-              promises.push(this.getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource));
-            } else {
-              // we are getting the work from this student
-
-              // get the latest component state from the component
-              var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-              // get the trials from the component state
-              promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
-            }
-          }
-        }
-
-        /*
-         * wait for all the promises to resolve because we may need to
-         * request the classmate work from the server
-         */
-        this.$q.all(promises).then((promiseResults) => {
-
-          // this will hold all the trials
-          var mergedTrials = [];
-
-          /*
-           * Loop through all the promise results. There will be a
-           * promise result for each component we are importing from.
-           * Each promiseResult is an array of trials.
-           */
-          for (var p = 0; p < promiseResults.length; p++) {
-
-            // get the array of trials for one component
-            var trials = promiseResults[p];
-
-            // loop through all the trials from the component
-            for (var t = 0; t < trials.length; t++) {
-              var trial = trials[t];
-
-              // add the trial to our array of merged trials
-              mergedTrials.push(trial);
-            }
-          }
-
-          // create a new student data
-          var studentData = {};
-          studentData.trials = mergedTrials;
-          studentData.version = 2;
-
-          // create a new component state
-          var newComponentState = this.NodeService.createNewComponentState();
-          newComponentState.studentData = studentData;
-
-          // populate the component state into this component
-          this.setStudentWork(newComponentState);
-
-          // make the work dirty so that it gets saved
-          this.studentDataChanged();
-        });
-      }
-    }
-  };
 
   /**
    * Get the trials from classmates
@@ -3462,7 +2748,6 @@ class GraphController {
              * studentDataChanged() to the undo stack
              */
             this.addNextComponentStateToUndoStack = true;
-
             this.studentDataChanged();
           });
         }
@@ -3741,260 +3026,10 @@ class GraphController {
          * studentDataChanged() to the undo stack
          */
         this.addNextComponentStateToUndoStack = true;
-
         this.studentDataChanged();
       }
     }
   };
-
-  /**
-   * Get the component id
-   * @return the component id
-   */
-  getComponentId() {
-    return this.componentContent.id;
-  };
-
-
-  /**
-   * The component has changed in the regular authoring view so we will save the project
-   */
-  authoringViewComponentChanged() {
-
-    // update the JSON string in the advanced authoring view textarea
-    this.updateAdvancedAuthoringView();
-
-    /*
-     * notify the parent node that the content has changed which will save
-     * the project to the server
-     */
-    this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-  };
-
-  /**
-   * The component has changed in the advanced authoring view so we will update
-   * the component and save the project.
-   */
-  advancedAuthoringViewComponentChanged() {
-
-    try {
-      /*
-       * create a new component by converting the JSON string in the advanced
-       * authoring view into a JSON object
-       */
-      var authoringComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
-
-      // replace the component in the project
-      this.ProjectService.replaceComponent(this.nodeId, this.componentId, authoringComponentContent);
-
-      // set the new authoring component content
-      this.authoringComponentContent = authoringComponentContent;
-
-      // set the new component into the controller
-      this.componentContent = authoringComponentContent;
-
-      /*
-       * notify the parent node that the content has changed which will save
-       * the project to the server
-       */
-      this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-    } catch(e) {
-      this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
-    }
-  };
-
-  /**
-   * Update the component JSON string that will be displayed in the advanced authoring view textarea
-   */
-  updateAdvancedAuthoringView() {
-    this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-  };
-
-  /**
-   * The show previous work checkbox was clicked
-   */
-  authoringShowPreviousWorkClicked() {
-
-    if (!this.authoringComponentContent.showPreviousWork) {
-      /*
-       * show previous work has been turned off so we will clear the
-       * show previous work node id, show previous work component id, and
-       * show previous work prompt values
-       */
-      this.authoringComponentContent.showPreviousWorkNodeId = null;
-      this.authoringComponentContent.showPreviousWorkComponentId = null;
-      this.authoringComponentContent.showPreviousWorkPrompt = null;
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * The show previous work node id has changed
-   */
-  authoringShowPreviousWorkNodeIdChanged() {
-
-    if (this.authoringComponentContent.showPreviousWorkNodeId == null ||
-      this.authoringComponentContent.showPreviousWorkNodeId == '') {
-
-      /*
-       * the show previous work node id is null so we will also set the
-       * show previous component id to null
-       */
-      this.authoringComponentContent.showPreviousWorkComponentId = '';
-    }
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * The show previous work component id has changed
-   */
-  authoringShowPreviousWorkComponentIdChanged() {
-
-    // get the show previous work node id
-    var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-
-    // get the show previous work prompt boolean value
-    var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-
-    // get the old show previous work component id
-    var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-
-    // get the new show previous work component id
-    var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-
-    // get the new show previous work component
-    var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-
-    if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
-      // the new show previous work component is empty
-
-      // save the component
-      this.authoringViewComponentChanged();
-    } else if (newShowPreviousWorkComponent != null) {
-
-      // get the current component type
-      var currentComponentType = this.componentContent.type;
-
-      // get the new component type
-      var newComponentType = newShowPreviousWorkComponent.type;
-
-      // check if the component types are different
-      if (newComponentType != currentComponentType) {
-        /*
-         * the component types are different so we will need to change
-         * the whole component
-         */
-
-        // make sure the author really wants to change the component type
-        var answer = confirm(this.$translate('ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE'));
-        if (answer) {
-          // the author wants to change the component type
-
-          /*
-           * get the component service so we can make a new instance
-           * of the component
-           */
-          var componentService = this.$injector.get(newComponentType + 'Service');
-
-          if (componentService != null) {
-
-            // create a new component
-            var newComponent = componentService.createComponent();
-
-            // set move over the values we need to keep
-            newComponent.id = this.authoringComponentContent.id;
-            newComponent.showPreviousWork = true;
-            newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
-            newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
-            newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-
-            /*
-             * update the authoring component content JSON string to
-             * change the component
-             */
-            this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-
-            // update the component in the project and save the project
-            this.advancedAuthoringViewComponentChanged();
-          }
-        } else {
-          /*
-           * the author does not want to change the component type so
-           * we will rollback the showPreviousWorkComponentId value
-           */
-          this.authoringComponentContent.showPreviousWorkComponentId = oldShowPreviousWorkComponentId;
-        }
-      } else {
-        /*
-         * the component types are the same so we do not need to change
-         * the component type and can just save
-         */
-        this.authoringViewComponentChanged();
-      }
-    }
-  }
-
-  /**
-   * Get all the step node ids in the project
-   * @returns all the step node ids
-   */
-  getStepNodeIds() {
-    var stepNodeIds = this.ProjectService.getNodeIds();
-
-    return stepNodeIds;
-  }
-
-  /**
-   * Get the step number and title
-   * @param nodeId get the step number and title for this node
-   * @returns the step number and title
-   */
-  getNodePositionAndTitleByNodeId(nodeId) {
-    var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-
-    return nodePositionAndTitle;
-  }
-
-  /**
-   * Get the components in a step
-   * @param nodeId get the components in the step
-   * @returns the components in the step
-   */
-  getComponentsByNodeId(nodeId) {
-    var components = this.ProjectService.getComponentsByNodeId(nodeId);
-
-    return components;
-  }
-
-  /**
-   * Check if a node is a step node
-   * @param nodeId the node id to check
-   * @returns whether the node is an application node
-   */
-  isApplicationNode(nodeId) {
-    var result = this.ProjectService.isApplicationNode(nodeId);
-
-    return result;
-  }
-
-  /**
-   * Add a series in the authoring view
-   */
-  authoringAddSeriesClicked() {
-
-    // create a new series
-    var newSeries = this.createNewSeries();
-
-    // add the new series
-    this.authoringComponentContent.series.push(newSeries);
-
-    // save the project
-    this.authoringViewComponentChanged();
-  }
 
   /**
    * Create a new series object
@@ -4016,73 +3051,6 @@ class GraphController {
 
     return newSeries;
   }
-
-  /**
-   * Delete a series in the authoring view
-   * @param the index of the series in the series array
-   */
-  authoringDeleteSeriesClicked(index) {
-
-    var confirmMessage = '';
-    var seriesName = '';
-
-    if (this.authoringComponentContent.series != null) {
-
-      // get the series
-      var series = this.authoringComponentContent.series[index];
-
-      if (series != null && series.name != null) {
-
-        // get the series name
-        seriesName = series.name;
-      }
-    }
-
-    if (seriesName == null || seriesName == '') {
-      // the series does not have a name
-      confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheSeries');
-    } else {
-      // the series has a name
-      confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheNamedSeries', { seriesName: seriesName });
-    }
-
-    // ask the author if they are sure they want to delete the series
-    var answer = confirm(confirmMessage);
-
-    if (answer) {
-      // remove the series from the series array
-      this.authoringComponentContent.series.splice(index, 1);
-
-      // save the project
-      this.authoringViewComponentChanged();
-    }
-  };
-
-  /**
-   * Set the message next to the save button
-   * @param message the message to display
-   * @param time the time to display
-   */
-  setSaveMessage(message, time) {
-    this.saveMessage.text = message;
-    this.saveMessage.time = time;
-  };
-
-  /**
-   * Register the the listener that will listen for the exit event
-   * so that we can perform saving before exiting.
-   */
-  registerExitListener() {
-
-    /*
-     * Listen for the 'exit' event which is fired when the student exits
-     * the VLE. This will perform saving before the VLE exits.
-     */
-    this.exitListener = this.$scope.$on('exit', angular.bind(this, function(event, args) {
-
-      this.$rootScope.$broadcast('doneExiting');
-    }));
-  };
 
   /**
    * Check if a series is the active series. There can only be on active series.
@@ -4149,11 +3117,6 @@ class GraphController {
      * studentDataChanged() to the undo stack
      */
     this.addNextComponentStateToUndoStack = true;
-
-    /*
-     * notify the controller that the student data has
-     * changed so that it will perform any necessary saving
-     */
     this.studentDataChanged();
   }
 
@@ -4376,11 +3339,6 @@ class GraphController {
      * studentDataChanged() to the undo stack
      */
     this.addNextComponentStateToUndoStack = true;
-
-    /*
-     * notify the controller that the student data has
-     * changed so that it will perform any necessary saving
-     */
     this.studentDataChanged();
 
     // update the selected trial text
@@ -4425,11 +3383,6 @@ class GraphController {
        * studentDataChanged() to the undo stack
        */
       this.addNextComponentStateToUndoStack = true;
-
-      /*
-       * notify the controller that the student data has
-       * changed so that it will perform any necessary saving
-       */
       this.studentDataChanged();
     }
   }
@@ -4511,11 +3464,6 @@ class GraphController {
     if (!this.UtilService.arraysContainSameValues(this.previousTrialIdsToShow, trialIdsToShow)) {
       // update the trialIdsToShow
       this.trialIdsToShow = trialIdsToShow;
-
-      /*
-       * notify the controller that the student data has
-       * changed so that it will perform any necessary saving
-       */
       this.studentDataChanged();
     }
 
@@ -4783,6 +3731,7 @@ class GraphController {
                   var seriesName = singleSeries.name;
                   var seriesData = singleSeries.data;
                   var seriesColor = singleSeries.color;
+                  var allowPointMouseOver = singleSeries.allowPointMouseOver;
                   var marker = singleSeries.marker;
                   var dashStyle = singleSeries.dashStyle;
 
@@ -4800,6 +3749,10 @@ class GraphController {
 
                   if (dashStyle != null) {
                     newSeries.dashStyle = dashStyle;
+                  }
+
+                  if (allowPointMouseOver != null) {
+                    newSeries.allowPointMouseOver = allowPointMouseOver;
                   }
 
                   // add the series to the trial
@@ -5087,37 +4040,6 @@ class GraphController {
   }
 
   /**
-   * The "Enable Trials" checkbox was clicked
-   */
-  authoringViewEnableTrialsClicked() {
-
-    if (this.authoringComponentContent.enableTrials) {
-      // trials are now enabled
-      this.authoringComponentContent.canCreateNewTrials = true;
-      this.authoringComponentContent.canDeleteTrials = true;
-    } else {
-      // trials are now disabled
-      this.authoringComponentContent.canCreateNewTrials = false;
-      this.authoringComponentContent.canDeleteTrials = false;
-      this.authoringComponentContent.hideAllTrialsOnNewTrial = true;
-    }
-
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Check whether we need to show the snip drawing button
-   * @return whether to show the snip drawing button
-   */
-  showSnipDrawingButton() {
-    if (this.NotebookService.isNotebookEnabled() && this.isSnipDrawingButtonVisible) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  /**
    * Snip the drawing by converting it to an image
    * @param $event the click event
    */
@@ -5139,7 +4061,7 @@ class GraphController {
         var imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
         // create a notebook item with the image populated into it
-        this.NotebookService.addNewItem($event, imageObject);
+        this.NotebookService.addNote($event, imageObject);
       });
     }
   }
@@ -5202,361 +4124,6 @@ class GraphController {
    */
   getUploadedFileName() {
     return this.uploadedFileName;
-  }
-
-  /**
-   * Check if a component generates student work
-   * @param component the component
-   * @return whether the component generates student work
-   */
-  componentHasWork(component) {
-    var result = true;
-
-    if (component != null) {
-      result = this.ProjectService.componentHasWork(component);
-    }
-
-    return result;
-  }
-
-  /**
-   * The import previous work checkbox was clicked
-   */
-  authoringImportPreviousWorkClicked() {
-
-    if (!this.authoringComponentContent.importPreviousWork) {
-      /*
-       * import previous work has been turned off so we will clear the
-       * import previous work node id, and import previous work
-       * component id
-       */
-      this.authoringComponentContent.importPreviousWorkNodeId = null;
-      this.authoringComponentContent.importPreviousWorkComponentId = null;
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * The import previous work node id has changed
-   */
-  authoringImportPreviousWorkNodeIdChanged() {
-
-    if (this.authoringComponentContent.importPreviousWorkNodeId == null ||
-      this.authoringComponentContent.importPreviousWorkNodeId == '') {
-
-      /*
-       * the import previous work node id is null so we will also set the
-       * import previous component id to null
-       */
-      this.authoringComponentContent.importPreviousWorkComponentId = '';
-    }
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * The import previous work component id has changed
-   */
-  authoringImportPreviousWorkComponentIdChanged() {
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * The author has changed the rubric
-   */
-  summernoteRubricHTMLChanged() {
-
-    // get the summernote rubric html
-    var html = this.summernoteRubricHTML;
-
-    /*
-     * remove the absolute asset paths
-     * e.g.
-     * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
-     * will be changed to
-     * <img src='sun.png'/>
-     */
-    html = this.ConfigService.removeAbsoluteAssetPaths(html);
-
-    /*
-     * replace <a> and <button> elements with <wiselink> elements when
-     * applicable
-     */
-    html = this.UtilService.insertWISELinks(html);
-
-    // update the component rubric
-    this.authoringComponentContent.rubric = html;
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Show the asset popup to allow the author to choose the background image
-   */
-  chooseBackgroundImage() {
-
-    // generate the parameters
-    var params = {};
-    params.isPopup = true;
-    params.nodeId = this.nodeId;
-    params.componentId = this.componentId;
-    params.target = 'background';
-
-    // display the asset chooser
-    this.$rootScope.$broadcast('openAssetChooser', params);
-  }
-
-  /**
-   * Add an x axis category
-   */
-  authoringAddXAxisCategory() {
-
-    // add an empty string as a new category
-    this.authoringComponentContent.xAxis.categories.push('');
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Delete an x axis category
-   * @param index the index of the category to delete
-   */
-  authoringDeleteXAxisCategory(index) {
-
-    if (index != null) {
-
-      var confirmMessage = '';
-
-      var categoryName = '';
-
-      if (this.authoringComponentContent.xAxis != null &&
-        this.authoringComponentContent.xAxis.categories != null) {
-
-        // get the category name
-        categoryName = this.authoringComponentContent.xAxis.categories[index];
-      }
-
-      if (categoryName == null || categoryName == '') {
-        // there category does not have a name
-        confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheCategory');
-      } else {
-        // the category has a name
-        confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheNamedCategory', { categoryName: categoryName });
-      }
-
-      // ask the author if they are sure they want to delete the category
-      var answer = confirm(confirmMessage);
-
-      if (answer) {
-        // remove the category at the given index
-        this.authoringComponentContent.xAxis.categories.splice(index, 1);
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-  }
-
-  /**
-   * Add an empty data point to the series
-   * @param series the series to add the empty data point to
-   */
-  authoringAddSeriesDataPoint(series) {
-
-    if (series != null && series.data != null) {
-
-      if (this.authoringComponentContent.xAxis.type == null ||
-        this.authoringComponentContent.xAxis.type === 'limits') {
-        // add an empty data point to the series
-        series.data.push([]);
-      } else if (this.authoringComponentContent.xAxis.type === 'categories') {
-        // add an empty data point to the series
-        series.data.push(null);
-      }
-    }
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Delete a data point from a series
-   * @param series the series to delete a data point from
-   * @param index the index of the data point to delete
-   */
-  authoringDeleteSeriesDataPoint(series, index) {
-
-    if (series != null && series.data != null) {
-
-      // ask the author if they are sure they want to delete the point
-      var answer = confirm(this.$translate('graph.areYouSureYouWantToDeleteTheDataPoint'));
-
-      if (answer) {
-        // delete the data point at the given index
-        series.data.splice(index, 1);
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-  }
-
-  /**
-   * Move a data point up
-   * @param series the series the data point belongs to
-   * @param index the index of the data point in the series
-   */
-  authoringMoveSeriesDataPointUp(series, index) {
-    if (series != null && series.data != null) {
-
-      if (index > 0) {
-        // the data point is not at the top so we can move it up
-
-        // remember the data point we are moving
-        var dataPoint = series.data[index];
-
-        // remove the data point at the given index
-        series.data.splice(index, 1);
-
-        // insert the data point back in at one index back
-        series.data.splice(index - 1, 0, dataPoint);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * Move a data point down
-   * @param series the series the data point belongs to
-   * @param index the index of the data point in the series
-   */
-  authoringMoveSeriesDataPointDown(series, index) {
-    if (series != null && series.data != null) {
-
-      if (index < series.data.length - 1) {
-        // the data point is not at the bottom so we can move it down
-
-        // remember the data point we are moving
-        var dataPoint = series.data[index];
-
-        // remove the data point at the given index
-        series.data.splice(index, 1);
-
-        // insert the data point back in at one index back
-        series.data.splice(index + 1, 0, dataPoint);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * The graph type changed so we will handle updating the series data points
-   * @param newValue the new value of the graph type
-   * @param oldValue the old value of the graph type
-   */
-  authoringViewGraphTypeChanged(newValue, oldValue) {
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * The author has changed the x axis type
-   * @param newValue the new x axis type
-   * @param oldValue the old x axis type
-   */
-  authoringViewXAxisTypeChanged(newValue, oldValue) {
-    // ask the author if they are sure they want to change the x axis type
-    let answer = confirm(this.$translate('graph.areYouSureYouWantToChangeTheXAxisType'));
-
-    if (answer) {
-      // the author answered yes to change the type
-      if (newValue === 'limits') {
-        if (oldValue === 'categories') {
-          // the graph type is changing from categories to limits
-          delete this.authoringComponentContent.xAxis.categories;
-          this.authoringComponentContent.xAxis.min = 0;
-          this.authoringComponentContent.xAxis.max = 10;
-          this.authoringConvertAllSeriesDataPoints(newValue);
-        }
-      } else if (newValue === 'categories') {
-        if (oldValue === 'limits' || oldValue === '' || oldValue == null) {
-          // the graph type is changing from limits to categories
-          delete this.authoringComponentContent.xAxis.min;
-          delete this.authoringComponentContent.xAxis.max;
-          delete this.authoringComponentContent.xAxis.units;
-          delete this.authoringComponentContent.yAxis.units;
-          this.authoringComponentContent.xAxis.categories = [];
-          this.authoringConvertAllSeriesDataPoints(newValue);
-        }
-      }
-    } else {
-      // the author answered no so we will not change the type
-      // revert the x axis type
-      this.authoringComponentContent.xAxis.type = oldValue;
-    }
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Add symbols to all the series
-   */
-  authoringAddSymbolsToSeries() {
-
-    // get all the series
-    var series = this.authoringComponentContent.series;
-
-    if (series != null) {
-
-      // loop through all the series
-      for (var s = 0; s < series.length; s++) {
-
-        // get a series
-        var tempSeries = series[s];
-
-        if (tempSeries != null) {
-          // set the symbol to circle
-          tempSeries.marker = {};
-          tempSeries.marker.symbol = 'circle';
-        }
-      }
-    }
-  }
-
-  /**
-   * Convert the data points in all the series
-   * @param graphType the x axis type to convert the data points to
-   */
-  authoringConvertAllSeriesDataPoints(xAxisType) {
-
-    // get all the series
-    var series = this.authoringComponentContent.series;
-
-    if (series != null) {
-
-      // loop through all the series
-      for (var s = 0; s < series.length; s++) {
-
-        // get a series
-        var tempSeries = series[s];
-
-        // convert the data points in the series
-        this.convertSeriesDataPoints(tempSeries, xAxisType);
-      }
-    }
   }
 
   /**
@@ -5690,300 +4257,6 @@ class GraphController {
   }
 
   /**
-   * Add a connected component
-   */
-  authoringAddConnectedComponent() {
-
-    /*
-     * create the new connected component object that will contain a
-     * node id and component id
-     */
-    var newConnectedComponent = {};
-    newConnectedComponent.nodeId = this.nodeId;
-    newConnectedComponent.componentId = null;
-    newConnectedComponent.type = null;
-    this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(newConnectedComponent);
-
-    // initialize the array of connected components if it does not exist yet
-    if (this.authoringComponentContent.connectedComponents == null) {
-      this.authoringComponentContent.connectedComponents = [];
-    }
-
-    // add the connected component
-    this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-    if (this.authoringComponentContent.connectedComponents.length > 1) {
-      /*
-       * there is more than one connected component so we will enable
-       * trials so that each connected component can put work in a
-       * different trial
-       */
-      this.authoringComponentContent.enableTrials = true;
-    }
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Automatically set the component id for the connected component if there
-   * is only one viable option.
-   * @param connectedComponent the connected component object we are authoring
-   */
-  authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-    if (connectedComponent != null) {
-      let components = this.getComponentsByNodeId(connectedComponent.nodeId);
-      if (components != null) {
-        let numberOfAllowedComponents = 0;
-        let allowedComponent = null;
-        for (let component of components) {
-          if (component != null) {
-            if (this.isConnectedComponentTypeAllowed(component.type) &&
-                component.id != this.componentId) {
-              // we have found a viable component we can connect to
-              numberOfAllowedComponents += 1;
-              allowedComponent = component;
-            }
-          }
-        }
-
-        if (numberOfAllowedComponents == 1) {
-          /*
-           * there is only one viable component to connect to so we
-           * will use it
-           */
-          connectedComponent.componentId = allowedComponent.id;
-          connectedComponent.type = 'importWork';
-        }
-      }
-    }
-  }
-
-  /**
-   * Delete a connected component
-   * @param index the index of the component to delete
-   */
-  authoringDeleteConnectedComponent(index) {
-
-    // ask the author if they are sure they want to delete the connected component
-    let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
-
-    if (answer) {
-      // the author answered yes to delete
-
-      if (this.authoringComponentContent.connectedComponents != null) {
-        this.authoringComponentContent.connectedComponents.splice(index, 1);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * Set the show submit button value
-   * @param show whether to show the submit button
-   */
-  setShowSubmitButtonValue(show) {
-
-    if (show == null || show == false) {
-      // we are hiding the submit button
-      this.authoringComponentContent.showSaveButton = false;
-      this.authoringComponentContent.showSubmitButton = false;
-    } else {
-      // we are showing the submit button
-      this.authoringComponentContent.showSaveButton = true;
-      this.authoringComponentContent.showSubmitButton = true;
-    }
-
-    /*
-     * notify the parent node that this component is changing its
-     * showSubmitButton value so that it can show save buttons on the
-     * step or sibling components accordingly
-     */
-    this.$scope.$emit('componentShowSubmitButtonValueChanged', {nodeId: this.nodeId, componentId: this.componentId, showSubmitButton: show});
-  }
-
-  /**
-   * The showSubmitButton value has changed
-   */
-  showSubmitButtonValueChanged() {
-
-    /*
-     * perform additional processing for when we change the showSubmitButton
-     * value
-     */
-    this.setShowSubmitButtonValue(this.authoringComponentContent.showSubmitButton);
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Add a connected component series number
-   * @param connectedComponent the connected component object
-   */
-  authoringAddConnectedComponentSeriesNumber(connectedComponent) {
-
-    if (connectedComponent != null) {
-
-      // initialize the series numbers if necessary
-      if (connectedComponent.seriesNumbers == null) {
-        connectedComponent.seriesNumbers = [];
-      }
-
-      // add an empty value into the series numbers
-      connectedComponent.seriesNumbers.push(null);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * Delete a connected component series number
-   * @param connectedComponent the connected component object
-   * @param seriesNumberIndex the series number index to delete
-   */
-  authoringDeleteConnectedComponentSeriesNumber(connectedComponent, seriesNumberIndex) {
-
-    if (connectedComponent != null) {
-
-      // initialize the series numbers if necessary
-      if (connectedComponent.seriesNumbers == null) {
-        connectedComponent.seriesNumbers = [];
-      }
-
-      // remove the element at the given index
-      connectedComponent.seriesNumbers.splice(seriesNumberIndex, 1);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * The author has changed a series number
-   * @param connectedComponent the connected component object
-   * @param seriesNumberIndex the series number index to update
-   * @param value the new series number value
-   */
-  authoringConnectedComponentSeriesNumberChanged(connectedComponent, seriesNumberIndex, value) {
-
-    if (connectedComponent != null) {
-
-      // initialize the series numbers if necessary
-      if (connectedComponent.seriesNumbers == null) {
-        connectedComponent.seriesNumbers = [];
-      }
-
-      // make sure the index is in the range of acceptable indexes
-      if (seriesNumberIndex < connectedComponent.seriesNumbers.length) {
-
-        // update the series number at the given index
-        connectedComponent.seriesNumbers[seriesNumberIndex] = value;
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * Get the connected component type
-   * @param connectedComponent get the component type of this connected component
-   * @return the connected component type
-   */
-  authoringGetConnectedComponentType(connectedComponent) {
-
-    var connectedComponentType = null;
-
-    if (connectedComponent != null) {
-
-      // get the node id and component id of the connected component
-      var nodeId = connectedComponent.nodeId;
-      var componentId = connectedComponent.componentId;
-
-      // get the component
-      var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
-      if (component != null) {
-        // get the component type
-        connectedComponentType = component.type;
-      }
-    }
-
-    return connectedComponentType;
-  }
-
-  /**
-   * The connected component node id has changed
-   * @param connectedComponent the connected component that has changed
-   */
-  authoringConnectedComponentNodeIdChanged(connectedComponent) {
-    if (connectedComponent != null) {
-      connectedComponent.componentId = null;
-      connectedComponent.type = null;
-      this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * The connected component component id has changed
-   * @param connectedComponent the connected component that has changed
-   */
-  authoringConnectedComponentComponentIdChanged(connectedComponent) {
-
-    if (connectedComponent != null) {
-
-      // get the new component type
-      var connectedComponentType = this.authoringGetConnectedComponentType(connectedComponent);
-
-      if (connectedComponentType != 'Embedded') {
-        /*
-         * the component type is not Embedded so we will remove the
-         * seriesNumbers field
-         */
-        delete connectedComponent.seriesNumbers;
-      }
-
-      if (connectedComponentType != 'Table') {
-        /*
-         * the component type is not Table so we will remove the
-         * skipFirstRow, xColumn, and yColumn fields
-         */
-        delete connectedComponent.skipFirstRow;
-        delete connectedComponent.xColumn;
-        delete connectedComponent.yColumn;
-      }
-
-      if (connectedComponentType != 'Graph') {
-        /*
-         * the component type is not Graph so we will remove the
-         * show classmate work fields
-         */
-        delete connectedComponent.showClassmateWorkSource;
-      }
-
-      if (connectedComponentType == 'Table') {
-        // set default values for the connected component params
-        connectedComponent.skipFirstRow = true;
-        connectedComponent.xColumn = 0;
-        connectedComponent.yColumn = 1;
-      }
-
-      // default the type to import work
-      connectedComponent.type = 'importWork';
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
    * Set the active series to the first series that the student can edit
    * or if there are no series the student can edit, set the active series
    * to the first series
@@ -6054,8 +4327,10 @@ class GraphController {
 
   /**
    * Import any work we need from connected components
+   * @param {boolean} isReset (optional) Whether this function call was
+   * triggered by the student clicking the reset button.
    */
-  handleConnectedComponents() {
+  handleConnectedComponents(isReset) {
 
     // get the connected components
     var connectedComponents = this.componentContent.connectedComponents;
@@ -6132,20 +4407,31 @@ class GraphController {
             }
           } else if (type == 'showWork' || type == 'importWork' || type == null) {
             // get the latest component state from the component
-            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+            let componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+            if (componentState != null) {
+              if (componentState.componentType == 'ConceptMap' ||
+                  componentState.componentType == 'Draw' ||
+                  componentState.componentType == 'Label') {
+                let connectedComponent =
+                  this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
+                if (connectedComponent.importWorkAsBackground === true) {
+                  promises.push(this.setComponentStateAsBackgroundImage(componentState));
+                }
+              } else {
+                // get the trials from the component state
+                promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
 
-            // get the trials from the component state
-            promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
+                if (type == 'showWork') {
+                  // we are showing work so we will not allow the student to edit it
+                  this.isDisabled = true;
+                }
 
-            if (type == 'showWork') {
-              // we are showing work so we will not allow the student to edit it
-              this.isDisabled = true;
-            }
-
-            if (componentState != null &&
-                componentState.studentData != null &&
-                componentState.studentData.backgroundImage != null) {
-              connectedComponentBackgroundImage = componentState.studentData.backgroundImage;
+                if (componentState != null &&
+                  componentState.studentData != null &&
+                  componentState.studentData.backgroundImage != null) {
+                  connectedComponentBackgroundImage = componentState.studentData.backgroundImage;
+                }
+              }
             }
           }
         }
@@ -6162,34 +4448,35 @@ class GraphController {
          */
 
         // this will hold all the trials
-        var mergedTrials = [];
+        let mergedTrials = [];
 
         /*
          * Loop through all the promise results. There will be a
          * promise result for each component we are importing from.
-         * Each promiseResult is an array of trials.
+         * Each promiseResult is an array of trials or an image url.
          */
-        for (var p = 0; p < promiseResults.length; p++) {
+        for (let promiseResult of promiseResults) {
+          if (promiseResult instanceof Array) {
+            let trials = promiseResult;
+            // loop through all the trials from the component
+            for (let t = 0; t < trials.length; t++) {
+              let trial = trials[t];
 
-          // get the array of trials for one component
-          var trials = promiseResults[p];
-
-          // loop through all the trials from the component
-          for (var t = 0; t < trials.length; t++) {
-            var trial = trials[t];
-
-            // add the trial to our array of merged trials
-            mergedTrials.push(trial);
+              // add the trial to our array of merged trials
+              mergedTrials.push(trial);
+            }
+          } else if (typeof(promiseResult) === "string") {
+            connectedComponentBackgroundImage = promiseResult;
           }
         }
 
         // create a new student data with all the trials
-        var studentData = {};
+        let studentData = {};
         studentData.trials = mergedTrials;
         studentData.version = 2;
 
         // create a new component state
-        var newComponentState = this.NodeService.createNewComponentState();
+        let newComponentState = this.NodeService.createNewComponentState();
         newComponentState.studentData = studentData;
 
         if (this.componentContent.backgroundImage != null &&
@@ -6201,15 +4488,25 @@ class GraphController {
           newComponentState.studentData.backgroundImage = connectedComponentBackgroundImage;
         }
 
-        newComponentState = this.handleConnectedComponentsHelper(newComponentState);
+        newComponentState = this.handleConnectedComponentsHelper(newComponentState, isReset);
 
         // populate the component state into this component
         this.setStudentWork(newComponentState);
-
-        // make the work dirty so that it gets saved
         this.studentDataChanged();
       });
     }
+  }
+
+  /**
+   * Create an image from a component state and set the image as the background.
+   * @param componentState A component state.
+   * @return A promise that returns the url of the image that is generated from
+   * the component state.
+   */
+  setComponentStateAsBackgroundImage(componentState) {
+    return this.UtilService.generateImageFromComponentState(componentState).then((image) => {
+      return image.url;
+    });
   }
 
   /**
@@ -6217,10 +4514,10 @@ class GraphController {
    * @param newComponentState The new component state generated by accumulating
    * the trials from all the connected component student data.
    */
-  handleConnectedComponentsHelper(newComponentState) {
+  handleConnectedComponentsHelper(newComponentState, isReset) {
     let mergedComponentState = this.$scope.componentState;
     let firstTime = true;
-    if (mergedComponentState == null) {
+    if (mergedComponentState == null || isReset) {
       mergedComponentState = newComponentState;
     } else {
       /*
@@ -6255,7 +4552,7 @@ class GraphController {
               mergedComponentState = this.mergeComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
             } else {
               // the connected component does not have student work
-              mergedComponentState = this.mergeNullComponentState(mergedComponentState, connectedComponentState, fields, firstTime);
+              mergedComponentState = this.mergeNullComponentState(mergedComponentState, fields, firstTime);
             }
           }
         }
@@ -6263,6 +4560,9 @@ class GraphController {
 
       if (mergedComponentState.studentData.version == null) {
         mergedComponentState.studentData.version = this.studentDataVersion;
+      }
+      if (newComponentState.studentData.backgroundImage != null) {
+        mergedComponentState.studentData.backgroundImage = newComponentState.studentData.backgroundImage;
       }
 
       if (mergedComponentState != null) {
@@ -6274,20 +4574,32 @@ class GraphController {
   }
 
   /**
-   * Merge the component state from the connected component with the component
+   * Merge the component state from the connected component into the component
    * state from this component.
    * @param baseComponentState The component state from this component.
-   * @param newComponentState The component state from the connected component.
-   * @param mergeFields The field to look at in the newComponentState.
+   * @param connectedComponentState The component state from the connected component.
+   * @param mergeFields (optional) An array of objects that specify which fields
+   * to look at in the connectedComponentState. Each object can contain 3 fields which
+   * are "name", "when", "action".
+   * - "name" is the name of the field in the connectedComponentState.studentData object
+   *   For example, if connectedComponentState is from a Graph component, we may author the value to be "trials"
+   * - "when" possible values
+   *     "firstTime" means we merge the "name" field only the first time we visit the component
+   *     "always" means we merge the "name" field every time we visit the component
+   * - "action" possible values
+   *     "read" means we look at the value of the "name" field and perform processing on it to generate
+   *       some value that we will set into the baseComponentState
+   *     "write" means we copy the value of the "name" field from connectedComponentState.studentData to
+   *       baseComponentState.studentData
    * @param firstTime Whether this is the first time this component is being
    * visited.
    * @return The merged component state.
    */
-  mergeComponentState(baseComponentState, newComponentState, mergeFields, firstTime) {
+  mergeComponentState(baseComponentState, connectedComponentState, mergeFields, firstTime) {
     if (mergeFields == null) {
-      if (newComponentState.componentType == 'Graph') {
+      if (connectedComponentState.componentType == 'Graph' && firstTime) {
         // there are no merge fields specified so we will get all of the fields
-        baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(newComponentState.studentData);
+        baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(connectedComponentState.studentData);
       }
     } else {
       // we will merge specific fields
@@ -6295,17 +4607,17 @@ class GraphController {
         let name = mergeField.name;
         let when = mergeField.when;
         let action = mergeField.action;
-        if (when == 'firstTime' && firstTime == true) {
+        if (when == 'firstTime' && firstTime) {
           if (action == 'write') {
-            baseComponentState.studentData[name] = newComponentState.studentData[name];
+            baseComponentState.studentData[name] = connectedComponentState.studentData[name];
           } else if (action == 'read') {
             // TODO
           }
         } else if (when == 'always') {
           if (action == 'write') {
-            baseComponentState.studentData[name] = newComponentState.studentData[name];
+            baseComponentState.studentData[name] = connectedComponentState.studentData[name];
           } else if (action == 'read') {
-            this.readConnectedComponentField(baseComponentState, newComponentState, name);
+            this.readConnectedComponentField(baseComponentState, connectedComponentState, name);
           }
         }
       }
@@ -6318,7 +4630,8 @@ class GraphController {
    * component but the connected component does not have any work. We will
    * instead use default values.
    * @param baseComponentState The component state from this component.
-   * @param mergeFields The field to look at in the newComponentState.
+   * @param mergeFields (optional) An array of objects that specify which fields
+   * to look at. (see comment for mergeComponentState() for more information).
    * @param firstTime Whether this is the first time this component is being
    * visited.
    * @return The merged component state.
@@ -6344,7 +4657,8 @@ class GraphController {
           if (action == 'write') {
             // TODO
           } else if (action == 'read') {
-            this.readConnectedComponentField(baseComponentState, newComponentState, name);
+            const connectedComponentState = null;
+            this.readConnectedComponentField(baseComponentState, connectedComponentState, name);
           }
         }
       }
@@ -6355,13 +4669,13 @@ class GraphController {
   /**
    * Read the field from the connected component's component state.
    * @param baseComponentState The component state from this component.
-   * @param newComponentState The component state from the connected component.
+   * @param connectedComponentState The component state from the connected component.
    * @param field The field to look at in the connected component's component
    * state.
    */
-  readConnectedComponentField(baseComponentState, newComponentState, field) {
+  readConnectedComponentField(baseComponentState, connectedComponentState, field) {
     if (field == 'selectedCells') {
-      if (newComponentState == null) {
+      if (connectedComponentState == null) {
         // we will default to hide all the trials
         for (let trial of baseComponentState.studentData.trials) {
           trial.show = false;
@@ -6371,7 +4685,7 @@ class GraphController {
          * loop through all the trials and show the ones that are in the
          * selected cells array.
          */
-        let studentData = newComponentState.studentData;
+        let studentData = connectedComponentState.studentData;
         let selectedCells = studentData[field];
         let selectedTrialIds = this.convertSelectedCellsToTrialIds(selectedCells);
         for (let trial of baseComponentState.studentData.trials) {
@@ -6384,70 +4698,6 @@ class GraphController {
       }
     } else if (field == 'trial') {
       // TODO
-    }
-  }
-
-  /**
-   * The showClassmateWork value has changed in a connected component
-   * @param connectedComponent the connected component that changed
-   */
-  connectedComponentShowClassmateWorkChanged(connectedComponent) {
-
-    if (connectedComponent != null) {
-
-      if (connectedComponent.showClassmateWork) {
-        /*
-         * show classmate work was enabled so we will default the
-         * show classmate work source to period
-         */
-        connectedComponent.showClassmateWorkSource = 'period';
-      } else {
-        /*
-         * the show classmate work was disabled so we will remove
-         * the show classmate work fields
-         */
-        delete connectedComponent.showClassmateWork;
-        delete connectedComponent.showClassmateWorkSource;
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * The connected component type has changed
-   * @param connectedComponent the connected component that changed
-   */
-  authoringConnectedComponentTypeChanged(connectedComponent) {
-
-    if (connectedComponent != null) {
-
-      if (connectedComponent.type == 'importWork') {
-        /*
-         * the type has changed to import work
-         */
-        delete connectedComponent.showClassmateWorkSource;
-      } else if (connectedComponent.type == 'showWork') {
-        /*
-         * the type has changed to show work
-         */
-        delete connectedComponent.showClassmateWorkSource;
-      } else if (connectedComponent.type == 'showClassmateWork') {
-        /*
-         * the type has changed to show classmate work so we will enable
-         * trials so that each classmate work will show up in a
-         * different trial
-         */
-        this.authoringComponentContent.enableTrials = true;
-
-        if (connectedComponent.showClassmateWorkSource == null) {
-          connectedComponent.showClassmateWorkSource = 'period';
-        }
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
     }
   }
 
@@ -6515,116 +4765,6 @@ class GraphController {
   }
 
   /**
-   * Add a tag
-   */
-  addTag() {
-
-    if (this.authoringComponentContent.tags == null) {
-      // initialize the tags array
-      this.authoringComponentContent.tags = [];
-    }
-
-    // add a tag
-    this.authoringComponentContent.tags.push('');
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Move a tag up
-   * @param index the index of the tag to move up
-   */
-  moveTagUp(index) {
-
-    if (index > 0) {
-      // the index is not at the top so we can move it up
-
-      // remember the tag
-      let tag = this.authoringComponentContent.tags[index];
-
-      // remove the tag
-      this.authoringComponentContent.tags.splice(index, 1);
-
-      // insert the tag one index back
-      this.authoringComponentContent.tags.splice(index - 1, 0, tag);
-    }
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Move a tag down
-   * @param index the index of the tag to move down
-   */
-  moveTagDown(index) {
-
-    if (index < this.authoringComponentContent.tags.length - 1) {
-      // the index is not at the bottom so we can move it down
-
-      // remember the tag
-      let tag = this.authoringComponentContent.tags[index];
-
-      // remove the tag
-      this.authoringComponentContent.tags.splice(index, 1);
-
-      // insert the tag one index forward
-      this.authoringComponentContent.tags.splice(index + 1, 0, tag);
-    }
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Delete a tag
-   * @param index the index of the tag to delete
-   */
-  deleteTag(index) {
-
-    // ask the author if they are sure they want to delete the tag
-    let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisTag'));
-
-    if (answer) {
-      // the author answered yes to delete the tag
-
-      // remove the tag
-      this.authoringComponentContent.tags.splice(index, 1);
-    }
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Check if we are allowed to connect to this component type
-   * @param componentType the component type
-   * @return whether we can connect to the component type
-   */
-  isConnectedComponentTypeAllowed(componentType) {
-
-    if (componentType != null) {
-
-      let allowedConnectedComponentTypes = this.allowedConnectedComponentTypes;
-
-      // loop through the allowed connected component types
-      for (let a = 0; a < allowedConnectedComponentTypes.length; a++) {
-        let allowedConnectedComponentType = allowedConnectedComponentTypes[a];
-
-        if (allowedConnectedComponentType != null) {
-          if (componentType == allowedConnectedComponentType.type) {
-            // the component type is allowed
-            return true;
-          }
-        }
-      }
-    }
-
-    return false;
-  }
-
-  /**
    * Get the category name given the index of the category on the x axis
    * @param index the index of the category
    * @return the category name at the given index
@@ -6641,34 +4781,6 @@ class GraphController {
     }
 
     return category;
-  }
-
-  /**
-   * The show JSON button was clicked to show or hide the JSON authoring
-   */
-  showJSONButtonClicked() {
-    // toggle the JSON authoring textarea
-    this.showJSONAuthoring = !this.showJSONAuthoring;
-
-    if (this.jsonStringChanged && !this.showJSONAuthoring) {
-      /*
-       * the author has changed the JSON and has just closed the JSON
-       * authoring view so we will save the component
-       */
-      this.advancedAuthoringViewComponentChanged();
-
-      // scroll to the top of the component
-      this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
-
-      this.jsonStringChanged = false;
-    }
-  }
-
-  /**
-   * The author has changed the JSON manually in the advanced view
-   */
-  authoringJSONChanged() {
-    this.jsonStringChanged = true;
   }
 
   /**
@@ -6888,7 +5000,6 @@ class GraphController {
 
 GraphController.$inject = [
   '$filter',
-  '$injector',
   '$mdDialog',
   '$q',
   '$rootScope',
