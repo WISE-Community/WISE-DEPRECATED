@@ -11,12 +11,12 @@ import { MomentModule } from 'ngx-moment';
 import { TeacherRunListComponent } from './teacher-run-list.component';
 import { TeacherService } from "../teacher.service";
 import { Project } from "../project";
-import { Run } from "../../domain/run";
+import { TeacherRun } from "../teacher-run";
 
 @Component({selector: 'app-teacher-run-list-item', template: ''})
 class TeacherRunListItemStubComponent {
   @Input()
-  run: Run = new Run();
+  run: TeacherRun = new TeacherRun();
 }
 
 /**
@@ -35,9 +35,9 @@ describe('TeacherRunListComponent', () => {
 
     const teacherServiceStub = {
       isLoggedIn: true,
-      getRuns(): Observable<Run[]> {
-        const runs : Run[] = [];
-        const run1 = new Run();
+      getRuns(): Observable<TeacherRun[]> {
+        const runs : TeacherRun[] = [];
+        const run1 = new TeacherRun();
         run1.id = 1;
         run1.name = "Photosynthesis";
         run1.numStudents = 30;
@@ -46,7 +46,7 @@ describe('TeacherRunListComponent', () => {
         project1.name = "Photosynthesis";
         project1.thumbIconPath = "";
         run1.project = project1;
-        const run2 = new Run();
+        const run2 = new TeacherRun();
         run2.id = 2;
         run2.name = "Plate Tectonics";
         run2.numStudents = 15;

@@ -24,11 +24,7 @@
     background-color: map-get($colors, control-bg);
   }
 
-  .content-block {
-    background-color: map-get($background, background);
-  }
-
-  .notice, .info-block {
+  .content-block, .info-block, .notice {
     background-color: map-get($colors, notice-bg);
   }
 
@@ -41,7 +37,7 @@
   }
 
   .mat-button {
-    &:not(.mat-icon-button) {
+    &:not(.mat-icon-button):not(.mat-raised-button) {
       background-color: map-get($colors, btn-bg);
     }
   }

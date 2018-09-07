@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SafeStyle } from '@angular/platform-browser';
-import { Run } from "../../domain/run";
+import { TeacherRun } from "../teacher-run";
 
 @Component({
   selector: 'app-teacher-run-list-item',
@@ -11,7 +11,7 @@ import { Run } from "../../domain/run";
 export class TeacherRunListItemComponent implements OnInit {
 
   @Input()
-  run: Run = new Run();
+  run: TeacherRun = new TeacherRun();
 
   editLink: string = '';
   gradeAndManageLink: string = '';

@@ -1,20 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TeacherRunListItemComponent } from './teacher-run-list-item.component';
-import { TeacherModule } from "../teacher.module";
-import { Observable } from "rxjs";
 import { Project } from "../project";
 import { TeacherService } from "../teacher.service";
-import { Run } from "../../domain/run";
-import { MatCardModule } from "@angular/material";
+import { TeacherRun } from "../teacher-run";
+import { MatCardModule, MatIconModule } from "@angular/material";
 import { MomentModule } from "ngx-moment";
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input } from "@angular/core";
 
 @Component({ selector: 'app-run-menu', template: '' })
 export class RunMenuStubComponent {
 
   @Input()
-  run: Run;
+  run: TeacherRun;
 }
 
 describe('TeacherProjectListItemComponent', () => {
@@ -24,7 +22,7 @@ describe('TeacherProjectListItemComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ TeacherRunListItemComponent, RunMenuStubComponent ],
-      imports: [ MatCardModule, MomentModule ],
+      imports: [ MatCardModule, MatIconModule, MomentModule ],
       providers: [ { provide: TeacherService }]
     })
     .compileComponents();
@@ -33,7 +31,7 @@ describe('TeacherProjectListItemComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TeacherRunListItemComponent);
     component = fixture.componentInstance;
-    const run = new Run();
+    const run = new TeacherRun();
     run.id = 1;
     run.name = "Photosynthesis";
     run.startTime = 123;

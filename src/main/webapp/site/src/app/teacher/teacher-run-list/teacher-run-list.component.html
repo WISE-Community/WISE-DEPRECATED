@@ -13,13 +13,13 @@
                     [placeholderText]="'Search'"
                     (update)="searchChanged($event)"></app-search-bar>
     <span fxFlex="1 1 auto" fxHide fxShow.gt-sm></span>
-    <app-select-menu fxFlex="0 1 auto"
-                     fxFlex.xs="100%"
-                     fxFlex.sm="0 0 calc(50%-8px)"
-                     [options]="filterOptions"
-                     [placeholderText]="'Filter by'"
+    <app-select-menu [options]="filterOptions"
+                     [placeholderText]="'Filter By Period'"
                      [value]="filterValue"
-                     (update)="filterChanged($event)"></app-select-menu>
+                     (update)="filterChanged($event)"
+                     [valueProp]="'value'"
+                     [viewValueProp]="'label'">
+    </app-select-menu>
   </div>
   <div *ngIf="searchValue && loaded" class="notice">
     <p>Units found: {{ filteredRuns.length }}</p>
