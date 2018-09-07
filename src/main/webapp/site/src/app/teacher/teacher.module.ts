@@ -11,9 +11,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MomentModule } from 'ngx-moment';
 import { FormsModule } from '@angular/forms';
 import {
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatDatepickerModule,
-  MatDialogModule, MatDividerModule, MatIconModule, MatMenuModule,
-  MatNativeDateModule, MatRadioModule, MatTabsModule, MatAutocompleteModule
+  MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
+  MatDatepickerModule, MatDialogModule, MatDividerModule, MatIconModule,
+  MatMenuModule, MatNativeDateModule, MatRadioModule, MatTabsModule,
+  MatTooltipModule
 } from '@angular/material';
 import { RunMenuComponent } from './run-menu/run-menu.component';
 import { CreateRunDialogComponent } from './create-run-dialog/create-run-dialog.component';
@@ -33,7 +34,8 @@ const materialModules = [
   MatMenuModule,
   MatNativeDateModule,
   MatRadioModule,
-  MatTabsModule
+  MatTabsModule,
+  MatTooltipModule
 ];
 @NgModule({
   imports: [

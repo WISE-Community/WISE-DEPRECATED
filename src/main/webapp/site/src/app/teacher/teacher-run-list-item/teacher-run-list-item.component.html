@@ -6,19 +6,21 @@
         <mat-card-title>{{ run.project.name }} <span class="mat-caption">(Run #{{ run.id }})</span></mat-card-title>
         <mat-card-subtitle fxHide fxShow.gt-xs>
           <div>
-            {{run.periods.length}}
-            <span [ngPlural]="run.periods.length">
-              <ng-template ngPluralCase="=0">periods</ng-template>
-              <ng-template ngPluralCase="=1">period</ng-template>
-              <ng-template ngPluralCase="other">periods</ng-template>
-            </span> |
+            <a [matTooltip]="periodsString()" matTooltipPosition="above">
+              {{run.periods.length}}
+              <ng-container [ngPlural]="run.periods.length">
+                <ng-template ngPluralCase="=0">periods</ng-template>
+                <ng-template ngPluralCase="=1">period</ng-template>
+                <ng-template ngPluralCase="other">periods</ng-template>
+              </ng-container>
+            </a> |
             <a href="{{ manageStudentsLink }}">
               {{run.numStudents}}
-              <span [ngPlural]="run.numStudents">
+              <ng-container [ngPlural]="run.numStudents">
                 <ng-template ngPluralCase="=0">students</ng-template>
                 <ng-template ngPluralCase="=1">student</ng-template>
                 <ng-template ngPluralCase="other">students</ng-template>
-              </span>
+              </ng-container>
             </a>
           </div>
           <div>Access Code: {{ run.runCode }}</div>
@@ -31,19 +33,21 @@
   <mat-card-content fxHide fxShow.xs>
     <mat-card-subtitle>
       <div>
-        {{run.periods.length}}
-        <span [ngPlural]="run.periods.length">
-          <ng-template ngPluralCase="=0">periods</ng-template>
-          <ng-template ngPluralCase="=1">period</ng-template>
-          <ng-template ngPluralCase="other">periods</ng-template>
-        </span> |
+        <a [matTooltip]="periodsString()" matTooltipPosition="above">
+          {{run.periods.length}}
+          <ng-container [ngPlural]="run.periods.length">
+            <ng-template ngPluralCase="=0">periods</ng-template>
+            <ng-template ngPluralCase="=1">period</ng-template>
+            <ng-template ngPluralCase="other">periods</ng-template>
+          </ng-container>
+        </a> |
         <a href="{{ manageStudentsLink }}">
           {{run.numStudents}}
-          <span [ngPlural]="run.numStudents">
+          <ng-container [ngPlural]="run.numStudents">
             <ng-template ngPluralCase="=0">students</ng-template>
             <ng-template ngPluralCase="=1">student</ng-template>
             <ng-template ngPluralCase="other">students</ng-template>
-          </span>
+          </ng-container>
         </a>
       </div>
       <div>Access Code: {{ run.runCode }}</div>

@@ -27,7 +27,7 @@
 
   <app-timeline>
     <ng-container *ngFor="let run of filteredRuns; let i=index">
-      <app-timeline-item [active]="!run.endTime">
+      <app-timeline-item [active]="!run.endTime" *ngIf="i < 10 || showAll">
         <app-timeline-item-label>
           <ng-container *ngIf="run.endTime">
             <ng-container *ngIf="runSpansYears(run)">
@@ -51,7 +51,7 @@
           </ng-container>
         </app-timeline-item-label>
         <app-timeline-item-content>
-          <app-teacher-run-list-item [run]="run" *ngIf="i < 10 || showAll"></app-teacher-run-list-item>
+          <app-teacher-run-list-item [run]="run"></app-teacher-run-list-item>
         </app-timeline-item-content>
       </app-timeline-item>
     </ng-container>

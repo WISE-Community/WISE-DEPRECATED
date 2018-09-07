@@ -4,7 +4,7 @@ import { TeacherRunListItemComponent } from './teacher-run-list-item.component';
 import { Project } from "../project";
 import { TeacherService } from "../teacher.service";
 import { TeacherRun } from "../teacher-run";
-import { MatCardModule, MatIconModule } from "@angular/material";
+import { MatCardModule, MatIconModule, MatTooltipModule } from "@angular/material";
 import { MomentModule } from "ngx-moment";
 import { Component, Input } from "@angular/core";
 
@@ -22,7 +22,7 @@ describe('TeacherProjectListItemComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ TeacherRunListItemComponent, RunMenuStubComponent ],
-      imports: [ MatCardModule, MatIconModule, MomentModule ],
+      imports: [ MatCardModule, MatIconModule, MatTooltipModule, MomentModule ],
       providers: [ { provide: TeacherService }]
     })
     .compileComponents();

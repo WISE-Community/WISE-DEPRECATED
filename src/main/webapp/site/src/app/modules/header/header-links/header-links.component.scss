@@ -1,5 +1,7 @@
-.mat-button:not(.mat-icon-button) {
-  text-transform: none;
-  font-size: 16px;
-  background-color: transparent;
+.header__links {
+  .mat-button:not(.mat-icon-button) {
+    text-transform: none;
+    font-size: 16px;
+    background-color: transparent;
+  }
 }

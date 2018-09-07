@@ -41,4 +41,19 @@ export class TeacherRunListItemComponent implements OnInit {
       }
     }
   }
+
+  periodsString() {
+    let string = '';
+    const length = this.run.periods.length;
+    for (let p = 0; p < length; p++) {
+      if (p === 0) {
+        string = 'Class Periods: ';
+      }
+      string += this.run.periods[p];
+      if (p < length - 1) {
+        string += ', ';
+      }
+    }
+    return string;
+  }
 }
