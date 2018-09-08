@@ -40,9 +40,15 @@
 }
 
 .mat-card-actions {
-  .mat-button, .mat-raised-button {
+  .mat-button, .mat-raised-button, .mat-flat-button, .mat-stroked-button {
     &:last-of-type {
       margin-right: 0;
+    }
+
+    .mat-icon {
+      @media (max-width: breakpoint('xs.max')) {
+        display: none;
+      }
     }
   }
 }

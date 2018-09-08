@@ -1,5 +1,5 @@
 <div class="notice" *ngIf="!runs.length && loaded">
-  <p>Hey there! Looks like you haven't used any WISE units in your classes yet.</p>
+  <p>Hey there! Looks like you haven't run any WISE units in your classes yet.</p>
   <p>Select "Browse Units" to find titles to use with your students.</p>
 </div>
 <div class="content-block" *ngIf="runs.length">
@@ -11,6 +11,7 @@
                     fxFlex.xs="0 0 100%"
                     fxFlex.sm="0 0 calc(50%-8px)"
                     [placeholderText]="'Search'"
+                    [value]="searchValue"
                     (update)="searchChanged($event)"></app-search-bar>
     <span fxFlex="1 1 auto" fxHide fxShow.gt-sm></span>
     <app-select-menu [options]="filterOptions"
@@ -21,13 +22,18 @@
                      [viewValueProp]="'label'">
     </app-select-menu>
   </div>
-  <div *ngIf="searchValue && loaded" class="notice">
-    <p>Units found: {{ filteredRuns.length }}</p>
+  <div *ngIf="loaded" class="notice">
+    <p>
+      <ng-container *ngIf="searchValue || filterValue">Units found: </ng-container>
+      <ng-container *ngIf="!searchValue && !filterValue">Total classroom units: </ng-container>
+      {{ filteredRuns.length }}<span class="mat-caption" *ngIf="filteredRuns.length"> (<ng-container *ngIf="filteredScheduledTotal">{{ filteredScheduledTotal }} scheduled, </ng-container>{{ filteredActiveTotal }} active, {{ filteredCompletedTotal }} completed)</span>.
+      <a *ngIf="searchValue || filterValue" href="#" (click)="!!reset()">Reset</a>
+    </p>
   </div>
 
   <app-timeline>
     <ng-container *ngFor="let run of filteredRuns; let i=index">
-      <app-timeline-item [active]="!run.endTime" *ngIf="i < 10 || showAll">
+      <app-timeline-item [active]="runIsActive(run)" *ngIf="i < 10 || showAll">
         <app-timeline-item-label>
           <ng-container *ngIf="run.endTime">
             <ng-container *ngIf="runSpansYears(run)">
@@ -59,6 +65,6 @@
 
   <div class="content-block__actions"
        *ngIf="filteredRuns.length > 10 && !showAll" >
-    <a mat-raised-button color="primary" (click)="showAll = true">Show All</a>
+    <a mat-raised-button color="primary" (click)="showAll = true">Show More</a>
   </div>
 </div>

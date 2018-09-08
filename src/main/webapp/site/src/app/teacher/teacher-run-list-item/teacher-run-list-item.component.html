@@ -3,10 +3,10 @@
     <div mat-card-avatar [style.background-image]="thumbStyle"></div>
     <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
       <div fxLayout="column">
-        <mat-card-title>{{ run.project.name }} <span class="mat-caption">(Run #{{ run.id }})</span></mat-card-title>
+        <mat-card-title [class.secondary-text]="run.endTime">{{ run.project.name }} <span class="mat-caption">(Run #{{ run.id }})</span></mat-card-title>
         <mat-card-subtitle fxHide fxShow.gt-xs>
           <div>
-            <a [matTooltip]="periodsString()" matTooltipPosition="above">
+            <a href="#" [matTooltip]="periodsString()" matTooltipPosition="above">
               {{run.periods.length}}
               <ng-container [ngPlural]="run.periods.length">
                 <ng-template ngPluralCase="=0">periods</ng-template>
@@ -33,7 +33,7 @@
   <mat-card-content fxHide fxShow.xs>
     <mat-card-subtitle>
       <div>
-        <a [matTooltip]="periodsString()" matTooltipPosition="above">
+        <a href="#" [matTooltip]="periodsString()" matTooltipPosition="above">
           {{run.periods.length}}
           <ng-container [ngPlural]="run.periods.length">
             <ng-template ngPluralCase="=0">periods</ng-template>
@@ -53,26 +53,39 @@
       <div>Access Code: {{ run.runCode }}</div>
     </mat-card-subtitle>
   </mat-card-content>
-  <mat-card-actions fxLayout="row" fxLayoutAlign="end center">
+  <mat-card-actions fxLayout="row wrap" fxLayoutAlign="end center">
     <span fxFlex="1 1 auto"></span>
-    <ng-container *ngIf="run.startTime && !run.endTime">
-      <a mat-button>
+    <ng-container *ngIf="isScheduled()">
+      <a mat-button class="secondary-text">
+        <mat-icon class="secondary-text">cancel</mat-icon>
+        Cancel
+      </a>
+      <a mat-button
+         color="accent">
+        <mat-icon class="accent">settings</mat-icon>
+        Settings
+      </a>
+    </ng-container>
+    <ng-container *ngIf="run.startTime && !run.endTime && !isScheduled()">
+      <a mat-button class="secondary-text">
         <mat-icon class="secondary-text">stop</mat-icon>
         End
       </a>
-      <a mat-raised-button
+      <a mat-flat-button
          href="{{ gradeAndManageLink }}"
          color="accent">
+        <mat-icon>build</mat-icon>
         Teacher Tools
       </a>
     </ng-container>
     <ng-container *ngIf="run.endTime">
-      <a mat-button>
+      <a mat-button class="secondary-text">
         <mat-icon class="secondary-text">play_arrow</mat-icon>
         Restart
       </a>
       <a mat-button color="accent" href="{{ gradeAndManageLink }}">
-        Review Work
+        <mat-icon class="accent">history</mat-icon>
+        Review
       </a>
     </ng-container>
   </mat-card-actions>

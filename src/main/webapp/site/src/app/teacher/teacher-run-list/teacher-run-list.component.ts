@@ -12,6 +12,9 @@ export class TeacherRunListComponent implements OnInit {
 
   runs: TeacherRun[] = [];
   filteredRuns: TeacherRun[] = [];
+  filteredActiveTotal: number = 0;
+  filteredCompletedTotal: number = 0;
+  filteredScheduledTotal: number = 0;
   loaded: boolean = false; // whether array of runs has been retrieved from server
   searchValue: string = '';
   periods: string[] = [];
@@ -36,7 +39,7 @@ export class TeacherRunListComponent implements OnInit {
     this.getRuns();
   }
 
-  getRuns() {
+  getRuns(): void {
     this.teacherService.getRuns()
       .subscribe(runs => {
         let teacherRuns: TeacherRun[] = runs as TeacherRun[];
@@ -61,7 +64,7 @@ export class TeacherRunListComponent implements OnInit {
     }
   }
 
-  sortPeriods() {
+  sortPeriods(): void {
     this.periods.sort(this.compareNumbers);
   }
 
@@ -99,17 +102,42 @@ export class TeacherRunListComponent implements OnInit {
     return startDay != endDay;
   }
 
-  performSearchAndFilter() {
-    this.filteredRuns = this.searchValue ? this.performSearch(this.searchValue) : this.runs;
-    this.performFilter(this.filterValue);
+  runIsActive(run: TeacherRun) {
+    if (run.endTime) {
+      return false;
+    }
+    let startTime = new Date(run.startTime).getTime();
+    let now = new Date().getTime();
+    if (startTime <= now) {
+      return true;
+    }
+    return false;
   }
 
-  searchChanged(searchValue: string) {
+  performSearchAndFilter(): void {
+    this.filteredRuns = this.searchValue ? this.performSearch(this.searchValue) : this.runs;
+    this.performFilter(this.filterValue);
+    this.filteredActiveTotal = 0;
+    this.filteredCompletedTotal = 0;
+    this.filteredScheduledTotal = 0;
+    let now: Date = new Date();
+    for (let run of this.filteredRuns) {
+      if (run.endTime) {
+        this.filteredCompletedTotal++;
+      } else if (this.runIsActive(run)) {
+        this.filteredActiveTotal++;
+      } else {
+        this.filteredScheduledTotal++;
+      }
+    }
+  }
+
+  searchChanged(searchValue: string): void {
     this.searchValue = searchValue;
     this.performSearchAndFilter();
   }
 
-  filterChanged(value: string) {
+  filterChanged(value: string): void {
     this.filterValue = value;
     this.performSearchAndFilter();
   }
@@ -139,5 +167,11 @@ export class TeacherRunListComponent implements OnInit {
         }
       })
     );
+  }
+
+  reset(): void {
+    this.searchValue = '';
+    this.filterValue = '';
+    this.performSearchAndFilter();
   }
 }

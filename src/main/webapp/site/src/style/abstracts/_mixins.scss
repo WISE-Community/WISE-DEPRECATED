@@ -11,7 +11,7 @@
   color: map-get($foreground, text);
 
   a {
-    &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item) {
+    &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item):not(.mat-flat-button):not(.mat-stroked-button) {
       color: map-get($colors, primary);
     }
   }
@@ -37,9 +37,13 @@
   }
 
   .mat-button {
-    &:not(.mat-icon-button):not(.mat-raised-button) {
+    &:not(.mat-raised-button):not(.mat-menu-item):not(.mat-flat-button):not(.mat-stroked-button) {
       background-color: map-get($colors, btn-bg);
     }
+  }
+
+  .mat-button, .mat-raised-button, .mat-flat-button, .mat-stroked-button {
+    min-width: 0;
   }
 
   .mat-card {
