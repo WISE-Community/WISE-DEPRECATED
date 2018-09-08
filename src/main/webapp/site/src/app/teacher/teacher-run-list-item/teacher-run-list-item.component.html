@@ -6,7 +6,7 @@
         <mat-card-title [class.secondary-text]="run.endTime">{{ run.project.name }} <span class="mat-caption">(Run #{{ run.id }})</span></mat-card-title>
         <mat-card-subtitle fxHide fxShow.gt-xs>
           <div>
-            <a href="#" [matTooltip]="periodsString()" matTooltipPosition="above">
+            <a [matTooltip]="periodsString()" matTooltipPosition="above">
               {{run.periods.length}}
               <ng-container [ngPlural]="run.periods.length">
                 <ng-template ngPluralCase="=0">periods</ng-template>
@@ -33,7 +33,7 @@
   <mat-card-content fxHide fxShow.xs>
     <mat-card-subtitle>
       <div>
-        <a href="#" [matTooltip]="periodsString()" matTooltipPosition="above">
+        <a [matTooltip]="periodsString()" matTooltipPosition="above">
           {{run.periods.length}}
           <ng-container [ngPlural]="run.periods.length">
             <ng-template ngPluralCase="=0">periods</ng-template>
