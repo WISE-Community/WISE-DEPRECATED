@@ -25,6 +25,8 @@ package org.wise.portal.domain.project.impl;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -39,53 +41,24 @@ public class Projectcode implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
+  @Getter
+  @Setter
   private String projectcode;
 
   private static String SEPARATOR = "-";
 
-  /**
-   * Constructor
-   *
-   * @param projectcode
-   */
   public Projectcode(String projectcode) {
     this.projectcode = StringUtils.strip(projectcode);
   }
 
-  /**
-   * Constructor
-   *
-   * @param runcode
-   * @param periodname
-   */
   public Projectcode(String runcode, String periodname) {
     this.projectcode = StringUtils.strip(runcode + SEPARATOR + periodname);
   }
 
-  /**
-   * @return the projectcode
-   */
-  public String getProjectcode() {
-    return projectcode;
-  }
-
-  /**
-   * @param projectcode the projectcode to set
-   */
-  public void setProjectcode(String projectcode) {
-    this.projectcode = StringUtils.strip(projectcode);
-  }
-
-  /**
-   * @return the runcode
-   */
   public String getRuncode() {
     return StringUtils.substringBefore(projectcode, SEPARATOR);
   }
 
-  /**
-   * @return the periodname
-   */
   public String getRunPeriod() {
     return StringUtils.substringAfter(projectcode, SEPARATOR);
   }
@@ -109,9 +82,6 @@ public class Projectcode implements Serializable {
     return false;
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -122,10 +92,7 @@ public class Projectcode implements Serializable {
   }
 
   /**
-   * Two Projectcodes are considered equal when their runcode and
-   * periodname match
-   *
-   * @see java.lang.Object#equals(java.lang.Object)
+   * Two Projectcodes are considered equal when their runcode and periodname match
    */
   @Override
   public boolean equals(Object obj) {

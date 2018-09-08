@@ -32,7 +32,7 @@ class ComponentController {
                 if (imageObject != null) {
 
                     // create a notebook item with the image populated into it
-                    this.NotebookService.addNewItem($eventArgs, imageObject);
+                    this.NotebookService.addNote($eventArgs, imageObject);
                 }
             }
         });
@@ -75,31 +75,19 @@ class ComponentController {
 
         if ($scope.mode === 'authoring') {
             $scope.authoringComponentContent = authoringComponentContent;
-            $scope.authoringComponentContentJSONString = angular.toJson($scope.authoringComponentContent, 4);
             $scope.nodeAuthoringController = $scope.$parent.nodeAuthoringController;
+            $scope.componentTemplatePath = this.NodeService.getComponentAuthoringTemplatePath(componentContent.type);
+        } else {
+            $scope.componentTemplatePath = this.NodeService.getComponentTemplatePath(componentContent.type);
         }
 
         $scope.componentContent = componentContent;
         $scope.componentState = this.componentState;
-        $scope.componentTemplatePath = this.NodeService.getComponentTemplatePath(componentContent.type);
         $scope.nodeId = this.nodeId;
         $scope.workgroupId = this.workgroupId;
         $scope.teacherWorkgroupId = this.teacherWorkgroupId;
         $scope.type = componentContent.type;
         $scope.nodeController = $scope.$parent.nodeController;
-
-        if (this.originalNodeId != null && this.originalComponentId != null) {
-            /*
-             * set the original node id and component id. this is used
-             * when we are showing previous work from another component.
-             */
-            $scope.originalNodeId = this.originalNodeId;
-            $scope.originalComponentId = this.originalComponentId;
-
-            // get the original component
-            var originalComponentContent = this.ProjectService.getComponentByNodeIdAndComponentId(this.originalNodeId, this.originalComponentId);
-            $scope.originalComponentContent = originalComponentContent;
-        }
 
         var componentHTML =
             `<div class="component__wrapper">
@@ -122,8 +110,6 @@ const Component = {
         componentState: '@',
         mode: '@',
         nodeId: '@',
-        originalNodeId: '@',
-        originalComponentId: '@',
         teacherWorkgroupId: '@',
         workgroupId: '@'
     },

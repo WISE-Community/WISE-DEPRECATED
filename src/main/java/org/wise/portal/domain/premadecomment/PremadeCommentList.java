@@ -28,21 +28,14 @@ import java.util.Set;
 import org.wise.portal.domain.user.User;
 
 /**
- * An Owned object with the added information of a List of
- * PremadeComments
+ * An Owned object with the added information of a List of PremadeComments
  *
  * @author Patrick Lawler
  */
 public interface PremadeCommentList extends Comparable {
 
-  /**
-   * @return a list of PremadeComments
-   */
   Set<PremadeComment> getPremadeCommentList();
 
-  /**
-   * @param premadeCommentList that sets the List of PremadeComments
-   */
   void setPremadeCommentList(Set<PremadeComment> premadeCommentList);
 
   int compareTo(Object premadeCommentList);

@@ -20,6 +20,7 @@ var VLEPage = function () {
     this.accountMenu = element(by.cssContainingText('.md-open-menu-container', 'Preview Team'));
     this.notificationButton = element(by.id('viewNotificationsButton'));
     this.notificationMenu = element(by.cssContainingText('.md-open-menu-container', 'Alerts'));
+    this.toggleConstraintsButton = element(by.id('toggleConstraints'));
     this.exitButton = element(by.id('goHomeButton'));
     this.logOutButton = element(by.id('signOutButton'));
   }
@@ -58,6 +59,11 @@ var VLEPage = function () {
     key: 'closeNode',
     value: function closeNode() {
       this.closeNodeButton.click();
+    }
+  }, {
+    key: 'toggleConstraints',
+    value: function toggleConstraints() {
+      this.toggleConstraintsButton.click();
     }
   }]);
 

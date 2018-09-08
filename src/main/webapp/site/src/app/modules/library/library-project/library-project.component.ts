@@ -3,6 +3,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { LibraryProject } from "../libraryProject";
 import { NGSSStandards } from "../ngssStandards";
+import { LibraryService } from "../../../services/library.service";
+import { CreateRunDialogComponent } from "../../../teacher/create-run-dialog/create-run-dialog.component";
+import { UserService } from "../../../services/user.service";
+import { User } from "../../../domain/user";
+import { Project } from "../../../teacher/project";
 
 @Component({
   selector: 'app-library-project',
@@ -81,8 +86,14 @@ export class LibraryProjectComponent implements OnInit {
 
 export class LibraryProjectDetailsComponent implements OnInit {
 
-  constructor(public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: any) {
+  isTeacher: boolean = false;
+
+  constructor(public dialog: MatDialog,
+              public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              private libraryService: LibraryService,
+              private userService: UserService) {
+    this.isTeacher = userService.isTeacher();
   }
 
   ngOnInit() {
@@ -90,5 +101,26 @@ export class LibraryProjectDetailsComponent implements OnInit {
 
   onClose(): void {
     this.dialogRef.close();
+  }
+
+  copyProject() {
+    this.libraryService.copyProject(this.data.project.id).subscribe((newProject: Project) => {
+      const newLibraryProject: LibraryProject = new LibraryProject();
+      newLibraryProject.id = newProject.id;
+      newLibraryProject.name = newProject.name;
+      newLibraryProject.metadata = newProject.metadata;
+      newLibraryProject.visible = true;
+      this.libraryService.addPersonalLibraryProject(newLibraryProject);
+      this.dialogRef.afterClosed().subscribe(() => {
+        scrollTo(0, 0);
+      });
+      this.dialog.closeAll();
+    });
+  }
+
+  runProject() {
+    this.dialog.open(CreateRunDialogComponent, {
+      data: this.data
+    });
   }
 }

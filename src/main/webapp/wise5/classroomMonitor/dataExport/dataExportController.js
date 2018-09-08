@@ -12,8 +12,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var DataExportController = function () {
     function DataExportController($injector, $rootScope, $scope, $state, AnnotationService, ConfigService, FileSaver, MatchService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService) {
-        var _this = this;
-
         _classCallCheck(this, DataExportController);
 
         this.$injector = $injector;
@@ -32,20 +30,16 @@ var DataExportController = function () {
         this.exportStepSelectionType = "exportAllSteps";
         this.exportType = null; // type of export: [latestWork, allWork, events]
         this.componentTypeToComponentService = {};
+        this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
 
         this.availableComponentDataExports = ['Match'];
 
         this.setDefaultExportSettings();
-
-        // get the project
-        // create the mapping of node id to order for the import project
-        this.ProjectService.retrieveProject().then(function (projectJSON) {
-            _this.project = projectJSON;
-            // calculate the node order of the import project
-            var nodeOrderOfProject = _this.ProjectService.getNodeOrderOfProject(_this.project);
-            _this.projectIdToOrder = nodeOrderOfProject.idToOrder;
-            _this.projectItems = nodeOrderOfProject.nodes;
-        });
+        this.project = this.ProjectService.project;
+        // create the mapping of node id to order
+        var nodeOrderOfProject = this.ProjectService.getNodeOrderOfProject(this.project);
+        this.projectIdToOrder = nodeOrderOfProject.idToOrder;
+        this.projectItems = nodeOrderOfProject.nodes;
 
         // save event when data export view is displayed
         var context = "ClassroomMonitor",
@@ -58,39 +52,14 @@ var DataExportController = function () {
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
+    /**
+     * Export all or latest work for this run in CSV format
+     * latestWork, allWork, and events will call this function with a null exportType.
+     */
+
+
     _createClass(DataExportController, [{
-        key: 'hello',
-        value: function hello() {
-            ocpu.seturl("//128.32.189.240:81/ocpu/user/wiser/library/wiser/R");
-            // perform the request
-            var req = ocpu.call("hello", {
-                "name": "Hiroki"
-            }, function (session) {
-                session.getStdout(function (returnedCSVString) {
-                    var csvBlob = new Blob([returnedCSVString], { type: 'text/csv' });
-                    var csvUrl = URL.createObjectURL(csvBlob);
-                    var a = document.createElement("a");
-                    document.body.appendChild(a);
-                    a.style = "display: none";
-                    a.href = csvUrl;
-                    a.download = "export_" + runId + ".csv";
-                    a.click();
-
-                    // timeout is required for FF.
-                    window.setTimeout(function () {
-                        URL.revokeObjectURL(csvUrl); // tell browser to release URL reference
-                    }, 3000);
-                });
-            });
-        }
-    }, {
         key: 'export',
-
-
-        /**
-         * Export all or latest work for this run in CSV format
-         * latestWork, allWork, and events will call this function with a null exportType.
-         */
         value: function _export() {
             var exportType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -157,7 +126,7 @@ var DataExportController = function () {
     }, {
         key: 'exportStudentWork',
         value: function exportStudentWork(exportType) {
-            var _this2 = this;
+            var _this = this;
 
             var selectedNodes = null;
             var selectedNodesMap = null;
@@ -188,10 +157,10 @@ var DataExportController = function () {
             this.TeacherDataService.getExport("allStudentWork", selectedNodes).then(function (result) {
 
                 // get the workgroups in the class
-                var workgroups = _this2.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+                var workgroups = _this.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
 
                 // get the run id
-                var runId = _this2.ConfigService.getRunId();
+                var runId = _this.ConfigService.getRunId();
 
                 // the rows that will show up in the export
                 var rows = [];
@@ -203,7 +172,7 @@ var DataExportController = function () {
                 var columnNameToNumber = {};
 
                 // an array of column names
-                var columnNames = ["#", "Workgroup ID", "WISE ID 1", "WISE ID 2", "WISE ID 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Student Work ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Teacher Score Server Timestamp", "Teacher Score Client Timestamp", "Teacher Score", "Max Teacher Score", "Teacher Comment Server Timestamp", "Teacher Comment Client Timestamp", "Teacher Comment", "Auto Score Server Timestamp", "Auto Score Client Timestamp", "Auto Score", "Max Auto Score", "Auto Comment Server Timestamp", "Auto Comment Client Timestamp", "Auto Comment", "Step Title", "Component Type", "Component Prompt", "Student Data", "Component Revision Counter", "Is Correct", "Is Submit", "Submit Count", "Response"];
+                var columnNames = ["#", "Workgroup ID", "WISE ID 1", "Student Name 1", "WISE ID 2", "Student Name 2", "WISE ID 3", "Student Name 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Student Work ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Teacher Score Server Timestamp", "Teacher Score Client Timestamp", "Teacher Score", "Max Teacher Score", "Teacher Comment Server Timestamp", "Teacher Comment Client Timestamp", "Teacher Comment", "Auto Score Server Timestamp", "Auto Score Client Timestamp", "Auto Score", "Max Auto Score", "Auto Comment Server Timestamp", "Auto Comment Client Timestamp", "Auto Comment", "Step Title", "Component Type", "Component Prompt", "Student Data", "Component Revision Counter", "Is Correct", "Is Submit", "Submit Count", "Response"];
 
                 var headerRow = [];
 
@@ -238,13 +207,8 @@ var DataExportController = function () {
                             // get the workgroup information
                             var workgroupId = workgroup.workgroupId;
                             var periodName = workgroup.periodName;
-                            var userInfo = _this2.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-
-                            // get the WISE IDs
-                            var wiseIds = _this2.ConfigService.getWISEIds(workgroupId);
-                            var wiseId1 = wiseIds[0];
-                            var wiseId2 = wiseIds[1];
-                            var wiseId3 = wiseIds[2];
+                            var userInfo = _this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+                            var extractedWISEIDsAndStudentNames = _this.extractWISEIDsAndStudentNames(userInfo.users);
 
                             /*
                              * a mapping from component to component revision counter.
@@ -257,9 +221,9 @@ var DataExportController = function () {
                             var componentStates = [];
 
                             if (exportType === "allStudentWork") {
-                                componentStates = _this2.TeacherDataService.getComponentStatesByWorkgroupId(workgroupId);
+                                componentStates = _this.TeacherDataService.getComponentStatesByWorkgroupId(workgroupId);
                             } else if (exportType === "latestStudentWork") {
-                                componentStates = _this2.TeacherDataService.getLatestComponentStatesByWorkgroupId(workgroupId);
+                                componentStates = _this.TeacherDataService.getLatestComponentStatesByWorkgroupId(workgroupId);
                             }
 
                             if (componentStates != null) {
@@ -274,9 +238,9 @@ var DataExportController = function () {
 
                                         var exportRow = true;
 
-                                        if (_this2.exportStepSelectionType === "exportSelectSteps") {
+                                        if (_this.exportStepSelectionType === "exportSelectSteps") {
                                             // we are only exporting selected steps
-                                            if (!_this2.isComponentSelected(selectedNodesMap, componentState.nodeId, componentState.componentId)) {
+                                            if (!_this.isComponentSelected(selectedNodesMap, componentState.nodeId, componentState.componentId)) {
                                                 // the component state is for a step that is not selected
                                                 exportRow = false;
                                             }
@@ -285,7 +249,7 @@ var DataExportController = function () {
                                         if (exportRow) {
 
                                             // create the export row
-                                            var row = _this2.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, componentState);
+                                            var row = _this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, extractedWISEIDsAndStudentNames['wiseId1'], extractedWISEIDsAndStudentNames['wiseId2'], extractedWISEIDsAndStudentNames['wiseId3'], extractedWISEIDsAndStudentNames['studentName1'], extractedWISEIDsAndStudentNames['studentName2'], extractedWISEIDsAndStudentNames['studentName3'], periodName, componentRevisionCounter, componentState);
 
                                             // add the row to the rows
                                             rows.push(row);
@@ -310,8 +274,29 @@ var DataExportController = function () {
                 }
 
                 // generate the csv file and have the client download it
-                _this2.generateCSVFile(rows, fileName);
+                _this.generateCSVFile(rows, fileName);
             });
+        }
+
+        /**
+         * @param users An array of user objects. Each user object contains an id and name.
+         * @returns {object} An object that contains key/value pairs. The key is wiseIdX
+         * or studentNameX where X is an integer. The values are the corresponding actual
+         * values of wise id and student name.
+         */
+
+    }, {
+        key: 'extractWISEIDsAndStudentNames',
+        value: function extractWISEIDsAndStudentNames(users) {
+            var extractedWISEIDsAndStudentNames = {};
+            for (var u = 0; u < users.length; u++) {
+                var user = users[u];
+                extractedWISEIDsAndStudentNames['wiseId' + (u + 1)] = user.id;
+                if (this.canViewStudentNames) {
+                    extractedWISEIDsAndStudentNames['studentName' + (u + 1)] = user.name;
+                }
+            }
+            return extractedWISEIDsAndStudentNames;
         }
 
         /**
@@ -331,7 +316,7 @@ var DataExportController = function () {
 
     }, {
         key: 'createStudentWorkExportRow',
-        value: function createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, componentState) {
+        value: function createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, componentRevisionCounter, componentState) {
 
             // create the row and prepopulate the elements with an empty string
             var row = new Array(columnNames.length);
@@ -347,15 +332,22 @@ var DataExportController = function () {
                 // set the WISE ID 1
                 row[columnNameToNumber["WISE ID 1"]] = wiseId1;
             }
-
+            if (studentName1 != null && this.includeStudentNames) {
+                row[columnNameToNumber["Student Name 1"]] = studentName1;
+            }
             if (wiseId2 != null) {
                 // set the WISE ID 2
                 row[columnNameToNumber["WISE ID 2"]] = wiseId2;
             }
-
+            if (studentName2 != null && this.includeStudentNames) {
+                row[columnNameToNumber["Student Name 2"]] = studentName2;
+            }
             if (wiseId3 != null) {
                 // set the WISE ID 3
                 row[columnNameToNumber["WISE ID 3"]] = wiseId3;
+            }
+            if (studentName3 != null && this.includeStudentNames) {
+                row[columnNameToNumber["Student Name 3"]] = studentName3;
             }
 
             row[columnNameToNumber["Class Period"]] = periodName;
@@ -610,25 +602,7 @@ var DataExportController = function () {
                     }
                 }
             }
-
-            // get the component type
-            var componentType = componentState.componentType;
-
-            if (componentType != null) {
-                // get the component type service
-                var componentService = this.$injector.get(componentType + 'Service');
-
-                if (componentService != null && componentService.getStudentDataString != null) {
-
-                    // get the student data string from the component state
-                    var studentDataString = componentService.getStudentDataString(componentState);
-
-                    if (studentDataString != null) {
-                        // set the response
-                        row[columnNameToNumber["Response"]] = studentDataString;
-                    }
-                }
-            }
+            row[columnNameToNumber["Response"]] = this.getStudentDataString(componentState);
 
             var revisionCounter = this.getRevisionCounter(componentRevisionCounter, componentState.nodeId, componentState.componentId);
 
@@ -671,6 +645,36 @@ var DataExportController = function () {
             }
 
             return row;
+        }
+
+        /**
+         * Get the plain text representation of the student work.
+         * @param componentState {object} A component state that contains the student work.
+         * @returns {string} A string that can be placed in a csv cell.
+         */
+
+    }, {
+        key: 'getStudentDataString',
+        value: function getStudentDataString(componentState) {
+            /*
+             * In Excel, if there is a cell with a long string and the cell to the
+             * right of it is empty, the long string will overlap onto cells to the
+             * right until the string ends or hits a cell that contains a value.
+             * To prevent this from occurring, we will default empty cell values to
+             * a string with a space in it. This way all values of cells are limited
+             * to displaying only in its own cell.
+             */
+            var studentDataString = " ";
+            var componentType = componentState.componentType;
+            var componentService = this.getComponentService(componentType);
+            if (componentService != null && componentService.getStudentDataString != null) {
+                studentDataString = componentService.getStudentDataString(componentState);
+                studentDataString = this.UtilService.removeHTMLTags(studentDataString);
+                studentDataString = studentDataString.replace(/"/g, '""');
+            } else {
+                studentDataString = componentState.studentData;
+            }
+            return studentDataString;
         }
 
         /**
@@ -879,7 +883,7 @@ var DataExportController = function () {
     }, {
         key: 'exportEvents',
         value: function exportEvents() {
-            var _this3 = this;
+            var _this2 = this;
 
             var selectedNodes = null;
             var selectedNodesMap = null;
@@ -910,10 +914,10 @@ var DataExportController = function () {
             this.TeacherDataService.getExport("events", selectedNodes).then(function (result) {
 
                 // get the workgroups in the class
-                var workgroups = _this3.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+                var workgroups = _this2.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
 
                 // get the run id
-                var runId = _this3.ConfigService.getRunId();
+                var runId = _this2.ConfigService.getRunId();
 
                 // the rows that will show up in the export
                 var rows = [];
@@ -925,7 +929,7 @@ var DataExportController = function () {
                 var columnNameToNumber = {};
 
                 // an array of column names
-                var columnNames = ["#", "Workgroup ID", "WISE ID 1", "WISE ID 2", "WISE ID 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Event ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Group Event Counter", "Context", "Category", "Event", "Event Data", "Response"];
+                var columnNames = ["#", "Workgroup ID", "WISE ID 1", "Student Name 1", "WISE ID 2", "Student Name 2", "WISE ID 3", "Student Name 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Event ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Group Event Counter", "Context", "Category", "Event", "Event Data", "Response"];
 
                 var headerRow = [];
 
@@ -960,13 +964,8 @@ var DataExportController = function () {
                             // get the workgroup information
                             var workgroupId = workgroup.workgroupId;
                             var periodName = workgroup.periodName;
-                            var userInfo = _this3.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-
-                            // get the WISE IDs
-                            var wiseIds = _this3.ConfigService.getWISEIds(workgroupId);
-                            var wiseId1 = wiseIds[0];
-                            var wiseId2 = wiseIds[1];
-                            var wiseId3 = wiseIds[2];
+                            var userInfo = _this2.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+                            var extractedWISEIDsAndStudentNames = _this2.extractWISEIDsAndStudentNames(userInfo.users);
 
                             /*
                              * a mapping from component to component event count.
@@ -978,7 +977,7 @@ var DataExportController = function () {
                             // get the events for the workgroup
                             var events = [];
 
-                            events = _this3.TeacherDataService.getEventsByWorkgroupId(workgroupId);
+                            events = _this2.TeacherDataService.getEventsByWorkgroupId(workgroupId);
 
                             if (events != null) {
 
@@ -992,20 +991,20 @@ var DataExportController = function () {
 
                                         var exportRow = true;
 
-                                        if (_this3.exportStepSelectionType === "exportSelectSteps") {
+                                        if (_this2.exportStepSelectionType === "exportSelectSteps") {
                                             // we are only exporting selected steps
 
                                             if (event.nodeId != null && event.componentId != null) {
                                                 // this is a component event
 
-                                                if (!_this3.isComponentSelected(selectedNodesMap, event.nodeId, event.componentId)) {
+                                                if (!_this2.isComponentSelected(selectedNodesMap, event.nodeId, event.componentId)) {
                                                     // the event is for a component that is not selected
                                                     exportRow = false;
                                                 }
                                             } else if (event.nodeId != null) {
                                                 // this is a node event
 
-                                                if (!_this3.isNodeSelected(selectedNodesMap, event.nodeId)) {
+                                                if (!_this2.isNodeSelected(selectedNodesMap, event.nodeId)) {
                                                     // the event is for a node that is not selected
                                                     exportRow = false;
                                                 }
@@ -1018,7 +1017,7 @@ var DataExportController = function () {
                                         if (exportRow) {
 
                                             // create the export row
-                                            var row = _this3.createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentEventCount, event);
+                                            var row = _this2.createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, extractedWISEIDsAndStudentNames['wiseId1'], extractedWISEIDsAndStudentNames['wiseId2'], extractedWISEIDsAndStudentNames['wiseId3'], extractedWISEIDsAndStudentNames['studentName1'], extractedWISEIDsAndStudentNames['studentName2'], extractedWISEIDsAndStudentNames['studentName3'], periodName, componentEventCount, event);
 
                                             // add the row to the rows
                                             rows.push(row);
@@ -1036,7 +1035,7 @@ var DataExportController = function () {
                 var fileName = runId + "_events.csv";
 
                 // generate the csv file and have the client download it
-                _this3.generateCSVFile(rows, fileName);
+                _this2.generateCSVFile(rows, fileName);
             });
         }
 
@@ -1057,7 +1056,7 @@ var DataExportController = function () {
 
     }, {
         key: 'createEventExportRow',
-        value: function createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentEventCount, event) {
+        value: function createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, componentEventCount, event) {
 
             // create the row and prepopulate the elements with an empty string
             var row = new Array(columnNames.length);
@@ -1073,15 +1072,22 @@ var DataExportController = function () {
                 // set the WISE ID 1
                 row[columnNameToNumber["WISE ID 1"]] = wiseId1;
             }
-
+            if (studentName1 != null && this.includeStudentNames) {
+                row[columnNameToNumber["Student Name 1"]] = studentName1;
+            }
             if (wiseId2 != null) {
                 // set the WISE ID 2
                 row[columnNameToNumber["WISE ID 2"]] = wiseId2;
             }
-
+            if (studentName2 != null && this.includeStudentNames) {
+                row[columnNameToNumber["Student Name 2"]] = studentName2;
+            }
             if (wiseId3 != null) {
                 // set the WISE ID 3
                 row[columnNameToNumber["WISE ID 3"]] = wiseId3;
+            }
+            if (studentName3 != null && this.includeStudentNames) {
+                row[columnNameToNumber["Student Name 3"]] = studentName3;
             }
 
             row[columnNameToNumber["Class Period"]] = periodName;
@@ -1241,10 +1247,10 @@ var DataExportController = function () {
     }, {
         key: 'exportNotebookItems',
         value: function exportNotebookItems(exportType) {
-            var _this4 = this;
+            var _this3 = this;
 
             this.TeacherDataService.getExport(exportType).then(function (result) {
-                var runId = _this4.ConfigService.getRunId();
+                var runId = _this3.ConfigService.getRunId();
                 var exportFilename = "";
 
                 var csvString = ""; // resulting csv string
@@ -1297,9 +1303,9 @@ var DataExportController = function () {
                         // for all non-header rows, fill in step numbers, titles, and component part numbers.
                         var nodeId = row[COLUMN_INDEX_NODE_ID];
                         var componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                        row[COLUMN_INDEX_STEP_NUMBER] = _this4.ProjectService.getNodePositionById(nodeId);
-                        row[COLUMN_INDEX_STEP_TITLE] = _this4.ProjectService.getNodeTitleByNodeId(nodeId);
-                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this4.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
+                        row[COLUMN_INDEX_STEP_NUMBER] = _this3.ProjectService.getNodePositionById(nodeId);
+                        row[COLUMN_INDEX_STEP_TITLE] = _this3.ProjectService.getNodeTitleByNodeId(nodeId);
+                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this3.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
                         var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
                         var wiseIDsArray = wiseIDs.split(",");
                         row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
@@ -1311,14 +1317,14 @@ var DataExportController = function () {
                         if (row[COLUMN_INDEX_TYPE] === "report") {
                             if (studentDataJSONCell.content != null) {
                                 //row[COLUMN_INDEX_STUDENT_RESPONSE] = this.escapeContent(studentDataJSONCell.content);
-                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this4.UtilService.removeHTMLTags(studentDataJSONCell.content);
+                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this3.UtilService.removeHTMLTags(studentDataJSONCell.content);
                             } else {
                                 row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
                             }
                         } else if (row[COLUMN_INDEX_TYPE] === "note") {
                             if (studentDataJSONCell.text != null) {
                                 //row[COLUMN_INDEX_STUDENT_RESPONSE] = this.escapeContent(studentDataJSONCell.text);
-                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this4.UtilService.removeHTMLTags(studentDataJSONCell.text);
+                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this3.UtilService.removeHTMLTags(studentDataJSONCell.text);
                             } else {
                                 row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
                             }
@@ -1355,10 +1361,10 @@ var DataExportController = function () {
     }, {
         key: 'exportNotifications',
         value: function exportNotifications() {
-            var _this5 = this;
+            var _this4 = this;
 
             this.TeacherDataService.getExport("notifications").then(function (result) {
-                var runId = _this5.ConfigService.getRunId();
+                var runId = _this4.ConfigService.getRunId();
                 var exportFilename = "";
 
                 var csvString = ""; // resulting csv string
@@ -1388,9 +1394,9 @@ var DataExportController = function () {
                         // for all non-header rows, fill in step numbers, titles, and component part numbers.
                         var nodeId = row[COLUMN_INDEX_NODE_ID];
                         var componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                        row[COLUMN_INDEX_STEP_NUMBER] = _this5.ProjectService.getNodePositionById(nodeId);
-                        row[COLUMN_INDEX_STEP_TITLE] = _this5.ProjectService.getNodeTitleByNodeId(nodeId);
-                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this5.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
+                        row[COLUMN_INDEX_STEP_NUMBER] = _this4.ProjectService.getNodePositionById(nodeId);
+                        row[COLUMN_INDEX_STEP_TITLE] = _this4.ProjectService.getNodeTitleByNodeId(nodeId);
+                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this4.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
                         var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
                         var wiseIDsArray = wiseIDs.split(",");
                         row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
@@ -1717,10 +1723,9 @@ var DataExportController = function () {
     }, {
         key: 'exportOneWorkgroupPerRow',
         value: function exportOneWorkgroupPerRow() {
-            var _this6 = this;
+            var _this5 = this;
 
-            // get the steps that were selected
-            var selectedNodes = this.getSelectedNodesToExport();
+            var selectedNodes = null;
 
             /*
              * holds the mappings from nodeid or nodeid-componentid to a boolean
@@ -1732,6 +1737,9 @@ var DataExportController = function () {
             var selectedNodesMap = null;
 
             if (this.exportStepSelectionType === "exportSelectSteps") {
+                // get the steps that were selected
+                selectedNodes = this.getSelectedNodesToExport();
+
                 if (selectedNodes == null || selectedNodes.length == 0) {
                     /*
                      * the user did not select any steps to export so we will not
@@ -1755,38 +1763,38 @@ var DataExportController = function () {
                 var rows = [];
 
                 // get the project id
-                var projectId = _this6.ConfigService.getProjectId();
+                var projectId = _this5.ConfigService.getProjectId();
 
                 // get the project title
-                var projectTitle = _this6.ProjectService.getProjectTitle();
+                var projectTitle = _this5.ProjectService.getProjectTitle();
 
                 // get the run id
-                var runId = _this6.ConfigService.getRunId();
+                var runId = _this5.ConfigService.getRunId();
 
                 var startDate = "";
 
                 var endDate = "";
 
                 // get the column ids that we will use for this export
-                var columnIds = _this6.getColumnIdsForOneWorkgroupPerRow(selectedNodesMap);
+                var columnIds = _this5.getColumnIdsForOneWorkgroupPerRow(selectedNodesMap);
 
                 // get all the step node ids
-                var nodeIds = _this6.ProjectService.getFlattenedProjectAsNodeIds();
+                var nodeIds = _this5.ProjectService.getFlattenedProjectAsNodeIds();
 
                 // the headers for the description row
-                var descriptionRowHeaders = ["Workgroup ID", "WISE ID 1", "WISE ID 2", "WISE ID 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date"];
+                var descriptionRowHeaders = ["Workgroup ID", "WISE ID 1", "Student Name 1", "WISE ID 2", "Student Name 2", "WISE ID 3", "Student Name 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date"];
 
                 // generate the mapping from column id to column index
-                var columnIdToColumnIndex = _this6.getColumnIdToColumnIndex(columnIds, descriptionRowHeaders);
+                var columnIdToColumnIndex = _this5.getColumnIdToColumnIndex(columnIds, descriptionRowHeaders);
 
                 // generate the top rows that contain the header cells
-                var topRows = _this6.getOneWorkgroupPerRowTopRows(columnIds, columnIdToColumnIndex, descriptionRowHeaders);
+                var topRows = _this5.getOneWorkgroupPerRowTopRows(columnIds, columnIdToColumnIndex, descriptionRowHeaders);
 
                 // add the top rows
                 rows = rows.concat(topRows);
 
                 // get the workgroups in the class
-                var workgroups = _this6.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+                var workgroups = _this5.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
 
                 // loop through all the workgroups
                 for (var w = 0; w < workgroups.length; w++) {
@@ -1809,26 +1817,35 @@ var DataExportController = function () {
                         // get the workgroup information
                         var workgroupId = workgroup.workgroupId;
                         var periodName = workgroup.periodName;
-                        var userInfo = _this6.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-
-                        // get the WISE IDs
-                        var wiseIds = _this6.ConfigService.getWISEIds(workgroupId);
-                        var wiseId1 = wiseIds[0];
-                        var wiseId2 = wiseIds[1];
-                        var wiseId3 = wiseIds[2];
+                        var userInfo = _this5.ConfigService.getUserInfoByWorkgroupId(workgroupId);
 
                         workgroupRow[columnIdToColumnIndex["Workgroup ID"]] = workgroupId;
+
+                        var extractedWISEIDsAndStudentNames = _this5.extractWISEIDsAndStudentNames(userInfo.users);
+                        var wiseId1 = extractedWISEIDsAndStudentNames["wiseId1"];
+                        var wiseId2 = extractedWISEIDsAndStudentNames["wiseId2"];
+                        var wiseId3 = extractedWISEIDsAndStudentNames["wiseId3"];
+                        var studentName1 = extractedWISEIDsAndStudentNames["studentName1"];
+                        var studentName2 = extractedWISEIDsAndStudentNames["studentName2"];
+                        var studentName3 = extractedWISEIDsAndStudentNames["studentName3"];
 
                         if (wiseId1 != null) {
                             workgroupRow[columnIdToColumnIndex["WISE ID 1"]] = wiseId1;
                         }
-
+                        if (studentName1 != null && _this5.includeStudentNames) {
+                            workgroupRow[columnIdToColumnIndex["Student Name 1"]] = studentName1;
+                        }
                         if (wiseId2 != null) {
                             workgroupRow[columnIdToColumnIndex["WISE ID 2"]] = wiseId2;
                         }
-
+                        if (studentName2 != null && _this5.includeStudentNames) {
+                            workgroupRow[columnIdToColumnIndex["Student Name 2"]] = studentName2;
+                        }
                         if (wiseId3 != null) {
                             workgroupRow[columnIdToColumnIndex["WISE ID 3"]] = wiseId3;
+                        }
+                        if (studentName3 != null && _this5.includeStudentNames) {
+                            workgroupRow[columnIdToColumnIndex["Student Name 3"]] = studentName3;
                         }
 
                         workgroupRow[columnIdToColumnIndex["Class Period"]] = periodName;
@@ -1843,7 +1860,7 @@ var DataExportController = function () {
                             var nodeId = nodeIds[n];
 
                             // get all the components in the step
-                            var components = _this6.ProjectService.getComponentsByNodeId(nodeId);
+                            var components = _this5.ProjectService.getComponentsByNodeId(nodeId);
 
                             if (components != null) {
 
@@ -1854,52 +1871,27 @@ var DataExportController = function () {
                                     if (component != null) {
                                         var componentId = component.id;
 
-                                        if (_this6.exportComponent(selectedNodesMap, nodeId, componentId)) {
+                                        if (_this5.exportComponent(selectedNodesMap, nodeId, componentId)) {
                                             // the researcher wants to export this component
 
                                             // get the column prefix
                                             var columnIdPrefix = nodeId + "-" + componentId;
 
                                             // get the latest component state
-                                            var componentState = _this6.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId);
+                                            var componentState = _this5.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId);
 
                                             if (componentState != null) {
-
-                                                // get the component service for the given component type
-                                                var componentService = _this6.getComponentService(componentState.componentType);
-
-                                                var studentDataString = " ";
-
-                                                if (componentService != null && componentService.getStudentDataString != null) {
-                                                    // there is a getStudentDataString function for this component type
-
-                                                    // get the student data string
-                                                    studentDataString = componentService.getStudentDataString(componentState);
-
-                                                    // get the student data string with the html tags removed
-                                                    studentDataString = _this6.UtilService.removeHTMLTags(studentDataString);
-
-                                                    // replace " with ""
-                                                    studentDataString = studentDataString.replace(/"/g, '""');
-                                                } else {
-                                                    /*
-                                                     * there is a getStudentDataString function for this component type
-                                                     * so we will just show the JSON string
-                                                     */
-                                                    studentDataString = componentState.studentData;
-                                                }
-
-                                                if (_this6.includeStudentWorkIds) {
+                                                if (_this5.includeStudentWorkIds) {
                                                     // we are exporting student work ids
                                                     workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = componentState.id;
                                                 }
 
-                                                if (_this6.includeStudentWorkTimestamps) {
+                                                if (_this5.includeStudentWorkTimestamps) {
                                                     // we are exporting student work timestamps
 
                                                     if (componentState.serverSaveTime != null) {
                                                         // get the time stamp as a pretty printed date time string
-                                                        var formattedDateTime = _this6.UtilService.convertMillisecondsToFormattedDateTime(componentState.serverSaveTime);
+                                                        var formattedDateTime = _this5.UtilService.convertMillisecondsToFormattedDateTime(componentState.serverSaveTime);
 
                                                         // set the time stamp string e.g. Wed Apr 06 2016 9:05:38 AM
                                                         workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkTimestamp"]] = formattedDateTime;
@@ -1907,13 +1899,13 @@ var DataExportController = function () {
                                                 }
 
                                                 // set the student data string
-                                                workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = studentDataString;
+                                                workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = _this5.getStudentDataString(componentState);
 
-                                                if (_this6.includeScores || _this6.includeComments) {
+                                                if (_this5.includeScores || _this5.includeComments) {
                                                     // we are exporting scores or comments
 
                                                     // get the latest score and comment annotation
-                                                    var latestComponentAnnotations = _this6.AnnotationService.getLatestComponentAnnotations(nodeId, componentId, workgroupId);
+                                                    var latestComponentAnnotations = _this5.AnnotationService.getLatestComponentAnnotations(nodeId, componentId, workgroupId);
 
                                                     if (latestComponentAnnotations != null) {
                                                         var scoreAnnotation = latestComponentAnnotations.score;
@@ -1921,17 +1913,17 @@ var DataExportController = function () {
 
                                                         if (scoreAnnotation != null) {
 
-                                                            if (_this6.includeScoreTimestamps) {
+                                                            if (_this5.includeScoreTimestamps) {
                                                                 // we are exporting score timestamps
 
                                                                 // get the score timestamp as a pretty printed date time
-                                                                var scoreTimestamp = _this6.UtilService.convertMillisecondsToFormattedDateTime(scoreAnnotation.serverSaveTime);
+                                                                var scoreTimestamp = _this5.UtilService.convertMillisecondsToFormattedDateTime(scoreAnnotation.serverSaveTime);
 
                                                                 // set the score timestamp
                                                                 workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-scoreTimestamp"]] = scoreTimestamp;
                                                             }
 
-                                                            if (_this6.includeScores) {
+                                                            if (_this5.includeScores) {
                                                                 // we are exporting scores
 
                                                                 if (scoreAnnotation.data != null && scoreAnnotation.data.value != null) {
@@ -1946,17 +1938,17 @@ var DataExportController = function () {
 
                                                         if (commentAnnotation != null) {
 
-                                                            if (_this6.includeCommentTimestamps) {
+                                                            if (_this5.includeCommentTimestamps) {
                                                                 // we are exporting comment timestamps
 
                                                                 // get the comment timestamp as a pretty printed date time
-                                                                var commentTimestamp = _this6.UtilService.convertMillisecondsToFormattedDateTime(commentAnnotation.serverSaveTime);
+                                                                var commentTimestamp = _this5.UtilService.convertMillisecondsToFormattedDateTime(commentAnnotation.serverSaveTime);
 
                                                                 // set the comment timestamp
                                                                 workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-commentTimestamp"]] = commentTimestamp;
                                                             }
 
-                                                            if (_this6.includeComments) {
+                                                            if (_this5.includeComments) {
                                                                 // we are exporting comments
 
                                                                 if (commentAnnotation.data != null && commentAnnotation.data.value != null) {
@@ -1975,10 +1967,10 @@ var DataExportController = function () {
                                 }
                             }
 
-                            if (_this6.exportNode(selectedNodesMap, nodeId)) {
+                            if (_this5.exportNode(selectedNodesMap, nodeId)) {
                                 // the researcher wants to export this step
 
-                                if (_this6.ProjectService.isBranchPoint(nodeId)) {
+                                if (_this5.ProjectService.isBranchPoint(nodeId)) {
                                     // this step is a branch point
 
                                     var toNodeId = null;
@@ -1990,7 +1982,7 @@ var DataExportController = function () {
                                      * get the latest branchPathTaken event for this
                                      * step
                                      */
-                                    var latestBranchPathTakenEvent = _this6.TeacherDataService.getLatestEventByWorkgroupIdAndNodeIdAndType(workgroupId, nodeId, eventType);
+                                    var latestBranchPathTakenEvent = _this5.TeacherDataService.getLatestEventByWorkgroupIdAndNodeIdAndType(workgroupId, nodeId, eventType);
 
                                     if (latestBranchPathTakenEvent != null && latestBranchPathTakenEvent.data != null && latestBranchPathTakenEvent.data.toNodeId != null) {
 
@@ -1998,10 +1990,10 @@ var DataExportController = function () {
                                         toNodeId = latestBranchPathTakenEvent.data.toNodeId;
 
                                         // get the title of the step
-                                        stepTitle = _this6.ProjectService.getNodePositionAndTitleByNodeId(toNodeId);
+                                        stepTitle = _this5.ProjectService.getNodePositionAndTitleByNodeId(toNodeId);
                                     }
 
-                                    if (_this6.includeBranchPathTakenNodeId) {
+                                    if (_this5.includeBranchPathTakenNodeId) {
                                         // we are exporting the branch path taken node ids
 
                                         if (toNodeId != null) {
@@ -2011,10 +2003,10 @@ var DataExportController = function () {
                                         }
                                     }
 
-                                    if (_this6.includeBranchPathTaken) {
+                                    if (_this5.includeBranchPathTaken) {
                                         // we are exporting branch path taken
 
-                                        var branchLetter = _this6.ProjectService.getBranchLetter(toNodeId);
+                                        var branchLetter = _this5.ProjectService.getBranchLetter(toNodeId);
 
                                         if (stepTitle != null) {
                                             workgroupRow[columnIdToColumnIndex[nodeId + "-branchPathTaken"]] = branchLetter;
@@ -2023,7 +2015,7 @@ var DataExportController = function () {
                                         }
                                     }
 
-                                    if (_this6.includeBranchPathTakenStepTitle) {
+                                    if (_this5.includeBranchPathTakenStepTitle) {
                                         // we are exporting branch path taken step titles
 
                                         if (stepTitle != null) {
@@ -2045,7 +2037,7 @@ var DataExportController = function () {
                 var fileName = runId + "_one_workgroup_per_row.csv";
 
                 // generate the csv file and have the client download it
-                _this6.generateCSVFile(rows, fileName);
+                _this5.generateCSVFile(rows, fileName);
             });
         }
 
@@ -2665,6 +2657,7 @@ var DataExportController = function () {
             // settings for one workgroup per row export
             this.includeStudentWork = true;
             this.includeStudentWorkIds = true;
+            this.includeStudentNames = true;
             this.includeStudentWorkTimestamps = true;
             this.includeBranchPathTaken = true;
             this.includeBranchPathTakenStepTitle = true;
@@ -2692,6 +2685,11 @@ var DataExportController = function () {
             // settings for one workgroup per row export
             this.includeStudentWork = true;
             this.includeStudentWorkIds = false;
+            if (this.canViewStudentNames) {
+                this.includeStudentNames = true;
+            } else {
+                this.includeStudentNames = false;
+            }
             this.includeStudentWorkTimestamps = false;
             this.includeBranchPathTaken = true;
             this.includeBranchPathTakenStepTitle = false;
@@ -2705,6 +2703,12 @@ var DataExportController = function () {
             // settings for raw data export
             this.includeAnnotations = false;
             this.includeEvents = false;
+
+            /*
+             * remove checked fields that may have been accidentally saved by the
+             * authoring tool or grading tool
+             */
+            this.ProjectService.cleanupBeforeSave();
         }
 
         /**
@@ -2725,10 +2729,9 @@ var DataExportController = function () {
     }, {
         key: 'exportRawData',
         value: function exportRawData() {
-            var _this7 = this;
+            var _this6 = this;
 
-            // get the steps that were selected
-            var selectedNodes = this.getSelectedNodesToExport();
+            var selectedNodes = null;
 
             /*
              * holds the mappings from nodeid or nodeid-componentid to a boolean
@@ -2740,6 +2743,9 @@ var DataExportController = function () {
             var selectedNodesMap = null;
 
             if (this.exportStepSelectionType === "exportSelectSteps") {
+                // get the steps that were selected
+                var selectedNodes = this.getSelectedNodesToExport();
+
                 if (selectedNodes == null || selectedNodes.length == 0) {
                     /*
                      * the user did not select any steps to export so we will not
@@ -2760,35 +2766,34 @@ var DataExportController = function () {
             this.TeacherDataService.getExport("rawData", selectedNodes).then(function (result) {
 
                 // get the run id
-                var runId = _this7.ConfigService.getRunId();
+                var runId = _this6.ConfigService.getRunId();
 
                 var data = {};
 
                 // get the workgroups in the class
-                var workgroups = _this7.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+                var workgroups = _this6.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
 
                 // make a copy of the workgroups array to prevent referencing issues
-                workgroups = _this7.UtilService.makeCopyOfJSONObject(workgroups);
+                workgroups = _this6.UtilService.makeCopyOfJSONObject(workgroups);
 
                 // loop through all the workgroups
                 for (var w = 0; w < workgroups.length; w++) {
                     var workgroup = workgroups[w];
 
                     if (workgroup != null) {
-
-                        // remove the user name and display name fields
-                        delete workgroup.userName;
-                        delete workgroup.displayNames;
+                        if (!_this6.includeStudentNames) {
+                            _this6.removeNamesFromWorkgroup(workgroup);
+                        }
 
                         // get the workgroup id
                         var workgroupId = workgroup.workgroupId;
 
-                        if (_this7.includeStudentWork) {
+                        if (_this6.includeStudentWork) {
                             // the user wants to export the student work
                             workgroup.studentWork = [];
 
                             // get all the component states for the workgroup
-                            var componentStates = _this7.TeacherDataService.getComponentStatesByWorkgroupId(workgroupId);
+                            var componentStates = _this6.TeacherDataService.getComponentStatesByWorkgroupId(workgroupId);
 
                             if (componentStates != null) {
 
@@ -2799,7 +2804,7 @@ var DataExportController = function () {
                                     if (componentState != null) {
 
                                         // get the composite id. example 'node2-b34gaf0ug2'
-                                        var compositeId = _this7.getCompositeId(componentState);
+                                        var compositeId = _this6.getCompositeId(componentState);
 
                                         if (selectedNodesMap == null || compositeId != null && selectedNodesMap[compositeId] == true) {
                                             /*
@@ -2813,12 +2818,12 @@ var DataExportController = function () {
                             }
                         }
 
-                        if (_this7.includeAnnotations) {
+                        if (_this6.includeAnnotations) {
                             // the user wants to export the annotations
                             workgroup.annotations = [];
 
                             // get all the annotations for the workgroup
-                            var annotations = _this7.TeacherDataService.getAnnotationsToWorkgroupId(workgroupId);
+                            var annotations = _this6.TeacherDataService.getAnnotationsToWorkgroupId(workgroupId);
 
                             if (annotations != null) {
 
@@ -2829,7 +2834,7 @@ var DataExportController = function () {
                                     if (annotation != null) {
 
                                         // get the composite id. example 'node2-b34gaf0ug2'
-                                        var compositeId = _this7.getCompositeId(annotation);
+                                        var compositeId = _this6.getCompositeId(annotation);
 
                                         if (selectedNodesMap == null || compositeId != null && selectedNodesMap[compositeId] == true) {
                                             /*
@@ -2843,14 +2848,14 @@ var DataExportController = function () {
                             }
                         }
 
-                        if (_this7.includeEvents) {
+                        if (_this6.includeEvents) {
                             // the user wants to export the events
                             workgroup.events = [];
 
                             var events = [];
 
                             // get all the events for the workgroup
-                            var events = _this7.TeacherDataService.getEventsByWorkgroupId(workgroupId);
+                            var events = _this6.TeacherDataService.getEventsByWorkgroupId(workgroupId);
 
                             if (events != null) {
 
@@ -2861,7 +2866,7 @@ var DataExportController = function () {
                                     if (event != null) {
 
                                         // get the composite id. example 'node2-b34gaf0ug2'
-                                        var compositeId = _this7.getCompositeId(event);
+                                        var compositeId = _this6.getCompositeId(event);
 
                                         if (selectedNodesMap == null || compositeId != null && selectedNodesMap[compositeId] == true) {
                                             /*
@@ -2887,8 +2892,40 @@ var DataExportController = function () {
                 var blob = new Blob([dataJSONString]);
 
                 // generate a file and download it to the user's computer
-                _this7.FileSaver.saveAs(blob, runId + "_raw_data.json");
+                _this6.FileSaver.saveAs(blob, runId + "_raw_data.json");
             });
+        }
+    }, {
+        key: 'removeNamesFromWorkgroup',
+        value: function removeNamesFromWorkgroup(workgroup) {
+            delete workgroup.userName;
+            delete workgroup.displayNames;
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = workgroup.users[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var user = _step.value;
+
+                    delete user.name;
+                    delete user.firstName;
+                    delete user.lastName;
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
         }
 
         /**
@@ -2927,29 +2964,29 @@ var DataExportController = function () {
     }, {
         key: 'canExportComponentDataType',
         value: function canExportComponentDataType(componentType) {
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
 
             try {
-                for (var _iterator = this.availableComponentDataExports[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var tempComponentType = _step.value;
+                for (var _iterator2 = this.availableComponentDataExports[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var tempComponentType = _step2.value;
 
                     if (componentType == tempComponentType) {
                         return true;
                     }
                 }
             } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
                     }
                 } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
                     }
                 }
             }
@@ -2994,7 +3031,7 @@ var DataExportController = function () {
     }, {
         key: 'exportMatchComponent',
         value: function exportMatchComponent(nodeId, component) {
-            var _this8 = this;
+            var _this7 = this;
 
             // request the student data from the server and then generate the export
             this.TeacherDataService.getExport("allStudentWork").then(function (result) {
@@ -3008,24 +3045,24 @@ var DataExportController = function () {
                 var rows = [];
 
                 // add the header row to the rows
-                rows.push(_this8.generateMatchComponentHeaderRow(component, columnNames, columnNameToNumber));
+                rows.push(_this7.generateMatchComponentHeaderRow(component, columnNames, columnNameToNumber));
 
                 // add the student work rows
-                rows = rows.concat(_this8.generateMatchComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
+                rows = rows.concat(_this7.generateMatchComponentWorkRows(component, columnNames, columnNameToNumber, nodeId));
 
                 // generate the file name of the csv file
                 var fileName = "";
-                var runId = _this8.ConfigService.getRunId();
-                var stepNumber = _this8.ProjectService.getNodePositionById(nodeId);
-                var componentNumber = _this8.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, component.id) + 1;
-                if (_this8.workSelectionType === 'exportAllWork') {
+                var runId = _this7.ConfigService.getRunId();
+                var stepNumber = _this7.ProjectService.getNodePositionById(nodeId);
+                var componentNumber = _this7.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, component.id) + 1;
+                if (_this7.workSelectionType === 'exportAllWork') {
                     fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_all_match_work.csv';
-                } else if (_this8.workSelectionType === 'exportLatestWork') {
+                } else if (_this7.workSelectionType === 'exportLatestWork') {
                     fileName = runId + '_step_' + stepNumber + '_component_' + componentNumber + '_latest_match_work.csv';
                 }
 
                 // generate the csv file and have the client download it
-                _this8.generateCSVFile(rows, fileName);
+                _this7.generateCSVFile(rows, fileName);
             });
         }
 
@@ -3043,7 +3080,7 @@ var DataExportController = function () {
         value: function populateMatchColumnNames(component, columnNames, columnNameToNumber) {
 
             // an array of column names
-            var defaultMatchColumnNames = ["#", "Workgroup ID", "WISE ID 1", "WISE ID 2", "WISE ID 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Student Work ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Student Data", "Component Revision Counter", "Is Submit", "Submit Count"];
+            var defaultMatchColumnNames = ["#", "Workgroup ID", "WISE ID 1", "Student Name 1", "WISE ID 2", "Student Name 2", "WISE ID 3", "Student Name 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Student Work ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Student Data", "Component Revision Counter", "Is Submit", "Submit Count"];
 
             /*
              * Add the default column names that contain the information about the
@@ -3061,13 +3098,13 @@ var DataExportController = function () {
             }
 
             // Add the header cells for the choices
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
 
             try {
-                for (var _iterator2 = component.choices[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var _choice = _step2.value;
+                for (var _iterator3 = component.choices[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var _choice = _step3.value;
 
                     columnNameToNumber[_choice.id] = columnNames.length;
                     columnNames.push(_choice.value);
@@ -3075,43 +3112,43 @@ var DataExportController = function () {
 
                 // Add the header cells for the choice correctness
             } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                        _iterator2.return();
+                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                        _iterator3.return();
                     }
                 } finally {
-                    if (_didIteratorError2) {
-                        throw _iteratorError2;
+                    if (_didIteratorError3) {
+                        throw _iteratorError3;
                     }
                 }
             }
 
             if (this.includeCorrectnessColumns && this.MatchService.hasCorrectAnswer(component)) {
-                var _iteratorNormalCompletion3 = true;
-                var _didIteratorError3 = false;
-                var _iteratorError3 = undefined;
+                var _iteratorNormalCompletion4 = true;
+                var _didIteratorError4 = false;
+                var _iteratorError4 = undefined;
 
                 try {
-                    for (var _iterator3 = component.choices[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                        var choice = _step3.value;
+                    for (var _iterator4 = component.choices[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                        var choice = _step4.value;
 
                         columnNameToNumber[choice.id + '-boolean'] = columnNames.length;
                         columnNames.push(choice.value);
                     }
                 } catch (err) {
-                    _didIteratorError3 = true;
-                    _iteratorError3 = err;
+                    _didIteratorError4 = true;
+                    _iteratorError4 = err;
                 } finally {
                     try {
-                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                            _iterator3.return();
+                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                            _iterator4.return();
                         }
                     } finally {
-                        if (_didIteratorError3) {
-                            throw _iteratorError3;
+                        if (_didIteratorError4) {
+                            throw _iteratorError4;
                         }
                     }
                 }
@@ -3136,28 +3173,28 @@ var DataExportController = function () {
             var headerRow = [];
 
             // generate the header row by looping through all the column names
-            var _iteratorNormalCompletion4 = true;
-            var _didIteratorError4 = false;
-            var _iteratorError4 = undefined;
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
 
             try {
-                for (var _iterator4 = columnNames[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                    var columnName = _step4.value;
+                for (var _iterator5 = columnNames[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                    var columnName = _step5.value;
 
                     // add the column name to the header row
                     headerRow.push(columnName);
                 }
             } catch (err) {
-                _didIteratorError4 = true;
-                _iteratorError4 = err;
+                _didIteratorError5 = true;
+                _iteratorError5 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                        _iterator4.return();
+                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                        _iterator5.return();
                     }
                 } finally {
-                    if (_didIteratorError4) {
-                        throw _iteratorError4;
+                    if (_didIteratorError5) {
+                        throw _iteratorError5;
                     }
                 }
             }
@@ -3187,29 +3224,29 @@ var DataExportController = function () {
 
             var rowCounter = 1;
 
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
 
             try {
-                for (var _iterator5 = workgroups[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                    var workgroup = _step5.value;
+                for (var _iterator6 = workgroups[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                    var workgroup = _step6.value;
 
                     var rowsForWorkgroup = this.generateMatchComponentWorkRowsForWorkgroup(component, workgroup, columnNames, columnNameToNumber, nodeId, componentId, rowCounter);
                     rows = rows.concat(rowsForWorkgroup);
                     rowCounter += rowsForWorkgroup.length;
                 }
             } catch (err) {
-                _didIteratorError5 = true;
-                _iteratorError5 = err;
+                _didIteratorError6 = true;
+                _iteratorError6 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                        _iterator5.return();
+                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                        _iterator6.return();
                     }
                 } finally {
-                    if (_didIteratorError5) {
-                        throw _iteratorError5;
+                    if (_didIteratorError6) {
+                        throw _iteratorError6;
                     }
                 }
             }
@@ -3237,12 +3274,7 @@ var DataExportController = function () {
             var workgroupId = workgroup.workgroupId;
             var periodName = workgroup.periodName;
             var userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-
-            // get the WISE IDs
-            var wiseIds = this.ConfigService.getWISEIds(workgroupId);
-            var wiseId1 = wiseIds[0];
-            var wiseId2 = wiseIds[1];
-            var wiseId3 = wiseIds[2];
+            var extractedWISEIDsAndStudentNames = this.extractWISEIDsAndStudentNames(userInfo.users);
 
             /*
              * a mapping from component to component revision counter.
@@ -3270,7 +3302,7 @@ var DataExportController = function () {
 
                     if (exportRow) {
                         // add the row to the rows that will show up in the export
-                        rows.push(this.generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState));
+                        rows.push(this.generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, extractedWISEIDsAndStudentNames['wiseId1'], extractedWISEIDsAndStudentNames['wiseId2'], extractedWISEIDsAndStudentNames['wiseId3'], extractedWISEIDsAndStudentNames['studentName1'], extractedWISEIDsAndStudentNames['studentName2'], extractedWISEIDsAndStudentNames['studentName3'], periodName, componentRevisionCounter, matchComponentState));
                         rowCounter++;
                     } else {
                         /*
@@ -3303,31 +3335,31 @@ var DataExportController = function () {
 
     }, {
         key: 'generateMatchComponentWorkRow',
-        value: function generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState) {
+        value: function generateMatchComponentWorkRow(component, columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, componentRevisionCounter, matchComponentState) {
 
             /*
              * Populate the cells in the row that contain the information about the
              * student, project, run, step, and component.
              */
-            var row = this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, matchComponentState);
+            var row = this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, componentRevisionCounter, matchComponentState);
 
-            var _iteratorNormalCompletion6 = true;
-            var _didIteratorError6 = false;
-            var _iteratorError6 = undefined;
+            var _iteratorNormalCompletion7 = true;
+            var _didIteratorError7 = false;
+            var _iteratorError7 = undefined;
 
             try {
-                for (var _iterator6 = matchComponentState.studentData.buckets[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                    var bucket = _step6.value;
+                for (var _iterator7 = matchComponentState.studentData.buckets[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                    var bucket = _step7.value;
 
 
                     // loop through all the choices that the student put in this bucket
-                    var _iteratorNormalCompletion7 = true;
-                    var _didIteratorError7 = false;
-                    var _iteratorError7 = undefined;
+                    var _iteratorNormalCompletion8 = true;
+                    var _didIteratorError8 = false;
+                    var _iteratorError8 = undefined;
 
                     try {
-                        for (var _iterator7 = bucket.items[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-                            var item = _step7.value;
+                        for (var _iterator8 = bucket.items[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                            var item = _step8.value;
 
                             // put the bucket name in the column corresponding to the choice
                             row[columnNameToNumber[item.id]] = bucket.value;
@@ -3337,31 +3369,31 @@ var DataExportController = function () {
                             }
                         }
                     } catch (err) {
-                        _didIteratorError7 = true;
-                        _iteratorError7 = err;
+                        _didIteratorError8 = true;
+                        _iteratorError8 = err;
                     } finally {
                         try {
-                            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                                _iterator7.return();
+                            if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                                _iterator8.return();
                             }
                         } finally {
-                            if (_didIteratorError7) {
-                                throw _iteratorError7;
+                            if (_didIteratorError8) {
+                                throw _iteratorError8;
                             }
                         }
                     }
                 }
             } catch (err) {
-                _didIteratorError6 = true;
-                _iteratorError6 = err;
+                _didIteratorError7 = true;
+                _iteratorError7 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                        _iterator6.return();
+                    if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                        _iterator7.return();
                     }
                 } finally {
-                    if (_didIteratorError6) {
-                        throw _iteratorError6;
+                    if (_didIteratorError7) {
+                        throw _iteratorError7;
                     }
                 }
             }

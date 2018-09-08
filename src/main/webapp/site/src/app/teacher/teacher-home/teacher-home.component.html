@@ -3,13 +3,13 @@
 </header>
 
 <section>
-  <mat-tab-group>
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex">
     <mat-tab label="Class Schedule">
       <app-teacher-run-list></app-teacher-run-list>
     </mat-tab>
     <mat-tab label="Browse WISE Units">
       <div class="content-block">
-        <app-library></app-library>
+        <app-teacher-project-library></app-teacher-project-library>
       </div>
     </mat-tab>
   </mat-tab-group>

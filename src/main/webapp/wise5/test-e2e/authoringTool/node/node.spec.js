@@ -104,7 +104,7 @@ describe('WISE Authoring Tool Step View', function () {
     page.clickInsertButton(1);
     common.shouldBeDisplayed(element(by.cssContainingText('span', '1. Open Response')));
     common.shouldBeDisplayed(element(by.cssContainingText('span', '2. Multiple Choice')));
-    page.clickTheComponentCheckbox(1);
+    page.clickTheComponentCheckbox(2);
     page.clickDeleteComponentButton();
 
     /*
@@ -115,7 +115,7 @@ describe('WISE Authoring Tool Step View', function () {
     browser.wait(EC.alertIsPresent(), 3000);
     browser.switchTo().alert().accept();
 
-    common.shouldBeDisplayed(element(by.cssContainingText('span', '1. Multiple Choice')));
+    common.shouldBeDisplayed(element(by.cssContainingText('span', '1. Open Response')));
   });
 });
 //# sourceMappingURL=node.spec.js.map

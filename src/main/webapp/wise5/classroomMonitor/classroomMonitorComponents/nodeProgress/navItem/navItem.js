@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NavItemController = function () {
-    function NavItemController($element, $filter, $rootScope, $scope, $state, AnnotationService, ConfigService, NodeService, NotificationService, ProjectService, StudentDataService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
+    function NavItemController($element, $filter, $rootScope, $scope, $state, AnnotationService, ConfigService, NodeService, NotificationService, PlanningService, ProjectService, StudentDataService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, NavItemController);
@@ -23,6 +23,7 @@ var NavItemController = function () {
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.NotificationService = NotificationService;
+        this.PlanningService = PlanningService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.StudentStatusService = StudentStatusService;
@@ -59,7 +60,7 @@ var NavItemController = function () {
         this.isWorkgroupOnlineOnNode = false;
 
         // whether this node is a planning group
-        this.isPlanning = this.ProjectService.isPlanning(this.nodeId);
+        this.isPlanning = this.PlanningService.isPlanning(this.nodeId);
 
         // get the node icon
         this.icon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
@@ -77,7 +78,7 @@ var NavItemController = function () {
              * planning is enabled for this group so we will get the available
              * planning nodes that can be used
              */
-            this.availablePlanningNodes = this.ProjectService.getAvailablePlanningNodes(this.nodeId);
+            this.availablePlanningNodes = this.PlanningService.getAvailablePlanningNodes(this.nodeId);
         } else if (this.isPlanningNode) {
             /* this is an available planning node for its parent group, so we
              * need to calculate the total number of times it has been added
@@ -176,13 +177,6 @@ var NavItemController = function () {
             _this.setWorkgroupsOnNodeData();
             _this.getAlertNotifications();
         });
-
-        // listen for the currentWorkgroupChanged event
-        /*this.$rootScope.$on('currentWorkgroupChanged', (event, args) => {
-            this.currentWorkgroup = args.currentWorkgroup;
-            this.setCurrentNodeStatus();
-            this.getAlertNotifications();
-        });*/
     }
 
     _createClass(NavItemController, [{
@@ -445,7 +439,7 @@ var NavItemController = function () {
     return NavItemController;
 }();
 
-NavItemController.$inject = ['$element', '$filter', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
+NavItemController.$inject = ['$element', '$filter', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'NodeService', 'NotificationService', 'PlanningService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 var NavItem = {
     bindings: {

@@ -7,6 +7,7 @@ class StudentDataService {
       $rootScope,
       AnnotationService,
       ConfigService,
+      PlanningService,
       ProjectService,
       UtilService) {
     this.$filter = $filter;
@@ -16,6 +17,7 @@ class StudentDataService {
     this.$rootScope = $rootScope;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
+    this.PlanningService = PlanningService;
     this.ProjectService = ProjectService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
@@ -251,7 +253,7 @@ class StudentDataService {
 
   updateNodeStatuses() {
     let nodes = this.ProjectService.getNodes();
-    let planningNodes = this.ProjectService.getPlanningNodes();
+    let planningNodes = this.PlanningService.getPlanningNodes();
     const groups = this.ProjectService.getGroups();
 
     if (nodes != null) {
@@ -425,64 +427,6 @@ class StudentDataService {
   };
 
   /**
-   * Evaluate the guided navigation constraint
-   * @param node the node
-   * @param constraintForNode the constraint object
-   * @returns whether the node can be visited or not
-   */
-  evaluateGuidedNavigationConstraint(node, constraintForNode) {
-    let result = false;
-    if (node != null) {
-      const nodeId = node.id;
-
-      if (this.isNodeVisited(nodeId)) {
-        // the node has been visited before so it should be clickable
-        result = true;
-      } else {
-        // get all the nodes that have been visited
-        const visitedNodes = this.getVisitedNodesHistory();
-
-        let transitionsToNodeId = [];
-
-        for (let visitedNodeId of visitedNodes) {
-          // get the transitions from the visited node to the node status node
-          const transitions = this.ProjectService.getTransitionsByFromAndToNodeId(visitedNodeId, nodeId);
-
-          // TODO: check if the transition can be used by the student
-
-          // concat the node ids
-          transitionsToNodeId = transitionsToNodeId.concat(transitions);
-        }
-
-        if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
-          // there is a transition between the current node and the node status node
-
-          /*
-           * there are transitions from the current node to the node status node so
-           * the node status node is clickable
-           */
-          result = true;
-        } else {
-          /*
-           * there is no transition between the visited nodes and the node status node
-           * so we will set the node to be not clickable
-           */
-          result = false;
-        }
-
-        if (this.ProjectService.isStartNode(node)) {
-          /*
-           * the node is the start node of the project or a start node of a group
-           * so we will make it clickable
-           */
-          result = true;
-        }
-      }
-    }
-    return result;
-  };
-
-  /**
    * Evaluate the node constraint
    * @param node the node
    * @param constraintForNode the constraint object
@@ -563,6 +507,8 @@ class StudentDataService {
         result = this.evaluateScoreCriteria(criteria);
       } else if (functionName === 'usedXSubmits') {
         result = this.evaluateUsedXSubmitsCriteria(criteria);
+      } else if (functionName === 'wroteXNumberOfWords') {
+        result = this.evaluateNumberOfWordsWrittenCriteria(criteria);
       } else if (functionName === '') {
 
       }
@@ -953,6 +899,34 @@ class StudentDataService {
 
           if (manualSubmitCounter >= requiredSubmitCount || highestSubmitCounter >= requiredSubmitCount) {
             // the student submitted the required number of times
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Evaluate the number of words written criteria.
+   * @param criteria The criteria to evaluate.
+   * @return A boolean value whether the student wrote the required number of
+   * words.
+   */
+  evaluateNumberOfWordsWrittenCriteria(criteria) {
+    if (criteria != null && criteria.params != null) {
+      const params = criteria.params;
+      const nodeId = params.nodeId;
+      const componentId = params.componentId;
+      const requiredNumberOfWords = params.requiredNumberOfWords;
+
+      if (nodeId != null && componentId != null) {
+        const componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+        if (componentState != null) {
+          const studentData = componentState.studentData;
+          const response = studentData.response;
+          const numberOfWords = this.UtilService.wordCount(response);
+          if (numberOfWords >= requiredNumberOfWords) {
             return true;
           }
         }
@@ -1517,6 +1491,27 @@ class StudentDataService {
   };
 
   /**
+   * Get the latest component state that was a submit
+   * for the given node id and component id.
+   * @param nodeId the node id
+   * @param componentId the component id
+   * @return the latest component state that was a submit with the matching
+   * node id and component id or null if none are found
+   */
+  getLatestSubmitComponentState(nodeId, componentId) {
+    const componentStates = this.studentData.componentStates;
+    for (let c = componentStates.length - 1; c >= 0; c--) {
+      const componentState = componentStates[c];
+      if (componentState.nodeId === nodeId &&
+          componentState.componentId === componentId &&
+          componentState.isSubmit) {
+        return componentState;
+      }
+    }
+    return null;
+  }
+
+  /**
    * Get the student work by specified student work id, which can be a ComponentState or NodeState
    * @param studentWorkId the student work id
    * @return an StudentWork or null
@@ -1879,24 +1874,11 @@ class StudentDataService {
           if (component != null) {
             const componentId = component.id;
             const componentType = component.type;
-            const showPreviousWorkNodeId = component.showPreviousWorkNodeId;
-            const showPreviousWorkComponentId = component.showPreviousWorkComponentId;
 
             let tempNodeId = nodeId;
             let tempNode = node;
             let tempComponentId = componentId;
             let tempComponent = component;
-
-            if (showPreviousWorkNodeId != null && showPreviousWorkComponentId != null) {
-              /*
-               * this is a show previous work component so we will check if the
-               * previous component was completed
-               */
-              tempNodeId = showPreviousWorkNodeId;
-              tempComponentId = showPreviousWorkComponentId;
-              tempNode = this.ProjectService.getNodeById(tempNodeId);
-              tempComponent = this.ProjectService.getComponentByNodeIdAndComponentId(tempNodeId, tempComponentId);
-            }
 
             if (componentType != null) {
               try {
@@ -2141,7 +2123,7 @@ class StudentDataService {
       for (let nodeState of nodeStates) {
         if (nodeState != null) {
           let nodeStateNodeId = nodeState.nodeId;
-          if (this.ProjectService.isPlanning(nodeStateNodeId) && nodeState.studentData != null) {
+          if (this.PlanningService.isPlanning(nodeStateNodeId) && nodeState.studentData != null) {
             let nodes = nodeState.studentData.nodes;
             for (let node of nodes) {
               let nodeId = node.id;
@@ -2426,6 +2408,32 @@ class StudentDataService {
   }
 
   /**
+   * Get a student work from any student.
+   * @param id The student work id.
+   */
+  getStudentWorkById(id) {
+    const studentDataURL = this.ConfigService.getConfigParam('studentDataURL');
+    const httpParams = {};
+    httpParams.method = 'GET';
+    httpParams.url = studentDataURL;
+    const params = {};
+    params.runId = this.ConfigService.getRunId();
+    params.id = id;
+    params.getStudentWork = true;
+    params.getEvents = false;
+    params.getAnnotations = false;
+    params.onlyGetLatest = true;
+    httpParams.params = params;
+    return this.$http(httpParams).then((result) => {
+      const resultData = result.data;
+      if (resultData != null && resultData.studentWorkList.length > 0) {
+        return resultData.studentWorkList[0];
+      }
+      return null;
+    });
+  }
+
+  /**
    * Get the max possible score for the project
    * @returns the sum of the max scores for all the nodes in the project visible
    * to the current workgroup or null if none of the visible components has max scores.
@@ -2462,6 +2470,7 @@ StudentDataService.$inject = [
   '$rootScope',
   'AnnotationService',
   'ConfigService',
+  'PlanningService',
   'ProjectService',
   'UtilService'
 ];

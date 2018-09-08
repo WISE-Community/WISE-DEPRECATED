@@ -242,11 +242,9 @@ var TeacherDataService = function () {
      */
     value: function retrieveStudentDataByNodeId(nodeId) {
       var nodeIdsAndComponentIds = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
-      var showPreviousWorkNodeIdsAndComponentIds = this.ProjectService.getShowPreviousWorkNodeIdsAndComponentIds(nodeId);
 
       var components = [];
       components = components.concat(nodeIdsAndComponentIds);
-      components = components.concat(showPreviousWorkNodeIdsAndComponentIds);
 
       var params = {};
       params.periodId = null;

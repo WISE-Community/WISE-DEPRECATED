@@ -116,8 +116,8 @@ public class WISE5AuthorProjectController {
       // do nothing
     }
 
-    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-    modelMap.put("configURL", wiseBaseURL + "/authorConfig");
+    String contextPath = request.getContextPath();
+    modelMap.put("configURL", contextPath + "/authorConfig");
     return "author";
   }
 
@@ -343,7 +343,7 @@ public class WISE5AuthorProjectController {
 
     JSONObject config = getDefaultAuthoringConfigJsonObject(request);
     try {
-      String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+      String contextPath = request.getContextPath();
       String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
       String rawProjectUrl = project.getModulePath();
       String projectURL = curriculumBaseWWW + rawProjectUrl;
@@ -358,16 +358,16 @@ public class WISE5AuthorProjectController {
       config.put("projectId", projectId);
       config.put("projectURL", projectURL);
       config.put("projectAssetTotalSizeMax", projectAssetTotalSizeMax);
-      config.put("projectAssetURL", wiseBaseURL + "/project/asset/" + projectId);
+      config.put("projectAssetURL", contextPath + "/project/asset/" + projectId);
       config.put("projectBaseURL", projectBaseURL);
-      config.put("previewProjectURL", wiseBaseURL + "/project/" + projectId);
-      config.put("cRaterRequestURL", wiseBaseURL + "/cRater");
-      config.put("importStepsURL", wiseBaseURL + "/project/importSteps/" + projectId);
+      config.put("previewProjectURL", contextPath + "/project/" + projectId);
+      config.put("cRaterRequestURL", contextPath + "/cRater");
+      config.put("importStepsURL", contextPath + "/project/importSteps/" + projectId);
       config.put("mode", "author");
 
       if (projectService.canAuthorProject(project, ControllerUtil.getSignedInUser())) {
-        config.put("saveProjectURL", wiseBaseURL + "/project/save/" + projectId);
-        config.put("commitProjectURL", wiseBaseURL + "/project/commit/" + projectId);
+        config.put("saveProjectURL", contextPath + "/project/save/" + projectId);
+        config.put("commitProjectURL", contextPath + "/project/commit/" + projectId);
       }
 
       User user = ControllerUtil.getSignedInUser();
@@ -392,18 +392,18 @@ public class WISE5AuthorProjectController {
     User user = ControllerUtil.getSignedInUser();
     try {
       String contextPath = request.getContextPath();
-      String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
       config.put("contextPath", contextPath);
-      config.put("copyProjectURL", wiseBaseURL + "/project/copy");
-      config.put("mainHomePageURL", wiseBaseURL);
-      config.put("renewSessionURL", wiseBaseURL + "/session/renew");
-      config.put("sessionLogOutURL", wiseBaseURL + "/logout");
-      config.put("registerNewProjectURL", wiseBaseURL + "/project/new");
-      config.put("wiseBaseURL", wiseBaseURL);
-      config.put("notifyProjectBeginURL", wiseBaseURL + "/project/notifyAuthorBegin/");
-      config.put("notifyProjectEndURL", wiseBaseURL + "/project/notifyAuthorEnd/");
-      config.put("getLibraryProjectsURL", wiseBaseURL + "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
-      config.put("teacherDataURL", wiseBaseURL + "/teacher/data");
+      config.put("userType", "teacher");
+      config.put("copyProjectURL", contextPath + "/project/copy");
+      config.put("mainHomePageURL", contextPath);
+      config.put("renewSessionURL", contextPath + "/session/renew");
+      config.put("sessionLogOutURL", contextPath + "/logout");
+      config.put("registerNewProjectURL", contextPath + "/project/new");
+      config.put("wiseBaseURL", contextPath);
+      config.put("notifyProjectBeginURL", contextPath + "/project/notifyAuthorBegin/");
+      config.put("notifyProjectEndURL", contextPath + "/project/notifyAuthorEnd/");
+      config.put("getLibraryProjectsURL", contextPath + "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
+      config.put("teacherDataURL", contextPath + "/teacher/data");
 
       String projectMetadataSettings = null;
       try {
@@ -498,24 +498,7 @@ public class WISE5AuthorProjectController {
         }
       }
       config.put("locale", locale);
-      String webSocketBaseURL = wiseProperties.getProperty("webSocketBaseUrl");
-
-      if (webSocketBaseURL == null) {
-        /*
-         * if the websocket base url was not provided in the portal properties
-         * we will use the default websocket base url.
-         * e.g.
-         * ws://localhost:8080/wise
-         */
-        if (wiseBaseURL.contains("http")) {
-          webSocketBaseURL = wiseBaseURL.replace("http", "ws");
-        } else {
-          String portalContextPath = ControllerUtil.getPortalUrlString(request);
-          webSocketBaseURL = portalContextPath.replace("http", "ws");
-        }
-      }
-
-      config.put("webSocketURL", webSocketBaseURL + "/websocket");
+      config.put("webSocketURL", ControllerUtil.getWebSocketURL(request, contextPath));
     } catch (JSONException e) {
       e.printStackTrace();
     }
@@ -570,11 +553,7 @@ public class WISE5AuthorProjectController {
       User user = ControllerUtil.getSignedInUser();
       if (projectService.canAuthorProject(project, user)) {
         String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
-        File projectAssetsDir = new File(projectAssetsDirPath);
-        JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDir);
-        PrintWriter writer = response.getWriter();
-        writer.write(projectAssetsJSONObject.toString());
-        writer.close();
+        writeAssetsToResponse(response, projectAssetsDirPath);
       }
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();
@@ -610,75 +589,82 @@ public class WISE5AuthorProjectController {
 
   /**
    * Saves POSTed file into the project's asset folder
-   * TODO refactor too many nesting
+   * Writes updated project assets directory to response
    */
   @RequestMapping(method = RequestMethod.POST, value = "/project/asset/{projectId}")
   protected void saveProjectAsset(@PathVariable Long projectId, HttpServletRequest request,
-      String assetFileName, HttpServletResponse response) throws ServletException, IOException {
-    try {
-      Project project = projectService.getById(projectId);
-      User user = ControllerUtil.getSignedInUser();
-      if (projectService.canAuthorProject(project, user)) {
-        String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
-        File projectAssetsDir = new File(projectAssetsDirPath);
+      String assetFileName, HttpServletResponse response) throws ServletException, IOException,
+      ObjectNotFoundException, JSONException {
+    Project project = projectService.getById(projectId);
+    User user = ControllerUtil.getSignedInUser();
+    if (projectService.canAuthorProject(project, user)) {
+      String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
+      File projectAssetsDir = new File(projectAssetsDirPath);
 
-        if (assetFileName != null) {
-          // user wants to delete an existing asset
-          File asset = new File(projectAssetsDir, assetFileName);
-          if (asset.exists()) {
-            asset.delete();
-          }
-        } else {
-          // user wants to add a new asset
-          Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
-          if (projectMaxTotalAssetsSize == null) {
-            projectMaxTotalAssetsSize = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
-          }
-          long sizeOfAssetsDirectory = FileUtils.sizeOfDirectory(projectAssetsDir);
-
-          DefaultMultipartHttpServletRequest multiRequest = (DefaultMultipartHttpServletRequest) request;
-          Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
-          if (fileMap != null && fileMap.size() > 0) {
-            for (String key : fileMap.keySet()) {
-              MultipartFile file = fileMap.get(key);
-              if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
-                // Adding this asset will exceed the maximum allowed for the project, so don't add it
-                // Show a message to the user
-                PrintWriter writer = response.getWriter();
-                writer.write("Error: Exceeded project max asset size.\nPlease delete unused assets.\n\nContact WISE if your project needs more disk space.");
-                writer.close();
-                return;
-              } else if (!isUserAllowedToUpload(user, file)) {
-                PrintWriter writer = response.getWriter();
-                writer.write("Error: Upload file \"" + file.getOriginalFilename() + "\" not allowed.\n");
-                writer.close();
-                return;
-              } else {
-                String filename = file.getOriginalFilename();
-                File asset = new File(projectAssetsDir, filename);
-                if (!asset.exists()) {
-                  asset.createNewFile();
-                }
-                byte[] fileContent = file.getBytes();
-                FileOutputStream fos = new FileOutputStream(asset);
-                fos.write(fileContent);
-                fos.flush();
-                fos.close();
-              }
-            }
-          }
+      if (assetFileName != null) {
+        deleteExistingAsset(assetFileName, projectAssetsDir);
+      } else {
+        if (addNewAsset((DefaultMultipartHttpServletRequest) request, response, project,
+            user, projectAssetsDir)) {
+          return;
         }
-
-        File projectAssetsDirectory = new File(projectAssetsDirPath);
-        JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDirectory);
-        PrintWriter writer = response.getWriter();
-        writer.write(projectAssetsJSONObject.toString());
-        writer.close();
       }
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    } catch (JSONException je) {
-      je.printStackTrace();
+      writeAssetsToResponse(response, projectAssetsDirPath);
+    }
+  }
+
+  private void writeAssetsToResponse(HttpServletResponse response, String projectAssetsDirPath) throws JSONException, IOException {
+    File projectAssetsDirectory = new File(projectAssetsDirPath);
+    JSONObject projectAssetsJSONObject = getDirectoryJSONObject(projectAssetsDirectory);
+    PrintWriter writer = response.getWriter();
+    writer.write(projectAssetsJSONObject.toString());
+    writer.close();
+  }
+
+  private boolean addNewAsset(DefaultMultipartHttpServletRequest request, HttpServletResponse response,
+      Project project, User user, File projectAssetsDir) throws IOException {
+    Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
+    if (projectMaxTotalAssetsSize == null) {
+      projectMaxTotalAssetsSize = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
+    }
+    long sizeOfAssetsDirectory = FileUtils.sizeOfDirectory(projectAssetsDir);
+
+    DefaultMultipartHttpServletRequest multiRequest = request;
+    Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
+    if (fileMap != null && fileMap.size() > 0) {
+      for (String key : fileMap.keySet()) {
+        MultipartFile file = fileMap.get(key);
+        if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
+          PrintWriter writer = response.getWriter();
+          writer.write("Error: Exceeded project max asset size.\nPlease delete unused assets.\n\nContact WISE if your project needs more disk space.");
+          writer.close();
+          return true;
+        } else if (!isUserAllowedToUpload(user, file)) {
+          PrintWriter writer = response.getWriter();
+          writer.write("Error: Upload file \"" + file.getOriginalFilename() + "\" not allowed.\n");
+          writer.close();
+          return true;
+        } else {
+          String filename = file.getOriginalFilename();
+          File asset = new File(projectAssetsDir, filename);
+          if (!asset.exists()) {
+            asset.createNewFile();
+          }
+          byte[] fileContent = file.getBytes();
+          FileOutputStream fos = new FileOutputStream(asset);
+          fos.write(fileContent);
+          fos.flush();
+          fos.close();
+        }
+      }
+    }
+    return false;
+  }
+
+  private void deleteExistingAsset(String assetFileName, File projectAssetsDir) {
+    File asset = new File(projectAssetsDir, assetFileName);
+    if (asset.exists()) {
+      asset.delete();
     }
   }
 
@@ -747,7 +733,7 @@ public class WISE5AuthorProjectController {
    * @return boolean true iff the given <code>User</code> user has sufficient permissions
    * to create a project
    */
-  private boolean hasAuthorPermissions(User user) {
+  public static boolean hasAuthorPermissions(User user) {
     return user.getUserDetails().hasGrantedAuthority(UserDetailsService.AUTHOR_ROLE) ||
         user.getUserDetails().hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
   }

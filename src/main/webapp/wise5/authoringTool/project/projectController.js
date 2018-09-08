@@ -172,7 +172,18 @@ var ProjectController = function () {
       _this.refreshProject();
     });
 
+    this.$rootScope.$on('scrollToBottom', function () {
+      _this.scrollToBottomOfPage();
+    });
+
     this.saveEvent('projectOpened', 'Navigation');
+
+    /*
+     * When the project is loaded from the project list view, we display a
+     * "Loading Project" message using the mdDialog. Now that the project
+     * has loaded, we will hide the message.
+     */
+    this.$mdDialog.hide();
   }
 
   _createClass(ProjectController, [{
@@ -327,12 +338,38 @@ var ProjectController = function () {
       this.$state.go('root.project.node', { projectId: this.projectId, nodeId: nodeId });
     }
   }, {
-    key: 'createGroup',
+    key: 'constraintIconClicked',
 
+
+    /**
+     * The constraint icon on a step in the project view was clicked.
+     * We will open the constraint view for the step.
+     * @param nodeId The node id of the step.
+     */
+    value: function constraintIconClicked(nodeId) {
+      this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+      this.$state.go('root.project.nodeConstraints', { projectId: this.projectId, nodeId: nodeId });
+    }
+
+    /**
+     * The branch icon on a step in the project view was clicked.
+     * We will open the transitions view for the step.
+     * @param nodeId The node id of the step.
+     */
+
+  }, {
+    key: 'branchIconClicked',
+    value: function branchIconClicked(nodeId) {
+      this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+      this.$state.go('root.project.nodeEditPaths', { projectId: this.projectId, nodeId: nodeId });
+    }
 
     /**
      * Create a new group (activity)
      */
+
+  }, {
+    key: 'createGroup',
     value: function createGroup() {
       /*
        * set the group into this variable to hold it temporarily while the
@@ -1140,12 +1177,22 @@ var ProjectController = function () {
   }, {
     key: 'refreshProject',
     value: function refreshProject() {
-      this.ProjectService.parseProject();
-      this.items = this.ProjectService.idToOrder;
-      this.inactiveGroupNodes = this.ProjectService.getInactiveGroupNodes();
-      this.inactiveStepNodes = this.ProjectService.getInactiveStepNodes();
-      this.inactiveNodes = this.ProjectService.getInactiveNodes();
-      this.unselectAllItems();
+      var _this10 = this;
+
+      /*
+       * Use a timeout before we refresh the project in order to allow the
+       * spinning progress indicator to show up before the browser starts
+       * blocking/freezing.
+       */
+      this.$timeout(function () {
+        _this10.ProjectService.parseProject();
+        _this10.items = _this10.ProjectService.idToOrder;
+        _this10.inactiveGroupNodes = _this10.ProjectService.getInactiveGroupNodes();
+        _this10.inactiveStepNodes = _this10.ProjectService.getInactiveStepNodes();
+        _this10.inactiveNodes = _this10.ProjectService.getInactiveNodes();
+        _this10.idToNode = _this10.ProjectService.getIdToNode();
+        _this10.unselectAllItems();
+      });
     }
 
     /**
@@ -1167,7 +1214,7 @@ var ProjectController = function () {
   }, {
     key: 'importStepClicked',
     value: function importStepClicked() {
-      var _this10 = this;
+      var _this11 = this;
 
       this.toggleView('importStep');
 
@@ -1178,7 +1225,7 @@ var ProjectController = function () {
 
         if (this.libraryProjectsList == null) {
           this.ConfigService.getLibraryProjects().then(function (libraryProjectsList) {
-            _this10.libraryProjectsList = libraryProjectsList;
+            _this11.libraryProjectsList = libraryProjectsList;
           });
         }
       }
@@ -1216,7 +1263,7 @@ var ProjectController = function () {
   }, {
     key: 'showImportProject',
     value: function showImportProject(importProjectId) {
-      var _this11 = this;
+      var _this12 = this;
 
       this.importProjectId = importProjectId;
       if (this.importProjectId == null) {
@@ -1229,10 +1276,10 @@ var ProjectController = function () {
         this.importProject = null;
       } else {
         this.ProjectService.retrieveProjectById(this.importProjectId).then(function (projectJSON) {
-          _this11.importProject = projectJSON;
-          var nodeOrderOfProject = _this11.ProjectService.getNodeOrderOfProject(_this11.importProject);
-          _this11.importProjectIdToOrder = nodeOrderOfProject.idToOrder;
-          _this11.importProjectItems = nodeOrderOfProject.nodes;
+          _this12.importProject = projectJSON;
+          var nodeOrderOfProject = _this12.ProjectService.getNodeOrderOfProject(_this12.importProject);
+          _this12.importProjectIdToOrder = nodeOrderOfProject.idToOrder;
+          _this12.importProjectItems = nodeOrderOfProject.nodes;
         });
       }
     }
@@ -1354,20 +1401,66 @@ var ProjectController = function () {
   }, {
     key: 'showJSONClicked',
     value: function showJSONClicked() {
-      this.showJSONAuthoring = !this.showJSONAuthoring;
       if (this.showJSONAuthoring) {
+        // we were showing the JSON view and the author now wants to hide it
+        if (this.isJSONValid()) {
+          this.toggleJSONAuthoringView();
+          this.UtilService.hideJSONValidMessage();
+        } else {
+          var answer = confirm(this.$translate('jsonInvalidErrorMessage'));
+          if (answer) {
+            // the author wants to revert back to the last valid JSON
+            this.toggleJSONAuthoringView();
+            this.UtilService.hideJSONValidMessage();
+          }
+        }
+      } else {
+        // we were not showing the JSON view and now the author wants to show it
+        this.toggleJSONAuthoringView();
         this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
+        this.UtilService.showJSONValidMessage();
+      }
+    }
+  }, {
+    key: 'isJSONValid',
+    value: function isJSONValid() {
+      try {
+        angular.fromJson(this.projectJSONString);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+  }, {
+    key: 'toggleJSONAuthoringView',
+    value: function toggleJSONAuthoringView() {
+      this.showJSONAuthoring = !this.showJSONAuthoring;
+    }
+
+    /**
+     * Save the project JSON to the server if the JSON is valid.
+     */
+
+  }, {
+    key: 'autoSaveProjectJSONString',
+    value: function autoSaveProjectJSONString() {
+      try {
+        this.saveProjectJSON(this.projectJSONString);
+        this.UtilService.showJSONValidMessage();
+      } catch (e) {
+        this.UtilService.showJSONInvalidMessage();
       }
     }
 
     /**
      * Save the project JSON string to the server
+     * @param projectJSONString
      */
 
   }, {
-    key: 'saveProjectJSONString',
-    value: function saveProjectJSONString() {
-      var project = angular.fromJson(this.projectJSONString);
+    key: 'saveProjectJSON',
+    value: function saveProjectJSON(projectJSONString) {
+      var project = angular.fromJson(projectJSONString);
       this.ProjectService.setProject(project);
       var scriptFilename = this.ProjectService.getProjectScriptFilename();
       if (scriptFilename != null) {
@@ -1537,6 +1630,9 @@ var ProjectController = function () {
         // if the advanced view is shown, do not show the project view
         this.projectMode = !this.advancedMode;
       }
+      if (!this.showJSONAuthoring) {
+        this.UtilService.hideJSONValidMessage();
+      }
     }
 
     /**
@@ -1588,6 +1684,13 @@ var ProjectController = function () {
     value: function scrollToTopOfPage() {
       this.$anchorScroll('top');
     }
+  }, {
+    key: 'scrollToBottomOfPage',
+    value: function scrollToBottomOfPage() {
+      $('#content').animate({
+        scrollTop: $('#bottom').prop('offsetTop')
+      }, 1000);
+    }
 
     /**
      * Creating a group was cancelled, so show the project regular project view
@@ -1619,7 +1722,7 @@ var ProjectController = function () {
   }, {
     key: 'temporarilyHighlightNewNodes',
     value: function temporarilyHighlightNewNodes(newNodes) {
-      var _this12 = this;
+      var _this13 = this;
 
       var doScrollToNewNodes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
@@ -1634,24 +1737,7 @@ var ProjectController = function () {
               var newNode = _step8.value;
 
               if (newNode != null) {
-                (function () {
-                  var nodeElement = $('#' + newNode.id);
-                  var originalBackgroundColor = nodeElement.css('backgroundColor');
-                  nodeElement.css('background-color', '#FFFF9C');
-
-                  /*
-                   * Use a timeout before starting to transition back to
-                   * the original background color. For some reason the
-                   * element won't get highlighted in the first place
-                   * unless this timeout is used.
-                   */
-                  _this12.$timeout(function () {
-                    nodeElement.css({
-                      'transition': 'background-color 3s ease-in-out',
-                      'background-color': originalBackgroundColor
-                    });
-                  });
-                })();
+                _this13.UtilService.temporarilyHighlightElement(newNode.id);
               }
             }
           } catch (err) {
@@ -1878,6 +1964,101 @@ var ProjectController = function () {
           }
         }
       }
+    }
+
+    /**
+     * Check if a node is a branch point.
+     * @param nodeId The node id of the node.
+     * @return Whether the node is a branch point.
+     */
+
+  }, {
+    key: 'isBranchPoint',
+    value: function isBranchPoint(nodeId) {
+      return this.ProjectService.isBranchPoint(nodeId);
+    }
+
+    /**
+     * Get the number of branch paths. This is assuming the node is a branch point.
+     * @param nodeId The node id of the branch point node.
+     * @return The number of branch paths for this branch point.
+     */
+
+  }, {
+    key: 'getNumberOfBranchPaths',
+    value: function getNumberOfBranchPaths(nodeId) {
+      return this.ProjectService.getNumberOfBranchPaths(nodeId);
+    }
+
+    /**
+     * Get the description of the branch criteria.
+     * @param nodeId The node id of the branch point node.
+     * @returns A human readable string describing how we will decide which
+     * branch path a student goes down.
+     */
+
+  }, {
+    key: 'getBranchCriteriaDescription',
+    value: function getBranchCriteriaDescription(nodeId) {
+      return this.ProjectService.getBranchCriteriaDescription(nodeId);
+    }
+
+    /**
+     * Check if a node has a constraint.
+     * @param nodeId The node id of the node.
+     * @return Whether the node has a constraint authored on it.
+     */
+
+  }, {
+    key: 'nodeHasConstraint',
+    value: function nodeHasConstraint(nodeId) {
+      return this.ProjectService.nodeHasConstraint(nodeId);
+    }
+
+    /**
+     * Get the number of constraints authored on a node.
+     * @param nodeId The node id of the node.
+     * @return The number of constraints authored on a node.
+     */
+
+  }, {
+    key: 'getNumberOfConstraintsOnNode',
+    value: function getNumberOfConstraintsOnNode(nodeId) {
+      var constraints = this.ProjectService.getConstraintsOnNode(nodeId);
+      return constraints.length;
+    }
+
+    /**
+     * Get the description of the constraints authored on the given step.
+     * @param nodeId The node id.
+     * @return A human readable string containing the description of the
+     * constraints authored on the given step.
+     */
+
+  }, {
+    key: 'getConstraintDescriptions',
+    value: function getConstraintDescriptions(nodeId) {
+      var constraintDescriptions = '';
+      var constraints = this.ProjectService.getConstraintsOnNode(nodeId);
+      for (var c = 0; c < constraints.length; c++) {
+        var constraint = constraints[c];
+        var description = this.ProjectService.getConstraintDescription(constraint);
+        constraintDescriptions += c + 1 + ' - ' + description + '\n';
+      }
+      return constraintDescriptions;
+    }
+
+    /**
+     * Check if a node has a rubric.
+     * @param nodeId The node id of the node.
+     * @return Whether the node or one of the node's components has a rubric
+     * authored on it.
+     */
+
+  }, {
+    key: 'nodeHasRubric',
+    value: function nodeHasRubric(nodeId) {
+      return this.ProjectService.nodeHasRubric(nodeId);
     }
   }]);
 

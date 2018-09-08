@@ -6,9 +6,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nodeService = require('../../services/nodeService');
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _nodeService2 = _interopRequireDefault(_nodeService);
+var _componentService = require('../componentService');
+
+var _componentService2 = _interopRequireDefault(_componentService);
+
+var _html2canvas = require('html2canvas');
+
+var _html2canvas2 = _interopRequireDefault(_html2canvas);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18,27 +24,18 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var GraphService = function (_NodeService) {
-  _inherits(GraphService, _NodeService);
+var GraphService = function (_ComponentService) {
+  _inherits(GraphService, _ComponentService);
 
-  function GraphService($filter, StudentDataService, UtilService) {
+  function GraphService($filter, $q, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, GraphService);
 
-    var _this = _possibleConstructorReturn(this, (GraphService.__proto__ || Object.getPrototypeOf(GraphService)).call(this));
+    var _this = _possibleConstructorReturn(this, (GraphService.__proto__ || Object.getPrototypeOf(GraphService)).call(this, $filter, StudentDataService, UtilService));
 
-    _this.$filter = $filter;
-    _this.StudentDataService = StudentDataService;
-    _this.UtilService = UtilService;
-    _this.$translate = _this.$filter('translate');
+    _this.$q = $q;
+    _this.StudentAssetService = StudentAssetService;
     return _this;
   }
-
-  /**
-   * Get the component type label
-   * example
-   * "Graph"
-   */
-
 
   _createClass(GraphService, [{
     key: 'getComponentTypeLabel',
@@ -54,13 +51,8 @@ var GraphService = function (_NodeService) {
   }, {
     key: 'createComponent',
     value: function createComponent() {
-
-      var component = {};
-      component.id = this.UtilService.generateKey();
+      var component = _get(GraphService.prototype.__proto__ || Object.getPrototypeOf(GraphService.prototype), 'createComponent', this).call(this);
       component.type = 'Graph';
-      component.prompt = '';
-      component.showSaveButton = false;
-      component.showSubmitButton = false;
       component.title = '';
       component.width = 800;
       component.height = 500;
@@ -107,65 +99,6 @@ var GraphService = function (_NodeService) {
     }
 
     /**
-     * Copies an existing Graph component object
-     * @returns a copied Graph component object
-     */
-
-  }, {
-    key: 'copyComponent',
-    value: function copyComponent(componentToCopy) {
-      var component = this.createComponent();
-      component.prompt = componentToCopy.prompt;
-      component.showSaveButton = componentToCopy.showSaveButton;
-      component.showSubmitButton = componentToCopy.showSubmitButton;
-      component.title = componentToCopy.title;
-      component.xAxis = componentToCopy.xAxis;
-      component.yAxis = componentToCopy.yAxis;
-      component.series = componentToCopy.series;
-      return component;
-    }
-
-    /**
-     * Populate a component state with the data from another component state
-     * @param componentStateFromOtherComponent the component state to obtain the data from
-     * @return a new component state that contains the student data from the other
-     * component state
-     */
-
-  }, {
-    key: 'populateComponentState',
-    value: function populateComponentState(componentStateFromOtherComponent) {
-      var componentState = null;
-
-      if (componentStateFromOtherComponent != null) {
-
-        // create an empty component state
-        componentState = this.StudentDataService.createComponentState();
-
-        // get the component type of the other component state
-        var otherComponentType = componentStateFromOtherComponent.componentType;
-
-        if (otherComponentType === 'Graph') {
-          // the other component is an Graph component
-
-          // get the student data from the other component state
-          var studentData = componentStateFromOtherComponent.studentData;
-
-          // create a copy of the student data
-          var studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
-
-          // set the student data into the new component state
-          componentState.studentData = studentDataCopy;
-        }
-      }
-
-      return componentState;
-    }
-  }, {
-    key: 'generateRegressionSeries',
-
-
-    /**
      * Code extracted from https://github.com/streamlinesocial/highcharts-regression
      * Loop through all the series that are passed in and find the ones that we
      * need to generate a regression series for. Return the regression series
@@ -173,6 +106,9 @@ var GraphService = function (_NodeService) {
      * @param series an array of series
      * @return an array of regression series
      */
+
+  }, {
+    key: 'generateRegressionSeries',
     value: function generateRegressionSeries(series) {
       var regressionSeries = [];
       var i = 0;
@@ -808,22 +744,18 @@ var GraphService = function (_NodeService) {
       }
       return 1 - SSYY / SSE;
     }
-
-    /**
-     * Check if the component was completed
-     * @param component the component object
-     * @param componentStates the component states for the specific component
-     * @param componentEvents the events for the specific component
-     * @param nodeEvents the events for the parent node of the component
-     * @param node parent node of the component
-     * @returns whether the component was completed
-     */
-
   }, {
     key: 'isCompleted',
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
       var result = false;
 
+      if (!this.canEdit(component) && this.UtilService.hasNodeEnteredEvent(nodeEvents)) {
+        /*
+         * the student can't perform any work on this component and has visited
+         * this step so we will mark it as completed
+         */
+        return true;
+      }
       if (componentStates && componentStates.length) {
         var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
 
@@ -862,14 +794,57 @@ var GraphService = function (_NodeService) {
       return result;
     }
   }, {
-    key: 'hasSeriesData',
+    key: 'canEdit',
 
+
+    /**
+     * Determine if the student can perform any work on this component.
+     * @param component The component content.
+     * @return Whether the student can perform any work on this component.
+     */
+    value: function canEdit(component) {
+      var series = component.series;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = series[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var singleSeries = _step.value;
+
+          if (singleSeries.canEdit) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      if (this.UtilService.hasImportWorkConnectedComponent(component)) {
+        return true;
+      }
+      return false;
+    }
 
     /**
      * Check if student data contains any series data
      * @param studentData student data from a component state
      * @returns whether the student data has series data
      */
+
+  }, {
+    key: 'hasSeriesData',
     value: function hasSeriesData(studentData) {
       var result = false;
 
@@ -891,100 +866,61 @@ var GraphService = function (_NodeService) {
     }
   }, {
     key: 'hasTrialData',
-
-
-    /**
-     * Check if the student data contains any trial data
-     * @param studentData student data from a component state
-     * @return whether the student data has trial data
-     */
     value: function hasTrialData(studentData) {
-      var result = false;
+      var trials = studentData.trials;
+      if (trials != null) {
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
 
-      if (studentData != null) {
-        var trials = studentData.trials;
+        try {
+          for (var _iterator2 = trials[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var trial = _step2.value;
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
 
-        if (trials != null) {
+            try {
+              for (var _iterator3 = trial.series[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var singleSeries = _step3.value;
 
-          // loop through all the trials
-          for (var t = 0; t < trials.length; t++) {
-
-            var trial = trials[t];
-
-            if (trial != null) {
-              var series = trial.series;
-
-              // loop through all the series
-              for (var s = 0; s < series.length; s++) {
-
-                // get a single series
-                var singleSeries = series[s];
-
-                if (singleSeries != null) {
-
-                  // get the data from the single series
-                  var data = singleSeries.data;
-
-                  if (data != null && data.length > 0) {
-                    // the single series has data
-                    return true;
-                  }
+                var seriesData = singleSeries.data;
+                if (seriesData != null && seriesData.length > 0) {
+                  return true;
+                }
+              }
+            } catch (err) {
+              _didIteratorError3 = true;
+              _iteratorError3 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                  _iterator3.return();
+                }
+              } finally {
+                if (_didIteratorError3) {
+                  throw _iteratorError3;
                 }
               }
             }
           }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
         }
       }
-
-      return result;
+      return false;
     }
-
-    /**
-     * Whether this component generates student work
-     * @param component (optional) the component object. if the component object
-     * is not provided, we will use the default value of whether the
-     * component type usually has work.
-     * @return whether this component generates student work
-     */
-
-  }, {
-    key: 'componentHasWork',
-    value: function componentHasWork(component) {
-      return true;
-    }
-
-    /**
-     * Whether this component uses a save button
-     * @return whether this component uses a save button
-     */
-
-  }, {
-    key: 'componentUsesSaveButton',
-    value: function componentUsesSaveButton() {
-      return true;
-    }
-
-    /**
-     * Whether this component uses a submit button
-     * @return whether this component uses a submit button
-     */
-
-  }, {
-    key: 'componentUsesSubmitButton',
-    value: function componentUsesSubmitButton() {
-      return true;
-    }
-
-    /**
-     * Check if the component state has student work. Sometimes a component
-     * state may be created if the student visits a component but doesn't
-     * actually perform any work. This is where we will check if the student
-     * actually performed any work.
-     * @param componentState the component state object
-     * @param componentContent the component content
-     * @return whether the component state has any work
-     */
-
   }, {
     key: 'componentStateHasStudentWork',
     value: function componentStateHasStudentWork(componentState, componentContent) {
@@ -1202,40 +1138,46 @@ var GraphService = function (_NodeService) {
     }
 
     /**
-     * Determine whether the component has been authored to show classmate work
-     * @param componentContent the component content
-     * @return whether to show classmate work in this component
+     * The component state has been rendered in a <component></component> element
+     * and now we want to take a snapshot of the work.
+     * @param componentState The component state that has been rendered.
+     * @return A promise that will return an image object.
      */
 
   }, {
-    key: 'showClassmateWork',
-    value: function showClassmateWork(componentContent) {
+    key: 'generateImageFromRenderedComponentState',
+    value: function generateImageFromRenderedComponentState(componentState) {
+      var _this2 = this;
 
-      if (componentContent != null && componentContent.connectedComponents != null) {
+      var deferred = this.$q.defer();
+      var componentId = componentState.componentId;
+      var highchartsDiv = angular.element('#chart_' + componentId).find('.highcharts-container');
+      if (highchartsDiv != null && highchartsDiv.length > 0) {
+        highchartsDiv = highchartsDiv[0];
 
-        var connectedComponents = componentContent.connectedComponents;
+        // convert the div element to a canvas element
+        (0, _html2canvas2.default)(highchartsDiv).then(function (canvas) {
 
-        // loop through all the connected components that we are importing from
-        for (var c = 0; c < connectedComponents.length; c++) {
-          var connectedComponent = connectedComponents[c];
+          // get the canvas as a base64 string
+          var img_b64 = canvas.toDataURL('image/png');
 
-          if (connectedComponent != null) {
-            if (connectedComponent.type == 'showClassmateWork') {
-              // the connected component is importing work from classmates
-              return true;
-            }
-          }
-        }
+          // get the image object
+          var imageObject = _this2.UtilService.getImageObjectFromBase64String(img_b64);
+
+          // add the image to the student assets
+          _this2.StudentAssetService.uploadAsset(imageObject).then(function (asset) {
+            deferred.resolve(asset);
+          });
+        });
       }
-
-      return false;
+      return deferred.promise;
     }
   }]);
 
   return GraphService;
-}(_nodeService2.default);
+}(_componentService2.default);
 
-GraphService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
+GraphService.$inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = GraphService;
 //# sourceMappingURL=graphService.js.map

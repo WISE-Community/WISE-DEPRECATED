@@ -3,7 +3,7 @@
 import AnimationService from './animationService';
 import AnimationController from './animationController';
 
-let animationComponentModule = angular.module('animationComponentModule', [
+const animationComponentModule = angular.module('animationComponentModule', [
     'pascalprecht.translate'
   ])
   .service(AnimationService.name, AnimationService)

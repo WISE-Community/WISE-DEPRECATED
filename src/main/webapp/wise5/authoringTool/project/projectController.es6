@@ -200,7 +200,18 @@ class ProjectController {
       this.refreshProject();
     });
 
+    this.$rootScope.$on('scrollToBottom', () => {
+      this.scrollToBottomOfPage();
+    });
+
     this.saveEvent('projectOpened', 'Navigation');
+
+    /*
+     * When the project is loaded from the project list view, we display a
+     * "Loading Project" message using the mdDialog. Now that the project
+     * has loaded, we will hide the message.
+     */
+    this.$mdDialog.hide();
   };
 
   /**
@@ -323,6 +334,30 @@ class ProjectController {
     this.$state
         .go('root.project.node', {projectId: this.projectId, nodeId: nodeId});
   };
+
+  /**
+   * The constraint icon on a step in the project view was clicked.
+   * We will open the constraint view for the step.
+   * @param nodeId The node id of the step.
+   */
+  constraintIconClicked(nodeId) {
+    this.TeacherDataService
+      .endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+    this.$state
+      .go('root.project.nodeConstraints', {projectId: this.projectId, nodeId: nodeId});
+  }
+
+  /**
+   * The branch icon on a step in the project view was clicked.
+   * We will open the transitions view for the step.
+   * @param nodeId The node id of the step.
+   */
+  branchIconClicked(nodeId) {
+    this.TeacherDataService
+      .endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+    this.$state
+      .go('root.project.nodeEditPaths', {projectId: this.projectId, nodeId: nodeId});
+  }
 
   /**
    * Create a new group (activity)
@@ -945,12 +980,20 @@ class ProjectController {
    * Recalculates step numbering
    */
   refreshProject() {
-    this.ProjectService.parseProject();
-    this.items = this.ProjectService.idToOrder;
-    this.inactiveGroupNodes = this.ProjectService.getInactiveGroupNodes();
-    this.inactiveStepNodes = this.ProjectService.getInactiveStepNodes();
-    this.inactiveNodes = this.ProjectService.getInactiveNodes();
-    this.unselectAllItems();
+    /*
+     * Use a timeout before we refresh the project in order to allow the
+     * spinning progress indicator to show up before the browser starts
+     * blocking/freezing.
+     */
+    this.$timeout(() => {
+      this.ProjectService.parseProject();
+      this.items = this.ProjectService.idToOrder;
+      this.inactiveGroupNodes = this.ProjectService.getInactiveGroupNodes();
+      this.inactiveStepNodes = this.ProjectService.getInactiveStepNodes();
+      this.inactiveNodes = this.ProjectService.getInactiveNodes();
+      this.idToNode = this.ProjectService.getIdToNode();
+      this.unselectAllItems();
+    });
   }
 
   /**
@@ -1099,17 +1142,58 @@ class ProjectController {
    * The show JSON button was clicked
    */
   showJSONClicked() {
-    this.showJSONAuthoring = !this.showJSONAuthoring;
     if (this.showJSONAuthoring) {
+      // we were showing the JSON view and the author now wants to hide it
+      if (this.isJSONValid()) {
+        this.toggleJSONAuthoringView();
+        this.UtilService.hideJSONValidMessage();
+      } else {
+        let answer = confirm(this.$translate('jsonInvalidErrorMessage'));
+        if (answer) {
+          // the author wants to revert back to the last valid JSON
+          this.toggleJSONAuthoringView();
+          this.UtilService.hideJSONValidMessage();
+        }
+      }
+    } else {
+      // we were not showing the JSON view and now the author wants to show it
+      this.toggleJSONAuthoringView();
       this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
+      this.UtilService.showJSONValidMessage();
+    }
+  }
+
+  isJSONValid() {
+    try {
+      angular.fromJson(this.projectJSONString);
+      return true;
+    } catch(e) {
+      return false;
+    }
+  }
+
+  toggleJSONAuthoringView() {
+    this.showJSONAuthoring = !this.showJSONAuthoring;
+  }
+
+  /**
+   * Save the project JSON to the server if the JSON is valid.
+   */
+  autoSaveProjectJSONString() {
+    try {
+      this.saveProjectJSON(this.projectJSONString);
+      this.UtilService.showJSONValidMessage();
+    } catch(e) {
+      this.UtilService.showJSONInvalidMessage();
     }
   }
 
   /**
    * Save the project JSON string to the server
+   * @param projectJSONString
    */
-  saveProjectJSONString() {
-    let project = angular.fromJson(this.projectJSONString);
+  saveProjectJSON(projectJSONString) {
+    let project = angular.fromJson(projectJSONString);
     this.ProjectService.setProject(project);
     let scriptFilename = this.ProjectService.getProjectScriptFilename();
     if (scriptFilename != null) {
@@ -1264,6 +1348,9 @@ class ProjectController {
       // if the advanced view is shown, do not show the project view
       this.projectMode = !this.advancedMode;
     }
+    if (!this.showJSONAuthoring) {
+      this.UtilService.hideJSONValidMessage();
+    }
   }
 
   /**
@@ -1306,6 +1393,12 @@ class ProjectController {
     this.$anchorScroll('top');
   }
 
+  scrollToBottomOfPage() {
+    $('#content').animate({
+      scrollTop: $('#bottom').prop('offsetTop')
+    }, 1000);
+  }
+
   /**
    * Creating a group was cancelled, so show the project regular project view
    */
@@ -1331,22 +1424,7 @@ class ProjectController {
       if (newNodes != null && newNodes.length > 0) {
         for (let newNode of newNodes) {
           if (newNode != null) {
-            let nodeElement = $('#' + newNode.id);
-            let originalBackgroundColor = nodeElement.css('backgroundColor');
-            nodeElement.css('background-color', '#FFFF9C');
-
-            /*
-             * Use a timeout before starting to transition back to
-             * the original background color. For some reason the
-             * element won't get highlighted in the first place
-             * unless this timeout is used.
-             */
-            this.$timeout(() => {
-              nodeElement.css({
-                'transition': 'background-color 3s ease-in-out',
-                'background-color': originalBackgroundColor
-              });
-            });
+            this.UtilService.temporarilyHighlightElement(newNode.id);
           }
         }
         if (doScrollToNewNodes) {
@@ -1533,6 +1611,80 @@ class ProjectController {
         }
       }
     }
+  }
+
+  /**
+   * Check if a node is a branch point.
+   * @param nodeId The node id of the node.
+   * @return Whether the node is a branch point.
+   */
+  isBranchPoint(nodeId) {
+    return this.ProjectService.isBranchPoint(nodeId);
+  }
+
+  /**
+   * Get the number of branch paths. This is assuming the node is a branch point.
+   * @param nodeId The node id of the branch point node.
+   * @return The number of branch paths for this branch point.
+   */
+  getNumberOfBranchPaths(nodeId) {
+    return this.ProjectService.getNumberOfBranchPaths(nodeId);
+  }
+
+  /**
+   * Get the description of the branch criteria.
+   * @param nodeId The node id of the branch point node.
+   * @returns A human readable string describing how we will decide which
+   * branch path a student goes down.
+   */
+  getBranchCriteriaDescription(nodeId) {
+    return this.ProjectService.getBranchCriteriaDescription(nodeId);
+  }
+
+  /**
+   * Check if a node has a constraint.
+   * @param nodeId The node id of the node.
+   * @return Whether the node has a constraint authored on it.
+   */
+  nodeHasConstraint(nodeId) {
+    return this.ProjectService.nodeHasConstraint(nodeId);
+  }
+
+  /**
+   * Get the number of constraints authored on a node.
+   * @param nodeId The node id of the node.
+   * @return The number of constraints authored on a node.
+   */
+  getNumberOfConstraintsOnNode(nodeId) {
+    let constraints = this.ProjectService.getConstraintsOnNode(nodeId);
+    return constraints.length;
+  }
+
+  /**
+   * Get the description of the constraints authored on the given step.
+   * @param nodeId The node id.
+   * @return A human readable string containing the description of the
+   * constraints authored on the given step.
+   */
+  getConstraintDescriptions(nodeId) {
+    let constraintDescriptions = '';
+    let constraints = this.ProjectService.getConstraintsOnNode(nodeId);
+    for (let c = 0; c < constraints.length; c++) {
+      let constraint = constraints[c];
+      let description = this.ProjectService.getConstraintDescription(constraint);
+      constraintDescriptions += (c + 1) + ' - ' + description + '\n';
+    }
+    return constraintDescriptions;
+  }
+
+  /**
+   * Check if a node has a rubric.
+   * @param nodeId The node id of the node.
+   * @return Whether the node or one of the node's components has a rubric
+   * authored on it.
+   */
+  nodeHasRubric(nodeId) {
+    return this.ProjectService.nodeHasRubric(nodeId);
   }
 }
 

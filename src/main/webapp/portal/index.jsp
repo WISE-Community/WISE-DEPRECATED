@@ -79,7 +79,15 @@
 			</div>
 
 			<div class="showcase">
-				<div id="projectHeader" class="feature"><span class="featureContent"><spring:message code="index.projects" /></span><a class="projectsLink" href="projectlibrary" title="<spring:message code="index.projects" />"><spring:message code="index.browseCurricula" /></a></div>
+				<div id="projectHeader" class="feature">
+          <span class="featureContent"><spring:message code="index.projects" /></span>
+          <sec:authorize access="hasRole('ROLE_TEACHER')">
+            <a class="projectsLink" href="teacher/management/library.html" title="<spring:message code="index.projects" />"><spring:message code="index.browseCurricula" /></a>
+          </sec:authorize>
+          <sec:authorize access="!hasRole('ROLE_USER')">
+            <a class="projectsLink" href="projectlibrary" title="<spring:message code="index.projects" />"><spring:message code="index.browseCurricula" /></a>
+          </sec:authorize>
+        </div>
 				<div id="features">
 					<div id="featureHeader" class="feature"><span class="featureContent"><spring:message code="index.features" /></span></div>
 					<div id="featuresContent">
@@ -173,6 +181,7 @@
 								    </ul>
 							    </div>
 						    </dd>
+                            <!--
 						    <dt><spring:message code="index.projects_biology" /></dt>
 						    <dd>
 						    	<div class="tinycarousel">
@@ -254,6 +263,7 @@
 								    </ul>
 							    </div>
 						    </dd>
+                            -->
 					   </dl>
 					  </div>
 				</div>
@@ -269,8 +279,8 @@
 					<div class="panelHead"><span><spring:message code="index.wiseInAction" /></span><span class="panelLink">+</span></div>
 					<div class="panelContent"><img src="${contextPath}/<spring:theme code="wise_teaching"/>" alt="<spring:message code="index.wiseInActionTitle" />" /></div>
 				</a>
-				<a id="researchTech" href="pages/research-tech.html" class="panelSection">
-					<div class="panelHead"><span><spring:message code="index.wiseResearchAndTech" /></span><span class="panelLink">+</span></div>
+				<a id="researchTech" href="http://wise-research.berkeley.edu" target="_blank" class="panelSection">
+					<div class="panelHead"><span><!--<spring:message code="index.wiseResearchAndTech" />-->Research</span><span class="panelLink">+</span></div>
 					<div class="panelContent"><img src="${contextPath}/<spring:theme code="wise_research"/>" alt="<spring:message code="index.wiseResearchAndTechTitle" />" /></div>
 				</a>
 				<div style="clear:both;"></div>

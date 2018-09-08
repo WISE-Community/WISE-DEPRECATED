@@ -32,6 +32,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
 import org.wise.portal.domain.user.User;
@@ -42,6 +44,8 @@ import org.wise.portal.service.authentication.UserDetailsService;
  */
 @Entity
 @Table(name = UserImpl.DATA_STORE_NAME)
+@Getter
+@Setter
 public class UserImpl implements User {
 
   @Transient
@@ -65,85 +69,22 @@ public class UserImpl implements User {
   @JoinColumn(name = COLUMN_NAME_USER_DETAILS_FK, nullable = false, unique = true)
   private MutableUserDetails userDetails;
 
-  /**
-   * @see User#getUserDetails()
-   */
-  public MutableUserDetails getUserDetails() {
-    return userDetails;
-  }
-
-  /**
-   * @see User#setUserDetails(org.wise.portal.domain.authentication.MutableUserDetails)
-   */
-  public void setUserDetails(MutableUserDetails userDetails) {
-    this.userDetails = userDetails;
-  }
-
-  /**
-   * @see User#isStudent()
-   */
   public boolean isStudent() {
     return this.userDetails.hasGrantedAuthority(UserDetailsService.STUDENT_ROLE);
   }
 
-  /**
-   * @see User#isTeacher()
-   */
   public boolean isTeacher() {
     return this.userDetails.hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
   }
 
-  /**
-   * @see User#isAdmin()
-   */
   public boolean isAdmin() {
     return this.userDetails.hasGrantedAuthority(UserDetailsService.ADMIN_ROLE);
   }
 
-  /**
-   * @see User#isTrustedAuthor()
-   */
   public boolean isTrustedAuthor() {
     return this.userDetails.hasGrantedAuthority(UserDetailsService.TRUSTED_AUTHOR_ROLE);
   }
 
-  /**
-   * @return the id
-   */
-  @SuppressWarnings("unused")
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * @param id
-   *            the id to set
-   */
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the version
-   */
-  @SuppressWarnings("unused")
-  private Integer getVersion() {
-    return version;
-  }
-
-  /**
-   * @param version
-   *            the version to set
-   */
-  @SuppressWarnings("unused")
-  private void setVersion(Integer version) {
-    this.version = version;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     final int PRIME = 31;
@@ -154,9 +95,6 @@ public class UserImpl implements User {
     return result;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)

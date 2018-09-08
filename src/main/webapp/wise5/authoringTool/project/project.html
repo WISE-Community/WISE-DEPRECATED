@@ -7,18 +7,7 @@
         <div align="right" style='background-color: white; position: sticky; top: 0px; z-index: 2;'>
           <div style="color:red">{{projectController.currentAuthorsMessage}}</div>
           <div>
-            <span ng-if="authoringToolController.globalMessage.text"
-                class="component__actions__info md-caption global-message">
-                {{authoringToolController.globalMessage.text}}
-                <span class="component__actions__more">
-                  <md-tooltip md-direction="top">
-                    {{ authoringToolController.globalMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}
-                  </md-tooltip>
-                  <span am-time-ago="authoringToolController.globalMessage.time"></span>
-                </span>
-            </span>
-            <span ng-if="authoringToolController.globalMessage == null || authoringToolController.globalMessage.text == null || authoringToolController.globalMessage.text == ''"
-                class="component__actions__info md-caption global-message">&nbsp</span>
+            <span>&nbsp</span>
           </div>
         </div>
         <style>
@@ -82,9 +71,6 @@
             min-width: 50px;
             height: 20px;
           }
-          body md-select-menu, body md-select-menu md-content {
-            max-height: 625px;
-          }
           .projectItem:hover {
             background-color: #add8e6;
           }
@@ -93,6 +79,10 @@
           }
           .projectItemTitleDiv {
             width: 100%;
+          }
+          .multiLineTooltip {
+            height: auto !important;
+            white-space: pre-line;
           }
         </style>
         <div ng-if="projectController.$state.current.name == 'root.project'">  <!-- show this only when we're in the project view -->
@@ -404,8 +394,8 @@
               <md-input-container style='width: 100%;'>
                 <textarea ng-model='projectController.projectJSONString'
                       style='width: 90%; border: 1px solid black;'
-                      ng-change='projectController.saveProjectJSONString()'
-                      ng-model-options='{updateOn: "blur"}'></textarea>
+                      ng-change='projectController.autoSaveProjectJSONString()'
+                      ng-model-options='{ debounce: 1000 }'></textarea>
               </md-input-container>
             </div>
           </div>
@@ -435,7 +425,11 @@
                     </h6>
                     <p style='display:inline; cursor:pointer;'
                       ng-if='item.order!==0 && !projectController.isGroupNode(item.$key)'>
-                      {{projectController.getNodePositionById(item.$key)}}: {{projectController.getNodeTitleByNodeId(item.$key)}}
+                      <span>{{projectController.getNodePositionById(item.$key)}}: {{projectController.getNodeTitleByNodeId(item.$key)}}</span>
+                      <span><md-icon ng-if='projectController.isBranchPoint(item.$key)' ng-click='projectController.branchIconClicked(item.$key); $event.stopPropagation();' style='transform: rotate(180deg);'>call_split</md-icon><md-tooltip md-direction='right'>{{ 'branchPointTooltip' | translate : '{ numberOfBranchPaths: ' + projectController.getNumberOfBranchPaths(item.$key) + ', branchCriteria: "' + projectController.getBranchCriteriaDescription(item.$key) + '"}'}}</md-tooltip></span>
+                      <span><md-icon ng-if='projectController.nodeHasConstraint(item.$key) && projectController.getNumberOfConstraintsOnNode(item.$key) == 1' ng-click='projectController.constraintIconClicked(item.$key); $event.stopPropagation();'>block</md-icon><md-tooltip class='multiLineTooltip' md-direction='right'>{{ projectController.getNumberOfConstraintsOnNode(item.$key) }} {{ 'constraint' | translate }}<br/>{{ projectController.getConstraintDescriptions(item.$key) }}</md-tooltip></span>
+                      <span><md-icon ng-if='projectController.nodeHasConstraint(item.$key) && projectController.getNumberOfConstraintsOnNode(item.$key) > 1' ng-click='projectController.constraintIconClicked(item.$key); $event.stopPropagation();'>block</md-icon><md-tooltip class='multiLineTooltip' md-direction='right'>{{ projectController.getNumberOfConstraintsOnNode(item.$key) }} {{ 'constraints' | translate }}<br/>{{ projectController.getConstraintDescriptions(item.$key) }}</md-tooltip></span>
+                      <span><md-icon ng-if='projectController.nodeHasRubric(item.$key)'>message</md-icon><md-tooltip md-direction='right'>{{ 'hasRubric' | translate }}</md-tooltip></span>
                     </p>
                   </div>
                   <div layout='row'>
@@ -443,10 +437,10 @@
                         ng-if='projectController.isGroupNode(item.$key) && ((projectController.insertNodeMode && item.order!==0) || (projectController.insertGroupMode && item.order==0))'
                         ng-click='projectController.insertInside(item.$key); $event.stopPropagation();'>
                       <md-icon>call_received</md-icon>
-                      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'insertAsFirstStep' | translate }}</md-tooltip>
+                      <md-tooltip ng-if='item.order !== 0' md-direction='top' class='projectButtonTooltip'>{{ 'insertAsFirstStep' | translate }}</md-tooltip>
+                      <md-tooltip ng-if='item.order === 0' md-direction='top' class='projectButtonTooltip'>{{ 'insertAsFirstActivity' | translate }}</md-tooltip>
                     </md-button>
-                    <md-button class='insertButton md-raised md-primary' ng-if='(projectController.insertNodeMode && !projectController.isGroupNode(item.$key)) || (projectController.insertGroupMode && projectController.isGroupNode(item.$key))'
-                         ng-if='item.order!==0'
+                    <md-button class='insertButton md-raised md-primary' ng-if='item.order !== 0 && ((projectController.insertNodeMode && !projectController.isGroupNode(item.$key)) || (projectController.insertGroupMode && projectController.isGroupNode(item.$key)))'
                          ng-click='projectController.insertAfter(item.$key); $event.stopPropagation();'>
                       <md-icon>subdirectory_arrow_left</md-icon>
                       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'insertAfter' | translate }}</md-tooltip>
@@ -493,7 +487,13 @@
                     </div>
                     <div layout='row'>
                       <md-button class='insertButton md-raised md-primary'
-                          ng-if='(projectController.insertNodeMode && !projectController.isGroupNode(inactiveNode.id))'
+                                 ng-if='projectController.insertNodeMode'
+                                 ng-click='projectController.insertInside(inactiveNode.id); $event.stopPropagation();'>
+                        <md-icon>call_received</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'insertInside' | translate }}</md-tooltip>
+                      </md-button>
+                      <md-button class='insertButton md-raised md-primary'
+                          ng-if='projectController.insertGroupMode'
                           ng-click='projectController.insertAfter(inactiveNode.id); $event.stopPropagation();'>
                         <md-icon>subdirectory_arrow_left</md-icon>
                         <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'insertAfter' | translate }}</md-tooltip>
@@ -590,6 +590,7 @@
           </div>
         </div>
         <div ui-view></div>  <!-- this ui-view shows the node authoring view -->
+        <div id="bottom"></div>
       </div>
     </md-content>
   </div>

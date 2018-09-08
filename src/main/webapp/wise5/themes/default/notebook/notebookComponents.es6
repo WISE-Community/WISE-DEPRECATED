@@ -7,7 +7,7 @@ import NotebookReport from './notebookReport/notebookReport';
 import NotebookReportAnnotations from './notebookReportAnnotations/notebookReportAnnotations';
 import NotebookLauncher from './notebookLauncher/notebookLauncher';
 
-let NotebookComponents = angular.module('theme.notebook', []);
+const NotebookComponents = angular.module('theme.notebook', []);
 
 NotebookComponents.component('notebook', Notebook);
 NotebookComponents.component('notebookItem', NotebookItem);

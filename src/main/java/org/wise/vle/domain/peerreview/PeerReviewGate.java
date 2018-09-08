@@ -34,74 +34,37 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.vle.domain.PersistableDomain;
 import org.wise.vle.domain.node.Node;
 
-
 @Entity
-@Table(name="peerreviewgate")
-@Inheritance(strategy=InheritanceType.JOINED)
+@Table(name = "peerreviewgate")
+@Inheritance(strategy = InheritanceType.JOINED)
+@Getter
+@Setter
 public class PeerReviewGate extends PersistableDomain {
 
   @Id
-  @GeneratedValue(strategy=GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id = null;
 
-  @Column(name="runId")
+  @Column(name = "runId")
   private Long runId = null;
 
-  @Column(name="periodId")
+  @Column(name = "periodId")
   private Long periodId = null;
 
   @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
   private Node node;
 
-  @Column(name="open")
+  @Column(name = "open")
   private boolean open = false;
 
   @Override
   protected Class<?> getObjectClass() {
     // TODO Auto-generated method stub
     return null;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public Long getRunId() {
-    return runId;
-  }
-
-  public void setRunId(Long runId) {
-    this.runId = runId;
-  }
-
-  public Long getPeriodId() {
-    return periodId;
-  }
-
-  public void setPeriodId(Long periodId) {
-    this.periodId = periodId;
-  }
-
-  public Node getNode() {
-    return node;
-  }
-
-  public void setNode(Node node) {
-    this.node = node;
-  }
-
-  public boolean isOpen() {
-    return open;
-  }
-
-  public void setOpen(boolean open) {
-    this.open = open;
   }
 }

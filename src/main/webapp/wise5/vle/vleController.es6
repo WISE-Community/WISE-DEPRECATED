@@ -52,6 +52,16 @@ class VLEController {
 
     this.constraintsDisabled = false;
 
+    let userType = this.ConfigService.getConfigParam('userType');
+    let contextPath = this.ConfigService.getConfigParam('contextPath');
+    if (userType == 'student') {
+      this.homePath = contextPath + '/student';
+    } else  if (userType == 'teacher') {
+      this.homePath = contextPath + '/teacher';
+    } else {
+      this.homePath = contextPath;
+    }
+
     if (this.ConfigService.getConfigParam('constraints') == false) {
       this.constraintsDisabled = true;
     }
@@ -266,7 +276,7 @@ class VLEController {
         $mdDialog.hide();
       };
       $scope.chooseSnippet = (snippableItem) => {
-        $scope.NotebookService.addNewItem($event, snippableItem);
+        $scope.NotebookService.addNote($event, snippableItem);
         $mdDialog.hide();
       };
     }

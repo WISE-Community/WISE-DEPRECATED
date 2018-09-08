@@ -32,14 +32,4 @@ import org.wise.portal.domain.Persistable;
  */
 public interface ImmutableAclEntry extends AccessControlEntry, AuditableAccessControlEntry,
     Persistable {
-//
-//    /**
-//     * @return the aceOrder
-//     */
-//    public abstract Integer getAceOrder();
-//
-//    /**
-//     * @return the targetObjectIdentity
-//     */
-//    public abstract MutableAclTargetObjectIdentity getTargetObjectIdentity();
 }

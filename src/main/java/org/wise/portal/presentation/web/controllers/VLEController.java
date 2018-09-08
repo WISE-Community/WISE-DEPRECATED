@@ -23,11 +23,6 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
-import java.util.Properties;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -37,8 +32,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.run.RunService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Properties;
 
 /**
  * Controller for handling student VLE-portal interactions.
@@ -63,13 +62,13 @@ public class VLEController {
       throws Exception {
     String runIdString = request.getParameter("runId");
     Run run = runService.retrieveById(Long.parseLong(runIdString));
-    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+    String contextPath = request.getContextPath();
 
     ModelAndView modelAndView = new ModelAndView("vle");
     modelAndView.addObject("run", run);
-    modelAndView.addObject("vleurl", wiseBaseURL + "/vle/vle.html");
+    modelAndView.addObject("vleurl", contextPath + "/vle/vle.html");
     modelAndView.addObject("vleConfigUrl",
-        wiseBaseURL + "/vleconfig?runId=" + run.getId() + "&mode=run");
+      contextPath + "/vleconfig?runId=" + run.getId() + "&mode=run");
     String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
     String rawProjectUrl = run.getProject().getModulePath();
     String contentUrl = curriculumBaseWWW + rawProjectUrl;
@@ -78,20 +77,20 @@ public class VLEController {
   }
 
   @RequestMapping(value = "/student/run/{runId}")
-  protected String launchVLEWISE5Run(@PathVariable Long runId, ModelMap modelMap) {
-    String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-    modelMap.put("configURL", wiseBaseURL + "/config/studentRun/" + runId);
+  protected String launchVLEWISE5Run(HttpServletRequest request, @PathVariable Long runId, ModelMap modelMap) {
+    String contextPath = request.getContextPath();
+    modelMap.put("configURL", contextPath + "/config/studentRun/" + runId);
     return "student";
   }
 
   @RequestMapping(value = "/project/{projectId}", method = RequestMethod.GET)
-  protected String launchVLEWISE5Preview(@PathVariable String projectId, ModelMap modelMap) {
+  protected String launchVLEWISE5Preview(HttpServletRequest request, @PathVariable String projectId, ModelMap modelMap) {
     try {
       if (!"demo".equals(projectId)) {
         projectService.getById(Long.parseLong(projectId));
       }
-      String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-      modelMap.put("configURL", wiseBaseURL + "/config/preview/" + projectId);
+      String contextPath = request.getContextPath();
+      modelMap.put("configURL", contextPath + "/config/preview/" + projectId);
       return "student";
     } catch (ObjectNotFoundException onfe) {
       onfe.printStackTrace();

@@ -29,8 +29,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.dao.SystemWideSaltSource;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -48,7 +46,6 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Validator for the TeamSignIn form
- *
  * @author Hiroki Terashima
  */
 @Component
@@ -63,32 +60,21 @@ public class TeamSignInFormValidator implements Validator {
   @Autowired
   private WorkgroupService workgroupService;
 
-  @Autowired
-  private SystemWideSaltSource systemSaltSource;
-
-  /**
-   * @see org.springframework.validation.Validator#supports(java.lang.Class)
-   */
   @SuppressWarnings("unchecked")
   public boolean supports(Class clazz) {
     return TeamSignInForm.class.isAssignableFrom(clazz);
   }
 
-  /**
-   * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
-   */
   public void validate(Object teamSignInFormIn, Errors errors) {
     TeamSignInForm teamSignInForm = (TeamSignInForm) teamSignInFormIn;
-    Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username1",
-      "error.teamsignin-username-not-specified");
+        "error.teamsignin-username-not-specified");
 
     if (errors.hasErrors()) {
       return;
     }
 
-    // get the signed in user
     User signedInUser = userService.retrieveUserByUsername(teamSignInForm.getUsername1());
     if (signedInUser == null) {
       errors.rejectValue("username1", "error.teamsignin-user-does-not-exist");
@@ -96,68 +82,39 @@ public class TeamSignInFormValidator implements Validator {
     }
 
     Run run = null;
-
     try {
-      // get the run
       run = runService.retrieveById(teamSignInForm.getRunId());
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
 
-    // get the workgroups the signed in user is in for this run
     List<Workgroup> workgroups = workgroupService.getWorkgroupListByRunAndUser(run, signedInUser);
-
     Workgroup workgroup = null;
-
-    // get the members in the workgroup
     Set<User> membersInWorkgroup = new HashSet<User>();
-
     if (workgroups != null && workgroups.size() > 0) {
-
-      // get the workgroup the signed in user is in
       workgroup = workgroups.get(0);
-
-      // get the members in the workgroup
       membersInWorkgroup = workgroups.get(0).getMembers();
     }
 
-    // loop through all the users that are not signed in (2 through 10)
     for (int x = 1; x < 10; x++) {
       int userIndex = x + 1;
       String usernameField = "username" + userIndex;
       String passwordField = "password" + userIndex;
       String absentField = "absent" + userIndex;
-
-      // get the username, password, and whether the user is absent
       String username = teamSignInForm.getUsernameByString(usernameField);
       String password = teamSignInForm.getPasswordByString(passwordField);
       boolean isAbsent = teamSignInForm.getIsAbsentByString(absentField);
 
       if (!StringUtils.isEmpty(username)) {
-        /*
-         * the username field is not empty so we need to check if this user
-         * is allowed to join the workgroup
-         */
-
         if (!isAbsent) {
-          // the user is not marked as absent
-
-          // get the user
           User user = userService.retrieveUserByUsername(username);
-
           if (user == null) {
-            //the username does not exist
             errors.rejectValue(usernameField, "error.teamsignin-user-does-not-exist");
           } else {
-
-            //get the user details
             MutableUserDetails userDetails = user.getUserDetails();
-
             if (userDetails instanceof TeacherUserDetails) {
-              //username is for a teacher and that is not allowed
               errors.rejectValue(usernameField, "error.teamsignin-teacher-username-specified");
             } else {
-
               /*
                * flag to determine if we need to check the password. we do not need to
                * check the password if the user is not allowed to join the workgroup because
@@ -166,41 +123,23 @@ public class TeamSignInFormValidator implements Validator {
               boolean needToCheckPassword = true;
 
               if (workgroup == null) {
-                // the workgroup has not been created
-
-                // check if the user is already in a workgroup
                 if (workgroupService.isUserInAnyWorkgroupForRun(user, run)) {
-                  // the user is already in another workgroup in the run so we will display an error message
                   errors.rejectValue(passwordField, "error.teamsignin-user-already-in-another-workgroup");
                   needToCheckPassword = false;
                 }
               } else {
-                // the workgroup has already been created
-
-                // check if the user is in the workgroup and not in another workgroup
-
                 if (workgroupService.isUserInWorkgroupForRun(user, run, workgroup)) {
-                  // the user is in the workgroup
                 } else if (workgroupService.isUserInAnotherWorkgroupForRun(user, run, workgroup)) {
-                  // the user is already in another workgroup in the run so we will display an error message
                   errors.rejectValue(passwordField, "error.teamsignin-user-already-in-another-workgroup");
                   needToCheckPassword = false;
                 } else {
-                  // the user is not in a workgroup for the run
                 }
               }
 
               if (needToCheckPassword) {
-                // the user is allowed to join the workgroup so we will now check the password
-
-                // get the hashed password
-                String hashedPassword = encoder.encodePassword(password, systemSaltSource.getSystemWideSalt());
-
                 if (StringUtils.isEmpty(password)) {
-                  //the password field is empty
                   errors.rejectValue(passwordField, "error.teamsignin-password-not-specified");
-                } else if (!user.getUserDetails().getPassword().equals(hashedPassword)) {
-                  //password is incorrect
+                } else if (!userService.isPasswordCorrect(user, password)) {
                   errors.rejectValue(passwordField, "error.teamsignin-incorrect-password");
                 }
               }

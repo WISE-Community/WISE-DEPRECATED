@@ -28,22 +28,20 @@
 					<div>
 						<form:form method="post" action="changepassword.html" commandName="changeStudentPasswordParameters" id="changestudentpassword" autocomplete='off'>
 						<table style="margin:0 auto;">
-							<sec:authorize access="!hasAnyRole('ROLE_ADMINISTRATOR')">
-								<tr>
-									<td><label for="changestudentpassword">
-										<c:choose>
-											<c:when test="${changeStudentPasswordParameters.teacherUser != null}">
-												<!-- teacher is changing the password for another user -->
-												(${changeStudentPasswordParameters.teacherUser.userDetails.username})
-											</c:when>
-											<c:otherwise>
-												<!-- user is changing their own password, don't show who should be typing their password -->
-											</c:otherwise>
-										</c:choose>
-										<spring:message code="changePassword_current" /></label></td>
-					      			<td><form:password path="passwd0" /></td>
-								</tr>
-							</sec:authorize>
+							<tr>
+								<td><label for="changestudentpassword">
+									<c:choose>
+										<c:when test="${changeStudentPasswordParameters.teacherUser != null}">
+											<!-- teacher is changing the password for another user -->
+											(${changeStudentPasswordParameters.teacherUser.userDetails.username})
+										</c:when>
+										<c:otherwise>
+											<!-- user is changing their own password, don't show who should be typing their password -->
+										</c:otherwise>
+									</c:choose>
+									<spring:message code="changePassword_current" /></label></td>
+				      			<td><form:password path="passwd0" /></td>
+							</tr>
 							<tr>
 							<td><label for="changestudentpassword">
 								<c:if test="${changeStudentPasswordParameters.teacherUser != null}">

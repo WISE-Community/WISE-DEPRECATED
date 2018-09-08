@@ -9,28 +9,30 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthoringToolMainController = function () {
-  function AuthoringToolMainController($anchorScroll, $filter, $rootScope, $state, $timeout, ConfigService, ProjectService, TeacherDataService) {
+  function AuthoringToolMainController($anchorScroll, $filter, $mdDialog, $rootScope, $state, $timeout, ConfigService, ProjectService, TeacherDataService, UtilService) {
     var _this = this;
 
     _classCallCheck(this, AuthoringToolMainController);
 
     this.$anchorScroll = $anchorScroll;
     this.$filter = $filter;
+    this.$mdDialog = $mdDialog;
     this.$rootScope = $rootScope;
     this.$state = $state;
     this.$timeout = $timeout;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
     this.TeacherDataService = TeacherDataService;
+    this.UtilService = UtilService;
 
     this.$translate = this.$filter('translate');
     this.projects = this.ConfigService.getConfigParam('projects');
     this.sharedProjects = this.ConfigService.getConfigParam('sharedProjects');
     this.showCreateProjectView = false;
+    this.inProcessOfCreatingProject = false;
+    this.showCreatingProjectMessage = false;
+    this.showErrorCreatingProjectMessage = false;
 
-    this.$rootScope.$on('goHome', function () {
-      _this.saveEvent('goToTeacherHome', 'Navigation', null, null);
-    });
     this.$rootScope.$on('logOut', function () {
       _this.saveEvent('logOut', 'Navigation', null, null);
     });
@@ -131,6 +133,7 @@ var AuthoringToolMainController = function () {
       var doCopyConfirmMessage = this.$translate('areYouSureYouWantToCopyThisProject') + '\n\n' + projectInfo;
       if (confirm(doCopyConfirmMessage)) {
         this.ProjectService.copyProject(projectId).then(function (projectId) {
+          _this2.showCopyingProjectMessage();
           _this2.saveEvent('projectCopied', 'Authoring', null, projectId);
 
           // refresh the project list and highlight the newly copied project
@@ -139,13 +142,31 @@ var AuthoringToolMainController = function () {
             _this2.scrollToTopOfPage();
             // the timeout is necessary for new element to appear on the page
             _this2.$timeout(function () {
-              var newProjectElement = $('#' + projectId);
               var highlightDuration = 3000;
-              _this2.highlightElement(newProjectElement, highlightDuration);
+              _this2.UtilService.temporarilyHighlightElement(projectId, highlightDuration);
             });
+            _this2.$mdDialog.hide();
           });
         });
       }
+    }
+  }, {
+    key: 'showCopyingProjectMessage',
+    value: function showCopyingProjectMessage() {
+      this.showMessageInModalDialog(this.$translate('copyingProject'));
+    }
+  }, {
+    key: 'showLoadingProjectMessage',
+    value: function showLoadingProjectMessage() {
+      this.showMessageInModalDialog(this.$translate('loadingProject'));
+    }
+  }, {
+    key: 'showMessageInModalDialog',
+    value: function showMessageInModalDialog(message) {
+      this.$mdDialog.show({
+        template: '\n        <div align="center">\n          <div style="width: 200px; height: 100px; margin: 20px;">\n            <span>' + message + '...</span>\n            <br/>\n            <br/>\n            <md-progress-circular md-mode="indeterminate"></md-progress-circular>\n          </div>\n        </div>\n      ',
+        clickOutsideToClose: false
+      });
     }
   }, {
     key: 'createNewProjectButtonClicked',
@@ -163,68 +184,123 @@ var AuthoringToolMainController = function () {
     }
 
     /**
-     * Highlights the specified element in yellow for specified duration, used
-     * to draw user's attention to new changes.
-     * @param componentElement DOM element to highlight
-     * @param duration Number how long (in ms) to highlight
-     */
-
-  }, {
-    key: 'highlightElement',
-    value: function highlightElement(componentElement, duration) {
-      var _this3 = this;
-
-      var originalBackgroundColor = componentElement.css('backgroundColor');
-      componentElement.css('background-color', '#FFFF9C');
-
-      /*
-       * Use a timeout before starting to transition back to
-       * the original background color. For some reason the
-       * element won't get highlighted in the first place
-       * unless this timeout is used.
-       */
-      this.$timeout(function () {
-        // slowly fade back to original background color
-        componentElement.css({
-          'transition': 'background-color 3s ease-in-out',
-          'background-color': originalBackgroundColor
-        });
-
-        /*
-         * remove these styling fields after we perform
-         * the fade otherwise the regular mouseover
-         * background color change will not work
-         */
-        _this3.$timeout(function () {
-          componentElement.css({
-            'transition': '',
-            'background-color': ''
-          });
-        }, duration);
-      });
-    }
-
-    /**
      * Create a new project and open it
      */
 
   }, {
     key: 'registerNewProject',
     value: function registerNewProject() {
-      var _this4 = this;
+      var _this3 = this;
 
       var projectTitle = this.project.metadata.title;
       if (projectTitle == null || projectTitle == '') {
         alert(this.$translate('pleaseEnterAProjectTitleForYourNewProject'));
       } else {
-        var projectJSONString = angular.toJson(this.project, 4);
-        var commitMessage = this.$translate('projectCreatedOn') + new Date().getTime();
-        this.ProjectService.registerNewProject(projectJSONString, commitMessage).then(function (projectId) {
-          _this4.showCreateProjectView = false;
-          _this4.saveEvent('projectCreated', 'Authoring', null, projectId);
-          _this4.$state.go('root.project', { projectId: projectId });
-        });
+        /*
+         * Make sure we are not already in the process of creating a project.
+         * This is used to make sure the author does not inadvertently click
+         * the register button twice which can lead to problems in the back
+         * end.
+         */
+        if (!this.isInProcessOfCreatingProject()) {
+          this.turnOnInProcessOfCreatingProject();
+          this.turnOnCreatingProjectMessage();
+          this.startErrorCreatingProjectTimeout();
+          var projectJSONString = angular.toJson(this.project, 4);
+          var commitMessage = this.$translate('projectCreatedOn') + new Date().getTime();
+          this.ProjectService.registerNewProject(projectJSONString, commitMessage).then(function (projectId) {
+            _this3.cancelErrorCreatingProjectTimeout();
+            _this3.saveEvent('projectCreated', 'Authoring', null, projectId);
+            _this3.$state.go('root.project', { projectId: projectId });
+          }).catch(function () {
+            _this3.turnOffInProcessOfCreatingProject();
+            _this3.turnOnErrorCreatingProjectMessage();
+            _this3.cancelErrorCreatingProjectTimeout();
+          });
+        }
       }
+    }
+  }, {
+    key: 'turnOnInProcessOfCreatingProject',
+    value: function turnOnInProcessOfCreatingProject() {
+      this.inProcessOfCreatingProject = true;
+    }
+  }, {
+    key: 'turnOffInProcessOfCreatingProject',
+    value: function turnOffInProcessOfCreatingProject() {
+      this.inProcessOfCreatingProject = false;
+    }
+
+    /**
+     * @returns {boolean} Whether we have made a request to the server to create
+     * a project and are now waiting for a response.
+     */
+
+  }, {
+    key: 'isInProcessOfCreatingProject',
+    value: function isInProcessOfCreatingProject() {
+      return this.inProcessOfCreatingProject;
+    }
+
+    /**
+     * Show the message that says "Creating Project..." after the author clicks
+     * the "Create" button that makes the request to create the project on the
+     * server.
+     */
+
+  }, {
+    key: 'turnOnCreatingProjectMessage',
+    value: function turnOnCreatingProjectMessage() {
+      this.showCreatingProjectMessage = true;
+      this.showErrorCreatingProjectMessage = false;
+    }
+
+    /**
+     * Show the message that says "Error Creating Project".
+     */
+
+  }, {
+    key: 'turnOnErrorCreatingProjectMessage',
+    value: function turnOnErrorCreatingProjectMessage() {
+      this.showCreatingProjectMessage = false;
+      this.showErrorCreatingProjectMessage = true;
+    }
+
+    /**
+     * Hide the messages that say "Creating Project..." and "Error Creating Project".
+     */
+
+  }, {
+    key: 'clearAllCreatingProjectMessages',
+    value: function clearAllCreatingProjectMessages() {
+      this.showCreatingProjectMessage = false;
+      this.showErrorCreatingProjectMessage = false;
+    }
+
+    /**
+     * Create a timeout to display the "Error Creating Project" message in case
+     * an error occurs and the server does not respond.
+     */
+
+  }, {
+    key: 'startErrorCreatingProjectTimeout',
+    value: function startErrorCreatingProjectTimeout() {
+      var _this4 = this;
+
+      this.errorCreatingProjectTimeout = this.$timeout(function () {
+        _this4.turnOffInProcessOfCreatingProject();
+        _this4.turnOnErrorCreatingProjectMessage();
+      }, 10000);
+    }
+
+    /**
+     * Cancel the timeout for displaying the "Error Creating Project" message.
+     */
+
+  }, {
+    key: 'cancelErrorCreatingProjectTimeout',
+    value: function cancelErrorCreatingProjectTimeout() {
+      this.$timeout.cancel(this.errorCreatingProjectTimeout);
     }
   }, {
     key: 'cancelRegisterNewProject',
@@ -232,6 +308,7 @@ var AuthoringToolMainController = function () {
       // clear the project template
       this.project = null;
       this.showCreateProjectView = false;
+      this.clearAllCreatingProjectMessages();
     }
 
     /**
@@ -242,6 +319,7 @@ var AuthoringToolMainController = function () {
   }, {
     key: 'openProject',
     value: function openProject(projectId) {
+      this.showLoadingProjectMessage();
       this.$state.go('root.project', { projectId: projectId });
     }
 
@@ -264,6 +342,7 @@ var AuthoringToolMainController = function () {
   }, {
     key: 'goHome',
     value: function goHome() {
+      this.saveEvent('goToTeacherHome', 'Navigation', null, null);
       window.location = this.ConfigService.getWISEBaseURL() + '/teacher';
     }
 
@@ -298,7 +377,7 @@ var AuthoringToolMainController = function () {
 
 ;
 
-AuthoringToolMainController.$inject = ['$anchorScroll', '$filter', '$rootScope', '$state', '$timeout', 'ConfigService', 'ProjectService', 'TeacherDataService'];
+AuthoringToolMainController.$inject = ['$anchorScroll', '$filter', '$mdDialog', '$rootScope', '$state', '$timeout', 'ConfigService', 'ProjectService', 'TeacherDataService', 'UtilService'];
 
 exports.default = AuthoringToolMainController;
 //# sourceMappingURL=authoringToolMainController.js.map

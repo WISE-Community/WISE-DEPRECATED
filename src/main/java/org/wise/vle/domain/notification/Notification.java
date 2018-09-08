@@ -23,6 +23,8 @@
  */
 package org.wise.vle.domain.notification;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.portal.domain.group.Group;
@@ -46,19 +48,21 @@ import java.sql.Timestamp;
   @Index(columnList = "toWorkgroupId", name = "notificationToWorkgroupIdIndex"),
   @Index(columnList = "fromWorkgroupId", name = "notificationFromWorkgroupIdIndex")
 })
+@Getter
+@Setter
 public class Notification extends PersistableDomain {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private Integer id = null;  // unique id of the notification
+  private Integer id = null;
 
   @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "runId", nullable = false)
-  private Run run;   // which run this notification is for
+  private Run run;
 
   @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "periodId", nullable = false)
-  private Group period;   // which period this notification is for
+  private Group period;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "toWorkgroupId")
@@ -103,126 +107,6 @@ public class Notification extends PersistableDomain {
     return Notification.class;
   }
 
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public Run getRun() {
-    return run;
-  }
-
-  public void setRun(Run run) {
-    this.run = run;
-  }
-
-  public Group getPeriod() {
-    return period;
-  }
-
-  public void setPeriod(Group period) {
-    this.period = period;
-  }
-
-  public Workgroup getToWorkgroup() {
-    return toWorkgroup;
-  }
-
-  public void setToWorkgroup(Workgroup toWorkgroup) {
-    this.toWorkgroup = toWorkgroup;
-  }
-
-  public Workgroup getFromWorkgroup() {
-    return fromWorkgroup;
-  }
-
-  public void setFromWorkgroup(Workgroup fromWorkgroup) {
-    this.fromWorkgroup = fromWorkgroup;
-  }
-
-  public String getGroupId() {
-    return groupId;
-  }
-
-  public void setGroupId(String groupId) {
-    this.groupId = groupId;
-  }
-
-  public String getNodeId() {
-    return nodeId;
-  }
-
-  public void setNodeId(String nodeId) {
-    this.nodeId = nodeId;
-  }
-
-  public String getComponentId() {
-    return componentId;
-  }
-
-  public void setComponentId(String componentId) {
-    this.componentId = componentId;
-  }
-
-  public String getComponentType() {
-    return componentType;
-  }
-
-  public void setComponentType(String componentType) {
-    this.componentType = componentType;
-  }
-
-  public Timestamp getTimeGenerated() {
-    return timeGenerated;
-  }
-
-  public void setTimeGenerated(Timestamp timeGenerated) {
-    this.timeGenerated = timeGenerated;
-  }
-
-  public Timestamp getTimeDismissed() {
-    return timeDismissed;
-  }
-
-  public void setTimeDismissed(Timestamp timeDismissed) {
-    this.timeDismissed = timeDismissed;
-  }
-
-  public Timestamp getServerSaveTime() {
-    return serverSaveTime;
-  }
-
-  public void setServerSaveTime(Timestamp serverSaveTime) {
-    this.serverSaveTime = serverSaveTime;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
-
-  public String getData() {
-    return data;
-  }
-
-  public void setData(String data) {
-    this.data = data;
-  }
-
   /**
    * Get the JSON representation of the StudentWork
    *
@@ -230,9 +114,7 @@ public class Notification extends PersistableDomain {
    */
   public JSONObject toJSON() {
     JSONObject notificationJSONObject = new JSONObject();
-
     try {
-
       if (this.id != null) {
         notificationJSONObject.put("id", this.id);
       }
@@ -296,11 +178,9 @@ public class Notification extends PersistableDomain {
       if (this.timeDismissed != null) {
         notificationJSONObject.put("timeDismissed", timeDismissed.getTime());
       }
-
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return notificationJSONObject;
   }
 }

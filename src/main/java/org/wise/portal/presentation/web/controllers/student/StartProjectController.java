@@ -48,9 +48,14 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
-import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 /**
  * Controller to allow students to launch the VLE using the project.
@@ -164,7 +169,7 @@ public class StartProjectController {
         JSONArray absentUserIds = new JSONArray();
         presentUserIds.put(user.getId());
         addStudentAttendanceEntry(workgroupId, runId, presentUserIds, absentUserIds);
-        return projectService.launchProject(workgroup);
+        return projectService.launchProject(workgroup, request.getContextPath());
       } else {
         // need to create a workgroup for this user, take them to create workgroup wizard
         ModelAndView modelAndView = new ModelAndView(SELECT_TEAM_URL);
@@ -208,7 +213,7 @@ public class StartProjectController {
         presentUserIds.put(user.getId());
         addStudentAttendanceEntry(workgroupId, runId, presentUserIds, absentUserIds);
         notifyServletSession(request, run);
-        return projectService.launchProject(workgroup);
+        return projectService.launchProject(workgroup, request.getContextPath());
       } else {
         ModelAndView modelAndView = new ModelAndView(TEAM_SIGN_IN_URL);
         modelAndView.addObject("runId", runId);
@@ -248,7 +253,7 @@ public class StartProjectController {
         presentUserIds.put(user.getId());
         addStudentAttendanceEntry(workgroupId, runId, presentUserIds, absentUserIds);
         notifyServletSession(request, run);
-        return projectService.launchProject(workgroup);
+        return projectService.launchProject(workgroup, request.getContextPath());
       } else {
         ModelAndView modelAndView = new ModelAndView(TEAM_SIGN_IN_URL);
         modelAndView.addObject("runId", runId);

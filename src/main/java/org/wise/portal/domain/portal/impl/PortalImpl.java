@@ -34,6 +34,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.portal.Portal;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +47,8 @@ import org.json.JSONObject;
  */
 @Entity
 @Table(name = "portal")
+@Getter
+@Setter
 public class PortalImpl implements Portal {
 
   @Transient
@@ -89,98 +93,6 @@ public class PortalImpl implements Portal {
   @Column(name = "OPTLOCK")
   protected Integer version = null;
 
-  /**
-   * @return the sendEmailOnException value
-   */
-  public boolean isSendMailOnException() {
-    return isSendMailOnException;
-  }
-
-  /**
-   * @param isSendMailOnException the sendEmailOnException to set
-   */
-  public void setSendMailOnException(boolean isSendMailOnException) {
-    this.isSendMailOnException = isSendMailOnException;
-  }
-
-  /**
-   * @return the sendmailProperties
-   */
-  public Properties getSendmailProperties() {
-    return sendmailProperties;
-  }
-
-  /**
-   * @param sendmailProperties the sendmailProperties to set
-   */
-  public void setSendmailProperties(Properties sendmailProperties) {
-    this.sendmailProperties = sendmailProperties;
-  }
-
-  /**
-   * @see org.wise.portal.domain.portal.Portal#getPortalName()
-   */
-  public String getPortalName() {
-    return this.portalName;
-  }
-
-  /**
-   * @see org.wise.portal.domain.portal.Portal#setPortalName(java.lang.String)
-   */
-  public void setPortalName(String portalName) {
-    this.portalName = portalName;
-  }
-
-  public Integer getId() {
-    return this.id;
-  }
-
-  @SuppressWarnings("unused")
-  private void setId(Integer id) {
-    this.id = id;
-  }
-
-  @SuppressWarnings("unused")
-  private Integer getVersion() {
-    return this.version;
-  }
-
-  @SuppressWarnings("unused")
-  private void setVersion(Integer version) {
-    this.version = version;
-  }
-
-  /**
-   * @return the comments
-   */
-  public String getComments() {
-    return comments;
-  }
-
-  /**
-   * @param comments the comments to set
-   */
-  public void setComments(String comments) {
-    this.comments = comments;
-  }
-
-  /**
-   * @return the settings
-   */
-  public String getSettings() {
-    return settings;
-  }
-
-  /**
-   * @param settings the settings to set
-   */
-  public void setSettings(String settings) {
-    this.settings = settings;
-  }
-
-  /**
-   * @see org.wise.portal.domain.portal.Portal#isLoginAllowed()
-   */
   public boolean isLoginAllowed() {
     try {
       JSONObject settings = new JSONObject(getSettings());
@@ -190,9 +102,6 @@ public class PortalImpl implements Portal {
     return true;  // allow login by default if there was an exception
   }
 
-  /**
-   * @see org.wise.portal.domain.portal.Portal#setLoginAllowed(boolean)
-   */
   public void setLoginAllowed(boolean loginAllowed) {
     try {
       JSONObject settings = new JSONObject(getSettings());
@@ -202,9 +111,6 @@ public class PortalImpl implements Portal {
     }
   }
 
-  /**
-   * @see org.wise.portal.domain.portal.Portal#isSendStatisticsToHub()
-   */
   public boolean isSendStatisticsToHub() {
     try {
       JSONObject settings = new JSONObject(getSettings());
@@ -214,9 +120,6 @@ public class PortalImpl implements Portal {
     return false;  // don't send statistics by default if there was an exception
   }
 
-  /**
-   * @see org.wise.portal.domain.portal.Portal#setSendStatisticsToHub(boolean)
-   */
   public void setSendStatisticsToHub(boolean doSendStatistics) {
     try {
       JSONObject settings = new JSONObject(getSettings());
@@ -224,69 +127,5 @@ public class PortalImpl implements Portal {
       this.setSettings(settings.toString());
     } catch (JSONException e) {
     }
-  }
-
-  /**
-   * @return the address
-   */
-  public String getAddress() {
-    return address;
-  }
-
-  /**
-   * @param address the address to set
-   */
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
-  /**
-   * @return the googleMapKey
-   */
-  public String getGoogleMapKey() {
-    return googleMapKey;
-  }
-
-  /**
-   * @param googleMapKey the googleMapKey to set
-   */
-  public void setGoogleMapKey(String googleMapKey) {
-    this.googleMapKey = googleMapKey;
-  }
-
-  @Override
-  public String getRunSurveyTemplate() {
-    return this.runSurveyTemplate;
-  }
-
-  @Override
-  public void setRunSurveyTemplate(String runSurveyTemplate) {
-    this.runSurveyTemplate = runSurveyTemplate;
-  }
-
-  /**
-   * Get the project metadata string
-   *
-   * @return project metadata string
-   */
-  public String getProjectMetadataSettings() {
-    return this.projectMetadataSettings;
-  }
-
-  /**
-   * Set the project metadata string
-   *
-   * @param projectMetadataSettings project metadata setting string
-   */
-  public void setProjectMetadataSettings (String projectMetadataSettings) {
-    this.projectMetadataSettings = projectMetadataSettings;
-  }
-
-  public void setProjectLibraryGroups(String projectLibraryGroups) {
-    this.projectLibraryGroups = projectLibraryGroups;
-  }
-
-  public String getProjectLibraryGroups() {
-    return projectLibraryGroups;
   }
 }

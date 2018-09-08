@@ -6,383 +6,179 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _componentController = require('../componentController');
+
+var _componentController2 = _interopRequireDefault(_componentController);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var AudioOscillatorController = function () {
-  function AudioOscillatorController($filter, $injector, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConfigService, NodeService, AudioOscillatorService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
-    var _this2 = this;
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AudioOscillatorController = function (_ComponentController) {
+  _inherits(AudioOscillatorController, _ComponentController);
+
+  function AudioOscillatorController($filter, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, AudioOscillatorService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
     _classCallCheck(this, AudioOscillatorController);
 
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.$timeout = $timeout;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
-    this.NodeService = NodeService;
-    this.AudioOscillatorService = AudioOscillatorService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-    this.idToOrder = this.ProjectService.idToOrder;
+    var _this = _possibleConstructorReturn(this, (AudioOscillatorController.__proto__ || Object.getPrototypeOf(AudioOscillatorController)).call(this, $filter, $mdDialog, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService));
 
-    this.$translate = this.$filter('translate');
-
-    // the node id of the current node
-    this.nodeId = null;
-
-    // the component id
-    this.componentId = null;
-
-    // field that will hold the component content
-    this.componentContent = null;
-
-    // field that will hold the authoring component content
-    this.authoringComponentContent = null;
+    _this.$q = $q;
+    _this.$timeout = $timeout;
+    _this.AudioOscillatorService = AudioOscillatorService;
 
     // holds the text that the student has typed
-    this.studentResponse = '';
+    _this.studentResponse = '';
 
     // an array of frequencies that the student has played
-    this.frequenciesPlayed = [];
+    _this.frequenciesPlayed = [];
 
     // an array of sorted frequencies that the student has played
-    this.frequenciesPlayedSorted = [];
+    _this.frequenciesPlayedSorted = [];
 
     // the number of frequences the student has played
-    this.numberOfFrequenciesPlayed = 0;
+    _this.numberOfFrequenciesPlayed = 0;
 
     // the lowest frequency the student played
-    this.minFrequencyPlayed = null;
+    _this.minFrequencyPlayed = null;
 
     // the highest frequency the student played
-    this.maxFrequencyPlayed = null;
+    _this.maxFrequencyPlayed = null;
 
     // holds student attachments like assets
-    this.attachments = [];
-
-    // whether the step should be disabled
-    this.isDisabled = false;
-
-    // whether the student work is dirty and needs saving
-    this.isDirty = false;
-
-    // whether the student work has changed since last submit
-    this.isSubmitDirty = false;
-
-    // message to show next to save/submit buttons
-    this.saveMessage = {
-      text: '',
-      time: ''
-    };
-
-    // whether this component is showing previous work
-    this.isShowPreviousWork = false;
-
-    // whether the student work is for a submit
-    this.isSubmit = false;
-
-    // whether students can attach files to their work
-    this.isStudentAttachmentEnabled = false;
-
-    // whether the prompt is shown or not
-    this.isPromptVisible = true;
-
-    // whether the save button is shown or not
-    this.isSaveButtonVisible = false;
-
-    // whether the submit button is shown or not
-    this.isSubmitButtonVisible = false;
-
-    // whether the submit button is disabled
-    this.isSubmitButtonDisabled = false;
-
-    // counter to keep track of the number of submits
-    this.submitCounter = 0;
-
-    // flag for whether to show the advanced authoring
-    this.showAdvancedAuthoring = false;
-
-    // whether the JSON authoring is displayed
-    this.showJSONAuthoring = false;
+    _this.attachments = [];
 
     // the latest annotations
-    this.latestAnnotations = null;
+    _this.latestAnnotations = null;
 
     // whether the audio is playing
-    this.isPlaying = false;
+    _this.isPlaying = false;
 
     // default oscillator type to sine
-    this.oscillatorType = 'sine';
+    _this.oscillatorType = 'sine';
 
     // default frequency is 440
-    this.frequency = 440;
+    _this.frequency = 440;
 
     // holds the oscillator types the student can choose
-    this.oscillatorTypes = [];
+    _this.oscillatorTypes = [];
 
     // the default dimensions of the oscilloscope
-    this.oscilloscopeId = 'oscilloscope';
-    this.oscilloscopeWidth = 800;
-    this.oscilloscopeHeight = 400;
-    this.gridCellSize = 50;
+    _this.oscilloscopeId = 'oscilloscope';
+    _this.oscilloscopeWidth = 800;
+    _this.oscilloscopeHeight = 400;
+    _this.gridCellSize = 50;
 
     // whether we should stop drawing after a good draw
-    this.stopAfterGoodDraw = true;
+    _this.stopAfterGoodDraw = true;
 
-    this.showOscillatorTypeChooser = false;
-    this.availableOscillatorTypes = ['sine', 'square', 'triangle', 'sawtooth'];
-    this.oscillatorTypeToAdd = 'sine';
+    _this.showOscillatorTypeChooser = false;
+    _this.availableOscillatorTypes = ['sine', 'square', 'triangle', 'sawtooth'];
+    _this.oscillatorTypeToAdd = 'sine';
 
     // the text to display on the play/stop button
-    this.playStopButtonText = this.$translate('audioOscillator.play');
+    _this.playStopButtonText = _this.$translate('audioOscillator.play');
 
-    // the options for when to update this component from a connected component
-    this.connectedComponentUpdateOnOptions = [{
-      value: 'change',
-      text: 'Change'
-    }, {
-      value: 'submit',
-      text: 'Submit'
-    }];
+    if (_this.mode === 'student') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
+      _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
 
-    // the component types we are allowed to connect to
-    this.allowedConnectedComponentTypes = [{
-      type: 'AudioOscillator'
-    }];
+      // get the latest annotations
+      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+    } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isDisabled = true;
 
-    // get the current node and node id
-    var currentNode = this.StudentDataService.getCurrentNode();
-    if (currentNode != null) {
-      this.nodeId = currentNode.id;
-    } else {
-      this.nodeId = this.$scope.nodeId;
+      // get the latest annotations
+      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+    } else if (_this.mode === 'onlyShowWork') {
+      _this.isPromptVisible = false;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isDisabled = true;
+    } else if (_this.mode === 'showPreviousWork') {
+      _this.isPromptVisible = true;
+      _this.isSaveButtonVisible = false;
+      _this.isSubmitButtonVisible = false;
+      _this.isDisabled = true;
     }
 
-    // get the component content from the scope
-    this.componentContent = this.$scope.componentContent;
+    _this.oscilloscopeId = 'oscilloscope' + _this.componentId;
 
-    // get the authoring component content
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
-    this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
+    // load the parameters into the component
+    _this.setParametersFromComponentContent();
 
-    /*
-     * get the original component content. this is used when showing
-     * previous work from another component.
-     */
-    this.originalComponentContent = this.$scope.originalComponentContent;
+    var componentState = null;
 
-    this.mode = this.$scope.mode;
+    // set whether studentAttachment is enabled
+    _this.isStudentAttachmentEnabled = _this.componentContent.isStudentAttachmentEnabled;
 
-    if (this.componentContent != null) {
+    // get the component state from the scope
+    componentState = _this.$scope.componentState;
 
-      // get the component id
-      this.componentId = this.componentContent.id;
-
-      if (this.mode === 'student') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-        // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-
-        // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      } else if (this.mode === 'onlyShowWork') {
-        this.isPromptVisible = false;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'showPreviousWork') {
-        this.isPromptVisible = true;
-        this.isSaveButtonVisible = false;
-        this.isSubmitButtonVisible = false;
-        this.isDisabled = true;
-      } else if (this.mode === 'authoring') {
-        // generate the summernote rubric element id
-        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-
-        // set the component rubric into the summernote rubric
-        this.summernoteRubricHTML = this.componentContent.rubric;
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('INSERT_ASSET');
-
+    if (_this.mode == 'student') {
+      if (_this.UtilService.hasShowWorkConnectedComponent(_this.componentContent)) {
+        // we will show work from another component
+        _this.handleConnectedComponents();
+      } else if (_this.AudioOscillatorService.componentStateHasStudentWork(componentState, _this.componentContent)) {
         /*
-         * create the custom button for inserting WISE assets into
-         * summernote
+         * the student has work so we will populate the work into this
+         * component
          */
-        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
-
-        /*
-         * the options that specifies the tools to display in the
-         * summernote prompt
-         */
-        this.summernoteRubricOptions = {
-          toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
-          height: 300,
-          disableDragAndDrop: true,
-          buttons: {
-            insertAssetButton: InsertAssetButton
-          }
-        };
-
-        // update which oscillator types should be checked
-        this.authoringProcessCheckedOscillatorTypes();
-
-        this.updateAdvancedAuthoringView();
-
-        $scope.$watch(function () {
-          return this.authoringComponentContent;
-        }.bind(this), function (newValue, oldValue) {
-          var _this = this;
-
-          // stop the audio if it is playing
-          this.stop();
-
-          // inject asset paths if necessary
-          this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
-          this.submitCounter = 0;
-          this.isSaveButtonVisible = this.componentContent.showSaveButton;
-          this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-          // load the parameters into the component
-          this.setParametersFromComponentContent();
-
-          // draw the oscilloscope gride after the view has rendered
-          $timeout(function () {
-            _this.drawOscilloscopeGrid();
-          }, 0);
-        }.bind(this), true);
+        _this.setStudentWork(componentState);
+      } else if (_this.UtilService.hasConnectedComponent(_this.componentContent)) {
+        // we will import work from another component
+        _this.handleConnectedComponents();
       }
+    } else {
+      // populate the student work into this component
+      _this.setStudentWork(componentState);
+    }
 
-      this.oscilloscopeId = 'oscilloscope' + this.componentId;
+    // check if the student has used up all of their submits
+    if (_this.componentContent.maxSubmitCount != null && _this.submitCounter >= _this.componentContent.maxSubmitCount) {
+      /*
+       * the student has used up all of their chances to submit so we
+       * will disable the submit button
+       */
+      _this.isSubmitButtonDisabled = true;
+    }
 
-      // load the parameters into the component
-      this.setParametersFromComponentContent();
+    _this.disableComponentIfNecessary();
 
-      var componentState = null;
+    if (_this.$scope.$parent.nodeController != null) {
+      // register this component with the parent node
+      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
+    }
 
-      // set whether studentAttachment is enabled
-      this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+    if (_this.mode !== 'grading' && _this.mode !== 'gradingRevision') {
+      // create the audio context
+      _this.audioContext = new AudioContext();
 
-      // get the component state from the scope
-      componentState = this.$scope.componentState;
-
-      if (this.mode == 'student') {
-        if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
-          // we will show work from another component
-          this.handleConnectedComponents();
-        } else if (this.AudioOscillatorService.componentStateHasStudentWork(componentState, this.componentContent)) {
-          /*
-           * the student has work so we will populate the work into this
-           * component
-           */
-          this.setStudentWork(componentState);
-        } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-          // we will import work from another component
-          this.handleConnectedComponents();
-        } else if (componentState == null) {
-          // check if we need to import work
-
-          if (componentState == null) {
-            /*
-             * only import work if the student does not already have
-             * work for this component
-             */
-
-            // check if we need to import work
-            var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-            var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-
-            if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-              /*
-               * check if the node id is in the field that we used to store
-               * the import previous work node id in
-               */
-              importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-            }
-
-            if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-              /*
-               * check if the component id is in the field that we used to store
-               * the import previous work component id in
-               */
-              importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-            }
-
-            if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-              // import the work from the other component
-              this.importWork();
-            } else if (this.componentContent.starterSentence != null) {
-              /*
-               * the student has not done any work and there is a starter sentence
-               * so we will populate the textarea with the starter sentence
-               */
-              this.studentResponse = this.componentContent.starterSentence;
-            }
-          } else {
-            // populate the student work into this component
-            this.setStudentWork(componentState);
-          }
-        }
-      } else {
-        // populate the student work into this component
-        this.setStudentWork(componentState);
-      }
-
-      // check if the student has used up all of their submits
-      if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-        /*
-         * the student has used up all of their chances to submit so we
-         * will disable the submit button
-         */
-        this.isSubmitButtonDisabled = true;
-      }
-
-      // check if we need to lock this component
-      this.calculateDisabled();
-
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-      }
-
-      if (this.mode !== 'grading' && this.mode !== 'gradingRevision') {
-        // create the audio context
-        this.audioContext = new AudioContext();
-
-        /*
-         * draw the oscilloscope grid after angular has finished rendering
-         * the view. we need to wait until after angular has set the
-         * canvas width and height to draw the grid because setting the
-         * dimensions of the canvas will erase it.
-         */
-        $timeout(function () {
-          _this2.drawOscilloscopeGrid();
-        }, 0);
-      }
+      /*
+       * draw the oscilloscope grid after angular has finished rendering
+       * the view. we need to wait until after angular has set the
+       * canvas width and height to draw the grid because setting the
+       * dimensions of the canvas will erase it.
+       */
+      $timeout(function () {
+        _this.drawOscilloscopeGrid();
+      }, 0);
     }
 
     /**
      * Returns true iff there is student work that hasn't been saved yet
      */
-    this.$scope.isDirty = function () {
+    _this.$scope.isDirty = function () {
       return this.$scope.audioOscillatorController.isDirty;
-    }.bind(this);
+    }.bind(_this);
 
     /**
      * Get the component state from this component. The parent node will
@@ -392,7 +188,7 @@ var AudioOscillatorController = function () {
      * action (optional; default is false)
      * @return a component state containing the student data
      */
-    this.$scope.getComponentState = function (isSubmit) {
+    _this.$scope.getComponentState = function (isSubmit) {
       var deferred = this.$q.defer();
       var getState = false;
       var action = 'change';
@@ -424,192 +220,36 @@ var AudioOscillatorController = function () {
       }
 
       return deferred.promise;
-    }.bind(this);
-
-    /**
-     * The parent node submit button was clicked
-     */
-    this.$scope.$on('nodeSubmitClicked', function (event, args) {
-
-      // get the node id of the node
-      var nodeId = args.nodeId;
-
-      // make sure the node id matches our parent node
-      if (this.nodeId === nodeId) {
-
-        // trigger the submit
-        var submitTriggeredBy = 'nodeSubmitButton';
-        this.submit(submitTriggeredBy);
-      }
-    }.bind(this));
-
-    /**
-     * Listen for the 'studentWorkSavedToServer' event which is fired when
-     * we receive the response from saving a component state to the server
-     */
-    this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function (event, args) {
-
-      var componentState = args.studentWork;
-
-      // check that the component state is for this component
-      if (componentState && this.nodeId === componentState.nodeId && this.componentId === componentState.componentId) {
-
-        // set isDirty to false because the component state was just saved and notify node
-        this.isDirty = false;
-        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
-
-        var isAutoSave = componentState.isAutoSave;
-        var isSubmit = componentState.isSubmit;
-        var serverSaveTime = componentState.serverSaveTime;
-        var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-        // set save message
-        if (isSubmit) {
-          this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
-
-          this.lockIfNecessary();
-
-          // set isSubmitDirty to false because the component state was just submitted and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-        } else if (isAutoSave) {
-          this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
-        } else {
-          this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
-        }
-      }
-    }));
-
-    /**
-     * Listen for the 'annotationSavedToServer' event which is fired when
-     * we receive the response from saving an annotation to the server
-     */
-    this.$scope.$on('annotationSavedToServer', function (event, args) {
-
-      if (args != null) {
-
-        // get the annotation that was saved to the server
-        var annotation = args.annotation;
-
-        if (annotation != null) {
-
-          // get the node id and component id of the annotation
-          var annotationNodeId = annotation.nodeId;
-          var annotationComponentId = annotation.componentId;
-
-          // make sure the annotation was for this component
-          if (_this2.nodeId === annotationNodeId && _this2.componentId === annotationComponentId) {
-
-            // get latest score and comment annotations for this component
-            _this2.latestAnnotations = _this2.AnnotationService.getLatestComponentAnnotations(_this2.nodeId, _this2.componentId, _this2.workgroupId);
-          }
-        }
-      }
-    });
+    }.bind(_this);
 
     /**
      * Listen for the 'exitNode' event which is fired when the student
      * exits the parent node. This will perform any necessary cleanup
      * when the student exits the parent node.
      */
-    this.$scope.$on('exitNode', function (event, args) {
-      if (_this2.mode !== 'grading') {
+    _this.$scope.$on('exitNode', function (event, args) {
+      if (_this.mode !== 'grading') {
         // stop playing the audio if the student leaves the step
-        _this2.stop();
-        _this2.audioContext.close();
+        _this.stop();
+        _this.audioContext.close();
       }
     });
 
-    /*
-     * Listen for the assetSelected event which occurs when the user
-     * selects an asset from the choose asset popup
-     */
-    this.$scope.$on('assetSelected', function (event, args) {
-
-      if (args != null) {
-
-        // make sure the event was fired for this component
-        if (args.nodeId == _this2.nodeId && args.componentId == _this2.componentId) {
-          // the asset was selected for this component
-          var assetItem = args.assetItem;
-
-          if (assetItem != null) {
-            var fileName = assetItem.fileName;
-
-            if (fileName != null) {
-              /*
-               * get the assets directory path
-               * e.g.
-               * /wise/curriculum/3/
-               */
-              var assetsDirectoryPath = _this2.ConfigService.getProjectAssetsDirectoryPath();
-              var fullAssetPath = assetsDirectoryPath + '/' + fileName;
-
-              var summernoteId = '';
-
-              if (args.target == 'prompt') {
-                // the target is the summernote prompt element
-                summernoteId = 'summernotePrompt_' + _this2.nodeId + '_' + _this2.componentId;
-              } else if (args.target == 'rubric') {
-                // the target is the summernote rubric element
-                summernoteId = 'summernoteRubric_' + _this2.nodeId + '_' + _this2.componentId;
-              }
-
-              if (summernoteId != '') {
-                if (_this2.UtilService.isImage(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // add the image html
-                  $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                } else if (_this2.UtilService.isVideo(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // insert the video element
-                  var videoElement = document.createElement('video');
-                  videoElement.controls = 'true';
-                  videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                  $('#' + summernoteId).summernote('insertNode', videoElement);
-                }
-              }
-            }
-          }
-        }
-      }
-
-      // close the popup
-      _this2.$mdDialog.hide();
-    });
-
-    /*
-     * The advanced button for a component was clicked. If the button was
-     * for this component, we will show the advanced authoring.
-     */
-    this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
-      if (args != null) {
-        var componentId = args.componentId;
-        if (_this2.componentId === componentId) {
-          _this2.showAdvancedAuthoring = !_this2.showAdvancedAuthoring;
-        }
-      }
-    });
+    _this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: _this.nodeId, componentId: _this.componentId });
+    return _this;
   }
 
-  /**
-   * Load the parameters from the component content object
-   */
-
-
   _createClass(AudioOscillatorController, [{
+    key: 'handleNodeSubmit',
+    value: function handleNodeSubmit() {
+      this.submit('nodeSubmitButton');
+    }
+
+    /**
+     * Load the parameters from the component content object
+     */
+
+  }, {
     key: 'setParametersFromComponentContent',
     value: function setParametersFromComponentContent() {
       if (this.componentContent.startingFrequency != null) {
@@ -719,50 +359,14 @@ var AudioOscillatorController = function () {
           // latest state is a submission, so set isSubmitDirty to false and notify node
           this.isSubmitDirty = false;
           this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          // set save message
-          this.setSaveMessage(this.$translate('LAST_SUBMITTED'), clientSaveTime);
+          this.setSubmittedMessage(clientSaveTime);
         } else {
           // latest state is not a submission, so set isSubmitDirty to true and notify node
           this.isSubmitDirty = true;
           this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          // set save message
-          this.setSaveMessage(this.$translate('LAST_SAVED'), clientSaveTime);
+          this.setSavedMessage(clientSaveTime);
         }
       }
-    }
-  }, {
-    key: 'saveButtonClicked',
-
-
-    /**
-     * Called when the student clicks the save button
-     */
-    value: function saveButtonClicked() {
-      this.isSubmit = false;
-
-      if (this.mode === 'authoring') {
-        /*
-         * we are in authoring mode so we will set isDirty to false here
-         * because the 'componentSaveTriggered' event won't work in
-         * authoring mode
-         */
-        this.isDirty = false;
-      }
-
-      // tell the parent node that this component wants to save
-      this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-    }
-  }, {
-    key: 'submitButtonClicked',
-
-
-    /**
-     * Called when the student clicks the submit button
-     */
-    value: function submitButtonClicked() {
-      // trigger the submit
-      var submitTriggeredBy = 'componentSubmitButton';
-      this.submit(submitTriggeredBy);
     }
   }, {
     key: 'submit',
@@ -812,8 +416,6 @@ var AudioOscillatorController = function () {
            * instead of just a save component state
            */
           this.isSubmit = true;
-
-          // increment the submit counter
           this.incrementSubmitCounter();
 
           // check if the student has used up all of their submits
@@ -853,69 +455,12 @@ var AudioOscillatorController = function () {
     }
 
     /**
-     * Increment the submit counter
-     */
-
-  }, {
-    key: 'incrementSubmitCounter',
-    value: function incrementSubmitCounter() {
-      this.submitCounter++;
-    }
-  }, {
-    key: 'lockIfNecessary',
-    value: function lockIfNecessary() {
-      // check if we need to lock the component after the student submits
-      if (this.isLockAfterSubmit()) {
-        this.isDisabled = true;
-      }
-    }
-  }, {
-    key: 'studentDataChanged',
-
-
-    /**
-     * Called when the student changes their work
-     */
-    value: function studentDataChanged() {
-      var _this3 = this;
-
-      /*
-       * set the dirty flags so we will know we need to save or submit the
-       * student work later
-       */
-      this.isDirty = true;
-      this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: true });
-
-      this.isSubmitDirty = true;
-      this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-
-      // clear out the save message
-      this.setSaveMessage('', null);
-
-      // get this part id
-      var componentId = this.getComponentId();
-
-      /*
-       * the student work in this component has changed so we will tell
-       * the parent node that the student data will need to be saved.
-       * this will also notify connected parts that this component's student
-       * data has changed.
-       */
-      var action = 'change';
-
-      // create a component state populated with the student data
-      this.createComponentState(action).then(function (componentState) {
-        _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: componentId, componentState: componentState });
-      });
-    }
-  }, {
-    key: 'setFrequenciesPlayed',
-
-
-    /**
      * Set the frequencies played array
      * @param frequenciesPlayed an array of numbers
      */
+
+  }, {
+    key: 'setFrequenciesPlayed',
     value: function setFrequenciesPlayed(frequenciesPlayed) {
       this.frequenciesPlayed = frequenciesPlayed;
     }
@@ -997,87 +542,11 @@ var AudioOscillatorController = function () {
       return deferred.promise;
     }
   }, {
-    key: 'createComponentStateAdditionalProcessing',
-
-
-    /**
-     * Perform any additional processing that is required before returning the
-     * component state
-     * Note: this function must call deferred.resolve() otherwise student work
-     * will not be saved
-     * @param deferred a deferred object
-     * @param componentState the component state
-     * @param action the action that we are creating the component state for
-     * e.g. 'submit', 'save', 'change'
-     */
-    value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
-      /*
-       * we don't need to perform any additional processing so we can resolve
-       * the promise immediately
-       */
-      deferred.resolve(componentState);
-    }
-
-    /**
-     * Check if we need to lock the component
-     */
-
-  }, {
-    key: 'calculateDisabled',
-    value: function calculateDisabled() {
-
-      // get the component content
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // check if the parent has set this component to disabled
-        if (componentContent.isDisabled) {
-          this.isDisabled = true;
-        } else if (componentContent.lockAfterSubmit) {
-          // we need to lock the component after the student has submitted
-
-          // get the component states for this component
-          var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          // check if any of the component states were submitted
-          var isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-
-          if (isSubmitted) {
-            // the student has submitted work for this component
-            this.isDisabled = true;
-          }
-        }
-      }
-    }
-  }, {
-    key: 'isLockAfterSubmit',
-
-
-    /**
-     * Check whether we need to lock the component after the student
-     * submits an answer.
-     */
-    value: function isLockAfterSubmit() {
-      var result = false;
-
-      if (this.componentContent != null) {
-
-        // check the lockAfterSubmit field in the component content
-        if (this.componentContent.lockAfterSubmit) {
-          result = true;
-        }
-      }
-
-      return result;
-    }
-  }, {
     key: 'removeAttachment',
     value: function removeAttachment(attachment) {
       if (this.attachments.indexOf(attachment) != -1) {
         this.attachments.splice(this.attachments.indexOf(attachment), 1);
         this.studentDataChanged();
-        // YOU ARE NOW FREEEEEEEEE!
       }
     }
   }, {
@@ -1089,7 +558,7 @@ var AudioOscillatorController = function () {
      * @param studentAsset
      */
     value: function attachStudentAsset(studentAsset) {
-      var _this4 = this;
+      var _this2 = this;
 
       if (studentAsset != null) {
         this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -1099,37 +568,11 @@ var AudioOscillatorController = function () {
               iconURL: copiedAsset.iconURL
             };
 
-            _this4.attachments.push(attachment);
-            _this4.studentDataChanged();
+            _this2.attachments.push(attachment);
+            _this2.studentDataChanged();
           }
         });
       }
-    }
-  }, {
-    key: 'getPrompt',
-
-
-    /**
-     * Get the prompt to show to the student
-     */
-    value: function getPrompt() {
-      var prompt = null;
-
-      if (this.originalComponentContent != null) {
-        // this is a show previous work component
-
-        if (this.originalComponentContent.showPreviousWorkPrompt) {
-          // show the prompt from the previous work component
-          prompt = this.componentContent.prompt;
-        } else {
-          // show the prompt from the original component
-          prompt = this.originalComponentContent.prompt;
-        }
-      } else if (this.componentContent != null) {
-        prompt = this.componentContent.prompt;
-      }
-
-      return prompt;
     }
   }, {
     key: 'getResponse',
@@ -1213,8 +656,6 @@ var AudioOscillatorController = function () {
        * has played
        */
       this.addFrequencyPlayed(this.frequency);
-
-      // set the student data to dirty
       this.studentDataChanged();
     }
 
@@ -1267,7 +708,7 @@ var AudioOscillatorController = function () {
   }, {
     key: 'drawOscilloscope',
     value: function drawOscilloscope() {
-      var _this5 = this;
+      var _this3 = this;
 
       // get the analyser to obtain the oscillator data
       var analyser = this.analyser;
@@ -1377,7 +818,7 @@ var AudioOscillatorController = function () {
          * draw was good we will stop drawing.
          */
         requestAnimationFrame(function () {
-          _this5.drawOscilloscope();
+          _this3.drawOscilloscope();
         });
       }
     }
@@ -1492,847 +933,6 @@ var AudioOscillatorController = function () {
     }
 
     /**
-     * Show the controls for adding an oscillator type
-     */
-
-  }, {
-    key: 'authoringOpenAddOscillatorType',
-    value: function authoringOpenAddOscillatorType() {
-      this.showOscillatorTypeChooser = true;
-    }
-
-    /**
-     * The author has clicked the add button to add an oscillator type
-     */
-
-  }, {
-    key: 'authoringAddOscillatorTypeClicked',
-    value: function authoringAddOscillatorTypeClicked() {
-      var oscillatorTypeToAdd = this.oscillatorTypeToAdd;
-
-      if (this.authoringComponentContent.oscillatorTypes.indexOf(oscillatorTypeToAdd) != -1) {
-        // the oscillator type is already in the array of oscillator types
-
-        alert(this.$translate('audioOscillator.errorYouHaveAlreadyAddedOscillatorType', { oscillatorTypeToAdd: oscillatorTypeToAdd }));
-      } else {
-        // the oscillator type is not already in the array of oscillator types
-        this.authoringComponentContent.oscillatorTypes.push(oscillatorTypeToAdd);
-
-        // hide the oscillator type chooser
-        this.showOscillatorTypeChooser = false;
-
-        // perform preview updating and project saving
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The author has clicked the cancel button for adding an oscillator type
-     */
-
-  }, {
-    key: 'authoringCancelOscillatorTypeClicked',
-    value: function authoringCancelOscillatorTypeClicked() {
-      // hide the oscillator type chooser
-      this.showOscillatorTypeChooser = false;
-    }
-
-    /**
-     * The author has clicked the delete button for removing an oscillator type
-     * @param index the index of the oscillator type to remove
-     */
-
-  }, {
-    key: 'authoringDeleteOscillatorTypeClicked',
-    value: function authoringDeleteOscillatorTypeClicked(index) {
-
-      // remove the oscillator type at the given index
-      this.authoringComponentContent.oscillatorTypes.splice(index, 1);
-
-      // perform preview updating and project saving
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Import work from another component
-     */
-
-  }, {
-    key: 'importWork',
-    value: function importWork() {
-
-      // get the component content
-      var componentContent = this.componentContent;
-
-      if (componentContent != null) {
-
-        // get the import previous work node id and component id
-        var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
-        var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-
-        if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-
-          /*
-           * check if the node id is in the field that we used to store
-           * the import previous work node id in
-           */
-          if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
-            importPreviousWorkNodeId = componentContent.importWorkNodeId;
-          }
-        }
-
-        if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-
-          /*
-           * check if the component id is in the field that we used to store
-           * the import previous work component id in
-           */
-          if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
-            importPreviousWorkComponentId = componentContent.importWorkComponentId;
-          }
-        }
-
-        if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-
-          // get the latest component state for this component
-          var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-          /*
-           * we will only import work into this component if the student
-           * has not done any work for this component
-           */
-          if (componentState == null) {
-            // the student has not done any work for this component
-
-            // get the latest component state from the component we are importing from
-            var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
-
-            if (importWorkComponentState != null) {
-              /*
-               * populate a new component state with the work from the
-               * imported component state
-               */
-              var populatedComponentState = this.AudioOscillatorService.populateComponentState(importWorkComponentState);
-
-              // populate the component state into this component
-              this.setStudentWork(populatedComponentState);
-
-              // make the work dirty so that it gets saved
-              this.studentDataChanged();
-            }
-          }
-        }
-      }
-    }
-  }, {
-    key: 'getComponentId',
-
-
-    /**
-     * Get the component id
-     * @return the component id
-     */
-    value: function getComponentId() {
-      return this.componentContent.id;
-    }
-  }, {
-    key: 'authoringViewComponentChanged',
-
-
-    /**
-     * The component has changed in the regular authoring view so we will save the project
-     */
-    value: function authoringViewComponentChanged() {
-
-      // update the JSON string in the advanced authoring view textarea
-      this.updateAdvancedAuthoringView();
-
-      /*
-       * notify the parent node that the content has changed which will save
-       * the project to the server
-       */
-      this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-    }
-  }, {
-    key: 'advancedAuthoringViewComponentChanged',
-
-
-    /**
-     * The component has changed in the advanced authoring view so we will update
-     * the component and save the project.
-     */
-    value: function advancedAuthoringViewComponentChanged() {
-
-      try {
-        /*
-         * create a new component by converting the JSON string in the advanced
-         * authoring view into a JSON object
-         */
-        var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
-
-        // replace the component in the project
-        this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
-
-        // set the new component into the controller
-        this.componentContent = editedComponentContent;
-
-        /*
-         * notify the parent node that the content has changed which will save
-         * the project to the server
-         */
-        this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-      } catch (e) {
-        this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
-      }
-    }
-  }, {
-    key: 'authoringShowPreviousWorkClicked',
-
-
-    /**
-     * The show previous work checkbox was clicked
-     */
-    value: function authoringShowPreviousWorkClicked() {
-
-      if (!this.authoringComponentContent.showPreviousWork) {
-        /*
-         * show previous work has been turned off so we will clear the
-         * show previous work node id, show previous work component id, and
-         * show previous work prompt values
-         */
-        this.authoringComponentContent.showPreviousWorkNodeId = null;
-        this.authoringComponentContent.showPreviousWorkComponentId = null;
-        this.authoringComponentContent.showPreviousWorkPrompt = null;
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The show previous work node id has changed
-     */
-
-  }, {
-    key: 'authoringShowPreviousWorkNodeIdChanged',
-    value: function authoringShowPreviousWorkNodeIdChanged() {
-
-      if (this.authoringComponentContent.showPreviousWorkNodeId == null || this.authoringComponentContent.showPreviousWorkNodeId == '') {
-
-        /*
-         * the show previous work node id is null so we will also set the
-         * show previous component id to null
-         */
-        this.authoringComponentContent.showPreviousWorkComponentId = '';
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The show previous work component id has changed
-     */
-
-  }, {
-    key: 'authoringShowPreviousWorkComponentIdChanged',
-    value: function authoringShowPreviousWorkComponentIdChanged() {
-
-      // get the show previous work node id
-      var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-
-      // get the show previous work prompt boolean value
-      var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-
-      // get the old show previous work component id
-      var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-
-      // get the new show previous work component id
-      var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-
-      // get the new show previous work component
-      var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-
-      if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
-        // the new show previous work component is empty
-
-        // save the component
-        this.authoringViewComponentChanged();
-      } else if (newShowPreviousWorkComponent != null) {
-
-        // get the current component type
-        var currentComponentType = this.componentContent.type;
-
-        // get the new component type
-        var newComponentType = newShowPreviousWorkComponent.type;
-
-        // check if the component types are different
-        if (newComponentType != currentComponentType) {
-          /*
-           * the component types are different so we will need to change
-           * the whole component
-           */
-
-          // make sure the author really wants to change the component type
-          var answer = confirm(this.$translate('ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE'));
-
-          if (answer) {
-            // the author wants to change the component type
-
-            /*
-             * get the component service so we can make a new instance
-             * of the component
-             */
-            var componentService = this.$injector.get(newComponentType + 'Service');
-
-            if (componentService != null) {
-
-              // create a new component
-              var newComponent = componentService.createComponent();
-
-              // set move over the values we need to keep
-              newComponent.id = this.authoringComponentContent.id;
-              newComponent.showPreviousWork = true;
-              newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
-              newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
-              newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-
-              /*
-               * update the authoring component content JSON string to
-               * change the component
-               */
-              this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-
-              // update the component in the project and save the project
-              this.advancedAuthoringViewComponentChanged();
-            }
-          } else {
-            /*
-             * the author does not want to change the component type so
-             * we will rollback the showPreviousWorkComponentId value
-             */
-            this.authoringComponentContent.showPreviousWorkComponentId = oldShowPreviousWorkComponentId;
-          }
-        } else {
-          /*
-           * the component types are the same so we do not need to change
-           * the component type and can just save
-           */
-          this.authoringViewComponentChanged();
-        }
-      }
-    }
-
-    /**
-     * Get all the step node ids in the project
-     * @returns all the step node ids
-     */
-
-  }, {
-    key: 'getStepNodeIds',
-    value: function getStepNodeIds() {
-      var stepNodeIds = this.ProjectService.getNodeIds();
-
-      return stepNodeIds;
-    }
-
-    /**
-     * Get the step number and title
-     * @param nodeId get the step number and title for this node
-     * @returns the step number and title
-     */
-
-  }, {
-    key: 'getNodePositionAndTitleByNodeId',
-    value: function getNodePositionAndTitleByNodeId(nodeId) {
-      var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-
-      return nodePositionAndTitle;
-    }
-
-    /**
-     * Get the components in a step
-     * @param nodeId get the components in the step
-     * @returns the components in the step
-     */
-
-  }, {
-    key: 'getComponentsByNodeId',
-    value: function getComponentsByNodeId(nodeId) {
-      var components = this.ProjectService.getComponentsByNodeId(nodeId);
-
-      return components;
-    }
-
-    /**
-     * Check if a node is a step node
-     * @param nodeId the node id to check
-     * @returns whether the node is an application node
-     */
-
-  }, {
-    key: 'isApplicationNode',
-    value: function isApplicationNode(nodeId) {
-      var result = this.ProjectService.isApplicationNode(nodeId);
-
-      return result;
-    }
-
-    /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-
-  }, {
-    key: 'updateAdvancedAuthoringView',
-    value: function updateAdvancedAuthoringView() {
-      this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-    }
-  }, {
-    key: 'setSaveMessage',
-
-
-    /**
-     * Set the message next to the save button
-     * @param message the message to display
-     * @param time the time to display
-     */
-    value: function setSaveMessage(message, time) {
-      this.saveMessage.text = message;
-      this.saveMessage.time = time;
-    }
-  }, {
-    key: 'registerExitListener',
-
-
-    /**
-     * Register the the listener that will listen for the exit event
-     * so that we can perform saving before exiting.
-     */
-    value: function registerExitListener() {
-
-      /*
-       * Listen for the 'exit' event which is fired when the student exits
-       * the VLE. This will perform saving before the VLE exits.
-       */
-      exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
-    }
-  }, {
-    key: 'componentHasWork',
-
-
-    /**
-     * Check if a component generates student work
-     * @param component the component
-     * @return whether the component generates student work
-     */
-    value: function componentHasWork(component) {
-      var result = true;
-
-      if (component != null) {
-        result = this.ProjectService.componentHasWork(component);
-      }
-
-      return result;
-    }
-
-    /**
-     * The import previous work checkbox was clicked
-     */
-
-  }, {
-    key: 'authoringImportPreviousWorkClicked',
-    value: function authoringImportPreviousWorkClicked() {
-
-      if (!this.authoringComponentContent.importPreviousWork) {
-        /*
-         * import previous work has been turned off so we will clear the
-         * import previous work node id, and import previous work
-         * component id
-         */
-        this.authoringComponentContent.importPreviousWorkNodeId = null;
-        this.authoringComponentContent.importPreviousWorkComponentId = null;
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The import previous work node id has changed
-     */
-
-  }, {
-    key: 'authoringImportPreviousWorkNodeIdChanged',
-    value: function authoringImportPreviousWorkNodeIdChanged() {
-
-      if (this.authoringComponentContent.importPreviousWorkNodeId == null || this.authoringComponentContent.importPreviousWorkNodeId == '') {
-
-        /*
-         * the import previous work node id is null so we will also set the
-         * import previous component id to null
-         */
-        this.authoringComponentContent.importPreviousWorkComponentId = '';
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The import previous work component id has changed
-     */
-
-  }, {
-    key: 'authoringImportPreviousWorkComponentIdChanged',
-    value: function authoringImportPreviousWorkComponentIdChanged() {
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * The author has changed the rubric
-     */
-
-  }, {
-    key: 'summernoteRubricHTMLChanged',
-    value: function summernoteRubricHTMLChanged() {
-
-      // get the summernote rubric html
-      var html = this.summernoteRubricHTML;
-
-      /*
-       * remove the absolute asset paths
-       * e.g.
-       * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
-       * will be changed to
-       * <img src='sun.png'/>
-       */
-      html = this.ConfigService.removeAbsoluteAssetPaths(html);
-
-      /*
-       * replace <a> and <button> elements with <wiselink> elements when
-       * applicable
-       */
-      html = this.UtilService.insertWISELinks(html);
-
-      // update the component rubric
-      this.authoringComponentContent.rubric = html;
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Add a connected component
-     */
-
-  }, {
-    key: 'addConnectedComponent',
-    value: function addConnectedComponent() {
-
-      /*
-       * create the new connected component object that will contain a
-       * node id and component id
-       */
-      var newConnectedComponent = {};
-      newConnectedComponent.nodeId = this.nodeId;
-      newConnectedComponent.componentId = null;
-      newConnectedComponent.updateOn = 'change';
-
-      // initialize the array of connected components if it does not exist yet
-      if (this.authoringComponentContent.connectedComponents == null) {
-        this.authoringComponentContent.connectedComponents = [];
-      }
-
-      // add the connected component
-      this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Delete a connected component
-     * @param index the index of the component to delete
-     */
-
-  }, {
-    key: 'deleteConnectedComponent',
-    value: function deleteConnectedComponent(index) {
-
-      if (this.authoringComponentContent.connectedComponents != null) {
-        this.authoringComponentContent.connectedComponents.splice(index, 1);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Set the show submit button value
-     * @param show whether to show the submit button
-     */
-
-  }, {
-    key: 'setShowSubmitButtonValue',
-    value: function setShowSubmitButtonValue(show) {
-
-      if (show == null || show == false) {
-        // we are hiding the submit button
-        this.authoringComponentContent.showSaveButton = false;
-        this.authoringComponentContent.showSubmitButton = false;
-      } else {
-        // we are showing the submit button
-        this.authoringComponentContent.showSaveButton = true;
-        this.authoringComponentContent.showSubmitButton = true;
-      }
-
-      /*
-       * notify the parent node that this component is changing its
-       * showSubmitButton value so that it can show save buttons on the
-       * step or sibling components accordingly
-       */
-      this.$scope.$emit('componentShowSubmitButtonValueChanged', { nodeId: this.nodeId, componentId: this.componentId, showSubmitButton: show });
-    }
-
-    /**
-     * The showSubmitButton value has changed
-     */
-
-  }, {
-    key: 'showSubmitButtonValueChanged',
-    value: function showSubmitButtonValueChanged() {
-
-      /*
-       * perform additional processing for when we change the showSubmitButton
-       * value
-       */
-      this.setShowSubmitButtonValue(this.authoringComponentContent.showSubmitButton);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * One of the oscillator types was clicked in the authoring view
-     */
-
-  }, {
-    key: 'authoringViewOscillatorTypeClicked',
-    value: function authoringViewOscillatorTypeClicked() {
-
-      /*
-       * clear the oscillator types so we can repopulate it with the
-       * ones that are checked
-       */
-      this.authoringComponentContent.oscillatorTypes = [];
-
-      if (this.authoringSineChecked) {
-        // sine is checked
-        this.authoringComponentContent.oscillatorTypes.push('sine');
-      }
-
-      if (this.authoringSquareChecked) {
-        // square is checked
-        this.authoringComponentContent.oscillatorTypes.push('square');
-      }
-
-      if (this.authoringTriangleChecked) {
-        // triangle is checked
-        this.authoringComponentContent.oscillatorTypes.push('triangle');
-      }
-
-      if (this.authoringSawtoothChecked) {
-        // sawtooth is checked
-        this.authoringComponentContent.oscillatorTypes.push('sawtooth');
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Determine which oscillator types should be checked
-     */
-
-  }, {
-    key: 'authoringProcessCheckedOscillatorTypes',
-    value: function authoringProcessCheckedOscillatorTypes() {
-
-      if (this.authoringComponentContent.oscillatorTypes.indexOf('sine') != -1) {
-        this.authoringSineChecked = true;
-      }
-
-      if (this.authoringComponentContent.oscillatorTypes.indexOf('square') != -1) {
-        this.authoringSquareChecked = true;
-      }
-
-      if (this.authoringComponentContent.oscillatorTypes.indexOf('triangle') != -1) {
-        this.authoringTriangleChecked = true;
-      }
-
-      if (this.authoringComponentContent.oscillatorTypes.indexOf('sawtooth') != -1) {
-        this.authoringSawtoothChecked = true;
-      }
-    }
-
-    /**
-     * Add a tag
-     */
-
-  }, {
-    key: 'addTag',
-    value: function addTag() {
-
-      if (this.authoringComponentContent.tags == null) {
-        // initialize the tags array
-        this.authoringComponentContent.tags = [];
-      }
-
-      // add a tag
-      this.authoringComponentContent.tags.push('');
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Move a tag up
-     * @param index the index of the tag to move up
-     */
-
-  }, {
-    key: 'moveTagUp',
-    value: function moveTagUp(index) {
-
-      if (index > 0) {
-        // the index is not at the top so we can move it up
-
-        // remember the tag
-        var tag = this.authoringComponentContent.tags[index];
-
-        // remove the tag
-        this.authoringComponentContent.tags.splice(index, 1);
-
-        // insert the tag one index back
-        this.authoringComponentContent.tags.splice(index - 1, 0, tag);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Move a tag down
-     * @param index the index of the tag to move down
-     */
-
-  }, {
-    key: 'moveTagDown',
-    value: function moveTagDown(index) {
-
-      if (index < this.authoringComponentContent.tags.length - 1) {
-        // the index is not at the bottom so we can move it down
-
-        // remember the tag
-        var tag = this.authoringComponentContent.tags[index];
-
-        // remove the tag
-        this.authoringComponentContent.tags.splice(index, 1);
-
-        // insert the tag one index forward
-        this.authoringComponentContent.tags.splice(index + 1, 0, tag);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Delete a tag
-     * @param index the index of the tag to delete
-     */
-
-  }, {
-    key: 'deleteTag',
-    value: function deleteTag(index) {
-
-      // ask the author if they are sure they want to delete the tag
-      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisTag'));
-
-      if (answer) {
-        // the author answered yes to delete the tag
-
-        // remove the tag
-        this.authoringComponentContent.tags.splice(index, 1);
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Import any work we need from connected components
-     */
-
-  }, {
-    key: 'handleConnectedComponents',
-    value: function handleConnectedComponents() {
-
-      // get the connected components
-      var connectedComponents = this.componentContent.connectedComponents;
-
-      if (connectedComponents != null) {
-
-        var componentStates = [];
-
-        // loop through all the connected components
-        for (var c = 0; c < connectedComponents.length; c++) {
-          var connectedComponent = connectedComponents[c];
-
-          if (connectedComponent != null) {
-            var nodeId = connectedComponent.nodeId;
-            var componentId = connectedComponent.componentId;
-            var type = connectedComponent.type;
-
-            if (type == 'showWork') {
-              // we are getting the work from this student
-
-              // get the latest component state from the component
-              var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-              if (componentState != null) {
-                componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-              }
-
-              // we are showing work so we will not allow the student to edit it
-              this.isDisabled = true;
-            } else if (type == 'importWork' || type == null) {
-              // we are getting the work from this student
-
-              // get the latest component state from the component
-              var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-              if (componentState != null) {
-                componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
-              }
-            }
-          }
-        }
-
-        // merge the student responses from all the component states
-        var mergedComponentState = this.createMergedComponentState(componentStates);
-
-        // set the student work into the component
-        this.setStudentWork(mergedComponentState);
-
-        // make the work dirty so that it gets saved
-        this.studentDataChanged();
-      }
-    }
-
-    /**
      * Create a component state with the merged student responses
      * @param componentStates an array of component states
      * @return a component state with the merged student responses
@@ -2410,282 +1010,14 @@ var AudioOscillatorController = function () {
 
       return oldStudentData;
     }
-
-    /**
-     * Add a connected component
-     */
-
-  }, {
-    key: 'authoringAddConnectedComponent',
-    value: function authoringAddConnectedComponent() {
-
-      /*
-       * create the new connected component object that will contain a
-       * node id and component id
-       */
-      var newConnectedComponent = {};
-      newConnectedComponent.nodeId = this.nodeId;
-      newConnectedComponent.componentId = null;
-      newConnectedComponent.type = null;
-      this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(newConnectedComponent);
-
-      // initialize the array of connected components if it does not exist yet
-      if (this.authoringComponentContent.connectedComponents == null) {
-        this.authoringComponentContent.connectedComponents = [];
-      }
-
-      // add the connected component
-      this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-
-    /**
-     * Automatically set the component id for the connected component if there
-     * is only one viable option.
-     * @param connectedComponent the connected component object we are authoring
-     */
-
-  }, {
-    key: 'authoringAutomaticallySetConnectedComponentComponentIdIfPossible',
-    value: function authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-      if (connectedComponent != null) {
-        var components = this.getComponentsByNodeId(connectedComponent.nodeId);
-        if (components != null) {
-          var numberOfAllowedComponents = 0;
-          var allowedComponent = null;
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
-
-          try {
-            for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var component = _step.value;
-
-              if (component != null) {
-                if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
-                  // we have found a viable component we can connect to
-                  numberOfAllowedComponents += 1;
-                  allowedComponent = component;
-                }
-              }
-            }
-          } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-              }
-            } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
-              }
-            }
-          }
-
-          if (numberOfAllowedComponents == 1) {
-            /*
-             * there is only one viable component to connect to so we
-             * will use it
-             */
-            connectedComponent.componentId = allowedComponent.id;
-            connectedComponent.type = 'importWork';
-          }
-        }
-      }
-    }
-
-    /**
-     * Delete a connected component
-     * @param index the index of the component to delete
-     */
-
-  }, {
-    key: 'authoringDeleteConnectedComponent',
-    value: function authoringDeleteConnectedComponent(index) {
-
-      // ask the author if they are sure they want to delete the connected component
-      var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
-
-      if (answer) {
-        // the author answered yes to delete
-
-        if (this.authoringComponentContent.connectedComponents != null) {
-          this.authoringComponentContent.connectedComponents.splice(index, 1);
-        }
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * Get the connected component type
-     * @param connectedComponent get the component type of this connected component
-     * @return the connected component type
-     */
-
-  }, {
-    key: 'authoringGetConnectedComponentType',
-    value: function authoringGetConnectedComponentType(connectedComponent) {
-
-      var connectedComponentType = null;
-
-      if (connectedComponent != null) {
-
-        // get the node id and component id of the connected component
-        var nodeId = connectedComponent.nodeId;
-        var componentId = connectedComponent.componentId;
-
-        // get the component
-        var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
-        if (component != null) {
-          // get the component type
-          connectedComponentType = component.type;
-        }
-      }
-
-      return connectedComponentType;
-    }
-
-    /**
-     * The connected component node id has changed
-     * @param connectedComponent the connected component that has changed
-     */
-
-  }, {
-    key: 'authoringConnectedComponentNodeIdChanged',
-    value: function authoringConnectedComponentNodeIdChanged(connectedComponent) {
-      if (connectedComponent != null) {
-        connectedComponent.componentId = null;
-        connectedComponent.type = null;
-        this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The connected component component id has changed
-     * @param connectedComponent the connected component that has changed
-     */
-
-  }, {
-    key: 'authoringConnectedComponentComponentIdChanged',
-    value: function authoringConnectedComponentComponentIdChanged(connectedComponent) {
-
-      if (connectedComponent != null) {
-
-        // default the type to import work
-        connectedComponent.type = 'importWork';
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * The connected component type has changed
-     * @param connectedComponent the connected component that changed
-     */
-
-  }, {
-    key: 'authoringConnectedComponentTypeChanged',
-    value: function authoringConnectedComponentTypeChanged(connectedComponent) {
-
-      if (connectedComponent != null) {
-
-        if (connectedComponent.type == 'importWork') {
-          /*
-           * the type has changed to import work
-           */
-        } else if (connectedComponent.type == 'showWork') {}
-        /*
-         * the type has changed to show work
-         */
-
-
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
-      }
-    }
-
-    /**
-     * Check if we are allowed to connect to this component type
-     * @param componentType the component type
-     * @return whether we can connect to the component type
-     */
-
-  }, {
-    key: 'isConnectedComponentTypeAllowed',
-    value: function isConnectedComponentTypeAllowed(componentType) {
-
-      if (componentType != null) {
-
-        var allowedConnectedComponentTypes = this.allowedConnectedComponentTypes;
-
-        // loop through the allowed connected component types
-        for (var a = 0; a < allowedConnectedComponentTypes.length; a++) {
-          var allowedConnectedComponentType = allowedConnectedComponentTypes[a];
-
-          if (allowedConnectedComponentType != null) {
-            if (componentType == allowedConnectedComponentType.type) {
-              // the component type is allowed
-              return true;
-            }
-          }
-        }
-      }
-
-      return false;
-    }
-
-    /**
-     * The show JSON button was clicked to show or hide the JSON authoring
-     */
-
-  }, {
-    key: 'showJSONButtonClicked',
-    value: function showJSONButtonClicked() {
-      // toggle the JSON authoring textarea
-      this.showJSONAuthoring = !this.showJSONAuthoring;
-
-      if (this.jsonStringChanged && !this.showJSONAuthoring) {
-        /*
-         * the author has changed the JSON and has just closed the JSON
-         * authoring view so we will save the component
-         */
-        this.advancedAuthoringViewComponentChanged();
-
-        // scroll to the top of the component
-        this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
-
-        this.jsonStringChanged = false;
-      }
-    }
-
-    /**
-     * The author has changed the JSON manually in the advanced view
-     */
-
-  }, {
-    key: 'authoringJSONChanged',
-    value: function authoringJSONChanged() {
-      this.jsonStringChanged = true;
-    }
   }]);
 
   return AudioOscillatorController;
-}();
+}(_componentController2.default);
 
 ;
 
-AudioOscillatorController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'NodeService', 'AudioOscillatorService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+AudioOscillatorController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'AudioOscillatorService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = AudioOscillatorController;
 //# sourceMappingURL=audioOscillatorController.js.map

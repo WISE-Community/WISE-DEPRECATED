@@ -21,10 +21,12 @@ import AnnotationService from '../services/annotationService';
 import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
 import ClassroomMonitorComponents from './classroomMonitorComponents';
 import ClassroomMonitorController from './classroomMonitorController';
+import ClassroomMonitorProjectService from './classroomMonitorProjectService';
 import ConceptMapComponentModule from '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import Components from '../directives/components';
+import ComponentService from '../components/componentService';
 import DashboardController from './dashboard/dashboardController';
 import DataExportController from './dataExport/dataExportController';
 import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
@@ -49,6 +51,7 @@ import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import OpenResponseComponentModule from '../components/openResponse/openResponseComponentModule';
 import OutsideURLComponentModule from '../components/outsideURL/outsideURLComponentModule';
+import PlanningService from '../services/planningService';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
 import StudentAssetService from '../services/studentAssetService';
@@ -64,7 +67,7 @@ import UtilService from '../services/utilService';
 
 import moment from 'moment';
 
-let classroomMonitorModule = angular.module('classroomMonitor', [
+const classroomMonitorModule = angular.module('classroomMonitor', [
         angularDragula(angular),
         'angularMoment',
         'angular-inview',
@@ -99,13 +102,15 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
     ])
     .service(AchievementService.name, AchievementService)
     .service(AnnotationService.name, AnnotationService)
+    .service(ComponentService.name, ComponentService)
     .service(ConfigService.name, ConfigService)
     .service(CRaterService.name, CRaterService)
     .service(HttpInterceptor.name, HttpInterceptor)
     .service(NodeService.name, NodeService)
     .service(NotebookService.name, NotebookService)
     .service(NotificationService.name, NotificationService)
-    .service(ProjectService.name, ProjectService)
+    .service(PlanningService.name, PlanningService)
+    .service(ProjectService.name, ClassroomMonitorProjectService)
     .service(SessionService.name, SessionService)
     .service(StudentAssetService.name, StudentAssetService)
     .service(StudentDataService.name, StudentDataService)
@@ -182,6 +187,15 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                         },
                         annotations: function(TeacherDataService, config) {
                             return TeacherDataService.retrieveAnnotations();
+                        },
+                        notebook: function (NotebookService, ConfigService, config, project) {
+                          if (NotebookService.isNotebookEnabled()) {
+                            return NotebookService.retrieveNotebookItems().then((notebook) => {
+                              return notebook;
+                            });
+                          } else {
+                            return NotebookService.notebook;
+                          }
                         }
                     }
                 })
@@ -240,20 +254,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                     url: '/notebook',
                     templateUrl: 'wise5/classroomMonitor/notebook/notebook.html',
                     controller: 'NotebookGradingController',
-                    controllerAs: 'notebookGradingController',
-                    resolve: {
-                        notebook: function (NotebookService, ConfigService, config, project, StudentAssetService) {
-                            if (!ConfigService.isPreview()) {
-                                //StudentAssetService.retrieveAssets().then((studentAssets) => {
-                                    return NotebookService.retrieveNotebookItems().then((notebook) => {
-                                        return notebook;
-                                    });
-                                //});
-                            } else {
-                                return NotebookService.notebook;
-                            }
-                        }
-                    }
+                    controllerAs: 'notebookGradingController'
                 });
 
             $httpProvider.interceptors.push('HttpInterceptor');

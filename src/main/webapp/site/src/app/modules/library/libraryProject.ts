@@ -1,5 +1,6 @@
 export class LibraryProject {
-  id: string;
+  id: number;
+  name: string;
   implementationModel: string;
   metadata: any;
   notes: string;

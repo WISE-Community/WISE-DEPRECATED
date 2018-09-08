@@ -32,6 +32,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 
@@ -39,7 +41,7 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
  * Implementation class of <code>MutableUserDetails</code> that uses an EJB3
  * compliant object persistence mechanism.
  *
- * UserDetails for a student in WISE Portal
+ * UserDetails for a student in WISE
  *
  * @author Hiroki Terashima
  */
@@ -81,99 +83,49 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
   private static final long serialVersionUID = 1L;
 
   @Column(name = StudentUserDetails.COLUMN_NAME_FIRSTNAME, nullable = false)
+  @Getter
+  @Setter
   private String firstname;
 
   @Column(name = StudentUserDetails.COLUMN_NAME_LASTNAME, nullable = false)
+  @Getter
+  @Setter
   private String lastname;
 
   @Column(name = StudentUserDetails.COLUMN_NAME_SIGNUPDATE, nullable = false)
+  @Getter
+  @Setter
   private Date signupdate;
 
   @Column(name = StudentUserDetails.COLUMN_NAME_GENDER, nullable = false)
+  @Getter
+  @Setter
   private Gender gender;
 
   @Column(name = StudentUserDetails.COLUMN_NAME_BIRTHDAY, nullable = false)
+  @Getter
+  @Setter
   private Date birthday;
 
   @Column(name = StudentUserDetails.COLUMN_NAME_NUMBEROFLOGINS, nullable = false)
+  @Getter
+  @Setter
   private Integer numberOfLogins;
 
   @Column(name = StudentUserDetails.COLUMN_NAME_LASTLOGINTIME)
+  @Setter
   private Date lastLoginTime;
 
   @Column(name = StudentUserDetails.COLUMN_NAME_ACCOUNTQUESTION, nullable = true)
+  @Getter
+  @Setter
   private String accountQuestion;
 
   @Column(name = StudentUserDetails.COLUMN_NAME_ACCOUNTANSWER, nullable = true)
+  @Getter
+  @Setter
   private String accountAnswer;
 
-  /**
-   * @return the firstname
-   */
-  public String getFirstname() {
-    return firstname;
-  }
-
-  /**
-   * @param firstname the firstname to set
-   */
-  public void setFirstname(String firstname) {
-    this.firstname = firstname;
-  }
-
-  /**
-   * @return the gender
-   */
-  public Gender getGender() {
-    return gender;
-  }
-
-  /**
-   * @param gender the gender to set
-   */
-  public void setGender(Gender gender) {
-    this.gender = gender;
-  }
-
-  /**
-   * @return the lastname
-   */
-  public String getLastname() {
-    return lastname;
-  }
-
-  /**
-   * @param lastname the lastname to set
-   */
-  public void setLastname(String lastname) {
-    this.lastname = lastname;
-  }
-
-  public Date getSignupdate() {
-    return signupdate;
-  }
-
-  public void setSignupdate(Date signupdate) {
-    this.signupdate = signupdate;
-  }
-
-  /**
-   * @return the birthday
-   */
-  public Date getBirthday() {
-    return birthday;
-  }
-
-  /**
-   * @param birthday the birthday to set
-   */
-  public void setBirthday(Date birthday) {
-    this.birthday = birthday;
-  }
-
-  /**
-   * @see MutableUserDetails#getCoreUsername()
-   */
   public String getCoreUsername() {
     String firstname = getFirstname();
     String lastnameInitial = getLastname().substring(0, 1);
@@ -199,9 +151,6 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
     return username;
   }
 
-  /**
-   * @see MutableUserDetails#getUsernameSuffixes()
-   */
   public String[] getUsernameSuffixes() {
     return new String[] {"", "a", "b", "c", "d", "e", "f", "g", "h",
       "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
@@ -248,51 +197,6 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
     return nextUsernameSuffix;
   }
 
-  /**
-   * the number of user logins
-   */
-  public Integer getNumberOfLogins() {
-    return this.numberOfLogins;
-  }
-
-  /**
-   * sets the number of logins
-   */
-  public void setNumberOfLogins(Integer numberOfLogins) {
-    this.numberOfLogins = numberOfLogins;
-  }
-
-  /**
-   * @return the accountQuestion
-   */
-  public String getAccountQuestion() {
-    return accountQuestion;
-  }
-
-  /**
-   * @param accountQuestion the accountQuestion to set
-   */
-  public void setAccountQuestion(String accountQuestion) {
-    this.accountQuestion = accountQuestion;
-  }
-
-  /**
-   * @return the accountAnswer
-   */
-  public String getAccountAnswer() {
-    return accountAnswer;
-  }
-
-  /**
-   * @param accountAnswer the accountAnswer to set
-   */
-  public void setAccountAnswer(String accountAnswer) {
-    this.accountAnswer = accountAnswer;
-  }
-
-  /**
-   * @return the lastLoginTime
-   */
   public Date getLastLoginTime() {
     if (lastLoginTime != null) {
       return lastLoginTime;
@@ -301,23 +205,10 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
     }
   }
 
-  /**
-   * @param lastLoginTime the lastLoginTime to set
-   */
-  public void setLastLoginTime(Date lastLoginTime) {
-    this.lastLoginTime = lastLoginTime;
-  }
-
-  /**
-   * @see MutableUserDetails#incrementNumberOfLogins()
-   */
   public void incrementNumberOfLogins() {
     this.numberOfLogins++;
   }
 
-  /**
-   * @see MutableUserDetails#getInfo()
-   */
   public HashMap<String, Object> getInfo() {
     HashMap<String, Object> infoMap = new HashMap<String, Object>();
     infoMap.put("ID", this.getId());

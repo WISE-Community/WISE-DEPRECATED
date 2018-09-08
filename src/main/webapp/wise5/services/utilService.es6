@@ -4,10 +4,16 @@ class UtilService {
   constructor(
       $filter,
       $injector,
-      $rootScope) {
+      $mdDialog,
+      $q,
+      $rootScope,
+      $timeout) {
     this.$filter = $filter;
     this.$injector = $injector;
+    this.$mdDialog = $mdDialog;
+    this.$q = $q;
     this.$rootScope = $rootScope;
+    this.$timeout = $timeout;
     this.componentTypeToLabel = {};
     this.$translate = this.$filter('translate');
   }
@@ -124,36 +130,6 @@ class UtilService {
       imageObject = this.getImageObjectFromBase64String(dataURL);
     }
     return imageObject;
-  }
-
-  /**
-   * Hide all the iframes. This is used before a student snips something
-   * to put into their notebook. Iframes shift the position of elements
-   * below it which causes issues when html2canvas tries to capture
-   * certain elements.
-   */
-  hideIFrames() {
-    const iframes = angular.element('iframe');
-    for (let iframe of iframes) {
-      if (iframe != null) {
-        iframe.style.display = 'none';
-      }
-    }
-  }
-
-  /**
-   * Show all the iframes. This is used after the student snips something
-   * to put into their notebook. Iframes shift the position of elements
-   * below it which causes issues when html2canvas tries to capture
-   * certain elements.
-   */
-  showIFrames() {
-    const iframes = angular.element('iframe');
-    for (let iframe of iframes) {
-      if (iframe != null) {
-        iframe.style.display = '';
-      }
-    }
   }
 
   /**
@@ -678,6 +654,29 @@ class UtilService {
   }
 
   /**
+   * @param componentContent The component content.
+   * @return Whether there are any connected components with a field we always
+   * want to read or write.
+   */
+  hasConnectedComponentAlwaysField(componentContent) {
+    if (componentContent != null) {
+      const connectedComponents = componentContent.connectedComponents;
+      if (connectedComponents != null && connectedComponents.length > 0) {
+        for (let connectedComponent of connectedComponents) {
+          if (connectedComponent.fields != null) {
+            for (let field of connectedComponent.fields) {
+              if (field.when == "always") {
+                return true;
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
    * Whether this component shows work from a connected component
    * @param componentContent the component content
    * @return whether this component shows work from a connected component
@@ -726,14 +725,290 @@ class UtilService {
    * False if the array has all null elements.
    */
   arrayHasNonNullElement(arrayToCheck) {
-    if (arrayToCheck != null) {
-      for (let element of arrayToCheck) {
-        if (element != null) {
+    for (let element of arrayToCheck) {
+      if (element != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Takes a string and breaks it up into multiple lines so that the length of
+   * each line does not exceed a certain number of characters. This code was
+   * found on stackoverflow.
+   * https://stackoverflow.com/questions/14484787/wrap-text-in-javascript
+   * @param str The string to break up.
+   * @param maxWidth The max width of a line.
+   * @return A string that has been broken up into multiple lines using \n.
+   */
+  wordWrap(str, maxWidth) {
+    if (str.length <= maxWidth) {
+      return str;
+    }
+    let newLineStr = "\n";
+    let done = false;
+    let res = '';
+    do {
+        let found = false;
+        // Inserts new line at first whitespace of the line
+        for (let i = maxWidth - 1; i >= 0; i--) {
+            if (this.testWhite(str.charAt(i))) {
+                res = res + [str.slice(0, i), newLineStr].join('');
+                str = str.slice(i + 1);
+                found = true;
+                break;
+            }
+        }
+        // Inserts new line at maxWidth position, the word is too long to wrap
+        if (!found) {
+            res += [str.slice(0, maxWidth), newLineStr].join('');
+            str = str.slice(maxWidth);
+        }
+
+        if (str.length < maxWidth)
+            done = true;
+    } while (!done);
+
+    return res + str;
+  }
+
+  /**
+   * Helper function for wordWrap().
+   * @param x A single character string.
+   * @return Whether the single character is a whitespace character.
+   */
+  testWhite(x) {
+    let white = new RegExp(/^\s$/);
+    return white.test(x.charAt(0));
+  };
+
+  /**
+   * Get the number of words in the string.
+   * @param str The string.
+   * @return The number of words in the string.
+   */
+  wordCount(str) {
+    return str.trim().split(/\s+/).length;
+  }
+
+  /**
+   * Check if there is a 'nodeEntered' event in the array of events.
+   * @param events An array of events.
+   * @return Whether there is a 'nodeEntered' event in the array of events.
+   */
+  hasNodeEnteredEvent(events) {
+    for (let event of events) {
+      if (event.event == 'nodeEntered') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Determine whether the component has been authored to import work.
+   * @param componentContent The component content.
+   * @return Whether to import work in this component.
+   */
+  hasImportWorkConnectedComponent(componentContent) {
+    return this.hasXConnectedComponent(componentContent, 'importWork');
+  }
+
+  /**
+   * Determine whether the component has been authored to show work.
+   * @param componentContent The component content.
+   * @return Whether to show work in this component.
+   */
+  hasShowWorkConnectedComponent(componentContent) {
+    return this.hasXConnectedComponent(componentContent, 'showWork');
+  }
+
+  /**
+   * Determine whether the component has been authored to show classmate work.
+   * @param componentContent The component content.
+   * @return Whether to show classmate work in this component.
+   */
+  hasShowClassmateWorkConnectedComponent(componentContent) {
+    return this.hasXConnectedComponent(componentContent, 'showClassmateWork');
+  }
+
+  /**
+   * Determine whether the component has a connected component of the given type.
+   * @param componentContent The component content.
+   * @param connectedComponentType The connected component type.
+   * @return Whether the component has a connected component of the given type.
+   */
+  hasXConnectedComponent(componentContent, connectedComponentType) {
+    if (componentContent.connectedComponents != null) {
+      let connectedComponents = componentContent.connectedComponents;
+      // loop through all the connected components
+      for (let connectedComponent of connectedComponents) {
+        if (connectedComponent.type == connectedComponentType) {
+          // the connected component is the type we're looking for
           return true;
         }
       }
     }
     return false;
+  }
+
+  /**
+   * Temporarily highlight an element in the DOM.
+   * @param id The id of the element.
+   * @param duration The number of milliseconds to keep the element highlighted.
+   */
+  temporarilyHighlightElement(id, duration = 1000) {
+    let element = $('#' + id);
+    let originalBackgroundColor = element.css('backgroundColor');
+    element.css('background-color', '#FFFF9C');
+
+    /*
+     * Use a timeout before starting to transition back to
+     * the original background color. For some reason the
+     * element won't get highlighted in the first place
+     * unless this timeout is used.
+     */
+    this.$timeout(() => {
+      // slowly fade back to the original background color
+      element.css({
+        'transition': 'background-color 2s ease-in-out',
+        'background-color': originalBackgroundColor
+      });
+
+      /*
+       * remove these styling fields after we perform
+       * the fade otherwise the regular mouseover
+       * background color change will not work
+       */
+      this.$timeout(() => {
+        element.css({
+          'transition': '',
+          'background-color': ''
+        });
+      }, 2000);
+    }, duration);
+  }
+
+  /**
+   * Render the component state and then generate an image from it.
+   * @param componentState The component state to render.
+   * @return A promise that will return an image.
+   */
+  generateImageFromComponentState(componentState) {
+    let deferred = this.$q.defer();
+    this.$mdDialog.show({
+      template: `
+        <div style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.2); z-index: 2;"></div>
+        <div align="center" style="position: absolute; top: 100px; left: 200px; z-index: 1000; padding: 20px; background-color: yellow;">
+          <span>{{ "importingWork" | translate }}...</span>
+          <br/>
+          <br/>
+          <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+        <component node-id="{{nodeId}}"
+                   component-id="{{componentId}}"
+                   component-state="{{componentState}}"
+                   mode="student"></component>
+      `,
+      locals: {
+        nodeId: componentState.nodeId,
+        componentId: componentState.componentId,
+        componentState: componentState
+      },
+      controller: DialogController
+    });
+    function DialogController($scope, $mdDialog, nodeId, componentId, componentState) {
+      $scope.nodeId = nodeId;
+      $scope.componentId = componentId;
+      $scope.componentState = componentState;
+      $scope.closeDialog = function() {
+        $mdDialog.hide();
+      }
+    }
+    DialogController.$inject = ['$scope', '$mdDialog', 'nodeId', 'componentId', 'componentState'];
+    // wait for the component in the dialog to finish rendering
+    let doneRenderingComponentListener = this.$rootScope.$on('doneRenderingComponent', (event, args) => {
+      if (componentState.nodeId == args.nodeId && componentState.componentId == args.componentId) {
+        this.$timeout(() => {
+          this.generateImageFromComponentStateHelper(componentState).then((image) => {
+            /*
+             * Destroy the listener otherwise this block of code will be called every time
+             * doneRenderingComponent is fired in the future.
+             */
+            doneRenderingComponentListener();
+            this.$timeout.cancel(destroyDoneRenderingComponentListenerTimeout);
+            deferred.resolve(image);
+          });
+        }, 1000);
+      }
+    });
+    /*
+     * Set a timeout to destroy the listener in case there is an error creating the image and
+     * we don't get to destroying it above.
+     */
+    let destroyDoneRenderingComponentListenerTimeout = this.$timeout(() => {
+      // destroy the listener
+      doneRenderingComponentListener();
+    }, 10000);
+    return deferred.promise;
+  }
+
+  /**
+   * The component state has been rendered in the DOM and now we want to create an image
+   * from it.
+   * @param componentState The component state that has been rendered.
+   * @return A promise that will return an image.
+   */
+  generateImageFromComponentStateHelper(componentState) {
+    let deferred = this.$q.defer();
+    let componentService = this.$injector.get(componentState.componentType + 'Service');
+    componentService.generateImageFromRenderedComponentState(componentState).then((image) => {
+      deferred.resolve(image);
+      this.$mdDialog.hide();
+    });
+    return deferred.promise;
+  }
+
+  /**
+   * Get the connected component associated with the component state.
+   * @param componentContent The component content.
+   * @param componentState The component state.
+   * @return A connected component object or null.
+   */
+  getConnectedComponentByComponentState(componentContent, componentState) {
+    let nodeId = componentState.nodeId;
+    let componentId = componentState.componentId;
+    let connectedComponents = componentContent.connectedComponents;
+    for (let connectedComponent of connectedComponents) {
+      if (connectedComponent.nodeId == nodeId && connectedComponent.componentId == componentId) {
+        return connectedComponent;
+      }
+    }
+    return null;
+  }
+
+  showJSONValidMessage() {
+    this.setIsJSONValidMessage(true);
+  }
+
+  showJSONInvalidMessage() {
+    this.setIsJSONValidMessage(false);
+  }
+
+  hideJSONValidMessage() {
+    this.setIsJSONValidMessage(null);
+  }
+
+  /**
+   * Show the message in the toolbar that says "JSON Valid" or "JSON Invalid".
+   * @param isJSONValid
+   * true if we want to show "JSON Valid"
+   * false if we want to show "JSON Invalid"
+   * null if we don't want to show anything
+   */
+  setIsJSONValidMessage(isJSONValid) {
+    this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: isJSONValid });
   }
 }
 
@@ -747,7 +1022,10 @@ if (!Array.prototype.last) {
 UtilService.$inject = [
   '$filter',
   '$injector',
-  '$rootScope'
+  '$mdDialog',
+  '$q',
+  '$rootScope',
+  '$timeout'
 ];
 
 export default UtilService;

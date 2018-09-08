@@ -36,6 +36,8 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +55,8 @@ import org.wise.vle.domain.work.StepWork;
 @Entity
 @Table(name = "annotation")
 @Inheritance(strategy = InheritanceType.JOINED)
+@Getter
+@Setter
 public class Annotation extends PersistableDomain {
 
   @Id
@@ -86,113 +90,9 @@ public class Annotation extends PersistableDomain {
   @Column(name = "nodeId")
   private String nodeId = null;
 
-  public Long getId() {
-    return id;
-  }
-
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the fromUser
-   */
-  public UserInfo getFromUser() {
-    return fromUser;
-  }
-
-  /**
-   * @param fromUser the fromUser to set
-   */
-  public void setFromUser(UserInfo fromUser) {
-    this.fromUser = fromUser;
-  }
-
-  /**
-   * @return the toUser
-   */
-  public UserInfo getToUser() {
-    return toUser;
-  }
-
-  /**
-   * @param toUser the toUser to set
-   */
-  public void setToUser(UserInfo toUser) {
-    this.toUser = toUser;
-  }
-
-  /**
-   * @return the stepWork
-   */
-  public StepWork getStepWork() {
-    return stepWork;
-  }
-
-  /**
-   * @param stepWork the stepWork to set
-   */
-  public void setStepWork(StepWork stepWork) {
-    this.stepWork = stepWork;
-  }
-
-  /**
-   * @return the annotateTime
-   */
-  public Timestamp getAnnotateTime() {
-    return annotateTime;
-  }
-
-  /**
-   * @param annotateTime the annotateTime to set
-   */
-  public void setAnnotateTime(Timestamp annotateTime) {
-    this.annotateTime = annotateTime;
-  }
-
-  /**
-   * @return the postTime
-   */
-  public Timestamp getPostTime() {
-    return postTime;
-  }
-
-  /**
-   * @param postTime the postTime to set
-   */
-  public void setPostTime(Timestamp postTime) {
-    this.postTime = postTime;
-  }
-
-  /**
-   * @return the id of the run
-   */
-  public Long getRunId() {
-    return runId;
-  }
-
-  /**
-   * @param runId the id of the run
-   */
-  public void setRunId(Long runId) {
-    this.runId = runId;
-  }
-
-  /**
-   * @see org.wise.vle.domain.PersistableDomain#getObjectClass()
-   */
   @Override
   protected Class<?> getObjectClass() {
     return Annotation.class;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
   }
 
   /**

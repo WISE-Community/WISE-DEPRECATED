@@ -62,5 +62,4 @@ public enum WebBrowser {
   public String getName() {
     return name();
   }
-
 }

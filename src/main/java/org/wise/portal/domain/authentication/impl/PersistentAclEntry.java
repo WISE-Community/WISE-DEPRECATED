@@ -35,6 +35,8 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.acls.domain.DefaultPermissionFactory;
 import org.springframework.security.acls.model.Acl;
 import org.springframework.security.acls.model.Permission;
@@ -89,10 +91,13 @@ public class PersistentAclEntry implements ImmutableAclEntry, Serializable {
 
   @SuppressWarnings("unused")
   @Column(name = COLUMN_NAME_ACE_ORDER, nullable = false)
+  @Setter
   private Integer aceOrder;
 
   @ManyToOne(cascade = CascadeType.ALL, targetEntity = PersistentAclSid.class)
   @JoinColumn(name = COLUMN_NAME_SID, nullable = false)
+  @Getter
+  @Setter
   private MutableAclSid sid;
 
   @SuppressWarnings("unused")
@@ -100,24 +105,31 @@ public class PersistentAclEntry implements ImmutableAclEntry, Serializable {
   private Integer mask;
 
   @Transient
+  @Getter
   private Permission permission;
 
   @Column(name = COLUMN_NAME_GRANTING, nullable = false)
+  @Setter
   private Boolean granting;
 
   @Column(name = COLUMN_NAME_AUDIT_SUCCESS, nullable = false)
+  @Setter
   private Boolean auditSuccess;
 
   @Column(name = COLUMN_NAME_AUDIT_FAILURE, nullable = false)
+  @Setter
   private Boolean auditFailure;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Getter
+  @Setter
   private Long id;
 
   @SuppressWarnings("unused")
   @Version
   @Column(name = "OPTLOCK")
+  @Setter
   private Integer version = null;
 
   /**
@@ -144,79 +156,26 @@ public class PersistentAclEntry implements ImmutableAclEntry, Serializable {
     this.auditFailure = auditFailure;
   }
 
-  /**
-   * @see org.acegisecurity.acls.AccessControlEntry#getAcl()
-   */
   public Acl getAcl() {
     return null;
   }
 
-  /**
-   * @see org.acegisecurity.acls.AccessControlEntry#getId()
-   */
-  public Serializable getId() {
-    return this.id;
-  }
-
-  /**
-   * @see org.acegisecurity.acls.AccessControlEntry#getPermission()
-   */
-  public Permission getPermission() {
-    return this.permission;
-  }
-
-  /**
-   * @see org.acegisecurity.acls.AccessControlEntry#getSid()
-   */
-  public Sid getSid() {
-    return this.sid;
-  }
-
-  /**
-   * @see org.acegisecurity.acls.AccessControlEntry#isGranting()
-   */
   public boolean isGranting() {
     return this.granting;
   }
 
-  /**
-   * @see org.acegisecurity.acls.AuditableAccessControlEntry#isAuditFailure()
-   */
   public boolean isAuditFailure() {
     return this.auditFailure;
   }
 
-  /**
-   * @see org.acegisecurity.acls.AuditableAccessControlEntry#isAuditSuccess()
-   */
   public boolean isAuditSuccess() {
     return this.auditSuccess;
   }
 
-  /**
-   * @param targetObjectIdentity
-   *                the targetObjectIdentity to set
-   */
   @SuppressWarnings("unused")
   private void setTargetObjectIdentity(
     MutableAclTargetObjectIdentity targetObjectIdentity) {
     this.targetObjectIdentity = targetObjectIdentity;
-  }
-
-  /**
-   * @param aceOrder the aceOrder to set
-   */
-  @SuppressWarnings("unused")
-  private void setAceOrder(Integer aceOrder) {
-    this.aceOrder = aceOrder;
-  }
-
-  /**
-   * @param sid the sid to set
-   */
-  @SuppressWarnings("unused")
-  private void setSid(MutableAclSid sid) {
-    this.sid = sid;
   }
 
   /**
@@ -227,45 +186,5 @@ public class PersistentAclEntry implements ImmutableAclEntry, Serializable {
     this.mask = mask;
     DefaultPermissionFactory dpf = new DefaultPermissionFactory();
     this.permission = dpf.buildFromMask(mask);
-  }
-
-  /**
-   * @param granting the granting to set
-   */
-  @SuppressWarnings("unused")
-  private void setGranting(Boolean granting) {
-    this.granting = granting;
-  }
-
-  /**
-   * @param auditSuccess the auditSuccess to set
-   */
-  @SuppressWarnings("unused")
-  private void setAuditSuccess(Boolean auditSuccess) {
-    this.auditSuccess = auditSuccess;
-  }
-
-  /**
-   * @param auditFailure the auditFailure to set
-   */
-  @SuppressWarnings("unused")
-  private void setAuditFailure(Boolean auditFailure) {
-    this.auditFailure = auditFailure;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * @param version the version to set
-   */
-  @SuppressWarnings("unused")
-  private void setVersion(Integer version) {
-    this.version = version;
   }
 }

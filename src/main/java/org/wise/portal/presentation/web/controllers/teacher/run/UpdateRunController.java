@@ -23,19 +23,11 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher.run;
 
-import java.util.Date;
-import java.util.Properties;
-
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -43,8 +35,14 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.mail.IMailFacade;
-import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.run.RunService;
+
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.Properties;
 
 /**
  * Controller for updating run settings, like add period,
@@ -139,7 +137,7 @@ public class UpdateRunController {
         this.runService.updateSurvey(Long.parseLong(runId), survey);
 
         // send email to WISE staff with Survey
-        String linkToSurvey = wiseProperties.getProperty("wiseBaseURL")+"/teacher/run/survey.html?runId="+runId;
+        String linkToSurvey = ControllerUtil.getPortalUrlString(request)+"/teacher/run/survey.html?runId="+runId;
         String emailBody = user.getUserDetails().getUsername()+ " completed a survey for "+run.getName()+" (Run ID="+runId+").\n\nLink to view survey on WISE: "+linkToSurvey+"\n\n"+survey;
         EmailService emailService =
           new EmailService("Survey completed [Run ID="+runId+"]: "+run.getName(), emailBody);

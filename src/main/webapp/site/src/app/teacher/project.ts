@@ -8,5 +8,6 @@ export class Project {
   thumbIconPath: string;
   isHighlighted: boolean;
   sharedOwners;
- run: Run;
+  run: Run;
+  metadata: object;
 }

@@ -25,6 +25,8 @@ package org.wise.vle.domain.user;
 
 import javax.persistence.*;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.vle.domain.PersistableDomain;
 
 /**
@@ -33,6 +35,8 @@ import org.wise.vle.domain.PersistableDomain;
  */
 @Entity
 @Table(name = "userinfo", indexes = { @Index(columnList = "workgroupId", name = "userinfoWorkgroupIdIndex") } )
+@Getter
+@Setter
 public class UserInfo extends PersistableDomain {
 
   @Id
@@ -42,26 +46,6 @@ public class UserInfo extends PersistableDomain {
   @Column(name = "workgroupId", unique = true)
   private Long workgroupId = null;
 
-  public Long getId() {
-    return id;
-  }
-
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
-
-  public Long getWorkgroupId() {
-    return workgroupId;
-  }
-
-  public void setWorkgroupId(Long workgroupId) {
-    this.workgroupId = workgroupId;
-  }
-
-  /**
-   * @see org.wise.vle.domain.PersistableDomain#getObjectClass()
-   */
   @Override
   protected Class<?> getObjectClass() {
     return UserInfo.class;

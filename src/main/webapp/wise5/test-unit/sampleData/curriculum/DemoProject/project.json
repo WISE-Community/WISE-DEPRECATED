@@ -8,7 +8,18 @@
       "ids": [
         "group1",
         "group2"
-      ]
+      ],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "group1"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      }
     },
     {
       "id": "group1",
@@ -35,7 +46,18 @@
         "node17",
         "node18",
         "node19"
-      ]
+      ],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "group2"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      }
     },
     {
       "id": "node1",
@@ -1228,7 +1250,8 @@
         "node30",
         "node31",
         "node32",
-        "node33"
+        "node33",
+        "node34"
       ]
     },
     {
@@ -1578,7 +1601,9 @@
         }
       ],
       "transitionLogic": {
-        "transitions": [],
+        "transitions": [{
+          "to": "node34"
+        }],
         "howToChooseAmongAvailablePaths": null,
         "whenToChoosePath": null,
         "canChangePath": null,
@@ -1625,7 +1650,9 @@
         }
       ],
       "transitionLogic": {
-        "transitions": [],
+        "transitions": [{
+          "to": "node34"
+        }],
         "howToChooseAmongAvailablePaths": null,
         "whenToChoosePath": null,
         "canChangePath": null,
@@ -1672,7 +1699,9 @@
         }
       ],
       "transitionLogic": {
-        "transitions": [],
+        "transitions": [ {
+          "to": "node34"
+        }],
         "howToChooseAmongAvailablePaths": null,
         "whenToChoosePath": null,
         "canChangePath": null,
@@ -1686,6 +1715,38 @@
           "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<p>You chose \"White\" in the multiple choice step. Enjoy your white chocolate!</p>\n<p><img src=\"white_chocolate.jpg?w=265&amp;h=205\" alt=\"\" width=\"265\" height=\"205\" /></p>\n</body>\n</html>"
         }
       ]
+    },
+    {
+      "id": "node34",
+      "type": "node",
+      "showSaveButton": false,
+      "showSubmitButton": false,
+      "constraints": [
+
+      ],
+      "transitionLogic": {
+        "transitions": [],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Merge point",
+      "components": [
+        {
+          "id": "xabcha8d4g",
+          "type": "HTML",
+          "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<p>Let us Merge!</p>\n</body>\n</html>"
+        }
+      ]
+    }
+  ],
+  "spaces": [
+    {
+      "id": "sharePictures",
+      "name": "Public",
+      "isPublic": true,
+      "isShowInNotebook": false
     }
   ],
   "constraints": [],

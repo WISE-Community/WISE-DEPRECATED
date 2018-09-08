@@ -25,6 +25,8 @@ package org.wise.portal.domain.impl;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 
@@ -33,6 +35,8 @@ import org.wise.portal.domain.run.Run;
  * @author Sally Ahn
  * @author Hiroki Terashima
  */
+@Getter
+@Setter
 public class AddSharedTeacherParameters implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -44,55 +48,4 @@ public class AddSharedTeacherParameters implements Serializable {
   private String sharedOwnerUsername;
 
   private String permission;
-
-  /**
-   * @return the run
-   */
-  public Run getRun() {
-    return run;
-  }
-
-  /**
-   * @param run the run to set
-   */
-  public void setRun(Run run) {
-    this.run = run;
-  }
-
-  /**
-   * @return the sharedOwnerUsername
-   */
-  public String getSharedOwnerUsername() {
-    return sharedOwnerUsername;
-  }
-
-  /**
-   * @param sharedOwnerUsername the sharedOwnerUsername to set
-   */
-  public void setSharedOwnerUsername(String sharedOwnerUsername) {
-    this.sharedOwnerUsername = sharedOwnerUsername;
-  }
-
-  /**
-   * @return the permission
-   */
-  public String getPermission() {
-    return permission;
-  }
-
-  /**
-   * @param permission the permission to set
-   */
-  public void setPermission(String permission) {
-    this.permission = permission;
-  }
-
-  public Project getProject() {
-    return project;
-  }
-
-  public void setProject(Project project) {
-    this.project = project;
-  }
-
 }

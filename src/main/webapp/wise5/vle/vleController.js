@@ -50,6 +50,16 @@ var VLEController = function () {
 
     this.constraintsDisabled = false;
 
+    var userType = this.ConfigService.getConfigParam('userType');
+    var contextPath = this.ConfigService.getConfigParam('contextPath');
+    if (userType == 'student') {
+      this.homePath = contextPath + '/student';
+    } else if (userType == 'teacher') {
+      this.homePath = contextPath + '/teacher';
+    } else {
+      this.homePath = contextPath;
+    }
+
     if (this.ConfigService.getConfigParam('constraints') == false) {
       this.constraintsDisabled = true;
     }
@@ -353,7 +363,7 @@ var VLEController = function () {
           $mdDialog.hide();
         };
         $scope.chooseSnippet = function (snippableItem) {
-          $scope.NotebookService.addNewItem($event, snippableItem);
+          $scope.NotebookService.addNote($event, snippableItem);
           $mdDialog.hide();
         };
       }

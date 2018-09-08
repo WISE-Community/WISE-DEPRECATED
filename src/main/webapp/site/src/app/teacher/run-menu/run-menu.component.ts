@@ -33,7 +33,7 @@ export class RunMenuComponent implements OnInit {
 
   showCreateRunDialog() {
     const dialogRef = this.dialog.open(CreateRunDialogComponent, {
-      data: { run: this.run }
+      data: this.run
     });
 
     dialogRef.afterClosed().subscribe(result => {

@@ -23,29 +23,39 @@
  */
 package org.wise.portal.domain.premadecomment.impl;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 
 /**
  * @author Patrick Lawler
- *
  */
 public class PremadeCommentParameters {
 
+  @Getter
+  @Setter
   private String comment = null;
 
+  @Getter
+  @Setter
   private String labels = null;
 
+  @Getter
+  @Setter
   private User owner = null;
 
+  @Getter
+  @Setter
   private Run run = null;
 
   private boolean global = false;
 
+  @Getter
+  @Setter
   private long listPosition = 0;
 
   public PremadeCommentParameters() {
-
   }
 
   public PremadeCommentParameters(String comment, User owner) {
@@ -60,75 +70,11 @@ public class PremadeCommentParameters {
     this.labels = labels;
   }
 
-  /**
-   * @return the comment
-   */
-  public String getComment() {
-    return comment;
-  }
-
-  /**
-   * @param comment the comment to set
-   */
-  public void setComment(String comment) {
-    this.comment = comment;
-  }
-
-  /**
-   * @return the label
-   */
-  public String getLabels() {
-    return labels;
-  }
-
-  /**
-   * @param label the label to set
-   */
-  public void setLabels(String labels) {
-    this.labels = labels;
-  }
-
-  /**
-   * @return the owner
-   */
-  public User getOwner() {
-    return owner;
-  }
-
-  /**
-   * @param owner the owner to set
-   */
-  public void setOwner(User owner) {
-    this.owner = owner;
-  }
-
-  /**
-   * @return the run
-   */
-  public Run getRun() {
-    return run;
-  }
-
-  /**
-   * @param run the run to set
-   */
-  public void setRun(Run run) {
-    this.run = run;
-  }
-
   public void setGlobal(boolean global) {
     this.global = global;
   }
 
   public boolean isGlobal() {
     return global;
-  }
-
-  public long getListPosition() {
-    return listPosition;
-  }
-
-  public void setListPosition(long listPosition) {
-    this.listPosition = listPosition;
   }
 }
