@@ -3,7 +3,7 @@
     <div mat-card-avatar [style.background-image]="thumbStyle"></div>
     <div fxFlex="1 1 100%" fxLayout="row" fxLayoutWrap>
       <div fxLayout="column">
-        <mat-card-title [class.secondary-text]="run.endTime">{{ run.project.name }} <span class="mat-caption">(Run #{{ run.id }})</span></mat-card-title>
+        <mat-card-title [class.secondary-text]="run.endTime">{{ run.project.name }}</mat-card-title>
         <mat-card-subtitle fxHide fxShow.gt-xs>
           <div>
             <a [matTooltip]="periodsString()" matTooltipPosition="above">

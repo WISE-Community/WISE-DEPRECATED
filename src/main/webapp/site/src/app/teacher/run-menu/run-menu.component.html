@@ -3,9 +3,11 @@
 </button>
 <mat-menu #runMenu="matMenu" xPosition="before">
   <div class="header-account-menu">
+    <div class="run-info mat-subheading-1">Run ID: {{ run.id }}</div>
+    <mat-divider></mat-divider>
     <a mat-menu-item href="{{ previewLink }}" target="_blank">
       <mat-icon>tv</mat-icon>
-      <span>Preview</span>
+      <span>Preview Unit</span>
     </a>
     <a mat-menu-item>
       <mat-icon>info</mat-icon>
