@@ -12,6 +12,8 @@ export class UserService {
   private user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   private logInURL = '/wise/j_acegi_security_check';
   private checkGoogleUserIdUrl = 'api/teacher/checkGoogleUserId';
+  private changePasswordUrl = 'api/user/password';
+  private languagesUrl = 'api/user/languages';
   isAuthenticated = false;
   redirectUrl: string; // redirect here after logging in
 
@@ -109,5 +111,19 @@ export class UserService {
 
   private log(message: string) {
     console.log('UserService: ' + message);
+  }
+
+  changePassword(username, oldPassword, newPassword) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('username', username);
+    body = body.set('oldPassword', oldPassword);
+    body = body.set('newPassword', newPassword);
+    return this.http.post<any>(this.changePasswordUrl, body, { headers: headers });
+  }
+
+  getLanguages() {
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    return this.http.get<any>(this.languagesUrl, { headers: headers });
   }
 }

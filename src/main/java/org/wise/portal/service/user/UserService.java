@@ -20,13 +20,14 @@
  */
 package org.wise.portal.service.user;
 
-import java.util.List;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
+
+import java.util.List;
 
 /**
  * Represents the set of operations on a user.
@@ -104,6 +105,8 @@ public interface UserService {
    * @return The user with the newly encoded password.
    */
   User updateUserPassword(final User user, String newPassword);
+
+  User updateUserPassword(User user, String oldPassword, String newPassword) throws IncorrectPasswordException;
 
   /**
    * Gets all users from persistent data store.
