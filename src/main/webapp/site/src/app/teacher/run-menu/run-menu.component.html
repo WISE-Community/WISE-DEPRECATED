@@ -25,5 +25,18 @@
       <mat-icon>refresh</mat-icon>
       <span>Use Again</span>
     </a>
+    <mat-divider></mat-divider>
+    <a mat-menu-item *ngIf="isScheduled()">
+      <mat-icon color="warn">cancel</mat-icon>
+      <span>Cancel</span>
+    </a>
+    <a mat-menu-item *ngIf="run.endTime">
+      <mat-icon color="success" class="success">play_arrow</mat-icon>
+      <span>Restart</span>
+    </a>
+    <a mat-menu-item *ngIf="run.startTime && !run.endTime && !isScheduled()">
+      <mat-icon color="warn">stop</mat-icon>
+      <span>End Unit</span>
+    </a>
   </div>
 </mat-menu>

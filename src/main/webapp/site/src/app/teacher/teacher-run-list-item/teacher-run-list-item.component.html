@@ -56,10 +56,6 @@
   <mat-card-actions fxLayout="row wrap" fxLayoutAlign="end center">
     <span fxFlex="1 1 auto"></span>
     <ng-container *ngIf="isScheduled()">
-      <a mat-button class="secondary-text">
-        <mat-icon class="secondary-text">cancel</mat-icon>
-        Cancel
-      </a>
       <a mat-button
          color="primary">
         <mat-icon class="primary">settings</mat-icon>
@@ -67,10 +63,6 @@
       </a>
     </ng-container>
     <ng-container *ngIf="run.startTime && !run.endTime && !isScheduled()">
-      <a mat-button class="secondary-text">
-        <mat-icon class="secondary-text">stop</mat-icon>
-        End
-      </a>
       <a mat-flat-button
          href="{{ gradeAndManageLink }}"
          color="primary">
@@ -79,10 +71,6 @@
       </a>
     </ng-container>
     <ng-container *ngIf="run.endTime">
-      <a mat-button class="secondary-text">
-        <mat-icon class="secondary-text">play_arrow</mat-icon>
-        Restart
-      </a>
       <a mat-button color="primary" href="{{ gradeAndManageLink }}">
         <mat-icon class="primary">history</mat-icon>
         Review
