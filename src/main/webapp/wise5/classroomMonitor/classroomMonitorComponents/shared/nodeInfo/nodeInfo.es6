@@ -48,10 +48,6 @@ class NodeInfoController {
                     component.isDisabled = true;
                 }
 
-                if (this.nodeContent.lockAfterSubmit) {
-                    component.lockAfterSubmit = true;
-                }
-
                 component.hasWork = this.ProjectService.componentHasWork(component);
                 if (component.hasWork) {
                     assessmentItemIndex++;
@@ -115,14 +111,7 @@ const NodeInfo = {
                             component__header">
                         {{ component.assessmentItemIndex + '. ' + $ctrl.getComponentTypeLabel(component.type) }}&nbsp;
                     </h3>
-                    <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""'
-                               node-id='{{component.showPreviousWorkNodeId}}'
-                               component-id='{{component.showPreviousWorkComponentId}}'
-                               original-node-id={{$ctrl.nodeId}}
-                               original-component-id={{component.id}}
-                               mode='student'></component>
-                    <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null || component.showPreviousWorkNodeId == "" || component.showPreviousWorkComponentId == ""'
-                               node-id='{{$ctrl.nodeId}}'
+                    <component node-id='{{$ctrl.nodeId}}'
                                component-id='{{component.id}}'
                                mode='student'></component>
                     <md-card class="annotations annotations--info" ng-if="component.rubric">

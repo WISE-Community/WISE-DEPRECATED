@@ -314,7 +314,7 @@ class AnnotationService {
             const nodeId = annotation.nodeId;
             const componentId = annotation.componentId;
             const data = annotation.data;
-            if (this.ProjectService.isActive(nodeId, componentId)) {
+            if (this.ProjectService.isActive(nodeId)) {
               const scoreFound = nodeId + '-' + componentId;
               if (scoresFound.indexOf(scoreFound) == -1) {
                 if (data != null) {

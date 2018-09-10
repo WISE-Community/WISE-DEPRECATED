@@ -23,16 +23,8 @@
  */
 package org.wise.portal.domain.run.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.persistence.*;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.SortNatural;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +40,9 @@ import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
+
+import javax.persistence.*;
+import java.util.*;
 
 /**
  * WISE "run" domain object A WISE run is an run with more information,
@@ -139,183 +134,122 @@ public class RunImpl implements Run {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Getter
+  @Setter
   private Long id = null;
 
   @Column(name = RunImpl.COLUMN_NAME_LAST_RUN)
+  @Getter
+  @Setter
   private Date lastRun;
 
   @Column(name = RunImpl.COLUMN_NAME_TIMES_RUN)
+  @Getter
+  @Setter
   private Integer timesRun;
 
   @Column(name = RunImpl.COLUMN_NAME_STARTTIME, nullable = false)
+  @Getter
+  @Setter
   private Date starttime;
 
   @Column(name = RunImpl.COLUMN_NAME_ENDTIME)
+  @Getter
+  @Setter
   private Date endtime;
 
   @Column(name = RunImpl.COLUMN_NAME_RUN_CODE, nullable = false, unique = true)
+  @Getter
+  @Setter
   private String runcode;
 
   @Column(name = RunImpl.COLUMN_NAME_ARCHIVE_REMINDER_TIME, nullable = false)
+  @Getter
+  @Setter
   private Date archiveReminderTime;
 
   @OneToMany(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY)
   @JoinTable(name = PERIODS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = PERIODS_JOIN_COLUMN_NAME, nullable = false))
   @SortNatural
+  @Getter
+  @Setter
   private Set<Group> periods = new TreeSet<Group>();
 
   @ManyToOne(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
   @JoinColumn(name = OWNER_COLUMN_NAME, nullable = false, unique = false)
+  @Getter
+  @Setter
   private User owner;
 
   @ManyToOne(targetEntity = ProjectImpl.class, fetch = FetchType.LAZY)
   @JoinColumn(name = PROJECTS_JOIN_COLUMN_NAME, nullable = false, unique = false)
+  @Getter
+  @Setter
   private Project project;
 
   @ManyToMany(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
   @JoinTable(name = SHARED_OWNERS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name =  RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = SHARED_OWNERS_JOIN_COLUMN_NAME, nullable = false))
+  @Getter
+  @Setter
   private Set<User> sharedowners = new TreeSet<User>();
 
   @OneToMany(targetEntity = AnnouncementImpl.class, fetch = FetchType.LAZY)
   @JoinTable(name = ANNOUNCEMENTS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = ANNOUNCEMENTS_JOIN_COLUMN_NAME, nullable = false))
   @SortNatural
+  @Getter
+  @Setter
   private Set<Announcement> announcements = new TreeSet<Announcement>();
 
   @Column(name = COLUMN_NAME_RUNNAME)
+  @Getter
+  @Setter
   private String name;
 
   @Column(name = COLUMN_NAME_INFO)
+  @Getter
+  @Setter
   private String info;   // other info pertaining to the run
 
   @Column(name = COLUMN_NAME_MAX_WORKGROUP_SIZE, nullable = true)
+  @Getter
+  @Setter
   private Integer maxWorkgroupSize;
 
   @Column(name = COLUMN_NAME_EXTRAS, length=5120000, columnDefinition = "mediumtext")
+  @Getter
+  @Setter
   private String extras;
 
   @Transient
+  @Getter
+  @Setter
   private List<StudentAttendance> studentAttendance;
 
   @Column(name = RunImpl.COLUMN_NAME_LOGGING_LEVEL)
+  @Getter
+  @Setter
   private Integer loggingLevel;
 
   @Column(name = RunImpl.COLUMN_NAME_POST_LEVEL, nullable = false)
+  @Getter
+  @Setter
   private Integer postLevel;
 
   @Column(name = RunImpl.COLUMN_NAME_VERSION_ID)
+  @Getter
+  @Setter
   private String versionId;
 
   @Column(name = COLUMN_NAME_PRIVATE_NOTES, length = 32768, columnDefinition = "text")
+  @Getter
+  @Setter
   private String privateNotes;   // text (blob) 2^15
 
   @Column(name = COLUMN_NAME_SURVEY, length = 32768, columnDefinition = "text")
+  @Getter
+  @Setter
   private String survey;   // text (blob) 2^15
 
-  /**
-   * @return the id of this run
-   */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id of this run
-   */
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the endtime
-   */
-  public Date getEndtime() {
-    return endtime;
-  }
-
-  /**
-   * @param endtime
-   *            the endtime to set
-   */
-  public void setEndtime(Date endtime) {
-    this.endtime = endtime;
-  }
-
-  /**
-   * @return the starttime
-   */
-  public Date getStarttime() {
-    return starttime;
-  }
-
-  /**
-   * @param starttime
-   *            the starttime to set
-   */
-  public void setStarttime(Date starttime) {
-    this.starttime = starttime;
-  }
-
-  /**
-   * @return the runcode
-   */
-  public String getRuncode() {
-    return runcode;
-  }
-
-  /**
-   * @param runcode
-   *            the runcode to set
-   */
-  public void setRuncode(String runcode) {
-    this.runcode = runcode;
-  }
-
-  /**
-   * @return the periods
-   */
-  public Set<Group> getPeriods() {
-    return periods;
-  }
-
-  /**
-   * @param periods the periods to set
-   */
-  public void setPeriods(Set<Group> periods) {
-    this.periods = periods;
-  }
-
-  /**
-   * @return User who owns this run
-   */
-  public User getOwner() {
-    return owner;
-  }
-
-  /**
-   * @param owner User who owns this run
-   */
-  public void setOwner(User owner) {
-    this.owner = owner;
-  }
-
-  /**
-   * @see org.wise.portal.domain.run.Run#getProject()
-   */
-  public Project getProject() {
-    return project;
-  }
-
-  /**
-   * @see org.wise.portal.domain.run.Run#setProject(org.wise.portal.domain.project.Project)
-   */
-  public void setProject(Project project) {
-    this.project = project;
-  }
-
-  /**
-   * @see org.wise.portal.domain.run.Run#getPeriodByName(java.lang.String)
-   */
   public Group getPeriodByName(String periodName) throws PeriodNotFoundException {
     Set<Group> periods = getPeriods();
     for (Group period : periods) {
@@ -327,23 +261,14 @@ public class RunImpl implements Run {
       " does not exist");
   }
 
-  /**
-   * @see Run#isEnded()
-   */
   public boolean isEnded() {
     return this.endtime != null;
   }
 
-  /**
-   * @see Run#isStudentAssociatedToThisRun(User)
-   */
   public boolean isStudentAssociatedToThisRun(User studentUser) {
     return getPeriodOfStudent(studentUser) != null;
   }
 
-  /**
-   * @see Run#getPeriodOfStudent(User)
-   */
   public Group getPeriodOfStudent(User studentUser) {
     Set<Group> periods = getPeriods();
     for (Group period : periods) {
@@ -355,10 +280,16 @@ public class RunImpl implements Run {
   }
 
   /**
-   * @see Run#getSharedowners()
+   * @param teacherUser A User object.
+   * @return Whether the user is an owner or shared owner of the run.
    */
-  public Set<User> getSharedowners() {
-    return sharedowners;
+  public boolean isTeacherAssociatedToThisRun(User teacherUser) {
+    Set<User> sharedOwners = getSharedowners();
+    User owner = getOwner();
+    if (owner.equals(teacherUser) || sharedOwners.contains(teacherUser)) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -380,44 +311,6 @@ public class RunImpl implements Run {
     return sharedOwnersList;
   }
 
-  /**
-   * @see Run#setSharedowners(Set)
-   */
-  public void setSharedowners(Set<User> sharedOwners) {
-    this.sharedowners = sharedOwners;
-  }
-
-  /**
-   * @return the name
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  /**
-   * @return the announcements
-   */
-  public Set<Announcement> getAnnouncements() {
-    return announcements;
-  }
-
-  /**
-   * @param announcements the announcements to set
-   */
-  public void setAnnouncements(Set<Announcement> announcements) {
-    this.announcements = announcements;
-  }
-
-  /**
-   * @return the isPaused
-   */
   public boolean isPaused() {
     if (this.info != null) {
       int start = this.info.indexOf("<isPaused>");
@@ -429,120 +322,6 @@ public class RunImpl implements Run {
       }
     }
     return false;
-  }
-
-  /**
-   * @return the info
-   */
-  public String getInfo() {
-    return info;
-  }
-
-  /**
-   * @param info the info to set
-   */
-  public void setInfo(String info) {
-    this.info = info;
-  }
-
-  /**
-   * @return <code>Integer</code> maxWorkgroupSize
-   */
-  public Integer getMaxWorkgroupSize() {
-    return maxWorkgroupSize;
-  }
-
-  /**
-   * @param maxWorkgroupSize max membership size of workgroup
-   */
-  public void setMaxWorkgroupSize(Integer maxWorkgroupSize) {
-    this.maxWorkgroupSize = maxWorkgroupSize;
-  }
-
-  /**
-   * @see Run#getArchiveReminderTime()
-   */
-  public Date getArchiveReminderTime() {
-    return archiveReminderTime;
-  }
-
-  /**
-   * @see Run#setArchiveReminderTime(java.util.Date)
-   */
-  public void setArchiveReminderTime(Date archiveReminderTime) {
-    this.archiveReminderTime = archiveReminderTime;
-  }
-
-  /**
-   * @return the extras
-   */
-  public String getExtras() {
-    return extras;
-  }
-
-  /**
-   * @param extras the extras to set
-   */
-  public void setExtras(String extras) {
-    this.extras = extras;
-  }
-
-  /**
-   * @return the loggingLevel
-   */
-  public Integer getLoggingLevel() {
-    return loggingLevel;
-  }
-
-  /**
-   * @param loggingLevel the loggingLevel to set
-   */
-  public void setLoggingLevel(Integer loggingLevel) {
-    this.loggingLevel = loggingLevel;
-  }
-
-  /**
-   * @return the postLevel
-   */
-  public Integer getPostLevel() {
-    return postLevel;
-  }
-
-  /**
-   * @param postLevel the postLevel to set
-   */
-  public void setPostLevel(Integer postLevel) {
-    this.postLevel = postLevel;
-  }
-
-  public Date getLastRun() {
-    return lastRun;
-  }
-
-  public void setLastRun(Date lastRun) {
-    this.lastRun = lastRun;
-  }
-
-  public Integer getTimesRun() {
-    return timesRun;
-  }
-
-  public void setTimesRun(Integer timesRun) {
-    this.timesRun = timesRun;
-  }
-
-  /**
-   * @return the versionId
-   */
-  public String getVersionId() {
-    return versionId;
-  }
-
-  /**
-   * @param versionId the versionId to set
-   */
-  public void setVersionId(String versionId) {
-    this.versionId = versionId;
   }
 
   public boolean isRealTimeEnabled() {
@@ -673,33 +452,6 @@ public class RunImpl implements Run {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-  }
-
-  @Override
-  public void setStudentAttendance(
-    List<StudentAttendance> studentAttendance) {
-    this.studentAttendance = studentAttendance;
-  }
-
-  @Override
-  public List<StudentAttendance> getStudentAttendance() {
-    return this.studentAttendance;
-  }
-
-  public String getPrivateNotes() {
-    return privateNotes;
-  }
-
-  public void setPrivateNotes(String privateNotes) {
-    this.privateNotes = privateNotes;
-  }
-
-  public String getSurvey() {
-    return survey;
-  }
-
-  public void setSurvey(String survey) {
-    this.survey = survey;
   }
 
   /**

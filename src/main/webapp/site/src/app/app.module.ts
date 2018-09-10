@@ -46,7 +46,7 @@ export function initialize(configService: ConfigService, userService: UserServic
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,

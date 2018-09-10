@@ -25,12 +25,16 @@ package org.wise.portal.domain.impl;
 
 import java.io.Serializable;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
  * @author Sally Ahn
  */
+@Getter
+@Setter
 public class ChangeWorkgroupParameters implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -46,70 +50,4 @@ public class ChangeWorkgroupParameters implements Serializable {
   private Long runId;
 
   private Long periodId;
-
-  public void setStudent(User student) {
-    this.student = student;
-  }
-
-  public User getStudent() {
-    return this.student;
-  }
-
-  public void setWorkgroupFrom(Workgroup workgroup) {
-    this.workgroupFrom = workgroup;
-  }
-
-  public Workgroup getWorkgroupFrom() {
-    return this.workgroupFrom;
-  }
-
-  public void setWorkgroupTo(Workgroup workgroup) {
-    this.workgroupTo = workgroup;
-  }
-
-  public Workgroup getWorkgroupTo() {
-    return this.workgroupTo;
-  }
-
-  /**
-   * @return the workgroupToId
-   */
-  public Long getWorkgroupToId() {
-    return workgroupToId;
-  }
-
-  /**
-   * @param workgroupToId the workgroupToId to set
-   */
-  public void setWorkgroupToId(Long workgroupToId) {
-    this.workgroupToId = workgroupToId;
-  }
-
-  /**
-   * @return the runId
-   */
-  public Long getRunId() {
-    return runId;
-  }
-
-  /**
-   * @param runId the runId to set
-   */
-  public void setRunId(Long runId) {
-    this.runId = runId;
-  }
-
-  /**
-   * @return the periodId
-   */
-  public Long getPeriodId() {
-    return periodId;
-  }
-
-  /**
-   * @param periodId the periodId to set
-   */
-  public void setPeriodId(Long periodId) {
-    this.periodId = periodId;
-  }
 }

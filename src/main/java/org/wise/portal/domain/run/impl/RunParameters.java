@@ -20,6 +20,13 @@
  */
 package org.wise.portal.domain.run.impl;
 
+import java.io.Serializable;
+import java.util.Locale;
+import java.util.Set;
+import java.util.TreeSet;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
 
@@ -29,11 +36,13 @@ import java.util.*;
 /**
  * @author Laurel Williams
  */
+@Getter
+@Setter
 public class RunParameters implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  private String name;  // name of the run
+  private String name;
 
   private Set<String> periodNames = new TreeSet<String>();
 
@@ -57,98 +66,6 @@ public class RunParameters implements Serializable {
 
   private Date startTime = Calendar.getInstance().getTime();
 
-  /**
-   * @return the name of this run
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * @param name the name of this run
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  /**
-   * @return the maximum size of workgroup
-   */
-  public Integer getMaxWorkgroupSize() {
-    return maxWorkgroupSize;
-  }
-
-  /**
-   * @param maxWorkgroupSize the maximum size of workgroup
-   */
-  public void setMaxWorkgroupSize(Integer maxWorkgroupSize) {
-    this.maxWorkgroupSize = maxWorkgroupSize;
-  }
-
-  /**
-   * @return the periodNames
-   */
-  public Set<String> getPeriodNames() {
-    return periodNames;
-  }
-
-  /**
-   * @param periodNames the periodNames to set
-   */
-  public void setPeriodNames(Set<String> periodNames) {
-    this.periodNames = periodNames;
-  }
-
-  /**
-   * @return the owner
-   */
-  public User getOwner() {
-    return owner;
-  }
-
-  /**
-   * @param owner the owner to set
-   */
-  public void setOwner(User owner) {
-    this.owner = owner;
-  }
-
-  /**
-   * @param text the manuallyEnteredPerios to set
-   */
-  public void setManuallyEnteredPeriods(String text){
-    this.manuallyEnteredPeriods = text;
-  }
-
-  /**
-   * @return manuallyEnteredPeriods
-   */
-  public String getManuallyEnteredPeriods(){
-    return this.manuallyEnteredPeriods;
-  }
-
-  public Date getStartTime() {
-    return startTime;
-  }
-
-  public void setStartTime(Date startTime) {
-    this.startTime = startTime;
-  }
-
-  /**
-   * @return the project
-   */
-  public Project getProject() {
-    return project;
-  }
-
-  /**
-   * @param project the project to set
-   */
-  public void setProject(Project project) {
-    this.project = project;
-  }
-
   public String printAllPeriods() {
     String allPeriods = null;
 
@@ -161,23 +78,6 @@ public class RunParameters implements Serializable {
     return allPeriods;
   }
 
-  /**
-   * @return the runIdsToArchive
-   */
-  public Set<String> getRunIdsToArchive() {
-    return runIdsToArchive;
-  }
-
-  /**
-   * @param runIdsToArchive the runIdsToArchive to set
-   */
-  public void setRunIdsToArchive(Set<String> runIdsToArchive) {
-    this.runIdsToArchive = runIdsToArchive;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -195,9 +95,6 @@ public class RunParameters implements Serializable {
     return result;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
@@ -233,49 +130,5 @@ public class RunParameters implements Serializable {
     } else if (!runIdsToArchive.equals(other.runIdsToArchive))
       return false;
     return true;
-  }
-
-  /**
-   * @return the loggingLevel
-   */
-  public Integer getLoggingLevel() {
-    return loggingLevel;
-  }
-
-  /**
-   * @param loggingLevel the loggingLevel to set
-   */
-  public void setLoggingLevel(Integer loggingLevel) {
-    this.loggingLevel = loggingLevel;
-  }
-
-  /**
-   * @return the postLevel
-   */
-  public Integer getPostLevel() {
-    return postLevel;
-  }
-
-  /**
-   * @param postLevel the postLevel to set
-   */
-  public void setPostLevel(Integer postLevel) {
-    this.postLevel = postLevel;
-  }
-
-  public Locale getLocale() {
-    return locale;
-  }
-
-  public void setLocale(Locale locale) {
-    this.locale = locale;
-  }
-
-  public Boolean getEnableRealTime() {
-    return enableRealTime;
-  }
-
-  public void setEnableRealTime(Boolean enableRealTime) {
-    this.enableRealTime = enableRealTime;
   }
 }

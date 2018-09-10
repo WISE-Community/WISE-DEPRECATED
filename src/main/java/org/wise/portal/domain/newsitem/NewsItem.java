@@ -94,5 +94,4 @@ public interface NewsItem {
    * @param String - the Type of the News Item
    */
   void setType(String type);
-
 }

@@ -1,0 +1,19 @@
+<div class="library notice-bg-bg">
+  <div fxLayout="column" fxLayout.gt-sm="row">
+    <app-library-filters (update)="filterUpdated($event)"></app-library-filters>
+    <div class="library__content content-block"
+         fxFlex.gt-sm="67">
+      <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+        <mat-tab label="WISE Tested ({{numberOfOfficialProjectsVisible}})">
+          <app-official-library (update)="updateNumberOfOfficialProjectsVisible($event)"></app-official-library>
+        </mat-tab>
+        <mat-tab label="Community Built ({{numberOfCommunityProjectsVisible}})">
+          <app-community-library (update)="updateNumberOfCommunityProjectsVisible($event)"></app-community-library>
+        </mat-tab>
+        <mat-tab label="My Units ({{numberOfPersonalProjectsVisible}})">
+          <app-personal-library (update)="updateNumberOfPersonalProjectsVisible($event)"></app-personal-library>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

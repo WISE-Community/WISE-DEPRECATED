@@ -88,3 +88,7 @@
         vertical-align: text-bottom;
     }
 }
+
+.stepSelectMenuContainer md-select-menu, .stepSelectMenuContainer md-select-menu md-content {
+  max-height: 500px;
+}

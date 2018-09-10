@@ -36,6 +36,8 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.authentication.MutableAclSid;
 import org.wise.portal.domain.authentication.MutableAclTargetObject;
 import org.wise.portal.domain.authentication.MutableAclTargetObjectIdentity;
@@ -79,9 +81,13 @@ public class PersistentAclTargetObjectIdentity implements MutableAclTargetObject
 
   @OneToOne(cascade = CascadeType.ALL, targetEntity = PersistentAclTargetObject.class)
   @JoinColumn(name = COLUMN_NAME_TARGET_OBJECT, nullable = false)
+  @Getter
+  @Setter
   private MutableAclTargetObject aclTargetObject;
 
   @Column(name = COLUMN_NAME_TARGET_OBJECT_ID, nullable = false)
+  @Getter
+  @Setter
   private Long aclTargetObjectId;
 
   @Column(name = COLUMN_NAME_TARGET_OBJECT_ID_NUM)
@@ -89,10 +95,14 @@ public class PersistentAclTargetObjectIdentity implements MutableAclTargetObject
 
   @ManyToOne(cascade = CascadeType.ALL, targetEntity = PersistentAclTargetObjectIdentity.class)
   @JoinColumn(name = COLUMN_NAME_PARENT)
+  @Getter
+  @Setter
   private MutableAclTargetObjectIdentity parent;
 
   @OneToOne(cascade = CascadeType.ALL, targetEntity = PersistentAclSid.class)
   @JoinColumn(name = COLUMN_NAME_OWNER_SID)
+  @Getter
+  @Setter
   private MutableAclSid ownerSid;
 
   @Column(name = COLUMN_NAME_INHERITING, nullable = false)
@@ -100,27 +110,13 @@ public class PersistentAclTargetObjectIdentity implements MutableAclTargetObject
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Getter
+  @Setter
   private Long id;
 
   @Version
   @Column(name = "OPTLOCK")
   private Integer version = null;
-
-  /**
-   * @see net.sf.sail.webapp.domain.Persistable#getId()
-   */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * @param id
-   *                the id to set
-   */
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
 
   @Override
   public String getType() {
@@ -128,54 +124,6 @@ public class PersistentAclTargetObjectIdentity implements MutableAclTargetObject
     return null;
   }
 
-  /**
-   * @return the version
-   */
-  @SuppressWarnings("unused")
-  private Integer getVersion() {
-    return version;
-  }
-
-  /**
-   * @param version
-   *                the version to set
-   */
-  @SuppressWarnings("unused")
-  private void setVersion(Integer version) {
-    this.version = version;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclTargetObjectIdentity#getAclTargetObject()
-   */
-  public MutableAclTargetObject getAclTargetObject() {
-    return aclTargetObject;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclTargetObjectIdentity#setAclTargetObject(net.sf.sail.webapp.domain.authentication.MutableAclTargetObject)
-   */
-  public void setAclTargetObject(MutableAclTargetObject aclTargetObject) {
-    this.aclTargetObject = aclTargetObject;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclTargetObjectIdentity#getAclTargetObjectId()
-   */
-  public Long getAclTargetObjectId() {
-    return aclTargetObjectId;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclTargetObjectIdentity#setAclTargetObjectId(java.lang.Long)
-   */
-  public void setAclTargetObjectId(Long aclTargetObjectId) {
-    this.aclTargetObjectId = aclTargetObjectId;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclTargetObjectIdentity#isInheriting()
-   */
   public Boolean isInheriting() {
     return this.getInheriting();
   }
@@ -184,44 +132,10 @@ public class PersistentAclTargetObjectIdentity implements MutableAclTargetObject
     return this.inheriting;
   }
 
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclTargetObjectIdentity#setInheriting(java.lang.Boolean)
-   */
   public void setInheriting(Boolean isInheriting) {
     this.inheriting = isInheriting;
   }
 
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclTargetObjectIdentity#getOwnerSid()
-   */
-  public MutableAclSid getOwnerSid() {
-    return ownerSid;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclTargetObjectIdentity#setOwnerSid(net.sf.sail.webapp.domain.authentication.impl.PersistentAclSid)
-   */
-  public void setOwnerSid(MutableAclSid ownerSid) {
-    this.ownerSid = ownerSid;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclTargetObjectIdentity#getParent()
-   */
-  public MutableAclTargetObjectIdentity getParent() {
-    return parent;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclTargetObjectIdentity#setParent(net.sf.sail.webapp.domain.authentication.MutableAclTargetObjectIdentity)
-   */
-  public void setParent(MutableAclTargetObjectIdentity parent) {
-    this.parent = parent;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     final int PRIME = 31;
@@ -235,9 +149,6 @@ public class PersistentAclTargetObjectIdentity implements MutableAclTargetObject
     return result;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
@@ -260,16 +171,10 @@ public class PersistentAclTargetObjectIdentity implements MutableAclTargetObject
     return true;
   }
 
-  /**
-   * @see org.acegisecurity.acls.objectidentity.ObjectIdentity#getIdentifier()
-   */
   public Serializable getIdentifier() {
     return this.getAclTargetObjectId();
   }
 
-  /**
-   * @see org.acegisecurity.acls.objectidentity.ObjectIdentity#getJavaType()
-   */
   public Class<?> getJavaType() {
     try {
       return Class.forName(this.getAclTargetObject().getClassname());
@@ -278,5 +183,4 @@ public class PersistentAclTargetObjectIdentity implements MutableAclTargetObject
       return null;
     }
   }
-
 }

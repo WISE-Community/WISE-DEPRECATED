@@ -43,6 +43,11 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
+
 /**
  * A Service for Projects
  *
@@ -155,7 +160,7 @@ public interface ProjectService {
    * @return
    * @throws Exception
    */
-  ModelAndView launchProject(Workgroup workgroup) throws Exception;
+  ModelAndView launchProject(Workgroup workgroup, String contextPath) throws Exception;
 
   /**
    * Launches a Preview of the Project.
@@ -221,6 +226,8 @@ public interface ProjectService {
    * @return List<Project> - list of library projects
    */
   List<Project> getPublicLibraryProjectList();
+
+  List<Project> getTeacherSharedProjectList();
 
   /**
    * Returns a <code>List<Project></code> list of library projects.
@@ -336,4 +343,6 @@ public interface ProjectService {
   void addSharedTeacherPermission(Long projectId, Long userId, Integer permissionId) throws ObjectNotFoundException;
 
   void removeSharedTeacherPermission(Long projectId, Long userId, Integer permissionId) throws ObjectNotFoundException;
+
+  List<Project> getProjectsWithoutRuns(User user);
 }

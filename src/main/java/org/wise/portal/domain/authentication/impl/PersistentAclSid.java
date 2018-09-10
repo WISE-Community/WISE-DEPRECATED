@@ -30,6 +30,8 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -62,10 +64,14 @@ public class PersistentAclSid implements MutableAclSid {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Getter
+  @Setter
   private Long id;
 
   @Version
   @Column(name = "OPTLOCK")
+  @Getter
+  @Setter
   private Integer version = null;
 
   //@Column(name = COLUMN_NAME_IS_PRINCIPAL, nullable = false)
@@ -75,11 +81,10 @@ public class PersistentAclSid implements MutableAclSid {
   private Boolean isPrincipal;
 
   @Column(name = COLUMN_NAME_SID, nullable = false)
+  @Getter
+  @Setter
   private String sidName;
 
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#isPrincipal()
-   */
   public Boolean isPrincipal() {
     return this.getIsPrincipal();
   }
@@ -92,17 +97,6 @@ public class PersistentAclSid implements MutableAclSid {
     this.isPrincipal = isPrincipal;
   }
 
-  private String getSidName() {
-    return sidName;
-  }
-
-  private void setSidName(String sidName) {
-    this.sidName = sidName;
-  }
-
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#getPrincipal()
-   */
   public String getPrincipal() {
     if (this.getIsPrincipal() == null) {
       throw new IllegalStateException();
@@ -114,9 +108,6 @@ public class PersistentAclSid implements MutableAclSid {
       "Unsupported method for this instance of Sid");
   }
 
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#setPrincipal(org.acegisecurity.Authentication)
-   */
   public void setPrincipal(Authentication authentication) {
     this.setIsPrincipal(Boolean.TRUE);
     if (authentication.getPrincipal() instanceof UserDetails) {
@@ -127,17 +118,11 @@ public class PersistentAclSid implements MutableAclSid {
     }
   }
 
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#setGrantedAuthority(org.acegisecurity.GrantedAuthority)
-   */
   public void setGrantedAuthority(GrantedAuthority grantedAuthority) {
     this.setIsPrincipal(Boolean.FALSE);
     this.setSidName(grantedAuthority.getAuthority());
   }
 
-  /**
-   * @see net.sf.sail.webapp.domain.authentication.MutableAclSid#getGrantedAuthority()
-   */
   public String getGrantedAuthority() {
     if (this.getIsPrincipal() == null) {
       throw new IllegalStateException();
@@ -150,31 +135,6 @@ public class PersistentAclSid implements MutableAclSid {
     }
   }
 
-  /**
-   * @see net.sf.sail.webapp.domain.Persistable#getId()
-   */
-  public Long getId() {
-    return id;
-  }
-
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
-
-  @SuppressWarnings("unused")
-  private Integer getVersion() {
-    return version;
-  }
-
-  @SuppressWarnings("unused")
-  private void setVersion(Integer version) {
-    this.version = version;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     final int PRIME = 31;
@@ -185,9 +145,6 @@ public class PersistentAclSid implements MutableAclSid {
     return result;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)

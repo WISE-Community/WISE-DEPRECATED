@@ -52,10 +52,6 @@ class WorkgroupNodeGradingController {
                     component.isDisabled = true;
                 }
 
-                if (this.nodeContent.lockAfterSubmit) {
-                    component.lockAfterSubmit = true;
-                }
-
                 // set whether component captures student work (for filtering purposes)
                 component.hasWork = this.ProjectService.componentHasWork(component);
             }
@@ -147,16 +143,7 @@ const WorkgroupNodeGrading = {
                                                   workgroup-id="$ctrl.workgroupId"
                                                   node-id="$ctrl.nodeId"></component-new-work-badge>
                     </h3>
-                    <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""'
-                               class="component-container"
-                               node-id='{{component.showPreviousWorkNodeId}}'
-                               component-id='{{component.showPreviousWorkComponentId}}'
-                               component-state='{{$ctrl.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId($ctrl.workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}'
-                               workgroup-id='{{$ctrl.workgroupId}}'
-                               teacher-workgroup-id='{{$ctrl.teacherWorkgroupId}}'
-                               mode='grading'></component>
-                    <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null || component.showPreviousWorkNodeId == "" || component.showPreviousWorkComponentId == ""'
-                               class="component-container"
+                    <component class="component-container"
                                node-id='{{$ctrl.nodeId}}'
                                component-id='{{component.id}}'
                                component-state='{{$ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id)}}'

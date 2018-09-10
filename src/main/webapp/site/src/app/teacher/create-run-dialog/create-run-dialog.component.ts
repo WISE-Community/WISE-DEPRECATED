@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 import { Project } from "../project";
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
@@ -17,8 +17,10 @@ export class CreateRunDialogComponent {
   studentsPerTeam: number;
   startDate: any;
 
-  constructor(public dialogRef: MatDialogRef<CreateRunDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any, private teacherService: TeacherService) {
+  constructor(public dialog: MatDialog,
+              public dialogRef: MatDialogRef<CreateRunDialogComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              private teacherService: TeacherService) {
     this.isFormValid = false;
     this.project = data.project;
     this.periods = {};
@@ -32,11 +34,7 @@ export class CreateRunDialogComponent {
 
   periodChanged() {
     const combinedPeriods = this.getPeriodsString();
-    if (combinedPeriods == "") {
-      this.isFormValid = false;
-    } else {
-      this.isFormValid = true;
-    }
+    this.isFormValid = combinedPeriods != "";
   }
 
   create() {
@@ -52,8 +50,11 @@ export class CreateRunDialogComponent {
           project.name = run.name;
           project.dateCreated = new Date().toString();
           project.run = run;
-          this.teacherService.addNewProject(project);
-          this.dialogRef.close();
+          project.thumbIconPath = '';
+          run.project = project;
+          this.teacherService.addNewRun(run);
+          this.teacherService.setTabIndex(0);
+          this.dialog.closeAll();
         });
     }
   }

@@ -10,6 +10,7 @@ class NavItemController {
                 ConfigService,
                 NodeService,
                 NotificationService,
+                PlanningService,
                 ProjectService,
                 StudentDataService,
                 StudentStatusService,
@@ -25,6 +26,7 @@ class NavItemController {
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.NotificationService = NotificationService;
+        this.PlanningService = PlanningService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.StudentStatusService = StudentStatusService;
@@ -61,7 +63,7 @@ class NavItemController {
         this.isWorkgroupOnlineOnNode = false;
 
         // whether this node is a planning group
-        this.isPlanning = this.ProjectService.isPlanning(this.nodeId);
+        this.isPlanning = this.PlanningService.isPlanning(this.nodeId);
 
         // get the node icon
         this.icon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
@@ -79,7 +81,7 @@ class NavItemController {
              * planning is enabled for this group so we will get the available
              * planning nodes that can be used
              */
-            this.availablePlanningNodes = this.ProjectService.getAvailablePlanningNodes(this.nodeId);
+            this.availablePlanningNodes = this.PlanningService.getAvailablePlanningNodes(this.nodeId);
         } else if (this.isPlanningNode) {
             /* this is an available planning node for its parent group, so we
              * need to calculate the total number of times it has been added
@@ -419,6 +421,7 @@ NavItemController.$inject = [
     'ConfigService',
     'NodeService',
     'NotificationService',
+    'PlanningService',
     'ProjectService',
     'StudentDataService',
     'StudentStatusService',

@@ -1,37 +1,25 @@
-import NodeService from '../../services/nodeService';
+import ComponentService from '../componentService';
+import html2canvas from 'html2canvas';
 
-class TableService extends NodeService {
+class TableService extends ComponentService {
 
   constructor($filter,
+      $q,
+      StudentAssetService,
       StudentDataService,
       UtilService) {
-    super();
-    this.$filter = $filter;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-    this.$translate = this.$filter('translate');
+    super($filter, StudentDataService, UtilService);
+    this.$q = $q;
+    this.StudentAssetService = StudentAssetService;
   }
 
-  /**
-   * Get the component type label
-   * example
-   * "Table"
-   */
   getComponentTypeLabel() {
     return this.$translate('table.componentTypeLabel');
   }
 
-  /**
-   * Create an Table component object
-   * @returns a new Table component object
-   */
   createComponent() {
-    var component = {};
-    component.id = this.UtilService.generateKey();
+    const component = super.createComponent();
     component.type = 'Table';
-    component.prompt = '';
-    component.showSaveButton = false;
-    component.showSubmitButton = false;
     component.globalCellSize = 10;
     component.numRows = 3;
     component.numColumns = 3;
@@ -92,65 +80,6 @@ class TableService extends NodeService {
     return component;
   }
 
-  /**
-   * Copies an existing Table component object
-   * @returns a copied Table component object
-   */
-  copyComponent(componentToCopy) {
-    var component = this.createComponent();
-    component.prompt = componentToCopy.prompt;
-    component.showSaveButton = componentToCopy.showSaveButton;
-    component.showSubmitButton = componentToCopy.showSubmitButton;
-    component.globalCellSize = componentToCopy.globalCellSize;
-    component.numRows = componentToCopy.numRows;
-    component.numColumns = componentToCopy.numColumns;
-    component.tableData = componentToCopy.tableData;
-    return component;
-  }
-
-  /**
-   * Populate a component state with the data from another component state
-   * @param componentStateFromOtherComponent the component state to obtain the data from
-   * @return a new component state that contains the student data from the other
-   * component state
-   */
-  populateComponentState(componentStateFromOtherComponent) {
-    var componentState = null;
-
-    if (componentStateFromOtherComponent != null) {
-
-      // create an empty component state
-      componentState = this.StudentDataService.createComponentState();
-
-      // get the component type of the other component state
-      var otherComponentType = componentStateFromOtherComponent.componentType;
-
-      if (otherComponentType === 'Table') {
-        // the other component is an Table component
-
-        // get the student data from the other component state
-        var studentData = componentStateFromOtherComponent.studentData;
-
-        // create a copy of the student data
-        var studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
-
-        // set the student data into the new component state
-        componentState.studentData = studentDataCopy;
-      }
-    }
-
-    return componentState;
-  };
-
-  /**
-   * Check if the component was completed
-   * @param component the component object
-   * @param componentStates the component states for the specific component
-   * @param componentEvents the events for the specific component
-   * @param nodeEvents the events for the parent node of the component
-   * @param node parent node of the component
-   * @returns whether the component was completed
-   */
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     if (!this.componentHasEditableCells(component)) {
       /*
@@ -221,42 +150,6 @@ class TableService extends NodeService {
     return false;
   }
 
-  /**
-   * Whether this component generates student work
-   * @param component (optional) the component object. if the component object
-   * is not provided, we will use the default value of whether the
-   * component type usually has work.
-   * @return whether this component generates student work
-   */
-  componentHasWork(component) {
-    return true;
-  }
-
-  /**
-   * Whether this component uses a save button
-   * @return whether this component uses a save button
-   */
-  componentUsesSaveButton() {
-    return true;
-  }
-
-  /**
-   * Whether this component uses a submit button
-   * @return whether this component uses a submit button
-   */
-  componentUsesSubmitButton() {
-    return true;
-  }
-
-  /**
-   * Check if the component state has student work. Sometimes a component
-   * state may be created if the student visits a component but doesn't
-   * actually perform any work. This is where we will check if the student
-   * actually performed any work.
-   * @param componentState the component state object
-   * @param componentContent the component content
-   * @return whether the component state has any work
-   */
   componentStateHasStudentWork(componentState, componentContent) {
 
     if (componentState != null) {
@@ -339,10 +232,40 @@ class TableService extends NodeService {
 
     return cellValue;
   }
+
+  /**
+   * The component state has been rendered in a <component></component> element
+   * and now we want to take a snapshot of the work.
+   * @param componentState The component state that has been rendered.
+   * @return A promise that will return an image object.
+   */
+  generateImageFromRenderedComponentState(componentState) {
+    let deferred = this.$q.defer();
+    let tableElement = angular.element('#table_' + componentState.nodeId + '_' + componentState.componentId);
+    if (tableElement != null && tableElement.length > 0) {
+      tableElement = tableElement[0];
+      // convert the table element to a canvas element
+      html2canvas(tableElement).then((canvas) => {
+        // get the canvas as a base64 string
+        let img_b64 = canvas.toDataURL('image/png');
+
+        // get the image object
+        let imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+
+        // add the image to the student assets
+        this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
+          deferred.resolve(asset);
+        });
+      });
+    }
+    return deferred.promise;
+  }
 }
 
 TableService.$inject = [
   '$filter',
+  '$q',
+  'StudentAssetService',
   'StudentDataService',
   'UtilService'
 ];

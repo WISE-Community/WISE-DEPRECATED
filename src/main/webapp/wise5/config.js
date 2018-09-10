@@ -25,6 +25,7 @@ System.config({
     "angular-websocket": "npm:angular-websocket@1.0.14",
     "core-js": "npm:core-js@1.2.7",
     "dom-autoscroller": "npm:dom-autoscroller@1.4.1",
+    "fabric": "npm:fabric@1.7.22",
     "highcharts-ng": "npm:highcharts-ng@0.0.11",
     "highcharts/draggable-points": "github:highcharts/draggable-points@master",
     "html2canvas": "npm:html2canvas@0.5.0-beta4",
@@ -69,7 +70,7 @@ System.config({
       "assert": "npm:assert@1.4.1"
     },
     "github:jspm/nodelibs-buffer@0.1.1": {
-      "buffer": "npm:buffer@5.0.7"
+      "buffer": "npm:buffer@5.0.8"
     },
     "github:jspm/nodelibs-constants@0.1.0": {
       "constants-browserify": "npm:constants-browserify@0.0.1"
@@ -83,7 +84,7 @@ System.config({
     "github:jspm/nodelibs-http@1.7.1": {
       "Base64": "npm:Base64@0.2.1",
       "events": "github:jspm/nodelibs-events@0.1.1",
-      "inherits": "npm:inherits@2.0.3",
+      "inherits": "npm:inherits@2.0.1",
       "stream": "github:jspm/nodelibs-stream@0.1.0",
       "url": "github:jspm/nodelibs-url@0.1.0",
       "util": "github:jspm/nodelibs-util@0.1.0"
@@ -220,7 +221,7 @@ System.config({
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
-    "npm:buffer@5.0.7": {
+    "npm:buffer@5.0.8": {
       "base64-js": "npm:base64-js@1.2.1",
       "ieee754": "npm:ieee754@1.1.8"
     },
@@ -334,6 +335,14 @@ System.config({
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",
       "create-hash": "npm:create-hash@1.1.3",
       "crypto": "github:jspm/nodelibs-crypto@0.1.0"
+    },
+    "npm:fabric@1.7.22": {
+      "buffer": "github:jspm/nodelibs-buffer@0.1.1",
+      "child_process": "github:jspm/nodelibs-child_process@0.1.0",
+      "http": "github:jspm/nodelibs-http@1.7.1",
+      "https": "github:jspm/nodelibs-https@0.1.0",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "url": "github:jspm/nodelibs-url@0.1.0"
     },
     "npm:hash-base@2.0.2": {
       "buffer": "github:jspm/nodelibs-buffer@0.1.1",

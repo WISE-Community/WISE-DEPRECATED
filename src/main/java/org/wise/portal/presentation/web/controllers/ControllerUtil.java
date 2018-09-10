@@ -132,4 +132,16 @@ public class ControllerUtil {
 
     return wiseVersion;
   }
+
+  /**
+   * Get the websocket base url e.g. ws://localhost:8080/wise/websocket
+   */
+  public static String getWebSocketURL(HttpServletRequest request, String contextPath) {
+    if (contextPath.contains("http")) {
+      return contextPath.replace("http", "ws") + "/websocket";
+    } else {
+      String portalContextPath = ControllerUtil.getPortalUrlString(request);
+      return portalContextPath.replace("http", "ws") + "/websocket";
+    }
+  }
 }

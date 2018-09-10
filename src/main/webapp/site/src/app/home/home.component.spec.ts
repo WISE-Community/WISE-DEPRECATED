@@ -5,9 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { HomeComponent } from './home.component';
-import { LibraryModule } from "../modules/library/library.module";
 import { LibraryService } from "../services/library.service";
-import { SharedModule } from "../modules/shared/shared.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { Component } from "@angular/core";
 import { MatIconModule } from "@angular/material";
@@ -21,7 +19,7 @@ class BlurbStubComponent {}
 @Component({selector: 'app-call-to-action', template: ''})
 class CallToActionStubComponent {}
 
-@Component({selector: 'app-library', template: ''})
+@Component({selector: 'app-home-page-project-library', template: ''})
 class LibraryStubComponent {}
 
 describe('HomeComponent', () => {

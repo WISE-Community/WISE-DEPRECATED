@@ -126,11 +126,6 @@ var ConfigService = function () {
       return this.getConfigParam('projectId');
     }
   }, {
-    key: 'getOpenCPUURL',
-    value: function getOpenCPUURL() {
-      return this.getConfigParam('openCPUURL');
-    }
-  }, {
     key: 'getSessionLogOutURL',
     value: function getSessionLogOutURL() {
       return this.getConfigParam('sessionLogOutURL');
@@ -168,7 +163,7 @@ var ConfigService = function () {
   }, {
     key: 'getWebSocketURL',
     value: function getWebSocketURL() {
-      return this.getConfigParam('webSocketURL');
+      return window.location.protocol.replace("http", "ws") + "//" + window.location.host + this.getContextPath() + "/websocket";
     }
   }, {
     key: 'getWISEBaseURL',
@@ -186,12 +181,17 @@ var ConfigService = function () {
       return this.getConfigParam('mode');
     }
   }, {
-    key: 'getPeriodId',
-
+    key: 'getContextPath',
+    value: function getContextPath() {
+      return this.getConfigParam('contextPath');
+    }
 
     /**
      * Returns the period id of the logged-in user.
      */
+
+  }, {
+    key: 'getPeriodId',
     value: function getPeriodId() {
       var myUserInfo = this.getMyUserInfo();
       if (myUserInfo != null) {

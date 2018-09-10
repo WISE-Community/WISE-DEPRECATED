@@ -115,7 +115,7 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           }
         ]
       },
@@ -125,11 +125,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           },
           {
-            value: "componentId",
-            text: this.$translate('componentID')
+            value: "component",
+            text: this.$translate('component')
           },
           {
             value: "scores",
@@ -143,11 +143,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "fromNodeId",
-            text: this.$translate('fromNodeID')
+            text: this.$translate('fromStep')
           },
           {
             value: "toNodeId",
-            text: this.$translate('toNodeID')
+            text: this.$translate('toStep')
           }
         ]
       },
@@ -157,11 +157,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           },
           {
             value: "componentId",
-            text: this.$translate('componentID')
+            text: this.$translate('component')
           },
           {
             value: "choiceIds",
@@ -175,11 +175,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           },
           {
             value: "componentId",
-            text: this.$translate('componentID')
+            text: this.$translate('component')
           }
         ]
       },
@@ -189,11 +189,11 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           },
           {
             value: "componentId",
-            text: this.$translate('componentID')
+            text: this.$translate('component')
           },
           {
             value: "requiredSubmitCount",
@@ -207,7 +207,7 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           }
         ]
       },
@@ -217,7 +217,7 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           }
         ]
       },
@@ -227,13 +227,31 @@ class NodeAuthoringController {
         params: [
           {
             value: "nodeId",
-            text: this.$translate('nodeID')
+            text: this.$translate('step')
           }
         ]
       },
       {
         value: "isPlanningActivityCompleted",
         text: this.$translate('isPlanningActivityCompleted')
+      },
+      {
+        value: "wroteXNumberOfWords",
+        text: this.$translate('wroteXNumberOfWords'),
+        params: [
+          {
+            value: "nodeId",
+            text: this.$translate('step')
+          },
+          {
+            value: "componentId",
+            text: this.$translate('component')
+          },
+          {
+            value: "requiredNumberOfWords",
+            text: this.$translate('requiredNumberOfWords')
+          }
+        ]
       }
     ];
 
@@ -455,13 +473,13 @@ class NodeAuthoringController {
         this.node.showSubmitButton = false;
 
         // turn on the save buttons for all components in this step
-        this.ProjectService.turnOnSaveButtonInComponents(this.node.id);
+        this.ProjectService.turnOnSaveButtonForAllComponents(this.node);
       } else {
         /*
          * a component is hiding their submit button so we may need
          * to show the step save button
          */
-        if (this.ProjectService.doesAnyComponentShowSubmitButton(this.node.id)) {
+        if (this.ProjectService.doesAnyComponentInNodeShowSubmitButton(this.node.id)) {
           /*
            * there is at least one component in the step that is showing
            * their submit button so we will show the save button on
@@ -469,7 +487,7 @@ class NodeAuthoringController {
            */
 
           // turn on the save buttons for all components in this step
-          this.ProjectService.turnOnSaveButtonInComponents(this.node.id);
+          this.ProjectService.turnOnSaveButtonForAllComponents(this.node);
         } else {
           /*
            * no components in this step show their submit button so we
@@ -479,13 +497,31 @@ class NodeAuthoringController {
           this.node.showSubmitButton = false;
 
           // turn off the save buttons for all the components
-          this.ProjectService.turnOffSaveButtonInComponents(this.node.id);
+          this.ProjectService.turnOffSaveButtonForAllComponents(this.node);
         }
       }
 
       // save changes
       this.authoringViewNodeChanged();
     });
+
+    if (this.$state.current.name == 'root.project.nodeConstraints') {
+      this.$timeout(() => {
+        this.nodeAuthoringViewButtonClicked('advanced');
+        this.$timeout(() => {
+          this.nodeAuthoringViewButtonClicked('editConstraints');
+        });
+      });
+    }
+
+    if (this.$state.current.name == 'root.project.nodeEditPaths') {
+      this.$timeout(() => {
+        this.nodeAuthoringViewButtonClicked('advanced');
+        this.$timeout(() => {
+          this.nodeAuthoringViewButtonClicked('editTransitions');
+        });
+      });
+    }
 
     this.scrollToTopOfPage();
 
@@ -579,7 +615,7 @@ class NodeAuthoringController {
                   }
 
                   // get the choices from the component
-                  let choices = this.getChoicesByNodeIdAndComponentId(this.createBranchNodeId, this.createBranchComponentId);
+                  let choices = this.ProjectService.getChoicesByNodeIdAndComponentId(this.createBranchNodeId, this.createBranchComponentId);
 
                   if (choices != null) {
                     // set the choices into the branch object
@@ -681,7 +717,7 @@ class NodeAuthoringController {
    */
   showSaveErrorAdvancedAuthoring() {
     alert(this.$translate('saveErrorAdvancedAuthoring'));
-  };
+  }
 
   /**
    * The author has clicked the cancel button which will revert all
@@ -1052,13 +1088,7 @@ class NodeAuthoringController {
    * @return the choices from the component
    */
   getChoicesByNodeIdAndComponentId(nodeId, componentId) {
-    let choices = [];
-    let component = this.ProjectService
-        .getComponentByNodeIdAndComponentId(nodeId, componentId);
-    if (component != null && component.choices != null) {
-      choices = component.choices;
-    }
-    return choices;
+    return this.ProjectService.getChoicesByNodeIdAndComponentId(nodeId, componentId);
   }
 
   /**
@@ -1120,7 +1150,8 @@ class NodeAuthoringController {
   }
 
   /**
-   * Add a constraint
+   * Add a new constraint.
+   * @return The id of the DOM element associated with the constraint.
    */
   addConstraint() {
     // get a new constraint id
@@ -1131,7 +1162,7 @@ class NodeAuthoringController {
       "id": newNodeConstraintId,
       "action": '',
       "targetId": this.nodeId,
-      "removalConditional": 'all',
+      "removalConditional": 'any',
       "removalCriteria": []
     };
 
@@ -1150,6 +1181,20 @@ class NodeAuthoringController {
     }
     this.node.constraints.push(constraint);
     this.ProjectService.saveProject();
+
+    return newNodeConstraintId;
+  }
+
+  /**
+   * Add a new constraint and then scroll to the bottom of the screen because
+   * that's where the new constraint will appear.
+   */
+  addConstraintAndScrollToBottom() {
+    let newNodeConstraintId = this.addConstraint();
+    this.$timeout(() => {
+      this.$rootScope.$broadcast('scrollToBottom');
+      this.UtilService.temporarilyHighlightElement(newNodeConstraintId);
+    });
   }
 
   /**
@@ -1157,17 +1202,20 @@ class NodeAuthoringController {
    * @param constraintIndex delete the constraint at the index
    */
   deleteConstraint(constraintIndex) {
-    if (constraintIndex != null) {
-      let node = this.ProjectService.getNodeById(this.nodeId);
-      if (node != null) {
-        let constraints = node.constraints;
-        if (constraints != null) {
-          // remove the constraint at the given index
-          constraints.splice(constraintIndex, 1);
+    let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConstraint'));
+    if (answer) {
+      if (constraintIndex != null) {
+        let node = this.ProjectService.getNodeById(this.nodeId);
+        if (node != null) {
+          let constraints = node.constraints;
+          if (constraints != null) {
+            // remove the constraint at the given index
+            constraints.splice(constraintIndex, 1);
+          }
         }
       }
+      this.ProjectService.saveProject();
     }
-    this.ProjectService.saveProject();
   }
 
   /**
@@ -1193,15 +1241,18 @@ class NodeAuthoringController {
    * @param removalCriteriaIndex the index of the removal criteria to remove
    */
   deleteRemovalCriteria(constraint, removalCriteriaIndex) {
-    if (constraint != null) {
-      // get all the removal criteria
-      let removalCriteria = constraint.removalCriteria;
-      if (removalCriteria != null) {
-        // remove the single removal criteria
-        removalCriteria.splice(removalCriteriaIndex, 1);
+    let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisRemovalCriteria'));
+    if (answer) {
+      if (constraint != null) {
+        // get all the removal criteria
+        let removalCriteria = constraint.removalCriteria;
+        if (removalCriteria != null) {
+          // remove the single removal criteria
+          removalCriteria.splice(removalCriteriaIndex, 1);
+        }
       }
+      this.ProjectService.saveProject();
     }
-    this.ProjectService.saveProject();
   }
 
   /**
@@ -1241,7 +1292,7 @@ class NodeAuthoringController {
           if (paramObject != null) {
             let value = paramObject.value;
 
-            // intialize the param value
+            // initialize the param value
             criteria.params[value] = '';
 
             if (value == 'nodeId') {
@@ -1306,9 +1357,8 @@ class NodeAuthoringController {
       this.showStepButtons = true;
       this.showComponents = true;
       this.showJSON = false;
+      this.UtilService.hideJSONValidMessage();
     } else if (view == 'generalAdvanced') {
-      // save and parse the JSON if it has changed
-      this.saveAndParseJSON();
       // toggle the edit transitions view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = !this.showGeneralAdvanced;
@@ -1322,9 +1372,8 @@ class NodeAuthoringController {
       this.showStepButtons = false;
       this.showComponents = false;
       this.showJSON = false;
+      this.UtilService.hideJSONValidMessage();
     } else if (view == 'editTransitions') {
-      // save and parse the JSON if it has changed
-      this.saveAndParseJSON();
       // toggle the edit transitions view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1338,9 +1387,8 @@ class NodeAuthoringController {
       this.showStepButtons = false;
       this.showComponents = false;
       this.showJSON = false;
+      this.UtilService.hideJSONValidMessage();
     } else if (view == 'editConstraints') {
-      // save and parse the JSON if it has changed
-      this.saveAndParseJSON();
       // toggle the edit constraints view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1354,6 +1402,7 @@ class NodeAuthoringController {
       this.showStepButtons = false;
       this.showComponents = false;
       this.showJSON = false;
+      this.UtilService.hideJSONValidMessage();
     } else if (view == 'editButtons') {
       // toggle the edit buttons view and hide all the other views
       this.showCreateComponent = false;
@@ -1367,6 +1416,7 @@ class NodeAuthoringController {
       this.showImportView = false;
       this.showStepButtons = false;
       this.showJSON = false;
+      this.UtilService.hideJSONValidMessage();
     } else if (view == 'editRubric') {
       // toggle the edit buttons view and hide all the other views
       this.showCreateComponent = false;
@@ -1381,9 +1431,8 @@ class NodeAuthoringController {
       this.showStepButtons = false;
       this.showComponents = false;
       this.showJSON = false;
+      this.UtilService.hideJSONValidMessage();
     } else if (view == 'createBranch') {
-      // save and parse the JSON if it has changed
-      this.saveAndParseJSON();
       // toggle the edit buttons view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1397,6 +1446,7 @@ class NodeAuthoringController {
       this.showStepButtons = false;
       this.showComponents = false;
       this.showJSON = false;
+      this.UtilService.hideJSONValidMessage();
     } else if (view == 'previousNode') {
       // hide all the other views
       this.showCreateComponent = false;
@@ -1409,6 +1459,7 @@ class NodeAuthoringController {
       this.showAdvanced = false;
       this.showImportView = false;
       this.showJSON = false;
+      this.UtilService.hideJSONValidMessage();
       let prevNodeId = this.ProjectService.getPreviousNodeId(this.nodeId);
       if (prevNodeId != null) {
         // there is a previous node id so we will go to it
@@ -1430,6 +1481,7 @@ class NodeAuthoringController {
       this.showAdvanced = false;
       this.showImportView = false;
       this.showJSON = false;
+      this.UtilService.hideJSONValidMessage();
       let nextNodeId = this.ProjectService.getNextNodeId(this.nodeId);
       if (nextNodeId != null) {
         // there is a next node id so we will go to it
@@ -1453,6 +1505,7 @@ class NodeAuthoringController {
       this.showStepButtons = false;
       this.showComponents = false;
       this.showJSON = false;
+      this.UtilService.hideJSONValidMessage();
     } else if (view == 'copy') {
       // toggle the copy view and hide all the other views
       this.showCreateComponent = false;
@@ -1467,6 +1520,7 @@ class NodeAuthoringController {
       this.showStepButtons = true;
       this.showComponents = true;
       this.showJSON = false;
+      this.UtilService.hideJSONValidMessage();
     } else if (view == 'move') {
       // toggle the move view and hide all the other views
       this.showCreateComponent = false;
@@ -1481,6 +1535,7 @@ class NodeAuthoringController {
       this.showStepButtons = true;
       this.showComponents = true;
       this.showJSON = false;
+      this.UtilService.hideJSONValidMessage();
     } else if (view == 'import') {
       // toggle the import view and hide all the other views
       this.showCreateComponent = false;
@@ -1495,9 +1550,8 @@ class NodeAuthoringController {
       this.showStepButtons = false;
       this.showComponents = true;
       this.showJSON = false;
+      this.UtilService.hideJSONValidMessage();
     } else if (view == 'showJSON') {
-      // save and parse the JSON if it has changed
-      this.saveAndParseJSON();
       // toggle the import view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1510,8 +1564,24 @@ class NodeAuthoringController {
       this.showImportView = false;
       this.showStepButtons = false;
       this.showComponents = false;
-      this.authoringNodeContentJSONString = angular.toJson(this.node, 4);
-      this.showJSON = !this.showJSON;
+      if (this.showJSON) {
+        // we were showing the JSON view and the author now wants to hide it
+        if (!this.isJSONValid()) {
+          if (confirm(this.$translate('jsonInvalidErrorMessage'))) {
+            // the author wants to revert back to the last valid JSON
+            this.toggleJSONAuthoringView();
+            this.UtilService.hideJSONValidMessage();
+          }
+        } else {
+          this.toggleJSONAuthoringView();
+          this.UtilService.hideJSONValidMessage();
+        }
+      } else {
+        // we were not showing the JSON view and now the author wants to show it
+        this.toggleJSONAuthoringView();
+        this.authoringNodeContentJSONString = angular.toJson(this.node, 4);
+        this.UtilService.showJSONValidMessage();
+      }
     } else {
       // hide all the views
       this.showCreateComponent = false;
@@ -1527,6 +1597,19 @@ class NodeAuthoringController {
       this.showComponents = true;
       this.showJSON = false;
     }
+  }
+
+  isJSONValid() {
+    try {
+      angular.fromJson(this.authoringNodeContentJSONString);
+      return true;
+    } catch(e) {
+      return false;
+    }
+  }
+
+  toggleJSONAuthoringView() {
+    this.showJSON = !this.showJSON;
   }
 
   /**
@@ -2111,9 +2194,7 @@ class NodeAuthoringController {
     let node = this.ProjectService.getNodeById(nodeId);
 
     if (node != null) {
-
-      // remove all branch path taken constraints from the node
-      this.ProjectService.removeBranchPathTakenNodeConstraints(nodeId);
+      this.ProjectService.removeBranchPathTakenNodeConstraintsIfAny(nodeId);
 
       if (item.checked) {
         // the item was checked so we will add the branch path taken constraints to it
@@ -2142,9 +2223,7 @@ class NodeAuthoringController {
      */
     for (let item of checkedItemsInBranchPath) {
       let itemNodeId = item.$key;
-
-      // remove all branch path taken constraints from the node
-      this.ProjectService.removeBranchPathTakenNodeConstraints(itemNodeId);
+      this.ProjectService.removeBranchPathTakenNodeConstraintsIfAny(itemNodeId);
 
       /*
        * the branch path taken constraints will be from this node to
@@ -2369,9 +2448,7 @@ class NodeAuthoringController {
           if (checkedItem != null) {
             // get the node id of the checked item
             let nodeId = checkedItem.$key;
-
-            // remove the branchPathTaken constraints from the step
-            this.ProjectService.removeBranchPathTakenNodeConstraints(nodeId);
+            this.ProjectService.removeBranchPathTakenNodeConstraintsIfAny(nodeId);
 
             /*
              * update the transition of the step to point to the next step
@@ -2759,7 +2836,7 @@ class NodeAuthoringController {
    * Check if we need to show the node save or node submit buttons
    */
   checkIfNeedToShowNodeSaveOrNodeSubmitButtons() {
-    if (this.ProjectService.doesAnyComponentShowSubmitButton(this.nodeId)) {
+    if (this.ProjectService.doesAnyComponentInNodeShowSubmitButton(this.nodeId)) {
       /*
        * there is a component in this step that is showing their
        * submit button
@@ -2947,23 +3024,7 @@ class NodeAuthoringController {
       if (newComponents != null) {
         for (let newComponent of newComponents) {
           if (newComponent != null) {
-            let componentElement = $('#' + newComponent.id);
-            let componentOriginalBackgroundColor = componentElement.css('backgroundColor');
-            componentElement.css('background-color', '#FFFF9C');
-
-            /*
-             * Use a timeout before starting to transition back to
-             * the original background color. For some reason the
-             * element won't get highlighted in the first place
-             * unless this timeout is used.
-             */
-            this.$timeout(() => {
-              // slowly fade back to original background color
-              componentElement.css({
-                'transition': 'background-color 2s ease-in-out',
-                'background-color': componentOriginalBackgroundColor
-              });
-            });
+            this.UtilService.temporarilyHighlightElement(newComponent.id);
           }
         }
       }
@@ -2977,7 +3038,7 @@ class NodeAuthoringController {
       this.$timeout(() => {
         this.showComponentAuthoring();
         this.turnOffInsertComponentMode();
-        this.showCreateComponent = false;
+        this.nodeAuthoringViewButtonClicked();
         this.clearComponentsToChecked();
 
         /*
@@ -2992,11 +3053,11 @@ class NodeAuthoringController {
             if (componentElement != null) {
               // scroll to the first new component that we've added
               $('#content').animate({
-                scrollTop: componentElement.prop('offsetTop') - 60
+                scrollTop: componentElement.offset().top - 200
               }, 1000);
             }
           }
-        });
+        }, 1000);
       }, 1000);
     });
   }
@@ -3219,16 +3280,13 @@ class NodeAuthoringController {
    */
   backButtonClicked() {
     if (this.showImportView || this.showRubric || this.showAdvanced) {
-      if (this.showJSON) {
-        /*
-         * we are showing the JSON so we will check if it has changed
-         * and then save and parse the JSON
-         */
-        this.saveAndParseJSON();
-      }
+      this.UtilService.hideJSONValidMessage();
 
       // we are in the import view so we will go back to the node view
       this.nodeAuthoringViewButtonClicked();
+
+      this.$state
+        .go('root.project.node', {projectId: this.projectId, nodeId: this.nodeId});
     } else {
       // we are in the node view so we will go back to the project view
       this.close();
@@ -3312,41 +3370,35 @@ class NodeAuthoringController {
   }
 
   /**
-   * Check if the JSON has changed and then save and parse the JSON
+   * Save the project JSON to the server if the JSON is valid.
    */
-  saveAndParseJSON() {
-    if (this.showJSON) {
-      /*
-       * We are showing the JSON so we will now check to see if the
-       * JSON changed. If the JSON changed we will save the node with
-       * new JSON.
-       */
-      if (this.authoringNodeContentJSONString != angular.toJson(this.node, 4)) {
-        // the JSON has been changed so we will update the node
+  autoSaveJSON() {
+    try {
+      // create the updated node object
+      let updatedNode = angular.fromJson(this.authoringNodeContentJSONString);
 
-        // create the updated node object
-        let updatedNode = angular.fromJson(this.authoringNodeContentJSONString);
+      // set the updated node into the project
+      this.ProjectService.setNode(this.nodeId, updatedNode);
 
-        // set the updated node into the project
-        this.ProjectService.setNode(this.nodeId, updatedNode);
+      // set the updated node into this controller
+      this.node = updatedNode;
 
-        // set the updated node into this controller
-        this.node = updatedNode;
+      // set the components into this controller
+      this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
 
-        // set the components into this controller
-        this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
+      // set the current node
+      this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
 
-        // set the current node
-        this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
+      // update the branch authoring fields into the controller
+      this.populateBranchAuthoring();
 
-        // update the branch authoring fields into the controller
-        this.populateBranchAuthoring();
-
-        // save the project
-        this.authoringViewNodeChanged().then(() => {
-          this.$rootScope.$broadcast('parseProject');
-        });
-      }
+      // save the project
+      this.authoringViewNodeChanged().then(() => {
+        this.$rootScope.$broadcast('parseProject');
+      });
+      this.UtilService.showJSONValidMessage();
+    } catch(e) {
+      this.UtilService.showJSONInvalidMessage();
     }
   }
 
@@ -3358,6 +3410,23 @@ class NodeAuthoringController {
    */
   componentAdvancedButtonClicked(componentId) {
     this.$rootScope.$broadcast('componentAdvancedButtonClicked', { componentId: componentId });
+  }
+
+  /**
+   * A constraint removal criteria step has changed.
+   * @param criteria The removal criteria object.
+   */
+  authoringViewConstraintRemovalCriteriaNodeIdChanged(criteria) {
+    criteria.params.componentId = '';
+    this.authoringViewNodeChanged();
+  }
+
+  /**
+   * A constraint removal criteria component has changed.
+   * @param criteria The removal criteria object.
+   */
+  authoringViewConstraintRemovalCriteriaComponentIdChanged(criteria) {
+    this.authoringViewNodeChanged();
   }
 }
 

@@ -175,4 +175,11 @@ public interface UserService {
    */
   void assignRole(MutableUserDetails userDetails, final String role);
 
+  /**
+   * Returns true iff the password (non-hashed) is correct for the user
+   * @param user WISE user
+   * @param password password to check, un-hashed
+   * @return true iff the password is correct.
+   */
+  boolean isPasswordCorrect(User user, String password);
 }

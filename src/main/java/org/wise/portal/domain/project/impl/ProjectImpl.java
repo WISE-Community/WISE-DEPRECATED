@@ -33,6 +33,8 @@ import java.util.TreeSet;
 
 import javax.persistence.*;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -121,6 +123,7 @@ public class ProjectImpl implements Project {
   public ProjectInfo projectinfo = new ProjectInfoImpl();
 
   @Column(name = COLUMN_NAME_PROJECT_NAME, nullable = false)
+  @Setter
   protected String name;
 
   @OneToOne(targetEntity = ProjectMetadataImpl.class, fetch = FetchType.LAZY)
@@ -132,90 +135,96 @@ public class ProjectImpl implements Project {
   protected String metadata;
 
   @Column(name = "modulePath", nullable = false)
+  @Getter
+  @Setter
   protected String modulePath = "";
 
   @ManyToOne(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
   @JoinColumn(name = "owner_fk", nullable = false, unique = false)
+  @Getter
+  @Setter
   private User owner;
 
   @ManyToMany(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
   @JoinTable(name = SHARED_OWNERS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name =  PROJECTS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = SHARED_OWNERS_JOIN_COLUMN_NAME, nullable = false))
+  @Getter
+  @Setter
   private Set<User> sharedowners = new TreeSet<User>();
 
   @ManyToMany(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
   @JoinTable(name = BOOKMARKERS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name= PROJECTS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = BOOKMARKERS_JOIN_COLUMN_NAME, nullable = false))
+  @Getter
+  @Setter
   private Set<User> bookmarkers = new TreeSet<User>();
 
   @Column(name = ProjectImpl.COLUMN_NAME_FAMILYTAG, nullable = true)
   protected FamilyTag familytag;
 
   @Column(name = ProjectImpl.COLUMN_NAME_ISCURRENT, nullable = true)
+  @Getter
   protected boolean isCurrent;
 
   @Column(name = ProjectImpl.COLUMN_NAME_PROJECTTYPE, nullable = true)
+  @Getter
+  @Setter
   protected ProjectType projectType;
 
   @Column(name = ProjectImpl.COLUMN_NAME_PARENT_PROJECT_ID, nullable = true)
+  @Getter
+  @Setter
   private Long parentProjectId;
 
   @Transient
   private Project parentProject;
 
   @Transient
+  @Getter
+  @Setter
   private Long rootProjectId = null;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Getter
+  @Setter
   public Long id = null;
 
   @Version
   @Column(name = "OPTLOCK")
+  @Getter
+  @Setter
   protected Integer version = null;
 
   @Column(name = ProjectImpl.ISPUBLIC_COLUMN_NAME)
+  @Getter
   protected boolean isPublic;
 
-  @Column(name = ProjectImpl.COLUMN_NAME_DATE_CREATED, nullable=false)
+  @Column(name = ProjectImpl.COLUMN_NAME_DATE_CREATED, nullable = false)
+  @Getter
+  @Setter
   protected Date dateCreated;
 
   @ManyToMany(targetEntity = TagImpl.class, fetch = FetchType.LAZY)
   @JoinTable(name = TAGS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = PROJECT_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = TAGS_JOIN_COLUMN_NAME, nullable = false))
+  @Getter
+  @Setter
   protected Set<Tag> tags = new TreeSet<Tag>();
 
-  @Column(name = ProjectImpl.COLUMN_NAME_IS_DELETED, nullable=true)
+  @Column(name = ProjectImpl.COLUMN_NAME_IS_DELETED, nullable = true)
   protected boolean isDeleted;
 
-  @Column(name = ProjectImpl.COLUMN_NAME_DATE_DELETED, nullable=true)
+  @Column(name = ProjectImpl.COLUMN_NAME_DATE_DELETED, nullable = true)
+  @Getter
+  @Setter
   protected Date dateDeleted;
 
   @Column(name = ProjectImpl.COLUMN_NAME_MAX_TOTAL_ASSETS_SIZE, nullable = true)
+  @Getter
+  @Setter
   protected Long maxTotalAssetsSize;
 
   @Column(name = ProjectImpl.COLUMN_NAME_WISE_VERSION, nullable = true)
   protected Integer wiseVersion;
 
-  public Long getId() {
-    return this.id;
-  }
-
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
-
-  @SuppressWarnings("unused")
-  private Integer getVersion() {
-    return this.version;
-  }
-
-  @SuppressWarnings("unused")
-  private void setVersion(Integer version) {
-    this.version = version;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -224,9 +233,6 @@ public class ProjectImpl implements Project {
     return result;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
@@ -244,54 +250,28 @@ public class ProjectImpl implements Project {
     return true;
   }
 
-  /**
-   * @return the familyTag
-   */
   public FamilyTag getFamilytag() {
     return familytag;
   }
 
-  /**
-   * @param familytag the familyTag to set
-   */
   public void setFamilytag(FamilyTag familytag) {
     this.familytag = familytag;
     this.projectinfo.setFamilyTag(familytag);
   }
 
-  /**
-   * @return the isCurrent
-   */
-  public boolean isCurrent() {
-    return isCurrent;
-  }
-
-  /**
-   * @param isCurrent the isCurrent to set
-   */
   public void setCurrent(boolean isCurrent) {
     this.isCurrent = isCurrent;
     this.projectinfo.setCurrent(isCurrent);
   }
 
-  /**
-   * @return the projectInfo
-   */
   public ProjectInfo getProjectInfo() {
     return projectinfo;
   }
 
-  /**
-   * @param projectInfo the projectInfo to set
-   */
   public void setProjectInfo(ProjectInfo projectInfo) {
     this.projectinfo = projectInfo;
     this.isCurrent = projectInfo.isCurrent();
     this.familytag = projectInfo.getFamilyTag();
-  }
-
-  public Set<User> getSharedowners() {
-    return sharedowners;
   }
 
   /**
@@ -314,35 +294,6 @@ public class ProjectImpl implements Project {
     return sharedOwnersList;
   }
 
-  public void setSharedowners(Set<User> sharedowners) {
-    this.sharedowners = sharedowners;
-  }
-
-  public User getOwner() {
-    return owner;
-  }
-
-  public void setOwner(User owner) {
-    this.owner = owner;
-  }
-
-  /**
-   * @return the projectType
-   */
-  public ProjectType getProjectType() {
-    return projectType;
-  }
-
-  /**
-   * @param projectType the projectType to set
-   */
-  public void setProjectType(ProjectType projectType) {
-    this.projectType = projectType;
-  }
-
-  /**
-   * @return the name
-   */
   public String getName() {
     if (name == null) {
       return "";
@@ -350,40 +301,6 @@ public class ProjectImpl implements Project {
     return name;
   }
 
-  /**
-   * @param name the name to set
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  @Override
-  public String getModulePath() {
-    return this.modulePath;
-  }
-
-  @Override
-  public void setModulePath(String modulePath) {
-    this.modulePath = modulePath;
-  }
-
-  /**
-   * @return the bookmarkers
-   */
-  public Set<User> getBookmarkers() {
-    return bookmarkers;
-  }
-
-  /**
-   * @param bookmarkers the bookmarkers to set
-   */
-  public void setBookmarkers(Set<User> bookmarkers) {
-    this.bookmarkers = bookmarkers;
-  }
-
-  /**
-   * @see org.wise.portal.domain.project.Project#populateProjectInfo()
-   */
   public void populateProjectInfo(){
     this.projectinfo = new ProjectInfoImpl();
     this.projectinfo.setName(this.getName());
@@ -393,9 +310,6 @@ public class ProjectImpl implements Project {
     return metadataObj;
   }
 
-  /**
-   * @see org.wise.portal.domain.project.Project#getMetadata()
-   */
   public ProjectMetadata getMetadata() {
     ProjectMetadata metadata = new ProjectMetadataImpl();
     if (this.metadata != null) {
@@ -409,18 +323,12 @@ public class ProjectImpl implements Project {
     return metadata;
   }
 
-  /**
-   * @see org.wise.portal.domain.project.Project#setMetadata(ProjectMetadata)
-   */
   public void setMetadata(ProjectMetadata metadata) {
     if (metadata != null) {
       this.metadata = metadata.toJSONString();
     }
   }
 
-  /**
-   * @see org.wise.portal.domain.project.Project#setMetadata(String)
-   */
   public void setMetadata(String metadataJSONString) {
     if (metadataJSONString != null) {
       this.metadata = metadataJSONString;
@@ -435,51 +343,10 @@ public class ProjectImpl implements Project {
     return visitor.visit(this);
   }
 
-  /**
-   * @return the isPublic
-   */
-  public boolean isPublic() {
-    return isPublic;
-  }
-
-  /**
-   * @param isPublic the isPublic to set
-   */
   public void setPublic(boolean isPublic) {
     this.isPublic = isPublic;
   }
 
-  /**
-   * @return the dateCreated
-   */
-  public Date getDateCreated() {
-    return dateCreated;
-  }
-
-  /**
-   * @param dateCreated the dateCreated to set
-   */
-  public void setDateCreated(Date dateCreated) {
-    this.dateCreated = dateCreated;
-  }
-
-  /**
-   * @return the tags
-   */
-  public Set<Tag> getTags() {
-    return tags;
-  }
-
-  /**
-   * @see org.wise.portal.domain.project.Project#setTags(Set)
-   */
-  public void setTags(Set<Tag> tags) {
-    this.tags = tags;
-  }
-
-  /**
-   * @see org.wise.portal.domain.project.Project#hasTags(java.util.Set)
-   */
   public boolean hasTags(Set<String> tagnames) {
     for (String tagname : tagnames) {
       boolean tagfound = false;
@@ -495,74 +362,12 @@ public class ProjectImpl implements Project {
     return true;
   }
 
-  /**
-   * @return the parentProjectId
-   */
-  public Long getParentProjectId() {
-    return parentProjectId;
-  }
-
-  /**
-   * @param parentProjectId the parentProjectId to set
-   */
-  public void setParentProjectId(Long parentProjectId) {
-    this.parentProjectId = parentProjectId;
-  }
-
-  /**
-   *
-   * @see org.wise.portal.domain.project.Project#getRootProjectId()
-   */
-  public Long getRootProjectId() {
-    return rootProjectId;
-  }
-
-  /**
-   *
-   * @see org.wise.portal.domain.project.Project#setRootProjectId(java.lang.Long)
-   */
-  public void setRootProjectId(Long rootProjectId) {
-    this.rootProjectId = rootProjectId;
-  }
-
-  /**
-   * Whether this project is deleted
-   * @return
-   */
   public boolean isDeleted() {
     return isDeleted;
   }
 
-  /**
-   * Set whether this project is deleted
-   * @param isDeleted
-   */
   public void setDeleted(boolean isDeleted) {
     this.isDeleted = isDeleted;
-  }
-
-  /**
-   * Get the date the project was deleted
-   * @return
-   */
-  public Date getDateDeleted() {
-    return dateDeleted;
-  }
-
-  /**
-   * Set the date the project was deleted
-   * @param dateDeleted
-   */
-  public void setDateDeleted(Date dateDeleted) {
-    this.dateDeleted = dateDeleted;
-  }
-
-  public Long getMaxTotalAssetsSize() {
-    return maxTotalAssetsSize;
-  }
-
-  public void setMaxTotalAssetsSize(Long maxTotalAssetsSize) {
-    this.maxTotalAssetsSize = maxTotalAssetsSize;
   }
 
   public Integer getWiseVersion() {
@@ -596,26 +401,20 @@ public class ProjectImpl implements Project {
       int result = 0;
 
       if (user1 != null && user2 != null) {
-        // get the user details
         MutableUserDetails userDetails1 = user1.getUserDetails();
         MutableUserDetails userDetails2 = user2.getUserDetails();
 
         if (userDetails1 != null && userDetails2 != null) {
-          // get the user names
           String userName1 = userDetails1.getUsername();
           String userName2 = userDetails2.getUsername();
 
           if (userName1 != null && userName2 != null) {
-            // get the user names in lower case
             String userName1LowerCase = userName1.toLowerCase();
             String userName2LowerCase = userName2.toLowerCase();
-
-            // compare the user names
             result = userName1LowerCase.compareTo(userName2LowerCase);
           }
         }
       }
-
       return result;
     }
   }

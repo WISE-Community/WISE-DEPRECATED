@@ -69,11 +69,10 @@ class NodeController {
       this.nodeContent = this.ProjectService.getNodeById(this.nodeId);
       this.nodeTitle = this.ProjectService.getNodeTitleByNodeId(this.nodeId);
       this.nodeStatus = this.StudentDataService.nodeStatuses[this.nodeId];
-      this.calculateDisabled();
       this.startAutoSaveInterval();
       this.registerExitListener();
 
-      if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('enterNode')) {
+      if (this.NodeService.currentNodeHasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('enterNode')) {
         this.NodeService.evaluateTransitionLogic();
       }
 
@@ -84,9 +83,9 @@ class NodeController {
       if (latestComponentState) {
         const latestClientSaveTime = latestComponentState.clientSaveTime;
         if (latestComponentState.isSubmit) {
-          this.setSaveMessage(this.$translate('LAST_SUBMITTED'), latestClientSaveTime);
+          this.setSubmittedMessage(latestClientSaveTime);
         } else {
-          this.setSaveMessage(this.$translate('LAST_SAVED'), latestClientSaveTime);
+          this.setSavedMessage(latestClientSaveTime);
         }
       }
 
@@ -128,10 +127,6 @@ class NodeController {
 
         if (nodeId != null && componentId != null) {
           if (this.nodeId == nodeId && this.nodeContainsComponent(componentId)) {
-            /*
-             * obtain the component states from the children and save them
-             * to the server
-             */
             const isAutoSave = false;
             this.createAndSaveComponentData(isAutoSave, componentId);
           }
@@ -150,10 +145,6 @@ class NodeController {
 
         if (nodeId != null && componentId != null) {
           if (this.nodeId == nodeId && this.nodeContainsComponent(componentId)) {
-            /*
-             * obtain the component states from the children and save them
-             * to the server
-             */
             const isAutoSave = false;
             const isSubmit = true;
             this.createAndSaveComponentData(isAutoSave, componentId, isSubmit);
@@ -260,7 +251,6 @@ class NodeController {
        * this node
        */
       if (nodeToExit.id === this.nodeId) {
-        const saveTriggeredBy = 'exitNode';
         this.stopAutoSaveInterval();
 
         /*
@@ -268,10 +258,7 @@ class NodeController {
          * everything it needs to do before exiting
          */
         this.nodeUnloaded(this.nodeId);
-
-        // check if this node has transition logic that should be run when the student exits the node
-        if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('exitNode')) {
-          // this node has transition logic
+        if (this.NodeService.currentNodeHasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('exitNode')) {
           this.NodeService.evaluateTransitionLogic();
         }
       }
@@ -551,13 +538,7 @@ class NodeController {
    */
   saveButtonClicked() {
     this.$rootScope.$broadcast('nodeSaveClicked', {nodeId: this.nodeId});
-
     const isAutoSave = false;
-
-    /*
-     * obtain the component states from the children and save them
-     * to the server
-     */
     this.createAndSaveComponentData(isAutoSave);
   };
 
@@ -570,31 +551,7 @@ class NodeController {
 
     const isAutoSave = false;
     const isSubmit = true;
-
-    /*
-     * obtain the component states from the children and save them
-     * to the server
-     */
     this.createAndSaveComponentData(isAutoSave, null, isSubmit);
-  };
-
-  /**
-   * Check if we need to lock the node
-   */
-  calculateDisabled() {
-    const nodeId = this.nodeId;
-    const nodeContent = this.nodeContent;
-
-    if (nodeContent) {
-      const lockAfterSubmit = nodeContent.lockAfterSubmit;
-      if (lockAfterSubmit) {
-        const componentStates = this.StudentDataService.getComponentStatesByNodeId(nodeId);
-        const isSubmitted = this.NodeService.isWorkSubmitted(componentStates);
-        if (isSubmitted) {
-          this.isDisabled = true;
-        }
-      }
-    }
   };
 
   /**
@@ -607,16 +564,9 @@ class NodeController {
     if (this.nodeContent != null) {
       components = this.nodeContent.components;
     }
-
     if (components != null && this.isDisabled) {
       for (const component of components) {
         component.isDisabled = true;
-      }
-    }
-
-    if (components != null && this.nodeContent.lockAfterSubmit) {
-      for (const component of components) {
-        component.lockAfterSubmit = true;
       }
     }
     return components;
@@ -687,24 +637,31 @@ class NodeController {
     return this.nodeContent != null && this.nodeContent.showSubmitButton;
   };
 
-  /**
-   * Check whether we need to lock the component after the student
-   * submits an answer.
-   */
-  isLockAfterSubmit() {
-    return this.componentContent != null &&
-        this.componentContent.lockAfterSubmit;
-  };
+  setSavedMessage(time) {
+    this.setSaveText(this.$translate('SAVED'), time);
+  }
+
+  setAutoSavedMessage(time) {
+    this.setSaveText(this.$translate('AUTO_SAVED'), time);
+  }
+
+  setSubmittedMessage(time) {
+    this.setSaveText(this.$translate('SUBMITTED'), time);
+  }
 
   /**
    * Set the message next to the save button
    * @param message the message to display
    * @param time the time to display
    */
-  setSaveMessage(message, time) {
+  setSaveText(message, time) {
     this.saveMessage.text = message;
     this.saveMessage.time = time;
   };
+
+  clearSaveText() {
+    this.setSaveText('', null);
+  }
 
   /**
    * Start the auto save interval for this node
@@ -713,11 +670,6 @@ class NodeController {
     this.autoSaveIntervalId = setInterval(() => {
       if (this.dirtyComponentIds.length) {
         const isAutoSave = true;
-
-        /*
-         * obtain the component states from the children and save them
-         * to the server
-         */
         this.createAndSaveComponentData(isAutoSave);
       }
     }, this.autoSaveInterval);
@@ -736,80 +688,65 @@ class NodeController {
    * @param isAutoSave whether the component states were auto saved
    * @param componentId (optional) the component id of the component
    * that triggered the save
-   * @param isSubmit (optional) whether this is a sumission or not
+   * @param isSubmit (optional) whether this is a submit or not
    * @returns a promise that will save all the component states for the step
-   * that need saving
+   * that needs saving
    */
   createAndSaveComponentData(isAutoSave, componentId, isSubmit) {
     return this.createComponentStates(isAutoSave, componentId, isSubmit)
         .then((componentStates) => {
       let componentAnnotations = [];
-      let componentEvents = null;
-      let nodeStates = null;
-
-      if ((componentStates != null && this.UtilService.arrayHasNonNullElement(componentStates)) ||
-          (componentAnnotations != null && componentAnnotations.length) ||
-          (componentEvents != null && componentEvents.length)) {
+      let componentEvents = [];
+      let nodeStates = [];
+      if (this.UtilService.arrayHasNonNullElement(componentStates)) {
         for (const componentState of componentStates) {
           if (componentState != null) {
             let annotations = componentState.annotations;
             if (annotations != null) {
-              /*
-               * add the annotations to our array of annotations that will
-               * be saved to the server
-               */
               componentAnnotations = componentAnnotations.concat(annotations);
             }
             delete componentState.annotations;
           }
         }
-
-        return this.StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations).then((savedStudentDataResponse) => {
+        return this.StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations)
+            .then((savedStudentDataResponse) => {
           if (savedStudentDataResponse) {
-            // check if this node has transition logic that should be run when the student data changes
-            if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
-              // this node has transition logic
-              this.NodeService.evaluateTransitionLogic();
-            }
-
-            // check if this node has transition logic that should be run when the student score changes
-            if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('scoreChanged')) {
-              if (componentAnnotations != null && componentAnnotations.length > 0) {
-                let evaluateTransitionLogic = false;
-                for (const componentAnnotation of componentAnnotations) {
-                  if (componentAnnotation != null) {
-                    if (componentAnnotation.type === 'autoScore') {
-                      evaluateTransitionLogic = true;
+            if (this.NodeService.currentNodeHasTransitionLogic()) {
+              if (this.NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
+                this.NodeService.evaluateTransitionLogic();
+              }
+              if (this.NodeService.evaluateTransitionLogicOn('scoreChanged')) {
+                if (componentAnnotations != null && componentAnnotations.length > 0) {
+                  let evaluateTransitionLogic = false;
+                  for (const componentAnnotation of componentAnnotations) {
+                    if (componentAnnotation != null) {
+                      if (componentAnnotation.type === 'autoScore') {
+                        evaluateTransitionLogic = true;
+                      }
                     }
                   }
-                }
-
-                if (evaluateTransitionLogic) {
-                  // the student score has changed so we will evaluate the transition logic
-                  this.NodeService.evaluateTransitionLogic();
+                  if (evaluateTransitionLogic) {
+                    this.NodeService.evaluateTransitionLogic();
+                  }
                 }
               }
             }
-
             const studentWorkList = savedStudentDataResponse.studentWorkList;
             if (!componentId && studentWorkList && studentWorkList.length) {
-              // this was a step save or submission and student work was saved, so set save message
               const latestStudentWork = studentWorkList[studentWorkList.length - 1];
               const serverSaveTime = latestStudentWork.serverSaveTime;
               const clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
               if (isAutoSave) {
-                this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
+                this.setAutoSavedMessage(clientSaveTime);
               } else if (isSubmit) {
-                this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
+                this.setSubmittedMessage(clientSaveTime);
               } else {
-                this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
+                this.setSavedMessage(clientSaveTime);
               }
             } else {
-              this.setSaveMessage('', null);
+              this.clearSaveText();
             }
           }
-
           return savedStudentDataResponse;
         });
       }

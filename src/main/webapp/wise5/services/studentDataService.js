@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentDataService = function () {
-  function StudentDataService($filter, $http, $injector, $q, $rootScope, AnnotationService, ConfigService, ProjectService, UtilService) {
+  function StudentDataService($filter, $http, $injector, $q, $rootScope, AnnotationService, ConfigService, PlanningService, ProjectService, UtilService) {
     var _this = this;
 
     _classCallCheck(this, StudentDataService);
@@ -21,6 +21,7 @@ var StudentDataService = function () {
     this.$rootScope = $rootScope;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
+    this.PlanningService = PlanningService;
     this.ProjectService = ProjectService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
@@ -378,7 +379,7 @@ var StudentDataService = function () {
     key: 'updateNodeStatuses',
     value: function updateNodeStatuses() {
       var nodes = this.ProjectService.getNodes();
-      var planningNodes = this.ProjectService.getPlanningNodes();
+      var planningNodes = this.PlanningService.getPlanningNodes();
       var groups = this.ProjectService.getGroups();
 
       if (nodes != null) {
@@ -683,88 +684,6 @@ var StudentDataService = function () {
       return false;
     }
   }, {
-    key: 'evaluateGuidedNavigationConstraint',
-
-
-    /**
-     * Evaluate the guided navigation constraint
-     * @param node the node
-     * @param constraintForNode the constraint object
-     * @returns whether the node can be visited or not
-     */
-    value: function evaluateGuidedNavigationConstraint(node, constraintForNode) {
-      var result = false;
-      if (node != null) {
-        var nodeId = node.id;
-
-        if (this.isNodeVisited(nodeId)) {
-          // the node has been visited before so it should be clickable
-          result = true;
-        } else {
-          // get all the nodes that have been visited
-          var visitedNodes = this.getVisitedNodesHistory();
-
-          var transitionsToNodeId = [];
-
-          var _iteratorNormalCompletion12 = true;
-          var _didIteratorError12 = false;
-          var _iteratorError12 = undefined;
-
-          try {
-            for (var _iterator12 = visitedNodes[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-              var visitedNodeId = _step12.value;
-
-              // get the transitions from the visited node to the node status node
-              var transitions = this.ProjectService.getTransitionsByFromAndToNodeId(visitedNodeId, nodeId);
-
-              // TODO: check if the transition can be used by the student
-
-              // concat the node ids
-              transitionsToNodeId = transitionsToNodeId.concat(transitions);
-            }
-          } catch (err) {
-            _didIteratorError12 = true;
-            _iteratorError12 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion12 && _iterator12.return) {
-                _iterator12.return();
-              }
-            } finally {
-              if (_didIteratorError12) {
-                throw _iteratorError12;
-              }
-            }
-          }
-
-          if (transitionsToNodeId != null && transitionsToNodeId.length > 0) {
-            // there is a transition between the current node and the node status node
-
-            /*
-             * there are transitions from the current node to the node status node so
-             * the node status node is clickable
-             */
-            result = true;
-          } else {
-            /*
-             * there is no transition between the visited nodes and the node status node
-             * so we will set the node to be not clickable
-             */
-            result = false;
-          }
-
-          if (this.ProjectService.isStartNode(node)) {
-            /*
-             * the node is the start node of the project or a start node of a group
-             * so we will make it clickable
-             */
-            result = true;
-          }
-        }
-      }
-      return result;
-    }
-  }, {
     key: 'evaluateNodeConstraint',
 
 
@@ -784,13 +703,13 @@ var StudentDataService = function () {
           result = true;
         } else {
           var firstResult = true;
-          var _iteratorNormalCompletion13 = true;
-          var _didIteratorError13 = false;
-          var _iteratorError13 = undefined;
+          var _iteratorNormalCompletion12 = true;
+          var _didIteratorError12 = false;
+          var _iteratorError12 = undefined;
 
           try {
-            for (var _iterator13 = removalCriteria[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-              var tempCriteria = _step13.value;
+            for (var _iterator12 = removalCriteria[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+              var tempCriteria = _step12.value;
 
               if (tempCriteria != null) {
                 // evaluate the criteria
@@ -814,16 +733,16 @@ var StudentDataService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError13 = true;
-            _iteratorError13 = err;
+            _didIteratorError12 = true;
+            _iteratorError12 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion13 && _iterator13.return) {
-                _iterator13.return();
+              if (!_iteratorNormalCompletion12 && _iterator12.return) {
+                _iterator12.return();
               }
             } finally {
-              if (_didIteratorError13) {
-                throw _iteratorError13;
+              if (_didIteratorError12) {
+                throw _iteratorError12;
               }
             }
           }
@@ -866,6 +785,8 @@ var StudentDataService = function () {
           result = this.evaluateScoreCriteria(criteria);
         } else if (functionName === 'usedXSubmits') {
           result = this.evaluateUsedXSubmitsCriteria(criteria);
+        } else if (functionName === 'wroteXNumberOfWords') {
+          result = this.evaluateNumberOfWordsWrittenCriteria(criteria);
         } else if (functionName === '') {}
       }
       return result;
@@ -905,13 +826,13 @@ var StudentDataService = function () {
         if (nodeId != null && componentId != null) {
           var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
           if (componentStates != null) {
-            var _iteratorNormalCompletion14 = true;
-            var _didIteratorError14 = false;
-            var _iteratorError14 = undefined;
+            var _iteratorNormalCompletion13 = true;
+            var _didIteratorError13 = false;
+            var _iteratorError13 = undefined;
 
             try {
-              for (var _iterator14 = componentStates[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
-                var componentState = _step14.value;
+              for (var _iterator13 = componentStates[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+                var componentState = _step13.value;
 
                 if (componentState != null) {
                   var studentData = componentState.studentData;
@@ -923,16 +844,16 @@ var StudentDataService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError14 = true;
-              _iteratorError14 = err;
+              _didIteratorError13 = true;
+              _iteratorError13 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion14 && _iterator14.return) {
-                  _iterator14.return();
+                if (!_iteratorNormalCompletion13 && _iterator13.return) {
+                  _iterator13.return();
                 }
               } finally {
-                if (_didIteratorError14) {
-                  throw _iteratorError14;
+                if (_didIteratorError13) {
+                  throw _iteratorError13;
                 }
               }
             }
@@ -990,13 +911,13 @@ var StudentDataService = function () {
                 if (studentData != null) {
                   var nodes = studentData.nodes;
                   if (nodes != null) {
-                    var _iteratorNormalCompletion15 = true;
-                    var _didIteratorError15 = false;
-                    var _iteratorError15 = undefined;
+                    var _iteratorNormalCompletion14 = true;
+                    var _didIteratorError14 = false;
+                    var _iteratorError14 = undefined;
 
                     try {
-                      for (var _iterator15 = nodes[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
-                        var node = _step15.value;
+                      for (var _iterator14 = nodes[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+                        var node = _step14.value;
 
                         if (node != null) {
                           if (node.type === 'node' && node.planningNodeTemplateId != null) {
@@ -1006,16 +927,16 @@ var StudentDataService = function () {
                         }
                       }
                     } catch (err) {
-                      _didIteratorError15 = true;
-                      _iteratorError15 = err;
+                      _didIteratorError14 = true;
+                      _iteratorError14 = err;
                     } finally {
                       try {
-                        if (!_iteratorNormalCompletion15 && _iterator15.return) {
-                          _iterator15.return();
+                        if (!_iteratorNormalCompletion14 && _iterator14.return) {
+                          _iterator14.return();
                         }
                       } finally {
-                        if (_didIteratorError15) {
-                          throw _iteratorError15;
+                        if (_didIteratorError14) {
+                          throw _iteratorError14;
                         }
                       }
                     }
@@ -1070,13 +991,13 @@ var StudentDataService = function () {
         var branchPathTakenEvents = this.getBranchPathTakenEventsByNodeId(expectedFromNodeId);
 
         if (branchPathTakenEvents != null) {
-          var _iteratorNormalCompletion16 = true;
-          var _didIteratorError16 = false;
-          var _iteratorError16 = undefined;
+          var _iteratorNormalCompletion15 = true;
+          var _didIteratorError15 = false;
+          var _iteratorError15 = undefined;
 
           try {
-            for (var _iterator16 = branchPathTakenEvents[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
-              var branchPathTakenEvent = _step16.value;
+            for (var _iterator15 = branchPathTakenEvents[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+              var branchPathTakenEvent = _step15.value;
 
               if (branchPathTakenEvent != null) {
                 var data = branchPathTakenEvent.data;
@@ -1092,16 +1013,16 @@ var StudentDataService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError16 = true;
-            _iteratorError16 = err;
+            _didIteratorError15 = true;
+            _iteratorError15 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion16 && _iterator16.return) {
-                _iterator16.return();
+              if (!_iteratorNormalCompletion15 && _iterator15.return) {
+                _iterator15.return();
               }
             } finally {
-              if (_didIteratorError16) {
-                throw _iteratorError16;
+              if (_didIteratorError15) {
+                throw _iteratorError15;
               }
             }
           }
@@ -1123,13 +1044,13 @@ var StudentDataService = function () {
         var nodeId = criteria.params.nodeId;
         var events = this.studentData.events;
         if (events != null) {
-          var _iteratorNormalCompletion17 = true;
-          var _didIteratorError17 = false;
-          var _iteratorError17 = undefined;
+          var _iteratorNormalCompletion16 = true;
+          var _didIteratorError16 = false;
+          var _iteratorError16 = undefined;
 
           try {
-            for (var _iterator17 = events[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
-              var event = _step17.value;
+            for (var _iterator16 = events[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+              var event = _step16.value;
 
               if (event != null) {
                 if (nodeId == event.nodeId && 'nodeEntered' === event.event) {
@@ -1138,16 +1059,16 @@ var StudentDataService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError17 = true;
-            _iteratorError17 = err;
+            _didIteratorError16 = true;
+            _iteratorError16 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion17 && _iterator17.return) {
-                _iterator17.return();
+              if (!_iteratorNormalCompletion16 && _iterator16.return) {
+                _iterator16.return();
               }
             } finally {
-              if (_didIteratorError17) {
-                throw _iteratorError17;
+              if (_didIteratorError16) {
+                throw _iteratorError16;
               }
             }
           }
@@ -1171,13 +1092,13 @@ var StudentDataService = function () {
 
         var events = this.studentData.events;
         if (events != null) {
-          var _iteratorNormalCompletion18 = true;
-          var _didIteratorError18 = false;
-          var _iteratorError18 = undefined;
+          var _iteratorNormalCompletion17 = true;
+          var _didIteratorError17 = false;
+          var _iteratorError17 = undefined;
 
           try {
-            for (var _iterator18 = events[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
-              var event = _step18.value;
+            for (var _iterator17 = events[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+              var event = _step17.value;
 
               if (event != null) {
                 if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
@@ -1186,16 +1107,16 @@ var StudentDataService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError18 = true;
-            _iteratorError18 = err;
+            _didIteratorError17 = true;
+            _iteratorError17 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion18 && _iterator18.return) {
-                _iterator18.return();
+              if (!_iteratorNormalCompletion17 && _iterator17.return) {
+                _iterator17.return();
               }
             } finally {
-              if (_didIteratorError18) {
-                throw _iteratorError18;
+              if (_didIteratorError17) {
+                throw _iteratorError17;
               }
             }
           }
@@ -1246,13 +1167,13 @@ var StudentDataService = function () {
 
         var events = this.studentData.events;
         if (events != null) {
-          var _iteratorNormalCompletion19 = true;
-          var _didIteratorError19 = false;
-          var _iteratorError19 = undefined;
+          var _iteratorNormalCompletion18 = true;
+          var _didIteratorError18 = false;
+          var _iteratorError18 = undefined;
 
           try {
-            for (var _iterator19 = events[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
-              var event = _step19.value;
+            for (var _iterator18 = events[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+              var event = _step18.value;
 
               if (event != null) {
                 if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
@@ -1266,16 +1187,16 @@ var StudentDataService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError19 = true;
-            _iteratorError19 = err;
+            _didIteratorError18 = true;
+            _iteratorError18 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion19 && _iterator19.return) {
-                _iterator19.return();
+              if (!_iteratorNormalCompletion18 && _iterator18.return) {
+                _iterator18.return();
               }
             } finally {
-              if (_didIteratorError19) {
-                throw _iteratorError19;
+              if (_didIteratorError18) {
+                throw _iteratorError18;
               }
             }
           }
@@ -1296,13 +1217,13 @@ var StudentDataService = function () {
       var branchPathTakenEvents = [];
       var events = this.studentData.events;
       if (events != null) {
-        var _iteratorNormalCompletion20 = true;
-        var _didIteratorError20 = false;
-        var _iteratorError20 = undefined;
+        var _iteratorNormalCompletion19 = true;
+        var _didIteratorError19 = false;
+        var _iteratorError19 = undefined;
 
         try {
-          for (var _iterator20 = events[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
-            var event = _step20.value;
+          for (var _iterator19 = events[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+            var event = _step19.value;
 
             if (event != null) {
               if (fromNodeId === event.nodeId && 'branchPathTaken' === event.event) {
@@ -1312,16 +1233,16 @@ var StudentDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError20 = true;
-          _iteratorError20 = err;
+          _didIteratorError19 = true;
+          _iteratorError19 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion20 && _iterator20.return) {
-              _iterator20.return();
+            if (!_iteratorNormalCompletion19 && _iterator19.return) {
+              _iterator19.return();
             }
           } finally {
-            if (_didIteratorError20) {
-              throw _iteratorError20;
+            if (_didIteratorError19) {
+              throw _iteratorError19;
             }
           }
         }
@@ -1413,13 +1334,13 @@ var StudentDataService = function () {
              * updated submitCounter for the number of submits.
              */
 
-            var _iteratorNormalCompletion21 = true;
-            var _didIteratorError21 = false;
-            var _iteratorError21 = undefined;
+            var _iteratorNormalCompletion20 = true;
+            var _didIteratorError20 = false;
+            var _iteratorError20 = undefined;
 
             try {
-              for (var _iterator21 = componentStates[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
-                var componentState = _step21.value;
+              for (var _iterator20 = componentStates[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+                var componentState = _step20.value;
 
                 if (componentState != null) {
                   if (componentState.isSubmit) {
@@ -1440,22 +1361,53 @@ var StudentDataService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError21 = true;
-              _iteratorError21 = err;
+              _didIteratorError20 = true;
+              _iteratorError20 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion21 && _iterator21.return) {
-                  _iterator21.return();
+                if (!_iteratorNormalCompletion20 && _iterator20.return) {
+                  _iterator20.return();
                 }
               } finally {
-                if (_didIteratorError21) {
-                  throw _iteratorError21;
+                if (_didIteratorError20) {
+                  throw _iteratorError20;
                 }
               }
             }
 
             if (manualSubmitCounter >= requiredSubmitCount || highestSubmitCounter >= requiredSubmitCount) {
               // the student submitted the required number of times
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Evaluate the number of words written criteria.
+     * @param criteria The criteria to evaluate.
+     * @return A boolean value whether the student wrote the required number of
+     * words.
+     */
+
+  }, {
+    key: 'evaluateNumberOfWordsWrittenCriteria',
+    value: function evaluateNumberOfWordsWrittenCriteria(criteria) {
+      if (criteria != null && criteria.params != null) {
+        var params = criteria.params;
+        var nodeId = params.nodeId;
+        var componentId = params.componentId;
+        var requiredNumberOfWords = params.requiredNumberOfWords;
+
+        if (nodeId != null && componentId != null) {
+          var componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+          if (componentState != null) {
+            var studentData = componentState.studentData;
+            var response = studentData.response;
+            var numberOfWords = this.UtilService.wordCount(response);
+            if (numberOfWords >= requiredNumberOfWords) {
               return true;
             }
           }
@@ -1476,13 +1428,13 @@ var StudentDataService = function () {
       this.visitedNodesHistory = [];
 
       if (events != null) {
-        var _iteratorNormalCompletion22 = true;
-        var _didIteratorError22 = false;
-        var _iteratorError22 = undefined;
+        var _iteratorNormalCompletion21 = true;
+        var _didIteratorError21 = false;
+        var _iteratorError21 = undefined;
 
         try {
-          for (var _iterator22 = events[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
-            var event = _step22.value;
+          for (var _iterator21 = events[Symbol.iterator](), _step21; !(_iteratorNormalCompletion21 = (_step21 = _iterator21.next()).done); _iteratorNormalCompletion21 = true) {
+            var event = _step21.value;
 
             if (event != null && event.event === 'nodeEntered') {
               this.updateStackHistory(event.nodeId);
@@ -1490,16 +1442,16 @@ var StudentDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError22 = true;
-          _iteratorError22 = err;
+          _didIteratorError21 = true;
+          _iteratorError21 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion22 && _iterator22.return) {
-              _iterator22.return();
+            if (!_iteratorNormalCompletion21 && _iterator21.return) {
+              _iterator21.return();
             }
           } finally {
-            if (_didIteratorError22) {
-              throw _iteratorError22;
+            if (_didIteratorError21) {
+              throw _iteratorError21;
             }
           }
         }
@@ -1604,13 +1556,13 @@ var StudentDataService = function () {
       var nodeStatesByNodeId = [];
       if (this.studentData != null && this.studentData.nodeStates != null) {
         var nodeStates = this.studentData.nodeStates;
-        var _iteratorNormalCompletion23 = true;
-        var _didIteratorError23 = false;
-        var _iteratorError23 = undefined;
+        var _iteratorNormalCompletion22 = true;
+        var _didIteratorError22 = false;
+        var _iteratorError22 = undefined;
 
         try {
-          for (var _iterator23 = nodeStates[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
-            var nodeState = _step23.value;
+          for (var _iterator22 = nodeStates[Symbol.iterator](), _step22; !(_iteratorNormalCompletion22 = (_step22 = _iterator22.next()).done); _iteratorNormalCompletion22 = true) {
+            var nodeState = _step22.value;
 
             if (nodeState != null) {
               var tempNodeId = nodeState.nodeId;
@@ -1620,16 +1572,16 @@ var StudentDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError23 = true;
-          _iteratorError23 = err;
+          _didIteratorError22 = true;
+          _iteratorError22 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion23 && _iterator23.return) {
-              _iterator23.return();
+            if (!_iteratorNormalCompletion22 && _iterator22.return) {
+              _iterator22.return();
             }
           } finally {
-            if (_didIteratorError23) {
-              throw _iteratorError23;
+            if (_didIteratorError22) {
+              throw _iteratorError22;
             }
           }
         }
@@ -1752,18 +1704,49 @@ var StudentDataService = function () {
       // merge componentStates and nodeStates into StudentWork before posting
       var studentWorkList = [];
       if (componentStates != null && componentStates.length > 0) {
-        var _iteratorNormalCompletion24 = true;
-        var _didIteratorError24 = false;
-        var _iteratorError24 = undefined;
+        var _iteratorNormalCompletion23 = true;
+        var _didIteratorError23 = false;
+        var _iteratorError23 = undefined;
 
         try {
-          for (var _iterator24 = componentStates[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
-            var componentState = _step24.value;
+          for (var _iterator23 = componentStates[Symbol.iterator](), _step23; !(_iteratorNormalCompletion23 = (_step23 = _iterator23.next()).done); _iteratorNormalCompletion23 = true) {
+            var componentState = _step23.value;
 
             if (componentState != null) {
               componentState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
               this.addComponentState(componentState);
               studentWorkList.push(componentState);
+            }
+          }
+        } catch (err) {
+          _didIteratorError23 = true;
+          _iteratorError23 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion23 && _iterator23.return) {
+              _iterator23.return();
+            }
+          } finally {
+            if (_didIteratorError23) {
+              throw _iteratorError23;
+            }
+          }
+        }
+      }
+
+      if (nodeStates != null && nodeStates.length > 0) {
+        var _iteratorNormalCompletion24 = true;
+        var _didIteratorError24 = false;
+        var _iteratorError24 = undefined;
+
+        try {
+          for (var _iterator24 = nodeStates[Symbol.iterator](), _step24; !(_iteratorNormalCompletion24 = (_step24 = _iterator24.next()).done); _iteratorNormalCompletion24 = true) {
+            var nodeState = _step24.value;
+
+            if (nodeState != null) {
+              nodeState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
+              this.addNodeState(nodeState);
+              studentWorkList.push(nodeState);
             }
           }
         } catch (err) {
@@ -1782,19 +1765,18 @@ var StudentDataService = function () {
         }
       }
 
-      if (nodeStates != null && nodeStates.length > 0) {
+      if (events != null && events.length > 0) {
         var _iteratorNormalCompletion25 = true;
         var _didIteratorError25 = false;
         var _iteratorError25 = undefined;
 
         try {
-          for (var _iterator25 = nodeStates[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
-            var nodeState = _step25.value;
+          for (var _iterator25 = events[Symbol.iterator](), _step25; !(_iteratorNormalCompletion25 = (_step25 = _iterator25.next()).done); _iteratorNormalCompletion25 = true) {
+            var event = _step25.value;
 
-            if (nodeState != null) {
-              nodeState.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved componentStates.
-              this.addNodeState(nodeState);
-              studentWorkList.push(nodeState);
+            if (event != null) {
+              event.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved events.
+              this.addEvent(event);
             }
           }
         } catch (err) {
@@ -1811,20 +1793,25 @@ var StudentDataService = function () {
             }
           }
         }
+      } else {
+        events = [];
       }
 
-      if (events != null && events.length > 0) {
+      if (annotations != null && annotations.length > 0) {
         var _iteratorNormalCompletion26 = true;
         var _didIteratorError26 = false;
         var _iteratorError26 = undefined;
 
         try {
-          for (var _iterator26 = events[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
-            var event = _step26.value;
+          for (var _iterator26 = annotations[Symbol.iterator](), _step26; !(_iteratorNormalCompletion26 = (_step26 = _iterator26.next()).done); _iteratorNormalCompletion26 = true) {
+            var annotation = _step26.value;
 
-            if (event != null) {
-              event.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved events.
-              this.addEvent(event);
+            if (annotation != null) {
+              annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
+              if (annotation.id == null) {
+                // add to local annotation array if this annotation has not been saved to the server before.
+                this.addAnnotation(annotation);
+              }
             }
           }
         } catch (err) {
@@ -1838,41 +1825,6 @@ var StudentDataService = function () {
           } finally {
             if (_didIteratorError26) {
               throw _iteratorError26;
-            }
-          }
-        }
-      } else {
-        events = [];
-      }
-
-      if (annotations != null && annotations.length > 0) {
-        var _iteratorNormalCompletion27 = true;
-        var _didIteratorError27 = false;
-        var _iteratorError27 = undefined;
-
-        try {
-          for (var _iterator27 = annotations[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
-            var annotation = _step27.value;
-
-            if (annotation != null) {
-              annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
-              if (annotation.id == null) {
-                // add to local annotation array if this annotation has not been saved to the server before.
-                this.addAnnotation(annotation);
-              }
-            }
-          }
-        } catch (err) {
-          _didIteratorError27 = true;
-          _iteratorError27 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion27 && _iterator27.return) {
-              _iterator27.return();
-            }
-          } finally {
-            if (_didIteratorError27) {
-              throw _iteratorError27;
             }
           }
         }
@@ -1947,13 +1899,13 @@ var StudentDataService = function () {
         }
 
         // set the id and serverSaveTime in the local studentWorkList
-        var _iteratorNormalCompletion28 = true;
-        var _didIteratorError28 = false;
-        var _iteratorError28 = undefined;
+        var _iteratorNormalCompletion27 = true;
+        var _didIteratorError27 = false;
+        var _iteratorError27 = undefined;
 
         try {
-          for (var _iterator28 = savedStudentWorkList[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
-            var savedStudentWork = _step28.value;
+          for (var _iterator27 = savedStudentWorkList[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+            var savedStudentWork = _step27.value;
 
             /*
              * loop through all the student work that were posted
@@ -1986,16 +1938,16 @@ var StudentDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError28 = true;
-          _iteratorError28 = err;
+          _didIteratorError27 = true;
+          _iteratorError27 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion28 && _iterator28.return) {
-              _iterator28.return();
+            if (!_iteratorNormalCompletion27 && _iterator27.return) {
+              _iterator27.return();
             }
           } finally {
-            if (_didIteratorError28) {
-              throw _iteratorError28;
+            if (_didIteratorError27) {
+              throw _iteratorError27;
             }
           }
         }
@@ -2007,13 +1959,13 @@ var StudentDataService = function () {
         var localEvents = this.studentData.events;
 
         // set the id and serverSaveTime in the local event
-        var _iteratorNormalCompletion29 = true;
-        var _didIteratorError29 = false;
-        var _iteratorError29 = undefined;
+        var _iteratorNormalCompletion28 = true;
+        var _didIteratorError28 = false;
+        var _iteratorError28 = undefined;
 
         try {
-          for (var _iterator29 = savedEvents[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
-            var savedEvent = _step29.value;
+          for (var _iterator28 = savedEvents[Symbol.iterator](), _step28; !(_iteratorNormalCompletion28 = (_step28 = _iterator28.next()).done); _iteratorNormalCompletion28 = true) {
+            var savedEvent = _step28.value;
 
             /*
              * loop through all the events that were posted
@@ -2032,16 +1984,16 @@ var StudentDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError29 = true;
-          _iteratorError29 = err;
+          _didIteratorError28 = true;
+          _iteratorError28 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion29 && _iterator29.return) {
-              _iterator29.return();
+            if (!_iteratorNormalCompletion28 && _iterator28.return) {
+              _iterator28.return();
             }
           } finally {
-            if (_didIteratorError29) {
-              throw _iteratorError29;
+            if (_didIteratorError28) {
+              throw _iteratorError28;
             }
           }
         }
@@ -2053,13 +2005,13 @@ var StudentDataService = function () {
         var localAnnotations = this.studentData.annotations;
 
         // set the id and serverSaveTime in the local annotation
-        var _iteratorNormalCompletion30 = true;
-        var _didIteratorError30 = false;
-        var _iteratorError30 = undefined;
+        var _iteratorNormalCompletion29 = true;
+        var _didIteratorError29 = false;
+        var _iteratorError29 = undefined;
 
         try {
-          for (var _iterator30 = savedAnnotations[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
-            var savedAnnotation = _step30.value;
+          for (var _iterator29 = savedAnnotations[Symbol.iterator](), _step29; !(_iteratorNormalCompletion29 = (_step29 = _iterator29.next()).done); _iteratorNormalCompletion29 = true) {
+            var savedAnnotation = _step29.value;
 
             /*
              * loop through all the events that were posted
@@ -2078,16 +2030,16 @@ var StudentDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError30 = true;
-          _iteratorError30 = err;
+          _didIteratorError29 = true;
+          _iteratorError29 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion30 && _iterator30.return) {
-              _iterator30.return();
+            if (!_iteratorNormalCompletion29 && _iterator29.return) {
+              _iterator29.return();
             }
           } finally {
-            if (_didIteratorError30) {
-              throw _iteratorError30;
+            if (_didIteratorError29) {
+              throw _iteratorError29;
             }
           }
         }
@@ -2245,28 +2197,80 @@ var StudentDataService = function () {
       return null;
     }
   }, {
-    key: 'getStudentWorkByStudentWorkId',
+    key: 'getLatestSubmitComponentState',
 
+
+    /**
+     * Get the latest component state that was a submit
+     * for the given node id and component id.
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @return the latest component state that was a submit with the matching
+     * node id and component id or null if none are found
+     */
+    value: function getLatestSubmitComponentState(nodeId, componentId) {
+      var componentStates = this.studentData.componentStates;
+      for (var c = componentStates.length - 1; c >= 0; c--) {
+        var componentState = componentStates[c];
+        if (componentState.nodeId === nodeId && componentState.componentId === componentId && componentState.isSubmit) {
+          return componentState;
+        }
+      }
+      return null;
+    }
 
     /**
      * Get the student work by specified student work id, which can be a ComponentState or NodeState
      * @param studentWorkId the student work id
      * @return an StudentWork or null
      */
+
+  }, {
+    key: 'getStudentWorkByStudentWorkId',
     value: function getStudentWorkByStudentWorkId(studentWorkId) {
       if (studentWorkId != null) {
         var componentStates = this.studentData.componentStates;
         if (componentStates != null) {
+          var _iteratorNormalCompletion30 = true;
+          var _didIteratorError30 = false;
+          var _iteratorError30 = undefined;
+
+          try {
+            for (var _iterator30 = componentStates[Symbol.iterator](), _step30; !(_iteratorNormalCompletion30 = (_step30 = _iterator30.next()).done); _iteratorNormalCompletion30 = true) {
+              var componentState = _step30.value;
+
+              if (componentState != null && componentState.id === studentWorkId) {
+                return componentState;
+              }
+            }
+          } catch (err) {
+            _didIteratorError30 = true;
+            _iteratorError30 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion30 && _iterator30.return) {
+                _iterator30.return();
+              }
+            } finally {
+              if (_didIteratorError30) {
+                throw _iteratorError30;
+              }
+            }
+          }
+        }
+
+        var nodeStates = this.studentData.nodeStates;
+        if (nodeStates != null) {
           var _iteratorNormalCompletion31 = true;
           var _didIteratorError31 = false;
           var _iteratorError31 = undefined;
 
           try {
-            for (var _iterator31 = componentStates[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
-              var componentState = _step31.value;
+            for (var _iterator31 = nodeStates[Symbol.iterator](), _step31; !(_iteratorNormalCompletion31 = (_step31 = _iterator31.next()).done); _iteratorNormalCompletion31 = true) {
+              var nodeState = _step31.value;
 
-              if (componentState != null && componentState.id === studentWorkId) {
-                return componentState;
+              if (nodeState != null && nodeState.id === studentWorkId) {
+                return nodeState;
               }
             }
           } catch (err) {
@@ -2280,36 +2284,6 @@ var StudentDataService = function () {
             } finally {
               if (_didIteratorError31) {
                 throw _iteratorError31;
-              }
-            }
-          }
-        }
-
-        var nodeStates = this.studentData.nodeStates;
-        if (nodeStates != null) {
-          var _iteratorNormalCompletion32 = true;
-          var _didIteratorError32 = false;
-          var _iteratorError32 = undefined;
-
-          try {
-            for (var _iterator32 = nodeStates[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
-              var nodeState = _step32.value;
-
-              if (nodeState != null && nodeState.id === studentWorkId) {
-                return nodeState;
-              }
-            }
-          } catch (err) {
-            _didIteratorError32 = true;
-            _iteratorError32 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion32 && _iterator32.return) {
-                _iterator32.return();
-              }
-            } finally {
-              if (_didIteratorError32) {
-                throw _iteratorError32;
               }
             }
           }
@@ -2343,13 +2317,13 @@ var StudentDataService = function () {
         if (studentData != null) {
           var componentStates = studentData.componentStates;
           if (componentStates != null) {
-            var _iteratorNormalCompletion33 = true;
-            var _didIteratorError33 = false;
-            var _iteratorError33 = undefined;
+            var _iteratorNormalCompletion32 = true;
+            var _didIteratorError32 = false;
+            var _iteratorError32 = undefined;
 
             try {
-              for (var _iterator33 = componentStates[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
-                var componentState = _step33.value;
+              for (var _iterator32 = componentStates[Symbol.iterator](), _step32; !(_iteratorNormalCompletion32 = (_step32 = _iterator32.next()).done); _iteratorNormalCompletion32 = true) {
+                var componentState = _step32.value;
 
                 if (componentState != null) {
                   var componentStateNodeId = componentState.nodeId;
@@ -2359,16 +2333,16 @@ var StudentDataService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError33 = true;
-              _iteratorError33 = err;
+              _didIteratorError32 = true;
+              _iteratorError32 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion33 && _iterator33.return) {
-                  _iterator33.return();
+                if (!_iteratorNormalCompletion32 && _iterator32.return) {
+                  _iterator32.return();
                 }
               } finally {
-                if (_didIteratorError33) {
-                  throw _iteratorError33;
+                if (_didIteratorError32) {
+                  throw _iteratorError32;
                 }
               }
             }
@@ -2395,13 +2369,13 @@ var StudentDataService = function () {
         if (studentData != null) {
           var componentStates = studentData.componentStates;
           if (componentStates != null) {
-            var _iteratorNormalCompletion34 = true;
-            var _didIteratorError34 = false;
-            var _iteratorError34 = undefined;
+            var _iteratorNormalCompletion33 = true;
+            var _didIteratorError33 = false;
+            var _iteratorError33 = undefined;
 
             try {
-              for (var _iterator34 = componentStates[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
-                var componentState = _step34.value;
+              for (var _iterator33 = componentStates[Symbol.iterator](), _step33; !(_iteratorNormalCompletion33 = (_step33 = _iterator33.next()).done); _iteratorNormalCompletion33 = true) {
+                var componentState = _step33.value;
 
                 if (componentState != null) {
                   var componentStateNodeId = componentState.nodeId;
@@ -2412,16 +2386,16 @@ var StudentDataService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError34 = true;
-              _iteratorError34 = err;
+              _didIteratorError33 = true;
+              _iteratorError33 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion34 && _iterator34.return) {
-                  _iterator34.return();
+                if (!_iteratorNormalCompletion33 && _iterator33.return) {
+                  _iterator33.return();
                 }
               } finally {
-                if (_didIteratorError34) {
-                  throw _iteratorError34;
+                if (_didIteratorError33) {
+                  throw _iteratorError33;
                 }
               }
             }
@@ -2460,13 +2434,13 @@ var StudentDataService = function () {
       if (nodeId != null) {
         if (this.studentData != null && this.studentData.events != null) {
           var events = this.studentData.events;
-          var _iteratorNormalCompletion35 = true;
-          var _didIteratorError35 = false;
-          var _iteratorError35 = undefined;
+          var _iteratorNormalCompletion34 = true;
+          var _didIteratorError34 = false;
+          var _iteratorError34 = undefined;
 
           try {
-            for (var _iterator35 = events[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
-              var event = _step35.value;
+            for (var _iterator34 = events[Symbol.iterator](), _step34; !(_iteratorNormalCompletion34 = (_step34 = _iterator34.next()).done); _iteratorNormalCompletion34 = true) {
+              var event = _step34.value;
 
               if (event != null) {
                 var eventNodeId = event.nodeId;
@@ -2476,16 +2450,16 @@ var StudentDataService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError35 = true;
-            _iteratorError35 = err;
+            _didIteratorError34 = true;
+            _iteratorError34 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion35 && _iterator35.return) {
-                _iterator35.return();
+              if (!_iteratorNormalCompletion34 && _iterator34.return) {
+                _iterator34.return();
               }
             } finally {
-              if (_didIteratorError35) {
-                throw _iteratorError35;
+              if (_didIteratorError34) {
+                throw _iteratorError34;
               }
             }
           }
@@ -2508,13 +2482,13 @@ var StudentDataService = function () {
       if (nodeId != null) {
         if (this.studentData != null && this.studentData.events != null) {
           var events = this.studentData.events;
-          var _iteratorNormalCompletion36 = true;
-          var _didIteratorError36 = false;
-          var _iteratorError36 = undefined;
+          var _iteratorNormalCompletion35 = true;
+          var _didIteratorError35 = false;
+          var _iteratorError35 = undefined;
 
           try {
-            for (var _iterator36 = events[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
-              var event = _step36.value;
+            for (var _iterator35 = events[Symbol.iterator](), _step35; !(_iteratorNormalCompletion35 = (_step35 = _iterator35.next()).done); _iteratorNormalCompletion35 = true) {
+              var event = _step35.value;
 
               if (event != null) {
                 var eventNodeId = event.nodeId;
@@ -2525,16 +2499,16 @@ var StudentDataService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError36 = true;
-            _iteratorError36 = err;
+            _didIteratorError35 = true;
+            _iteratorError35 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion36 && _iterator36.return) {
-                _iterator36.return();
+              if (!_iteratorNormalCompletion35 && _iterator35.return) {
+                _iterator35.return();
               }
             } finally {
-              if (_didIteratorError36) {
-                throw _iteratorError36;
+              if (_didIteratorError35) {
+                throw _iteratorError35;
               }
             }
           }
@@ -2630,13 +2604,13 @@ var StudentDataService = function () {
 
       if (this.ProjectService.isGroupNode(nodeId)) {
         var nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
-        var _iteratorNormalCompletion37 = true;
-        var _didIteratorError37 = false;
-        var _iteratorError37 = undefined;
+        var _iteratorNormalCompletion36 = true;
+        var _didIteratorError36 = false;
+        var _iteratorError36 = undefined;
 
         try {
-          for (var _iterator37 = nodeIds[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
-            var id = _step37.value;
+          for (var _iterator36 = nodeIds[Symbol.iterator](), _step36; !(_iteratorNormalCompletion36 = (_step36 = _iterator36.next()).done); _iteratorNormalCompletion36 = true) {
+            var id = _step36.value;
 
             var status = this.nodeStatuses[id];
             if (this.ProjectService.isGroupNode(id)) {
@@ -2673,16 +2647,16 @@ var StudentDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError37 = true;
-          _iteratorError37 = err;
+          _didIteratorError36 = true;
+          _iteratorError36 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion37 && _iterator37.return) {
-              _iterator37.return();
+            if (!_iteratorNormalCompletion36 && _iterator36.return) {
+              _iterator36.return();
             }
           } finally {
-            if (_didIteratorError37) {
-              throw _iteratorError37;
+            if (_didIteratorError36) {
+              throw _iteratorError36;
             }
           }
         }
@@ -2760,13 +2734,13 @@ var StudentDataService = function () {
           var nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
 
           if (nodeIds.length) {
-            var _iteratorNormalCompletion38 = true;
-            var _didIteratorError38 = false;
-            var _iteratorError38 = undefined;
+            var _iteratorNormalCompletion37 = true;
+            var _didIteratorError37 = false;
+            var _iteratorError37 = undefined;
 
             try {
-              for (var _iterator38 = nodeIds[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
-                var id = _step38.value;
+              for (var _iterator37 = nodeIds[Symbol.iterator](), _step37; !(_iteratorNormalCompletion37 = (_step37 = _iterator37.next()).done); _iteratorNormalCompletion37 = true) {
+                var id = _step37.value;
 
                 if (this.nodeStatuses[id] == null || !this.nodeStatuses[id].isVisible || !this.nodeStatuses[id].isCompleted) {
                   // the child is not visible or not completed so the group is not completed
@@ -2775,16 +2749,16 @@ var StudentDataService = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError38 = true;
-              _iteratorError38 = err;
+              _didIteratorError37 = true;
+              _iteratorError37 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion38 && _iterator38.return) {
-                  _iterator38.return();
+                if (!_iteratorNormalCompletion37 && _iterator37.return) {
+                  _iterator37.return();
                 }
               } finally {
-                if (_didIteratorError38) {
-                  throw _iteratorError38;
+                if (_didIteratorError37) {
+                  throw _iteratorError37;
                 }
               }
             }
@@ -2807,35 +2781,22 @@ var StudentDataService = function () {
            * so we will loop through all the components and check if they are
            * completed
            */
-          var _iteratorNormalCompletion39 = true;
-          var _didIteratorError39 = false;
-          var _iteratorError39 = undefined;
+          var _iteratorNormalCompletion38 = true;
+          var _didIteratorError38 = false;
+          var _iteratorError38 = undefined;
 
           try {
-            for (var _iterator39 = components[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
-              var _component = _step39.value;
+            for (var _iterator38 = components[Symbol.iterator](), _step38; !(_iteratorNormalCompletion38 = (_step38 = _iterator38.next()).done); _iteratorNormalCompletion38 = true) {
+              var _component = _step38.value;
 
               if (_component != null) {
                 var _componentId = _component.id;
                 var _componentType = _component.type;
-                var showPreviousWorkNodeId = _component.showPreviousWorkNodeId;
-                var showPreviousWorkComponentId = _component.showPreviousWorkComponentId;
 
                 var tempNodeId = nodeId;
                 var tempNode = _node;
                 var tempComponentId = _componentId;
                 var tempComponent = _component;
-
-                if (showPreviousWorkNodeId != null && showPreviousWorkComponentId != null) {
-                  /*
-                   * this is a show previous work component so we will check if the
-                   * previous component was completed
-                   */
-                  tempNodeId = showPreviousWorkNodeId;
-                  tempComponentId = showPreviousWorkComponentId;
-                  tempNode = this.ProjectService.getNodeById(tempNodeId);
-                  tempComponent = this.ProjectService.getComponentByNodeIdAndComponentId(tempNodeId, tempComponentId);
-                }
 
                 if (_componentType != null) {
                   try {
@@ -2867,16 +2828,16 @@ var StudentDataService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError39 = true;
-            _iteratorError39 = err;
+            _didIteratorError38 = true;
+            _iteratorError38 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion39 && _iterator39.return) {
-                _iterator39.return();
+              if (!_iteratorNormalCompletion38 && _iterator38.return) {
+                _iterator38.return();
               }
             } finally {
-              if (_didIteratorError39) {
-                throw _iteratorError39;
+              if (_didIteratorError38) {
+                throw _iteratorError38;
               }
             }
           }
@@ -3114,25 +3075,25 @@ var StudentDataService = function () {
 
       var nodeStates = this.getNodeStates();
       if (nodeStates != null) {
-        var _iteratorNormalCompletion40 = true;
-        var _didIteratorError40 = false;
-        var _iteratorError40 = undefined;
+        var _iteratorNormalCompletion39 = true;
+        var _didIteratorError39 = false;
+        var _iteratorError39 = undefined;
 
         try {
-          for (var _iterator40 = nodeStates[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
-            var nodeState = _step40.value;
+          for (var _iterator39 = nodeStates[Symbol.iterator](), _step39; !(_iteratorNormalCompletion39 = (_step39 = _iterator39.next()).done); _iteratorNormalCompletion39 = true) {
+            var nodeState = _step39.value;
 
             if (nodeState != null) {
               var nodeStateNodeId = nodeState.nodeId;
-              if (this.ProjectService.isPlanning(nodeStateNodeId) && nodeState.studentData != null) {
+              if (this.PlanningService.isPlanning(nodeStateNodeId) && nodeState.studentData != null) {
                 var nodes = nodeState.studentData.nodes;
-                var _iteratorNormalCompletion41 = true;
-                var _didIteratorError41 = false;
-                var _iteratorError41 = undefined;
+                var _iteratorNormalCompletion40 = true;
+                var _didIteratorError40 = false;
+                var _iteratorError40 = undefined;
 
                 try {
-                  for (var _iterator41 = nodes[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
-                    var node = _step41.value;
+                  for (var _iterator40 = nodes[Symbol.iterator](), _step40; !(_iteratorNormalCompletion40 = (_step40 = _iterator40.next()).done); _iteratorNormalCompletion40 = true) {
+                    var node = _step40.value;
 
                     var nodeId = node.id;
                     // regex to match the planning node id e.g. planningNode2
@@ -3161,16 +3122,16 @@ var StudentDataService = function () {
                     }
                   }
                 } catch (err) {
-                  _didIteratorError41 = true;
-                  _iteratorError41 = err;
+                  _didIteratorError40 = true;
+                  _iteratorError40 = err;
                 } finally {
                   try {
-                    if (!_iteratorNormalCompletion41 && _iterator41.return) {
-                      _iterator41.return();
+                    if (!_iteratorNormalCompletion40 && _iterator40.return) {
+                      _iterator40.return();
                     }
                   } finally {
-                    if (_didIteratorError41) {
-                      throw _iteratorError41;
+                    if (_didIteratorError40) {
+                      throw _iteratorError40;
                     }
                   }
                 }
@@ -3178,16 +3139,16 @@ var StudentDataService = function () {
             }
           }
         } catch (err) {
-          _didIteratorError40 = true;
-          _iteratorError40 = err;
+          _didIteratorError39 = true;
+          _iteratorError39 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion40 && _iterator40.return) {
-              _iterator40.return();
+            if (!_iteratorNormalCompletion39 && _iterator39.return) {
+              _iterator39.return();
             }
           } finally {
-            if (_didIteratorError40) {
-              throw _iteratorError40;
+            if (_didIteratorError39) {
+              throw _iteratorError39;
             }
           }
         }
@@ -3236,13 +3197,13 @@ var StudentDataService = function () {
           if (node != null) {
             var components = node.components;
             if (components != null) {
-              var _iteratorNormalCompletion42 = true;
-              var _didIteratorError42 = false;
-              var _iteratorError42 = undefined;
+              var _iteratorNormalCompletion41 = true;
+              var _didIteratorError41 = false;
+              var _iteratorError41 = undefined;
 
               try {
-                for (var _iterator42 = components[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
-                  var component = _step42.value;
+                for (var _iterator41 = components[Symbol.iterator](), _step41; !(_iteratorNormalCompletion41 = (_step41 = _iterator41.next()).done); _iteratorNormalCompletion41 = true) {
+                  var component = _step41.value;
 
                   if (component != null) {
                     var componentId = component.id;
@@ -3261,16 +3222,16 @@ var StudentDataService = function () {
                   }
                 }
               } catch (err) {
-                _didIteratorError42 = true;
-                _iteratorError42 = err;
+                _didIteratorError41 = true;
+                _iteratorError41 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion42 && _iterator42.return) {
-                    _iterator42.return();
+                  if (!_iteratorNormalCompletion41 && _iterator41.return) {
+                    _iterator41.return();
                   }
                 } finally {
-                  if (_didIteratorError42) {
-                    throw _iteratorError42;
+                  if (_didIteratorError41) {
+                    throw _iteratorError41;
                   }
                 }
               }
@@ -3316,13 +3277,13 @@ var StudentDataService = function () {
 
           var tempTimestamp = 0;
           var criteria = completionCriteria.criteria;
-          var _iteratorNormalCompletion43 = true;
-          var _didIteratorError43 = false;
-          var _iteratorError43 = undefined;
+          var _iteratorNormalCompletion42 = true;
+          var _didIteratorError42 = false;
+          var _iteratorError42 = undefined;
 
           try {
-            for (var _iterator43 = criteria[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
-              var completionCriterion = _step43.value;
+            for (var _iterator42 = criteria[Symbol.iterator](), _step42; !(_iteratorNormalCompletion42 = (_step42 = _iterator42.next()).done); _iteratorNormalCompletion42 = true) {
+              var completionCriterion = _step42.value;
 
               var tempResult = true;
               if (completionCriterion != null) {
@@ -3377,16 +3338,16 @@ var StudentDataService = function () {
               }
             }
           } catch (err) {
-            _didIteratorError43 = true;
-            _iteratorError43 = err;
+            _didIteratorError42 = true;
+            _iteratorError42 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion43 && _iterator43.return) {
-                _iterator43.return();
+              if (!_iteratorNormalCompletion42 && _iterator42.return) {
+                _iterator42.return();
               }
             } finally {
-              if (_didIteratorError43) {
-                throw _iteratorError43;
+              if (_didIteratorError42) {
+                throw _iteratorError42;
               }
             }
           }
@@ -3407,6 +3368,48 @@ var StudentDataService = function () {
     value: function getComponentStateSavedAfter(nodeId, componentId, timestamp) {
       var componentStates = this.studentData.componentStates;
       if (componentStates != null) {
+        var _iteratorNormalCompletion43 = true;
+        var _didIteratorError43 = false;
+        var _iteratorError43 = undefined;
+
+        try {
+          for (var _iterator43 = componentStates[Symbol.iterator](), _step43; !(_iteratorNormalCompletion43 = (_step43 = _iterator43.next()).done); _iteratorNormalCompletion43 = true) {
+            var tempComponentState = _step43.value;
+
+            if (tempComponentState != null && tempComponentState.serverSaveTime > timestamp && tempComponentState.nodeId === nodeId && tempComponentState.componentId === componentId) {
+              return tempComponentState;
+            }
+          }
+        } catch (err) {
+          _didIteratorError43 = true;
+          _iteratorError43 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion43 && _iterator43.return) {
+              _iterator43.return();
+            }
+          } finally {
+            if (_didIteratorError43) {
+              throw _iteratorError43;
+            }
+          }
+        }
+      }
+      return null;
+    }
+
+    /**
+     * Get the first submit component state after the given timestamp
+     * @param nodeId the node id of the component state
+     * @param componentId the component id of the component state
+     * @param timestamp look for a submit component state after this timestamp
+     */
+
+  }, {
+    key: 'getComponentStateSubmittedAfter',
+    value: function getComponentStateSubmittedAfter(nodeId, componentId, timestamp) {
+      var componentStates = this.studentData.componentStates;
+      if (componentStates != null) {
         var _iteratorNormalCompletion44 = true;
         var _didIteratorError44 = false;
         var _iteratorError44 = undefined;
@@ -3415,7 +3418,7 @@ var StudentDataService = function () {
           for (var _iterator44 = componentStates[Symbol.iterator](), _step44; !(_iteratorNormalCompletion44 = (_step44 = _iterator44.next()).done); _iteratorNormalCompletion44 = true) {
             var tempComponentState = _step44.value;
 
-            if (tempComponentState != null && tempComponentState.serverSaveTime > timestamp && tempComponentState.nodeId === nodeId && tempComponentState.componentId === componentId) {
+            if (tempComponentState != null && tempComponentState.serverSaveTime > timestamp && tempComponentState.nodeId === nodeId && tempComponentState.componentId === componentId && tempComponentState.isSubmit) {
               return tempComponentState;
             }
           }
@@ -3438,27 +3441,24 @@ var StudentDataService = function () {
     }
 
     /**
-     * Get the first submit component state after the given timestamp
-     * @param nodeId the node id of the component state
-     * @param componentId the component id of the component state
-     * @param timestamp look for a submit component state after this timestamp
+     * Get the first visit event after the timestamp
      */
 
   }, {
-    key: 'getComponentStateSubmittedAfter',
-    value: function getComponentStateSubmittedAfter(nodeId, componentId, timestamp) {
-      var componentStates = this.studentData.componentStates;
-      if (componentStates != null) {
+    key: 'getVisitEventAfter',
+    value: function getVisitEventAfter(nodeId, timestamp) {
+      var events = this.studentData.events;
+      if (events != null) {
         var _iteratorNormalCompletion45 = true;
         var _didIteratorError45 = false;
         var _iteratorError45 = undefined;
 
         try {
-          for (var _iterator45 = componentStates[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
-            var tempComponentState = _step45.value;
+          for (var _iterator45 = events[Symbol.iterator](), _step45; !(_iteratorNormalCompletion45 = (_step45 = _iterator45.next()).done); _iteratorNormalCompletion45 = true) {
+            var tempEvent = _step45.value;
 
-            if (tempComponentState != null && tempComponentState.serverSaveTime > timestamp && tempComponentState.nodeId === nodeId && tempComponentState.componentId === componentId && tempComponentState.isSubmit) {
-              return tempComponentState;
+            if (tempEvent != null && tempEvent.serverSaveTime > timestamp && tempEvent.nodeId === nodeId && tempEvent.event === 'nodeEntered') {
+              return tempEvent;
             }
           }
         } catch (err) {
@@ -3472,45 +3472,6 @@ var StudentDataService = function () {
           } finally {
             if (_didIteratorError45) {
               throw _iteratorError45;
-            }
-          }
-        }
-      }
-      return null;
-    }
-
-    /**
-     * Get the first visit event after the timestamp
-     */
-
-  }, {
-    key: 'getVisitEventAfter',
-    value: function getVisitEventAfter(nodeId, timestamp) {
-      var events = this.studentData.events;
-      if (events != null) {
-        var _iteratorNormalCompletion46 = true;
-        var _didIteratorError46 = false;
-        var _iteratorError46 = undefined;
-
-        try {
-          for (var _iterator46 = events[Symbol.iterator](), _step46; !(_iteratorNormalCompletion46 = (_step46 = _iterator46.next()).done); _iteratorNormalCompletion46 = true) {
-            var tempEvent = _step46.value;
-
-            if (tempEvent != null && tempEvent.serverSaveTime > timestamp && tempEvent.nodeId === nodeId && tempEvent.event === 'nodeEntered') {
-              return tempEvent;
-            }
-          }
-        } catch (err) {
-          _didIteratorError46 = true;
-          _iteratorError46 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion46 && _iterator46.return) {
-              _iterator46.return();
-            }
-          } finally {
-            if (_didIteratorError46) {
-              throw _iteratorError46;
             }
           }
         }
@@ -3562,6 +3523,35 @@ var StudentDataService = function () {
     }
 
     /**
+     * Get a student work from any student.
+     * @param id The student work id.
+     */
+
+  }, {
+    key: 'getStudentWorkById',
+    value: function getStudentWorkById(id) {
+      var studentDataURL = this.ConfigService.getConfigParam('studentDataURL');
+      var httpParams = {};
+      httpParams.method = 'GET';
+      httpParams.url = studentDataURL;
+      var params = {};
+      params.runId = this.ConfigService.getRunId();
+      params.id = id;
+      params.getStudentWork = true;
+      params.getEvents = false;
+      params.getAnnotations = false;
+      params.onlyGetLatest = true;
+      httpParams.params = params;
+      return this.$http(httpParams).then(function (result) {
+        var resultData = result.data;
+        if (resultData != null && resultData.studentWorkList.length > 0) {
+          return resultData.studentWorkList[0];
+        }
+        return null;
+      });
+    }
+
+    /**
      * Get the max possible score for the project
      * @returns the sum of the max scores for all the nodes in the project visible
      * to the current workgroup or null if none of the visible components has max scores.
@@ -3596,7 +3586,7 @@ var StudentDataService = function () {
   return StudentDataService;
 }();
 
-StudentDataService.$inject = ['$filter', '$http', '$injector', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'ProjectService', 'UtilService'];
+StudentDataService.$inject = ['$filter', '$http', '$injector', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'PlanningService', 'ProjectService', 'UtilService'];
 
 exports.default = StudentDataService;
 //# sourceMappingURL=studentDataService.js.map

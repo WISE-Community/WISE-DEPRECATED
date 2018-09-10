@@ -31,6 +31,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.Schoollevel;
 
@@ -38,7 +40,7 @@ import org.wise.portal.domain.authentication.Schoollevel;
  * Implementation class of <code>MutableUserDetails</code> that uses an EJB3
  * compliant object persistence mechanism.
  *
- * UserDetails for a teacher in WISE Portal
+ * UserDetails for a teacher in WISE
  *
  * @author Hiroki Terashima
  */
@@ -95,167 +97,80 @@ public class TeacherUserDetails extends PersistentUserDetails implements Mutable
   private static final long serialVersionUID = 1L;
 
   @Column(name = TeacherUserDetails.COLUMN_NAME_FIRSTNAME, nullable = false)
+  @Getter
+  @Setter
   private String firstname;
 
   @Column(name = TeacherUserDetails.COLUMN_NAME_LASTNAME, nullable = false)
+  @Getter
+  @Setter
   private String lastname;
 
   @Column(name = TeacherUserDetails.COLUMN_NAME_SIGNUPDATE, nullable = false)
+  @Getter
+  @Setter
   private Date signupdate;
 
   @Column(name = TeacherUserDetails.COLUMN_NAME_CITY)
+  @Getter
+  @Setter
   private String city;
 
   @Column(name = TeacherUserDetails.COLUMN_NAME_STATE)
+  @Getter
+  @Setter
   private String state;
 
   @Column(name = TeacherUserDetails.COLUMN_NAME_COUNTRY, nullable = false)
+  @Getter
+  @Setter
   private String country;
 
   @Column(name = TeacherUserDetails.COLUMN_NAME_SCHOOLNAME, nullable = false)
+  @Getter
+  @Setter
   private String schoolname;
 
   @Column(name = TeacherUserDetails.COLUMN_NAME_CURRICULUMSUBJECTS)
+  @Getter
+  @Setter
   private String[] curriculumsubjects;
 
   @Column(name = TeacherUserDetails.COLUMN_NAME_SCHOOLLEVEL, nullable = false)
+  @Getter
+  @Setter
   private Schoollevel schoollevel;
 
   @Column(name = TeacherUserDetails.COLUMN_NAME_NUMBEROFLOGINS, nullable = false)
+  @Getter
+  @Setter
   private Integer numberOfLogins;
 
   @Column(name = TeacherUserDetails.COLUMN_NAME_LASTLOGINTIME)
+  @Getter
+  @Setter
   private Date lastLoginTime;
 
   @Column(name = TeacherUserDetails.COMUN_NAME_DISPLAYNAME)
+  @Getter
+  @Setter
   private String displayname;
 
   @Column(name = TeacherUserDetails.COMUN_NAME_EMAILVALID, nullable=false)
   private boolean emailValid = true;
 
   @Column(name = TeacherUserDetails.COLUMN_NAME_HOW_HEAR)
+  @Getter
+  @Setter
   private String howDidYouHearAboutUs;
 
-  /**
-   * @return the firstname
-   */
-  public String getFirstname() {
-    return firstname;
-  }
-  /**
-   * @param firstname the firstname to set
-   */
-  public void setFirstname(String firstname) {
-    this.firstname = firstname;
-  }
-  /**
-   * @return the lastname
-   */
-  public String getLastname() {
-    return lastname;
-  }
-  /**
-   * @param lastname the lastname to set
-   */
-  public void setLastname(String lastname) {
-    this.lastname = lastname;
-  }
-  /**
-   * @return the signupdate
-   */
-  public Date getSignupdate() {
-    return signupdate;
-  }
-  /**
-   * @param signupdate the signupdate to set
-   */
-  public void setSignupdate(Date signupdate) {
-    this.signupdate = signupdate;
-  }
-  /**
-   * @return the city
-   */
-  public String getCity() {
-    return city;
-  }
-  /**
-   * @param city the city to set
-   */
-  public void setCity(String city) {
-    this.city = city;
-  }
-  /**
-   * @return the country
-   */
-  public String getCountry() {
-    return country;
-  }
-  /**
-   * @param country the country to set
-   */
-  public void setCountry(String country) {
-    this.country = country;
-  }
-  /**
-   * @return the curriculumsubjects
-   */
-  public String[] getCurriculumsubjects() {
-    return curriculumsubjects;
-  }
-  /**
-   * @param curriculumsubjects the curriculumsubjects to set
-   */
-  public void setCurriculumsubjects(String[] curriculumsubjects) {
-    this.curriculumsubjects = curriculumsubjects;
-  }
-  /**
-   * @return the schoollevel
-   */
-  public Schoollevel getSchoollevel() {
-    return schoollevel;
-  }
-  /**
-   * @param schoollevel the schoollevel to set
-   */
-  public void setSchoollevel(Schoollevel schoollevel) {
-    this.schoollevel = schoollevel;
-  }
-  /**
-   * @return the schoolname
-   */
-  public String getSchoolname() {
-    return schoolname;
-  }
-  /**
-   * @param schoolname the schoolname to set
-   */
-  public void setSchoolname(String schoolname) {
-    this.schoolname = schoolname;
-  }
-  /**
-   * @return the state
-   */
-  public String getState() {
-    return state;
-  }
-  /**
-   * @param state the state to set
-   */
-  public void setState(String state) {
-    this.state = state;
-  }
-  /**
-   * @see org.wise.portal.domain.authenticationMutableUserDetails.getCoreUsername()
-   */
   public String getCoreUsername() {
     // firstname + lastname, but make sure it's alphanumeric
     String username = firstname + lastname;
     username = username.replaceAll("[^a-zA-Z0-9]", "");
     return username;
   }
-  /**
-   * @see org.wise.portal.domain.authenticationMutableUserDetails.getUsernameSuffixes()
-   */
+
   public String[] getUsernameSuffixes() {
     return new String[] {"", "1", "2", "3", "4", "5", "6", "7", "8",
       "9", "10", "11", "12", "13", "14", "15", "16"};
@@ -270,11 +185,10 @@ public class TeacherUserDetails extends PersistentUserDetails implements Mutable
    */
   public String getNextUsernameSuffix(String currentUsernameSuffix) {
     String nextUsernameSuffix = "";
-
-    if(currentUsernameSuffix == null) {
+    if (currentUsernameSuffix == null) {
       //empty suffix string
       nextUsernameSuffix = "";
-    } else if("".equals(currentUsernameSuffix)) {
+    } else if ("".equals(currentUsernameSuffix)) {
       //if the previous was "" we will now return an integer
       nextUsernameSuffix = "1";
     } else {
@@ -285,39 +199,15 @@ public class TeacherUserDetails extends PersistentUserDetails implements Mutable
         e.printStackTrace();
       }
     }
-
     return nextUsernameSuffix;
   }
 
-  public Integer getNumberOfLogins() {
-    return this.numberOfLogins;
-  }
-
-  public void setNumberOfLogins(Integer numberOfLogins) {
-    this.numberOfLogins = numberOfLogins;
-  }
-  /**
-   * @return the lastLoginTime
-   */
-  public Date getLastLoginTime() {
-    return lastLoginTime;
-  }
-  /**
-   * @param lastLoginTime the lastLoginTime to set
-   */
-  public void setLastLoginTime(Date lastLoginTime) {
-    this.lastLoginTime = lastLoginTime;
-  }
-  /**
-   * @override @see org.wise.portal.domain.authentication.MutableUserDetails#incrementNumberOfLogins()
-   */
+  @Override
   public void incrementNumberOfLogins() {
     this.numberOfLogins++;
   }
 
-  /**
-   * @override @see org.wise.portal.domain.authentication.MutableUserDetails#getInfo()
-   */
+  @Override
   public HashMap<String, Object> getInfo() {
     HashMap<String, Object> infoMap = new HashMap<String, Object>();
     infoMap.put("ID", this.getId());
@@ -331,7 +221,7 @@ public class TeacherUserDetails extends PersistentUserDetails implements Mutable
     infoMap.put("School Level", this.getSchoollevel().toString());
     String subjects = "";
     if (curriculumsubjects != null) {
-      for(String s:curriculumsubjects) {
+      for (String s:curriculumsubjects) {
         subjects = subjects + s + " ";
       }
     }
@@ -346,45 +236,11 @@ public class TeacherUserDetails extends PersistentUserDetails implements Mutable
     return infoMap;
   }
 
-  /**
-   * @return the displayname
-   */
-  public String getDisplayname() {
-    return displayname;
-  }
-
-  /**
-   * @param displayname the displayname to set
-   */
-  public void setDisplayname(String displayname) {
-    this.displayname = displayname;
-  }
-  /**
-   * @return the emailValid
-   */
   public boolean isEmailValid() {
     return emailValid;
   }
-  /**
-   * @param emailValid the emailValid to set
-   */
+
   public void setEmailValid(boolean emailValid) {
     this.emailValid = emailValid;
-  }
-
-  /**
-   * Get the how the teacher heard about us
-   * @return
-   */
-  public String getHowDidYouHearAboutUs() {
-    return howDidYouHearAboutUs;
-  }
-
-  /**
-   * Set how the teacher heard about us
-   * @param howDidYouHearAboutUs
-   */
-  public void setHowDidYouHearAboutUs(String howDidYouHearAboutUs) {
-    this.howDidYouHearAboutUs = howDidYouHearAboutUs;
   }
 }

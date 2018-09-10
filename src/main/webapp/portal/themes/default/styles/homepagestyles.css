@@ -258,13 +258,13 @@ div.projectLink a {
 /* Tiny Carousel Styles (Project Showcase - In-subject Scrolling) */
 
 .tinycarousel { height: 200px; overflow:hidden; }
-.tinycarousel .viewport { float: left; width: 329px; height: 200px; overflow: hidden; position: relative; border-right:1px solid #d6c6af;}
+.tinycarousel .viewport { float: left; width: 460px; height: 200px; overflow: hidden; position: relative; border-right:1px solid #d6c6af;}
 .tinycarousel .buttons { display: block; margin: 0; position:absolute; right:10px; text-decoration:none !important; font-size:1.25em; }
 .tinycarousel .next {bottom:8px;}
 .tinycarousel .prev {top:8px;}
 .tinycarousel .disable { color:#ddd !important; }
 .tinycarousel .overview { list-style: none; padding: 0; margin: 0;  position: absolute; left: 0; top: 0; }
-.tinycarousel .overview li{ margin: 0; padding: 0; height: 200px; width: 329px; overflow:hidden; position:relative; }
+.tinycarousel .overview li{ margin: 0; padding: 0; height: 200px; width: 460px; overflow:hidden; position:relative; }
 
 .tinycarousel .pager { overflow: hidden; list-style: none; margin: 2px 0; width: 20px; position: absolute; top: 30px; bottom: 30px; right: 9px; }
 .tinycarousel .pager li {  }

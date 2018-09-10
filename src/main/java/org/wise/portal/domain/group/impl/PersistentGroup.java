@@ -38,13 +38,15 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 
 /**
- * This implementation of group
+ * WISE implementation of group
  *
  * @author Cynick Young
  */
@@ -75,28 +77,35 @@ public class PersistentGroup implements Group {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
+  @Getter
+  @Setter
   private Long id = null;
 
   @Version
   @Column(name = "OPTLOCK")
+  @Getter
+  @Setter
   private Integer version = null;
 
   // TODO: why is the EAGER fetched?
   @ManyToMany(targetEntity = UserImpl.class, fetch = FetchType.EAGER)
   @JoinTable(name = USERS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = GROUPS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = USERS_JOIN_COLUMN_NAME, nullable = false))
+  @Getter
+  @Setter
   private Set<User> members = new HashSet<User>();
 
   @Column(name = PersistentGroup.COLUMN_NAME_NAME, nullable = false)
+  @Getter
+  @Setter
   private String name;
 
   @ManyToOne(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @Cascade( { org.hibernate.annotations.CascadeType.SAVE_UPDATE })
   @JoinColumn(name = COLUMN_NAME_PARENT_FK)
+  @Getter
+  @Setter
   private Group parent;
 
-  /**
-   * @see org.wise.portal.domain.group.Group#addMember(org.wise.portal.domain.user.User)
-   */
   public void addMember(User member) {
     // TODO: LW & HT DISCUSS: WHY IS THIS IF CASE NEEDED? IT'S USING A SET
     if (this.members.contains(member)) {
@@ -105,91 +114,10 @@ public class PersistentGroup implements Group {
     this.members.add(member);
   }
 
-  /**
-   * @see org.wise.portal.domain.group.Group#removeMember(org.wise.portal.domain.user.User)
-   */
   public void removeMember(User member) {
     this.members.remove(member);
   }
 
-  /**
-   * @see org.wise.portal.domain.group.Group#getMembers()
-   */
-  public Set<User> getMembers() {
-    return this.members;
-  }
-
-  /**
-   * @see org.wise.portal.domain.group.Group#setMembers(java.util.Set)
-   */
-  public void setMembers(Set<User> members) {
-    this.members = members;
-  }
-
-  /**
-   * @see org.wise.portal.domain.group.Group#getId()
-   */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * @param id
-   *            the id to set
-   */
-  @SuppressWarnings("unused")
-  private void setId(Long id) {
-    this.id = id;
-  }
-
-  /**
-   * @return the version
-   */
-  @SuppressWarnings("unused")
-  private Integer getVersion() {
-    return version;
-  }
-
-  /**
-   * @param version
-   *            the version to set
-   */
-  @SuppressWarnings("unused")
-  private void setVersion(Integer version) {
-    this.version = version;
-  }
-
-  /**
-   * @see org.wise.portal.domain.group.Group#getName()
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * @see org.wise.portal.domain.group.Group#setName(java.lang.String)
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  /**
-   * @see org.wise.portal.domain.group.Group#getParent()
-   */
-  public Group getParent() {
-    return parent;
-  }
-
-  /**
-   * @see org.wise.portal.domain.group.Group#setParent(org.wise.portal.domain.group.Group)
-   */
-  public void setParent(Group parent) {
-    this.parent = parent;
-  }
-
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     final int PRIME = 31;
@@ -199,9 +127,6 @@ public class PersistentGroup implements Group {
     return result;
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)

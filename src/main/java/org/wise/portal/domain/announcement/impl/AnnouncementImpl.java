@@ -33,6 +33,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.portal.domain.announcement.Announcement;
 
 /**
@@ -43,7 +45,9 @@ import org.wise.portal.domain.announcement.Announcement;
  */
 @Entity
 @Table(name = "announcements")
-public class AnnouncementImpl implements Announcement, Comparable<Announcement>{
+@Getter
+@Setter
+public class AnnouncementImpl implements Announcement, Comparable<Announcement> {
 
   @Transient
   private final static String COLUMN_NAME_TITLE = "title";
@@ -70,62 +74,6 @@ public class AnnouncementImpl implements Announcement, Comparable<Announcement>{
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id", columnDefinition = "int")
   private Integer id;
-
-  /**
-   * @return the title
-   */
-  public String getTitle() {
-    return title;
-  }
-
-  /**
-   * @param title the title to set
-   */
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  /**
-   * @return the timestamp
-   */
-  public Date getTimestamp() {
-    return timestamp;
-  }
-
-  /**
-   * @param timestamp the timestamp to set
-   */
-  public void setTimestamp(Date timestamp) {
-    this.timestamp = timestamp;
-  }
-
-  /**
-   * @return the announcement
-   */
-  public String getAnnouncement() {
-    return announcement;
-  }
-
-  /**
-   * @param announcement the announcement to set
-   */
-  public void setAnnouncement(String announcement) {
-    this.announcement = announcement;
-  }
-
-  /**
-   * @return the id
-   */
-  public Integer getId() {
-    return id;
-  }
-
-  /**
-   * @param id the id to set
-   */
-  public void setId(Integer id) {
-    this.id = id;
-  }
 
   public int compareTo(Announcement announcement){
     return announcement.getId().compareTo(this.getId());

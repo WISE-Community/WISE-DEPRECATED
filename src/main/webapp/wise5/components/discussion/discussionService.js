@@ -6,9 +6,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nodeService = require('../../services/nodeService');
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _nodeService2 = _interopRequireDefault(_nodeService);
+var _componentService = require('../componentService');
+
+var _componentService2 = _interopRequireDefault(_componentService);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -18,25 +20,19 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var DiscussionService = function (_NodeService) {
-  _inherits(DiscussionService, _NodeService);
+var DiscussionService = function (_ComponentService) {
+  _inherits(DiscussionService, _ComponentService);
 
   function DiscussionService($filter, $http, $rootScope, $q, $injector, ConfigService, StudentDataService, UtilService) {
     _classCallCheck(this, DiscussionService);
 
-    var _this = _possibleConstructorReturn(this, (DiscussionService.__proto__ || Object.getPrototypeOf(DiscussionService)).call(this));
+    var _this = _possibleConstructorReturn(this, (DiscussionService.__proto__ || Object.getPrototypeOf(DiscussionService)).call(this, $filter, StudentDataService, UtilService));
 
-    _this.$filter = $filter;
     _this.$http = $http;
     _this.$rootScope = $rootScope;
     _this.$q = $q;
     _this.$injector = $injector;
     _this.ConfigService = ConfigService;
-    _this.StudentDataService = StudentDataService;
-    _this.UtilService = UtilService;
-
-    _this.$translate = _this.$filter('translate');
-
     if (_this.ConfigService != null && _this.ConfigService.getMode() == 'classroomMonitor') {
       // in the classroom monitor, we need access to the TeacherDataService so it can retrieve posts and replies for all students
       _this.TeacherDataService = _this.$injector.get('TeacherDataService');
@@ -44,52 +40,19 @@ var DiscussionService = function (_NodeService) {
     return _this;
   }
 
-  /**
-   * Get the component type label
-   * example
-   * "Discussion"
-   */
-
-
   _createClass(DiscussionService, [{
     key: 'getComponentTypeLabel',
     value: function getComponentTypeLabel() {
       return this.$translate('discussion.componentTypeLabel');
     }
-
-    /**
-     * Create a Discussion component object
-     * @returns a new Discussion component object
-     */
-
   }, {
     key: 'createComponent',
     value: function createComponent() {
-      var component = {};
-      component.id = this.UtilService.generateKey();
+      var component = _get(DiscussionService.prototype.__proto__ || Object.getPrototypeOf(DiscussionService.prototype), 'createComponent', this).call(this);
       component.type = 'Discussion';
       component.prompt = this.$translate('ENTER_PROMPT_HERE');
-      component.showSaveButton = false;
-      component.showSubmitButton = false;
       component.isStudentAttachmentEnabled = true;
       component.gateClassmateResponses = true;
-      return component;
-    }
-
-    /**
-     * Copies an existing Discussion component object
-     * @returns a copied Discussion component object
-     */
-
-  }, {
-    key: 'copyComponent',
-    value: function copyComponent(componentToCopy) {
-      var component = this.createComponent();
-      component.prompt = componentToCopy.prompt;
-      component.showSaveButton = componentToCopy.showSaveButton;
-      component.showSubmitButton = componentToCopy.showSubmitButton;
-      component.isStudentAttachmentEnabled = componentToCopy.isStudentAttachmentEnabled;
-      component.gateClassmateResponses = componentToCopy.gateClassmateResponses;
       return component;
     }
   }, {
@@ -139,47 +102,110 @@ var DiscussionService = function (_NodeService) {
     }
   }, {
     key: 'isCompleted',
-
-
-    /**
-     * Check if the component was completed
-     * @param component the component object
-     * @param componentStates the component states for the specific component
-     * @param componentEvents the events for the specific component
-     * @param nodeEvents the events for the parent node of the component
-     * @returns whether the component was completed
-     */
     value: function isCompleted(component, componentStates, componentEvents, nodeEvents) {
-      var result = false;
+      if (this.hasShowWorkConnectedComponentThatHasWork(component)) {
+        if (this.hasNodeEnteredEvent(nodeEvents)) {
+          return true;
+        }
+      } else {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-      if (componentStates != null) {
+        try {
+          for (var _iterator = componentStates[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var componentState = _step.value;
 
-        // loop through all the component states
-        for (var c = 0; c < componentStates.length; c++) {
-
-          // the component state
-          var componentState = componentStates[c];
-
-          // get the student data from the component state
-          var studentData = componentState.studentData;
-
-          if (studentData != null) {
-            var response = studentData.response;
-
-            if (response != null) {
-              // there is a response so the component is completed
-              result = true;
-              break;
+            if (componentState.studentData.response != null) {
+              return true;
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
             }
           }
         }
       }
-
-      return result;
+      return false;
     }
   }, {
-    key: 'getPostsAssociatedWithWorkgroupId',
+    key: 'hasShowWorkConnectedComponentThatHasWork',
+    value: function hasShowWorkConnectedComponentThatHasWork(componentContent) {
+      var connectedComponents = componentContent.connectedComponents;
+      if (connectedComponents != null) {
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
 
+        try {
+          for (var _iterator2 = connectedComponents[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var connectedComponent = _step2.value;
+
+            if (connectedComponent.type == 'showWork') {
+              var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
+              if (componentStates.length > 0) {
+                return true;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
+      }
+      return false;
+    }
+  }, {
+    key: 'hasNodeEnteredEvent',
+    value: function hasNodeEnteredEvent(nodeEvents) {
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
+
+      try {
+        for (var _iterator3 = nodeEvents[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var nodeEvent = _step3.value;
+
+          if (nodeEvent.event == 'nodeEntered') {
+            return true;
+          }
+        }
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
+
+      return false;
+    }
 
     /**
      * Get all the posts associated with a workgroup id. This will
@@ -191,6 +217,9 @@ var DiscussionService = function (_NodeService) {
      * top level posts and replies that are associated with the
      * workgroup
      */
+
+  }, {
+    key: 'getPostsAssociatedWithWorkgroupId',
     value: function getPostsAssociatedWithWorkgroupId(componentId, workgroupId) {
       var allPosts = [];
 
@@ -290,52 +319,15 @@ var DiscussionService = function (_NodeService) {
       return postAndAllReplies;
     }
   }, {
-    key: 'componentHasWork',
-
-
-    /**
-     * Whether this component generates student work
-     * @param component (optional) the component object. if the component object
-     * is not provided, we will use the default value of whether the
-     * component type usually has work.
-     * @return whether this component generates student work
-     */
-    value: function componentHasWork(component) {
-      return true;
-    }
-
-    /**
-     * Whether this component uses a save button
-     * @return whether this component uses a save button
-     */
-
-  }, {
     key: 'componentUsesSaveButton',
     value: function componentUsesSaveButton() {
       return false;
     }
-
-    /**
-     * Whether this component uses a submit button
-     * @return whether this component uses a submit button
-     */
-
   }, {
     key: 'componentUsesSubmitButton',
     value: function componentUsesSubmitButton() {
       return false;
     }
-
-    /**
-     * Check if the component state has student work. Sometimes a component
-     * state may be created if the student visits a component but doesn't
-     * actually perform any work. This is where we will check if the student
-     * actually performed any work.
-     * @param componentState the component state object
-     * @param componentContent the component content
-     * @return whether the component state has any work
-     */
-
   }, {
     key: 'componentStateHasStudentWork',
     value: function componentStateHasStudentWork(componentState, componentContent) {
@@ -391,7 +383,7 @@ var DiscussionService = function (_NodeService) {
   }]);
 
   return DiscussionService;
-}(_nodeService2.default);
+}(_componentService2.default);
 
 DiscussionService.$inject = ['$filter', '$http', '$rootScope', '$q', '$injector', 'ConfigService', 'StudentDataService', 'UtilService'];
 

@@ -14,48 +14,52 @@ import 'lib/angular-toArrayFilter/toArrayFilter';
 import 'angular-translate';
 import 'angular-translate-loader-partial';
 import 'angular-websocket';
-import '../components/animation/animationComponentModule';
+import '../components/animation/animationAuthoringComponentModule';
 import AnnotationService from '../services/annotationService';
-import '../components/audioOscillator/audioOscillatorComponentModule';
+import '../components/audioOscillator/audioOscillatorAuthoringComponentModule';
 import './components/authoringToolComponents';
 import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
 import AuthoringToolNewProjectController from './main/authoringToolNewProjectController';
+import AuthoringToolProjectService from './authoringToolProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
 import AuthorWebSocketService from '../services/authorWebSocketService';
-import '../components/conceptMap/conceptMapComponentModule';
+import '../components/conceptMap/conceptMapAuthoringComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import '../directives/components';
-import '../components/discussion/discussionComponentModule';
-import '../components/draw/drawComponentModule';
-import '../components/embedded/embeddedComponentModule';
+import ComponentService from '../components/componentService';
+import '../components/discussion/discussionAuthoringComponentModule';
+import '../components/draw/drawAuthoringComponentModule';
+import '../components/embedded/embeddedAuthoringComponentModule';
 import '../filters/filters';
 import '../lib/highcharts@4.2.1';
-import '../components/graph/graphComponentModule';
-import '../components/html/htmlComponentModule';
-import '../components/label/labelComponentModule';
-import '../components/match/matchComponentModule';
-import '../components/multipleChoice/multipleChoiceComponentModule';
+import '../components/graph/graphAuthoringComponentModule';
+import '../components/html/htmlAuthoringComponentModule';
+import '../components/label/labelAuthoringComponentModule';
+import '../components/match/matchAuthoringComponentModule';
+import '../components/multipleChoice/multipleChoiceAuthoringComponentModule';
 import NodeAuthoringController from './node/nodeAuthoringController';
 import NodeService from '../services/nodeService';
 import '../directives/notebook/notebook';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
-import '../components/openResponse/openResponseComponentModule';
-import '../components/outsideURL/outsideURLComponentModule';
+import '../components/openResponse/openResponseAuthoringComponentModule';
+import '../components/outsideURL/outsideURLAuthoringComponentModule';
 import ProjectAssetController from './asset/projectAssetController';
 import ProjectAssetService from '../services/projectAssetService';
 import ProjectController from './project/projectController';
 import ProjectHistoryController from './history/projectHistoryController';
 import ProjectInfoController from './info/projectInfoController';
+import PlanningService from '../services/planningService';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
+import SpaceService from '../services/spaceService';
 import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
-import '../components/table/tableComponentModule';
+import '../components/table/tableAuthoringComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
@@ -64,25 +68,25 @@ import WISELinkAuthoringController from './wiseLink/wiseLinkAuthoringController'
 import 'lib/angular-summernote/dist/angular-summernote.min';
 import moment from 'moment';
 
-let authoringModule = angular.module('authoring', [
+const authoringModule = angular.module('authoring', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
-    'animationComponentModule',
-    'audioOscillatorComponentModule',
+    'animationAuthoringComponentModule',
+    'audioOscillatorAuthoringComponentModule',
     'authoringTool.components',
     'components',
-    'conceptMapComponentModule',
-    'discussionComponentModule',
-    'drawComponentModule',
-    'embeddedComponentModule',
+    'conceptMapAuthoringComponentModule',
+    'discussionAuthoringComponentModule',
+    'drawAuthoringComponentModule',
+    'embeddedAuthoringComponentModule',
     'filters',
-    'graphComponentModule',
+    'graphAuthoringComponentModule',
     'highcharts-ng',
     'htmlComponentModule',
-    'labelComponentModule',
-    'matchComponentModule',
-    'multipleChoiceComponentModule',
+    'labelAuthoringComponentModule',
+    'matchAuthoringComponentModule',
+    'multipleChoiceAuthoringComponentModule',
     'ngAnimate',
     'ngAria',
     'ngFileUpload',
@@ -90,23 +94,26 @@ let authoringModule = angular.module('authoring', [
     'ngSanitize',
     'ngWebSocket',
     'notebook',
-    'openResponseComponentModule',
-    'outsideURLComponentModule',
+    'openResponseAuthoringComponentModule',
+    'outsideURLAuthoringComponentModule',
     'pascalprecht.translate',
     'summernote',
-    'tableComponentModule',
+    'tableAuthoringComponentModule',
     'ui.router'
     ])
     .service(AnnotationService.name, AnnotationService)
     .service(AuthorWebSocketService.name, AuthorWebSocketService)
+    .service(ComponentService.name, ComponentService)
     .service(ConfigService.name, ConfigService)
     .service(CRaterService.name, CRaterService)
     .service(NodeService.name, NodeService)
     .service(NotebookService.name, NotebookService)
     .service(NotificationService.name, NotificationService)
-    .service(ProjectService.name, ProjectService)
+    .service(PlanningService.name, PlanningService)
+    .service(ProjectService.name, AuthoringToolProjectService)
     .service(ProjectAssetService.name, ProjectAssetService)
     .service(SessionService.name, SessionService)
+    .service(SpaceService.name, SpaceService)
     .service(StudentAssetService.name, StudentAssetService)
     .service(StudentDataService.name, StudentDataService)
     .service(StudentStatusService.name, StudentStatusService)
@@ -212,6 +219,20 @@ let authoringModule = angular.module('authoring', [
           })
           .state('root.project.node', {
             url: '/node/:nodeId',
+            templateUrl: 'wise5/authoringTool/node/node.html',
+            controller: 'NodeAuthoringController',
+            controllerAs: 'nodeAuthoringController',
+            resolve: {}
+          })
+          .state('root.project.nodeConstraints', {
+            url: '/node/constraints/:nodeId',
+            templateUrl: 'wise5/authoringTool/node/node.html',
+            controller: 'NodeAuthoringController',
+            controllerAs: 'nodeAuthoringController',
+            resolve: {}
+          })
+          .state('root.project.nodeEditPaths', {
+            url: '/node/editpaths/:nodeId',
             templateUrl: 'wise5/authoringTool/node/node.html',
             controller: 'NodeAuthoringController',
             controllerAs: 'nodeAuthoringController',

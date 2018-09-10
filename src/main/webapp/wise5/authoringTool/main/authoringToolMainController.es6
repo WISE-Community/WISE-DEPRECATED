@@ -5,29 +5,33 @@ class AuthoringToolMainController {
   constructor(
       $anchorScroll,
       $filter,
+      $mdDialog,
       $rootScope,
       $state,
       $timeout,
       ConfigService,
       ProjectService,
-      TeacherDataService) {
+      TeacherDataService,
+      UtilService) {
     this.$anchorScroll = $anchorScroll;
     this.$filter = $filter;
+    this.$mdDialog = $mdDialog;
     this.$rootScope = $rootScope;
     this.$state = $state;
     this.$timeout = $timeout;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
     this.TeacherDataService = TeacherDataService;
+    this.UtilService = UtilService;
 
     this.$translate = this.$filter('translate');
     this.projects = this.ConfigService.getConfigParam('projects');
     this.sharedProjects = this.ConfigService.getConfigParam('sharedProjects');
     this.showCreateProjectView = false;
+    this.inProcessOfCreatingProject = false;
+    this.showCreatingProjectMessage = false;
+    this.showErrorCreatingProjectMessage = false;
 
-    this.$rootScope.$on('goHome', () => {
-      this.saveEvent('goToTeacherHome', 'Navigation', null, null);
-    });
     this.$rootScope.$on('logOut', () => {
       this.saveEvent('logOut', 'Navigation', null, null);
     });
@@ -78,6 +82,7 @@ class AuthoringToolMainController {
         '\n\n' + projectInfo;
     if (confirm(doCopyConfirmMessage)) {
       this.ProjectService.copyProject(projectId).then((projectId) => {
+        this.showCopyingProjectMessage();
         this.saveEvent('projectCopied', 'Authoring', null, projectId);
 
         // refresh the project list and highlight the newly copied project
@@ -86,13 +91,37 @@ class AuthoringToolMainController {
           this.scrollToTopOfPage();
           // the timeout is necessary for new element to appear on the page
           this.$timeout(() => {
-            let newProjectElement = $('#' + projectId);
             let highlightDuration = 3000;
-            this.highlightElement(newProjectElement, highlightDuration);
+            this.UtilService.temporarilyHighlightElement(projectId, highlightDuration);
           });
+          this.$mdDialog.hide();
         });
       });
     }
+  }
+
+  showCopyingProjectMessage() {
+    this.showMessageInModalDialog(this.$translate('copyingProject'));
+  }
+
+  showLoadingProjectMessage() {
+    this.showMessageInModalDialog(this.$translate('loadingProject'));
+  }
+
+  showMessageInModalDialog(message) {
+    this.$mdDialog.show({
+      template: `
+        <div align="center">
+          <div style="width: 200px; height: 100px; margin: 20px;">
+            <span>${message}...</span>
+            <br/>
+            <br/>
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          </div>
+        </div>
+      `,
+      clickOutsideToClose: false
+    });
   }
 
   createNewProjectButtonClicked() {
@@ -109,43 +138,6 @@ class AuthoringToolMainController {
   }
 
   /**
-   * Highlights the specified element in yellow for specified duration, used
-   * to draw user's attention to new changes.
-   * @param componentElement DOM element to highlight
-   * @param duration Number how long (in ms) to highlight
-   */
-  highlightElement(componentElement, duration) {
-    let originalBackgroundColor = componentElement.css('backgroundColor');
-    componentElement.css('background-color', '#FFFF9C');
-
-    /*
-     * Use a timeout before starting to transition back to
-     * the original background color. For some reason the
-     * element won't get highlighted in the first place
-     * unless this timeout is used.
-     */
-    this.$timeout(() => {
-      // slowly fade back to original background color
-      componentElement.css({
-        'transition': 'background-color 3s ease-in-out',
-        'background-color': originalBackgroundColor
-      });
-
-      /*
-       * remove these styling fields after we perform
-       * the fade otherwise the regular mouseover
-       * background color change will not work
-       */
-      this.$timeout(() => {
-        componentElement.css({
-          'transition': '',
-          'background-color': ''
-        });
-      }, duration);
-    });
-  }
-
-  /**
    * Create a new project and open it
    */
   registerNewProject() {
@@ -153,22 +145,98 @@ class AuthoringToolMainController {
     if (projectTitle == null || projectTitle == '') {
       alert(this.$translate('pleaseEnterAProjectTitleForYourNewProject'));
     } else {
-      let projectJSONString = angular.toJson(this.project, 4);
-      let commitMessage =
-          this.$translate('projectCreatedOn') + new Date().getTime();
-      this.ProjectService.registerNewProject(projectJSONString, commitMessage)
-          .then((projectId) => {
-        this.showCreateProjectView = false;
-        this.saveEvent('projectCreated', 'Authoring', null, projectId);
-        this.$state.go('root.project', {projectId: projectId});
-      });
+      /*
+       * Make sure we are not already in the process of creating a project.
+       * This is used to make sure the author does not inadvertently click
+       * the register button twice which can lead to problems in the back
+       * end.
+       */
+      if (!this.isInProcessOfCreatingProject()) {
+        this.turnOnInProcessOfCreatingProject();
+        this.turnOnCreatingProjectMessage();
+        this.startErrorCreatingProjectTimeout();
+        let projectJSONString = angular.toJson(this.project, 4);
+        let commitMessage =
+            this.$translate('projectCreatedOn') + new Date().getTime();
+        this.ProjectService.registerNewProject(projectJSONString, commitMessage)
+            .then((projectId) => {
+              this.cancelErrorCreatingProjectTimeout();
+              this.saveEvent('projectCreated', 'Authoring', null, projectId);
+              this.$state.go('root.project', {projectId: projectId});
+            }).catch(() => {
+              this.turnOffInProcessOfCreatingProject();
+              this.turnOnErrorCreatingProjectMessage();
+              this.cancelErrorCreatingProjectTimeout();
+            });
+      }
     }
+  }
+
+  turnOnInProcessOfCreatingProject() {
+    this.inProcessOfCreatingProject = true;
+  }
+
+  turnOffInProcessOfCreatingProject() {
+    this.inProcessOfCreatingProject = false;
+  }
+
+  /**
+   * @returns {boolean} Whether we have made a request to the server to create
+   * a project and are now waiting for a response.
+   */
+  isInProcessOfCreatingProject() {
+    return this.inProcessOfCreatingProject;
+  }
+
+  /**
+   * Show the message that says "Creating Project..." after the author clicks
+   * the "Create" button that makes the request to create the project on the
+   * server.
+   */
+  turnOnCreatingProjectMessage() {
+    this.showCreatingProjectMessage = true;
+    this.showErrorCreatingProjectMessage = false;
+  }
+
+  /**
+   * Show the message that says "Error Creating Project".
+   */
+  turnOnErrorCreatingProjectMessage() {
+    this.showCreatingProjectMessage = false;
+    this.showErrorCreatingProjectMessage = true;
+  }
+
+  /**
+   * Hide the messages that say "Creating Project..." and "Error Creating Project".
+   */
+  clearAllCreatingProjectMessages() {
+    this.showCreatingProjectMessage = false;
+    this.showErrorCreatingProjectMessage = false;
+  }
+
+  /**
+   * Create a timeout to display the "Error Creating Project" message in case
+   * an error occurs and the server does not respond.
+   */
+  startErrorCreatingProjectTimeout() {
+    this.errorCreatingProjectTimeout = this.$timeout(() => {
+      this.turnOffInProcessOfCreatingProject();
+      this.turnOnErrorCreatingProjectMessage();
+    }, 10000);
+  }
+
+  /**
+   * Cancel the timeout for displaying the "Error Creating Project" message.
+   */
+  cancelErrorCreatingProjectTimeout() {
+    this.$timeout.cancel(this.errorCreatingProjectTimeout);
   }
 
   cancelRegisterNewProject() {
     // clear the project template
     this.project = null;
     this.showCreateProjectView = false;
+    this.clearAllCreatingProjectMessages();
   }
 
   /**
@@ -176,6 +244,7 @@ class AuthoringToolMainController {
    * @param projectId the project id to open
    */
   openProject(projectId) {
+    this.showLoadingProjectMessage();
     this.$state.go('root.project', {projectId:projectId});
   }
 
@@ -192,6 +261,7 @@ class AuthoringToolMainController {
    * Send the user to the teacher home page
    */
   goHome() {
+    this.saveEvent('goToTeacherHome', 'Navigation', null, null);
     window.location = this.ConfigService.getWISEBaseURL() + '/teacher';
   }
 
@@ -221,12 +291,14 @@ class AuthoringToolMainController {
 AuthoringToolMainController.$inject = [
     '$anchorScroll',
     '$filter',
+    '$mdDialog',
     '$rootScope',
     '$state',
     '$timeout',
     'ConfigService',
     'ProjectService',
-    'TeacherDataService'
+    'TeacherDataService',
+    'UtilService'
 ];
 
 export default AuthoringToolMainController;

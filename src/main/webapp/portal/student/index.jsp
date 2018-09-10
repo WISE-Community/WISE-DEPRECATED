@@ -285,8 +285,8 @@
                             <li>
                               <a href="${contextPath}/contact/contactwise.html?projectId=${studentRunInfo.run.project.id}&runId=${studentRunInfo.run.id}">
                                 <spring:message code="student.index.reportProblem"/>
-                              </a><
-                            /li>
+                              </a>
+                            </li>
                           </ul>
                         </td>
                       </tr>

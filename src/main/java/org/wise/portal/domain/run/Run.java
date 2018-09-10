@@ -23,10 +23,6 @@
  */
 package org.wise.portal.domain.run;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.announcement.Announcement;
@@ -34,6 +30,10 @@ import org.wise.portal.domain.attendance.StudentAttendance;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * WISE representation for a length of time in which the
@@ -142,6 +142,12 @@ public interface Run extends Persistable {
    *     <code>Run</code> in any of the periods.
    */
   boolean isStudentAssociatedToThisRun(User studentUser);
+
+  /**
+   * @param teacherUser A user object.
+   * @return Whether the user is the owner or shared owner of the run.
+   */
+  boolean isTeacherAssociatedToThisRun(User teacherUser);
 
   /**
    * Returns the Period (<code>Group</code>) that this student is in

@@ -36,13 +36,13 @@ require('angular-translate-loader-partial');
 
 require('angular-websocket');
 
-require('../components/animation/animationComponentModule');
+require('../components/animation/animationAuthoringComponentModule');
 
 var _annotationService = require('../services/annotationService');
 
 var _annotationService2 = _interopRequireDefault(_annotationService);
 
-require('../components/audioOscillator/audioOscillatorComponentModule');
+require('../components/audioOscillator/audioOscillatorAuthoringComponentModule');
 
 require('./components/authoringToolComponents');
 
@@ -58,6 +58,10 @@ var _authoringToolNewProjectController = require('./main/authoringToolNewProject
 
 var _authoringToolNewProjectController2 = _interopRequireDefault(_authoringToolNewProjectController);
 
+var _authoringToolProjectService = require('./authoringToolProjectService');
+
+var _authoringToolProjectService2 = _interopRequireDefault(_authoringToolProjectService);
+
 var _authorNotebookController = require('./notebook/authorNotebookController');
 
 var _authorNotebookController2 = _interopRequireDefault(_authorNotebookController);
@@ -66,7 +70,7 @@ var _authorWebSocketService = require('../services/authorWebSocketService');
 
 var _authorWebSocketService2 = _interopRequireDefault(_authorWebSocketService);
 
-require('../components/conceptMap/conceptMapComponentModule');
+require('../components/conceptMap/conceptMapAuthoringComponentModule');
 
 var _configService = require('../services/configService');
 
@@ -78,25 +82,29 @@ var _cRaterService2 = _interopRequireDefault(_cRaterService);
 
 require('../directives/components');
 
-require('../components/discussion/discussionComponentModule');
+var _componentService = require('../components/componentService');
 
-require('../components/draw/drawComponentModule');
+var _componentService2 = _interopRequireDefault(_componentService);
 
-require('../components/embedded/embeddedComponentModule');
+require('../components/discussion/discussionAuthoringComponentModule');
+
+require('../components/draw/drawAuthoringComponentModule');
+
+require('../components/embedded/embeddedAuthoringComponentModule');
 
 require('../filters/filters');
 
 require('../lib/highcharts@4.2.1');
 
-require('../components/graph/graphComponentModule');
+require('../components/graph/graphAuthoringComponentModule');
 
-require('../components/html/htmlComponentModule');
+require('../components/html/htmlAuthoringComponentModule');
 
-require('../components/label/labelComponentModule');
+require('../components/label/labelAuthoringComponentModule');
 
-require('../components/match/matchComponentModule');
+require('../components/match/matchAuthoringComponentModule');
 
-require('../components/multipleChoice/multipleChoiceComponentModule');
+require('../components/multipleChoice/multipleChoiceAuthoringComponentModule');
 
 var _nodeAuthoringController = require('./node/nodeAuthoringController');
 
@@ -116,9 +124,9 @@ var _notificationService = require('../services/notificationService');
 
 var _notificationService2 = _interopRequireDefault(_notificationService);
 
-require('../components/openResponse/openResponseComponentModule');
+require('../components/openResponse/openResponseAuthoringComponentModule');
 
-require('../components/outsideURL/outsideURLComponentModule');
+require('../components/outsideURL/outsideURLAuthoringComponentModule');
 
 var _projectAssetController = require('./asset/projectAssetController');
 
@@ -140,6 +148,10 @@ var _projectInfoController = require('./info/projectInfoController');
 
 var _projectInfoController2 = _interopRequireDefault(_projectInfoController);
 
+var _planningService = require('../services/planningService');
+
+var _planningService2 = _interopRequireDefault(_planningService);
+
 var _projectService = require('../services/projectService');
 
 var _projectService2 = _interopRequireDefault(_projectService);
@@ -147,6 +159,10 @@ var _projectService2 = _interopRequireDefault(_projectService);
 var _sessionService = require('../services/sessionService');
 
 var _sessionService2 = _interopRequireDefault(_sessionService);
+
+var _spaceService = require('../services/spaceService');
+
+var _spaceService2 = _interopRequireDefault(_spaceService);
 
 var _studentAssetService = require('../services/studentAssetService');
 
@@ -164,7 +180,7 @@ var _studentWebSocketService = require('../services/studentWebSocketService');
 
 var _studentWebSocketService2 = _interopRequireDefault(_studentWebSocketService);
 
-require('../components/table/tableComponentModule');
+require('../components/table/tableAuthoringComponentModule');
 
 var _teacherDataService = require('../services/teacherDataService');
 
@@ -190,7 +206,7 @@ var _moment2 = _interopRequireDefault(_moment);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'animationComponentModule', 'audioOscillatorComponentModule', 'authoringTool.components', 'components', 'conceptMapComponentModule', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'filters', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'summernote', 'tableComponentModule', 'ui.router']).service(_annotationService2.default.name, _annotationService2.default).service(_authorWebSocketService2.default.name, _authorWebSocketService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_projectService2.default.name, _projectService2.default).service(_projectAssetService2.default.name, _projectAssetService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_authoringToolController2.default.name, _authoringToolController2.default).controller(_authoringToolMainController2.default.name, _authoringToolMainController2.default).controller(_authoringToolNewProjectController2.default.name, _authoringToolNewProjectController2.default).controller(_authorNotebookController2.default.name, _authorNotebookController2.default).controller(_nodeAuthoringController2.default.name, _nodeAuthoringController2.default).controller(_projectAssetController2.default.name, _projectAssetController2.default).controller(_projectController2.default.name, _projectController2.default).controller(_projectHistoryController2.default.name, _projectHistoryController2.default).controller(_projectInfoController2.default.name, _projectInfoController2.default).controller(_wiseLinkAuthoringController2.default.name, _wiseLinkAuthoringController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider) {
+var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'animationAuthoringComponentModule', 'audioOscillatorAuthoringComponentModule', 'authoringTool.components', 'components', 'conceptMapAuthoringComponentModule', 'discussionAuthoringComponentModule', 'drawAuthoringComponentModule', 'embeddedAuthoringComponentModule', 'filters', 'graphAuthoringComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelAuthoringComponentModule', 'matchAuthoringComponentModule', 'multipleChoiceAuthoringComponentModule', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'openResponseAuthoringComponentModule', 'outsideURLAuthoringComponentModule', 'pascalprecht.translate', 'summernote', 'tableAuthoringComponentModule', 'ui.router']).service(_annotationService2.default.name, _annotationService2.default).service(_authorWebSocketService2.default.name, _authorWebSocketService2.default).service(_componentService2.default.name, _componentService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_planningService2.default.name, _planningService2.default).service(_projectService2.default.name, _authoringToolProjectService2.default).service(_projectAssetService2.default.name, _projectAssetService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_spaceService2.default.name, _spaceService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_authoringToolController2.default.name, _authoringToolController2.default).controller(_authoringToolMainController2.default.name, _authoringToolMainController2.default).controller(_authoringToolNewProjectController2.default.name, _authoringToolNewProjectController2.default).controller(_authorNotebookController2.default.name, _authorNotebookController2.default).controller(_nodeAuthoringController2.default.name, _nodeAuthoringController2.default).controller(_projectAssetController2.default.name, _projectAssetController2.default).controller(_projectController2.default.name, _projectController2.default).controller(_projectHistoryController2.default.name, _projectHistoryController2.default).controller(_projectInfoController2.default.name, _projectInfoController2.default).controller(_wiseLinkAuthoringController2.default.name, _wiseLinkAuthoringController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider) {
 
   $urlRouterProvider.otherwise('/');
 
@@ -261,6 +277,18 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
     }
   }).state('root.project.node', {
     url: '/node/:nodeId',
+    templateUrl: 'wise5/authoringTool/node/node.html',
+    controller: 'NodeAuthoringController',
+    controllerAs: 'nodeAuthoringController',
+    resolve: {}
+  }).state('root.project.nodeConstraints', {
+    url: '/node/constraints/:nodeId',
+    templateUrl: 'wise5/authoringTool/node/node.html',
+    controller: 'NodeAuthoringController',
+    controllerAs: 'nodeAuthoringController',
+    resolve: {}
+  }).state('root.project.nodeEditPaths', {
+    url: '/node/editpaths/:nodeId',
     templateUrl: 'wise5/authoringTool/node/node.html',
     controller: 'NodeAuthoringController',
     controllerAs: 'nodeAuthoringController',

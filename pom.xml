@@ -35,7 +35,7 @@
   <artifactId>wise</artifactId>
   <packaging>war</packaging>
   <name>Web-based Inquiry Science Environment</name>
-  <version>5.6.3</version>
+  <version>5.7.8</version>
   <url>http://wise5.org</url>
 
   <licenses>
@@ -124,8 +124,9 @@
               <testExcludes>
                 <exclude>**/org/wise/portal/service/**/*.java</exclude>
                 <exclude>**/org/wise/portal/domain/**/*.java</exclude>
-                <exclude>**/org/wise/portal/presentation/web/**/*.java</exclude>
-                <exclude>**/org/wise/portal/presentation/validators/student/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/**/*.java</exclude>
               </testExcludes>
@@ -144,12 +145,13 @@
         <configuration>
           <forkMode>once</forkMode>
           <excludes>
-              <exclude>**/org/wise/portal/service/**/*.java</exclude>
-              <exclude>**/org/wise/portal/domain/**/*.java</exclude>
-              <exclude>**/org/wise/portal/presentation/web/**/*.java</exclude>
-            <exclude>**/org/wise/portal/presentation/validators/student/*.java</exclude>
+            <exclude>**/org/wise/portal/service/**/*.java</exclude>
+            <exclude>**/org/wise/portal/domain/**/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
-              <exclude>**/org/wise/portal/dao/**/*.java</exclude>
+            <exclude>**/org/wise/portal/dao/**/*.java</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -495,6 +497,24 @@
       <version>3.5.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-easymock</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.0</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <properties>
@@ -505,6 +525,7 @@
     <spring-security-oauth2.version>2.2.1.RELEASE</spring-security-oauth2.version>
     <spring-security-jwt.version>1.0.9.RELEASE</spring-security-jwt.version>
     <jwks-rsa.version>0.3.0</jwks-rsa.version>
+    <powermock.version>1.7.1</powermock.version>
     <startup.listeners>
     </startup.listeners>
   </properties>

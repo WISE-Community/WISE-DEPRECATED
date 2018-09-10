@@ -204,6 +204,7 @@ const WorkgroupSelect = {
         <md-select ng-if="!$ctrl.useAutocomplete"
                    md-theme="default"
                    ng-class="$ctrl.customClass"
+                   md-container-class="stepSelectMenuContainer"
                    aria-label="{{ $ctrl.placeholder }}"
                    ng-model="$ctrl.selectedItem"
                    ng-change="$ctrl.selectedItemChange()"

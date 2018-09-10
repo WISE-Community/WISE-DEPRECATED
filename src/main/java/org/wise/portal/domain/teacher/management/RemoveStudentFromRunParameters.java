@@ -23,14 +23,18 @@
  */
 package org.wise.portal.domain.teacher.management;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 /**
- * A form-backing object for WISE teachers for removing students
- * from a run.
+ * A form-backing object for WISE teachers for removing students from a run.
  *
  * @author Hiroki Terashima
  */
+@Getter
+@Setter
 public class RemoveStudentFromRunParameters implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -38,32 +42,4 @@ public class RemoveStudentFromRunParameters implements Serializable {
   private Long runId;
 
   private Long userId;
-
-  /**
-   * @return the runId
-   */
-  public Long getRunId() {
-    return runId;
-  }
-
-  /**
-   * @param runId the runId to set
-   */
-  public void setRunId(Long runId) {
-    this.runId = runId;
-  }
-
-  /**
-   * @return the userId
-   */
-  public Long getUserId() {
-    return userId;
-  }
-
-  /**
-   * @param userId the userId to set
-   */
-  public void setUserId(Long userId) {
-    this.userId = userId;
-  }
 }

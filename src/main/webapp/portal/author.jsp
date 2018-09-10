@@ -12,7 +12,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <%@ include file="favicon.jsp"%>
         <script src="${contextPath}/wise5/jspm_packages/system.js"></script>
-        <script src="${contextPath}/wise5/config.js"></script>
+        <script src="${contextPath}/wise5/config.js?v=5.7.8"></script>
+        <script src="${contextPath}/wise5/cacheBuster.js?v=5.7.8"></script>
         <script>
             System.import('${contextPath}/wise5/authoringTool/bootstrap');
         </script>
@@ -22,7 +23,7 @@
             <div ui-view></div>
         </div>
         <script>
-        var configURL = '${configURL}';
+            var configURL = '${configURL}';
         </script>
     </body>
 </html>

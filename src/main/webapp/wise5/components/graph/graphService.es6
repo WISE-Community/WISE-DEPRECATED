@@ -1,21 +1,17 @@
-import NodeService from '../../services/nodeService';
+import ComponentService from '../componentService';
+import html2canvas from 'html2canvas';
 
-class GraphService extends NodeService {
+class GraphService extends ComponentService {
   constructor($filter,
+      $q,
+      StudentAssetService,
       StudentDataService,
       UtilService) {
-    super();
-    this.$filter = $filter;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-    this.$translate = this.$filter('translate');
+    super($filter, StudentDataService, UtilService);
+    this.$q = $q;
+    this.StudentAssetService = StudentAssetService;
   }
 
-  /**
-   * Get the component type label
-   * example
-   * "Graph"
-   */
   getComponentTypeLabel() {
     return this.$translate('graph.componentTypeLabel');
   }
@@ -25,13 +21,8 @@ class GraphService extends NodeService {
    * @returns a new Graph component object
    */
   createComponent() {
-
-    var component = {};
-    component.id = this.UtilService.generateKey();
+    const component = super.createComponent();
     component.type = 'Graph';
-    component.prompt = '';
-    component.showSaveButton = false;
-    component.showSubmitButton = false;
     component.title = '';
     component.width = 800;
     component.height = 500;
@@ -78,56 +69,6 @@ class GraphService extends NodeService {
 
     return component;
   }
-
-  /**
-   * Copies an existing Graph component object
-   * @returns a copied Graph component object
-   */
-  copyComponent(componentToCopy) {
-    var component = this.createComponent();
-    component.prompt = componentToCopy.prompt;
-    component.showSaveButton = componentToCopy.showSaveButton;
-    component.showSubmitButton = componentToCopy.showSubmitButton;
-    component.title = componentToCopy.title;
-    component.xAxis = componentToCopy.xAxis;
-    component.yAxis = componentToCopy.yAxis;
-    component.series = componentToCopy.series;
-    return component;
-  }
-
-  /**
-   * Populate a component state with the data from another component state
-   * @param componentStateFromOtherComponent the component state to obtain the data from
-   * @return a new component state that contains the student data from the other
-   * component state
-   */
-  populateComponentState(componentStateFromOtherComponent) {
-    var componentState = null;
-
-    if (componentStateFromOtherComponent != null) {
-
-      // create an empty component state
-      componentState = this.StudentDataService.createComponentState();
-
-      // get the component type of the other component state
-      var otherComponentType = componentStateFromOtherComponent.componentType;
-
-      if (otherComponentType === 'Graph') {
-        // the other component is an Graph component
-
-        // get the student data from the other component state
-        var studentData = componentStateFromOtherComponent.studentData;
-
-        // create a copy of the student data
-        var studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
-
-        // set the student data into the new component state
-        componentState.studentData = studentDataCopy;
-      }
-    }
-
-    return componentState;
-  };
 
   /**
    * Code extracted from https://github.com/streamlinesocial/highcharts-regression
@@ -720,18 +661,16 @@ class GraphService extends NodeService {
     return  1 - ( SSYY / SSE)  ;
   }
 
-  /**
-   * Check if the component was completed
-   * @param component the component object
-   * @param componentStates the component states for the specific component
-   * @param componentEvents the events for the specific component
-   * @param nodeEvents the events for the parent node of the component
-   * @param node parent node of the component
-   * @returns whether the component was completed
-   */
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     let result = false;
 
+    if (!this.canEdit(component) && this.UtilService.hasNodeEnteredEvent(nodeEvents)) {
+      /*
+       * the student can't perform any work on this component and has visited
+       * this step so we will mark it as completed
+       */
+      return true;
+    }
     if (componentStates && componentStates.length) {
       let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
@@ -771,6 +710,24 @@ class GraphService extends NodeService {
   };
 
   /**
+   * Determine if the student can perform any work on this component.
+   * @param component The component content.
+   * @return Whether the student can perform any work on this component.
+   */
+  canEdit(component) {
+    let series = component.series;
+    for (let singleSeries of series) {
+      if (singleSeries.canEdit) {
+        return true;
+      }
+    }
+    if (this.UtilService.hasImportWorkConnectedComponent(component)) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Check if student data contains any series data
    * @param studentData student data from a component state
    * @returns whether the student data has series data
@@ -795,88 +752,21 @@ class GraphService extends NodeService {
     return result;
   };
 
-  /**
-   * Check if the student data contains any trial data
-   * @param studentData student data from a component state
-   * @return whether the student data has trial data
-   */
   hasTrialData(studentData) {
-    var result = false;
-
-    if (studentData != null) {
-      var trials = studentData.trials;
-
-      if (trials != null) {
-
-        // loop through all the trials
-        for (var t = 0; t < trials.length; t++) {
-
-          var trial = trials[t];
-
-          if (trial != null) {
-            var series = trial.series;
-
-            // loop through all the series
-            for (var s = 0; s < series.length; s++) {
-
-              // get a single series
-              var singleSeries = series[s];
-
-              if (singleSeries != null) {
-
-                // get the data from the single series
-                var data = singleSeries.data;
-
-                if (data != null && data.length > 0) {
-                  // the single series has data
-                  return true;
-                }
-              }
-            }
+    const trials = studentData.trials;
+    if (trials != null) {
+      for (let trial of trials) {
+        for (let singleSeries of trial.series) {
+          const seriesData = singleSeries.data;
+          if (seriesData != null && seriesData.length > 0) {
+            return true;
           }
         }
       }
     }
-
-    return result;
+    return false;
   }
 
-  /**
-   * Whether this component generates student work
-   * @param component (optional) the component object. if the component object
-   * is not provided, we will use the default value of whether the
-   * component type usually has work.
-   * @return whether this component generates student work
-   */
-  componentHasWork(component) {
-    return true;
-  }
-
-  /**
-   * Whether this component uses a save button
-   * @return whether this component uses a save button
-   */
-  componentUsesSaveButton() {
-    return true;
-  }
-
-  /**
-   * Whether this component uses a submit button
-   * @return whether this component uses a submit button
-   */
-  componentUsesSubmitButton() {
-    return true;
-  }
-
-  /**
-   * Check if the component state has student work. Sometimes a component
-   * state may be created if the student visits a component but doesn't
-   * actually perform any work. This is where we will check if the student
-   * actually performed any work.
-   * @param componentState the component state object
-   * @param componentContent the component content
-   * @return whether the component state has any work
-   */
   componentStateHasStudentWork(componentState, componentContent) {
     let hasStudentWork = false;
 
@@ -1077,35 +967,41 @@ class GraphService extends NodeService {
   }
 
   /**
-   * Determine whether the component has been authored to show classmate work
-   * @param componentContent the component content
-   * @return whether to show classmate work in this component
+   * The component state has been rendered in a <component></component> element
+   * and now we want to take a snapshot of the work.
+   * @param componentState The component state that has been rendered.
+   * @return A promise that will return an image object.
    */
-  showClassmateWork(componentContent) {
+  generateImageFromRenderedComponentState(componentState) {
+    let deferred = this.$q.defer();
+    let componentId = componentState.componentId;
+    let highchartsDiv = angular.element('#chart_' + componentId).find('.highcharts-container');
+    if (highchartsDiv != null && highchartsDiv.length > 0) {
+      highchartsDiv = highchartsDiv[0];
 
-    if (componentContent != null && componentContent.connectedComponents != null) {
+      // convert the div element to a canvas element
+      html2canvas(highchartsDiv).then((canvas) => {
 
-      let connectedComponents = componentContent.connectedComponents;
+        // get the canvas as a base64 string
+        let img_b64 = canvas.toDataURL('image/png');
 
-      // loop through all the connected components that we are importing from
-      for (let c = 0; c < connectedComponents.length; c++) {
-        let connectedComponent = connectedComponents[c];
+        // get the image object
+        let imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
-        if (connectedComponent != null) {
-          if (connectedComponent.type == 'showClassmateWork') {
-            // the connected component is importing work from classmates
-            return true;
-          }
-        }
-      }
+        // add the image to the student assets
+        this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
+          deferred.resolve(asset);
+        });
+      });
     }
-
-    return false;
+    return deferred.promise;
   }
 }
 
 GraphService.$inject = [
   '$filter',
+  '$q',
+  'StudentAssetService',
   'StudentDataService',
   'UtilService'
 ];

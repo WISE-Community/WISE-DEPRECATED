@@ -5,8 +5,6 @@
   "label.areYouSureYouWantToChangeTheBackgroundImage": "您真的要修改背景图片么？",
   "label.areYouSureYouWantToDeleteThisLabel": "您真的要删除该标签么？\n\n{{selectedLabelText}}",
   "label.canStudentCreateLabels": "允许学生创建标签",
-  "label.canStudentDeleteLabels": "允许学生删除标签",
-  "label.clickOnTheImageOr": "点击图片或",
   "label.color": "颜色",
   "label.deleteLabel": "删除标签",
   "label.enterTextHere": "在此输入文本",

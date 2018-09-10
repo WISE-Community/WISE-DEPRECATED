@@ -29,10 +29,6 @@ var AuthoringToolController = function () {
     this.TeacherDataService = TeacherDataService;
 
     this.numberProject = true; // TODO: make dynamic or remove
-    this.globalMessage = {
-      text: '',
-      time: ''
-    };
     this.isMenuOpen = false;
 
     // ui-views and their corresponding names, labels, and icons
@@ -83,6 +79,22 @@ var AuthoringToolController = function () {
         active: true
       },
       'root.project.node': {
+        name: '',
+        label: '',
+        icon: '',
+        type: 'secondary',
+        showToolbar: true,
+        active: false
+      },
+      'root.project.nodeConstraints': {
+        name: '',
+        label: '',
+        icon: '',
+        type: 'secondary',
+        showToolbar: true,
+        active: false
+      },
+      'root.project.nodeEditPaths': {
         name: '',
         label: '',
         icon: '',
@@ -222,7 +234,7 @@ var AuthoringToolController = function () {
       this.$anchorScroll('top');
 
       // set current view and whether to show the toolbars and step tools
-      this.showStepTools = this.$state.$current.name === 'root.project' || this.$state.$current.name === 'root.project.node';
+      this.showStepTools = this.$state.$current.name === 'root.project' || this.$state.$current.name === 'root.project.node' || this.$state.$current.name === 'root.project.nodeConstraints' || this.$state.$current.name === 'root.project.nodeEditPaths';
       var view = this.views[this.$state.$current.name];
       if (view) {
         this.currentViewName = view.name;
@@ -240,6 +252,12 @@ var AuthoringToolController = function () {
       } else {
         this.projectTitle = null;
       }
+      this.turnOffJSONValidMessage();
+    }
+  }, {
+    key: 'turnOffJSONValidMessage',
+    value: function turnOffJSONValidMessage() {
+      this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: null });
     }
 
     /**
@@ -291,8 +309,11 @@ var AuthoringToolController = function () {
   }, {
     key: 'setGlobalMessage',
     value: function setGlobalMessage(message, time) {
-      this.globalMessage.text = message;
-      this.globalMessage.time = time;
+      var globalMessage = {
+        text: message,
+        time: time
+      };
+      this.$rootScope.$broadcast('setGlobalMessage', { globalMessage: globalMessage });
     }
   }, {
     key: 'saveEvent',

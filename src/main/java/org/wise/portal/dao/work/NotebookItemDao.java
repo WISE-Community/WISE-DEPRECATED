@@ -40,5 +40,7 @@ public interface NotebookItemDao<T extends NotebookItem> extends SimpleDao<T> {
   List<NotebookItem> getNotebookItemListByParams(Integer id, Run run, Group period,
       Workgroup workgroup, String nodeId, String componentId);
 
+  List<NotebookItem> getNotebookItemByGroup(Integer runId, String groupName);
+
   List<Object[]> getNotebookItemExport(Integer runId);
 }

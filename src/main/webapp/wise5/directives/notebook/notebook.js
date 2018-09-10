@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _notebookController = require('./notebookController');
@@ -19,49 +19,49 @@ var _notebookItemReportController2 = _interopRequireDefault(_notebookItemReportC
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var NotebookItem = {
-    bindings: {
-        itemId: '<',
-        isChooseMode: '<',
-        templateUrl: '<',
-        componentController: '<',
-        onDelete: '&',
-        onRevive: '&',
-        onSelect: '&',
-        workgroupId: '='
-    },
-    template: '<ng-include src="notebookItemController.getTemplateUrl()"></ng-include>',
-    controller: 'NotebookItemController as notebookItemController'
+  bindings: {
+    itemId: '<',
+    isChooseMode: '<',
+    templateUrl: '<',
+    componentController: '<',
+    onDelete: '&',
+    onRevive: '&',
+    onSelect: '&',
+    workgroupId: '='
+  },
+  template: '<ng-include src="notebookItemController.getTemplateUrl()"></ng-include>',
+  controller: 'NotebookItemController as notebookItemController'
 };
 
 var notebookModule = angular.module('notebook', []).directive('notebook', function () {
-    return {
-        scope: {
-            componentController: '=',
-            filter: '=',
-            mode: '@',
-            themePath: '=',
-            templateUrl: '=',
-            workgroupId: '='
-        },
-        template: '<ng-include src="notebookController.getTemplateUrl()"></ng-include>',
-        controller: 'NotebookController',
-        controllerAs: 'notebookController',
-        bindToController: true
-    };
+  return {
+    scope: {
+      componentController: '=',
+      filter: '=',
+      mode: '@',
+      themePath: '=',
+      templateUrl: '=',
+      workgroupId: '='
+    },
+    template: '<ng-include src="notebookController.getTemplateUrl()"></ng-include>',
+    controller: 'NotebookController',
+    controllerAs: 'notebookController',
+    bindToController: true
+  };
 }).directive('notebookitemreport', function () {
-    return {
-        scope: {
-            reportId: '=',
-            isEditAllowed: '=',
-            templateUrl: '=',
-            themePath: '=',
-            workgroupId: '='
-        },
-        template: '<ng-include src="notebookItemReportController.getTemplateUrl()"></ng-include>',
-        controller: 'NotebookItemReportController',
-        controllerAs: 'notebookItemReportController',
-        bindToController: true
-    };
+  return {
+    scope: {
+      reportId: '=',
+      isEditAllowed: '=',
+      templateUrl: '=',
+      themePath: '=',
+      workgroupId: '='
+    },
+    template: '<ng-include src="notebookItemReportController.getTemplateUrl()"></ng-include>',
+    controller: 'NotebookItemReportController',
+    controllerAs: 'notebookItemReportController',
+    bindToController: true
+  };
 }).controller('NotebookController', _notebookController2.default).controller('NotebookItemReportController', _notebookItemReportController2.default).controller(_notebookItemController2.default.name, _notebookItemController2.default).component('notebookItem', NotebookItem);
 
 exports.default = notebookModule;

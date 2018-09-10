@@ -34,6 +34,8 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.wise.vle.domain.PersistableDomain;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.node.Node;
@@ -41,8 +43,10 @@ import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
 
 @Entity
-@Table(name="peerreviewwork")
-@Inheritance(strategy=InheritanceType.JOINED)
+@Table(name = "peerreviewwork")
+@Inheritance(strategy = InheritanceType.JOINED)
+@Getter
+@Setter
 public class PeerReviewWork extends PersistableDomain {
 
   protected static Long authorWorkgroupId = -2L;
@@ -51,10 +55,10 @@ public class PeerReviewWork extends PersistableDomain {
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Long id = null;
 
-  @Column(name="runId")
+  @Column(name = "runId")
   private Long runId = null;
 
-  @Column(name="periodId")
+  @Column(name = "periodId")
   private Long periodId = null;
 
   @ManyToOne(cascade = {CascadeType.PERSIST})
@@ -76,62 +80,6 @@ public class PeerReviewWork extends PersistableDomain {
   protected Class<?> getObjectClass() {
     // TODO Auto-generated method stub
     return null;
-  }
-
-  public Long getRunId() {
-    return runId;
-  }
-
-  public void setRunId(Long runId) {
-    this.runId = runId;
-  }
-
-  public Long getPeriodId() {
-    return periodId;
-  }
-
-  public void setPeriodId(Long periodId) {
-    this.periodId = periodId;
-  }
-
-  public UserInfo getUserInfo() {
-    return userInfo;
-  }
-
-  public void setUserInfo(UserInfo userInfo) {
-    this.userInfo = userInfo;
-  }
-
-  public Node getNode() {
-    return node;
-  }
-
-  public void setNode(Node node) {
-    this.node = node;
-  }
-
-  public StepWork getStepWork() {
-    return stepWork;
-  }
-
-  public void setStepWork(StepWork stepWork) {
-    this.stepWork = stepWork;
-  }
-
-  public UserInfo getReviewerUserInfo() {
-    return reviewerUserInfo;
-  }
-
-  public void setReviewerUserInfo(UserInfo reviewerUserInfo) {
-    this.reviewerUserInfo = reviewerUserInfo;
-  }
-
-  public Annotation getAnnotation() {
-    return annotation;
-  }
-
-  public void setAnnotation(Annotation annotation) {
-    this.annotation = annotation;
   }
 
   public static Long getAuthorWorkgroupId() {

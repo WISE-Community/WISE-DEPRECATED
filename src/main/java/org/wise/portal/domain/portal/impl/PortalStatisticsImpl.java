@@ -40,7 +40,7 @@ import org.json.JSONObject;
 
 @Entity
 @Table(name = "portal_statistics")
-public class PortalStatisticsImpl implements PortalStatistics {
+public class  PortalStatisticsImpl implements PortalStatistics {
 
   @Transient
   private static final long serialVersionUID = 1L;
@@ -151,16 +151,12 @@ public class PortalStatisticsImpl implements PortalStatistics {
    */
   public JSONObject getJSONObject() {
     JSONObject jsonObject = new JSONObject();
-
     try {
       Long timestampMilliseconds = null;
-
-      if(timestamp != null) {
-        //get the timestamp in milliseconds
+      if (timestamp != null) {
         timestampMilliseconds = timestamp.getTime();
       }
 
-      //set the fields
       jsonObject.put("timestamp", timestampMilliseconds);
       jsonObject.put("totalNumberStudents", totalNumberStudents);
       jsonObject.put("totalNumberStudentLogins", totalNumberStudentLogins);
@@ -172,7 +168,6 @@ public class PortalStatisticsImpl implements PortalStatistics {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-
     return jsonObject;
   }
 }
