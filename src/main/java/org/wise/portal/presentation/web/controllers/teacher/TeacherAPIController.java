@@ -81,6 +81,12 @@ public class TeacherAPIController {
     runJSON.put("runCode", run.getRuncode());
     runJSON.put("startTime", run.getStarttime());
     runJSON.put("endTime", run.getEndtime());
+    Set<Group> periods = run.getPeriods();
+    JSONArray periodsArray = new JSONArray();
+    for (Group period : periods) {
+      periodsArray.put(period.getName());
+    }
+    runJSON.put("periods", periodsArray);
     runJSON.put("numStudents", getNumStudentsInRun(run));
     runJSON.put("teacherFirstName", run.getOwner().getUserDetails().getFirstname());
     runJSON.put("teacherLastName", run.getOwner().getUserDetails().getLastname());

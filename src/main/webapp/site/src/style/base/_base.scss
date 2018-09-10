@@ -15,7 +15,7 @@ body {
 a {
   text-decoration: none;
 
-  &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item) {
+  &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item):not(.mat-flat-button):not(.mat-stroked-button) {
     &:hover, &:focus {
       text-decoration: underline;
     }

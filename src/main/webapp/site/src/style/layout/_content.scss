@@ -18,4 +18,8 @@
 
 .content__header {
   margin-bottom: 16px;
+
+  @media (min-width: breakpoint('md.min')) {
+    margin: 16px 0 32px;
+  }
 }

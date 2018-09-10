@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TeacherModule } from "../teacher.module";
 import { RunMenuComponent } from "./run-menu.component";
 import { TeacherService } from "../teacher.service";
 import { Run } from "../../domain/run";
@@ -7,6 +6,7 @@ import { Project } from "../project";
 import { FormsModule } from "@angular/forms";
 import {
   MatDialog,
+  MatDividerModule,
   MatFormFieldModule,
   MatIconModule,
   MatMenuModule
@@ -18,7 +18,13 @@ describe('RunMenuComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, MatFormFieldModule, MatMenuModule, MatIconModule ],
+      imports: [
+        FormsModule,
+        MatDividerModule,
+        MatFormFieldModule,
+        MatMenuModule,
+        MatIconModule
+      ],
       declarations: [ RunMenuComponent ],
       providers: [ { provide: TeacherService }, { provide: MatDialog }]
     })

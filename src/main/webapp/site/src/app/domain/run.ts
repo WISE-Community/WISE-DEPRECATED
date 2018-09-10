@@ -10,7 +10,6 @@ export class Run {
   startTime: number;
   numStudents: number;
   periods: string[];
-  isHighlighted: boolean;
   teacherFirstName: string;
   teacherLastName: string;
   teacherDisplayName: string;

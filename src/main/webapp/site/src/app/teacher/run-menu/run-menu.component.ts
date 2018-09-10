@@ -40,4 +40,16 @@ export class RunMenuComponent implements OnInit {
       scrollTo(0, 0);
     });
   }
+
+  isScheduled() {
+    if (this.run.endTime) {
+      return false;
+    }
+    let startTime = new Date(this.run.startTime).getTime();
+    let now = new Date().getTime();
+    if (startTime < now) {
+      return false;
+    }
+    return true;
+  }
 }

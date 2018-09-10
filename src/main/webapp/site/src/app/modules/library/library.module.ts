@@ -22,12 +22,12 @@ import {
   MatSelectModule,
   MatTabsModule,
   MatTooltipModule} from '@angular/material';
+import { TimelineModule } from "../timeline/timeline.module";
 import { LibraryFiltersComponent } from './library-filters/library-filters.component';
 import { HomePageProjectLibraryComponent } from './home-page-project-library/home-page-project-library.component';
 import { TeacherProjectLibraryComponent } from './teacher-project-library/teacher-project-library.component';
 import { OfficialLibraryComponent } from './official-library/official-library.component';
 import { CommunityLibraryComponent } from './community-library/community-library.component';
-import { LibraryComponent } from './library/library.component';
 import { PersonalLibraryComponent } from './personal-library/personal-library.component';
 
 const materialModules = [
@@ -51,7 +51,8 @@ const materialModules = [
     ReactiveFormsModule,
     RouterModule,
     materialModules,
-    SharedModule
+    SharedModule,
+    TimelineModule
   ],
   declarations: [
     LibraryGroupThumbsComponent,
