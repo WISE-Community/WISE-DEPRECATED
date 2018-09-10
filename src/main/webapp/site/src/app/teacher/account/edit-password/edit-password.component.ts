@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { UserService } from "../../../services/user.service";
-import { ConfigService } from "../../../services/config.service";
 
 @Component({
   selector: 'app-edit-password',
@@ -24,7 +23,6 @@ export class EditPasswordComponent implements OnInit {
   });
 
   constructor(private fb: FormBuilder,
-      private configService: ConfigService,
       private userService: UserService) { }
 
   ngOnInit() {
@@ -67,7 +65,7 @@ export class EditPasswordComponent implements OnInit {
     if (response.message == 'success') {
       this.displayMessage("Successfully changed password");
     } else if (response.message == 'incorrect password') {
-      this.displayMessage("Failed to change password");
+      this.displayMessage("Incorrect Old Password");
     } else {
       this.displayMessage("Failed to change password");
     }

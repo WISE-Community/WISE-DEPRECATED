@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ConfigService } from "../../../services/config.service";
 import { UserService } from "../../../services/user.service";
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
@@ -24,7 +23,6 @@ export class EditPasswordComponent implements OnInit {
   });
 
   constructor(private fb: FormBuilder,
-              private configService: ConfigService,
               private userService: UserService) { }
 
   ngOnInit() {
