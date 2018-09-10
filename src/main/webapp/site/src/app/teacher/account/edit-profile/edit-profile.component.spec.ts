@@ -62,7 +62,10 @@ describe('EditProfileComponent', () => {
         return userBehaviorSubject;
       },
       getLanguages() {
-        return Observable.create([]);
+        return Observable.create( observer => {
+          observer.next([]);
+          observer.complete();
+        });
       }
     };
 

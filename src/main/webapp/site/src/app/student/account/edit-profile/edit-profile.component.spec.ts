@@ -33,7 +33,10 @@ describe('EditProfileComponent', () => {
         return userBehaviorSubject;
       },
       getLanguages() {
-        return Observable.create([]);
+        return Observable.create( observer => {
+          observer.next([]);
+          observer.complete();
+        });
       }
     };
     TestBed.configureTestingModule({
@@ -61,7 +64,7 @@ describe('EditProfileComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-
+  
   it('should create', () => {
     expect(component).toBeTruthy();
   });
