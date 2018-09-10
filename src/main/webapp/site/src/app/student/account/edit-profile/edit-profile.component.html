@@ -1,0 +1,55 @@
+<div class="login mat-app-background" fxLayout="column" fxLayoutAlign="start center">
+  <mat-card class="login__form">
+    <mat-card-content>
+      <form role="form" style="flex-direction: column" (submit)="saveChanges()" [formGroup]="editProfileFormGroup">
+        <h2 class="accent center">Edit Profile</h2>
+        <p>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="firstName"
+                   name="firstName"
+                   placeholder="First Name"
+                   formControlName="firstName" />
+            <mat-error *ngIf="editProfileFormGroup.controls['firstName'].hasError('required')">First Name Required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="lastName"
+                   name="lastName"
+                   placeholder="Last Name"
+                   formControlName="lastName" />
+            <mat-error *ngIf="editProfileFormGroup.controls['lastName'].hasError('required')">Last Name Required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <input matInput
+                   id="userName"
+                   name="userName"
+                   placeholder="User Name"
+                   formControlName="userName" />
+            <mat-error *ngIf="editProfileFormGroup.controls['userName'].hasError('required')">User Name Required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex>
+            <mat-select placeholder="Language"
+                        formControlName="language">
+              <mat-option *ngFor="let language of languages" [value]="language.locale">
+                {{language.language}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="editProfileFormGroup.controls['language'].hasError('required')">Language Required</mat-error>
+          </mat-form-field>
+        </p>
+        <button fxFlex mat-raised-button color="primary" type="submit"
+                [disabled]="!editProfileFormGroup.valid">
+          Save Changes
+        </button>
+        <div>{{ message }}</div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

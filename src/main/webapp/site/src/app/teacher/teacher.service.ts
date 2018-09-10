@@ -23,9 +23,10 @@ export class TeacherService {
   public newProjectSource$ = this.newProjectSource.asObservable();
   private newRunSource = new Subject<Run>();
   public newRunSource$ = this.newRunSource.asObservable();
+  private updateProfileUrl = 'api/teacher/profile/update';
   private tabIndexSource = new Subject<number>();
   public tabIndexSource$ = this.tabIndexSource.asObservable();
-
+  
   constructor(private http: HttpClient) { }
 
   getRuns(): Observable<Run[]> {
@@ -122,6 +123,21 @@ export class TeacherService {
 
   addNewRun(run: Run) {
     this.newRunSource.next(run);
+  }
+
+  updateProfile(username, displayName, email, city, state, country, schoolName, schoolLevel, language) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('username', username);
+    body = body.set('displayName', displayName);
+    body = body.set('email', email);
+    body = body.set('city', city);
+    body = body.set('state', state);
+    body = body.set('country', country);
+    body = body.set('schoolName', schoolName);
+    body = body.set('schoolLevel', schoolLevel);
+    body = body.set('language', language);
+    return this.http.post<any>(this.updateProfileUrl, body, { headers: headers });
   }
 
   setTabIndex(index: number) {

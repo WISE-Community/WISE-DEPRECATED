@@ -3,7 +3,6 @@ import { Observable ,  of } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { Run } from "../domain/run";
 import { RunInfo } from './run-info';
 import { Student } from "../domain/student";
 import { StudentRun } from './student-run';
@@ -17,6 +16,7 @@ export class StudentService {
   private addRunUrl = 'api/student/run/register';
   private registerUrl = 'api/student/register';
   private securityQuestionsUrl = 'api/student/register/questions';
+  private updateProfileUrl = 'api/student/profile/update';
 
   private newRunSource = new Subject<StudentRun>();
   newRunSource$ = this.newRunSource.asObservable();
@@ -88,5 +88,13 @@ export class StudentService {
 
   retrieveSecurityQuestions(): Observable<Object> {
     return this.http.get(this.securityQuestionsUrl);
+  }
+
+  updateProfile(username, language) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    let body = new HttpParams();
+    body = body.set('username', username);
+    body = body.set('language', language);
+    return this.http.post<any>(this.updateProfileUrl, body, { headers: headers });
   }
 }

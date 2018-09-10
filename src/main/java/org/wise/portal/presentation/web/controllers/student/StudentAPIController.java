@@ -48,11 +48,13 @@ import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -362,5 +364,22 @@ public class StudentAPIController {
     accountQuestionObject.put("key", accountQuestionKey);
     accountQuestionObject.put("value", accountQuestion);
     return accountQuestionObject;
+  }
+
+  @RequestMapping(value = "/profile/update", method = RequestMethod.POST)
+  protected String updateProfile(HttpServletRequest request,
+                                 @RequestParam("username") String username,
+                                 @RequestParam("language") String language) throws NotAuthorizedException, JSONException {
+    User user = ControllerUtil.getSignedInUser();
+    if (user.getUserDetails().getUsername().equals(username)) {
+      StudentUserDetails studentUserDetails = (StudentUserDetails) user.getUserDetails();
+      studentUserDetails.setLanguage(language);
+      userService.updateUser(user);
+      JSONObject response = new JSONObject();
+      response.put("message", "success");
+      return response.toString();
+    } else {
+      throw new NotAuthorizedException("username is not the same as signed in user");
+    }
   }
 }

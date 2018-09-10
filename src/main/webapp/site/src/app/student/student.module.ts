@@ -24,6 +24,9 @@ import { StudentRunListItemComponent } from './student-run-list-item/student-run
 import { AuthGuard } from "./auth.guard";
 import { AddProjectDialogComponent } from "./add-project-dialog/add-project-dialog.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { EditComponent } from './account/edit/edit.component';
+import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
+import { EditPasswordComponent } from './account/edit-password/edit-password.component';
 
 @NgModule({
   imports: [
@@ -42,7 +45,10 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
     StudentHomeComponent,
     StudentEditProfileComponent,
     StudentRunListComponent,
-    StudentRunListItemComponent
+    StudentRunListItemComponent,
+    EditComponent,
+    EditProfileComponent,
+    EditPasswordComponent
   ],
   entryComponents: [
     AddProjectDialogComponent
