@@ -101,17 +101,4 @@ describe('TeacherHomeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should show two tabs', () => {
-    const bannerDe: DebugElement = fixture.debugElement;
-    const tabGroupDe = bannerDe.query(By.css('mat-tab-group'));
-    const tabs: DebugElement[] = tabGroupDe.children;
-    expect(tabs.length).toEqual(2);
-  });
-
-  it('should show teacher name and avatar', () => {
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('#teacherName').textContent)
-      .toContain('Demo');
-  });
 });

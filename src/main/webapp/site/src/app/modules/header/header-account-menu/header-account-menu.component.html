@@ -15,12 +15,24 @@
     </div>
     <mat-divider></mat-divider>
     <a *ngIf="role === 'student'" mat-menu-item routerLink="/student">
-      <mat-icon>face</mat-icon>
-      <span>My Account</span>
+      <mat-icon>home</mat-icon>
+      <span>Student Home</span>
     </a>
     <a *ngIf="role !== 'student'" mat-menu-item routerLink="/teacher">
-      <mat-icon>face</mat-icon>
-      <span>My Account</span>
+      <mat-icon>home</mat-icon>
+      <span>Teacher Home</span>
+    </a>
+    <a *ngIf="role !== 'student'" mat-menu-item routerLink="/profile/edit">
+      <mat-icon>edit</mat-icon>
+      <span>Edit Profile</span>
+    </a>
+    <a *ngIf="role === 'researcher'" mat-menu-item routerLink="/researcher">
+      <mat-icon>settings</mat-icon>
+      <span>Researcher Tools</span>
+    </a>
+    <a *ngIf="role === 'admin'" mat-menu-item routerLink="/researcher">
+      <mat-icon>settings</mat-icon>
+      <span>Admin Tools</span>
     </a>
     <a mat-menu-item>
       <mat-icon>help</mat-icon>
