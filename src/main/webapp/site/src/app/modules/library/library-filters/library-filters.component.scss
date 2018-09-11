@@ -1,0 +1,30 @@
+@import
+  '~style/abstracts/variables',
+  '~style/abstracts/mixins',
+  '~style/abstracts/functions';
+
+.library-filters {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .25s ease;
+
+  &.expand {
+    max-height: 1000px;
+  }
+
+  @media (min-width: breakpoint('md.min')) {
+    max-height: 1000px;
+  }
+}
+
+.library-filters-toggle {
+  margin-left: 4px;
+
+  @media (min-width: breakpoint('md.min')) {
+    display: none;
+  }
+}
+
+.library-filter {
+  margin: 0;
+}

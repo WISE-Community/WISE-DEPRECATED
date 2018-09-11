@@ -1,0 +1,62 @@
+@import
+  '~@angular/material/theming',
+  '~style/abstracts/variables',
+  '~style/abstracts/mixins',
+  '~style/abstracts/functions';
+
+.library {
+  text-align: left;
+  border-radius: $card-border-radius;
+  overflow: hidden;
+  margin-top: 24px;
+
+  h2 {
+    font-weight: 400;
+    margin-bottom: 8px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+
+  app-search-bar {
+    width: 100%;
+  }
+
+  .mat-tab-label-container, .mat-tab-header-pagination {
+    background-color: #333333;
+  }
+}
+
+.library__header {
+  border-radius: 0;
+  padding-top: 16px;
+
+  h3 {
+    font-weight: 500;
+  }
+
+  .info-block {
+    background-color: transparent;
+    padding: 0 0 16px;
+    font-size: mat-font-size($config, subheading-2);
+  }
+}
+
+.library__content {
+  &.content-block {
+    background-color: transparent;
+  }
+
+  .notice {
+    margin-bottom: 0;
+
+    @media (max-width: breakpoint('xs.max')) {
+      margin-top: 0;
+    }
+  }
+}
+
+.library__groups {
+  display: block;
+}

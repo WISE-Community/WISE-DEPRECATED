@@ -139,7 +139,17 @@ export abstract class LibraryComponent implements OnInit {
         numProjectsVisible += 1;
       }
     }
+    this.setImplementationModelOptions();
     this.emitNumberOfProjectsVisible(numProjectsVisible);
+  }
+
+  setImplementationModelOptions() {
+    this.implementationModelOptions = [];
+    for (let i = 0; i < this.libraryService.implementationModelOptions.length; i++) {
+      const option = {...this.libraryService.implementationModelOptions[i]};
+      option.name = option.name + ` (${this.countVisibleProjects(this.projects, option.id)})`;
+      this.implementationModelOptions.push(option);
+    }
   }
 
   emitNumberOfProjectsVisible(numProjectsVisible) {

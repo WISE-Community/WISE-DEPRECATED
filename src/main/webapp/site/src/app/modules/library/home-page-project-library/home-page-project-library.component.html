@@ -1,6 +1,14 @@
 <div class="library notice-bg-bg">
   <div fxLayout="column" fxLayout.gt-sm="row">
-    <app-library-filters (update)="filterUpdated($event)" fxFlex.gt-sm="33"></app-library-filters>
-    <app-official-library fxFlex.gt-sm="67"></app-official-library>
+    <div class="content-block dark-theme library__header primary-bg"
+         fxFlex.gt-sm="33">
+      <p class="info-block center">
+        Explore suggested WISE curricula for the given grade levels or search for specific units that address your needs.
+      </p>
+      <app-library-filters (update)="filterUpdated($event)"></app-library-filters>
+    </div>
+    <div class="library__content content-block" fxFlex.gt-sm="67">
+      <app-official-library></app-official-library>
+    </div>
   </div>
 </div>

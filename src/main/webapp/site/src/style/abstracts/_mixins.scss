@@ -5,8 +5,11 @@
   // Include angular material theme
   @include angular-material-theme($theme);
   $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
 
   // Create theme-specific styles
+  color: map-get($foreground, text);
+
   a {
     &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item):not(.mat-flat-button):not(.mat-stroked-button):not(.mat-icon-button) {
       color: map-get($colors, primary);
@@ -83,6 +86,10 @@
     &.mat-expanded {
       @include mat-elevation(6);
     }
+  }
+
+  .mat-tab-label-active {
+    opacity: 1;
   }
 
   // Set classes for each named color in the $colors map
