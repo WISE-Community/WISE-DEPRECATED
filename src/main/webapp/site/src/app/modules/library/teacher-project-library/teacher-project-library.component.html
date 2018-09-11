@@ -1,3 +1,7 @@
+<a mat-raised-button color="accent" href="/wise/author">
+  <mat-icon>add</mat-icon>
+  Create
+</a>
 <div class="library notice-bg-bg" fxLayout="column" fxLayout.gt-sm="row">
   <div class="content-block dark-theme library__header primary-bg"
        fxFlex.gt-sm="33">
@@ -16,10 +20,16 @@
         </div>
       </mat-tab>
       <mat-tab label="Community Built ({{numberOfCommunityProjectsVisible}})">
-        <app-community-library (update)="updateNumberOfCommunityProjectsVisible($event)"></app-community-library>
+        <div class="notice">Units designed and shared by WISE community members</div>
+        <div class="content-block">
+          <app-community-library (update)="updateNumberOfCommunityProjectsVisible($event)"></app-community-library>
+        </div>
       </mat-tab>
       <mat-tab label="My Units ({{numberOfPersonalProjectsVisible}})">
-        <app-personal-library (update)="updateNumberOfPersonalProjectsVisible($event)"></app-personal-library>
+        <div class="notice">Units owned by you or shared by other WISE users</div>
+        <div class="content-block">
+          <app-personal-library (update)="updateNumberOfPersonalProjectsVisible($event)"></app-personal-library>
+        </div>
       </mat-tab>
     </mat-tab-group>
   </div>
