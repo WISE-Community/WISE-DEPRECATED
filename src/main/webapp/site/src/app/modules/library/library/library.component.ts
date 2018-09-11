@@ -118,7 +118,6 @@ export abstract class LibraryComponent implements OnInit {
    * @param {ProjectFilterOptions} filterOptions
    */
   filterUpdated(filterOptions: ProjectFilterOptions): void {
-    let numProjectsVisible = 0;
     this.searchValue = filterOptions.searchValue;
     this.disciplineValue = filterOptions.disciplineValue;
     this.dciArrangementValue = filterOptions.dciArrangementValue;
@@ -135,11 +134,9 @@ export abstract class LibraryComponent implements OnInit {
         filterMatch = true;
       }
       project.visible = searchMatch || filterMatch;
-      if (project.visible) {
-        numProjectsVisible += 1;
-      }
     }
     this.setImplementationModelOptions();
+    let numProjectsVisible = this.countVisibleProjects(this.projects);
     this.emitNumberOfProjectsVisible(numProjectsVisible);
   }
 
@@ -269,9 +266,13 @@ export abstract class LibraryComponent implements OnInit {
     return false;
   }
 
-  countVisibleProjects(set: LibraryProject[], implementationModel: string): number {
-    return set.filter((project) => 'project' && project.visible &&
-      project.implementationModel === implementationModel).length;
+  countVisibleProjects(set: LibraryProject[], implementationModel: string = ''): number {
+    if (implementationModel) {
+      return set.filter((project) => 'project' && project.visible &&
+        project.implementationModel === implementationModel).length;
+    } else {
+      return set.filter((project) => 'project' && project.visible).length;
+    }
   }
 
   implementationModelUpdated(value: string): void {
