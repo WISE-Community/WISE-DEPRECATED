@@ -356,14 +356,20 @@ class ComponentController {
           this.isDisabled = true;
         }
       }
-      this.setStudentWork(this.createMergedComponentState(componentStates));
-      this.handleConnectedComponentsPostProcess();
-      this.studentDataChanged();
+      if (componentStates.length > 0) {
+        this.setStudentWork(this.createMergedComponentState(componentStates));
+        this.handleConnectedComponentsPostProcess();
+        this.studentDataChanged();
+      }
     }
   }
 
+  createMergedComponentState(componentStates) {
+    return componentStates[0];
+  }
+
   handleConnectedComponentsPostProcess() {
-    // overriden by children
+    // overridden by children
   }
 
   showCopyPublicNotebookItemButton() {

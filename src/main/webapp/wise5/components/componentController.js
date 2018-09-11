@@ -403,15 +403,22 @@ var ComponentController = function () {
           }
         }
 
-        this.setStudentWork(this.createMergedComponentState(componentStates));
-        this.handleConnectedComponentsPostProcess();
-        this.studentDataChanged();
+        if (componentStates.length > 0) {
+          this.setStudentWork(this.createMergedComponentState(componentStates));
+          this.handleConnectedComponentsPostProcess();
+          this.studentDataChanged();
+        }
       }
+    }
+  }, {
+    key: 'createMergedComponentState',
+    value: function createMergedComponentState(componentStates) {
+      return componentStates[0];
     }
   }, {
     key: 'handleConnectedComponentsPostProcess',
     value: function handleConnectedComponentsPostProcess() {
-      // overriden by children
+      // overridden by children
     }
   }, {
     key: 'showCopyPublicNotebookItemButton',
