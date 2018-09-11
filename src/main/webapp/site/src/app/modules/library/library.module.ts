@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LibraryGroupThumbsComponent } from './library-group-thumbs/library-group-thumbs.component';
 import { LibraryProjectComponent, LibraryProjectDetailsComponent } from './library-project/library-project.component';
 import { LibraryProjectDisciplineIconComponent } from './library-project-discipline-icon/library-project-discipline-icon.component';
+import { LibraryProjectMenuComponent } from "./library-project-menu/library-project-menu.component";
 import { LibraryService } from "../../services/library.service";
 import { RouterModule } from '@angular/router';
 import { SharedModule } from "../shared/shared.module";
@@ -18,6 +19,7 @@ import {
   MatExpansionModule,
   MatFormFieldModule,
   MatIconModule,
+  MatMenuModule,
   MatOptionModule,
   MatSelectModule,
   MatTabsModule,
@@ -38,6 +40,7 @@ const materialModules = [
   MatExpansionModule,
   MatFormFieldModule,
   MatIconModule,
+  MatMenuModule,
   MatOptionModule,
   MatSelectModule,
   MatTabsModule,
@@ -59,6 +62,7 @@ const materialModules = [
     LibraryProjectComponent,
     LibraryProjectDetailsComponent,
     LibraryProjectDisciplineIconComponent,
+    LibraryProjectMenuComponent,
     LibraryFiltersComponent,
     HomePageProjectLibraryComponent,
     TeacherProjectLibraryComponent,

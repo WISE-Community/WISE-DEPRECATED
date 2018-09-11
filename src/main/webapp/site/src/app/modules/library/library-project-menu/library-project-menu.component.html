@@ -1,0 +1,19 @@
+<button mat-icon-button [matMenuTriggerFor]="projectMenu">
+  <mat-icon aria-label="Project Menu">more_vert</mat-icon>
+</button>
+<mat-menu #projectMenu="matMenu" xPosition="before">
+  <div class="header-account-menu">
+    <a mat-menu-item (click)="runProject()">
+      <mat-icon class="success" color="success">play_arrow</mat-icon> Use with Class
+    </a>
+    <a mat-menu-item (click)="copyProject()">
+      <mat-icon>content_copy</mat-icon> Copy
+    </a>
+    <a mat-menu-item (click)="editProject()" target="_blank">
+      <mat-icon>edit</mat-icon> Edit
+    </a>
+    <a mat-menu-item (click)="shareProject()" target="_blank">
+      <mat-icon>share</mat-icon> Share
+    </a>
+  </div>
+</mat-menu>
