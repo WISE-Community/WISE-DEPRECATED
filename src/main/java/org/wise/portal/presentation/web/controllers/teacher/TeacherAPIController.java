@@ -127,7 +127,7 @@ public class TeacherAPIController {
   @ResponseBody
   @RequestMapping(value = "/register", method = RequestMethod.POST)
   protected String createTeacherAccount(
-    @RequestBody Map<String, String> teacherFields
+    @RequestBody Map<String, String> teacherFields, HttpServletRequest request
   ) throws DuplicateUsernameException {
     TeacherUserDetails teacherUserDetails = new TeacherUserDetails();
     teacherUserDetails.setFirstname(teacherFields.get("firstName"));
@@ -147,6 +147,8 @@ public class TeacherAPIController {
     teacherUserDetails.setSchoollevel(Schoollevel.valueOf(teacherFields.get("schoolLevel")));
     teacherUserDetails.setSchoolname(teacherFields.get("schoolName"));
     teacherUserDetails.setHowDidYouHearAboutUs(teacherFields.get("howDidYouHearAboutUs"));
+    Locale locale = request.getLocale();
+    teacherUserDetails.setLanguage(locale.getLanguage());
     User createdUser = this.userService.createUser(teacherUserDetails);
     return createdUser.getUserDetails().getUsername();
   }
