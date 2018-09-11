@@ -283,11 +283,10 @@ public class StudentAPIController {
   }
 
   @RequestMapping(value = "/config", method = RequestMethod.GET)
-  protected String getConfig(ModelMap modelMap) throws JSONException {
+  protected String getConfig(ModelMap modelMap, HttpServletRequest request) throws JSONException {
     JSONObject configJSON = new JSONObject();
-    String wiseBaseURL = (String) wiseProperties.get("wiseBaseURL");
-    configJSON.put("wiseBaseURL", wiseBaseURL);
-    configJSON.put("logOutURL", wiseBaseURL + "/logout");
+    String contextPath = request.getContextPath();
+    configJSON.put("logOutURL", contextPath + "/logout");
     configJSON.put("currentTime", new Timestamp(System.currentTimeMillis()));
     return configJSON.toString();
   }

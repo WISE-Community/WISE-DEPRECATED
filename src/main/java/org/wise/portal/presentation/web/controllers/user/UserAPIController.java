@@ -16,6 +16,7 @@ import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.user.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -97,10 +98,12 @@ public class UserAPIController {
   }
 
   @RequestMapping(value = "/config", method = RequestMethod.GET)
-  protected String getConfig(ModelMap modelMap) throws JSONException {
+  protected String getConfig(ModelMap modelMap, HttpServletRequest request) throws JSONException {
     JSONObject configJSON = new JSONObject();
+    String contextPath = request.getContextPath();
+    configJSON.put("contextPath", contextPath);
     configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
-    configJSON.put("logOutURL", wiseProperties.get("wiseBaseURL") + "/logout");
+    configJSON.put("logOutURL", contextPath + "/logout");
     return configJSON.toString();
   }
 
