@@ -453,6 +453,13 @@ var DrawController = function (_ComponentController) {
         this.setupTools();
       }
     }
+  }, {
+    key: 'handleConnectedComponentsPostProcess',
+    value: function handleConnectedComponentsPostProcess() {
+      if (this.componentContent.background != null) {
+        this.drawingTool.setBackgroundImage(this.componentContent.background);
+      }
+    }
 
     /**
      * Setup the tools that we will make available to the student
