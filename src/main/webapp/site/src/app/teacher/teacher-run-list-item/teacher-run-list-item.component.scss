@@ -1,9 +1,8 @@
 @import
-'~style/abstracts/variables',
-'~style/abstracts/functions';
+  '~style/abstracts/variables',
+  '~style/abstracts/functions';
 
 .mat-card {
-  margin-top: 16px;
   padding-top: 12px;
 
   @media (min-width: breakpoint('sm.min')) {
@@ -38,6 +37,24 @@
 
 .mat-card-subtitle {
   margin-bottom: 2px;
+}
+
+.mat-card-actions {
+  .mat-button, .mat-raised-button, .mat-flat-button, .mat-stroked-button {
+    &:last-of-type {
+      margin-right: 0;
+    }
+
+    .mat-icon {
+      @media (max-width: breakpoint('xs.max')) {
+        display: none;
+      }
+    }
+  }
+}
+
+app-run-menu {
+  margin: -8px -8px 0 0;
 }
 
 .highlighted {

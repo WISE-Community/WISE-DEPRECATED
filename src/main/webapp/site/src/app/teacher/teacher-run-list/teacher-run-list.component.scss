@@ -1,7 +1,22 @@
+@import
+  '~style/abstracts/variables',
+  '~style/abstracts/mixins',
+  '~style/abstracts/functions';
+
 h2 {
   margin-bottom: 0;
 }
 
 .content-block {
   margin-top: 24px;
+  overflow: hidden;
+}
+
+.content-block__header {
+  padding: 16px 16px 0;
+  margin: -16px -16px 16px;
+
+  @media (min-width: breakpoint('sm.min')) {
+    margin: -24px -24px 16px;
+  }
 }

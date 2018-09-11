@@ -8,4 +8,5 @@ export class StudentRun extends Run {
   workgroupMembers: any;
   workgroupNames: string;
   error: string;
+  isHighlighted: boolean;
 }

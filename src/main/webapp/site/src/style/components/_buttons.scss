@@ -1,10 +1,22 @@
 @import '~@angular/material/theming';
 
-.mat-button, .mat-raised-button {
+.mat-button, .mat-raised-button, .mat-flat-button, .mat-stroked-button {
   text-transform: uppercase;
 
   &:hover, &:focus {
     text-decoration: none;
+  }
+
+  &:not(.mat-icon-button) {
+    border-radius: $card-border-radius;
+  }
+}
+
+.mat-raised-button {
+  &:not(.mat-icon-button) {
+    &:not([class*=mat-elevation-z]) {
+      @include mat-elevation(3);
+    }
   }
 }
 

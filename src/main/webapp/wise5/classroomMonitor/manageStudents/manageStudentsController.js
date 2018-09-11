@@ -22,4 +22,4 @@ var ManageStudentsController = function ManageStudentsController($injector, $fil
 ManageStudentsController.$inject = ['$injector', '$filter', '$mdDialog', '$rootScope', '$scope', '$state', 'AchievementService', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService', 'moment'];
 
 exports.default = ManageStudentsController;
-//# sourceMappingURL=ManageStudentsController.js.map
+//# sourceMappingURL=manageStudentsController.js.map

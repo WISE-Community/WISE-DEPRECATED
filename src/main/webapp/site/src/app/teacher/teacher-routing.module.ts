@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from "./auth.guard";
 import { TeacherComponent } from "../teacher/teacher.component";
 import { TeacherHomeComponent } from "../teacher/teacher-home/teacher-home.component";
+import { EditComponent } from "./account/edit/edit.component";
 
 const teacherRoutes: Routes = [
   {
@@ -13,7 +14,7 @@ const teacherRoutes: Routes = [
     children: [
       { path: '', component: TeacherHomeComponent },
       { path: 'profile', redirectTo: '', pathMatch: 'full' },
-      //{ path: 'profile/edit', component: TeacherEditProfileComponent }
+      { path: 'profile/edit', component: EditComponent }
     ]
   }
 ];

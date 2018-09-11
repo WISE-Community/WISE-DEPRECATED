@@ -1,7 +1,7 @@
 .mat-dialog-container {
   max-width: 100%;
 
-  @media (max-width: breakpoint('sm.min') - 1) {
+  @media (max-width: breakpoint('xs.max')) {
     padding: 16px !important;
 
     .mat-dialog-content {
@@ -27,8 +27,9 @@
   width: breakpoint('xl.min');
 }
 
+
 .cdk-overlay-pane {
-  @media (max-width: breakpoint('sm.min') - 1) {
+  @media (max-width: breakpoint('xs.max')) {
     max-width: 90vw;
   }
 }

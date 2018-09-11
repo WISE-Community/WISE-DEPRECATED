@@ -24,18 +24,8 @@
     background-color: map-get($colors, control-bg);
   }
 
-  .content-block {
-    background-color: map-get($background, background);
-  }
-
-  .notice, .info-block {
+  .content-block, .info-block, .notice {
     background-color: map-get($colors, notice-bg);
-  }
-
-  .cta {
-    .mat-button-focus-overlay {
-      display: none;
-    }
   }
 
   .cta__headline {
@@ -52,18 +42,8 @@
     }
   }
 
-  .mat-button, .mat-raised-button {
-    &:not(.mat-icon-button) {
-      border-radius: $card-border-radius;
-    }
-  }
-
-  .mat-raised-button {
-    &:not(.mat-icon-button) {
-      &:not([class*=mat-elevation-z]) {
-        @include mat-elevation(3);
-      }
-    }
+  .mat-button, .mat-raised-button, .mat-flat-button, .mat-stroked-button {
+    min-width: 0;
   }
 
   .mat-card {
@@ -71,7 +51,7 @@
   }
 
   .mat-dialog-container {
-    border-radius: 3px;
+    border-radius: $card-border-radius;
   }
 
   .mat-dialog-actions {
@@ -90,6 +70,10 @@
 
   .mat-tab-label-active {
     opacity: 1;
+  }
+
+  .mat-form-field-prefix, .mat-form-field-suffix {
+    color: map-get($foreground, secondary-text);
   }
 
   // Set classes for each named color in the $colors map
