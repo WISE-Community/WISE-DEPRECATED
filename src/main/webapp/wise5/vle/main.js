@@ -349,7 +349,7 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
   $translatePartialLoaderProvider.addPart('vle/i18n');
   $translateProvider.useLoader('$translatePartialLoader', {
     urlTemplate: 'wise5/{part}/i18n_{lang}.json'
-  }).fallbackLanguage(['en']).registerAvailableLanguageKeys(['el', 'en', 'es', 'ja', 'ko', 'pt', 'tr', 'zh_CN', 'zh_TW'], {
+  }).fallbackLanguage(['en']).registerAvailableLanguageKeys(['ar', 'el', 'en', 'es', 'ja', 'ko', 'pt', 'tr', 'zh_CN', 'zh_TW'], {
     'en_US': 'en',
     'en_UK': 'en'
   }).determinePreferredLanguage().useSanitizeValueStrategy('sanitizeParameters', 'escape');

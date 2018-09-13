@@ -1,1 +1,19 @@
-{}
+{
+  "match.addBucket": "إضافة مستودع",
+  "match.addChoice": "إضافة خيار ",
+  "match.areYouSureYouWantToDeleteThisBucket": " هل أنت متأكد من رغبتك في حذف هذا المستودع؟",
+  "match.areYouSureYouWantToDeleteThisChoice": "هل أنت متأكد من رغبتك في حذف هذا الخيار؟",
+  "match.bucketName": "اسم المستودع",
+  "match.buckets": "المستودعات",
+  "match.choiceName": "اسم الخيار",
+  "match.choices": "الخيارات",
+  "match.choicesNeedToBeOrderedWithinBuckets": "يجب ترتيب الخيارات داخل المستودعات",
+  "match.componentTypeLabel": "تطابق",
+  "match.correctBucketButWrongPosition": "المستودع صحيح ولكن الموضع خاطئ",
+  "match.deleteBucket": "حذف المستودع",
+  "match.deleteChoice": "حذف الخيار",
+  "match.incorrectPositionFeedback": "ملاحظات حول موضع خاطئ",
+  "match.originBucketName": "اسم المستودع الأصلي",
+  "match.position": "الموضع",
+  "match.showPrivateNotesAsChoices": "عرض ملاحظات خاصة مثل الخيارات"
+}

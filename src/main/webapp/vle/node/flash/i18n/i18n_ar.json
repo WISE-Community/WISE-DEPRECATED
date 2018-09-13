@@ -1,0 +1,14 @@
+{
+    "enlarge": {
+        "description": "'enlarge' link text in the grading tool for viewing flash in a bigger window",
+        "value": "التكبير"
+    },
+    "error_student_data_not_found": {
+        "description": "Error message to display in the grading tool when student data is not found",
+        "value": "خطأ: لم يتم العثور على بيانات الطالب. تحقق من ملف الفلاش للتأكد من أن تنسيق التصدير صحيح."
+    },
+    "error_custom_content_not_found": {
+        "description": "Error message to display in the grading tool when the custom grading content is not found",
+        "value": "خطأ: لم يتم العثور على محتوى تقييم مخصص. تحقق من ملف الفلاش للتأكد من أن تنسيق التصدير صحيح."
+    }
+}

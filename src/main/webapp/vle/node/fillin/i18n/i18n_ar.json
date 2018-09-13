@@ -1,0 +1,66 @@
+{
+    "fill_in_the_blanks": {
+        "description": "The text 'Fill in the blanks'",
+        "value": "املأ الفراغات"
+    },
+    "fill_in_the_blank_instructions": {
+        "description": "The instruction text for students for this step",
+        "value": "املأ كل فراغ بالكلمة / الكلمات الصحيحة."
+    },
+    "help": {
+        "description": "The text 'help' to show on the help button",
+        "value": "التعليمات"
+    },
+    "correct": {
+        "description": "The word 'Correct' to display when student fills in the right answer.",
+        "value": "صحيح"
+    },
+    "incorrect": {
+        "description": "The word 'Incorrect' to display in the gradingtool next to incorrect student answers.",
+        "value": "غير صحيح."
+    },
+    "answer_for_blank": {
+        "description": "Text indicating which blank the student is currently on",
+        "value": "إجابة الفراغ رقم {0}"
+    },
+    "check_answer": {
+        "description": "Text for the 'check answer' button",
+        "value": "تحقق من الإجابة"
+    },
+    "try_again": {
+        "description": "Text for the 'try again' button",
+        "value": "المحاولة مجددًا"
+    },
+    "next_button": {
+        "description": "Text for the 'Next Blank' button",
+        "value": "الفراغ التالي"
+    },
+    "all_correct_msg": {
+        "description": "The message to display when student fills in all the right answers.",
+        "value": "لقد ملأت جميع الفراغات بنجاح.\nعمل مذهل!"
+    },
+    "not_correct_msg": {
+        "description": "The message to display when student fills in an incorrect answer.",
+        "value": "غير صحيح أو به خطأ إملائي"
+    },
+    "successfully_filled_in_part1": {
+        "description": "'You successfully filled' part of 'You successfully filled x blanks in y tries'",
+        "value": "لقد ملأت"
+    },
+    "successfully_filled_in_one_blank_in": {
+        "description": "'1 blank in' part of 'You successfully filled x blanks in y tries'",
+        "value": "الفراغ 1 من"
+    },
+    "successfully_filled_in_x_blanks_in": {
+        "description": "'x blanks in' part of 'You successfully filled x blanks in y tries'",
+        "value": " الفراغات {0}"
+    },
+    "successfully_filled_in_one_try": {
+        "description": "'1 try' part of 'You successfully filled x blanks in y tries'",
+        "value": " بمحاولة وحيدة."
+    },
+    "successfully_filled_in_y_tries": {
+        "description": "'y tries' part of 'You successfully filled x blanks in y tries'",
+        "value": "{0} محاولات."
+    }
+}

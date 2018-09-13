@@ -1,0 +1,122 @@
+{
+    "questionnaire": {
+        "description": "The text 'questionnaire' in the page title",
+        "value": "استبيان"
+    },
+    "question": {
+        "description": "The text 'question' in the step header, right above where the prompt/question is shown",
+        "value": "السؤال"
+    },
+    "submit": {
+        "description": "The text 'Submit the Questionnaire' on the button shown at the bottom of the questionnaire",
+        "value": "إرسال الاستبيان"
+    },
+    "save_draft": {
+        "description": "The text 'SAVE DRAFT' on the button shown at the bottom of the questionnaire",
+        "value": "حفظ مسودة"
+    },
+    "original_question": {
+        "description": "The text 'original question' used in peer review steps",
+        "value": "السؤال الأصلي "
+    },
+    "show_hide_text": {
+        "description": "The text 'show/hide text' for the button used in peer review steps",
+        "value": "عرض/إخفاء النص"
+    },
+    "text_is_hidden": {
+        "description": "The text 'text is hidden' used in peer review steps",
+        "value": " النص مخفى"
+    },
+    "your_original_response...": {
+        "description": "The text used as a place holder to show the original response in peer review steps",
+        "value": " إجابتك الأصلية...هذا النص مكتوب بواسطة javascript"
+    },
+    "annotation": {
+        "description": "The text 'annotation' used in peer review steps",
+        "value": "تعليق توضيحي"
+    },
+    "to_start_this_step_you_must": {
+        "description": "The message to tell the student they must submit a response in another step before they can work on this step",
+        "value": "لبدء هذه الخطوة يجب أولًا إرسال رد في الخطوة"
+    },
+    "link": {
+        "description": "The word 'link' used to notify the user that the text is a link",
+        "value": "رابط"
+    },
+    "this_step_is_not_available_yet": {
+        "description": "The text to notify the student that they can't work on this step yet because it is part of a peer review sequence",
+        "value": "هذه الخطوة غير متوفرة حتى الآن."
+    },
+    "more_of_your_peers_need_to_submit": {
+        "description": "The text to notify the student that more of their classmates need to submit work to this peer review sequence step",
+        "value": "يحتاج الكثير من زملائك إلى إرسال رد لهذه الخطوة"
+    },
+    "you_will_then_be_assigned_a_response": {
+        "description": "The text to notify the student that they will be assigned to review one of their classmate's work",
+        "value": "سيتم تعيين رد لك للمعاينة"
+    },
+    "please_return_to_this_step_again": {
+        "description": "The text to notify the student to try coming back to this step later",
+        "value": "يرجى الرجوع إلى هذه الخطوة مرة أخرى بعد بضع دقائق."
+    },
+    "instructions": {
+        "description": "The text 'instructions'",
+        "value": "التعليمات"
+    },
+    "your_feedback_for": {
+        "description": "The text 'your feedback for'",
+        "value": " ملاحظاتك حول"
+    },
+    "team_anonymous": {
+        "description": "The label to show student work is from an anonymous team",
+        "value": "الفريق مجهول"
+    },
+    "work_submitted_by": {
+        "description": "The label to show who submitted the work",
+        "value": "تم إرسال العمل بواسطة"
+    },
+    "you_have_successfully_reviewed": {
+        "description": "The text to notify the student that they have reviewed their classmate's work",
+        "value": "راجعتَ بنجاح العمل المرسل بواسطة"
+    },
+    "well_done": {
+        "description": "The text 'Well done!'",
+        "value": "أحسنت!"
+    },
+    "prompt_from_first_peer_review": {
+        "description": "The text to notify the user that the prompt from the first step in the peer review sequence will appear here",
+        "value": "سوف يُعرض هنا اقتراح من جانب خطوة مراجعة النظير الأولى "
+    },
+    "work_from_a_random_classmate": {
+        "description": "The text to notify the user that the work from a random classmate will display here",
+        "value": "سوف يعرض هنا عمل أحد زملاء الفصل الدراسي عشوائيًا"
+    },
+    "please_answer_all_the_questions": {
+        "description": "The text to notify the user that they should answer all the questions before submitting",
+        "value": "يرجى الإجابة على جميع الأسئلة قبل إرسال هذا الاستبيان."
+    },
+    "your_work_has_been_saved": {
+        "description": "The text that notifies the user that their work has been saved",
+        "value": "تم حفظ عملك."
+    },
+    "your_work_has_been_submitted": {
+        "description": "The text that notifies the user that their work has been submitted",
+        "value": "تم إرسال عملك."
+    },
+    "you_have_completed_this_step": {
+        "description": "The text that notifies the user that they have completed this step",
+        "value": "لقد أكملت هذه الخطوة."
+    },
+    "grading_item_part_number": {
+        "description": "'Part X:' to show in the grading view for each item part",
+        "value": "الجزء {0}:"
+    },
+    "show_starter_sentence": {
+        "description": "The text for the show starter sentence button",
+        "value": "عرض جملة البدء"
+    },
+    "click_ok_to_save": {
+        "description": "The text to notify the student to click 'OK' to save and lock the step",
+        "value": "انقر فوق \"موافق\" للحفظ وقفل هذه الخطوة. سوف يُحفظ عملك ولن تكون قادرًا على إجراء أي تغييرات أخرى.\nإذا كنت ترغب في الاستمرار في العمل على هذه الخطوة، فانقر فوق \"إلغاء\"."
+    }
+}

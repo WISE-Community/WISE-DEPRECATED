@@ -1,0 +1,118 @@
+{
+    "ok": {
+        "description": "Text for the word 'OK'",
+        "value": "موافق"
+    },
+    "cancel": {
+        "description": "Text for the word 'Cancel'",
+        "value": "إلغاء"
+    },
+    "revise": {
+        "description": "Text for link to revise a changed idea",
+        "value": "مراجعة"
+    },
+    "keep": {
+        "description": "Text for link to keep a changed idea",
+        "value": "احتفاظ"
+    },
+    "restoreAndRevise": {
+        "description": "Text for link to restore and revise a deleted idea",
+        "value": "استرداد ومراجعة"
+    },
+    "remove": {
+        "description": "Text for link to remove a deleted idea from the organizing space",
+        "value": "إزالة"
+    },
+    "readyToExplain": {
+        "description": "Text for the ready to explain button",
+        "value": "مستعد للشرح!"
+    },
+    "saveResponse": {
+        "description": "Text for the save explanation response button",
+        "value": "حفظ الرد"
+    },
+    "undoChanges": {
+        "description": "Text for the save explanation response button",
+        "value": "التراجع عن التغييرات"
+    },
+    "organizingSpace_instructions": {
+        "description": "Instructions to show when the idea organizing space is empty.",
+        "value": "هذه هي مساحة الترتيب الخاصة بك. اسحب {0} هنا لمساعدتك في إعداد رد على الأسئلة أو التعليمات أعلاه."
+    },
+    "organizingSpace_explainInstructions": {
+        "description": "Text to display in the organizing space when the explanation feature is enabled.",
+        "value": "عند الانتهاء من ترتيب {0}، انقر فوق \"{1}\"."
+    },
+    "constraint_mustCompleteExplainWarning": {
+        "description": "Text to display when user tries to advance in the project before completing this Explanation Builder step",
+        "value": "يجب عليك إتمام عمل {0} {1} قبل الاستمرار.\n\nرتب بعض {2} في مساحة الترتيب.\nثم اختر \"{3}\" واكتب إجابتك.\nعند الانتهاء، حدد \"{4}\"."
+    },
+    "constraint_mustCompleteWarning": {
+        "description": "Text to display when user tries to advance in the project before completing this Explanation Builder step (with explanation feature enabled)",
+        "value": "يجب عليك إتمام عمل {0} {1} قبل الاستمرار.\n\nرتب بعض {2} في مساحة الترتيب."
+    },
+    "ideaBasket_empty": {
+        "description": "Text to display when idea basket is empty",
+        "value": "{0} الخاص بك فارغ. انقر فوق \"{l}\" لبدء إضافة {2}."
+    },
+    "ideaTableHeader": {
+        "description": "Header text for the ideas table",
+        "value": "{0} الخاص بك"
+    },
+    "addIdea_title": {
+        "description": "Title text for the add new idea dialog/form",
+        "value": "إضافة {0} جديد"
+    },
+    "addIdea_textLabel": {
+        "description": "Label for the idea text input field in add or edit idea forms",
+        "value": "اكتب {0} الخاص بك هنا*:"
+    },
+    "addIdea_required": {
+        "description": "Message to display when a field is required in add or edit idea forms",
+        "value": "يرجى تحديد (1) واحد على الأقل."
+    },
+    "editIdea_title": {
+        "description": "Title text for the edit idea dialog/form",
+        "value": "تعديل {0} الخاص بك"
+    },
+    "reviseIdea_title": {
+        "description": "Title text for the revise idea dialog/form",
+        "value": "مراجعة {0} الخاص بك"
+    },
+    "restoreIdea_title": {
+        "description": "Title text for the revise & restore idea dialog/form",
+        "value": "استرداد {0} الخاص بك"
+    },
+    "saveConfirmation": {
+        "description": "Message to display when student has completed the step",
+        "value": "تم الحفظ! إذا انتهيت، فانتقل إلى {0} التالي."
+    },
+    "unsavedChangesWarning": {
+        "description": "Warning to display in confirmation dialog when user attempts to leave step without saving response",
+        "value": "انتبه، لديك تغييرات لم تُحفظ!\n\nإذا كنت ترغب في حفظ إجابتك، فاختر {0} وانقر زر {1}.\n\nهل أنت متأكد من رغبتك في المغادرة دون حفظ؟"
+    },
+    "error_failedToRetrieveBasket": {
+        "description": "Error text to display when system fails to retrieve the Idea Basket from the server",
+        "value": "خطأ: فشل الاسترجاع {0}! لن تكون قادرًا على العمل على {1} هذا. يرجى إعادة تحميل {1} وتحديث المشروع للمحاولة مرة أخرى."
+    },
+    "idea_title": {
+        "description": "Title/tooltip to display for ideas listed in the Explanation Builder",
+        "value": "انقر واسحب للإضافة لمساحة الترتيب، وانقر نقرًا مزدوجًا للتعديل"
+    },
+    "usedIdea_title": {
+        "description": "Title/tooltip to display for ideas used in the organizing space",
+        "value": "انقر واسحب للانتقال، انقر لتغيير اللون"
+    },
+    "editIdea_changeConfirm": {
+        "description": "Text for the warning confirmation dialog that appears when users attempt to edit an idea that is being used in Explanation Builder steps",
+        "value": "إن {0} هذا مستخدم حاليًا في الخطوات التالية:\n{l}\n\nإذا غيرت {2}، فسوف تغير أيضًا إجابتك في هذه الخطوات."
+    },
+    "ideaChangedAlert": {
+        "description": "Text for alert box that appears when an idea being used in this Explanation Builder step has been modified in some way",
+        "value": "تم <b>تغيير</b> {0} منذ أن أضفته إلى مساحة الترتيب. ماذا تريد أن تفعل؟"
+    },
+    "ideaDeletedAlert": {
+        "description": "Text for alert box that appears when an idea being used in this Explanation Builder step has been deleted",
+        "value": "تم <b>حذف</b> {0}. ماذا تريد أن تفعل؟"
+    }
+}
