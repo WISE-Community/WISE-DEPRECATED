@@ -64,6 +64,19 @@ public class TeacherAPIController {
   protected String getRuns() throws JSONException {
     User user = ControllerUtil.getSignedInUser();
     List<Run> runs = runService.getRunListByOwner(user);
+    JSONArray runsJSONArray = getRunsJSON(runs);
+    return runsJSONArray.toString();
+  }
+
+  @RequestMapping(value = "/sharedruns", method = RequestMethod.GET)
+  protected String getSharedRuns() throws JSONException {
+    User user = ControllerUtil.getSignedInUser();
+    List<Run> runs = runService.getRunListBySharedOwner(user);
+    JSONArray runsJSONArray = getRunsJSON(runs);
+    return runsJSONArray.toString();
+  }
+
+  protected JSONArray getRunsJSON(List<Run> runs) throws JSONException {
     JSONArray runsJSONArray = new JSONArray();
     for (Run run : runs) {
       JSONObject runJSON = getRunJSON(run);
@@ -71,7 +84,7 @@ public class TeacherAPIController {
       runJSON.put("project", projectJSON);
       runsJSONArray.put(runJSON);
     }
-    return runsJSONArray.toString();
+    return runsJSONArray;
   }
 
   private JSONObject getRunJSON(Run run) throws JSONException {

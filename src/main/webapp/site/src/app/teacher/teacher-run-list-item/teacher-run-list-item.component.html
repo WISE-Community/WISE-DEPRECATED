@@ -54,6 +54,7 @@
     </mat-card-subtitle>
   </mat-card-content>
   <mat-card-actions fxLayout="row wrap" fxLayoutAlign="end center">
+    <div *ngIf="run.shared" class="run-list-item__shared-owner">Owned by {{ run.teacherDisplayName }}</div>
     <span fxFlex="1 1 auto"></span>
     <ng-container *ngIf="isScheduled()">
       <a mat-button

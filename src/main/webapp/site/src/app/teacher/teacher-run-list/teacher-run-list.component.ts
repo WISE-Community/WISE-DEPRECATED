@@ -11,6 +11,8 @@ import { TeacherRun } from "../teacher-run";
 export class TeacherRunListComponent implements OnInit {
 
   runs: TeacherRun[] = [];
+  personalRuns: TeacherRun[] = [];
+  sharedRuns: TeacherRun[] = [];
   filteredRuns: TeacherRun[] = [];
   filteredActiveTotal: number = 0;
   filteredCompletedTotal: number = 0;
@@ -22,6 +24,8 @@ export class TeacherRunListComponent implements OnInit {
     { 'value': '', 'label': 'All Periods' }
   ];
   filterValue: string = '';
+  isPersonalRunsRetrieved: boolean = false;
+  isSharedRunsRetrieved: boolean = false;
 
   constructor(private teacherService: TeacherService) {
     teacherService.newRunSource$.subscribe(run => {
@@ -37,20 +41,56 @@ export class TeacherRunListComponent implements OnInit {
 
   ngOnInit() {
     this.getRuns();
+    this.getSharedRuns();
   }
 
   getRuns(): void {
     this.teacherService.getRuns()
-      .subscribe(runs => {
-        let teacherRuns: TeacherRun[] = runs as TeacherRun[];
-        this.runs = teacherRuns;
-        this.filteredRuns = teacherRuns;
-        this.populatePeriods(teacherRuns);
-        this.sortPeriods();
-        this.populateFilterOptions();
-        this.performSearchAndFilter();
-        this.loaded = true;
+      .subscribe(personalRuns => {
+        this.personalRuns = personalRuns as TeacherRun[];
+        this.isPersonalRunsRetrieved = true;
+        this.processRunsIfReady();
       });
+  }
+
+  getSharedRuns(): void {
+    this.teacherService.getSharedRuns()
+      .subscribe(sharedRuns => {
+        this.sharedRuns = sharedRuns as TeacherRun[];
+        for (let sharedRun of this.sharedRuns) {
+          sharedRun.shared = true;
+        }
+        this.isSharedRunsRetrieved = true;
+        this.processRunsIfReady();
+      });
+  }
+
+  processRunsIfReady() {
+    if (this.isPersonalRunsRetrieved && this.isSharedRunsRetrieved) {
+      this.processRuns();
+    }
+  }
+
+  processRuns() {
+    const runs = this.personalRuns.concat(this.sharedRuns);
+    runs.sort(this.sortByRunIdDesc);
+    this.runs = runs;
+    this.filteredRuns = runs;
+    this.populatePeriods(runs);
+    this.sortPeriods();
+    this.populateFilterOptions();
+    this.performSearchAndFilter();
+    this.loaded = true;
+  }
+
+  sortByRunIdDesc(a, b) {
+    if (a.id < b.id) {
+      return 1;
+    } else if (a.id > b.id) {
+      return -1;
+    } else {
+      return 0;
+    }
   }
 
   populatePeriods(runs: TeacherRun[]): void {

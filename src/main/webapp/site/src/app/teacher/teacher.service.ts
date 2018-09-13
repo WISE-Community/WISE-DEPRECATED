@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable ,  of } from "rxjs";
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { catchError, tap } from "rxjs/operators";
 import { Project } from "./project";
 import { Teacher } from "../domain/teacher";
-import { User } from "../domain/user";
 import { Run } from "../domain/run";
 import { Subject } from "rxjs";
 
@@ -12,6 +10,7 @@ import { Subject } from "rxjs";
 export class TeacherService {
 
   private runsUrl = 'api/teacher/runs';
+  private sharedRunsUrl = 'api/teacher/sharedruns';
   private registerUrl = 'api/teacher/register';
   private runPermissionUrl = 'api/teacher/run/permission';
   private projectPermissionUrl = 'api/teacher/project/permission';
@@ -26,12 +25,17 @@ export class TeacherService {
   private updateProfileUrl = 'api/teacher/profile/update';
   private tabIndexSource = new Subject<number>();
   public tabIndexSource$ = this.tabIndexSource.asObservable();
-  
+
   constructor(private http: HttpClient) { }
 
   getRuns(): Observable<Run[]> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
     return this.http.get<Run[]>(this.runsUrl, { headers: headers });
+  }
+
+  getSharedRuns(): Observable<Run[]> {
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    return this.http.get<Run[]>(this.sharedRunsUrl, { headers: headers });
   }
 
   getRun(runId: number): Observable<Run> {
