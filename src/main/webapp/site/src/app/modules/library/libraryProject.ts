@@ -8,4 +8,5 @@ export class LibraryProject {
   thumbStyle: any;
   type: string;
   visible: boolean = true;
+  shared: boolean = false;
 }
