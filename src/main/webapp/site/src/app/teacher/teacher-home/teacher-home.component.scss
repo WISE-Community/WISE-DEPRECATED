@@ -13,11 +13,7 @@ h1 {
 
 mat-icon {
   padding-right: 8px;
-  @include mat-icon-size(52px);
-
-  @media (min-width: breakpoint('sm.min')) {
-    @include mat-icon-size(56px);
-  }
+  @include mat-icon-size(36px);
 }
 
 .content-block {

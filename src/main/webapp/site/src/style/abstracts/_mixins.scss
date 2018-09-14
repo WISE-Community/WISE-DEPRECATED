@@ -68,6 +68,16 @@
     }
   }
 
+  .mat-menu-item {
+    &.active {
+      background-color: map-get($background, hover);
+
+      .mat-icon {
+        color: map-get($colors, primary);
+      }
+    }
+  }
+
   .mat-tab-label-active {
     opacity: 1;
   }
