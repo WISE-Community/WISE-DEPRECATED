@@ -1,107 +1,15 @@
 @import
-'~@angular/material/theming',
-'~style/abstracts/variables',
-'~style/abstracts/mixins',
-'~style/abstracts/functions';
+  '~@angular/material/theming',
+  '~style/abstracts/variables',
+  '~style/abstracts/mixins',
+  '~style/abstracts/functions';
 
-.library {
-  text-align: left;
-  border-radius: $card-border-radius;
-  overflow: hidden;
-
-  h2 {
-    font-weight: 400;
-    margin-bottom: 8px;
-
-    mat-icon {
-      margin-right: 8px;
-    }
-  }
-
-  app-search-bar {
-    width: 100%;
-  }
+.library-home {
+  margin-bottom: 32px;
 }
 
-.library__header {
-  color: #ffffff;
-  margin-bottom: 16px;
-  border-radius: 0;
-
-  @media (min-width: breakpoint('md.min')) {
-    margin-bottom: 0;
-  }
-
-  .info-block {
-    background-color: transparent;
-    padding: 0 0 16px;
-    font-size: mat-font-size($config, subheading-2);
-  }
-}
-
-.library__content {
-  &.content-block {
-    background-color: transparent;
-  }
-
+.library-home__content {
   .notice {
     margin-top: 0;
   }
-}
-
-.library__filters {
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height .25s ease;
-
-  &.expand {
-    max-height: 1000px;
-  }
-
-  @media (min-width: breakpoint('md.min')) {
-    max-height: 1000px;
-  }
-}
-
-.library__filter-toggle {
-  margin-left: 4px;
-
-  @media (min-width: breakpoint('md.min')) {
-    display: none;
-  }
-}
-
-.library__filter {
-  margin: 0;
-}
-
-.library__groups {
-  margin-top: 16px;
-  display: block;
-}
-
-.library-group {
-  .mat-content {
-    align-items: center;
-    font-weight: 500;
-  }
-
-  .mat-expansion-panel-body {
-    padding: 0 16px 16px;
-  }
-
-  &:not(.mat-expanded) {
-    .mat-expansion-indicator {
-      padding-left: 16px;
-    }
-  }
-}
-
-.library-group__title {
-  white-space: nowrap;
-  margin-right: 8px;
-}
-
-.library__links {
-  margin-top: 48px;
 }

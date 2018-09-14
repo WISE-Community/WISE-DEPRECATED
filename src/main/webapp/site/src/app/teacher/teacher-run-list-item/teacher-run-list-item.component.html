@@ -6,14 +6,16 @@
         <mat-card-title [class.secondary-text]="run.endTime">{{ run.project.name }}</mat-card-title>
         <mat-card-subtitle fxHide fxShow.gt-xs>
           <div>
-            <a [matTooltip]="periodsString()" matTooltipPosition="above">
+            <span class="more-info"
+                  [matTooltip]="periodsString()"
+                  matTooltipPosition="above">
               {{run.periods.length}}
               <ng-container [ngPlural]="run.periods.length">
                 <ng-template ngPluralCase="=0">periods</ng-template>
                 <ng-template ngPluralCase="=1">period</ng-template>
                 <ng-template ngPluralCase="other">periods</ng-template>
               </ng-container>
-            </a> |
+            </span> |
             <a href="{{ manageStudentsLink }}">
               {{run.numStudents}}
               <ng-container [ngPlural]="run.numStudents">
@@ -72,8 +74,8 @@
     </ng-container>
     <ng-container *ngIf="run.endTime">
       <a mat-button color="primary" href="{{ gradeAndManageLink }}">
-        <mat-icon class="primary">history</mat-icon>
-        Review
+        <mat-icon class="primary">build</mat-icon>
+        Teacher Tools
       </a>
     </ng-container>
   </mat-card-actions>

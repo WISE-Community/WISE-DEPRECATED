@@ -104,6 +104,7 @@ public class ProjectAPIController {
     projectJSON.put("id", project.getId());
     projectJSON.put("name", project.getName());
     projectJSON.put("metadata", project.getMetadata().toJSONObject());
+    projectJSON.put("projectThumb", getProjectThumb(project));
     return projectJSON;
   }
 
@@ -119,23 +120,28 @@ public class ProjectAPIController {
         Project project = projectService.getById(projectId);
         ProjectMetadata metadata = project.getMetadata();
         projectLibraryGroup.put("metadata", metadata.toJSONObject());
-        String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
-        String projectThumb = "";
-        String modulePath = project.getModulePath();
-        int lastIndexOfSlash = modulePath.lastIndexOf("/");
-        if (lastIndexOfSlash != -1) {
-          /*
-           * The project thumb url by default is the same (/assets/project_thumb.png)
-           * for all projects, but this could be overwritten in the future
-           * e.g. /253/assets/projectThumb.png
-           */
-          projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
-        }
-        projectLibraryGroup.put("projectThumb", projectThumb);
+        projectLibraryGroup.put("projectThumb", getProjectThumb(project));
+        projectLibraryGroup.put("name", project.getName());
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
     }
+  }
+
+  private String getProjectThumb(Project project) {
+    String projectThumb = "";
+    String modulePath = project.getModulePath();
+    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    int lastIndexOfSlash = modulePath.lastIndexOf("/");
+    if (lastIndexOfSlash != -1) {
+      /*
+       * The project thumb url by default is the same (/assets/project_thumb.png)
+       * for all projects, but this could be overwritten in the future
+       * e.g. /253/assets/projectThumb.png
+       */
+      projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
+    }
+    return projectThumb;
   }
 
   /**

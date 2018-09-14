@@ -11,7 +11,7 @@
   color: map-get($foreground, text);
 
   a {
-    &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item):not(.mat-flat-button):not(.mat-stroked-button) {
+    &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item):not(.mat-flat-button):not(.mat-stroked-button):not(.mat-icon-button) {
       color: map-get($colors, primary);
     }
   }
@@ -37,7 +37,7 @@
   }
 
   .mat-button {
-    &:not(.mat-raised-button):not(.mat-menu-item):not(.mat-flat-button):not(.mat-stroked-button) {
+    &:not(.mat-raised-button):not(.mat-flat-button):not(.mat-stroked-button):not(.mat-icon-button):not(.mat-menu-item) {
       background-color: map-get($colors, btn-bg);
     }
   }
@@ -66,6 +66,20 @@
     &.mat-expanded {
       @include mat-elevation(6);
     }
+  }
+
+  .mat-menu-item {
+    &.active {
+      background-color: map-get($background, hover);
+
+      .mat-icon {
+        color: map-get($colors, primary);
+      }
+    }
+  }
+
+  .mat-tab-label-active {
+    opacity: 1;
   }
 
   .mat-form-field-prefix, .mat-form-field-suffix {

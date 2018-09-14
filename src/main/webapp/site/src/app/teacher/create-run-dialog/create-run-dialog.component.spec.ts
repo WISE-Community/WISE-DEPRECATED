@@ -33,7 +33,9 @@ describe('CreateRunDialogComponent', () => {
     component = fixture.componentInstance;
     const project: Project = new Project();
     project.id = 1;
-    project.name = "Photosynthesis";
+    project.metadata = {
+      "title": "Photosynthesis"
+    };
     project.thumbIconPath = "photo.png";
     component.project = project;
     fixture.detectChanges();

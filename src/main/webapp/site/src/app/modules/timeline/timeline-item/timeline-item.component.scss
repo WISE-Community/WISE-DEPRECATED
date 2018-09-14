@@ -11,7 +11,7 @@
   padding-bottom: 24px;
 
   @media (min-width: breakpoint('md.min')) {
-    margin-left: 124px;
+    margin-left: 132px;
     padding-left: 32px;
     padding-top: 12px;
   }
@@ -51,9 +51,9 @@
   @media (min-width: breakpoint('md.min')) {
     position: absolute;
     top: 0;
-    left: -124px;
+    left: -132px;
     text-align: right;
-    width: 100px;
+    width: 108px;
     margin: 0;
   }
 }

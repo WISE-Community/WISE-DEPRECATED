@@ -103,6 +103,23 @@ export class LibraryProjectDetailsComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  menuAction(value: string): void {
+    switch(value) {
+      case 'copy':
+        this.copyProject();
+        break;
+      case 'run':
+        this.runProject();
+        break;
+      case 'edit':
+        this.editProject();
+        break;
+      case 'share':
+          this.shareProject();
+          break;
+    }
+  }
+
   copyProject() {
     this.libraryService.copyProject(this.data.project.id).subscribe((newProject: Project) => {
       const newLibraryProject: LibraryProject = new LibraryProject();
@@ -122,5 +139,13 @@ export class LibraryProjectDetailsComponent implements OnInit {
     this.dialog.open(CreateRunDialogComponent, {
       data: this.data
     });
+  }
+
+  shareProject() {
+
+  };
+
+  editProject() {
+
   }
 }

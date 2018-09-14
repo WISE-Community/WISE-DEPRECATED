@@ -14,7 +14,9 @@
                     [value]="searchValue"
                     (update)="searchChanged($event)"></app-search-bar>
     <span fxFlex="1 1 auto" fxHide fxShow.gt-sm></span>
-    <app-select-menu [options]="filterOptions"
+    <app-select-menu fxFlex="0 0 auto"
+                     fxFlex.sm="0 0 calc(50%-8px)"
+                     [options]="filterOptions"
                      [placeholderText]="'Filter By Period'"
                      [value]="filterValue"
                      (update)="filterChanged($event)"

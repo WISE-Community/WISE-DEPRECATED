@@ -1,19 +1,38 @@
-<div class="library notice-bg-bg">
-  <div fxLayout="column" fxLayout.gt-sm="row">
+<div fxLayout="row" fxLayoutAlign="end center">
+  <a mat-raised-button color="accent" href="/wise/author">
+    <mat-icon>add</mat-icon>
+    Create
+  </a>
+</div>
+<div class="library library-teacher notice-bg-bg" fxLayout="column" fxLayout.gt-sm="row">
+  <div class="content-block dark-theme library__header library-teacher__header primary-bg"
+       fxFlex.gt-sm="33">
+    <h3>Search & Filter</h3>
     <app-library-filters (update)="filterUpdated($event)"></app-library-filters>
-    <div class="library__content content-block"
-         fxFlex.gt-sm="67">
-      <mat-tab-group [(selectedIndex)]="selectedTabIndex">
-        <mat-tab label="WISE Tested ({{numberOfOfficialProjectsVisible}})">
+  </div>
+  <div class="library__content library-teacher__content" fxFlex.gt-sm="67">
+    <mat-tab-group [(selectedIndex)]="selectedTabIndex"
+                   aria-label="Select unit library view"
+                   backgroundColor="primary"
+                   mat-stretch-tabs>
+      <mat-tab label="WISE Tested ({{numberOfOfficialProjectsVisible}})">
+        <div class="notice">Suggested unit sequences developed and tested by the WISE team</div>
+        <div class="content-block">
           <app-official-library (update)="updateNumberOfOfficialProjectsVisible($event)"></app-official-library>
-        </mat-tab>
-        <mat-tab label="Community Built ({{numberOfCommunityProjectsVisible}})">
+        </div>
+      </mat-tab>
+      <mat-tab label="Community Built ({{numberOfCommunityProjectsVisible}})">
+        <div class="notice">Units designed and shared by WISE community members</div>
+        <div class="content-block">
           <app-community-library (update)="updateNumberOfCommunityProjectsVisible($event)"></app-community-library>
-        </mat-tab>
-        <mat-tab label="My Units ({{numberOfPersonalProjectsVisible}})">
+        </div>
+      </mat-tab>
+      <mat-tab label="My Units ({{numberOfPersonalProjectsVisible}})">
+        <div class="notice">Units owned by or shared with you</div>
+        <div class="content-block">
           <app-personal-library (update)="updateNumberOfPersonalProjectsVisible($event)"></app-personal-library>
-        </mat-tab>
-      </mat-tab-group>
-    </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </div>
