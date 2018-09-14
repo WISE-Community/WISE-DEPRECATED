@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RunMenuComponent } from "./run-menu.component";
 import { TeacherService } from "../teacher.service";
-import { Run } from "../../domain/run";
 import { Project } from "../project";
 import { FormsModule } from "@angular/forms";
+import { BehaviorSubject, Observable } from 'rxjs';
 import {
   MatDialog,
   MatDividerModule,
@@ -11,12 +11,33 @@ import {
   MatIconModule,
   MatMenuModule
 } from "@angular/material";
+import { UserService } from "../../services/user.service";
+import { User } from "../../domain/user";
+import { TeacherRun } from "../teacher-run";
 
 describe('RunMenuComponent', () => {
   let component: RunMenuComponent;
   let fixture: ComponentFixture<RunMenuComponent>;
 
   beforeEach(async(() => {
+    let userServiceStub = {
+      getUser(): BehaviorSubject<User> {
+        const user: User = new User();
+        user.firstName = 'Demo';
+        user.lastName = 'Teacher';
+        user.role = 'teacher';
+        user.userName = 'DemoTeacher';
+        user.id = 123456;
+        return Observable.create(observer => {
+          observer.next(user);
+          observer.complete();
+        });
+      },
+      getUserId() {
+        return 123456;
+      }
+    };
+
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
@@ -26,7 +47,11 @@ describe('RunMenuComponent', () => {
         MatIconModule
       ],
       declarations: [ RunMenuComponent ],
-      providers: [ { provide: TeacherService }, { provide: MatDialog }]
+      providers: [
+        { provide: TeacherService },
+        { provide: UserService, useValue: userServiceStub },
+        { provide: MatDialog }
+      ]
     })
     .compileComponents();
   }));
@@ -34,12 +59,18 @@ describe('RunMenuComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(RunMenuComponent);
     component = fixture.componentInstance;
-    const run: Run = new Run();
+    const run: TeacherRun = new TeacherRun();
     run.id = 1;
     run.name = "Photosynthesis";
+    const owner = new User();
+    owner.id = 1;
+    run.owner = owner;
     const project = new Project();
     project.id = 1;
+    project.owner = owner;
+    project.sharedOwners = [];
     run.project = project;
+    run.sharedOwners = [];
     component.run = run;
     fixture.detectChanges();
   });

@@ -13,11 +13,11 @@
       <mat-icon>info</mat-icon>
       <span>Unit Info</span>
     </a>
-    <a mat-menu-item href="{{ editLink }}">
+    <a mat-menu-item href="{{ editLink }}" *ngIf="canEdit()">
       <mat-icon>edit</mat-icon>
       <span>Edit Content</span>
     </a>
-    <a mat-menu-item (click)="shareRun()">
+    <a mat-menu-item (click)="shareRun()" *ngIf="canShare()">
       <mat-icon>share</mat-icon>
       <span>Share</span>
     </a>
