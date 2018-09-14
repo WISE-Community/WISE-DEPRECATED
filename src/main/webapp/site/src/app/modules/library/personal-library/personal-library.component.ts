@@ -17,20 +17,13 @@ export class PersonalLibraryComponent extends LibraryComponent {
   constructor(libraryService: LibraryService) {
     super(libraryService);
 
-    libraryService.personalLibraryProjectsSource$.subscribe((personalProjects) => {
-      for (let personalProject of personalProjects) {
-        personalProject.visible = true;
-      }
+    libraryService.personalLibraryProjectsSource$.subscribe((personalProjects: LibraryProject[]) => {
       this.personalProjects = personalProjects;
       this.combinePersonalAndSharedProjects();
       this.emitNumberOfProjectsVisible();
     });
 
-    libraryService.sharedLibraryProjectsSource$.subscribe((sharedProjects) => {
-      for (let sharedProject of sharedProjects) {
-        sharedProject.visible = true;
-        sharedProject.shared = true;
-      }
+    libraryService.sharedLibraryProjectsSource$.subscribe((sharedProjects: LibraryProject[]) => {
       this.sharedProjects = sharedProjects;
       this.combinePersonalAndSharedProjects();
       this.emitNumberOfProjectsVisible();

@@ -61,20 +61,35 @@ export class LibraryService {
 
   getCommunityLibraryProjects() {
     this.http.get<LibraryProject[]>(this.communityProjectsUrl).subscribe((projects) => {
-      this.communityLibraryProjectsSource.next(projects);
+      const communityLibraryProjects: LibraryProject[] = this.convertToLibraryProjects(projects);
+      this.communityLibraryProjectsSource.next(communityLibraryProjects);
     });
   }
 
   getPersonalLibraryProjects() {
     this.http.get<LibraryProject[]>(this.personalProjectsUrl).subscribe((projects) => {
-      this.personalLibraryProjectsSource.next(projects);
+      const personalLibraryProjects: LibraryProject[] = this.convertToLibraryProjects(projects);
+      this.personalLibraryProjectsSource.next(personalLibraryProjects);
     });
   }
 
   getSharedLibraryProjects() {
     this.http.get<LibraryProject[]>(this.sharedProjectsUrl).subscribe((projects) => {
-      this.sharedLibraryProjectsSource.next(projects);
+      const sharedLibraryProjects: LibraryProject[] = this.convertToLibraryProjects(projects);
+      for (let sharedLibraryProject of sharedLibraryProjects) {
+        sharedLibraryProject.shared = true;
+      }
+      this.sharedLibraryProjectsSource.next(sharedLibraryProjects);
     });
+  }
+
+  convertToLibraryProjects(projectsJSON) {
+    const libraryProjects: LibraryProject[] = [];
+    for (let project of projectsJSON) {
+      const libraryProject = new LibraryProject(project);
+      libraryProjects.push(libraryProject);
+    }
+    return libraryProjects;
   }
 
   /**
