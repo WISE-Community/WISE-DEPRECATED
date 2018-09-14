@@ -34,10 +34,17 @@ describe('HeaderLinksComponent', () => {
     user.role = "student";
     user.userName = "AmandaP0101";
     component.user = user;
+    component.location = 'student';
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should show user welcome message', () => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('.mat-subheading-2').textContent)
+      .toContain('Welcome Amanda!');
   });
 });
