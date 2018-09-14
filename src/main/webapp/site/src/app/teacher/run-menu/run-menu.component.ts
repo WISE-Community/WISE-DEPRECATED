@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
-import { CreateRunDialogComponent } from "../create-run-dialog/create-run-dialog.component";
 import { ShareRunDialogComponent } from "../share-run-dialog/share-run-dialog.component";
 
 @Component({
@@ -28,16 +27,6 @@ export class RunMenuComponent implements OnInit {
   shareRun() {
     this.dialog.open(ShareRunDialogComponent, {
       data: { run: this.run }
-    });
-  }
-
-  showCreateRunDialog() {
-    const dialogRef = this.dialog.open(CreateRunDialogComponent, {
-      data: this.run
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      scrollTo(0, 0);
     });
   }
 
