@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ShareRunDialogComponent } from './share-run-dialog.component';
 import { Observable } from "rxjs";
-import { TeacherModule } from "../teacher.module";
 import { MatDialogRef } from "@angular/material/dialog";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { Project } from "../project";

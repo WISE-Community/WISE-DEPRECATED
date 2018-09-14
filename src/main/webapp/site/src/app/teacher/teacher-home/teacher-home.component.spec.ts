@@ -8,7 +8,7 @@ import { Project } from "../project";
 
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClient, HttpHandler } from "@angular/common/http";
-import { DebugElement, DebugNode, NO_ERRORS_SCHEMA } from "@angular/core";
+import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { By } from "@angular/platform-browser";
 import { TeacherHomeComponent } from "./teacher-home.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
