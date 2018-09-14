@@ -11,7 +11,7 @@ export class HeaderLinksComponent implements OnInit {
   user: User;
 
   @Input()
-  location: string; // the current location
+  location: string;
 
   role: string = "";
 

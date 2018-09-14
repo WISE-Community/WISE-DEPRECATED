@@ -1,11 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 
 @Component({
   selector: 'app-teacher-project-library',
   templateUrl: './teacher-project-library.component.html',
-  styleUrls: ['./teacher-project-library.component.scss']
+  styleUrls: [
+    './teacher-project-library.component.scss',
+    '../library/library.component.scss'
+  ],
+  encapsulation: ViewEncapsulation.None
 })
 export class TeacherProjectLibraryComponent implements OnInit {
 

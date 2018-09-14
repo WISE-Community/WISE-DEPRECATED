@@ -35,7 +35,7 @@ export class OfficialLibraryComponent extends LibraryComponent {
     libraryService.officialLibraryProjectsSource$.subscribe((libraryProjects) => {
       this.projects = libraryProjects;
       this.emitNumberOfProjectsVisible(this.projects.length);
-      this.implementationModelOptions = libraryService.implementationModelOptions;
+      this.setImplementationModelOptions();
       this.implementationModelValue = libraryService.implementationModelValue;
     });
     libraryService.projectFilterOptionsSource$.subscribe((projectFilterOptions) => {

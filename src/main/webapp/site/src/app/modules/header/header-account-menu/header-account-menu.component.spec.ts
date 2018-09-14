@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HeaderAccountMenuComponent } from './header-account-menu.component';
 import { User } from "../../../domain/user";
 import { HttpClient, HttpHandler } from "@angular/common/http";
-import { HeaderModule } from "../header.module";
+import { RouterTestingModule } from "@angular/router/testing";
 import { APP_BASE_HREF } from "@angular/common";
 import {
   MatDividerModule,
@@ -22,7 +22,14 @@ describe('HeaderAccountMenuComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ HeaderAccountMenuComponent ],
-      imports: [ MatFormFieldModule, FormsModule, MatIconModule, MatMenuModule, MatDividerModule ],
+      imports: [
+        FormsModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatMenuModule,
+        MatDividerModule,
+        RouterTestingModule
+      ],
       providers: [
         { provide: APP_BASE_HREF, useValue : '/' },
         ConfigService,
