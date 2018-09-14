@@ -201,14 +201,15 @@ export abstract class LibraryComponent implements OnInit {
    * @return {boolean}
    */
   isSearchMatch(project: LibraryProject, searchValue: string): boolean {
-    const metadata = project.metadata;
-    return Object.keys(metadata).some(prop => {
+    let data: any = project.metadata;
+    data.id = project.id;
+    return Object.keys(data).some(prop => {
       // only check for match in specific metadata fields
       if (prop != 'title' && prop != 'summary' && prop != 'keywords' &&
-        prop != 'features' &&  prop != 'standardsAddressed') {
+        prop != 'features' &&  prop != 'standardsAddressed' && prop != 'id') {
         return false;
       } else {
-        let value = metadata[prop];
+        let value = data[prop];
         if (prop === 'standardsAddressed') {
           value = JSON.stringify(value);
         }

@@ -4,50 +4,12 @@
   '~style/abstracts/mixins',
   '~style/abstracts/functions';
 
-.library {
-  text-align: left;
-  border-radius: $card-border-radius;
-  overflow: hidden;
+.library-home {
   margin-bottom: 32px;
-
-  h2 {
-    font-weight: 400;
-    margin-bottom: 8px;
-
-    mat-icon {
-      margin-right: 8px;
-    }
-  }
-
-  app-search-bar {
-    width: 100%;
-  }
 }
 
-.library__header {
-  border-radius: 0;
-
-  .info-block {
-    background-color: transparent;
-    padding: 0 0 16px;
-    font-size: mat-font-size($config, subheading-2);
-  }
-}
-
-.library__content {
-  &.content-block {
-    background-color: transparent;
-  }
-
+.library-home__content {
   .notice {
     margin-top: 0;
   }
-}
-
-.library__groups {
-  display: block;
-}
-
-.library__links {
-  margin-top: 48px;
 }

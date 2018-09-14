@@ -4,13 +4,13 @@
     Create
   </a>
 </div>
-<div class="library notice-bg-bg" fxLayout="column" fxLayout.gt-sm="row">
-  <div class="content-block dark-theme library__header primary-bg"
+<div class="library library-teacher notice-bg-bg" fxLayout="column" fxLayout.gt-sm="row">
+  <div class="content-block dark-theme library__header library-teacher__header primary-bg"
        fxFlex.gt-sm="33">
     <h3>Search & Filter</h3>
     <app-library-filters (update)="filterUpdated($event)"></app-library-filters>
   </div>
-  <div class="library__content" fxFlex.gt-sm="67">
+  <div class="library__content library-teacher__content" fxFlex.gt-sm="67">
     <mat-tab-group [(selectedIndex)]="selectedTabIndex"
                    aria-label="Select unit library view"
                    backgroundColor="primary"
