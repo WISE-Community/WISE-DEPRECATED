@@ -3,6 +3,7 @@ import { AuthService, GoogleLoginProvider } from "angularx-social-login";
 import { Router } from "@angular/router";
 import { TeacherService } from "../../teacher/teacher.service";
 import { UserService } from '../../services/user.service';
+import { ConfigService } from '../../services/config.service';
 
 @Component({
   selector: 'app-register-teacher',
@@ -12,11 +13,18 @@ import { UserService } from '../../services/user.service';
 export class RegisterTeacherComponent implements OnInit {
 
   email: string = "";
+  isGoogleAuthenticationEnabled: boolean = false;
 
   constructor(private socialAuthService: AuthService,
-      private teacherService: TeacherService, private userService: UserService, private router: Router) {}
+      private teacherService: TeacherService, private userService: UserService,
+      private configService: ConfigService, private router: Router) {}
 
   ngOnInit() {
+    this.configService.getConfig().subscribe((config) => {
+      if (config != null) {
+        this.isGoogleAuthenticationEnabled = config.googleClientId != null;
+      }
+    });
   }
 
   public signUp() {
