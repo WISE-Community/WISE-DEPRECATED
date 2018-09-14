@@ -29,10 +29,6 @@ export class LibraryProjectMenuComponent implements OnInit {
     this.select.emit('copy');
   }
 
-  runProject() {
-    this.select.emit('run');
-  }
-
   shareProject() {
     this.select.emit('share');
   }

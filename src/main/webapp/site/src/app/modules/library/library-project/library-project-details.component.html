@@ -8,9 +8,9 @@
           <div class="mat-card-subtitle">
             <div>
               Grade level: <span *ngFor="let g of data.project.metadata.grades; let isLast=last">{{ g }}{{ isLast ? '' : ', ' }}</span>
-              &nbsp;&bull;&nbsp;
+              &nbsp;|&nbsp;
               Duration: {{ data.project.metadata.totalTime }}<br />
-              Project ID: {{ data.project.id }}<!--&nbsp;&bull;&nbsp;Last Updated: {{ data.project.lastUpdated }}>-->
+              Project ID: {{ data.project.id }}<!--| Last Updated: {{ data.project.lastUpdated }}>-->
             </div>
           </div>
         </div>
@@ -44,12 +44,22 @@
     </p>
   </div>
 </div>
-<div mat-dialog-actions fxLayout="row" fxLayoutAlign="end none">
+<div mat-dialog-actions
+     fxLayout="row"
+     fxLayout.xs="column"
+     fxLayoutAlign="end none"
+     fxLayoutGap="8px">
   <button mat-button (click)="onClose()">
     Close
   </button>
+  <button mat-flat-button color="accent" (click)="runProject()">
+    <mat-icon>supervised_user_circle</mat-icon> Use with Class
+  </button>
   <!-- TODO: get preview url using config -->
-  <a mat-flat-button color="primary" href="/wise/previewproject.html?projectId={{ data.project.id }}" target="_blank">
+  <a mat-flat-button
+     color="primary"
+     href="/wise/previewproject.html?projectId={{ data.project.id }}"
+     target="_blank">
     <mat-icon>visibility</mat-icon> Preview
   </a>
 </div>
