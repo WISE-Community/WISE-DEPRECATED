@@ -1,1 +1,10 @@
-{}
+{
+  "discussion.allowUploadedImagesInPosts": "يستطيع الطلاب تحميل الصور واستخدامها في منشوراتهم.",
+  "discussion.areYouSureYouWantToDeleteThisPost": "هل أنت متأكد من رغبتك في حذف هذا المنشور؟",
+  "discussion.areYouSureYouWantToShowThisPost": "هل أنت متأكد من رغبتك في عرض هذا المنشور؟",
+  "discussion.comments": "التعليقات",
+  "discussion.componentTypeLabel": "المناقشة",
+  "discussion.post": "منشور ",
+  "discussion.repliedToADiscussionYouWereIn": " قام {{userNames}} بالرد على مناقشة تشترك بها!",
+  "discussion.reply": "الرد"
+}

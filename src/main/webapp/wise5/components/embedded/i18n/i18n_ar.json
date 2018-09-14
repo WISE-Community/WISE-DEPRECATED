@@ -1,1 +1,6 @@
-{}
+{
+  "embedded.chooseTheModelFile": "اختيار ملف النموذج",
+  "embedded.componentTypeLabel": "مُضمّن (مُخصص)",
+  "embedded.modelFileName": "اسم ملف النموذج",
+  "embedded.modelParameters": "معلّمات النموذج"
+}

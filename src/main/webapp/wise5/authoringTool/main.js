@@ -323,7 +323,7 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
   $translatePartialLoaderProvider.addPart('authoringTool/i18n');
   $translateProvider.useLoader('$translatePartialLoader', {
     urlTemplate: 'wise5/{part}/i18n_{lang}.json'
-  }).registerAvailableLanguageKeys(['el', 'en', 'es', 'ja', 'ko', 'pt', 'tr', 'zh_CN', 'zh_TW'], {
+  }).registerAvailableLanguageKeys(['ar', 'el', 'en', 'es', 'ja', 'ko', 'pt', 'tr', 'zh_CN', 'zh_TW'], {
     'en_US': 'en',
     'en_UK': 'en'
   }).determinePreferredLanguage().fallbackLanguage(['en']).useSanitizeValueStrategy('sanitizeParameters', 'escape');

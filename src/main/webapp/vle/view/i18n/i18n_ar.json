@@ -1,0 +1,1214 @@
+{
+  "error_msg_with_reason": {
+    "description": "An error message a reason",
+    "value": "حدث خطأ. يرجى التواصل مع فريق WISE. السبب: {0}"
+  },
+  "file_button_text": {
+    "description": "Text on the File Manager button for Student VLE",
+    "value": "ملفات"
+  },
+  "ideas_button_text": {
+    "description": "Text on the Idea Manager button for Student VLE",
+    "value": "أفكار"
+  },
+  "addidea_button_text": {
+    "description": "Text on Add Idea buttons for Student VLE",
+    "value": "إضافة فكرة"
+  },
+  "mywork_button_text": {
+    "description": "Text on the My Work button for Student VLE",
+    "value": "عملي"
+  },
+  "display_chat_room": {
+    "description": "Text on the Chat Room button for Student VLE",
+    "value": "فتح غرفة دردشة"
+  },
+  "mywork_button_title": {
+    "description": "Text for mouse hover title on the My Work button",
+    "value": "معاينة عملي"
+  },
+  "mywork_preview_mode": {
+    "description": "Text to display when user clicks on review work button in preview mode",
+    "value": "عملي غير متوفر في وضع المعاينة. أثناء تنفيذ حصة دراسية، سوف يُعرض عملك ودرجاتك هنا."
+  },
+  "flagged_button_text": {
+    "description": "Text on the Flagged button",
+    "value": "المميز بعلامة"
+  },
+  "flagged_button_title": {
+    "description": "Text for mouse hover title on the Flagged button",
+    "value": "معاينة عمل المُعلِم المميز بعلامة"
+  },
+  "flagged_preview_mode": {
+    "description": "Text to display when user clicks on flagged work button in preview mode",
+    "value": "العناصر المميزة بعلامة غير متوفرة في وضع المعاينة. أثناء تنفيذ حصة دراسية، سوف تُعرض العناصر التي يميزها المعلم هنا."
+  },
+  "journal_button_text": {
+    "description": "Text on the Journal button",
+    "value": "دفتر اليومية"
+  },
+  "toggle_nav_button_text": {
+    "description": "Text on the Toggle Navigation button when navigation UI is on (visible)",
+    "value": "ملئ الشاشة"
+  },
+  "menu_teacherHome": {
+    "description": "Text for link teacher home page",
+    "value": "صفحة المعلم الرئيسية"
+  },
+  "menu_projectLibrary": {
+    "description": "Text for link to project library",
+    "value": "مكتبة المشروع"
+  },
+  "menu_signOut": {
+    "description": "Text for link to sign out",
+    "value": "تسجيل الخروج"
+  },
+  "toggle_nav_button_title": {
+    "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)",
+    "value": "وضع ملء الشاشة (إخفاء قائمة التنقل)"
+  },
+  "toggle_nav_button_text_off": {
+    "description": "Text on the Toggle Navigation button when navigation UI is off (hidden)",
+    "value": "عرض القائمة"
+  },
+  "toggle_nav_button_title_off": {
+    "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)",
+    "value": "عرض قائمة التنقل"
+  },
+  "signout_button_text": {
+    "description": "Text on the Log out button",
+    "value": "تسجيل الخروج"
+  },
+  "signout_button_title": {
+    "description": "Text for mouse hover title on the Log out button",
+    "value": "حفظ و تسجيل الخروج من WISE "
+  },
+  "previous_step_text": {
+    "description": "Text on button in the project vle that will show the previous step in the project",
+    "value": "< السابق"
+  },
+  "previous_step_title": {
+    "description": "Text for mouse hover title on button in the project vle that will show the previous step in the project",
+    "value": "الخطوة السابقة"
+  },
+  "next_step_text": {
+    "description": "Text on button in the project vle that will show the next step in the project",
+    "value": "التالي >"
+  },
+  "next_step_title": {
+    "description": "Text for mouse hover title on button in the project vle that will show the next step in the project",
+    "value": "الخطوة التالية"
+  },
+  "gohome_button_text": {
+    "description": "Text on the Home button",
+    "value": "الصفحة الرئيسية"
+  },
+  "gohome_button_title": {
+    "description": "Text for mouse hover title on the Home button",
+    "value": "حفظ وخروج إلى صفحة الطالب الرئيسية"
+  },
+  "hint_title": {
+    "description": "Title of the hint dialog window and the text that shows up next to the Hint button",
+    "value": "تلميحات"
+  },
+  "hint_button_text": {
+    "description": "Text that shows up next to the Hint button",
+    "value": "تلميحات"
+  },
+  "hint_button_title": {
+    "description": "Text for mouse hover title on the Hint button (will be followed by the hint_title, e.g. 'View Hints')",
+    "value": "عرض تلميحات لهذه الخطوة "
+  },
+  "hint_num_separator": {
+    "description": "Text to be shown between current Hint number and total (e.g. 1 'of' 2)",
+    "value": "من"
+  },
+  "hint_hint": {
+    "description": "Default Text label for 'hint'",
+    "value": " تلميح"
+  },
+  "hint_plural": {
+    "description": "Default Text label for 'hints' (plural)",
+    "value": "تلميحات"
+  },
+  "hint_next": {
+    "description": "next hint",
+    "value": "التالي"
+  },
+  "hint_prev": {
+    "description": "previous hint",
+    "value": "السابق"
+  },
+  "node_annotations_title": {
+    "description": "Title of the step feedback dialog window",
+    "value": " الخطوة"
+  },
+  "node_annotations_button_title": {
+    "description": "Text for mouse hover title on the Hint button (will be followed by the hint_title, e.g. 'View Hints')",
+    "value": "عرض ملاحظات لهذه الخطوة"
+  },
+  "node_annotations_button_text": {
+    "description": "Text that shows up next to the Hint button",
+    "value": "ملاحظات"
+  },
+  "node_annotations_instructions": {
+    "description": "The message at the bottom of the feedback popup to tell the student they can always bring the popup back up",
+    "value": "يمكنك دائمًا عرض هذه الملاحظات من خلال النقر على أيقونة \"{0}\"."
+  },
+  "show_previous_work_message": {
+    "description": "The message that shows the step number and title and the work from a previous step.",
+    "value": "تذكر، عملك من \"الخطوة {0}\" كان </br>{l}</brx/br>"
+  },
+  "navigation_expand_all": {
+    "description": "Text on a button to show all navigation items",
+    "value": "عرض الكل"
+  },
+  "navigation_collapse_all": {
+    "description": "Text on a button to hide all navigation items",
+    "value": "إخفاء الكل"
+  },
+  "student_assets_upload_new_file": {
+    "description": "Text 'Upload New File' in Student Asset Manager",
+    "value": "تحميل ملف جديد"
+  },
+  "student_assets_my_files": {
+    "description": "Text 'My Files' in Student Asset Manager",
+    "value": "ملفاتي"
+  },
+  "student_assets_remove_file_warning": {
+    "description": "Text in Student Asset Manager when student is not allowed to remove a file",
+    "value": "ملفاتي"
+  },
+  "student_assets_import_success_message": {
+    "description": "Text 'Successfully imported file' in Student Asset Manager",
+    "value": "ملف مستورد بنجاح"
+  },
+  "student_assets_import_failure_message": {
+    "description": "Text in Student Asset Manager when importing file failed",
+    "value": "فشل الاستيراد. لا تقبل الخطوة الحالية الملف الذي اخترته. يرجى اختيار ملف مختلف."
+  },
+  "student_assets_add_selected_file": {
+    "description": "Text on a button in Student Asset Manager to add the selected file to the current step",
+    "value": "إضافة ملف مُحدد للخطوة"
+  },
+  "student_assets_add_selected_file_to_portfolio": {
+    "description": "Text on a button in Student Asset Manager to add the selected file to the portfolio",
+    "value": "أضف ملفًا مُحددًا لقائمة المشاريع"
+  },
+  "student_assets_delete_selected_file": {
+    "description": "Text on a button in Student Asset Manager to delete a selected file",
+    "value": "حذف الملف المحدد"
+  },
+  "student_assets_student_usage_message": {
+    "description": "Text on a button in Student Asset Manager to delete a selected file",
+    "value": "أنت تستخدم {0} من {1} مساحة التخزين الخاصة بك."
+  },
+  "student_assets_student_usage_exceeded_message": {
+    "description": "Text on a button in Student Asset Manager to delete a selected file",
+    "value": "لقد تجاوزت أقصى حد للمساحة! أقصى حد مسموح به هو {0}، والإجمالي على الخادم هو{1}. يرجى حذف بعض الملفات."
+  },
+  "student_assets_preview_mode": {
+    "description": "Message to show users when they click on student assets button in preview mode",
+    "value": "أصول الطلاب غير متوفرة في وضع المعاينة. أثناء حصة دراسية منفذة، يستطيع هنا الطلاب تحميل أصول مثل الصور واستخدامها بعد ذلك في الردود."
+  },
+  "student_aggregate_view_intro_text": {
+    "description": "Text above where the aggregate view would be displayed",
+    "value": "عرض ملخص الخطوة {0}"
+  },
+  "student_aggregate_view_preview_mode_default_text": {
+    "description": "Default text to display for aggregate view when in preview mode.",
+    "value": "سيظهر إجمالي عرض عمل الطلاب لـ {0} هنا عند إعداد عملية تنفيذ حصة دراسية."
+  },
+  "cancel": {
+    "description": "Text 'Cancel'",
+    "value": "إلغاء"
+  },
+  "ok": {
+    "description": "Text 'OK'",
+    "value": "موافق"
+  },
+  "on": {
+    "description": "Text for the word 'on' (uppercase)",
+    "value": "تشغيل"
+  },
+  "off": {
+    "description": "Text for the word 'off' (uppercase)",
+    "value": "إيقاف تشغيل"
+  },
+  "ON": {
+    "description": "Text for the word 'ON' (uppercase)",
+    "value": "تشغيل"
+  },
+  "OFF": {
+    "description": "Text for the word 'OFF' (uppercase)",
+    "value": "إيقاف تشغيل"
+  },
+  "done": {
+    "description": "Text 'Done', to mean completed",
+    "value": "تم"
+  },
+  "stepTerm": {
+    "description": "Default term for a 'Step' in a WISE project (singular)",
+    "value": "خطوة"
+  },
+  "stepTermPlural": {
+    "description": "Plural form of the default term for a 'Step' in a WISE project",
+    "value": "خطوات"
+  },
+  "activityTerm": {
+    "description": "Default term for an 'Activity' in a WISE project (singular)",
+    "value": "النشاط"
+  },
+  "activityTermPlural": {
+    "description": "Plural form of the default term for a 'Activity' in a WISE project",
+    "value": "أنشطة"
+  },
+  "promptTerm": {
+    "description": "Default term for 'Prompt' in a WISE step",
+    "value": "مطالبة"
+  },
+  "insertImage": {
+    "description": "Text 'Insert Image', to use for file upload",
+    "value": "إدراج صورة "
+  },
+  "idea": {
+    "description": "The default text for an 'idea' in the Idea Manager tool.",
+    "value": "فكرة "
+  },
+  "idea_plural": {
+    "description": "The default text for 'ideas' in the Idea Manager tool.",
+    "value": "أفكار"
+  },
+  "idea_basket": {
+    "description": "The text 'Idea Basket' in the Idea Manager",
+    "value": "سلة الأفكار"
+  },
+  "idea_basket_add_an_idea": {
+    "description": "The text for buttons to add a new idea in the Idea Manager",
+    "value": "إضافة فكرة +"
+  },
+  "idea_basket_private": {
+    "description": "The text for the private idea basket",
+    "value": "سلة الأفكار الخاصة"
+  },
+  "idea_basket_public": {
+    "description": "The text for the public idea basket",
+    "value": "سلة الأفكار العامة"
+  },
+  "idea_basket_retrieval_error": {
+    "description": "Error message displayed when retrieving idea basket fails",
+    "value": "خطأ: تعذر فتح سلة الأفكار، حدٍّث المشروع وحاول مجددًا."
+  },
+  "ideaBasket_clickToSort": {
+    "description": "Title/tooltip for sortable rows in a table",
+    "value": "انقر للفرز"
+  },
+  "ideaBasket_empty": {
+    "description": "Text to display when idea basket is empty",
+    "value": "{0} الخاص بك فارغ. انقر \"{1}\" لبدء إضافة {2}."
+  },
+  "ideaBasket_deletedTableHeader": {
+    "description": "Header text for the deleted ideas table in the Idea Basket",
+    "value": "{0} محذوف"
+  },
+  "ideaBasket_ideaTableHeader": {
+    "description": "Header text for the ideas table in the Idea Basket",
+    "value": "{0} الخاص بك"
+  },
+  "ideaBasket_deletedEmpty": {
+    "description": "Text to display when the Idea Basket trash is empty",
+    "value": "سلة المهملات فارغة."
+  },
+  "ideaBasket_trashLabel": {
+    "description": "Label the for deleted ideas table in the Idea Basket",
+    "value": "سلة المهملات"
+  },
+  "ideaBasket_deleteHeader": {
+    "description": "Header text for the delete idea column in the Idea Basket",
+    "value": "حذف"
+  },
+  "ideaBasket_restoreHeader": {
+    "description": "Header text for the restore idea column in the Idea Basket",
+    "value": "استعادة"
+  },
+  "ideaBasket_showDeleted": {
+    "description": "Text for the link to show the contents of the Deleted Ideas table in the Idea Basket",
+    "value": " (انقر للعرض)"
+  },
+  "ideaBasket_hideDeleted": {
+    "description": "Text for the link to hide the contents of the Deleted Ideas table in the Idea Basket",
+    "value": " (انقر للإخفاء)"
+  },
+  "ideaBasket_ideaTitle": {
+    "description": "Title/tooltip for an idea in the Idea Basket",
+    "value": "انقر واسحب لإعادة الطلب. انقر نقرًا مزدوجًا للتحرير"
+  },
+  "ideaBasket_deletedIdeaTitle": {
+    "description": "Title/tooltip for a deleted idea in the Idea Basket",
+    "value": "انقر على الرمز + لإخراج هذا {0} من سلة المهملات"
+  },
+  "ideaBasket_editLinkText": {
+    "description": "Text for link to edit an idea in the Idea Basket",
+    "value": "تحرير"
+  },
+  "ideaBasket_editLinkTitle": {
+    "description": "Title/tooltip for link to edit an idea in the Idea Basket",
+    "value": "تحرير {0} "
+  },
+  "ideaBasket_deleteLinkTitle": {
+    "description": "Title/tooltip for link to delete an idea in the Idea Basket",
+    "value": "حذف {0}"
+  },
+  "ideaBasket_customAttributeLabel": {
+    "description": "Label text for a student-generated (custom) value for an idea attribute in the Idea Basket",
+    "value": "أخرى"
+  },
+  "ideaBasket_public_copyLinkText": {
+    "description": "Text for link or button to copy an idea from the Public Idea Basket",
+    "value": "نسخ"
+  },
+  "ideaBasket_public_header": {
+    "description": "Header text for the Public Idea Basket",
+    "value": "عام {0}"
+  },
+  "ideaBasket_public_publicLabel": {
+    "description": "Label designating a public idea in the Idea Basket",
+    "value": "عام"
+  },
+  "ideaBasket_public_empty": {
+    "description": "Text to display when public Idea Basket is empty",
+    "value": "{0} العام فارغ."
+  },
+  "ideaBasket_public_privateLabel": {
+    "description": "Label designating a private idea in the Idea Basket",
+    "value": "خاص"
+  },
+  "ideaBasket_public_publicRowLabel": {
+    "description": "Label designating a public idea row in the Idea Basket",
+    "value": "(عام)"
+  },
+  "ideaBasket_public_origin": {
+    "description": "Header text for the column identifying the origin (source) of an idea (public or private) in the Idea Basket",
+    "value": "الأصل "
+  },
+  "ideaBasket_public_timesCopied": {
+    "description": "Header text for the column identifying how many times an idea has been copied from the Public Idea Basket",
+    "value": "تم نسخ الأوقات"
+  },
+  "ideaBasket_public_makePublic": {
+    "description": "Text for button or link to make an idea public (add to the Public Idea Basket)",
+    "value": "اجعله عامًا"
+  },
+  "ideaBasket_public_makePrivate": {
+    "description": "Text for button or link to remove an idea from the Public Idea Basket",
+    "value": "أجعله خاصًا"
+  },
+  "ideaBasket_public_copiedIdea": {
+    "description": "Text identifying an idea that originated as a copy from the Public Idea Basket",
+    "value": "تم النسخ"
+  },
+  "ideaBasket_public_orignalIdea": {
+    "description": "Text identifying an idea that was did not originate as a copy from the Public Idea Basket",
+    "value": "أنا"
+  },
+  "ideaBasket_public_copySuccess": {
+    "description": "Message to display when successfully copying an idea from the pubic Idea Basket",
+    "value": "تم نسخ {0} بنجاح من {1}."
+  },
+  "ideaBasket_public_loadFailure": {
+    "description": "Message to display when loading public Idea Basket fails",
+    "value": "خطأ: فشل استرجاع {0}."
+  },
+  "ideaBasket_public_copyOwnIdeaError": {
+    "description": "Error text to display when workgroup attempts to copy their own idea from the public Idea Basket.",
+    "value": "خطأ: غير مسموح لك بنسخ {0} المشتركة الخاصة بك ."
+  },
+  "ideaBasket_public_alreadyCopiedError": {
+    "description": "Error text to display when workgroup attempts to copy an idea from the public Idea Basket they have already copied.",
+    "value": "خطأ: لقد نسخت {0} هذا بالفعل."
+  },
+  "ideaBasket_saveError": {
+    "description": "Error message to display when Idea Basket fails to save on the server",
+    "value": "خطأ: فشل حفظ {0}."
+  },
+  "ideaBasket_loadError": {
+    "description": "Error message to display when Idea Basket fails to load",
+    "value": "خطأ: خطأ في الاسترجاع {0} حدِّث المشروع أو تفضل بزيارة خطوة مختلفة ثم ارجع إلى هذه الخطوة لمحاولة تحميلها مرة أخرى."
+  },
+  "ideaManager_attributeSelectMultiple": {
+    "description": "Instructions text for idea attributes that permit multiple selections in the Idea Basket",
+    "value": "(حدد كل ما ينطق):"
+  },
+  "ideaManager_attributeSelectOne": {
+    "description": "Instructions text for idea attributes that permit a single selection in the Idea Basket",
+    "value": " (حدد واحدًا):"
+  },
+  "ideaManager_attributeSelectOneLabel": {
+    "description": "Label text for idea attribute selectors that permit a single selection in the Idea Basket",
+    "value": "اختر واحدًا:"
+  },
+  "ideaManager_noIconLabel": {
+    "description": "Label for no icon option of the icon attribute selector in the Idea Manager",
+    "value": "لا شيء"
+  },
+  "ideaManager_addIdea_textLabel": {
+    "description": "Label for the idea text input field in add or edit idea forms in the Idea Manager tools",
+    "value": "اكتب {0} الخاص بك هنا*:"
+  },
+  "ideaManager_addIdea_title": {
+    "description": "Title text for the add new idea dialog/form in Idea Manager tools",
+    "value": "إضافة {0} جديد"
+  },
+  "ideaManager_addIdea_required": {
+    "description": "Message to display when a field is required in add or edit idea forms in the Idea Manager tools",
+    "value": "يرجى تحديد (1) واحد على الأقل."
+  },
+  "ideaManager_editIdea_title": {
+    "description": "Title text for the edit idea dialog/form in Idea Manager tools",
+    "value": "تحرير {0} الخاص بك"
+  },
+  "ideaManager_editIdea_changeConfirm": {
+    "description": "Text for the warning confirmation dialog that appears when users attempt to edit an idea that is being used in Explanation Builder steps",
+    "value": "إن {0} هذا مستخدم حاليًا في الخطوات التالية:\n{l}\n\nإذا غيرت {2}، فسوف تغير أيضًا إجابتك في هذه الخطوات."
+  },
+  "ideaManager_deleteIdea_title": {
+    "description": "Title text for the delete idea dialog in Idea Manager tools",
+    "value": "انتقل إلى سلة المهملات"
+  },
+  "ideaManager_deleteIdea_confirm1": {
+    "description": "Text for first part of confirmation delete idea confirmation dialog",
+    "value": "هل أنت متأكد من رغبتك في حذف {0}؟"
+  },
+  "ideaManager_deleteIdea_confirm2": {
+    "description": "Text for second part of confirmation delete idea confirmation dialog",
+    "value": "يمكنك دائمًا استرجاعها من سلة المهملات لاحقًا إذا غيرت رأيك."
+  },
+  "portfolio": {
+    "description": "The text 'Portfolio' in the Portfolio",
+    "value": "قائمة المشاريع "
+  },
+  "portfolio_retrieval_error": {
+    "description": "Error message displayed when retrieving portfolio fails",
+    "value": "خطأ: تعذر فتح قائمة المشاريع، حدِّث المشروع للمحاولة مجددًا"
+  },
+  "portfolio_button_text": {
+    "description": "Text on the Portfolio button for Student VLE",
+    "value": "قائمة مشاريعي"
+  },
+  "portfolio_add_item": {
+    "description": "Text 'Add to portfolio' on the Show My Work and Step pages",
+    "value": "إضافة إلى قائمة المشاريع"
+  },
+  "portfolio_add_item_success": {
+    "description": "Successful confirmation text 'Added to portfolio' on the Show My Work and Step pages",
+    "value": "تمت الإضافة إلى قائمة المشاريع."
+  },
+  "portfolio_delete_item": {
+    "description": "Text 'Delete to portfolio' on the Show My Work and Step pages",
+    "value": "حذف من قائمة المشاريع"
+  },
+  "portfolio_delete_item_success": {
+    "description": "Portfolio delete item successful confirmation text on the Show My Work and Step pages",
+    "value": "حُذف بنجاح من قائمة المشاريع."
+  },
+  "portfolio_save_success": {
+    "description": "Portfolio save successful confirmation text on the Show My Work and Step pages",
+    "value": "تم حفظ قائمة المشاريع بنجاح."
+  },
+  "explanation_builder": {
+    "description": "The default text for the 'Explanation Builder' tool.",
+    "value": "منشئ الشروح"
+  },
+  "chat_room": {
+    "description": "The text 'Chat Room' in the Chat Room popup",
+    "value": "غرفة الدردشة"
+  },
+  "grading_button_grade_by_step": {
+    "description": "GradingTool: Text in the grade-by-step button",
+    "value": "تصنيف حسب الخطوة"
+  },
+  "grading_button_grade_by_team": {
+    "description": "GradingTool: Text in the grade-by-team button",
+    "value": "تصنيف  حسب الفريق"
+  },
+  "grading_all_revisions": {
+    "description": "GradingTool: Text 'all revisions' to show all student revisions",
+    "value": "جميع المراجعات"
+  },
+  "grading_latest_work": {
+    "description": "GradingTool: Text 'latest work' to show only the latest student work",
+    "value": "أحدث عمل"
+  },
+  "grading_button_view_student_uploaded_files": {
+    "description": "GradingTool: Text in the View Student Uploaded Files button",
+    "value": "ملفات الطلاب"
+  },
+  "grading_button_export_latest_student_work": {
+    "description": "GradingTool: Text in the Export Latest Student Work button",
+    "value": "تصدير أحدث عمل للطلاب"
+  },
+  "grading_button_export_all_student_work": {
+    "description": "GradingTool: Text in the Export All Student Work button",
+    "value": "تصدير جميع عمل الطلاب"
+  },
+  "grading_button_export_idea_baskets": {
+    "description": "GradingTool: Text in the Export Idea Baskets button",
+    "value": "تصدير سلة الأفكار"
+  },
+  "grading_button_export_explanation_builder_work": {
+    "description": "GradingTool: Text in the Export Explanation Builder Work button",
+    "value": "تصدير عمل منشئ الشروح"
+  },
+  "grading_button_export_custom_work": {
+    "description": "GradingTool: Text in the Export Custom Student Work button",
+    "value": "تصدير عمل معين للطلاب"
+  },
+  "grading_button_export_student_names": {
+    "description": "GradingTool: Text in the Export Student Names button",
+    "value": "تصدير أسماء الطلاب"
+  },
+  "grading_button_special_export": {
+    "description": "GradingTool: Text in the Special Export button",
+    "value": "تصدير خاص "
+  },
+  "grading_button_export_latest_student_work_description": {
+    "description": "GradingTool: Description next the Export Student Names button",
+    "value": "(تصدير أحدث مراجعة للطلاب)"
+  },
+  "grading_button_export_all_student_work_description": {
+    "description": "GradingTool: Description next the Export All Student Work button",
+    "value": "(تصدير جميع مراجعات عمل الطلاب بالإضافة إلى بيانات تنقلهم)"
+  },
+  "grading_button_export_idea_baskets_description": {
+    "description": "GradingTool: Description next the Export Idea Baskets button",
+    "value": "(تصدير جميع مراجعات سلة الأفكار) "
+  },
+  "grading_button_export_explanation_builder_work_description": {
+    "description": "GradingTool: Description next the Export Explanation Builder Work button",
+    "value": "(تصدير جميع مراجعات منشئ الشروح)"
+  },
+  "grading_button_export_custom_work_description": {
+    "description": "GradingTool: Description next the Export Custom Student Work button",
+    "value": " (تصدير جميع العمل أو أحدث عمل لخطوات محددة تختارها)"
+  },
+  "grading_button_export_student_names_description": {
+    "description": "GradingTool: Description next the Export Student Names button",
+    "value": "(تصدير أسماء الطلاب مع فترتهم ومعرف مجموعة العمل ومعرف wise وتسجيل الدخول)"
+  },
+  "grading_button_special_export_description": {
+    "description": "GradingTool: Description next the Special Export button",
+    "value": "(تصدير العمل لخطوات خاصة كملف مضغوط)"
+  },
+  "grading_button_explanation": {
+    "description": "GradingTool: Text in the Explanation button",
+    "value": "الشرح"
+  },
+  "grading_button_teacher_run_notes": {
+    "description": "GradingTool: Text in the My Notes button to bring up teacher run notes",
+    "value": "ملاحظاتي"
+  },
+  "grading_button_check_for_new_student_work": {
+    "description": "GradingTool: Text in the Check for New Student Work button",
+    "value": "تحقق من العمل الجديد"
+  },
+  "grading_button_save_changes": {
+    "description": "GradingTool: Text in the Save Changes button",
+    "value": "حفظ التغييرات"
+  },
+  "grading_grade_by_step_header": {
+    "description": "GradingTool: grade by step page header, tell teacher to select a step below",
+    "value": "حدد الخطوة أدناه لبدء التصنيف (قيم النقاط قابلة للتحرير)"
+  },
+  "grading_grade_by_step_point_value": {
+    "description": "GradingTool: grade by step point value table column",
+    "value": "قيمة النقطة"
+  },
+  "grading_grade_by_step_editable": {
+    "description": "GradingTool: grade by step editable table column",
+    "value": "قابل للتحرير"
+  },
+  "grading_grade_by_step_items_to_review": {
+    "description": "GradingTool: grade by step Items to Review table column",
+    "value": "العناصر المطلوب مراجعتها"
+  },
+  "grading_grade_by_step_average_class_score": {
+    "description": "GradingTool: grade by step Avg Class Score table column",
+    "value": "متوسط التقييم"
+  },
+  "grading_grade_by_step_scored_items_only": {
+    "description": "GradingTool: grade by step scored items only table column",
+    "value": " العناصر المُقيمة فقط"
+  },
+  "grading_grade_by_step_percent_completed_step": {
+    "description": "GradingTool: grade by step % of Students Who Have Completed This Step table column",
+    "value": "% خطوة مكتملة"
+  },
+  "grading_grade_by_step_all_periods": {
+    "description": "GradingTool: grade by step All Periods select option when choosing whose work to filter by",
+    "value": "جميع الفترات"
+  },
+  "grading_grade_by_team_header": {
+    "description": "GradingTool: grade by team page header",
+    "value": "حدد أحد فرق الطلاب أدناه لبدأ التصنيف"
+  },
+  "grading_grade_by_team_teacher_graded_score": {
+    "description": "GradingTool: grade by team teacher-graded score",
+    "value": "تقييم تصنيف معلم"
+  },
+  "grading_grade_by_team_percentage_project_completed": {
+    "description": "GradingTool: grade by team % of project completed table column",
+    "value": "اكتملت نسبة % من المشروع"
+  },
+  "grading_question": {
+    "description": "the text 'question', to be shown next to the question that was presented to the student",
+    "value": "السؤال"
+  },
+  "grading_hide_show_question": {
+    "description": "'hide/show question' link that toggles the question's visibility in the grading tool",
+    "value": "عرض / إخفاء السؤال"
+  },
+  "grading_current_step": {
+    "description": "'Current Step' label in the grading tool that shows the title of the current step in the project",
+    "value": "الخطوة الحالية "
+  },
+  "grading_previous_step": {
+    "description": "'Previous Step' button in the grading tool that will show the previous step in the project",
+    "value": "< السابقة"
+  },
+  "grading_previous_step_not_exist": {
+    "description": "Text to show when previous step does not exist because this is the first gradable step in the project",
+    "value": "السابق. الخطوة غير موجودة: هذه هي أول خطوة قابلة للتقييم"
+  },
+  "grading_change_step": {
+    "description": "'Change Step' button in the grading tool that will show the select step page",
+    "value": "تغيير الخطوة"
+  },
+  "grading_next_step": {
+    "description": "'Next Step' button in the grading tool that will show the next step in the project",
+    "value": "التالي >"
+  },
+  "grading_next_step_not_exist": {
+    "description": "Text to show when next step does not exist because this is the last gradable step in the project",
+    "value": "الخطوة التالية غير موجودة: هذه هي آخر خطوة قابلة للتقييم"
+  },
+  "grading_sort_by": {
+    "description": "Label 'Sort By' to let user choose which column to sort the view by",
+    "value": "التصنيف حسب"
+  },
+  "period": {
+    "description": "Period",
+    "value": "الفترة"
+  },
+  "workgroupId": {
+    "description": "Workgroup Id",
+    "value": "معرف مجموعة العمل"
+  },
+  "team": {
+    "description": "The label for the team",
+    "value": "الفريق"
+  },
+  "team_caps": {
+    "description": "TEAM",
+    "value": "الفريق"
+  },
+  "student_work": {
+    "description": "student work column in the grading tool",
+    "value": "عمل الطلاب"
+  },
+  "teacher_comment_and_score": {
+    "description": "Teacher comments / score column in the grading tool",
+    "value": "تعليق/تقييم  المعلم"
+  },
+  "score": {
+    "description": "The column header for the score in Show My Work",
+    "value": "الدرجة"
+  },
+  "tools": {
+    "description": "Tools",
+    "value": "الأدوات"
+  },
+  "comment": {
+    "description": "Comment",
+    "value": "تعليق "
+  },
+  "flag": {
+    "description": "Flag, for flagging student's work using the flagging tool",
+    "value": "علامة"
+  },
+  "flag_as_inappropriate": {
+    "description": "\"Flag as inappropriate\" text, for flagging inappropriate student's work using the flagging tool",
+    "value": "تمييز كعنصر غير ملائم"
+  },
+  "timestamp": {
+    "description": "timestamp",
+    "value": "طابع زمني"
+  },
+  "last_annotation": {
+    "description": "the text 'last annotation'",
+    "value": "آخر تعليق"
+  },
+  "grading_open_premade_comments": {
+    "description": "the text 'open premade comments' that will open the premade comments window when clicked",
+    "value": "فتح التعليقات المنشأة مسبقًا "
+  },
+  "not_available": {
+    "description": "the text 'not available'",
+    "value": "غير متوفر"
+  },
+  "grading_no_work_warning": {
+    "description": "text to show in grading cells that do not have students' work to display",
+    "value": "لم يرسل الطالب العمل إلى هذه الخطوة، لذا فإن التقييم والملاحظات معطلان."
+  },
+  "grading_no_revisions": {
+    "description": "text to show in grading cells that do not have any revisions",
+    "value": "(لا توجد مراجعات)"
+  },
+  "grading_only_latest_revision_displayed": {
+    "description": "text to show in grading cells where only the latest revision is displayed",
+    "value": "(المراجعة الأحدث فقط معروضة)"
+  },
+  "grading_hide_personal_info": {
+    "description": "text to show next to the 'Hide Personal Info' checkbox in the grading tool",
+    "value": "إخفاء المعلومات الشخصية"
+  },
+  "grading_show_flagged_items_only": {
+    "description": "text to show next to the 'Show Flagged Items Only' checkbox in the grading tool",
+    "value": "العناصر المميزة بعلامة فقط"
+  },
+  "grading_show_smart_filtered_items_only": {
+    "description": "text to show next to the 'Show Smart-Filtered Items Only' checkbox in the grading tool",
+    "value": "العناصر المرشحة بطريقة ذكية فقط"
+  },
+  "grading_enlarge_student_work_text": {
+    "description": "text to show next to the 'Enlarge Student Work Text' checkbox in the grading tool",
+    "value": "تكبير منطقة عمل الطلاب"
+  },
+  "grading_only_show_new_student_work": {
+    "description": "text to show next to the 'Only Show New Work' checkbox in the grading tool",
+    "value": "عرض العمل الجديد فقط"
+  },
+  "grading_sort_by_auto_graded_score_checkbox": {
+    "description": "text to show next to the 'Sort By Auto Graded Score' checkbox in the grading tool",
+    "value": "الفرز حسب درجة التقييم التلقائي"
+  },
+  "grading_hide_show_revisions": {
+    "description": "text to show in the 'Hide/Show Revisions' link in the grading tool that toggles revisions visibility",
+    "value": "المراجعة"
+  },
+  "grading_change_team": {
+    "description": "text to show in the 'Change Team' button in the grading tool that brings up the grade-by-team page",
+    "value": "تغيير الفريق"
+  },
+  "welcome": {
+    "description": "Text for 'Welcome'",
+    "value": "مرحبًا بك"
+  },
+  "welcome_users_default": {
+    "description": "Text to display in VLE for user name in preview mode",
+    "value": "مرحبًا بمستخدم الاختبار!"
+  },
+  "note_title": {
+    "description": "Text to display in the title bar of a note dialog window",
+    "value": "ملاحظة الانعكاس"
+  },
+  "authoring_confirm_switch_authoring_mode": {
+    "description": "Message displayed in the Authoring Tool to authors when trying to switch between simple/advanced modes but their changes have not been saved.",
+    "value": "أنت على وشك تغيير وضع التأليف ولكنك لم تحفظ التغييرات. إذا تابعت، فسوف تفقد تغييراتك. هل ترغب في المتابعة؟"
+  },
+  "authoring_hint_dialog_title": {
+    "description": "Text to display as the title of the edit step hints dialog window.",
+    "value": "إضافة / تحرير تلميحات لهذه الخطوة"
+  },
+  "authoring_hint_new": {
+    "description": "Default text for a new step hint.",
+    "value": "تلميح جديد"
+  },
+  "authoring_hint_forceShow": {
+    "description": "Text to display for the label of the \"Force Show: \" drop down in the step hint authoring panel",
+    "value": "فرض الإظهار:"
+  },
+  "authoring_hint_option_never": {
+    "description": "The text \"Never\" to display in \"force show:\" drop down in the step hint authoring panel",
+    "value": "أبدًا"
+  },
+  "authoring_hint_option_firstTimeOnly": {
+    "description": "The text \"First Time Only\" to display in \"force show:\" drop down in the step hint authoring panel",
+    "value": "أول مرة فقط"
+  },
+  "authoring_hint_option_always": {
+    "description": "The text \"Always\" to display in \"force show:\" drop down in the step hint authoring panel",
+    "value": "دائمًا"
+  },
+  "authoring_hint_modal": {
+    "description": "Text to display for the label of the \"Modal Dialog\" checkbox in the step hint authoring panel",
+    "value": "مربع حوار مشروط"
+  },
+  "authoring_hint_isMustViewAllPartsBeforeClosing": {
+    "description": "Text to display for the label of the \"Must View All Parts Before Closing\" checkbox in the step hint authoring panel",
+    "value": "يجب عرض جميع الأجزاء قبل الإغلاق"
+  },
+  "authoring_hint_options_label": {
+    "description": "The label for the 'Options' settings in the step hint authoring panel",
+    "value": "خيارات"
+  },
+  "authoring_hint_terminology_label": {
+    "description": "The label for the 'Labels/Terminology' settings in the step hint authoring panel",
+    "value": "التسميات / المصطلحات"
+  },
+  "authoring_hint_terminology_instructions": {
+    "description": "The instructions for the 'Labels/Terminology' settings in the step hint authoring panel",
+    "value": "اختياري: خصص اسم عرض \"للتلميحات\" في هذه الخطوة."
+  },
+  "authoring_hint_term_label": {
+    "description": "The label for the 'hint' term input field in the step hint authoring panel",
+    "value": "مصطلح \"للتلميح\": "
+  },
+  "authoring_hint_term_plural_label": {
+    "description": "The label for the 'hints' term input field in the step hint authoring panel",
+    "value": "مصطلح \"للتلميحات\" (جمع):"
+  },
+  "authoring_hint_add": {
+    "description": "The label for the 'add new hint' button in the step hint authoring panel",
+    "value": "إضافة تلميح جديد"
+  },
+  "authoring_hint_delete": {
+    "description": "The label for the 'delete current hint' button in the step hint authoring panel",
+    "value": "حذف التلميح الحالي"
+  },
+  "authoring_imsettings_attribute_help": {
+    "description": "",
+    "value": "سوف يظهر محتوى التعليمات هنا"
+  },
+  "authoring_imsettings_terminology_help": {
+    "description": "",
+    "value": "سوف يظهر محتوى التعليمات هنا"
+  },
+  "authoring_imsettings_text_required": {
+    "description": "The help text in the Idea Manager settings for the lock icon on the 'text' idea attribute.",
+    "value": "تمثل السمة <span style='font-weight:bold;’>text</span> مكونًا  أساسيًا لكل فكرة ولا يمكن حذفها ."
+  },
+  "project_error_has_no_steps": {
+    "description": "The error text to be displayed when the project has no steps in it",
+    "value": "خطأ: هذا المشروع لا يحتوي على أي خطوات."
+  },
+  "preview_project_constraint_enabled_message": {
+    "description": "The message shown in preview project mode when student navigation constraints are enabled.",
+    "value": "قيود تنقل الطلاب ممكنة حاليًا. لمعاينة المشروع دون أي قيود."
+  },
+  "preview_project_constraint_disabled_message": {
+    "description": "The message shown in preview project mode when student navigation constraints are enabled.",
+    "value": "قيود تنقل الطلاب معطلة حاليًا. لمعاينة المشروع مع جميع القيود،"
+  },
+  "common_click_here": {
+    "description": "the common text 'click here'",
+    "value": " انقر هنا"
+  },
+  "teacher_score": {
+    "description": "The column header for the teacher score",
+    "value": "درجة المعلم"
+  },
+  "computer_score": {
+    "description": "The column header for the computer score",
+    "value": "تقييم الحاسوب"
+  },
+  "total_score": {
+    "description": "The column header for the total score",
+    "value": "إجمالي النقاط"
+  },
+  "percent_project_completed": {
+    "description": "The column header for the project completion percentage",
+    "value": "اكتملت نسبة % من المشروع"
+  },
+  "my_work_with_teacher_feedback_and_scores": {
+    "description": "The title for the my work dialog popup",
+    "value": "عملي (مع ملاحظات المعلم والتقييمات)"
+  },
+  "you_have_new_feedback_from_teacher": {
+    "description": "The message that shows up when the student logs in and has new teacher feedback",
+    "value": "لديك ملاحظات جديدة من معلمك."
+  },
+  "new_feedback_labeled_as_new": {
+    "description": "The message that shows up when the student logs in and has new teacher feedback",
+    "value": "الملاحظات الجديدة باسم [جديد]."
+  },
+  "new_feedback": {
+    "description": "The header for the section that displays the student work that has new feedback",
+    "value": "ملاحظات جديدة"
+  },
+  "my_work": {
+    "description": "The header for the section that displays all of the student work",
+    "value": "عملي"
+  },
+  "new_text": {
+    "description": "The text 'New' used to label new feedback",
+    "value": "جديد"
+  },
+  "teacher_feedback": {
+    "description": "The label for the teacher feedback",
+    "value": "ملاحظات المعلم"
+  },
+  "your_teacher_hasnt_graded": {
+    "description": "The text to show that there is no feedback from the teacher yet",
+    "value": "التقييم: لم يقيم معلمك عملك حتى الآن."
+  },
+  "last_visited_on": {
+    "description": "The label to show when the student last visited the step",
+    "value": "آخر زيارة كانت بتاريخ"
+  },
+  "latest_work": {
+    "description": "The label to show the latest work",
+    "value": "أحدث عمل"
+  },
+  "you_havent_visited_this_step": {
+    "description": "The text to show that the student hasn't visited the step yet",
+    "value": "لم تزر هذه الخطوة من قبل."
+  },
+  "you_havent_submitted_work_for_this_step": {
+    "description": "The text to show that the student hasn't submitted work for the step yet",
+    "value": "لم ترسل العمل لهذه الخطوة."
+  },
+  "teacher_flagged_work": {
+    "description": "The title for the flagged work window in the student vle",
+    "value": "عمل المُعلِم المميز بعلامة"
+  },
+  "there_are_no_flagged_items": {
+    "description": "The message that says there are no flagged items",
+    "value": "لا توجد أي عناصر مميزة بعلامة."
+  },
+  "choose_a_step": {
+    "description": "The label that tells the student to choose a step to view flagged work for in the flagged work window",
+    "value": "اختر خطوة"
+  },
+  "question_instructions": {
+    "description": "The label for the step prompt when displaying flagged work for a step",
+    "value": "الأسئلة / التعليمات"
+  },
+  "sample_responses": {
+    "description": "The label for the student work that has been flagged for a step",
+    "value": "عينات ردود"
+  },
+  "anonymous": {
+    "description": "The label to specify that the team is anonymous",
+    "value": "مجهول"
+  },
+  "you_got_a_score_of": {
+    "description": "The text to display the score in the feedback popup",
+    "value": "لقد حصلت على درجة من"
+  },
+  "out_of": {
+    "description": "The text to display the score in the feedback popup",
+    "value": "من"
+  },
+  "comments": {
+    "description": "The text to display the comments in the feedback popup",
+    "value": "التعليقات"
+  },
+  "hints_viewAll": {
+    "description": "The message in the hints popup that says the student must view all hints before closing the hints popup",
+    "value": "يجب عليك عرض كل {0} قبل الإغلاق."
+  },
+  "constraint_dialog_title": {
+    "description": "Title text for dialog alerting users about locked steps or activities (unable to visit because of navigation constraints)",
+    "value": "العنصر مُقفل "
+  },
+  "constraint_allItems": {
+    "description": "Text to add after activity name when a constraint requires user to satisfy a requirement for all items in an activity",
+    "value": "(جميع العناصر)"
+  },
+  "constraint_message_mustCompleteStepBeforeAdvancing": {
+    "description": "The message shown to students telling them to complete work on the current step before moving on",
+    "value": "يجب عليك إتمام {0} الحالي قبل الاستمرار."
+  },
+  "constraint_message_mustCompleteActivityBeforeAdvancing": {
+    "description": "The message shown to students telling them to complete work on the current activity before moving on",
+    "value": "يجب عليك إتمام جميع العناصر في {0} الحالي قبل الاستمرار."
+  },
+  "constraint_message_mustCompleteStepBeforeExiting": {
+    "description": "The message shown to students telling them to complete work on the current step before exiting",
+    "value": "يجب عليك إتمام {0} الحالي قبل المغادرة."
+  },
+  "constraint_message_mustCompleteActivityBeforeExiting": {
+    "description": "The message shown to students telling them to complete work on the current activity before exiting",
+    "value": "يجب عليك إتمام جميع العناصر في {0} الحالي قبل المغادرة."
+  },
+  "constraint_message_mustCompleteXBeforeVisiting": {
+    "description": "The message shown to students telling them to complete work on previous items before working on the selected step or activity",
+    "value": "يجب عليك إتمام ما يلي قبل عرض هذا العنصر:"
+  },
+  "constraint_message_mustVisitXBeforeVisiting": {
+    "description": "The message shown to students telling them to visit items before working on the selected step or activity",
+    "value": "يجب عليك زيارة ما يلي قبل عرض هذا العنصر:"
+  },
+  "constraint_message_mustUnlockXBeforeVisiting": {
+    "description": "The message shown to students telling them to unlock (make visitable) previous items before working on the selected step or activity",
+    "value": "يجب عليك فتح ما يلي قبل عرض هذا العنصر:"
+  },
+  "constraint_message_xMustHaveStatusY": {
+    "description": "The message shown to students telling them that the steps shown below must have 'statusType' set to 'statusValue' before they can work on the selected step",
+    "value": "يجب أن يكون '{0}' التالي محددًا إلى '{1}' قبل أن تكون قادرًا على عرض هذا العنصر:"
+  },
+  "constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingZero": {
+    "description": "The message shown to students telling them they need to create one idea on the step before they can proceed. They have not created any ideas on the step.",
+    "value": "يجب عليك إنشاء على الأقل {0} {1} على '{2} {3}' من أجل التقدم. لم تُنشئ أي {4} على {5} هذا. "
+  },
+  "constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancing": {
+    "description": "The message shown to students telling them they need to create multiple ideas on the step before they can proceed. They have not created enough ideas on the step.",
+    "value": "يجب عليك إنشاء على الأقل {0} {1} على '{2} {3}' من أجل التقدم. لقد أنشأت فقط {4} {5} على {6}."
+  },
+  "session_timeout_warning": {
+    "description": "Warning text to display to users in the session timeout alert.",
+    "value": "لقد كنت غير نشط  لمدة طويلة. إن لم تجدد جلستك الآن، فسوف يُسجل لك الخروج من WISE."
+  },
+  "session_timeout_confirm": {
+    "description": "Text to display on button in the session timeout alert that users can press to renew session.",
+    "value": "الاستمرار في تسجيل الدخول!"
+  },
+  "session_timeout_message": {
+    "description": "Text to display to display to users when there session timed out and they have been logged out of WISE.",
+    "value": "لم تكن نشطًا منذ مدة طويلة جدًا ولذا تم تسجيل خروجك. يرجى إعادة تسجيل الدخول للاستمرار."
+  },
+  "session_timeout_title": {
+    "description": "Title text for the session timeout alert.",
+    "value": "انتهى وقت الجلسة"
+  },
+  "classroomMonitor_title": {
+    "description": "Title for the classroom monitor",
+    "value": "مدير الحصة الدراسية"
+  },
+  "classroomMonitor_run": {
+    "description": "Text displaying the ID of the current run in the classroom monitor ({0} will be replaced by ID number)",
+    "value": "#{0}"
+  },
+  "classroomMonitor_search": {
+    "description": "Placeholder text for search inputs in the classroom monitor",
+    "value": "بحث"
+  },
+  "classroomMonitor_save": {
+    "description": "Text for save button in classroom monitor",
+    "value": "حفظ التغييرات"
+  },
+  "classroomMonitor_viewProject": {
+    "description": "Text for link to preview project in classroom monitor",
+    "value": "عرض المشروع"
+  },
+  "classroomMonitor_workgroupsOnline": {
+    "description": "Text displaying number of workgroups currently online ({0} will be replaced with actual number)",
+    "value": "مجموعات العمل عبر الإنترنت: {0}"
+  },
+  "classroomMonitor_progress": {
+    "description": "Text for step progress link in classroom monitor",
+    "value": "المشروع"
+  },
+  "classroomMonitor_monitor": {
+    "description": "Text for student progress link in classroom monitor",
+    "value": "الطلاب"
+  },
+  "classroomMonitor_studentProgress_title": {
+    "description": "Title text for student progress link and section in classroom monitor",
+    "value": "مراقب الطلاب"
+  },
+  "classroomMonitor_stepProgress_title": {
+    "description": "Title text for step progress link and section in classroom monitor",
+    "value": "تقدم الخطوة"
+  },
+  "classroomMonitor_gradebook": {
+    "description": "Text for grade book link in classroom monitor",
+    "value": "دفتر التقييم"
+  },
+  "classroomMonitor_gradebook_title": {
+    "description": "Title text for grade book link in classroom monitor",
+    "value": "دفتر تقييم الطلاب"
+  },
+  "classroomMonitor_manage": {
+    "description": "Text for manage students link in classroom monitor",
+    "value": "التوجيه"
+  },
+  "classroomMonitor_manage_title": {
+    "description": "Title text for manage students link in classroom monitor",
+    "value": "إدارة الطلاب"
+  },
+  "classroomMonitor_idea_baskets": {
+    "description": "Text for idea baskets link in classroom monitor",
+    "value": "سلال الأفكار"
+  },
+  "classroomMonitor_idea_basket_title": {
+    "description": "Text for idea basket title",
+    "value": "سلة الأفكار"
+  },
+  "classroomMonitor_idea_baskets_title": {
+    "description": "Text for idea baskets title",
+    "value": "سلال الأفكار"
+  },
+  "classroomMonitor_summary_report_title": {
+    "description": "Text for summary report title",
+    "value": "تقرير مُلخص "
+  },
+  "classroomMonitor_summary_report": {
+    "description": "Text for summary report",
+    "value": "تقرير مُلخص "
+  },
+  "classroomMonitor_tools": {
+    "description": "Text for tools button in classroom monitor",
+    "value": "الأدوات"
+  },
+  "classroomMonitor_announcements": {
+    "description": "Text for announcements link in classroom monitor",
+    "value": "الإعلانات"
+  },
+  "classroomMonitor_notes": {
+    "description": "Text for run notes link in classroom monitor",
+    "value": "ملاحظاتي"
+  },
+  "classroomMonitor_exportWork": {
+    "description": "Text for export work link in classroom monitor",
+    "value": "تصدير العمل"
+  },
+  "classroomMonitor_saving": {
+    "description": "Notification to display when saving changes (scores, feedback, etc.) in the classroom monitor",
+    "value": "جارٍ حفظ التغييرات..."
+  },
+  "classroomMonitor_saveConfirmation": {
+    "description": "Notification to display when teacher changes (scores, feedback, etc.) have been saved in the classroom monitor",
+    "value": "تم حفظ التغييرات!"
+  },
+  "classroomMonitor_newItemsOnly": {
+    "description": "Text for option to only show new work in classroom monitor",
+    "value": "العمل الجديد فقط"
+  },
+  "classroomMonitor_hidePersonalInfo": {
+    "description": "Text for option to hide personal info in classroom monitor",
+    "value": "إخفاء المعلومات الشخصية"
+  },
+  "classroomMonitor_gradeByStep_headers_feedback": {
+    "description": "Header text for the teacher feedback column in the grade by step table of classroom monitor",
+    "value": "التقييم والملاحظات"
+  },
+  "classroomMonitor_gradeByStep_headers_score": {
+    "description": "Header text for the score column in the grade by step table of classroom monitor",
+    "value": "درجة"
+  },
+  "classroomMonitor_gradeByStep_headers_studentWork": {
+    "description": "Header text for the student work column in the grade by step table of classroom monitor",
+    "value": "الفريق"
+  },
+  "classroomMonitor_gradeByStep_title": {
+    "description": "Title text for grade by step section in classroom monitor",
+    "value": "تصنيف حسب الخطوة"
+  },
+  "classroomMonitor_gradeByStudent_headers_feedback": {
+    "description": "Header text for the teacher feedback column in the grade by student table of classroom monitor",
+    "value": "التقييم والملاحظات"
+  },
+  "classroomMonitor_gradeByStudent_headers_score": {
+    "description": "Header text for the score column in the grade by student table of classroom monitor",
+    "value": "درجة"
+  },
+  "classroomMonitor_gradeByStudent_headers_studentWork": {
+    "description": "Header text for the student work column in the grade by student table of classroom monitor",
+    "value": "خطوة"
+  },
+  "classroomMonitor_gradeByStudent_title": {
+    "description": "Title text for grade by student section in classroom monitor",
+    "value": "تصنيف حسب الفريق"
+  }
+}
