@@ -44,13 +44,13 @@ import java.util.Map;
 
 public class GoogleOpenIdConnectFilter extends AbstractAuthenticationProcessingFilter {
 
-  @Value("${google.clientId}")
+  @Value("${google.clientId:}")
   private String clientId;
 
-  @Value("${google.issuer}")
+  @Value("${google.issuer:}")
   private String issuer;
 
-  @Value("${google.jwkUrl}")
+  @Value("${google.jwkUrl:}")
   private String jwkUrl;
 
   @Autowired
