@@ -4,6 +4,7 @@ exports.config = {
   sauceSeleniumAddress: 'localhost:4445/wd/hub',
   sauceUser: process.env.SAUCE_USERNAME,
   sauceKey: process.env.SAUCE_ACCESS_KEY,
+  sauceSeleniumUseHttp: true,
   //seleniumAddress: 'http://localhost:4444/wd/hub',
   suites: {
     authoringTool: ['authoringTool/info/info.spec.js', 'authoringTool/node/node.spec.js', 'authoringTool/notebook/notebook.spec.js', 'authoringTool/project/project.spec.js', 'authoringTool/projectList/projectList.spec.js'],
