@@ -104,6 +104,7 @@ public class TeacherAPIController {
     projectJSON.put("dateArchived", project.getDateDeleted());
     projectJSON.put("thumbIconPath", getProjectThumbIconPath(project));
     projectJSON.put("sharedOwners", getProjectSharedOwners(project));
+    projectJSON.put("metadata", project.getMetadata().toJSONObject());
     return projectJSON;
   }
 
