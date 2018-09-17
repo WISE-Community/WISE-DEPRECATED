@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
@@ -91,6 +92,14 @@ public class ProjectAPIController {
     return projectsJSON.toString();
   }
 
+  @RequestMapping(value = "/shared", method = RequestMethod.GET)
+  protected String getSharedLibrayProjects(ModelMap modelMap) throws JSONException {
+    User signedInUser = ControllerUtil.getSignedInUser();
+    List<Project> sharedProjectList = projectService.getSharedProjectList(signedInUser);
+    JSONArray projectsJSON = getProjectsJSON(sharedProjectList);
+    return projectsJSON.toString();
+  }
+
   private JSONArray getProjectsJSON(List<Project> projectList) throws JSONException {
     JSONArray projectsJSON = new JSONArray();
     for (Project teacherSharedProject : projectList) {
@@ -104,6 +113,8 @@ public class ProjectAPIController {
     projectJSON.put("id", project.getId());
     projectJSON.put("name", project.getName());
     projectJSON.put("metadata", project.getMetadata().toJSONObject());
+    TeacherUserDetails ownerUserDetails = (TeacherUserDetails) (project.getOwner().getUserDetails());
+    projectJSON.put("owner", ownerUserDetails.getDisplayname());
     projectJSON.put("projectThumb", getProjectThumb(project));
     return projectJSON;
   }

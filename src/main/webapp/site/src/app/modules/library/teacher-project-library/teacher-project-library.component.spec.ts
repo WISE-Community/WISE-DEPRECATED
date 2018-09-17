@@ -66,6 +66,9 @@ describe('TeacherProjectLibraryComponent', () => {
     getPersonalLibraryProjects() {
 
     },
+    getSharedLibraryProjects() {
+
+    },
     setTabIndex() {
 
     },
@@ -73,6 +76,7 @@ describe('TeacherProjectLibraryComponent', () => {
     officialLibraryProjectsSource$: fakeAsyncResponse([]),
     communityLibraryProjectsSource$: fakeAsyncResponse([]),
     personalLibraryProjectsSource$: fakeAsyncResponse([]),
+    sharedLibraryProjectsSource$: fakeAsyncResponse([]),
     projectFilterOptionsSource$: fakeAsyncResponse({
       searchValue: "",
       disciplineValue: [],
