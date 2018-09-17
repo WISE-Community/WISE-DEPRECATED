@@ -36,7 +36,7 @@ describe('TeacherRunListComponent', () => {
     const teacherServiceStub = {
       isLoggedIn: true,
       getRuns(): Observable<TeacherRun[]> {
-        const runs : TeacherRun[] = [];
+        const runs: TeacherRun[] = [];
         const run1 = new TeacherRun();
         run1.id = 1;
         run1.name = "Photosynthesis";
@@ -61,6 +61,14 @@ describe('TeacherRunListComponent', () => {
           observer.next(runs);
           observer.complete();
         });
+      },
+      getSharedRuns(): Observable<TeacherRun[]> {
+        const runs: TeacherRun[] = [];
+        return Observable.create(observer => {
+            observer.next(runs);
+            observer.complete();
+          }
+        );
       },
       newRunSource$: fakeAsyncResponse([{id: 3, name: "Global Climate Change"}])
     };

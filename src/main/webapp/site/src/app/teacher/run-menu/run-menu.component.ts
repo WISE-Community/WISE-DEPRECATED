@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
 import { ShareRunDialogComponent } from "../share-run-dialog/share-run-dialog.component";
+import { UserService } from "../../services/user.service";
+import { TeacherRun } from "../teacher-run";
 
 @Component({
   selector: 'app-run-menu',
@@ -12,12 +13,15 @@ import { ShareRunDialogComponent } from "../share-run-dialog/share-run-dialog.co
 export class RunMenuComponent implements OnInit {
 
   @Input()
-  run: Run;
+  run: TeacherRun;
 
   editLink: string = '';
   previewLink: string = '';
 
-  constructor(public dialog: MatDialog, public teacherService: TeacherService) { }
+  constructor(public dialog: MatDialog,
+              public teacherService: TeacherService,
+              public userService: UserService) {
+  }
 
   ngOnInit() {
     this.editLink = `/wise/author/authorproject.html?projectId=${ this.run.project.id }`;
@@ -40,5 +44,13 @@ export class RunMenuComponent implements OnInit {
       return false;
     }
     return true;
+  }
+
+  canEdit() {
+    return this.run.project.canEdit(this.userService.getUserId());
+  }
+
+  canShare() {
+    return this.run.canGradeAndManage(this.userService.getUserId());
   }
 }

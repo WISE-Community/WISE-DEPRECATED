@@ -44,14 +44,8 @@ export class CreateRunDialogComponent {
     } else {
       this.teacherService.createRun(
         this.project.id, combinedPeriods, this.studentsPerTeam, this.startDate.getTime())
-        .subscribe((run: Run) => {
-          const project = new Project();
-          project.id = run.projectId;
-          project.name = run.name;
-          project.dateCreated = new Date().toString();
-          project.run = run;
-          project.thumbIconPath = '';
-          run.project = project;
+        .subscribe((newRun: Run) => {
+          const run = new Run(newRun);
           this.teacherService.addNewRun(run);
           this.teacherService.setTabIndex(0);
           this.dialog.closeAll();
