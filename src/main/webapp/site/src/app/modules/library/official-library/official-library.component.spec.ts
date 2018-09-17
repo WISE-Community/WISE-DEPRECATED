@@ -55,14 +55,10 @@ describe('OfficialLibraryComponent', () => {
       });
     },
     getOfficialLibraryProjects() {
-
     },
-    libraryGroupsSource$: fakeAsyncResponse({
-
-    }),
-    officialLibraryProjectsSource$: fakeAsyncResponse({
-
-    }),
+    libraryGroupsSource$: fakeAsyncResponse([]),
+    officialLibraryProjectsSource$: fakeAsyncResponse([]),
+    communityLibraryProjectsSource$: fakeAsyncResponse([]),
     projectFilterOptionsSource$: fakeAsyncResponse({
       searchValue: "",
       disciplineValue: [],
@@ -98,6 +94,7 @@ describe('OfficialLibraryComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(OfficialLibraryComponent);
     component = fixture.componentInstance;
+    component.projects = [];
     fixture.detectChanges();
   });
 

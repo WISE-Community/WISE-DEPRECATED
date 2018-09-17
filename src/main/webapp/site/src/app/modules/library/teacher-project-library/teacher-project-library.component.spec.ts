@@ -43,6 +43,7 @@ describe('TeacherProjectLibraryComponent', () => {
   let component: TeacherProjectLibraryComponent;
   let fixture: ComponentFixture<TeacherProjectLibraryComponent>;
   const libraryServiceStub = {
+    implementationModelOptions: [],
     getLibraryGroups(): Observable<LibraryGroup[]> {
       const libraryGroup: LibraryGroup[] = [];
       return Observable.create( observer => {
@@ -65,10 +66,13 @@ describe('TeacherProjectLibraryComponent', () => {
     getPersonalLibraryProjects() {
 
     },
-    libraryGroupsSource$: fakeAsyncResponse({}),
-    officialLibraryProjectsSource$: fakeAsyncResponse({}),
-    communityLibraryProjectsSource$: fakeAsyncResponse({}),
-    personalLibraryProjectsSource$: fakeAsyncResponse({}),
+    setTabIndex() {
+
+    },
+    libraryGroupsSource$: fakeAsyncResponse([]),
+    officialLibraryProjectsSource$: fakeAsyncResponse([]),
+    communityLibraryProjectsSource$: fakeAsyncResponse([]),
+    personalLibraryProjectsSource$: fakeAsyncResponse([]),
     projectFilterOptionsSource$: fakeAsyncResponse({
       searchValue: "",
       disciplineValue: [],
