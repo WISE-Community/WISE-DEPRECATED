@@ -87,7 +87,7 @@
     "update-i18n": "node ./node_modules/gulp/bin/gulp.js update-i18n",
     "compile-sass": "node ./node_modules/gulp/bin/gulp.js compile-sass",
     "test": "node ./node_modules/karma/bin/karma start src/main/webapp/wise5/karma.conf.js --single-run --browsers PhantomJS",
-    "test-angular-portal": "node ./node_modules/karma/bin/karma start src/main/webapp/site/karma.conf.js --single-run --browsers PhantomJS",
+    "test-angular-portal": "ng test --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadlessNoSandbox --watch=false",
     "test-watch": "./node_modules/karma/bin/karma start src/main/webapp/wise5/karma.conf.js --color --browsers PhantomJS",
     "test-e2e-comment": "test-e2e assumes wise is already running.",
     "test-e2e": "node ./node_modules/protractor/bin/protractor src/main/webapp/wise5/test-e2e/conf.js",

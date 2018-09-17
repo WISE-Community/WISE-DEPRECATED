@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { UserService } from '../services/user.service';
+import { ConfigService } from '../services/config.service';
 
 @Component({
   selector: 'app-login',
@@ -11,17 +12,23 @@ import { UserService } from '../services/user.service';
 })
 export class LoginComponent implements OnInit {
 
-  ngOnInit(): void {
-  }
-
   credentials: any = {username: '', password: ''};
   error: boolean = false;
   processing: boolean = false;
+  isGoogleAuthenticationEnabled: boolean = false;
 
   constructor(private userService: UserService, private http: HttpClient,
-      private router: Router) {
+      private router: Router, private configService: ConfigService) {
   }
 
+  ngOnInit(): void {
+    this.configService.getConfig().subscribe((config) => {
+      if (config != null) {
+        this.isGoogleAuthenticationEnabled = config.googleClientId != null;
+      }
+    });
+  }
+  
   login(): boolean {
     this.processing = true;
     this.error = false;

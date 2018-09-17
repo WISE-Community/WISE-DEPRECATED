@@ -45,15 +45,17 @@
           </button>
         </p>
       </form>
-      <p class="center mat-subheading-1">- or -</p>
-      <p class="center">
-        <button class="button--social-login button--google"
-                color="accent"
-                mat-raised-button
-                (click)="socialSignIn('google')">
-          <img src="assets/img/icons/g-logo.png" alt="Google logo" />Sign in with Google
-        </button>
-      </p>
+      <span *ngIf="isGoogleAuthenticationEnabled">
+        <p class="center mat-subheading-1">- or -</p>
+        <p class="center">
+          <button class="button--social-login button--google"
+                  color="accent"
+                  mat-raised-button
+                  (click)="socialSignIn('google')">
+            <img src="assets/img/icons/g-logo.png" alt="Google logo" />Sign in with Google
+          </button>
+        </p>
+      </span>
     </mat-card-content>
     <mat-divider></mat-divider>
     <mat-card-actions>
