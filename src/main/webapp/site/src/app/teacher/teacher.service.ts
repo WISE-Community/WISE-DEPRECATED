@@ -26,7 +26,7 @@ export class TeacherService {
   private updateProfileUrl = 'api/teacher/profile/update';
   private tabIndexSource = new Subject<number>();
   public tabIndexSource$ = this.tabIndexSource.asObservable();
-  
+
   constructor(private http: HttpClient) { }
 
   getRuns(): Observable<Run[]> {
@@ -119,6 +119,18 @@ export class TeacherService {
     const url = this.projectPermissionUrl + "/" + projectId + "/" + userId + "/" + permissionId;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.delete<Object>(url, { headers: headers });
+  }
+
+  addSharedProjectOwner(projectId: number, username: string) {
+    const url = this.projectPermissionUrl + "/" + projectId + "/" + username;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.put<Object>(url, null, {headers: headers});
+  }
+
+  removeSharedProjectOwner(projectId: number, username: string) {
+    const url = this.projectPermissionUrl + "/" + projectId + "/" + username;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.delete<Object>(url, {headers: headers});
   }
 
   addNewRun(run: Run) {

@@ -2,6 +2,8 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Project } from "../../../teacher/project";
 import { TeacherService } from "../../../teacher/teacher.service";
+import { ShareProjectDialogComponent } from "../share-project-dialog/share-project-dialog.component";
+import { UserService } from "../../../services/user.service";
 
 @Component({
   selector: 'app-library-project-menu',
@@ -18,10 +20,17 @@ export class LibraryProjectMenuComponent implements OnInit {
 
   editLink: string = '';
   previewLink: string = '';
+  isCanShare:boolean = false;
 
-  constructor(public dialog: MatDialog, public teacherService: TeacherService) { }
+  constructor(public dialog: MatDialog,
+              public teacherService: TeacherService,
+              public userService: UserService) {
+  }
 
   ngOnInit() {
+    if (this.userService.getUserId() == this.project.owner.id) {
+      this.isCanShare = true;
+    }
     this.editLink = `/wise/author/authorproject.html?projectId=${ this.project.id }`;
   }
 
@@ -30,7 +39,9 @@ export class LibraryProjectMenuComponent implements OnInit {
   }
 
   shareProject() {
-    this.select.emit('share');
+    this.dialog.open(ShareProjectDialogComponent, {
+      data: { project: this.project }
+    });
   }
 
   editProject() {

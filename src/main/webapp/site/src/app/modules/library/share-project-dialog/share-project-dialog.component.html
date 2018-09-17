@@ -1,0 +1,45 @@
+<div style="display: flex;"><div style="width: 30%"><h2>Share Project</h2></div><div style="width: 40%"></div><div style="width: 10%"><button mat-button [mat-dialog-close]="true">X</button></div></div>
+Name: {{project.name}} <br/>
+Lesson ID: {{project.id}}
+<div style="display:flex">
+  <div>Find Teacher:</div>
+  <div>
+    <mat-form-field>
+      <input type="text" placeholder="Enter Teacher Name" aria-label="Number" matInput [formControl]="teacherSearchControl" [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <div>
+    <button mat-raised-button (click)="shareProject()"
+            [disabled]="teacherSearchControl.value == ''"
+            aria-label="Add new shared owner"
+            color="accent"
+            class="add-run-input">
+      Share
+    </button>
+  </div>
+</div>
+
+<table>
+  <tr><th>Teacher Name</th><th>Permissions</th></tr>
+  <tr><td>{{ project.owner.displayName}}</td><td>Owner. Full Permissions</td></tr>
+  <tr *ngFor="let sharedOwner of sharedOwners">
+    <td>
+      {{sharedOwner.firstName}} {{sharedOwner.lastName}}
+      <button mat-raised-button (click)="unshareProject(sharedOwner)"
+              aria-label="Removed shared owner"
+              color="accent"
+              class="add-run-input">
+        Revoke
+      </button>
+    </td>
+    <td>
+      <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[1]" disabled="true">View Lesson</mat-checkbox><br/>
+      <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[2]" (change)="projectPermissionChanged(sharedOwner.id, 2, sharedOwner.projectPermissions[2])">Edit Lesson Content</mat-checkbox><br/>
+    </td>
+  </tr>
+</table>

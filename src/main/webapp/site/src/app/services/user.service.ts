@@ -24,6 +24,10 @@ export class UserService {
     return this.user$;
   }
 
+  getUserId(): number {
+    return this.getUser().getValue().id;
+  }
+
   isStudent(): boolean {
     return this.isAuthenticated &&
       this.user$.getValue().role === 'student';

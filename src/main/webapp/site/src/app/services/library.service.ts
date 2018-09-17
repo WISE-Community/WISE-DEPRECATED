@@ -5,6 +5,8 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { LibraryGroup } from "../modules/library/libraryGroup";
 import { ProjectFilterOptions } from "../domain/projectFilterOptions";
 import { LibraryProject } from "../modules/library/libraryProject";
+import { Run } from "../domain/run";
+import { Project } from "../teacher/project";
 
 @Injectable()
 export class LibraryService {
@@ -14,6 +16,7 @@ export class LibraryService {
   private personalProjectsUrl = 'api/project/personal';
   private sharedProjectsUrl = 'api/project/shared';
   private copyProjectUrl = 'api/project/copy';
+  private projectInfoUrl = 'api/project/info';
   public libraryGroups: LibraryGroup[];
   private libraryGroupsSource = new Subject<LibraryGroup[]>();
   public libraryGroupsSource$ = this.libraryGroupsSource.asObservable();
@@ -152,5 +155,9 @@ export class LibraryService {
 
   addPersonalLibraryProject(project: LibraryProject) {
     this.newProjectSource.next(project);
+  }
+
+  getProjectInfo(projectId): Observable<Project> {
+    return this.http.get<Project>(this.projectInfoUrl + "/" + projectId);
   }
 }
