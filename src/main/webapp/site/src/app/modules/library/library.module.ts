@@ -4,7 +4,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { LibraryGroupThumbsComponent } from './library-group-thumbs/library-group-thumbs.component';
-import { LibraryProjectComponent, LibraryProjectDetailsComponent } from './library-project/library-project.component';
+import { LibraryProjectComponent } from './library-project/library-project.component';
+import { LibraryProjectDetailsComponent } from "./library-project-details/library-project-details.component";
 import { LibraryProjectDisciplineIconComponent } from './library-project-discipline-icon/library-project-discipline-icon.component';
 import { LibraryProjectMenuComponent } from "./library-project-menu/library-project-menu.component";
 import { LibraryService } from "../../services/library.service";

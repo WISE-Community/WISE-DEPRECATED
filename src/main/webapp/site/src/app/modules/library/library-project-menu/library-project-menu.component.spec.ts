@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LibraryProjectMenuComponent } from "./library-project-menu.component";
 import { TeacherService } from "../../../teacher/teacher.service";
-import { Project } from "../../../teacher/project";
+import { Project } from "../../../domain/project";
 import {
   MatDialog,
   MatDividerModule,

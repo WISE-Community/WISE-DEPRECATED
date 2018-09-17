@@ -2,9 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LibraryProjectComponent } from './library-project.component';
 import { LibraryProject } from "../libraryProject";
-import { LibraryModule } from "../library.module";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { TeacherService } from "../../../teacher/teacher.service";
 import { MatDialog } from "@angular/material";
 
 describe('LibraryProjectComponent', () => {

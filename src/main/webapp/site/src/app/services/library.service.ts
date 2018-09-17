@@ -5,7 +5,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { LibraryGroup } from "../modules/library/libraryGroup";
 import { ProjectFilterOptions } from "../domain/projectFilterOptions";
 import { LibraryProject } from "../modules/library/libraryProject";
-import { Project } from "../teacher/project";
 
 @Injectable()
 export class LibraryService {

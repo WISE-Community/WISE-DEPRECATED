@@ -1,4 +1,4 @@
-import { Project } from "../teacher/project";
+import { Project } from "./project";
 
 export class Run {
   accessCode: string;

@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
-import { Project } from "../project";
+import { Project } from "../../domain/project";
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
 
@@ -50,7 +50,7 @@ export class CreateRunDialogComponent {
           project.name = run.name;
           project.dateCreated = new Date().toString();
           project.run = run;
-          project.thumbIconPath = '';
+          project.projectThumb = '';
           run.project = project;
           this.teacherService.addNewRun(run);
           this.teacherService.setTabIndex(0);
