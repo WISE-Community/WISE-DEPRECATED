@@ -28,7 +28,6 @@ export class OfficialLibraryComponent extends LibraryComponent {
 
   constructor(libraryService: LibraryService) {
     super(libraryService);
-    libraryService.getOfficialLibraryProjects();
     libraryService.libraryGroupsSource$.subscribe((libraryGroups) => {
       this.libraryGroups = libraryGroups;
     });
@@ -41,6 +40,7 @@ export class OfficialLibraryComponent extends LibraryComponent {
     libraryService.projectFilterOptionsSource$.subscribe((projectFilterOptions) => {
       this.filterUpdated(projectFilterOptions);
     });
+    libraryService.getOfficialLibraryProjects();
   }
 
   ngOnInit() {
