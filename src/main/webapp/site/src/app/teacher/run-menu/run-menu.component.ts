@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material';
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
 import { ShareRunDialogComponent } from "../share-run-dialog/share-run-dialog.component";
+import { LibraryProjectDetailsComponent } from "../../modules/library/library-project-details/library-project-details.component";
 
 @Component({
   selector: 'app-run-menu',
@@ -27,6 +28,15 @@ export class RunMenuComponent implements OnInit {
   shareRun() {
     this.dialog.open(ShareRunDialogComponent, {
       data: { run: this.run }
+    });
+  }
+
+  showUnitDetails() {
+    const project = this.run.project;
+    this.dialog.open(LibraryProjectDetailsComponent, {
+      ariaLabel: 'Project Details',
+      data: { project: project },
+      panelClass: 'mat-dialog-container--md'
     });
   }
 

@@ -40,6 +40,7 @@ describe('OfficialLibraryComponent', () => {
   let component: OfficialLibraryComponent;
   let fixture: ComponentFixture<OfficialLibraryComponent>;
   const libraryServiceStub = {
+    implementationModelOptions: [],
     getLibraryGroups(): Observable<LibraryGroup[]> {
       const libraryGroup: LibraryGroup[] = [];
       return Observable.create( observer => {
