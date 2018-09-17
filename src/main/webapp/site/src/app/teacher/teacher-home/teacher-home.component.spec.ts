@@ -38,7 +38,7 @@ describe('TeacherHomeComponent', () => {
         const project1 = new Project();
         project1.id = 1;
         project1.name = "Photosynthesis";
-        project1.thumbIconPath = "";
+        project1.projectThumb = "";
         run1.project = project1;
         const run2 = new Run();
         run2.id = 2;
@@ -47,7 +47,7 @@ describe('TeacherHomeComponent', () => {
         const project2 = new Project();
         project2.id = 1;
         project2.name = "Photosynthesis";
-        project2.thumbIconPath = "";
+        project2.projectThumb = "";
         run2.project = project2;
         runs.push(run1);
         runs.push(run2);

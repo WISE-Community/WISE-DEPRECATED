@@ -37,7 +37,7 @@ describe('CreateRunDialogComponent', () => {
     project.metadata = {
       "title": "Photosynthesis"
     };
-    project.thumbIconPath = "photo.png";
+    project.projectThumb = "photo.png";
     component.project = project;
     fixture.detectChanges();
   });

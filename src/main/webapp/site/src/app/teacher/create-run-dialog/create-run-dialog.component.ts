@@ -50,7 +50,7 @@ export class CreateRunDialogComponent {
           project.name = run.name;
           project.dateCreated = new Date().toString();
           project.run = run;
-          project.thumbIconPath = '';
+          project.projectThumb = '';
           run.project = project;
           this.teacherService.addNewRun(run);
           this.teacherService.setTabIndex(0);
