@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Project } from "../../../teacher/project";
+import { Project } from "../../../domain/project";
 import { TeacherService } from "../../../teacher/teacher.service";
 
 @Component({

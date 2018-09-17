@@ -1,11 +1,8 @@
-export class LibraryProject {
-  id: number;
-  name: string;
+import { Project } from "../../domain/project";
+
+export class LibraryProject extends Project {
   implementationModel: string;
-  metadata: any;
   notes: string;
-  projectThumb: string;
-  thumbStyle: any;
   type: string;
   visible: boolean = true;
 }

@@ -4,7 +4,7 @@ import { defer, Observable } from "rxjs";
 import { UserService } from "../../services/user.service";
 import { TeacherService } from "../../teacher/teacher.service";
 import { User } from "../../domain/user";
-import { Project } from "../project";
+import { Project} from "../../domain/project";
 
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClient, HttpHandler } from "@angular/common/http";

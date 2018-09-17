@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable ,  of } from "rxjs";
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Project } from "./project";
+import { Project } from "../domain/project";
 import { Teacher } from "../domain/teacher";
 import { Run } from "../domain/run";
 import { Subject } from "rxjs";

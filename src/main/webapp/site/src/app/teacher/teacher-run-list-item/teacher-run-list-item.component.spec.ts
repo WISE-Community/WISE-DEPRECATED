@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TeacherRunListItemComponent } from './teacher-run-list-item.component';
-import { Project } from "../project";
+import { Project} from "../../domain/project";
 import { TeacherService } from "../teacher.service";
 import { TeacherRun } from "../teacher-run";
 import { MatCardModule, MatIconModule, MatTooltipModule } from "@angular/material";

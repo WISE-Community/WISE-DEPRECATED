@@ -10,7 +10,7 @@ import { MomentModule } from 'ngx-moment';
 
 import { TeacherRunListComponent } from './teacher-run-list.component';
 import { TeacherService } from "../teacher.service";
-import { Project } from "../project";
+import { Project } from "../../domain/project";
 import { TeacherRun } from "../teacher-run";
 
 @Component({selector: 'app-teacher-run-list-item', template: ''})

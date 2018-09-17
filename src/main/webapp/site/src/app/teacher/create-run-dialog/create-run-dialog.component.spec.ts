@@ -11,6 +11,7 @@ import {
 import { SharedModule } from "../../modules/shared/shared.module";
 import { FormsModule } from "@angular/forms";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { Project } from "../../domain/project";
 
 describe('CreateRunDialogComponent', () => {
   let component: CreateRunDialogComponent;
