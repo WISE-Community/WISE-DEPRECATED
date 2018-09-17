@@ -38,15 +38,9 @@ describe('CommunityLibraryComponent', () => {
     getCommunityLibraryProjects() {
 
     },
-    libraryGroupsSource$: fakeAsyncResponse({
-
-    }),
-    officialLibraryProjectsSource$: fakeAsyncResponse({
-
-    }),
-    communityLibraryProjectsSource$: fakeAsyncResponse({
-
-    }),
+    libraryGroupsSource$: fakeAsyncResponse([]),
+    officialLibraryProjectsSource$: fakeAsyncResponse([]),
+    communityLibraryProjectsSource$: fakeAsyncResponse([]),
     projectFilterOptionsSource$: fakeAsyncResponse({
       searchValue: "",
       disciplineValue: [],

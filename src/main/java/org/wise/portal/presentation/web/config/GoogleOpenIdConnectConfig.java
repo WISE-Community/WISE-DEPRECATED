@@ -15,19 +15,19 @@ import java.util.Arrays;
 @EnableOAuth2Client
 public class GoogleOpenIdConnectConfig {
 
-  @Value("${google.clientId}")
+  @Value("${google.clientId:}")
   private String clientId;
 
-  @Value("${google.clientSecret}")
+  @Value("${google.clientSecret:}")
   private String clientSecret;
 
-  @Value("${google.accessTokenUri}")
+  @Value("${google.accessTokenUri:}")
   private String accessTokenUri;
 
-  @Value("${google.userAuthorizationUri}")
+  @Value("${google.userAuthorizationUri:}")
   private String userAuthorizationUri;
 
-  @Value("${google.redirectUri}")
+  @Value("${google.redirectUri:}")
   private String redirectUri;
 
   @Bean

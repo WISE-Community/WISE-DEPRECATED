@@ -25,23 +25,25 @@ import {
   GoogleLoginProvider,
 } from "angularx-social-login";
 
-export function getAuthServiceConfigs(configService: ConfigService) {
-  let config = new AuthServiceConfig(
-    [
-      {
-        id: GoogleLoginProvider.PROVIDER_ID,
-        provider: new GoogleLoginProvider(configService.getGoogleClientId())
-      }
-    ]);
-  return config;
-}
-
 export function initialize(configService: ConfigService, userService: UserService) {
   return () => {
     return userService.retrieveUserPromise().then((user) => {
       configService.subscribeToGetUser();
     });
   }
+}
+
+export function getAuthServiceConfigs(configService: ConfigService) {
+  const autServiceConfig: AuthServiceConfig = new AuthServiceConfig([]);
+  configService.getConfig().subscribe((config) => {
+    if (config != null) {
+      if (configService.getGoogleClientId() != null) {
+        autServiceConfig.providers.set(GoogleLoginProvider.PROVIDER_ID,
+          new GoogleLoginProvider(configService.getGoogleClientId()));
+      }
+    }
+  });
+  return autServiceConfig;
 }
 
 @NgModule({

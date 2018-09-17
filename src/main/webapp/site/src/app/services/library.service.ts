@@ -45,7 +45,7 @@ export class LibraryService {
   getOfficialLibraryProjects() {
     this.http.get<LibraryGroup[]>(this.libraryGroupsUrl).subscribe((libraryGroups) => {
       this.libraryGroups = libraryGroups;
-      this.libraryGroupsSource.next(libraryGroups);
+      this.implementationModelOptions = [];
       const projects: LibraryProject[] = [];
       for (let group of this.libraryGroups) {
         if (!this.implementationModelValue) {
@@ -56,6 +56,7 @@ export class LibraryService {
         this.populateProjects(group, group.id, projects);
       }
       this.officialLibraryProjectsSource.next(projects);
+      this.libraryGroupsSource.next(libraryGroups);
     });
   }
 

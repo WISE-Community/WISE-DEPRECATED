@@ -43,11 +43,11 @@ describe('PersonalLibraryComponent', () => {
     getSharedLibraryProjects() {
 
     },
-    libraryGroupsSource$: fakeAsyncResponse({}),
-    officialLibraryProjectsSource$: fakeAsyncResponse({}),
-    communityLibraryProjectsSource$: fakeAsyncResponse({}),
-    personalLibraryProjectsSource$: fakeAsyncResponse({}),
-    sharedLibraryProjectsSource$: fakeAsyncResponse({}),
+    libraryGroupsSource$: fakeAsyncResponse([]),
+    officialLibraryProjectsSource$: fakeAsyncResponse([]),
+    communityLibraryProjectsSource$: fakeAsyncResponse([]),
+    personalLibraryProjectsSource$: fakeAsyncResponse([]),
+    sharedLibraryProjectsSource$: fakeAsyncResponse([]),
     projectFilterOptionsSource$: fakeAsyncResponse({
       searchValue: "",
       disciplineValue: [],
