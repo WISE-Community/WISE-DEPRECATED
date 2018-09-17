@@ -18,6 +18,7 @@ import { fakeAsyncResponse } from "../../../student/student-run-list/student-run
 import { Observable } from "rxjs";
 import { CommunityLibraryComponent } from "../community-library/community-library.component";
 import { PersonalLibraryComponent } from "../personal-library/personal-library.component";
+import { Project } from "../../../teacher/project";
 
 @Component({selector: 'app-library-group-thumbs', template: ''})
 class LibraryGroupThumbsStubComponent {
@@ -66,11 +67,20 @@ describe('TeacherProjectLibraryComponent', () => {
     getSharedLibraryProjects() {
 
     },
+    getProjectInfo(): Observable<Project> {
+      return Observable.create(observer => {
+        observer.next(projectObj);
+        observer.complete();
+      });
+    },
+    setTabIndex() {
+
+    },
     libraryGroupsSource$: fakeAsyncResponse({}),
-    officialLibraryProjectsSource$: fakeAsyncResponse({}),
-    communityLibraryProjectsSource$: fakeAsyncResponse({}),
-    personalLibraryProjectsSource$: fakeAsyncResponse({}),
-    sharedLibraryProjectsSource$: fakeAsyncResponse({}),
+    officialLibraryProjectsSource$: fakeAsyncResponse([]),
+    communityLibraryProjectsSource$: fakeAsyncResponse([]),
+    personalLibraryProjectsSource$: fakeAsyncResponse([]),
+    sharedLibraryProjectsSource$: fakeAsyncResponse([]),
     projectFilterOptionsSource$: fakeAsyncResponse({
       searchValue: "",
       disciplineValue: [],
@@ -78,7 +88,17 @@ describe('TeacherProjectLibraryComponent', () => {
       peValue: []
     }),
     tabIndexSource$: fakeAsyncResponse({}),
-    newProjectSource$: fakeAsyncResponse({})
+    newProjectSource$: fakeAsyncResponse({}),
+    implementationModelOptions: []
+  };
+  const projectObj = {
+    id: 1,
+    name: "Test",
+    owner: {
+      id: 123456,
+      displayName: "Spongebob Squarepants"
+    },
+    sharedOwners: []
   };
 
   beforeEach(async(() => {

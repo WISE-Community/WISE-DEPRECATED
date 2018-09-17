@@ -44,7 +44,8 @@ describe('LibraryComponent', () => {
       disciplineValue: [],
       dciArrangementValue: [],
       peValue: []
-    })
+    }),
+    implementationModelOptions: []
   }
 
   beforeEach(async(() => {

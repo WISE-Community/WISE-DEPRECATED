@@ -58,7 +58,8 @@ describe('ShareProjectDialogComponent', () => {
       peValue: []
     }),
     tabIndexSource$: fakeAsyncResponse({}),
-    newProjectSource$: fakeAsyncResponse({})
+    newProjectSource$: fakeAsyncResponse({}),
+    implementationModelOptions: []
   };
   const teacherServiceStub = {
     isLoggedIn: true,
@@ -116,7 +117,7 @@ describe('ShareProjectDialogComponent', () => {
       displayName: "Spongebob Squarepants"
     },
     sharedOwners: []
-  }
+  };
 
   let component: ShareProjectDialogComponent;
   let fixture: ComponentFixture<ShareProjectDialogComponent>;

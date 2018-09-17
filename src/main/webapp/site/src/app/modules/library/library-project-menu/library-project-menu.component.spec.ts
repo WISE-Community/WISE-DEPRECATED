@@ -57,6 +57,9 @@ describe('LibraryProjectMenuComponent', () => {
     const project: Project = new Project();
     project.id = 1;
     project.name = "Photosynthesis";
+    project.owner = {
+      id: 123456
+    };
     component.project = project;
     fixture.detectChanges();
   });
