@@ -14,7 +14,7 @@ script:
 - while ! grep "initialization completed" output.txt >/dev/null; do sleep 2; echo "polling for WISE server..."; done
 - npm test
 - npm run test-angular-portal
-- npm run test-e2e
+# - npm run test-e2e
 notifications:
   email:
   - honchikun@gmail.com
