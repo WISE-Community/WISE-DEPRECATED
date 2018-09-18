@@ -1,6 +1,6 @@
 <div style="display: flex;"><div style="width: 30%"><h2>Share Project</h2></div><div style="width: 40%"></div><div style="width: 10%"><button mat-button [mat-dialog-close]="true">X</button></div></div>
-Name: {{project.name}} <br/>
-Lesson ID: {{project.id}}
+<div *ngIf="project != null">Name: {{project.name}}</div>
+<div *ngIf="project != null">Lesson ID: {{project.id}}</div>
 <div style="display:flex">
   <div>Find Teacher:</div>
   <div>
@@ -26,7 +26,7 @@ Lesson ID: {{project.id}}
 
 <table>
   <tr><th>Teacher Name</th><th>Permissions</th></tr>
-  <tr><td>{{ project.owner.displayName}}</td><td>Owner. Full Permissions</td></tr>
+  <tr><td *ngIf="project != null">{{project.owner.displayName}}</td><td>Owner. Full Permissions</td></tr>
   <tr *ngFor="let sharedOwner of sharedOwners">
     <td>
       {{sharedOwner.firstName}} {{sharedOwner.lastName}}
