@@ -42,7 +42,7 @@ Lesson ID: {{run.project.id}}
         <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[1]" disabled="true">View Student Work</mat-checkbox><br/>
         <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[3]" (change)="runPermissionChanged(sharedOwner.id, 3, sharedOwner.runPermissions[3])">View Student Names</mat-checkbox><br/>
         <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[2]" (change)="runPermissionChanged(sharedOwner.id, 2, sharedOwner.runPermissions[2])">Grade and Manage Run</mat-checkbox><br/>
-        <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[2]" (change)="projectPermissionChanged(sharedOwner.id, 2, sharedOwner.projectPermissions[2])">Edit Lesson Content</mat-checkbox>
+        <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[2]" (change)="projectPermissionChanged(project, sharedOwner.id, 2, sharedOwner.projectPermissions[2])">Edit Lesson Content</mat-checkbox>
       </td>
   </tr>
 </table>

@@ -39,7 +39,7 @@ Lesson ID: {{project.id}}
     </td>
     <td>
       <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[1]" disabled="true">View Lesson</mat-checkbox><br/>
-      <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[2]" (change)="projectPermissionChanged(sharedOwner.id, 2, sharedOwner.projectPermissions[2])">Edit Lesson Content</mat-checkbox><br/>
+      <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[2]" (change)="projectPermissionChanged(project, sharedOwner.id, 2, sharedOwner.projectPermissions[2])">Edit Lesson Content</mat-checkbox><br/>
     </td>
   </tr>
 </table>

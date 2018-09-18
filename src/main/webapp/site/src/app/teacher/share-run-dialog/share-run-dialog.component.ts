@@ -1,63 +1,33 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
 import { Run } from "../../domain/run";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { TeacherService } from "../teacher.service";
-import { Observable, timer } from 'rxjs';
-import { map, startWith, debounce, debounceTime } from 'rxjs/operators';
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { ShareItemDialogComponent } from "../../modules/library/share-item-dialog/share-item-dialog.component";
 
 @Component({
   selector: 'app-share-run-dialog',
   templateUrl: './share-run-dialog.component.html',
   styleUrls: ['./share-run-dialog.component.scss']
 })
-export class ShareRunDialogComponent implements OnInit {
+export class ShareRunDialogComponent extends ShareItemDialogComponent {
 
   run: Run;
-  projectId: number;
-  runId: number;
-  teacherSearchControl = new FormControl();
-  options: string[] = [];
-  filteredOptions: Observable<string[]>;
-  sharedOwners: any[] = [];
 
-  constructor(public dialogRef: MatDialogRef<ShareRunDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any,
-        private teacherService: TeacherService) {
+  constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              public teacherService: TeacherService) {
+    super(dialogRef, data, teacherService);
     this.runId = data.run.id;
-
     this.teacherService.getRun(this.runId).subscribe((run: Run) => {
       this.run = run;
+      this.project = run.project;
       this.projectId = run.project.id;
       this.populateSharedOwners(run.sharedOwners);
     });
-    this.teacherService.retrieveAllTeacherUsernames().subscribe((teacherUsernames) => {
-      this.options = teacherUsernames;
-    })
   }
 
   ngOnInit() {
-    this.filteredOptions = this.teacherSearchControl.valueChanges.pipe(
-      debounceTime(1000),
-      map(value => this._filter(value))
-    );
-  }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    if (filterValue == '') {
-      return [];
-    }
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
-  }
-
-  populateSharedOwners(sharedOwners) {
-    for (let sharedOwner of sharedOwners) {
-      const localSharedOwner = JSON.parse(JSON.stringify(sharedOwner));
-      this.populatePermissions(localSharedOwner);
-      delete localSharedOwner.permissions;
-      this.sharedOwners.push(localSharedOwner);
-    }
+    super.ngOnInit();
   }
 
   populatePermissions(sharedOwner) {
@@ -81,29 +51,12 @@ export class ShareRunDialogComponent implements OnInit {
     };
   }
 
-  addProjectPermissions(sharedOwner) {
-    this.setDefaultProjectPermissions(sharedOwner);
-    const sharedProjectOwner = this.getSharedProjectOwner(sharedOwner.id);
-    for (let permission of sharedProjectOwner.permissions) {
-      sharedOwner.projectPermissions[permission] = true;
-    }
-  }
-
   setDefaultProjectPermissions(sharedOwner) {
     sharedOwner.projectPermissions = {
       1: false,  // View the project
-      2: false,  // View and edit the project
+      2: false,  // Edit the project
       16: false  // Admin (read, write, share)
     };
-  }
-
-  getSharedProjectOwner(userId) {
-    for (let sharedOwner of this.run.project.sharedOwners) {
-      if (sharedOwner.id == userId) {
-        return sharedOwner;
-      }
-    }
-    return { permissions: [] };
   }
 
   runPermissionChanged(sharedOwnerId, permissionId, isAddingPermission) {
@@ -134,43 +87,6 @@ export class ShareRunDialogComponent implements OnInit {
     sharedOwner.runPermissions[permissionId] = false;
   }
 
-  projectPermissionChanged(sharedOwnerId, permissionId, isAddingPermission) {
-    if (isAddingPermission) {
-      this.teacherService.addSharedOwnerProjectPermission(this.run.project.id, sharedOwnerId, permissionId)
-        .subscribe((response: any) => {
-          if (response.status == "success") {
-            this.addProjectPermissionToSharedOwner(sharedOwnerId, permissionId);
-          }
-        })
-    } else {
-      this.teacherService.removeSharedOwnerProjectPermission(this.run.project.id, sharedOwnerId, permissionId)
-        .subscribe((response: any) => {
-          if (response.status == "success") {
-            this.removeProjectPermissionFromSharedOwner(sharedOwnerId, permissionId);
-          }
-        })
-    }
-  }
-
-  addProjectPermissionToSharedOwner(sharedOwnerId, permissionId) {
-    const sharedOwner = this.getSharedOwner(sharedOwnerId);
-    sharedOwner.projectPermissions[permissionId] = true;
-  }
-
-  removeProjectPermissionFromSharedOwner(sharedOwnerId, permissionId) {
-    const sharedOwner = this.getSharedOwner(sharedOwnerId);
-    sharedOwner.projectPermissions[permissionId] = false;
-  }
-
-  getSharedOwner(sharedOwnerId): any {
-    for (let sharedOwner of this.sharedOwners) {
-      if (sharedOwner.id == sharedOwnerId) {
-        return sharedOwner;
-      }
-    }
-    return { permissions: [] };
-  }
-
   shareRun() {
     const sharedOwnerUsername = this.teacherSearchControl.value;
     if (this.options.includes(sharedOwnerUsername) && !this.isSharedOwner(sharedOwnerUsername)) {
@@ -188,29 +104,10 @@ export class ShareRunDialogComponent implements OnInit {
     }
   }
 
-  isSharedOwner(username) {
-    for (let sharedOwner of this.sharedOwners) {
-      if (sharedOwner.username == username) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   unshareRun(sharedOwner) {
     this.teacherService.removeSharedOwner(this.runId, sharedOwner.username)
         .subscribe((response) => {
       this.removeSharedOwner(sharedOwner);
     });
   }
-
-  removeSharedOwner(sharedOwner) {
-    for (let i = 0; i < this.sharedOwners.length; i ++) {
-      if (this.sharedOwners[i].id == sharedOwner.id) {
-        this.sharedOwners.splice(i, 1);
-        return;
-      }
-    }
-  }
-
 }
