@@ -19,6 +19,7 @@ describe('PersonalLibraryComponent', () => {
   let component: PersonalLibraryComponent;
   let fixture: ComponentFixture<PersonalLibraryComponent>;
   const libraryServiceStub = {
+    implementationModelOptions: [],
     getLibraryGroups(): Observable<LibraryGroup[]> {
       const libraryGroup: LibraryGroup[] = [];
       return Observable.create( observer => {
@@ -50,10 +51,10 @@ describe('PersonalLibraryComponent', () => {
         observer.complete();
       });
     },
-    setTabIndex() {
+    setTabIndex(index) {
 
     },
-    libraryGroupsSource$: fakeAsyncResponse({}),
+    libraryGroupsSource$: fakeAsyncResponse([]),
     officialLibraryProjectsSource$: fakeAsyncResponse([]),
     communityLibraryProjectsSource$: fakeAsyncResponse([]),
     personalLibraryProjectsSource$: fakeAsyncResponse([]),

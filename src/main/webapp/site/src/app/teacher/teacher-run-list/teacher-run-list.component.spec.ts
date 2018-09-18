@@ -41,7 +41,7 @@ describe('TeacherRunListComponent', () => {
         run1.id = 1;
         run1.name = "Photosynthesis";
         run1.numStudents = 30;
-        run1.periods = ["1"];
+        run1.periods = ["1","2"];
         const project1 = new Project();
         project1.id = 1;
         project1.name = "Photosynthesis";
@@ -51,10 +51,10 @@ describe('TeacherRunListComponent', () => {
         run2.id = 2;
         run2.name = "Plate Tectonics";
         run2.numStudents = 15;
-        run2.periods = ["2"];
+        run2.periods = ["3","4"];
         const project2 = new Project();
         project2.id = 1;
-        project2.name = "Photosynthesis";
+        project2.name = "Plate Tectonics";
         project2.projectThumb = "";
         run2.project = project2;
         runs.push(run1);
@@ -72,7 +72,13 @@ describe('TeacherRunListComponent', () => {
           }
         );
       },
-      newRunSource$: fakeAsyncResponse({id: 3, name: "Global Climate Change", periods: ["3"]})
+      newRunSource$: fakeAsyncResponse(
+        {
+          id: 3,
+          name: "Global Climate Change",
+          periods: ["1", "2"]
+        }
+      )
     };
 
     TestBed.configureTestingModule({

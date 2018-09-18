@@ -10,6 +10,7 @@ import {
   MatBadgeModule,
   MatExpansionModule,
   MatIconModule,
+  MatMenuModule,
   MatTabsModule,
   MatTooltipModule
 } from "@angular/material";
@@ -20,6 +21,7 @@ import { Observable } from "rxjs";
 import { CommunityLibraryComponent } from "../community-library/community-library.component";
 import { PersonalLibraryComponent } from "../personal-library/personal-library.component";
 import { LibraryProjectDetailsComponent } from "../library-project-details/library-project-details.component";
+import { LibraryProjectMenuComponent } from "../library-project-menu/library-project-menu.component";
 import { Project } from "../../../domain/project";
 
 @Component({selector: 'app-library-group-thumbs', template: ''})
@@ -111,6 +113,7 @@ describe('TeacherProjectLibraryComponent', () => {
         MatIconModule,
         MatBadgeModule,
         MatExpansionModule,
+        MatMenuModule,
         MatTabsModule,
         MatTooltipModule
       ],
@@ -122,6 +125,7 @@ describe('TeacherProjectLibraryComponent', () => {
         LibraryGroupThumbsStubComponent,
         LibraryProjectStubComponent,
         LibraryProjectDetailsComponent,
+        LibraryProjectMenuComponent,
         LibraryFiltersComponent
       ],
       providers: [

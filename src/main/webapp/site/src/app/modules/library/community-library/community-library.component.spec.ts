@@ -19,6 +19,7 @@ describe('CommunityLibraryComponent', () => {
   let component: CommunityLibraryComponent;
   let fixture: ComponentFixture<CommunityLibraryComponent>;
   const libraryServiceStub = {
+    implementationModelOptions: [],
     getLibraryGroups(): Observable<LibraryGroup[]> {
       const libraryGroup: LibraryGroup[] = [];
       return Observable.create( observer => {
