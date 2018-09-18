@@ -35,12 +35,7 @@ export class PersonalLibraryComponent extends LibraryComponent {
 
     libraryService.newProjectSource$.subscribe(project => {
       this.projects.unshift(project);
-<<<<<<< HEAD
-      let numProjectsVisible = this.countVisibleProjects(this.projects);
-      this.emitNumberOfProjectsVisible(numProjectsVisible);
-=======
       this.emitNumberOfProjectsVisible();
->>>>>>> issue-1443-show-shared-library-projects
       this.libraryService.setTabIndex(2);
     });
 

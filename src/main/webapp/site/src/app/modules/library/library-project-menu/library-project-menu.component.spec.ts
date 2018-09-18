@@ -57,9 +57,11 @@ describe('LibraryProjectMenuComponent', () => {
     const project: Project = new Project();
     project.id = 1;
     project.name = "Photosynthesis";
-    project.owner = {
-      id: 123456
-    };
+    const user = new User();
+    user.id = 123456;
+    user.userName = "Spongebob Squarepants";
+    user.displayName = "Spongebob Squarepants";
+    project.owner = user;
     component.project = project;
     fixture.detectChanges();
   });
