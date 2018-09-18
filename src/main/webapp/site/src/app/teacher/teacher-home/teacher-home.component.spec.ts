@@ -4,11 +4,11 @@ import { defer, Observable } from "rxjs";
 import { UserService } from "../../services/user.service";
 import { TeacherService } from "../../teacher/teacher.service";
 import { User } from "../../domain/user";
-import { Project } from "../project";
+import { Project} from "../../domain/project";
 
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClient, HttpHandler } from "@angular/common/http";
-import { DebugElement, DebugNode, NO_ERRORS_SCHEMA } from "@angular/core";
+import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { By } from "@angular/platform-browser";
 import { TeacherHomeComponent } from "./teacher-home.component";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
@@ -38,7 +38,7 @@ describe('TeacherHomeComponent', () => {
         const project1 = new Project();
         project1.id = 1;
         project1.name = "Photosynthesis";
-        project1.thumbIconPath = "";
+        project1.projectThumb = "";
         run1.project = project1;
         const run2 = new Run();
         run2.id = 2;
@@ -47,7 +47,7 @@ describe('TeacherHomeComponent', () => {
         const project2 = new Project();
         project2.id = 1;
         project2.name = "Photosynthesis";
-        project2.thumbIconPath = "";
+        project2.projectThumb = "";
         run2.project = project2;
         runs.push(run1);
         runs.push(run2);
@@ -56,7 +56,7 @@ describe('TeacherHomeComponent', () => {
           observer.complete();
         });
       },
-      newRunSource$: fakeAsyncResponse([{id: 3, name: "Global Climate Change"}]),
+      newRunSource$: fakeAsyncResponse({id: 3, name: "Global Climate Change", periods: ["3"]}),
       tabIndexSource$: fakeAsyncResponse(0)
     };
 

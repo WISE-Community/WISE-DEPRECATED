@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TeacherRunListItemComponent } from './teacher-run-list-item.component';
-import { Project } from "../project";
+import { Project} from "../../domain/project";
 import { TeacherService } from "../teacher.service";
 import { TeacherRun } from "../teacher-run";
 import { MatCardModule, MatIconModule, MatTooltipModule } from "@angular/material";
@@ -41,7 +41,7 @@ describe('TeacherProjectListItemComponent', () => {
     const project = new Project();
     project.id = 1;
     project.name = "Photosynthesis";
-    project.thumbIconPath = "";
+    project.projectThumb = "";
     run.project = project;
     component.run = run;
     fixture.detectChanges();

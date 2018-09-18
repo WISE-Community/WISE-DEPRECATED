@@ -1,9 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Project } from "../../../teacher/project";
 import { TeacherService } from "../../../teacher/teacher.service";
 import { LibraryService } from "../../../services/library.service";
 import { ShareItemDialogComponent } from "../share-item-dialog/share-item-dialog.component";
+import { Project } from "../../../domain/project";
 
 @Component({
   selector: 'app-share-project-dialog',

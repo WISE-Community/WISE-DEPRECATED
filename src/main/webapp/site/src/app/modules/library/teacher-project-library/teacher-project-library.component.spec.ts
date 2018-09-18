@@ -10,7 +10,8 @@ import {
   MatBadgeModule,
   MatExpansionModule,
   MatIconModule,
-  MatTabsModule
+  MatTabsModule,
+  MatTooltipModule
 } from "@angular/material";
 import { LibraryService } from "../../../services/library.service";
 import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
@@ -18,7 +19,8 @@ import { fakeAsyncResponse } from "../../../student/student-run-list/student-run
 import { Observable } from "rxjs";
 import { CommunityLibraryComponent } from "../community-library/community-library.component";
 import { PersonalLibraryComponent } from "../personal-library/personal-library.component";
-import { Project } from "../../../teacher/project";
+import { LibraryProjectDetailsComponent } from "../library-project-details/library-project-details.component";
+import { Project } from "../../../domain/project";
 
 @Component({selector: 'app-library-group-thumbs', template: ''})
 class LibraryGroupThumbsStubComponent {
@@ -42,6 +44,7 @@ describe('TeacherProjectLibraryComponent', () => {
   let component: TeacherProjectLibraryComponent;
   let fixture: ComponentFixture<TeacherProjectLibraryComponent>;
   const libraryServiceStub = {
+    implementationModelOptions: [],
     getLibraryGroups(): Observable<LibraryGroup[]> {
       const libraryGroup: LibraryGroup[] = [];
       return Observable.create( observer => {
@@ -88,8 +91,7 @@ describe('TeacherProjectLibraryComponent', () => {
       peValue: []
     }),
     tabIndexSource$: fakeAsyncResponse({}),
-    newProjectSource$: fakeAsyncResponse({}),
-    implementationModelOptions: []
+    newProjectSource$: fakeAsyncResponse({})
   };
   const projectObj = {
     id: 1,
@@ -109,7 +111,8 @@ describe('TeacherProjectLibraryComponent', () => {
         MatIconModule,
         MatBadgeModule,
         MatExpansionModule,
-        MatTabsModule
+        MatTabsModule,
+        MatTooltipModule
       ],
       declarations: [
         CommunityLibraryComponent,
@@ -118,6 +121,7 @@ describe('TeacherProjectLibraryComponent', () => {
         TeacherProjectLibraryComponent,
         LibraryGroupThumbsStubComponent,
         LibraryProjectStubComponent,
+        LibraryProjectDetailsComponent,
         LibraryFiltersComponent
       ],
       providers: [

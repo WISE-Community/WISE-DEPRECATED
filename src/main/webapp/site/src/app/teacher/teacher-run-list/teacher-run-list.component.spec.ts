@@ -10,7 +10,7 @@ import { MomentModule } from 'ngx-moment';
 
 import { TeacherRunListComponent } from './teacher-run-list.component';
 import { TeacherService } from "../teacher.service";
-import { Project } from "../project";
+import { Project } from "../../domain/project";
 import { TeacherRun } from "../teacher-run";
 
 @Component({selector: 'app-teacher-run-list-item', template: ''})
@@ -41,19 +41,21 @@ describe('TeacherRunListComponent', () => {
         run1.id = 1;
         run1.name = "Photosynthesis";
         run1.numStudents = 30;
+        run1.periods = ["1"];
         const project1 = new Project();
         project1.id = 1;
         project1.name = "Photosynthesis";
-        project1.thumbIconPath = "";
+        project1.projectThumb = "";
         run1.project = project1;
         const run2 = new TeacherRun();
         run2.id = 2;
         run2.name = "Plate Tectonics";
         run2.numStudents = 15;
+        run2.periods = ["2"];
         const project2 = new Project();
         project2.id = 1;
         project2.name = "Photosynthesis";
-        project2.thumbIconPath = "";
+        project2.projectThumb = "";
         run2.project = project2;
         runs.push(run1);
         runs.push(run2);
@@ -70,7 +72,7 @@ describe('TeacherRunListComponent', () => {
           }
         );
       },
-      newRunSource$: fakeAsyncResponse([{id: 3, name: "Global Climate Change"}])
+      newRunSource$: fakeAsyncResponse({id: 3, name: "Global Climate Change", periods: ["3"]})
     };
 
     TestBed.configureTestingModule({

@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ShareProjectDialogComponent } from './share-project-dialog.component';
 import { TeacherService } from "../../../teacher/teacher.service";
 import { Run } from "../../../domain/run";
-import { Project } from "../../../teacher/project";
+import { Project } from "../../../domain/project";
 import { Observable } from 'rxjs';
 import { MatDialogRef, MAT_DIALOG_DATA, MatAutocompleteModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -46,11 +46,14 @@ describe('ShareProjectDialogComponent', () => {
         observer.complete();
       });
     },
+    setTabIndex() {
+
+    },
     libraryGroupsSource$: fakeAsyncResponse({}),
-    officialLibraryProjectsSource$: fakeAsyncResponse({}),
-    communityLibraryProjectsSource$: fakeAsyncResponse({}),
-    personalLibraryProjectsSource$: fakeAsyncResponse({}),
-    sharedLibraryProjectsSource$: fakeAsyncResponse({}),
+    officialLibraryProjectsSource$: fakeAsyncResponse([]),
+    communityLibraryProjectsSource$: fakeAsyncResponse([]),
+    personalLibraryProjectsSource$: fakeAsyncResponse([]),
+    sharedLibraryProjectsSource$: fakeAsyncResponse([]),
     projectFilterOptionsSource$: fakeAsyncResponse({
       searchValue: "",
       disciplineValue: [],

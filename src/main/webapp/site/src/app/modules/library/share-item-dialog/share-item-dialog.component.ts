@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { TeacherService } from "../../../teacher/teacher.service";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { map, debounceTime } from 'rxjs/operators';
-import { Project } from "../../../teacher/project";
+import { Project } from "../../../domain/project";
 
 @Component({
   selector: 'app-share-item-dialog',

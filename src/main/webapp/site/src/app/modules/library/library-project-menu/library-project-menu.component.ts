@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Project } from "../../../teacher/project";
+import { Project } from "../../../domain/project";
 import { TeacherService } from "../../../teacher/teacher.service";
 import { ShareProjectDialogComponent } from "../share-project-dialog/share-project-dialog.component";
 import { UserService } from "../../../services/user.service";
