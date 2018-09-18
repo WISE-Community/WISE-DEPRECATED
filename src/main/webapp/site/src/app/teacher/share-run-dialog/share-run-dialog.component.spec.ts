@@ -49,16 +49,26 @@ describe('ShareRunDialogComponent', () => {
     const runObj = {
       id: 1,
       name: "Photosynthesis",
+      owner: {
+        id: 2,
+        displayName: "Patrick Star"
+      },
       sharedOwners: [{
-        id:4,
+        id: 4,
+        displayName: "Spongebob Squarepants",
         firstName: "spongebob",
         lastName: "squarepants",
         permissions: [1,3]
       }],
       project: {
         id: 9,
+        owner: {
+          id: 2,
+          displayName: "Patrick Star"
+        },
         sharedOwners: [{
-          id:4,
+          id: 4,
+          displayName: "Spongebob Squarepants",
           firstName: "spongebob",
           lastName: "squarepants",
           permissions: [2]
