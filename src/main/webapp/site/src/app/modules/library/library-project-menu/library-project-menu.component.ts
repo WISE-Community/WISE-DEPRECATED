@@ -28,10 +28,26 @@ export class LibraryProjectMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.userService.getUserId() == this.project.owner.id) {
-      this.isCanShare = true;
-    }
+    this.isCanShare = this.calculateIsCanShare();
     this.editLink = `/wise/author/authorproject.html?projectId=${ this.project.id }`;
+  }
+
+  calculateIsCanShare() {
+    return this.isOwner() || this.isSharedOwner();
+  }
+
+  isOwner() {
+    return this.userService.getUserId() == this.project.owner.id;
+  }
+
+  isSharedOwner() {
+    const userId = this.userService.getUserId();
+    for (let sharedOwner of this.project.sharedOwners) {
+      if (userId == sharedOwner.id) {
+        return true;
+      }
+    }
+    return false;
   }
 
   copyProject() {
