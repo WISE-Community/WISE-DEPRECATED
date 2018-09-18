@@ -66,8 +66,7 @@ describe('PersonalLibraryComponent', () => {
       peValue: []
     }),
     tabIndexSource$: fakeAsyncResponse({}),
-    newProjectSource$: fakeAsyncResponse({}),
-    implementationModelOptions: []
+    newProjectSource$: fakeAsyncResponse({})
   };
   const runObj = {
     id: 1,

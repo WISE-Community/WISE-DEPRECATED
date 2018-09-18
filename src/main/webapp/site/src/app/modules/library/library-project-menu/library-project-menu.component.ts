@@ -20,7 +20,8 @@ export class LibraryProjectMenuComponent implements OnInit {
 
   editLink: string = '';
   previewLink: string = '';
-  isCanShare:boolean = false;
+  isCanEdit: boolean = false;
+  isCanShare: boolean = false;
 
   constructor(public dialog: MatDialog,
               public teacherService: TeacherService,
@@ -28,8 +29,13 @@ export class LibraryProjectMenuComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.isCanEdit = this.calculateIsCanEdit();
     this.isCanShare = this.calculateIsCanShare();
     this.editLink = `/wise/author/authorproject.html?projectId=${ this.project.id }`;
+  }
+
+  calculateIsCanEdit() {
+    return this.isOwner() || this.isSharedOwnerWithEditPermission();
   }
 
   calculateIsCanShare() {
@@ -48,6 +54,20 @@ export class LibraryProjectMenuComponent implements OnInit {
       }
     }
     return false;
+  }
+
+  isSharedOwnerWithEditPermission() {
+    const userId = this.userService.getUserId();
+    for (let sharedOwner of this.project.sharedOwners) {
+      if (userId == sharedOwner.id) {
+        return this.hasEditPermission(sharedOwner);
+      }
+    }
+    return false;
+  }
+
+  hasEditPermission(sharedOwner) {
+    return sharedOwner.permissions.includes(Project.EDIT_PERMISSION);
   }
 
   copyProject() {
