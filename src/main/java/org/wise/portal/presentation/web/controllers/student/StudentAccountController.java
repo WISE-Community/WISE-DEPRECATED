@@ -115,6 +115,7 @@ public class StudentAccountController {
     birthday.set(Calendar.MONTH, birthmonth-1);  // month is 0-based
     birthday.set(Calendar.DATE, birthdate);
     userDetails.setBirthday(birthday.getTime());
+    userDetails.setLanguage(wiseProperties.getProperty("defaultLocale", "en"));
 
     studentAccountFormValidator.validate(accountForm, result);
     if (result.hasErrors()) {

@@ -169,6 +169,7 @@ public class TeacherAccountController {
     try {
       userDetails.setDisplayname(userDetails.getFirstname() + " " + userDetails.getLastname());
       userDetails.setEmailValid(true);
+      userDetails.setLanguage(wiseProperties.getProperty("defaultLocale", "en"));
       User createdUser = this.userService.createUser(userDetails);
       NewAccountEmailService newAccountEmailService = new NewAccountEmailService(createdUser, request.getLocale(), request);
       Thread thread = new Thread(newAccountEmailService);
