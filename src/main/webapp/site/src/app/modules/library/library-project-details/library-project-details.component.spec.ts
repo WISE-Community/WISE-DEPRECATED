@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, Input } from '@angular/core';
 import { defer, Observable } from "rxjs";
 import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -8,6 +9,13 @@ import { LibraryService } from "../../../services/library.service";
 import { UserService } from "../../../services/user.service";
 import { Project } from "../../../domain/project";
 import { NGSSStandards } from "../ngssStandards";
+import { TeacherRun } from "../../../teacher/teacher-run";
+
+@Component({ selector: 'app-library-project-menu', template: '' })
+export class LibraryProjectMenuStubComponent {
+  @Input()
+  project: Project;
+}
 
 describe('LibraryProjectDetailsComponent', () => {
   let component: LibraryProjectDetailsComponent;
@@ -26,7 +34,7 @@ describe('LibraryProjectDetailsComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [
-        LibraryProjectDetailsComponent
+        LibraryProjectDetailsComponent, LibraryProjectMenuStubComponent
       ],
       imports: [ MatDialogModule, MatIconModule, MatTooltipModule ],
       providers: [
@@ -83,13 +91,13 @@ describe('LibraryProjectDetailsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // it('should show project title', () => {
-  //   const compiled = fixture.debugElement.nativeElement;
-  //   expect(compiled.textContent).toContain('Photosynthesis & Cellular Respiration');
-  // });
-  //
-  // it('should show project performance expectations', () => {
-  //   const compiled = fixture.debugElement.nativeElement;
-  //   expect(compiled.textContent).toContain('MS-LS1-6');
-  // });
+  it('should show project title', () => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.textContent).toContain('Photosynthesis & Cellular Respiration');
+  });
+
+  it('should show project performance expectations', () => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.textContent).toContain('MS-LS1-6');
+  });
 });

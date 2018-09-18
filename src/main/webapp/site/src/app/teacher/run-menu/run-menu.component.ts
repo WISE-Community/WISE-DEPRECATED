@@ -35,7 +35,7 @@ export class RunMenuComponent implements OnInit {
     const project = this.run.project;
     this.dialog.open(LibraryProjectDetailsComponent, {
       ariaLabel: 'Project Details',
-      data: { project: project },
+      data: { project: project, isRunProject: true },
       panelClass: 'mat-dialog-container--md'
     });
   }
