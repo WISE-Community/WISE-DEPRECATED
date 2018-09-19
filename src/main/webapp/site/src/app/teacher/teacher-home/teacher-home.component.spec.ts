@@ -56,7 +56,13 @@ describe('TeacherHomeComponent', () => {
           observer.complete();
         });
       },
-      newRunSource$: fakeAsyncResponse([{id: 3, name: "Global Climate Change"}]),
+      newRunSource$: fakeAsyncResponse([
+        {
+          id: 3,
+          name: "Global Climate Change",
+          periods: ["1", "2"]
+        }
+      ]),
       tabIndexSource$: fakeAsyncResponse(0)
     };
 

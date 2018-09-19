@@ -6,10 +6,10 @@
     <a mat-menu-item (click)="copyProject()">
       <mat-icon>content_copy</mat-icon> Copy
     </a>
-    <a mat-menu-item (click)="editProject()" target="_blank">
+    <a mat-menu-item href="{{editLink}}" target="_blank" *ngIf="isCanEdit">
       <mat-icon>edit</mat-icon> Edit
     </a>
-    <a mat-menu-item (click)="shareProject()" target="_blank">
+    <a mat-menu-item (click)="shareProject()" target="_blank" *ngIf="isCanShare">
       <mat-icon>share</mat-icon> Share
     </a>
   </div>

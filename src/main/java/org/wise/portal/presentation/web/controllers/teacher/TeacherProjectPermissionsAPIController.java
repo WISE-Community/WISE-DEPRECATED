@@ -22,7 +22,7 @@ public class TeacherProjectPermissionsAPIController {
   private ProjectService projectService;
 
   @ResponseBody
-  @RequestMapping(value = "/{projectId}/{teacherUsername}", method = RequestMethod.PUT)
+  @RequestMapping(value = "/{projectId}/{username}", method = RequestMethod.PUT)
   protected SharedOwner addSharedOwner(@PathVariable Long projectId,
                                        @PathVariable String username) {
     try {

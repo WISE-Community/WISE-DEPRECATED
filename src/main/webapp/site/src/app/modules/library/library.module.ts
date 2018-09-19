@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ReactiveFormsModule } from '@angular/forms';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LibraryGroupThumbsComponent } from './library-group-thumbs/library-group-thumbs.component';
 import { LibraryProjectComponent } from './library-project/library-project.component';
 import { LibraryProjectDetailsComponent } from "./library-project-details/library-project-details.component";
@@ -13,9 +12,11 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from "../shared/shared.module";
 
 import {
+  MatAutocompleteModule,
   MatBadgeModule,
   MatButtonModule,
   MatCardModule,
+  MatCheckboxModule,
   MatDialogModule,
   MatExpansionModule,
   MatFormFieldModule,
@@ -24,7 +25,7 @@ import {
   MatOptionModule,
   MatSelectModule,
   MatTabsModule,
-  MatTooltipModule} from '@angular/material';
+  MatTooltipModule } from '@angular/material';
 import { TimelineModule } from "../timeline/timeline.module";
 import { LibraryFiltersComponent } from './library-filters/library-filters.component';
 import { HomePageProjectLibraryComponent } from './home-page-project-library/home-page-project-library.component';
@@ -32,11 +33,14 @@ import { TeacherProjectLibraryComponent } from './teacher-project-library/teache
 import { OfficialLibraryComponent } from './official-library/official-library.component';
 import { CommunityLibraryComponent } from './community-library/community-library.component';
 import { PersonalLibraryComponent } from './personal-library/personal-library.component';
+import { ShareProjectDialogComponent } from './share-project-dialog/share-project-dialog.component';
 
 const materialModules = [
+  MatAutocompleteModule,
   MatBadgeModule,
   MatButtonModule,
   MatCardModule,
+  MatCheckboxModule,
   MatDialogModule,
   MatExpansionModule,
   MatFormFieldModule,
@@ -52,6 +56,7 @@ const materialModules = [
   imports: [
     CommonModule,
     FlexLayoutModule,
+    FormsModule,
     ReactiveFormsModule,
     RouterModule,
     materialModules,
@@ -69,9 +74,13 @@ const materialModules = [
     TeacherProjectLibraryComponent,
     OfficialLibraryComponent,
     CommunityLibraryComponent,
-    PersonalLibraryComponent
+    PersonalLibraryComponent,
+    ShareProjectDialogComponent
   ],
-  entryComponents: [ LibraryProjectDetailsComponent ],
+  entryComponents: [
+    LibraryProjectDetailsComponent,
+    ShareProjectDialogComponent
+  ],
   exports: [
     HomePageProjectLibraryComponent,
     ReactiveFormsModule,

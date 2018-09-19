@@ -10,6 +10,7 @@ import {
   MatBadgeModule,
   MatExpansionModule,
   MatIconModule,
+  MatMenuModule,
   MatTabsModule,
   MatTooltipModule
 } from "@angular/material";
@@ -20,6 +21,8 @@ import { Observable } from "rxjs";
 import { CommunityLibraryComponent } from "../community-library/community-library.component";
 import { PersonalLibraryComponent } from "../personal-library/personal-library.component";
 import { LibraryProjectDetailsComponent } from "../library-project-details/library-project-details.component";
+import { LibraryProjectMenuComponent } from "../library-project-menu/library-project-menu.component";
+import { Project } from "../../../domain/project";
 
 @Component({selector: 'app-library-group-thumbs', template: ''})
 class LibraryGroupThumbsStubComponent {
@@ -69,10 +72,16 @@ describe('TeacherProjectLibraryComponent', () => {
     getSharedLibraryProjects() {
 
     },
+    getProjectInfo(): Observable<Project> {
+      return Observable.create(observer => {
+        observer.next(projectObj);
+        observer.complete();
+      });
+    },
     setTabIndex() {
 
     },
-    libraryGroupsSource$: fakeAsyncResponse([]),
+    libraryGroupsSource$: fakeAsyncResponse({}),
     officialLibraryProjectsSource$: fakeAsyncResponse([]),
     communityLibraryProjectsSource$: fakeAsyncResponse([]),
     personalLibraryProjectsSource$: fakeAsyncResponse([]),
@@ -86,6 +95,15 @@ describe('TeacherProjectLibraryComponent', () => {
     tabIndexSource$: fakeAsyncResponse({}),
     newProjectSource$: fakeAsyncResponse({})
   };
+  const projectObj = {
+    id: 1,
+    name: "Test",
+    owner: {
+      id: 123456,
+      displayName: "Spongebob Squarepants"
+    },
+    sharedOwners: []
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -95,6 +113,7 @@ describe('TeacherProjectLibraryComponent', () => {
         MatIconModule,
         MatBadgeModule,
         MatExpansionModule,
+        MatMenuModule,
         MatTabsModule,
         MatTooltipModule
       ],
@@ -106,6 +125,7 @@ describe('TeacherProjectLibraryComponent', () => {
         LibraryGroupThumbsStubComponent,
         LibraryProjectStubComponent,
         LibraryProjectDetailsComponent,
+        LibraryProjectMenuComponent,
         LibraryFiltersComponent
       ],
       providers: [

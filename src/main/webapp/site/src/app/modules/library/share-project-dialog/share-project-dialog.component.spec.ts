@@ -1,25 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, Input } from "@angular/core";
-import { PersonalLibraryComponent } from './personal-library.component';
-import { LibraryGroup } from "../libraryGroup";
-import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
-import { Observable } from "rxjs";
-import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
-import { LibraryService } from "../../../services/library.service";
-import { LibraryProject } from "../libraryProject";
+
+import { ShareProjectDialogComponent } from './share-project-dialog.component';
+import { TeacherService } from "../../../teacher/teacher.service";
+import { Run } from "../../../domain/run";
 import { Project } from "../../../domain/project";
+import { Observable } from 'rxjs';
+import { MatDialogRef, MAT_DIALOG_DATA, MatAutocompleteModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { LibraryGroup } from "../libraryGroup";
+import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
+import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
+import { LibraryService } from "../../../services/library.service";
 
-@Component({selector: 'app-library-project', template: ''})
-class LibraryProjectStubComponent {
-  @Input()
-  project: LibraryProject = new LibraryProject();
-}
-
-describe('PersonalLibraryComponent', () => {
-  let component: PersonalLibraryComponent;
-  let fixture: ComponentFixture<PersonalLibraryComponent>;
+describe('ShareProjectDialogComponent', () => {
   const libraryServiceStub = {
-    implementationModelOptions: [],
     getLibraryGroups(): Observable<LibraryGroup[]> {
       const libraryGroup: LibraryGroup[] = [];
       return Observable.create( observer => {
@@ -51,10 +46,10 @@ describe('PersonalLibraryComponent', () => {
         observer.complete();
       });
     },
-    setTabIndex(index) {
+    setTabIndex() {
 
     },
-    libraryGroupsSource$: fakeAsyncResponse([]),
+    libraryGroupsSource$: fakeAsyncResponse({}),
     officialLibraryProjectsSource$: fakeAsyncResponse([]),
     communityLibraryProjectsSource$: fakeAsyncResponse([]),
     personalLibraryProjectsSource$: fakeAsyncResponse([]),
@@ -66,7 +61,37 @@ describe('PersonalLibraryComponent', () => {
       peValue: []
     }),
     tabIndexSource$: fakeAsyncResponse({}),
-    newProjectSource$: fakeAsyncResponse({})
+    newProjectSource$: fakeAsyncResponse({}),
+    implementationModelOptions: []
+  };
+  const teacherServiceStub = {
+    isLoggedIn: true,
+    getProjects(): Observable<Project[]> {
+      let projects : any[] = [
+        {id: 1, name: "Photosynthesis"}, {id: 2, name: "Plate Tectonics"}
+      ];
+      return Observable.create( observer => {
+        observer.next(projects);
+        observer.complete();
+      });
+    },
+    retrieveAllTeacherUsernames(): Observable<string[]> {
+      let usernames : any[] = [
+        "Spongebob Squarepants",
+        "Patrick Star"
+      ];
+      return Observable.create( observer => {
+        observer.next(usernames);
+        observer.complete();
+      });
+    },
+    getRun(runId: string): Observable<Run> {
+      return Observable.create( observer => {
+        const run: any = runObj;
+        observer.next(run);
+        observer.complete();
+      });
+    }
   };
   const runObj = {
     id: 1,
@@ -97,21 +122,29 @@ describe('PersonalLibraryComponent', () => {
     sharedOwners: []
   };
 
+  let component: ShareProjectDialogComponent;
+  let fixture: ComponentFixture<ShareProjectDialogComponent>;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        PersonalLibraryComponent,
-        LibraryProjectStubComponent
-      ],
+      declarations: [ ShareProjectDialogComponent ],
+      imports: [ BrowserAnimationsModule, MatAutocompleteModule ],
       providers: [
-        { provide: LibraryService, useValue: libraryServiceStub }
-      ]
+        { provide: TeacherService, useValue: teacherServiceStub },
+        { provide: LibraryService, useValue: libraryServiceStub },
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {
+            project: projectObj
+          }
+        }
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PersonalLibraryComponent);
+    fixture = TestBed.createComponent(ShareProjectDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

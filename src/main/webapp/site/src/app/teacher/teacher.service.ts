@@ -10,6 +10,7 @@ import { Subject } from "rxjs";
 export class TeacherService {
 
   private runsUrl = 'api/teacher/runs';
+  private sharedRunsUrl = 'api/teacher/sharedruns';
   private registerUrl = 'api/teacher/register';
   private runPermissionUrl = 'api/teacher/run/permission';
   private projectPermissionUrl = 'api/teacher/project/permission';
@@ -24,12 +25,17 @@ export class TeacherService {
   private updateProfileUrl = 'api/teacher/profile/update';
   private tabIndexSource = new Subject<number>();
   public tabIndexSource$ = this.tabIndexSource.asObservable();
-  
+
   constructor(private http: HttpClient) { }
 
   getRuns(): Observable<Run[]> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
     return this.http.get<Run[]>(this.runsUrl, { headers: headers });
+  }
+
+  getSharedRuns(): Observable<Run[]> {
+    const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
+    return this.http.get<Run[]>(this.sharedRunsUrl, { headers: headers });
   }
 
   getRun(runId: number): Observable<Run> {
@@ -117,6 +123,18 @@ export class TeacherService {
     const url = this.projectPermissionUrl + "/" + projectId + "/" + userId + "/" + permissionId;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.delete<Object>(url, { headers: headers });
+  }
+
+  addSharedProjectOwner(projectId: number, username: string) {
+    const url = this.projectPermissionUrl + "/" + projectId + "/" + username;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.put<Object>(url, null, {headers: headers});
+  }
+
+  removeSharedProjectOwner(projectId: number, username: string) {
+    const url = this.projectPermissionUrl + "/" + projectId + "/" + username;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.delete<Object>(url, {headers: headers});
   }
 
   addNewRun(run: Run) {

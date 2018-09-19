@@ -13,6 +13,7 @@ import { NGSSStandards } from "../ngssStandards";
 })
 export class LibraryProjectDetailsComponent implements OnInit {
   isTeacher: boolean = false;
+  isRunProject: false;
   ngss: NGSSStandards = new NGSSStandards();
   ngssWebUrl: string = 'https://www.nextgenscience.org/search-standards?keys=';
 
@@ -22,6 +23,7 @@ export class LibraryProjectDetailsComponent implements OnInit {
               private libraryService: LibraryService,
               private userService: UserService) {
     this.isTeacher = userService.isTeacher();
+    this.isRunProject = data.isRunProject;
     this.setNGSS();
   }
 
@@ -55,6 +57,18 @@ export class LibraryProjectDetailsComponent implements OnInit {
           }
         }
       }
+    }
+  }
+
+  menuAction(action: String) {
+    switch (action) {
+      case 'copy':
+        this.copyProject();
+        break;
+      case 'share':
+        break;
+      case 'edit':
+        break;
     }
   }
 

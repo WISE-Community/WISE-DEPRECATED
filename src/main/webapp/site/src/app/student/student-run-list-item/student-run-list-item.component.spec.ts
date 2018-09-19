@@ -1,14 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { StudentRun } from '../student-run';
 import { StudentRunListItemComponent } from './student-run-list-item.component';
-import { StudentModule } from "../student.module";
 import { Observable } from "rxjs";
 import { Config } from "../../domain/config";
 import { ConfigService } from "../../services/config.service";
-import { SharedModule } from "../../modules/shared/shared.module";
 import { MomentModule } from "ngx-moment";
 import { MatCardModule } from "@angular/material";
+import { Project } from "../../domain/project";
 
 describe('StudentRunListItemComponent', () => {
   let component: StudentRunListItemComponent;
@@ -41,7 +39,11 @@ describe('StudentRunListItemComponent', () => {
     run.teacherFirstname = "Mr.";
     run.teacherLastname = "Happy";
     run.projectThumb = "Happy.png";
-    run.startTime = 20180612
+    run.startTime = 20180612;
+    const project: Project = new Project();
+    project.id = 1;
+    project.name = "Test Project";
+    run.project = project;
     component.run = run;
     fixture.detectChanges();
   });
