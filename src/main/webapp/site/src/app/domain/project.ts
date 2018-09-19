@@ -36,26 +36,29 @@ export class Project {
   }
 
   public canView(userId) {
-    return this.permissionHelper(userId, Project.VIEW_PERMISSION);
+    return this.isOwner(userId) ||
+        this.isSharedOwnerWithPermission(userId, Project.VIEW_PERMISSION);
   }
 
   public canEdit(userId) {
-    return this.permissionHelper(userId, Project.EDIT_PERMISSION);
+    return this.isOwner(userId) ||
+        this.isSharedOwnerWithPermission(userId, Project.EDIT_PERMISSION);
   }
 
-  permissionHelper(userId, permissionId) {
-    if (this.owner.id == userId) {
-      return true;
-    } else {
-      for (let sharedOwner of this.sharedOwners) {
-        if (sharedOwner.id == userId) {
-          return this.userHasPermission(sharedOwner, permissionId);
-        }
+  isOwner(userId) {
+    return this.owner.id == userId;
+  }
+
+  isSharedOwnerWithPermission(userId, permissionId) {
+    for (let sharedOwner of this.sharedOwners) {
+      if (sharedOwner.id == userId) {
+        return this.userHasPermission(sharedOwner, permissionId);
       }
     }
+    return false;
   }
 
   userHasPermission(user: User, permission: number) {
-    return user.permissions.indexOf(permission) != -1;
+    return user.permissions.includes(permission);
   }
 }

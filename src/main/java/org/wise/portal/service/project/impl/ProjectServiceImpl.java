@@ -128,7 +128,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public SharedOwner addSharedTeacher(Long projectId, String teacherUsername)
-    throws ObjectNotFoundException, TeacherAlreadySharedWithProjectException {
+      throws ObjectNotFoundException, TeacherAlreadySharedWithProjectException {
     User user = userDao.retrieveByUsername(teacherUsername);
     Project project = this.getById(projectId);
     if (!project.getSharedowners().contains(user)) {

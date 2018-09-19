@@ -47,12 +47,10 @@ export class TeacherRunListComponent implements OnInit {
   getRuns(): void {
     this.teacherService.getRuns()
       .subscribe(runs => {
-        const personalRuns: TeacherRun[] = [];
+        this.personalRuns = [];
         for (let personalRun of runs) {
-          const teacherRun = new TeacherRun(personalRun);
-          personalRuns.push(teacherRun);
+          this.personalRuns.push(new TeacherRun(personalRun));
         }
-        this.personalRuns = personalRuns;
         this.isPersonalRunsRetrieved = true;
         this.processRunsIfReady();
       });

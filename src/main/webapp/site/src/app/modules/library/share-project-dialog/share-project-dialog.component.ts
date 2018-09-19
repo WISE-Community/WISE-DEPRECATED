@@ -42,7 +42,7 @@ export class ShareProjectDialogComponent extends ShareItemDialogComponent {
 
   shareProject() {
     const sharedOwnerUsername = this.teacherSearchControl.value;
-    if (this.options.includes(sharedOwnerUsername) && !this.isSharedOwner(sharedOwnerUsername)) {
+    if (this.allTeacherUsernames.includes(sharedOwnerUsername) && !this.isSharedOwner(sharedOwnerUsername)) {
       this.teacherService.addSharedProjectOwner(this.project.id, sharedOwnerUsername)
         .subscribe((newSharedOwner) => {
           if (newSharedOwner != null) {

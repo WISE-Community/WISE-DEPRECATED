@@ -1,4 +1,4 @@
-<div style="display: flex;"><div style="width: 30%"><h2>Share Project</h2></div><div style="width: 40%"></div><div style="width: 10%"><button mat-button [mat-dialog-close]="true">X</button></div></div>
+<div style="display: flex;"><div style="width: 30%"><h2>Share Lesson</h2></div><div style="width: 40%"></div><div style="width: 10%"><button mat-button [mat-dialog-close]="true">X</button></div></div>
 <div *ngIf="project != null">Name: {{project.name}}</div>
 <div *ngIf="project != null">Lesson ID: {{project.id}}</div>
 <div style="display:flex">
@@ -7,8 +7,8 @@
     <mat-form-field>
       <input type="text" placeholder="Enter Teacher Name" aria-label="Number" matInput [formControl]="teacherSearchControl" [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-          {{option}}
+        <mat-option *ngFor="let teacherUsername of filteredTeacherUsernames | async" [value]="teacherUsername">
+          {{teacherUsername}}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>

@@ -101,8 +101,8 @@ public class ProjectAPIController {
 
   @ResponseBody
   @RequestMapping(value = "/info/{projectId}", method = RequestMethod.GET)
-  protected String getRun(@PathVariable Long projectId)
-    throws ObjectNotFoundException, JSONException {
+  protected String getRun(@PathVariable Long projectId) throws ObjectNotFoundException,
+      JSONException {
     Project project = projectService.getById(projectId);
     JSONObject projectJSON = getProjectJSON(project);
     return projectJSON.toString();
@@ -136,7 +136,7 @@ public class ProjectAPIController {
       ownerJSON.put("userName", ownerUserDetails.getUsername());
       ownerJSON.put("firstName", ownerUserDetails.getFirstname());
       ownerJSON.put("lastName", ownerUserDetails.getLastname());
-    } catch(org.hibernate.ObjectNotFoundException e) {
+    } catch (org.hibernate.ObjectNotFoundException e) {
       System.out.println(e);
     }
     return ownerJSON;
@@ -154,9 +154,11 @@ public class ProjectAPIController {
   private JSONObject getSharedOwnerJSON(User sharedOwner, Project project) throws JSONException {
     JSONObject sharedOwnerJSON = new JSONObject();
     sharedOwnerJSON.put("id", sharedOwner.getId());
-    sharedOwnerJSON.put("username", sharedOwner.getUserDetails().getUsername());
-    sharedOwnerJSON.put("firstName", sharedOwner.getUserDetails().getFirstname());
-    sharedOwnerJSON.put("lastName", sharedOwner.getUserDetails().getLastname());
+    TeacherUserDetails sharedOwnerUserDetails = (TeacherUserDetails) sharedOwner.getUserDetails();
+    sharedOwnerJSON.put("displayName", sharedOwnerUserDetails.getDisplayname());
+    sharedOwnerJSON.put("username", sharedOwnerUserDetails.getUsername());
+    sharedOwnerJSON.put("firstName", sharedOwnerUserDetails.getFirstname());
+    sharedOwnerJSON.put("lastName", sharedOwnerUserDetails.getLastname());
     sharedOwnerJSON.put("permissions", getSharedOwnerPermissions(project, sharedOwner));
     return sharedOwnerJSON;
   }
@@ -222,7 +224,7 @@ public class ProjectAPIController {
     Project parentProject = projectService.getById(Long.parseLong(projectId));
     Set<String> tagNames = new TreeSet<String>();
     tagNames.add("library");
-    if (parentProject != null && (this.projectService.canAuthorProject(parentProject, user) || parentProject.hasTags(tagNames))) {
+    if (parentProject != null && (this.projectService.canReadProject(parentProject, user) || parentProject.hasTags(tagNames))) {
       String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
       String parentProjectJSONAbsolutePath = curriculumBaseDir + parentProject.getModulePath();
       File parentProjectJSONFile = new File(parentProjectJSONAbsolutePath);

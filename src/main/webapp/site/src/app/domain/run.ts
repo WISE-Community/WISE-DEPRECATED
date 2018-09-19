@@ -38,30 +38,34 @@ export class Run {
   }
 
   public canViewStudentWork(userId) {
-    return this.permissionHelper(userId, Run.VIEW_STUDENT_WORK_PERMISSION);
+    return this.isOwner(userId) ||
+        this.isSharedOwnerWithPermission(userId, Run.VIEW_STUDENT_WORK_PERMISSION);
   }
 
   public canGradeAndManage(userId) {
-    return this.permissionHelper(userId, Run.GRADE_AND_MANAGE_PERMISSION);
+    return this.isOwner(userId) ||
+        this.isSharedOwnerWithPermission(userId, Run.GRADE_AND_MANAGE_PERMISSION);
   }
 
   public canViewStudentNames(userId) {
-    return this.permissionHelper(userId, Run.VIEW_STUDENT_NAMES_PERMISSION);
+    return this.isOwner(userId) ||
+        this.isSharedOwnerWithPermission(userId, Run.VIEW_STUDENT_NAMES_PERMISSION);
   }
 
-  permissionHelper(userId, permissionId) {
-    if (this.owner.id == userId) {
-      return true;
-    } else {
-      for (let sharedOwner of this.sharedOwners) {
-        if (sharedOwner.id == userId) {
-          return this.userHasPermission(sharedOwner, permissionId);
-        }
+  isOwner(userId) {
+    return this.owner.id == userId;
+  }
+
+  isSharedOwnerWithPermission(userId, permissionId) {
+    for (let sharedOwner of this.sharedOwners) {
+      if (sharedOwner.id == userId) {
+        return this.userHasPermission(sharedOwner, permissionId);
       }
     }
+    return false;
   }
 
   userHasPermission(user: User, permission: number) {
-    return user.permissions.indexOf(permission) != -1;
+    return user.permissions.includes(permission);
   }
 }
