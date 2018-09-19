@@ -4,18 +4,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.acls.model.Permission;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
 import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectType;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.controllers.author.project.WISE5AuthorProjectController;
@@ -91,6 +91,23 @@ public class ProjectAPIController {
     return projectsJSON.toString();
   }
 
+  @RequestMapping(value = "/shared", method = RequestMethod.GET)
+  protected String getSharedLibrayProjects(ModelMap modelMap) throws JSONException {
+    User signedInUser = ControllerUtil.getSignedInUser();
+    List<Project> sharedProjectList = projectService.getSharedProjectList(signedInUser);
+    JSONArray projectsJSON = getProjectsJSON(sharedProjectList);
+    return projectsJSON.toString();
+  }
+
+  @ResponseBody
+  @RequestMapping(value = "/info/{projectId}", method = RequestMethod.GET)
+  protected String getRun(@PathVariable Long projectId)
+    throws ObjectNotFoundException, JSONException {
+    Project project = projectService.getById(projectId);
+    JSONObject projectJSON = getProjectJSON(project);
+    return projectJSON.toString();
+  }
+
   private JSONArray getProjectsJSON(List<Project> projectList) throws JSONException {
     JSONArray projectsJSON = new JSONArray();
     for (Project teacherSharedProject : projectList) {
@@ -104,7 +121,53 @@ public class ProjectAPIController {
     projectJSON.put("id", project.getId());
     projectJSON.put("name", project.getName());
     projectJSON.put("metadata", project.getMetadata().toJSONObject());
+    projectJSON.put("projectThumb", getProjectThumb(project));
+    projectJSON.put("owner", getOwnerJSON(project.getOwner()));
+    projectJSON.put("sharedOwners", getProjectSharedOwnersJSON(project));
     return projectJSON;
+  }
+
+  private JSONObject getOwnerJSON(User owner) throws JSONException {
+    JSONObject ownerJSON = new JSONObject();
+    try {
+      ownerJSON.put("id", owner.getId());
+      TeacherUserDetails ownerUserDetails = (TeacherUserDetails) owner.getUserDetails();
+      ownerJSON.put("displayName", ownerUserDetails.getDisplayname());
+      ownerJSON.put("userName", ownerUserDetails.getUsername());
+      ownerJSON.put("firstName", ownerUserDetails.getFirstname());
+      ownerJSON.put("lastName", ownerUserDetails.getLastname());
+    } catch(org.hibernate.ObjectNotFoundException e) {
+      System.out.println(e);
+    }
+    return ownerJSON;
+  }
+
+  private JSONArray getProjectSharedOwnersJSON(Project project) throws JSONException {
+    JSONArray sharedOwners = new JSONArray();
+    for (User sharedOwner : project.getSharedowners()) {
+      JSONObject sharedOwnerJSON = getSharedOwnerJSON(sharedOwner, project);
+      sharedOwners.put(sharedOwnerJSON);
+    }
+    return sharedOwners;
+  }
+
+  private JSONObject getSharedOwnerJSON(User sharedOwner, Project project) throws JSONException {
+    JSONObject sharedOwnerJSON = new JSONObject();
+    sharedOwnerJSON.put("id", sharedOwner.getId());
+    sharedOwnerJSON.put("username", sharedOwner.getUserDetails().getUsername());
+    sharedOwnerJSON.put("firstName", sharedOwner.getUserDetails().getFirstname());
+    sharedOwnerJSON.put("lastName", sharedOwner.getUserDetails().getLastname());
+    sharedOwnerJSON.put("permissions", getSharedOwnerPermissions(project, sharedOwner));
+    return sharedOwnerJSON;
+  }
+
+  private JSONArray getSharedOwnerPermissions(Project project, User sharedOwner) {
+    JSONArray sharedOwnerPermissions = new JSONArray();
+    List<Permission> sharedTeacherPermissions = projectService.getSharedTeacherPermissions(project, sharedOwner);
+    for (Permission permission : sharedTeacherPermissions) {
+      sharedOwnerPermissions.put(permission.getMask());
+    }
+    return sharedOwnerPermissions;
   }
 
   private void populateProjectMetadata(JSONObject projectLibraryGroup) throws JSONException {
@@ -119,23 +182,28 @@ public class ProjectAPIController {
         Project project = projectService.getById(projectId);
         ProjectMetadata metadata = project.getMetadata();
         projectLibraryGroup.put("metadata", metadata.toJSONObject());
-        String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
-        String projectThumb = "";
-        String modulePath = project.getModulePath();
-        int lastIndexOfSlash = modulePath.lastIndexOf("/");
-        if (lastIndexOfSlash != -1) {
-          /*
-           * The project thumb url by default is the same (/assets/project_thumb.png)
-           * for all projects, but this could be overwritten in the future
-           * e.g. /253/assets/projectThumb.png
-           */
-          projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
-        }
-        projectLibraryGroup.put("projectThumb", projectThumb);
+        projectLibraryGroup.put("projectThumb", getProjectThumb(project));
+        projectLibraryGroup.put("name", project.getName());
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
     }
+  }
+
+  private String getProjectThumb(Project project) {
+    String projectThumb = "";
+    String modulePath = project.getModulePath();
+    String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+    int lastIndexOfSlash = modulePath.lastIndexOf("/");
+    if (lastIndexOfSlash != -1) {
+      /*
+       * The project thumb url by default is the same (/assets/project_thumb.png)
+       * for all projects, but this could be overwritten in the future
+       * e.g. /253/assets/projectThumb.png
+       */
+      projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
+    }
+    return projectThumb;
   }
 
   /**

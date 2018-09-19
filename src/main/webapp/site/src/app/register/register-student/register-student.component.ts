@@ -4,6 +4,7 @@ import { TeacherService } from "../../teacher/teacher.service";
 import { Router } from "@angular/router";
 import { StudentService } from '../../student/student.service';
 import { UserService } from '../../services/user.service';
+import { ConfigService } from "../../services/config.service";
 
 @Component({
   selector: 'app-register-student',
@@ -14,12 +15,18 @@ export class RegisterStudentComponent implements OnInit {
 
   firstName: string = "";
   lastName: string = "";
+  isGoogleAuthenticationEnabled: boolean = false;
 
   constructor(private socialAuthService: AuthService,
               private studentService: StudentService, private userService: UserService,
-              private router: Router) {}
+              private configService: ConfigService, private router: Router) {}
 
   ngOnInit() {
+    this.configService.getConfig().subscribe((config) => {
+      if (config != null) {
+        this.isGoogleAuthenticationEnabled = config.googleClientId != null;
+      }
+    });
   }
 
   public signUp() {

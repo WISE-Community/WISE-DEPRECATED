@@ -7,9 +7,9 @@
     <mat-divider></mat-divider>
     <a mat-menu-item href="{{ previewLink }}" target="_blank">
       <mat-icon>tv</mat-icon>
-      <span>Preview Unit</span>
+      <span>Preview</span>
     </a>
-    <a mat-menu-item>
+    <a mat-menu-item (click)="showUnitDetails()">
       <mat-icon>info</mat-icon>
       <span>Unit Info</span>
     </a>
@@ -21,14 +21,10 @@
       <mat-icon>share</mat-icon>
       <span>Share</span>
     </a>
-    <a mat-menu-item (click)="showCreateRunDialog()">
-      <mat-icon>refresh</mat-icon>
-      <span>Use Again</span>
-    </a>
     <mat-divider></mat-divider>
     <a mat-menu-item *ngIf="isScheduled()">
       <mat-icon color="warn">cancel</mat-icon>
-      <span>Cancel</span>
+      <span>Cancel Unit</span>
     </a>
     <a mat-menu-item *ngIf="run.endTime">
       <mat-icon color="success" class="success">play_arrow</mat-icon>

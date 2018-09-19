@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RunMenuComponent } from "./run-menu.component";
 import { TeacherService } from "../teacher.service";
-import { Project } from "../project";
+import { Project } from "../../domain/project";
 import { FormsModule } from "@angular/forms";
 import { BehaviorSubject, Observable } from 'rxjs';
 import {

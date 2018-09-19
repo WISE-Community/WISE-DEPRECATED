@@ -24,12 +24,12 @@ export class TeacherRunListItemComponent implements OnInit {
 
   getThumbStyle() {
     const DEFAULT_THUMB = 'assets/img/default-picture.svg';
-    const STYLE = `url(${this.run.project.thumbIconPath}), url(${DEFAULT_THUMB})`;
+    const STYLE = `url(${this.run.project.projectThumb}), url(${DEFAULT_THUMB})`;
     return this.sanitizer.bypassSecurityTrustStyle(STYLE);
   }
 
   ngOnInit() {
-    this.thumbStyle = this.getThumbStyle();
+    this.run.project.thumbStyle = this.getThumbStyle();
     this.editLink = `/wise/author/authorproject.html?projectId=${ this.run.project.id }`;
     if (this.run != null) {
       this.gradeAndManageLink = `/wise/teacher/run/manage/${ this.run.id }`;

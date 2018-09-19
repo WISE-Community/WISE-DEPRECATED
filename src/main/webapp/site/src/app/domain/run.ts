@@ -1,4 +1,4 @@
-import { Project } from "../teacher/project";
+import { Project } from "./project";
 import { User } from "./user";
 
 export class Run {

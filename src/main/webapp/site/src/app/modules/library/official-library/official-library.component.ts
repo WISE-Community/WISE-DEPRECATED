@@ -28,19 +28,19 @@ export class OfficialLibraryComponent extends LibraryComponent {
 
   constructor(libraryService: LibraryService) {
     super(libraryService);
-    libraryService.getOfficialLibraryProjects();
     libraryService.libraryGroupsSource$.subscribe((libraryGroups) => {
       this.libraryGroups = libraryGroups;
     });
     libraryService.officialLibraryProjectsSource$.subscribe((libraryProjects) => {
       this.projects = libraryProjects;
       this.emitNumberOfProjectsVisible(this.projects.length);
-      this.implementationModelOptions = libraryService.implementationModelOptions;
+      this.setImplementationModelOptions();
       this.implementationModelValue = libraryService.implementationModelValue;
     });
     libraryService.projectFilterOptionsSource$.subscribe((projectFilterOptions) => {
       this.filterUpdated(projectFilterOptions);
     });
+    libraryService.getOfficialLibraryProjects();
   }
 
   ngOnInit() {

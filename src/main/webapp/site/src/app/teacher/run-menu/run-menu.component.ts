@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { TeacherService } from "../teacher.service";
-import { CreateRunDialogComponent } from "../create-run-dialog/create-run-dialog.component";
 import { ShareRunDialogComponent } from "../share-run-dialog/share-run-dialog.component";
+import { LibraryProjectDetailsComponent } from "../../modules/library/library-project-details/library-project-details.component";
 import { UserService } from "../../services/user.service";
 import { TeacherRun } from "../teacher-run";
 
@@ -35,13 +35,12 @@ export class RunMenuComponent implements OnInit {
     });
   }
 
-  showCreateRunDialog() {
-    const dialogRef = this.dialog.open(CreateRunDialogComponent, {
-      data: this.run
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      scrollTo(0, 0);
+  showUnitDetails() {
+    const project = this.run.project;
+    this.dialog.open(LibraryProjectDetailsComponent, {
+      ariaLabel: 'Project Details',
+      data: { project: project, isRunProject: true },
+      panelClass: 'mat-dialog-container--md'
     });
   }
 

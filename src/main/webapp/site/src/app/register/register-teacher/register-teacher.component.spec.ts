@@ -8,10 +8,22 @@ import { RouterTestingModule } from "@angular/router/testing";
 import { UserService } from "../../services/user.service";
 import { FormsModule } from "@angular/forms";
 import { MatCardModule, MatFormFieldModule, MatInputModule } from "@angular/material";
+import { Observable } from "rxjs";
+import { Config } from "../../domain/config";
+import { ConfigService } from "../../services/config.service";
 
 describe('RegisterTeacherComponent', () => {
   let component: RegisterTeacherComponent;
   let fixture: ComponentFixture<RegisterTeacherComponent>;
+  const configServiceStub = {
+    getConfig(): Observable<Config> {
+      const config : Config = {"context":"vle","logOutURL":"/logout","currentTime":20180730};
+      return Observable.create( observer => {
+        observer.next(config);
+        observer.complete();
+      });
+    }
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -20,7 +32,8 @@ describe('RegisterTeacherComponent', () => {
       providers: [
         { provide: AuthService },
         { provide: TeacherService },
-        { provide: UserService }
+        { provide: UserService },
+        { provide: ConfigService, useValue: configServiceStub }
       ]
     })
     .compileComponents();

@@ -1,16 +1,19 @@
-import { Run } from "../domain/run";
+import { Run } from "./run";
 import { User } from "../domain/user";
 
 export class Project {
   id: number;
   name: string;
+  metadata: any;
   dateCreated: string;
   dateArchived: string;
-  thumbIconPath: string;
+  lastEdited: string;
+  projectThumb: string;
+  thumbStyle: any;
   isHighlighted: boolean;
   owner: User;
   sharedOwners: User[] = [];
-  metadata: object;
+  run: Run;
 
   static readonly VIEW_PERMISSION: number = 1;
   static readonly EDIT_PERMISSION: number = 2;

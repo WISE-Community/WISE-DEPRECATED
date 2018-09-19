@@ -1,5 +1,7 @@
 <header fxLayout="row" class="content__header">
-  <h1 class="accent">Welcome, <span id="teacherName">{{ user.firstName}}</span>!</h1>
+  <h1 class="accent" fxLayoutAlign="center center">
+    <mat-icon>home</mat-icon>Teacher Home
+  </h1>
 </header>
 
 <section>
@@ -8,9 +10,7 @@
       <app-teacher-run-list></app-teacher-run-list>
     </mat-tab>
     <mat-tab label="Browse WISE Units">
-      <div class="content-block">
         <app-teacher-project-library></app-teacher-project-library>
-      </div>
     </mat-tab>
   </mat-tab-group>
 </section>
