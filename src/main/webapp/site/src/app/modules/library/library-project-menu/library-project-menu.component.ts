@@ -79,8 +79,4 @@ export class LibraryProjectMenuComponent implements OnInit {
       data: { project: this.project }
     });
   }
-
-  editProject() {
-    this.select.emit('edit');
-  }
 }
