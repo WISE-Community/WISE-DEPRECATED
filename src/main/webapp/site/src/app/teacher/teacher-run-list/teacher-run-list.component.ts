@@ -47,12 +47,10 @@ export class TeacherRunListComponent implements OnInit {
   getRuns(): void {
     this.teacherService.getRuns()
       .subscribe(runs => {
-        const personalRuns: TeacherRun[] = [];
+        this.personalRuns = [];
         for (let personalRun of runs) {
-          const teacherRun = new TeacherRun(personalRun);
-          personalRuns.push(teacherRun);
+          this.personalRuns.push(new TeacherRun(personalRun));
         }
-        this.personalRuns = personalRuns;
         this.isPersonalRunsRetrieved = true;
         this.processRunsIfReady();
       });
@@ -61,14 +59,11 @@ export class TeacherRunListComponent implements OnInit {
   getSharedRuns(): void {
     this.teacherService.getSharedRuns()
       .subscribe(runs => {
-        const sharedRuns: TeacherRun[] = [];
-        for (let personalRun of runs) {
-          const teacherRun = new TeacherRun(personalRun);
-          sharedRuns.push(teacherRun);
-        }
-        this.sharedRuns = sharedRuns;
-        for (let sharedRun of this.sharedRuns) {
-          sharedRun.shared = true;
+        this.sharedRuns = [];
+        for (let sharedRun of runs) {
+          const teacherRun = new TeacherRun(sharedRun);
+          teacherRun.shared = true;
+          this.sharedRuns.push(teacherRun);
         }
         this.isSharedRunsRetrieved = true;
         this.processRunsIfReady();
