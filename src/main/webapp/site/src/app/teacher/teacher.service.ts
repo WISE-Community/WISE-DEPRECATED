@@ -39,7 +39,7 @@ export class TeacherService {
   }
 
   getRun(runId: number): Observable<Run> {
-    return this.http.get<Run>(this.runUrl + "/" + runId);
+    return this.http.get<Run>(`${this.runUrl}/${runId}`);
   }
 
   registerTeacherAccount(teacherUser: Teacher, callback: any) {
@@ -90,49 +90,49 @@ export class TeacherService {
   }
 
   addSharedOwner(runId: number, teacherUsername: string) {
-    const url = this.runPermissionUrl + "/" + runId + "/" + teacherUsername;
+    const url = `${this.runPermissionUrl}/${runId}/${teacherUsername}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.put<Object>(url, null, {headers: headers});
   }
 
   removeSharedOwner(runId: number, username: string) {
-    const url = this.runPermissionUrl + "/" + runId + "/" + username;
+    const url = `${this.runPermissionUrl}/${runId}/${username}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.delete<Object>(url, {headers: headers});
   }
 
   addSharedOwnerRunPermission(runId: number, userId: string, permissionId: number) {
-    const url = this.runPermissionUrl + "/" + runId + "/" + userId + "/" + permissionId;
+    const url = `${this.runPermissionUrl}/${runId}/${userId}/${permissionId}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.put<any>(url, null, {headers: headers});
   }
 
   removeSharedOwnerRunPermission(runId: number, userId: string, permissionId: number) {
-    const url = this.runPermissionUrl + "/" + runId + "/" + userId + "/" + permissionId;
+    const url = `${this.runPermissionUrl}/${runId}/${userId}/${permissionId}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.delete<any>(url, {headers: headers});
   }
 
   addSharedOwnerProjectPermission(projectId: number, userId: string, permissionId: number) {
-    const url = this.projectPermissionUrl + "/" + projectId + "/" + userId + "/" + permissionId;
+    const url = `${this.projectPermissionUrl}/${projectId}/${userId}/${permissionId}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.put<Object>(url, { headers: headers });
   }
 
   removeSharedOwnerProjectPermission(projectId: number, userId: string, permissionId: number) {
-    const url = this.projectPermissionUrl + "/" + projectId + "/" + userId + "/" + permissionId;
+    const url = `${this.projectPermissionUrl}/${projectId}/${userId}/${permissionId}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.delete<Object>(url, { headers: headers });
   }
 
   addSharedProjectOwner(projectId: number, username: string) {
-    const url = this.projectPermissionUrl + "/" + projectId + "/" + username;
+    const url = `${this.projectPermissionUrl}/${projectId}/${username}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.put<Object>(url, null, {headers: headers});
   }
 
   removeSharedProjectOwner(projectId: number, username: string) {
-    const url = this.projectPermissionUrl + "/" + projectId + "/" + username;
+    const url = `${this.projectPermissionUrl}/${projectId}/${username}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     return this.http.delete<Object>(url, {headers: headers});
   }

@@ -29,31 +29,13 @@ export class LibraryProjectMenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.isCanEdit = this.calculateIsCanEdit();
-    this.isCanShare = this.calculateIsCanShare();
+    this.isCanEdit = this.isOwner() || this.isSharedOwnerWithEditPermission();
+    this.isCanShare = this.isOwner();
     this.editLink = `/wise/author/authorproject.html?projectId=${ this.project.id }`;
-  }
-
-  calculateIsCanEdit() {
-    return this.isOwner() || this.isSharedOwnerWithEditPermission();
-  }
-
-  calculateIsCanShare() {
-    return this.isOwner() || this.isSharedOwner();
   }
 
   isOwner() {
     return this.userService.getUserId() == this.project.owner.id;
-  }
-
-  isSharedOwner() {
-    const userId = this.userService.getUserId();
-    for (let sharedOwner of this.project.sharedOwners) {
-      if (userId == sharedOwner.id) {
-        return true;
-      }
-    }
-    return false;
   }
 
   isSharedOwnerWithEditPermission() {

@@ -17,20 +17,20 @@ export abstract class ShareItemDialogComponent implements OnInit {
   projectId: number;
   runId: number;
   teacherSearchControl = new FormControl();
-  options: string[] = [];
-  filteredOptions: Observable<string[]>;
+  allTeacherUsernames: string[] = [];
+  filteredTeacherUsernames: Observable<string[]>;
   sharedOwners: any[] = [];
 
   constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               public teacherService: TeacherService) {
     this.teacherService.retrieveAllTeacherUsernames().subscribe((teacherUsernames) => {
-      this.options = teacherUsernames;
+      this.allTeacherUsernames = teacherUsernames;
     })
   }
 
   ngOnInit() {
-    this.filteredOptions = this.teacherSearchControl.valueChanges.pipe(
+    this.filteredTeacherUsernames = this.teacherSearchControl.valueChanges.pipe(
       debounceTime(1000),
       map(value => this._filter(value))
     );
@@ -41,7 +41,7 @@ export abstract class ShareItemDialogComponent implements OnInit {
     if (filterValue == '') {
       return [];
     }
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+    return this.allTeacherUsernames.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   populateSharedOwners(sharedOwners) {
@@ -121,7 +121,7 @@ export abstract class ShareItemDialogComponent implements OnInit {
   }
 
   removeSharedOwner(sharedOwner) {
-    for (let i = 0; i < this.sharedOwners.length; i ++) {
+    for (let i = 0; i < this.sharedOwners.length; i++) {
       if (this.sharedOwners[i].id == sharedOwner.id) {
         this.sharedOwners.splice(i, 1);
         return;
