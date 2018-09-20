@@ -11,8 +11,14 @@ import {
   MatIconModule,
   MatMenuModule
 } from "@angular/material";
+import { ConfigService } from "../../services/config.service";
 
 describe('RunMenuComponent', () => {
+  const configServiceStub = {
+    getContextPath(): string {
+      return '/wise';
+    }
+  };
   let component: RunMenuComponent;
   let fixture: ComponentFixture<RunMenuComponent>;
 
@@ -20,7 +26,11 @@ describe('RunMenuComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, MatFormFieldModule, MatMenuModule, MatIconModule ],
       declarations: [ RunMenuComponent ],
-      providers: [ { provide: TeacherService }, { provide: MatDialog }]
+      providers: [
+        { provide: TeacherService },
+        { provide: MatDialog },
+        { provide: ConfigService, useValue: configServiceStub }
+      ]
     })
     .compileComponents();
   }));

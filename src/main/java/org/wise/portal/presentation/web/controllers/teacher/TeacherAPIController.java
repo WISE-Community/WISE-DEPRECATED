@@ -57,6 +57,8 @@ public class TeacherAPIController {
   protected String getConfig(ModelMap modelMap, HttpServletRequest request) throws JSONException {
     JSONObject configJSON = new JSONObject();
     String contextPath = request.getContextPath();
+    configJSON.put("contextPath", contextPath);
+    configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
     configJSON.put("logOutURL", contextPath + "/logout");
     return configJSON.toString();
   }

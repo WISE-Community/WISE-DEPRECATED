@@ -9,6 +9,7 @@ import { Run } from "../../domain/run";
 import { MatCardModule } from "@angular/material";
 import { MomentModule } from "ngx-moment";
 import { Component, Input, OnInit } from "@angular/core";
+import { ConfigService } from "../../services/config.service";
 
 @Component({ selector: 'app-run-menu', template: '' })
 export class RunMenuStubComponent {
@@ -17,7 +18,12 @@ export class RunMenuStubComponent {
   run: Run;
 }
 
-describe('TeacherProjectListItemComponent', () => {
+describe('TeacherRunListItemComponent', () => {
+  const configServiceStub = {
+    getContextPath(): string {
+      return '/wise';
+    }
+  };
   let component: TeacherRunListItemComponent;
   let fixture: ComponentFixture<TeacherRunListItemComponent>;
 
@@ -25,7 +31,10 @@ describe('TeacherProjectListItemComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ TeacherRunListItemComponent, RunMenuStubComponent ],
       imports: [ MatCardModule, MomentModule ],
-      providers: [ { provide: TeacherService }]
+      providers: [
+        { provide: TeacherService },
+        { provide: ConfigService, useValue: configServiceStub }
+      ]
     })
     .compileComponents();
   }));

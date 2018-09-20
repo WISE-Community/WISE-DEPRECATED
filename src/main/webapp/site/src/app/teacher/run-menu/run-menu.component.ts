@@ -4,6 +4,7 @@ import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
 import { CreateRunDialogComponent } from "../create-run-dialog/create-run-dialog.component";
 import { ShareRunDialogComponent } from "../share-run-dialog/share-run-dialog.component";
+import { ConfigService } from "../../services/config.service";
 
 @Component({
   selector: 'app-run-menu',
@@ -18,11 +19,13 @@ export class RunMenuComponent implements OnInit {
   editLink: string = '';
   previewLink: string = '';
 
-  constructor(public dialog: MatDialog, public teacherService: TeacherService) { }
+  constructor(private dialog: MatDialog,
+              private teacherService: TeacherService,
+              private configService: ConfigService) { }
 
   ngOnInit() {
-    this.editLink = `/wise/author/authorproject.html?projectId=${ this.run.project.id }`;
-    this.previewLink = `/wise/previewproject.html?projectId=${ this.run.project.id }`;
+    this.editLink = `${this.configService.getContextPath()}/author/authorproject.html?projectId=${this.run.project.id}`;
+    this.previewLink = `${this.configService.getContextPath()}/previewproject.html?projectId=${this.run.project.id}`;
   }
 
   shareRun() {
