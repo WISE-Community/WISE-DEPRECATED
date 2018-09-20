@@ -235,6 +235,7 @@ View.prototype.createClassroomMonitorDisplays = function() {
     this.createPremadeCommentsDiv();
     this.createShowClassroomDisplay();
     this.createSummaryReportDisplay();
+    this.createManageStudentsDisplay();
     // set the default view
     this.setClassroomMonitorView(this.currentMonitorView);
 };
@@ -252,6 +253,8 @@ View.prototype.setClassroomMonitorView = function(monitorView){
             break;
         case 'exportWork':
         case 'manageStudents':
+            this.showManageStudentsDisplay();
+            break;
         case 'gradebook':
         case 'announcements':
         case 'notes':
@@ -12541,6 +12544,15 @@ View.prototype.getUsernamesForWorkgroup = function(workgroupId){
     usernames = students.join(', ');
 
     return usernames;
+};
+
+View.prototype.createManageStudentsDisplay = function() {
+    $('#manageStudentsIfrm').attr('src', '/wise/teacher/management/viewmystudents?runId=' + this.config.getConfigParam('runId'));
+};
+
+View.prototype.showManageStudentsDisplay = function() {
+    this.hideAllDisplays();
+    $('#manageStudents').show();
 };
 
 //used to notify scriptloader that this script has finished loading
