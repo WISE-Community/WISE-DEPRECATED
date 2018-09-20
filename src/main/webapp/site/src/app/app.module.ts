@@ -36,9 +36,9 @@ export function getAuthServiceConfigs(configService: ConfigService) {
   return config;
 }
 
-export function initialize(configService: ConfigService, userService: UserService) {
-  return () => {
-    userService.retrieveUserPromise().then((user) => {
+export function initialize(configService: ConfigService, userService: UserService): () => Promise<any> {
+  return (): Promise<any> => {
+    return userService.retrieveUserPromise().then((user) => {
       userService.getUser().subscribe((user) => {
         configService.retrieveConfig(user);
       });
