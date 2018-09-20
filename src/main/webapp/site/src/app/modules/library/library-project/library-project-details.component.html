@@ -47,7 +47,7 @@
   <a mat-raised-button color="primary" *ngIf="isTeacher" (click)="runProject(data.project.id)">
     <mat-icon>directions_run</mat-icon> Run with Class
   </a>
-  <a mat-raised-button color="primary" href="/wise/previewproject.html?projectId={{ data.project.id }}" target="_blank">
+  <a mat-raised-button color="primary" href="{{previewProjectUrl}}" target="_blank">
     <mat-icon>visibility</mat-icon> Preview
   </a>
 </div>

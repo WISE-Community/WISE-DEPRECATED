@@ -14,6 +14,7 @@ import {
   MatDividerModule,
   MatFormFieldModule, MatInputModule
 } from "@angular/material";
+import { ConfigService } from '../services/config.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -36,6 +37,11 @@ describe('LoginComponent', () => {
         return url;
       }
     }
+    const configServiceStub = {
+      getContextPath(): string {
+        return '/wise';
+      }
+    }
     TestBed.configureTestingModule({
       declarations: [ LoginComponent ],
       imports: [
@@ -50,7 +56,9 @@ describe('LoginComponent', () => {
       providers: [
         HttpClient,
         HttpHandler,
-        { provide: UserService, useValue: userServiceStub }]
+        { provide: UserService, useValue: userServiceStub },
+        { provide: ConfigService, useValue: configServiceStub}
+      ]
     })
     .compileComponents();
   }));

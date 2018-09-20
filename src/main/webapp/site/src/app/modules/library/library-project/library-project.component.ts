@@ -8,6 +8,7 @@ import { CreateRunDialogComponent } from "../../../teacher/create-run-dialog/cre
 import { UserService } from "../../../services/user.service";
 import { User } from "../../../domain/user";
 import { Project } from "../../../teacher/project";
+import { ConfigService } from '../../../services/config.service';
 
 @Component({
   selector: 'app-library-project',
@@ -87,13 +88,16 @@ export class LibraryProjectComponent implements OnInit {
 export class LibraryProjectDetailsComponent implements OnInit {
 
   isTeacher: boolean = false;
+  previewProjectUrl: string = '';
 
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private libraryService: LibraryService,
-              private userService: UserService) {
+              private userService: UserService,
+              private configService: ConfigService) {
     this.isTeacher = userService.isTeacher();
+    this.previewProjectUrl = `${configService.getContextPath()}/previewproject.html?projectId=${data.project.id}`;
   }
 
   ngOnInit() {

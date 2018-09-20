@@ -38,8 +38,10 @@ export function getAuthServiceConfigs(configService: ConfigService) {
 
 export function initialize(configService: ConfigService, userService: UserService) {
   return () => {
-    return userService.retrieveUserPromise().then((user) => {
-      configService.subscribeToGetUser();
+    userService.retrieveUserPromise().then((user) => {
+      userService.getUser().subscribe((user) => {
+        configService.retrieveConfig(user);
+      });
     });
   }
 }

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { UserService } from '../services/user.service';
+import { ConfigService } from '../services/config.service';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
   processing: boolean = false;
 
   constructor(private userService: UserService, private http: HttpClient,
-      private router: Router) {
+      private router: Router, private configService: ConfigService) {
   }
 
   login(): boolean {
@@ -37,6 +38,6 @@ export class LoginComponent implements OnInit {
   }
 
   public socialSignIn(socialPlatform : string) {
-    window.location.href = "/wise/google-login";
+    window.location.href = `${this.configService.getContextPath()}/google-login`;
   }
 }
