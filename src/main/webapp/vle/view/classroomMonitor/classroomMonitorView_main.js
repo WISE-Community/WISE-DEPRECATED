@@ -12547,7 +12547,7 @@ View.prototype.getUsernamesForWorkgroup = function(workgroupId){
 };
 
 View.prototype.createManageStudentsDisplay = function() {
-    $('#manageStudentsIfrm').attr('src', '/wise/teacher/management/viewmystudents?runId=' + this.config.getConfigParam('runId'));
+    $('#manageStudentsIfrm').attr('src', this.config.getConfigParam('contextPath') + '/teacher/management/viewmystudents?runId=' + this.config.getConfigParam('runId'));
 };
 
 View.prototype.showManageStudentsDisplay = function() {
