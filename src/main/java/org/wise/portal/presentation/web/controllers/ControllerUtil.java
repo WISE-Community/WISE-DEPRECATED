@@ -217,6 +217,7 @@ public class ControllerUtil {
     JSONObject projectJSON = new JSONObject();
     projectJSON.put("id", project.getId());
     projectJSON.put("name", project.getName());
+    projectJSON.put("metadata", project.getMetadata().toJSONObject());
     projectJSON.put("dateCreated", project.getDateCreated());
     projectJSON.put("dateArchived", project.getDateDeleted());
     projectJSON.put("projectThumb", getProjectThumbIconPath(project));
