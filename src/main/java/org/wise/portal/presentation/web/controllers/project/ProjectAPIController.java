@@ -160,17 +160,14 @@ public class ProjectAPIController {
    */
   @RequestMapping(value = "/copy", method = RequestMethod.POST)
   protected String copyProject(HttpServletRequest request,
-                             @RequestParam("projectId") String projectId) throws
-      ObjectNotFoundException, IOException, JSONException {
+      @RequestParam("projectId") String projectId) throws ObjectNotFoundException, IOException,
+      JSONException {
     User user = ControllerUtil.getSignedInUser();
     if (!WISE5AuthorProjectController.hasAuthorPermissions(user)) {
       return "";
     }
     Project parentProject = projectService.getById(Long.parseLong(projectId));
-    Set<String> tagNames = new TreeSet<String>();
-    tagNames.add("library");
-    if (parentProject != null &&
-        (this.projectService.canReadProject(parentProject, user) ||
+    if (parentProject != null && (this.projectService.canReadProject(parentProject, user) ||
           parentProject.isOfficialProject() ||
           parentProject.isCommunityProject())) {
       String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
