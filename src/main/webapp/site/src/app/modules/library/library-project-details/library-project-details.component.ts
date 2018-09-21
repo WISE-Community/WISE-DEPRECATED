@@ -74,10 +74,7 @@ export class LibraryProjectDetailsComponent implements OnInit {
 
   copyProject() {
     this.libraryService.copyProject(this.data.project.id).subscribe((newProject: LibraryProject) => {
-      const newLibraryProject: LibraryProject = new LibraryProject();
-      newLibraryProject.id = newProject.id;
-      newLibraryProject.name = newProject.name;
-      newLibraryProject.metadata = newProject.metadata;
+      const newLibraryProject: LibraryProject = new LibraryProject(newProject);
       newLibraryProject.visible = true;
       this.libraryService.addPersonalLibraryProject(newLibraryProject);
       this.dialogRef.afterClosed().subscribe(() => {

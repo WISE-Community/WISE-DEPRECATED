@@ -12,6 +12,7 @@ import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
+import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
 import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectType;
@@ -104,72 +105,16 @@ public class ProjectAPIController {
   protected String getRun(@PathVariable Long projectId) throws ObjectNotFoundException,
       JSONException {
     Project project = projectService.getById(projectId);
-    JSONObject projectJSON = getProjectJSON(project);
+    JSONObject projectJSON = ControllerUtil.getProjectJSON(project);
     return projectJSON.toString();
   }
 
   private JSONArray getProjectsJSON(List<Project> projectList) throws JSONException {
     JSONArray projectsJSON = new JSONArray();
     for (Project teacherSharedProject : projectList) {
-      projectsJSON.put(getProjectJSON(teacherSharedProject));
+      projectsJSON.put(ControllerUtil.getProjectJSON(teacherSharedProject));
     }
     return projectsJSON;
-  }
-
-  private JSONObject getProjectJSON(Project project) throws JSONException {
-    JSONObject projectJSON = new JSONObject();
-    projectJSON.put("id", project.getId());
-    projectJSON.put("name", project.getName());
-    projectJSON.put("metadata", project.getMetadata().toJSONObject());
-    projectJSON.put("projectThumb", getProjectThumb(project));
-    projectJSON.put("owner", getOwnerJSON(project.getOwner()));
-    projectJSON.put("sharedOwners", getProjectSharedOwnersJSON(project));
-    return projectJSON;
-  }
-
-  private JSONObject getOwnerJSON(User owner) throws JSONException {
-    JSONObject ownerJSON = new JSONObject();
-    try {
-      ownerJSON.put("id", owner.getId());
-      TeacherUserDetails ownerUserDetails = (TeacherUserDetails) owner.getUserDetails();
-      ownerJSON.put("displayName", ownerUserDetails.getDisplayname());
-      ownerJSON.put("userName", ownerUserDetails.getUsername());
-      ownerJSON.put("firstName", ownerUserDetails.getFirstname());
-      ownerJSON.put("lastName", ownerUserDetails.getLastname());
-    } catch (org.hibernate.ObjectNotFoundException e) {
-      System.out.println(e);
-    }
-    return ownerJSON;
-  }
-
-  private JSONArray getProjectSharedOwnersJSON(Project project) throws JSONException {
-    JSONArray sharedOwners = new JSONArray();
-    for (User sharedOwner : project.getSharedowners()) {
-      JSONObject sharedOwnerJSON = getSharedOwnerJSON(sharedOwner, project);
-      sharedOwners.put(sharedOwnerJSON);
-    }
-    return sharedOwners;
-  }
-
-  private JSONObject getSharedOwnerJSON(User sharedOwner, Project project) throws JSONException {
-    JSONObject sharedOwnerJSON = new JSONObject();
-    sharedOwnerJSON.put("id", sharedOwner.getId());
-    TeacherUserDetails sharedOwnerUserDetails = (TeacherUserDetails) sharedOwner.getUserDetails();
-    sharedOwnerJSON.put("displayName", sharedOwnerUserDetails.getDisplayname());
-    sharedOwnerJSON.put("username", sharedOwnerUserDetails.getUsername());
-    sharedOwnerJSON.put("firstName", sharedOwnerUserDetails.getFirstname());
-    sharedOwnerJSON.put("lastName", sharedOwnerUserDetails.getLastname());
-    sharedOwnerJSON.put("permissions", getSharedOwnerPermissions(project, sharedOwner));
-    return sharedOwnerJSON;
-  }
-
-  private JSONArray getSharedOwnerPermissions(Project project, User sharedOwner) {
-    JSONArray sharedOwnerPermissions = new JSONArray();
-    List<Permission> sharedTeacherPermissions = projectService.getSharedTeacherPermissions(project, sharedOwner);
-    for (Permission permission : sharedTeacherPermissions) {
-      sharedOwnerPermissions.put(permission.getMask());
-    }
-    return sharedOwnerPermissions;
   }
 
   private void populateProjectMetadata(JSONObject projectLibraryGroup) throws JSONException {
@@ -224,7 +169,10 @@ public class ProjectAPIController {
     Project parentProject = projectService.getById(Long.parseLong(projectId));
     Set<String> tagNames = new TreeSet<String>();
     tagNames.add("library");
-    if (parentProject != null && (this.projectService.canReadProject(parentProject, user) || parentProject.hasTags(tagNames))) {
+    if (parentProject != null &&
+        (this.projectService.canReadProject(parentProject, user) ||
+          parentProject.isOfficialProject() ||
+          parentProject.isCommunityProject())) {
       String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
       String parentProjectJSONAbsolutePath = curriculumBaseDir + parentProject.getModulePath();
       File parentProjectJSONFile = new File(parentProjectJSONAbsolutePath);
@@ -252,7 +200,7 @@ public class ProjectAPIController {
       }
 
       Project project = projectService.createProject(pParams);
-      return getProjectJSON(project).toString();
+      return ControllerUtil.getProjectJSON(project).toString();
     }
     return "";
   }
