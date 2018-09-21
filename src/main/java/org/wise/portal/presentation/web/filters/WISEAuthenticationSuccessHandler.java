@@ -70,7 +70,6 @@ public class WISEAuthenticationSuccessHandler
     boolean userIsAdmin = false;
     if (userDetails instanceof StudentUserDetails) {
       if (request.getServletPath().contains("google-login")) {
-        // google login is only allowed for angular apps
         String contextPath = request.getContextPath();
         response.sendRedirect(contextPath + "/site/student");
         return;
@@ -84,7 +83,6 @@ public class WISEAuthenticationSuccessHandler
       this.setDefaultTargetUrl(WISEAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH + "?pLT=" + pLT);
     } else if (userDetails instanceof TeacherUserDetails) {
       if (request.getServletPath().contains("google-login")) {
-        // google login is only allowed for angular apps
         String contextPath = request.getContextPath();
         response.sendRedirect(contextPath + "/site/teacher");
         return;
