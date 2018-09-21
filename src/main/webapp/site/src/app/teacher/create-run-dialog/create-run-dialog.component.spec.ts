@@ -1,6 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Project } from "../project";
-import { Observable } from "rxjs";
 import { TeacherService } from "../teacher.service";
 import { CreateRunDialogComponent } from "./create-run-dialog.component";
 import { MatDialogRef } from "@angular/material/dialog";
@@ -11,8 +9,9 @@ import {
   MatRadioModule
 } from "@angular/material";
 import { SharedModule } from "../../modules/shared/shared.module";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormsModule } from "@angular/forms";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { Project } from "../../domain/project";
 
 describe('CreateRunDialogComponent', () => {
   let component: CreateRunDialogComponent;
@@ -35,8 +34,10 @@ describe('CreateRunDialogComponent', () => {
     component = fixture.componentInstance;
     const project: Project = new Project();
     project.id = 1;
-    project.name = "Photosynthesis";
-    project.thumbIconPath = "photo.png";
+    project.metadata = {
+      "title": "Photosynthesis"
+    };
+    project.projectThumb = "photo.png";
     component.project = project;
     fixture.detectChanges();
   });

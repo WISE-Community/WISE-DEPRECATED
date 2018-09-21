@@ -1,21 +1,16 @@
 <header fxLayout="row" class="content__header">
-  <mat-icon aria-label="User avatar">account_box</mat-icon>
-  <div fxLayout="column">
-    <h1 id="teacherName" class="accent">{{ user.firstName}} {{ user.lastName }}</h1>
-    <a ngClass="mat-subheading-1" ngClass.xs="{'mat-subheading-1': false}"
-       routerLink="/teacher/profile/edit">Edit Profile</a>
-  </div>
+  <h1 class="accent" fxLayoutAlign="center center">
+    <mat-icon>home</mat-icon>Teacher Home
+  </h1>
 </header>
 
 <section>
   <mat-tab-group [(selectedIndex)]="selectedTabIndex">
-    <mat-tab label="My Runs">
+    <mat-tab label="Class Schedule">
       <app-teacher-run-list></app-teacher-run-list>
     </mat-tab>
-    <mat-tab label="Library Projects">
-      <div class="content-block">
+    <mat-tab label="Browse WISE Units">
         <app-teacher-project-library></app-teacher-project-library>
-      </div>
     </mat-tab>
   </mat-tab-group>
 </section>

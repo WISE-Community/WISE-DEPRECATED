@@ -67,6 +67,19 @@ public class TeacherAPIController {
   protected String getRuns() throws JSONException {
     User user = ControllerUtil.getSignedInUser();
     List<Run> runs = runService.getRunListByOwner(user);
+    JSONArray runsJSONArray = getRunsJSON(runs);
+    return runsJSONArray.toString();
+  }
+
+  @RequestMapping(value = "/sharedruns", method = RequestMethod.GET)
+  protected String getSharedRuns() throws JSONException {
+    User user = ControllerUtil.getSignedInUser();
+    List<Run> runs = runService.getRunListBySharedOwner(user);
+    JSONArray runsJSONArray = getRunsJSON(runs);
+    return runsJSONArray.toString();
+  }
+
+  protected JSONArray getRunsJSON(List<Run> runs) throws JSONException {
     JSONArray runsJSONArray = new JSONArray();
     for (Run run : runs) {
       JSONObject runJSON = getRunJSON(run);
@@ -74,7 +87,7 @@ public class TeacherAPIController {
       runJSON.put("project", projectJSON);
       runsJSONArray.put(runJSON);
     }
-    return runsJSONArray.toString();
+    return runsJSONArray;
   }
 
   private JSONObject getRunJSON(Run run) throws JSONException {
@@ -84,12 +97,16 @@ public class TeacherAPIController {
     runJSON.put("runCode", run.getRuncode());
     runJSON.put("startTime", run.getStarttime());
     runJSON.put("endTime", run.getEndtime());
+    Set<Group> periods = run.getPeriods();
+    JSONArray periodsArray = new JSONArray();
+    for (Group period : periods) {
+      periodsArray.put(period.getName());
+    }
+    runJSON.put("periods", periodsArray);
     runJSON.put("numStudents", getNumStudentsInRun(run));
-    runJSON.put("teacherFirstName", run.getOwner().getUserDetails().getFirstname());
-    runJSON.put("teacherLastName", run.getOwner().getUserDetails().getLastname());
-    runJSON.put("teacherDisplayName",
-        ((TeacherUserDetails) run.getOwner().getUserDetails()).getDisplayname());
+    runJSON.put("owner", getOwnerJSON(run.getOwner()));
     runJSON.put("sharedOwners", getRunSharedOwners(run));
+    runJSON.put("project", getProjectJSON(run.getProject()));
     return runJSON;
   }
 
@@ -99,9 +116,25 @@ public class TeacherAPIController {
     projectJSON.put("name", project.getName());
     projectJSON.put("dateCreated", project.getDateCreated());
     projectJSON.put("dateArchived", project.getDateDeleted());
-    projectJSON.put("thumbIconPath", getProjectThumbIconPath(project));
-    projectJSON.put("sharedOwners", getProjectSharedOwners(project));
+    projectJSON.put("projectThumb", getProjectThumbIconPath(project));
+    projectJSON.put("owner", getOwnerJSON(project.getOwner()));
+    projectJSON.put("sharedOwners", getProjectSharedOwnersJSON(project));
     return projectJSON;
+  }
+
+  private JSONObject getOwnerJSON(User owner) throws JSONException {
+    JSONObject ownerJSON = new JSONObject();
+    try {
+      ownerJSON.put("id", owner.getId());
+      TeacherUserDetails ownerUserDetails = (TeacherUserDetails) owner.getUserDetails();
+      ownerJSON.put("displayName", ownerUserDetails.getDisplayname());
+      ownerJSON.put("userName", ownerUserDetails.getUsername());
+      ownerJSON.put("firstName", ownerUserDetails.getFirstname());
+      ownerJSON.put("lastName", ownerUserDetails.getLastname());
+    } catch(org.hibernate.ObjectNotFoundException e) {
+      System.out.println(e);
+    }
+    return ownerJSON;
   }
 
   @ResponseBody
@@ -124,7 +157,7 @@ public class TeacherAPIController {
   @ResponseBody
   @RequestMapping(value = "/register", method = RequestMethod.POST)
   protected String createTeacherAccount(
-    @RequestBody Map<String, String> teacherFields
+    @RequestBody Map<String, String> teacherFields, HttpServletRequest request
   ) throws DuplicateUsernameException {
     TeacherUserDetails teacherUserDetails = new TeacherUserDetails();
     teacherUserDetails.setFirstname(teacherFields.get("firstName"));
@@ -144,6 +177,8 @@ public class TeacherAPIController {
     teacherUserDetails.setSchoollevel(Schoollevel.valueOf(teacherFields.get("schoolLevel")));
     teacherUserDetails.setSchoolname(teacherFields.get("schoolName"));
     teacherUserDetails.setHowDidYouHearAboutUs(teacherFields.get("howDidYouHearAboutUs"));
+    Locale locale = request.getLocale();
+    teacherUserDetails.setLanguage(locale.getLanguage());
     User createdUser = this.userService.createUser(teacherUserDetails);
     return createdUser.getUserDetails().getUsername();
   }
@@ -154,7 +189,7 @@ public class TeacherAPIController {
     return this.userService.retrieveUserByGoogleUserId(googleUserId) != null;
   }
 
-  private JSONArray getProjectSharedOwners(Project project) throws JSONException {
+  private JSONArray getProjectSharedOwnersJSON(Project project) throws JSONException {
     JSONArray sharedOwners = new JSONArray();
     for (User sharedOwner : project.getSharedowners()) {
       sharedOwners.put(getSharedOwnerJSON(sharedOwner, project));
@@ -240,8 +275,8 @@ public class TeacherAPIController {
     Set<String> periodNames = createPeriodNamesSet(periods);
     Run run = runService.createRun(Integer.parseInt(projectId), user, periodNames, Integer.parseInt(studentsPerTeam),
         Long.parseLong(startDate), locale);
-    JSONObject createRunResponse = generateCreateRunResponse(run);
-    return createRunResponse.toString();
+    JSONObject runJSON = getRunJSON(run);
+    return runJSON.toString();
   }
 
   Set<String> createPeriodNamesSet(String periodsString) {
@@ -259,18 +294,6 @@ public class TeacherAPIController {
       periodsArray.put(period.getName());
     }
     return periodsArray;
-  }
-
-  JSONObject generateCreateRunResponse(Run run) throws Exception {
-    JSONObject runJSON = new JSONObject();
-    runJSON.put("id", run.getId());
-    runJSON.put("projectId", run.getProject().getId());
-    runJSON.put("accessCode", run.getRuncode());
-    runJSON.put("name", run.getName());
-    runJSON.put("periods", createPeriodNamesArray(run.getPeriods()));
-    runJSON.put("startTime", run.getStarttime().getTime());
-    runJSON.put("numStudents", 0);
-    return runJSON;
   }
 
   @RequestMapping(value = "/profile/update", method = RequestMethod.POST)

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '../../domain/user';
 import { UserService } from "../../services/user.service";
-import { Observable } from "rxjs";
 
 @Component({
   selector: 'app-header',
@@ -20,19 +19,13 @@ export class HeaderComponent implements OnInit {
   constructor(private router: Router, private userService: UserService) {
     this.router = router;
     this.router.events.subscribe((event) => {
-      this.url = this.router.url;
-      if (this.url.includes('/teacher')) {
-        this.location = 'teacher';
-      } else if (this.url.includes('/student')) {
-        this.location = 'student';
-      } else {
-        this.location = '';
-      }
+      this.setLocation();
     });
   }
 
   ngOnInit() {
     this.getUser();
+    this.setLocation();
   }
 
   getUser() {
@@ -43,5 +36,16 @@ export class HeaderComponent implements OnInit {
           this.role = user.role;
         }
       });
+  }
+
+  setLocation() {
+    this.url = this.router.url;
+    if (this.url.includes('/teacher')) {
+      this.location = 'teacher';
+    } else if (this.url.includes('/student')) {
+      this.location = 'student';
+    } else {
+      this.location = '';
+    }
   }
 }

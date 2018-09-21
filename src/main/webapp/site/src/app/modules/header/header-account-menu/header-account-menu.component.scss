@@ -4,7 +4,7 @@
   '~style/abstracts/mixins';
 
 .mat-icon-button {
-  @include mat-icon-button-size(32px);
+  @include mat-icon-button-size(36px);
   margin-left: 8px;
 
   @media (min-width: breakpoint('sm.min')) {

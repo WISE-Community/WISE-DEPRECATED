@@ -1,10 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditProfileComponent } from './edit-profile.component';
-import { Run } from "../../../domain/run";
 import { User } from "../../../domain/user";
-import { Project } from "../../../teacher/project";
-import { fakeAsyncResponse } from "../../../teacher/teacher-home/teacher-home.component.spec";
 import { Observable, BehaviorSubject } from '../../../../../../../../../node_modules/rxjs';
 import { UserService } from "../../../services/user.service";
 import { BrowserAnimationsModule } from '../../../../../../../../../node_modules/@angular/platform-browser/animations';

@@ -39,6 +39,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.project.ProjectDao;
+import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.project.FamilyTag;
@@ -91,6 +92,9 @@ public class ProjectServiceImpl implements ProjectService {
   @Autowired
   private PremadeCommentService premadeCommentService;
 
+  @Autowired
+  private UserDao<User> userDao;
+
   /**
    * @see ProjectService#addBookmarkerToProject(Project, User)
    */
@@ -120,6 +124,23 @@ public class ProjectServiceImpl implements ProjectService {
       this.aclService.removePermission(project, BasePermission.READ, user);
       this.aclService.removePermission(project, BasePermission.WRITE, user);
       this.aclService.addPermission(project, BasePermission.ADMINISTRATION, user);
+    }
+  }
+
+  public SharedOwner addSharedTeacher(Long projectId, String teacherUsername)
+      throws ObjectNotFoundException, TeacherAlreadySharedWithProjectException {
+    User user = userDao.retrieveByUsername(teacherUsername);
+    Project project = this.getById(projectId);
+    if (!project.getSharedowners().contains(user)) {
+      project.getSharedowners().add(user);
+      this.projectDao.save(project);
+      this.aclService.addPermission(project, ProjectPermission.VIEW_PROJECT, user);
+      List<Integer> newPermissions = new ArrayList<>();
+      newPermissions.add(ProjectPermission.VIEW_PROJECT.getMask());
+      return new SharedOwner(user.getId(), user.getUserDetails().getUsername(),
+        user.getUserDetails().getFirstname(), user.getUserDetails().getLastname(), newPermissions);
+    } else {
+      throw new TeacherAlreadySharedWithProjectException(teacherUsername + " is already shared with this project");
     }
   }
 
@@ -613,21 +634,6 @@ public class ProjectServiceImpl implements ProjectService {
 
   public List<Permission> getSharedTeacherPermissions(Project project, User sharedTeacher) {
     return this.aclService.getPermissions(project, sharedTeacher);
-  }
-
-  public SharedOwner addSharedTeacher(Long projectId, String username)
-      throws ObjectNotFoundException, TeacherAlreadySharedWithProjectException {
-    User user = userService.retrieveUserByUsername(username);
-    Project project = this.getById(projectId);
-    if (project.getSharedowners().contains(user)) {
-      AddSharedTeacherParameters addSharedTeacherParameters = new AddSharedTeacherParameters();
-      addSharedTeacherParameters.setProject(getById(projectId));
-      addSharedTeacherParameters.setSharedOwnerUsername(username);
-      addSharedTeacherToProject(addSharedTeacherParameters);
-      return createNewSharedOwner(username);
-    } else {
-      throw new TeacherAlreadySharedWithProjectException(username + " is already shared with this project");
-    }
   }
 
   SharedOwner createNewSharedOwner(String username) {

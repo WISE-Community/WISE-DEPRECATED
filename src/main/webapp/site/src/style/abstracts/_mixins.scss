@@ -5,10 +5,13 @@
   // Include angular material theme
   @include angular-material-theme($theme);
   $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
 
   // Create theme-specific styles
+  color: map-get($foreground, text);
+
   a {
-    &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item) {
+    &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item):not(.mat-flat-button):not(.mat-stroked-button):not(.mat-icon-button) {
       color: map-get($colors, primary);
     }
   }
@@ -21,18 +24,8 @@
     background-color: map-get($colors, control-bg);
   }
 
-  .content-block {
-    background-color: map-get($background, background);
-  }
-
-  .notice, .info-block {
+  .content-block, .info-block, .notice {
     background-color: map-get($colors, notice-bg);
-  }
-
-  .cta {
-    .mat-button-focus-overlay {
-      display: none;
-    }
   }
 
   .cta__headline {
@@ -44,23 +37,13 @@
   }
 
   .mat-button {
-    &:not(.mat-icon-button) {
+    &:not(.mat-raised-button):not(.mat-flat-button):not(.mat-stroked-button):not(.mat-icon-button):not(.mat-menu-item) {
       background-color: map-get($colors, btn-bg);
     }
   }
 
-  .mat-button, .mat-raised-button {
-    &:not(.mat-icon-button) {
-      border-radius: $card-border-radius;
-    }
-  }
-
-  .mat-raised-button {
-    &:not(.mat-icon-button) {
-      &:not([class*=mat-elevation-z]) {
-        @include mat-elevation(3);
-      }
-    }
+  .mat-button, .mat-raised-button, .mat-flat-button, .mat-stroked-button {
+    min-width: 0;
   }
 
   .mat-card {
@@ -68,7 +51,7 @@
   }
 
   .mat-dialog-container {
-    border-radius: 3px;
+    border-radius: $card-border-radius;
   }
 
   .mat-dialog-actions {
@@ -83,6 +66,24 @@
     &.mat-expanded {
       @include mat-elevation(6);
     }
+  }
+
+  .mat-menu-item {
+    &.active {
+      background-color: map-get($background, hover);
+
+      .mat-icon {
+        color: map-get($colors, primary);
+      }
+    }
+  }
+
+  .mat-tab-label-active {
+    opacity: 1;
+  }
+
+  .mat-form-field-prefix, .mat-form-field-suffix {
+    color: map-get($foreground, secondary-text);
   }
 
   // Set classes for each named color in the $colors map

@@ -9,46 +9,13 @@ import { ReactiveFormsModule } from '../../../../../../../../../node_modules/@an
 import { MatFormFieldModule, MatSelectModule, MatCheckboxModule, MatCardModule, MatInputModule } from '../../../../../../../../../node_modules/@angular/material';
 import { RouterTestingModule } from '../../../../../../../../../node_modules/@angular/router/testing';
 import { TeacherService } from "../../teacher.service";
-import { Run } from "../../../domain/run";
-import { Project } from "../../project";
-import { fakeAsyncResponse } from "../../teacher-home/teacher-home.component.spec";
+import { Project } from "../../../domain/project";
 
 describe('EditProfileComponent', () => {
   let component: EditProfileComponent;
   let fixture: ComponentFixture<EditProfileComponent>;
 
   beforeEach(async(() => {
-    let teacherServiceStub = {
-      isLoggedIn: true,
-      getRuns(): Observable<Run[]> {
-        const runs : Run[] = [];
-        const run1 = new Run();
-        run1.id = 1;
-        run1.name = "Photosynthesis";
-        run1.numStudents = 12;
-        const project1 = new Project();
-        project1.id = 1;
-        project1.name = "Photosynthesis";
-        project1.thumbIconPath = "";
-        run1.project = project1;
-        const run2 = new Run();
-        run2.id = 2;
-        run2.name = "Plate Tectonics";
-        run2.numStudents = 21;
-        const project2 = new Project();
-        project2.id = 1;
-        project2.name = "Photosynthesis";
-        project2.thumbIconPath = "";
-        run2.project = project2;
-        runs.push(run1);
-        runs.push(run2);
-        return Observable.create( observer => {
-          observer.next(runs);
-          observer.complete();
-        });
-      },
-      newRunSource$: fakeAsyncResponse([{id: 3, name: "Global Climate Change"}])
-    };
     const userServiceStub = {
       getUser(): BehaviorSubject<User> {
         const user: User = new User();
@@ -82,7 +49,7 @@ describe('EditProfileComponent', () => {
         MatInputModule
       ],
       providers: [
-        { provide: TeacherService, useValue: teacherServiceStub },
+        { provide: TeacherService },
         { provide: UserService, useValue: userServiceStub }
       ]
     })

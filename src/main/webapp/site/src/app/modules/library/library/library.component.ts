@@ -118,7 +118,6 @@ export abstract class LibraryComponent implements OnInit {
    * @param {ProjectFilterOptions} filterOptions
    */
   filterUpdated(filterOptions: ProjectFilterOptions): void {
-    let numProjectsVisible = 0;
     this.searchValue = filterOptions.searchValue;
     this.disciplineValue = filterOptions.disciplineValue;
     this.dciArrangementValue = filterOptions.dciArrangementValue;
@@ -135,11 +134,19 @@ export abstract class LibraryComponent implements OnInit {
         filterMatch = true;
       }
       project.visible = searchMatch || filterMatch;
-      if (project.visible) {
-        numProjectsVisible += 1;
-      }
     }
+    this.setImplementationModelOptions();
+    let numProjectsVisible = this.countVisibleProjects(this.projects);
     this.emitNumberOfProjectsVisible(numProjectsVisible);
+  }
+
+  setImplementationModelOptions() {
+    this.implementationModelOptions = [];
+    for (let i = 0; i < this.libraryService.implementationModelOptions.length; i++) {
+      const option = {...this.libraryService.implementationModelOptions[i]};
+      option.name = option.name + ` (${this.countVisibleProjects(this.projects, option.id)})`;
+      this.implementationModelOptions.push(option);
+    }
   }
 
   emitNumberOfProjectsVisible(numProjectsVisible) {
@@ -194,14 +201,15 @@ export abstract class LibraryComponent implements OnInit {
    * @return {boolean}
    */
   isSearchMatch(project: LibraryProject, searchValue: string): boolean {
-    const metadata = project.metadata;
-    return Object.keys(metadata).some(prop => {
+    let data: any = project.metadata;
+    data.id = project.id;
+    return Object.keys(data).some(prop => {
       // only check for match in specific metadata fields
       if (prop != 'title' && prop != 'summary' && prop != 'keywords' &&
-        prop != 'features' &&  prop != 'standardsAddressed') {
+        prop != 'features' &&  prop != 'standardsAddressed' && prop != 'id') {
         return false;
       } else {
-        let value = metadata[prop];
+        let value = data[prop];
         if (prop === 'standardsAddressed') {
           value = JSON.stringify(value);
         }
@@ -259,9 +267,13 @@ export abstract class LibraryComponent implements OnInit {
     return false;
   }
 
-  countVisibleProjects(set: LibraryProject[], implementationModel: string): number {
-    return set.filter((project) => 'project' && project.visible &&
-      project.implementationModel === implementationModel).length;
+  countVisibleProjects(set: LibraryProject[], implementationModel: string = ''): number {
+    if (implementationModel) {
+      return set.filter((project) => 'project' && project.visible &&
+        project.implementationModel === implementationModel).length;
+    } else {
+      return set.filter((project) => 'project' && project.visible).length;
+    }
   }
 
   implementationModelUpdated(value: string): void {

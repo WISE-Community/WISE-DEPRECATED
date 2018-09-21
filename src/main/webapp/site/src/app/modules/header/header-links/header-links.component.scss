@@ -1,5 +1,10 @@
 .mat-button:not(.mat-icon-button) {
   text-transform: none;
   font-size: 16px;
-  background-color: transparent;
+  background-color: transparent !important;
+  margin: 0 4px;
+}
+
+.mat-subheading-2 {
+  margin-bottom: 0;
 }

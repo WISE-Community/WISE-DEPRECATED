@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { LibraryGroup } from "../modules/library/libraryGroup";
 import { ProjectFilterOptions } from "../domain/projectFilterOptions";
 import { LibraryProject } from "../modules/library/libraryProject";
-import { Project } from "../teacher/project";
+import { Project } from "../domain/project";
 
 @Injectable()
 export class LibraryService {
@@ -13,7 +13,9 @@ export class LibraryService {
   private libraryGroupsUrl = 'api/project/library';
   private communityProjectsUrl = 'api/project/community';
   private personalProjectsUrl = 'api/project/personal';
+  private sharedProjectsUrl = 'api/project/shared';
   private copyProjectUrl = 'api/project/copy';
+  private projectInfoUrl = 'api/project/info';
   public libraryGroups: LibraryGroup[];
   private libraryGroupsSource = new Subject<LibraryGroup[]>();
   public libraryGroupsSource$ = this.libraryGroupsSource.asObservable();
@@ -24,6 +26,9 @@ export class LibraryService {
 
   private personalLibraryProjectsSource = new Subject<LibraryProject[]>();
   public personalLibraryProjectsSource$ = this.personalLibraryProjectsSource.asObservable();
+
+  private sharedLibraryProjectsSource = new Subject<LibraryProject[]>();
+  public sharedLibraryProjectsSource$ = this.sharedLibraryProjectsSource.asObservable();
 
   private projectFilterOptionsSource = new Subject<ProjectFilterOptions>();
   public projectFilterOptionsSource$ = this.projectFilterOptionsSource.asObservable();
@@ -42,7 +47,7 @@ export class LibraryService {
   getOfficialLibraryProjects() {
     this.http.get<LibraryGroup[]>(this.libraryGroupsUrl).subscribe((libraryGroups) => {
       this.libraryGroups = libraryGroups;
-      this.libraryGroupsSource.next(libraryGroups);
+      this.implementationModelOptions = [];
       const projects: LibraryProject[] = [];
       for (let group of this.libraryGroups) {
         if (!this.implementationModelValue) {
@@ -53,19 +58,41 @@ export class LibraryService {
         this.populateProjects(group, group.id, projects);
       }
       this.officialLibraryProjectsSource.next(projects);
+      this.libraryGroupsSource.next(libraryGroups);
     });
   }
 
   getCommunityLibraryProjects() {
     this.http.get<LibraryProject[]>(this.communityProjectsUrl).subscribe((projects) => {
-      this.communityLibraryProjectsSource.next(projects);
+      const communityLibraryProjects: LibraryProject[] = this.convertToLibraryProjects(projects);
+      this.communityLibraryProjectsSource.next(communityLibraryProjects);
     });
   }
 
   getPersonalLibraryProjects() {
     this.http.get<LibraryProject[]>(this.personalProjectsUrl).subscribe((projects) => {
-      this.personalLibraryProjectsSource.next(projects);
+      const personalLibraryProjects: LibraryProject[] = this.convertToLibraryProjects(projects);
+      this.personalLibraryProjectsSource.next(personalLibraryProjects);
     });
+  }
+
+  getSharedLibraryProjects() {
+    this.http.get<LibraryProject[]>(this.sharedProjectsUrl).subscribe((projects) => {
+      const sharedLibraryProjects: LibraryProject[] = this.convertToLibraryProjects(projects);
+      for (let sharedLibraryProject of sharedLibraryProjects) {
+        sharedLibraryProject.shared = true;
+      }
+      this.sharedLibraryProjectsSource.next(sharedLibraryProjects);
+    });
+  }
+
+  convertToLibraryProjects(projectsJSON) {
+    const libraryProjects: LibraryProject[] = [];
+    for (let project of projectsJSON) {
+      const libraryProject = new LibraryProject(project);
+      libraryProjects.push(libraryProject);
+    }
+    return libraryProjects;
   }
 
   /**
@@ -127,5 +154,9 @@ export class LibraryService {
 
   addPersonalLibraryProject(project: LibraryProject) {
     this.newProjectSource.next(project);
+  }
+
+  getProjectInfo(projectId): Observable<Project> {
+    return this.http.get<Project>(this.projectInfoUrl + "/" + projectId);
   }
 }

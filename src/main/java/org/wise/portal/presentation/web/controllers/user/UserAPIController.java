@@ -88,7 +88,11 @@ public class UserAPIController {
         userJSON.put("schoolName", teacherUserDetails.getSchoolname());
         userJSON.put("schoolLevel", teacherUserDetails.getSchoollevel());
       }
-      userJSON.put("language", userDetails.getLanguage());
+      String language = userDetails.getLanguage();
+      if (language == null) {
+        language = "en";
+      }
+      userJSON.put("language", language);
 
       return userJSON.toString();
     } else {

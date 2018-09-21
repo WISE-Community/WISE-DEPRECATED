@@ -7,6 +7,7 @@ import { Observable } from "rxjs";
 import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
 import { LibraryService } from "../../../services/library.service";
 import { LibraryProject } from "../libraryProject";
+import { Project } from "../../../domain/project";
 
 @Component({selector: 'app-library-project', template: ''})
 class LibraryProjectStubComponent {
@@ -18,6 +19,7 @@ describe('PersonalLibraryComponent', () => {
   let component: PersonalLibraryComponent;
   let fixture: ComponentFixture<PersonalLibraryComponent>;
   const libraryServiceStub = {
+    implementationModelOptions: [],
     getLibraryGroups(): Observable<LibraryGroup[]> {
       const libraryGroup: LibraryGroup[] = [];
       return Observable.create( observer => {
@@ -40,10 +42,23 @@ describe('PersonalLibraryComponent', () => {
     getPersonalLibraryProjects() {
 
     },
-    libraryGroupsSource$: fakeAsyncResponse({}),
-    officialLibraryProjectsSource$: fakeAsyncResponse({}),
-    communityLibraryProjectsSource$: fakeAsyncResponse({}),
-    personalLibraryProjectsSource$: fakeAsyncResponse({}),
+    getSharedLibraryProjects() {
+
+    },
+    getProjectInfo(): Observable<Project> {
+      return Observable.create(observer => {
+        observer.next(projectObj);
+        observer.complete();
+      });
+    },
+    setTabIndex(index) {
+
+    },
+    libraryGroupsSource$: fakeAsyncResponse([]),
+    officialLibraryProjectsSource$: fakeAsyncResponse([]),
+    communityLibraryProjectsSource$: fakeAsyncResponse([]),
+    personalLibraryProjectsSource$: fakeAsyncResponse([]),
+    sharedLibraryProjectsSource$: fakeAsyncResponse([]),
     projectFilterOptionsSource$: fakeAsyncResponse({
       searchValue: "",
       disciplineValue: [],
@@ -52,7 +67,35 @@ describe('PersonalLibraryComponent', () => {
     }),
     tabIndexSource$: fakeAsyncResponse({}),
     newProjectSource$: fakeAsyncResponse({})
-  }
+  };
+  const runObj = {
+    id: 1,
+    name: "Photosynthesis",
+    sharedOwners: [{
+      id:4,
+      firstName: "spongebob",
+      lastName: "squarepants",
+      permissions: [1,3]
+    }],
+    project: {
+      id: 9,
+      sharedOwners: [{
+        id:4,
+        firstName: "spongebob",
+        lastName: "squarepants",
+        permissions: [2]
+      }]
+    }
+  };
+  const projectObj = {
+    id: 1,
+    name: "Test",
+    owner: {
+      id: 123456,
+      displayName: "Spongebob Squarepants"
+    },
+    sharedOwners: []
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
