@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ConfigService } from '../../services/config.service';
 
 @Component({
   selector: 'app-register-google-user-already-exists',
@@ -7,12 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterGoogleUserAlreadyExistsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private configService: ConfigService) { }
 
   ngOnInit() {
   }
 
   public socialSignIn(socialPlatform : string) {
-    window.location.href = "/wise/google-login";
+    window.location.href = `${this.configService.getContextPath()}/google-login`;
   }
 }

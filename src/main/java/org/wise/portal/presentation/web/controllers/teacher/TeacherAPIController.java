@@ -54,9 +54,12 @@ public class TeacherAPIController {
   private UserDetailsService userDetailsService;
 
   @RequestMapping(value = "/config", method = RequestMethod.GET)
-  protected String getConfig(ModelMap modelMap) throws JSONException {
+  protected String getConfig(ModelMap modelMap, HttpServletRequest request) throws JSONException {
     JSONObject configJSON = new JSONObject();
-    configJSON.put("logOutURL", wiseProperties.get("wiseBaseURL") + "/logout");
+    String contextPath = request.getContextPath();
+    configJSON.put("contextPath", contextPath);
+    configJSON.put("googleClientId", wiseProperties.get("google.clientId"));
+    configJSON.put("logOutURL", contextPath + "/logout");
     return configJSON.toString();
   }
 

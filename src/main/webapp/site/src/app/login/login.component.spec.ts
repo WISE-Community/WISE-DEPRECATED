@@ -33,12 +33,15 @@ describe('LoginComponent', () => {
   };
   const configServiceStub = {
     getConfig(): Observable<Config> {
-      const config : Config = {"context":"vle","logOutURL":"/logout","currentTime":20180730};
+      const config : Config = {"contextPath":"vle","logOutURL":"/logout","currentTime":20180730};
       return Observable.create( observer => {
         observer.next(config);
         observer.complete();
       });
-    }
+    },
+  getContextPath(): string {
+    return '/wise';
+  }
   };
   class RouterStub {
     navigateByUrl(url: string) {
@@ -61,7 +64,8 @@ describe('LoginComponent', () => {
         HttpClient,
         HttpHandler,
         { provide: UserService, useValue: userServiceStub },
-        { provide: ConfigService, useValue: configServiceStub }]
+        { provide: ConfigService, useValue: configServiceStub }
+      ]
     })
     .compileComponents();
   }));

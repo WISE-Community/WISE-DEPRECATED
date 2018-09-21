@@ -1,5 +1,5 @@
 export class Config {
-  context: string;
+  contextPath: string;
   googleClientId?: string;
   logOutURL: string;
   currentTime: number;

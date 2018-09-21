@@ -8,6 +8,7 @@ import { Component, Input } from "@angular/core";
 import { User } from "../../domain/user";
 import { MatIconModule, MatToolbarModule } from "@angular/material";
 import { RouterTestingModule } from "@angular/router/testing";
+import { ConfigService } from '../../services/config.service';
 
 @Component({selector: 'app-header-links', template: ''})
 class HeaderLinksStubComponent {
@@ -36,7 +37,8 @@ describe('HeaderComponent', () => {
         { provide: APP_BASE_HREF, useValue : '/' },
         HttpClient,
         HttpHandler,
-        UserService
+        UserService,
+        ConfigService
       ]
     })
     .compileComponents();

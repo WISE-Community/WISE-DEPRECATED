@@ -14,20 +14,14 @@ export class ConfigService {
   private teacherConfigUrl = 'api/teacher/config';
   private config$: BehaviorSubject<Config> = new BehaviorSubject<Config>(null);
 
-  constructor(private http: HttpClient, private userService: UserService) {
-  }
-
-  subscribeToGetUser() {
-    this.userService.getUser().subscribe((user) => {
-      this.retrieveConfig(user);
-    });
+  constructor(private http: HttpClient) {
   }
 
   getConfig(): Observable<Config> {
     return this.config$;
   }
 
-  retrieveConfig(user: User) {
+  retrieveConfig(user?: User) {
     let configUrl = this.userConfigUrl;
     if (user.role == 'student') {
       configUrl = this.studentConfigUrl;
@@ -64,6 +58,10 @@ export class ConfigService {
 
   private log(message: string) {
     console.log('ConfigService: ' + message);
+  }
+
+  getContextPath() {
+    return this.config$.getValue().contextPath;
   }
 
   getGoogleClientId() {

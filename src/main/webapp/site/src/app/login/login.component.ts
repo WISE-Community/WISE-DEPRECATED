@@ -44,6 +44,6 @@ export class LoginComponent implements OnInit {
   }
 
   public socialSignIn(socialPlatform : string) {
-    window.location.href = "/wise/google-login";
+    window.location.href = `${this.configService.getContextPath()}/google-login`;
   }
 }

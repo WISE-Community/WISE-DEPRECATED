@@ -25,10 +25,12 @@ import {
   GoogleLoginProvider,
 } from "angularx-social-login";
 
-export function initialize(configService: ConfigService, userService: UserService) {
-  return () => {
+export function initialize(configService: ConfigService, userService: UserService): () => Promise<any> {
+  return (): Promise<any> => {
     return userService.retrieveUserPromise().then((user) => {
-      configService.subscribeToGetUser();
+      userService.getUser().subscribe((user) => {
+        configService.retrieveConfig(user);
+      });
     });
   }
 }

@@ -5,16 +5,17 @@ import { AuthGuard } from './auth.guard';
 import { UserService } from "../services/user.service";
 import { HttpClientModule } from "@angular/common/http";
 import { RouterTestingModule } from "@angular/router/testing";
+import { ConfigService } from "../services/config.service";
 
-describe('AuthGuard', () => {
+describe('StudentAuthGuard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, HttpClientModule, RouterTestingModule ],
-      providers: [ AuthGuard, UserService ]
+      providers: [ AuthGuard, UserService, ConfigService ]
     });
   });
 
-  it('should ...', inject([AuthGuard,UserService], (guard: AuthGuard) => {
+  it('should create', inject([AuthGuard,UserService,ConfigService], (guard: AuthGuard) => {
     expect(guard).toBeTruthy();
   }));
 });

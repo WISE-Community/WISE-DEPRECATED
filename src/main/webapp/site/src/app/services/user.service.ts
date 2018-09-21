@@ -4,20 +4,20 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, finalize, tap, map } from 'rxjs/operators';
 import { User } from '../domain/user';
 import { HttpParams } from "../../../../../../../node_modules/@angular/common/http";
+import { ConfigService } from './config.service';
 
 @Injectable()
 export class UserService {
 
   private userUrl = 'api/user/user';
   private user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-  private logInURL = '/wise/j_acegi_security_check';
   private checkGoogleUserIdUrl = 'api/teacher/checkGoogleUserId';
   private changePasswordUrl = 'api/user/password';
   private languagesUrl = 'api/user/languages';
   isAuthenticated = false;
   redirectUrl: string; // redirect here after logging in
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private configService: ConfigService) {
   }
 
   getUser(): BehaviorSubject<User> {
@@ -81,7 +81,8 @@ export class UserService {
       'Content-Type': 'application/x-www-form-urlencoded'
     };
     let formData = "username=" + credentials.username + "&password=" + credentials.password;
-    this.http.post(this.logInURL,
+    const logInURL = `${this.configService.getContextPath()}/j_acegi_security_check`;
+    this.http.post(logInURL,
         formData,
         { headers: headers, responseType: "text" })
         .subscribe(response => {

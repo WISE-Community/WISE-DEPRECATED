@@ -19,7 +19,8 @@ export class StudentRunListItemComponent implements OnInit {
   thumbStyle: SafeStyle;
   isAvailable: boolean = true;
 
-  constructor(private sanitizer: DomSanitizer, private configService: ConfigService) {
+  constructor(private sanitizer: DomSanitizer,
+              private configService: ConfigService) {
     this.sanitizer = sanitizer;
     this.configService = configService;
   }
@@ -32,8 +33,8 @@ export class StudentRunListItemComponent implements OnInit {
 
   ngOnInit() {
     this.thumbStyle = this.getThumbStyle();
-    this.runLink = `/wise/student/teamsignin.html?runId=${ this.run.id }`;
-    this.problemLink = `/wise/contact/contactwise.html?projectId=${ this.run.project.id }&runId=${ this.run.id }`;
+    this.runLink = `${this.configService.getContextPath()}/student/teamsignin.html?runId=${this.run.id}`;
+    this.problemLink = `${this.configService.getContextPath()}/contact/contactwise.html?projectId=${this.run.projectId}&runId=${this.run.id}`;
     this.configService.getConfig().subscribe(config => {
       if (config != null) {
         if (this.run.startTime > config.currentTime) {

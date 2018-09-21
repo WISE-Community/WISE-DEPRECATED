@@ -15,11 +15,14 @@ describe('StudentRunListItemComponent', () => {
   beforeEach(async(() => {
     const configServiceStub = {
       getConfig(): Observable<Config> {
-        const config : Config = {"context":"vle","logOutURL":"/logout","currentTime":20180730};
+        const config : Config = {"contextPath":"vle","logOutURL":"/logout","currentTime":20180730};
         return Observable.create( observer => {
           observer.next(config);
           observer.complete();
         });
+      },
+      getContextPath(): string {
+        return '/wise';
       }
     };
     TestBed.configureTestingModule({
