@@ -75,36 +75,17 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
    */
   @Override
   @Transactional
-  public void onAuthenticationFailure(HttpServletRequest request,
-                                      HttpServletResponse response,
-                                      AuthenticationException exception)
-    throws java.io.IOException,
-    javax.servlet.ServletException {
-
-    //get the user name the user has entered
+  public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+      AuthenticationException exception) throws java.io.IOException, javax.servlet.ServletException {
     String userName = request.getParameter("username");
-
-    if(userName != null) {
-      //get the user
+    if (userName != null) {
       User user = userService.retrieveUserByUsername(userName);
-
-      if(user != null) {
-        //user name exists
-
-        //get the user details
+      if (user != null) {
         MutableUserDetails userDetails = (MutableUserDetails) user.getUserDetails();
-
-        //get the recent time they failed to login
         Date recentFailedLoginTime = userDetails.getRecentFailedLoginTime();
-
-        //get the current time
         Date currentTime = new Date();
-
         Integer numberOfRecentFailedLoginAttempts = 1;
-
-        if(recentFailedLoginTime != null) {
-          //they have failed to log in before
-
+        if (recentFailedLoginTime != null) {
           long timeDifference = currentTime.getTime() - recentFailedLoginTime.getTime();
 
           /*
@@ -112,25 +93,19 @@ public class WISEAuthenticationFailureHandler extends SimpleUrlAuthenticationFai
            * is less than 15 minutes we will increment the failed attempts counter.
            * if the difference is greater than 15 minutes we will reset the counter.
            */
-          if(timeDifference < (recentFailedLoginTimeLimit * 60 * 1000)) {
-            //time since last failed attempt is less than 15 minutes
-
-            //increase the recent failed number of attempts by 1
+          if (timeDifference < (recentFailedLoginTimeLimit * 60 * 1000)) {
             numberOfRecentFailedLoginAttempts = userDetails.getNumberOfRecentFailedLoginAttempts() + 1;
           }
         }
-
-        //set the number of times the user has failed to log in within the last 15 minutes
         userDetails.setNumberOfRecentFailedLoginAttempts(numberOfRecentFailedLoginAttempts);
-
-        //set the time they failed to log in
         userDetails.setRecentFailedLoginTime(currentTime);
-
-        //update the user
         userService.updateUser(user);
       }
+    } else if (request.getServletPath().contains("google-login")) {
+      String contextPath = request.getContextPath();
+      response.sendRedirect(contextPath + "/site/login/googleUserNotFound");
+      return;
     }
-
     this.setDefaultFailureUrl(this.determineFailureUrl(request, response, exception));
     super.onAuthenticationFailure(request, response, exception);
   }
