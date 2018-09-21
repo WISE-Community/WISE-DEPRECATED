@@ -20,13 +20,13 @@ export class PersonalLibraryComponent extends LibraryComponent {
     libraryService.personalLibraryProjectsSource$.subscribe((personalProjects: LibraryProject[]) => {
       this.personalProjects = personalProjects;
       this.combinePersonalAndSharedProjects();
-      this.emitNumberOfProjectsVisible();
+      this.emitNumberOfProjectsVisible(this.personalProjects.length + this.sharedProjects.length);
     });
 
     libraryService.sharedLibraryProjectsSource$.subscribe((sharedProjects: LibraryProject[]) => {
       this.sharedProjects = sharedProjects;
       this.combinePersonalAndSharedProjects();
-      this.emitNumberOfProjectsVisible();
+      this.emitNumberOfProjectsVisible(this.personalProjects.length + this.sharedProjects.length);
     });
 
     libraryService.projectFilterOptionsSource$.subscribe((projectFilterOptions) => {
@@ -35,7 +35,7 @@ export class PersonalLibraryComponent extends LibraryComponent {
 
     libraryService.newProjectSource$.subscribe(project => {
       this.projects.unshift(project);
-      this.emitNumberOfProjectsVisible();
+      this.emitNumberOfProjectsVisible(this.personalProjects.length + this.sharedProjects.length);
       this.libraryService.setTabIndex(2);
     });
 
@@ -44,10 +44,6 @@ export class PersonalLibraryComponent extends LibraryComponent {
   }
 
   ngOnInit() {
-  }
-
-  emitNumberOfProjectsVisible() {
-    super.emitNumberOfProjectsVisible(this.personalProjects.length + this.sharedProjects.length);
   }
 
   combinePersonalAndSharedProjects() {
