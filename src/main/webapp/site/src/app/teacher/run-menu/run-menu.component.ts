@@ -22,6 +22,7 @@ export class RunMenuComponent implements OnInit {
 
   constructor(private dialog: MatDialog,
               private teacherService: TeacherService,
+              private userService: UserService,
               private configService: ConfigService) { }
 
   ngOnInit() {

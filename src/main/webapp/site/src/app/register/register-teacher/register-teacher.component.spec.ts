@@ -17,7 +17,7 @@ describe('RegisterTeacherComponent', () => {
   let fixture: ComponentFixture<RegisterTeacherComponent>;
   const configServiceStub = {
     getConfig(): Observable<Config> {
-      const config : Config = {"context":"vle","logOutURL":"/logout","currentTime":20180730};
+      const config : Config = {"contextPath":"vle","logOutURL":"/logout","currentTime":20180730};
       return Observable.create( observer => {
         observer.next(config);
         observer.complete();

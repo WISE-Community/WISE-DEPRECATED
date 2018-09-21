@@ -10,7 +10,7 @@
               <span *ngIf="run.endTime">Ended: {{ run.endTime | amDateFormat:'ll' }}</span>
             </div>
             <div>
-              Teacher: {{ run.teacherDisplayName }}
+              Teacher: {{ run.owner.displayName }}
               &nbsp;&bull;&nbsp;
               Period: {{ run.periodName }}
               &nbsp;&bull;&nbsp;

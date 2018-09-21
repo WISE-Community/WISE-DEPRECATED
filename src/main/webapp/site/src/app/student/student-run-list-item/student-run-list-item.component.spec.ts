@@ -7,6 +7,7 @@ import { ConfigService } from "../../services/config.service";
 import { MomentModule } from "ngx-moment";
 import { MatCardModule } from "@angular/material";
 import { Project } from "../../domain/project";
+import { User } from "../../domain/user";
 
 describe('StudentRunListItemComponent', () => {
   let component: StudentRunListItemComponent;
@@ -39,8 +40,9 @@ describe('StudentRunListItemComponent', () => {
     const run: StudentRun = new StudentRun();
     run.id = 1;
     run.name = "Photosynthesis";
-    run.teacherFirstname = "Mr.";
-    run.teacherLastname = "Happy";
+    const owner = new User();
+    owner.displayName = "Mr. Happy";
+    run.owner = owner;
     run.projectThumb = "Happy.png";
     run.startTime = 20180612;
     const project: Project = new Project();

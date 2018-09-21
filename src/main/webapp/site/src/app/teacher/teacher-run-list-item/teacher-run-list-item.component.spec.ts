@@ -7,7 +7,6 @@ import { TeacherRun } from "../teacher-run";
 import { MatCardModule, MatIconModule, MatTooltipModule } from "@angular/material";
 import { MomentModule } from "ngx-moment";
 import { Component, Input } from "@angular/core";
-import { Component, Input, OnInit } from "@angular/core";
 import { ConfigService } from "../../services/config.service";
 
 @Component({ selector: 'app-run-menu', template: '' })

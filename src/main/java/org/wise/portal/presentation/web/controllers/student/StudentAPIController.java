@@ -134,9 +134,9 @@ public class StudentAPIController {
     runJSON.put("runCode", run.getRuncode());
     runJSON.put("startTime", run.getStarttime());
     runJSON.put("endTime", run.getEndtime());
-    runJSON.put("teacherFirstName", run.getOwner().getUserDetails().getFirstname());
-    runJSON.put("teacherLastName", run.getOwner().getUserDetails().getLastname());
-    runJSON.put("teacherDisplayName", ((TeacherUserDetails) run.getOwner().getUserDetails()).getDisplayname());
+    runJSON.put("project", ControllerUtil.getProjectJSON(project));
+    runJSON.put("owner", run.getOwner());
+    runJSON.put("sharedOwners", run.getSharedowners());
 
     /*
      * The workgroup can be null if the student registered for a run but

@@ -11,13 +11,10 @@ import {
   MatIconModule,
   MatMenuModule
 } from "@angular/material";
-<<<<<<< HEAD
 import { ConfigService } from "../../services/config.service";
-=======
 import { UserService } from "../../services/user.service";
 import { User } from "../../domain/user";
 import { TeacherRun } from "../teacher-run";
->>>>>>> PortalRedesignAngular
 
 describe('RunMenuComponent', () => {
   const configServiceStub = {
@@ -58,13 +55,9 @@ describe('RunMenuComponent', () => {
       declarations: [ RunMenuComponent ],
       providers: [
         { provide: TeacherService },
-<<<<<<< HEAD
         { provide: MatDialog },
-        { provide: ConfigService, useValue: configServiceStub }
-=======
         { provide: UserService, useValue: userServiceStub },
-        { provide: MatDialog }
->>>>>>> PortalRedesignAngular
+        { provide: ConfigService, useValue: configServiceStub }
       ]
     })
     .compileComponents();
