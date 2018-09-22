@@ -33,6 +33,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     super.ngOnInit();
     this.getSharedOwners().subscribe(sharedOwners => {
       let owners = [...sharedOwners];
+      owners.reverse();
       if (this.run.owner) {
         owners.unshift({
           sharedOwner: this.run.owner,
@@ -103,7 +104,8 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   shareRun() {
     this.duplicate = false;
     const sharedOwnerUsername = this.teacherSearchControl.value;
-    if (this.allTeacherUsernames.includes(sharedOwnerUsername) && !this.isSharedOwner(sharedOwnerUsername)) {
+    if (this.run.owner.userName !== sharedOwnerUsername &&
+      !this.isSharedOwner(sharedOwnerUsername)) {
       this.teacherService.addSharedOwner(this.runId, sharedOwnerUsername)
           .subscribe((newSharedOwner) => {
         if (newSharedOwner != null) {
