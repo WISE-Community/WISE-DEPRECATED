@@ -14,6 +14,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   run: Run = new Run();
   dataSource: MatTableDataSource<any[]> = new MatTableDataSource<any[]>();
   displayedColumns: string[] = ['name', 'permissions'];
+  duplicate: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
@@ -100,6 +101,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   }
 
   shareRun() {
+    this.duplicate = false;
     const sharedOwnerUsername = this.teacherSearchControl.value;
     if (this.allTeacherUsernames.includes(sharedOwnerUsername) && !this.isSharedOwner(sharedOwnerUsername)) {
       this.teacherService.addSharedOwner(this.runId, sharedOwnerUsername)
@@ -112,7 +114,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
         }
       });
     } else {
-      console.log("invalid username");
+      this.duplicate = true;
     }
     document.getElementById("share-run-dialog-search").blur();
   }
