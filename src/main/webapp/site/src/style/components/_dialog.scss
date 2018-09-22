@@ -1,36 +1,37 @@
 .mat-dialog-container {
   max-width: 100%;
+  padding: 16px !important;
 
-  @media (max-width: breakpoint('xs.max')) {
-    padding: 16px !important;
-
-    .mat-dialog-content {
-      margin: 0px -16px;
-      padding: 0 16px;
-    }
+  .mat-dialog-content {
+    margin: 0 -16px;
+    padding: 0 16px;
   }
 
-  .dialog-menu {
-    margin: -8px -8px 8px 8px;
+  .mat-dialog-content--scroll {
+    padding-top: 16px;
+    padding-bottom: 16px;
   }
 }
 
-.mat-dialog-container--sm {
+.dialog-menu {
+  margin: -8px -8px 8px 8px;
+}
+
+.mat-dialog--sm {
   width: breakpoint('sm.min');
 }
 
-.mat-dialog-container--md {
+.mat-dialog--md {
   width: breakpoint('md.min');
 }
 
-.mat-dialog-container--lg {
+.mat-dialog--lg {
   width: breakpoint('lg.min');
 }
 
-.mat-dialog-container--xl {
+.mat-dialog--xl {
   width: breakpoint('xl.min');
 }
-
 
 .cdk-overlay-pane {
   @media (max-width: breakpoint('xs.max')) {

@@ -32,7 +32,8 @@ export class RunMenuComponent implements OnInit {
 
   shareRun() {
     this.dialog.open(ShareRunDialogComponent, {
-      data: { run: this.run }
+      data: { run: this.run },
+      panelClass: 'mat-dialog--md'
     });
   }
 
@@ -41,7 +42,7 @@ export class RunMenuComponent implements OnInit {
     this.dialog.open(LibraryProjectDetailsComponent, {
       ariaLabel: 'Project Details',
       data: { project: project, isRunProject: true },
-      panelClass: 'mat-dialog-container--md'
+      panelClass: 'mat-dialog--md'
     });
   }
 

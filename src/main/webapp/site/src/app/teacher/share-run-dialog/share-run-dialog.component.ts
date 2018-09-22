@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef, MatTableDataSource } from "@angular/material";
 import { ShareItemDialogComponent } from "../../modules/library/share-item-dialog/share-item-dialog.component";
 
 @Component({
@@ -11,7 +11,9 @@ import { ShareItemDialogComponent } from "../../modules/library/share-item-dialo
 })
 export class ShareRunDialogComponent extends ShareItemDialogComponent {
 
-  run: Run;
+  run: Run = new Run();
+  dataSource: MatTableDataSource<any[]> = new MatTableDataSource<any[]>();
+  displayedColumns: string[] = ['name', 'permissions'];
 
   constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
@@ -28,6 +30,16 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
 
   ngOnInit() {
     super.ngOnInit();
+    this.getSharedOwners().subscribe(sharedOwners => {
+      let owners = [...sharedOwners];
+      if (this.run.owner) {
+        owners.unshift({
+          sharedOwner: this.run.owner,
+          isOwner: true
+        });
+      }
+      this.dataSource = new MatTableDataSource(owners);
+    });
   }
 
   populatePermissions(sharedOwner) {
@@ -37,7 +49,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
 
   addRunPermissions(sharedOwner) {
     this.setDefaultRunPermissions(sharedOwner);
-    for (let permission of sharedOwner.permissions) {
+    for (let permission of sharedOwner.runPermissions) {
       sharedOwner.runPermissions[permission] = true;
     }
   }
@@ -95,13 +107,14 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
         if (newSharedOwner != null) {
           this.setDefaultRunPermissions(newSharedOwner);
           this.setDefaultProjectPermissions(newSharedOwner);
-          this.sharedOwners.push(newSharedOwner);
+          this.addSharedOwner(newSharedOwner);
           this.teacherSearchControl.setValue('');
         }
       });
     } else {
       console.log("invalid username");
     }
+    document.getElementById("share-run-dialog-search").blur();
   }
 
   unshareRun(sharedOwner) {

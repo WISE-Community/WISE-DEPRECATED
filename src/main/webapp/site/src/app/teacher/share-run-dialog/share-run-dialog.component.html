@@ -1,48 +1,61 @@
-<div style="display: flex;"><div style="width: 30%"><h2>Share Run</h2></div><div style="width: 40%"></div><div style="width: 10%"><button mat-button [mat-dialog-close]="true">X</button></div></div>
-<div *ngIf="run != null">Name: {{run.name}}</div>
-<div *ngIf="run != null">Run ID: {{run.id}}</div>
-<div *ngIf="run != null">Lesson ID: {{run.project.id}}</div>
-<div style="display:flex">
-  <div>Find Teacher:</div>
-  <div>
-    <mat-form-field>
-      <input type="text" placeholder="Enter Teacher Name" aria-label="Number" matInput [formControl]="teacherSearchControl" [matAutocomplete]="auto">
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let teacherUsername of filteredTeacherUsernames | async" [value]="teacherUsername">
-          {{teacherUsername}}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-  </div>
-  <div>
-    <button mat-raised-button (click)="shareRun()"
-            [disabled]="teacherSearchControl.value == ''"
-            aria-label="Add new shared owner"
-            color="accent"
-            class="add-run-input">
-      Share
-    </button>
-  </div>
-</div>
+<h2 class="mat-dialog-title">Share Classroom Run</h2>
+<mat-dialog-content class="mat-dialog-content--scroll">
+  <p class="mat-body-2">
+    {{ run.name }} <span class="mat-caption">(Run ID: {{ run.id }})</span>
+  </p>
+  <mat-form-field appearance="fill">
+    <mat-label>Enter teacher username</mat-label>
+    <input id="share-run-dialog-search"
+           type="text"
+           matInput
+           [formControl]="teacherSearchControl"
+           [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="shareRun($event)">
+      <mat-option *ngFor="let teacherUsername of filteredTeacherUsernames | async"
+                  [value]="teacherUsername">
+        {{ teacherUsername }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
+    <ng-container matColumnDef="name" sticky>
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let sharedOwner">
+        <ng-container *ngIf="sharedOwner.isOwner">
+          {{ run.owner.firstName }} {{ run.owner.lastName }}
+        </ng-container>
+        <ng-container *ngIf="!sharedOwner.isOwner">
+          {{ sharedOwner.firstName }} {{ sharedOwner.lastName }} (<a href="#" (click)="!!unshareRun(sharedOwner)" class="warn">Revoke</a>)
+        </ng-container>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="permissions">
+      <th mat-header-cell *matHeaderCellDef>Permissions</th>
+      <td mat-cell *matCellDef="let sharedOwner">
+        <ng-container *ngIf="sharedOwner.isOwner">
+          Owner. Full permissions.
+        </ng-container>
+        <ng-container *ngIf="!sharedOwner.isOwner">
+          <div fxLayout="row wrap" fxLayoutGap="12px">
+            <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[1]"
+                          disabled="true">View Student Work</mat-checkbox>
+            <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[3]"
+                          (change)="runPermissionChanged(sharedOwner.id, 3, sharedOwner.runPermissions[3])">View Student Names</mat-checkbox>
+            <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[2]"
+                          (change)="runPermissionChanged(sharedOwner.id, 2, sharedOwner.runPermissions[2])">Grade and Manage</mat-checkbox>
+            <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[2]"
+                          (change)="projectPermissionChanged(project, sharedOwner.id, 2, sharedOwner.projectPermissions[2])">Edit Unit Content</mat-checkbox>
+          </div>
+        </ng-container>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end">
+  <button mat-flat-button color="primary" mat-dialog-close>
+    Done
+  </button>
+</mat-dialog-actions>
 
-<table>
-  <tr><th>Teacher Name</th><th>Permissions</th></tr>
-  <tr><td *ngIf="run != null">{{run.owner.displayName}}</td><td>Owner. Full Permissions</td></tr>
-  <tr *ngFor="let sharedOwner of sharedOwners">
-      <td>
-        {{sharedOwner.firstName}} {{sharedOwner.lastName}}
-        <button mat-raised-button (click)="unshareRun(sharedOwner)"
-                aria-label="Removed shared owner"
-                color="accent"
-                class="add-run-input">
-          Revoke
-        </button>
-      </td>
-      <td>
-        <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[1]" disabled="true">View Student Work</mat-checkbox><br/>
-        <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[3]" (change)="runPermissionChanged(sharedOwner.id, 3, sharedOwner.runPermissions[3])">View Student Names</mat-checkbox><br/>
-        <mat-checkbox [(ngModel)]="sharedOwner.runPermissions[2]" (change)="runPermissionChanged(sharedOwner.id, 2, sharedOwner.runPermissions[2])">Grade and Manage Run</mat-checkbox><br/>
-        <mat-checkbox [(ngModel)]="sharedOwner.projectPermissions[2]" (change)="projectPermissionChanged(project, sharedOwner.id, 2, sharedOwner.projectPermissions[2])">Edit Lesson Content</mat-checkbox>
-      </td>
-  </tr>
-</table>

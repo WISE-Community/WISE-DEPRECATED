@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { TeacherService } from "../../../teacher/teacher.service";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { map, debounceTime } from 'rxjs/operators';
@@ -20,6 +20,7 @@ export abstract class ShareItemDialogComponent implements OnInit {
   allTeacherUsernames: string[] = [];
   filteredTeacherUsernames: Observable<string[]>;
   sharedOwners: any[] = [];
+  private sharedOwners$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(this.sharedOwners);
 
   constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
@@ -34,6 +35,10 @@ export abstract class ShareItemDialogComponent implements OnInit {
       debounceTime(1000),
       map(value => this._filter(value))
     );
+  }
+
+  getSharedOwners(): BehaviorSubject<any[]> {
+    return this.sharedOwners$;
   }
 
   public _filter(value: string): string[] {
@@ -51,6 +56,7 @@ export abstract class ShareItemDialogComponent implements OnInit {
       delete localSharedOwner.permissions;
       this.sharedOwners.push(localSharedOwner);
     }
+    this.sharedOwners$.next(this.sharedOwners);
   }
 
   abstract populatePermissions(sharedOwner);
@@ -120,10 +126,16 @@ export abstract class ShareItemDialogComponent implements OnInit {
     return false;
   }
 
+  addSharedOwner(sharedOwner) {
+    this.sharedOwners.push(sharedOwner);
+    this.sharedOwners$.next(this.sharedOwners);
+  }
+
   removeSharedOwner(sharedOwner) {
     for (let i = 0; i < this.sharedOwners.length; i++) {
       if (this.sharedOwners[i].id == sharedOwner.id) {
         this.sharedOwners.splice(i, 1);
+        this.sharedOwners$.next(this.sharedOwners);
         return;
       }
     }
