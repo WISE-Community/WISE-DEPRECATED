@@ -2,9 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { LibraryService } from "../../../services/library.service";
 import { UserService } from "../../../services/user.service";
-import { LibraryProject } from "../libraryProject";
 import { CreateRunDialogComponent } from "../../../teacher/create-run-dialog/create-run-dialog.component";
 import { NGSSStandards } from "../ngssStandards";
+import { CopyProjectDialogComponent } from "../copy-project-dialog/copy-project-dialog.component";
 
 @Component({
   selector: 'app-library-project-details',
@@ -73,14 +73,8 @@ export class LibraryProjectDetailsComponent implements OnInit {
   }
 
   copyProject() {
-    this.libraryService.copyProject(this.data.project.id).subscribe((newProject: LibraryProject) => {
-      const newLibraryProject: LibraryProject = new LibraryProject(newProject);
-      newLibraryProject.visible = true;
-      this.libraryService.addPersonalLibraryProject(newLibraryProject);
-      this.dialogRef.afterClosed().subscribe(() => {
-        scrollTo(0, 0);
-      });
-      this.dialog.closeAll();
+    this.dialog.open(CopyProjectDialogComponent, {
+      data: this.data
     });
   }
 

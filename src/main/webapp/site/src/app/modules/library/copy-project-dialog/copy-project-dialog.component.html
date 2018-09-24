@@ -1,0 +1,29 @@
+<p class="copy-confirmation-message">
+  Copying a project creates a duplicate of the project. You will own the duplicate and can customize it.
+</p>
+<p class="copy-confirmation-message">
+  Are you sure you want to copy this project?
+</p>
+<p class="copy-confirmation-message">
+  Name: {{data.project.name}}<br/>
+  Unit ID: {{data.project.id}}
+</p>
+<div class="buttons-div">
+  <button mat-button
+          mat-raised-button
+          color="primary"
+          class="button"
+          (click)="copy()"
+          [disabled]="isCopying">
+    <span *ngIf="!isCopying">Copy</span>
+    <span *ngIf="isCopying">Copying...</span>
+  </button>
+  <div class="buttons-spacer"></div>
+  <button mat-button
+          mat-raised-button
+          color="primary"
+          (click)="cancel()"
+          class="button">
+    Cancel
+  </button>
+</div>

@@ -9,7 +9,6 @@ import { LibraryService } from "../../../services/library.service";
 import { UserService } from "../../../services/user.service";
 import { Project } from "../../../domain/project";
 import { NGSSStandards } from "../ngssStandards";
-import { TeacherRun } from "../../../teacher/teacher-run";
 
 @Component({ selector: 'app-library-project-menu', template: '' })
 export class LibraryProjectMenuStubComponent {
