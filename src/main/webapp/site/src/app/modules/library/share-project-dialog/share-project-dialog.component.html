@@ -5,11 +5,21 @@
   </p>
   <mat-form-field appearance="fill">
     <mat-label>Enter teacher username</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
     <input id="share-project-dialog-search"
            type="text"
            matInput
            [formControl]="teacherSearchControl"
            [matAutocomplete]="auto">
+    <button mat-button
+            matSuffix
+            mat-icon-button
+            [disabled]="disable"
+            [ngClass]="{'invisible': !teacherSearchControl.value}"
+            aria-label="Clear"
+            (click)="teacherSearchControl.setValue('')">
+      <mat-icon>close</mat-icon>
+    </button>
     <mat-hint *ngIf="duplicate && allTeacherUsernames.includes(teacherSearchControl.value)"
               class="info">Teacher is already on shared list.</mat-hint>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="shareProject()">
