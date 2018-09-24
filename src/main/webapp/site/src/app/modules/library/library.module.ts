@@ -24,6 +24,7 @@ import {
   MatMenuModule,
   MatOptionModule,
   MatSelectModule,
+  MatTableModule,
   MatTabsModule,
   MatTooltipModule } from '@angular/material';
 import { TimelineModule } from "../timeline/timeline.module";
@@ -48,6 +49,7 @@ const materialModules = [
   MatMenuModule,
   MatOptionModule,
   MatSelectModule,
+  MatTableModule,
   MatTabsModule,
   MatTooltipModule
 ];

@@ -12,7 +12,7 @@
            [matAutocomplete]="auto">
     <mat-hint *ngIf="duplicate && options.includes(teacherSearchControl.value)"
               class="info">Teacher is already on shared list.</mat-hint>
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="shareRun($event)">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="shareRun()">
       <mat-option *ngFor="let teacherUsername of filteredTeacherUsernames | async"
                   [value]="teacherUsername">
         {{ teacherUsername }}

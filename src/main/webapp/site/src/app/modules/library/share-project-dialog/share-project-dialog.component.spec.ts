@@ -5,7 +5,11 @@ import { TeacherService } from "../../../teacher/teacher.service";
 import { Run } from "../../../domain/run";
 import { Project } from "../../../domain/project";
 import { Observable } from 'rxjs';
-import { MatDialogRef, MAT_DIALOG_DATA, MatAutocompleteModule } from '@angular/material';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatAutocompleteModule,
+  MatTableModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { LibraryGroup } from "../libraryGroup";
@@ -128,7 +132,10 @@ describe('ShareProjectDialogComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ShareProjectDialogComponent ],
-      imports: [ BrowserAnimationsModule, MatAutocompleteModule ],
+      imports: [
+        BrowserAnimationsModule,
+        MatAutocompleteModule,
+        MatTableModule ],
       providers: [
         { provide: TeacherService, useValue: teacherServiceStub },
         { provide: LibraryService, useValue: libraryServiceStub },

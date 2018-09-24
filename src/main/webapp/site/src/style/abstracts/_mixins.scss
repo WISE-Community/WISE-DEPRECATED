@@ -13,6 +13,13 @@
   a {
     &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item):not(.mat-flat-button):not(.mat-stroked-button):not(.mat-icon-button) {
       color: map-get($colors, primary);
+
+      // Set classes for each named color in the $colors map
+      @each $key, $value in $colors {
+        &.#{$key} {
+          color: $value;
+        }
+      }
     }
   }
 
