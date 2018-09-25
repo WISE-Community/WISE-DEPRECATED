@@ -1,47 +1,56 @@
-<h2>Run with class: {{project.metadata.title}} (Lesson ID: {{project.id}})</h2>
-<div>
-  <h3>1. Choose Periods</h3>
-  <div fxLayout="row">
-    <div fxFlex>
-      <div *ngFor="let period of [1, 2, 3, 4]">
-        <mat-checkbox [(ngModel)]="periods[period]" (change)="periodChanged()">{{period}}</mat-checkbox>
-        <br/>
-      </div>
+<h2 class="mat-dialog-title">Use with Class</h2>
+<form [formGroup]="form" (ngSubmit)="create()">
+  <mat-dialog-content class="mat-dialog-content--scroll" fxLayout="column">
+    <p class="mat-subheading-2">
+      {{ project.metadata.title }} <span class="mat-caption">(Unit ID: {{ project.id }})</span>
+    </p>
+    <h3>1. Choose Periods</h3>
+    <div formArrayName="selectedPeriods">
+      <span *ngFor="let control of form.controls.selectedPeriods.controls"
+           [formGroup]="control">
+        <mat-checkbox formControlName="checkbox">
+          {{ control.controls.name.value }}
+        </mat-checkbox>
+      </span>
     </div>
-    <div fxFlex>
-      <div *ngFor="let period of [5, 6, 7, 8]">
-        <mat-checkbox [(ngModel)]="periods[period]" (change)="periodChanged()">{{period}}</mat-checkbox>
-        <br/>
-      </div>
-    </div>
-  </div>
-  <div>Add your own periods:
-    <mat-form-field style="width: 60%">
-      <input matInput type="text" [(ngModel)]="customPeriods" (ngModelChange)="periodChanged()"/>
+    <mat-form-field appearance="fill" class="mat-form-field--longhint">
+      <mat-label>Add your own periods</mat-label>
+      <input matInput
+             id="customPeriods"
+             name="customPeriods"
+             formControlName="customPeriods" />
+      <mat-hint>For "Period 9", just enter the number 9. Separate periods with commas (e.g. "Section 1, Section 2"). Manually named periods should be no more than 16 characters long.</mat-hint>
     </mat-form-field>
-  </div>
-  <div>(Separate manually named periods with commas. Example: "Section1, Section 2, Section 3". Manually named periods should be no more than 16 characters in length.)</div>
-</div>
-<br/>
-<div>
-  <h3>2. Choose Students Per Team</h3>
-  <p>How many students per computer during the lesson?</p>
-  <mat-radio-group [(ngModel)]="studentsPerTeam">
-    <mat-radio-button [value]="1">Only 1 student</mat-radio-button>
-    <br/>
-    <mat-radio-button [value]="3">1-3 students</mat-radio-button>
-  </mat-radio-group>
-</div>
-<br/>
-<div>
-  <h3>3. Choose Start Date</h3>
-  <mat-form-field>
-    <input [(ngModel)]="startDate" matInput [matDatepicker]="picker" placeholder="Choose a date" disabled>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker disabled="false"></mat-datepicker>
-  </mat-form-field>
-</div>
-<div>
-  <button (click)="create()" [disabled]="!isFormValid" mat-button mat-raised-button>Create</button>
-  <button mat-button mat-raised-button mat-dialog-close>Cancel</button>
-</div>
+    <mat-divider></mat-divider>
+    <h3>2. Choose Students Per Team</h3>
+    <mat-radio-group #rGroup
+                     formControlName="studentsPerTeam"
+                     fxLayoutGap="16px">
+      <mat-radio-button value="1" radioGroup="rGroup">
+        Only 1 student
+      </mat-radio-button>
+      <mat-radio-button value="3" radioGroup="rGroup">
+        1-3 students
+      </mat-radio-button>
+    </mat-radio-group>
+    <mat-divider></mat-divider>
+    <h3>3. Choose Start Date</h3>
+    <mat-form-field appearance="fill" fxFlexAlign="start">
+      <mat-label>Start date</mat-label>
+      <input matInput
+             [matDatepicker]="picker"
+             formControlName="startDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error>Start date is required</mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayoutAlign="end" fxLayoutGap="8px">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button type="submit"
+            mat-flat-button
+            color="primary" [disabled]="form.invalid">
+      Create Run
+    </button>
+  </mat-dialog-actions>
+</form>
