@@ -80,7 +80,8 @@ export class LibraryProjectDetailsComponent implements OnInit {
 
   runProject() {
     this.dialog.open(CreateRunDialogComponent, {
-      data: this.data
+      data: this.data,
+      panelClass: 'mat-dialog--md'
     });
   }
 }

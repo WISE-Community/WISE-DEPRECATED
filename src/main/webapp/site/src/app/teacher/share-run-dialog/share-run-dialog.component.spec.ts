@@ -1,14 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ShareRunDialogComponent } from './share-run-dialog.component';
 import { Observable } from "rxjs";
-import { MatDialogRef } from "@angular/material/dialog";
-import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { Project } from "../../domain/project";
 import { TeacherService } from "../teacher.service";
-import { BrowserAnimationsModule } from "../../../../../../../../node_modules/@angular/platform-browser/animations";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Run } from "../../domain/run";
-import { MatAutocompleteModule, MatButtonModule } from "@angular/material";
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatAutocompleteModule,
+  MatTableModule } from "@angular/material";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('ShareRunDialogComponent', () => {
@@ -48,16 +49,17 @@ describe('ShareRunDialogComponent', () => {
     const runObj = {
       id: 1,
       name: "Photosynthesis",
+      periods: ["1"],
+      numStudents: 4,
       owner: {
         id: 2,
         displayName: "Patrick Star"
       },
       sharedOwners: [{
         id: 4,
-        displayName: "Spongebob Squarepants",
-        firstName: "spongebob",
-        lastName: "squarepants",
-        permissions: [1,3]
+        firstName: "Spongebob",
+        lastName: "Squarepants",
+        runPermissions: [1,3]
       }],
       project: {
         id: 9,
@@ -67,16 +69,19 @@ describe('ShareRunDialogComponent', () => {
         },
         sharedOwners: [{
           id: 4,
-          displayName: "Spongebob Squarepants",
-          firstName: "spongebob",
-          lastName: "squarepants",
+          firstName: "Spongebob",
+          lastName: "Squarepants",
           permissions: [2]
         }]
       }
     };
     TestBed.configureTestingModule({
       declarations: [ ShareRunDialogComponent ],
-      imports: [ BrowserAnimationsModule, MatAutocompleteModule ],
+      imports: [
+        BrowserAnimationsModule,
+        MatAutocompleteModule,
+        MatTableModule
+      ],
       providers: [
         { provide: TeacherService, useValue: teacherServiceStub },
         { provide: MatDialogRef, useValue: {} },

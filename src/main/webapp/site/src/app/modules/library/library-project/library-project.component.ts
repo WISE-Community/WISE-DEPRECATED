@@ -38,7 +38,7 @@ export class LibraryProjectComponent implements OnInit {
     this.dialog.open(LibraryProjectDetailsComponent, {
       ariaLabel: 'Project Details',
       data: { project: project },
-      panelClass: 'mat-dialog-container--md'
+      panelClass: 'mat-dialog--md'
     });
   }
 }

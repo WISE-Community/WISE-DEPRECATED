@@ -22,6 +22,16 @@
   }
 }
 
+.mat-form-field--longhint {
+  .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+
+  .mat-form-field-subscript-wrapper {
+    position: relative;
+  }
+}
+
 .mat-icon-button.input-control--appearance-fill {
   margin: 6px 0 6px 4px;
 }
@@ -36,4 +46,3 @@
     white-space: normal;
   }
 }
-

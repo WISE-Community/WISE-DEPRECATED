@@ -13,8 +13,8 @@ import { FormsModule } from '@angular/forms';
 import {
   MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
   MatDatepickerModule, MatDialogModule, MatDividerModule, MatIconModule,
-  MatMenuModule, MatNativeDateModule, MatRadioModule, MatTabsModule,
-  MatTooltipModule
+  MatMenuModule, MatNativeDateModule, MatRadioModule, MatTableModule,
+  MatTabsModule, MatTooltipModule
 } from '@angular/material';
 import { RunMenuComponent } from './run-menu/run-menu.component';
 import { CreateRunDialogComponent } from './create-run-dialog/create-run-dialog.component';
@@ -38,6 +38,7 @@ const materialModules = [
   MatNativeDateModule,
   MatRadioModule,
   MatTabsModule,
+  MatTableModule,
   MatTooltipModule
 ];
 @NgModule({

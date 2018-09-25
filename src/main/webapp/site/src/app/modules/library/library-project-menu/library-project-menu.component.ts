@@ -58,7 +58,8 @@ export class LibraryProjectMenuComponent implements OnInit {
 
   shareProject() {
     this.dialog.open(ShareProjectDialogComponent, {
-      data: { project: this.project }
+      data: { project: this.project },
+      panelClass: 'mat-dialog--md'
     });
   }
 }
