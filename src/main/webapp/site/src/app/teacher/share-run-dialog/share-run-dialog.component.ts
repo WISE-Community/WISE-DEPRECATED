@@ -51,7 +51,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
 
   addRunPermissions(sharedOwner) {
     this.setDefaultRunPermissions(sharedOwner);
-    for (let permission of sharedOwner.runPermissions) {
+    for (let permission of sharedOwner.permissions) {
       sharedOwner.runPermissions[permission] = true;
     }
   }
