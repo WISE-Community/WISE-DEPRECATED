@@ -27,6 +27,12 @@
     color: map-get($colors, primary);
   }
 
+  form {
+    h1, h2, h3 {
+      font-weight: 500;
+    }
+  }
+
   .app-background {
     background-color: map-get($colors, control-bg);
   }

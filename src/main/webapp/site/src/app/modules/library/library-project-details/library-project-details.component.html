@@ -49,7 +49,7 @@
      fxLayout.xs="column"
      fxLayoutAlign="end"
      fxLayoutGap="8px">
-  <button mat-button cdk-focus-start (click)="onClose()">
+  <button mat-button cdkFocusRegionstart (click)="onClose()">
     Close
   </button>
   <button *ngIf="isTeacher && !isRunProject"
