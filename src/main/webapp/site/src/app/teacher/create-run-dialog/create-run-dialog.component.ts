@@ -13,7 +13,6 @@ import { TeacherService } from "../teacher.service";
 })
 export class CreateRunDialogComponent {
 
-  isFormValid: boolean;
   form: FormGroup;
   project: Project;
   periodsGroup: FormArray;
@@ -27,7 +26,6 @@ export class CreateRunDialogComponent {
               @Inject(MAT_DIALOG_DATA) public data: any,
               private teacherService: TeacherService,
               private fb: FormBuilder) {
-    this.isFormValid = false;
     this.project = data.project;
     this.studentsPerTeam = 3;
     this.startDate = new Date();
@@ -57,24 +55,21 @@ export class CreateRunDialogComponent {
   }
 
   setPeriodOptions() {
-    for(let i = 1; i < 9; i++) {
+    for (let i = 1; i < 9; i++) {
       this.periodOptions.push(i.toString());
     }
   }
 
   mapPeriods(items: any[]): string[] {
-    let selectedPeriods = items.filter((item) => item.checkbox).map((item) => item.name);
-    return selectedPeriods.length ? selectedPeriods : null;
+    const selectedPeriods = items.filter((item) => item.checkbox).map((item) => item.name);
+    return selectedPeriods.length ? selectedPeriods : [];
   }
 
   create() {
     const combinedPeriods = this.getPeriodsString();
-    if (combinedPeriods == "") {
-      alert("Error: You must select at least one period");
-    } else {
-      const startDate = this.form.controls['startDate'].value.getTime();
-      const studentsPerTeam = this.form.controls['studentsPerTeam'].value;
-      this.teacherService.createRun(
+    const startDate = this.form.controls['startDate'].value.getTime();
+    const studentsPerTeam = this.form.controls['studentsPerTeam'].value;
+    this.teacherService.createRun(
         this.project.id, combinedPeriods, studentsPerTeam, startDate)
         .subscribe((newRun: Run) => {
           const run = new Run(newRun);
@@ -82,32 +77,18 @@ export class CreateRunDialogComponent {
           this.teacherService.setTabIndex(0);
           this.dialog.closeAll();
         });
-    }
   }
 
   getPeriodsString(): string {
-    let periods = this.mapPeriods(this.periodsGroup.value);
-    let customPeriods = this.customPeriods.value.split(',');
+    const periods = this.mapPeriods(this.periodsGroup.value);
+    const customPeriods = this.customPeriods.value.split(',');
     for (let i = 0; i < customPeriods.length; i++) {
       customPeriods[i] = customPeriods[i].trim();
     }
-    if (periods) {
+    if (periods.length > 0) {
       return periods.toString() + ',' + customPeriods.toString();
     } else {
       return customPeriods.toString();
     }
-    // let allPeriods = "";
-    // for (let period of [1, 2, 3, 4, 5, 6, 7, 8]) {
-    //   if (this.periods[period]) {
-    //     if (allPeriods != "") {
-    //       allPeriods += ",";
-    //     }
-    //     allPeriods += period;
-    //   }
-    // }
-    // if (this.customPeriods != "") {
-    //   allPeriods += "," + this.customPeriods;
-    // }
-    // return allPeriods;
   }
 }
