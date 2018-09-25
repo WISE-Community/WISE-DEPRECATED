@@ -34,6 +34,7 @@ import { OfficialLibraryComponent } from './official-library/official-library.co
 import { CommunityLibraryComponent } from './community-library/community-library.component';
 import { PersonalLibraryComponent } from './personal-library/personal-library.component';
 import { ShareProjectDialogComponent } from './share-project-dialog/share-project-dialog.component';
+import { CopyProjectDialogComponent } from './copy-project-dialog/copy-project-dialog.component';
 
 const materialModules = [
   MatAutocompleteModule,
@@ -75,9 +76,11 @@ const materialModules = [
     OfficialLibraryComponent,
     CommunityLibraryComponent,
     PersonalLibraryComponent,
-    ShareProjectDialogComponent
+    ShareProjectDialogComponent,
+    CopyProjectDialogComponent
   ],
   entryComponents: [
+    CopyProjectDialogComponent,
     LibraryProjectDetailsComponent,
     ShareProjectDialogComponent
   ],

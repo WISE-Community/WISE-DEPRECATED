@@ -1,0 +1,29 @@
+<p class="copy-confirmation-message">
+  This will create a new copy of this project that will show up in the “My Units” section of the project library. You will be the owner of this project and can edit it.
+</p>
+<p class="copy-confirmation-message">
+  Are you sure you want to copy this project?
+</p>
+<p class="copy-confirmation-message">
+  Name: {{data.project.name}}<br/>
+  Unit ID: {{data.project.id}}
+</p>
+<div class="buttons-div">
+  <button mat-button
+          mat-raised-button
+          color="primary"
+          class="button"
+          (click)="copy()"
+          [disabled]="isCopying">
+    <span *ngIf="!isCopying">Copy</span>
+    <span *ngIf="isCopying">Copying...</span>
+  </button>
+  <div class="buttons-spacer"></div>
+  <button mat-button
+          mat-raised-button
+          color="primary"
+          (click)="cancel()"
+          class="button">
+    Cancel
+  </button>
+</div>
