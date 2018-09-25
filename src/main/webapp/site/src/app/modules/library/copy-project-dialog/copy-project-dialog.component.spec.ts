@@ -48,6 +48,12 @@ describe('CopyProjectDialogComponent', () => {
     setTabIndex() {
 
     },
+    copyProject(): Observable<Project> {
+      return Observable.create(observer => {
+        observer.next(projectObj);
+        observer.complete();
+      });
+    },
     libraryGroupsSource$: fakeAsyncResponse({}),
     officialLibraryProjectsSource$: fakeAsyncResponse([]),
     communityLibraryProjectsSource$: fakeAsyncResponse([]),
@@ -73,13 +79,35 @@ describe('CopyProjectDialogComponent', () => {
     sharedOwners: []
   };
 
+  const getCopyButton = () => {
+    const buttons =  fixture.debugElement.nativeElement.querySelectorAll('button');
+    return buttons[0];
+  }
+
+  const getCancelButton = () => {
+    const buttons =  fixture.debugElement.nativeElement.querySelectorAll('button');
+    return buttons[1];
+  }
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ CopyProjectDialogComponent ],
       providers: [
         { provide: LibraryService, useValue: libraryServiceStub },
         { provide: MatDialog, useValue: {} },
-        { provide: MatDialogRef, useValue: {} },
+        {
+          provide: MatDialogRef, useValue: {
+            afterClosed: () => {
+              return Observable.create(observer => {
+                observer.next({});
+                observer.complete();
+              })
+            },
+            close: () => {
+
+            }
+          }
+        },
         { provide: MAT_DIALOG_DATA, useValue: {
             project: projectObj
           }
@@ -97,5 +125,22 @@ describe('CopyProjectDialogComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should click the submit button and disable it', async() => {
+    const copyButton = getCopyButton();
+    copyButton.click();
+    fixture.detectChanges();
+    expect(component.isCopying).toBe(true);
+    expect(copyButton.disabled).toBe(true);
+    expect(copyButton.querySelector('span').innerHTML).toBe('Copying...');
+  });
+
+  it('should click the cancel button and close the dialog', async() => {
+    const cancelButton = getCancelButton();
+    const dialogRefCloseSpy = spyOn(fixture.debugElement.injector.get(MatDialogRef), 'close');
+    cancelButton.click();
+    fixture.detectChanges();
+    expect(dialogRefCloseSpy).toHaveBeenCalled();
   });
 });
