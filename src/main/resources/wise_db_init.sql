@@ -608,7 +608,7 @@ create table user_details (
     credentials_not_expired bit not null,
     email_address varchar(255),
     enabled bit not null,
-    googleUserId varchar(255) NULL;
+    googleUserId varchar(255) null, 
     language varchar(255),
     recent_number_of_failed_login_attempts integer,
     password varchar(255) not null,
