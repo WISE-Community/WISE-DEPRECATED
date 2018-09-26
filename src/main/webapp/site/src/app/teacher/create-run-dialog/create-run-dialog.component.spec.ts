@@ -4,18 +4,16 @@ import { CreateRunDialogComponent } from "./create-run-dialog.component";
 import { MatDialogRef } from "@angular/material/dialog";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import {
-  MatCheckboxModule, MatDatepickerModule, MatDialogModule,
-  MatDividerModule, MatNativeDateModule, MatRadioModule
+  MatCheckboxModule, MatDialogModule, MatRadioModule
 } from "@angular/material";
-import { SharedModule } from "../../modules/shared/shared.module";
 import {
   FormArray, FormControl,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule
 } from "@angular/forms";
-import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { Project } from "../../domain/project";
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('CreateRunDialogComponent', () => {
   let component: CreateRunDialogComponent;
@@ -23,23 +21,19 @@ describe('CreateRunDialogComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        SharedModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatCheckboxModule,
-        MatDatepickerModule,
+        HttpClientTestingModule,
         MatDialogModule,
-        MatDividerModule,
-        MatNativeDateModule,
+        ReactiveFormsModule,
         MatRadioModule,
-        NoopAnimationsModule
+        MatCheckboxModule
       ],
       declarations: [ CreateRunDialogComponent ],
       providers: [
-        {provide: TeacherService},
+        TeacherService,
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: [] }
-        ]
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
       .compileComponents();
   }));
