@@ -13,12 +13,8 @@ describe('LibraryFiltersComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule ],
-      declarations: [
-        LibraryFiltersComponent
-      ],
-      providers: [
-        LibraryService
-      ],
+      declarations: [ LibraryFiltersComponent ],
+      providers: [ LibraryService ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
       .compileComponents();
