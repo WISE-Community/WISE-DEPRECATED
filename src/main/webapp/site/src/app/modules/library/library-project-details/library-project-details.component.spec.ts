@@ -1,14 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Input } from '@angular/core';
-import { defer, Observable } from "rxjs";
+import { Observable } from "rxjs";
+import { MatDialog } from "@angular/material/dialog";
 import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatDialogModule, MatIconModule, MatTooltipModule } from '@angular/material';
 import { LibraryProjectDetailsComponent } from './library-project-details.component';
-import { LibraryService } from "../../../services/library.service";
 import { UserService } from "../../../services/user.service";
 import { Project } from "../../../domain/project";
 import { NGSSStandards } from "../ngssStandards";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { LibraryService } from "../../../services/library.service";
 
 @Component({ selector: 'app-library-project-menu', template: '' })
 export class LibraryProjectMenuStubComponent {
@@ -16,32 +17,40 @@ export class LibraryProjectMenuStubComponent {
   project: Project;
 }
 
+export class MockMatDialog {
+
+}
+
+export class MockLibraryService {
+
+}
+
+export class MockUserService {
+  isTeacher(): Observable<boolean> {
+    const isTeacher: boolean = true;
+    return Observable.create( observer => {
+      observer.next(isTeacher);
+      observer.complete();
+    });
+  }
+}
+
 describe('LibraryProjectDetailsComponent', () => {
   let component: LibraryProjectDetailsComponent;
   let fixture: ComponentFixture<LibraryProjectDetailsComponent>;
 
   beforeEach(async(() => {
-    let userServiceStub = {
-      isTeacher(): Observable<boolean> {
-        const isTeacher: boolean = true;
-        return Observable.create( observer => {
-          observer.next(isTeacher);
-          observer.complete();
-        });
-      }
-    };
-
     TestBed.configureTestingModule({
-      declarations: [
-        LibraryProjectDetailsComponent, LibraryProjectMenuStubComponent
-      ],
-      imports: [ MatDialogModule, MatIconModule, MatTooltipModule ],
+      declarations: [ LibraryProjectDetailsComponent ],
+      imports: [ ],
       providers: [
-        { provide: LibraryService },
-        { provide: UserService, useValue: userServiceStub },
+        { provide: LibraryService, useClass: MockLibraryService },
+        { provide: UserService, useClass: MockUserService },
         { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: [] }
-      ]
+        { provide: MAT_DIALOG_DATA, useValue: [] },
+        { provide: MatDialog, useClass: MockMatDialog }
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
