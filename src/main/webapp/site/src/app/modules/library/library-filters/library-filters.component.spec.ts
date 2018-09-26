@@ -4,7 +4,16 @@ import { LibraryService } from "../../../services/library.service";
 import sampleLibraryProjects from "../sampleLibraryProjects";
 import { SimpleChange, NO_ERRORS_SCHEMA } from '@angular/core';
 import { LibraryProject } from "../libraryProject";
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
+import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
+
+export class MockLibraryService {
+  public officialLibraryProjectsSource$ = fakeAsyncResponse([]);
+  public communityLibraryProjectsSource$ = fakeAsyncResponse([]);
+  filterOptions(projectFilterOptions: ProjectFilterOptions) {
+
+  }
+}
 
 describe('LibraryFiltersComponent', () => {
   let component: LibraryFiltersComponent;
@@ -12,9 +21,9 @@ describe('LibraryFiltersComponent', () => {
   let projects: LibraryProject[];
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
+      imports: [ ],
       declarations: [ LibraryFiltersComponent ],
-      providers: [ LibraryService ],
+      providers: [ { provide: LibraryService, useClass: MockLibraryService } ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
       .compileComponents();

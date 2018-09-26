@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TeacherService } from "../teacher.service";
 import { CreateRunDialogComponent } from "./create-run-dialog.component";
-import { MatDialogRef } from "@angular/material/dialog";
+import { MatDialogRef, MatDialog } from "@angular/material/dialog";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 import {
-  MatCheckboxModule, MatDialogModule, MatRadioModule
+  MatCheckboxModule, MatRadioModule
 } from "@angular/material";
 import {
   FormArray, FormControl,
@@ -12,8 +12,11 @@ import {
   ReactiveFormsModule
 } from "@angular/forms";
 import { Project } from "../../domain/project";
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+
+export class MockTeacherService {
+
+}
 
 describe('CreateRunDialogComponent', () => {
   let component: CreateRunDialogComponent;
@@ -21,17 +24,16 @@ describe('CreateRunDialogComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule,
-        MatDialogModule,
         ReactiveFormsModule,
         MatRadioModule,
         MatCheckboxModule
       ],
       declarations: [ CreateRunDialogComponent ],
       providers: [
-        TeacherService,
+        { provide: TeacherService, useClass: MockTeacherService },
         { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: [] }
+        { provide: MAT_DIALOG_DATA, useValue: [] },
+        { provide: MatDialog, useValue: {} }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
