@@ -3,6 +3,7 @@
   "match.addTargetBucket": "Add Target Bucket",
   "match.areYouSureYouWantToDeleteThisBucket": "Are you sure you want to delete this bucket?",
   "match.areYouSureYouWantToDeleteThisChoice": "Are you sure you want to delete this choice?",
+  "match.canStudentCreateChoices": "Can Student Create Choices",
   "match.choiceName": "Choice Name",
   "match.choices": "Choices",
   "match.choicesNeedToBeOrderedWithinBuckets": "Choices need to be ordered within buckets",
@@ -10,6 +11,7 @@
   "match.correctBucketButWrongPosition": "Correct bucket but wrong position",
   "match.deleteBucket": "Delete Bucket",
   "match.deleteChoice": "Delete Choice",
+  "match.enterChoiceText": "Enter Choice Text",
   "match.incorrectPositionFeedback": "Incorrect Position Feedback",
   "match.position": "Position",
   "match.showPrivateNotesAsChoices": "Show Private Notes As Choices",
@@ -18,5 +20,6 @@
   "match.targetBucketName": "Target Bucket Name",
   "match.targetBuckets": "Target Buckets",
   "match.thereAreNoChoices": "There are no choices. Click the \"Add Choice\" button to add a choice.",
-  "match.thereAreNoTargetBuckets": "There are no target buckets. Click the \"Add Target Bucket\" button to add a bucket."
+  "match.thereAreNoTargetBuckets": "There are no target buckets. Click the \"Add Target Bucket\" button to add a bucket.",
+  "match.typeSomething": "Type Something"
 }

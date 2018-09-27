@@ -7,6 +7,13 @@
       </div>
       <div>
         <md-checkbox class='md-primary'
+                     ng-model='matchController.authoringComponentContent.canCreateChoices'
+                     ng-change='matchController.authoringViewComponentChanged()'>
+          {{ 'match.canStudentCreateChoices' | translate }}
+        </md-checkbox>
+      </div>
+      <div>
+        <md-checkbox class='md-primary'
                      ng-model='matchController.authoringComponentContent.horizontal'
                      ng-change='matchController.authoringViewComponentChanged()'>
           {{ 'match.showSourceBucketOnTheLeftAndTargetBucketsOnTheRight' | translate }}

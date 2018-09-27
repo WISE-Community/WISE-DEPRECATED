@@ -41,6 +41,7 @@ class MatchController extends ComponentController {
     this.sourceBucketId = '0';
     this.hasCorrectAnswer = false;
     this.isLatestComponentStateSubmit = false;
+    this.sourceBucket = null;
 
     this.privateNotebookItems = [];
 
@@ -229,13 +230,16 @@ class MatchController extends ComponentController {
         for (let currentChoice of componentStateBucket.items) {
           const currentChoiceId = currentChoice.id;
           const currentChoiceLocation = choiceIds.indexOf(currentChoiceId);
+          const bucket = this.getBucketById(componentStateBucketId);
           if (currentChoiceLocation > -1) {
             // choice is valid and used by student in a valid bucket, so add it to that bucket
-            const bucket = this.getBucketById(componentStateBucketId);
-            // content for choice with this id may have change, so get updated content
+
+            // content for choice with this id may have changed, so get updated content
             const updatedChoice = this.getChoiceById(currentChoiceId);
             bucket.items.push(updatedChoice);
             choiceIds.splice(currentChoiceLocation, 1);
+          } else {
+            bucket.items.push(currentChoice);
           }
         }
       }
@@ -408,16 +412,16 @@ class MatchController extends ComponentController {
     this.setNumChoiceColumns();
     this.setChoiceStyle();
     this.setBucketStyle();
-    const sourceBucket = {
+    this.sourceBucket = {
       id: this.sourceBucketId,
       value: this.componentContent.choicesLabel ? this.componentContent.choicesLabel : this.$translate('match.choices'),
       type: 'bucket',
       items: []
     };
     for (let choice of this.getChoices()) {
-      sourceBucket.items.push(choice);
+      this.sourceBucket.items.push(choice);
     }
-    this.buckets.push(sourceBucket);
+    this.buckets.push(this.sourceBucket);
     for (let bucket of this.componentContent.buckets) {
       bucket.items = [];
       this.buckets.push(bucket);
@@ -921,6 +925,41 @@ class MatchController extends ComponentController {
       ids.push(object.id);
     }
     return ids;
+  }
+
+  addChoice() {
+    const confirm = this.$mdDialog.prompt()
+        .title(this.$translate('match.enterChoiceText'))
+        .placeholder(this.$translate('match.typeSomething'))
+        .cancel(this.$translate('CANCEL'))
+        .ok(this.$translate('OK'));
+    this.$mdDialog.show(confirm).then((result) => {
+      if (result != null && result != '') {
+        var newChoice = {};
+        newChoice.id = this.UtilService.generateKey(10);
+        newChoice.value = result;
+        newChoice.type = 'choice';
+        newChoice.studentCreated = true;
+        this.sourceBucket.items.push(newChoice);
+        this.studentDataChanged();
+      }
+    });
+  }
+
+  deleteChoice(choice) {
+    if (confirm(this.$translate('match.areYouSureYouWantToDeleteThisChoice'))) {
+      let buckets = this.getBuckets();
+      for (let bucket of buckets) {
+        let items = bucket.items;
+        for (let i = 0; i < items.length; i++) {
+          let item = items[i];
+          if (item.id == choice.id) {
+            items.splice(i, 1);
+          }
+        }
+      }
+      this.studentDataChanged();
+    }
   }
 }
 
