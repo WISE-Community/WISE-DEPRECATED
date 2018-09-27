@@ -1,8 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-
 import { RegisterHomeComponent } from './register-home.component';
-import { SharedModule } from "../../modules/shared/shared.module";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('RegisterHomeComponent', () => {
   let component: RegisterHomeComponent;
@@ -11,7 +9,8 @@ describe('RegisterHomeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ RegisterHomeComponent ],
-      imports: [ SharedModule, RouterTestingModule ]
+      imports: [],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

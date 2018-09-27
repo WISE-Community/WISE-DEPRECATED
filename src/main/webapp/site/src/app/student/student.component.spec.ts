@@ -1,10 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { APP_BASE_HREF } from '@angular/common';
 import { StudentComponent } from './student.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-
-import { StudentModule } from "./student.module";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('StudentComponent', () => {
   let component: StudentComponent;
@@ -13,12 +11,10 @@ describe('StudentComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule.withRoutes([]) ],
-      providers: [
-        { provide: APP_BASE_HREF, useValue : '/' }
-      ],
-      declarations: [ StudentComponent ]
+      imports: [ RouterTestingModule ],
+      providers: [],
+      declarations: [ StudentComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

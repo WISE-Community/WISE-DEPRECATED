@@ -1,38 +1,34 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TeacherRunListItemComponent } from './teacher-run-list-item.component';
 import { Project} from "../../domain/project";
 import { TeacherService } from "../teacher.service";
 import { TeacherRun } from "../teacher-run";
-import { MatCardModule, MatIconModule, MatTooltipModule } from "@angular/material";
-import { MomentModule } from "ngx-moment";
-import { Component, Input } from "@angular/core";
 import { ConfigService } from "../../services/config.service";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
-@Component({ selector: 'app-run-menu', template: '' })
-export class RunMenuStubComponent {
+export class MockTeacherService {
 
-  @Input()
-  run: TeacherRun;
+}
+
+export class MockConfigService {
+  getContextPath(): string {
+    return '/wise';
+  }
 }
 
 describe('TeacherRunListItemComponent', () => {
-  const configServiceStub = {
-    getContextPath(): string {
-      return '/wise';
-    }
-  };
   let component: TeacherRunListItemComponent;
   let fixture: ComponentFixture<TeacherRunListItemComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TeacherRunListItemComponent, RunMenuStubComponent ],
-      imports: [ MatCardModule, MatIconModule, MatTooltipModule, MomentModule ],
+      declarations: [ TeacherRunListItemComponent ],
+      imports: [],
       providers: [
-        { provide: TeacherService },
-        { provide: ConfigService, useValue: configServiceStub }
-      ]
+        { provide: TeacherService, useClass: MockTeacherService },
+        { provide: ConfigService, useClass: MockConfigService }
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

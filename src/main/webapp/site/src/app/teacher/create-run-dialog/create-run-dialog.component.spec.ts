@@ -3,14 +3,8 @@ import { TeacherService } from "../teacher.service";
 import { CreateRunDialogComponent } from "./create-run-dialog.component";
 import { MatDialogRef, MatDialog } from "@angular/material/dialog";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
-import {
-  MatCheckboxModule, MatRadioModule
-} from "@angular/material";
-import {
-  FormArray, FormControl,
-  FormGroup,
-  ReactiveFormsModule
-} from "@angular/forms";
+import { MatCheckboxModule, MatRadioModule } from "@angular/material";
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { Project } from "../../domain/project";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
@@ -37,7 +31,7 @@ describe('CreateRunDialogComponent', () => {
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {

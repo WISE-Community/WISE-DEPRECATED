@@ -1,8 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CallToActionComponent } from './call-to-action.component';
-import { SharedModule } from "../shared.module";
-import { RouterTestingModule } from "@angular/router/testing";
-import { MatIconModule } from "@angular/material";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('CallToActionComponent', () => {
   let component: CallToActionComponent;
@@ -11,10 +9,8 @@ describe('CallToActionComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ CallToActionComponent ],
-      imports: [
-        RouterTestingModule.withRoutes([]),
-        MatIconModule
-      ]
+      imports: [],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

@@ -1,5 +1,4 @@
 import { TestBed, async } from '@angular/core/testing';
-import { APP_BASE_HREF } from '@angular/common';
 import { AppComponent } from './app.component';
 import { Component } from "@angular/core";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -11,7 +10,7 @@ class RouterOutletStubComponent { }
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [ { provide: APP_BASE_HREF, useValue : '/' } ],
+      providers: [],
       declarations: [ AppComponent ],
       imports: [ RouterTestingModule ],
       schemas: [ NO_ERRORS_SCHEMA ]

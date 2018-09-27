@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { StudentEditProfileComponent } from './student-edit-profile.component';
-import { StudentModule } from "../student.module";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('StudentEditProfileComponent', () => {
   let component: StudentEditProfileComponent;
@@ -10,7 +9,8 @@ describe('StudentEditProfileComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ StudentEditProfileComponent ],
-      imports: [ ]
+      imports: [],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

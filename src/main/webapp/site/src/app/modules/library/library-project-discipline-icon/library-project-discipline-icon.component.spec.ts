@@ -1,9 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LibraryProjectDisciplineIconComponent } from './library-project-discipline-icon.component';
 import { LibraryProject } from "../libraryProject";
-import { LibraryModule } from "../library.module";
-import { MatFormFieldModule, MatTooltipModule } from "@angular/material";
-import { FormsModule } from "@angular/forms";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('LibraryProjectDisciplineIconComponent', () => {
   let component: LibraryProjectDisciplineIconComponent;
@@ -12,7 +10,8 @@ describe('LibraryProjectDisciplineIconComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ LibraryProjectDisciplineIconComponent ],
-      imports: [ MatFormFieldModule, FormsModule, MatTooltipModule ]
+      imports: [],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

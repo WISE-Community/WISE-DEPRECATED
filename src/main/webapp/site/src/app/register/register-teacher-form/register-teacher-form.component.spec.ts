@@ -1,55 +1,50 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { Component } from '@angular/core';
 import { RegisterTeacherFormComponent } from './register-teacher-form.component';
 import { RouterTestingModule } from "@angular/router/testing";
 import { TeacherService } from "../../teacher/teacher.service";
-import { Observable } from "rxjs";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { User } from "../../domain/user";
 import { UserService } from '../../services/user.service';
 import { ReactiveFormsModule } from "@angular/forms";
 import {
-  MatCardModule,
   MatCheckboxModule,
-  MatFormFieldModule, MatInputModule,
+  MatInputModule,
   MatSelectModule
 } from "@angular/material";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+
+
+export class MockTeacherService {
+
+}
+
+export class MockUserService {
+
+}
+
+@Component({selector: 'mat-card', template: ''})
+class MatCardComponent {}
 
 describe('RegisterTeacherFormComponent', () => {
   let component: RegisterTeacherFormComponent;
   let fixture: ComponentFixture<RegisterTeacherFormComponent>;
 
   beforeEach(async(() => {
-    const userServiceStub = {
-      getUser(): Observable<User[]> {
-        const user: User = new User();
-        user.firstName = 'Demo';
-        user.lastName = 'Teacher';
-        user.role = 'teacher';
-        user.userName = 'DemoTeacher';
-        user.id = 123456;
-        return Observable.create( observer => {
-          observer.next(user);
-          observer.complete();
-        });
-      }
-    };
     TestBed.configureTestingModule({
       declarations: [ RegisterTeacherFormComponent ],
       imports: [
         BrowserAnimationsModule,
         RouterTestingModule,
         ReactiveFormsModule,
-        MatFormFieldModule,
-        MatSelectModule,
         MatCheckboxModule,
-        MatCardModule,
+        MatSelectModule,
         MatInputModule
       ],
       providers: [
-        { provide: TeacherService },
-        { provide: UserService, useValue: userServiceStub }
-      ]
+        { provide: TeacherService, useClass: MockTeacherService },
+        { provide: UserService, useClass: MockUserService }
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

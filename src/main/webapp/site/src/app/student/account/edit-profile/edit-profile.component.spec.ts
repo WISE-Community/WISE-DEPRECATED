@@ -1,57 +1,56 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { EditProfileComponent } from './edit-profile.component';
 import { User } from "../../../domain/user";
-import { Observable, BehaviorSubject } from '../../../../../../../../../node_modules/rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { UserService } from "../../../services/user.service";
-import { BrowserAnimationsModule } from '../../../../../../../../../node_modules/@angular/platform-browser/animations';
-import { ReactiveFormsModule } from '../../../../../../../../../node_modules/@angular/forms';
-import { MatFormFieldModule, MatSelectModule, MatCheckboxModule, MatCardModule, MatInputModule } from '../../../../../../../../../node_modules/@angular/material';
-import { RouterTestingModule } from '../../../../../../../../../node_modules/@angular/router/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatSelectModule, MatInputModule } from '@angular/material';
 import { StudentService } from "../../student.service";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+
+export class MockStudentService {
+
+}
+
+export class MockUserService {
+  getUser(): BehaviorSubject<User> {
+    const user: User = new User();
+    user.firstName = 'Demo';
+    user.lastName = 'Teacher';
+    user.role = 'teacher';
+    user.userName = 'DemoTeacher';
+    user.id = 123456;
+    const userBehaviorSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+    userBehaviorSubject.next(user);
+    return userBehaviorSubject;
+  }
+  getLanguages() {
+    return Observable.create( observer => {
+      observer.next([]);
+      observer.complete();
+    });
+  }
+}
 
 describe('EditProfileComponent', () => {
   let component: EditProfileComponent;
   let fixture: ComponentFixture<EditProfileComponent>;
 
   beforeEach(async(() => {
-    let studentServiceStub = {
-    };
-    const userServiceStub = {
-      getUser(): BehaviorSubject<User> {
-        const user: User = new User();
-        user.firstName = 'Demo';
-        user.lastName = 'Teacher';
-        user.role = 'teacher';
-        user.userName = 'DemoTeacher';
-        user.id = 123456;
-        const userBehaviorSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-        userBehaviorSubject.next(user);
-        return userBehaviorSubject;
-      },
-      getLanguages() {
-        return Observable.create( observer => {
-          observer.next([]);
-          observer.complete();
-        });
-      }
-    };
     TestBed.configureTestingModule({
       declarations: [ EditProfileComponent ],
       imports: [
         BrowserAnimationsModule,
-        RouterTestingModule,
         ReactiveFormsModule,
-        MatFormFieldModule,
         MatSelectModule,
-        MatCheckboxModule,
-        MatCardModule,
         MatInputModule
       ],
       providers: [
-        { provide: StudentService, useValue: studentServiceStub },
-        { provide: UserService, useValue: userServiceStub }
-      ]
+        { provide: StudentService, useClass: MockStudentService },
+        { provide: UserService, useClass: MockUserService }
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

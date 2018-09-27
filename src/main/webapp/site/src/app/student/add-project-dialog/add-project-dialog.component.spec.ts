@@ -1,17 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AddProjectDialogComponent } from './add-project-dialog.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { StudentModule } from "../student.module";
 import { MatDialogRef } from "@angular/material/dialog";
-import { Observable } from "rxjs";
 import { StudentService } from "../student.service";
-import { StudentRun } from "../student-run";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
-  MatError,
-  MatFormFieldModule, MatInputModule,
+  MatInputModule,
   MatSelectModule
 } from "@angular/material";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+
+export class MockStudentService {
+
+}
 
 describe('AddProjectDialogComponent', () => {
   let component: AddProjectDialogComponent;
@@ -20,11 +20,12 @@ describe('AddProjectDialogComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AddProjectDialogComponent ],
-      imports: [ BrowserAnimationsModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatInputModule ],
+      imports: [ BrowserAnimationsModule, MatSelectModule, MatInputModule ],
       providers: [
-        { provide: MatDialogRef, useValue: {} },
-        { provide: StudentService }
-      ]
+        { provide: StudentService, useClass: MockStudentService },
+        { provide: MatDialogRef, useValue: {} }
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

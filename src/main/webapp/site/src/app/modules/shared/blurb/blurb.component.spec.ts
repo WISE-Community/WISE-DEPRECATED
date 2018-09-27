@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BlurbComponent } from './blurb.component';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('BlurbComponent', () => {
   let component: BlurbComponent;
@@ -8,7 +9,8 @@ describe('BlurbComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ BlurbComponent ],
-      imports: [ ]
+      imports: [],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

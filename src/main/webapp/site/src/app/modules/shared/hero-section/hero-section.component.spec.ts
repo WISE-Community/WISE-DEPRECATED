@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HeroSectionComponent } from './hero-section.component';
-import { SharedModule } from "../shared.module";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('HeroSectionComponent', () => {
   let component: HeroSectionComponent;
@@ -9,7 +9,8 @@ describe('HeroSectionComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ HeroSectionComponent ],
-      imports: [ ]
+      imports: [ ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

@@ -2,63 +2,57 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RunMenuComponent } from "./run-menu.component";
 import { TeacherService } from "../teacher.service";
 import { Project } from "../../domain/project";
-import { FormsModule } from "@angular/forms";
 import { BehaviorSubject, Observable } from 'rxjs';
-import {
-  MatDialog,
-  MatDividerModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatMenuModule
-} from "@angular/material";
+import { MatDialog, MatMenuModule } from "@angular/material";
 import { ConfigService } from "../../services/config.service";
 import { UserService } from "../../services/user.service";
 import { User } from "../../domain/user";
 import { TeacherRun } from "../teacher-run";
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+
+export class MockTeacherService {
+
+}
+
+export class MockUserService {
+  getUser(): BehaviorSubject<User> {
+    const user: User = new User();
+    user.firstName = 'Demo';
+    user.lastName = 'Teacher';
+    user.role = 'teacher';
+    user.userName = 'DemoTeacher';
+    user.id = 123456;
+    return Observable.create(observer => {
+      observer.next(user);
+      observer.complete();
+    });
+  }
+  getUserId() {
+    return 123456;
+  }
+}
+
+export class MockConfigService {
+  getContextPath(): string {
+    return '/wise';
+  }
+}
 
 describe('RunMenuComponent', () => {
-  const configServiceStub = {
-    getContextPath(): string {
-      return '/wise';
-    }
-  };
   let component: RunMenuComponent;
   let fixture: ComponentFixture<RunMenuComponent>;
 
   beforeEach(async(() => {
-    let userServiceStub = {
-      getUser(): BehaviorSubject<User> {
-        const user: User = new User();
-        user.firstName = 'Demo';
-        user.lastName = 'Teacher';
-        user.role = 'teacher';
-        user.userName = 'DemoTeacher';
-        user.id = 123456;
-        return Observable.create(observer => {
-          observer.next(user);
-          observer.complete();
-        });
-      },
-      getUserId() {
-        return 123456;
-      }
-    };
-
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        MatDividerModule,
-        MatFormFieldModule,
-        MatMenuModule,
-        MatIconModule
-      ],
+      imports: [ MatMenuModule ],
       declarations: [ RunMenuComponent ],
       providers: [
-        { provide: TeacherService },
-        { provide: MatDialog },
-        { provide: UserService, useValue: userServiceStub },
-        { provide: ConfigService, useValue: configServiceStub }
-      ]
+        { provide: TeacherService, useClass: MockTeacherService },
+        { provide: UserService, useClass: MockUserService },
+        { provide: ConfigService, useClass: MockConfigService },
+        { provide: MatDialog, useValue: {} }
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

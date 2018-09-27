@@ -5,6 +5,7 @@ import { LibraryService } from "../../../services/library.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 export class MockLibraryService {
+  implementationModelOptions = [];
   communityLibraryProjectsSource$ = fakeAsyncResponse([]);
   projectFilterOptionsSource$ = fakeAsyncResponse({
     searchValue: "",

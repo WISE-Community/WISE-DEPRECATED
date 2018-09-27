@@ -5,14 +5,9 @@ import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
 import { StudentRunListComponent } from "./student-run-list.component";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 export function fakeAsyncResponse<T>(data: T) {
   return defer(() => Promise.resolve(data));
-}
-
-export class MockMatDialog {
-
 }
 
 export class MockStudentService {
@@ -43,10 +38,10 @@ describe('StudentRunListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ StudentRunListComponent ],
-      imports: [ HttpClientTestingModule ],
+      imports: [],
       providers: [
         { provide: StudentService, useClass: MockStudentService },
-        { provide: MatDialog, useClass: MockMatDialog }
+        { provide: MatDialog, useValue: {} }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
