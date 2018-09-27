@@ -23,6 +23,9 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -31,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.service.portal.PortalService;
+import org.wise.portal.service.project.ProjectService;
 
 /**
  * Controller for configuring this WISE instance
@@ -42,6 +46,9 @@ public class ManagePortalController {
 
   @Autowired
   private PortalService portalService;
+
+  @Autowired
+  private ProjectService projectService;
 
   @RequestMapping(method = RequestMethod.GET)
   protected String showPortalSettings(ModelMap modelMap,
@@ -84,6 +91,7 @@ public class ManagePortalController {
       } else if (attr.equals("projectLibraryGroups")) {
         portal.setProjectLibraryGroups(val);
         portalService.updatePortal(portal);
+        addOfficialTagToProjectLibraryGroup(val);
         modelMap.put("msg", "success");
       } else {
         modelMap.put("msg", "error: permission denied");
@@ -92,5 +100,40 @@ public class ManagePortalController {
       e.printStackTrace();
       modelMap.put("msg", "error");
     }
+  }
+
+  /**
+   * For each project referenced in the JSON string, add the "official" tag.
+   * @param projectLibraryGroup JSON string representing the entire project library group.
+   *     See portalService.getDefaultProjectLibraryGroups() for sample JSON
+   */
+  public void addOfficialTagToProjectLibraryGroup(String projectLibraryGroup)
+      throws JSONException {
+    JSONArray arrangements = new JSONArray(projectLibraryGroup);
+    for (int i = 0; i < arrangements.length(); i++) {
+      JSONObject arrangement = arrangements.getJSONObject(i);
+      addOfficialTagToArrangement(arrangement);
+    }
+  }
+
+  private void addOfficialTagToArrangement(JSONObject arrangement) throws JSONException {
+    JSONArray groups = arrangement.getJSONArray("children");
+    for (int i = 0; i < groups.length(); i++) {
+      JSONObject group = groups.getJSONObject(i);
+      addOfficialTagToGroup(group);
+    }
+  }
+
+  private void addOfficialTagToGroup(JSONObject group) throws JSONException {
+    JSONArray projects = group.getJSONArray("children");
+    for (int i = 0; i < projects.length(); i++) {
+      JSONObject project = projects.getJSONObject(i);
+      addOfficialTagToProject(project);
+    }
+  }
+
+  private void addOfficialTagToProject(JSONObject project) throws JSONException {
+    long projectId = project.getLong("id");
+    projectService.addTagToProject("official", projectId);
   }
 }
