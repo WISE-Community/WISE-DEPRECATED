@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TimelineComponent } from './timeline.component';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('TimelineComponent', () => {
   let component: TimelineComponent;
@@ -8,7 +8,8 @@ describe('TimelineComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TimelineComponent ]
+      declarations: [ TimelineComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

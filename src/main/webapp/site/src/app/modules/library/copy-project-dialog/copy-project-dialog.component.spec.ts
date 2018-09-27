@@ -1,74 +1,26 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CopyProjectDialogComponent } from './copy-project-dialog.component';
 import { LibraryService } from "../../../services/library.service";
-import { ProjectFilterOptions } from "../../../domain/projectFilterOptions";
-import { LibraryGroup } from "../libraryGroup";
-import { Project } from "../../../domain/project";
 import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
-import { Observable } from 'rxjs';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Project } from "../../../domain/project";
+import { Observable } from 'rxjs';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+
+export class MockLibraryService {
+  newProjectSource$ = fakeAsyncResponse({});
+  copyProject() {
+    return Observable.create(observer => {
+      const project: Project = new Project();
+      observer.next(project);
+      observer.complete();
+    });
+  }
+}
 
 describe('CopyProjectDialogComponent', () => {
   let component: CopyProjectDialogComponent;
   let fixture: ComponentFixture<CopyProjectDialogComponent>;
-
-  const libraryServiceStub = {
-    getLibraryGroups(): Observable<LibraryGroup[]> {
-      const libraryGroup: LibraryGroup[] = [];
-      return Observable.create( observer => {
-        observer.next(libraryGroup);
-        observer.complete();
-      });
-    },
-    filterOptions(projectFilterOptions: ProjectFilterOptions): Observable<ProjectFilterOptions> {
-      return Observable.create(observer => {
-        observer.next(projectFilterOptions);
-        observer.complete();
-      });
-    },
-    getOfficialLibraryProjects() {
-
-    },
-    getCommunityLibraryProjects() {
-
-    },
-    getPersonalLibraryProjects() {
-
-    },
-    getSharedLibraryProjects() {
-
-    },
-    getProjectInfo(): Observable<Project> {
-      return Observable.create(observer => {
-        observer.next(projectObj);
-        observer.complete();
-      });
-    },
-    setTabIndex() {
-
-    },
-    copyProject(): Observable<Project> {
-      return Observable.create(observer => {
-        observer.next(projectObj);
-        observer.complete();
-      });
-    },
-    libraryGroupsSource$: fakeAsyncResponse({}),
-    officialLibraryProjectsSource$: fakeAsyncResponse([]),
-    communityLibraryProjectsSource$: fakeAsyncResponse([]),
-    personalLibraryProjectsSource$: fakeAsyncResponse([]),
-    sharedLibraryProjectsSource$: fakeAsyncResponse([]),
-    projectFilterOptionsSource$: fakeAsyncResponse({
-      searchValue: "",
-      disciplineValue: [],
-      dciArrangementValue: [],
-      peValue: []
-    }),
-    tabIndexSource$: fakeAsyncResponse({}),
-    newProjectSource$: fakeAsyncResponse({}),
-    implementationModelOptions: []
-  };
   const projectObj = {
     id: 1,
     name: "Test",
@@ -93,26 +45,29 @@ describe('CopyProjectDialogComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ CopyProjectDialogComponent ],
       providers: [
-        { provide: LibraryService, useValue: libraryServiceStub },
-        { provide: MatDialog, useValue: {} },
+        { provide: LibraryService, useClass: MockLibraryService },
+        { provide: MatDialog, useValue: {
+            closeAll: () => {
+
+            }
+          }
+        },
         {
           provide: MatDialogRef, useValue: {
             afterClosed: () => {
               return Observable.create(observer => {
                 observer.next({});
                 observer.complete();
-              })
+              });
             },
             close: () => {
 
             }
           }
         },
-        { provide: MAT_DIALOG_DATA, useValue: {
-            project: projectObj
-          }
-        }
-      ]
+        { provide: MAT_DIALOG_DATA, useValue: { project: projectObj } }
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

@@ -1,21 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TeacherService } from "../teacher.service";
 import { CreateRunDialogComponent } from "./create-run-dialog.component";
-import { MatDialogRef } from "@angular/material/dialog";
+import { MatDialogRef, MatDialog } from "@angular/material/dialog";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
-import {
-  MatCheckboxModule, MatDatepickerModule, MatDialogModule,
-  MatDividerModule, MatNativeDateModule, MatRadioModule
-} from "@angular/material";
-import { SharedModule } from "../../modules/shared/shared.module";
-import {
-  FormArray, FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule
-} from "@angular/forms";
-import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { MatCheckboxModule, MatRadioModule } from "@angular/material";
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { Project } from "../../domain/project";
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+
+export class MockTeacherService {
+
+}
 
 describe('CreateRunDialogComponent', () => {
   let component: CreateRunDialogComponent;
@@ -23,25 +18,20 @@ describe('CreateRunDialogComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        SharedModule,
-        FormsModule,
         ReactiveFormsModule,
-        MatCheckboxModule,
-        MatDatepickerModule,
-        MatDialogModule,
-        MatDividerModule,
-        MatNativeDateModule,
         MatRadioModule,
-        NoopAnimationsModule
+        MatCheckboxModule
       ],
       declarations: [ CreateRunDialogComponent ],
       providers: [
-        {provide: TeacherService},
+        { provide: TeacherService, useClass: MockTeacherService },
         { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: [] }
-        ]
+        { provide: MAT_DIALOG_DATA, useValue: [] },
+        { provide: MatDialog, useValue: {} }
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {

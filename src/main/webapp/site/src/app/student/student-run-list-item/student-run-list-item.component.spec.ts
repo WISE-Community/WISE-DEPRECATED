@@ -5,31 +5,33 @@ import { Observable } from "rxjs";
 import { Config } from "../../domain/config";
 import { ConfigService } from "../../services/config.service";
 import { MomentModule } from "ngx-moment";
-import { MatCardModule } from "@angular/material";
 import { Project } from "../../domain/project";
 import { User } from "../../domain/user";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+
+export class MockConfigService {
+  getConfig(): Observable<Config> {
+    const config : Config = {"contextPath":"vle","logOutURL":"/logout","currentTime":20180730};
+    return Observable.create( observer => {
+      observer.next(config);
+      observer.complete();
+    });
+  }
+  getContextPath(): string {
+    return '/wise';
+  }
+}
 
 describe('StudentRunListItemComponent', () => {
   let component: StudentRunListItemComponent;
   let fixture: ComponentFixture<StudentRunListItemComponent>;
 
   beforeEach(async(() => {
-    const configServiceStub = {
-      getConfig(): Observable<Config> {
-        const config : Config = {"contextPath":"vle","logOutURL":"/logout","currentTime":20180730};
-        return Observable.create( observer => {
-          observer.next(config);
-          observer.complete();
-        });
-      },
-      getContextPath(): string {
-        return '/wise';
-      }
-    };
     TestBed.configureTestingModule({
-      imports: [ MatCardModule, MomentModule ],
+      imports: [ MomentModule ],
       declarations: [ StudentRunListItemComponent ],
-      providers: [ { provide: ConfigService, useValue: configServiceStub } ]
+      providers: [ { provide: ConfigService, useClass: MockConfigService } ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

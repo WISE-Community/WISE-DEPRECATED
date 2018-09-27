@@ -1,9 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RegisterStudentCompleteComponent } from './register-student-complete.component';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
-import { MatCardModule } from "@angular/material";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('RegisterStudentCompleteComponent', () => {
   let component: RegisterStudentCompleteComponent;
@@ -12,7 +10,8 @@ describe('RegisterStudentCompleteComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ RegisterStudentCompleteComponent ],
-      imports: [ BrowserAnimationsModule, RouterTestingModule, MatCardModule ]
+      imports: [ RouterTestingModule ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

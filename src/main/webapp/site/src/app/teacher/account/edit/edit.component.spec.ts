@@ -1,15 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { EditComponent } from './edit.component';
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
-
-@Component({selector: 'app-edit-password', template: ''})
-class EditPasswordComponent {
-}
-
-@Component({selector: 'app-edit-profile', template: ''})
-class EditProfileComponent {
-}
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('EditComponent', () => {
   let component: EditComponent;

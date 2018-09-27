@@ -1,19 +1,26 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { HeaderAccountMenuComponent } from './header-account-menu.component';
 import { User } from "../../../domain/user";
-import { HttpClient, HttpHandler } from "@angular/common/http";
-import { RouterTestingModule } from "@angular/router/testing";
-import { APP_BASE_HREF } from "@angular/common";
-import {
-  MatDividerModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatMenuModule
-} from "@angular/material";
-import { FormsModule } from "@angular/forms";
+import { MatMenuModule } from "@angular/material";
 import { ConfigService } from "../../../services/config.service";
-import { UserService } from "../../../services/user.service";
+import { Observable } from "rxjs";
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { Config } from "../../../domain/config";
+
+export class MockConfigService {
+  getConfig(): Observable<Config> {
+    const config: Config = {
+      contextPath: "/wise",
+      logOutURL: "/logout",
+      currentTime: 20180730
+    };
+    return Observable.create(observer => {
+      observer.next(config);
+      observer.complete();
+    });
+  }
+}
 
 describe('HeaderAccountMenuComponent', () => {
   let component: HeaderAccountMenuComponent;
@@ -23,20 +30,13 @@ describe('HeaderAccountMenuComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ HeaderAccountMenuComponent ],
       imports: [
-        FormsModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatMenuModule,
-        MatDividerModule,
-        RouterTestingModule
+        HttpClientTestingModule,
+        MatMenuModule
       ],
       providers: [
-        { provide: APP_BASE_HREF, useValue : '/' },
-        ConfigService,
-        UserService,
-        HttpClient,
-        HttpHandler
-      ]
+        { provide: ConfigService, useClass: MockConfigService }
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

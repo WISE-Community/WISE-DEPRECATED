@@ -1,12 +1,12 @@
 import { TestBed, inject } from '@angular/core/testing';
-
 import { LibraryService } from './library.service';
-import { HttpClient, HttpHandler } from "@angular/common/http";
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('LibraryService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [LibraryService,HttpClient,HttpHandler],
+      providers: [ LibraryService ],
+      imports: [ HttpClientTestingModule ]
     });
   });
 

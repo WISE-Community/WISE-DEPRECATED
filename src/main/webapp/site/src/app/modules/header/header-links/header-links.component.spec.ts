@@ -1,10 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { HeaderLinksComponent } from './header-links.component';
 import { User } from "../../../domain/user";
-import { APP_BASE_HREF } from "@angular/common";
-import { RouterTestingModule } from "@angular/router/testing";
 import { Component } from "@angular/core";
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 @Component({selector: 'app-header-signin', template: ''})
 class HeaderSignInStubComponent {}
@@ -15,11 +13,9 @@ describe('HeaderLinksComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [
-        { provide: APP_BASE_HREF, useValue : '/' }
-      ],
-      declarations: [ HeaderLinksComponent, HeaderSignInStubComponent ],
-      imports: [ RouterTestingModule ]
+      declarations: [ HeaderLinksComponent ],
+      imports: [ ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

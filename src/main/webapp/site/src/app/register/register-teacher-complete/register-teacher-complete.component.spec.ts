@@ -1,9 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RegisterTeacherCompleteComponent } from './register-teacher-complete.component';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
-import { MatCardModule } from "@angular/material";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('RegisterTeacherCompleteComponent', () => {
   let component: RegisterTeacherCompleteComponent;
@@ -12,7 +10,8 @@ describe('RegisterTeacherCompleteComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ RegisterTeacherCompleteComponent ],
-      imports: [ BrowserAnimationsModule, RouterTestingModule, MatCardModule ]
+      imports: [ RouterTestingModule ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

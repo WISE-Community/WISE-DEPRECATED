@@ -1,8 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { LibraryGroupThumbsComponent } from './library-group-thumbs.component';
 import { LibraryGroup } from "../libraryGroup";
-import { LibraryModule } from "../library.module";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('LibraryGroupThumbsComponent', () => {
   let component: LibraryGroupThumbsComponent;
@@ -11,7 +10,8 @@ describe('LibraryGroupThumbsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [ ],
-      declarations: [ LibraryGroupThumbsComponent ]
+      declarations: [ LibraryGroupThumbsComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));

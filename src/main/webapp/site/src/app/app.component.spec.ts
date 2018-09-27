@@ -1,30 +1,19 @@
 import { TestBed, async } from '@angular/core/testing';
-import { APP_BASE_HREF } from '@angular/common';
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from "./app-routing.module";
-import { HeaderModule } from "./modules/header/header.module";
-import { FooterModule } from "./modules/footer/footer.module";
-import { UserService } from "./services/user.service";
 import { Component } from "@angular/core";
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
-@Component({selector: 'app-header', template: ''})
-class HeaderStubComponent {}
-
-@Component({selector: 'app-footer', template: ''})
-class FooterStubComponent {}
+@Component({selector: 'router-outlet', template: ''})
+class RouterOutletStubComponent { }
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [
-        { provide: APP_BASE_HREF, useValue : '/' }
-      ],
-      declarations: [
-        AppComponent, HeaderStubComponent, FooterStubComponent
-      ],
-      imports: [
-        AppRoutingModule
-      ]
+      providers: [],
+      declarations: [ AppComponent ],
+      imports: [ RouterTestingModule ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     }).compileComponents();
   }));
   it('should create the app', async(() => {

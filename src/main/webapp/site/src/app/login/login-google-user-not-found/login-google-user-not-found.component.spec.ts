@@ -1,11 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { LoginGoogleUserNotFoundComponent } from './login-google-user-not-found.component';
-import {
-  MatCardModule,
-  MatDividerModule
-} from "@angular/material";
-import { RouterTestingModule } from "@angular/router/testing";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 
 describe('LoginGoogleUserNotFoundComponent', () => {
   let component: LoginGoogleUserNotFoundComponent;
@@ -14,11 +9,8 @@ describe('LoginGoogleUserNotFoundComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ LoginGoogleUserNotFoundComponent ],
-      imports: [
-        RouterTestingModule.withRoutes([]),
-        MatCardModule,
-        MatDividerModule,
-      ]
+      imports: [],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
