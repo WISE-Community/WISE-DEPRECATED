@@ -35,7 +35,7 @@ describe('CreateRunDialogComponent', () => {
   };
   project.projectThumb = "photo.png";
 
-  const getsubmitButton = () => {
+  const getSubmitButton = () => {
     return fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
   };
 
@@ -108,8 +108,10 @@ describe('CreateRunDialogComponent', () => {
     expect(component.getPeriodsString()).toEqual("1,3,5,hello");
   });
 
-  it('should invalidate form on initial state (when no period is selected)', () => {
+  it('should disable submit button and invalidate form on initial state (when no period is selected)', () => {
+    const submitButton = getSubmitButton();
     expect(component.form.valid).toBeFalsy();
+    expect(submitButton.disabled).toBe(true);
   });
 
   it('should validate form when period is selected or custom period is entered', () => {
@@ -123,14 +125,14 @@ describe('CreateRunDialogComponent', () => {
   });
 
   it('should enable submit button when form is valid', () => {
-    const submitButton = getsubmitButton();
+    const submitButton = getSubmitButton();
     component.periodsGroup.controls[0].get("checkbox").setValue(true);
     fixture.detectChanges();
     expect(submitButton.disabled).toBe(false);
   });
 
   it('should disable the submit and cancel buttons when form is submitted', async() => {
-    const submitButton = getsubmitButton();
+    const submitButton = getSubmitButton();
     const cancelButton = getCancelButton();
     const form = getForm();
     form.triggerEventHandler('submit', null);
