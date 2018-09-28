@@ -1597,11 +1597,12 @@ var MatchController = function (_ComponentController) {
       var confirm = this.$mdDialog.prompt().title(this.$translate('match.enterChoiceText')).placeholder(this.$translate('match.typeSomething')).cancel(this.$translate('CANCEL')).ok(this.$translate('OK'));
       this.$mdDialog.show(confirm).then(function (result) {
         if (result != null && result != '') {
-          var newChoice = {};
-          newChoice.id = _this4.UtilService.generateKey(10);
-          newChoice.value = result;
-          newChoice.type = 'choice';
-          newChoice.studentCreated = true;
+          var newChoice = {
+            id: _this4.UtilService.generateKey(10),
+            value: result,
+            type: 'choice',
+            studentCreated: true
+          };
           _this4.sourceBucket.items.push(newChoice);
           _this4.studentDataChanged();
         }

@@ -935,11 +935,12 @@ class MatchController extends ComponentController {
         .ok(this.$translate('OK'));
     this.$mdDialog.show(confirm).then((result) => {
       if (result != null && result != '') {
-        var newChoice = {};
-        newChoice.id = this.UtilService.generateKey(10);
-        newChoice.value = result;
-        newChoice.type = 'choice';
-        newChoice.studentCreated = true;
+        const newChoice = {
+          id: this.UtilService.generateKey(10),
+          value: result,
+          type: 'choice',
+          studentCreated: true
+        };
         this.sourceBucket.items.push(newChoice);
         this.studentDataChanged();
       }
@@ -948,11 +949,11 @@ class MatchController extends ComponentController {
 
   deleteChoice(choice) {
     if (confirm(this.$translate('match.areYouSureYouWantToDeleteThisChoice'))) {
-      let buckets = this.getBuckets();
+      const buckets = this.getBuckets();
       for (let bucket of buckets) {
-        let items = bucket.items;
+        const items = bucket.items;
         for (let i = 0; i < items.length; i++) {
-          let item = items[i];
+          const item = items[i];
           if (item.id == choice.id) {
             items.splice(i, 1);
           }
