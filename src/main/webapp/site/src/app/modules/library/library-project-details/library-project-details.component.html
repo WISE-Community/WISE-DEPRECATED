@@ -19,8 +19,7 @@
     </div>
     <span fxFlex></span>
     <app-library-project-menu *ngIf="isTeacher && !isRunProject"
-                              [project]="data.project"
-                              (menuAction)="menuAction($event)"></app-library-project-menu>
+                              [project]="data.project"></app-library-project-menu>
   </div>
   <div class="library-project-details__info info-block">
     <div class="library-project-details__summary" [innerHTML]="data.project.metadata.summary"></div>
