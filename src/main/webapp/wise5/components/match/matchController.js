@@ -46,6 +46,7 @@ var MatchController = function (_ComponentController) {
     _this.sourceBucketId = '0';
     _this.hasCorrectAnswer = false;
     _this.isLatestComponentStateSubmit = false;
+    _this.sourceBucket = null;
 
     _this.privateNotebookItems = [];
 
@@ -262,13 +263,16 @@ var MatchController = function (_ComponentController) {
 
                 var currentChoiceId = currentChoice.id;
                 var currentChoiceLocation = choiceIds.indexOf(currentChoiceId);
+                var bucket = this.getBucketById(componentStateBucketId);
                 if (currentChoiceLocation > -1) {
                   // choice is valid and used by student in a valid bucket, so add it to that bucket
-                  var bucket = this.getBucketById(componentStateBucketId);
-                  // content for choice with this id may have change, so get updated content
+
+                  // content for choice with this id may have changed, so get updated content
                   var updatedChoice = this.getChoiceById(currentChoiceId);
                   bucket.items.push(updatedChoice);
                   choiceIds.splice(currentChoiceLocation, 1);
+                } else {
+                  bucket.items.push(currentChoice);
                 }
               }
             } catch (err) {
@@ -575,7 +579,7 @@ var MatchController = function (_ComponentController) {
       this.setNumChoiceColumns();
       this.setChoiceStyle();
       this.setBucketStyle();
-      var sourceBucket = {
+      this.sourceBucket = {
         id: this.sourceBucketId,
         value: this.componentContent.choicesLabel ? this.componentContent.choicesLabel : this.$translate('match.choices'),
         type: 'bucket',
@@ -589,7 +593,7 @@ var MatchController = function (_ComponentController) {
         for (var _iterator7 = this.getChoices()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
           var choice = _step7.value;
 
-          sourceBucket.items.push(choice);
+          this.sourceBucket.items.push(choice);
         }
       } catch (err) {
         _didIteratorError7 = true;
@@ -606,7 +610,7 @@ var MatchController = function (_ComponentController) {
         }
       }
 
-      this.buckets.push(sourceBucket);
+      this.buckets.push(this.sourceBucket);
       var _iteratorNormalCompletion8 = true;
       var _didIteratorError8 = false;
       var _iteratorError8 = undefined;
@@ -1584,6 +1588,64 @@ var MatchController = function (_ComponentController) {
       }
 
       return ids;
+    }
+  }, {
+    key: 'addChoice',
+    value: function addChoice() {
+      var _this4 = this;
+
+      var confirm = this.$mdDialog.prompt().title(this.$translate('match.enterChoiceText')).placeholder(this.$translate('match.typeSomething')).cancel(this.$translate('CANCEL')).ok(this.$translate('OK'));
+      this.$mdDialog.show(confirm).then(function (result) {
+        if (result != null && result != '') {
+          var newChoice = {
+            id: _this4.UtilService.generateKey(10),
+            value: result,
+            type: 'choice',
+            studentCreated: true
+          };
+          _this4.sourceBucket.items.push(newChoice);
+          _this4.studentDataChanged();
+        }
+      });
+    }
+  }, {
+    key: 'deleteChoice',
+    value: function deleteChoice(choice) {
+      if (confirm(this.$translate('match.areYouSureYouWantToDeleteThisChoice'))) {
+        var buckets = this.getBuckets();
+        var _iteratorNormalCompletion27 = true;
+        var _didIteratorError27 = false;
+        var _iteratorError27 = undefined;
+
+        try {
+          for (var _iterator27 = buckets[Symbol.iterator](), _step27; !(_iteratorNormalCompletion27 = (_step27 = _iterator27.next()).done); _iteratorNormalCompletion27 = true) {
+            var bucket = _step27.value;
+
+            var items = bucket.items;
+            for (var i = 0; i < items.length; i++) {
+              var item = items[i];
+              if (item.id == choice.id) {
+                items.splice(i, 1);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError27 = true;
+          _iteratorError27 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion27 && _iterator27.return) {
+              _iterator27.return();
+            }
+          } finally {
+            if (_didIteratorError27) {
+              throw _iteratorError27;
+            }
+          }
+        }
+
+        this.studentDataChanged();
+      }
     }
   }]);
 

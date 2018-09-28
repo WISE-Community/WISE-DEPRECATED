@@ -189,7 +189,18 @@
               <md-card>
                 <md-card-title class='match-bucket__header'>
                   <md-card-title-text>
-                    <compile data='matchController.buckets[0].value'></compile>
+                    <div style="display: flex; align-items: center;">
+                      <div><compile data='matchController.buckets[0].value'></compile></div>
+                      <div ng-if="matchController.componentContent.canCreateChoices">
+                        <md-button ng-click="matchController.addChoice()"
+                                   class='studentButton md-raised md-primary'>
+                          <md-icon>add</md-icon>
+                          <md-tooltip md-direction='top'>
+                            {{ 'match.addChoice' | translate }}
+                          </md-tooltip>
+                        </md-button>
+                      </div>
+                    </div>
                   </md-card-title-text>
                 </md-card-title>
                 <md-card-content class='match-bucket__content'>
@@ -208,6 +219,10 @@
                               <compile data='item.value'></compile>
                             </span>
                             <span flex></span>
+                            <md-button ng-if="item.studentCreated"
+                                       ng-click="matchController.deleteChoice(item)">
+                              <md-icon>clear</md-icon>
+                            </md-button>
                             <md-icon>open_with</md-icon>
                           </div>
                           <p class='match-feedback md-body-2'
@@ -265,6 +280,10 @@
                                 <compile data='item.value'></compile>
                               </span>
                               <span flex></span>
+                              <md-button ng-if="item.studentCreated"
+                                         ng-click="matchController.deleteChoice(item)">
+                                <md-icon>clear</md-icon>
+                              </md-button>
                               <md-icon>open_with</md-icon>
                             </div>
                             <p class='match-feedback md-body-2'
