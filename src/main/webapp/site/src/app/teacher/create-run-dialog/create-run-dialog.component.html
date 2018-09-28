@@ -1,7 +1,7 @@
 <h2 class="mat-dialog-title">Use with Class</h2>
 <form [formGroup]="form" (ngSubmit)="create()">
   <mat-dialog-content class="mat-dialog-content--scroll" fxLayout="column">
-    <p class="mat-subheading-2">
+    <p class="mat-subheading-2 accent-1">
       {{ project.metadata.title }} <span class="mat-caption">(Unit ID: {{ project.id }})</span>
     </p>
     <h3>1. Choose Periods</h3>
@@ -46,7 +46,7 @@
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions fxLayoutAlign="end" fxLayoutGap="8px">
-    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button mat-dialog-close [disabled]="isCreating">Cancel</button>
     <button type="submit"
             mat-flat-button
             color="primary"
