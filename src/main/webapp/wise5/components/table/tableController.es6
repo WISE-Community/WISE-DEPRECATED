@@ -32,9 +32,6 @@ class TableController extends ComponentController {
     // holds the the table data
     this.tableData = null;
 
-    // the latest annotations
-    this.latestAnnotations = null;
-
     // whether the reset table button is shown or not
     this.isResetTableButtonVisible = true;
 

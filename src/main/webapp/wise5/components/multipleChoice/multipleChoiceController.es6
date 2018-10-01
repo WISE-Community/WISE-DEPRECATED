@@ -33,9 +33,6 @@ class MultipleChoiceController extends ComponentController {
     // whether to show the feedback or not
     this.showFeedback = true;
 
-    // the latest annotations
-    this.latestAnnotations = null;
-
     // whether this component has been authored with a correct answer
     this.hasCorrectAnswer = false;
 

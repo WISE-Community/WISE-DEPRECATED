@@ -56,7 +56,6 @@ var EmbeddedController = function (_ComponentController) {
 
     _this.notebookConfig = _this.NotebookService.getNotebookConfig();
 
-    _this.latestAnnotations = null;
     _this.componentStateId = null;
     _this.embeddedApplicationIFrameId = '';
 

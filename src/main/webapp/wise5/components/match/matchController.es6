@@ -37,7 +37,6 @@ class MatchController extends ComponentController {
     this.isHorizontal = this.componentContent.horizontal; // whether to orient the choices and buckets side-by-side
     this.choiceStyle = '';
     this.bucketStyle = '';
-    this.latestAnnotations = null;
     this.sourceBucketId = '0';
     this.hasCorrectAnswer = false;
     this.isLatestComponentStateSubmit = false;

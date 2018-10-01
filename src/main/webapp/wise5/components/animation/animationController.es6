@@ -29,7 +29,6 @@ class AnimationController extends ComponentController {
     this.AnimationService = AnimationService;
     this.NotificationService = NotificationService;
 
-    this.latestAnnotations = null;
     this.width = 800;
     this.height = 600;
     this.pixelsPerXUnit = 1;

@@ -48,7 +48,6 @@ class EmbeddedController extends ComponentController {
 
     this.notebookConfig = this.NotebookService.getNotebookConfig();
 
-    this.latestAnnotations = null;
     this.componentStateId = null;
     this.embeddedApplicationIFrameId = '';
 

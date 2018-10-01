@@ -42,9 +42,6 @@ class GraphController extends ComponentController {
     // will hold the active series
     this.activeSeries = null;
 
-    // the latest annotations
-    this.latestAnnotations = null;
-
     // whether the reset graph button is shown or not
     this.isResetGraphButtonVisible = false;
 

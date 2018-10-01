@@ -40,9 +40,6 @@ var MultipleChoiceController = function (_ComponentController) {
     // whether to show the feedback or not
     _this.showFeedback = true;
 
-    // the latest annotations
-    _this.latestAnnotations = null;
-
     // whether this component has been authored with a correct answer
     _this.hasCorrectAnswer = false;
 

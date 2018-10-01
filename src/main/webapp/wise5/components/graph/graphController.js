@@ -51,9 +51,6 @@ var GraphController = function (_ComponentController) {
     // will hold the active series
     _this.activeSeries = null;
 
-    // the latest annotations
-    _this.latestAnnotations = null;
-
     // whether the reset graph button is shown or not
     _this.isResetGraphButtonVisible = false;
 

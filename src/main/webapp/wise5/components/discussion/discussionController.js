@@ -58,9 +58,6 @@ var DiscussionController = function (_ComponentController) {
     // whether we have retrieved the classmate responses
     _this.retrievedClassmateResponses = false;
 
-    // the latest annotations
-    _this.latestAnnotations = null;
-
     if (_this.$scope.workgroupId != null) {
       _this.workgroupId = _this.$scope.workgroupId;
     }

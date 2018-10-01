@@ -40,9 +40,6 @@ var OpenResponseController = function (_ComponentController) {
     // whether we're only showing the student work
     _this.onlyShowWork = false;
 
-    // the latest annotations
-    _this.latestAnnotations = null;
-
     // used to hold a message dialog if we need to use one
     _this.messageDialog = null;
 
