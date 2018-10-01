@@ -54,7 +54,6 @@ var MatchController = function (_ComponentController) {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
       _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
       if (_this.shouldImportPrivateNotes()) {
         _this.privateNotebookItems = _this.NotebookService.getPrivateNotebookItems();
         _this.$rootScope.$on('notebookUpdated', function (event, args) {
@@ -68,9 +67,6 @@ var MatchController = function (_ComponentController) {
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
       _this.isDisabled = true;
-      if (_this.mode === 'grading') {
-        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-      }
       if (_this.shouldImportPrivateNotes()) {
         _this.privateNotebookItems = _this.NotebookService.getPrivateNotebookItems(_this.workgroupId);
       }
@@ -112,10 +108,6 @@ var MatchController = function (_ComponentController) {
     }
 
     _this.disableComponentIfNecessary();
-
-    if (_this.$scope.$parent.nodeController != null) {
-      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
-    }
 
     _this.registerDragListeners();
 
@@ -708,49 +700,6 @@ var MatchController = function (_ComponentController) {
     value: function getCopyOfBuckets() {
       var bucketsJSONString = angular.toJson(this.getBuckets());
       return angular.fromJson(bucketsJSONString);
-    }
-
-    /**
-     * A submit was triggered by the component submit button or node submit button
-     * @param {string} submitTriggeredBy what triggered the submit
-     * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
-     */
-
-  }, {
-    key: 'submit',
-    value: function submit(submitTriggeredBy) {
-      if (this.isSubmitDirty) {
-        var performSubmit = true;
-        if (this.componentContent.maxSubmitCount != null && this.hasStudentUsedAllSubmits()) {
-          performSubmit = false;
-        }
-        if (performSubmit) {
-          this.isSubmit = true;
-          this.isCorrect = null;
-          this.incrementSubmitCounter();
-          if (this.componentContent.maxSubmitCount != null && this.hasStudentUsedAllSubmits()) {
-            this.isDisabled = true;
-            this.isSubmitButtonDisabled = true;
-          }
-
-          if (this.mode === 'authoring') {
-            /*
-             * we are in authoring mode so we will set values appropriately
-             * here because the 'componentSubmitTriggered' event won't
-             * work in authoring mode
-             */
-            this.isDirty = false;
-            this.isSubmitDirty = false;
-            this.createComponentState('submit');
-          }
-
-          if (submitTriggeredBy === 'componentSubmitButton') {
-            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-          }
-        } else {
-          this.isSubmit = false;
-        }
-      }
     }
   }, {
     key: 'getNumSubmitsLeft',

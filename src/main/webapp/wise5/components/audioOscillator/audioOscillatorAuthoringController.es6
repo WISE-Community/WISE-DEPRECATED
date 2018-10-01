@@ -34,6 +34,9 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
       StudentDataService,
       UtilService);
 
+    this.showOscillatorTypeChooser = false;
+    this.oscillatorTypeToAdd = 'sine';
+
     // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [
       {

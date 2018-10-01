@@ -36,9 +36,6 @@ class DiscussionController extends ComponentController {
     // holds the text for a new response (not a reply)
     this.newResponse = '';
 
-    // holds student attachments like assets
-    this.newAttachments = [];
-
     // will hold the class responses
     this.classResponses = [];
 
@@ -111,9 +108,6 @@ class DiscussionController extends ComponentController {
             this.getClassmateResponses();
           }
         }
-
-        // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
       }
 
       this.disableComponentIfNecessary();
@@ -134,11 +128,6 @@ class DiscussionController extends ComponentController {
       this.setClassResponses(componentStates, annotations);
 
       this.isDisabled = true;
-
-      if (this.mode === 'grading') {
-        // get the latest annotations
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-      }
     } else if (this.mode === 'onlyShowWork') {
       this.isDisabled = true;
     } else if (this.mode === 'showPreviousWork') {
@@ -149,14 +138,6 @@ class DiscussionController extends ComponentController {
     }
 
     this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
-
-    // set whether studentAttachment is enabled
-    this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-    if (this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
-      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-    }
 
     /**
      * The submit button was clicked
@@ -516,7 +497,7 @@ class DiscussionController extends ComponentController {
       // set the response into the component state
       studentData.response = this.studentResponse;
 
-      studentData.attachments = this.newAttachments;
+      studentData.attachments = this.attachments;
 
       if (this.componentStateIdReplyingTo != null) {
         // if this step is replying, set the component state id replying to
@@ -601,7 +582,7 @@ class DiscussionController extends ComponentController {
     this.newResponse = '';
 
     // clear new attachments input
-    this.newAttachments = [];
+    this.attachments = [];
 
     // clear the component state id replying to
     this.componentStateIdReplyingTo = null;
@@ -670,33 +651,6 @@ class DiscussionController extends ComponentController {
     }
 
     return result;
-  };
-
-  removeAttachment(attachment) {
-    if (this.newAttachments.indexOf(attachment) != -1) {
-      this.newAttachments.splice(this.newAttachments.indexOf(attachment), 1);
-      this.studentDataChanged();
-    }
-  };
-
-  /**
-   * Attach student asset to this Component's attachments
-   * @param studentAsset
-   */
-  attachStudentAsset(studentAsset) {
-    if (studentAsset != null) {
-      this.StudentAssetService.copyAssetForReference(studentAsset).then( (copiedAsset) => {
-        if (copiedAsset != null) {
-          var attachment = {
-            studentAssetId: copiedAsset.id,
-            iconURL: copiedAsset.iconURL
-          };
-
-          this.newAttachments.push(attachment);
-          this.studentDataChanged();
-        }
-      });
-    }
   };
 
   /**

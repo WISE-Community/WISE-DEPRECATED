@@ -66,7 +66,6 @@ var EmbeddedController = function (_ComponentController) {
     if (_this.mode === 'student') {
       _this.isSaveButtonVisible = _this.componentContent.showSaveButton;
       _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
     } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
@@ -77,10 +76,6 @@ var EmbeddedController = function (_ComponentController) {
         if (_this.mode === 'gradingRevision') {
           _this.embeddedApplicationIFrameId = 'componentApp_gradingRevision_' + componentState.id;
         }
-      }
-
-      if (_this.mode === 'grading') {
-        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
       }
     } else if (_this.mode === 'onlyShowWork') {
       _this.isSaveButtonVisible = false;
@@ -96,10 +91,6 @@ var EmbeddedController = function (_ComponentController) {
 
     _this.width = _this.componentContent.width ? _this.componentContent.width : '100%';
     _this.height = _this.componentContent.height ? _this.componentContent.height : '100%';
-
-    if (_this.$scope.$parent.nodeController != null) {
-      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
-    }
 
     /**
      * A connected component has changed its student data so we will
@@ -210,7 +201,7 @@ var EmbeddedController = function (_ComponentController) {
         this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
       } else if (messageEventData.messageType === 'applicationInitialized') {
         this.sendLatestWorkToApplication();
-        this.processLatestSubmit();
+        this.processLatestStudentWork();
 
         // activate iframe-resizer on the embedded app's iframe
         $('#' + this.embeddedApplicationIFrameId).iFrameResize({ scrolling: true });
@@ -305,29 +296,6 @@ var EmbeddedController = function (_ComponentController) {
     key: 'iframeLoaded',
     value: function iframeLoaded(contentLocation) {
       window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.addEventListener('message', this.messageEventListener);
-    }
-
-    /**
-     * Check if latest component state is a submission and if not, set isSubmitDirty to true
-     */
-
-  }, {
-    key: 'processLatestSubmit',
-    value: function processLatestSubmit() {
-      var latestState = this.$scope.componentState;
-      if (latestState) {
-        var serverSaveTime = latestState.serverSaveTime;
-        var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-        if (latestState.isSubmit) {
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          this.setSubmittedMessage(clientSaveTime);
-        } else {
-          this.isSubmitDirty = true;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          this.setSavedMessage(clientSaveTime);
-        }
-      }
     }
   }, {
     key: 'setURL',

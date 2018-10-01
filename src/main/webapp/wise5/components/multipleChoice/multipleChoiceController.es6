@@ -46,9 +46,6 @@ class MultipleChoiceController extends ComponentController {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-      // get the latest annotations
-      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
     } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
@@ -116,11 +113,6 @@ class MultipleChoiceController extends ComponentController {
     }
 
     this.disableComponentIfNecessary();
-
-    if (this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
-      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-    }
 
     /**
      * Get the component state from this component. The parent node will
@@ -218,30 +210,7 @@ class MultipleChoiceController extends ComponentController {
           this.submitCounter = submitCounter;
         }
 
-        this.processLatestSubmit();
-      }
-    }
-  };
-
-  /**
-   * Check if latest component state is a submission and set isSubmitDirty accordingly
-   */
-  processLatestSubmit() {
-    let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-    if (latestState) {
-      let serverSaveTime = latestState.serverSaveTime;
-      let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-      if (latestState.isSubmit) {
-        // latest state is a submission, so set isSubmitDirty to false and notify node
-        this.isSubmitDirty = false;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        this.setSubmittedMessage(clientSaveTime);
-      } else {
-        // latest state is not a submission, so set isSubmitDirty to true and notify node
-        this.isSubmitDirty = true;
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
-        this.setSavedMessage(clientSaveTime);
+        this.processLatestStudentWork();
       }
     }
   };

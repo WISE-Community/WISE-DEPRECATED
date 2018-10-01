@@ -40,9 +40,6 @@ var LabelController = function (_ComponentController) {
     _this.LabelService = LabelService;
     _this.OpenResponseService = OpenResponseService;
 
-    // holds student attachments like assets
-    _this.attachments = [];
-
     // the latest annotations
     _this.latestAnnotations = null;
 
@@ -156,9 +153,6 @@ var LabelController = function (_ComponentController) {
         _this.canCreateLabels = false;
         _this.isResetButtonVisible = false;
       }
-
-      // get the latest annotations
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
     } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
@@ -172,9 +166,6 @@ var LabelController = function (_ComponentController) {
           _this.canvasId = 'labelCanvas_gradingRevision_' + componentState.id;
         }
       }
-
-      // get the latest annotations
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
     } else if (_this.mode === 'onlyShowWork') {
       _this.isPromptVisible = false;
       _this.isSaveButtonVisible = false;
@@ -371,9 +362,6 @@ var LabelController = function (_ComponentController) {
         this.createKeydownListener();
       }
 
-      // set whether studentAttachment is enabled
-      this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
       if (this.mode == 'student') {
         if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
           // we will show work from another component
@@ -435,11 +423,6 @@ var LabelController = function (_ComponentController) {
       }
 
       this.disableComponentIfNecessary();
-
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-      }
     }
 
     /**
@@ -483,33 +466,7 @@ var LabelController = function (_ComponentController) {
             this.submitCounter = submitCounter;
           }
 
-          this.processLatestSubmit();
-        }
-      }
-    }
-  }, {
-    key: 'processLatestSubmit',
-
-
-    /**
-     * Check if latest component state is a submission and set isSubmitDirty accordingly
-     */
-    value: function processLatestSubmit() {
-      var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-      if (latestState) {
-        var serverSaveTime = latestState.serverSaveTime;
-        var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-        if (latestState.isSubmit) {
-          // latest state is a submission, so set isSubmitDirty to false and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          this.setSubmittedMessage(clientSaveTime);
-        } else {
-          // latest state is not a submission, so set isSubmitDirty to true and notify node
-          this.isSubmitDirty = true;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          this.setSavedMessage(clientSaveTime);
+          this.processLatestStudentWork();
         }
       }
     }
@@ -548,91 +505,6 @@ var LabelController = function (_ComponentController) {
             // add the label to the canvas
             this.addLabelToCanvas(this.canvas, label);
           }
-        }
-      }
-    }
-  }, {
-    key: 'submit',
-
-
-    /**
-     * A submit was triggered by the component submit button or node submit button
-     * @param submitTriggeredBy what triggered the submit
-     * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
-     */
-    value: function submit(submitTriggeredBy) {
-
-      if (this.isSubmitDirty) {
-        // the student has unsubmitted work
-
-        var performSubmit = true;
-
-        if (this.componentContent.maxSubmitCount != null) {
-          // there is a max submit count
-
-          // calculate the number of submits this student has left
-          var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
-
-          var message = '';
-
-          if (numberOfSubmitsLeft <= 0) {
-            // the student does not have any more chances to submit
-            performSubmit = false;
-          } else if (numberOfSubmitsLeft == 1) {
-            /*
-             * the student has one more chance to submit left so maybe
-             * we should ask the student if they are sure they want to submit
-             */
-          } else if (numberOfSubmitsLeft > 1) {
-            /*
-             * the student has more than one chance to submit left so maybe
-             * we should ask the student if they are sure they want to submit
-             */
-          }
-        }
-
-        if (performSubmit) {
-
-          /*
-           * set isSubmit to true so that when the component state is
-           * created, it will know that is a submit component state
-           * instead of just a save component state
-           */
-          this.isSubmit = true;
-          this.incrementSubmitCounter();
-
-          // check if the student has used up all of their submits
-          if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-            /*
-             * the student has used up all of their submits so we will
-             * disable the submit button
-             */
-            this.isSubmitButtonDisabled = true;
-          }
-
-          if (this.mode === 'authoring') {
-            /*
-             * we are in authoring mode so we will set values appropriately
-             * here because the 'componentSubmitTriggered' event won't
-             * work in authoring mode
-             */
-            this.isDirty = false;
-            this.isSubmitDirty = false;
-            this.createComponentState('submit');
-          }
-
-          if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
-            // tell the parent node that this component wants to submit
-            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
-          } else if (submitTriggeredBy === 'nodeSubmitButton') {
-            // nothing extra needs to be performed
-          }
-        } else {
-          /*
-           * the student has cancelled the submit so if a component state
-           * is created, it will just be a regular save and not submit
-           */
-          this.isSubmit = false;
         }
       }
     }
@@ -910,33 +782,6 @@ var LabelController = function (_ComponentController) {
      */
     value: function showCancelButton() {
       return this.isCancelButtonVisible;
-    }
-  }, {
-    key: 'removeAttachment',
-    value: function removeAttachment(attachment) {
-      if (this.attachments.indexOf(attachment) != -1) {
-        this.attachments.splice(this.attachments.indexOf(attachment), 1);
-        this.studentDataChanged();
-      }
-    }
-  }, {
-    key: 'attachStudentAsset',
-    value: function attachStudentAsset(studentAsset) {
-      var _this3 = this;
-
-      if (studentAsset != null) {
-        this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
-          if (copiedAsset != null) {
-            var attachment = {
-              studentAssetId: copiedAsset.id,
-              iconURL: copiedAsset.iconURL
-            };
-
-            _this3.attachments.push(attachment);
-            _this3.studentDataChanged();
-          }
-        });
-      }
     }
   }, {
     key: 'initializeCanvas',
@@ -1519,7 +1364,7 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'addLabelToCanvas',
     value: function addLabelToCanvas(canvas, label) {
-      var _this4 = this;
+      var _this3 = this;
 
       if (canvas != null && label != null) {
 
@@ -1553,7 +1398,7 @@ var LabelController = function (_ComponentController) {
                * the circle was clicked so we will make the associated
                * label selected
                */
-              _this4.selectLabel(label);
+              _this3.selectLabel(label);
             });
           }
 
@@ -1562,7 +1407,7 @@ var LabelController = function (_ComponentController) {
              * the text was clicked so we will make the associated
              * label selected
              */
-            _this4.selectLabel(label);
+            _this3.selectLabel(label);
           });
 
           this.labels.push(label);
@@ -1869,7 +1714,7 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'createMergedComponentState',
     value: function createMergedComponentState(componentStates) {
-      var _this5 = this;
+      var _this4 = this;
 
       var mergedComponentState = this.NodeService.createNewComponentState();
 
@@ -1908,10 +1753,10 @@ var LabelController = function (_ComponentController) {
                   // create an image from the concept map data
                   this.LabelService.createImageFromText(response, null, null, charactersPerLine, null, spaceInbetweenLines, fontSize).then(function (image) {
                     // set the image as the background
-                    _this5.setBackgroundImage(image);
+                    _this4.setBackgroundImage(image);
 
                     // make the work dirty so that it gets saved
-                    _this5.studentDataChanged();
+                    _this4.studentDataChanged();
                   });
                 }
               }
@@ -1985,10 +1830,10 @@ var LabelController = function (_ComponentController) {
   }, {
     key: 'setComponentStateAsBackgroundImage',
     value: function setComponentStateAsBackgroundImage(componentState) {
-      var _this6 = this;
+      var _this5 = this;
 
       this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
-        _this6.setBackgroundImage(image.url);
+        _this5.setBackgroundImage(image.url);
       });
     }
 
