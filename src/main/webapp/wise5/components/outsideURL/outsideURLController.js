@@ -50,11 +50,6 @@ var OutsideURLController = function (_ComponentController) {
     // get the max height
     _this.maxHeight = _this.componentContent.maxHeight ? _this.componentContent.maxHeight : 'none';
 
-    if (_this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
-      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
-    }
-
     /**
      * Get the component state from this component. The parent node will
      * call this function to obtain the component state when it needs to

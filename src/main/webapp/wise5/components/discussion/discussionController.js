@@ -40,9 +40,6 @@ var DiscussionController = function (_ComponentController) {
     // holds the text for a new response (not a reply)
     _this.newResponse = '';
 
-    // holds student attachments like assets
-    _this.newAttachments = [];
-
     // will hold the class responses
     _this.classResponses = [];
 
@@ -112,9 +109,6 @@ var DiscussionController = function (_ComponentController) {
             _this.getClassmateResponses();
           }
         }
-
-        // get the latest annotations
-        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
       }
 
       _this.disableComponentIfNecessary();
@@ -135,11 +129,6 @@ var DiscussionController = function (_ComponentController) {
       _this.setClassResponses(componentStates, annotations);
 
       _this.isDisabled = true;
-
-      if (_this.mode === 'grading') {
-        // get the latest annotations
-        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
-      }
     } else if (_this.mode === 'onlyShowWork') {
       _this.isDisabled = true;
     } else if (_this.mode === 'showPreviousWork') {
@@ -150,14 +139,6 @@ var DiscussionController = function (_ComponentController) {
     }
 
     _this.isRichTextEnabled = _this.componentContent.isRichTextEnabled;
-
-    // set whether studentAttachment is enabled
-    _this.isStudentAttachmentEnabled = _this.componentContent.isStudentAttachmentEnabled;
-
-    if (_this.$scope.$parent.nodeController != null) {
-      // register this component with the parent node
-      _this.$scope.$parent.nodeController.registerComponentController(_this.$scope, _this.componentContent);
-    }
 
     /**
      * The submit button was clicked
@@ -545,7 +526,7 @@ var DiscussionController = function (_ComponentController) {
         // set the response into the component state
         studentData.response = this.studentResponse;
 
-        studentData.attachments = this.newAttachments;
+        studentData.attachments = this.attachments;
 
         if (this.componentStateIdReplyingTo != null) {
           // if this step is replying, set the component state id replying to
@@ -633,7 +614,7 @@ var DiscussionController = function (_ComponentController) {
       this.newResponse = '';
 
       // clear new attachments input
-      this.newAttachments = [];
+      this.attachments = [];
 
       // clear the component state id replying to
       this.componentStateIdReplyingTo = null;
@@ -733,39 +714,6 @@ var DiscussionController = function (_ComponentController) {
       }
 
       return result;
-    }
-  }, {
-    key: 'removeAttachment',
-    value: function removeAttachment(attachment) {
-      if (this.newAttachments.indexOf(attachment) != -1) {
-        this.newAttachments.splice(this.newAttachments.indexOf(attachment), 1);
-        this.studentDataChanged();
-      }
-    }
-  }, {
-    key: 'attachStudentAsset',
-
-
-    /**
-     * Attach student asset to this Component's attachments
-     * @param studentAsset
-     */
-    value: function attachStudentAsset(studentAsset) {
-      var _this6 = this;
-
-      if (studentAsset != null) {
-        this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
-          if (copiedAsset != null) {
-            var attachment = {
-              studentAssetId: copiedAsset.id,
-              iconURL: copiedAsset.iconURL
-            };
-
-            _this6.newAttachments.push(attachment);
-            _this6.studentDataChanged();
-          }
-        });
-      }
     }
   }, {
     key: 'setClassResponses',
@@ -1067,7 +1015,7 @@ var DiscussionController = function (_ComponentController) {
      * delete.
      */
     value: function deletebuttonclicked(componentState) {
-      var _this7 = this;
+      var _this6 = this;
 
       if (componentState != null) {
 
@@ -1103,13 +1051,13 @@ var DiscussionController = function (_ComponentController) {
         this.AnnotationService.saveAnnotation(annotation).then(function () {
 
           // get the component states made by the student
-          var componentStates = _this7.DiscussionService.getPostsAssociatedWithWorkgroupId(_this7.componentId, _this7.workgroupId);
+          var componentStates = _this6.DiscussionService.getPostsAssociatedWithWorkgroupId(_this6.componentId, _this6.workgroupId);
 
           // get the annotations for the component states
-          var annotations = _this7.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+          var annotations = _this6.getInappropriateFlagAnnotationsByComponentStates(componentStates);
 
           // refresh the teacher view of the posts
-          _this7.setClassResponses(componentStates, annotations);
+          _this6.setClassResponses(componentStates, annotations);
         });
       }
     }
@@ -1126,7 +1074,7 @@ var DiscussionController = function (_ComponentController) {
   }, {
     key: 'undodeletebuttonclicked',
     value: function undodeletebuttonclicked(componentState) {
-      var _this8 = this;
+      var _this7 = this;
 
       if (componentState != null) {
 
@@ -1162,13 +1110,13 @@ var DiscussionController = function (_ComponentController) {
         this.AnnotationService.saveAnnotation(annotation).then(function () {
 
           // get the component states made by the student
-          var componentStates = _this8.DiscussionService.getPostsAssociatedWithWorkgroupId(_this8.componentId, _this8.workgroupId);
+          var componentStates = _this7.DiscussionService.getPostsAssociatedWithWorkgroupId(_this7.componentId, _this7.workgroupId);
 
           // get the annotations for the component states
-          var annotations = _this8.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+          var annotations = _this7.getInappropriateFlagAnnotationsByComponentStates(componentStates);
 
           // refresh the teacher view of the posts
-          _this8.setClassResponses(componentStates, annotations);
+          _this7.setClassResponses(componentStates, annotations);
         });
       }
     }

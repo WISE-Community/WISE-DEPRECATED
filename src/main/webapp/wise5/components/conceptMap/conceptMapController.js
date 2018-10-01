@@ -40,9 +40,6 @@ var ConceptMapController = function (_ComponentController) {
     // holds the text that the student has typed
     _this.studentResponse = '';
 
-    // holds student attachments like assets
-    _this.attachments = [];
-
     // the latest annotations
     _this.latestAnnotations = null;
 
@@ -127,17 +124,11 @@ var ConceptMapController = function (_ComponentController) {
       _this.isSubmitButtonVisible = _this.componentContent.showSubmitButton;
       _this.availableNodes = _this.componentContent.nodes;
       _this.availableLinks = _this.componentContent.links;
-
-      // get the latest annotations
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
     } else if (_this.mode === 'grading' || _this.mode === 'gradingRevision') {
       _this.isPromptVisible = true;
       _this.isSaveButtonVisible = false;
       _this.isSubmitButtonVisible = false;
       _this.isDisabled = true;
-
-      // get the latest annotations
-      _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
 
       var _componentState = _this.$scope.componentState;
 
@@ -288,9 +279,6 @@ var ConceptMapController = function (_ComponentController) {
 
       var componentState = null;
 
-      // set whether studentAttachment is enabled
-      this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
       // get the component state from the scope
       componentState = this.$scope.componentState;
 
@@ -422,11 +410,6 @@ var ConceptMapController = function (_ComponentController) {
 
       this.disableComponentIfNecessary();
 
-      if (this.$scope.$parent.nodeController != null) {
-        // register this component with the parent node
-        this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-      }
-
       this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
     }
 
@@ -464,7 +447,7 @@ var ConceptMapController = function (_ComponentController) {
             this.attachments = attachments;
           }
 
-          this.processLatestSubmit();
+          this.processLatestStudentWork();
         }
       }
     }
@@ -643,37 +626,13 @@ var ConceptMapController = function (_ComponentController) {
     }
 
     /**
-     * Check if latest component state is a submission and set isSubmitDirty accordingly
-     */
-
-  }, {
-    key: 'processLatestSubmit',
-    value: function processLatestSubmit() {
-      var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-
-      if (latestState) {
-        if (latestState.isSubmit) {
-          // latest state is a submission, so set isSubmitDirty to false and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
-          this.setSubmittedMessage(latestState.clientSaveTime);
-        } else {
-          // latest state is not a submission, so set isSubmitDirty to true and notify node
-          this.isSubmitDirty = true;
-          this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
-          this.setSavedMessage(latestState.clientSaveTime);
-        }
-      }
-    }
-  }, {
-    key: 'submit',
-
-
-    /**
      * A submit was triggered by the component submit button or node submit button
      * @param submitTriggeredBy what triggered the submit
      * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
      */
+
+  }, {
+    key: 'submit',
     value: function submit(submitTriggeredBy) {
 
       if (this.isSubmitDirty) {
@@ -1069,46 +1028,13 @@ var ConceptMapController = function (_ComponentController) {
 
       return annotation;
     }
-  }, {
-    key: 'removeAttachment',
-    value: function removeAttachment(attachment) {
-      if (this.attachments.indexOf(attachment) != -1) {
-        this.attachments.splice(this.attachments.indexOf(attachment), 1);
-        this.studentDataChanged();
-      }
-    }
-  }, {
-    key: 'attachStudentAsset',
-
-
-    /**
-     * Attach student asset to this Component's attachments
-     * @param studentAsset
-     */
-    value: function attachStudentAsset(studentAsset) {
-      var _this3 = this;
-
-      if (studentAsset != null) {
-        this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
-          if (copiedAsset != null) {
-            var attachment = {
-              studentAssetId: copiedAsset.id,
-              iconURL: copiedAsset.iconURL
-            };
-
-            _this3.attachments.push(attachment);
-            _this3.studentDataChanged();
-          }
-        });
-      }
-    }
-  }, {
-    key: 'getResponse',
-
 
     /**
      * Get the text the student typed
      */
+
+  }, {
+    key: 'getResponse',
     value: function getResponse() {
       var response = null;
 
@@ -1307,7 +1233,7 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'setupSVG',
     value: function setupSVG() {
-      var _this4 = this;
+      var _this3 = this;
 
       // get the svg element in the svg.js world
       this.draw = SVG(this.svgId);
@@ -1322,17 +1248,17 @@ var ConceptMapController = function (_ComponentController) {
 
       // set the mouse down listener
       this.draw.mousedown(function (event) {
-        _this4.svgMouseDown(event);
+        _this3.svgMouseDown(event);
       });
 
       // set the mouse up listener
       this.draw.mouseup(function (event) {
-        _this4.svgMouseUp(event);
+        _this3.svgMouseUp(event);
       });
 
       // set the mouse move listener
       this.draw.mousemove(function (event) {
-        _this4.svgMouseMove(event);
+        _this3.svgMouseMove(event);
       });
 
       // get the svg element in the angular world
@@ -1376,7 +1302,7 @@ var ConceptMapController = function (_ComponentController) {
            * the user has dropped a new node onto the svg to create a
            * new instance of a node
            */
-          _this4.newNodeDropped(event);
+          _this3.newNodeDropped(event);
         });
 
         this.addedDropListener = true;
@@ -2077,52 +2003,52 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'setNodeMouseEvents',
     value: function setNodeMouseEvents(conceptMapNode) {
-      var _this5 = this;
+      var _this4 = this;
 
       // set the node mouse over event
       conceptMapNode.setNodeMouseOver(function (event) {
-        _this5.nodeMouseOver(event);
+        _this4.nodeMouseOver(event);
       });
 
       // set the node mouse out event
       conceptMapNode.setNodeMouseOut(function (event) {
-        _this5.nodeMouseOut(event);
+        _this4.nodeMouseOut(event);
       });
 
       // set the connector mouse down event
       conceptMapNode.setConnectorMouseDown(function (event) {
-        _this5.disableNodeDragging();
-        _this5.connectorMouseDown(event);
+        _this4.disableNodeDragging();
+        _this4.connectorMouseDown(event);
       });
 
       // set the node mouse down event
       conceptMapNode.setNodeMouseDown(function (event) {
-        _this5.nodeMouseDown(event);
+        _this4.nodeMouseDown(event);
       });
 
       // set the node mouse up event
       conceptMapNode.setNodeMouseUp(function (event) {
-        _this5.nodeMouseUp(event);
+        _this4.nodeMouseUp(event);
       });
 
       // set the delete button mouse down event
       conceptMapNode.setDeleteButtonMouseDown(function (event) {
-        _this5.nodeDeleteButtonMouseDown(event);
+        _this4.nodeDeleteButtonMouseDown(event);
       });
 
       // set the delete button mouse over event
       conceptMapNode.setDeleteButtonMouseOver(function (event) {
-        _this5.nodeDeleteButtonMouseOver(event);
+        _this4.nodeDeleteButtonMouseOver(event);
       });
 
       // set the delete button mouse out event
       conceptMapNode.setDeleteButtonMouseOut(function (event) {
-        _this5.nodeDeleteButtonMouseOut(event);
+        _this4.nodeDeleteButtonMouseOut(event);
       });
 
       // set node drag move event
       conceptMapNode.setDragMove(function (event) {
-        _this5.nodeDragMove(event);
+        _this4.nodeDragMove(event);
       });
     }
 
@@ -2888,31 +2814,31 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'setLinkMouseEvents',
     value: function setLinkMouseEvents(link) {
-      var _this6 = this;
+      var _this5 = this;
 
       // set the link mouse down listener
       link.setLinkMouseDown(function (event) {
-        _this6.linkMouseDown(event);
+        _this5.linkMouseDown(event);
       });
 
       // set the link text mouse down listener
       link.setLinkTextMouseDown(function (event) {
-        _this6.linkTextMouseDown(event);
+        _this5.linkTextMouseDown(event);
       });
 
       // set the link mouse over listener
       link.setLinkMouseOver(function (event) {
-        _this6.linkMouseOver(event);
+        _this5.linkMouseOver(event);
       });
 
       // set the link mouse out listener
       link.setLinkMouseOut(function (event) {
-        _this6.linkMouseOut(event);
+        _this5.linkMouseOut(event);
       });
 
       // set the delete button clicked event for the link
       link.setDeleteButtonClicked(function (event) {
-        _this6.linkDeleteButtonClicked(event, link);
+        _this5.linkDeleteButtonClicked(event, link);
       });
     }
 
@@ -3239,7 +3165,7 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'snip',
     value: function snip($event) {
-      var _this7 = this;
+      var _this6 = this;
 
       // get the svg element. this will obtain an array.
       var svgElement = angular.element('#svg_' + this.nodeId + '_' + this.componentId);
@@ -3294,7 +3220,7 @@ var ConceptMapController = function (_ComponentController) {
            * set the UtilService in a local variable so we can access it
            * in the onload callback function
            */
-          var thisUtilService = _this7.UtilService;
+          var thisUtilService = _this6.UtilService;
 
           // the function that is called after the image is fully loaded
           image.onload = function (event) {
@@ -3314,7 +3240,7 @@ var ConceptMapController = function (_ComponentController) {
             var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image, false);
 
             // create a notebook item with the image populated into it
-            _this7.NotebookService.addNote($event, imageObject);
+            _this6.NotebookService.addNote($event, imageObject);
           };
 
           // set the src of the image so that the image gets loaded
@@ -3419,10 +3345,10 @@ var ConceptMapController = function (_ComponentController) {
   }, {
     key: 'setComponentStateAsBackgroundImage',
     value: function setComponentStateAsBackgroundImage(componentState) {
-      var _this8 = this;
+      var _this7 = this;
 
       this.UtilService.generateImageFromComponentState(componentState).then(function (image) {
-        _this8.setBackgroundImage(image.url);
+        _this7.setBackgroundImage(image.url);
       });
     }
 
