@@ -229,8 +229,8 @@ class AudioOscillatorController extends ComponentController {
     this.gain.connect(this.analyser);
     this.oscillator.start();
     this.goodDraw = false;
-    this.drawOscilloscope();
     this.isPlaying = true;
+    this.drawOscilloscope();
     this.addFrequencyPlayed(this.frequency);
     this.studentDataChanged();
   }
@@ -252,28 +252,57 @@ class AudioOscillatorController extends ComponentController {
   }
 
   drawOscilloscope() {
-    const analyser = this.analyser;
-    const ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
-    const width = ctx.canvas.width;
-    const height = ctx.canvas.height;
-
-    // get the number of samples, this will be half the fftSize
-    const bufferLength = analyser.frequencyBinCount;
-
-    // create an array to hold the oscillator data
-    const timeData = new Uint8Array(bufferLength);
-
-    // populate the oscillator data into the timeData array
-    analyser.getByteTimeDomainData(timeData);
+    if (!this.isPlaying) {
+      return;
+    }
 
     this.drawOscilloscopeGrid();
+    this.startDrawingAudioSignalLine();
+    const firstRisingZeroCrossingIndex = this.drawOscilloscopePoints();
 
-    // start drawing the audio signal line from the oscillator
+    if (this.isFirstRisingZeroCrossingIndexCloseToZero(firstRisingZeroCrossingIndex)) {
+      /*
+       * we want the first rising zero crossing index to be close to zero
+       * so that the graph spans almost the whole width of the canvas.
+       * if the first rising zero crossing index was close to bufferLength
+       * size then we would see a cut off graph.
+       */
+      this.goodDraw = true;
+    }
+
+    if (this.isDrawAgain()) {
+      requestAnimationFrame(() => {
+        this.drawOscilloscope();
+      });
+    }
+  }
+
+  getTimeData() {
+    const bufferLength = this.analyser.frequencyBinCount;
+    const timeData = new Uint8Array(bufferLength);
+    this.analyser.getByteTimeDomainData(timeData);
+    return timeData;
+  }
+
+  startDrawingAudioSignalLine() {
+    const ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
     ctx.lineWidth = 2;
-    ctx.strokeStyle = 'rgb(0, 200, 0)'; // green
+    ctx.strokeStyle = 'rgb(0, 200, 0)';
     ctx.beginPath();
+  }
 
-    const sliceWidth = width * 1.0 / bufferLength;
+  getSliceWidth() {
+    const ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
+    const bufferLength = this.analyser.frequencyBinCount;
+    const width = ctx.canvas.width;
+    return width * 1.0 / bufferLength;
+  }
+
+  drawOscilloscopePoints() {
+    const ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
+    const height = ctx.canvas.height;
+    const timeData = this.getTimeData();
+    const sliceWidth = this.getSliceWidth();
     let x = 0;
     let v = 0;
     let y = 0;
@@ -282,10 +311,10 @@ class AudioOscillatorController extends ComponentController {
      * we want to start drawing the audio signal such that the first point
      * is at 0,0 on the oscilloscope and the signal rises after that.
      * e.g. pretend the ascii below is a sine wave
-     *   _    _
-     *  / \  / \
+     *  _       _
+     * / \     / \
      * -------------------
-     *   \_/  \_/
+     *     \_/     \_/
      */
     let foundFirstRisingZeroCrossing = false;
     let firstRisingZeroCrossingIndex = null;
@@ -295,25 +324,16 @@ class AudioOscillatorController extends ComponentController {
      * loop through all the points and draw the signal from the first
      * rising zero crossing to the end of the buffer
      */
-    for (let i = 0; i < bufferLength; i++) {
+    for (let i = 0; i < timeData.length; i++) {
       const currentY = timeData[i] - 128;
       const nextY = timeData[i + 1] - 128;
 
-      // check if the current data point is the first rising zero crossing
-      if (!foundFirstRisingZeroCrossing &&
-        (currentY < 0 || currentY == 0) && nextY > 0) {
-
-        // the point is the first rising zero crossing
+      if (this.isFirstRisingZeroCrossingPoint(foundFirstRisingZeroCrossing, currentY, nextY)) {
         foundFirstRisingZeroCrossing = true;
         firstRisingZeroCrossingIndex = i;
       }
 
       if (foundFirstRisingZeroCrossing) {
-        /*
-         * we have found the first rising zero crossing so we can start
-         * drawing the points.
-         */
-
         /*
          * get the height of the point. we need to perform this
          * subtraction of 128 to flip the value since canvas
@@ -321,41 +341,37 @@ class AudioOscillatorController extends ComponentController {
          */
         v = (128 - (timeData[i] - 128)) / 128.0;
         y = v * height / 2;
-
-        if (isFirstPointDrawn) {
-          ctx.lineTo(x, y);
-        } else {
-          ctx.moveTo(x, y);
+        this.drawPoint(ctx, isFirstPointDrawn, x, y);
+        if (!isFirstPointDrawn) {
           isFirstPointDrawn = true;
         }
-
-        // update the x position we are drawing at
         x += sliceWidth;
       }
     }
 
-    if (firstRisingZeroCrossingIndex > 0 && firstRisingZeroCrossingIndex < 10) {
-      /*
-       * we want the first rising zero crossing index to be close to zero
-       * so that the graph spans almost the whole width of the canvas.
-       * if first rising zero crossing index was close to bufferLength
-       * then we would see a cut off graph.
-       */
-      this.goodDraw = true;
-    }
-
     ctx.stroke();
 
-    if (!this.stopAfterGoodDraw || (this.stopAfterGoodDraw && !this.goodDraw)) {
-      /*
-       * the draw was not good so we will try to draw it again by
-       * sampling the oscillator again and drawing again. if the
-       * draw was good we will stop drawing.
-       */
-      requestAnimationFrame(() => {
-        this.drawOscilloscope();
-      });
+    return firstRisingZeroCrossingIndex;
+  }
+
+  isFirstRisingZeroCrossingPoint(foundFirstRisingZeroCrossing, currentY, nextY) {
+    return !foundFirstRisingZeroCrossing && (currentY < 0 || currentY == 0) && nextY > 0;
+  }
+
+  drawPoint(ctx, isFirstPointDrawn, x, y) {
+    if (isFirstPointDrawn) {
+      ctx.lineTo(x, y);
+    } else {
+      ctx.moveTo(x, y);
     }
+  }
+
+  isFirstRisingZeroCrossingIndexCloseToZero(firstRisingZeroCrossingIndex) {
+    return firstRisingZeroCrossingIndex > 0 && firstRisingZeroCrossingIndex < 10;
+  }
+
+  isDrawAgain() {
+    return !this.stopAfterGoodDraw || (this.stopAfterGoodDraw && !this.goodDraw);
   }
 
   drawOscilloscopeGrid() {
@@ -368,12 +384,12 @@ class AudioOscillatorController extends ComponentController {
     ctx.lineWidth = 2;
     ctx.strokeStyle = 'lightgrey';
     ctx.beginPath();
-    this.drawVerticalLines(ctx, width, height, x, gridCellSize);
-    this.drawHorizontalLines(ctx, width, height, y, gridCellSize);
+    this.drawVerticalLines(ctx, width, height, gridCellSize);
+    this.drawHorizontalLines(ctx, width, height, gridCellSize);
     ctx.stroke();
   }
 
-  drawVerticalLines(ctx, width, height, x, gridCellSize) {
+  drawVerticalLines(ctx, width, height, gridCellSize) {
     let x = 0;
     while (x < width) {
       this.drawVerticalLine(ctx, x, height);
@@ -386,7 +402,7 @@ class AudioOscillatorController extends ComponentController {
     ctx.lineTo(x, height);
   }
 
-  drawHorizontalLines(ctx, width, height, y, gridCellSize) {
+  drawHorizontalLines(ctx, width, height, gridCellSize) {
     // draw the horizontal lines above and including the middle line
     let y = height / 2;
     while (y >= 0) {

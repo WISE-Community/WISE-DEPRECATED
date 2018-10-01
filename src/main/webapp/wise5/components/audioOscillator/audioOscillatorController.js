@@ -36,7 +36,6 @@ var AudioOscillatorController = function (_ComponentController) {
     _this.numberOfFrequenciesPlayed = 0;
     _this.minFrequencyPlayed = null;
     _this.maxFrequencyPlayed = null;
-    _this.latestAnnotations = null;
     _this.oscilloscopeId = 'oscilloscope' + _this.componentId;
 
     _this.initializeDefaultSettings();
@@ -87,9 +86,9 @@ var AudioOscillatorController = function (_ComponentController) {
      * Get the component state from this component. The parent node will
      * call this function to obtain the component state when it needs to
      * save student data.
-     * @param isSubmit boolean whether the request is coming from a submit
-     * action (optional; default is false)
-     * @return a component state containing the student data
+     * @param isSubmit boolean Whether the request is coming from a submit
+     * action (optional; default is false).
+     * @return A component state containing the student data.
      */
     _this.$scope.getComponentState = function (isSubmit) {
       var deferred = this.$q.defer();
@@ -114,9 +113,9 @@ var AudioOscillatorController = function (_ComponentController) {
         });
       } else {
         /*
-         * the student does not have any unsaved changes in this component
+         * The student does not have any unsaved changes in this component
          * so we don't need to save a component state for this component.
-         * we will immediately resolve the promise here.
+         * We will immediately resolve the promise here.
          */
         deferred.resolve();
       }
@@ -252,8 +251,8 @@ var AudioOscillatorController = function (_ComponentController) {
       this.gain.connect(this.analyser);
       this.oscillator.start();
       this.goodDraw = false;
-      this.drawOscilloscope();
       this.isPlaying = true;
+      this.drawOscilloscope();
       this.addFrequencyPlayed(this.frequency);
       this.studentDataChanged();
     }
@@ -282,28 +281,61 @@ var AudioOscillatorController = function (_ComponentController) {
     value: function drawOscilloscope() {
       var _this2 = this;
 
-      var analyser = this.analyser;
-      var ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
-      var width = ctx.canvas.width;
-      var height = ctx.canvas.height;
-
-      // get the number of samples, this will be half the fftSize
-      var bufferLength = analyser.frequencyBinCount;
-
-      // create an array to hold the oscillator data
-      var timeData = new Uint8Array(bufferLength);
-
-      // populate the oscillator data into the timeData array
-      analyser.getByteTimeDomainData(timeData);
+      if (!this.isPlaying) {
+        return;
+      }
 
       this.drawOscilloscopeGrid();
+      this.startDrawingAudioSignalLine();
+      var firstRisingZeroCrossingIndex = this.drawOscilloscopePoints();
 
-      // start drawing the audio signal line from the oscillator
+      if (this.isFirstRisingZeroCrossingIndexCloseToZero(firstRisingZeroCrossingIndex)) {
+        /*
+         * we want the first rising zero crossing index to be close to zero
+         * so that the graph spans almost the whole width of the canvas.
+         * if the first rising zero crossing index was close to bufferLength
+         * size then we would see a cut off graph.
+         */
+        this.goodDraw = true;
+      }
+
+      if (this.isDrawAgain()) {
+        requestAnimationFrame(function () {
+          _this2.drawOscilloscope();
+        });
+      }
+    }
+  }, {
+    key: 'getTimeData',
+    value: function getTimeData() {
+      var bufferLength = this.analyser.frequencyBinCount;
+      var timeData = new Uint8Array(bufferLength);
+      this.analyser.getByteTimeDomainData(timeData);
+      return timeData;
+    }
+  }, {
+    key: 'startDrawingAudioSignalLine',
+    value: function startDrawingAudioSignalLine() {
+      var ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
       ctx.lineWidth = 2;
-      ctx.strokeStyle = 'rgb(0, 200, 0)'; // green
+      ctx.strokeStyle = 'rgb(0, 200, 0)';
       ctx.beginPath();
-
-      var sliceWidth = width * 1.0 / bufferLength;
+    }
+  }, {
+    key: 'getSliceWidth',
+    value: function getSliceWidth() {
+      var ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
+      var bufferLength = this.analyser.frequencyBinCount;
+      var width = ctx.canvas.width;
+      return width * 1.0 / bufferLength;
+    }
+  }, {
+    key: 'drawOscilloscopePoints',
+    value: function drawOscilloscopePoints() {
+      var ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
+      var height = ctx.canvas.height;
+      var timeData = this.getTimeData();
+      var sliceWidth = this.getSliceWidth();
       var x = 0;
       var v = 0;
       var y = 0;
@@ -312,10 +344,10 @@ var AudioOscillatorController = function (_ComponentController) {
        * we want to start drawing the audio signal such that the first point
        * is at 0,0 on the oscilloscope and the signal rises after that.
        * e.g. pretend the ascii below is a sine wave
-       *   _    _
-       *  / \  / \
+       *  _       _
+       * / \     / \
        * -------------------
-       *   \_/  \_/
+       *     \_/     \_/
        */
       var foundFirstRisingZeroCrossing = false;
       var firstRisingZeroCrossingIndex = null;
@@ -325,24 +357,16 @@ var AudioOscillatorController = function (_ComponentController) {
        * loop through all the points and draw the signal from the first
        * rising zero crossing to the end of the buffer
        */
-      for (var i = 0; i < bufferLength; i++) {
+      for (var i = 0; i < timeData.length; i++) {
         var currentY = timeData[i] - 128;
         var nextY = timeData[i + 1] - 128;
 
-        // check if the current data point is the first rising zero crossing
-        if (!foundFirstRisingZeroCrossing && (currentY < 0 || currentY == 0) && nextY > 0) {
-
-          // the point is the first rising zero crossing
+        if (this.isFirstRisingZeroCrossingPoint(foundFirstRisingZeroCrossing, currentY, nextY)) {
           foundFirstRisingZeroCrossing = true;
           firstRisingZeroCrossingIndex = i;
         }
 
         if (foundFirstRisingZeroCrossing) {
-          /*
-           * we have found the first rising zero crossing so we can start
-           * drawing the points.
-           */
-
           /*
            * get the height of the point. we need to perform this
            * subtraction of 128 to flip the value since canvas
@@ -350,47 +374,46 @@ var AudioOscillatorController = function (_ComponentController) {
            */
           v = (128 - (timeData[i] - 128)) / 128.0;
           y = v * height / 2;
-
-          if (isFirstPointDrawn) {
-            ctx.lineTo(x, y);
-          } else {
-            ctx.moveTo(x, y);
+          this.drawPoint(ctx, isFirstPointDrawn, x, y);
+          if (!isFirstPointDrawn) {
             isFirstPointDrawn = true;
           }
-
-          // update the x position we are drawing at
           x += sliceWidth;
         }
       }
 
-      if (firstRisingZeroCrossingIndex > 0 && firstRisingZeroCrossingIndex < 10) {
-        /*
-         * we want the first rising zero crossing index to be close to zero
-         * so that the graph spans almost the whole width of the canvas.
-         * if first rising zero crossing index was close to bufferLength
-         * then we would see a cut off graph.
-         */
-        this.goodDraw = true;
-      }
-
       ctx.stroke();
 
-      if (!this.stopAfterGoodDraw || this.stopAfterGoodDraw && !this.goodDraw) {
-        /*
-         * the draw was not good so we will try to draw it again by
-         * sampling the oscillator again and drawing again. if the
-         * draw was good we will stop drawing.
-         */
-        requestAnimationFrame(function () {
-          _this2.drawOscilloscope();
-        });
+      return firstRisingZeroCrossingIndex;
+    }
+  }, {
+    key: 'isFirstRisingZeroCrossingPoint',
+    value: function isFirstRisingZeroCrossingPoint(foundFirstRisingZeroCrossing, currentY, nextY) {
+      return !foundFirstRisingZeroCrossing && (currentY < 0 || currentY == 0) && nextY > 0;
+    }
+  }, {
+    key: 'drawPoint',
+    value: function drawPoint(ctx, isFirstPointDrawn, x, y) {
+      if (isFirstPointDrawn) {
+        ctx.lineTo(x, y);
+      } else {
+        ctx.moveTo(x, y);
       }
+    }
+  }, {
+    key: 'isFirstRisingZeroCrossingIndexCloseToZero',
+    value: function isFirstRisingZeroCrossingIndexCloseToZero(firstRisingZeroCrossingIndex) {
+      return firstRisingZeroCrossingIndex > 0 && firstRisingZeroCrossingIndex < 10;
+    }
+  }, {
+    key: 'isDrawAgain',
+    value: function isDrawAgain() {
+      return !this.stopAfterGoodDraw || this.stopAfterGoodDraw && !this.goodDraw;
     }
   }, {
     key: 'drawOscilloscopeGrid',
     value: function drawOscilloscopeGrid() {
       var ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
-
       var width = ctx.canvas.width;
       var height = ctx.canvas.height;
       var gridCellSize = this.gridCellSize;
@@ -399,93 +422,65 @@ var AudioOscillatorController = function (_ComponentController) {
       ctx.lineWidth = 2;
       ctx.strokeStyle = 'lightgrey';
       ctx.beginPath();
-
-      var x = 0;
-
-      // draw the vertical lines
-      while (x < width) {
-
-        // draw a vertical line
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
-
-        // move the x position to the right
-        x += gridCellSize;
-      }
-
-      // start by drawing the line in the middle
-      var y = height / 2;
-
-      // draw the horizontal lines above and including the middle line
-      while (y >= 0) {
-
-        // draw a horizontal line
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-
-        // move the y position up (this is up because of canvas positioning)
-        y -= gridCellSize;
-      }
-
-      y = height / 2;
-
-      // draw the horizontal lines below the middle line
-      while (y <= height) {
-
-        // draw a horizontal line
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-
-        // move the y position down (this is down because of canvas positioning)
-        y += gridCellSize;
-      }
-
-      // draw the lines on the canvas
+      this.drawVerticalLines(ctx, width, height, gridCellSize);
+      this.drawHorizontalLines(ctx, width, height, gridCellSize);
       ctx.stroke();
     }
   }, {
+    key: 'drawVerticalLines',
+    value: function drawVerticalLines(ctx, width, height, gridCellSize) {
+      var x = 0;
+      while (x < width) {
+        this.drawVerticalLine(ctx, x, height);
+        x += gridCellSize;
+      }
+    }
+  }, {
     key: 'drawVerticalLine',
-    value: function drawVerticalLine() {}
+    value: function drawVerticalLine(ctx, x, height) {
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, height);
+    }
+  }, {
+    key: 'drawHorizontalLines',
+    value: function drawHorizontalLines(ctx, width, height, gridCellSize) {
+      // draw the horizontal lines above and including the middle line
+      var y = height / 2;
+      while (y >= 0) {
+        this.drawHorizontalLine(ctx, y, width);
+        y -= gridCellSize;
+      }
+
+      // draw the horizontal lines below the middle line
+      y = height / 2;
+      while (y < height) {
+        this.drawHorizontalLine(ctx, y, width);
+        y += gridCellSize;
+      }
+    }
   }, {
     key: 'drawHorizontalLine',
-    value: function drawHorizontalLine() {}
-
-    /**
-     * The oscillator type changed
-     */
-
+    value: function drawHorizontalLine(ctx, y, width) {
+      ctx.moveTo(0, y);
+      ctx.lineTo(width, y);
+    }
   }, {
     key: 'oscillatorTypeChanged',
     value: function oscillatorTypeChanged() {
-
-      // clear the grid
       this.drawOscilloscopeGrid();
 
       if (this.isAudioPlaying()) {
         this.restartPlayer();
       }
     }
-
-    /**
-     * The frequency changed
-     */
-
   }, {
     key: 'frequencyChanged',
     value: function frequencyChanged() {
-
-      // clear the grid
       this.drawOscilloscopeGrid();
-
       if (this.isAudioPlaying()) {
         this.restartPlayer();
       }
     }
-
-    /**
-     * Restart the player
-     */
-
   }, {
     key: 'restartPlayer',
     value: function restartPlayer() {
@@ -494,20 +489,17 @@ var AudioOscillatorController = function (_ComponentController) {
     }
 
     /**
-     * Create a component state with the merged student responses
-     * @param componentStates an array of component states
-     * @return a component state with the merged student responses
+     * Create a component state with the merged student responses.
+     * @param componentStates An array of component states.
+     * @return A component state with the merged student responses.
      */
 
   }, {
     key: 'createMergedComponentState',
     value: function createMergedComponentState(componentStates) {
-
-      // create a new component state
       var mergedComponentState = this.NodeService.createNewComponentState();
       if (componentStates != null) {
         var mergedStudentData = {};
-        // loop through all the component states and merge the student data
         for (var c = 0; c < componentStates.length; c++) {
           var componentState = componentStates[c];
           if (componentState != null) {
@@ -519,57 +511,51 @@ var AudioOscillatorController = function (_ComponentController) {
         }
         mergedComponentState.studentData = mergedStudentData;
       }
-
       return mergedComponentState;
     }
 
     /**
-     * Merge the values in the student data
-     * @param oldStudentData the old student data we will merge into
-     * @param newStudentData the new student data we will merge
-     * @return the merged student data
+     * Merge the values in the student data.
+     * @param existingStudentData The old student data we will merge into.
+     * @param newStudentData The new student data we will merge.
+     * @return The merged student data.
      */
 
   }, {
     key: 'mergeStudentData',
-    value: function mergeStudentData(oldStudentData, newStudentData) {
-
-      if (oldStudentData != null && newStudentData != null) {
-
-        if (oldStudentData.frequenciesPlayed == null) {
-          oldStudentData.frequenciesPlayed = newStudentData.frequenciesPlayed;
-        } else {
-          oldStudentData.frequenciesPlayed = oldStudentData.frequenciesPlayed.concat(newStudentData.frequenciesPlayed);
-        }
-
-        if (oldStudentData.frequenciesPlayedSorted == null) {
-          oldStudentData.frequenciesPlayedSorted = newStudentData.frequenciesPlayed;
-        } else {
-          var frequenciesPlayedSorted = this.UtilService.makeCopyOfJSONObject(oldStudentData.frequenciesPlayed);
-          frequenciesPlayedSorted.sort();
-          oldStudentData.frequenciesPlayedSorted = frequenciesPlayedSorted;
-        }
-
-        if (oldStudentData.numberOfFrequenciesPlayed == null) {
-          oldStudentData.numberOfFrequenciesPlayed = newStudentData.numberOfFrequenciesPlayed;
-        } else {
-          oldStudentData.numberOfFrequenciesPlayed = oldStudentData.numberOfFrequenciesPlayed + newStudentData.numberOfFrequenciesPlayed;
-        }
-
-        if (oldStudentData.minFrequencyPlayed == null) {
-          oldStudentData.minFrequencyPlayed = newStudentData.minFrequencyPlayed;
-        } else {
-          oldStudentData.minFrequencyPlayed = Math.min(oldStudentData.minFrequencyPlayed, newStudentData.minFrequencyPlayed);
-        }
-
-        if (oldStudentData.maxFrequencyPlayed == null) {
-          oldStudentData.maxFrequencyPlayed = newStudentData.maxFrequencyPlayed;
-        } else {
-          oldStudentData.maxFrequencyPlayed = Math.max(oldStudentData.maxFrequencyPlayed, newStudentData.maxFrequencyPlayed);
-        }
+    value: function mergeStudentData(existingStudentData, newStudentData) {
+      if (existingStudentData.frequenciesPlayed == null) {
+        existingStudentData.frequenciesPlayed = newStudentData.frequenciesPlayed;
+      } else {
+        existingStudentData.frequenciesPlayed = existingStudentData.frequenciesPlayed.concat(newStudentData.frequenciesPlayed);
       }
 
-      return oldStudentData;
+      if (existingStudentData.frequenciesPlayedSorted == null) {
+        existingStudentData.frequenciesPlayedSorted = newStudentData.frequenciesPlayed;
+      } else {
+        var frequenciesPlayedSorted = this.UtilService.makeCopyOfJSONObject(existingStudentData.frequenciesPlayed);
+        frequenciesPlayedSorted.sort();
+        existingStudentData.frequenciesPlayedSorted = frequenciesPlayedSorted;
+      }
+
+      if (existingStudentData.numberOfFrequenciesPlayed == null) {
+        existingStudentData.numberOfFrequenciesPlayed = newStudentData.numberOfFrequenciesPlayed;
+      } else {
+        existingStudentData.numberOfFrequenciesPlayed = existingStudentData.numberOfFrequenciesPlayed + newStudentData.numberOfFrequenciesPlayed;
+      }
+
+      if (existingStudentData.minFrequencyPlayed == null) {
+        existingStudentData.minFrequencyPlayed = newStudentData.minFrequencyPlayed;
+      } else {
+        existingStudentData.minFrequencyPlayed = Math.min(existingStudentData.minFrequencyPlayed, newStudentData.minFrequencyPlayed);
+      }
+
+      if (existingStudentData.maxFrequencyPlayed == null) {
+        existingStudentData.maxFrequencyPlayed = newStudentData.maxFrequencyPlayed;
+      } else {
+        existingStudentData.maxFrequencyPlayed = Math.max(existingStudentData.maxFrequencyPlayed, newStudentData.maxFrequencyPlayed);
+      }
+      return existingStudentData;
     }
   }]);
 
