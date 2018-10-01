@@ -40,9 +40,6 @@ var ConceptMapController = function (_ComponentController) {
     // holds the text that the student has typed
     _this.studentResponse = '';
 
-    // the latest annotations
-    _this.latestAnnotations = null;
-
     // used to hold a message dialog if we need to use one
     _this.messageDialog = null;
 

@@ -37,9 +37,6 @@ class ConceptMapController extends ComponentController {
     // holds the text that the student has typed
     this.studentResponse = '';
 
-    // the latest annotations
-    this.latestAnnotations = null;
-
     // used to hold a message dialog if we need to use one
     this.messageDialog = null;
 

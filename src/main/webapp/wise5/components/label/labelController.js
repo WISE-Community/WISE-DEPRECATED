@@ -40,9 +40,6 @@ var LabelController = function (_ComponentController) {
     _this.LabelService = LabelService;
     _this.OpenResponseService = OpenResponseService;
 
-    // the latest annotations
-    _this.latestAnnotations = null;
-
     // whether the new label button is shown or not
     _this.isNewLabelButtonVisible = true;
 

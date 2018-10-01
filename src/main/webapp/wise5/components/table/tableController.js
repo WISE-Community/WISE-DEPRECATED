@@ -38,9 +38,6 @@ var TableController = function (_ComponentController) {
     // holds the the table data
     _this.tableData = null;
 
-    // the latest annotations
-    _this.latestAnnotations = null;
-
     // whether the reset table button is shown or not
     _this.isResetTableButtonVisible = true;
 

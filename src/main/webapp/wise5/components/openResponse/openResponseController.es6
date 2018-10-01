@@ -38,9 +38,6 @@ class OpenResponseController extends ComponentController {
     // whether we're only showing the student work
     this.onlyShowWork = false;
 
-    // the latest annotations
-    this.latestAnnotations = null;
-
     // used to hold a message dialog if we need to use one
     this.messageDialog = null;
 

@@ -42,7 +42,6 @@ var MatchController = function (_ComponentController) {
     _this.isHorizontal = _this.componentContent.horizontal; // whether to orient the choices and buckets side-by-side
     _this.choiceStyle = '';
     _this.bucketStyle = '';
-    _this.latestAnnotations = null;
     _this.sourceBucketId = '0';
     _this.hasCorrectAnswer = false;
     _this.isLatestComponentStateSubmit = false;

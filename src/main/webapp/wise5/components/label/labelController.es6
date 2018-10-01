@@ -32,9 +32,6 @@ class LabelController extends ComponentController {
     this.LabelService = LabelService;
     this.OpenResponseService = OpenResponseService;
 
-    // the latest annotations
-    this.latestAnnotations = null;
-
     // whether the new label button is shown or not
     this.isNewLabelButtonVisible = true;
 

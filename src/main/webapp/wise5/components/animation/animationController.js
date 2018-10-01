@@ -33,7 +33,6 @@ var AnimationController = function (_ComponentController) {
     _this.AnimationService = AnimationService;
     _this.NotificationService = NotificationService;
 
-    _this.latestAnnotations = null;
     _this.width = 800;
     _this.height = 600;
     _this.pixelsPerXUnit = 1;

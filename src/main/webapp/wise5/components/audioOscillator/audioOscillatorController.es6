@@ -30,7 +30,6 @@ class AudioOscillatorController extends ComponentController {
     this.numberOfFrequenciesPlayed = 0;
     this.minFrequencyPlayed = null;
     this.maxFrequencyPlayed = null;
-    this.latestAnnotations = null;
     this.oscilloscopeId = 'oscilloscope' + this.componentId;
 
     this.initializeDefaultSettings();

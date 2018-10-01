@@ -54,10 +54,6 @@ class DiscussionController extends ComponentController {
     // whether we have retrieved the classmate responses
     this.retrievedClassmateResponses = false;
 
-    // the latest annotations
-    this.latestAnnotations = null;
-
-
     if (this.$scope.workgroupId != null) {
       this.workgroupId = this.$scope.workgroupId;
     }
