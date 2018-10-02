@@ -17,9 +17,13 @@
 }
 
 .content__header {
-  margin-bottom: 16px;
-
   @media (min-width: breakpoint('md.min')) {
-    margin: 16px 0 32px;
+    margin: 16px 0 16px;
   }
+
+  .mat-icon {
+    padding-right: 8px;
+    @include mat-icon-size(32px);
+  }
+
 }
