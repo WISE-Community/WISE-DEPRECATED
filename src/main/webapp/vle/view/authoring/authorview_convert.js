@@ -23,7 +23,7 @@ View.prototype.convertProjectToWISE5 = function() {
     this.wise4Project = this.getProject().projectJSON();
 
     // get the WISE4 project folder path
-    this.projectFolderPath = 'http://' + location.host + this.wise4ProjectBaseURL;
+    this.projectFolderPath = this.wise4ProjectBaseURL;
 
     // regex to find the project folder name
     var projectFolderNameRegEx = new RegExp("(\/wise)?\/curriculum\/(.*)\/");
