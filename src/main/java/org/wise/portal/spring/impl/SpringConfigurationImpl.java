@@ -35,6 +35,7 @@ public final class SpringConfigurationImpl implements SpringConfiguration {
    */
   public String[] getDispatcherServletContextConfigLocations() {
     return new String[] {
+      "classpath:net/bull/javamelody/monitoring-spring.xml",
       "classpath:configurations/dispatcherServletContexts.xml"
     };
   }
