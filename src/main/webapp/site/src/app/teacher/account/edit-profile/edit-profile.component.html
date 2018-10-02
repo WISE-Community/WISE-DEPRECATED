@@ -5,8 +5,8 @@
        fxLayout="row wrap"
        fxLayoutAlign="center"
        fxLayoutGap="0"
-       fxLayoutGap.gt-sm="16px grid">
-    <p fxFlex="100" fxFlex.gt-sm="50">
+       fxLayoutGap.gt-xs="16px grid">
+    <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
         <mat-label>First Name</mat-label>
         <input matInput
@@ -16,7 +16,7 @@
         <mat-error *ngIf="editProfileFormGroup.controls['firstName'].hasError('required')">First Name Required</mat-error>
       </mat-form-field>
     </p>
-    <p fxFlex="100" fxFlex.gt-sm="50">
+    <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
         <mat-label>Last Name</mat-label>
         <input matInput
@@ -26,7 +26,7 @@
         <mat-error *ngIf="editProfileFormGroup.controls['lastName'].hasError('required')">Last Name Required</mat-error>
       </mat-form-field>
     </p>
-    <p fxFlex="100" fxFlex.gt-sm="50">
+    <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
         <mat-label>Display Name</mat-label>
         <input matInput
@@ -37,7 +37,7 @@
         <mat-error *ngIf="editProfileFormGroup.controls['lastName'].hasError('required')">Display Name Required</mat-error>
       </mat-form-field>
     </p>
-    <p fxFlex="100" fxFlex.gt-sm="50">
+    <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
         <mat-label>Email</mat-label>
         <input matInput
@@ -47,7 +47,7 @@
         <mat-error *ngIf="editProfileFormGroup.controls['email'].hasError('required')">Email Required</mat-error>
       </mat-form-field>
     </p>
-    <p fxFlex="100" fxFlex.gt-sm="50">
+    <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
         <mat-label>City</mat-label>
         <input matInput
@@ -57,7 +57,7 @@
         <mat-error *ngIf="editProfileFormGroup.controls['city'].hasError('required')">City Required</mat-error>
       </mat-form-field>
     </p>
-    <p fxFlex="100" fxFlex.gt-sm="50">
+    <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
         <mat-label>State</mat-label>
         <input matInput
@@ -67,7 +67,7 @@
         <mat-error *ngIf="editProfileFormGroup.controls['state'].hasError('required')">State Required</mat-error>
       </mat-form-field>
     </p>
-    <p fxFlex="100" fxFlex.gt-sm="50">
+    <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
         <mat-label>Country</mat-label>
         <input matInput
@@ -77,7 +77,7 @@
         <mat-error *ngIf="editProfileFormGroup.controls['country'].hasError('required')">Country Required</mat-error>
       </mat-form-field>
     </p>
-    <p fxFlex="100" fxFlex.gt-sm="50">
+    <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
         <mat-label>School Name</mat-label>
         <input matInput
@@ -87,7 +87,7 @@
         <mat-error *ngIf="editProfileFormGroup.controls['schoolName'].hasError('required')">School Name Required</mat-error>
       </mat-form-field>
     </p>
-    <p fxFlex="100" fxFlex.gt-sm="50">
+    <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
         <mat-label>School Level</mat-label>
         <mat-select formControlName="schoolLevel">
@@ -98,7 +98,7 @@
         <mat-error *ngIf="editProfileFormGroup.controls['schoolLevel'].hasError('required')">School Level Required</mat-error>
       </mat-form-field>
     </p>
-    <p fxFlex="100" fxFlex.gt-sm="50">
+    <p fxFlex="100" fxFlex.gt-xs="50">
       <mat-form-field appearance="fill" fxFlex>
         <mat-label>Language</mat-label>
         <mat-select formControlName="language">
@@ -115,7 +115,8 @@
             color="primary"
             type="submit"
             [disabled]="!editProfileFormGroup.valid"
-            fxFlex="100" fxFlex.gt-sm="0 0 auto">
+            fxFlex
+            fxFlex.gt-xs="0 0 auto">
       Save Changes
     </button>
   </div>
