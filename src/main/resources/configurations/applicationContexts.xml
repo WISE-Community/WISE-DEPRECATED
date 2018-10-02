@@ -832,6 +832,7 @@
     <property name="accessDecisionManager" ref="urlAccessDecisionManager" />
     <property name="securityMetadataSource">
       <sec:filter-security-metadata-source use-expressions="false">
+        <sec:intercept-url pattern="/monitoring" access="ROLE_ADMINISTRATOR" />
         <sec:intercept-url pattern="/admin*" access="ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
         <sec:intercept-url pattern="/admin/**" access="ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
         <sec:intercept-url pattern="/translate*" access="ROLE_ADMINISTRATOR,ROLE_TRANSLATOR" />
