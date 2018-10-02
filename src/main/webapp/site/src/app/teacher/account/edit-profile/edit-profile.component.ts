@@ -12,7 +12,13 @@ import { TeacherService } from "../../teacher.service";
 export class EditProfileComponent implements OnInit {
 
   user: Teacher;
-  schoolLevels: string[] = ["ELEMENTARY_SCHOOL", "MIDDLE_SCHOOL", "HIGH_SCHOOL", "COLLEGE", "OTHER"];
+  schoolLevels: any[] = [
+    { id: 'ELEMENTARY_SCHOOL', label: 'Elementary School' },
+    { id: 'MIDDLE_SCHOOL', label: 'Middle School' },
+    { id: 'HIGH_SCHOOL', label: 'High School' },
+    { id: 'COLLEGE', label: 'College' },
+    { id: 'OTHER', label: 'Other' }
+  ];
   message: string = '';
   languages: object[];
 
