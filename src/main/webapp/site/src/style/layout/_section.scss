@@ -1,9 +1,5 @@
 .section {
   position: relative;
-
-  .section__header {
-    margin-bottom: 32px;
-  }
 }
 
 .section--fullwidth {
@@ -13,6 +9,18 @@
   @media (min-width: breakpoint('sm.min')) {
     padding-left: 32px;
     padding-right: 32px;
+  }
+}
+
+.section__header {
+  margin-bottom: 32px;
+}
+
+.section__tab {
+  padding: 24px 0;
+
+  @media (min-width: breakpoint('sm.min')) {
+    padding: 24px 16px;
   }
 }
 
