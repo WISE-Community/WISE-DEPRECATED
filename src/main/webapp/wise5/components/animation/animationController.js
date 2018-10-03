@@ -1151,10 +1151,10 @@ var AnimationController = function (_ComponentController) {
     value: function studentDataChanged() {
       var _this5 = this;
 
-      this.setIsDirtyTrue(true);
+      this.setIsDirty(true);
       this.emitComponentDirty(true);
 
-      this.setIsSubmitDirty(true);
+      this.setIsSubmit(true);
       this.emitComponentSubmitDirty(true);
 
       this.clearSaveText();
@@ -1238,6 +1238,7 @@ var AnimationController = function (_ComponentController) {
     value: function playButtonClicked() {
       this.setAnimationStateToPlaying();
       this.startAnimation();
+      this.studentDataChanged();
     }
   }, {
     key: 'pauseButtonClicked',
