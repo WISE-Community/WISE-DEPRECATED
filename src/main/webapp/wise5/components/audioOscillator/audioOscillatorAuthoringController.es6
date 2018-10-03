@@ -61,6 +61,10 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
 
   handleAuthoringComponentContentChanged(newValue, oldValue) {
     super.handleAuthoringComponentContentChanged(newValue, oldValue);
+    this.refreshContentInAuthoringPreview();
+  }
+
+  refreshContentInAuthoringPreview() {
     this.stop();
     this.setParametersFromComponentContent();
     this.drawOscilloscopeGridAfterTimeout();
@@ -73,14 +77,12 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
       const fullAssetPath = this.getFullAssetPath(fileName);
       let summernoteId = this.getSummernoteId(args);
       this.restoreSummernoteCursorPosition(summernoteId);
-
       if (this.UtilService.isImage(fileName)) {
         this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
       } else if (this.UtilService.isVideo(fileName)) {
         this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
       }
     }
-
     this.$mdDialog.hide();
   }
 

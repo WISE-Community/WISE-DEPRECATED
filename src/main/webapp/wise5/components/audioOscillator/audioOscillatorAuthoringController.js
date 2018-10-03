@@ -57,6 +57,11 @@ var AudioOscillatorAuthoringController = function (_AudioOscillatorContr) {
     key: 'handleAuthoringComponentContentChanged',
     value: function handleAuthoringComponentContentChanged(newValue, oldValue) {
       _get(AudioOscillatorAuthoringController.prototype.__proto__ || Object.getPrototypeOf(AudioOscillatorAuthoringController.prototype), 'handleAuthoringComponentContentChanged', this).call(this, newValue, oldValue);
+      this.refreshContentInAuthoringPreview();
+    }
+  }, {
+    key: 'refreshContentInAuthoringPreview',
+    value: function refreshContentInAuthoringPreview() {
       this.stop();
       this.setParametersFromComponentContent();
       this.drawOscilloscopeGridAfterTimeout();
@@ -70,14 +75,12 @@ var AudioOscillatorAuthoringController = function (_AudioOscillatorContr) {
         var fullAssetPath = this.getFullAssetPath(fileName);
         var summernoteId = this.getSummernoteId(args);
         this.restoreSummernoteCursorPosition(summernoteId);
-
         if (this.UtilService.isImage(fileName)) {
           this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
         } else if (this.UtilService.isVideo(fileName)) {
           this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
         }
       }
-
       this.$mdDialog.hide();
     }
   }, {

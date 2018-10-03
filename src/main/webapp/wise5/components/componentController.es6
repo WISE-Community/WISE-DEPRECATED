@@ -214,6 +214,9 @@ class ComponentController {
     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
     this.isSaveButtonVisible = this.componentContent.showSaveButton;
     this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+    this.latestAnnotations = null;
+    this.isDirty = false;
+    this.isSubmitDirty = false;
     this.submitCounter = 0;
   }
 
@@ -241,11 +244,15 @@ class ComponentController {
     $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
   }
 
-  insertImageIntoSummernote(summernoteId, fullAssetPath) {
+  insertVideoIntoSummernote(summernoteId, fullAssetPath) {
     var videoElement = document.createElement('video');
     videoElement.controls = 'true';
     videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
     $('#' + summernoteId).summernote('insertNode', videoElement);
+  }
+
+  assetSelected(event, args) {
+
   }
 
   registerComponentWithParentNode() {
@@ -873,7 +880,7 @@ class ComponentController {
   summernoteRubricHTMLChanged() {
 
     // get the summernote rubric html
-    var html = this.summernoteRubricHTML;
+    let html = this.summernoteRubricHTML;
 
     /*
      * remove the absolute asset paths
@@ -978,26 +985,6 @@ class ComponentController {
 
   isEventTargetThisComponent(args) {
     return this.nodeId == args.nodeId && this.componentId == args.componentId;
-  }
-
-  createSummernoteRubricId() {
-    return 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-  }
-
-  restoreSummernoteCursorPosition(summernoteId) {
-    $('#' + summernoteId).summernote('editor.restoreRange');
-    $('#' + summernoteId).summernote('editor.focus');
-  }
-
-  insertImageIntoSummernote(fullAssetPath, fileName) {
-    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-  }
-
-  insertVideoIntoSummernote(fullAssetPath) {
-    const videoElement = document.createElement('video');
-    videoElement.controls = 'true';
-    videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-    $('#' + summernoteId).summernote('insertNode', videoElement);
   }
 
   hasMaxSubmitCount() {

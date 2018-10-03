@@ -137,7 +137,7 @@ var ComponentController = function () {
 
       this.$scope.$on('annotationSavedToServer', function (event, args) {
         var annotation = args.annotation;
-        if (_this.nodeId === annotation.nodeId && _this.componentId === annotation.componentId) {
+        if (_this.isEventTargetThisComponent(annotation)) {
           _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
         }
       });
@@ -211,6 +211,9 @@ var ComponentController = function () {
       this.componentContent = this.ProjectService.injectAssetPaths(newValue);
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+      this.latestAnnotations = null;
+      this.isDirty = false;
+      this.isSubmitDirty = false;
       this.submitCounter = 0;
     }
   }, {
@@ -242,13 +245,16 @@ var ComponentController = function () {
       $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
     }
   }, {
-    key: 'insertImageIntoSummernote',
-    value: function insertImageIntoSummernote(summernoteId, fullAssetPath) {
+    key: 'insertVideoIntoSummernote',
+    value: function insertVideoIntoSummernote(summernoteId, fullAssetPath) {
       var videoElement = document.createElement('video');
       videoElement.controls = 'true';
       videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
       $('#' + summernoteId).summernote('insertNode', videoElement);
     }
+  }, {
+    key: 'assetSelected',
+    value: function assetSelected(event, args) {}
   }, {
     key: 'registerComponentWithParentNode',
     value: function registerComponentWithParentNode() {
@@ -1130,30 +1136,6 @@ var ComponentController = function () {
     key: 'isEventTargetThisComponent',
     value: function isEventTargetThisComponent(args) {
       return this.nodeId == args.nodeId && this.componentId == args.componentId;
-    }
-  }, {
-    key: 'createSummernoteRubricId',
-    value: function createSummernoteRubricId() {
-      return 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-    }
-  }, {
-    key: 'restoreSummernoteCursorPosition',
-    value: function restoreSummernoteCursorPosition(summernoteId) {
-      $('#' + summernoteId).summernote('editor.restoreRange');
-      $('#' + summernoteId).summernote('editor.focus');
-    }
-  }, {
-    key: 'insertImageIntoSummernote',
-    value: function insertImageIntoSummernote(fullAssetPath, fileName) {
-      $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-    }
-  }, {
-    key: 'insertVideoIntoSummernote',
-    value: function insertVideoIntoSummernote(fullAssetPath) {
-      var videoElement = document.createElement('video');
-      videoElement.controls = 'true';
-      videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-      $('#' + summernoteId).summernote('insertNode', videoElement);
     }
   }, {
     key: 'hasMaxSubmitCount',
