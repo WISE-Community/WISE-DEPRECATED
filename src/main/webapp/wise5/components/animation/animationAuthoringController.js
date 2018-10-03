@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 var _animationController = require('./animationController');
 
 var _animationController2 = _interopRequireDefault(_animationController);
@@ -27,53 +29,48 @@ var AnimationAuthoringController = function (_AnimationController) {
     var _this = _possibleConstructorReturn(this, (AnimationAuthoringController.__proto__ || Object.getPrototypeOf(AnimationAuthoringController)).call(this, $filter, $mdDialog, $q, $rootScope, $scope, $timeout, AnimationService, AnnotationService, ConfigService, NodeService, NotebookService, NotificationService, ProjectService, StudentAssetService, StudentDataService, UtilService));
 
     _this.allowedConnectedComponentTypes = [{ type: 'Animation' }, { type: 'Graph' }];
-
-    $scope.$watch(function () {
-      return this.authoringComponentContent;
-    }.bind(_this), function (newValue, oldValue) {
-      this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      this.refreshContentInAuthoringPreview();
-    }.bind(_this), true);
-
-    _this.$scope.$on('assetSelected', function (event, args) {
-      if (_this.isEventTargetThisComponent(args)) {
-        var fileName = args.assetItem.fileName;
-        if (args.target == 'rubric') {
-          var summernoteId = _this.createSummernoteRubricId();
-          _this.restoreSummernoteCursorPosition(summernoteId);
-          var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
-          var fullAssetPath = assetsDirectoryPath + '/' + fileName;
-          if (_this.UtilService.isImage(fileName)) {
-            _this.insertImageIntoSummernote(fullAssetPath, fileName);
-          } else if (_this.UtilService.isVideo(fileName)) {
-            _this.insertVideoIntoSummernote(fullAssetPath);
-          }
-        } else if (args.target == 'image') {
-          args.targetObject.image = fileName;
-        } else if (args.target == 'imageMovingLeft') {
-          args.targetObject.imageMovingLeft = fileName;
-        } else if (args.target == 'imageMovingRight') {
-          args.targetObject.imageMovingRight = fileName;
-        }
-      }
-      _this.authoringViewComponentChanged();
-      _this.$mdDialog.hide();
-    });
     return _this;
   }
 
   _createClass(AnimationAuthoringController, [{
+    key: 'handleAuthoringComponentContentChanged',
+    value: function handleAuthoringComponentContentChanged(newValue, oldValue) {
+      _get(AnimationAuthoringController.prototype.__proto__ || Object.getPrototypeOf(AnimationAuthoringController.prototype), 'handleAuthoringComponentContentChanged', this).call(this, newValue, oldValue);
+      this.refreshContentInAuthoringPreview();
+    }
+  }, {
     key: 'refreshContentInAuthoringPreview',
     value: function refreshContentInAuthoringPreview() {
-      this.submitCounter = 0;
-      this.latestAnnotations = null;
-      this.isDirty = false;
-      this.isSubmitDirty = false;
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       this.removeAllObjectsFromSVG();
       this.initializeCoordinates();
-      this.setup();
+      this.setupSVG();
+    }
+  }, {
+    key: 'assetSelected',
+    value: function assetSelected(event, args) {
+      if (this.isEventTargetThisComponent(args)) {
+        var fileName = args.assetItem.fileName;
+        if (args.target == 'rubric') {
+          var summernoteId = this.getSummernoteId(args);
+          this.restoreSummernoteCursorPosition(summernoteId);
+          var fullAssetPath = this.getFullAssetPath(fileName);
+          if (this.UtilService.isImage(fileName)) {
+            this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
+          } else if (this.UtilService.isVideo(fileName)) {
+            this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
+          }
+        } else if (args.target == 'image') {
+          args.targetObject.image = fileName;
+          this.authoringViewComponentChanged();
+        } else if (args.target == 'imageMovingLeft') {
+          args.targetObject.imageMovingLeft = fileName;
+          this.authoringViewComponentChanged();
+        } else if (args.target == 'imageMovingRight') {
+          args.targetObject.imageMovingRight = fileName;
+          this.authoringViewComponentChanged();
+        }
+      }
+      this.$mdDialog.hide();
     }
   }, {
     key: 'removeAllObjectsFromSVG',
